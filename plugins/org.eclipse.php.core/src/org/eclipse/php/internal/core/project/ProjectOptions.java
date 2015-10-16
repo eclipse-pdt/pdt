@@ -40,8 +40,8 @@ public class ProjectOptions {
 
 	public static PHPVersion getPhpVersion(IProject project) {
 		if (project != null) {
-			return PHPVersion.byAlias(CorePreferencesSupport.getInstance()
-					.getPreferencesValue(Keys.PHP_VERSION, null, project));
+			return PHPVersion
+					.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
 		}
 		return getDefaultPhpVersion();
 	}
@@ -57,8 +57,7 @@ public class ProjectOptions {
 
 	public static PHPVersion getPhpVersion(String fileName) {
 		PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(fileName);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
 		if (resource != null) {
 			IProject project = resource.getProject();
 			if (project.isAccessible()) {
@@ -69,26 +68,23 @@ public class ProjectOptions {
 	}
 
 	public static PHPVersion getDefaultPhpVersion() {
-		return PHPVersion.byAlias(CorePreferencesSupport.getInstance()
-				.getWorkspacePreferencesValue(Keys.PHP_VERSION));
+		return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.PHP_VERSION));
 	}
 
 	public static boolean setPhpVersion(PHPVersion version, IProject project) {
-		return CorePreferencesSupport.getInstance()
-				.setProjectSpecificPreferencesValue(Keys.PHP_VERSION,
-						version.getAlias(), project);
+		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.PHP_VERSION,
+				version.getAlias(), project);
 	}
 
 	public static final boolean isSupportingAspTags(IProject project) {
-		return project == null ? false : Boolean.valueOf(
-				CorePreferencesSupport.getInstance().getPreferencesValue(
-						Keys.EDITOR_USE_ASP_TAGS, null, project))
-				.booleanValue();
+		return project == null ? false
+				: Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
+						null, project)).booleanValue();
 	}
 
 	public static boolean useShortTags(IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance()
-				.getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project);
+		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null,
+				project);
 		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
 
@@ -100,10 +96,8 @@ public class ProjectOptions {
 		return isSupportingAspTags(file.getProject());
 	}
 
-	public static final boolean setSupportingAspTags(boolean value,
-			IProject project) {
-		return CorePreferencesSupport.getInstance()
-				.setProjectSpecificPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
-						Boolean.toString(value), project);
+	public static final boolean setSupportingAspTags(boolean value, IProject project) {
+		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
+				Boolean.toString(value), project);
 	}
 }

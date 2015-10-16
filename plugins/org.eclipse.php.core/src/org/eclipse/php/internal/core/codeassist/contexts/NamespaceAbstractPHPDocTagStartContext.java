@@ -32,11 +32,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
  * Will be used for special code assist in doc blocks such as:
  * 
  * <pre>
- *   @var My|
+ *   &#64;var My|
  * </pre>
  */
-public abstract class NamespaceAbstractPHPDocTagStartContext extends
-		NamespacePHPDocTagContext {
+public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePHPDocTagContext {
 
 	private IType[] namespaces;
 	private boolean isGlobal;
@@ -44,8 +43,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 	private IType currentNS;
 	private String nsPrefix;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -64,14 +62,11 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 			String lastWord = stack.pop();
 			if (lastWord.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 				if (!stack.empty() && isPrefix(lastWord)) {
-					if (lastWord
-							.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+					if (lastWord.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 						// isGlobal = true;
 					}
-					if (lastWord
-							.startsWith(NamespaceReference.NAMESPACE_DELIMITER)
-							&& lastWord
-									.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
+					if (lastWord.startsWith(NamespaceReference.NAMESPACE_DELIMITER)
+							&& lastWord.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
 						isGlobal = true;
 					} else {
 						initRelativeNamespace(sourceModule, offset, lastWord);
@@ -88,22 +83,16 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 		return false;
 	}
 
-	private void initRelativeNamespace(ISourceModule sourceModule, int offset,
-			String lastWord) {
+	private void initRelativeNamespace(ISourceModule sourceModule, int offset, String lastWord) {
 		String nsName = lastWord;
 		String fullName = lastWord;
 		nsPrefix = null;
 		if (lastWord.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
-			nsPrefix = lastWord.substring(0, lastWord
-					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-			nsName = nsName
-					.substring(
-							0,
-							nsName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) + 1);
+			nsPrefix = lastWord.substring(0, lastWord.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+			nsName = nsName.substring(0, nsName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) + 1);
 
 			try {
-				namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule,
-						offset, null, null);
+				namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule, offset, null, null);
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -119,17 +108,14 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 			currentNS = null;
 			try {
 				if (sourceModule.getElementAt(offset) != null) {
-					IType type = (IType) sourceModule.getElementAt(offset)
-							.getAncestor(IModelElement.TYPE);
+					IType type = (IType) sourceModule.getElementAt(offset).getAncestor(IModelElement.TYPE);
 					if (type != null && type.getParent() instanceof IType) {
 						type = (IType) type.getParent();
 					}
 					if (type != null && (PHPFlags.isNamespace(type.getFlags()))) {
 						currentNS = type;
-						fullName = NamespaceReference.NAMESPACE_SEPARATOR
-								+ currentNS.getElementName()
-								+ NamespaceReference.NAMESPACE_SEPARATOR
-								+ lastWord;
+						fullName = NamespaceReference.NAMESPACE_SEPARATOR + currentNS.getElementName()
+								+ NamespaceReference.NAMESPACE_SEPARATOR + lastWord;
 					} else {
 
 					}
@@ -141,19 +127,17 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 				if (nsPrefix == null) {
 					nsPrefix = currentNS.getElementName();
 				} else {
-					nsPrefix = currentNS.getElementName()
-							+ NamespaceReference.NAMESPACE_SEPARATOR + nsPrefix;
+					nsPrefix = currentNS.getElementName() + NamespaceReference.NAMESPACE_SEPARATOR + nsPrefix;
 				}
 			}
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
-				.getScriptProject());
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 		if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			fullName = fullName.substring(1);
 		}
-		possibleNamespaces = PhpModelAccess.getDefault().findNamespaces(null,
-				fullName, MatchRule.PREFIX, 0, 0, scope, null);
+		possibleNamespaces = PhpModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.PREFIX, 0, 0, scope,
+				null);
 	}
 
 	/**
@@ -200,18 +184,15 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
-		// Check that there's no other (whitespace) characters
-		// after the namespace separator, otherwise there's no reason
-		// to retrieve the next region.
-				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER
-						.length()) {
+				// Check that there's no other (whitespace) characters
+				// after the namespace separator, otherwise there's no reason
+				// to retrieve the next region.
+				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER.length()) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
-					.getEnd());
+			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
 			// Also check that we only retrieve PHP labels.
 			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
-				return getRegionCollection().getStartOffset()
-						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}
 		}
 		return super.getPrefixEnd();

@@ -36,8 +36,7 @@ import org.eclipse.php.internal.core.typeinference.context.FileContext;
  */
 public class InUseTraitStrategy extends AbstractCompletionStrategy {
 
-	public InUseTraitStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public InUseTraitStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -56,18 +55,14 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 		ISourceModule sourceModule = abstractContext.getSourceModule();
 		List<String> useTypes = abstractContext.getUseTypes();
 		String prefix = abstractContext.getPrefix();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
-		FileContext fileContext = new FileContext(sourceModule,
-				moduleDeclaration, offset);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		FileContext fileContext = new FileContext(sourceModule, moduleDeclaration, offset);
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		for (String useType : useTypes) {
 			if (useType.trim().toLowerCase().startsWith(prefix.toLowerCase())) {
 
-				IEvaluatedType type = PHPClassType.fromTraitName(useType,
-						sourceModule, offset);
-				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
-						type, fileContext, offset);
+				IEvaluatedType type = PHPClassType.fromTraitName(useType, sourceModule, offset);
+				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, fileContext, offset);
 				if (modelElements != null) {
 					for (IType typeElement : modelElements) {
 						reporter.reportType(typeElement, "", replacementRange, //$NON-NLS-1$

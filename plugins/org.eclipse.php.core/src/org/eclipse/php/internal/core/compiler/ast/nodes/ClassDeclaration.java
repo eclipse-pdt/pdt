@@ -28,28 +28,23 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * <pre>
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * class MyClass { },
- * class MyClass extends SuperClass implements Interface1, Interface2 {
- *   const MY_CONSTANT = 3;
- *   public static final $myVar = 5, $yourVar;
- *   var $anotherOne;
- *   private function myFunction($a) { }
- * }
+ * class MyClass { }, class MyClass extends SuperClass implements Interface1,
+ * Interface2 { const MY_CONSTANT = 3; public static final $myVar = 5, $yourVar;
+ * var $anotherOne; private function myFunction($a) { } }
  */
-public class ClassDeclaration extends TypeDeclaration implements
-		IPHPDocAwareDeclaration, IRecoverable {
+public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable {
 
 	private PHPDocBlock phpDoc;
 	private TypeReference superClass;
 	private List<TypeReference> interfaceList;
 	private boolean isRecovered;
 
-	public ClassDeclaration(int start, int end, int nameStart, int nameEnd,
-			int modifier, String className, TypeReference superClass,
-			List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
+	public ClassDeclaration(int start, int end, int nameStart, int nameEnd, int modifier, String className,
+			TypeReference superClass, List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
 		super(className, nameStart, nameEnd, start, end);
 
 		setModifiers(modifier);
@@ -138,13 +133,11 @@ public class ClassDeclaration extends TypeDeclaration implements
 	}
 
 	public final void addSuperClass(ASTNode expression) {
-		throw new IllegalStateException(
-				"Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
+		throw new IllegalStateException("Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
 	}
 
 	public final void setSuperClasses(ASTListNode exprList) {
-		throw new IllegalStateException(
-				"Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
+		throw new IllegalStateException("Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
 	}
 
 	public PHPDocBlock getPHPDoc() {
@@ -155,15 +148,22 @@ public class ClassDeclaration extends TypeDeclaration implements
 		return ASTNodeKinds.CLASS_DECLARATION;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered
+	 * ()
 	 */
 	public boolean isRecovered() {
 		return isRecovered;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#setRecovered(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#
+	 * setRecovered(boolean)
 	 */
 	public void setRecovered(boolean isRecovered) {
 		this.isRecovered = isRecovered;

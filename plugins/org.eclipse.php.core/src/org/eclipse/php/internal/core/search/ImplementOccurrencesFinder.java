@@ -46,8 +46,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 			fIdentifier = (Identifier) node;
 			StructuralPropertyDescriptor locationInParent;
 			if (fIdentifier.getParent() instanceof NamespaceName) {
-				locationInParent = fIdentifier.getParent()
-						.getLocationInParent();
+				locationInParent = fIdentifier.getParent().getLocationInParent();
 			} else {
 				locationInParent = fIdentifier.getLocationInParent();
 			}
@@ -58,15 +57,13 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 				return "ImplementOccurrencesFinder_invalidTarget"; //$NON-NLS-1$
 			}
 			IBinding resolvedBinding = fIdentifier.resolveBinding();
-			if (resolvedBinding == null
-					|| !(resolvedBinding instanceof ITypeBinding)) {
+			if (resolvedBinding == null || !(resolvedBinding instanceof ITypeBinding)) {
 				return "ImplementOccurrencesFinder_invalidTarget"; //$NON-NLS-1$
 			} else {
 				fBinding = (ITypeBinding) resolvedBinding;
 			}
 			if (fIdentifier.getParent() instanceof NamespaceName) {
-				fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent()
-						.getParent();
+				fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent().getParent();
 			} else {
 				fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent();
 			}
@@ -86,38 +83,30 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	@Override
 	protected void findOccurrences() {
-		fDescription = Messages
-				.format(
-						CoreMessages.getString("ImplementOccurrencesFinder.3"), fIdentifier.getName()); //$NON-NLS-1$
+		fDescription = Messages.format(CoreMessages.getString("ImplementOccurrencesFinder.3"), fIdentifier.getName()); //$NON-NLS-1$
 		fTypeDeclaration.accept(this);
-		fResult.add(new OccurrenceLocation(fIdentifier.getStart(), fIdentifier
-				.getLength(), getOccurrenceType(fIdentifier), fDescription));
+		fResult.add(new OccurrenceLocation(fIdentifier.getStart(), fIdentifier.getLength(),
+				getOccurrenceType(fIdentifier), fDescription));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse
-	 * .php.internal.core.ast.nodes.MethodDeclaration)
+	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * eclipse .php.internal.core.ast.nodes.MethodDeclaration)
 	 */
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
-		if (methodBinding != null
-				&& !PHPFlags.isStatic(methodBinding.getModifiers())) {
-			IMethodBinding method = Bindings.findOverriddenMethodInHierarchy(
-					fBinding, methodBinding);
+		if (methodBinding != null && !PHPFlags.isStatic(methodBinding.getModifiers())) {
+			IMethodBinding method = Bindings.findOverriddenMethodInHierarchy(fBinding, methodBinding);
 			if (method != null) {
-				Identifier name = methodDeclaration.getFunction()
-						.getFunctionName();
-				fResult.add(new OccurrenceLocation(name.getStart(), name
-						.getLength(), 0, fDescription));
+				Identifier name = methodDeclaration.getFunction().getFunctionName();
+				fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), 0, fDescription));
 			}
 		}
 		return super.visit(methodDeclaration);

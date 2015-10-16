@@ -84,16 +84,14 @@ public class FileNetworkUtility {
 	 *            Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTree buildReferencingFilesTree(ISourceModule file,
-			IProgressMonitor monitor) {
+	public static ReferenceTree buildReferencingFilesTree(ISourceModule file, IProgressMonitor monitor) {
 
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
 
 		Node root = new Node(file);
 
-		internalBuildReferencingFilesTree(root, processedFiles,
-				new HashMap<IModelElement, IField[]>(), monitor);
+		internalBuildReferencingFilesTree(root, processedFiles, new HashMap<IModelElement, IField[]>(), monitor);
 
 		return new ReferenceTree(root);
 	}
@@ -104,33 +102,27 @@ public class FileNetworkUtility {
 		}
 		if (file instanceof ExternalSourceModule) {
 			try {
-				IProjectFragment fileFragment = ((ExternalSourceModule) file)
-						.getProjectFragment();
+				IProjectFragment fileFragment = ((ExternalSourceModule) file).getProjectFragment();
 				List<IModelElement> scopeElements = new LinkedList<IModelElement>();
 				scopeElements.add(fileFragment);
 
-				IScriptProject[] scriptProjects = ModelManager
-						.getModelManager().getModel().getScriptProjects();
+				IScriptProject[] scriptProjects = ModelManager.getModelManager().getModel().getScriptProjects();
 				for (IScriptProject scriptProject : scriptProjects) {
-					for (IProjectFragment fragment : scriptProject
-							.getProjectFragments()) {
+					for (IProjectFragment fragment : scriptProject.getProjectFragments()) {
 						if (fragment.equals(fileFragment)) {
 							scopeElements.add(scriptProject);
 						}
 					}
 				}
-				return SearchEngine.createSearchScope(scopeElements
-						.toArray(new IModelElement[scopeElements.size()]),
-						IDLTKSearchScope.SOURCES, PHPLanguageToolkit
-								.getDefault());
+				return SearchEngine.createSearchScope(scopeElements.toArray(new IModelElement[scopeElements.size()]),
+						IDLTKSearchScope.SOURCES, PHPLanguageToolkit.getDefault());
 			} catch (ModelException e) {
 				return null;
 			}
 		}
 
 		IScriptProject scriptProject = file.getScriptProject();
-		IProject[] referencingProjects = scriptProject.getProject()
-				.getReferencingProjects();
+		IProject[] referencingProjects = scriptProject.getProject().getReferencingProjects();
 		ArrayList<IScriptProject> scopeProjects = new ArrayList<IScriptProject>();
 		scopeProjects.add(scriptProject);
 		for (IProject referencingProject : referencingProjects) {
@@ -138,13 +130,12 @@ public class FileNetworkUtility {
 				scopeProjects.add(DLTKCore.create(referencingProject));
 			}
 		}
-		return SearchEngine.createSearchScope((IScriptProject[]) scopeProjects
-				.toArray(new IScriptProject[scopeProjects.size()]),
+		return SearchEngine.createSearchScope(
+				(IScriptProject[]) scopeProjects.toArray(new IScriptProject[scopeProjects.size()]),
 				IDLTKSearchScope.SOURCES, PHPLanguageToolkit.getDefault());
 	}
 
-	private static void internalBuildReferencingFilesTree(Node root,
-			Set<ISourceModule> processedFiles,
+	private static void internalBuildReferencingFilesTree(Node root, Set<ISourceModule> processedFiles,
 			Map<IModelElement, IField[]> includesCache, IProgressMonitor monitor) {
 
 		if (monitor != null && monitor.isCanceled()) {
@@ -157,21 +148,19 @@ public class FileNetworkUtility {
 			return;
 		}
 
-		IModelElement parentElement = (file instanceof ExternalSourceModule) ? ((ExternalSourceModule) file)
-				.getProjectFragment() : file.getScriptProject();
+		IModelElement parentElement = (file instanceof ExternalSourceModule)
+				? ((ExternalSourceModule) file).getProjectFragment() : file.getScriptProject();
 
 		IField[] includes = includesCache.get(parentElement);
 		if (includes == null) {
-			includes = PhpModelAccess.getDefault().findIncludes(null,
-					MatchRule.PREFIX, scope, monitor);
+			includes = PhpModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX, scope, monitor);
 			includesCache.put(parentElement, includes);
 		}
 
 		for (IField include : includes) {
 			String filePath = ((IncludeField) include).getFilePath();
 			String lastSegment = filePath;
-			int i = Math.max(filePath.lastIndexOf('/'),
-					filePath.lastIndexOf('\\'));
+			int i = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 			if (i > 0) {
 				lastSegment = lastSegment.substring(i + 1);
 			}
@@ -187,8 +176,7 @@ public class FileNetworkUtility {
 
 			// If this is the correct include (that means that included file is
 			// the original file):
-			if (file.equals(testFile)
-					&& !processedFiles.contains(referencingFile)) {
+			if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
 				processedFiles.add(referencingFile);
 				Node node = new Node(referencingFile);
 				root.addChild(node);
@@ -198,8 +186,7 @@ public class FileNetworkUtility {
 		Collection<Node> children = root.getChildren();
 		if (children != null) {
 			for (Node child : children) {
-				internalBuildReferencingFilesTree(child, processedFiles,
-						includesCache, monitor);
+				internalBuildReferencingFilesTree(child, processedFiles, includesCache, monitor);
 			}
 		}
 	}
@@ -214,8 +201,7 @@ public class FileNetworkUtility {
 	 *            Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTree buildReferencedFilesTree(ISourceModule file,
-			IProgressMonitor monitor) {
+	public static ReferenceTree buildReferencedFilesTree(ISourceModule file, IProgressMonitor monitor) {
 
 		return buildReferencedFilesTree(file, null, monitor);
 	}
@@ -232,8 +218,8 @@ public class FileNetworkUtility {
 	 *            Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTree buildReferencedFilesTree(ISourceModule file,
-			Map<ISourceModule, Node> cachedTrees, IProgressMonitor monitor) {
+	public static ReferenceTree buildReferencedFilesTree(ISourceModule file, Map<ISourceModule, Node> cachedTrees,
+			IProgressMonitor monitor) {
 
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
@@ -242,8 +228,7 @@ public class FileNetworkUtility {
 		if (cachedTrees == null || (root = cachedTrees.get(file)) == null) {
 			root = new Node(file);
 			try {
-				internalBuildReferencedFilesTree(root, processedFiles,
-						cachedTrees, monitor);
+				internalBuildReferencedFilesTree(root, processedFiles, cachedTrees, monitor);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
@@ -251,15 +236,12 @@ public class FileNetworkUtility {
 		return new ReferenceTree(root);
 	}
 
-	private static void internalBuildReferencedFilesTree(final Node root,
-			Set<ISourceModule> processedFiles,
-			Map<ISourceModule, Node> cachedTrees, IProgressMonitor monitor)
-			throws CoreException {
+	private static void internalBuildReferencedFilesTree(final Node root, Set<ISourceModule> processedFiles,
+			Map<ISourceModule, Node> cachedTrees, IProgressMonitor monitor) throws CoreException {
 
 		ISourceModule sourceModule = root.getFile();
-		IField[] includes = PhpModelAccess.getDefault().findIncludes(null,
-				MatchRule.PREFIX, SearchEngine.createSearchScope(sourceModule),
-				monitor);
+		IField[] includes = PhpModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX,
+				SearchEngine.createSearchScope(sourceModule), monitor);
 
 		if (includes == null) {
 			return;
@@ -292,8 +274,7 @@ public class FileNetworkUtility {
 		}
 
 		for (Node child : nodesToBuild) {
-			internalBuildReferencedFilesTree(child, processedFiles,
-					cachedTrees, monitor);
+			internalBuildReferencedFilesTree(child, processedFiles, cachedTrees, monitor);
 		}
 	}
 
@@ -301,15 +282,14 @@ public class FileNetworkUtility {
 		return findSourceModule(from, path, null);
 	}
 
-	public static ISourceModule findSourceModule(ISourceModule from,
-			String path, Set<String> exclusiveFiles) {
+	public static ISourceModule findSourceModule(ISourceModule from, String path, Set<String> exclusiveFiles) {
 		ISourceModule sourceModule = null;
 
 		IProject currentProject = from.getScriptProject().getProject();
 		String currentScriptDir = from.getParent().getPath().toString();
 		String currentWorkingDir = currentScriptDir; // currentProject.getFullPath().toString();
-		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir,
-				currentScriptDir, currentProject, exclusiveFiles);
+		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir, currentScriptDir, currentProject,
+				exclusiveFiles);
 
 		if (result instanceof ResourceResult) {
 			// workspace file
@@ -338,8 +318,7 @@ public class FileNetworkUtility {
 					moduleName = path.substring(i + 1);
 				}
 				for (IProjectFragment projectFragment : projectFragments) {
-					IScriptFolder scriptFolder = projectFragment
-							.getScriptFolder(folderPath);
+					IScriptFolder scriptFolder = projectFragment.getScriptFolder(folderPath);
 					if (scriptFolder != null) {
 						sourceModule = scriptFolder.getSourceModule(moduleName);
 						if (sourceModule != null) {

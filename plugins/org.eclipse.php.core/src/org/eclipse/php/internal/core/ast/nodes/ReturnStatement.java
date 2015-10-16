@@ -21,8 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represent a return statement
- * <pre>e.g.<pre> return;
- * return $a;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * return; return $a;
  */
 public class ReturnStatement extends Statement {
 
@@ -31,22 +35,21 @@ public class ReturnStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(ReturnStatement.class, "expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(ReturnStatement.class,
+			"expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
+	}
+
 	public ReturnStatement(int start, int end, AST ast) {
 		this(start, end, ast, null);
 	}
@@ -57,7 +60,7 @@ public class ReturnStatement extends Statement {
 
 	public ReturnStatement(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
-		
+
 		if (expr != null) {
 			setExpression(expr);
 		}
@@ -69,7 +72,7 @@ public class ReturnStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		if (expression != null) {
@@ -110,7 +113,7 @@ public class ReturnStatement extends Statement {
 	 * Returns the expression of this return statement.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return expression;
 	}
@@ -121,25 +124,27 @@ public class ReturnStatement extends Statement {
 	public Expression getExpr() {
 		return expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this expression statement.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		ASTNode oldChild = this.expression;
 		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 		this.expression = expression;
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -153,7 +158,7 @@ public class ReturnStatement extends Statement {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

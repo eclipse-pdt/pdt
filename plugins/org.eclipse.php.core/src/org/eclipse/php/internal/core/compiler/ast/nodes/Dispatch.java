@@ -18,13 +18,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represents a base class for method invocation and field access
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * $a->$b,
- * foo()->bar(),
- * $myClass->foo()->bar(),
- * A::$a->foo()
+ * $a->$b, foo()->bar(), $myClass->foo()->bar(), A::$a->foo()
  */
 public abstract class Dispatch extends Expression {
 

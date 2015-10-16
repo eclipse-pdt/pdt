@@ -30,6 +30,7 @@ import java.util.List;
 public class PHPDocThrowsStartContext extends AbstractPHPDocTagStartContext {
 
 	public static List<String> TAGS = new ArrayList<String>();
+
 	static {
 		TAGS.add("throws"); //$NON-NLS-1$
 	}

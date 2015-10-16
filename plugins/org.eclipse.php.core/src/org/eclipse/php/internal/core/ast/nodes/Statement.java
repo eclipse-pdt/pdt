@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 /**
- * This is the base class for all statements in the PHP AST tree 
+ * This is the base class for all statements in the PHP AST tree
  */
 public abstract class Statement extends ASTNode {
 

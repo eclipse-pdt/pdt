@@ -23,8 +23,7 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
-public abstract class AbstractPHPSourceParser extends AbstractSourceParser
-		implements ISourceParser {
+public abstract class AbstractPHPSourceParser extends AbstractSourceParser implements ISourceParser {
 	private String fileName;
 
 	public AbstractPHPSourceParser(String fileName) {
@@ -35,14 +34,10 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		this(null);
 	}
 
-	public IModuleDeclaration parse(IModuleSource input,
-			IProblemReporter reporter) {
+	public IModuleDeclaration parse(IModuleSource input, IProblemReporter reporter) {
 		try {
-			return parse(
-					new CharArrayReader(input.getContentsAsCharArray()),
-					reporter,
-					ProjectOptions.useShortTags(input.getModelElement()
-							.getScriptProject().getProject()));
+			return parse(new CharArrayReader(input.getContentsAsCharArray()), reporter,
+					ProjectOptions.useShortTags(input.getModelElement().getScriptProject().getProject()));
 		} catch (Exception e) {
 			Logger.logException(e);
 			// XXX: add recovery
@@ -51,8 +46,8 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 
 	}
 
-	public abstract IModuleDeclaration parse(Reader in,
-			IProblemReporter reporter, boolean useShortTags) throws Exception;
+	public abstract IModuleDeclaration parse(Reader in, IProblemReporter reporter, boolean useShortTags)
+			throws Exception;
 
 	protected IModuleDeclaration parse(AbstractASTParser parser) {
 		parser.setFileName(fileName);

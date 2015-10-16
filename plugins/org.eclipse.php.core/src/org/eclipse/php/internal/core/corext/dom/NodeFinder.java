@@ -50,8 +50,7 @@ public class NodeFinder extends ApplyAll {
 		NodeFinder finder = new NodeFinder(start, length);
 		root.accept(finder);
 		ASTNode result = finder.getCoveredNode();
-		if (result == null || result.getStart() != start
-				|| result.getLength() != length) {
+		if (result == null || result.getStart() != start || result.getLength() != length) {
 			return finder.getCoveringNode();
 		}
 		return result;

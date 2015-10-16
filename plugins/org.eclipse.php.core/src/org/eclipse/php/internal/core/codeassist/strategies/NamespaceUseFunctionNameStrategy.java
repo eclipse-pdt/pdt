@@ -27,8 +27,7 @@ import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceUseFunctionNameContext;
 
-public class NamespaceUseFunctionNameStrategy extends
-		AbstractCompletionStrategy {
+public class NamespaceUseFunctionNameStrategy extends AbstractCompletionStrategy {
 
 	public NamespaceUseFunctionNameStrategy(ICompletionContext context) {
 		super(context);
@@ -41,7 +40,7 @@ public class NamespaceUseFunctionNameStrategy extends
 		}
 
 		NamespaceUseFunctionNameContext concreteContext = (NamespaceUseFunctionNameContext) context;
-		String suffix = "";//$NON-NLS-1$ 
+		String suffix = "";//$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IMethod method : getMethods(concreteContext)) {
@@ -49,16 +48,14 @@ public class NamespaceUseFunctionNameStrategy extends
 		}
 	}
 
-	public IMethod[] getMethods(NamespaceUseFunctionNameContext context)
-			throws BadLocationException {
+	public IMethod[] getMethods(NamespaceUseFunctionNameContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IMethod method : ns.getMethods()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(
-							method.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
 						result.add(method);
 					}
 				}
@@ -80,8 +77,6 @@ public class NamespaceUseFunctionNameStrategy extends
 	}
 
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.DEFAULT
-				| ProposalExtraInfo.NO_INSERT_NAMESPACE
-				| ProposalExtraInfo.NO_INSERT_USE;
+		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.NO_INSERT_NAMESPACE | ProposalExtraInfo.NO_INSERT_USE;
 	}
 }

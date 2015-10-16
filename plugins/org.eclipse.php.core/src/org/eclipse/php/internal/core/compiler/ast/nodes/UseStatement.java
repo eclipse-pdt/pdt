@@ -49,18 +49,15 @@ public class UseStatement extends Statement {
 		this(start, end, parts, T_NONE);
 	}
 
-	public UseStatement(int start, int end, List<UsePart> parts,
-			int statementType) {
+	public UseStatement(int start, int end, List<UsePart> parts, int statementType) {
 		this(start, end, null, parts, statementType);
 	}
 
-	public UseStatement(int start, int end, FullyQualifiedReference namespace,
-			List<UsePart> parts) {
+	public UseStatement(int start, int end, FullyQualifiedReference namespace, List<UsePart> parts) {
 		this(start, end, namespace, parts, UseStatement.T_NONE);
 	}
 
-	public UseStatement(int start, int end, FullyQualifiedReference namespace,
-			List<UsePart> parts, int statementType) {
+	public UseStatement(int start, int end, FullyQualifiedReference namespace, List<UsePart> parts, int statementType) {
 		super(start, end);
 
 		assert parts != null;

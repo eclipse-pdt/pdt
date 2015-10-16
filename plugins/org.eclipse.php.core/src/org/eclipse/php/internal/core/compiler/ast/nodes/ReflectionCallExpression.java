@@ -17,15 +17,13 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class ReflectionCallExpression extends Expression implements
-		Dereferencable {
+public class ReflectionCallExpression extends Expression implements Dereferencable {
 
 	private Expression receiver;
 	private Expression name;
 	private CallArgumentsList args;
 
-	public ReflectionCallExpression(int start, int end, Expression receiver,
-			Expression name, CallArgumentsList args) {
+	public ReflectionCallExpression(int start, int end, Expression receiver, Expression name, CallArgumentsList args) {
 		super(start, end);
 
 		assert name != null;

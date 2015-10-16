@@ -79,8 +79,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	private List<String> descTexts;
 	private String trimmedDescText;
 
-	public PHPDocTag(int start, int end, int tagKind, String matchedTag,
-			String value, List<Scalar> texts) {
+	public PHPDocTag(int start, int end, int tagKind, String matchedTag, String value, List<Scalar> texts) {
 		super(start, end);
 		this.tagKind = tagKind;
 		this.matchedTag = matchedTag;
@@ -133,9 +132,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				if (text.trim().length() == 0) {
 					continue;
 				}
-				List<String> commentWords = Arrays
-						.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(text
-								.trim()));
+				List<String> commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(text.trim()));
 				commentWords = removeEmptyString(commentWords);
 				if (commentWords.size() <= wordsToSkip) {
 					wordsToSkip = wordsToSkip - commentWords.size();
@@ -162,8 +159,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		return result;
 	}
 
-	private String removeFirstWords(String text, List<String> commentWords,
-			int wordSize) {
+	private String removeFirstWords(String text, List<String> commentWords, int wordSize) {
 		for (int i = 0; i < wordSize; i++) {
 			int index = text.indexOf(commentWords.get(i));
 			text = text.substring(commentWords.get(i).length() + index);
@@ -191,8 +187,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		return i;
 	}
 
-	private void splitSingleTypeReference(TypeReference reference,
-			List<TypeReference> types) {
+	private void splitSingleTypeReference(TypeReference reference, List<TypeReference> types) {
 		String word = reference.getName();
 		int valueStart = reference.sourceStart();
 		int classStart = getClassStartIndex(word, 0);
@@ -200,8 +195,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 		while (classStart < classEnd) {
 			String className = word.substring(classStart, classEnd);
-			types.add(new TypeReference(valueStart + classStart, valueStart
-					+ classEnd, className));
+			types.add(new TypeReference(valueStart + classStart, valueStart + classEnd, className));
 
 			classStart = getClassStartIndex(word, classEnd);
 			classEnd = getClassEndIndex(word, classStart);
@@ -220,99 +214,73 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		// For all unsupported tags
 		int wordsToSkip = 0;
 
-		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS
-				|| tagKind == SEE) {
+		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS || tagKind == SEE) {
 
 			// Read first word
-			int wordStart = PHPTextSequenceUtilities
-					.readForwardSpaces(value, 0);
-			int wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
-					value, wordStart);
+			int wordStart = PHPTextSequenceUtilities.readForwardSpaces(value, 0);
+			int wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, wordStart);
 
 			if (tagKind == VAR && wordStart < wordEnd) {
 
 				String word = value.substring(wordStart, wordEnd);
 				if (word.charAt(0) == '$') {
-					variableReference = new VariableReference(valueStart
-							+ wordStart, valueStart + wordEnd, word);
+					variableReference = new VariableReference(valueStart + wordStart, valueStart + wordEnd, word);
 					allReferencesWithOrigOrder.add(variableReference);
 					wordsToSkip++;
 					// Read next word
-					wordStart = PHPTextSequenceUtilities.readForwardSpaces(
-							value, wordEnd);
-					wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
-							value, wordStart);
+					wordStart = PHPTextSequenceUtilities.readForwardSpaces(value, wordEnd);
+					wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, wordStart);
 				}
 			}
 			if (wordStart < wordEnd) {
 
 				String word = value.substring(wordStart, wordEnd);
-				singleTypeReference = new TypeReference(valueStart + wordStart,
-						valueStart + wordEnd, word);
+				singleTypeReference = new TypeReference(valueStart + wordStart, valueStart + wordEnd, word);
 				splitSingleTypeReference(singleTypeReference, typeReferences);
 				allReferencesWithOrigOrder.addAll(typeReferences);
 				wordsToSkip++;
 				// Read next word
-				wordStart = PHPTextSequenceUtilities.readForwardSpaces(value,
-						wordEnd);
-				wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
-						value, wordStart);
+				wordStart = PHPTextSequenceUtilities.readForwardSpaces(value, wordEnd);
+				wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, wordStart);
 			}
-			if (tagKind == VAR && variableReference == null
-					&& wordStart < wordEnd) {
+			if (tagKind == VAR && variableReference == null && wordStart < wordEnd) {
 
 				String word = value.substring(wordStart, wordEnd);
 				if (word.charAt(0) == '$') {
-					variableReference = new VariableReference(valueStart
-							+ wordStart, valueStart + wordEnd, word);
+					variableReference = new VariableReference(valueStart + wordStart, valueStart + wordEnd, word);
 					allReferencesWithOrigOrder.add(variableReference);
 					wordsToSkip++;
 				}
 			}
-		} else if (tagKind == PARAM || tagKind == PROPERTY
-				|| tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
+		} else if (tagKind == PARAM || tagKind == PROPERTY || tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
 
-			int firstWordStart = PHPTextSequenceUtilities.readForwardSpaces(
-					value, 0);
-			int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
-					value, firstWordStart);
+			int firstWordStart = PHPTextSequenceUtilities.readForwardSpaces(value, 0);
+			int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, firstWordStart);
 			if (firstWordStart < firstWordEnd) {
 
-				int secondWordStart = PHPTextSequenceUtilities
-						.readForwardSpaces(value, firstWordEnd);
-				int secondWordEnd = PHPTextSequenceUtilities
-						.readForwardUntilSpaces(value, secondWordStart);
+				int secondWordStart = PHPTextSequenceUtilities.readForwardSpaces(value, firstWordEnd);
+				int secondWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, secondWordStart);
 				if (secondWordStart < secondWordEnd) {
 
-					String firstWord = value.substring(firstWordStart,
-							firstWordEnd);
-					String secondWord = value.substring(secondWordStart,
-							secondWordEnd);
-					if (firstWord.charAt(0) == '$'
-							|| firstWord.startsWith("...$")) { //$NON-NLS-1$
-						variableReference = new VariableReference(valueStart
-								+ firstWordStart, valueStart + firstWordEnd,
-								firstWord);
-						singleTypeReference = new TypeReference(valueStart
-								+ secondWordStart, valueStart + secondWordEnd,
-								secondWord);
-						splitSingleTypeReference(singleTypeReference,
-								typeReferences);
+					String firstWord = value.substring(firstWordStart, firstWordEnd);
+					String secondWord = value.substring(secondWordStart, secondWordEnd);
+					if (firstWord.charAt(0) == '$' || firstWord.startsWith("...$")) { //$NON-NLS-1$
+						variableReference = new VariableReference(valueStart + firstWordStart,
+								valueStart + firstWordEnd, firstWord);
+						singleTypeReference = new TypeReference(valueStart + secondWordStart,
+								valueStart + secondWordEnd, secondWord);
+						splitSingleTypeReference(singleTypeReference, typeReferences);
 						allReferencesWithOrigOrder.add(variableReference);
 						allReferencesWithOrigOrder.addAll(typeReferences);
 						// The two words following the tag name were splitted
 						// into two references
 						wordsToSkip = 2;
-					} else if (secondWord.charAt(0) == '$'
-							|| secondWord.startsWith("...$")) { //$NON-NLS-1$
-						variableReference = new VariableReference(valueStart
-								+ secondWordStart, valueStart + secondWordEnd,
-								secondWord);
-						singleTypeReference = new TypeReference(valueStart
-								+ firstWordStart, valueStart + firstWordEnd,
+					} else if (secondWord.charAt(0) == '$' || secondWord.startsWith("...$")) { //$NON-NLS-1$
+						variableReference = new VariableReference(valueStart + secondWordStart,
+								valueStart + secondWordEnd, secondWord);
+						singleTypeReference = new TypeReference(valueStart + firstWordStart, valueStart + firstWordEnd,
 								firstWord);
-						splitSingleTypeReference(singleTypeReference,
-								typeReferences);
+						splitSingleTypeReference(singleTypeReference, typeReferences);
 						allReferencesWithOrigOrder.addAll(typeReferences);
 						allReferencesWithOrigOrder.add(variableReference);
 						// The two words following the tag name were splitted
@@ -399,8 +367,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	public boolean isValidParamTag() {
-		return tagKind == PARAM && singleTypeReference != null
-				&& variableReference != null;
+		return tagKind == PARAM && singleTypeReference != null && variableReference != null;
 	}
 
 	public boolean isValidVarTag() {

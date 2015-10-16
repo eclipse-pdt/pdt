@@ -66,8 +66,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	public IntHashtable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0)
-			throw new IllegalArgumentException(
-					"Illegal Capacity: " + initialCapacity); //$NON-NLS-1$
+			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity); //$NON-NLS-1$
 		if (loadFactor <= 0 || Float.isNaN(loadFactor))
 			throw new IllegalArgumentException("Illegal Load: " + loadFactor); //$NON-NLS-1$
 
@@ -227,7 +226,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		int hash = key;// .hashCode();
 		int index = (hash & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
-			if ((e.hash == hash) && e.key/* .equals( */== key/* ) */) {
+			if ((e.hash == hash) && e.key/* .equals( */ == key/* ) */) {
 				return true;
 			}
 		}
@@ -248,7 +247,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		int hash = key;// .hashCode();
 		int index = (hash & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
-			if ((e.hash == hash) && e.key/* .equals( */== key/* ) */) {
+			if ((e.hash == hash) && e.key/* .equals( */ == key/* ) */) {
 				return e.value;
 			}
 		}
@@ -407,8 +406,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			IntHashtable t = (IntHashtable) super.clone();
 			t.table = new Entry[table.length];
 			for (int i = table.length; i-- > 0;) {
-				t.table[i] = (table[i] != null) ? (Entry) table[i].clone()
-						: null;
+				t.table[i] = (table[i] != null) ? (Entry) table[i].clone() : null;
 			}
 			// t.keySet = null;
 			t.entrySet = null;
@@ -655,8 +653,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *             mapping represented by the Hashtable The key-value mappings
 	 *             are emitted in no particular order.
 	 */
-	private synchronized void writeObject(java.io.ObjectOutputStream s)
-			throws IOException {
+	private synchronized void writeObject(java.io.ObjectOutputStream s) throws IOException {
 		// Write out the length, threshold, loadfactor
 		s.defaultWriteObject();
 
@@ -677,8 +674,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	/**
 	 * Reconstitute the Hashtable from a stream (i.e., deserialize it).
 	 */
-	private synchronized void readObject(java.io.ObjectInputStream s)
-			throws IOException, ClassNotFoundException {
+	private synchronized void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException {
 		// Read in the length, threshold, and loadfactor
 		s.defaultReadObject();
 
@@ -724,8 +720,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		}
 
 		protected Object clone() {
-			return new Entry(hash, key, value, (next == null ? null
-					: (Entry) next.clone()));
+			return new Entry(hash, key, value, (next == null ? null : (Entry) next.clone()));
 		}
 
 		// Map.Entry Ops
@@ -752,9 +747,8 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 				return false;
 			IntMap.Entry e = (IntMap.Entry) o;
 
-			return (key == 0 ? e.getKey() == 0 : key/* .equals( */== e.getKey()/* ) */)
-					&& (value == null ? e.getValue() == null : value.equals(e
-							.getValue()));
+			return (key == 0 ? e.getKey() == 0 : key/* .equals( */ == e.getKey()/* ) */)
+					&& (value == null ? e.getValue() == null : value.equals(e.getValue()));
 		}
 
 		public int hashCode() {
@@ -762,7 +756,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		}
 
 		public String toString() {
-			return key/* .toString() */+ "=" + value.toString(); //$NON-NLS-1$
+			return key/* .toString() */ + "=" + value.toString(); //$NON-NLS-1$
 		}
 	}
 

@@ -21,8 +21,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
 import java_cup.runtime.Symbol;
 
-public class CompilerAstLexer
-		extends org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer {
+public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer {
 
 	private PHPDocBlock latestDocBlock;
 
@@ -42,8 +41,7 @@ public class CompilerAstLexer
 
 	protected void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition,
-				leftPosition + getTokenLength(), type);
+		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
 		getCommentList().add(comment);
 	}
 
@@ -89,8 +87,7 @@ public class CompilerAstLexer
 		case ParserConstants.T_PROTECTED:
 		case ParserConstants.T_PUBLIC:
 		case ParserConstants.T_TRAIT:
-			symbol.value = new PHPDocBlockSymbolPair((String) symbol.value,
-					latestDocBlock);
+			symbol.value = new PHPDocBlockSymbolPair((String) symbol.value, latestDocBlock);
 			break;
 		}
 

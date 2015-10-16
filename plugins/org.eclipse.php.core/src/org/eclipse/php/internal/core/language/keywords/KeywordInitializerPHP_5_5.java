@@ -24,8 +24,7 @@ public class KeywordInitializerPHP_5_5 extends KeywordInitializerPHP_5_4 {
 	public void initialize(Collection<KeywordData> list) {
 		super.initialize(list);
 
-		list.add(new KeywordData(
-				"yield", WHITESPACE_SUFFIX, 1, PHPKeywords.METHOD_BODY)); //$NON-NLS-1$
+		list.add(new KeywordData("yield", WHITESPACE_SUFFIX, 1, PHPKeywords.METHOD_BODY)); //$NON-NLS-1$
 		list.add(new KeywordData("finally", OPEN_BLOCK_SUFFIX, 2)); //$NON-NLS-1$
 
 		for (KeywordData k : list) {

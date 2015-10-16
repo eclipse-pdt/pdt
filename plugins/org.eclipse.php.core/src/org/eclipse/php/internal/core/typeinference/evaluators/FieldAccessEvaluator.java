@@ -44,8 +44,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
-	private IGoal[] produceNextSubgoal(IGoal previousGoal,
-			IEvaluatedType previousResult, GoalState goalState) {
+	private IGoal[] produceNextSubgoal(IGoal previousGoal, IEvaluatedType previousResult, GoalState goalState) {
 
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		Expression expression = (Expression) typedGoal.getExpression();
@@ -83,8 +82,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 				state = STATE_GOT_RECEIVER;
 			} else {
 				state = STATE_WAITING_RECEIVER;
-				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-						receiver) };
+				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), receiver) };
 			}
 		}
 
@@ -101,36 +99,28 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		// (using PHPDoc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_FIELD_PHPDOC;
-			TypeContext typeContext = new TypeContext(
-					(ISourceModuleContext) goal.getContext(), receiverType);
+			TypeContext typeContext = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
 			if (goal.getContext() instanceof IModelCacheContext) {
-				typeContext.setCache(((IModelCacheContext) goal.getContext())
-						.getCache());
+				typeContext.setCache(((IModelCacheContext) goal.getContext()).getCache());
 			}
-			return new IGoal[] { new PHPDocClassVariableGoal(typeContext,
-					variableName, offset) };
+			return new IGoal[] { new PHPDocClassVariableGoal(typeContext, variableName, offset) };
 		}
 
 		if (state == STATE_WAITING_FIELD_PHPDOC) {
-			if (goalState != GoalState.PRUNED && previousResult != null
-					&& previousResult != UnknownType.INSTANCE) {
+			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 				return null;
 			}
 			state = STATE_WAITING_FIELD;
-			TypeContext typeContext = new TypeContext(
-					(ISourceModuleContext) goal.getContext(), receiverType);
+			TypeContext typeContext = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
 			if (goal.getContext() instanceof IModelCacheContext) {
-				typeContext.setCache(((IModelCacheContext) goal.getContext())
-						.getCache());
+				typeContext.setCache(((IModelCacheContext) goal.getContext()).getCache());
 			}
-			return new IGoal[] { new ClassVariableDeclarationGoal(typeContext,
-					variableName) };
+			return new IGoal[] { new ClassVariableDeclarationGoal(typeContext, variableName) };
 		}
 
 		if (state == STATE_WAITING_FIELD) {
-			if (goalState != GoalState.PRUNED && previousResult != null
-					&& previousResult != UnknownType.INSTANCE) {
+			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 			}
 		}
@@ -151,8 +141,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		IGoal[] goals = produceNextSubgoal(subgoal, (IEvaluatedType) result,
-				state);
+		IGoal[] goals = produceNextSubgoal(subgoal, (IEvaluatedType) result, state);
 		if (goals != null) {
 			return goals;
 		}

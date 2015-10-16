@@ -23,27 +23,23 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * Represents function invocation. Holds the function name and the invocation
  * parameters.
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * foo(),
- * $a(),
- * foo($a, 'a', 12)
+ * foo(), $a(), foo($a, 'a', 12)
  */
 public class FunctionInvocation extends VariableBase {
 
 	private FunctionName functionName;
-	private final ASTNode.NodeList<Expression> parameters = new ASTNode.NodeList<Expression>(
-			PARAMETERS_PROPERTY);
+	private final ASTNode.NodeList<Expression> parameters = new ASTNode.NodeList<Expression>(PARAMETERS_PROPERTY);
 	/**
 	 * The "expressions" structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor FUNCTION_PROPERTY = new ChildPropertyDescriptor(
-			FunctionInvocation.class,
-			"functionName", FunctionName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+			FunctionInvocation.class, "functionName", FunctionName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor PARAMETERS_PROPERTY = new ChildListPropertyDescriptor(
-			FunctionInvocation.class,
-			"parameters", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+			FunctionInvocation.class, "parameters", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -52,15 +48,13 @@ public class FunctionInvocation extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(FUNCTION_PROPERTY);
 		propertyList.add(PARAMETERS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	private FunctionInvocation(int start, int end, AST ast,
-			FunctionName functionName, Expression[] parameters) {
+	private FunctionInvocation(int start, int end, AST ast, FunctionName functionName, Expression[] parameters) {
 		super(start, end, ast);
 
 		if (functionName == null || parameters == null) {
@@ -77,11 +71,9 @@ public class FunctionInvocation extends VariableBase {
 		super(ast);
 	}
 
-	public FunctionInvocation(int start, int end, AST ast,
-			FunctionName functionName, List parameters) {
-		this(start, end, ast, functionName, parameters == null ? null
-				: (Expression[]) parameters.toArray(new Expression[parameters
-						.size()]));
+	public FunctionInvocation(int start, int end, AST ast, FunctionName functionName, List parameters) {
+		this(start, end, ast, functionName,
+				parameters == null ? null : (Expression[]) parameters.toArray(new Expression[parameters.size()]));
 	}
 
 	public void accept0(Visitor visitor) {
@@ -166,8 +158,7 @@ public class FunctionInvocation extends VariableBase {
 		postReplaceChild(oldChild, functionname, FUNCTION_PROPERTY);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FUNCTION_PROPERTY) {
 			if (get) {
 				return getFunctionName();
@@ -212,17 +203,14 @@ public class FunctionInvocation extends VariableBase {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final FunctionName function = ASTNode.copySubtree(target,
-				getFunctionName());
+		final FunctionName function = ASTNode.copySubtree(target, getFunctionName());
 		final List params = ASTNode.copySubtrees(target, parameters());
-		final FunctionInvocation result = new FunctionInvocation(getStart(),
-				getEnd(), target, function, params);
+		final FunctionInvocation result = new FunctionInvocation(getStart(), getEnd(), target, function, params);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

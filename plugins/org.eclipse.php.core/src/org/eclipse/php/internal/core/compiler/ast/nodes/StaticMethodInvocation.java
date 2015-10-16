@@ -21,7 +21,8 @@ import org.eclipse.dltk.ast.references.SimpleReference;
  * Represents static function invocation. Holds the function invocation and the
  * class name.
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
  * MyClass::foo($a)
@@ -32,25 +33,21 @@ public class StaticMethodInvocation extends PHPCallExpression {
 	 */
 	private Expression functionName;
 
-	public StaticMethodInvocation(ASTNode receiver, String name,
-			CallArgumentsList args) {
+	public StaticMethodInvocation(ASTNode receiver, String name, CallArgumentsList args) {
 		super(receiver, name, args);
 	}
 
-	public StaticMethodInvocation(int start, int end, ASTNode receiver,
-			Expression functionName, SimpleReference name,
+	public StaticMethodInvocation(int start, int end, ASTNode receiver, Expression functionName, SimpleReference name,
 			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 		this.functionName = functionName;
 	}
 
-	public StaticMethodInvocation(int start, int end, ASTNode receiver,
-			SimpleReference name, CallArgumentsList args) {
+	public StaticMethodInvocation(int start, int end, ASTNode receiver, SimpleReference name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
 
-	public StaticMethodInvocation(int start, int end, ASTNode receiver,
-			String name, CallArgumentsList args) {
+	public StaticMethodInvocation(int start, int end, ASTNode receiver, String name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
 

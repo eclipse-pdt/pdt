@@ -43,10 +43,8 @@ public class PHPTextSequenceUtilities {
 	private static final String START_BLOCK_COMMENT = "/*"; //$NON-NLS-1$
 
 	private static final char END_LINE = '\n';
-	private static final Pattern FUNCTION_PATTERN = Pattern
-			.compile("function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-	private static final Pattern CLASS_PATTERN = Pattern
-			.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private static final String LBRACE = "{"; //$NON-NLS-1$
 	private static final String RBRACE = "}"; //$NON-NLS-1$
@@ -77,14 +75,12 @@ public class PHPTextSequenceUtilities {
 	 * 
 	 * @return text sequence of the statement, cannot be null
 	 */
-	public static TextSequence getStatement(int offset,
-			IStructuredDocumentRegion sdRegion, boolean removeComments) {
+	public static TextSequence getStatement(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
 		}
-		ITextRegion tRegion = sdRegion
-				.getRegionAtCharacterOffset(documentOffset);
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
 
 		ITextRegionCollection container = sdRegion;
 
@@ -92,22 +88,18 @@ public class PHPTextSequenceUtilities {
 			container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		if (tRegion != null
-				&& tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = container.getRegionAtCharacterOffset(
-					container.getStartOffset() + tRegion.getStart() - 1);
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			tRegion = container.getRegionAtCharacterOffset(container.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
-		if (tRegion != null
-				&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 
 			try {
 				// Set default starting position to the beginning of the
 				// PhpScriptRegion:
-				int startOffset = container.getStartOffset()
-						+ phpScriptRegion.getStart();
+				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
 
 				// Now, search backwards for the statement start (in this
 				// PhpScriptRegion):
@@ -115,8 +107,7 @@ public class PHPTextSequenceUtilities {
 				if (documentOffset == startOffset) {
 					startTokenRegion = phpScriptRegion.getPhpToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion
-							.getPhpToken(offset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
 				}
 				while (true) {
 					// If statement start is at the beginning of the PHP script
@@ -124,25 +115,20 @@ public class PHPTextSequenceUtilities {
 					if (startTokenRegion.getStart() == 0) {
 						break;
 					}
-					if (startTokenRegion
-							.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
-							|| startTokenRegion
-									.getType() == PHPRegionTypes.PHP_CURLY_OPEN
-							|| startTokenRegion
-									.getType() == PHPRegionTypes.PHP_SEMICOLON
+					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
 					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */) {
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
 						startOffset += startTokenRegion.getEnd();
 						break;
 					}
-					startTokenRegion = phpScriptRegion
-							.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
 				}
 
-				TextSequence textSequence = TextSequenceUtilities
-						.createTextSequence(sdRegion, startOffset,
-								offset - startOffset);
+				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset,
+						offset - startOffset);
 
 				// remove comments
 				if (removeComments) {
@@ -150,9 +136,7 @@ public class PHPTextSequenceUtilities {
 				}
 
 				// remove spaces from start.
-				textSequence = textSequence.subTextSequence(
-						readForwardSpaces(textSequence, 0),
-						textSequence.length());
+				textSequence = textSequence.subTextSequence(readForwardSpaces(textSequence, 0), textSequence.length());
 				return textSequence;
 			} catch (BadLocationException e) {
 			}
@@ -183,26 +167,20 @@ public class PHPTextSequenceUtilities {
 	 * 
 	 * @return text sequence region, cannot be null
 	 */
-	public static Region getStatementRegion(int offset,
-			IStructuredDocumentRegion sdRegion, boolean ignoreStartComments) {
+	public static Region getStatementRegion(int offset, IStructuredDocumentRegion sdRegion,
+			boolean ignoreStartComments) {
 		// temporary workaround to fix
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=472197
-		TextSequence textSequence = getStatement(offset, sdRegion,
-				ignoreStartComments);
-		return new Region(textSequence.getOriginalOffset(0),
-				textSequence.length());
+		TextSequence textSequence = getStatement(offset, sdRegion, ignoreStartComments);
+		return new Region(textSequence.getOriginalOffset(0), textSequence.length());
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
 		List<IRegion> comments = collectComments(textSequence);
 		for (int i = comments.size() - 1; i >= 0; i--) {
 			IRegion commentStartRegion = comments.get(i);
-			int end = Math.min(
-					commentStartRegion.getOffset()
-							+ commentStartRegion.getLength(),
-					textSequence.length());
-			textSequence = textSequence
-					.cutTextSequence(commentStartRegion.getOffset(), end);
+			int end = Math.min(commentStartRegion.getOffset() + commentStartRegion.getLength(), textSequence.length());
+			textSequence = textSequence.cutTextSequence(commentStartRegion.getOffset(), end);
 		}
 		return textSequence;
 	}
@@ -214,25 +192,18 @@ public class PHPTextSequenceUtilities {
 		int foundIndex = 0;
 		while ((foundIndex = buffer.indexOf("/", start)) != -1) { //$NON-NLS-1$
 			int commentStartPosition = foundIndex;
-			String currentType = TextSequenceUtilities.getType(textSequence,
-					commentStartPosition);
-			if (PHPPartitionTypes.isPHPCommentState(currentType)
-					&& !PHPPartitionTypes.isPHPQuotesState(currentType)
+			String currentType = TextSequenceUtilities.getType(textSequence, commentStartPosition);
+			if (PHPPartitionTypes.isPHPCommentState(currentType) && !PHPPartitionTypes.isPHPQuotesState(currentType)
 					&& commentStartPosition + 2 < textSequence.length()) {
-				String startCommentString = textSequence
-						.subSequence(commentStartPosition,
-								commentStartPosition + 2)
+				String startCommentString = textSequence.subSequence(commentStartPosition, commentStartPosition + 2)
 						.toString();
 				if (startCommentString.equals(START_BLOCK_COMMENT)) {
 					// we are inside comment.
-					Matcher commentEndMatcher = COMMENT_END_PATTERN
-							.matcher(textSequence);
-					boolean foundEnd = commentEndMatcher
-							.find(commentStartPosition);
+					Matcher commentEndMatcher = COMMENT_END_PATTERN.matcher(textSequence);
+					boolean foundEnd = commentEndMatcher.find(commentStartPosition);
 					if (foundEnd) {
 						int commentEndPosition = commentEndMatcher.end();
-						IRegion range = new Region(commentStartPosition,
-								commentEndPosition - commentStartPosition);
+						IRegion range = new Region(commentStartPosition, commentEndPosition - commentStartPosition);
 						commentRegions.add(range);
 						start = commentEndPosition;
 					} else {
@@ -243,10 +214,8 @@ public class PHPTextSequenceUtilities {
 					start = commentStartPosition + 2;
 					for (int commentEndPosition = start; commentEndPosition < textSequence
 							.length(); commentEndPosition++) {
-						if (textSequence
-								.charAt(commentEndPosition) == END_LINE) {
-							IRegion range = new Region(commentStartPosition,
-									commentEndPosition - commentStartPosition);
+						if (textSequence.charAt(commentEndPosition) == END_LINE) {
+							IRegion range = new Region(commentStartPosition, commentEndPosition - commentStartPosition);
 							commentRegions.add(range);
 							start = commentEndPosition;
 							break;
@@ -264,8 +233,7 @@ public class PHPTextSequenceUtilities {
 
 	public static int getMethodEndIndex(CharSequence textSequence, int offset) {
 		int length = textSequence.length();
-		while (offset < length
-				&& Character.isWhitespace(textSequence.charAt(offset))) {
+		while (offset < length && Character.isWhitespace(textSequence.charAt(offset))) {
 			++offset;
 		}
 		if (offset < length && textSequence.charAt(offset) == '(') {
@@ -276,8 +244,7 @@ public class PHPTextSequenceUtilities {
 		while (offset < length && textSequence.charAt(offset) != ')') {
 			++offset;
 		}
-		if (textSequence.length() > offset
-				&& textSequence.charAt(offset) == ')') {
+		if (textSequence.length() > offset && textSequence.charAt(offset) == ')') {
 			return offset + 1;
 		}
 		return -1;
@@ -293,37 +260,30 @@ public class PHPTextSequenceUtilities {
 		while (matcher.find()) {
 			// verify char before 'function' word.
 			int functionStart = matcher.start();
-			if (functionStart != 0 && Character.isJavaIdentifierStart(
-					textSequence.charAt(functionStart - 1))) {
+			if (functionStart != 0 && Character.isJavaIdentifierStart(textSequence.charAt(functionStart - 1))) {
 				continue;
 			}
 
 			// verfy state
-			String type = TextSequenceUtilities.getType(textSequence,
-					functionStart + 1);
+			String type = TextSequenceUtilities.getType(textSequence, functionStart + 1);
 			if (PHPPartitionTypes.isPHPRegularState(type)) {
 				// verify the function is not closed.
 				int offset;
 				boolean possibleReturnType = false;
 				boolean returnType = false;
-				for (offset = matcher.end(); offset < textSequence
-						.length(); offset++) {
+				for (offset = matcher.end(); offset < textSequence.length(); offset++) {
 					if (textSequence.charAt(offset) == ')') {
 						// verify state
-						type = TextSequenceUtilities.getType(textSequence,
-								offset);
+						type = TextSequenceUtilities.getType(textSequence, offset);
 						if (PHPPartitionTypes.isPHPRegularState(type)) {
 							possibleReturnType = true;
 						}
-					} else if ((possibleReturnType || returnType)
-							&& textSequence.charAt(offset) == '{') {
+					} else if ((possibleReturnType || returnType) && textSequence.charAt(offset) == '{') {
 						break;
-					} else if (possibleReturnType
-							&& textSequence.charAt(offset) == ':') {
+					} else if (possibleReturnType && textSequence.charAt(offset) == ':') {
 						possibleReturnType = false;
 						returnType = true;
-					} else if (possibleReturnType && !Character
-							.isWhitespace(textSequence.charAt(offset))) {
+					} else if (possibleReturnType && !Character.isWhitespace(textSequence.charAt(offset))) {
 						break;
 					}
 				}
@@ -341,23 +301,19 @@ public class PHPTextSequenceUtilities {
 		while (matcher.find()) {
 			// verify char before start.
 			int startOffset = matcher.start();
-			if (startOffset != 0 && Character.isJavaIdentifierStart(
-					textSequence.charAt(startOffset - 1))) {
+			if (startOffset != 0 && Character.isJavaIdentifierStart(textSequence.charAt(startOffset - 1))) {
 				continue;
 			}
 			// verify state
-			String type = TextSequenceUtilities.getType(textSequence,
-					startOffset + 1);
+			String type = TextSequenceUtilities.getType(textSequence, startOffset + 1);
 			if (PHPPartitionTypes.isPHPRegularState(type)) {
 				int endOffset = matcher.end();
 				// verify the class is not closed.
 				int offset;
-				for (offset = endOffset; offset < textSequence
-						.length(); offset++) {
+				for (offset = endOffset; offset < textSequence.length(); offset++) {
 					if (textSequence.charAt(offset) == '}') {
 						// verify state
-						type = TextSequenceUtilities.getType(textSequence,
-								offset);
+						type = TextSequenceUtilities.getType(textSequence, offset);
 						if (PHPPartitionTypes.isPHPRegularState(type)) {
 							break;
 						}
@@ -371,8 +327,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int readNamespaceStartIndex(CharSequence textSequence,
-			int startPosition, boolean includeDollar) {
+	public static int readNamespaceStartIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
 		boolean onBackslash = false;
 		boolean onWhitespace = false;
 		int oldStartPosition = startPosition;
@@ -401,13 +356,10 @@ public class PHPTextSequenceUtilities {
 			}
 			startPosition--;
 		}
-		if (includeDollar && startPosition > 0
-				&& textSequence.charAt(startPosition - 1) == '$') {
+		if (includeDollar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
 			startPosition--;
 		}
-		startPosition = startPosition >= 0
-				? readForwardSpaces(textSequence, startPosition)
-				: startPosition;
+		startPosition = startPosition >= 0 ? readForwardSpaces(textSequence, startPosition) : startPosition;
 		// FIXME bug 291970 i do not know if this is right or not
 		if (startPosition > oldStartPosition) {
 			startPosition = oldStartPosition;
@@ -415,14 +367,12 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 
-	public static int readNamespaceEndIndex(CharSequence textSequence,
-			int startPosition, boolean includeDollar) {
+	public static int readNamespaceEndIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
 		boolean onBackslash = false;
 		boolean onWhitespace = false;
 
 		int length = textSequence.length();
-		if (includeDollar && startPosition < length
-				&& textSequence.charAt(startPosition) == '$') {
+		if (includeDollar && startPosition < length && textSequence.charAt(startPosition) == '$') {
 			startPosition++;
 		}
 		while (startPosition < length) {
@@ -449,13 +399,10 @@ public class PHPTextSequenceUtilities {
 			}
 			startPosition++;
 		}
-		return startPosition >= 0
-				? readBackwardSpaces(textSequence, startPosition)
-				: startPosition;
+		return startPosition >= 0 ? readBackwardSpaces(textSequence, startPosition) : startPosition;
 	}
 
-	public static int readIdentifierStartIndex(CharSequence textSequence,
-			int startPosition, boolean includeDolar) {
+	public static int readIdentifierStartIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -463,18 +410,15 @@ public class PHPTextSequenceUtilities {
 			}
 			startPosition--;
 		}
-		if (includeDolar && startPosition > 0
-				&& textSequence.charAt(startPosition - 1) == '$') {
+		if (includeDolar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
 			startPosition--;
 		}
 		return startPosition;
 	}
 
-	public static int readIdentifierEndIndex(CharSequence textSequence,
-			int startPosition, boolean includeDolar) {
+	public static int readIdentifierEndIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
 		int length = textSequence.length();
-		if (includeDolar && startPosition < length
-				&& textSequence.charAt(startPosition) == '$') {
+		if (includeDolar && startPosition < length && textSequence.charAt(startPosition) == '$') {
 			startPosition++;
 		}
 		while (startPosition < length) {
@@ -487,26 +431,20 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 
-	public static int readIdentifierStartIndex(PHPVersion phpVersion,
-			CharSequence textSequence, int startPosition,
+	public static int readIdentifierStartIndex(PHPVersion phpVersion, CharSequence textSequence, int startPosition,
 			boolean includeDollar) {
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			return PHPTextSequenceUtilities.readIdentifierStartIndex(
-					textSequence, startPosition, includeDollar);
+			return PHPTextSequenceUtilities.readIdentifierStartIndex(textSequence, startPosition, includeDollar);
 		}
-		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence,
-				startPosition, includeDollar);
+		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence, startPosition, includeDollar);
 	}
 
-	public static int readIdentifierEndIndex(PHPVersion phpVersion,
-			CharSequence textSequence, int startPosition,
+	public static int readIdentifierEndIndex(PHPVersion phpVersion, CharSequence textSequence, int startPosition,
 			boolean includeDollar) {
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			return PHPTextSequenceUtilities.readIdentifierEndIndex(textSequence,
-					startPosition, includeDollar);
+			return PHPTextSequenceUtilities.readIdentifierEndIndex(textSequence, startPosition, includeDollar);
 		}
-		return PHPTextSequenceUtilities.readNamespaceEndIndex(textSequence,
-				startPosition, includeDollar);
+		return PHPTextSequenceUtilities.readNamespaceEndIndex(textSequence, startPosition, includeDollar);
 	}
 
 	/**
@@ -516,8 +454,7 @@ public class PHPTextSequenceUtilities {
 	 * @param pos
 	 * @return
 	 */
-	public static ISourceRange getEnclosingIdentifier(CharSequence textSequence,
-			int pos) {
+	public static ISourceRange getEnclosingIdentifier(CharSequence textSequence, int pos) {
 		if (pos < 0 || pos >= textSequence.length())
 			return null;
 
@@ -530,8 +467,7 @@ public class PHPTextSequenceUtilities {
 		return new SourceRange(start, end - start + 1);
 	}
 
-	public static int readBackwardSpaces(CharSequence textSequence,
-			int startPosition) {
+	public static int readBackwardSpaces(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv > 0; rv--) {
 			if (!Character.isWhitespace(textSequence.charAt(rv - 1))) {
@@ -541,8 +477,8 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardSpaces(IDocument document, int startPosition,
-			int endPosition) throws BadLocationException {
+	public static int readForwardSpaces(IDocument document, int startPosition, int endPosition)
+			throws BadLocationException {
 		int rv = startPosition;
 		for (; rv < endPosition; rv++) {
 			if (!Character.isWhitespace(document.getChar(rv))) {
@@ -552,8 +488,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardSpaces(CharSequence textSequence,
-			int startPosition) {
+	public static int readForwardSpaces(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			if (!Character.isWhitespace(textSequence.charAt(rv))) {
@@ -563,8 +498,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardUntilSpaces(CharSequence textSequence,
-			int startPosition) {
+	public static int readForwardUntilSpaces(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			if (Character.isWhitespace(textSequence.charAt(rv))) {
@@ -585,8 +519,7 @@ public class PHPTextSequenceUtilities {
 	 * @param delims
 	 *            - The array of delimiters
 	 */
-	public static int readForwardUntilDelim(CharSequence textSequence,
-			int startPosition, char[] delims) {
+	public static int readForwardUntilDelim(CharSequence textSequence, int startPosition, char[] delims) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			char c = textSequence.charAt(rv);
@@ -610,8 +543,7 @@ public class PHPTextSequenceUtilities {
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static int getPrivousTriggerIndex(CharSequence textSequence,
-			int startPosition) {
+	public static int getPrivousTriggerIndex(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		int bracketsNum = 0;
 		char inStringMode = 0;
@@ -620,8 +552,7 @@ public class PHPTextSequenceUtilities {
 		for (; rv > 0; rv--) {
 			char currChar = textSequence.charAt(rv - 1);
 			if (currChar == '\'' || currChar == '"') {
-				inStringMode = inStringMode == 0 ? currChar
-						: inStringMode == currChar ? 0 : inStringMode;
+				inStringMode = inStringMode == 0 ? currChar : inStringMode == currChar ? 0 : inStringMode;
 			}
 			if (inStringMode != 0) {
 				continue;
@@ -645,8 +576,8 @@ public class PHPTextSequenceUtilities {
 				inLiteral = false;
 			}
 
-			if (!Character.isLetterOrDigit(currChar) && currChar != '_'
-					&& currChar != '$' && !Character.isWhitespace(currChar)) {
+			if (!Character.isLetterOrDigit(currChar) && currChar != '_' && currChar != '$'
+					&& !Character.isWhitespace(currChar)) {
 				switch (currChar) {
 				case '(':
 				case '[':
@@ -689,8 +620,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int readIdentifierListStartIndex(CharSequence textSequence,
-			int endPosition) {
+	public static int readIdentifierListStartIndex(CharSequence textSequence, int endPosition) {
 		int startPosition = endPosition;
 		int listStartPosition = startPosition;
 		boolean beforeWhitespace = false;
@@ -730,24 +660,20 @@ public class PHPTextSequenceUtilities {
 	 * @param textSequence
 	 * @return
 	 */
-	public static String[] getArgNames(PHPVersion phpVersion,
-			CharSequence textSequence) {
+	public static String[] getArgNames(PHPVersion phpVersion, CharSequence textSequence) {
 		List<String> args = new ArrayList<String>();
 		if (textSequence != null && textSequence.length() > 2) {
 			if (textSequence.charAt(textSequence.length() - 1) == ')') {
-				textSequence = textSequence.subSequence(0,
-						textSequence.length() - 1);
+				textSequence = textSequence.subSequence(0, textSequence.length() - 1);
 			}
 			if (textSequence.charAt(0) == '(') {
-				textSequence = textSequence.subSequence(1,
-						textSequence.length());
+				textSequence = textSequence.subSequence(1, textSequence.length());
 			}
 			if (phpVersion == null) {
 				phpVersion = PHPVersion.getLatestVersion();
 			}
 
-			AbstractPhpLexer lexer = PhpLexerFactory.createLexer(
-					new StringReader(textSequence.toString()), phpVersion);
+			AbstractPhpLexer lexer = PhpLexerFactory.createLexer(new StringReader(textSequence.toString()), phpVersion);
 			lexer.initialize(lexer.getScriptingState());
 			String symbol = null;
 			int level = 0;
@@ -756,27 +682,21 @@ public class PHPTextSequenceUtilities {
 				try {
 					symbol = lexer.getNextToken();
 					if (symbol != null) {
-						CharSequence text = textSequence.subSequence(
-								lexer.getTokenStart(),
+						CharSequence text = textSequence.subSequence(lexer.getTokenStart(),
 								lexer.getTokenStart() + lexer.getLength());
 						if (symbol.equals(PHPRegionTypes.PHP_TOKEN)) {
-							if (text.equals(LPAREN) || text.equals(LBRACE)
-									|| text.equals(LBRACKET)) {
+							if (text.equals(LPAREN) || text.equals(LBRACE) || text.equals(LBRACKET)) {
 								level++;
-							} else
-								if (text.equals(RPAREN) || text.equals(RBRACE)
-										|| text.equals(RBRACKET)) {
+							} else if (text.equals(RPAREN) || text.equals(RBRACE) || text.equals(RBRACKET)) {
 								level--;
 							} else if (level == 0 && text.equals(COMMA)) {
 								argIndex++;
 							}
-						} else if (level == 0 && symbol.equals(
-								PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
+						} else if (level == 0 && symbol.equals(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
 							if (args.size() < argIndex + 1) {
 								args.add(text.toString());
 							}
-						} else if (level == 0
-								&& !symbol.equals(PHPRegionTypes.WHITESPACE)) {
+						} else if (level == 0 && !symbol.equals(PHPRegionTypes.WHITESPACE)) {
 							if (args.size() < argIndex + 1) {
 								args.add(null);
 							} else {
@@ -809,14 +729,12 @@ public class PHPTextSequenceUtilities {
 		if (charAt == '-') {
 			insert = String.valueOf('>');
 		} else if (charAt == ':') {
-			if (statementPosition > 0
-					&& statement.charAt(statementPosition - 1) == ':') {
+			if (statementPosition > 0 && statement.charAt(statementPosition - 1) == ':') {
 				return null;
 			}
 			insert = String.valueOf(':');
 		} else {
-			statementPosition = PHPTextSequenceUtilities
-					.readBackwardSpaces(statement, statementPosition);
+			statementPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statementPosition);
 			switch (statement.charAt(statementPosition)) {
 			case '}':
 			case ')':
@@ -827,15 +745,11 @@ public class PHPTextSequenceUtilities {
 			case ':':
 				return null;
 			default:
-				int identStart = PHPTextSequenceUtilities
-						.readIdentifierStartIndex(statement, statementPosition,
-								true);
-				if (statement.charAt(identStart) == '$'
-						|| statement.charAt(identStart) == '}') {
+				int identStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, statementPosition, true);
+				if (statement.charAt(identStart) == '$' || statement.charAt(identStart) == '}') {
 					insert = OBJECT_OPERATOR;
 				} else {
-					identStart = PHPTextSequenceUtilities
-							.readBackwardSpaces(statement, identStart - 1);
+					identStart = PHPTextSequenceUtilities.readBackwardSpaces(statement, identStart - 1);
 					if (identStart > 1 && statement.charAt(identStart) == '>'
 							&& statement.charAt(identStart - 1) == '-') {
 						insert = OBJECT_OPERATOR;

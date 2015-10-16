@@ -35,8 +35,7 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 			"subpackage", "todo", "throws", "tutorial", "uses", "var", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			"version" }; //$NON-NLS-1$
 
-	public PHPDocTagStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public PHPDocTagStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -58,8 +57,7 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
 		for (String nextTag : PHPDOC_TAGS) {
 			if (CodeAssistUtils.startsWithIgnoreCase(nextTag, tagName)) {
-				if (!requestor.isContextInformationMode()
-						|| nextTag.length() == tagName.length()) {
+				if (!requestor.isContextInformationMode() || nextTag.length() == tagName.length()) {
 
 					// Tags are reported like keywords:
 					reporter.reportKeyword(nextTag, suffix, replaceRange);

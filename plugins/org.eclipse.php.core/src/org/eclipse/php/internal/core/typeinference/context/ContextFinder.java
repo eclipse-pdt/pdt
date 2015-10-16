@@ -53,8 +53,7 @@ public abstract class ContextFinder extends ASTVisitor {
 		this.sourceModule = sourceModule;
 	}
 
-	public ContextFinder(ISourceModule sourceModule, IType realType,
-			IType declaringType) {
+	public ContextFinder(ISourceModule sourceModule, IType realType, IType declaringType) {
 		this.sourceModule = sourceModule;
 		this.declaringType = declaringType;
 		this.realType = realType;
@@ -86,34 +85,25 @@ public abstract class ContextFinder extends ASTVisitor {
 				fileContext.setNamespace(node.getName());
 			}
 		} else {
-			ISourceModuleContext parentContext = (ISourceModuleContext) contextStack
-					.peek();
+			ISourceModuleContext parentContext = (ISourceModuleContext) contextStack.peek();
 			PHPClassType instanceType;
 			if (parentContext instanceof INamespaceContext
-					&& ((INamespaceContext) parentContext)
-							.getNamespace() != null) {
+					&& ((INamespaceContext) parentContext).getNamespace() != null) {
 				if (node instanceof TraitDeclaration) {
-					instanceType = new PHPTraitType(
-							((INamespaceContext) parentContext).getNamespace(),
-							node.getName());
+					instanceType = new PHPTraitType(((INamespaceContext) parentContext).getNamespace(), node.getName());
 				} else {
-					instanceType = new PHPClassType(
-							((INamespaceContext) parentContext).getNamespace(),
-							node.getName());
+					instanceType = new PHPClassType(((INamespaceContext) parentContext).getNamespace(), node.getName());
 				}
 			} else {
 				if (node instanceof TraitDeclaration) {
 					if (declaringType != null && realType != null
-							&& declaringType.getElementName()
-									.equals(node.getName())) {
+							&& declaringType.getElementName().equals(node.getName())) {
 						if (realType.getParent() instanceof IType) {
 							IType ns = (IType) realType.getParent();
-							instanceType = new PHPThisClassType(
-									ns.getElementName(),
-									realType.getElementName(), realType);
+							instanceType = new PHPThisClassType(ns.getElementName(), realType.getElementName(),
+									realType);
 						} else {
-							instanceType = new PHPThisClassType(
-									realType.getElementName(), realType);
+							instanceType = new PHPThisClassType(realType.getElementName(), realType);
 						}
 					} else {
 						instanceType = new PHPTraitType(node.getName());
@@ -136,18 +126,15 @@ public abstract class ContextFinder extends ASTVisitor {
 	}
 
 	public boolean visit(AnonymousClassDeclaration node) throws Exception {
-		ISourceModuleContext parentContext = (ISourceModuleContext) contextStack
-				.peek();
+		ISourceModuleContext parentContext = (ISourceModuleContext) contextStack.peek();
 
 		MultiTypeType multiTypeType = new MultiTypeType();
 		if (node.getSuperClass() != null) {
-			multiTypeType.addType(
-					PHPClassType.fromSimpleReference(node.getSuperClass()));
+			multiTypeType.addType(PHPClassType.fromSimpleReference(node.getSuperClass()));
 		}
 		if (node.getInterfaceList() != null) {
 			for (TypeReference typeReference : node.getInterfaceList()) {
-				multiTypeType.addType(
-						PHPClassType.fromSimpleReference(typeReference));
+				multiTypeType.addType(PHPClassType.fromSimpleReference(typeReference));
 			}
 		}
 		contextStack.push(new TypeContext(parentContext, multiTypeType));
@@ -164,11 +151,10 @@ public abstract class ContextFinder extends ASTVisitor {
 			argTypes.add(UnknownType.INSTANCE);
 		}
 		IContext parent = contextStack.peek();
-		ModuleDeclaration rootNode = ((ISourceModuleContext) parent)
-				.getRootNode();
+		ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
 
-		contextStack.push(new MethodContext(parent, sourceModule, rootNode,
-				node, argumentsList.toArray(new String[argumentsList.size()]),
+		contextStack.push(new MethodContext(parent, sourceModule, rootNode, node,
+				argumentsList.toArray(new String[argumentsList.size()]),
 				argTypes.toArray(new IEvaluatedType[argTypes.size()])));
 
 		boolean visitGeneral = visitGeneral(node);

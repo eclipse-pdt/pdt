@@ -84,13 +84,11 @@ public class PhpSourceParser extends XMLSourceParser {
 			// these types (might) demand a IStructuredDocumentRegion for each
 			// of them
 			if (type == DOMRegionContext.BLOCK_TEXT) {
-				if (currentNode != null
-						&& currentNode.getLastRegion().getType() == DOMRegionContext.BLOCK_TEXT) {
+				if (currentNode != null && currentNode.getLastRegion().getType() == DOMRegionContext.BLOCK_TEXT) {
 					// multiple block texts indicated embedded containers; no
 					// new IStructuredDocumentRegion
 					currentNode.addRegion(region);
-					currentNode.setLength(region.getEnd()
-							- currentNode.getStart());
+					currentNode.setLength(region.getEnd() - currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 					// DW 4/16/2003 regions no longer have parents
 					// region.setParent(currentNode);
@@ -103,8 +101,7 @@ public class PhpSourceParser extends XMLSourceParser {
 						// ensure that any existing node is at least
 						// terminated
 						if (!currentNode.isEnded()) {
-							currentNode.setLength(region.getStart()
-									- currentNode.getStart());
+							currentNode.setLength(region.getStart() - currentNode.getStart());
 							// fCurrentNode.setTextLength(region.getStart() -
 							// fCurrentNode.getStart());
 						}
@@ -131,21 +128,15 @@ public class PhpSourceParser extends XMLSourceParser {
 				}
 			}
 			// the following contexts OPEN new StructuredDocumentRegions
-			else if ((currentNode != null && currentNode.isEnded())
-					|| (type == PHPRegionContext.PHP_OPEN)
-					|| (type == DOMRegionContext.XML_CONTENT)
-					|| (type == DOMRegionContext.XML_CHAR_REFERENCE)
-					|| (type == DOMRegionContext.XML_ENTITY_REFERENCE)
-					|| (type == DOMRegionContext.XML_TAG_OPEN)
-					|| (type == DOMRegionContext.XML_END_TAG_OPEN)
-					|| (type == DOMRegionContext.XML_COMMENT_OPEN)
-					|| (type == DOMRegionContext.XML_CDATA_OPEN)
-					|| (type == DOMRegionContext.XML_DECLARATION_OPEN)) {
+			else if ((currentNode != null && currentNode.isEnded()) || (type == PHPRegionContext.PHP_OPEN)
+					|| (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE)
+					|| (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_TAG_OPEN)
+					|| (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_COMMENT_OPEN)
+					|| (type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_DECLARATION_OPEN)) {
 				if (currentNode != null) {
 					// ensure that any existing node is at least terminated
 					if (!currentNode.isEnded()) {
-						currentNode.setLength(region.getStart()
-								- currentNode.getStart());
+						currentNode.setLength(region.getStart() - currentNode.getStart());
 						// fCurrentNode.setTextLength(region.getStart() -
 						// fCurrentNode.getStart());
 					}
@@ -169,11 +160,9 @@ public class PhpSourceParser extends XMLSourceParser {
 			}
 			// the following contexts neither open nor close
 			// StructuredDocumentRegions; just add to them
-			else if ((type == DOMRegionContext.XML_TAG_NAME)
-					|| (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			else if ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 					|| (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS)
-					|| (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
-					|| (type == DOMRegionContext.XML_COMMENT_TEXT)
+					|| (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMRegionContext.XML_COMMENT_TEXT)
 					|| (type == DOMRegionContext.XML_PI_CONTENT)
 					|| (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)
 					|| (type == PHPRegionContext.PHP_CONTENT)) {
@@ -188,12 +177,9 @@ public class PhpSourceParser extends XMLSourceParser {
 			}
 			// the following contexts close off StructuredDocumentRegions
 			// cleanly
-			else if ((type == PHPRegionContext.PHP_CLOSE)
-					|| (type == DOMRegionContext.XML_PI_CLOSE)
-					|| (type == DOMRegionContext.XML_TAG_CLOSE)
-					|| (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)
-					|| (type == DOMRegionContext.XML_COMMENT_CLOSE)
-					|| (type == DOMRegionContext.XML_DECLARATION_CLOSE)
+			else if ((type == PHPRegionContext.PHP_CLOSE) || (type == DOMRegionContext.XML_PI_CLOSE)
+					|| (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)
+					|| (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)
 					|| (type == DOMRegionContext.XML_CDATA_CLOSE)) {
 				currentNode.setEnded(true);
 				currentNode.setLength(region.getEnd() - currentNode.getStart());
@@ -221,27 +207,23 @@ public class PhpSourceParser extends XMLSourceParser {
 					if (region instanceof ITextRegionContainer) {
 						((ITextRegionContainer) region).setParent(currentNode);
 					}
-					region.adjustStart(container.getLength()
-							- region.getStart());
+					region.adjustStart(container.getLength() - region.getStart());
 				}
 				currentNode.getLastRegion().adjustLength(region.getLength());
 				currentNode.adjustLength(region.getLength());
-			} else if (type == DOMRegionContext.UNDEFINED
-					&& currentNode != null) {
+			} else if (type == DOMRegionContext.UNDEFINED && currentNode != null) {
 				// skip on a very-first region situation as the default
 				// behavior is good enough
 				// combine with previous if also undefined
 				if (currentNode.getLastRegion() != null
 						&& currentNode.getLastRegion().getType() == DOMRegionContext.UNDEFINED) {
-					currentNode.getLastRegion()
-							.adjustLength(region.getLength());
+					currentNode.getLastRegion().adjustLength(region.getLength());
 					currentNode.adjustLength(region.getLength());
 				}
 				// previous wasn't undefined
 				else {
 					currentNode.addRegion(region);
-					currentNode.setLength(region.getEnd()
-							- currentNode.getStart());
+					currentNode.setLength(region.getEnd() - currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 				}
 			} else {
@@ -260,10 +242,9 @@ public class PhpSourceParser extends XMLSourceParser {
 					((ITextRegionContainer) region).setParent(currentNode);
 				}
 				if (Debug.debugTokenizer)
-					System.out
-							.println(getClass().getName()
-									+ " found region of not specifically handled type " + region.getType() + " @ " + region.getStart() + "[" + region.getLength() + "]"); //$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
-				//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+					System.out.println(getClass().getName() + " found region of not specifically handled type " //$NON-NLS-1$
+							+ region.getType() + " @ " + region.getStart() + "[" + region.getLength() + "]"); //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+				// $NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 			}
 
 			// these regions also get their own node, so close them cleanly
@@ -272,10 +253,8 @@ public class PhpSourceParser extends XMLSourceParser {
 			// be more readable if that is handled here as well, but the
 			// current layout
 			// ensures that they open StructuredDocumentRegions the same way
-			if ((type == DOMRegionContext.XML_CONTENT)
-					|| (type == DOMRegionContext.XML_CHAR_REFERENCE)
-					|| (type == DOMRegionContext.XML_ENTITY_REFERENCE)
-					|| (type == PHPRegionContext.PHP_CLOSE)) {
+			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE)
+					|| (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == PHPRegionContext.PHP_CLOSE)) {
 				currentNode.setEnded(true);
 			}
 			if (headNode == null && currentNode != null) {

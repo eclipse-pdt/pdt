@@ -26,8 +26,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class GlobalKeywordsStrategy extends KeywordsStrategy {
 
-	public GlobalKeywordsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public GlobalKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 

@@ -30,15 +30,14 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 			"mixed", "void", "integer", "int", "string", "float", "double", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 			"bool", "boolean", "resource", "null", "NULL", "$this", "self", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 			"static" }; //$NON-NLS-1$
-	
+
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context) {
 		super(context, 0, Modifiers.AccNameSpace);
 	}
 
-	public PHPDocReturnTypeStrategy(ICompletionContext context, int trueFlag,
-			int falseFlag) {
+	public PHPDocReturnTypeStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
 	}
 
@@ -55,8 +54,7 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 		}
 	}
 
-	private void reportKeyword(ICompletionReporter reporter,
-			ISourceRange replaceRange, String keyword, String prefix) {
+	private void reportKeyword(ICompletionReporter reporter, ISourceRange replaceRange, String keyword, String prefix) {
 		if (keyword.startsWith(prefix)) {
 			reporter.reportKeyword(keyword, EMPTY, replaceRange);
 		}

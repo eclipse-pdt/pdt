@@ -36,8 +36,7 @@ public class UnaryOperationEvaluator extends GoalEvaluator {
 			result = new SimpleType(SimpleType.TYPE_NUMBER);
 			break;
 		case UnaryOperation.OP_TILDA:
-			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-					unaryOp.getExpr()) };
+			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), unaryOp.getExpr()) };
 		case UnaryOperation.OP_NOT:
 			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
 			break;

@@ -104,8 +104,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 						// one is not overriding it.
 					}
 					int thisModifiers = getModifiers();
-					if ((otherModifiers & Modifiers.AccPublic) != 0
-							|| (otherModifiers & Modifiers.AccDefault) != 0) {
+					if ((otherModifiers & Modifiers.AccPublic) != 0 || (otherModifiers & Modifiers.AccDefault) != 0) {
 						// 'public' (default in PHP) can be overridden only by
 						// other 'public' methods.
 						return (thisModifiers & Modifiers.AccPublic) != 0

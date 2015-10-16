@@ -18,8 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a prefix expression
- * <pre>e.g.<pre> --$a,
- * --foo()
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * --$a, --foo()
  */
 public class PrefixExpression extends Expression {
 
@@ -33,8 +37,7 @@ public class PrefixExpression extends Expression {
 	private final Expression variable;
 	private final int operator;
 
-	public PrefixExpression(int start, int end, Expression variable,
-			int operator) {
+	public PrefixExpression(int start, int end, Expression variable, int operator) {
 		super(start, end);
 
 		assert variable != null;
@@ -53,14 +56,14 @@ public class PrefixExpression extends Expression {
 
 	public String getOperator() {
 		switch (getOperatorType()) {
-			case OP_DEC:
-				return "--"; //$NON-NLS-1$
-			case OP_INC:
-				return "++"; //$NON-NLS-1$
-			case OP_UNPACK:
-				return "..."; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_DEC:
+			return "--"; //$NON-NLS-1$
+		case OP_INC:
+			return "++"; //$NON-NLS-1$
+		case OP_UNPACK:
+			return "..."; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

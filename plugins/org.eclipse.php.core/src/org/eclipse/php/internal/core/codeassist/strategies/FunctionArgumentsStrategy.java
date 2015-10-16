@@ -37,8 +37,7 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  */
 public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
 
-	public FunctionArgumentsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public FunctionArgumentsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -50,34 +49,27 @@ public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) getContext();
-		CompletionRequestor requestor = abstractContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
 		int offset = abstractContext.getOffset();
 
 		// find function arguments
 		ISourceModule sourceModule = abstractContext.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
-		Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(
-				moduleDeclaration, offset);
+		Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(moduleDeclaration, offset);
 		if (declaration instanceof MethodDeclaration) {
 
 			String prefix = abstractContext.getPrefix();
 			ISourceRange replaceRange = getReplacementRange(abstractContext);
 			String suffix = ""; //$NON-NLS-1$
 
-			List<Argument> arguments = ((MethodDeclaration) declaration)
-					.getArguments();
+			List<Argument> arguments = ((MethodDeclaration) declaration).getArguments();
 			for (Argument arg : arguments) {
 				String argumentVar = arg.getName();
 				if (argumentVar.startsWith(prefix)) {
-					if (!requestor.isContextInformationMode()
-							|| argumentVar.length() == prefix.length()) {
-						reporter.reportField(
-								new FakeField((ModelElement) sourceModule,
-										argumentVar, 0, 0), suffix,
+					if (!requestor.isContextInformationMode() || argumentVar.length() == prefix.length()) {
+						reporter.reportField(new FakeField((ModelElement) sourceModule, argumentVar, 0, 0), suffix,
 								replaceRange, false);
 					}
 				}

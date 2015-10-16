@@ -88,11 +88,10 @@ public class PHPCorePlugin extends Plugin {
 
 				// register the listener in charge of converting the projects -
 				// applies for projects being opened during work
-				ResourcesPlugin.getWorkspace().addResourceChangeListener(
-						projectConvertListener, IResourceChangeEvent.PRE_BUILD);
+				ResourcesPlugin.getWorkspace().addResourceChangeListener(projectConvertListener,
+						IResourceChangeEvent.PRE_BUILD);
 
-				ResourcesPlugin.getWorkspace().addResourceChangeListener(
-						reindexOperationListener,
+				ResourcesPlugin.getWorkspace().addResourceChangeListener(reindexOperationListener,
 						IResourceChangeEvent.PRE_BUILD);
 
 				// run the conversion over all the projects in the workspace -
@@ -154,8 +153,7 @@ public class PHPCorePlugin extends Plugin {
 				try {
 					if (source instanceof IProject) {
 						IProject project = (IProject) source;
-						ProjectIndexerManager
-								.removeProject(project.getFullPath());
+						ProjectIndexerManager.removeProject(project.getFullPath());
 						ProjectIndexerManager.indexProject(project);
 
 					} else if (source instanceof IWorkspace) {
@@ -176,14 +174,12 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	private void checkStructureVersionAndReindex() {
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(ID);
-		String modelVersion = preferences
-				.get(PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE, null);
+		String modelVersion = preferences.get(PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE, null);
 		if (PHPCoreConstants.STRUCTURE_VERSION.equals(modelVersion)) {
 			return;
 		}
 
-		preferences.put(PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE,
-				PHPCoreConstants.STRUCTURE_VERSION);
+		preferences.put(PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE, PHPCoreConstants.STRUCTURE_VERSION);
 		try {
 			preferences.flush();
 		} catch (BackingStoreException e1) {
@@ -198,8 +194,7 @@ public class PHPCorePlugin extends Plugin {
 		}
 	}
 
-	private void reindexAllProjects(IWorkspace workspace)
-			throws ModelException {
+	private void reindexAllProjects(IWorkspace workspace) throws ModelException {
 		IProject[] projects = workspace.getRoot().getProjects();
 
 		// remove from index:
@@ -209,11 +204,9 @@ public class PHPCorePlugin extends Plugin {
 			}
 			if (project.isOpen()) {
 				IScriptProject scriptProject = DLTKCore.create(project);
-				IProjectFragment[] projectFragments = scriptProject
-						.getProjectFragments();
+				IProjectFragment[] projectFragments = scriptProject.getProjectFragments();
 				for (IProjectFragment projectFragment : projectFragments) {
-					ProjectIndexerManager.removeProjectFragment(scriptProject,
-							projectFragment.getPath());
+					ProjectIndexerManager.removeProjectFragment(scriptProject, projectFragment.getPath());
 				}
 				ProjectIndexerManager.removeProject(project.getFullPath());
 			}
@@ -232,18 +225,15 @@ public class PHPCorePlugin extends Plugin {
 	 * Gathers all the projects in the workspace and sends them to the
 	 * conversion method
 	 */
-	private void convertProjects(IProgressMonitor monitor)
-			throws CoreException, ModelException {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+	private void convertProjects(IProgressMonitor monitor) throws CoreException, ModelException {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		processProjects(projects);
 	}
 
 	/**
 	 * Goes over the given projects and converts them
 	 */
-	private void processProjects(final IProject[] projects)
-			throws CoreException, ModelException {
+	private void processProjects(final IProject[] projects) throws CoreException, ModelException {
 		ProjectsIterate: for (IProject project : projects) {
 			// skip unaccessible projects
 			if (!project.isAccessible()) {
@@ -251,13 +241,11 @@ public class PHPCorePlugin extends Plugin {
 			}
 			// verify that the project is a PHP project
 			if (PHPToolkitUtil.isPhpProject(project)) {
-				IProjectDescription projectDescription = project
-						.getDescription();
+				IProjectDescription projectDescription = project.getDescription();
 				ICommand[] commands = projectDescription.getBuildSpec();
 				// check if the Script Builder is installed
 				for (int i = 0; i < commands.length; ++i) {
-					if (commands[i].getBuilderName()
-							.equals(DLTKCore.BUILDER_ID)) {
+					if (commands[i].getBuilderName().equals(DLTKCore.BUILDER_ID)) {
 						// when the builder exists - continue to the next
 						// project
 						continue ProjectsIterate;
@@ -272,8 +260,7 @@ public class PHPCorePlugin extends Plugin {
 	/*
 	 * Do the actual modifications on the project
 	 */
-	private void modifyProject(IProject project)
-			throws CoreException, ModelException {
+	private void modifyProject(IProject project) throws CoreException, ModelException {
 		final PHPNature phpNature = new PHPNature();
 
 		// add the required builders and build paths as defined in the new PHP
@@ -290,14 +277,11 @@ public class PHPCorePlugin extends Plugin {
 			newPath.addAll(Arrays.asList(existingPath));
 		}
 		ProjectBackwardCompatibilityUtil unit = new ProjectBackwardCompatibilityUtil();
-		IBuildpathEntry[] oldIncludePath = unit
-				.convertIncludePathForProject(project);
+		IBuildpathEntry[] oldIncludePath = unit.convertIncludePathForProject(project);
 		if (oldIncludePath != null) {
 			newPath.addAll(Arrays.asList(oldIncludePath));
 		}
-		scriptProject.setRawBuildpath(
-				newPath.toArray(new IBuildpathEntry[newPath.size()]),
-				new NullProgressMonitor());
+		scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
 	}
 
 	/**
@@ -322,11 +306,9 @@ public class PHPCorePlugin extends Plugin {
 
 		super.stop(context);
 
-		ResourcesPlugin.getWorkspace()
-				.removeResourceChangeListener(projectConvertListener);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectConvertListener);
 
-		ResourcesPlugin.getWorkspace()
-				.removeResourceChangeListener(reindexOperationListener);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(reindexOperationListener);
 
 		plugin = null;
 	}
@@ -343,8 +325,7 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
-				"PHPCore plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "PHPCore plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static void logErrorMessage(String message) {
@@ -435,45 +416,37 @@ public class PHPCorePlugin extends Plugin {
 	 *                indicates the reason of the failure
 	 * @since 3.1
 	 */
-	public static void initializeAfterLoad(IProgressMonitor monitor)
-			throws CoreException {
+	public static void initializeAfterLoad(IProgressMonitor monitor) throws CoreException {
 		try {
 			if (monitor != null) {
-				monitor.beginTask(
-						CoreMessages.PHPCorePlugin_initializingPHPToolkit, 125);
+				monitor.beginTask(CoreMessages.PHPCorePlugin_initializingPHPToolkit, 125);
 			}
 
 			// dummy query for waiting until the indexes are ready
-			IDLTKSearchScope scope = SearchEngine
-					.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+			IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 			try {
 				LanguageModelInitializer.cleanup(monitor);
 				if (monitor != null) {
-					monitor.subTask(
-							CoreMessages.PHPCorePlugin_initializingSearchEngine);
+					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findMethods(ID, MatchRule.PREFIX,
-						Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findMethods(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findTypes(ID, MatchRule.PREFIX,
-						Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findTypes(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findFields(ID, MatchRule.PREFIX,
-						Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findFields(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findIncludes(ID, MatchRule.PREFIX,
-						scope, monitor);
+				PhpModelAccess.getDefault().findIncludes(ID, MatchRule.PREFIX, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}

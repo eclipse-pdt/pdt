@@ -21,9 +21,13 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a PHP comment
- * <pre>e.g.<pre> // this is a single line comment
- * # this is a single line comment
- * /** this is php doc block (end php docblock here)
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * // this is a single line comment # this is a single line comment /** this is
+ * php doc block (end php docblock here)
  */
 public class Comment extends ASTNode {
 
@@ -32,44 +36,43 @@ public class Comment extends ASTNode {
 	public final static int TYPE_PHPDOC = 2;
 
 	private int commentType;
-	
+
 	/**
 	 * The "identifier" structural property of this node type.
 	 */
-	public static final SimplePropertyDescriptor COMMENT_TYPE_PROPERTY = 
-		new SimplePropertyDescriptor(Comment.class, "commentType", Integer.class, MANDATORY); //$NON-NLS-1$
-	
+	public static final SimplePropertyDescriptor COMMENT_TYPE_PROPERTY = new SimplePropertyDescriptor(Comment.class,
+			"commentType", Integer.class, MANDATORY); //$NON-NLS-1$
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(1);
 		list.add(COMMENT_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
-	
 
 	public Comment(int start, int end, AST ast, int type) {
 		super(start, end, ast);
-		
+
 		setCommentType(type);
 	}
 
 	public Comment(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
 	}
 
@@ -81,14 +84,14 @@ public class Comment extends ASTNode {
 
 	public static String getCommentType(int type) {
 		switch (type) {
-			case TYPE_SINGLE_LINE:
-				return "singleLine"; //$NON-NLS-1$
-			case TYPE_MULTILINE:
-				return "multiLine"; //$NON-NLS-1$
-			case TYPE_PHPDOC:
-				return "phpDoc"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case TYPE_SINGLE_LINE:
+			return "singleLine"; //$NON-NLS-1$
+		case TYPE_MULTILINE:
+			return "multiLine"; //$NON-NLS-1$
+		case TYPE_PHPDOC:
+			return "phpDoc"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -105,8 +108,8 @@ public class Comment extends ASTNode {
 	public int getCommentType() {
 		return commentType;
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -124,9 +127,9 @@ public class Comment extends ASTNode {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == COMMENT_TYPE_PROPERTY) {
@@ -145,10 +148,10 @@ public class Comment extends ASTNode {
 		if (value != TYPE_MULTILINE && value != TYPE_PHPDOC && value != TYPE_SINGLE_LINE) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		preValueChange(COMMENT_TYPE_PROPERTY);
 		this.commentType = value;
 		postValueChange(COMMENT_TYPE_PROPERTY);
 	}
-	
+
 }

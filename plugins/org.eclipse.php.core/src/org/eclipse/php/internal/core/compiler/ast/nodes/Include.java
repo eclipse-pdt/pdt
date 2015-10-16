@@ -19,10 +19,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents include, include_once, require and require_once expressions
- * <pre>e.g.<pre> include('myFile.php'),
- * include_once($myFile),
- * require($myClass->getFileName()),
- * require_once(A::FILE_NAME)
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * include('myFile.php'), include_once($myFile),
+ * require($myClass->getFileName()), require_once(A::FILE_NAME)
  */
 public class Include extends Reference {
 
@@ -44,16 +47,16 @@ public class Include extends Reference {
 
 	public String getType() {
 		switch (getIncludeType()) {
-			case IT_REQUIRE:
-				return "require"; //$NON-NLS-1$
-			case IT_REQUIRE_ONCE:
-				return "require_once"; //$NON-NLS-1$
-			case IT_INCLUDE:
-				return "include"; //$NON-NLS-1$
-			case IT_INCLUDE_ONCE:
-				return "include_once"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case IT_REQUIRE:
+			return "require"; //$NON-NLS-1$
+		case IT_REQUIRE_ONCE:
+			return "require_once"; //$NON-NLS-1$
+		case IT_INCLUDE:
+			return "include"; //$NON-NLS-1$
+		case IT_INCLUDE_ONCE:
+			return "include_once"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

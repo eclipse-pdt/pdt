@@ -164,8 +164,7 @@ public class ASTRewrite {
 	 *             document passed does not correspond to the AST that is
 	 *             rewritten.
 	 */
-	public TextEdit rewriteAST(IDocument document, Map options)
-			throws IllegalArgumentException {
+	public TextEdit rewriteAST(IDocument document, Map options) throws IllegalArgumentException {
 		if (document == null) {
 			throw new IllegalArgumentException();
 		}
@@ -180,10 +179,8 @@ public class ASTRewrite {
 		String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 
 		ASTNode astRoot = rootNode.getProgramRoot();
-		List commentNodes = astRoot instanceof Program ? ((Program) astRoot)
-				.comments() : null;
-		return internalRewriteAST(document, content, lineInfo, lineDelim,
-				commentNodes, options, rootNode);
+		List commentNodes = astRoot instanceof Program ? ((Program) astRoot).comments() : null;
+		return internalRewriteAST(document, content, lineInfo, lineDelim, commentNodes, options, rootNode);
 	}
 
 	/**
@@ -226,8 +223,7 @@ public class ASTRewrite {
 	 * 
 	 * @since 3.2
 	 */
-	public TextEdit rewriteAST() throws ModelException,
-			IllegalArgumentException {
+	public TextEdit rewriteAST() throws ModelException, IllegalArgumentException {
 		ASTNode rootNode = getRootNode();
 		if (rootNode == null) {
 			return new MultiTextEdit(); // no changes
@@ -251,22 +247,19 @@ public class ASTRewrite {
 		String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 		Map options = typeRoot.getScriptProject().getOptions(true);
 
-		return internalRewriteAST(document, content, lineInfo, lineDelim,
-				astRoot.comments(), options, rootNode);
+		return internalRewriteAST(document, content, lineInfo, lineDelim, astRoot.comments(), options, rootNode);
 	}
 
-	private TextEdit internalRewriteAST(IDocument document, char[] content,
-			LineInformation lineInfo, String lineDelim, List commentNodes,
-			Map options, ASTNode rootNode) {
+	private TextEdit internalRewriteAST(IDocument document, char[] content, LineInformation lineInfo, String lineDelim,
+			List commentNodes, Map options, ASTNode rootNode) {
 		TextEdit result = new MultiTextEdit();
 		// validateASTNotModified(rootNode);
 
 		TargetSourceRangeComputer sourceRangeComputer = getExtendedSourceRangeComputer();
 		this.eventStore.prepareMovedNodes(sourceRangeComputer);
 
-		ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(ast.lexer(),
-				document, lineInfo, lineDelim, result, this.eventStore,
-				this.nodeStore, commentNodes, options, sourceRangeComputer);
+		ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(ast.lexer(), document, lineInfo, lineDelim, result,
+				this.eventStore, this.nodeStore, commentNodes, options, sourceRangeComputer);
 		rootNode.accept(visitor);
 
 		this.eventStore.revertMovedNodes();
@@ -278,8 +271,7 @@ public class ASTRewrite {
 		int start = -1;
 		int end = -1;
 
-		for (Iterator iter = getRewriteEventStore().getChangeRootIterator(); iter
-				.hasNext();) {
+		for (Iterator iter = getRewriteEventStore().getChangeRootIterator(); iter.hasNext();) {
 			ASTNode curr = (ASTNode) iter.next();
 			if (!RewriteEventStore.isNewNode(curr)) {
 				int currStart = curr.getStart();
@@ -306,8 +298,7 @@ public class ASTRewrite {
 			}
 			ASTNode parent = node.getParent(); // go up until a parent has
 												// different range
-			while (parent != null && parent.getStart() == node.getStart()
-					&& parent.getLength() == node.getLength()) {
+			while (parent != null && parent.getStart() == node.getStart() && parent.getLength() == node.getLength()) {
 				node = parent;
 				parent = node.getParent();
 			}
@@ -320,8 +311,8 @@ public class ASTRewrite {
 	 * IllegalArgumentException { GenericVisitor isModifiedVisitor= new
 	 * GenericVisitor() { protected boolean visitNode(ASTNode node) { if
 	 * ((node.getFlags() & ASTNode.ORIGINAL) == 0) { throw new
-	 * IllegalArgumentException
-	 * ("The AST that is rewritten must not be modified."); //$NON-NLS-1$ }
+	 * IllegalArgumentException (
+	 * "The AST that is rewritten must not be modified."); //$NON-NLS-1$ }
 	 * return true; } }; root.accept(isModifiedVisitor); }
 	 */
 
@@ -346,9 +337,7 @@ public class ASTRewrite {
 		}
 		StructuralPropertyDescriptor property = node.getLocationInParent();
 		if (property.isChildListProperty()) {
-			getListRewrite(node.getParent(),
-					(ChildListPropertyDescriptor) property).remove(node,
-					editGroup);
+			getListRewrite(node.getParent(), (ChildListPropertyDescriptor) property).remove(node, editGroup);
 		} else {
 			set(node.getParent(), property, null, editGroup);
 		}
@@ -375,16 +364,14 @@ public class ASTRewrite {
 	 *             (or placeholder), or if the described modification is
 	 *             otherwise invalid
 	 */
-	public final void replace(ASTNode node, ASTNode replacement,
-			TextEditGroup editGroup) {
+	public final void replace(ASTNode node, ASTNode replacement, TextEditGroup editGroup) {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
 		StructuralPropertyDescriptor property = node.getLocationInParent();
 		if (property.isChildListProperty()) {
-			getListRewrite(node.getParent(),
-					(ChildListPropertyDescriptor) property).replace(node,
-					replacement, editGroup);
+			getListRewrite(node.getParent(), (ChildListPropertyDescriptor) property).replace(node, replacement,
+					editGroup);
 		} else {
 			set(node.getParent(), property, replacement, editGroup);
 		}
@@ -418,16 +405,14 @@ public class ASTRewrite {
 	 *             of this rewriter's AST, or if the property is not a node
 	 *             property, or if the described modification is invalid
 	 */
-	public final void set(ASTNode node, StructuralPropertyDescriptor property,
-			Object value, TextEditGroup editGroup) {
+	public final void set(ASTNode node, StructuralPropertyDescriptor property, Object value, TextEditGroup editGroup) {
 		if (node == null || property == null) {
 			throw new IllegalArgumentException();
 		}
 		validateIsCorrectAST(node);
 		validatePropertyType(property, value);
 
-		NodeRewriteEvent nodeEvent = this.eventStore.getNodeEvent(node,
-				property, true);
+		NodeRewriteEvent nodeEvent = this.eventStore.getNodeEvent(node, property, true);
 		nodeEvent.setNewValue(value);
 		if (editGroup != null) {
 			this.eventStore.setEventEditGroup(nodeEvent, editGroup);
@@ -457,8 +442,7 @@ public class ASTRewrite {
 			throw new IllegalArgumentException();
 		}
 		if (property.isChildListProperty()) {
-			throw new IllegalArgumentException(
-					"Use the list rewriter to access nodes in a list"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Use the list rewriter to access nodes in a list"); //$NON-NLS-1$
 		}
 		return this.eventStore.getNewValue(node, property);
 	}
@@ -477,8 +461,7 @@ public class ASTRewrite {
 	 *             of this rewriter's AST, or if the property is not a node
 	 *             property, or if the described modification is invalid
 	 */
-	public final ListRewrite getListRewrite(ASTNode node,
-			ChildListPropertyDescriptor property) {
+	public final ListRewrite getListRewrite(ASTNode node, ChildListPropertyDescriptor property) {
 		if (node == null || property == null) {
 			throw new IllegalArgumentException();
 		}
@@ -532,8 +515,7 @@ public class ASTRewrite {
 		}
 	}
 
-	private void validatePropertyType(StructuralPropertyDescriptor prop,
-			Object node) {
+	private void validatePropertyType(StructuralPropertyDescriptor prop, Object node) {
 		if (prop.isChildListProperty()) {
 			String message = "Can not modify a list property, use a list rewriter"; //$NON-NLS-1$
 			throw new IllegalArgumentException(message);
@@ -575,8 +557,7 @@ public class ASTRewrite {
 		}
 		ASTNode placeholder = getNodeStore().newPlaceholderNode(nodeType);
 		if (placeholder == null) {
-			throw new IllegalArgumentException(
-					"String placeholder is not supported for type" + nodeType); //$NON-NLS-1$
+			throw new IllegalArgumentException("String placeholder is not supported for type" + nodeType); //$NON-NLS-1$
 		}
 
 		getNodeStore().markAsStringPlaceholder(placeholder, code);
@@ -620,8 +601,8 @@ public class ASTRewrite {
 		}
 		validateIsExistingNode(node);
 		validateIsCorrectAST(node);
-		CopySourceInfo info = getRewriteEventStore().markAsCopySource(
-				node.getParent(), node.getLocationInParent(), node, isMove);
+		CopySourceInfo info = getRewriteEventStore().markAsCopySource(node.getParent(), node.getLocationInParent(),
+				node, isMove);
 
 		ASTNode placeholder = getNodeStore().newPlaceholderNode(node.getType());
 		if (placeholder == null) {
@@ -696,8 +677,7 @@ public class ASTRewrite {
 	 *            <code>new TargetSourceRangeComputer()</code>
 	 * @since 3.1
 	 */
-	public final void setTargetSourceRangeComputer(
-			TargetSourceRangeComputer computer) {
+	public final void setTargetSourceRangeComputer(TargetSourceRangeComputer computer) {
 		// if computer==null, rely on lazy init code in
 		// getTargetSourceRangeComputer()
 		this.targetSourceRangeComputer = computer;

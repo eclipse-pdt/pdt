@@ -63,20 +63,17 @@ public class PhpTokenContainer implements Cloneable {
 	 * @throws BadLocationException
 	 *             - if the offset is out of bound
 	 */
-	public synchronized ITextRegion getToken(int offset)
-			throws BadLocationException {
+	public synchronized ITextRegion getToken(int offset) throws BadLocationException {
 		assert tokensIterator != null;
 		if (phpTokens.isEmpty()) {
-			throw new BadLocationException(
-					"offset " + offset + " cannot be contained in an empty region"); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new BadLocationException("offset " + offset + " cannot be contained in an empty region"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		// we have at least one region...
 		checkBadLocation(offset);
 
 		// smart searching
-		ITextRegion result = tokensIterator.hasNext() ? tokensIterator.next()
-				: tokensIterator.previous();
+		ITextRegion result = tokensIterator.hasNext() ? tokensIterator.next() : tokensIterator.previous();
 		assert result != null && result.getLength() > 0;
 
 		if (isInside(result, offset)) {
@@ -105,8 +102,7 @@ public class PhpTokenContainer implements Cloneable {
 		return result;
 	}
 
-	public synchronized ITextRegion[] getTokens(final int offset,
-			final int length) throws BadLocationException {
+	public synchronized ITextRegion[] getTokens(final int offset, final int length) throws BadLocationException {
 		assert length >= 0;
 		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of
 		// ITextRegion
@@ -116,8 +112,7 @@ public class PhpTokenContainer implements Cloneable {
 			result.add(token);
 		}
 
-		while (tokensIterator.hasNext() && token != null
-				&& token.getEnd() <= offset + length) {
+		while (tokensIterator.hasNext() && token != null && token.getEnd() <= offset + length) {
 			token = tokensIterator.next();
 			result.add(token);
 		}
@@ -126,8 +121,7 @@ public class PhpTokenContainer implements Cloneable {
 	}
 
 	private final boolean isInside(ITextRegion region, int offset) {
-		return region != null && region.getStart() <= offset
-				&& offset < region.getEnd();
+		return region != null && region.getStart() <= offset && offset < region.getEnd();
 	}
 
 	/**
@@ -135,8 +129,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @return the lexer state at the given offset
 	 * @throws BadLocationException
 	 */
-	public synchronized LexerState getState(int offset)
-			throws BadLocationException {
+	public synchronized LexerState getState(int offset) throws BadLocationException {
 		Iterator<LexerStateChange> iter = lexerStateChanges.iterator();
 		assert iter.hasNext();
 
@@ -158,11 +151,9 @@ public class PhpTokenContainer implements Cloneable {
 	 * @return the partition type of the given offset (will never be null)
 	 * @throws BadLocationException
 	 */
-	public synchronized String getPartitionType(int offset)
-			throws BadLocationException {
+	public synchronized String getPartitionType(int offset) throws BadLocationException {
 		ITextRegion token = getToken(offset);
-		while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType())
-				&& token.getStart() - 1 >= 0) {
+		while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType()) && token.getStart() - 1 >= 0) {
 			token = getToken(token.getStart() - 1);
 		}
 		assert token != null;
@@ -189,19 +180,16 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param toOffset
 	 * @param size
 	 */
-	public synchronized void updateStateChanges(PhpTokenContainer newContainer,
-			int fromOffset, int toOffset) {
+	public synchronized void updateStateChanges(PhpTokenContainer newContainer, int fromOffset, int toOffset) {
 		if (newContainer.lexerStateChanges.size() < 2) {
 			return;
 		}
 
 		// remove
-		final ListIterator<LexerStateChange> oldIterator = removeOldChanges(
-				fromOffset, toOffset);
+		final ListIterator<LexerStateChange> oldIterator = removeOldChanges(fromOffset, toOffset);
 
 		// add
-		final Iterator<LexerStateChange> newIterator = newContainer.lexerStateChanges
-				.iterator();
+		final Iterator<LexerStateChange> newIterator = newContainer.lexerStateChanges.iterator();
 		newIterator.next(); // ignore the first state change (it is identical to
 		// the original one)
 
@@ -213,8 +201,7 @@ public class PhpTokenContainer implements Cloneable {
 		}
 	}
 
-	private void setIterator(ListIterator<LexerStateChange> oldIterator,
-			int fromOffset, int toOffset) {
+	private void setIterator(ListIterator<LexerStateChange> oldIterator, int fromOffset, int toOffset) {
 		if (oldIterator.nextIndex() != 1) {
 			oldIterator.previous();
 		} else {
@@ -229,8 +216,7 @@ public class PhpTokenContainer implements Cloneable {
 
 	}
 
-	public synchronized ListIterator<ContextRegion> removeTokensSubList(
-			ITextRegion tokenStart, ITextRegion tokenEnd) {
+	public synchronized ListIterator<ContextRegion> removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
 		assert tokenStart != null;
 
 		// go to the start region
@@ -282,8 +268,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public synchronized ListIterator<ContextRegion> getPhpTokensIterator(
-			final int offset) throws BadLocationException {
+	public synchronized ListIterator<ContextRegion> getPhpTokensIterator(final int offset) throws BadLocationException {
 		// fast results for empty lists
 		if (phpTokens.isEmpty()) {
 			return tokensIterator;
@@ -324,14 +309,11 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param region
 	 * @param lexerState
 	 */
-	public synchronized void addLast(String yylex, int start,
-			int yylengthLength, int yylength, Object lexerState) {
-		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start)
-				&& tokensIterator == null;
+	public synchronized void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
+		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		if (phpTokens.size() > 0) {
-			ContextRegion lastContextRegion = (ContextRegion) phpTokens
-					.get(phpTokens.size() - 1);
+			ContextRegion lastContextRegion = (ContextRegion) phpTokens.get(phpTokens.size() - 1);
 			if (deprecatedKeywordAfter(lastContextRegion.getType())) {
 				if (isKeyword(yylex)) {
 					yylex = PHPRegionTypes.PHP_LABEL;
@@ -339,16 +321,12 @@ public class PhpTokenContainer implements Cloneable {
 			}
 		}
 		// if state was change - we add a new token and add state
-		if (lexerStateChanges.size() == 0
-				|| !getLastChange().state.equals(lexerState)) {
-			int textLength = (AbstractPhpLexer.WHITESPACE.equals(yylex)) ? 0
-					: yylengthLength;
+		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
+			int textLength = (AbstractPhpLexer.WHITESPACE.equals(yylex)) ? 0 : yylengthLength;
 
-			final ContextRegion contextRegion = new ContextRegion(yylex, start,
-					textLength, yylength);
+			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
-			lexerStateChanges.addLast(new LexerStateChange(
-					(LexerState) lexerState, contextRegion));
+			lexerStateChanges.addLast(new LexerStateChange((LexerState) lexerState, contextRegion));
 			return;
 		}
 
@@ -358,8 +336,7 @@ public class PhpTokenContainer implements Cloneable {
 			final ITextRegion last = phpTokens.getLast();
 			last.adjustLength(yylength);
 		} else { // else - add as a new token
-			final ContextRegion contextRegion = new ContextRegion(yylex, start,
-					yylengthLength, yylength);
+			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
 			phpTokens.addLast(contextRegion);
 		}
 	}
@@ -384,8 +361,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @return if the keyword should be a normal identifier after yylex
 	 */
 	public static boolean deprecatedKeywordAfter(String yylex) {
-		if (PHPRegionTypes.PHP_FUNCTION.equals(yylex)
-				|| PHPRegionTypes.PHP_CONST.equals(yylex)) {
+		if (PHPRegionTypes.PHP_FUNCTION.equals(yylex) || PHPRegionTypes.PHP_CONST.equals(yylex)) {
 			return true;
 		}
 		return false;
@@ -400,14 +376,12 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param yylength
 	 * @param lexerState
 	 */
-	public synchronized void adjustWhitespace(String yylex, int start,
-			int yylengthLength, int yylength, Object lexerState) {
-		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start)
-				&& tokensIterator == null;
+	public synchronized void adjustWhitespace(String yylex, int start, int yylengthLength, int yylength,
+			Object lexerState) {
+		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		// if state was change - we add a new token and add state
-		if (lexerStateChanges.size() != 0
-				&& getLastChange().state.equals(lexerState)) {
+		if (lexerStateChanges.size() != 0 && getLastChange().state.equals(lexerState)) {
 			final ITextRegion last = phpTokens.getLast();
 			last.adjustLength(yylength);
 		}
@@ -420,8 +394,7 @@ public class PhpTokenContainer implements Cloneable {
 		public final LexerState state;
 		public final ITextRegion firstRegion;
 
-		public LexerStateChange(final LexerState state,
-				final ITextRegion firstRegion) {
+		public LexerStateChange(final LexerState state, final ITextRegion firstRegion) {
 			assert firstRegion != null && state != null;
 
 			this.state = state;
@@ -455,12 +428,10 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param offset
 	 * @throws BadLocationException
 	 */
-	protected synchronized final void checkBadLocation(int offset)
-			throws BadLocationException {
+	protected synchronized final void checkBadLocation(int offset) throws BadLocationException {
 		ITextRegion lastRegion = getLastToken();
 		if (offset < 0 || lastRegion.getEnd() < offset) {
-			throw new BadLocationException(
-					"offset " + offset + " is out of [0, " + lastRegion.getEnd() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			throw new BadLocationException("offset " + offset + " is out of [0, " + lastRegion.getEnd() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -472,15 +443,12 @@ public class PhpTokenContainer implements Cloneable {
 		return lexerStateChanges.getLast();
 	}
 
-	protected synchronized final ListIterator<LexerStateChange> removeOldChanges(
-			int fromOffset, int toOffset) {
-		final ListIterator<LexerStateChange> iterator = (ListIterator<LexerStateChange>) lexerStateChanges
-				.iterator();
+	protected synchronized final ListIterator<LexerStateChange> removeOldChanges(int fromOffset, int toOffset) {
+		final ListIterator<LexerStateChange> iterator = (ListIterator<LexerStateChange>) lexerStateChanges.iterator();
 
 		LexerStateChange element = iterator.next();
 		while (element.getOffset() <= toOffset) {
-			if (element.getOffset() > fromOffset
-					&& element.getOffset() <= toOffset) {
+			if (element.getOffset() > fromOffset && element.getOffset() <= toOffset) {
 				iterator.remove();
 			}
 			if (!iterator.hasNext()) {

@@ -35,8 +35,7 @@ public class PHPNature extends ScriptNature {
 	/**
 	 * Adds a builder to the build spec for the given project.
 	 */
-	protected ICommand addToFrontOfBuildSpec(String builderID)
-			throws CoreException {
+	protected ICommand addToFrontOfBuildSpec(String builderID) throws CoreException {
 		ICommand command = null;
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
@@ -70,20 +69,17 @@ public class PHPNature extends ScriptNature {
 	 * @param newFileContents
 	 *            - String
 	 */
-	public void createFile(IPath newFilePath, String newFileContents)
-			throws CoreException {
+	public void createFile(IPath newFilePath, String newFileContents) throws CoreException {
 
 		IPath projectPath = getProject().getFullPath();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
 		createFolder(newFilePath.removeLastSegments(1).toString());
 
-		IFile outputFile = workspace.getRoot().getFile(
-				projectPath.append(newFilePath));
+		IFile outputFile = workspace.getRoot().getFile(projectPath.append(newFilePath));
 		outputFile.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		InputStream inputStream = new ByteArrayInputStream(newFileContents
-				.getBytes());
+		InputStream inputStream = new ByteArrayInputStream(newFileContents.getBytes());
 		if (!(outputFile.exists())) {
 			outputFile.create(inputStream, true, null);
 		}
@@ -113,8 +109,7 @@ public class PHPNature extends ScriptNature {
 	 * @exception org.eclipse.core.runtime.CoreException
 	 *                The exception description.
 	 */
-	protected void removeFromBuildSpec(String builderID)
-			throws org.eclipse.core.runtime.CoreException {
+	protected void removeFromBuildSpec(String builderID) throws org.eclipse.core.runtime.CoreException {
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
 		boolean found = false;
@@ -166,10 +161,8 @@ public class PHPNature extends ScriptNature {
 	 * @exception com.ibm.itp.core.api.resources.CoreException
 	 *                The exception description.
 	 */
-	public IFolder createFolder(String aProjectRelativePathString)
-			throws CoreException {
-		if (aProjectRelativePathString != null
-				&& aProjectRelativePathString.length() > 0) {
+	public IFolder createFolder(String aProjectRelativePathString) throws CoreException {
+		if (aProjectRelativePathString != null && aProjectRelativePathString.length() > 0) {
 			return createFolder(new Path(aProjectRelativePathString));
 		}
 		return null;
@@ -182,11 +175,9 @@ public class PHPNature extends ScriptNature {
 	 * @exception com.ibm.itp.core.api.resources.CoreException
 	 *                The exception description.
 	 */
-	public IFolder createFolder(IPath aProjectRelativePath)
-			throws CoreException {
+	public IFolder createFolder(IPath aProjectRelativePath) throws CoreException {
 		if (aProjectRelativePath != null && !aProjectRelativePath.isEmpty()) {
-			IFolder folder = getWorkspace().getRoot().getFolder(
-					getProjectPath().append(aProjectRelativePath));
+			IFolder folder = getWorkspace().getRoot().getFolder(getProjectPath().append(aProjectRelativePath));
 			if (!folder.exists()) {
 				folder.create(true, true, null);
 			}

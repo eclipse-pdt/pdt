@@ -10,8 +10,7 @@ public class TraitPrecedence extends Expression {
 	private FullyQualifiedTraitMethodReference methodReference;
 	private List<TypeReference> trList;
 
-	public TraitPrecedence(int start, int end,
-			FullyQualifiedTraitMethodReference methodReference,
+	public TraitPrecedence(int start, int end, FullyQualifiedTraitMethodReference methodReference,
 			List<TypeReference> trList) {
 		super(start, end);
 		this.methodReference = methodReference;

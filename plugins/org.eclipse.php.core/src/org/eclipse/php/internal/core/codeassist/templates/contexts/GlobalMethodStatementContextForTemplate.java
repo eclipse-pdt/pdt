@@ -14,7 +14,8 @@ package org.eclipse.php.internal.core.codeassist.templates.contexts;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 
 /**
- * This context represents state when staying in a method top level statement. <br/>
+ * This context represents state when staying in a method top level statement.
+ * <br/>
  * Examples:
  * 
  * <pre>
@@ -26,6 +27,5 @@ import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementCo
  * 
  * @author zhaozw
  */
-public final class GlobalMethodStatementContextForTemplate extends
-		GlobalMethodStatementContext {
+public final class GlobalMethodStatementContextForTemplate extends GlobalMethodStatementContext {
 }

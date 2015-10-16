@@ -19,16 +19,14 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class AnonymousClassDeclaration extends Expression
-		implements IRecoverable {
+public class AnonymousClassDeclaration extends Expression implements IRecoverable {
 
 	private TypeReference superClass;
 	private List<TypeReference> interfaceList;
 	private Block body;
 	private boolean isRecovered;
 
-	public AnonymousClassDeclaration(int start, int end,
-			TypeReference superClass, List<TypeReference> interfaceList,
+	public AnonymousClassDeclaration(int start, int end, TypeReference superClass, List<TypeReference> interfaceList,
 			Block body) {
 		super(start, end);
 

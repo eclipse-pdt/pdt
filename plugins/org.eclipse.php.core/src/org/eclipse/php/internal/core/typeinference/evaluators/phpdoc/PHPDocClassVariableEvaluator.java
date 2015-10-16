@@ -48,8 +48,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		int offset = typedGoal.getOffset();
 
 		IModelAccessCache cache = context.getCache();
-		IType[] types = PHPTypeInferenceUtils.getModelElements(
-				context.getInstanceType(), context, offset, cache);
+		IType[] types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context, offset, cache);
 		Map<PHPDocBlock, IField> docs = new HashMap<PHPDocBlock, IField>();
 		// remove array index from field name
 		if (variableName.endsWith("]")) { //$NON-NLS-1$
@@ -64,18 +63,15 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 					// we look in whole hiearchy
 					ITypeHierarchy superHierarchy;
 					if (cache != null) {
-						superHierarchy = cache
-								.getSuperTypeHierarchy(type, null);
+						superHierarchy = cache.getSuperTypeHierarchy(type, null);
 					} else {
 						superHierarchy = type.newSupertypeHierarchy(null);
 					}
 					IType[] superTypes = superHierarchy.getAllTypes();
 					for (IType superType : superTypes) {
-						IField[] typeField = PHPModelUtils.getTypeField(
-								superType, variableName, true);
+						IField[] typeField = PHPModelUtils.getTypeField(superType, variableName, true);
 						if (typeField.length > 0) {
-							PHPDocBlock docBlock = PHPModelUtils
-									.getDocBlock(typeField[0]);
+							PHPDocBlock docBlock = PHPModelUtils.getDocBlock(typeField[0]);
 							if (docBlock != null) {
 								docs.put(docBlock, typeField[0]);
 							}
@@ -92,26 +88,21 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		for (Entry<PHPDocBlock, IField> entry : docs.entrySet()) {
 			PHPDocBlock doc = entry.getKey();
 			IField typeField = entry.getValue();
-			IType currentNamespace = PHPModelUtils
-					.getCurrentNamespace(typeField);
+			IType currentNamespace = PHPModelUtils.getCurrentNamespace(typeField);
 
-			IModelElement space = currentNamespace != null ? currentNamespace
-					: typeField.getSourceModule();
+			IModelElement space = currentNamespace != null ? currentNamespace : typeField.getSourceModule();
 
 			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
 				// do it like for
 				// PHPDocumentationContentAccess#handleBlockTags(List tags):
 				// variable name can be optional, but if present keep only
 				// the good ones
-				if (tag.getVariableReference() != null
-						&& !tag.getVariableReference().getName()
-								.equals(variableName)) {
+				if (tag.getVariableReference() != null && !tag.getVariableReference().getName().equals(variableName)) {
 					continue;
 				}
 
-				evaluated.addAll(Arrays.asList(PHPEvaluationUtils
-						.evaluatePHPDocType(tag.getTypeReferences(), space,
-								tag.sourceStart(), null)));
+				evaluated.addAll(Arrays.asList(PHPEvaluationUtils.evaluatePHPDocType(tag.getTypeReferences(), space,
+						tag.sourceStart(), null)));
 			}
 		}
 
@@ -133,8 +124,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 	 * 
 	 * @deprecated will be removed in Mars
 	 */
-	public static MultiTypeType getArrayType(String type,
-			IType currentNamespace, int offset) {
+	public static MultiTypeType getArrayType(String type, IType currentNamespace, int offset) {
 		return PHPEvaluationUtils.getArrayType(type, currentNamespace, offset);
 	}
 

@@ -18,8 +18,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 	 * @param context
 	 * @param elementFilter
 	 */
-	public InUseTraitKeywordStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public InUseTraitKeywordStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 

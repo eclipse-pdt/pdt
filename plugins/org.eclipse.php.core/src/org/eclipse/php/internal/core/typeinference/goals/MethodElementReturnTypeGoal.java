@@ -17,14 +17,13 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 
-	public MethodElementReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, String[] argNames,
-			int offset) {
+	public MethodElementReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName,
+			String[] argNames, int offset) {
 		super(context, evaluatedType, methodName, argNames, offset);
 	}
 
-	public MethodElementReturnTypeGoal(IContext context, IType[] types,
-			String methodName, String[] argNames, int offset) {
+	public MethodElementReturnTypeGoal(IContext context, IType[] types, String methodName, String[] argNames,
+			int offset) {
 		super(context, types, methodName, argNames, offset);
 	}
 

@@ -41,8 +41,7 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * Constructor for Ternary Operator
 	 */
-	public ConditionalExpression(int start, int end, Expression condition,
-			Expression ifTrue, Expression ifFalse) {
+	public ConditionalExpression(int start, int end, Expression condition, Expression ifTrue, Expression ifFalse) {
 		super(start, end);
 
 		assert condition != null && ifFalse != null;
@@ -55,8 +54,7 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * Constructor for Null Coalesce Operator
 	 */
-	public ConditionalExpression(int start, int end, Expression condition,
-			Expression ifNull) {
+	public ConditionalExpression(int start, int end, Expression condition, Expression ifNull) {
 		super(start, end);
 
 		assert condition != null && ifNull != null;

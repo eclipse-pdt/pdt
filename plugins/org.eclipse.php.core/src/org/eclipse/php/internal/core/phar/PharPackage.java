@@ -19,7 +19,8 @@ import org.eclipse.core.runtime.Path;
 
 public class PharPackage {
 
-	private IPath stubLocation = new Path(""); // internal location //$NON-NLS-1$
+	private IPath stubLocation = new Path(""); // internal //$NON-NLS-1$
+												// location
 
 	private String stubVersion;
 	private String alias;
@@ -125,8 +126,7 @@ public class PharPackage {
 	 */
 	public IFile getStubFile() {
 		IPath path = getStubLocation();
-		if (path != null && path.isValidPath(path.toString())
-				&& path.segmentCount() >= 2)
+		if (path != null && path.isValidPath(path.toString()) && path.segmentCount() >= 2)
 			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		else
 			return null;
@@ -236,8 +236,8 @@ public class PharPackage {
 	 * @return <code>true</code> if the JAR Package info is valid
 	 */
 	public boolean isValid() {
-		return getElements() != null && getElements().length > 0
-				&& getAbsolutePharLocation() != null && isStubAccessible();
+		return getElements() != null && getElements().length > 0 && getAbsolutePharLocation() != null
+				&& isStubAccessible();
 	}
 
 	/**

@@ -19,8 +19,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * 
  * @author Michal Niewrzal
  */
-public enum PhpProblemIdentifier
-	implements IProblemIdentifier,IProblemIdentifierExtension {
+public enum PhpProblemIdentifier implements IProblemIdentifier,IProblemIdentifierExtension {
 
 	SYNTAX, USE_STATEMENTS;
 

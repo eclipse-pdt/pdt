@@ -24,8 +24,7 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 @SuppressWarnings("deprecation")
-public class PHPTypeInferencer extends DefaultTypeInferencer implements
-		IPHPTypeInferencer {
+public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPTypeInferencer {
 
 	public PHPTypeInferencer() {
 		super(new PHPGoalEvaluatorFactory());
@@ -66,8 +65,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
-			if (goal instanceof MethodElementReturnTypeGoal
-					|| goal instanceof ClassVariableDeclarationGoal) {
+			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);
@@ -85,8 +83,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are PHPDoc (liteweight) goals pruned
-			if (goal instanceof PHPDocMethodReturnTypeGoal
-					|| goal instanceof PHPDocClassVariableGoal) {
+			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

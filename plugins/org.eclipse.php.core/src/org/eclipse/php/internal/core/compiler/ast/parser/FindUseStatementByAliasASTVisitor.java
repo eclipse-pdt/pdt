@@ -22,8 +22,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author Kaloyan Raev
  */
-public class FindUseStatementByAliasASTVisitor
-		extends AbstractUseStatementASTVisitor {
+public class FindUseStatementByAliasASTVisitor extends AbstractUseStatementASTVisitor {
 
 	/**
 	 * Current use statement, used to detect group use statements.
@@ -94,15 +93,13 @@ public class FindUseStatementByAliasASTVisitor
 		}
 
 		if (aliasName.equalsIgnoreCase(alias)) {
-			if (currentUseStatement == null
-					|| currentUseStatement.getNamespace() == null) {
+			if (currentUseStatement == null || currentUseStatement.getNamespace() == null) {
 				result = usePart;
 			} else {
 				FullyQualifiedReference fqn = createCombinedFQN(usePart);
 
 				result = new UsePart(fqn, usePart.getAlias(),
-						Math.max(currentUseStatement.getStatementType(),
-								usePart.getStatementType()));
+						Math.max(currentUseStatement.getStatementType(), usePart.getStatementType()));
 			}
 			return false;
 		}
@@ -118,17 +115,12 @@ public class FindUseStatementByAliasASTVisitor
 	 * @return
 	 */
 	private FullyQualifiedReference createCombinedFQN(UsePart usePart) {
-		String firstNamespace = currentUseStatement.getNamespace()
-				.getFullyQualifiedName();
-		String name = PHPModelUtils.extractElementName(
-				usePart.getNamespace().getFullyQualifiedName());
-		String secondNamespace = PHPModelUtils.extractNameSpaceName(
-				usePart.getNamespace().getFullyQualifiedName());
+		String firstNamespace = currentUseStatement.getNamespace().getFullyQualifiedName();
+		String name = PHPModelUtils.extractElementName(usePart.getNamespace().getFullyQualifiedName());
+		String secondNamespace = PHPModelUtils.extractNameSpaceName(usePart.getNamespace().getFullyQualifiedName());
 
-		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace,
-				secondNamespace);
-		return new FullyQualifiedReference(0, 0, name,
-				new NamespaceReference(0, 0, fqn));
+		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace, secondNamespace);
+		return new FullyQualifiedReference(0, 0, name, new NamespaceReference(0, 0, fqn));
 	}
 
 }

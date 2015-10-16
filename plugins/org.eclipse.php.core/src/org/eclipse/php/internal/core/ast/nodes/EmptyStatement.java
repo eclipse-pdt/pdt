@@ -21,23 +21,26 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * This class represents an empty statement.
- * <pre>e.g.<pre> ;
- * while(true); - the while statement contains empty statement
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * ; while(true); - the while statement contains empty statement
  */
 public class EmptyStatement extends Statement {
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(0);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
+
 	public EmptyStatement(int start, int end, AST ast) {
 		super(start, end, ast);
 	}
@@ -45,15 +48,15 @@ public class EmptyStatement extends Statement {
 	public EmptyStatement(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
 	}
 
@@ -74,8 +77,8 @@ public class EmptyStatement extends Statement {
 	public int getType() {
 		return ASTNode.EMPTY_STATEMENT;
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

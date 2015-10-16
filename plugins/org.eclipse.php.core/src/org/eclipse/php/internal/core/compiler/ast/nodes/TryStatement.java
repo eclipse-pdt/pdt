@@ -23,18 +23,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represents the try statement
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * try {
- *   statements...
- * } catch (Exception $e) {
- *   statements...
- * } catch (AnotherException $ae) {
- *   statements...
- * } finally {
- *   statements... (php 5.5)
- * }
+ * try { statements... } catch (Exception $e) { statements... } catch
+ * (AnotherException $ae) { statements... } finally { statements... (php 5.5) }
  */
 public class TryStatement extends Statement {
 
@@ -42,8 +36,8 @@ public class TryStatement extends Statement {
 	private final List<CatchClause> catchClauses;
 	private final FinallyClause finallyClause;
 
-	public TryStatement(int start, int end, Block tryStatement,
-			List<CatchClause> catchClauses, FinallyClause finallyClause) {
+	public TryStatement(int start, int end, Block tryStatement, List<CatchClause> catchClauses,
+			FinallyClause finallyClause) {
 		super(start, end);
 
 		assert tryStatement != null && catchClauses != null;
@@ -52,8 +46,7 @@ public class TryStatement extends Statement {
 		this.finallyClause = finallyClause;
 	}
 
-	public TryStatement(int start, int end, Block tryStatement,
-			List<CatchClause> catchClauses) {
+	public TryStatement(int start, int end, Block tryStatement, List<CatchClause> catchClauses) {
 		this(start, end, tryStatement, catchClauses, null);
 	}
 

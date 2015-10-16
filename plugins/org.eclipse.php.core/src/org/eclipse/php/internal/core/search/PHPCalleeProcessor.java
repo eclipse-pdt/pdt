@@ -34,14 +34,12 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 
 	private class RequestorAdaptor extends SourceElementRequestorAdaptor {
 		@Override
-		public void acceptMethodReference(String methodName, int argCount,
-				int sourcePosition, int sourceEndPosition) {
+		public void acceptMethodReference(String methodName, int argCount, int sourcePosition, int sourceEndPosition) {
 			int off = 0;
 			try {
 				off = method.getSourceRange().getOffset();
 				if (sourcePosition < method.getSourceRange().getOffset()
-						|| sourceEndPosition > method.getSourceRange()
-								.getLength()
+						|| sourceEndPosition > method.getSourceRange().getLength()
 								+ method.getSourceRange().getOffset()) {
 					return;
 				}
@@ -49,17 +47,14 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 				Logger.logException(e1);
 			}
 
-			SimpleReference ref = new SimpleReference(sourcePosition,
-					sourceEndPosition, methodName);
-			IMethod[] methods = findMethods(methodName, argCount,
-					sourcePosition);
+			SimpleReference ref = new SimpleReference(sourcePosition, sourceEndPosition, methodName);
+			IMethod[] methods = findMethods(methodName, argCount, sourcePosition);
 			fSearchResults.put(ref, methods);
 		}
 
 	}
 
-	public PHPCalleeProcessor(IMethod method, IProgressMonitor monitor,
-			IDLTKSearchScope scope) {
+	public PHPCalleeProcessor(IMethod method, IProgressMonitor monitor, IDLTKSearchScope scope) {
 		this.method = method;
 		this.scope = scope;
 	}
@@ -69,11 +64,9 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 		try {
 			if (method.getSource() != null) {
 				RequestorAdaptor requestor = new RequestorAdaptor();
-				ISourceElementParser parser = DLTKLanguageManager
-						.getSourceElementParser(PHPNature.ID);
+				ISourceElementParser parser = DLTKLanguageManager.getSourceElementParser(PHPNature.ID);
 				parser.setRequestor(requestor);
-				parser.parseSourceModule((IModuleSource) method
-						.getAncestor(IModelElement.SOURCE_MODULE));
+				parser.parseSourceModule((IModuleSource) method.getAncestor(IModelElement.SOURCE_MODULE));
 			} else {
 			}
 			return fSearchResults;
@@ -85,13 +78,11 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 		return fSearchResults;
 	}
 
-	public IMethod[] findMethods(final String methodName, int argCount,
-			int sourcePosition) {
+	public IMethod[] findMethods(final String methodName, int argCount, int sourcePosition) {
 		final List<IMethod> methods = new ArrayList<IMethod>();
 		ISourceModule module = this.method.getSourceModule();
 		try {
-			IModelElement[] elements = module.codeSelect(sourcePosition,
-					methodName.length());
+			IModelElement[] elements = module.codeSelect(sourcePosition, methodName.length());
 			for (int i = 0; i < elements.length; ++i) {
 				if (elements[i] instanceof IMethod) {
 					methods.add((IMethod) elements[i]);
@@ -105,25 +96,21 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
-	protected void search(String patternString, int searchFor, int limitTo,
-			IDLTKSearchScope scope, SearchRequestor resultCollector)
-			throws CoreException {
-		search(patternString, searchFor, limitTo, SearchPattern.R_EXACT_MATCH,
-				scope, resultCollector);
+	protected void search(String patternString, int searchFor, int limitTo, IDLTKSearchScope scope,
+			SearchRequestor resultCollector) throws CoreException {
+		search(patternString, searchFor, limitTo, SearchPattern.R_EXACT_MATCH, scope, resultCollector);
 	}
 
-	protected void search(String patternString, int searchFor, int limitTo,
-			int matchRule, IDLTKSearchScope scope, SearchRequestor requestor)
-			throws CoreException {
-		if (patternString.indexOf('*') != -1
-				|| patternString.indexOf('?') != -1) {
+	protected void search(String patternString, int searchFor, int limitTo, int matchRule, IDLTKSearchScope scope,
+			SearchRequestor requestor) throws CoreException {
+		if (patternString.indexOf('*') != -1 || patternString.indexOf('?') != -1) {
 			matchRule |= SearchPattern.R_PATTERN_MATCH;
 		}
-		SearchPattern pattern = SearchPattern.createPattern(patternString,
-				searchFor, limitTo, matchRule, scope.getLanguageToolkit());
+		SearchPattern pattern = SearchPattern.createPattern(patternString, searchFor, limitTo, matchRule,
+				scope.getLanguageToolkit());
 		SearchEngine searchEngine = new SearchEngine();
-		searchEngine.search(pattern, new SearchParticipant[] { SearchEngine
-				.getDefaultSearchParticipant() }, scope, requestor, null);
+		searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
+				requestor, null);
 	}
 
 }

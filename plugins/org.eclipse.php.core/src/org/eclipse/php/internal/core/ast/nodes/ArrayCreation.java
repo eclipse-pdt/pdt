@@ -22,17 +22,16 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents array creation
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * array(1,2,3,),
- * array('Dodo'=>'Golo','Dafna'=>'Dodidu')
- * array($a, $b=>foo(), 1=>$myClass->getFirst())
+ * array(1,2,3,), array('Dodo'=>'Golo','Dafna'=>'Dodidu') array($a, $b=>foo(),
+ * 1=>$myClass->getFirst())
  */
 public class ArrayCreation extends VariableBase {
 
-	private final ASTNode.NodeList<ArrayElement> elements = new ASTNode.NodeList<ArrayElement>(
-			ELEMENTS_PROPERTY);
+	private final ASTNode.NodeList<ArrayElement> elements = new ASTNode.NodeList<ArrayElement>(ELEMENTS_PROPERTY);
 	private boolean hasArrayKey;
 
 	/**
@@ -42,16 +41,15 @@ public class ArrayCreation extends VariableBase {
 			ArrayCreation.class, "elements", ArrayElement.class, CYCLE_RISK); //$NON-NLS-1$
 
 	public static final SimplePropertyDescriptor HAS_ARRAY_KEY = new SimplePropertyDescriptor(
-			LambdaFunctionDeclaration.class,
-			"hasArrayKey", Boolean.class, OPTIONAL); //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "hasArrayKey", Boolean.class, OPTIONAL); //$NON-NLS-1$
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(HAS_ARRAY_KEY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -61,8 +59,7 @@ public class ArrayCreation extends VariableBase {
 		super(ast);
 	}
 
-	private ArrayCreation(int start, int end, AST ast, ArrayElement[] elements,
-			boolean hasArrayKey) {
+	private ArrayCreation(int start, int end, AST ast, ArrayElement[] elements, boolean hasArrayKey) {
 		super(start, end, ast);
 
 		if (elements == null) {
@@ -75,18 +72,15 @@ public class ArrayCreation extends VariableBase {
 		setHasArrayKey(hasArrayKey);
 	}
 
-	public ArrayCreation(int start, int end, AST ast,
-			List<ArrayElement> elements) {
-		this(start, end, ast, elements == null ? null
-				: (ArrayElement[]) elements.toArray(new ArrayElement[elements
-						.size()]), true);
+	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements) {
+		this(start, end, ast,
+				elements == null ? null : (ArrayElement[]) elements.toArray(new ArrayElement[elements.size()]), true);
 	}
 
-	public ArrayCreation(int start, int end, AST ast,
-			List<ArrayElement> elements, boolean hasArrayKey) {
-		this(start, end, ast, elements == null ? null
-				: (ArrayElement[]) elements.toArray(new ArrayElement[elements
-						.size()]), hasArrayKey);
+	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements, boolean hasArrayKey) {
+		this(start, end, ast,
+				elements == null ? null : (ArrayElement[]) elements.toArray(new ArrayElement[elements.size()]),
+				hasArrayKey);
 	}
 
 	public boolean isHasArrayKey() {
@@ -102,8 +96,7 @@ public class ArrayCreation extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final boolean internalGetSetBooleanProperty(
-			SimplePropertyDescriptor property, boolean get, boolean value) {
+	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == HAS_ARRAY_KEY) {
 			if (get) {
 				return isHasArrayKey();
@@ -116,8 +109,7 @@ public class ArrayCreation extends VariableBase {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
@@ -194,16 +186,13 @@ public class ArrayCreation extends VariableBase {
 	 */
 	ASTNode clone0(AST target) {
 		final List<ASTNode> elements = ASTNode.copySubtrees(target, elements());
-		final ArrayCreation result = new ArrayCreation(this.getStart(),
-				this.getEnd(), target,
-				elements.toArray(new ArrayElement[elements.size()]),
-				isHasArrayKey());
+		final ArrayCreation result = new ArrayCreation(this.getStart(), this.getEnd(), target,
+				elements.toArray(new ArrayElement[elements.size()]), isHasArrayKey());
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

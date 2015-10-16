@@ -29,15 +29,12 @@ import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 
-public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
-		implements IExecutableExtension {
+public class ParserBuildParticipantFactory extends AbstractBuildParticipantType implements IExecutableExtension {
 
 	@Override
-	public IBuildParticipant createBuildParticipant(IScriptProject project)
-			throws CoreException {
+	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
 		if (natureId != null) {
-			final ISourceParser parser = DLTKLanguageManager
-					.getSourceParser(natureId);
+			final ISourceParser parser = DLTKLanguageManager.getSourceParser(natureId);
 			if (parser != null) {
 				return new ParserBuildParticipant(parser);
 			}
@@ -47,8 +44,8 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 
 	private String natureId = null;
 
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
 	}
 
@@ -62,8 +59,7 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 
 		public void build(IBuildContext context) throws CoreException {
 			IModelElement element = context.getModelElement();
-			if (LibraryFolderManager.getInstance().isInLibraryFolder(
-					element.getResource())) {
+			if (LibraryFolderManager.getInstance().isInLibraryFolder(element.getResource())) {
 				// skip syntax check for code inside library folders
 				return;
 			}
@@ -75,19 +71,17 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 				return;
 			}
 			// get cache entry
-			final ISourceModuleInfo cacheEntry = ModelManager.getModelManager()
-					.getSourceModuleInfoCache().get(context.getSourceModule());
+			final ISourceModuleInfo cacheEntry = ModelManager.getModelManager().getSourceModuleInfoCache()
+					.get(context.getSourceModule());
 			// if full build,do not use cache,or the error marker will not be
 			// refreshed
 			if (context.getBuildType() != IScriptBuilder.FULL_BUILD) {
 
 				// check if there is cached AST
-				moduleDeclaration = SourceParserUtil.getModuleFromCache(
-						cacheEntry, context.getProblemReporter());
+				moduleDeclaration = SourceParserUtil.getModuleFromCache(cacheEntry, context.getProblemReporter());
 				if (moduleDeclaration != null) {
 					// use AST from cache
-					context.set(IBuildContext.ATTR_MODULE_DECLARATION,
-							moduleDeclaration);
+					context.set(IBuildContext.ATTR_MODULE_DECLARATION, moduleDeclaration);
 					return;
 				}
 			}
@@ -95,18 +89,14 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 			// create problem collector
 			final ProblemCollector problemCollector = new ProblemCollector();
 			// parse
-			moduleDeclaration = parser
-					.parse((IModuleSource) context.getSourceModule(),
-							problemCollector);
+			moduleDeclaration = parser.parse((IModuleSource) context.getSourceModule(), problemCollector);
 			// put result to the cache
-			SourceParserUtil.putModuleToCache(cacheEntry, moduleDeclaration,
-					problemCollector);
+			SourceParserUtil.putModuleToCache(cacheEntry, moduleDeclaration, problemCollector);
 			// report errors to the build context
 			problemCollector.copyTo(context.getProblemReporter());
 
 			// push AST to build context
-			context.set(IBuildContext.ATTR_MODULE_DECLARATION,
-					moduleDeclaration);
+			context.set(IBuildContext.ATTR_MODULE_DECLARATION, moduleDeclaration);
 		}
 	}
 

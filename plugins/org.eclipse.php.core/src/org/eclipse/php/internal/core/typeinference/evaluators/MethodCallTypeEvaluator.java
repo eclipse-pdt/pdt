@@ -46,8 +46,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
-	private IGoal produceNextSubgoal(IGoal previousGoal,
-			IEvaluatedType previousResult, GoalState goalState) {
+	private IGoal produceNextSubgoal(IGoal previousGoal, IEvaluatedType previousResult, GoalState goalState) {
 
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		CallExpression expression = (CallExpression) typedGoal.getExpression();
@@ -77,15 +76,13 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		// (using PHP Doc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_METHOD_PHPDOC;
-			return new PHPDocMethodReturnTypeGoal(typedGoal.getContext(),
-					receiverType, expression.getName(),
+			return new PHPDocMethodReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName(),
 					getFunctionCallArgs(expression), expression.sourceStart());
 		}
 
 		// PHPDoc logic is done, start evaluating 'return' statements here:
 		if (state == STATE_WAITING_METHOD_PHPDOC) {
-			if (goalState != GoalState.PRUNED && previousResult != null
-					&& previousResult != UnknownType.INSTANCE) {
+			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 				previousResult = null;
 				// BUG 404031, stop read if found not simple element
@@ -95,18 +92,15 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 				}
 			}
 			state = STATE_WAITING_METHOD;
-			return new MethodElementReturnTypeGoal(typedGoal.getContext(),
-					receiverType, expression.getName(),
+			return new MethodElementReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName(),
 					getFunctionCallArgs(expression), expression.sourceStart());
 		}
 
 		if (state == STATE_WAITING_METHOD) {
-			if (goalState != GoalState.PRUNED && previousResult != null
-					&& previousResult != UnknownType.INSTANCE) {
+			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				if (result != null) {
-					result = PHPTypeInferenceUtils.combineTypes(Arrays
-							.asList(new IEvaluatedType[] { result,
-									previousResult }));
+					result = PHPTypeInferenceUtils
+							.combineTypes(Arrays.asList(new IEvaluatedType[] { result, previousResult }));
 				} else {
 					result = previousResult;
 					previousResult = null;

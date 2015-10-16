@@ -23,8 +23,7 @@ import org.eclipse.php.internal.core.corext.ASTNodes;
  */
 public class MethodExitsFinder extends AbstractOccurrencesFinder {
 
-	private static final String EXIT_POINT_OF = CoreMessages
-			.getString("MethodExitsFinder.0"); //$NON-NLS-1$
+	private static final String EXIT_POINT_OF = CoreMessages.getString("MethodExitsFinder.0"); //$NON-NLS-1$
 	public static final String ID = "MethodExitsFinder"; //$NON-NLS-1$
 	private FunctionDeclaration fFunctionDeclaration;
 	private ASTNode fExitPointNode;
@@ -40,8 +39,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		fASTRoot = root;
 		fExitPointNode = node;
 		if (isExitExecutionPath(node)) {
-			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(
-					node, ASTNode.FUNCTION_DECLARATION);
+			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fFunctionDeclaration == null)
 				return "MethodExitsFinder_no_return_type_selected"; //$NON-NLS-1$
 			return null;
@@ -53,13 +51,11 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 
 	private final boolean isExitExecutionPath(ASTNode node) {
 		return node != null
-				&& (node.getType() == ASTNode.RETURN_STATEMENT || node
-						.getType() == ASTNode.THROW_STATEMENT);
+				&& (node.getType() == ASTNode.RETURN_STATEMENT || node.getType() == ASTNode.THROW_STATEMENT);
 	}
 
 	protected void findOccurrences() {
-		fDescription = Messages.format(EXIT_POINT_OF, fFunctionDeclaration
-				.getFunctionName().getName());
+		fDescription = Messages.format(EXIT_POINT_OF, fFunctionDeclaration.getFunctionName().getName());
 		fFunctionDeclaration.accept(this);
 		// TODO : check execution path to determine if the last bracket
 		// is also a possible exit path
@@ -80,8 +76,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		// }
 		// }
 		int offset = fFunctionDeclaration.getEnd() - 1;
-		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null),
-				fDescription));
+		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fDescription));
 		// }
 	}
 
@@ -97,20 +92,17 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(ReturnStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
-				getOccurrenceType(null), fDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return super.visit(node);
 	}
 
 	public boolean visit(YieldExpression node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
-				getOccurrenceType(null), fDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return super.visit(node);
 	}
 
 	public boolean visit(ThrowStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
-				getOccurrenceType(null), fDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return true;
 	}
 

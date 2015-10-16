@@ -35,8 +35,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 	 * @param context
 	 * @param elementFilter
 	 */
-	public MethodKeywordStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public MethodKeywordStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -58,16 +57,14 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
 		// if the class does not have parent
-		if ((keyword.context & PHPKeywords.METHOD_BODY) != 0
-				&& isParent(keyword)) {
+		if ((keyword.context & PHPKeywords.METHOD_BODY) != 0 && isParent(keyword)) {
 			ICompletionContext context = getContext();
 			if (context instanceof GlobalMethodStatementContext) {
 				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;
 				IType type = globalContext.getEnclosingType();
 				try {
 					if (type != null && PHPFlags.isClass(type.getFlags())) {
-						ITypeHierarchy hierarchy = getCompanion()
-								.getSuperTypeHierarchy(type, null);
+						ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 						IType[] superTypes = hierarchy.getAllSupertypes(type);
 						for (IType superType : superTypes) {
 							if (PHPFlags.isClass(superType.getFlags())) {
@@ -85,9 +82,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 
 	protected boolean isParent(KeywordData keyword) {
 		String name = keyword.name;
-		if (PHPVersion.PHP5_4
-				.isLessThan(((AbstractCompletionContext) getContext())
-						.getPhpVersion())) {
+		if (PHPVersion.PHP5_4.isLessThan(((AbstractCompletionContext) getContext()).getPhpVersion())) {
 			name = name.toLowerCase();
 		}
 

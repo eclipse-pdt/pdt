@@ -18,9 +18,10 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.TraitUseStatement;
  * 
  * <p>
  * This visitor is optimized for performance to look not deeper than the
- * necessary level in the AST tree. As described in the <a
- * href="http://php.net/manual/en/language.oop5.traits.php">PHP Manual</a> trait
- * use statements can be legally placed only in the scope of class declarations.
+ * necessary level in the AST tree. As described in the
+ * <a href="http://php.net/manual/en/language.oop5.traits.php">PHP Manual</a>
+ * trait use statements can be legally placed only in the scope of class
+ * declarations.
  * </p>
  * 
  * @author Kaloyan Raev

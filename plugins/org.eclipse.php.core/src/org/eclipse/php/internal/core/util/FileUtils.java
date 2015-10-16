@@ -96,25 +96,20 @@ public class FileUtils {
 	 * @throws IOException
 	 *             if problem encountered during write.
 	 */
-	static public void setContents(File file, String contents)
-			throws FileNotFoundException, IOException {
+	static public void setContents(File file, String contents) throws FileNotFoundException, IOException {
 		if (file == null) {
-			throw new IllegalArgumentException(CoreMessages
-					.getString("FileUtils_2")); //$NON-NLS-1$
+			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_2")); //$NON-NLS-1$
 		}
 		if (!file.exists()) {
-			throw new FileNotFoundException(CoreMessages
-					.getString("FileUtils_3") //$NON-NLS-1$
+			throw new FileNotFoundException(CoreMessages.getString("FileUtils_3") //$NON-NLS-1$
 					+ file);
 		}
 		if (!file.isFile()) {
-			throw new IllegalArgumentException(CoreMessages
-					.getString("FileUtils_4") //$NON-NLS-1$
+			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_4") //$NON-NLS-1$
 					+ file);
 		}
 		if (!file.canWrite()) {
-			throw new IllegalArgumentException(CoreMessages
-					.getString("FileUtils_5") //$NON-NLS-1$
+			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_5") //$NON-NLS-1$
 					+ file);
 		}
 
@@ -137,8 +132,7 @@ public class FileUtils {
 	 * @param filePathString
 	 * @return
 	 */
-	public static boolean checkIfContainerOfFile(String containerPathString,
-			String filePathString) {
+	public static boolean checkIfContainerOfFile(String containerPathString, String filePathString) {
 		Path containerFilterPath = new Path(containerPathString.toLowerCase());
 		Path filePath = new Path(filePathString.toLowerCase());
 		if (containerFilterPath.segmentCount() > filePath.segmentCount()) {
@@ -146,14 +140,12 @@ public class FileUtils {
 		}
 
 		if (((containerFilterPath.getDevice() == null) && (filePath.getDevice() != null))
-				|| ((containerFilterPath.getDevice() != null) && (filePath
-						.getDevice() == null))) {
+				|| ((containerFilterPath.getDevice() != null) && (filePath.getDevice() == null))) {
 			return false;
 		}
 
 		if ((containerFilterPath.getDevice() != null)
-				&& !containerFilterPath.getDevice().toLowerCase().equals(
-						filePath.getDevice().toLowerCase())) {
+				&& !containerFilterPath.getDevice().toLowerCase().equals(filePath.getDevice().toLowerCase())) {
 			return false;
 		}
 
@@ -173,8 +165,7 @@ public class FileUtils {
 	 * @param filePathStr2
 	 * @return
 	 */
-	public static boolean checkIfEqualFilePaths(String filePathStr1,
-			String filePathStr2) {
+	public static boolean checkIfEqualFilePaths(String filePathStr1, String filePathStr2) {
 		Path filePath1 = new Path(filePathStr1.toLowerCase());
 		Path filePath2 = new Path(filePathStr2.toLowerCase());
 		if (filePath1.segmentCount() != filePath2.segmentCount()) {
@@ -187,8 +178,7 @@ public class FileUtils {
 		}
 
 		if ((filePath1.getDevice() != null)
-				&& !filePath1.getDevice().toLowerCase().equals(
-						filePath2.getDevice().toLowerCase())) {
+				&& !filePath1.getDevice().toLowerCase().equals(filePath2.getDevice().toLowerCase())) {
 			return false;
 		}
 

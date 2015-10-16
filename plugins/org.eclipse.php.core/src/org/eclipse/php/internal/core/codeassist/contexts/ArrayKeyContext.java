@@ -55,8 +55,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 		return hasQuotes;
 	}
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -65,47 +64,37 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 
 			TextSequence statementText = getStatementText();
 			int length = statementText.length();
-			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, length);
-			int startPosition = PHPTextSequenceUtilities
-					.readIdentifierStartIndex(getPhpVersion(), statementText,
-							endPosition, true);
+			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, length);
+			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText,
+					endPosition, true);
 
 			hasQuotes = false;
 
 			if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
 				hasQuotes = true;
 
-				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-						statementText, startPosition);
-				if (endPosition == 0
-						|| (statementText.charAt(endPosition - 1) != '\"' && statementText
-								.charAt(endPosition - 1) != '\'')) {
+				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
+				if (endPosition == 0 || (statementText.charAt(endPosition - 1) != '\"'
+						&& statementText.charAt(endPosition - 1) != '\'')) {
 					return false;
 				}
 				startPosition = endPosition - 1;
 			}
-			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, startPosition);
-			if (endPosition > 0
-					&& (statementText.charAt(endPosition - 1) == '\"' || statementText
-							.charAt(endPosition - 1) == '\'')) {
+			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
+			if (endPosition > 0 && (statementText.charAt(endPosition - 1) == '\"'
+					|| statementText.charAt(endPosition - 1) == '\'')) {
 				hasQuotes = true;
 				startPosition = endPosition - 1;
-				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-						statementText, startPosition);
+				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
 			}
-			if (endPosition == 0
-					|| statementText.charAt(endPosition - 1) != '[') {
+			if (endPosition == 0 || statementText.charAt(endPosition - 1) != '[') {
 				return false;
 			}
 
-			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, endPosition - 1);
-			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					getPhpVersion(), statementText, endPosition, true);
-			arrayVarName = statementText
-					.subSequence(startPosition, endPosition).toString();
+			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 1);
+			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText,
+					endPosition, true);
+			arrayVarName = statementText.subSequence(startPosition, endPosition).toString();
 			if (!arrayVarName.startsWith("$")) { //$NON-NLS-1$
 				return false;
 			}

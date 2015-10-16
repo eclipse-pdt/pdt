@@ -82,20 +82,17 @@ class InternalASTRewrite extends NodeEventHandler {
 				 * given node is the compilation unit.
 				 */
 				public SourceRange computeSourceRange(ASTNode node) {
-					int extendedStartPosition = rootNode
-							.getExtendedStartPosition(node);
+					int extendedStartPosition = rootNode.getExtendedStartPosition(node);
 					int extendedLength = rootNode.getExtendedLength(node);
-					return new SourceRange(extendedStartPosition,
-							extendedLength);
+					return new SourceRange(extendedStartPosition, extendedLength);
 				}
 			};
 			LineInformation lineInfo = LineInformation.create(document);
 			String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 			List comments = rootNode.comments();
 
-			ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(lexer,
-					document, lineInfo, lineDelim, result, this.eventStore,
-					this.nodeStore, comments, options, xsrComputer);
+			ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(lexer, document, lineInfo, lineDelim, result,
+					this.eventStore, this.nodeStore, comments, options, xsrComputer);
 			visitor.setInsertUseStatement(isInsertUseStatement);
 			rootNode.accept(visitor);
 		}
@@ -106,18 +103,16 @@ class InternalASTRewrite extends NodeEventHandler {
 		ASTNode source = (ASTNode) this.clonedNodes.get(newChild);
 		if (source != null) {
 			if (this.cloneDepth == 0) {
-				PropertyLocation propertyLocation = this.eventStore
-						.getPropertyLocation(source, RewriteEventStore.ORIGINAL);
-				CopySourceInfo sourceInfo = this.eventStore.markAsCopySource(
-						propertyLocation.getParent(),
+				PropertyLocation propertyLocation = this.eventStore.getPropertyLocation(source,
+						RewriteEventStore.ORIGINAL);
+				CopySourceInfo sourceInfo = this.eventStore.markAsCopySource(propertyLocation.getParent(),
 						propertyLocation.getProperty(), source, false);
 				this.nodeStore.markAsCopyTarget(newChild, sourceInfo);
 			}
 		} else if ((newChild.getFlags() & ASTNode.ORIGINAL) != 0) {
-			PropertyLocation propertyLocation = this.eventStore
-					.getPropertyLocation(newChild, RewriteEventStore.ORIGINAL);
-			CopySourceInfo sourceInfo = this.eventStore.markAsCopySource(
-					propertyLocation.getParent(),
+			PropertyLocation propertyLocation = this.eventStore.getPropertyLocation(newChild,
+					RewriteEventStore.ORIGINAL);
+			CopySourceInfo sourceInfo = this.eventStore.markAsCopySource(propertyLocation.getParent(),
 					propertyLocation.getProperty(), newChild, true);
 			this.nodeStore.markAsCopyTarget(newChild, sourceInfo);
 		}
@@ -144,8 +139,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		event.setNewValue(node.getStructuralProperty(property));
 	}
 
-	void preAddChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void preAddChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		if (property.isChildProperty()) {
 			NodeRewriteEvent event = this.getNodeEvent(node, property);
 			event.setNewValue(child);
@@ -158,8 +152,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
-	void postAddChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void postAddChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		if (property.isChildListProperty()) {
 
 			ListRewriteEvent event = this.getListEvent(node, property);
@@ -180,8 +173,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
-	void preRemoveChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void preRemoveChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		if (property.isChildProperty()) {
 			NodeRewriteEvent event = getNodeEvent(node, property);
 			event.setNewValue(null);
@@ -197,8 +189,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
-	void preReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild,
-			StructuralPropertyDescriptor property) {
+	void preReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild, StructuralPropertyDescriptor property) {
 		if (property.isChildProperty()) {
 			NodeRewriteEvent event = getNodeEvent(node, property);
 			event.setNewValue(newChild);
@@ -235,13 +226,11 @@ class InternalASTRewrite extends NodeEventHandler {
 		this.cloneDepth--;
 	}
 
-	private NodeRewriteEvent getNodeEvent(ASTNode node,
-			StructuralPropertyDescriptor property) {
+	private NodeRewriteEvent getNodeEvent(ASTNode node, StructuralPropertyDescriptor property) {
 		return this.eventStore.getNodeEvent(node, property, true);
 	}
 
-	private ListRewriteEvent getListEvent(ASTNode node,
-			StructuralPropertyDescriptor property) {
+	private ListRewriteEvent getListEvent(ASTNode node, StructuralPropertyDescriptor property) {
 		return this.eventStore.getListEvent(node, property, true);
 	}
 

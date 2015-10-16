@@ -21,8 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a prefix expression
- * <pre>e.g.<pre> --$a,
- * --foo()
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * --$a, --foo()
  */
 public class PrefixExpression extends Expression implements IOperationNode {
 
@@ -39,8 +43,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(
-			PrefixExpression.class,
+	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(PrefixExpression.class,
 			"variable", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
 			PrefixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
@@ -52,8 +55,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(VARIABLE_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -63,8 +65,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		super(ast);
 	}
 
-	public PrefixExpression(int start, int end, AST ast, Expression variable,
-			int operator) {
+	public PrefixExpression(int start, int end, AST ast, Expression variable, int operator) {
 		super(start, end, ast);
 
 		if (variable == null) {
@@ -107,14 +108,14 @@ public class PrefixExpression extends Expression implements IOperationNode {
 
 	public static String getOperator(int operator) {
 		switch (operator) {
-			case OP_DEC:
-				return "--"; //$NON-NLS-1$
-			case OP_INC:
-				return "++"; //$NON-NLS-1$
-			case OP_UNPACK:
-				return "..."; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_DEC:
+			return "--"; //$NON-NLS-1$
+		case OP_INC:
+			return "++"; //$NON-NLS-1$
+		case OP_UNPACK:
+			return "..."; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -133,14 +134,21 @@ public class PrefixExpression extends Expression implements IOperationNode {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * ()
 	 */
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * (int)
 	 */
 	public String getOperationString(int op) {
 		return getOperator(op);
@@ -163,8 +171,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		postValueChange(OPERATOR_PROPERTY);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
@@ -209,8 +216,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		postReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == VARIABLE_PROPERTY) {
 			if (get) {
 				return getVariable();
@@ -233,16 +239,14 @@ public class PrefixExpression extends Expression implements IOperationNode {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Expression variable = ASTNode.copySubtree(target,
-				this.getVariable());
-		final PrefixExpression result = new PrefixExpression(this.getStart(),
-				this.getEnd(), target, variable, this.getOperator());
+		final Expression variable = ASTNode.copySubtree(target, this.getVariable());
+		final PrefixExpression result = new PrefixExpression(this.getStart(), this.getEnd(), target, variable,
+				this.getOperator());
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

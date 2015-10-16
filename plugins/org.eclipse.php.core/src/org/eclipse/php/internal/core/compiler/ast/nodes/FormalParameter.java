@@ -21,21 +21,23 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a function formal parameter
- * <pre>e.g.<pre> $a,
- * MyClass $a,
- * $a = 3,
- * int $a = 3
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a, MyClass $a, $a = 3, int $a = 3
  */
 public class FormalParameter extends Argument {
 
-	private final SimpleReference parameterType; // this can be either type reference or array
+	private final SimpleReference parameterType; // this can be either type
+													// reference or array
 	private final VariableReference parameterName;
 	private final boolean isMandatory;
 	private final boolean isVariadic;
 
-	public FormalParameter(int start, int end, SimpleReference type,
-			final VariableReference parameterName, Expression defaultValue,
-			boolean isMandatory, boolean isVariadic) {
+	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
+			Expression defaultValue, boolean isMandatory, boolean isVariadic) {
 		super(parameterName, start, end, defaultValue, 0);
 
 		SimpleReference ref = getRef();
@@ -52,18 +54,17 @@ public class FormalParameter extends Argument {
 		this.isVariadic = isVariadic;
 	}
 
-	public FormalParameter(int start, int end, SimpleReference type,
-			final VariableReference parameterName, Expression defaultValue) {
+	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
+			Expression defaultValue) {
 		this(start, end, type, parameterName, defaultValue, false, false);
 	}
 
-	public FormalParameter(int start, int end, SimpleReference type,
-			final VariableReference parameterName, boolean isMandatory) {
+	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
+			boolean isMandatory) {
 		this(start, end, type, parameterName, null, isMandatory, false);
 	}
 
-	public FormalParameter(int start, int end, SimpleReference type,
-			final VariableReference parameterName) {
+	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName) {
 		this(start, end, type, parameterName, null, true, false);
 	}
 

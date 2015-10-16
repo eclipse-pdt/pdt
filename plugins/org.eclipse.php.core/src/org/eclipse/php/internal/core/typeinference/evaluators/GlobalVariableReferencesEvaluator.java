@@ -60,8 +60,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		IScriptProject scriptProject = null;
 		if (context instanceof ISourceModuleContext) {
 			sourceModuleContext = (ISourceModuleContext) context;
-			scriptProject = sourceModuleContext.getSourceModule()
-					.getScriptProject();
+			scriptProject = sourceModuleContext.getSourceModule().getScriptProject();
 		}
 
 		String variableName = typedGoal.getVariableName();
@@ -72,8 +71,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-		IField[] elements = PhpModelAccess.getDefault().findFields(
-				variableName, MatchRule.EXACT, Modifiers.AccGlobal,
+		IField[] elements = PhpModelAccess.getDefault().findFields(variableName, MatchRule.EXACT, Modifiers.AccGlobal,
 				Modifiers.AccConstant, scope, null);
 
 		// if no element found, return empty array.
@@ -94,8 +92,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				SourceField sourceField = (SourceField) element;
 				ISourceModule sourceModule = sourceField.getSourceModule();
 				if (!offsets.containsKey(sourceModule)) {
-					offsets.put(sourceModule, new TreeSet<ISourceRange>(
-							sourceRangeComparator));
+					offsets.put(sourceModule, new TreeSet<ISourceRange>(sourceRangeComparator));
 				}
 				try {
 					offsets.get(sourceModule).add(sourceField.getSourceRange());
@@ -108,37 +105,31 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		}
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
-		for (Entry<ISourceModule, SortedSet<ISourceRange>> entry : offsets
-				.entrySet()) {
+		for (Entry<ISourceModule, SortedSet<ISourceRange>> entry : offsets.entrySet()) {
 			ISourceModule sourceModule = entry.getKey();
 			if (exploreOtherFiles
-					|| (sourceModuleContext != null && sourceModuleContext
-							.getSourceModule().equals(sourceModule))) {
+					|| (sourceModuleContext != null && sourceModuleContext.getSourceModule().equals(sourceModule))) {
 
-				ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration(sourceModule);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 				SortedSet<ISourceRange> fileOffsets = entry.getValue();
 
 				if (!fileOffsets.isEmpty()) {
-					GlobalReferenceDeclSearcher varSearcher = new GlobalReferenceDeclSearcher(
-							sourceModule, fileOffsets, variableName);
+					GlobalReferenceDeclSearcher varSearcher = new GlobalReferenceDeclSearcher(sourceModule, fileOffsets,
+							variableName);
 					try {
 						moduleDeclaration.traverse(varSearcher);
 
 						DeclarationScope[] scopes = varSearcher.getScopes();
 						for (DeclarationScope s : scopes) {
-							for (Declaration decl : s
-									.getDeclarations(variableName)) {
+							for (Declaration decl : s.getDeclarations(variableName)) {
 
 								IContext context2 = s.getContext();
 								if (context2 instanceof IModelCacheContext
 										&& this.goal.getContext() instanceof IModelCacheContext) {
 									((IModelCacheContext) context2)
-											.setCache(((IModelCacheContext) this.goal
-													.getContext()).getCache());
+											.setCache(((IModelCacheContext) this.goal.getContext()).getCache());
 								}
-								subGoals.add(new ExpressionTypeGoal(context2,
-										decl.getNode()));
+								subGoals.add(new ExpressionTypeGoal(context2, decl.getNode()));
 							}
 						}
 					} catch (Exception e) {
@@ -172,8 +163,8 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		private int currentEnd;
 		private boolean stopProcessing;
 
-		public GlobalReferenceDeclSearcher(ISourceModule sourceModule,
-				SortedSet<ISourceRange> offsets, String variableName) {
+		public GlobalReferenceDeclSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets,
+				String variableName) {
 			super(sourceModule);
 			this.variableName = variableName;
 			offsetsIt = offsets.iterator();
@@ -203,8 +194,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		}
 
 		protected boolean isInteresting(ASTNode node) {
-			return !stopProcessing && node.sourceStart() <= currentStart
-					&& node.sourceEnd() >= currentEnd;
+			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
 		}
 	}
 }

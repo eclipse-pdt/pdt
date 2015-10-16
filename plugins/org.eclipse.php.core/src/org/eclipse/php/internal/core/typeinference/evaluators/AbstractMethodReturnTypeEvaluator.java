@@ -26,8 +26,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
-public abstract class AbstractMethodReturnTypeEvaluator extends
-		AbstractPHPGoalEvaluator {
+public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 	protected static class MethodsAndTypes {
 		public IMethod[] methods;
 		public IType[] types;
@@ -43,8 +42,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 
 	protected MethodsAndTypes getMethodsAndTypes() {
 		AbstractMethodReturnTypeGoal typedGoal = (AbstractMethodReturnTypeGoal) goal;
-		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext())
-				.getSourceModule();
+		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext()).getSourceModule();
 		IType[] types = typedGoal.getTypes();
 		String methodName = typedGoal.getMethodName();
 
@@ -58,9 +56,8 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 		List<IType> methodTypes = new LinkedList<IType>();
 		if (types == null) {
 			try {
-				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
-						methodName, sourceModule, typedGoal.getOffset(), cache,
-						null)));
+				methods.addAll(Arrays.asList(
+						PHPModelUtils.getFunctions(methodName, sourceModule, typedGoal.getOffset(), cache, null)));
 				for (int i = 0, size = methods.size(); i < size; i++) {
 					methodTypes.add(null);
 				}
@@ -70,16 +67,14 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 		} else {
 			try {
 				for (IType type : types) {
-					IMethod[] typeMethods = PHPModelUtils.getTypeMethod(type,
-							methodName, true);
+					IMethod[] typeMethods = PHPModelUtils.getTypeMethod(type, methodName, true);
 					if (typeMethods.length == 0) {
 						ITypeHierarchy hierarchy = null;
 						if (cache != null) {
 							hierarchy = cache.getSuperTypeHierarchy(type, null);
 						}
-						typeMethods = PHPModelUtils
-								.getSuperTypeHierarchyMethod(type, hierarchy,
-										methodName, true, null);
+						typeMethods = PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, methodName, true,
+								null);
 					}
 					if (typeMethods.length > 0) {
 						methods.add(typeMethods[0]);

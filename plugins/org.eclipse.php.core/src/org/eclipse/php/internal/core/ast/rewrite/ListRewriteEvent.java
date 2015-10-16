@@ -107,8 +107,7 @@ public class ListRewriteEvent extends RewriteEvent {
 	 */
 	public RewriteEvent[] getChildren() {
 		List entries = getEntries();
-		return (RewriteEvent[]) entries
-				.toArray(new RewriteEvent[entries.size()]);
+		return (RewriteEvent[]) entries.toArray(new RewriteEvent[entries.size()]);
 	}
 
 	/*
@@ -196,8 +195,7 @@ public class ListRewriteEvent extends RewriteEvent {
 	}
 
 	public void setNewValue(ASTNode newValue, int insertIndex) {
-		NodeRewriteEvent curr = (NodeRewriteEvent) getEntries()
-				.get(insertIndex);
+		NodeRewriteEvent curr = (NodeRewriteEvent) getEntries().get(insertIndex);
 		curr.setNewValue(newValue);
 	}
 

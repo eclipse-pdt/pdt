@@ -26,8 +26,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * 
  * @author michael
  */
-public abstract class FunctionParameterContext extends
-		FunctionDeclarationContext {
+public abstract class FunctionParameterContext extends FunctionDeclarationContext {
 
 	/**
 	 * Scans the function parameters from the end to the beginning, and looks
@@ -56,8 +55,7 @@ public abstract class FunctionParameterContext extends
 					if (j > i + 1) {
 						charAtBefore = statementText.charAt(j);
 					}
-					if (charAt == '$' || charAt == '=' || charAt == ','
-							|| (charAt == ':' && charAtBefore == ':')) {
+					if (charAt == '$' || charAt == '=' || charAt == ',' || (charAt == ':' && charAtBefore == ':')) {
 						return charAt;
 					}
 				}

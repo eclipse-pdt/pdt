@@ -21,18 +21,21 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents an HTML blocks in the resource
- * <pre>e.g.<pre> <html> </html>
- * <html> <?php ?> </html> <?php ?>
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * <html> </html> <html> <?php ?> </html> <?php ?>
  */
 public class InLineHtml extends Statement {
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(0);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -52,7 +55,7 @@ public class InLineHtml extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		// no children
@@ -75,8 +78,8 @@ public class InLineHtml extends Statement {
 	public int getType() {
 		return ASTNode.IN_LINE_HTML;
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

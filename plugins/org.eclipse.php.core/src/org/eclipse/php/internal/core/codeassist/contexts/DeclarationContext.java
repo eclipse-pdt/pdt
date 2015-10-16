@@ -12,7 +12,8 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 /**
- * This context represents state when staying in a PHP element declaration. <br/>
+ * This context represents state when staying in a PHP element declaration.
+ * <br/>
  * Examples:
  * 
  * <pre>

@@ -35,10 +35,8 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class FunctionBinding implements IFunctionBinding {
 
-	protected static final int VALID_MODIFIERS = Modifiers.AccPublic
-			| Modifiers.AccProtected | Modifiers.AccPrivate
-			| Modifiers.AccDefault | Modifiers.AccStatic | Modifiers.AccFinal
-			| Modifiers.AccAbstract;
+	protected static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate
+			| Modifiers.AccDefault | Modifiers.AccStatic | Modifiers.AccFinal | Modifiers.AccAbstract;
 	protected BindingResolver resolver;
 	protected IMethod modelElement;
 
@@ -58,9 +56,8 @@ public class FunctionBinding implements IFunctionBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getExceptionTypes
-	 * ()
+	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#
+	 * getExceptionTypes ()
 	 */
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
@@ -86,9 +83,8 @@ public class FunctionBinding implements IFunctionBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getParameterTypes
-	 * ()
+	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#
+	 * getParameterTypes ()
 	 */
 	public ITypeBinding[] getParameterTypes() {
 		// TODO - Create the parameters types according to the defined types in

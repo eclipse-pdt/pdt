@@ -63,16 +63,12 @@ public class PHPFileVisitor implements IResourceProxyVisitor {
 		boolean result = false;
 		if (file != null) {
 			try {
-				IContentTypeManager contentTypeManager = Platform
-						.getContentTypeManager();
+				IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 
-				IContentDescription contentDescription = file
-						.getContentDescription();
-				IContentType phpContentType = contentTypeManager
-						.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+				IContentDescription contentDescription = file.getContentDescription();
+				IContentType phpContentType = contentTypeManager.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 				if (contentDescription != null) {
-					IContentType fileContentType = contentDescription
-							.getContentType();
+					IContentType fileContentType = contentDescription.getContentType();
 
 					if (phpContentType != null) {
 						if (fileContentType.isKindOf(phpContentType)) {

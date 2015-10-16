@@ -23,12 +23,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * Holds an identifier.<br>
  * uses for variable name, function name and class name.
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * $variableName - variableName is the identifier,
- * foo() - foo is the identifier,
- * $myClass->fun() - myClass and fun are identifiers
+ * $variableName - variableName is the identifier, foo() - foo is the
+ * identifier, $myClass->fun() - myClass and fun are identifiers
  */
 public class Identifier extends VariableBase {
 
@@ -37,17 +37,17 @@ public class Identifier extends VariableBase {
 	/**
 	 * The "identifier" structural property of this node type.
 	 */
-	public static final SimplePropertyDescriptor NAME_PROPERTY = new SimplePropertyDescriptor(
-			Identifier.class, "name", String.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor NAME_PROPERTY = new SimplePropertyDescriptor(Identifier.class, "name", //$NON-NLS-1$
+			String.class, MANDATORY);
 
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(1);
 		list.add(NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
@@ -126,22 +126,19 @@ public class Identifier extends VariableBase {
 
 	@Override
 	protected ASTNode clone0(AST target) {
-		Identifier result = new Identifier(this.getStart(), this.getEnd(),
-				target, this.getName());
+		Identifier result = new Identifier(this.getStart(), this.getEnd(), target, this.getName());
 		return result;
 	}
 
 	@Override
-	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final Object internalGetSetObjectProperty(
-			SimplePropertyDescriptor property, boolean get, Object value) {
+	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
 				return getName();

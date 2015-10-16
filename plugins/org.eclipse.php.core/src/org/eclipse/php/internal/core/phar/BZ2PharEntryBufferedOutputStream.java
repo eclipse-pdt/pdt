@@ -15,11 +15,9 @@ import java.io.OutputStream;
 
 import org.eclipse.php.internal.core.tar.CBZip2OutputStream;
 
-public class BZ2PharEntryBufferedOutputStream extends
-		PharEntryBufferedOutputStream {
+public class BZ2PharEntryBufferedOutputStream extends PharEntryBufferedOutputStream {
 
-	public BZ2PharEntryBufferedOutputStream(OutputStream innerStream)
-			throws IOException {
+	public BZ2PharEntryBufferedOutputStream(OutputStream innerStream) throws IOException {
 		super(new CBZip2OutputStream(innerStream, 4));
 	}
 

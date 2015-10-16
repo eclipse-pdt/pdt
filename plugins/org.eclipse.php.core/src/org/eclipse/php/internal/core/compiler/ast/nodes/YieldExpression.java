@@ -48,8 +48,7 @@ public class YieldExpression extends Expression {
 		this(start, end, null, expr);
 	}
 
-	public YieldExpression(int start, int end, Expression key,
-			Expression expr) {
+	public YieldExpression(int start, int end, Expression key, Expression expr) {
 		super(start, end);
 		this.expr = expr;
 		this.key = key;

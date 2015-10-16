@@ -38,10 +38,8 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class TypeDeclarationContext extends DeclarationContext {
 
-	protected static final Pattern EXTENDS_PATTERN = Pattern.compile(
-			"\\Wextends\\W", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-	protected static final Pattern IMPLEMENTS_PATTERN = Pattern.compile(
-			"\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	protected static final Pattern EXTENDS_PATTERN = Pattern.compile("\\Wextends\\W", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	protected static final Pattern IMPLEMENTS_PATTERN = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private int typeEnd;
 	private int typeIdentifierEnd;
@@ -50,8 +48,7 @@ public abstract class TypeDeclarationContext extends DeclarationContext {
 	protected Matcher implementsMatcher;
 	protected Matcher extendsMatcher;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -65,8 +62,7 @@ public abstract class TypeDeclarationContext extends DeclarationContext {
 		// check if we are in the class identifier part.
 		typeIdentifierEnd = 0;
 		for (; typeIdentifierEnd < statementText.length(); typeIdentifierEnd++) {
-			if (!Character.isLetterOrDigit(statementText
-					.charAt(typeIdentifierEnd))) {
+			if (!Character.isLetterOrDigit(statementText.charAt(typeIdentifierEnd))) {
 				break;
 			}
 		}

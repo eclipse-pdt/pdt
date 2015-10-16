@@ -16,8 +16,7 @@ import org.eclipse.dltk.compiler.problem.IProblemIdentifierFactory;
 public class PhpProblemIdentifierFactory implements IProblemIdentifierFactory {
 
 	@Override
-	public IProblemIdentifier valueOf(String localName)
-			throws IllegalArgumentException {
+	public IProblemIdentifier valueOf(String localName) throws IllegalArgumentException {
 		return PhpProblemIdentifier.valueOf(localName);
 	}
 

@@ -30,8 +30,7 @@ public class PHPDOMModelParser extends XMLModelParser {
 	}
 
 	protected boolean isNestedTag(String regionType) {
-		return regionType == PHPRegionContext.PHP_OPEN
-				|| regionType == PHPRegionContext.PHP_CLOSE;
+		return regionType == PHPRegionContext.PHP_OPEN || regionType == PHPRegionContext.PHP_CLOSE;
 	}
 
 	protected boolean isNestedTagOpen(String regionType) {
@@ -39,8 +38,7 @@ public class PHPDOMModelParser extends XMLModelParser {
 	}
 
 	protected String computeNestedTag(String regionType, String tagName,
-			IStructuredDocumentRegion structuredDocumentRegion,
-			ITextRegion region) {
+			IStructuredDocumentRegion structuredDocumentRegion, ITextRegion region) {
 		return PHPDOMModelParser.PHP_TAG_NAME;
 	}
 

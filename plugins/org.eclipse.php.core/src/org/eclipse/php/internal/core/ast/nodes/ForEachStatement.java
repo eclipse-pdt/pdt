@@ -21,17 +21,16 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a for each statement
- * <pre>e.g.<pre>
- * foreach (array_expression as $value)
- *   statement;
- *     
- * foreach (array_expression as $key => $value) 
- *   statement;
  * 
- * foreach (array_expression as $key => $value): 
- *   statement;
- *   ...
- * endforeach;
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * foreach (array_expression as $value) statement;
+ * 
+ * foreach (array_expression as $key => $value) statement;
+ * 
+ * foreach (array_expression as $key => $value): statement; ... endforeach;
  */
 public class ForEachStatement extends Statement {
 
@@ -43,22 +42,21 @@ public class ForEachStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(ForEachStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor KEY_PROPERTY = 
-		new ChildPropertyDescriptor(ForEachStatement.class, "key", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor VALUE_PROPERTY = 
-		new ChildPropertyDescriptor(ForEachStatement.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor STATEMENT_PROPERTY = 
-		new ChildPropertyDescriptor(ForEachStatement.class, "statement", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
+			ForEachStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor KEY_PROPERTY = new ChildPropertyDescriptor(ForEachStatement.class,
+			"key", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor VALUE_PROPERTY = new ChildPropertyDescriptor(ForEachStatement.class,
+			"value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor STATEMENT_PROPERTY = new ChildPropertyDescriptor(ForEachStatement.class,
+			"statement", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
@@ -66,15 +64,16 @@ public class ForEachStatement extends Statement {
 		propertyList.add(VALUE_PROPERTY);
 		propertyList.add(STATEMENT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
-	public ForEachStatement(int start, int end, AST ast,Expression expression, Expression key, Expression value, Statement statement) {
+	}
+
+	public ForEachStatement(int start, int end, AST ast, Expression expression, Expression key, Expression value,
+			Statement statement) {
 		super(start, end, ast);
 
 		if (expression == null || value == null || statement == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setExpression(expression);
 		setValue(value);
 		setStatement(statement);
@@ -82,7 +81,7 @@ public class ForEachStatement extends Statement {
 			setKey(key);
 		}
 	}
-	
+
 	public ForEachStatement(AST ast) {
 		super(ast);
 	}
@@ -97,7 +96,7 @@ public class ForEachStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
@@ -157,22 +156,24 @@ public class ForEachStatement extends Statement {
 	 * Returns the expression of this for each statement.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return this.expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this for each statement.
 	 * 
-	 * @param expression the new expression of this for each statement.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression of this for each statement.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -193,20 +194,22 @@ public class ForEachStatement extends Statement {
 	/**
 	 * Sets the new key component of this for each statement
 	 * 
-	 * @param key the new expression of this for each statement.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param key
+	 *            the new expression of this for each statement.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setKey(Expression key) {
 		ASTNode oldChild = this.key;
 		preReplaceChild(oldChild, key, KEY_PROPERTY);
 		this.key = key;
 		postReplaceChild(oldChild, key, KEY_PROPERTY);
-	}	
+	}
 
 	/**
 	 * @return the value component of this for each statement
@@ -218,14 +221,16 @@ public class ForEachStatement extends Statement {
 	/**
 	 * Sets the new value component of this for each statement
 	 * 
-	 * @param value the new value of this for each statement.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param value
+	 *            the new value of this for each statement.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setValue(Expression value) {
 		if (value == null) {
 			throw new IllegalArgumentException();
@@ -234,8 +239,8 @@ public class ForEachStatement extends Statement {
 		preReplaceChild(oldChild, value, VALUE_PROPERTY);
 		this.value = value;
 		postReplaceChild(oldChild, value, VALUE_PROPERTY);
-	}		
-	
+	}
+
 	/**
 	 * @return the statement component of this for each statement
 	 */
@@ -246,14 +251,16 @@ public class ForEachStatement extends Statement {
 	/**
 	 * Sets the new statement component of this for each statement
 	 * 
-	 * @param statement the new value of this for each statement.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param statement
+	 *            the new value of this for each statement.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setStatement(Statement statement) {
 		if (statement == null) {
 			throw new IllegalArgumentException();
@@ -262,7 +269,7 @@ public class ForEachStatement extends Statement {
 		preReplaceChild(oldChild, statement, STATEMENT_PROPERTY);
 		this.statement = statement;
 		postReplaceChild(oldChild, statement, STATEMENT_PROPERTY);
-	}		
+	}
 
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
@@ -300,8 +307,8 @@ public class ForEachStatement extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -315,7 +322,8 @@ public class ForEachStatement extends Statement {
 		final Expression key = ASTNode.copySubtree(target, getKey());
 		final Expression value = ASTNode.copySubtree(target, getValue());
 		final Statement stm = ASTNode.copySubtree(target, getStatement());
-		final ForEachStatement result = new ForEachStatement(this.getStart(), this.getEnd(), target, expr, key, value, stm);
+		final ForEachStatement result = new ForEachStatement(this.getStart(), this.getEnd(), target, expr, key, value,
+				stm);
 		return result;
 	}
 

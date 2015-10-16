@@ -40,8 +40,7 @@ public class GeneratorClassType extends PHPClassType {
 
 	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
-		if (type instanceof PHPClassType
-				&& type.getTypeName().compareToIgnoreCase("Generator") == 0) { //$NON-NLS-1$
+		if (type instanceof PHPClassType && type.getTypeName().compareToIgnoreCase("Generator") == 0) { //$NON-NLS-1$
 			return true;
 		}
 		return false;

@@ -81,7 +81,7 @@ public class TarFileExporter extends AbstractFileExporter {
 	 */
 	// private void write(TarEntry entry, IFile contents) throws IOException,
 	// CoreException {
-	//		
+	//
 	// write(entry, contents.getContents(false));
 	// }
 
@@ -95,8 +95,7 @@ public class TarFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
-	public void write(IFile resource, String destinationPath)
-			throws IOException, CoreException {
+	public void write(IFile resource, String destinationPath) throws IOException, CoreException {
 
 		TarEntry newEntry = new TarEntry(destinationPath);
 		if (resource.getLocalTimeStamp() != IResource.NULL_STAMP) {
@@ -127,8 +126,7 @@ public class TarFileExporter extends AbstractFileExporter {
 		write(newEntry, stubInput);
 	}
 
-	private void write(TarEntry entry, InputStream contentStream)
-			throws IOException {
+	private void write(TarEntry entry, InputStream contentStream) throws IOException {
 
 		outputStream.putNextEntry(entry);
 		try {
@@ -146,8 +144,7 @@ public class TarFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
-	public void write(IFolder resource, String destinationPath)
-			throws IOException, CoreException {
+	public void write(IFolder resource, String destinationPath) throws IOException, CoreException {
 		TarEntry newEntry = new TarEntry(destinationPath);
 		if (resource.getLocalTimeStamp() != IResource.NULL_STAMP) {
 			newEntry.setTime(resource.getLocalTimeStamp() / 1000);

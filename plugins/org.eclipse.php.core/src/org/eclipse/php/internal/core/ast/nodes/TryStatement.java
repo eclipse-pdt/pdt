@@ -22,22 +22,17 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents the try statement
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * try {
- *   statements...
- * } catch (Exception $e) {
- *   statements...
- * } catch (AnotherException $ae) {
- *   statements...
- * }
+ * try { statements... } catch (Exception $e) { statements... } catch
+ * (AnotherException $ae) { statements... }
  */
 public class TryStatement extends Statement {
 
 	private Block tryStatement;
-	private ASTNode.NodeList<CatchClause> catchClauses = new ASTNode.NodeList<CatchClause>(
-			CATCH_CLAUSES_PROPERTY);
+	private ASTNode.NodeList<CatchClause> catchClauses = new ASTNode.NodeList<CatchClause>(CATCH_CLAUSES_PROPERTY);
 	private FinallyClause finallyClause;
 
 	/**
@@ -45,16 +40,14 @@ public class TryStatement extends Statement {
 	 * 
 	 * @since 3.0
 	 */
-	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
-			TryStatement.class,
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(TryStatement.class,
 			"tryStatement", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	public static final ChildListPropertyDescriptor CATCH_CLAUSES_PROPERTY = new ChildListPropertyDescriptor(
 			TryStatement.class, "catchClauses", CatchClause.class, CYCLE_RISK); //$NON-NLS-1$
 
 	public static final ChildPropertyDescriptor FINALLY_CLAUSE_PROPERTY = new ChildPropertyDescriptor(
-			TryStatement.class,
-			"finallyClause", FinallyClause.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+			TryStatement.class, "finallyClause", FinallyClause.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -63,8 +56,7 @@ public class TryStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		propertyList.add(BODY_PROPERTY);
 		propertyList.add(CATCH_CLAUSES_PROPERTY);
 		propertyList.add(FINALLY_CLAUSE_PROPERTY);
@@ -81,13 +73,12 @@ public class TryStatement extends Statement {
 	 *         {@link StructuralPropertyDescriptor})
 	 * @since 3.0
 	 */
-	public static List<StructuralPropertyDescriptor> propertyDescriptors(
-			int apiLevel) {
+	public static List<StructuralPropertyDescriptor> propertyDescriptors(int apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	private TryStatement(int start, int end, AST ast, Block tryStatement,
-			CatchClause[] catchClauses, FinallyClause finallyClause) {
+	private TryStatement(int start, int end, AST ast, Block tryStatement, CatchClause[] catchClauses,
+			FinallyClause finallyClause) {
 		super(start, end, ast);
 
 		if (tryStatement == null || catchClauses == null) {
@@ -100,8 +91,7 @@ public class TryStatement extends Statement {
 		setFinallyClause(finallyClause);
 	}
 
-	private TryStatement(int start, int end, AST ast, Block tryStatement,
-			CatchClause[] catchClauses) {
+	private TryStatement(int start, int end, AST ast, Block tryStatement, CatchClause[] catchClauses) {
 		super(start, end, ast);
 		if (tryStatement == null || catchClauses == null) {
 			throw new IllegalArgumentException();
@@ -112,19 +102,15 @@ public class TryStatement extends Statement {
 		}
 	}
 
-	public TryStatement(int start, int end, AST ast, Block tryStatement,
-			List catchClauses) {
+	public TryStatement(int start, int end, AST ast, Block tryStatement, List catchClauses) {
 		this(start, end, ast, tryStatement, catchClauses == null ? null
-				: (CatchClause[]) catchClauses
-						.toArray(new CatchClause[catchClauses.size()]));
+				: (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]));
 	}
 
-	public TryStatement(int start, int end, AST ast, Block tryStatement,
-			List catchClauses, FinallyClause finallyClause) {
+	public TryStatement(int start, int end, AST ast, Block tryStatement, List catchClauses,
+			FinallyClause finallyClause) {
 		this(start, end, ast, tryStatement, catchClauses == null ? null
-				: (CatchClause[]) catchClauses
-						.toArray(new CatchClause[catchClauses.size()]),
-				finallyClause);
+				: (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]), finallyClause);
 	}
 
 	public TryStatement(AST ast) {
@@ -196,8 +182,7 @@ public class TryStatement extends Statement {
 	 * @deprecated use {@link #catchClauses()}
 	 */
 	public CatchClause[] getCatchClauses() {
-		return (CatchClause[]) catchClauses
-				.toArray(new CatchClause[catchClauses.size()]);
+		return (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]);
 	}
 
 	/**
@@ -290,24 +275,21 @@ public class TryStatement extends Statement {
 	ASTNode clone0(AST target) {
 		Block body = ASTNode.copySubtree(target, getBody());
 		final List catchs = ASTNode.copySubtrees(target, this.catchClauses);
-		final FinallyClause finallyClause = ASTNode.copySubtree(target,
-				this.finallyClause);
-		final TryStatement result = new TryStatement(this.getStart(),
-				this.getEnd(), target, body, catchs, finallyClause);
+		final FinallyClause finallyClause = ASTNode.copySubtree(target, this.finallyClause);
+		final TryStatement result = new TryStatement(this.getStart(), this.getEnd(), target, body, catchs,
+				finallyClause);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();

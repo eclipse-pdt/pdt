@@ -43,8 +43,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 * Path of the language model for php projects
 	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
-	public static final Path LANGUAGE_CONTAINER_PATH = new Path(
-			LanguageModelInitializer.CONTAINER_PATH);
+	public static final Path LANGUAGE_CONTAINER_PATH = new Path(LanguageModelInitializer.CONTAINER_PATH);
 
 	private static final String LANGUAGE_PREFIX = "__language__"; //$NON-NLS-1$
 
@@ -61,8 +60,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	/**
 	 * Holds nice names for the language model paths
 	 */
-	private static Map<IPath, String> pathToName = Collections
-			.synchronizedMap(new HashMap<IPath, String>());
+	private static Map<IPath, String> pathToName = Collections.synchronizedMap(new HashMap<IPath, String>());
 
 	static void addPathName(IPath path, String name) {
 		pathToName.put(path, name);
@@ -85,8 +83,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 * @param containerPath
 	 * @param scriptProject
 	 */
-	private void initializeListener(final IPath containerPath,
-			final IScriptProject scriptProject) {
+	private void initializeListener(final IPath containerPath, final IScriptProject scriptProject) {
 		final IProject project = scriptProject.getProject();
 		if (project2PhpVerListener.containsKey(project)) {
 			return;
@@ -107,31 +104,24 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		};
 
 		project2PhpVerListener.put(project, versionChangeListener);
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(
-				versionChangeListener);
+		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(versionChangeListener);
 
-		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(
-				project, new IProjectClosedObserver() {
-					public void closed() {
-						PhpVersionChangedHandler.getInstance()
-								.removePhpVersionChangedListener(
-										project2PhpVerListener.remove(project));
-					}
-				});
+		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
+			public void closed() {
+				PhpVersionChangedHandler.getInstance()
+						.removePhpVersionChangedListener(project2PhpVerListener.remove(project));
+			}
+		});
 	}
 
 	@Override
-	public void initialize(IPath containerPath, IScriptProject scriptProject)
-			throws CoreException {
-		if (containerPath.segmentCount() > 0
-				&& containerPath.segment(0).equals(CONTAINER_PATH)) {
+	public void initialize(IPath containerPath, IScriptProject scriptProject) throws CoreException {
+		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
 				if (isPHPProject(scriptProject)) {
-					DLTKCore.setBuildpathContainer(
-							containerPath,
-							new IScriptProject[] { scriptProject },
-							new IBuildpathContainer[] { new LanguageModelContainer(
-									containerPath, scriptProject) }, null);
+					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { scriptProject },
+							new IBuildpathContainer[] { new LanguageModelContainer(containerPath, scriptProject) },
+							null);
 					initializeListener(containerPath, scriptProject);
 				}
 			} catch (Exception e) {
@@ -146,8 +136,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	private static String getNatureFromProject(IScriptProject project) {
-		IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
-				.getLanguageToolkit(project);
+		IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
 		if (languageToolkit != null) {
 			return languageToolkit.getNatureId();
 		}
@@ -156,15 +145,13 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 	public static boolean isLanguageModelElement(IModelElement element) {
 		if (element != null) {
-			IProjectFragment fragment = (IProjectFragment) element
-					.getAncestor(IModelElement.PROJECT_FRAGMENT);
+			IProjectFragment fragment = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
 			if (fragment != null && fragment.isExternal()) {
 				IPath path = fragment.getPath();
 
 				// see getTargetLocation() below for description:
 				if (path.segmentCount() > 2) {
-					return LANGUAGE_PREFIX.equals(path.segment(path
-							.segmentCount() - 2));
+					return LANGUAGE_PREFIX.equals(path.segment(path.segmentCount() - 2));
 				}
 			}
 		}
@@ -179,8 +166,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 *            Project handle
 	 * @throws ModelException
 	 */
-	public static void enableLanguageModelFor(IScriptProject project)
-			throws ModelException {
+	public static void enableLanguageModelFor(IScriptProject project) throws ModelException {
 		if (!isPHPProject(project)) {
 			return;
 		}
@@ -196,15 +182,12 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 
 		if (!found) {
-			IBuildpathEntry containerEntry = DLTKCore
-					.newContainerEntry(LANGUAGE_CONTAINER_PATH);
+			IBuildpathEntry containerEntry = DLTKCore.newContainerEntry(LANGUAGE_CONTAINER_PATH);
 			int newSize = rawBuildpath.length + 1;
-			List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>(
-					newSize);
+			List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>(newSize);
 			newRawBuildpath.addAll(Arrays.asList(rawBuildpath));
 			newRawBuildpath.add(containerEntry);
-			project.setRawBuildpath(
-					newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
+			project.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
 		}
 	}
 
@@ -214,13 +197,11 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			providers.add(new DefaultLanguageModelProvider()); // add default
 
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
-					.getConfigurationElementsFor(
-							"org.eclipse.php.core.languageModelProviders"); //$NON-NLS-1$
+					.getConfigurationElementsFor("org.eclipse.php.core.languageModelProviders"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("provider")) { //$NON-NLS-1$
 					try {
-						providers.add((ILanguageModelProvider) element
-								.createExecutableExtension("class")); //$NON-NLS-1$
+						providers.add((ILanguageModelProvider) element.createExecutableExtension("class")); //$NON-NLS-1$
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}
@@ -232,13 +213,9 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return LanguageModelInitializer.providers;
 	}
 
-	static IPath getTargetLocation(ILanguageModelProvider provider,
-			IPath sourcePath, IScriptProject project) {
+	static IPath getTargetLocation(ILanguageModelProvider provider, IPath sourcePath, IScriptProject project) {
 
-		return provider
-				.getPlugin()
-				.getStateLocation()
-				.append(LANGUAGE_PREFIX)
+		return provider.getPlugin().getStateLocation().append(LANGUAGE_PREFIX)
 				.append(Integer.toHexString(sourcePath.toOSString().hashCode()));
 	}
 
@@ -251,16 +228,14 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 */
 	@SuppressWarnings("restriction")
 	public static void cleanup(IProgressMonitor monitor) throws CoreException {
-		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		Set<IPath> inUse = new HashSet<IPath>();
 		Set<IPath> toDrop = new HashSet<IPath>();
 		for (IProject project : projects) {
 			if (!PHPToolkitUtil.isPhpProject(project)) {
 				continue;
 			}
-			IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-					Path.fromPortableString(CONTAINER_PATH),
+			IBuildpathContainer container = DLTKCore.getBuildpathContainer(Path.fromPortableString(CONTAINER_PATH),
 					DLTKCore.create(project));
 			if (container == null) {
 				continue;
@@ -271,14 +246,12 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 
 		for (ILanguageModelProvider provider : getContributedProviders()) {
-			File dir = provider.getPlugin().getStateLocation()
-					.append(LANGUAGE_PREFIX).toFile();
+			File dir = provider.getPlugin().getStateLocation().append(LANGUAGE_PREFIX).toFile();
 			if (!dir.exists() || !dir.isDirectory()) {
 				continue;
 			}
 			for (File lib : dir.listFiles()) {
-				IPath compare = EnvironmentPathUtils.getFullPath(
-						LocalEnvironment.ENVIRONMENT_ID,
+				IPath compare = EnvironmentPathUtils.getFullPath(LocalEnvironment.ENVIRONMENT_ID,
 						Path.fromOSString(lib.getPath()));
 				if (inUse.contains(compare)) {
 					continue;
@@ -292,8 +265,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 		for (IPath path : toDrop) {
 			ProjectIndexerManager.removeProject(path);
-			efs.getStore(EnvironmentPathUtils.getLocalPath(path)).delete(
-					EFS.NONE, monitor);
+			efs.getStore(EnvironmentPathUtils.getLocalPath(path)).delete(EFS.NONE, monitor);
 		}
 	}
 }

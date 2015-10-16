@@ -45,21 +45,18 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 	}
 
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.NO_INSERT_USE
-				| ProposalExtraInfo.FULL_NAME | ProposalExtraInfo.TYPE_ONLY
-				| ProposalExtraInfo.CLASS_IN_NAMESPACE;
+		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.NO_INSERT_USE | ProposalExtraInfo.FULL_NAME
+				| ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.CLASS_IN_NAMESPACE;
 	}
 
 	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		if (abstractContext
-				.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
+		if (abstractContext.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) abstractContext
 					.getCompletionRequestor();
-			if (phpCompletionRequestor
-					.filter(CompletionFlag.STOP_REPORT_TYPE)) {
+			if (phpCompletionRequestor.filter(CompletionFlag.STOP_REPORT_TYPE)) {
 				return;
 			}
 			if (!phpCompletionRequestor.isExplicit()) {
@@ -87,8 +84,7 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	protected IType[] getTypes(AbstractCompletionContext context)
-			throws BadLocationException {
+	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
@@ -97,32 +93,27 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PhpModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 
 		if (prefix.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
-				result.addAll(Arrays.asList(PhpModelAccess.getDefault()
-						.findNamespaces(null, prefix, MatchRule.PREFIX,
-								trueFlag, falseFlag, scope, null)));
+				result.addAll(Arrays.asList(PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX,
+						trueFlag, falseFlag, scope, null)));
 			}
-			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
-					prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope,
-					null)));
-			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
-					prefix, "", MatchRule.PREFIX, trueFlag, falseFlag, scope, //$NON-NLS-1$
-					null)));
+			result.addAll(Arrays.asList(
+					PhpModelAccess.getDefault().findTypes(prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
+			result.addAll(Arrays.asList(
+					PhpModelAccess.getDefault().findTypes(prefix, "", MatchRule.PREFIX, trueFlag, falseFlag, scope, //$NON-NLS-1$
+							null)));
 		} else {
-			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
-					null, prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope,
-					null)));
+			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag,
+					falseFlag, scope, null)));
 			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
-				result.addAll(Arrays.asList(PhpModelAccess.getDefault()
-						.findNamespaces(null, prefix, MatchRule.PREFIX,
-								trueFlag, falseFlag, scope, null)));
+				result.addAll(Arrays.asList(PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX,
+						trueFlag, falseFlag, scope, null)));
 			}
 
 		}

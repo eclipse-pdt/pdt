@@ -48,11 +48,9 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 	protected TaskTag[] taskTags = null;
 
-	public ValidationResult validate(IResource resource, int kind,
-			ValidationState state, IProgressMonitor monitor) {
+	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		// process only PHP files
-		if (resource.getType() != IResource.FILE
-				|| !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
+		if (resource.getType() != IResource.FILE || !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
 			return null;
 		}
 
@@ -78,8 +76,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 		// remove the markers currently existing for this resource
 		// in case of project/folder, the markers are deleted recursively
 		try {
-			file.deleteMarkers(PHPCoreConstants.PHP_MARKER_TYPE, false,
-					IResource.DEPTH_INFINITE);
+			file.deleteMarkers(PHPCoreConstants.PHP_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
 		}
 		IStructuredModel model = null;
@@ -87,12 +84,10 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 			// desperately try to get the model :) In case it doesn't exist yet,
 			// create it
 			try {
-				model = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(file);
+				model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
 			} catch (Exception e) {
 				try {
-					model = StructuredModelManager.getModelManager()
-							.createUnManagedStructuredModelFor(file);
+					model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 				} catch (Exception e2) {
 				}
 			}
@@ -100,19 +95,15 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 				return;
 			}
 			// collect the tasks info and report
-			IStructuredDocumentRegion[] sdRegions = model
-					.getStructuredDocument().getStructuredDocumentRegions();
+			IStructuredDocumentRegion[] sdRegions = model.getStructuredDocument().getStructuredDocumentRegions();
 			for (IStructuredDocumentRegion structuredDocumentRegion : sdRegions) {
 
-				IStructuredDocument document = structuredDocumentRegion
-						.getParentDocument();
+				IStructuredDocument document = structuredDocumentRegion.getParentDocument();
 
-				ITextRegionList textRegions = structuredDocumentRegion
-						.getRegions();
+				ITextRegionList textRegions = structuredDocumentRegion.getRegions();
 				for (int i = 0; i < textRegions.size(); i++) {
 					ITextRegion textRegion = textRegions.get(i);
-					int regionStart = structuredDocumentRegion
-							.getStartOffset(textRegion);
+					int regionStart = structuredDocumentRegion.getStartOffset(textRegion);
 
 					// special handling for php tags inside html
 					if (textRegion instanceof ContextRegionContainer) {
@@ -125,20 +116,16 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 						try {
 
 							// go over the text regions and look for the tasks
-							ITextRegion[] phpTokens = scriptRegion
-									.getPhpTokens(0, textRegion.getLength());
+							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(0, textRegion.getLength());
 							for (int j = 0; j < phpTokens.length; j++) {
 								ITextRegion phpToken = phpTokens[j];
-								if (PHPRegionTypes.PHPDOC_TODO.equals(phpToken
-										.getType())) {
+								if (PHPRegionTypes.PHPDOC_TODO.equals(phpToken.getType())) {
 									// get the task information from the
 									// document
-									int offset = regionStart
-											+ phpToken.getStart();
+									int offset = regionStart + phpToken.getStart();
 									int length = phpToken.getLength();
 
-									String taskKeyword = document.get(offset,
-											phpToken.getLength());
+									String taskKeyword = document.get(offset, phpToken.getLength());
 									int priority = getTaskPriority(taskKeyword);
 
 									// get the actual message for this task - if
@@ -146,28 +133,22 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 									if (j + 1 < phpTokens.length) {
 										for (int k = j + 1; k < phpTokens.length; k++) {
 											ITextRegion phpNextToken = phpTokens[k];
-											if (PHPRegionTypes.PHPDOC_TODO
-													.equals(phpNextToken
-															.getType())) {
+											if (PHPRegionTypes.PHPDOC_TODO.equals(phpNextToken.getType())) {
 												break;
 											}
-											length = length
-													+ phpNextToken.getLength();
+											length = length + phpNextToken.getLength();
 										}
 									}
 
 									try {
-										reportTask(document, file, reporter,
-												offset, length, priority);
+										reportTask(document, file, reporter, offset, length, priority);
 									} catch (CoreException e) {
-										Logger.logException(
-												"Failed creating task", e); //$NON-NLS-1$
+										Logger.logException("Failed creating task", e); //$NON-NLS-1$
 									}
 								}
 							}
 						} catch (BadLocationException e) {
-							Logger.logException(CoreMessages
-									.getString("PHPTodoTaskAstParser_0"), e); //$NON-NLS-1$
+							Logger.logException(CoreMessages.getString("PHPTodoTaskAstParser_0"), e); //$NON-NLS-1$
 						}
 					}
 				}
@@ -216,8 +197,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IResource res = ResourcesPlugin.getWorkspace().getRoot()
-				.getFile(new Path(delta));
+		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
 		return res instanceof IFile ? (IFile) res : null;
 	}
 
@@ -250,9 +230,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @throws BadLocationException
 	 * @throws CoreException
 	 */
-	private void reportTask(IStructuredDocument document, IFile file,
-			IReporter taskReporter, int offset, int length, int priority)
-			throws BadLocationException, CoreException {
+	private void reportTask(IStructuredDocument document, IFile file, IReporter taskReporter, int offset, int length,
+			int priority) throws BadLocationException, CoreException {
 		int lineNumber = document.getLineOfOffset(offset);
 
 		String taskStr = getTaskStr(document, lineNumber, offset, length);
@@ -275,8 +254,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @param charEnd
 	 * @throws CoreException
 	 */
-	private void createMarker(IFile file, String taskStr, int lineNumber,
-			int priority, int offset, int charEnd) throws CoreException {
+	private void createMarker(IFile file, String taskStr, int lineNumber, int priority, int offset, int charEnd)
+			throws CoreException {
 		IMarker marker = file.createMarker(PHPCoreConstants.PHP_MARKER_TYPE);
 
 		marker.setAttribute(IMarker.TASK, true);
@@ -299,8 +278,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	private String getTaskStr(IStructuredDocument document, int lineNumber,
-			int offset, int length) throws BadLocationException {
+	private String getTaskStr(IStructuredDocument document, int lineNumber, int offset, int length)
+			throws BadLocationException {
 		// get line info to identify the end of the task
 		IRegion lineInformation = document.getLineInformation(lineNumber);
 		int lineStart = lineInformation.getOffset();

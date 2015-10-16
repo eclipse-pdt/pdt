@@ -41,11 +41,11 @@ public class UseStatementPart extends ASTNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(
-			UseStatementPart.class, "name", NamespaceName.class, MANDATORY, //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(UseStatementPart.class,
+			"name", NamespaceName.class, MANDATORY, //$NON-NLS-1$
 			CYCLE_RISK);
-	public static final ChildPropertyDescriptor ALIAS_PROPERTY = new ChildPropertyDescriptor(
-			UseStatementPart.class, "alias", Expression.class, OPTIONAL, //$NON-NLS-1$
+	public static final ChildPropertyDescriptor ALIAS_PROPERTY = new ChildPropertyDescriptor(UseStatementPart.class,
+			"alias", Expression.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
 	public static final SimplePropertyDescriptor STATEMENT_TYPE_PROPERTY = new SimplePropertyDescriptor(
 			UseStatementPart.class, "statementType", Integer.class, //$NON-NLS-1$
@@ -58,8 +58,7 @@ public class UseStatementPart extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(ALIAS_PROPERTY);
 		properyList.add(STATEMENT_TYPE_PROPERTY);
@@ -70,13 +69,11 @@ public class UseStatementPart extends ASTNode {
 		super(ast);
 	}
 
-	public UseStatementPart(int start, int end, AST ast, NamespaceName name,
-			Identifier alias) {
+	public UseStatementPart(int start, int end, AST ast, NamespaceName name, Identifier alias) {
 		this(start, end, ast, name, alias, UseStatement.T_NONE);
 	}
 
-	public UseStatementPart(int start, int end, AST ast, NamespaceName name,
-			Identifier alias, int statementType) {
+	public UseStatementPart(int start, int end, AST ast, NamespaceName name, Identifier alias, int statementType) {
 		super(start, end, ast);
 		if (name == null) {
 			throw new IllegalArgumentException();
@@ -230,19 +227,17 @@ public class UseStatementPart extends ASTNode {
 	ASTNode clone0(AST target) {
 		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Identifier alias = ASTNode.copySubtree(target, getAlias());
-		final UseStatementPart result = new UseStatementPart(this.getStart(),
-				this.getEnd(), target, name, alias, this.getStatementType());
+		final UseStatementPart result = new UseStatementPart(this.getStart(), this.getEnd(), target, name, alias,
+				this.getStatementType());
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
 				return getName();
@@ -265,8 +260,7 @@ public class UseStatementPart extends ASTNode {
 	}
 
 	@Override
-	int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == STATEMENT_TYPE_PROPERTY) {
 			if (get) {
 				return getStatementType();

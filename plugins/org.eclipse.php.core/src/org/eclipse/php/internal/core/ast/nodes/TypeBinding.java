@@ -46,8 +46,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @param type
 	 * @param elements
 	 */
-	public TypeBinding(BindingResolver resolver, IEvaluatedType type,
-			IModelElement[] elements) {
+	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement[] elements) {
 		this.resolver = resolver;
 		this.type = type;
 		if (elements != null && elements.length > 0) {
@@ -66,8 +65,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @param type
 	 * @param element
 	 */
-	public TypeBinding(BindingResolver resolver, IEvaluatedType type,
-			IModelElement element) {
+	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement element) {
 		this.resolver = resolver;
 		this.type = type;
 		if (element != null) {
@@ -180,8 +178,7 @@ public class TypeBinding implements ITypeBinding {
 					try {
 						IField[] fields = type.getFields();
 						for (int i = 0; i < fields.length; i++) {
-							IVariableBinding variableBinding = resolver
-									.getVariableBinding(fields[i]);
+							IVariableBinding variableBinding = resolver.getVariableBinding(fields[i]);
 							if (variableBinding != null) {
 								variableBindings.add(variableBinding);
 							}
@@ -192,8 +189,7 @@ public class TypeBinding implements ITypeBinding {
 						}
 					}
 				}
-				fields = variableBindings
-						.toArray(new IVariableBinding[variableBindings.size()]);
+				fields = variableBindings.toArray(new IVariableBinding[variableBindings.size()]);
 			} else {
 				fields = new IVariableBinding[0];
 			}
@@ -236,8 +232,7 @@ public class TypeBinding implements ITypeBinding {
 						IMethod[] methods = type.getMethods();
 						if (methods != null) {
 							for (int i = 0; i < methods.length; i++) {
-								IMethodBinding methodBinding = resolver
-										.getMethodBinding(methods[i]);
+								IMethodBinding methodBinding = resolver.getMethodBinding(methods[i]);
 								methodBindings.add(methodBinding);
 							}
 						}
@@ -247,8 +242,7 @@ public class TypeBinding implements ITypeBinding {
 						}
 					}
 				}
-				methods = methodBindings
-						.toArray(new IMethodBinding[methodBindings.size()]);
+				methods = methodBindings.toArray(new IMethodBinding[methodBindings.size()]);
 			} else {
 				methods = new IMethodBinding[0]; // TODO - Implement
 				// IMethodBinding
@@ -353,8 +347,7 @@ public class TypeBinding implements ITypeBinding {
 					}
 				}
 			}
-			this.interfaces = (ITypeBinding[]) interfaces
-					.toArray(new ITypeBinding[interfaces.size()]);
+			this.interfaces = (ITypeBinding[]) interfaces.toArray(new ITypeBinding[interfaces.size()]);
 		}
 		return this.interfaces;
 	}
@@ -416,8 +409,7 @@ public class TypeBinding implements ITypeBinding {
 	protected IType[] getSuperTypes() {
 		if (superTypes == null) {
 			if (elements != null && elements.length > 0) {
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(elements[0].getScriptProject());
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(elements[0].getScriptProject());
 
 				Set<String> superTypeNames = new HashSet<String>();
 				for (IModelElement element : elements) {
@@ -444,14 +436,10 @@ public class TypeBinding implements ITypeBinding {
 						ISourceModule sourceModule = (ISourceModule) elements[0]
 								.getAncestor(IModelElement.SOURCE_MODULE);
 
-						String typeName = PHPModelUtils
-								.extractElementName(superTypeName);
-						String nameSpace = PHPModelUtils
-								.extractNameSpaceName(superTypeName);
-						Collection<IType> types = resolver
-								.getModelAccessCache()
-								.getClassesOrInterfaces(sourceModule, typeName,
-										nameSpace, null);
+						String typeName = PHPModelUtils.extractElementName(superTypeName);
+						String nameSpace = PHPModelUtils.extractNameSpaceName(superTypeName);
+						Collection<IType> types = resolver.getModelAccessCache().getClassesOrInterfaces(sourceModule,
+								typeName, nameSpace, null);
 						if (types != null) {
 							for (IType type : types) {
 								if (!elementList.contains(type)) {
@@ -520,8 +508,7 @@ public class TypeBinding implements ITypeBinding {
 					}
 				}
 			}
-			superClass = resolver.getTypeBinding(superClasses
-					.toArray(new IType[superClasses.size()]));
+			superClass = resolver.getTypeBinding(superClasses.toArray(new IType[superClasses.size()]));
 		}
 		return superClass;
 	}
@@ -674,23 +661,19 @@ public class TypeBinding implements ITypeBinding {
 		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
-				if (type.getSuperClasses() == null
-						|| type.getSuperClasses().length == 0) {
+				if (type.getSuperClasses() == null || type.getSuperClasses().length == 0) {
 					return false;
 				}
 
 				ITypeHierarchy supertypeHierarchy = hierarchy.get(type);
 				if (supertypeHierarchy == null) {
-					supertypeHierarchy = type
-							.newSupertypeHierarchy(new NullProgressMonitor());
+					supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 					hierarchy.put(type, supertypeHierarchy);
 				}
 				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
 				if (otherElements != null) {
 					for (IModelElement modelElement : otherElements) {
-						if (modelElement instanceof IType
-								&& supertypeHierarchy
-										.contains((IType) modelElement)) {
+						if (modelElement instanceof IType && supertypeHierarchy.contains((IType) modelElement)) {
 							isSubTypeCompatible = true;
 							break;
 						}
@@ -724,7 +707,8 @@ public class TypeBinding implements ITypeBinding {
 	 * internal id)</li>
 	 * <li>classes or interfaces - the VM name of the type and the key of its
 	 * package</li>
-	 * <li>array types - the key of the component type and number of dimensions</li>
+	 * <li>array types - the key of the component type and number of dimensions
+	 * </li>
 	 * <li>primitive types - the name of the primitive type</li>
 	 * <li>fields - the name of the field and the key of its declaring type</li>
 	 * <li>methods - the name of the method, the key of its declaring type, and
@@ -914,8 +898,7 @@ public class TypeBinding implements ITypeBinding {
 		return this.elements == null && !(this.type instanceof SimpleType);
 	}
 
-	public List<IType> getTraitList(boolean isMethod, String classMemberName,
-			boolean includeSuper) {
+	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper) {
 		List<IType> result = new LinkedList<IType>();
 		if (this.elements == null || elements.length == 0) {
 			return result;
@@ -931,16 +914,14 @@ public class TypeBinding implements ITypeBinding {
 			for (IModelElement element : elements) {
 				IType type = (IType) element;
 				try {
-					if (type.getSuperClasses() == null
-							|| type.getSuperClasses().length == 0
+					if (type.getSuperClasses() == null || type.getSuperClasses().length == 0
 							|| PHPFlags.isTrait(type.getFlags())) {
 						return result;
 					}
 
 					ITypeHierarchy supertypeHierarchy = hierarchy.get(type);
 					if (supertypeHierarchy == null) {
-						supertypeHierarchy = type
-								.newSupertypeHierarchy(new NullProgressMonitor());
+						supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 						hierarchy.put(type, supertypeHierarchy);
 					}
 					IType trait = getTrait(type, isMethod, classMemberName);
@@ -965,11 +946,9 @@ public class TypeBinding implements ITypeBinding {
 				// }
 				IMember[] members;
 				if (isMethod) {
-					members = PHPModelUtils.getTypeMethod(type,
-							classMemberName, true);
+					members = PHPModelUtils.getTypeMethod(type, classMemberName, true);
 				} else {
-					members = PHPModelUtils.getTypeField(type, classMemberName,
-							true);
+					members = PHPModelUtils.getTypeField(type, classMemberName, true);
 				}
 				for (IMember member : members) {
 					IType declaringType = member.getDeclaringType();

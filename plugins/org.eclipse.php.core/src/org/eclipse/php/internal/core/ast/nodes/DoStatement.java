@@ -21,10 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represent do while statement.
- * <pre>e.g.<pre>
- * do {
- *   echo $i;
- * } while ($i > 0);
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * do { echo $i; } while ($i > 0);
  */
 public class DoStatement extends Statement {
 
@@ -34,24 +36,24 @@ public class DoStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CONDITION_PROPERTY = 
-		new ChildPropertyDescriptor(DoStatement.class, "condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(DoStatement.class, "body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor CONDITION_PROPERTY = new ChildPropertyDescriptor(DoStatement.class,
+			"condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(DoStatement.class, "body", //$NON-NLS-1$
+			Statement.class, MANDATORY, CYCLE_RISK);
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
 		list.add(CONDITION_PROPERTY);
 		list.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
-	
+
 	public DoStatement(int start, int end, AST ast, Expression condition, Statement body) {
 		super(start, end, ast);
 
@@ -64,15 +66,15 @@ public class DoStatement extends Statement {
 
 	public DoStatement(AST ast) {
 		super(ast);
-	}	
-	
+	}
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		condition.accept(visitor);
@@ -121,27 +123,29 @@ public class DoStatement extends Statement {
 	public Statement getBody() {
 		return this.body;
 	}
-	
+
 	/**
 	 * Returns the condition expression of this do statement.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getCondition() {
 		return this.condition;
 	}
-	
+
 	/**
 	 * Sets the condition of this do statement.
 	 * 
-	 * @param expression the expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setCondition(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -151,20 +155,21 @@ public class DoStatement extends Statement {
 		this.condition = expression;
 		postReplaceChild(oldChild, expression, CONDITION_PROPERTY);
 	}
-	
+
 	/**
-	 * Sets the body part of this whil
-	 * e statement.
+	 * Sets the body part of this whil e statement.
 	 * <p>
 	 * 
-	 * @param body the "then" statement node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param body
+	 *            the "then" statement node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setBody(Statement body) {
 		if (body == null) {
 			throw new IllegalArgumentException();
@@ -174,7 +179,7 @@ public class DoStatement extends Statement {
 		this.body = body;
 		postReplaceChild(oldChild, body, BODY_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CONDITION_PROPERTY) {
 			if (get) {
@@ -196,7 +201,7 @@ public class DoStatement extends Statement {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

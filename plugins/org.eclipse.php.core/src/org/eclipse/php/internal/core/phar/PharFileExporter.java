@@ -25,8 +25,7 @@ public class PharFileExporter extends AbstractFileExporter {
 
 	public PharFileExporter(PharPackage pharPackage) throws IOException {
 		super(pharPackage);
-		outputStream = new PharBufferedOutputStream(fileContentStream,
-				pharPackage);
+		outputStream = new PharBufferedOutputStream(fileContentStream, pharPackage);
 		exportedField = new HashSet<File>();
 	}
 
@@ -44,17 +43,14 @@ public class PharFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
-	public void write(IFile resource, String destinationPath)
-			throws IOException, CoreException {
+	public void write(IFile resource, String destinationPath) throws IOException, CoreException {
 
 		write(resource.getLocation().toFile(), destinationPath);
 	}
 
-	public void write(File file, String destinationPath) throws IOException,
-			CoreException {
+	public void write(File file, String destinationPath) throws IOException, CoreException {
 
-		PharAchiveOutputEntry newEntry = new PharAchiveOutputEntry(
-				destinationPath);
+		PharAchiveOutputEntry newEntry = new PharAchiveOutputEntry(destinationPath);
 		newEntry.setMethod(pharPackage.getCompressType());
 		if (file.lastModified() != IResource.NULL_STAMP) {
 			newEntry.setTime(file.lastModified() / 1000);
@@ -63,8 +59,7 @@ public class PharFileExporter extends AbstractFileExporter {
 		write(newEntry, file);
 	}
 
-	private void write(PharAchiveOutputEntry entry, File file)
-			throws IOException, CoreException {
+	private void write(PharAchiveOutputEntry entry, File file) throws IOException, CoreException {
 		if (exportedField.contains(file))
 			return;
 		exportedField.add(file);
@@ -73,8 +68,7 @@ public class PharFileExporter extends AbstractFileExporter {
 			throw new FileNotFoundException(file.getAbsolutePath());
 		}
 
-		InputStream contentStream = new BufferedInputStream(
-				new FileInputStream(file));
+		InputStream contentStream = new BufferedInputStream(new FileInputStream(file));
 		entry.setSize(file.length());
 		outputStream.putNextEntry(entry);
 		try {
@@ -96,8 +90,7 @@ public class PharFileExporter extends AbstractFileExporter {
 		outputStream.writeStub(stub);
 	}
 
-	public void write(IFolder resource, String destinationPath)
-			throws IOException, CoreException {
+	public void write(IFolder resource, String destinationPath) throws IOException, CoreException {
 
 		write(resource.getLocation().toFile(), destinationPath);
 	}

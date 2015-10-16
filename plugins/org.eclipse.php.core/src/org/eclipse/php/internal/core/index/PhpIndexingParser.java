@@ -20,15 +20,12 @@ import org.eclipse.php.internal.core.Logger;
 
 public class PhpIndexingParser implements IIndexingParser {
 
-	public void parseSourceModule(ISourceModule module,
-			IIndexingRequestor requestor) {
+	public void parseSourceModule(ISourceModule module, IIndexingRequestor requestor) {
 
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(module);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module);
 		if (moduleDeclaration != null) {
 			try {
-				moduleDeclaration
-						.traverse(new PhpIndexingVisitor(requestor, module));
+				moduleDeclaration.traverse(new PhpIndexingVisitor(requestor, module));
 			} catch (Exception e) {
 				Logger.logException(e);
 			}

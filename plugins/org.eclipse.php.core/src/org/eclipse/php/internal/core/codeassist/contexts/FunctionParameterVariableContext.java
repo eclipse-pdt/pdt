@@ -15,7 +15,8 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
 /**
- * This context represents the state when staying in a function parameter type. <br/>
+ * This context represents the state when staying in a function parameter type.
+ * <br/>
  * Example:
  * 
  * <pre>
@@ -26,8 +27,7 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class FunctionParameterVariableContext extends FunctionParameterContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

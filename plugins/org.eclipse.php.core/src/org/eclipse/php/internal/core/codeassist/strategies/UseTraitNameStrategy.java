@@ -28,8 +28,7 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 public class UseTraitNameStrategy extends GlobalTypesStrategy {
 
-	public UseTraitNameStrategy(ICompletionContext context, int trueFlag,
-			int falseFlag) {
+	public UseTraitNameStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
 	}
 
@@ -41,15 +40,13 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(
-						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 		super.apply(reporter);
 	}
 
-	protected IType[] getTypes(AbstractCompletionContext context)
-			throws BadLocationException {
+	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
@@ -58,19 +55,18 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PhpModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
-			IType[] types = PhpModelAccess.getDefault().findTraits(prefix,
-					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
+			IType[] types = PhpModelAccess.getDefault().findTraits(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
+					scope, null);
 			result.addAll(Arrays.asList(types));
 		}
-		IType[] types = PhpModelAccess.getDefault().findTraits(null, prefix,
-				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+		IType[] types = PhpModelAccess.getDefault().findTraits(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
+				scope, null);
 		result.addAll(Arrays.asList(types));
 
 		return (IType[]) result.toArray(new IType[result.size()]);

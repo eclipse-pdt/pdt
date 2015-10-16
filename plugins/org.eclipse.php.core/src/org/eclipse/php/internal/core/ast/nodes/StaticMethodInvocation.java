@@ -20,41 +20,44 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents static function invocation.
- * Holds the function invocation and the class name.
- * <pre>e.g.<pre> 
+ * Represents static function invocation. Holds the function invocation and the
+ * class name.
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
  * MyClass::foo($a)
  */
 public class StaticMethodInvocation extends StaticDispatch {
 
 	private FunctionInvocation method;
-	
+
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(StaticMethodInvocation.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor METHOD_PROPERTY = 
-		new ChildPropertyDescriptor(StaticMethodInvocation.class, "method", FunctionInvocation.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = new ChildPropertyDescriptor(
+			StaticMethodInvocation.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor METHOD_PROPERTY = new ChildPropertyDescriptor(
+			StaticMethodInvocation.class, "method", FunctionInvocation.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
-	ChildPropertyDescriptor getClassNameProperty(){
-		return StaticMethodInvocation.CLASS_NAME_PROPERTY ;
+	ChildPropertyDescriptor getClassNameProperty() {
+		return StaticMethodInvocation.CLASS_NAME_PROPERTY;
 	}
-	
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(METHOD_PROPERTY);
-		propertyList.add(CLASS_NAME_PROPERTY);		
+		propertyList.add(CLASS_NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
-	
 
 	public StaticMethodInvocation(int start, int end, AST ast, Expression className, FunctionInvocation method) {
 		super(start, end, ast, className);
@@ -75,7 +78,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		getClassName().accept(visitor);
@@ -118,7 +121,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 	public FunctionInvocation getMethod() {
 		return method;
 	}
-	
+
 	/**
 	 * @see #getMethod()
 	 */
@@ -126,18 +129,20 @@ public class StaticMethodInvocation extends StaticDispatch {
 	public ASTNode getMember() {
 		return getMethod();
 	}
-	
+
 	/**
 	 * Sets the method component of this field access.
 	 * 
-	 * @param method the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param method
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setMethod(FunctionInvocation method) {
 		if (method == null) {
 			throw new IllegalArgumentException();
@@ -146,8 +151,8 @@ public class StaticMethodInvocation extends StaticDispatch {
 		preReplaceChild(oldChild, method, METHOD_PROPERTY);
 		this.method = method;
 		postReplaceChild(oldChild, method, METHOD_PROPERTY);
-	}	
-	
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == METHOD_PROPERTY) {
 			if (get) {
@@ -160,8 +165,8 @@ public class StaticMethodInvocation extends StaticDispatch {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -173,7 +178,8 @@ public class StaticMethodInvocation extends StaticDispatch {
 	ASTNode clone0(AST target) {
 		final Expression className = ASTNode.copySubtree(target, getClassName());
 		final FunctionInvocation method = ASTNode.copySubtree(target, getMethod());
-		final StaticMethodInvocation result = new StaticMethodInvocation(getStart(), getEnd(), target, className, method);
+		final StaticMethodInvocation result = new StaticMethodInvocation(getStart(), getEnd(), target, className,
+				method);
 		return result;
 	}
 
@@ -181,13 +187,13 @@ public class StaticMethodInvocation extends StaticDispatch {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/**
-	 * Resolves and returns the binding for this method 
+	 * Resolves and returns the binding for this method
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
-	 */	
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
+	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);
 	}

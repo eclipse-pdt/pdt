@@ -19,8 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represent a break statement
- * <pre>e.g.<pre> break;
- * break $a;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * break; break $a;
  */
 public class BreakStatement extends Statement {
 

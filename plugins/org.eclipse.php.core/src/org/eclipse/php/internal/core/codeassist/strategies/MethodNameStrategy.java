@@ -41,8 +41,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 	private static String CONSTRUCTOR_SUFFIX = "()"; //$NON-NLS-1$
 
-	public MethodNameStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public MethodNameStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -57,8 +56,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		}
 
 		MethodNameContext concreteContext = (MethodNameContext) context;
-		CompletionRequestor requestor = concreteContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
 
 		String prefix = concreteContext.getPrefix();
 		boolean exactName = requestor.isContextInformationMode();
@@ -73,21 +71,16 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		}
 
 		try {
-			ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(
-					declaringClass, null);
-			IMethod[] superClassMethods = PHPModelUtils
-					.getSuperTypeHierarchyMethod(declaringClass, hierarchy,
-							prefix, exactName, null);
+			ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(declaringClass, null);
+			IMethod[] superClassMethods = PHPModelUtils.getSuperTypeHierarchyMethod(declaringClass, hierarchy, prefix,
+					exactName, null);
 			for (IMethod superMethod : superClassMethods) {
-				if (declaringClass.getMethod(superMethod.getElementName())
-						.exists()) {
+				if (declaringClass.getMethod(superMethod.getElementName()).exists()) {
 					continue;
 				}
 				int flags = superMethod.getFlags();
-				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags)
-						&& !PHPFlags.isStatic(flags)) {
-					reporter.reportMethod(superMethod, CONSTRUCTOR_SUFFIX,
-							replaceRange);
+				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags) && !PHPFlags.isStatic(flags)) {
+					reporter.reportMethod(superMethod, CONSTRUCTOR_SUFFIX, replaceRange);
 				}
 			}
 		} catch (CoreException e) {
@@ -107,10 +100,8 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 		for (String function : functions) {
 			if (CodeAssistUtils.startsWithIgnoreCase(function, prefix)) {
-				if (!requestor.isContextInformationMode()
-						|| function.length() == prefix.length()) {
-					FakeMethod fakeMethod = new FakeMethod(
-							(ModelElement) declaringClass, function);
+				if (!requestor.isContextInformationMode() || function.length() == prefix.length()) {
+					FakeMethod fakeMethod = new FakeMethod((ModelElement) declaringClass, function);
 					if (function.equals("__construct")) { //$NON-NLS-1$
 						fakeMethod.setConstructor(true);
 					}
@@ -127,6 +118,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return "(".equals(nextWord) ? "" : CONSTRUCTOR_SUFFIX; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "(".equals(nextWord) ? "" : CONSTRUCTOR_SUFFIX; //$NON-NLS-1$ //$NON-NLS-2$
+																// //$NON-NLS-3$
 	}
 }

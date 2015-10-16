@@ -75,8 +75,7 @@ public class ConditionalExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
 		list.add(CONDITION_PROPERTY);
 		list.add(IF_TRUE_PROPERTY);
 		list.add(IF_FALSE_PROPERTY);
@@ -91,12 +90,11 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * Constructor for Ternary Operator
 	 */
-	public ConditionalExpression(int start, int end, AST ast,
-			Expression condition, Expression ifTrue, Expression ifFalse) {
+	public ConditionalExpression(int start, int end, AST ast, Expression condition, Expression ifTrue,
+			Expression ifFalse) {
 		super(start, end, ast);
 
-		if (condition == null || (ast.apiLevel().isLessThan(PHPVersion.PHP5_3)
-				&& ifTrue == null) || ifFalse == null) {
+		if (condition == null || (ast.apiLevel().isLessThan(PHPVersion.PHP5_3) && ifTrue == null) || ifFalse == null) {
 			throw new IllegalArgumentException();
 		}
 		setCondition(condition);
@@ -108,12 +106,10 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * Constructor for Null Coalesce Operator
 	 */
-	public ConditionalExpression(int start, int end, AST ast,
-			Expression expression, Expression ifNull) {
+	public ConditionalExpression(int start, int end, AST ast, Expression expression, Expression ifNull) {
 		super(start, end, ast);
 
-		if (expression == null || ast.apiLevel().isLessThan(PHPVersion.PHP7_0)
-				|| ifNull == null) {
+		if (expression == null || ast.apiLevel().isLessThan(PHPVersion.PHP7_0) || ifNull == null) {
 			throw new IllegalArgumentException();
 		}
 		setCondition(expression);
@@ -252,8 +248,7 @@ public class ConditionalExpression extends Expression {
 	 *                </ul>
 	 */
 	public void setIfTrue(Expression expression) {
-		if (ast.apiLevel().isLessThan(PHPVersion.PHP5_3)
-				&& expression == null) {
+		if (ast.apiLevel().isLessThan(PHPVersion.PHP5_3) && expression == null) {
 			throw new IllegalArgumentException();
 		}
 		ASTNode oldChild = this.ifTrue;
@@ -288,8 +283,7 @@ public class ConditionalExpression extends Expression {
 	 *                </ul>
 	 */
 	public void setIfFalse(Expression expression) {
-		if (expression == null
-				&& ast.apiLevel().isLessThan(PHPVersion.PHP7_0)) {
+		if (expression == null && ast.apiLevel().isLessThan(PHPVersion.PHP7_0)) {
 			throw new IllegalArgumentException();
 		}
 		ASTNode oldChild = this.ifFalse;
@@ -316,8 +310,7 @@ public class ConditionalExpression extends Expression {
 		return matcher.match(this, other);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CONDITION_PROPERTY) {
 			if (get) {
 				return getCondition();
@@ -346,8 +339,7 @@ public class ConditionalExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_TYPE_PROPERTY) {
 			if (get) {
 				return getOperatorType();
@@ -362,23 +354,18 @@ public class ConditionalExpression extends Expression {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Expression condition = ASTNode.copySubtree(target,
-				this.getCondition());
+		final Expression condition = ASTNode.copySubtree(target, this.getCondition());
 		final Expression ifTrue = ASTNode.copySubtree(target, this.getIfTrue());
-		final Expression ifFalse = ASTNode.copySubtree(target,
-				this.getIfTrue());
+		final Expression ifFalse = ASTNode.copySubtree(target, this.getIfTrue());
 		if (this.operatorType == OP_TERNARY) {
-			return new ConditionalExpression(this.getStart(), this.getEnd(),
-					target, condition, ifTrue, ifFalse);
+			return new ConditionalExpression(this.getStart(), this.getEnd(), target, condition, ifTrue, ifFalse);
 		} else {
-			return new ConditionalExpression(this.getStart(), this.getEnd(),
-					target, condition, ifTrue);
+			return new ConditionalExpression(this.getStart(), this.getEnd(), target, condition, ifTrue);
 		}
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

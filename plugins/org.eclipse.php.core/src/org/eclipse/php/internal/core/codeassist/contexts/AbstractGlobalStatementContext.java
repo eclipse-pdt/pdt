@@ -25,8 +25,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class AbstractGlobalStatementContext extends StatementContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -36,14 +35,12 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 			boolean isExplicit = phpCompletionRequestor.isExplicit();
 			if (!isExplicit) {
 				try {
-					String prefix = getPrefix().isEmpty() ? getPreviousWord()
-							: getPrefix();
+					String prefix = getPrefix().isEmpty() ? getPreviousWord() : getPrefix();
 					if ((prefix == null || prefix.length() == 0)) {
 						return false;
 					}
 					TextSequence statementText = getStatementText();
-					if (statementText.length() > 0
-							&& statementText.charAt(statementText.length() - 1) == ':') {
+					if (statementText.length() > 0 && statementText.charAt(statementText.length() - 1) == ':') {
 						return false;
 					}
 				} catch (BadLocationException e) {

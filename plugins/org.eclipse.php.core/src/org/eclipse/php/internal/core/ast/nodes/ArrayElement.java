@@ -20,14 +20,14 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a single element of array.
- * Holds the key and the value both can be any expression
- * The key can be null
- * <pre>e.g.<pre> 1,
- * 'Dodo'=>'Golo',
- * $a, 
- * $b=>foo(), 
- * 1=>$myClass->getFirst() *
+ * Represents a single element of array. Holds the key and the value both can be
+ * any expression The key can be null
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst() *
  */
 public class ArrayElement extends ASTNode {
 
@@ -37,35 +37,34 @@ public class ArrayElement extends ASTNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor KEY_PROPERTY = 
-		new ChildPropertyDescriptor(ArrayElement.class, "key", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor VALUE_PROPERTY = 
-		new ChildPropertyDescriptor(ArrayElement.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor KEY_PROPERTY = new ChildPropertyDescriptor(ArrayElement.class, "key", //$NON-NLS-1$
+			Expression.class, OPTIONAL, CYCLE_RISK);
+	public static final ChildPropertyDescriptor VALUE_PROPERTY = new ChildPropertyDescriptor(ArrayElement.class,
+			"value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(KEY_PROPERTY);
 		properyList.add(VALUE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
+
 	public ArrayElement(AST ast) {
 		super(ast);
 	}
-	
+
 	public ArrayElement(int start, int end, AST ast, Expression key, Expression value) {
 		super(start, end, ast);
 		if (value == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setValue(value);
 		if (key != null) {
 			setKey(key);
@@ -121,8 +120,8 @@ public class ArrayElement extends ASTNode {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public int getType() {
 		return ASTNode.ARRAY_ELEMENT;
 	}
@@ -130,23 +129,25 @@ public class ArrayElement extends ASTNode {
 	/**
 	 * Returns the key of this array element(null if missing).
 	 * 
-	 * @return the key of the array element 
-	 */ 
+	 * @return the key of the array element
+	 */
 	public Expression getKey() {
 		return key;
 	}
-		
+
 	/**
 	 * Sets the key of this array element.
 	 * 
-	 * @param expression the left operand node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the left operand node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setKey(Expression expression) {
 		ASTNode oldChild = this.key;
 		preReplaceChild(oldChild, expression, KEY_PROPERTY);
@@ -158,22 +159,24 @@ public class ArrayElement extends ASTNode {
 	 * Returns the value expression of this array element.
 	 * 
 	 * @return the value expression of this array element
-	 */ 
+	 */
 	public Expression getValue() {
 		return this.value;
 	}
-		
+
 	/**
 	 * Sets the key of this array expression.
 	 * 
-	 * @param expression the right operand node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the right operand node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setValue(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -183,9 +186,8 @@ public class ArrayElement extends ASTNode {
 		this.value = expression;
 		postReplaceChild(oldChild, expression, VALUE_PROPERTY);
 	}
-	
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

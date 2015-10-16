@@ -39,8 +39,7 @@ public interface ICompletionContext {
 	 * @return <code>true</code> if this context is valid for the current
 	 *         position, otherwise <code>false</code>
 	 */
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor);
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor);
 
 	/**
 	 * Whether this context may be applied only if it's the only context that

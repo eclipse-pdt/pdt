@@ -32,8 +32,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public abstract class KeywordsStrategy extends GlobalElementStrategy {
 
-	public KeywordsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public KeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -50,15 +49,12 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 		boolean withoutSemicolon = concreteContext.getNextWord().trim()
 				.equals(IPHPKeywordsInitializer.SEMICOLON_SUFFIX);
-		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(
-				sourceModule.getScriptProject().getProject()).findByPrefix(
-				prefix);
+		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject())
+				.findByPrefix(prefix);
 		for (KeywordData keyword : keywordsList) {
 			if (!filterKeyword(keyword)) {
 				String suffix = keyword.suffix;
-				if (withoutSemicolon
-						&& suffix
-								.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
+				if (withoutSemicolon && suffix.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
 					suffix = suffix.substring(0, suffix.length() - 1);
 				}
 				reporter.reportKeyword(keyword.name, suffix, replaceRange);

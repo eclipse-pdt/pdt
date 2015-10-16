@@ -28,16 +28,14 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class ClassDeclarationContext extends TypeDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 		int typeEnd = getTypeEnd();
 		if (typeEnd >= 6) {
 			TextSequence statementText = getStatementText();
-			String typeString = statementText
-					.subSequence(typeEnd - 6, typeEnd - 1).toString();
+			String typeString = statementText.subSequence(typeEnd - 6, typeEnd - 1).toString();
 			if ("class".equalsIgnoreCase(typeString)) { //$NON-NLS-1$
 				return true;
 			}

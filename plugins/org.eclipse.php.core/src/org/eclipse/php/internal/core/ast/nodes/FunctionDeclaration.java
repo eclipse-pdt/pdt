@@ -51,14 +51,14 @@ public class FunctionDeclaration extends Statement {
 	 */
 	public static final SimplePropertyDescriptor IS_REFERENCE_PROPERTY = new SimplePropertyDescriptor(
 			FunctionDeclaration.class, "isReference", Boolean.class, OPTIONAL); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(
-			FunctionDeclaration.class, "name", Identifier.class, MANDATORY, //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(FunctionDeclaration.class,
+			"name", Identifier.class, MANDATORY, //$NON-NLS-1$
 			NO_CYCLE_RISK);
 	public static final ChildListPropertyDescriptor FORMAL_PARAMETERS_PROPERTY = new ChildListPropertyDescriptor(
 			FunctionDeclaration.class, "formalParameters", //$NON-NLS-1$
 			FormalParameter.class, NO_CYCLE_RISK);
-	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
-			FunctionDeclaration.class, "body", Block.class, OPTIONAL, //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(FunctionDeclaration.class,
+			"body", Block.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
 	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
 			FunctionDeclaration.class, "returnType", Identifier.class, //$NON-NLS-1$
@@ -71,8 +71,7 @@ public class FunctionDeclaration extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
@@ -81,17 +80,14 @@ public class FunctionDeclaration extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public FunctionDeclaration(int start, int end, AST ast,
-			Identifier functionName, List<?> formalParameters, Block body,
-			final boolean isReference) {
+	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName, List<?> formalParameters,
+			Block body, final boolean isReference) {
 		this(start, end, ast, functionName,
-				(FormalParameter[]) formalParameters
-						.toArray(new FormalParameter[formalParameters.size()]),
-				body, isReference);
+				(FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]), body,
+				isReference);
 	}
 
-	public FunctionDeclaration(int start, int end, AST ast,
-			Identifier functionName, List formalParameters, Block body,
+	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName, List formalParameters, Block body,
 			final boolean isReference, Identifier returnType) {
 		super(start, end, ast);
 
@@ -111,11 +107,9 @@ public class FunctionDeclaration extends Statement {
 		this.returnType = returnType;
 	}
 
-	private FunctionDeclaration(int start, int end, AST ast,
-			Identifier functionName, FormalParameter[] formalParameters,
-			Block body, final boolean isReference) {
-		this(start, end, ast, functionName, Arrays.asList(formalParameters),
-				body, isReference, null);
+	private FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
+			FormalParameter[] formalParameters, Block body, final boolean isReference) {
+		this(start, end, ast, functionName, Arrays.asList(formalParameters), body, isReference, null);
 	}
 
 	public FunctionDeclaration(AST ast) {
@@ -233,8 +227,7 @@ public class FunctionDeclaration extends Statement {
 	 * @deprecated use {@link #formalParameters()}
 	 */
 	public FormalParameter[] getFormalParameters() {
-		return formalParameters
-				.toArray(new FormalParameter[this.formalParameters.size()]);
+		return formalParameters.toArray(new FormalParameter[this.formalParameters.size()]);
 	}
 
 	/**
@@ -332,8 +325,7 @@ public class FunctionDeclaration extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final boolean internalGetSetBooleanProperty(
-			SimplePropertyDescriptor property, boolean get, boolean value) {
+	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_REFERENCE_PROPERTY) {
 			if (get) {
 				return isReference();
@@ -346,8 +338,7 @@ public class FunctionDeclaration extends Statement {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
 				return getFunctionName();
@@ -376,8 +367,7 @@ public class FunctionDeclaration extends Statement {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == FORMAL_PARAMETERS_PROPERTY) {
 			return formalParameters();
 		}
@@ -396,22 +386,17 @@ public class FunctionDeclaration extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final Identifier function = ASTNode.copySubtree(target,
-				getFunctionName());
-		final List<?> formalParams = ASTNode.copySubtrees(target,
-				formalParameters());
+		final Identifier function = ASTNode.copySubtree(target, getFunctionName());
+		final List<?> formalParams = ASTNode.copySubtrees(target, formalParameters());
 		final boolean isRef = isReference();
-		final Identifier returnType = ASTNode.copySubtree(target,
-				getReturnType());
-		final FunctionDeclaration result = new FunctionDeclaration(getStart(),
-				getEnd(), target, function, formalParams, body, isRef,
-				returnType);
+		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
+		final FunctionDeclaration result = new FunctionDeclaration(getStart(), getEnd(), target, function, formalParams,
+				body, isRef, returnType);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

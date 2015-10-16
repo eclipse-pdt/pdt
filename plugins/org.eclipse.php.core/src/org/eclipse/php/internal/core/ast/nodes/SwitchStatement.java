@@ -21,18 +21,13 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a switch statement.
- * <pre>e.g.<pre> 
- * switch ($i) {
- *   case 0:
- *     echo "i equals 0";
- *     break;
- *   case 1:
- *     echo "i equals 1";
- *     break;
- *   default:
- *     echo "i not equals 0 or 1";
- *     break;
- * }
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * switch ($i) { case 0: echo "i equals 0"; break; case 1: echo "i equals 1";
+ * break; default: echo "i not equals 0 or 1"; break; }
  */
 public class SwitchStatement extends Statement {
 
@@ -42,37 +37,35 @@ public class SwitchStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(SwitchStatement.class, "expression", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(SwitchStatement.class, "body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(SwitchStatement.class,
+			"expression", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(SwitchStatement.class,
+			"body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
+	}
+
 	public SwitchStatement(AST ast) {
 		super(ast);
 	}
-	
+
 	public SwitchStatement(int start, int end, AST ast, Expression expression, Block body) {
 		super(start, end, ast);
 
 		if (expression == null || body == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setExpression(expression);
 		setBody(body);
 	}
@@ -83,7 +76,7 @@ public class SwitchStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
@@ -122,7 +115,7 @@ public class SwitchStatement extends Statement {
 	 * Returns the expression of this switch statement.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return expression;
 	}
@@ -133,18 +126,20 @@ public class SwitchStatement extends Statement {
 	public Expression getExpr() {
 		return expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this switch statement.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -168,19 +163,21 @@ public class SwitchStatement extends Statement {
 	public Block getBody() {
 		return this.body;
 	}
-	
+
 	/**
 	 * Sets the body part of this switch statement
 	 * <p>
 	 * 
-	 * @param body the "then" statement node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param body
+	 *            the "then" statement node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setBody(Block body) {
 		if (body == null) {
 			throw new IllegalArgumentException();
@@ -190,7 +187,7 @@ public class SwitchStatement extends Statement {
 		this.body = body;
 		postReplaceChild(oldChild, body, BODY_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -211,20 +208,20 @@ public class SwitchStatement extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
-	
+
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression expr = ASTNode.copySubtree(target, getExpression());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		
+
 		final SwitchStatement result = new SwitchStatement(this.getStart(), this.getEnd(), target, expr, body);
 		return result;
 	}
@@ -233,5 +230,5 @@ public class SwitchStatement extends Statement {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 }

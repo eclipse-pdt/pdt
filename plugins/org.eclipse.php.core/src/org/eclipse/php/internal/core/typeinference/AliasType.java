@@ -22,8 +22,7 @@ public class AliasType extends SourceType {
 	// this.alias = alias;
 	// }
 
-	public AliasType(IDLTKSearchScope scope, ModelElement sourceModule,
-			String fullyQualifiedName, String alias) {
+	public AliasType(IDLTKSearchScope scope, ModelElement sourceModule, String fullyQualifiedName, String alias) {
 		super(sourceModule, alias);
 		this.scope = scope;
 		this.alias = alias;
@@ -52,8 +51,8 @@ public class AliasType extends SourceType {
 	public IType resolve() {
 		if (!resolved) {
 			resolved = true;
-			IType[] namespaces = PhpModelAccess.getDefault().findTypes(
-					fullyQualifiedName, MatchRule.EXACT, 0, 0, scope, null);
+			IType[] namespaces = PhpModelAccess.getDefault().findTypes(fullyQualifiedName, MatchRule.EXACT, 0, 0, scope,
+					null);
 			if (namespaces != null && namespaces.length > 0) {
 				realType = namespaces[0];
 				// this.parent = (ModelElement) namespaces[0].getParent();

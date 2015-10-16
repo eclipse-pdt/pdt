@@ -18,8 +18,9 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a goto label.
- * <pre>e.g.
- * LABEL:
+ * 
+ * <pre>
+ * e.g. LABEL:
  */
 public class GotoLabel extends Statement {
 
@@ -29,7 +30,7 @@ public class GotoLabel extends Statement {
 		super(start, end);
 		this.label = label;
 	}
-	
+
 	public void traverse(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 		visitor.endvisit(this);
@@ -38,7 +39,7 @@ public class GotoLabel extends Statement {
 	public String getLabel() {
 		return label;
 	}
-	
+
 	public int getKind() {
 		return ASTNodeKinds.GOTO_LABEL;
 	}

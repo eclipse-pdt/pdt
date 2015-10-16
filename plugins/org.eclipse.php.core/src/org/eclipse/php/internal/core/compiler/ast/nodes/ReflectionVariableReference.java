@@ -19,9 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents an indirect reference to a variable.
- * <pre>e.g.<pre> $$a
- * $$foo()
- * ${foo()}
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $$a $$foo() ${foo()}
  */
 public class ReflectionVariableReference extends Expression {
 
@@ -48,7 +51,7 @@ public class ReflectionVariableReference extends Expression {
 		visitor.endvisit(this);
 	}
 
-	public Expression getExpression(){
+	public Expression getExpression() {
 		return this.expression;
 	}
 

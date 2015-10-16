@@ -29,9 +29,8 @@ import org.eclipse.php.internal.core.typeinference.PHPThisClassType;
  * 
  * @author michael
  */
-public class MethodContext implements IContext, INamespaceContext,
-		IArgumentsContext, IInstanceContext, ISourceModuleContext,
-		IModelCacheContext {
+public class MethodContext implements IContext, INamespaceContext, IArgumentsContext, IInstanceContext,
+		ISourceModuleContext, IModelCacheContext {
 
 	private final ISourceModule sourceModule;
 	private final ModuleDeclaration rootNode;
@@ -43,9 +42,8 @@ public class MethodContext implements IContext, INamespaceContext,
 	private IModelAccessCache cache;
 	private IType type;
 
-	public MethodContext(IContext parent, ISourceModule sourceModule,
-			ModuleDeclaration rootNode, MethodDeclaration methodNode,
-			String[] argNames, IEvaluatedType[] argTypes) {
+	public MethodContext(IContext parent, ISourceModule sourceModule, ModuleDeclaration rootNode,
+			MethodDeclaration methodNode, String[] argNames, IEvaluatedType[] argTypes) {
 		this.sourceModule = sourceModule;
 		this.rootNode = rootNode;
 		this.methodNode = methodNode;
@@ -113,8 +111,7 @@ public class MethodContext implements IContext, INamespaceContext,
 
 	public String getLangNature() {
 		if (sourceModule != null) {
-			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
-					.getLanguageToolkit(sourceModule);
+			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(sourceModule);
 			if (languageToolkit != null) {
 				return languageToolkit.getNatureId();
 			}
@@ -133,14 +130,10 @@ public class MethodContext implements IContext, INamespaceContext,
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((instanceType == null) ? 0 : instanceType.hashCode());
-		result = prime * result
-				+ ((methodNode == null) ? 0 : methodNode.hashCode());
-		result = prime * result
-				+ ((namespaceName == null) ? 0 : namespaceName.hashCode());
-		result = prime * result
-				+ ((sourceModule == null) ? 0 : sourceModule.hashCode());
+		result = prime * result + ((instanceType == null) ? 0 : instanceType.hashCode());
+		result = prime * result + ((methodNode == null) ? 0 : methodNode.hashCode());
+		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		result = prime * result + ((sourceModule == null) ? 0 : sourceModule.hashCode());
 		return result;
 	}
 
@@ -180,8 +173,7 @@ public class MethodContext implements IContext, INamespaceContext,
 		if (type != null) {
 			if (type.getParent() instanceof IType) {
 				IType ns = (IType) type.getParent();
-				instanceType = new PHPThisClassType(ns.getElementName(),
-						type.getElementName(), type);
+				instanceType = new PHPThisClassType(ns.getElementName(), type.getElementName(), type);
 			} else {
 				instanceType = new PHPThisClassType(type.getElementName(), type);
 			}

@@ -19,8 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a parsing error
- * <pre>e.g.<pre> echo ;
- * for () {}
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * echo ; for () {}
  */
 public class ASTError extends Statement {
 

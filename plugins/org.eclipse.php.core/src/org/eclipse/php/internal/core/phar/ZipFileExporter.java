@@ -62,8 +62,7 @@ public class ZipFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
-	private void write(ZipEntry entry, InputStream contentStream)
-			throws IOException {
+	private void write(ZipEntry entry, InputStream contentStream) throws IOException {
 		byte[] readBuffer = new byte[4096];
 
 		outputStream.putNextEntry(entry);
@@ -80,8 +79,7 @@ public class ZipFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
-	private void completeEntry(ZipEntry entry, InputStream contentStream)
-			throws IOException {
+	private void completeEntry(ZipEntry entry, InputStream contentStream) throws IOException {
 		byte[] readBuffer = new byte[4096];
 
 		// If the contents are being compressed then we get the below for free.
@@ -117,8 +115,7 @@ public class ZipFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
-	public void write(IFile resource, String destinationPath)
-			throws IOException, CoreException {
+	public void write(IFile resource, String destinationPath) throws IOException, CoreException {
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 		completeEntry(newEntry, resource.getContents(false));
 		write(newEntry, resource.getContents(false));
@@ -130,8 +127,7 @@ public class ZipFileExporter extends AbstractFileExporter {
 		write(newEntry, PharUtil.getStubInputStream(stub));
 	}
 
-	public void write(IFolder resource, String destinationPath)
-			throws IOException, CoreException {
+	public void write(IFolder resource, String destinationPath) throws IOException, CoreException {
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 
 		outputStream.putNextEntry(newEntry);

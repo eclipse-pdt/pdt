@@ -33,8 +33,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class NamespaceName extends Identifier {
 
-	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<Identifier>(
-			ELEMENTS_PROPERTY);
+	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<Identifier>(ELEMENTS_PROPERTY);
 
 	/**
 	 * Whether the namespace name has '\' prefix, which means it relates to the
@@ -53,10 +52,10 @@ public class NamespaceName extends Identifier {
 	 */
 	public static final ChildListPropertyDescriptor ELEMENTS_PROPERTY = new ChildListPropertyDescriptor(
 			NamespaceName.class, "segments", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor GLOBAL_PROPERTY = new SimplePropertyDescriptor(
-			NamespaceName.class, "global", Boolean.class, MANDATORY); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor CURRENT_PROPERTY = new SimplePropertyDescriptor(
-			NamespaceName.class, "current", Boolean.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor GLOBAL_PROPERTY = new SimplePropertyDescriptor(NamespaceName.class,
+			"global", Boolean.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor CURRENT_PROPERTY = new SimplePropertyDescriptor(NamespaceName.class,
+			"current", Boolean.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -65,8 +64,7 @@ public class NamespaceName extends Identifier {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				4);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(4);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(GLOBAL_PROPERTY);
@@ -78,8 +76,7 @@ public class NamespaceName extends Identifier {
 		super(ast);
 	}
 
-	public NamespaceName(int start, int end, AST ast, Identifier[] segments,
-			boolean global, boolean current) {
+	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global, boolean current) {
 		super(start, end, ast, buildName(segments, global, current));
 
 		for (Identifier name : segments) {
@@ -90,13 +87,9 @@ public class NamespaceName extends Identifier {
 		this.current = current;
 	}
 
-	public NamespaceName(int start, int end, AST ast, List segments,
-			boolean global, boolean current) {
+	public NamespaceName(int start, int end, AST ast, List segments, boolean global, boolean current) {
 		super(start, end, ast,
-				buildName(
-						(Identifier[]) segments.toArray(
-								new Identifier[getSegmentSize(segments)]),
-				global, current));
+				buildName((Identifier[]) segments.toArray(new Identifier[getSegmentSize(segments)]), global, current));
 
 		Iterator<Identifier> it = segments.iterator();
 		while (it.hasNext()) {
@@ -114,8 +107,7 @@ public class NamespaceName extends Identifier {
 		return segments.size();
 	}
 
-	protected static String buildName(Identifier[] segments, boolean global,
-			boolean current) {
+	protected static String buildName(Identifier[] segments, boolean global, boolean current) {
 		if (segments == null) {
 			throw new IllegalArgumentException();
 		}
@@ -235,19 +227,17 @@ public class NamespaceName extends Identifier {
 		final List segments = ASTNode.copySubtrees(target, segments());
 		final boolean global = isGlobal();
 		final boolean current = isCurrent();
-		final NamespaceName result = new NamespaceName(this.getStart(),
-				this.getEnd(), target, segments, global, current);
+		final NamespaceName result = new NamespaceName(this.getStart(), this.getEnd(), target, segments, global,
+				current);
 		return result;
 	}
 
 	@Override
-	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property,
-			boolean get, boolean value) {
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == GLOBAL_PROPERTY) {
 			if (get) {
 				return isGlobal();
@@ -270,8 +260,7 @@ public class NamespaceName extends Identifier {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == ELEMENTS_PROPERTY) {
 			return segments();
 		}

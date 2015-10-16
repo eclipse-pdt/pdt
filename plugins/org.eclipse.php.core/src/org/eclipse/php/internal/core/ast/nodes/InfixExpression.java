@@ -21,10 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents an infix expression
- * <pre>e.g.<pre> $a + 1,
- * 3 - 2,
- * foo() * $a->bar(),
- * 'string'.$c
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a + 1, 3 - 2, foo() * $a->bar(), 'string'.$c
  */
 public class InfixExpression extends Expression {
 
@@ -91,8 +93,8 @@ public class InfixExpression extends Expression {
 	public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
 			InfixExpression.class, "left", Expression.class, MANDATORY, //$NON-NLS-1$
 			CYCLE_RISK);
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
-			InfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(InfixExpression.class,
+			"operator", Integer.class, MANDATORY); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
 			InfixExpression.class, "right", Expression.class, MANDATORY, //$NON-NLS-1$
 			CYCLE_RISK);
@@ -104,16 +106,14 @@ public class InfixExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(LEFT_OPERAND_PROPERTY);
 		properyList.add(OPERATOR_PROPERTY);
 		properyList.add(RIGHT_OPERAND_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public InfixExpression(int start, int end, AST ast, Expression left,
-			int operator, Expression right) {
+	public InfixExpression(int start, int end, AST ast, Expression left, int operator, Expression right) {
 		super(start, end, ast);
 
 		if (right == null || left == null || getOperator(operator) == null) {
@@ -217,8 +217,7 @@ public class InfixExpression extends Expression {
 		buffer.append(tab).append("<InfixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" operator='") //$NON-NLS-1$
-				.append(getXmlStringValue(getOperator(operator)))
-				.append("'>\n"); //$NON-NLS-1$
+				.append(getXmlStringValue(getOperator(operator))).append("'>\n"); //$NON-NLS-1$
 		left.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		right.toString(buffer, TAB + tab);
@@ -331,19 +330,17 @@ public class InfixExpression extends Expression {
 	ASTNode clone0(AST target) {
 		final Expression left = ASTNode.copySubtree(target, getLeft());
 		final Expression right = ASTNode.copySubtree(target, getRight());
-		final InfixExpression result = new InfixExpression(this.getStart(),
-				this.getEnd(), target, left, this.getOperator(), right);
+		final InfixExpression result = new InfixExpression(this.getStart(), this.getEnd(), target, left,
+				this.getOperator(), right);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == LEFT_OPERAND_PROPERTY) {
 			if (get) {
 				return getLeft();
@@ -365,8 +362,7 @@ public class InfixExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();

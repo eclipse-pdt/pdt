@@ -21,7 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents ignore error expression
- * <pre>e.g.<pre> '@$a->foo()' 
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * '@$a->foo()'
  */
 public class IgnoreError extends Expression {
 
@@ -30,23 +35,21 @@ public class IgnoreError extends Expression {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(IgnoreError.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(IgnoreError.class,
+			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
-	
+	}
+
 	public IgnoreError(int start, int end, AST ast) {
 		this(start, end, ast, null);
 	}
@@ -70,7 +73,7 @@ public class IgnoreError extends Expression {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
@@ -102,7 +105,7 @@ public class IgnoreError extends Expression {
 	 * Returns the expression of this return statement.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return expression;
 	}
@@ -113,18 +116,20 @@ public class IgnoreError extends Expression {
 	public Expression getExpr() {
 		return expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this expression statement.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -147,8 +152,8 @@ public class IgnoreError extends Expression {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

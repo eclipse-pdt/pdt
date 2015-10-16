@@ -18,10 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents an unary operation expression
- * <pre>e.g.<pre> +$a,
- * -3,
- * -foo(),
- * +-+-$a
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * +$a, -3, -foo(), +-+-$a
  */
 public class UnaryOperation extends Expression {
 
@@ -55,16 +57,16 @@ public class UnaryOperation extends Expression {
 
 	public String getOperator() {
 		switch (getOperatorType()) {
-			case OP_PLUS:
-				return "+"; //$NON-NLS-1$
-			case OP_MINUS:
-				return "-"; //$NON-NLS-1$
-			case OP_NOT:
-				return "!"; //$NON-NLS-1$
-			case OP_TILDA:
-				return "~"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_PLUS:
+			return "+"; //$NON-NLS-1$
+		case OP_MINUS:
+			return "-"; //$NON-NLS-1$
+		case OP_NOT:
+			return "!"; //$NON-NLS-1$
+		case OP_TILDA:
+			return "~"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

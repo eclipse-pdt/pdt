@@ -43,20 +43,19 @@ public class UseStatement extends Statement {
 	// 'const' keyword
 	public static final int T_CONST = 2;
 
-	private final ASTNode.NodeList<UseStatementPart> parts = new ASTNode.NodeList<UseStatementPart>(
-			PARTS_PROPERTY);
+	private final ASTNode.NodeList<UseStatementPart> parts = new ASTNode.NodeList<UseStatementPart>(PARTS_PROPERTY);
 	private int statementType;
 	private NamespaceName namespace;
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor PARTS_PROPERTY = new ChildListPropertyDescriptor(
-			UseStatement.class, "parts", UseStatementPart.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor PARTS_PROPERTY = new ChildListPropertyDescriptor(UseStatement.class,
+			"parts", UseStatementPart.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor STATEMENT_TYPE_PROPERTY = new SimplePropertyDescriptor(
 			UseStatement.class, "statementType", Integer.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor NAMESPACE_PROPERTY = new ChildPropertyDescriptor(
-			UseStatement.class, "namespace", NamespaceName.class, OPTIONAL, //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAMESPACE_PROPERTY = new ChildPropertyDescriptor(UseStatement.class,
+			"namespace", NamespaceName.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
 
 	/**
@@ -66,8 +65,7 @@ public class UseStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(PARTS_PROPERTY);
 		properyList.add(STATEMENT_TYPE_PROPERTY);
 		properyList.add(NAMESPACE_PROPERTY);
@@ -78,23 +76,20 @@ public class UseStatement extends Statement {
 		super(ast);
 	}
 
-	public UseStatement(int start, int end, AST ast,
-			List<UseStatementPart> parts) {
+	public UseStatement(int start, int end, AST ast, List<UseStatementPart> parts) {
 		this(start, end, ast, parts, T_NONE);
 	}
 
-	public UseStatement(int start, int end, AST ast,
-			List<UseStatementPart> parts, int statementType) {
+	public UseStatement(int start, int end, AST ast, List<UseStatementPart> parts, int statementType) {
 		this(start, end, ast, null, parts, statementType);
 	}
 
-	public UseStatement(int start, int end, AST ast, NamespaceName namespace,
-			List<UseStatementPart> parts) {
+	public UseStatement(int start, int end, AST ast, NamespaceName namespace, List<UseStatementPart> parts) {
 		this(start, end, ast, namespace, parts, T_NONE);
 	}
 
-	public UseStatement(int start, int end, AST ast, NamespaceName namespace,
-			List<UseStatementPart> parts, int statementType) {
+	public UseStatement(int start, int end, AST ast, NamespaceName namespace, List<UseStatementPart> parts,
+			int statementType) {
 		super(start, end, ast);
 
 		if (parts == null || parts.size() == 0) {
@@ -108,8 +103,7 @@ public class UseStatement extends Statement {
 		setStatementType(statementType);
 	}
 
-	public UseStatement(int start, int end, AST ast, UseStatementPart[] parts,
-			int statementType) {
+	public UseStatement(int start, int end, AST ast, UseStatementPart[] parts, int statementType) {
 		super(start, end, ast);
 
 		if (parts == null || parts.length == 0) {
@@ -216,8 +210,7 @@ public class UseStatement extends Statement {
 		postReplaceChild(oldChild, namespace, NAMESPACE_PROPERTY);
 	}
 
-	final List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == PARTS_PROPERTY) {
 			return parts();
 		}
@@ -225,8 +218,7 @@ public class UseStatement extends Statement {
 		return super.internalGetChildListProperty(property);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAMESPACE_PROPERTY) {
 			if (get) {
 				return getNamespace();
@@ -240,8 +232,7 @@ public class UseStatement extends Statement {
 	}
 
 	@Override
-	int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == STATEMENT_TYPE_PROPERTY) {
 			if (get) {
 				return getStatementType();
@@ -264,16 +255,14 @@ public class UseStatement extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final List parts = ASTNode.copySubtrees(target, parts());
-		final NamespaceName namespace = ASTNode.copySubtree(target,
-				getNamespace());
-		final UseStatement result = new UseStatement(getStart(), getEnd(),
-				target, namespace, parts, getStatementType());
+		final NamespaceName namespace = ASTNode.copySubtree(target, getNamespace());
+		final UseStatement result = new UseStatement(getStart(), getEnd(), target, namespace, parts,
+				getStatementType());
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

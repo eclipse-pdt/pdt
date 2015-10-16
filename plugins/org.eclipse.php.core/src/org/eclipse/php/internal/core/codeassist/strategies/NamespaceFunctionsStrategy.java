@@ -31,8 +31,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
  */
 public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
 
-	public NamespaceFunctionsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public NamespaceFunctionsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -54,8 +53,7 @@ public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
 		for (IType ns : concreteContext.getNamespaces()) {
 			try {
 				for (IMethod method : ns.getMethods()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(
-							method.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
 						reporter.reportMethod(method, suffix, replaceRange);
 					}
 				}

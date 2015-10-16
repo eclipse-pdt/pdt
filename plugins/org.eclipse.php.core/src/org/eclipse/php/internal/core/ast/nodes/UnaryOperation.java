@@ -21,10 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents an unary operation expression
- * <pre>e.g.<pre> +$a,
- * -3,
- * -foo(),
- * +-+-$a
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * +$a, -3, -foo(), +-+-$a
  */
 public class UnaryOperation extends Expression implements IOperationNode {
 
@@ -34,7 +36,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	public static final int OP_MINUS = 1;
 	// '!'
 	public static final int OP_NOT = 2;
-	// '~'	
+	// '~'
 	public static final int OP_TILDA = 3;
 
 	private Expression expression;
@@ -43,25 +45,24 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(UnaryOperation.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = 
-		new SimplePropertyDescriptor(UnaryOperation.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(UnaryOperation.class,
+			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(UnaryOperation.class,
+			"operator", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
+	}
+
 	public UnaryOperation(int start, int end, AST ast, Expression expr, int operator) {
 		super(start, end, ast);
 
@@ -82,7 +83,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
@@ -108,16 +109,16 @@ public class UnaryOperation extends Expression implements IOperationNode {
 
 	public static String getOperator(int operator) {
 		switch (operator) {
-			case OP_PLUS:
-				return "+"; //$NON-NLS-1$
-			case OP_MINUS:
-				return "-"; //$NON-NLS-1$
-			case OP_NOT:
-				return "!"; //$NON-NLS-1$
-			case OP_TILDA:
-				return "~"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_PLUS:
+			return "+"; //$NON-NLS-1$
+		case OP_MINUS:
+			return "-"; //$NON-NLS-1$
+		case OP_NOT:
+			return "!"; //$NON-NLS-1$
+		case OP_TILDA:
+			return "~"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -129,7 +130,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	 * Returns the expression of this unary operation.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return expression;
 	}
@@ -140,18 +141,20 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	public Expression getExpr() {
 		return expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this unary operation.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -161,7 +164,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 		this.expression = expression;
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -178,6 +181,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	/**
 	 * the operation type - one of {@link #OP_MINUS}, {@link #OP_NOT},
 	 * {@link #OP_PLUS}, {@link #OP_TILDA}
+	 * 
 	 * @return operation type
 	 */
 	public int getOperator() {
@@ -186,14 +190,21 @@ public class UnaryOperation extends Expression implements IOperationNode {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * ()
 	 */
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * (int)
 	 */
 	public String getOperationString(int op) {
 		return getOperator(op);
@@ -202,26 +213,28 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	/**
 	 * Sets the operator of this unary operation
 	 * 
-	 * @param new operator of this unary operation
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param new
+	 *            operator of this unary operation
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public final void setOperator(int value) {
 		if (getOperator(value) == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		preValueChange(OPERATOR_PROPERTY);
 		this.operator = value;
 		postValueChange(OPERATOR_PROPERTY);
 	}
-	
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
@@ -235,9 +248,8 @@ public class UnaryOperation extends Expression implements IOperationNode {
 		// allow default implementation to flag the error
 		return super.internalGetSetIntProperty(property, get, value);
 	}
-	
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -248,7 +260,8 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression expression = ASTNode.copySubtree(target, this.getExpression());
-		final UnaryOperation result = new UnaryOperation(this.getStart(), this.getEnd(), target, expression, this.getOperator());
+		final UnaryOperation result = new UnaryOperation(this.getStart(), this.getEnd(), target, expression,
+				this.getOperator());
 		return result;
 	}
 

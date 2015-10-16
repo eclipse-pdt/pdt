@@ -10,8 +10,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 public class TraitPrecedence extends Expression {
 
-	public TraitPrecedence(int start, int end, AST ast,
-			FullyQualifiedTraitMethodReference methodReference,
+	public TraitPrecedence(int start, int end, AST ast, FullyQualifiedTraitMethodReference methodReference,
 			List<NamespaceName> trList) {
 		super(start, end, ast);
 		setMethodReference(methodReference);
@@ -26,11 +25,9 @@ public class TraitPrecedence extends Expression {
 	}
 
 	private FullyQualifiedTraitMethodReference methodReference;
-	private ASTNode.NodeList<NamespaceName> trList = new ASTNode.NodeList<NamespaceName>(
-			TRAIT_REFERENCE_LIST);;
+	private ASTNode.NodeList<NamespaceName> trList = new ASTNode.NodeList<NamespaceName>(TRAIT_REFERENCE_LIST);;
 
-	public static final ChildPropertyDescriptor METHOD_REFERENCE = new ChildPropertyDescriptor(
-			TraitPrecedence.class,
+	public static final ChildPropertyDescriptor METHOD_REFERENCE = new ChildPropertyDescriptor(TraitPrecedence.class,
 			"methodReference", FullyQualifiedTraitMethodReference.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	public static final ChildListPropertyDescriptor TRAIT_REFERENCE_LIST = new ChildListPropertyDescriptor(
@@ -43,8 +40,7 @@ public class TraitPrecedence extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(METHOD_REFERENCE);
 		propertyList.add(TRAIT_REFERENCE_LIST);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -54,8 +50,7 @@ public class TraitPrecedence extends Expression {
 		return methodReference;
 	}
 
-	public void setMethodReference(
-			FullyQualifiedTraitMethodReference methodReference) {
+	public void setMethodReference(FullyQualifiedTraitMethodReference methodReference) {
 		if (methodReference == null) {
 			throw new IllegalArgumentException();
 		}
@@ -145,22 +140,19 @@ public class TraitPrecedence extends Expression {
 
 	@Override
 	ASTNode clone0(AST target) {
-		FullyQualifiedTraitMethodReference methodReference = ASTNode
-				.copySubtree(target, getMethodReference());
+		FullyQualifiedTraitMethodReference methodReference = ASTNode.copySubtree(target, getMethodReference());
 		List<NamespaceName> trList = ASTNode.copySubtrees(target, getTrList());
-		final TraitPrecedence result = new TraitPrecedence(this.getStart(),
-				this.getEnd(), target, methodReference, trList);
+		final TraitPrecedence result = new TraitPrecedence(this.getStart(), this.getEnd(), target, methodReference,
+				trList);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == METHOD_REFERENCE) {
 			if (get) {
 				return getMethodReference();

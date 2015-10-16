@@ -19,14 +19,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents while statement.
- * <pre>e.g.<pre>
- * while (expr)
- *   statement;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * while (expr) statement;
  *
- * while (expr):
- *   statement
- *   ...
- * endwhile;
+ * while (expr): statement ... endwhile;
  */
 public class WhileStatement extends Statement {
 

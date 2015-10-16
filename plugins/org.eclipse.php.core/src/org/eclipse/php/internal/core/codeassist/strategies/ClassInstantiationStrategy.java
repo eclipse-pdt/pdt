@@ -24,12 +24,10 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
  * 
  * @author michael
  */
-public class ClassInstantiationStrategy extends
-		AbstractClassInstantiationStrategy {
+public class ClassInstantiationStrategy extends AbstractClassInstantiationStrategy {
 
 	public ClassInstantiationStrategy(ICompletionContext context) {
-		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace
-				| Modifiers.AccAbstract);
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace | Modifiers.AccAbstract);
 	}
 
 	@Override
@@ -39,8 +37,7 @@ public class ClassInstantiationStrategy extends
 		String suffix = getSuffix(completionContext);
 		addAlias(reporter, suffix);
 		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(
-						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 		super.apply(reporter);

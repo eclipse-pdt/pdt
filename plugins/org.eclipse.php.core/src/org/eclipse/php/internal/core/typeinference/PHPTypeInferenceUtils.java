@@ -29,8 +29,7 @@ import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
 public class PHPTypeInferenceUtils {
 
-	public static IEvaluatedType combineMultiType(
-			Collection<IEvaluatedType> evaluatedTypes) {
+	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluatedTypes) {
 		MultiTypeType multiTypeType = new MultiTypeType();
 		for (IEvaluatedType type : evaluatedTypes) {
 			if (type == null) {
@@ -41,14 +40,12 @@ public class PHPTypeInferenceUtils {
 		return multiTypeType;
 	}
 
-	private static Collection<IEvaluatedType> resolveAmbiguousTypes(
-			Collection<IEvaluatedType> evaluatedTypes) {
+	private static Collection<IEvaluatedType> resolveAmbiguousTypes(Collection<IEvaluatedType> evaluatedTypes) {
 		List<IEvaluatedType> resolved = new LinkedList<IEvaluatedType>();
 		for (IEvaluatedType type : evaluatedTypes) {
 			if (type instanceof AmbiguousType) {
 				AmbiguousType ambType = (AmbiguousType) type;
-				resolved.addAll(resolveAmbiguousTypes(
-						Arrays.asList(ambType.getPossibleTypes())));
+				resolved.addAll(resolveAmbiguousTypes(Arrays.asList(ambType.getPossibleTypes())));
 			} else {
 				resolved.add(type);
 			}
@@ -56,10 +53,8 @@ public class PHPTypeInferenceUtils {
 		return resolved;
 	}
 
-	public static IEvaluatedType combineTypes(
-			Collection<IEvaluatedType> evaluatedTypes) {
-		Set<IEvaluatedType> types = new LinkedHashSet<IEvaluatedType>(
-				resolveAmbiguousTypes(evaluatedTypes));
+	public static IEvaluatedType combineTypes(Collection<IEvaluatedType> evaluatedTypes) {
+		Set<IEvaluatedType> types = new LinkedHashSet<IEvaluatedType>(resolveAmbiguousTypes(evaluatedTypes));
 		if (types.contains(null)) {
 			types.remove(null);
 			types.add(PHPSimpleTypes.NULL);
@@ -70,34 +65,24 @@ public class PHPTypeInferenceUtils {
 		if (types.size() == 1) {
 			return types.iterator().next();
 		}
-		return new AmbiguousType(
-				types.toArray(new IEvaluatedType[types.size()]));
+		return new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 	}
 
-	public static IEvaluatedType resolveExpression(ISourceModule sourceModule,
-			ASTNode expression) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
-		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration,
-				expression);
-		return resolveExpression(sourceModule, moduleDeclaration, context,
-				expression);
+	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ASTNode expression) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, expression);
+		return resolveExpression(sourceModule, moduleDeclaration, context, expression);
 	}
 
-	public static IEvaluatedType resolveExpression(ISourceModule sourceModule,
-			ModuleDeclaration moduleDeclaration, IContext context,
-			ASTNode expression) {
-		return resolveExpression(new PHPTypeInferencer(), sourceModule,
-				moduleDeclaration, context, expression);
+	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration,
+			IContext context, ASTNode expression) {
+		return resolveExpression(new PHPTypeInferencer(), sourceModule, moduleDeclaration, context, expression);
 	}
 
-	public static IEvaluatedType resolveExpression(
-			IPHPTypeInferencer inferencer, ISourceModule sourceModule,
-			ModuleDeclaration moduleDeclaration, IContext context,
-			ASTNode expression) {
+	public static IEvaluatedType resolveExpression(IPHPTypeInferencer inferencer, ISourceModule sourceModule,
+			ModuleDeclaration moduleDeclaration, IContext context, ASTNode expression) {
 		if (context != null) {
-			return inferencer
-					.evaluateType(new ExpressionTypeGoal(context, expression));
+			return inferencer.evaluateType(new ExpressionTypeGoal(context, expression));
 		}
 		return UnknownType.INSTANCE;
 	}
@@ -112,11 +97,9 @@ public class PHPTypeInferenceUtils {
 	 * @return model elements or <code>null</code> in case no element could be
 	 *         found
 	 */
-	public static IType[] getModelElements(IEvaluatedType evaluatedType,
-			ISourceModuleContext context) {
+	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context) {
 		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context, 0,
-				context instanceof IModelCacheContext
-						? ((IModelCacheContext) context).getCache() : null);
+				context instanceof IModelCacheContext ? ((IModelCacheContext) context).getCache() : null);
 	}
 
 	/**
@@ -130,10 +113,9 @@ public class PHPTypeInferenceUtils {
 	 * @return model elements or <code>null</code> in case no element could be
 	 *         found
 	 */
-	public static IType[] getModelElements(IEvaluatedType evaluatedType,
-			ISourceModuleContext context, IModelAccessCache cache) {
-		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context, 0,
-				cache);
+	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context,
+			IModelAccessCache cache) {
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context, 0, cache);
 	}
 
 	/**
@@ -147,11 +129,9 @@ public class PHPTypeInferenceUtils {
 	 * @return model elements or <code>null</code> in case no element could be
 	 *         found
 	 */
-	public static IType[] getModelElements(IEvaluatedType evaluatedType,
-			ISourceModuleContext context, int offset) {
+	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		return internalGetModelElements(evaluatedType, context, offset,
-				context instanceof IModelCacheContext
-						? ((IModelCacheContext) context).getCache() : null);
+				context instanceof IModelCacheContext ? ((IModelCacheContext) context).getCache() : null);
 	}
 
 	/**
@@ -166,21 +146,19 @@ public class PHPTypeInferenceUtils {
 	 * @return model elements or <code>null</code> in case no element could be
 	 *         found
 	 */
-	public static IType[] getModelElements(IEvaluatedType evaluatedType,
-			ISourceModuleContext context, int offset, IModelAccessCache cache) {
+	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset,
+			IModelAccessCache cache) {
 		return internalGetModelElements(evaluatedType, context, offset, cache);
 	}
 
-	private static IType[] internalGetModelElements(
-			IEvaluatedType evaluatedType, ISourceModuleContext context,
+	private static IType[] internalGetModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context,
 			int offset, IModelAccessCache cache) {
 		ISourceModule sourceModule = context.getSourceModule();
 		if (isSimple(evaluatedType)) {
 			return null;
 		}
 		if (evaluatedType instanceof ModelClassType) {
-			return new IType[] {
-					((ModelClassType) evaluatedType).getTypeDeclaration() };
+			return new IType[] { ((ModelClassType) evaluatedType).getTypeDeclaration() };
 		}
 		if (evaluatedType instanceof PHPClassType) {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
@@ -189,13 +167,10 @@ public class PHPTypeInferenceUtils {
 				try {
 					IType[] types = sourceModule.getTypes();
 					for (IType t : types) {
-						if (t.getElementName().equalsIgnoreCase(
-								evaluatedType.getTypeName())) {
+						if (t.getElementName().equalsIgnoreCase(evaluatedType.getTypeName())) {
 							Class<?> expressionClass = evaluatedType.getClass();
-							if ((expressionClass == PHPTraitType.class)
-									&& PHPFlags.isTrait(t.getFlags())
-									|| (expressionClass == PHPClassType.class)
-											&& PHPFlags.isClass(t.getFlags())) {
+							if ((expressionClass == PHPTraitType.class) && PHPFlags.isTrait(t.getFlags())
+									|| (expressionClass == PHPClassType.class) && PHPFlags.isClass(t.getFlags())) {
 								result.add(t);
 							}
 
@@ -213,16 +188,12 @@ public class PHPTypeInferenceUtils {
 					Class<?> expressionClass = evaluatedType.getClass();
 					if (expressionClass == PHPTraitType.class) {
 						PHPTraitType phpTraitType = (PHPTraitType) evaluatedType;
-						return PHPModelUtils.getTypes(
-								evaluatedType.getTypeName(), sourceModule,
-								offset, cache, null, false,
-								phpTraitType.isGlobal());
+						return PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null,
+								false, phpTraitType.isGlobal());
 					} else {
 						PHPClassType phpClassType = (PHPClassType) evaluatedType;
-						return PHPModelUtils.getTypes(
-								evaluatedType.getTypeName(), sourceModule,
-								offset, cache, null, true,
-								phpClassType.isGlobal());
+						return PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null,
+								true, phpClassType.isGlobal());
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
@@ -232,11 +203,9 @@ public class PHPTypeInferenceUtils {
 			}
 		} else if (evaluatedType instanceof AmbiguousType) {
 			List<IType> tmpList = new LinkedList<IType>();
-			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType)
-					.getPossibleTypes();
+			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
-				IType[] tmpArray = internalGetModelElements(possibleType,
-						context, offset, cache);
+				IType[] tmpArray = internalGetModelElements(possibleType, context, offset, cache);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}
@@ -247,8 +216,7 @@ public class PHPTypeInferenceUtils {
 			MultiTypeType multiTypeType = (MultiTypeType) evaluatedType;
 			List<IType> result = new ArrayList<IType>();
 			for (IEvaluatedType tmpType : multiTypeType.getTypes()) {
-				IType[] tmpTypes = internalGetModelElements(tmpType, context,
-						offset, cache);
+				IType[] tmpTypes = internalGetModelElements(tmpType, context, offset, cache);
 				if (tmpTypes != null) {
 					result.addAll(Arrays.asList(tmpTypes));
 				}
@@ -271,8 +239,7 @@ public class PHPTypeInferenceUtils {
 	public static boolean isSimple(Object object) {
 		if (object == null || object instanceof SimpleType) {
 			return true;
-		} else if (PHPSimpleTypes.RESOURCE == object
-				|| PHPSimpleTypes.OBJECT == object
+		} else if (PHPSimpleTypes.RESOURCE == object || PHPSimpleTypes.OBJECT == object
 				|| PHPSimpleTypes.MIXED == object) {
 			return true;
 		} else if (object instanceof MultiTypeType) {
@@ -283,8 +250,7 @@ public class PHPTypeInferenceUtils {
 			}
 			return true;
 		} else if (object instanceof AmbiguousType) {
-			for (IEvaluatedType type : ((AmbiguousType) object)
-					.getPossibleTypes()) {
+			for (IEvaluatedType type : ((AmbiguousType) object).getPossibleTypes()) {
 				if (!isSimple(type)) {
 					return false;
 				}

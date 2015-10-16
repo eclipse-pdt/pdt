@@ -14,11 +14,9 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	private Identifier functionName;
 
 	public static final ChildPropertyDescriptor CLASS_NAME = new ChildPropertyDescriptor(
-			FullyQualifiedTraitMethodReference.class,
-			"className", NamespaceName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			FullyQualifiedTraitMethodReference.class, "className", NamespaceName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor FUNCTION_NAME = new ChildPropertyDescriptor(
-			FullyQualifiedTraitMethodReference.class,
-			"functionName", Identifier.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			FullyQualifiedTraitMethodReference.class, "functionName", Identifier.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -27,15 +25,14 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(CLASS_NAME);
 		propertyList.add(FUNCTION_NAME);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public FullyQualifiedTraitMethodReference(int start, int end, AST ast,
-			NamespaceName className, Identifier functionName) {
+	public FullyQualifiedTraitMethodReference(int start, int end, AST ast, NamespaceName className,
+			Identifier functionName) {
 		super(start, end, ast);
 		setClassName(className);
 		setFunctionName(functionName);
@@ -123,14 +120,13 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		NamespaceName className = ASTNode.copySubtree(target, getClassName());
-		final FullyQualifiedTraitMethodReference result = new FullyQualifiedTraitMethodReference(
-				this.getStart(), this.getEnd(), target, className, functionName);
+		final FullyQualifiedTraitMethodReference result = new FullyQualifiedTraitMethodReference(this.getStart(),
+				this.getEnd(), target, className, functionName);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
@@ -148,8 +144,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	// return super.internalGetSetObjectProperty(property, get, value);
 	// }
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASS_NAME) {
 			if (get) {
 				return getClassName();

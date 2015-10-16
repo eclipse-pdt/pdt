@@ -15,7 +15,8 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
- * This context represents state when staying in a method top level statement. <br/>
+ * This context represents state when staying in a method top level statement.
+ * <br/>
  * Examples:
  * 
  * <pre>
@@ -27,14 +28,12 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * 
  * @author michael
  */
-public class GlobalMethodStatementContext extends
-		AbstractGlobalStatementContext {
+public class GlobalMethodStatementContext extends AbstractGlobalStatementContext {
 
 	private IMethod enclosingMethod;
 	private IType enclosingType;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -52,8 +51,7 @@ public class GlobalMethodStatementContext extends
 
 			// find the most outer enclosing type if exists
 			while (enclosingElement != null
-					&& !(enclosingElement instanceof IType && enclosingElement
-							.getParent() instanceof ISourceModule)) {
+					&& !(enclosingElement instanceof IType && enclosingElement.getParent() instanceof ISourceModule)) {
 				enclosingElement = enclosingElement.getParent();
 			}
 			enclosingType = (IType) enclosingElement;

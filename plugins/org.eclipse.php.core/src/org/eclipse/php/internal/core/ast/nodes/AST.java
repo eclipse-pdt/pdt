@@ -166,12 +166,10 @@ public class AST {
 	 */
 	private BindingResolver resolver = new BindingResolver();
 
-	public AST(Reader reader, PHPVersion apiLevel, boolean aspTagsAsPhp,
-			boolean useShortTags) throws IOException {
+	public AST(Reader reader, PHPVersion apiLevel, boolean aspTagsAsPhp, boolean useShortTags) throws IOException {
 		this.useASPTags = aspTagsAsPhp;
 		this.apiLevel = apiLevel;
-		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp,
-				useShortTags);
+		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp, useShortTags);
 		this.parser = getParserInstance(apiLevel, this.lexer);
 	}
 
@@ -184,8 +182,8 @@ public class AST {
 	 * @return
 	 * @throws IOException
 	 */
-	private AstLexer getLexerInstance(Reader reader, PHPVersion phpVersion,
-			boolean aspTagsAsPhp, boolean useShortTags) throws IOException {
+	private AstLexer getLexerInstance(Reader reader, PHPVersion phpVersion, boolean aspTagsAsPhp, boolean useShortTags)
+			throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
 			final AstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
@@ -222,9 +220,8 @@ public class AST {
 			lexer7.setUseShortTags(useShortTags);
 			return lexer7;
 		} else {
-			throw new IllegalArgumentException(
-					CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
-							+ phpVersion);
+			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
+					+ phpVersion);
 		}
 	}
 
@@ -302,9 +299,8 @@ public class AST {
 			parser.setAST(this);
 			return parser;
 		} else {
-			throw new IllegalArgumentException(
-					CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
-							+ phpVersion);
+			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
+					+ phpVersion);
 		}
 	}
 
@@ -402,8 +398,7 @@ public class AST {
 	 *            the child or child list property descriptor
 	 * @since 3.0
 	 */
-	void preRemoveChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void preRemoveChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers during lazy init
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by a reader doing lazy init
@@ -435,8 +430,7 @@ public class AST {
 	 *            the child or child list property descriptor
 	 * @since 3.0
 	 */
-	void postRemoveChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void postRemoveChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers during lazy init
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by a reader doing lazy init
@@ -470,8 +464,7 @@ public class AST {
 	 *            the child or child list property descriptor
 	 * @since 3.0
 	 */
-	void preReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild,
-			StructuralPropertyDescriptor property) {
+	void preReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild, StructuralPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers during lazy init
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by a reader doing lazy init
@@ -484,8 +477,7 @@ public class AST {
 			}
 		}
 		try {
-			this.eventHandler.preReplaceChildEvent(node, child, newChild,
-					property);
+			this.eventHandler.preReplaceChildEvent(node, child, newChild, property);
 			// N.B. even if event handler blows up, the AST is not
 			// corrupted since node has not been changed yet
 		} finally {
@@ -506,8 +498,7 @@ public class AST {
 	 *            the child or child list property descriptor
 	 * @since 3.0
 	 */
-	void postReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild,
-			StructuralPropertyDescriptor property) {
+	void postReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild, StructuralPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers during lazy init
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by a reader doing lazy init
@@ -520,8 +511,7 @@ public class AST {
 			}
 		}
 		try {
-			this.eventHandler.postReplaceChildEvent(node, child, newChild,
-					property);
+			this.eventHandler.postReplaceChildEvent(node, child, newChild, property);
 			// N.B. even if event handler blows up, the AST is not
 			// corrupted since node has not been changed yet
 		} finally {
@@ -540,8 +530,7 @@ public class AST {
 	 *            the child or child list property descriptor
 	 * @since 3.0
 	 */
-	void preAddChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void preAddChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers during lazy init
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by a reader doing lazy init
@@ -573,8 +562,7 @@ public class AST {
 	 *            the child or child list property descriptor
 	 * @since 3.0
 	 */
-	void postAddChildEvent(ASTNode node, ASTNode child,
-			StructuralPropertyDescriptor property) {
+	void postAddChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers during lazy init
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by a reader doing lazy init
@@ -947,13 +935,11 @@ public class AST {
 		if (this.modificationCount != this.originalModificationCount) {
 			throw new IllegalArgumentException("AST is already modified"); //$NON-NLS-1$
 		} else if (this.rewriter != null) {
-			throw new IllegalArgumentException(
-					"AST modifications are already recorded"); //$NON-NLS-1$
+			throw new IllegalArgumentException("AST modifications are already recorded"); //$NON-NLS-1$
 		} else if ((root.getFlags() & ASTNode.PROTECT) != 0) {
 			throw new IllegalArgumentException("Root node is unmodifiable"); //$NON-NLS-1$
 		} else if (root.getAST() != this) {
-			throw new IllegalArgumentException(
-					"Root node is not owned by this ast"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Root node is not owned by this ast"); //$NON-NLS-1$
 		}
 
 		this.rewriter = new InternalASTRewrite(root);
@@ -989,8 +975,7 @@ public class AST {
 			throw new IllegalArgumentException();
 		}
 		if (this.rewriter == null) {
-			throw new IllegalStateException(
-					"Modifications record is not enabled"); //$NON-NLS-1$
+			throw new IllegalStateException("Modifications record is not enabled"); //$NON-NLS-1$
 		}
 		return this.rewriter.rewriteAST(document, options);
 	}
@@ -1092,8 +1077,7 @@ public class AST {
 	 * @param arrayType
 	 * @return a new ArrayAccess
 	 */
-	public ArrayAccess newArrayAccess(VariableBase variableName,
-			Expression index, int arrayType) {
+	public ArrayAccess newArrayAccess(VariableBase variableName, Expression index, int arrayType) {
 		ArrayAccess arrayAccess = new ArrayAccess(this);
 		arrayAccess.setName(variableName);
 		arrayAccess.setIndex(index);
@@ -1108,8 +1092,7 @@ public class AST {
 	 * @param index
 	 * @return a new ArrayAccess
 	 */
-	public ArrayAccess newArrayAccess(VariableBase variableName,
-			Expression index) {
+	public ArrayAccess newArrayAccess(VariableBase variableName, Expression index) {
 		ArrayAccess arrayAccess = new ArrayAccess(this);
 		arrayAccess.setName(variableName);
 		arrayAccess.setIndex(index);
@@ -1187,8 +1170,7 @@ public class AST {
 	 *            An {@link Expression}
 	 * @return A new Assignment.
 	 */
-	public Assignment newAssignment(VariableBase leftHandSide, int operator,
-			Expression rightHandSide) {
+	public Assignment newAssignment(VariableBase leftHandSide, int operator, Expression rightHandSide) {
 		Assignment assignment = new Assignment(this);
 		assignment.setLeftHandSide(leftHandSide);
 		assignment.setOperator(operator);
@@ -1223,8 +1205,7 @@ public class AST {
 	 *            - List of {@link Expression}
 	 * @return A new BackTickExpression.
 	 */
-	public BackTickExpression newBackTickExpression(
-			List<Expression> expressions) {
+	public BackTickExpression newBackTickExpression(List<Expression> expressions) {
 		BackTickExpression backTickExpression = new BackTickExpression(this);
 		backTickExpression.expressions().addAll(expressions);
 		return backTickExpression;
@@ -1298,8 +1279,7 @@ public class AST {
 	 * @param castType
 	 * @return A new CastExpression.
 	 */
-	public CastExpression newCastExpression(Expression expression,
-			int castType) {
+	public CastExpression newCastExpression(Expression expression, int castType) {
 		CastExpression castExpression = new CastExpression(this);
 		castExpression.setExpression(expression);
 		castExpression.setCastingType(castType);
@@ -1324,8 +1304,7 @@ public class AST {
 	 * @param statement
 	 * @return A new CatchClause.
 	 */
-	public CatchClause newCatchClause(Identifier className, Variable variable,
-			Block statement) {
+	public CatchClause newCatchClause(Identifier className, Variable variable, Block statement) {
 		CatchClause catchClause = new CatchClause(this);
 		catchClause.setClassName(className);
 		catchClause.setVariable(variable);
@@ -1361,8 +1340,7 @@ public class AST {
 	 * @return A new ClassConstantDeclaration.
 	 */
 	public ConstantDeclaration newClassConstantDeclaration() {
-		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(
-				this);
+		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(this);
 		return classConstantDeclaration;
 	}
 
@@ -1373,10 +1351,8 @@ public class AST {
 	 * @param initializers
 	 * @return A new ClassConstantDeclaration.
 	 */
-	public ConstantDeclaration newClassConstantDeclaration(
-			List<Identifier> names, List<Expression> initializers) {
-		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(
-				this);
+	public ConstantDeclaration newClassConstantDeclaration(List<Identifier> names, List<Expression> initializers) {
+		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(this);
 		classConstantDeclaration.initializers().addAll(initializers);
 		classConstantDeclaration.names().addAll(names);
 		return classConstantDeclaration;
@@ -1402,8 +1378,8 @@ public class AST {
 	 * @param body
 	 * @return A new ClassDeclaration.
 	 */
-	public ClassDeclaration newClassDeclaration(int modifier, String className,
-			String superClass, List<Identifier> interfaces, Block body) {
+	public ClassDeclaration newClassDeclaration(int modifier, String className, String superClass,
+			List<Identifier> interfaces, Block body) {
 		ClassDeclaration classDeclaration = new ClassDeclaration(this);
 		classDeclaration.setModifier(modifier);
 		classDeclaration.setName(newIdentifier(className));
@@ -1423,8 +1399,7 @@ public class AST {
 	 * @return A new ClassInstanceCreation.
 	 */
 	public ClassInstanceCreation newClassInstanceCreation() {
-		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(
-				this);
+		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(this);
 		return classInstanceCreation;
 	}
 
@@ -1435,10 +1410,8 @@ public class AST {
 	 * @param ctorParams
 	 * @return A new ClassInstanceCreation.
 	 */
-	public ClassInstanceCreation newClassInstanceCreation(ClassName className,
-			List<Expression> ctorParams) {
-		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(
-				this);
+	public ClassInstanceCreation newClassInstanceCreation(ClassName className, List<Expression> ctorParams) {
+		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(this);
 		classInstanceCreation.setClassName(className);
 		classInstanceCreation.ctorParams().addAll(ctorParams);
 		return classInstanceCreation;
@@ -1516,8 +1489,7 @@ public class AST {
 	 * @return A new ConditionalExpression.
 	 */
 	public ConditionalExpression newConditionalExpression() {
-		ConditionalExpression conditionalExpression = new ConditionalExpression(
-				this);
+		ConditionalExpression conditionalExpression = new ConditionalExpression(this);
 		return conditionalExpression;
 	}
 
@@ -1529,10 +1501,8 @@ public class AST {
 	 * @param ifFalse
 	 * @return A new ConditionalExpression.
 	 */
-	public ConditionalExpression newConditionalExpression(Expression condition,
-			Expression ifTrue, Expression ifFalse) {
-		ConditionalExpression conditionalExpression = new ConditionalExpression(
-				this);
+	public ConditionalExpression newConditionalExpression(Expression condition, Expression ifTrue, Expression ifFalse) {
+		ConditionalExpression conditionalExpression = new ConditionalExpression(this);
 		conditionalExpression.setCondition(condition);
 		conditionalExpression.setIfTrue(ifTrue);
 		conditionalExpression.setIfFalse(ifFalse);
@@ -1569,8 +1539,8 @@ public class AST {
 	 * @param body
 	 * @return A new DeclareStatement.
 	 */
-	public DeclareStatement newDeclareStatement(List<Identifier> directiveNames,
-			List<Expression> directiveValues, Statement body) {
+	public DeclareStatement newDeclareStatement(List<Identifier> directiveNames, List<Expression> directiveValues,
+			Statement body) {
 		DeclareStatement declareStatement = new DeclareStatement(this);
 		declareStatement.directiveNames().addAll(directiveNames);
 		declareStatement.directiveValues().addAll(directiveValues);
@@ -1714,8 +1684,7 @@ public class AST {
 	 * @param variablesAndDefaults
 	 * @return A new FieldsDeclaration.
 	 */
-	public FieldsDeclaration newFieldsDeclaration(int modifier,
-			List<SingleFieldDeclaration> variablesAndDefaults) {
+	public FieldsDeclaration newFieldsDeclaration(int modifier, List<SingleFieldDeclaration> variablesAndDefaults) {
 		FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(this);
 		fieldsDeclaration.setModifier(modifier);
 		List<SingleFieldDeclaration> fields = fieldsDeclaration.fields();
@@ -1742,8 +1711,8 @@ public class AST {
 	 * @param statement
 	 * @return A new ForEachStatement.
 	 */
-	public ForEachStatement newForEachStatement(Expression expression,
-			Expression key, Expression value, Statement statement) {
+	public ForEachStatement newForEachStatement(Expression expression, Expression key, Expression value,
+			Statement statement) {
 		ForEachStatement forEachStatement = new ForEachStatement(this);
 		forEachStatement.setExpression(expression);
 		forEachStatement.setKey(key);
@@ -1771,8 +1740,7 @@ public class AST {
 	 * @param isMandatory
 	 * @return A new FormalParameter.
 	 */
-	public FormalParameter newFormalParameter(Identifier type,
-			Expression parameterName, Expression defaultValue,
+	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue,
 			boolean isMandatory) {
 		FormalParameter formalParameter = new FormalParameter(this);
 		formalParameter.setParameterType(type);
@@ -1800,9 +1768,8 @@ public class AST {
 	 * @param body
 	 * @return A new ForStatement.
 	 */
-	public ForStatement newForStatement(List<Expression> initializers,
-			List<Expression> conditions, List<Expression> updaters,
-			Statement body) {
+	public ForStatement newForStatement(List<Expression> initializers, List<Expression> conditions,
+			List<Expression> updaters, Statement body) {
 		ForStatement forStatement = new ForStatement(this);
 		forStatement.initializers().addAll(initializers);
 		forStatement.updaters().addAll(updaters);
@@ -1830,9 +1797,8 @@ public class AST {
 	 * @param isReference
 	 * @return A new FunctionDeclaration.
 	 */
-	public FunctionDeclaration newFunctionDeclaration(Identifier functionName,
-			List<FormalParameter> formalParameters, Block body,
-			final boolean isReference) {
+	public FunctionDeclaration newFunctionDeclaration(Identifier functionName, List<FormalParameter> formalParameters,
+			Block body, final boolean isReference) {
 		FunctionDeclaration functionDeclaration = new FunctionDeclaration(this);
 		functionDeclaration.setFunctionName(functionName);
 		functionDeclaration.formalParameters().addAll(formalParameters);
@@ -1859,8 +1825,7 @@ public class AST {
 	 *            (can be null to indicate no parameters)
 	 * @return A new FunctionInvocation.
 	 */
-	public FunctionInvocation newFunctionInvocation(FunctionName functionName,
-			List<Expression> parameters) {
+	public FunctionInvocation newFunctionInvocation(FunctionName functionName, List<Expression> parameters) {
 		FunctionInvocation functionInvocation = new FunctionInvocation(this);
 		functionInvocation.setFunctionName(functionName);
 		if (parameters != null) {
@@ -1961,8 +1926,7 @@ public class AST {
 	 * @param falseStatement
 	 * @return A new IfStatement.
 	 */
-	public IfStatement newIfStatement(Expression condition,
-			Statement trueStatement, Statement falseStatement) {
+	public IfStatement newIfStatement(Expression condition, Statement trueStatement, Statement falseStatement) {
 		IfStatement ifStatement = new IfStatement(this);
 		ifStatement.setCondition(condition);
 		ifStatement.setTrueStatement(trueStatement);
@@ -2034,8 +1998,7 @@ public class AST {
 	 * @param right
 	 * @return A new InfixExpression.
 	 */
-	public InfixExpression newInfixExpression(Expression left, int operator,
-			Expression right) {
+	public InfixExpression newInfixExpression(Expression left, int operator, Expression right) {
 		InfixExpression infixExpression = new InfixExpression(this);
 		infixExpression.setLeft(left);
 		infixExpression.setOperator(operator);
@@ -2059,8 +2022,7 @@ public class AST {
 	 * @return A new InstanceOfExpression.
 	 */
 	public InstanceOfExpression newInstanceOfExpression() {
-		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(
-				this);
+		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(this);
 
 		return instanceOfExpression;
 	}
@@ -2072,10 +2034,8 @@ public class AST {
 	 * @param className
 	 * @return A new InstanceOfExpression.
 	 */
-	public InstanceOfExpression newInstanceOfExpression(Expression expr,
-			ClassName className) {
-		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(
-				this);
+	public InstanceOfExpression newInstanceOfExpression(Expression expr, ClassName className) {
+		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(this);
 		instanceOfExpression.setClassName(className);
 		instanceOfExpression.setExpression(expr);
 		return instanceOfExpression;
@@ -2087,8 +2047,7 @@ public class AST {
 	 * @return A new InterfaceDeclaration.
 	 */
 	public InterfaceDeclaration newInterfaceDeclaration() {
-		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(
-				this);
+		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(this);
 		return interfaceDeclaration;
 	}
 
@@ -2100,10 +2059,9 @@ public class AST {
 	 * @param body
 	 * @return A new InterfaceDeclaration.
 	 */
-	public InterfaceDeclaration newInterfaceDeclaration(
-			Identifier interfaceName, List<Identifier> interfaces, Block body) {
-		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(
-				this);
+	public InterfaceDeclaration newInterfaceDeclaration(Identifier interfaceName, List<Identifier> interfaces,
+			Block body) {
+		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(this);
 		interfaceDeclaration.setName(interfaceName);
 		interfaceDeclaration.interfaces().addAll(interfaces);
 		interfaceDeclaration.setBody(body);
@@ -2149,8 +2107,7 @@ public class AST {
 	 * @param function
 	 * @return A new MethodDeclaration.
 	 */
-	public MethodDeclaration newMethodDeclaration(int modifier,
-			FunctionDeclaration function) {
+	public MethodDeclaration newMethodDeclaration(int modifier, FunctionDeclaration function) {
 		MethodDeclaration methodDeclaration = new MethodDeclaration(this);
 		methodDeclaration.setModifier(modifier);
 		methodDeclaration.setFunction(function);
@@ -2175,8 +2132,7 @@ public class AST {
 	 * 
 	 * @return A new MethodInvocation.
 	 */
-	public MethodInvocation newMethodInvocation(VariableBase dispatcher,
-			FunctionInvocation method) {
+	public MethodInvocation newMethodInvocation(VariableBase dispatcher, FunctionInvocation method) {
 		MethodInvocation methodInvocation = new MethodInvocation(this);
 		methodInvocation.setDispatcher(dispatcher);
 		methodInvocation.setMethod(method);
@@ -2189,8 +2145,7 @@ public class AST {
 	 * @return A new ParenthesisExpression.
 	 */
 	public ParenthesisExpression newParenthesisExpression() {
-		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(
-				this);
+		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(this);
 		return parenthesisExpression;
 	}
 
@@ -2200,10 +2155,8 @@ public class AST {
 	 * @param expression
 	 * @return A new ParenthesisExpression.
 	 */
-	public ParenthesisExpression newParenthesisExpression(
-			Expression expression) {
-		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(
-				this);
+	public ParenthesisExpression newParenthesisExpression(Expression expression) {
+		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(this);
 		parenthesisExpression.setExpression(expression);
 		return parenthesisExpression;
 	}
@@ -2225,8 +2178,7 @@ public class AST {
 	 * @param operator
 	 * @return A new PostfixExpression.
 	 */
-	public PostfixExpression newPostfixExpression(VariableBase variable,
-			int operator) {
+	public PostfixExpression newPostfixExpression(VariableBase variable, int operator) {
 		PostfixExpression postfixExpression = new PostfixExpression(this);
 		postfixExpression.setVariable(variable);
 		postfixExpression.setOperator(operator);
@@ -2250,8 +2202,7 @@ public class AST {
 	 * @param operator
 	 * @return A new PrefixExpression.
 	 */
-	public PrefixExpression newPrefixExpression(VariableBase variable,
-			int operator) {
+	public PrefixExpression newPrefixExpression(VariableBase variable, int operator) {
 		PrefixExpression prefixExpression = new PrefixExpression(this);
 		prefixExpression.setVariable(variable);
 		prefixExpression.setOperator(operator);
@@ -2273,8 +2224,7 @@ public class AST {
 	 * 
 	 * @return A new Program.
 	 */
-	public Program newProgram(List<Statement> statements,
-			List<Comment> commentList) {
+	public Program newProgram(List<Statement> statements, List<Comment> commentList) {
 		Program program = new Program(this);
 		program.statements().addAll(statements);
 		program.comments().addAll(commentList);
@@ -2400,8 +2350,7 @@ public class AST {
 	 * @param expression
 	 * @return A new YieldExpression.
 	 */
-	public YieldExpression newYieldExpression(Expression key,
-			Expression expression) {
+	public YieldExpression newYieldExpression(Expression key, Expression expression) {
 		YieldExpression YieldExpression = new YieldExpression(this);
 		YieldExpression.setKey(key);
 		YieldExpression.setExpression(expression);
@@ -2453,8 +2402,7 @@ public class AST {
 	 * @return A new SingleFieldDeclaration.
 	 */
 	public SingleFieldDeclaration newSingleFieldDeclaration() {
-		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(
-				this);
+		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
 		return singleFieldDeclaration;
 	}
 
@@ -2465,10 +2413,8 @@ public class AST {
 	 * @param value
 	 * @return A new SingleFieldDeclaration.
 	 */
-	public SingleFieldDeclaration newSingleFieldDeclaration(Variable name,
-			Expression value) {
-		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(
-				this);
+	public SingleFieldDeclaration newSingleFieldDeclaration(Variable name, Expression value) {
+		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
 		singleFieldDeclaration.setName(name);
 		singleFieldDeclaration.setValue(value);
 		return singleFieldDeclaration;
@@ -2480,8 +2426,7 @@ public class AST {
 	 * @return A new StaticConstantAccess.
 	 */
 	public StaticConstantAccess newStaticConstantAccess() {
-		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(
-				this);
+		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(this);
 		return staticConstantAccess;
 	}
 
@@ -2492,10 +2437,8 @@ public class AST {
 	 * @param constant
 	 * @return A new StaticConstantAccess.
 	 */
-	public StaticConstantAccess newStaticConstantAccess(Identifier className,
-			Identifier constant) {
-		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(
-				this);
+	public StaticConstantAccess newStaticConstantAccess(Identifier className, Identifier constant) {
+		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(this);
 		staticConstantAccess.setClassName(className);
 		staticConstantAccess.setConstant(constant);
 		return staticConstantAccess;
@@ -2518,8 +2461,7 @@ public class AST {
 	 * @param field
 	 * @return A new StaticFieldAccess.
 	 */
-	public StaticFieldAccess newStaticFieldAccess(Identifier className,
-			Variable field) {
+	public StaticFieldAccess newStaticFieldAccess(Identifier className, Variable field) {
 		StaticFieldAccess staticFieldAccess = new StaticFieldAccess(this);
 		staticFieldAccess.setClassName(className);
 		staticFieldAccess.setField(field);
@@ -2532,8 +2474,7 @@ public class AST {
 	 * @return A new StaticMethodInvocation.
 	 */
 	public StaticMethodInvocation newStaticMethodInvocation() {
-		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(
-				this);
+		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(this);
 		return staticMethodInvocation;
 	}
 
@@ -2544,10 +2485,8 @@ public class AST {
 	 * @param method
 	 * @return A new StaticMethodInvocation.
 	 */
-	public StaticMethodInvocation newStaticMethodInvocation(
-			Identifier className, FunctionInvocation method) {
-		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(
-				this);
+	public StaticMethodInvocation newStaticMethodInvocation(Identifier className, FunctionInvocation method) {
+		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(this);
 		staticMethodInvocation.setClassName(className);
 		staticMethodInvocation.setMethod(method);
 		return staticMethodInvocation;
@@ -2593,8 +2532,7 @@ public class AST {
 	 * @param isDefault
 	 * @return A new SwitchCase.
 	 */
-	public SwitchCase newSwitchCase(Expression value, List<Statement> actions,
-			boolean isDefault) {
+	public SwitchCase newSwitchCase(Expression value, List<Statement> actions, boolean isDefault) {
 		SwitchCase switchCase = new SwitchCase(this);
 		switchCase.setValue(value);
 		switchCase.actions().addAll(actions);
@@ -2619,8 +2557,7 @@ public class AST {
 	 * @param body
 	 * @return A new SwitchStatement.
 	 */
-	public SwitchStatement newSwitchStatement(Expression expression,
-			Block body) {
+	public SwitchStatement newSwitchStatement(Expression expression, Block body) {
 		SwitchStatement switchStatement = new SwitchStatement(this);
 		switchStatement.setExpression(expression);
 		switchStatement.setBody(body);
@@ -2666,8 +2603,7 @@ public class AST {
 	 * @param catchClauses
 	 * @return A new TryStatement.
 	 */
-	public TryStatement newTryStatement(Block block,
-			List<CatchClause> catchClauses) {
+	public TryStatement newTryStatement(Block block, List<CatchClause> catchClauses) {
 		TryStatement tryStatement = new TryStatement(this);
 		tryStatement.setBody(block);
 		tryStatement.catchClauses().addAll(catchClauses);
@@ -2691,8 +2627,7 @@ public class AST {
 	 * @param operator
 	 * @return A new UnaryOperation.
 	 */
-	public UnaryOperation newUnaryOperation(Expression expression,
-			int operator) {
+	public UnaryOperation newUnaryOperation(Expression expression, int operator) {
 		UnaryOperation unaryOperation = new UnaryOperation(this);
 		unaryOperation.setExpression(expression);
 		unaryOperation.setOperator(operator);
@@ -2759,8 +2694,7 @@ public class AST {
 	 * @param body
 	 * @return A new WhileStatement.
 	 */
-	public WhileStatement newWhileStatement(Expression condition,
-			Statement body) {
+	public WhileStatement newWhileStatement(Expression condition, Statement body) {
 		WhileStatement whileStatement = new WhileStatement(this);
 		whileStatement.setCondition(condition);
 		whileStatement.setBody(body);
@@ -2777,8 +2711,8 @@ public class AST {
 	 *            - Whether the namespace has a 'namespace' prefix
 	 * @return A new NamespaceName.
 	 */
-	public NamespaceName newNamespaceName(final Collection<Identifier> segments,
-			final boolean isglobal, final boolean iscurrent) {
+	public NamespaceName newNamespaceName(final Collection<Identifier> segments, final boolean isglobal,
+			final boolean iscurrent) {
 		NamespaceName namespaceName = new NamespaceName(this);
 		namespaceName.segments().addAll(segments);
 		namespaceName.setGlobal(isglobal);
@@ -2793,10 +2727,8 @@ public class AST {
 	 * @param body
 	 * @return A new NamespaceDeclaration.
 	 */
-	public NamespaceDeclaration newNamespaceDeclaration(NamespaceName name,
-			Block body) {
-		NamespaceDeclaration namespaceDeclaration = new NamespaceDeclaration(
-				this);
+	public NamespaceDeclaration newNamespaceDeclaration(NamespaceName name, Block body) {
+		NamespaceDeclaration namespaceDeclaration = new NamespaceDeclaration(this);
 		namespaceDeclaration.setName(name);
 		namespaceDeclaration.setBody(body);
 		return namespaceDeclaration;
@@ -2809,8 +2741,7 @@ public class AST {
 	 * @param alias
 	 * @return A new UseStatementPart.
 	 */
-	public UseStatementPart newUseStatementPart(NamespaceName name,
-			Identifier alias) {
+	public UseStatementPart newUseStatementPart(NamespaceName name, Identifier alias) {
 		UseStatementPart usePart = new UseStatementPart(this);
 		usePart.setName(name);
 		usePart.setAlias(alias);
@@ -2824,8 +2755,7 @@ public class AST {
 	 * @param statementType
 	 * @return A new UseStatement.
 	 */
-	public UseStatement newUseStatement(Collection<UseStatementPart> parts,
-			int statementType) {
+	public UseStatement newUseStatement(Collection<UseStatementPart> parts, int statementType) {
 		UseStatement useStatement = new UseStatement(this);
 		useStatement.parts().addAll(parts);
 		useStatement.setStatementType(statementType);
@@ -2862,12 +2792,10 @@ public class AST {
 	 * @param label
 	 * @return A new LambdaFunctionDeclaration.
 	 */
-	public LambdaFunctionDeclaration newLambdaFunctionDeclaration(
-			final Collection<FormalParameter> formalParameters,
-			final Collection<Variable> lexicalVars, final Block body,
-			final boolean isReference, final boolean isStatic) {
-		LambdaFunctionDeclaration lfDeclaration = new LambdaFunctionDeclaration(
-				this);
+	public LambdaFunctionDeclaration newLambdaFunctionDeclaration(final Collection<FormalParameter> formalParameters,
+			final Collection<Variable> lexicalVars, final Block body, final boolean isReference,
+			final boolean isStatic) {
+		LambdaFunctionDeclaration lfDeclaration = new LambdaFunctionDeclaration(this);
 		lfDeclaration.setBody(body);
 		lfDeclaration.setIsReference(isReference);
 		lfDeclaration.setStatic(isStatic);
@@ -2878,17 +2806,15 @@ public class AST {
 
 	/************************* php5.4 starts ***************************/
 
-	public FullyQualifiedTraitMethodReference newFullyQualifiedTraitMethodReference(
-			NamespaceName className, Identifier functionName) {
-		FullyQualifiedTraitMethodReference lfDeclaration = new FullyQualifiedTraitMethodReference(
-				this);
+	public FullyQualifiedTraitMethodReference newFullyQualifiedTraitMethodReference(NamespaceName className,
+			Identifier functionName) {
+		FullyQualifiedTraitMethodReference lfDeclaration = new FullyQualifiedTraitMethodReference(this);
 		lfDeclaration.setClassName(className);
 		lfDeclaration.setFunctionName(functionName);
 		return lfDeclaration;
 	}
 
-	public TraitAlias newTraitAlias(Expression traitMethod, int modifier,
-			Identifier functionName) {
+	public TraitAlias newTraitAlias(Expression traitMethod, int modifier, Identifier functionName) {
 		TraitAlias lfDeclaration = new TraitAlias(this);
 		lfDeclaration.setModifier(modifier);
 		lfDeclaration.setTraitMethod(traitMethod);
@@ -2922,8 +2848,8 @@ public class AST {
 	 * @param body
 	 * @return A new TraitDeclaration.
 	 */
-	public TraitDeclaration newTraitDeclaration(int modifier, String className,
-			String superClass, List<Identifier> interfaces, Block body) {
+	public TraitDeclaration newTraitDeclaration(int modifier, String className, String superClass,
+			List<Identifier> interfaces, Block body) {
 		TraitDeclaration traitDeclaration = new TraitDeclaration(this);
 		traitDeclaration.setModifier(modifier);
 		traitDeclaration.setName(newIdentifier(className));
@@ -2937,8 +2863,7 @@ public class AST {
 		return traitDeclaration;
 	}
 
-	public TraitPrecedence newTraitPrecedence(
-			FullyQualifiedTraitMethodReference methodReference,
+	public TraitPrecedence newTraitPrecedence(FullyQualifiedTraitMethodReference methodReference,
 			List<NamespaceName> trList) {
 		TraitPrecedence lfDeclaration = new TraitPrecedence(this);
 		lfDeclaration.setMethodReference(methodReference);
@@ -2946,16 +2871,13 @@ public class AST {
 		return lfDeclaration;
 	}
 
-	public TraitPrecedenceStatement newTraitPrecedenceStatement(
-			TraitPrecedence precedence) {
-		TraitPrecedenceStatement lfDeclaration = new TraitPrecedenceStatement(
-				this);
+	public TraitPrecedenceStatement newTraitPrecedenceStatement(TraitPrecedence precedence) {
+		TraitPrecedenceStatement lfDeclaration = new TraitPrecedenceStatement(this);
 		lfDeclaration.setPrecedence(precedence);
 		return lfDeclaration;
 	}
 
-	public TraitUseStatement newTraitUseStatement(List<NamespaceName> traitList,
-			List<TraitStatement> tsList) {
+	public TraitUseStatement newTraitUseStatement(List<NamespaceName> traitList, List<TraitStatement> tsList) {
 		TraitUseStatement lfDeclaration = new TraitUseStatement(this);
 		lfDeclaration.setTraitList(traitList);
 		lfDeclaration.setTsList(tsList);

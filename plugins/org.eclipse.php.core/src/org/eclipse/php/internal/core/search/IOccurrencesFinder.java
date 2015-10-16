@@ -36,8 +36,7 @@ public interface IOccurrencesFinder {
 		private final int fFlags;
 		private final String fDescription;
 
-		public OccurrenceLocation(int offset, int length, int flags,
-				String description) {
+		public OccurrenceLocation(int offset, int length, int flags, String description) {
 			fOffset = offset;
 			fLength = length;
 			fFlags = flags;

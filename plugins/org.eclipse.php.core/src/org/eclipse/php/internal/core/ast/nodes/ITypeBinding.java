@@ -28,7 +28,8 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
  * parameters</li>
  * <li>an annotation - represents the annotation type declaration (annotation
  * types do not have have type parameters)</li>
- * <li>an array type - array types are referenced but not explicitly declared</li>
+ * <li>an array type - array types are referenced but not explicitly declared
+ * </li>
  * <li>a primitive type (including the special return type <code>void</code>) -
  * primitive types are referenced but not explicitly declared</li>
  * <li>the null type - this is the special type of <code>null</code></li>
@@ -429,8 +430,7 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isUnknown();
 
-	public List<IType> getTraitList(boolean isMethod, String classMemberName,
-			boolean includeSuper);
+	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper);
 
 	public org.eclipse.dltk.core.IModelElement[] getPHPElements();
 }

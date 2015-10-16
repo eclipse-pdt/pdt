@@ -21,8 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a type casting expression
- * <pre>e.g.<pre> (int) $a,
- * (string) $b->foo()
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * (int) $a, (string) $b->foo()
  */
 public class CastExpression extends Expression {
 
@@ -32,13 +36,13 @@ public class CastExpression extends Expression {
 	public static final int TYPE_REAL = 1;
 	// 'string'
 	public static final int TYPE_STRING = 2;
-	// 'array'	
+	// 'array'
 	public static final int TYPE_ARRAY = 3;
-	// 'object'	
+	// 'object'
 	public static final int TYPE_OBJECT = 4;
-	// 'bool'	
+	// 'bool'
 	public static final int TYPE_BOOL = 5;
-	// 'unset'	
+	// 'unset'
 	public static final int TYPE_UNSET = 6;
 
 	private Expression expression;
@@ -47,13 +51,14 @@ public class CastExpression extends Expression {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(CastExpression.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor CASTING_TYPE_PROPERTY = new SimplePropertyDescriptor(CastExpression.class, "castingType", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(CastExpression.class,
+			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor CASTING_TYPE_PROPERTY = new SimplePropertyDescriptor(
+			CastExpression.class, "castingType", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
@@ -88,22 +93,22 @@ public class CastExpression extends Expression {
 
 	public static String getCastType(int type) {
 		switch (type) {
-			case TYPE_INT:
-				return "int"; //$NON-NLS-1$
-			case TYPE_REAL:
-				return "real"; //$NON-NLS-1$
-			case TYPE_STRING:
-				return "string"; //$NON-NLS-1$
-			case TYPE_ARRAY:
-				return "array"; //$NON-NLS-1$
-			case TYPE_OBJECT:
-				return "object"; //$NON-NLS-1$
-			case TYPE_BOOL:
-				return "bool"; //$NON-NLS-1$
-			case TYPE_UNSET:
-				return "unset"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case TYPE_INT:
+			return "int"; //$NON-NLS-1$
+		case TYPE_REAL:
+			return "real"; //$NON-NLS-1$
+		case TYPE_STRING:
+			return "string"; //$NON-NLS-1$
+		case TYPE_ARRAY:
+			return "array"; //$NON-NLS-1$
+		case TYPE_OBJECT:
+			return "object"; //$NON-NLS-1$
+		case TYPE_BOOL:
+			return "bool"; //$NON-NLS-1$
+		case TYPE_UNSET:
+			return "unset"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -159,8 +164,10 @@ public class CastExpression extends Expression {
 	/**
 	 * Sets the type of this cast expression.
 	 * 
-	 * @param castingType the cast type 
-	 * @exception IllegalArgumentException if the argument is incorrect
+	 * @param castingType
+	 *            the cast type
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
 	 */
 	public void setCastingType(int castingType) {
 		if (getCastType(castingType) == null) {
@@ -196,13 +203,15 @@ public class CastExpression extends Expression {
 	/**
 	 * Sets the expression of this cast expression.
 	 * 
-	 * @param expression of this cast expression.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param expression
+	 *            of this cast expression.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
@@ -241,7 +250,7 @@ public class CastExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -252,7 +261,8 @@ public class CastExpression extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression clone = ASTNode.copySubtree(target, this.getExpression());
-		final CastExpression result = new CastExpression(this.getStart(), this.getEnd(), target, clone, this.getCastingType());
+		final CastExpression result = new CastExpression(this.getStart(), this.getEnd(), target, clone,
+				this.getCastingType());
 		return result;
 	}
 

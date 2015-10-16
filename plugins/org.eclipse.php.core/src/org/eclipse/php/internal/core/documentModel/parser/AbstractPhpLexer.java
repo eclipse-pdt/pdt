@@ -236,10 +236,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 				length++;
 			}
 			bufferedTokens = new LinkedList<ITextRegion>();
-			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, 0,
-					length, buffer.toString());
-			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(),
-					yylength()));
+			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, 0, length, buffer.toString());
+			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
 			yylex = removeFromBuffer();
 		} else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
 			bufferedTokens = new LinkedList<ITextRegion>();
@@ -271,11 +269,9 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public void setPatterns(IProject project) {
 		if (project != null) {
-			todos = TaskPatternsProvider.getInstance().getPatternsForProject(
-					project);
+			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 		} else {
-			todos = TaskPatternsProvider.getInstance()
-					.getPetternsForWorkspace();
+			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
 		}
 	}
 
@@ -287,8 +283,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	 * @param comment
 	 * @return a list of todo ITextRegion
 	 */
-	private void checkForTodo(List<ITextRegion> result, String token,
-			int commentStart, int commentLength, String comment) {
+	private void checkForTodo(List<ITextRegion> result, String token, int commentStart, int commentLength,
+			String comment) {
 		ArrayList<Matcher> matchers = createMatcherList(comment);
 		int startPosition = 0;
 
@@ -298,22 +294,19 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			int startIndex = matcher.start();
 			int endIndex = matcher.end();
 			if (startIndex != startPosition) {
-				tRegion = new ContextRegion(token,
-						commentStart + startPosition, startIndex
-								- startPosition, startIndex - startPosition);
+				tRegion = new ContextRegion(token, commentStart + startPosition, startIndex - startPosition,
+						startIndex - startPosition);
 				result.add(tRegion);
 			}
-			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
-					commentStart + startIndex, endIndex - startIndex, endIndex
-							- startIndex);
+			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO, commentStart + startIndex, endIndex - startIndex,
+					endIndex - startIndex);
 			result.add(tRegion);
 			startPosition = endIndex;
 			matcher = getMinimalMatcher(matchers, startPosition);
 		}
 		final int length = commentLength - startPosition;
 		if (length != 0) {
-			result.add(new ContextRegion(token, commentStart + startPosition,
-					length, length));
+			result.add(new ContextRegion(token, commentStart + startPosition, length, length));
 		}
 
 		// String[] words = comment.split("\\W+");
@@ -368,8 +361,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		return list;
 	}
 
-	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers,
-			int startPosition) {
+	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers, int startPosition) {
 		Matcher minimal = null;
 		int size = matchers.size();
 		for (int i = 0; i < size;) {
@@ -427,8 +419,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 				return false;
 			final StateStack activeStack = getActiveStack();
 			final StateStack otherActiveStack = tmp.getActiveStack();
-			if (!(activeStack == otherActiveStack || activeStack != null
-					&& activeStack.equals(otherActiveStack)))
+			if (!(activeStack == otherActiveStack || activeStack != null && activeStack.equals(otherActiveStack)))
 				return false;
 			return true;
 		}
@@ -488,12 +479,9 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result
-					+ ((myHeredoc == null) ? 0 : myHeredoc.hashCode());
-			result = prime * result
-					+ ((myNowdoc == null) ? 0 : myNowdoc.hashCode());
-			result = prime * result
-					+ ((theState == null) ? 0 : theState.hashCode());
+			result = prime * result + ((myHeredoc == null) ? 0 : myHeredoc.hashCode());
+			result = prime * result + ((myNowdoc == null) ? 0 : myNowdoc.hashCode());
+			result = prime * result + ((theState == null) ? 0 : theState.hashCode());
 			return result;
 		}
 

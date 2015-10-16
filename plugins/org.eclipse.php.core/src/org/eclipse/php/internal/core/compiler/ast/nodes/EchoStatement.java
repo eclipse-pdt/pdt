@@ -22,8 +22,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represent a echo statement.
- * <pre>e.g.<pre> echo "hello",
- * echo "hello", "world"
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * echo "hello", echo "hello", "world"
  */
 public class EchoStatement extends Statement {
 

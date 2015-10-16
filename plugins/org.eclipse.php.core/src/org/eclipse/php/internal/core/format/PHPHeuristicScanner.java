@@ -121,8 +121,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * #stop(char)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			return super.stop(ch, position, true)
-					&& isDefaultPartition(position);
+			return super.stop(ch, position, true) && isDefaultPartition(position);
 		}
 
 		/*
@@ -168,16 +167,14 @@ public final class PHPHeuristicScanner implements Symbols {
 	 * 
 	 * @see NonJavaIdentifierPart
 	 */
-	private final class NonJavaIdentifierPartDefaultPartition extends
-			NonJavaIdentifierPart {
+	private final class NonJavaIdentifierPartDefaultPartition extends NonJavaIdentifierPart {
 		/*
 		 * @see
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #stop(char)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			return super.stop(ch, position, true)
-					|| !isDefaultPartition(position);
+			return super.stop(ch, position, true) || !isDefaultPartition(position);
 		}
 
 		/*
@@ -239,8 +236,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * #stop(char, int)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			return Arrays.binarySearch(fChars, ch) >= 0
-					&& isDefaultPartition(position);
+			return Arrays.binarySearch(fChars, ch) >= 0 && isDefaultPartition(position);
 		}
 
 		/*
@@ -250,8 +246,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 */
 		public int nextPosition(int position, boolean forward) {
 			// only match char in the same string
-			if (fTextRegion != null
-					&& !fTextRegion.equals(getTextRegion(position))) {
+			if (fTextRegion != null && !fTextRegion.equals(getTextRegion(position))) {
 				if (forward) {
 					return fDocument.getLength();
 				} else {
@@ -310,8 +305,7 @@ public final class PHPHeuristicScanner implements Symbols {
 	 * @param partition
 	 *            the partition to scan in
 	 */
-	public PHPHeuristicScanner(IDocument document, String partitioning,
-			String partition) {
+	public PHPHeuristicScanner(IDocument document, String partitioning, String partition) {
 		Assert.isNotNull(document);
 		Assert.isNotNull(partitioning);
 		Assert.isNotNull(partition);
@@ -329,8 +323,7 @@ public final class PHPHeuristicScanner implements Symbols {
 	 *            the document to scan.
 	 */
 	public PHPHeuristicScanner(IDocument document) {
-		this(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
-				IDocument.DEFAULT_CONTENT_TYPE);
+		this(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
 	}
 
 	/**
@@ -348,8 +341,7 @@ public final class PHPHeuristicScanner implements Symbols {
 	 * @return the PHPHeuristicScanner for the given document and offset
 	 * @throws BadLocationException
 	 */
-	public static PHPHeuristicScanner createHeuristicScanner(
-			IDocument document, int offset, boolean ignoreString)
+	public static PHPHeuristicScanner createHeuristicScanner(IDocument document, int offset, boolean ignoreString)
 			throws BadLocationException {
 		// Create a scanner with default values
 		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document);
@@ -358,14 +350,10 @@ public final class PHPHeuristicScanner implements Symbols {
 		ITypedRegion partition = scanner.getPartition(offset);
 		// Update the default partition in the scanner
 		scanner.fPartition = partition.getType();
-		if (ignoreString
-				&& PHPPartitionTypes.PHP_QUOTED_STRING
-						.equals(scanner.fPartition)) {
+		if (ignoreString && PHPPartitionTypes.PHP_QUOTED_STRING.equals(scanner.fPartition)) {
 			scanner.fPartition = PHPPartitionTypes.PHP_DEFAULT;
 		}
-		if (!ignoreString
-				&& PHPPartitionTypes.PHP_QUOTED_STRING
-						.equals(scanner.fPartition)) {
+		if (!ignoreString && PHPPartitionTypes.PHP_QUOTED_STRING.equals(scanner.fPartition)) {
 			scanner.fTextRegion = scanner.getTextRegion(offset);
 		}
 		return scanner;
@@ -618,8 +606,7 @@ public final class PHPHeuristicScanner implements Symbols {
 	 *            the closing peer character (e.g. '}')
 	 * @return the matching peer character position, or <code>NOT_FOUND</code>
 	 */
-	public int findClosingPeer(int start, final char openingPeer,
-			final char closingPeer) {
+	public int findClosingPeer(int start, final char openingPeer, final char closingPeer) {
 		Assert.isNotNull(fDocument);
 		Assert.isTrue(start >= 0);
 
@@ -627,8 +614,7 @@ public final class PHPHeuristicScanner implements Symbols {
 			int depth = 1;
 			start -= 1;
 			while (true) {
-				start = scanForward(start + 1, UNBOUND, new CharacterMatch(
-						new char[] { openingPeer, closingPeer }));
+				start = scanForward(start + 1, UNBOUND, new CharacterMatch(new char[] { openingPeer, closingPeer }));
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
 
@@ -666,15 +652,13 @@ public final class PHPHeuristicScanner implements Symbols {
 	 *            the closing peer character (e.g. '}')
 	 * @return the matching peer character position, or <code>NOT_FOUND</code>
 	 */
-	public int findOpeningPeer(int start, int bound, char openingPeer,
-			char closingPeer) {
+	public int findOpeningPeer(int start, int bound, char openingPeer, char closingPeer) {
 		Assert.isTrue(start < fDocument.getLength());
 
 		try {
 			int depth = 1;
 			start += 1;
-			final CharacterMatch match = new CharacterMatch(new char[] {
-					openingPeer, closingPeer });
+			final CharacterMatch match = new CharacterMatch(new char[] { openingPeer, closingPeer });
 			while (true) {
 				start = scanBackward(start - 1, bound, match);
 				if (start == NOT_FOUND)
@@ -711,8 +695,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		if (offset < 1 || offset >= fDocument.getLength())
 			return null;
 
-		int begin = findOpeningPeer(offset - 1, PHPHeuristicScanner.UNBOUND,
-				LBRACE, RBRACE);
+		int begin = findOpeningPeer(offset - 1, PHPHeuristicScanner.UNBOUND, LBRACE, RBRACE);
 		int end = findClosingPeer(offset, LBRACE, RBRACE);
 		if (begin == NOT_FOUND || end == NOT_FOUND)
 			return null;
@@ -998,43 +981,30 @@ public final class PHPHeuristicScanner implements Symbols {
 			if (fDocument instanceof BasicStructuredDocument) {
 				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
 						.getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion != null ? sdRegion
-						.getRegionAtCharacterOffset(position) : null;
+				ITextRegion textRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(position) : null;
 				if (textRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-					textRegion = phpScriptRegion.getPhpToken(position
-							- phpScriptRegion.getStart()
-							- sdRegion.getStartOffset());
+					textRegion = phpScriptRegion
+							.getPhpToken(position - phpScriptRegion.getStart() - sdRegion.getStartOffset());
 
-					int regionStart = textRegion.getStart()
-							+ phpScriptRegion.getStart()
-							+ sdRegion.getStartOffset();
+					int regionStart = textRegion.getStart() + phpScriptRegion.getStart() + sdRegion.getStartOffset();
 					// handle comments
-					if (PHPPartitionTypes.isPHPCommentState(textRegion
-							.getType())) {
-						return new TypedRegion(regionStart,
-								textRegion.getLength(),
-								PHPPartitionTypes.PHP_COMMENT);
+					if (PHPPartitionTypes.isPHPCommentState(textRegion.getType())) {
+						return new TypedRegion(regionStart, textRegion.getLength(), PHPPartitionTypes.PHP_COMMENT);
 					}
 					// handle strings
-					else if (PHPPartitionTypes.isPHPQuotesState(textRegion
-							.getType())) {
-						return new TypedRegion(regionStart,
-								textRegion.getLength(),
+					else if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
+						return new TypedRegion(regionStart, textRegion.getLength(),
 								PHPPartitionTypes.PHP_QUOTED_STRING);
 					}
 					// handle the rest
-					else if (PHPPartitionTypes.isPHPRegularState(textRegion
-							.getType())) {
-						return new TypedRegion(regionStart,
-								textRegion.getLength(),
-								PHPPartitionTypes.PHP_DEFAULT);
+					else if (PHPPartitionTypes.isPHPRegularState(textRegion.getType())) {
+						return new TypedRegion(regionStart, textRegion.getLength(), PHPPartitionTypes.PHP_DEFAULT);
 					}
 				}
 			}
 
-			return TextUtilities.getPartition(fDocument, fPartitioning,
-					position, false);
+			return TextUtilities.getPartition(fDocument, fPartitioning, position, false);
 		} catch (BadLocationException e) {
 			return new TypedRegion(position, 0, "__no_partition_at_all"); //$NON-NLS-1$
 		}
@@ -1050,20 +1020,18 @@ public final class PHPHeuristicScanner implements Symbols {
 			if (fDocument instanceof BasicStructuredDocument) {
 				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
 						.getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion != null ? sdRegion
-						.getRegionAtCharacterOffset(position) : null;
+				ITextRegion textRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(position) : null;
 				if (textRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-					textRegion = phpScriptRegion.getPhpToken(position
-							- sdRegion.getStartOffset()
-							- phpScriptRegion.getStart());
+					textRegion = phpScriptRegion
+							.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					return textRegion;
 				}
 			}
 
 			return null;
 		} catch (BadLocationException e) {
-			return null; //$NON-NLS-1$
+			return null; // $NON-NLS-1$
 		}
 
 	}
@@ -1100,8 +1068,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		case TokenELSE:
 			return true;
 		case TokenRPAREN:
-			position = findOpeningPeer(fPos, PHPHeuristicScanner.UNBOUND,
-					LPAREN, RPAREN);
+			position = findOpeningPeer(fPos, PHPHeuristicScanner.UNBOUND, LPAREN, RPAREN);
 			if (position > 0) {
 				switch (previousToken(position - 1, bound)) {
 				case TokenIF:

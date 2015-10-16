@@ -8,8 +8,7 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 
 	private final ArrayDeclaration arrayDeclaration;
 
-	public ArrayDeclarationGoal(IContext context,
-			ArrayDeclaration arrayDeclaration) {
+	public ArrayDeclarationGoal(IContext context, ArrayDeclaration arrayDeclaration) {
 		super(context);
 		this.arrayDeclaration = arrayDeclaration;
 	}
@@ -21,9 +20,7 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime
-				* result
-				+ ((arrayDeclaration == null) ? 0 : arrayDeclaration.hashCode());
+		result = prime * result + ((arrayDeclaration == null) ? 0 : arrayDeclaration.hashCode());
 		return result;
 	}
 
@@ -45,8 +42,7 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 
 	public String toString() {
 		return "ExpressionTypeGoal: " //$NON-NLS-1$
-				+ ((arrayDeclaration != null) ? arrayDeclaration.toString()
-						: "null") //$NON-NLS-1$
+				+ ((arrayDeclaration != null) ? arrayDeclaration.toString() : "null") //$NON-NLS-1$
 				+ " context: " //$NON-NLS-1$
 				+ ((context != null) ? context.toString() : "null"); //$NON-NLS-1$
 	}

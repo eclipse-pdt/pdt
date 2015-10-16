@@ -16,8 +16,12 @@ import org.eclipse.dltk.ast.expressions.Expression;
 
 /**
  * Represents a static field access.
- * <pre>e.g.<pre> MyClass::$a
- * MyClass::$$a[3]
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * MyClass::$a MyClass::$$a[3]
  */
 public class StaticFieldAccess extends StaticDispatch {
 

@@ -32,8 +32,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
  */
 public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 
-	public NamespaceConstantsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public NamespaceConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -58,8 +57,7 @@ public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 					if (!PHPFlags.isConstant(field.getFlags())) {
 						continue;
 					}
-					if (CodeAssistUtils.startsWithIgnoreCase(
-							field.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(field.getElementName(), prefix)) {
 						reporter.reportField(field, suffix, replaceRange, false);
 					}
 				}

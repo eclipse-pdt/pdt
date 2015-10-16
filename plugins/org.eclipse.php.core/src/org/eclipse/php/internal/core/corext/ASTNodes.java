@@ -27,8 +27,7 @@ public class ASTNodes {
 	public static final int ERROR = 1 << 1;
 	public static final int PROBLEMS = WARNING | ERROR;
 
-	private static final int CLEAR_VISIBILITY = ~(Modifiers.AccPublic
-			| Modifiers.AccProtected | Modifiers.AccPrivate);
+	private static final int CLEAR_VISIBILITY = ~(Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate);
 
 	private ASTNodes() {
 		// no instance;
@@ -58,23 +57,18 @@ public class ASTNodes {
 	 * @return Returns true if the location is a body node location of a control
 	 *         statement.
 	 */
-	public static boolean isControlStatementBody(
-			StructuralPropertyDescriptor locationInParent) {
+	public static boolean isControlStatementBody(StructuralPropertyDescriptor locationInParent) {
 		return locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY
 				|| locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY
-				|| locationInParent == ForStatement.BODY_PROPERTY
-				|| locationInParent == WhileStatement.BODY_PROPERTY
+				|| locationInParent == ForStatement.BODY_PROPERTY || locationInParent == WhileStatement.BODY_PROPERTY
 				|| locationInParent == DoStatement.BODY_PROPERTY;
 	}
 
 	public static boolean needsParentheses(Expression expression) {
 		int type = expression.getType();
-		return type == ASTNode.INFIX_EXPRESSION
-				|| type == ASTNode.CONDITIONAL_EXPRESSION
-				|| type == ASTNode.PREFIX_EXPRESSION
-				|| type == ASTNode.POSTFIX_EXPRESSION
-				|| type == ASTNode.CAST_EXPRESSION
-				|| type == ASTNode.INSTANCE_OF_EXPRESSION;
+		return type == ASTNode.INFIX_EXPRESSION || type == ASTNode.CONDITIONAL_EXPRESSION
+				|| type == ASTNode.PREFIX_EXPRESSION || type == ASTNode.POSTFIX_EXPRESSION
+				|| type == ASTNode.CAST_EXPRESSION || type == ASTNode.INSTANCE_OF_EXPRESSION;
 	}
 
 	public static ASTNode getParent(ASTNode node, Class parentClass) {
@@ -91,8 +85,7 @@ public class ASTNodes {
 		return node;
 	}
 
-	public static ASTNode findParent(ASTNode node,
-			StructuralPropertyDescriptor[][] pathes) {
+	public static ASTNode findParent(ASTNode node, StructuralPropertyDescriptor[][] pathes) {
 		for (int p = 0; p < pathes.length; p++) {
 			StructuralPropertyDescriptor[] path = pathes[p];
 			ASTNode current = node;

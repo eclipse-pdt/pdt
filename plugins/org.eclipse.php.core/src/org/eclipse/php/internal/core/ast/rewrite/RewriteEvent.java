@@ -56,7 +56,8 @@ public abstract class RewriteEvent {
 	public abstract boolean isListRewrite();
 
 	/**
-	 * @return Returns the original value. For lists this is a <code>List<code> of ASTNode's, for non-list
+	 * @return Returns the original value. For lists this is a
+	 *         <code>List<code> of ASTNode's, for non-list
 	 * events this can be an ASTNode (for node properties), Integer (for an integer property),
 	 * Boolean (for boolean node properties) or properties like Operator.
 	 * <code>null</code> is returned if the event is a insert event.
@@ -64,7 +65,8 @@ public abstract class RewriteEvent {
 	public abstract Object getOriginalValue();
 
 	/**
-	 * @return Returns the new value. For lists this is a <code>List<code> of ASTNode's, for non-list
+	 * @return Returns the new value. For lists this is a
+	 *         <code>List<code> of ASTNode's, for non-list
 	 * events this can be an ASTNode (for node properties), Integer (for an integer property),
 	 * Boolean (for boolean node properties) or properties like Operator.
 	 * <code>null</code> is returned if the event is a remove event.

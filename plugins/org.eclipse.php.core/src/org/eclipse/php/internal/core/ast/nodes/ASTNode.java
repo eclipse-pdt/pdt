@@ -228,8 +228,7 @@ public abstract class ASTNode implements Visitable {
 	/**
 	 * An unmodifiable empty map (used to implement <code>properties()</code>).
 	 */
-	private static final Map UNMODIFIABLE_EMPTY_MAP = Collections
-			.unmodifiableMap(new HashMap(1));
+	private static final Map UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap(1));
 
 	/**
 	 * Primary field used in representing node properties efficiently. If
@@ -399,8 +398,7 @@ public abstract class ASTNode implements Visitable {
 	 * @exception RuntimeException
 	 *                if this node does not have the given property
 	 */
-	public final Object getStructuralProperty(
-			StructuralPropertyDescriptor property) {
+	public final Object getStructuralProperty(StructuralPropertyDescriptor property) {
 		if (property instanceof SimplePropertyDescriptor) {
 			SimplePropertyDescriptor p = (SimplePropertyDescriptor) property;
 			if (p.getValueType() == Integer.class) {
@@ -414,12 +412,10 @@ public abstract class ASTNode implements Visitable {
 			}
 		}
 		if (property instanceof ChildPropertyDescriptor) {
-			return internalGetSetChildProperty(
-					(ChildPropertyDescriptor) property, true, null);
+			return internalGetSetChildProperty((ChildPropertyDescriptor) property, true, null);
 		}
 		if (property instanceof ChildListPropertyDescriptor) {
-			return internalGetChildListProperty(
-					(ChildListPropertyDescriptor) property);
+			return internalGetChildListProperty((ChildListPropertyDescriptor) property);
 		}
 		throw new IllegalArgumentException();
 	}
@@ -443,8 +439,7 @@ public abstract class ASTNode implements Visitable {
 	 *                if this node does not have the given property, or if the
 	 *                given property cannot be set
 	 */
-	public final void setStructuralProperty(
-			StructuralPropertyDescriptor property, Object value) {
+	public final void setStructuralProperty(StructuralPropertyDescriptor property, Object value) {
 		if (property instanceof SimplePropertyDescriptor) {
 			SimplePropertyDescriptor p = (SimplePropertyDescriptor) property;
 			if (p.getValueType() == int.class) {
@@ -473,8 +468,7 @@ public abstract class ASTNode implements Visitable {
 			return;
 		}
 		if (property instanceof ChildListPropertyDescriptor) {
-			throw new IllegalArgumentException(
-					"Cannot set the list of child list property"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot set the list of child list property"); //$NON-NLS-1$
 		}
 	}
 
@@ -509,8 +503,7 @@ public abstract class ASTNode implements Visitable {
 	 * @return a list of property descriptors (element type:
 	 *         {@link StructuralPropertyDescriptor})
 	 */
-	abstract List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel);
+	abstract List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel);
 
 	/**
 	 * @return the related AST
@@ -541,8 +534,7 @@ public abstract class ASTNode implements Visitable {
 	 *            the new parent of this node, or <code>null</code> if none
 	 * @see #getParent
 	 */
-	public void setParent(ASTNode parent,
-			StructuralPropertyDescriptor location) {
+	public void setParent(ASTNode parent, StructuralPropertyDescriptor location) {
 		this.parent = parent;
 		this.location = location;
 	}
@@ -904,8 +896,7 @@ public abstract class ASTNode implements Visitable {
 	 *                <li>any of the nodes involved are unmodifiable</li>
 	 *                </ul>
 	 */
-	final void preReplaceChild(ASTNode oldChild, ASTNode newChild,
-			ChildPropertyDescriptor property) {
+	final void preReplaceChild(ASTNode oldChild, ASTNode newChild, ChildPropertyDescriptor property) {
 		if ((this.flags & PROTECT) != 0) {
 			// this node is protected => cannot gain or lose children
 			throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
@@ -917,12 +908,10 @@ public abstract class ASTNode implements Visitable {
 		if (oldChild != null) {
 			if ((oldChild.flags & PROTECT) != 0) {
 				// old child node is protected => cannot be unparented
-				throw new IllegalArgumentException(
-						"AST node cannot be modified"); //$NON-NLS-1$
+				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			if (newChild != null) {
-				this.ast.preReplaceChildEvent(this, oldChild, newChild,
-						property);
+				this.ast.preReplaceChildEvent(this, oldChild, newChild, property);
 			} else {
 				this.ast.preRemoveChildEvent(this, oldChild, property);
 			}
@@ -946,13 +935,11 @@ public abstract class ASTNode implements Visitable {
 	 * {@link #preReplaceChild(ASTNode, ASTNode, ChildPropertyDescriptor)} for
 	 * details.
 	 */
-	final void postReplaceChild(ASTNode oldChild, ASTNode newChild,
-			ChildPropertyDescriptor property) {
+	final void postReplaceChild(ASTNode oldChild, ASTNode newChild, ChildPropertyDescriptor property) {
 		// link new child to parent
 		if (newChild != null) {
 			if (oldChild != null) {
-				this.ast.postReplaceChildEvent(this, oldChild, newChild,
-						property);
+				this.ast.postReplaceChildEvent(this, oldChild, newChild, property);
 			} else {
 				this.ast.postAddChildEvent(this, newChild, property);
 			}
@@ -1058,8 +1045,7 @@ public abstract class ASTNode implements Visitable {
 	 *            relationship between node and child
 	 * @since 3.0
 	 */
-	final void postLazyInit(ASTNode newChild,
-			ChildPropertyDescriptor property) {
+	final void postLazyInit(ASTNode newChild, ChildPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers
 		// ASTNode.this is locked at this point
 		// newChild is brand new (so no chance of concurrent access)
@@ -1171,8 +1157,7 @@ public abstract class ASTNode implements Visitable {
 			// check for just one property left
 			if (m.size() == 1) {
 				// convert to more efficient representation
-				Map.Entry[] entries = (Map.Entry[]) m.entrySet()
-						.toArray(new Map.Entry[1]);
+				Map.Entry[] entries = (Map.Entry[]) m.entrySet().toArray(new Map.Entry[1]);
 				this.property1 = entries[0].getKey();
 				this.property2 = entries[0].getValue();
 			}
@@ -1400,8 +1385,7 @@ public abstract class ASTNode implements Visitable {
 	 *                <li>a cycle in would be created</li>
 	 *                </ul>
 	 */
-	static void checkNewChild(ASTNode node, ASTNode newChild,
-			boolean cycleCheck, Class nodeType) {
+	static void checkNewChild(ASTNode node, ASTNode newChild, boolean cycleCheck, Class nodeType) {
 		if (newChild.ast != node.ast) {
 			// new child is from a different AST
 			throw new IllegalArgumentException();
@@ -1444,8 +1428,7 @@ public abstract class ASTNode implements Visitable {
 	 *                if this node does not have the given property, or if the
 	 *                given value cannot be set as specified
 	 */
-	int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
 	}
 
@@ -1468,8 +1451,7 @@ public abstract class ASTNode implements Visitable {
 	 *                if this node does not have the given property, or if the
 	 *                given value cannot be set as specified
 	 */
-	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property,
-			boolean get, boolean value) {
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
 	}
 
@@ -1494,8 +1476,7 @@ public abstract class ASTNode implements Visitable {
 	 *                if this node does not have the given property, or if the
 	 *                given value cannot be set as specified
 	 */
-	Object internalGetSetObjectProperty(SimplePropertyDescriptor property,
-			boolean get, Object value) {
+	Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
 	}
 
@@ -1519,8 +1500,7 @@ public abstract class ASTNode implements Visitable {
 	 *                if this node does not have the given property, or if the
 	 *                given child cannot be set as specified
 	 */
-	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
 	}
 
@@ -1536,8 +1516,7 @@ public abstract class ASTNode implements Visitable {
 	 * @exception RuntimeException
 	 *                if the given node does not have the given property
 	 */
-	List<StructuralPropertyDescriptor> internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	List<StructuralPropertyDescriptor> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
 	}
 
@@ -1674,8 +1653,7 @@ public abstract class ASTNode implements Visitable {
 			}
 			if ((ASTNode.this.flags & PROTECT) != 0) {
 				// this node is protected => cannot gain or lose children
-				throw new IllegalArgumentException(
-						"AST node cannot be modified"); //$NON-NLS-1$
+				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			// delink old child from parent, and link new child to parent
 			ASTNode newChild = (ASTNode) element;
@@ -1685,21 +1663,17 @@ public abstract class ASTNode implements Visitable {
 			}
 			if ((oldChild.flags & PROTECT) != 0) {
 				// old child is protected => cannot be unparented
-				throw new IllegalArgumentException(
-						"AST node cannot be modified"); //$NON-NLS-1$
+				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
-			ASTNode.checkNewChild(ASTNode.this, newChild,
-					this.propertyDescriptor.cycleRisk,
+			ASTNode.checkNewChild(ASTNode.this, newChild, this.propertyDescriptor.cycleRisk,
 					this.propertyDescriptor.elementType);
-			ASTNode.this.ast.preReplaceChildEvent(ASTNode.this, oldChild,
-					newChild, this.propertyDescriptor);
+			ASTNode.this.ast.preReplaceChildEvent(ASTNode.this, oldChild, newChild, this.propertyDescriptor);
 
 			T result = this.store.set(index, (T) newChild);
 			// n.b. setParent will call ast.modifying()
 			oldChild.setParent(null, null);
 			newChild.setParent(ASTNode.this, this.propertyDescriptor);
-			ASTNode.this.ast.postReplaceChildEvent(ASTNode.this, oldChild,
-					newChild, this.propertyDescriptor);
+			ASTNode.this.ast.postReplaceChildEvent(ASTNode.this, oldChild, newChild, this.propertyDescriptor);
 			return result;
 		}
 
@@ -1714,23 +1688,19 @@ public abstract class ASTNode implements Visitable {
 			}
 			if ((ASTNode.this.flags & PROTECT) != 0) {
 				// this node is protected => cannot gain or lose children
-				throw new IllegalArgumentException(
-						"AST node cannot be modified"); //$NON-NLS-1$
+				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			// link new child to parent
 			ASTNode newChild = (ASTNode) element;
-			ASTNode.checkNewChild(ASTNode.this, newChild,
-					this.propertyDescriptor.cycleRisk,
+			ASTNode.checkNewChild(ASTNode.this, newChild, this.propertyDescriptor.cycleRisk,
 					this.propertyDescriptor.elementType);
-			ASTNode.this.ast.preAddChildEvent(ASTNode.this, newChild,
-					this.propertyDescriptor);
+			ASTNode.this.ast.preAddChildEvent(ASTNode.this, newChild, this.propertyDescriptor);
 
 			this.store.add(index, element);
 			updateCursors(index, +1);
 			// n.b. setParent will call ast.modifying()
 			newChild.setParent(ASTNode.this, this.propertyDescriptor);
-			ASTNode.this.ast.postAddChildEvent(ASTNode.this, newChild,
-					this.propertyDescriptor);
+			ASTNode.this.ast.postAddChildEvent(ASTNode.this, newChild, this.propertyDescriptor);
 		}
 
 		/*
@@ -1741,25 +1711,21 @@ public abstract class ASTNode implements Visitable {
 		public T remove(int index) {
 			if ((ASTNode.this.flags & PROTECT) != 0) {
 				// this node is protected => cannot gain or lose children
-				throw new IllegalArgumentException(
-						"AST node cannot be modified"); //$NON-NLS-1$
+				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			// delink old child from parent
 			ASTNode oldChild = (ASTNode) this.store.get(index);
 			if ((oldChild.flags & PROTECT) != 0) {
 				// old child is protected => cannot be unparented
-				throw new IllegalArgumentException(
-						"AST node cannot be modified"); //$NON-NLS-1$
+				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 
-			ASTNode.this.ast.preRemoveChildEvent(ASTNode.this, oldChild,
-					this.propertyDescriptor);
+			ASTNode.this.ast.preRemoveChildEvent(ASTNode.this, oldChild, this.propertyDescriptor);
 			// n.b. setParent will call ast.modifying()
 			oldChild.setParent(null, null);
 			T result = this.store.remove(index);
 			updateCursors(index, -1);
-			ASTNode.this.ast.postRemoveChildEvent(ASTNode.this, oldChild,
-					this.propertyDescriptor);
+			ASTNode.this.ast.postRemoveChildEvent(ASTNode.this, oldChild, this.propertyDescriptor);
 			return result;
 
 		}

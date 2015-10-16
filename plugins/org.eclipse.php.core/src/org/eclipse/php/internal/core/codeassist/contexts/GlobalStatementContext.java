@@ -34,8 +34,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
  */
 public class GlobalStatementContext extends AbstractGlobalStatementContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -46,17 +45,13 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 			if (enclosingElement == null) {
 				int actualOffset = offset - 1;
 				try {
-					PHPHeuristicScanner scanner = PHPHeuristicScanner
-							.createHeuristicScanner(getDocument(),
-									actualOffset, true);
-					int index = scanner.findOpeningPeer(actualOffset,
-							PHPHeuristicScanner.UNBOUND,
-							PHPHeuristicScanner.LBRACE,
-							PHPHeuristicScanner.RBRACE);
+					PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(),
+							actualOffset, true);
+					int index = scanner.findOpeningPeer(actualOffset, PHPHeuristicScanner.UNBOUND,
+							PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
 					if (index != PHPHeuristicScanner.NOT_FOUND) {
 						ITextRegion textRegion = getPHPToken(index);
-						while (textRegion.getStart() != 0
-								&& textRegion.getType() != PHPRegionTypes.PHP_CURLY_CLOSE) {
+						while (textRegion.getStart() != 0 && textRegion.getType() != PHPRegionTypes.PHP_CURLY_CLOSE) {
 							if (textRegion.getType() == PHPRegionTypes.PHP_CLASS
 									|| textRegion.getType() == PHPRegionTypes.PHP_INTERFACE
 									|| textRegion.getType() == PHPRegionTypes.PHP_TRAIT
@@ -65,8 +60,7 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 							}
 
 							actualOffset = textRegion.getStart() - 1;
-							textRegion = getPhpScriptRegion().getPhpToken(
-									actualOffset);
+							textRegion = getPhpScriptRegion().getPhpToken(actualOffset);
 						}
 					}
 				} catch (BadLocationException e1) {
@@ -76,9 +70,8 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
-			if ((enclosingElement instanceof IMethod)
-					|| (enclosingElement instanceof IType && !PHPFlags
-							.isNamespace(((IType) enclosingElement).getFlags()))) {
+			if ((enclosingElement instanceof IMethod) || (enclosingElement instanceof IType
+					&& !PHPFlags.isNamespace(((IType) enclosingElement).getFlags()))) {
 				return false;
 			}
 		} catch (ModelException e) {

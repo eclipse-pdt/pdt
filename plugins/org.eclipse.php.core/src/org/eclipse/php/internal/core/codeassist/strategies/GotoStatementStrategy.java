@@ -34,8 +34,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class GotoStatementStrategy extends GlobalElementStrategy {
 
-	public GotoStatementStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public GotoStatementStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -53,13 +52,10 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 			return;
 		}
 		try {
-			ModuleDeclaration rootNode = SourceParserUtil
-					.getModuleDeclaration(gotoStatementContext
-							.getSourceModule());
+			ModuleDeclaration rootNode = SourceParserUtil.getModuleDeclaration(gotoStatementContext.getSourceModule());
 			ASTNode node;
 			if (gotoStatementContext.getCurrentElement() != null) {
-				node = PHPModelUtils.getNodeByElement(rootNode,
-						gotoStatementContext.getCurrentElement());
+				node = PHPModelUtils.getNodeByElement(rootNode, gotoStatementContext.getCurrentElement());
 			} else {
 				node = rootNode;
 			}

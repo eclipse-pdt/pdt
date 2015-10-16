@@ -18,14 +18,14 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a single element of array.
- * Holds the key and the value both can be any expression
- * The key can be null
- * <pre>e.g.<pre> 1,
- * 'Dodo'=>'Golo',
- * $a,
- * $b=>foo(),
- * 1=>$myClass->getFirst() *
+ * Represents a single element of array. Holds the key and the value both can be
+ * any expression The key can be null
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst() *
  */
 public class ArrayElement extends ASTNode {
 

@@ -28,18 +28,15 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * 
  * @author michael
  */
-public class InterfaceDeclarationKeywordContext extends
-		InterfaceDeclarationContext {
+public class InterfaceDeclarationKeywordContext extends InterfaceDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 
 		TextSequence statementText = getStatementText();
-		statementText = statementText.subTextSequence(getTypeIdentifierEnd(),
-				statementText.length());
+		statementText = statementText.subTextSequence(getTypeIdentifierEnd(), statementText.length());
 
 		if (hasExtends()) {
 			return true;

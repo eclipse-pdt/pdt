@@ -47,8 +47,7 @@ public class TarArchiveFile implements IArchive {
 				if (map.containsKey(tarEntry.getName())) {
 					return map.get(tarEntry.getName());
 				} else {
-					TarArchiveEntry tarArchiveEntry = new TarArchiveEntry(
-							tarEntry);
+					TarArchiveEntry tarArchiveEntry = new TarArchiveEntry(tarEntry);
 					map.put(tarArchiveEntry.getName(), tarArchiveEntry);
 					return tarArchiveEntry;
 				}

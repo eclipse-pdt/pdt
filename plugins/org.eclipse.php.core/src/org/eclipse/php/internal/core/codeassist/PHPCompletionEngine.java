@@ -36,8 +36,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class PHPCompletionEngine extends ScriptCompletionEngine implements
-		ICompletionReporter {
+public class PHPCompletionEngine extends ScriptCompletionEngine implements ICompletionReporter {
 
 	private int relevanceKeyword;
 	private int relevanceMethod;
@@ -46,16 +45,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private int relevanceConst;
 	private Map<? super Object, Object> processedElements = new HashMap<Object, Object>();
 	private Set<? super Object> processedPaths = new HashSet<Object>();
-	private Set<IField> processedFields = new TreeSet<IField>(
-			new Comparator<IField>() {
-				public int compare(IField f1, IField f2) {
-					// filter duplications of variables
-					if (PHPModelUtils.isSameField((IField) f1, (IField) f2)) {
-						return 0;
-					}
-					return f1.getElementName().compareTo(f2.getElementName());
-				}
-			});
+	private Set<IField> processedFields = new TreeSet<IField>(new Comparator<IField>() {
+		public int compare(IField f1, IField f2) {
+			// filter duplications of variables
+			if (PHPModelUtils.isSameField((IField) f1, (IField) f2)) {
+				return 0;
+			}
+			return f1.getElementName().compareTo(f2.getElementName());
+		}
+	});
 
 	IModuleSource module;
 
@@ -63,8 +61,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		complete(module, position, i, true);
 	}
 
-	public void complete(IModuleSource module, int position, int i,
-			boolean waitForBuilder) {
+	public void complete(IModuleSource module, int position, int i, boolean waitForBuilder) {
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return;
 		}
@@ -86,10 +83,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			ICompletionContextResolver[] contextResolvers;
 			ICompletionStrategyFactory[] strategyFactories;
 			if (requestor instanceof IPHPCompletionRequestorExtension) {
-				contextResolvers = ((IPHPCompletionRequestorExtension) requestor)
-						.getContextResolvers();
-				strategyFactories = ((IPHPCompletionRequestorExtension) requestor)
-						.getStrategyFactories();
+				contextResolvers = ((IPHPCompletionRequestorExtension) requestor).getContextResolvers();
+				strategyFactories = ((IPHPCompletionRequestorExtension) requestor).getStrategyFactories();
 			} else {
 				contextResolvers = CompletionContextResolver.getActive();
 				strategyFactories = CompletionStrategyFactory.getActive();
@@ -100,13 +95,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 					.getModelElement();
 
 			for (ICompletionContextResolver resolver : contextResolvers) {
-				ICompletionContext[] contexts = resolver.resolve(sourceModule,
-						position, requestor, companion);
+				ICompletionContext[] contexts = resolver.resolve(sourceModule, position, requestor, companion);
 
 				if (contexts != null && contexts.length > 0) {
 					for (ICompletionStrategyFactory factory : strategyFactories) {
-						ICompletionStrategy[] strategies = factory
-								.create(contexts);
+						ICompletionStrategy[] strategies = factory.create(contexts);
 
 						if (strategies != null && strategies.length > 0) {
 							for (ICompletionStrategy strategy : strategies) {
@@ -168,22 +161,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	@Override
-	public void reportField(IField field, String suffix,
-			ISourceRange replaceRange, boolean removeDollar) {
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar) {
 		reportField(field, suffix, replaceRange, removeDollar, 0);
 	}
 
 	@Override
-	public void reportField(IField field, String suffix,
-			ISourceRange replaceRange, boolean removeDollar, int subRelevance) {
-		reportField(field, suffix, replaceRange, removeDollar, subRelevance,
-				null);
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
+			int subRelevance) {
+		reportField(field, suffix, replaceRange, removeDollar, subRelevance, null);
 	}
 
 	@Override
-	public void reportField(IField field, String suffix,
-			ISourceRange replaceRange, boolean removeDollar, int subRelevance,
-			Object extraInfo) {
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
+			int subRelevance, Object extraInfo) {
 		if (processedFields.contains(field)) {
 			return;
 		}
@@ -195,16 +185,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		int relevance = PHPFlags.isConstant(flags) ? relevanceConst
-				: relevanceVar;
+		int relevance = PHPFlags.isConstant(flags) ? relevanceConst : relevanceVar;
 		relevance += subRelevance;
 
 		noProposal = false;
 
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 
-			CompletionProposal proposal = createProposal(
-					CompletionProposal.FIELD_REF, actualCompletionPosition);
+			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
 			proposal.setName(field.getElementName());
 
 			String completion = field.getElementName() + suffix;
@@ -216,8 +204,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
 			proposal.setRelevance(relevance);
-			proposal.setReplaceRange(replaceRange.getOffset(),
-					replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
 
@@ -227,8 +214,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		}
 	}
 
-	public void reportField(IField field, String completion,
-			ISourceRange replaceRange, int subRelevance) {
+	public void reportField(IField field, String completion, ISourceRange replaceRange, int subRelevance) {
 		if (processedFields.contains(field)) {
 			return;
 		}
@@ -240,16 +226,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		int relevance = PHPFlags.isConstant(flags) ? relevanceConst
-				: relevanceVar;
+		int relevance = PHPFlags.isConstant(flags) ? relevanceConst : relevanceVar;
 		relevance += subRelevance;
 
 		noProposal = false;
 
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 
-			CompletionProposal proposal = createProposal(
-					CompletionProposal.FIELD_REF, actualCompletionPosition);
+			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
 			proposal.setName(field.getElementName());
 
 			proposal.setCompletion(completion);
@@ -257,8 +241,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
 			proposal.setRelevance(relevance);
-			proposal.setReplaceRange(replaceRange.getOffset(),
-					replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
 
@@ -269,13 +252,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	@Override
-	public void reportKeyword(String keyword, String suffix,
-			ISourceRange replaceRange) {
+	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange) {
 		reportKeyword(keyword, suffix, replaceRange, 0);
 	}
 
-	public void reportKeyword(String keyword, String suffix,
-			ISourceRange replaceRange, int subRelevance) {
+	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange, int subRelevance) {
 		if (processedElements.containsKey(keyword)) {
 			return;
 		}
@@ -285,13 +266,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 
-			CompletionProposal proposal = createProposal(
-					CompletionProposal.KEYWORD, actualCompletionPosition);
+			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 			proposal.setName(keyword);
 			proposal.setCompletion(keyword + suffix);
 			proposal.setRelevance(relevanceKeyword + subRelevance);
-			proposal.setReplaceRange(replaceRange.getOffset(),
-					replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
 
@@ -302,16 +281,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	@Override
-	public void reportMethod(IMethod method, String suffix,
-			ISourceRange replaceRange, Object extraInfo) {
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo) {
 		reportMethod(method, suffix, replaceRange, extraInfo, 0);
 	}
 
-	public void reportMethod(IMethod method, String suffix,
-			ISourceRange replaceRange, Object extraInfo, int subRelevance) {
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
+			int subRelevance) {
 		if (processedElements.containsKey(method)
-				&& ((IMethod) processedElements.get(method)).getParent()
-						.getClass() == method.getParent().getClass()) {
+				&& ((IMethod) processedElements.get(method)).getParent().getClass() == method.getParent().getClass()) {
 
 			return;
 		}
@@ -321,8 +298,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 		if (!requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
 
-			CompletionProposal proposal = createProposal(
-					CompletionProposal.METHOD_DECLARATION,
+			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_DECLARATION,
 					actualCompletionPosition);
 			proposal.setExtraInfo(extraInfo);
 			// show method parameter names:
@@ -355,8 +331,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				}
 			}
 
-			proposal.setReplaceRange(replaceRange.getOffset(),
-					replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
 
 			this.requestor.accept(proposal);
@@ -369,8 +344,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	@Override
-	public void reportMethod(IMethod method, String suffix,
-			ISourceRange replaceRange) {
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange) {
 		reportMethod(method, suffix, replaceRange, null);
 	}
 
@@ -380,16 +354,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	@Override
-	public void reportType(IType type, String suffix,
-			ISourceRange replaceRange, Object extraInfo) {
+	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo) {
 		reportType(type, suffix, replaceRange, extraInfo, 0);
 	}
 
 	@Override
-	public void reportType(IType type, String suffix,
-			ISourceRange replaceRange, Object extraInfo, int subRelevance) {
-		if (processedElements.containsKey(type)
-				&& processedElements.get(type).getClass() == type.getClass()) {
+	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance) {
+		if (processedElements.containsKey(type) && processedElements.get(type).getClass() == type.getClass()) {
 			return;
 		}
 		processedElements.put(type, type);
@@ -398,8 +369,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
 
-			CompletionProposal proposal = createProposal(
-					CompletionProposal.TYPE_REF, actualCompletionPosition);
+			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
 			proposal.setExtraInfo(extraInfo);
 			// Support parameter names for constructor:
 			if (requestor.isContextInformationMode()) {
@@ -433,8 +403,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				PHPCorePlugin.log(e);
 			}
 
-			proposal.setReplaceRange(replaceRange.getOffset(),
-					replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
 
 			this.requestor.accept(proposal);
@@ -446,10 +415,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	@Override
-	public void reportResource(IModelElement model, IPath relative,
-			String suffix, ISourceRange replaceRange) {
-		if (processedElements.containsKey(model)
-				|| processedPaths.contains(relative)) {
+	public void reportResource(IModelElement model, IPath relative, String suffix, ISourceRange replaceRange) {
+		if (processedElements.containsKey(model) || processedPaths.contains(relative)) {
 			return;
 		}
 		processedElements.put(model, model);
@@ -459,14 +426,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		CompletionProposal proposal = null;
 		if (model.getElementType() == IModelElement.SCRIPT_FOLDER
 				&& !requestor.isIgnored(CompletionProposal.PACKAGE_REF)) {
-			proposal = createProposal(CompletionProposal.PACKAGE_REF,
-					actualCompletionPosition);
+			proposal = createProposal(CompletionProposal.PACKAGE_REF, actualCompletionPosition);
 		} else if (model.getElementType() == IModelElement.PROJECT_FRAGMENT) {
-			proposal = createProposal(CompletionProposal.PACKAGE_REF,
-					actualCompletionPosition);
+			proposal = createProposal(CompletionProposal.PACKAGE_REF, actualCompletionPosition);
 		} else if (!requestor.isIgnored(CompletionProposal.KEYWORD)) {
-			proposal = createProposal(CompletionProposal.KEYWORD,
-					actualCompletionPosition);
+			proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 		}
 
 		if (proposal == null) {
@@ -476,8 +440,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		proposal.setName(relative.toString());
 		proposal.setCompletion((relative.toString() + suffix));
 		proposal.setRelevance(relevanceKeyword);
-		proposal.setReplaceRange(replaceRange.getOffset(),
-				replaceRange.getOffset() + replaceRange.getLength());
+		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 		proposal.setModelElement(model);
 
 		this.requestor.accept(proposal);

@@ -21,9 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a dispaching expression
- * <pre>e.g.<pre> foo()->bar(),
- * $myClass->foo()->bar(),
- * A::$a->foo()
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * foo()->bar(), $myClass->foo()->bar(), A::$a->foo()
  */
 public class MethodInvocation extends Dispatch {
 
@@ -32,40 +35,40 @@ public class MethodInvocation extends Dispatch {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor DISPATCHER_PROPERTY = 
-		new ChildPropertyDescriptor(MethodInvocation.class, "dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor METHOD_PROPERTY = 
-		new ChildPropertyDescriptor(MethodInvocation.class, "method", FunctionInvocation.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor DISPATCHER_PROPERTY = new ChildPropertyDescriptor(
+			MethodInvocation.class, "dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor METHOD_PROPERTY = new ChildPropertyDescriptor(MethodInvocation.class,
+			"method", FunctionInvocation.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
 	ChildPropertyDescriptor getDispatcherProperty() {
 		return MethodInvocation.DISPATCHER_PROPERTY;
 	}
-	
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(METHOD_PROPERTY);
-		propertyList.add(DISPATCHER_PROPERTY);		
+		propertyList.add(DISPATCHER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
 	public MethodInvocation(AST ast) {
 		super(ast);
 	}
-	
+
 	public MethodInvocation(int start, int end, AST ast, VariableBase dispatcher, FunctionInvocation method) {
 		super(start, end, ast, dispatcher);
 
 		if (method == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setMethod(method);
 	}
 
@@ -75,7 +78,7 @@ public class MethodInvocation extends Dispatch {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		getDispatcher().accept(visitor);
@@ -113,6 +116,7 @@ public class MethodInvocation extends Dispatch {
 
 	/**
 	 * The method component of this method invocation expression
+	 * 
 	 * @return method component of this method invocation expression
 	 */
 	public FunctionInvocation getMethod() {
@@ -122,18 +126,20 @@ public class MethodInvocation extends Dispatch {
 	public FunctionInvocation getMember() {
 		return getMethod();
 	}
-	
+
 	/**
 	 * Sets the method component of this field access.
 	 * 
-	 * @param method the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param method
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setMethod(FunctionInvocation method) {
 		if (method == null) {
 			throw new IllegalArgumentException();
@@ -142,8 +148,8 @@ public class MethodInvocation extends Dispatch {
 		preReplaceChild(oldChild, method, METHOD_PROPERTY);
 		this.method = method;
 		postReplaceChild(oldChild, method, METHOD_PROPERTY);
-	}	
-	
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == METHOD_PROPERTY) {
 			if (get) {
@@ -156,15 +162,15 @@ public class MethodInvocation extends Dispatch {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
-	
+
 	@Override
 	ASTNode clone0(AST target) {
 		final VariableBase dispatcher = ASTNode.copySubtree(target, getDispatcher());
@@ -177,27 +183,27 @@ public class MethodInvocation extends Dispatch {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/**
 	 * Resolves and returns the binding for the Constructor accessed by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IMethodBinding resolveConstructorBinding() {
 		return this.ast.getBindingResolver().resolveConstructor(this);
 	}
-	
+
 	/**
 	 * Resolves and returns the binding for the method invoked by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
-	 */	
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
+	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);
 	}
-	
+
 }

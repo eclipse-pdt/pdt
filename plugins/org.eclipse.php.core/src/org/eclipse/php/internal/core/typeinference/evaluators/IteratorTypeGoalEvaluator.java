@@ -50,8 +50,7 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		IteratorTypeGoal typedGoal = (IteratorTypeGoal) goal;
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-				typedGoal.getExpression()) };
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), typedGoal.getExpression()) };
 	}
 
 	public Object produceResult() {
@@ -61,47 +60,37 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		IModelAccessCache cache = null;
 		if (goal.getContext() instanceof IModelCacheContext) {
-			cache = (IModelAccessCache) ((IModelCacheContext) goal.getContext())
-					.getCache();
+			cache = (IModelAccessCache) ((IModelCacheContext) goal.getContext()).getCache();
 		}
 		String variableName = null;
 		IteratorTypeGoal iteratorTypeGoal = (IteratorTypeGoal) goal;
 		if (iteratorTypeGoal.getExpression() instanceof VariableReference) {
-			variableName = ((VariableReference) iteratorTypeGoal
-					.getExpression()).getName();
+			variableName = ((VariableReference) iteratorTypeGoal.getExpression()).getName();
 		}
 		if (state != GoalState.RECURSIVE) {
 			if (result instanceof GeneratorClassType) {
 				MultiTypeType type = new MultiTypeType();
-				type.getTypes()
-						.addAll(((GeneratorClassType) result).getTypes());
+				type.getTypes().addAll(((GeneratorClassType) result).getTypes());
 				this.result = type;
 				return IGoal.NO_GOALS;
 			} else if (result instanceof PHPClassType) {
 				if (subgoal instanceof ExpressionTypeGoal) {
-					ISourceModule sourceModule = ((ISourceModuleContext) subgoal
-							.getContext()).getSourceModule();
+					ISourceModule sourceModule = ((ISourceModuleContext) subgoal.getContext()).getSourceModule();
 					PHPClassType classType = (PHPClassType) result;
 					List<IGoal> subGoals = new LinkedList<IGoal>();
 					try {
 						// XXX: offset is 0 here but it should still work,
 						// because classType already contains the namespace part
-						IType[] types = PHPModelUtils.getTypes(
-								classType.getTypeName(), sourceModule, 0,
-								cache, null);
+						IType[] types = PHPModelUtils.getTypes(classType.getTypeName(), sourceModule, 0, cache, null);
 						for (IType type : types) {
-							IType[] superTypes = PHPModelUtils.getSuperClasses(
-									type,
-									cache == null ? null : cache
-											.getSuperTypeHierarchy(type, null));
+							IType[] superTypes = PHPModelUtils.getSuperClasses(type,
+									cache == null ? null : cache.getSuperTypeHierarchy(type, null));
 
 							if (subgoal.getContext() instanceof MethodContext) {
 
-								MethodContext methodContext = (MethodContext) subgoal
-										.getContext();
+								MethodContext methodContext = (MethodContext) subgoal.getContext();
 
-								if (isArrayType(methodContext, variableName,
-										type)) {
+								if (isArrayType(methodContext, variableName, type)) {
 									MultiTypeType mType = new MultiTypeType();
 									mType.addType((IEvaluatedType) result);
 									this.result = mType;
@@ -110,13 +99,9 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 							}
 
 							if (isImplementedIterator(superTypes)) {
-								subGoals.add(new MethodElementReturnTypeGoal(
-										subgoal.getContext(),
-										new IType[] { type },
+								subGoals.add(new MethodElementReturnTypeGoal(subgoal.getContext(), new IType[] { type },
 										"current", new String[0], type.getSourceRange().getOffset())); //$NON-NLS-1$
-								subGoals.add(new PHPDocMethodReturnTypeGoal(
-										subgoal.getContext(),
-										new IType[] { type },
+								subGoals.add(new PHPDocMethodReturnTypeGoal(subgoal.getContext(), new IType[] { type },
 										"current", new String[0], type.getSourceRange().getOffset())); //$NON-NLS-1$
 							}
 						}
@@ -159,39 +144,31 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 	 * @param type
 	 * @return boolean
 	 */
-	private boolean isArrayType(MethodContext methodContext,
-			String variableName, IType type) {
+	private boolean isArrayType(MethodContext methodContext, String variableName, IType type) {
 
-		PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
-				.getMethodNode();
+		PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext.getMethodNode();
 
 		PHPDocBlock[] docBlocks = new PHPDocBlock[0];
 		for (Object object : methodDeclaration.getArguments()) {
 			if (object instanceof FormalParameter) {
 				FormalParameter formalParameter = (FormalParameter) object;
-				if (formalParameter.getName().equals(variableName)
-						&& formalParameter.isVariadic()) {
+				if (formalParameter.getName().equals(variableName) && formalParameter.isVariadic()) {
 					return true;
 				}
 			}
 		}
 		try {
-			IModelElement element = methodContext.getSourceModule()
-					.getElementAt(methodDeclaration.getNameStart());
+			IModelElement element = methodContext.getSourceModule().getElementAt(methodDeclaration.getNameStart());
 			if (element instanceof IMethod) {
 				IMethod method = (IMethod) element;
 				if (method.getDeclaringType() != null) {
 					docBlocks = PHPModelUtils
-							.getTypeHierarchyMethodDoc(
-									method.getDeclaringType(),
-									methodContext.getCache() != null ? methodContext
-											.getCache().getSuperTypeHierarchy(
-													method.getDeclaringType(),
-													null) : null, method
-											.getElementName(), true, null);
+							.getTypeHierarchyMethodDoc(method.getDeclaringType(),
+									methodContext.getCache() != null ? methodContext.getCache()
+											.getSuperTypeHierarchy(method.getDeclaringType(), null) : null,
+							method.getElementName(), true, null);
 				} else {
-					docBlocks = new PHPDocBlock[] { methodDeclaration
-							.getPHPDoc() };
+					docBlocks = new PHPDocBlock[] { methodDeclaration.getPHPDoc() };
 				}
 			} else {
 				docBlocks = new PHPDocBlock[] { methodDeclaration.getPHPDoc() };
@@ -209,12 +186,9 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 				PHPDocTag[] tags = docBlocks[i].getTags(PHPDocTag.PARAM);
 				for (int j = 0; j < tags.length; j++) {
 					PHPDocTag tag = tags[j];
-					if (tag.isValidParamTag()
-							&& tag.getVariableReference().getName()
-									.equals(variableName)) {
+					if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(variableName)) {
 						for (TypeReference reference : tag.getTypeReferences()) {
-							if (PHPEvaluationUtils.isArrayType(reference
-									.getName())) {
+							if (PHPEvaluationUtils.isArrayType(reference.getName())) {
 								return true;
 							}
 						}

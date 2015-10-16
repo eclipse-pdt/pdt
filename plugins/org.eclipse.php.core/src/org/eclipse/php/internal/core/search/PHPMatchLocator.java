@@ -46,8 +46,7 @@ public class PHPMatchLocator extends MatchLocator {
 		MatchingNodeSet nodeSet;
 		HashtableOfIntValues occurrencesCounts = new HashtableOfIntValues();
 
-		public LocalDeclarationVisitor(IModelElement parent,
-				MatchingNodeSet nodeSet) {
+		public LocalDeclarationVisitor(IModelElement parent, MatchingNodeSet nodeSet) {
 			this.parent = parent;
 			this.nodeSet = nodeSet;
 		}
@@ -55,13 +54,10 @@ public class PHPMatchLocator extends MatchLocator {
 		public boolean visit(Expression expression) {
 			if (expression instanceof CallExpression) {
 				try {
-					FieldDeclaration constantDecl = ASTUtils
-							.getConstantDeclaration((CallExpression) expression);
+					FieldDeclaration constantDecl = ASTUtils.getConstantDeclaration((CallExpression) expression);
 					if (constantDecl != null) {
-						Integer level = (Integer) nodeSet.matchingNodes
-								.removeKey(constantDecl);
-						reportMatching(null, constantDecl, parent,
-								level != null ? level.intValue() : -1, nodeSet);
+						Integer level = (Integer) nodeSet.matchingNodes.removeKey(constantDecl);
+						reportMatching(null, constantDecl, parent, level != null ? level.intValue() : -1, nodeSet);
 						return false;
 					}
 				} catch (CoreException e) {
@@ -85,10 +81,8 @@ public class PHPMatchLocator extends MatchLocator {
 					occurrenceCount = occurrenceCount + 1;
 				}
 				occurrencesCounts.put(simpleName, occurrenceCount);
-				Integer level = (Integer) nodeSet.matchingNodes
-						.removeKey(typeDeclaration);
-				reportMatching(typeDeclaration, parent,
-						level != null ? level.intValue() : -1, nodeSet,
+				Integer level = (Integer) nodeSet.matchingNodes.removeKey(typeDeclaration);
+				reportMatching(typeDeclaration, parent, level != null ? level.intValue() : -1, nodeSet,
 						occurrenceCount);
 				return false; // don't visit members as this was done during
 			} catch (CoreException e) {
@@ -98,10 +92,8 @@ public class PHPMatchLocator extends MatchLocator {
 
 		public boolean visit(MethodDeclaration method) {
 			try {
-				Integer level = (Integer) nodeSet.matchingNodes
-						.removeKey(method);
-				reportMatching(null, method, parent,
-						level != null ? level.intValue() : -1, nodeSet);
+				Integer level = (Integer) nodeSet.matchingNodes.removeKey(method);
+				reportMatching(null, method, parent, level != null ? level.intValue() : -1, nodeSet);
 				return false; // don't visit members as this was done during
 			} catch (CoreException e) {
 				throw new WrappedCoreException(e);
@@ -109,9 +101,8 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
-	protected void reportMatching(ModuleDeclaration module,
-			MethodDeclaration method, IModelElement parent, int accuracy,
-			MatchingNodeSet nodeSet) throws CoreException {
+	protected void reportMatching(ModuleDeclaration module, MethodDeclaration method, IModelElement parent,
+			int accuracy, MatchingNodeSet nodeSet) throws CoreException {
 		if (parent == null) {
 			parent = createSourceModuleHandle();
 		}
@@ -126,8 +117,7 @@ public class PHPMatchLocator extends MatchLocator {
 				if (DLTKCore.DEBUG) {
 					System.out.println("TODO: AST Add constructor support."); //$NON-NLS-1$
 				}
-				match = this.patternLocator.newDeclarationMatch(method,
-						enclosingElement, accuracy, this);
+				match = this.patternLocator.newDeclarationMatch(method, enclosingElement, accuracy, this);
 				if (match != null) {
 					report(match);
 				}
@@ -135,8 +125,7 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 
 		// handle nodes for the local type first
-		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(
-				enclosingElement, nodeSet);
+		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(enclosingElement, nodeSet);
 		try {
 			method.getBody().traverse(localDeclarationVisitor);
 		} catch (Exception e) {
@@ -146,8 +135,7 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 
 		// references in this method
-		ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(),
-				method.sourceEnd());
+		ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(), method.sourceEnd());
 		if (nodes != null) {
 			if (parent == null) {
 				parent = createSourceModuleHandle();
@@ -158,15 +146,12 @@ public class PHPMatchLocator extends MatchLocator {
 				if (encloses(enclosingElement)) {
 					for (int i = 0, l = nodes.length; i < l; i++) {
 						ASTNode node = nodes[i];
-						Integer level = (Integer) nodeSet.matchingNodes
-								.removeKey(node);
+						Integer level = (Integer) nodeSet.matchingNodes.removeKey(node);
 						if (DLTKCore.DEBUG) {
-							System.out
-									.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+							System.out.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
 						}
-						this.patternLocator.matchReportReference(node,
-								enclosingElement, (Scope) null,
-								level.intValue(), this);
+						this.patternLocator.matchReportReference(node, enclosingElement, (Scope) null, level.intValue(),
+								this);
 					}
 					return;
 				}
@@ -176,10 +161,8 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
-	protected void reportMatching(TypeDeclaration type,
-			MethodDeclaration method, IModelElement parent, int accuracy,
-			boolean typeInHierarchy, MatchingNodeSet nodeSet)
-			throws CoreException {
+	protected void reportMatching(TypeDeclaration type, MethodDeclaration method, IModelElement parent, int accuracy,
+			boolean typeInHierarchy, MatchingNodeSet nodeSet) throws CoreException {
 		IModelElement enclosingElement = createHandle(method, parent);
 		if (accuracy > -1 && enclosingElement != null) { // skip if unable to
 			// find method
@@ -188,8 +171,7 @@ public class PHPMatchLocator extends MatchLocator {
 				if (DLTKCore.DEBUG) {
 					System.out.println("TODO: AST Add constructor support."); //$NON-NLS-1$
 				}
-				match = this.patternLocator.newDeclarationMatch(method,
-						enclosingElement, accuracy, this);
+				match = this.patternLocator.newDeclarationMatch(method, enclosingElement, accuracy, this);
 				if (match != null) {
 					report(match);
 				}
@@ -197,8 +179,7 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 
 		// handle nodes for the local type first
-		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(
-				enclosingElement, nodeSet);
+		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(enclosingElement, nodeSet);
 		try {
 			method.getBody().traverse(localDeclarationVisitor);
 		} catch (Exception e) {
@@ -209,8 +190,7 @@ public class PHPMatchLocator extends MatchLocator {
 
 		// references in this method
 		if (typeInHierarchy) {
-			ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(),
-					method.sourceEnd());
+			ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(), method.sourceEnd());
 			if (nodes != null) {
 				if ((this.matchContainer & PatternLocator.CLASS_CONTAINER) != 0) {
 					if (enclosingElement == null)
@@ -218,14 +198,11 @@ public class PHPMatchLocator extends MatchLocator {
 					if (encloses(enclosingElement)) {
 						for (int i = 0, l = nodes.length; i < l; i++) {
 							ASTNode node = nodes[i];
-							Integer level = (Integer) nodeSet.matchingNodes
-									.removeKey(node);
+							Integer level = (Integer) nodeSet.matchingNodes.removeKey(node);
 							if (DLTKCore.DEBUG) {
-								System.out
-										.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+								System.out.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
 							}
-							this.patternLocator.matchReportReference(node,
-									enclosingElement, (Scope) null,
+							this.patternLocator.matchReportReference(node, enclosingElement, (Scope) null,
 									level.intValue(), this);
 						}
 						return;
@@ -237,9 +214,8 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
-	protected void reportMatching(TypeDeclaration type, IModelElement parent,
-			int accuracy, MatchingNodeSet nodeSet, int occurrenceCount)
-			throws CoreException {
+	protected void reportMatching(TypeDeclaration type, IModelElement parent, int accuracy, MatchingNodeSet nodeSet,
+			int occurrenceCount) throws CoreException {
 		if (parent != null && parent.getElementType() == IModelElement.METHOD) {
 			// All PHP elements declared inside of function are automatically
 			// belonging
@@ -251,80 +227,53 @@ public class PHPMatchLocator extends MatchLocator {
 	}
 
 	@Override
-	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
-			int accuracy, int offset, int length, boolean isConstructor,
-			boolean isSynthetic, ASTNode reference) {
-		return newMethodReferenceMatch(enclosingElement, accuracy, offset,
-				length, isConstructor, isSynthetic, reference, pattern);
+	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement, int accuracy, int offset, int length,
+			boolean isConstructor, boolean isSynthetic, ASTNode reference) {
+		return newMethodReferenceMatch(enclosingElement, accuracy, offset, length, isConstructor, isSynthetic,
+				reference, pattern);
 	}
 
-	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
-			int accuracy, int offset, int length, boolean isConstructor,
-			boolean isSynthetic, ASTNode reference, SearchPattern pattern) {
-		if (pattern instanceof MethodPattern
-				&& (reference instanceof PHPCallExpression)) {
+	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement, int accuracy, int offset, int length,
+			boolean isConstructor, boolean isSynthetic, ASTNode reference, SearchPattern pattern) {
+		if (pattern instanceof MethodPattern && (reference instanceof PHPCallExpression)) {
 			PHPCallExpression pce = (PHPCallExpression) reference;
-			ISourceModule module = (ISourceModule) enclosingElement
-					.getAncestor(IModelElement.SOURCE_MODULE);
+			ISourceModule module = (ISourceModule) enclosingElement.getAncestor(IModelElement.SOURCE_MODULE);
 			if (module != null) {
 				try {
 					MethodPattern methodPattern = (MethodPattern) pattern;
-					IModelElement[] elements = module.codeSelect(pce
-							.getCallName().sourceStart(), 0);
+					IModelElement[] elements = module.codeSelect(pce.getCallName().sourceStart(), 0);
 					if (elements == null || elements.length == 0) {
-						return super.newMethodReferenceMatch(enclosingElement,
-								accuracy, offset, length, isConstructor,
+						return super.newMethodReferenceMatch(enclosingElement, accuracy, offset, length, isConstructor,
 								isSynthetic, reference);
 					} else {
 						for (int i = 0; i < elements.length; i++) {
 							if (pattern.focus != null) {
 								if (pattern.focus.equals(elements[i])) {
-									return super.newMethodReferenceMatch(
-											enclosingElement, accuracy, offset,
-											length, isConstructor, isSynthetic,
-											reference);
+									return super.newMethodReferenceMatch(enclosingElement, accuracy, offset, length,
+											isConstructor, isSynthetic, reference);
 								}
 							} else {
 								if (methodPattern.declaringSimpleName != null
-										&& elements[i]
-												.getAncestor(IModelElement.TYPE) != null
-										&& PHPFlags
-												.isClass(((IType) elements[i]
-														.getAncestor(IModelElement.TYPE))
-														.getFlags())
-										&& new String(
-												methodPattern.declaringSimpleName)
-												.equalsIgnoreCase(((IType) elements[i]
-														.getParent())
-														.getElementName())) {
+										&& elements[i].getAncestor(IModelElement.TYPE) != null
+										&& PHPFlags.isClass(
+												((IType) elements[i].getAncestor(IModelElement.TYPE)).getFlags())
+										&& new String(methodPattern.declaringSimpleName)
+												.equalsIgnoreCase(((IType) elements[i].getParent()).getElementName())) {
 
-									return super.newMethodReferenceMatch(
-											enclosingElement, accuracy, offset,
-											length, isConstructor, isSynthetic,
-											reference);
-								} else if (methodPattern.declaringSimpleName == null
-										&& (elements[i]
-												.getAncestor(IModelElement.TYPE) == null || elements[i]
-												.getAncestor(IModelElement.TYPE) != null
-												&& !PHPFlags
-														.isClass(((IType) elements[i]
-																.getAncestor(IModelElement.TYPE))
-																.getFlags()))) {
+									return super.newMethodReferenceMatch(enclosingElement, accuracy, offset, length,
+											isConstructor, isSynthetic, reference);
+								} else if (methodPattern.declaringSimpleName == null && (elements[i]
+										.getAncestor(IModelElement.TYPE) == null
+										|| elements[i].getAncestor(IModelElement.TYPE) != null && !PHPFlags.isClass(
+												((IType) elements[i].getAncestor(IModelElement.TYPE)).getFlags()))) {
 
-									return super.newMethodReferenceMatch(
-											enclosingElement, accuracy, offset,
-											length, isConstructor, isSynthetic,
-											reference);
-								} else if (methodPattern.declaringSimpleName == null
-										&& methodPattern.selector != null
-										&& new String(methodPattern.selector)
-												.equals(elements[i]
-														.getElementName())) {
+									return super.newMethodReferenceMatch(enclosingElement, accuracy, offset, length,
+											isConstructor, isSynthetic, reference);
+								} else if (methodPattern.declaringSimpleName == null && methodPattern.selector != null
+										&& new String(methodPattern.selector).equals(elements[i].getElementName())) {
 
-									return super.newMethodReferenceMatch(
-											enclosingElement, accuracy, offset,
-											length, isConstructor, isSynthetic,
-											reference);
+									return super.newMethodReferenceMatch(enclosingElement, accuracy, offset, length,
+											isConstructor, isSynthetic, reference);
 								}
 
 								// if (new String(methodPattern.selector)
@@ -344,12 +293,10 @@ public class PHPMatchLocator extends MatchLocator {
 				}
 			}
 		} else if (pattern instanceof OrPattern) {
-			for (SearchPattern searchPattern : ((OrPattern) pattern)
-					.getPatterns()) {
+			for (SearchPattern searchPattern : ((OrPattern) pattern).getPatterns()) {
 				if (searchPattern instanceof MethodPattern) {
-					return newMethodReferenceMatch(enclosingElement, accuracy,
-							offset, length, isConstructor, isSynthetic,
-							reference, searchPattern);
+					return newMethodReferenceMatch(enclosingElement, accuracy, offset, length, isConstructor,
+							isSynthetic, reference, searchPattern);
 				}
 
 			}

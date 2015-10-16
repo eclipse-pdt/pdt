@@ -12,8 +12,8 @@ public class FakeConstructor extends FakeMethod {
 	 */
 	private boolean isEnclosingClass;
 
-	public FakeConstructor(ModelElement parent, String name, int offset,
-			int length, int nameOffset, int nameLength, boolean isEnclosingClass) {
+	public FakeConstructor(ModelElement parent, String name, int offset, int length, int nameOffset, int nameLength,
+			boolean isEnclosingClass) {
 		super(parent, name, offset, length, nameOffset, nameLength);
 		this.isEnclosingClass = isEnclosingClass;
 	}
@@ -30,15 +30,12 @@ public class FakeConstructor extends FakeMethod {
 		this.isEnclosingClass = isEnclosingClass;
 	}
 
-	public static FakeConstructor createFakeConstructor(IMethod ctor,
-			IType type, boolean isEnclosingClass) {
+	public static FakeConstructor createFakeConstructor(IMethod ctor, IType type, boolean isEnclosingClass) {
 		ISourceRange sourceRange;
 		try {
 			sourceRange = type.getSourceRange();
-			FakeConstructor ctorMethod = new FakeConstructor(
-					(ModelElement) type, type.getElementName(), sourceRange
-							.getOffset(), sourceRange.getLength(), sourceRange
-							.getOffset(), sourceRange.getLength(),
+			FakeConstructor ctorMethod = new FakeConstructor((ModelElement) type, type.getElementName(),
+					sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength(),
 					isEnclosingClass);
 			if (ctor != null) {
 				ctorMethod.setParameters(ctor.getParameters());
@@ -67,15 +64,12 @@ public class FakeConstructor extends FakeMethod {
 
 			// try to find constructor in super classes
 			if (constructors[0] == null) {
-				ITypeHierarchy newSupertypeHierarchy = type
-						.newSupertypeHierarchy(null);
-				IType[] allSuperclasses = newSupertypeHierarchy
-						.getAllSuperclasses(type);
+				ITypeHierarchy newSupertypeHierarchy = type.newSupertypeHierarchy(null);
+				IType[] allSuperclasses = newSupertypeHierarchy.getAllSuperclasses(type);
 				if (allSuperclasses != null && allSuperclasses.length > 0) {
 					for (IType superClass : allSuperclasses) {
 						if (constructors[0] == null) {
-							constructors = getConstructorsOfType(superClass,
-									isEnclosingClass);
+							constructors = getConstructorsOfType(superClass, isEnclosingClass);
 						} else {
 							break;
 						}
@@ -89,20 +83,16 @@ public class FakeConstructor extends FakeMethod {
 		return constructors;
 	}
 
-	private static IMethod[] getConstructorsOfType(IType type,
-			boolean isEnclosingClass) throws ModelException {
+	private static IMethod[] getConstructorsOfType(IType type, boolean isEnclosingClass) throws ModelException {
 		IMethod[] constructors = new IMethod[2];
 		IMethod[] methods = type.getMethods();
 		if (methods != null && methods.length > 0) {
 			for (IMethod method : methods) {
-				if (method.isConstructor() && method.getParameters() != null
-						&& method.getParameters().length > 0) {
+				if (method.isConstructor() && method.getParameters() != null && method.getParameters().length > 0) {
 					constructors[0] = method;
-					if (isEnclosingClass
-							|| !PHPFlags.isPrivate(constructors[0].getFlags())) {
-						constructors[1] = FakeConstructor
-								.createFakeConstructor(constructors[0], type,
-										isEnclosingClass);
+					if (isEnclosingClass || !PHPFlags.isPrivate(constructors[0].getFlags())) {
+						constructors[1] = FakeConstructor.createFakeConstructor(constructors[0], type,
+								isEnclosingClass);
 					}
 				}
 			}

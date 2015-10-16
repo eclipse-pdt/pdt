@@ -23,13 +23,12 @@ public class PHPDocBlock extends Comment {
 	private PHPDocTag[] tags;
 	private List<Scalar> texts;
 
-	public PHPDocBlock(int start, int end, String shortDescription,
-			String longDescription, PHPDocTag[] tags) {
+	public PHPDocBlock(int start, int end, String shortDescription, String longDescription, PHPDocTag[] tags) {
 		this(start, end, shortDescription, longDescription, tags, null);
 	}
 
-	public PHPDocBlock(int start, int end, String shortDescription,
-			String longDescription, PHPDocTag[] tags, List<Scalar> texts) {
+	public PHPDocBlock(int start, int end, String shortDescription, String longDescription, PHPDocTag[] tags,
+			List<Scalar> texts) {
 		super(start, end, Comment.TYPE_PHPDOC);
 		this.shortDescription = shortDescription;
 		this.longDescription = longDescription;

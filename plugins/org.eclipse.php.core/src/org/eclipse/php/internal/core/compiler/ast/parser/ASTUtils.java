@@ -38,11 +38,9 @@ import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 public class ASTUtils {
 
-	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile(
-			"(.*?@var\\s+)([$][^$\\s]+)(\\s+)([^$\\s]+).*", //$NON-NLS-1$
+	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile("(.*?@var\\s+)([$][^$\\s]+)(\\s+)([^$\\s]+).*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
-	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile(
-			"(.*?@var\\s+)([^$\\s]+)(\\s+)([$][^$\\s]+).*", //$NON-NLS-1$
+	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile("(.*?@var\\s+)([^$\\s]+)(\\s+)([$][^$\\s]+).*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
 
 	/**
@@ -86,8 +84,7 @@ public class ASTUtils {
 				String typeName = types.substring(0, pipeIdx);
 				int typeEnd = typeStart + typeName.length();
 				if (typeName.length() > 0) {
-					typeReferences.add(new TypeReference(typeStart, typeEnd,
-							typeName));
+					typeReferences.add(new TypeReference(typeStart, typeEnd, typeName));
 				}
 				types = types.substring(pipeIdx + 1);
 				typeStart += pipeIdx + 1;
@@ -96,15 +93,12 @@ public class ASTUtils {
 			String typeName = types;
 			int typeEnd = typeStart + typeName.length();
 			if (typeName.length() > 0) {
-				typeReferences.add(new TypeReference(typeStart, typeEnd,
-						typeName));
+				typeReferences.add(new TypeReference(typeStart, typeEnd, typeName));
 			}
 
-			VariableReference varReference = new VariableReference(varStart,
-					varEnd, varName);
+			VariableReference varReference = new VariableReference(varStart, varEnd, varName);
 			VarComment varComment = new VarComment(start, end, varReference,
-					(TypeReference[]) typeReferences
-							.toArray(new TypeReference[typeReferences.size()]));
+					(TypeReference[]) typeReferences.toArray(new TypeReference[typeReferences.size()]));
 			return varComment;
 		}
 		return null;
@@ -120,9 +114,8 @@ public class ASTUtils {
 	 */
 	public static String stripQuotes(String name) {
 		int len = name.length();
-		if (len > 1
-				&& (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name
-						.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
+		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\''
+				|| name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
 			name = name.substring(1, len - 1);
 		}
 		return name;
@@ -135,8 +128,7 @@ public class ASTUtils {
 	 * @param position
 	 * @return
 	 */
-	public static ASTNode findMinimalNode(ModuleDeclaration unit, int start,
-			int end) {
+	public static ASTNode findMinimalNode(ModuleDeclaration unit, int start, int end) {
 
 		class Visitor extends ASTVisitor {
 
@@ -161,12 +153,10 @@ public class ASTUtils {
 				}
 				if (realStart <= start && realEnd >= end) {
 					if (result != null) {
-						if ((s.sourceStart() >= result.sourceStart())
-								&& (s.sourceEnd() <= result.sourceEnd())) {
+						if ((s.sourceStart() >= result.sourceStart()) && (s.sourceEnd() <= result.sourceEnd())) {
 							// now we could not handle ConstantReference in
 							// StaticConstantAccess
-							if (s instanceof ConstantReference
-									&& (result instanceof StaticConstantAccess)) {
+							if (s instanceof ConstantReference && (result instanceof StaticConstantAccess)) {
 								return false;
 							}
 							result = s;
@@ -201,8 +191,7 @@ public class ASTUtils {
 	 * @param position
 	 * @return
 	 */
-	public static ASTNode findMaximalNodeEndingAt(ModuleDeclaration unit,
-			final int boundaryOffset) {
+	public static ASTNode findMaximalNodeEndingAt(ModuleDeclaration unit, final int boundaryOffset) {
 
 		class Visitor extends ASTVisitor {
 			ASTNode result = null;
@@ -242,8 +231,7 @@ public class ASTUtils {
 	 * @param node
 	 * @return
 	 */
-	public static ASTNode[] restoreWayToNode(ModuleDeclaration module,
-			final ASTNode node) {
+	public static ASTNode[] restoreWayToNode(ModuleDeclaration module, final ASTNode node) {
 
 		final Stack<ASTNode> stack = new Stack<ASTNode>();
 
@@ -288,8 +276,8 @@ public class ASTUtils {
 	 * @param target
 	 *            AST node to find context for
 	 */
-	public static IContext findContext(final ISourceModule sourceModule,
-			final ModuleDeclaration unit, final ASTNode target) {
+	public static IContext findContext(final ISourceModule sourceModule, final ModuleDeclaration unit,
+			final ASTNode target) {
 
 		ContextFinder visitor = new ContextFinder(sourceModule) {
 			private IContext context;
@@ -326,8 +314,8 @@ public class ASTUtils {
 	 * @param offset
 	 *            Offset in the filetarget
 	 */
-	public static IContext findContext(final ISourceModule sourceModule,
-			final ModuleDeclaration unit, final int offset) {
+	public static IContext findContext(final ISourceModule sourceModule, final ModuleDeclaration unit,
+			final int offset) {
 
 		ContextFinder visitor = new ContextFinder(sourceModule) {
 			private IContext context;
@@ -337,8 +325,7 @@ public class ASTUtils {
 			}
 
 			public boolean visitGeneral(ASTNode node) throws Exception {
-				if (!(node instanceof ASTError) && node.sourceStart() <= offset
-						&& node.sourceEnd() >= offset) {
+				if (!(node instanceof ASTError) && node.sourceStart() <= offset && node.sourceEnd() >= offset) {
 					if (!contextStack.isEmpty()) {
 						context = contextStack.peek();
 					}
@@ -379,8 +366,7 @@ public class ASTUtils {
 	 * @return declaration after the PHP-doc block or <code>null</code> if first
 	 *         coming statement is not declaration.
 	 */
-	public static Declaration findDeclarationAfterPHPdoc(
-			ModuleDeclaration moduleDeclaration, final int offset) {
+	public static Declaration findDeclarationAfterPHPdoc(ModuleDeclaration moduleDeclaration, final int offset) {
 
 		final Declaration[] decl = new Declaration[1];
 
@@ -431,22 +417,17 @@ public class ASTUtils {
 	 * @return constant declaration if the given call expression represents
 	 *         define() expression, otherwise <code>null</code>
 	 */
-	public static FieldDeclaration getConstantDeclaration(
-			CallExpression callExpression) {
+	public static FieldDeclaration getConstantDeclaration(CallExpression callExpression) {
 		String name = callExpression.getName();
 		if ("define".equalsIgnoreCase(name)) { //$NON-NLS-1$
 			CallArgumentsList args = callExpression.getArgs();
 			if (args != null && args.getChilds() != null) {
 				ASTNode argument = (ASTNode) args.getChilds().get(0);
 				if (argument instanceof Scalar) {
-					String constant = ASTUtils.stripQuotes(((Scalar) argument)
-							.getValue());
-					FieldDeclaration fieldDeclaration = new FieldDeclaration(
-							constant, argument.sourceStart(),
-							argument.sourceEnd(), callExpression.sourceStart(),
-							callExpression.sourceEnd());
-					fieldDeclaration.setModifier(Modifiers.AccGlobal
-							| Modifiers.AccConstant | Modifiers.AccFinal);
+					String constant = ASTUtils.stripQuotes(((Scalar) argument).getValue());
+					FieldDeclaration fieldDeclaration = new FieldDeclaration(constant, argument.sourceStart(),
+							argument.sourceEnd(), callExpression.sourceStart(), callExpression.sourceEnd());
+					fieldDeclaration.setModifier(Modifiers.AccGlobal | Modifiers.AccConstant | Modifiers.AccFinal);
 					return fieldDeclaration;
 				}
 			}
@@ -468,11 +449,9 @@ public class ASTUtils {
 	 * @return USE statement part node, or <code>null</code> in case relevant
 	 *         statement couldn't be found
 	 */
-	public static UsePart findUseStatementByAlias(
-			ModuleDeclaration moduleDeclaration, String aliasName, int offset) {
+	public static UsePart findUseStatementByAlias(ModuleDeclaration moduleDeclaration, String aliasName, int offset) {
 
-		FindUseStatementByAliasASTVisitor visitor = new FindUseStatementByAliasASTVisitor(
-				aliasName, offset);
+		FindUseStatementByAliasASTVisitor visitor = new FindUseStatementByAliasASTVisitor(aliasName, offset);
 
 		try {
 			moduleDeclaration.traverse(visitor);
@@ -497,12 +476,10 @@ public class ASTUtils {
 	 * @return USE statement part node, or <code>null</code> in case relevant
 	 *         statement couldn't be found
 	 */
-	public static UsePart findUseStatementByNamespace(
-			ModuleDeclaration moduleDeclaration, final String namespace,
+	public static UsePart findUseStatementByNamespace(ModuleDeclaration moduleDeclaration, final String namespace,
 			final int offset) {
 
-		FindUseStatementByNamespaceASTVisitor visitor = new FindUseStatementByNamespaceASTVisitor(
-				namespace, offset);
+		FindUseStatementByNamespaceASTVisitor visitor = new FindUseStatementByNamespaceASTVisitor(namespace, offset);
 
 		try {
 			moduleDeclaration.traverse(visitor);
@@ -524,11 +501,9 @@ public class ASTUtils {
 	 *            account)
 	 * @return USE statements list
 	 */
-	public static UseStatement[] getUseStatements(
-			ModuleDeclaration moduleDeclaration, final int offset) {
+	public static UseStatement[] getUseStatements(ModuleDeclaration moduleDeclaration, final int offset) {
 
-		GetUseStatementsASTVisitor visitor = new GetUseStatementsASTVisitor(
-				offset);
+		GetUseStatementsASTVisitor visitor = new GetUseStatementsASTVisitor(offset);
 
 		try {
 			moduleDeclaration.traverse(visitor);

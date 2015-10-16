@@ -21,8 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a postfix expression
- * <pre>e.g.<pre> $a++,
- * foo()--
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a++, foo()--
  */
 public class PostfixExpression extends Expression implements IOperationNode {
 
@@ -37,13 +41,14 @@ public class PostfixExpression extends Expression implements IOperationNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(PostfixExpression.class, "variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(PostfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(PostfixExpression.class,
+			"variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
+			PostfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
@@ -101,12 +106,12 @@ public class PostfixExpression extends Expression implements IOperationNode {
 
 	public static String getOperator(int operator) {
 		switch (operator) {
-			case OP_DEC:
-				return "--"; //$NON-NLS-1$
-			case OP_INC:
-				return "++"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_DEC:
+			return "--"; //$NON-NLS-1$
+		case OP_INC:
+			return "++"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -125,14 +130,21 @@ public class PostfixExpression extends Expression implements IOperationNode {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * ()
 	 */
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * (int)
 	 */
 	public String getOperationString(int op) {
 		return getOperator(op);
@@ -141,8 +153,10 @@ public class PostfixExpression extends Expression implements IOperationNode {
 	/**
 	 * Sets the operator of this postfix expression.
 	 * 
-	 * @param operator the postfix operator
-	 * @exception IllegalArgumentException if the argument is incorrect
+	 * @param operator
+	 *            the postfix operator
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
 	 */
 	public void setOperator(int operator) {
 		if (getOperator(operator) == null) {
@@ -178,13 +192,15 @@ public class PostfixExpression extends Expression implements IOperationNode {
 	/**
 	 * Sets the expression of this postfix expression.
 	 * 
-	 * @param variable the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param variable
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setVariable(VariableBase variable) {
 		if (variable == null) {
@@ -209,7 +225,7 @@ public class PostfixExpression extends Expression implements IOperationNode {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -220,7 +236,8 @@ public class PostfixExpression extends Expression implements IOperationNode {
 	@Override
 	ASTNode clone0(AST target) {
 		final VariableBase variable = ASTNode.copySubtree(target, this.getVariable());
-		final PostfixExpression result = new PostfixExpression(this.getStart(), this.getEnd(), target, variable, this.getOperator());
+		final PostfixExpression result = new PostfixExpression(this.getStart(), this.getEnd(), target, variable,
+				this.getOperator());
 		return result;
 	}
 

@@ -22,8 +22,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author Kaloyan Raev
  */
-public class FindUseStatementByNamespaceASTVisitor
-		extends AbstractUseStatementASTVisitor {
+public class FindUseStatementByNamespaceASTVisitor extends AbstractUseStatementASTVisitor {
 
 	/**
 	 * Current use statement, used to detect group use statements.
@@ -86,11 +85,9 @@ public class FindUseStatementByNamespaceASTVisitor
 	protected boolean visit(UsePart usePart) {
 		String ns = usePart.getNamespace().getFullyQualifiedName();
 
-		boolean isGroupStatement = currentUseStatement != null
-				&& currentUseStatement.getNamespace() != null;
+		boolean isGroupStatement = currentUseStatement != null && currentUseStatement.getNamespace() != null;
 		if (isGroupStatement) {
-			String curentFQN = currentUseStatement.getNamespace()
-					.getFullyQualifiedName();
+			String curentFQN = currentUseStatement.getNamespace().getFullyQualifiedName();
 			ns = PHPModelUtils.concatFullyQualifiedNames(curentFQN, ns);
 		}
 
@@ -99,8 +96,7 @@ public class FindUseStatementByNamespaceASTVisitor
 				FullyQualifiedReference fqn = createCombinedFQN(usePart);
 
 				result = new UsePart(fqn, usePart.getAlias(),
-						Math.max(currentUseStatement.getStatementType(),
-								usePart.getStatementType()));
+						Math.max(currentUseStatement.getStatementType(), usePart.getStatementType()));
 			} else {
 				result = usePart;
 			}
@@ -118,17 +114,12 @@ public class FindUseStatementByNamespaceASTVisitor
 	 * @return
 	 */
 	private FullyQualifiedReference createCombinedFQN(UsePart usePart) {
-		String firstNamespace = currentUseStatement.getNamespace()
-				.getFullyQualifiedName();
-		String name = PHPModelUtils.extractElementName(
-				usePart.getNamespace().getFullyQualifiedName());
-		String secondNamespace = PHPModelUtils.extractNameSpaceName(
-				usePart.getNamespace().getFullyQualifiedName());
+		String firstNamespace = currentUseStatement.getNamespace().getFullyQualifiedName();
+		String name = PHPModelUtils.extractElementName(usePart.getNamespace().getFullyQualifiedName());
+		String secondNamespace = PHPModelUtils.extractNameSpaceName(usePart.getNamespace().getFullyQualifiedName());
 
-		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace,
-				secondNamespace);
-		return new FullyQualifiedReference(0, 0, name,
-				new NamespaceReference(0, 0, fqn));
+		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace, secondNamespace);
+		return new FullyQualifiedReference(0, 0, name, new NamespaceReference(0, 0, fqn));
 	}
 
 }

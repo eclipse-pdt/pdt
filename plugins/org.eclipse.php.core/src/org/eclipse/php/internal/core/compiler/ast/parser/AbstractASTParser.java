@@ -32,9 +32,8 @@ import java_cup.runtime.lr_parser;
 
 abstract public class AbstractASTParser extends lr_parser {
 
-	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0,
-			new LinkedList<Statement>(), new LinkedList<ASTError>(),
-			new LinkedList<VarComment>());
+	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<Statement>(),
+			new LinkedList<ASTError>(), new LinkedList<VarComment>());
 	private IProblemReporter problemReporter;
 	private String fileName;
 
@@ -88,11 +87,9 @@ abstract public class AbstractASTParser extends lr_parser {
 		return program.getErrors();
 	}
 
-	protected void reportError(IProblemReporter problemReporter,
-			String fileName, int start, int end, int lineNumber,
+	protected void reportError(IProblemReporter problemReporter, String fileName, int start, int end, int lineNumber,
 			String message) {
-		DefaultProblem problem = new DefaultProblem(fileName, message,
-				PhpProblemIdentifier.SYNTAX, new String[0],
+		DefaultProblem problem = new DefaultProblem(fileName, message, PhpProblemIdentifier.SYNTAX, new String[0],
 				ProblemSeverities.Error, start, end, lineNumber, -1);
 		problemReporter.reportProblem(problem);
 	}
@@ -120,19 +117,15 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		if (message != null && problemReporter != null && fileName != null) {
 			int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
-			reportError(problemReporter, fileName, error.sourceStart(),
-					error.sourceEnd(), lineNumber, message);
+			reportError(problemReporter, fileName, error.sourceStart(), error.sourceEnd(), lineNumber, message);
 		}
 	}
 
 	public void addStatement(Statement s) {
 		int kind = s.getKind();
-		if (kind != ASTNodeKinds.EMPTY_STATEMENT
-				&& kind != ASTNodeKinds.DECLARE_STATEMENT
-				&& kind != ASTNodeKinds.NAMESPACE_DECLARATION
-				&& metBracketedNSDecl) {
-			reportError(new ASTError(s.sourceStart(), s.sourceEnd()),
-					Messages.AbstractASTParser_0);
+		if (kind != ASTNodeKinds.EMPTY_STATEMENT && kind != ASTNodeKinds.DECLARE_STATEMENT
+				&& kind != ASTNodeKinds.NAMESPACE_DECLARATION && metBracketedNSDecl) {
+			reportError(new ASTError(s.sourceStart(), s.sourceEnd()), Messages.AbstractASTParser_0);
 		}
 
 		if (currentNamespace != null && currentNamespace != s) {
@@ -149,8 +142,7 @@ abstract public class AbstractASTParser extends lr_parser {
 	public void report_error(String message, Object info) {
 		if (info instanceof Symbol) {
 			if (((Symbol) info).left != -1) {
-				ASTError error = new ASTError(((Symbol) info).left,
-						((Symbol) info).right);
+				ASTError error = new ASTError(((Symbol) info).left, ((Symbol) info).right);
 				reportError(error);
 			} else {
 				reportError(new ASTError(0, 1));
@@ -159,8 +151,7 @@ abstract public class AbstractASTParser extends lr_parser {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void unrecovered_syntax_error(Symbol cur_token)
-			throws java.lang.Exception {
+	public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
 		// in case
 		int start = 0;
 		int end = 0;
@@ -216,13 +207,11 @@ abstract public class AbstractASTParser extends lr_parser {
 		int endPosition = cur_token.right;
 		int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
 
-		StringBuilder errorMessage = new StringBuilder(
-				Messages.AbstractASTParser_1);
+		StringBuilder errorMessage = new StringBuilder(Messages.AbstractASTParser_1);
 
 		// current token can be either null, string or phpdoc - according to
 		// this resolve:
-		String currentText = cur_token.value instanceof String
-				? (String) cur_token.value : null;
+		String currentText = cur_token.value instanceof String ? (String) cur_token.value : null;
 		if (currentText == null || currentText.length() == 0) {
 			currentText = getTokenName(cur_token.sym);
 		}
@@ -234,8 +223,7 @@ abstract public class AbstractASTParser extends lr_parser {
 				currentText = "EOF"; //$NON-NLS-1$
 			}
 			endPosition = startPosition + currentText.length();
-			errorMessage.append(Messages.AbstractASTParser_4)
-					.append(currentText).append('\'');
+			errorMessage.append(Messages.AbstractASTParser_4).append(currentText).append('\'');
 		}
 
 		if (rowOfProbe.length <= 6) {
@@ -253,14 +241,12 @@ abstract public class AbstractASTParser extends lr_parser {
 			}
 		}
 
-		reportError(problemReporter, fileName, startPosition, endPosition,
-				lineNumber, errorMessage.toString());
+		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, errorMessage.toString());
 	}
 
 	protected abstract String getTokenName(int token);
 
-	public void report_fatal_error(String message, Object info)
-			throws java.lang.Exception {
+	public void report_fatal_error(String message, Object info) throws java.lang.Exception {
 		/*
 		 * stop parsing (not really necessary since we throw an exception, but)
 		 */
@@ -275,20 +261,16 @@ abstract public class AbstractASTParser extends lr_parser {
 	public void addDeclarationStatement(Statement s) {
 		if (declarations.isEmpty()) {
 			if (s.getKind() == ASTNodeKinds.NAMESPACE_DECLARATION) {
-				if (program.getStatements().size() > 0 && !metBracketedNSDecl
-						&& !metUnbracketedNSDecl) {
+				if (program.getStatements().size() > 0 && !metBracketedNSDecl && !metUnbracketedNSDecl) {
 					boolean justDeclarationNodes = true;
 					for (Object statement : program.getStatements()) {
-						if (((Statement) statement)
-								.getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
+						if (((Statement) statement).getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
 							justDeclarationNodes = false;
 							break;
 						}
 					}
 					if (!justDeclarationNodes) {
-						reportError(
-								new ASTError(s.sourceStart(), s.sourceEnd()),
-								Messages.AbstractASTParser_7);
+						reportError(new ASTError(s.sourceStart(), s.sourceEnd()), Messages.AbstractASTParser_7);
 					}
 				}
 			}

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-
 /**
  * Helper class to collect VariableName and ArrayAccess for php >=5.4 & < 7
  * 

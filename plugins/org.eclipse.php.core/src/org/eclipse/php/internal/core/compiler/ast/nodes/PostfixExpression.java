@@ -18,8 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a postfix expression
- * <pre>e.g.<pre> $a++,
- * foo()--
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a++, foo()--
  */
 public class PostfixExpression extends Expression {
 
@@ -50,12 +54,12 @@ public class PostfixExpression extends Expression {
 
 	public String getOperator() {
 		switch (getOperatorType()) {
-			case OP_DEC:
-				return "--"; //$NON-NLS-1$
-			case OP_INC:
-				return "++"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_DEC:
+			return "--"; //$NON-NLS-1$
+		case OP_INC:
+			return "++"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

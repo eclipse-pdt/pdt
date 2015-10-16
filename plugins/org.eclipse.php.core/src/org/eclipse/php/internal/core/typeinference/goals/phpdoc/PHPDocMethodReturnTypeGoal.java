@@ -18,19 +18,17 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 
 public class PHPDocMethodReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 
-	public PHPDocMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, String[] argNames,
-			int offset) {
+	public PHPDocMethodReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName,
+			String[] argNames, int offset) {
 		super(context, evaluatedType, methodName, argNames, offset);
 	}
 
-	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName, int offset) {
+	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types, String methodName, int offset) {
 		super(context, types, methodName, offset);
 	}
 
-	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName, String[] argNames, int offset) {
+	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types, String methodName, String[] argNames,
+			int offset) {
 		super(context, types, methodName, argNames, offset);
 	}
 

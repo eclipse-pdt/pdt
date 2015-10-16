@@ -29,8 +29,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 public final class ClassStatementContext extends AbstractGlobalStatementContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -41,9 +40,7 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
-			if (enclosingElement instanceof IType
-					&& !PHPFlags.isNamespace(((IType) enclosingElement)
-							.getFlags())) {
+			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
 				return true;
 			}
 		} catch (ModelException e) {

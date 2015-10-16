@@ -35,18 +35,15 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal
-				.getExpression();
+		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal.getExpression();
 		Expression className = expression.getClassName();
 		if ((className instanceof TypeReference)) {
-			if (isSelf((TypeReference) className)
-					&& (goal.getContext() instanceof MethodContext)) {
+			if (isSelf((TypeReference) className) && (goal.getContext() instanceof MethodContext)) {
 				MethodContext methodContext = (MethodContext) goal.getContext();
 				result = methodContext.getInstanceType();
 				return IGoal.NO_GOALS;
 			} else {
-				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-						className) };
+				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), className) };
 			}
 		}
 		result = UnknownType.INSTANCE;
@@ -64,10 +61,8 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 
 	private boolean isSelf(TypeReference className) {
 		String name = className.getName();
-		if (goal.getContext() instanceof ISourceModuleContext
-				&& PHPVersion.PHP5_4.isLessThan(ProjectOptions
-						.getPhpVersion(((ISourceModuleContext) goal
-								.getContext()).getSourceModule()))) {
+		if (goal.getContext() instanceof ISourceModuleContext && PHPVersion.PHP5_4.isLessThan(
+				ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule()))) {
 			name = name.toLowerCase();
 		}
 

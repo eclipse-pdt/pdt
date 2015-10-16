@@ -48,8 +48,7 @@ public class NumberedBufferedOutputStream extends OutputStream {
 	}
 
 	@Override
-	public synchronized void write(byte[] b, int off, int len)
-			throws IOException {
+	public synchronized void write(byte[] b, int off, int len) throws IOException {
 		innerOutputStream.write(b, off, len);
 		current = current + len;
 		// crc.update(b, off, len);

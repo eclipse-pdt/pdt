@@ -50,16 +50,14 @@ public class PharPath {
 		if (PharConstants.WINDOWS) {
 			path = path.setDevice(null);
 		} else {
-			path = new Path(path.toString().substring(
-					PharConstants.PHAR_PREFIX.length()));
+			path = new Path(path.toString().substring(PharConstants.PHAR_PREFIX.length()));
 		}
 
 		String pathString = path.toString();
 		int index = pathString.indexOf(PharConstants.PHAR_EXTENSION_WITH_DOT);
 		if (index >= 0) {
 			index += PharConstants.PHAR_EXTENSION_WITH_DOT.length();
-			if (PharConstants.WINDOWS
-					&& pathString.startsWith(PharConstants.SPLASH)) {
+			if (PharConstants.WINDOWS && pathString.startsWith(PharConstants.SPLASH)) {
 				pharName = pathString.substring(1, index);
 			} else {
 				pharName = pathString.substring(0, index);
@@ -82,7 +80,6 @@ public class PharPath {
 	}
 
 	public boolean isPhar() {
-		return (folder == null || folder.trim().length() == 0)
-				&& (file == null || file.trim().length() == 0);
+		return (folder == null || folder.trim().length() == 0) && (file == null || file.trim().length() == 0);
 	}
 }

@@ -20,28 +20,30 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a global statement 
- * <pre>e.g.<pre> global $a
- * global $a, $b
- * global ${foo()->bar()},
- * global $$a 
+ * Represents a global statement
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * global $a global $a, $b global ${foo()->bar()}, global $$a
  */
 public class GlobalStatement extends Statement {
 
 	private final ASTNode.NodeList<Variable> variables = new ASTNode.NodeList<Variable>(VARIABLES_PROPERTY);
-	
+
 	/**
 	 * The "variables" structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor VARIABLES_PROPERTY = 
-		new ChildListPropertyDescriptor(GlobalStatement.class, "variables", Variable.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor VARIABLES_PROPERTY = new ChildListPropertyDescriptor(
+			GlobalStatement.class, "variables", Variable.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		properyList.add(VARIABLES_PROPERTY);
@@ -60,7 +62,8 @@ public class GlobalStatement extends Statement {
 	}
 
 	public GlobalStatement(int start, int end, AST ast, List variables) {
-		this(start, end, ast, variables == null ? null : (Variable[]) variables.toArray(new Variable[variables.size()]));
+		this(start, end, ast,
+				variables == null ? null : (Variable[]) variables.toArray(new Variable[variables.size()]));
 	}
 
 	public GlobalStatement(AST ast) {
@@ -73,7 +76,7 @@ public class GlobalStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.variables) {
@@ -118,7 +121,7 @@ public class GlobalStatement extends Statement {
 	public Variable[] getVariables() {
 		return variables.toArray(new Variable[this.variables.size()]);
 	}
-	
+
 	/**
 	 * @return the variables component of the global statement
 	 */
@@ -126,7 +129,7 @@ public class GlobalStatement extends Statement {
 		return this.variables;
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -145,9 +148,9 @@ public class GlobalStatement extends Statement {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == VARIABLES_PROPERTY) {
@@ -155,5 +158,5 @@ public class GlobalStatement extends Statement {
 		}
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
-	}	
+	}
 }

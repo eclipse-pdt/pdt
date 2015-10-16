@@ -24,8 +24,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class FileContext extends BasicContext implements INamespaceContext,
-		IModelCacheContext {
+public class FileContext extends BasicContext implements INamespaceContext, IModelCacheContext {
 
 	private String namespaceName;
 	private IModelAccessCache cache;
@@ -47,11 +46,9 @@ public class FileContext extends BasicContext implements INamespaceContext,
 	 * @param rootNode
 	 * @param offset
 	 */
-	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode,
-			int offset) {
+	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode, int offset) {
 		super(sourceModule, rootNode);
-		IType currentNamespace = PHPModelUtils.getCurrentNamespace(
-				sourceModule, offset);
+		IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 		if (currentNamespace != null) {
 			this.namespaceName = currentNamespace.getElementName();
 		}
@@ -88,8 +85,7 @@ public class FileContext extends BasicContext implements INamespaceContext,
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result
-				+ ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
 		return result;
 	}
 

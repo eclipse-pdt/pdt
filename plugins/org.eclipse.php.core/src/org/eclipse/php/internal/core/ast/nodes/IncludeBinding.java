@@ -28,11 +28,11 @@ public class IncludeBinding implements IIncludeBinding {
 	public IncludeBinding(ISourceModule model, Include includeDeclaration) {
 		super();
 		final String scalars = ASTNodes.getScalars(includeDeclaration.getExpression());
-		this.model = model;		
+		this.model = model;
 		this.name = scalars.replace("\'", "").replace("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		this.includedSourceModule = FileNetworkUtility.findSourceModule(this.model, this.name);
-	}	
-	
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -54,7 +54,7 @@ public class IncludeBinding implements IIncludeBinding {
 	}
 
 	/**
-	 * TODO handle dirname(__FILE__) or other expressions 
+	 * TODO handle dirname(__FILE__) or other expressions
 	 */
 	public IModelElement getPHPElement() {
 		return this.includedSourceModule;

@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.references.VariableKind;
 
 /**
  * PHP variable kinds
+ * 
  * @author michael
  */
 public interface PHPVariableKind extends VariableKind {

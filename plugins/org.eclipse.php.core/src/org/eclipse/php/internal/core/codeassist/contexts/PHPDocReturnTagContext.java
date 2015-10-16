@@ -30,8 +30,7 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class PHPDocReturnTagContext extends PHPDocTagContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

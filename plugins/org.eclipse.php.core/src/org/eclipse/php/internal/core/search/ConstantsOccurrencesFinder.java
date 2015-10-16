@@ -48,12 +48,10 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 			nameNode = (Scalar) node;
 			constantName = ((Scalar) nameNode).getStringValue();
 			if (isQuoted(constantName)) {
-				constantName = constantName.substring(1,
-						constantName.length() - 1);
+				constantName = constantName.substring(1, constantName.length() - 1);
 			}
 			return null;
-		} else if (node.getType() == ASTNode.IDENTIFIER
-				&& node.getParent().getType() == ASTNode.NAMESPACE_NAME) {
+		} else if (node.getType() == ASTNode.IDENTIFIER && node.getParent().getType() == ASTNode.NAMESPACE_NAME) {
 			nameNode = node;
 			constantName = ((Identifier) node).getName();
 			return null;
@@ -65,17 +63,15 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, constantName);
 		fASTRoot.accept(this);
 		if (nodeToFullName.containsKey(nameNode)) {
 			String fullName = nodeToFullName.get(nameNode);
-			for (Iterator<ASTNode> iterator = nodeToFullName.keySet()
-					.iterator(); iterator.hasNext();) {
+			for (Iterator<ASTNode> iterator = nodeToFullName.keySet().iterator(); iterator.hasNext();) {
 				ASTNode nameNode = iterator.next();
 				if (nodeToFullName.get(nameNode).equalsIgnoreCase(fullName)) {
 					fResult.add(nodeToOccurrence.get(nameNode));
@@ -85,12 +81,10 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(Identifier identifier) {
-		if (checkEquality(identifier.getName())
-				&& PhpElementConciliator.isGlobalConstant(identifier)) {
-			nodeToFullName.put(identifier, getFullName((Identifier) identifier
-					.getParent(), fLastUseParts, fCurrentNamespace));
-			nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier
-					.getStart(), identifier.getLength(),
+		if (checkEquality(identifier.getName()) && PhpElementConciliator.isGlobalConstant(identifier)) {
+			nodeToFullName.put(identifier,
+					getFullName((Identifier) identifier.getParent(), fLastUseParts, fCurrentNamespace));
+			nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier.getStart(), identifier.getLength(),
 					getOccurrenceType(identifier), fDescription));
 		}
 		return true;
@@ -103,14 +97,11 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		String scalarValue = scalar.getStringValue();
 		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue != null) {
 			// disregard strings
-			if (!isQuoted(scalarValue)
-					&& (scalar.getParent().getType() != ASTNode.QUOTE)) {
+			if (!isQuoted(scalarValue) && (scalar.getParent().getType() != ASTNode.QUOTE)) {
 				if (checkEquality(scalarValue)) {
 					// Usage of the scalar
-					nodeToFullName.put(scalar, getFullName(scalarValue,
-							fLastUseParts, fCurrentNamespace));
-					nodeToOccurrence.put(scalar, new OccurrenceLocation(scalar
-							.getStart(), scalar.getLength(),
+					nodeToFullName.put(scalar, getFullName(scalarValue, fLastUseParts, fCurrentNamespace));
+					nodeToOccurrence.put(scalar, new OccurrenceLocation(scalar.getStart(), scalar.getLength(),
 							getOccurrenceType(scalar), fDescription));
 					// fResult.add(new OccurrenceLocation(scalar.getStart(),
 					// scalar.getLength(), getOccurrenceType(scalar),
@@ -120,8 +111,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 				// The scalar is quoted, so it might be in a 'define' or a
 				// 'constant' call.
 				if (isQuoted(scalarValue)) {
-					scalarValue = scalarValue.substring(1,
-							scalarValue.length() - 1);
+					scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
 				}
 				if (checkEquality(scalarValue)) {
 					ASTNode parent = scalar.getParent();
@@ -129,33 +119,23 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 						// Check if this is the definition function of the
 						// scalar (define).
 						FunctionInvocation functionInvocation = (FunctionInvocation) parent;
-						Expression name = functionInvocation.getFunctionName()
-								.getName();
+						Expression name = functionInvocation.getFunctionName().getName();
 						if (name instanceof Identifier) {
 							String functionName = ((Identifier) name).getName();
 							if ("define".equalsIgnoreCase(functionName)) {//$NON-NLS-1$
 								defineFound = true;
 								// check if the 'define' has a case sensitivity
 								// definition
-								isCaseSensitiveConstant = isCaseSensitiveDefined(functionInvocation
-										.parameters());
+								isCaseSensitiveConstant = isCaseSensitiveDefined(functionInvocation.parameters());
 								if (!isCaseSensitiveConstant
-										|| isCaseSensitiveConstant
-										&& constantName.equals(scalarValue)) {
-									String writeDescription = Messages.format(
-											BASE_WRITE_DESCRIPTION, scalar
-													.getStringValue());
-									nodeToFullName.put(scalar, getFullName(
-											scalarValue, fLastUseParts,
-											fCurrentNamespace));
-									nodeToOccurrence
-											.put(
-													scalar,
-													new OccurrenceLocation(
-															scalar.getStart(),
-															scalar.getLength(),
-															IOccurrencesFinder.F_WRITE_OCCURRENCE,
-															writeDescription));
+										|| isCaseSensitiveConstant && constantName.equals(scalarValue)) {
+									String writeDescription = Messages.format(BASE_WRITE_DESCRIPTION,
+											scalar.getStringValue());
+									nodeToFullName.put(scalar,
+											getFullName(scalarValue, fLastUseParts, fCurrentNamespace));
+									nodeToOccurrence.put(scalar,
+											new OccurrenceLocation(scalar.getStart(), scalar.getLength(),
+													IOccurrencesFinder.F_WRITE_OCCURRENCE, writeDescription));
 									// fResult
 									// .add(new OccurrenceLocation(
 									// scalar.getStart(),
@@ -165,19 +145,11 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 								}
 							} else if ("constant".equalsIgnoreCase(functionName)) { //$NON-NLS-1$
 								if (!isCaseSensitiveConstant
-										|| isCaseSensitiveConstant
-										&& constantName.equals(scalarValue)) {
-									nodeToFullName.put(scalar, getFullName(
-											scalarValue, fLastUseParts,
-											fCurrentNamespace));
-									nodeToOccurrence
-											.put(
-													scalar,
-													new OccurrenceLocation(
-															scalar.getStart(),
-															scalar.getLength(),
-															IOccurrencesFinder.F_READ_OCCURRENCE,
-															fDescription));
+										|| isCaseSensitiveConstant && constantName.equals(scalarValue)) {
+									nodeToFullName.put(scalar,
+											getFullName(scalarValue, fLastUseParts, fCurrentNamespace));
+									nodeToOccurrence.put(scalar, new OccurrenceLocation(scalar.getStart(),
+											scalar.getLength(), IOccurrencesFinder.F_READ_OCCURRENCE, fDescription));
 									// fResult
 									// .add(new OccurrenceLocation(
 									// scalar.getStart(),
@@ -243,8 +215,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 		char first = str.charAt(0);
 		char last = str.charAt(str.length() - 1);
-		return (first == '\'' || first == '\"')
-				&& (last == '\'' || last == '\"');
+		return (first == '\'' || first == '\"') && (last == '\'' || last == '\"');
 	}
 
 	/*

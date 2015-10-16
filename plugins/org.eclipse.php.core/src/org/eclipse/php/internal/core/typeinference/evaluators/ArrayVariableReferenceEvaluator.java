@@ -43,9 +43,8 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
 					((ReflectionArrayVariableReference) expr).getExpression()) };
 		}
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-				new VariableReference(expr.sourceStart(), expr.sourceEnd(),
-						((ArrayVariableReference) expr).getName())) };
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), new VariableReference(expr.sourceStart(),
+				expr.sourceEnd(), ((ArrayVariableReference) expr).getName())) };
 	}
 
 	public Object produceResult() {
@@ -54,16 +53,14 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof AmbiguousType) {
-			IEvaluatedType[] possibleTypes = ((AmbiguousType) result)
-					.getPossibleTypes();
+			IEvaluatedType[] possibleTypes = ((AmbiguousType) result).getPossibleTypes();
 			List<IEvaluatedType> types = new ArrayList<IEvaluatedType>();
 			for (IEvaluatedType type : possibleTypes) {
 				if (type instanceof MultiTypeType) {
 					types.addAll(((MultiTypeType) type).getTypes());
 				}
 			}
-			result = new AmbiguousType(types.toArray(new IEvaluatedType[types
-					.size()]));
+			result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 		} else if (result instanceof MultiTypeType) {
 			MultiTypeType multiTypeType = (MultiTypeType) result;
 			List<IEvaluatedType> types = multiTypeType.getTypes();
@@ -72,8 +69,7 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 			} else if (types.size() == 0) {
 				result = PHPSimpleTypes.MIXED;
 			} else {
-				result = new AmbiguousType(
-						types.toArray(new IEvaluatedType[types.size()]));
+				result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 			}
 		}
 		this.result = (IEvaluatedType) result;

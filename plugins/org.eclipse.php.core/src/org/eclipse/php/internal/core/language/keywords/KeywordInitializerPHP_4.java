@@ -69,8 +69,7 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("require_once", //$NON-NLS-1$
 				WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2)); //$NON-NLS-1$
-		list.add(new KeywordData(
-				"return", WHITESPACE_SUFFIX, 1, PHPKeywords.METHOD_BODY | PHPKeywords.GLOBAL)); //$NON-NLS-1$
+		list.add(new KeywordData("return", WHITESPACE_SUFFIX, 1, PHPKeywords.METHOD_BODY | PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("static", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$

@@ -19,15 +19,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represents a scalar
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * 'string',
- * 1,
- * 1.3,
- * __CLASS__
- * "string"[0]
- * `
+ * 'string', 1, 1.3, __CLASS__ "string"[0] `
  */
 public class Scalar extends StringLiteral implements Dereferencable {
 	// 'int'

@@ -133,8 +133,7 @@ public class TargetSourceRangeComputer {
 		ASTNode root = node.getProgramRoot();
 		if (root instanceof Program) {
 			Program cu = (Program) root;
-			return new SourceRange(cu.getExtendedStartPosition(node), cu
-					.getExtendedLength(node));
+			return new SourceRange(cu.getExtendedStartPosition(node), cu.getExtendedLength(node));
 		}
 		return new SourceRange(node.getStart(), node.getLength());
 	}

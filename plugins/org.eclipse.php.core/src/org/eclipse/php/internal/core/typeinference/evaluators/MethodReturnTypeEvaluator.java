@@ -33,8 +33,7 @@ import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
-public class MethodReturnTypeEvaluator
-		extends AbstractMethodReturnTypeEvaluator {
+public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator {
 
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 	private final List<IEvaluatedType> yieldEvaluated = new LinkedList<IEvaluatedType>();
@@ -57,8 +56,7 @@ public class MethodReturnTypeEvaluator
 			}
 
 			ISourceModule sourceModule = method.getSourceModule();
-			ModuleDeclaration module = SourceParserUtil
-					.getModuleDeclaration(sourceModule);
+			ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 
 			MethodDeclaration decl = null;
 			try {
@@ -70,25 +68,20 @@ public class MethodReturnTypeEvaluator
 			}
 			// final boolean found[] = new boolean[1];
 			if (decl != null) {
-				final IContext innerContext = ASTUtils.findContext(sourceModule,
-						module, decl);
+				final IContext innerContext = ASTUtils.findContext(sourceModule, module, decl);
 				if (innerContext instanceof MethodContext) {
 					MethodContext mc = (MethodContext) innerContext;
 					mc.setCurrentType(mat.types[i]);
 				}
-				if (goal.getContext() instanceof IModelCacheContext
-						&& innerContext instanceof IModelCacheContext) {
-					((IModelCacheContext) innerContext)
-							.setCache(((IModelCacheContext) goal.getContext())
-									.getCache());
+				if (goal.getContext() instanceof IModelCacheContext && innerContext instanceof IModelCacheContext) {
+					((IModelCacheContext) innerContext).setCache(((IModelCacheContext) goal.getContext()).getCache());
 				}
 
 				final MethodDeclaration topDeclaration = decl;
 				if (topDeclaration instanceof PHPMethodDeclaration) {
 					PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) topDeclaration;
 					if (methodDeclaration.getReturnType() != null) {
-						subGoals.add(new ExpressionTypeGoal(innerContext,
-								methodDeclaration.getReturnType()));
+						subGoals.add(new ExpressionTypeGoal(innerContext, methodDeclaration.getReturnType()));
 						continue;
 					}
 				}
@@ -109,8 +102,7 @@ public class MethodReturnTypeEvaluator
 							if (expr == null) {
 								evaluated.add(PHPSimpleTypes.VOID);
 							} else {
-								subGoals.add(new ExpressionTypeGoal(
-										innerContext, expr));
+								subGoals.add(new ExpressionTypeGoal(innerContext, expr));
 							}
 						} else if (node instanceof YieldExpression) {
 							YieldExpression statement = (YieldExpression) node;
@@ -118,8 +110,7 @@ public class MethodReturnTypeEvaluator
 							if (expr == null) {
 								yieldEvaluated.add(PHPSimpleTypes.NULL);
 							} else {
-								final ExpressionTypeGoal yg = new ExpressionTypeGoal(
-										innerContext, expr);
+								final ExpressionTypeGoal yg = new ExpressionTypeGoal(innerContext, expr);
 								subGoals.add(yg);
 								yieldGoals.add(yg);
 							}
@@ -145,8 +136,7 @@ public class MethodReturnTypeEvaluator
 	/**
 	 * Resolve magic methods defined by the @method tag
 	 */
-	private void resolveMagicMethodDeclaration(IMethod method,
-			String methodName) {
+	private void resolveMagicMethodDeclaration(IMethod method, String methodName) {
 		final IModelElement parent = method.getParent();
 		if (parent.getElementType() != IModelElement.TYPE) {
 			return;
@@ -159,20 +149,17 @@ public class MethodReturnTypeEvaluator
 		}
 		IType currentNamespace = PHPModelUtils.getCurrentNamespace(type);
 		for (PHPDocTag tag : docBlock.getTags(PHPDocTag.METHOD)) {
-			final Collection<String> typeNames = PHPEvaluationUtils
-					.getTypeBinding(methodName, tag);
+			final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(methodName, tag);
 			for (String typeName : typeNames) {
 				if (typeName.trim().isEmpty()) {
 					continue;
 				}
-				IEvaluatedType evaluatedType = PHPEvaluationUtils
-						.extractArrayType(typeName, currentNamespace,
-								tag.sourceStart());
+				IEvaluatedType evaluatedType = PHPEvaluationUtils.extractArrayType(typeName, currentNamespace,
+						tag.sourceStart());
 				if (evaluatedType != null) {
 					evaluated.add(evaluatedType);
 				} else {
-					IEvaluatedType resolved = PHPSimpleTypes
-							.fromString(typeName);
+					IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);
 					if (resolved == null) {
 						resolved = new PHPClassType(typeName);
 					}

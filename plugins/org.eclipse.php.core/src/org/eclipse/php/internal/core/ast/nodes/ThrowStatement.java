@@ -33,8 +33,8 @@ public class ThrowStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(ThrowStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(ThrowStatement.class,
+			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -135,8 +135,7 @@ public class ThrowStatement extends Statement {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
 				return getExpression();
@@ -160,14 +159,12 @@ public class ThrowStatement extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression expr = ASTNode.copySubtree(target, getExpression());
-		final ThrowStatement result = new ThrowStatement(this.getStart(), this
-				.getEnd(), target, expr);
+		final ThrowStatement result = new ThrowStatement(this.getStart(), this.getEnd(), target, expr);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

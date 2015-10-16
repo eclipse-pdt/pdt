@@ -76,8 +76,7 @@ public enum PHPVersion {
 	}
 
 	public static PHPVersion[] supportedVersions() {
-		return new PHPVersion[] { PHP7_0, PHP5_6, PHP5_5, PHP5_4, PHP5_3,
-				PHP5 };
+		return new PHPVersion[] { PHP7_0, PHP5_6, PHP5_5, PHP5_4, PHP5_3, PHP5 };
 	}
 
 	/**

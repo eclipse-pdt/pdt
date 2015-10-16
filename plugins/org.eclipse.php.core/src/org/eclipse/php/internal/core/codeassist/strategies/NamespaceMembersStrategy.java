@@ -14,10 +14,9 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 
-
-
 /**
- * This strategy completes namespace members: A\foo(), A\Class::, etc...  
+ * This strategy completes namespace members: A\foo(), A\Class::, etc...
+ * 
  * @author michael
  */
 public abstract class NamespaceMembersStrategy extends AbstractCompletionStrategy {

@@ -22,8 +22,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents the static statement
- * <pre>e.g.<pre> static $a
- * static $a, $b=5;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * static $a static $a, $b=5;
  */
 public class StaticStatement extends Statement {
 
@@ -32,15 +36,15 @@ public class StaticStatement extends Statement {
 	/**
 	 * The "expressions" structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor EXPRESSIONS_PROPERTY = 
-		new ChildListPropertyDescriptor(StaticStatement.class, "expressions", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor EXPRESSIONS_PROPERTY = new ChildListPropertyDescriptor(
+			StaticStatement.class, "expressions", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		properyList.add(EXPRESSIONS_PROPERTY);
@@ -63,7 +67,8 @@ public class StaticStatement extends Statement {
 	}
 
 	public StaticStatement(int start, int end, AST ast, List expressions) {
-		this(start, end, ast, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
+		this(start, end, ast,
+				expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
 
 	/**
@@ -90,7 +95,7 @@ public class StaticStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.expressions) {
@@ -133,14 +138,14 @@ public class StaticStatement extends Statement {
 	public Expression[] getExpressions() {
 		return this.expressions.toArray(new Expression[this.expressions.size()]);
 	}
-	
+
 	/**
 	 * @return expression list of the static statement
 	 */
 	public List<Expression> expressions() {
 		return this.expressions;
 	}
-	
+
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == EXPRESSIONS_PROPERTY) {
 			return expressions();
@@ -148,8 +153,8 @@ public class StaticStatement extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -160,7 +165,8 @@ public class StaticStatement extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final List expressions = ASTNode.copySubtrees(target, this.expressions());
-		final StaticStatement staticStatementSt = new StaticStatement(this.getStart(), this.getEnd(), target, expressions);
+		final StaticStatement staticStatementSt = new StaticStatement(this.getStart(), this.getEnd(), target,
+				expressions);
 		return staticStatementSt;
 	}
 

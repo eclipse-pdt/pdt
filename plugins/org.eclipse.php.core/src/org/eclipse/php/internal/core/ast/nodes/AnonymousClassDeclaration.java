@@ -22,8 +22,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class AnonymousClassDeclaration extends Expression {
 
 	private Expression superClass;
-	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(
-			INTERFACES_PROPERTY);
+	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(INTERFACES_PROPERTY);
 	private Block body;
 
 	/**
@@ -46,8 +45,7 @@ public class AnonymousClassDeclaration extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		propertyList.add(SUPER_CLASS_PROPERTY);
 		propertyList.add(INTERFACES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
@@ -58,8 +56,8 @@ public class AnonymousClassDeclaration extends Expression {
 		super(ast);
 	}
 
-	public AnonymousClassDeclaration(int start, int end, AST ast,
-			Expression superClass, List<Identifier> interfaces, Block body) {
+	public AnonymousClassDeclaration(int start, int end, AST ast, Expression superClass, List<Identifier> interfaces,
+			Block body) {
 		super(start, end, ast);
 
 		setSuperClass(superClass);
@@ -188,16 +186,13 @@ public class AnonymousClassDeclaration extends Expression {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Expression superClass = ASTNode.copySubtree(target,
-				getSuperClass());
+		final Expression superClass = ASTNode.copySubtree(target, getSuperClass());
 		final List interfaces = ASTNode.copySubtrees(target, getInterfaces());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		return new AnonymousClassDeclaration(getStart(), getEnd(), target,
-				superClass, interfaces, body);
+		return new AnonymousClassDeclaration(getStart(), getEnd(), target, superClass, interfaces, body);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();
@@ -218,8 +213,7 @@ public class AnonymousClassDeclaration extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == INTERFACES_PROPERTY) {
 			return getInterfaces();
 		}
@@ -233,8 +227,7 @@ public class AnonymousClassDeclaration extends Expression {
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

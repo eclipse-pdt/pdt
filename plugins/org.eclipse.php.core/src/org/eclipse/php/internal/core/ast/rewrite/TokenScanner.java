@@ -134,12 +134,10 @@ public class TokenScanner {
 		try {
 			currentToken = this.scanner.next_token();
 		} catch (Exception e) {
-			throw new CoreException(createError(LEXICAL_ERROR, e.getMessage(),
-					e));
+			throw new CoreException(createError(LEXICAL_ERROR, e.getMessage(), e));
 		}
 		if (currentToken.sym == END_OF_FILE) {
-			throw new CoreException(createError(END_OF_FILE,
-					"End Of File", null)); //$NON-NLS-1$
+			throw new CoreException(createError(END_OF_FILE, "End Of File", null)); //$NON-NLS-1$
 		}
 		return currentToken;
 	}
@@ -242,8 +240,7 @@ public class TokenScanner {
 	 *                END_OF_FILE) or a lexical error was detected while
 	 *                scanning (code LEXICAL_ERROR)
 	 */
-	public int getTokenStartOffset(Symbol token, int startOffset)
-			throws CoreException {
+	public int getTokenStartOffset(Symbol token, int startOffset) throws CoreException {
 		readToToken(token, startOffset);
 		return getCurrentStartOffset();
 	}
@@ -262,8 +259,7 @@ public class TokenScanner {
 	 *                END_OF_FILE) or a lexical error was detected while
 	 *                scanning (code LEXICAL_ERROR)
 	 */
-	public int getTokenEndOffset(Symbol token, int startOffset)
-			throws CoreException {
+	public int getTokenEndOffset(Symbol token, int startOffset) throws CoreException {
 		readToToken(token, startOffset);
 		return getCurrentEndOffset();
 	}
@@ -282,8 +278,7 @@ public class TokenScanner {
 	 *                END_OF_FILE) or a lexical error was detected while
 	 *                scanning (code LEXICAL_ERROR)
 	 */
-	public int getPreviousTokenEndOffset(Symbol token, int startOffset)
-			throws CoreException {
+	public int getPreviousTokenEndOffset(Symbol token, int startOffset) throws CoreException {
 		setOffset(startOffset);
 		int res = startOffset;
 		Symbol curr = readNext();
@@ -329,10 +324,8 @@ public class TokenScanner {
 		return false;
 	}
 
-	public static IStatus createError(int code, String message,
-			Throwable throwable) {
-		return new Status(IStatus.ERROR, PHPCorePlugin.ID, code, message,
-				throwable);
+	public static IStatus createError(int code, String message, Throwable throwable) {
+		return new Status(IStatus.ERROR, PHPCorePlugin.ID, code, message, throwable);
 	}
 
 }

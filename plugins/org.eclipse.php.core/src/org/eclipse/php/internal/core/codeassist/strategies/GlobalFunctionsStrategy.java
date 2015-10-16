@@ -49,11 +49,10 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		ICompletionContext context = getContext();
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = abstractContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext
-				.getPreviousWord() : abstractContext.getPrefix();
+		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext.getPreviousWord()
+				: abstractContext.getPrefix();
 		if (prefix.trim().isEmpty() || prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
@@ -70,8 +69,8 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix,
-				matchRule, Modifiers.AccGlobal, 0, scope, null);
+		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix, matchRule, Modifiers.AccGlobal, 0, scope,
+				null);
 
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);
@@ -83,8 +82,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		addAlias(reporter, suffix);
 	}
 
-	protected void addAlias(ICompletionReporter reporter, String suffix)
-			throws BadLocationException {
+	protected void addAlias(ICompletionReporter reporter, String suffix) throws BadLocationException {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		if (abstractContext.getCompletionRequestor().isContextInformationMode()) {
@@ -97,57 +95,47 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		IModuleSource module = reporter.getModule();
 		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
 				.getModelElement();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		final int offset = abstractContext.getOffset();
-		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule,
-				offset);
+		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 
-		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(
-				prefix, moduleDeclaration, offset, namespace, false);
+		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset, namespace,
+				false);
 		reportAlias(reporter, suffix, abstractContext, module, result);
 	}
 
-	protected void reportAlias(ICompletionReporter reporter, String suffix,
-			AbstractCompletionContext abstractContext, IModuleSource module,
-			final Map<String, UsePart> result) throws BadLocationException {
+	protected void reportAlias(ICompletionReporter reporter, String suffix, AbstractCompletionContext abstractContext,
+			IModuleSource module, final Map<String, UsePart> result) throws BadLocationException {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
-			String fullName = entry.getValue().getNamespace()
-					.getFullyQualifiedName();
+			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
 			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				fullName = fullName.substring(1);
 			}
 			IMethod[] elements;
 			if (!fullName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
-				elements = PhpModelAccess.getDefault().findMethods(null,
-						fullName, MatchRule.PREFIX, 0, 0, scope, null);
+				elements = PhpModelAccess.getDefault().findMethods(null, fullName, MatchRule.PREFIX, 0, 0, scope, null);
 				for (int i = 0; i < elements.length; i++) {
 					String elementName = elements[i].getElementName();
-					reportAlias(reporter, scope, module, replacementRange,
-							elements[i], elementName,
+					reportAlias(reporter, scope, module, replacementRange, elements[i], elementName,
 							elementName.replace(fullName, name), suffix);
 				}
 			}
-			elements = PhpModelAccess.getDefault().findMethods(fullName,
-					MatchRule.EXACT, 0, 0, scope, null);
+			elements = PhpModelAccess.getDefault().findMethods(fullName, MatchRule.EXACT, 0, 0, scope, null);
 
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();
-				reportAlias(reporter, scope, module, replacementRange,
-						elements[i], elementName, name, suffix);
+				reportAlias(reporter, scope, module, replacementRange, elements[i], elementName, name, suffix);
 			}
 		}
 	}
 
-	protected void reportAlias(ICompletionReporter reporter,
-			IDLTKSearchScope scope, IModuleSource module,
-			ISourceRange replacementRange, IMember member, String fullName,
-			String alias, String suffix) {
-		reporter.reportMethod(new AliasMethod((ModelElement) member, fullName,
-				alias), suffix, replacementRange, getExtraInfo());
+	protected void reportAlias(ICompletionReporter reporter, IDLTKSearchScope scope, IModuleSource module,
+			ISourceRange replacementRange, IMember member, String fullName, String alias, String suffix) {
+		reporter.reportMethod(new AliasMethod((ModelElement) member, fullName, alias), suffix, replacementRange,
+				getExtraInfo());
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

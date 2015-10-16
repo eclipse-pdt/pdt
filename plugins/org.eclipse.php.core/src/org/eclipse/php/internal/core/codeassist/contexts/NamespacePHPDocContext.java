@@ -33,8 +33,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
  */
 public abstract class NamespacePHPDocContext extends AbstractCompletionContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -48,8 +47,7 @@ public abstract class NamespacePHPDocContext extends AbstractCompletionContext {
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
 		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
-		while (!Character.isWhitespace(getChar(prefixEnd))
-				&& getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
+		while (!Character.isWhitespace(getChar(prefixEnd)) && getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
 			++prefixEnd;
 		}
 		return prefixEnd;
@@ -57,8 +55,7 @@ public abstract class NamespacePHPDocContext extends AbstractCompletionContext {
 
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
-		if (prefix.length() > 0
-				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			return prefix.substring(1);
 		}
 		return prefix;

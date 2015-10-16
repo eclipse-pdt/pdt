@@ -31,8 +31,7 @@ public class AutoDetectLibraryFolderListener implements IResourceChangeListener 
 
 		// find all projects in the delta that may potentially have folders to
 		// be marked as library folders
-		IProject[] projects = new OpenedAndChangedProjectsFinder(delta)
-				.getFoundProjects();
+		IProject[] projects = new OpenedAndChangedProjectsFinder(delta).getFoundProjects();
 
 		// schedule a workspace job to process the projects
 		new AutoDetectLibraryFolderJob(projects).schedule();

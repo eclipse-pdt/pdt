@@ -5,8 +5,7 @@ import org.eclipse.dltk.ast.ASTVisitor;
 public class TraitPrecedenceStatement extends TraitStatement {
 	private TraitPrecedence precedence;
 
-	public TraitPrecedenceStatement(int start, int end,
-			TraitPrecedence precedence) {
+	public TraitPrecedenceStatement(int start, int end, TraitPrecedence precedence) {
 		super(start, end);
 		this.precedence = precedence;
 	}

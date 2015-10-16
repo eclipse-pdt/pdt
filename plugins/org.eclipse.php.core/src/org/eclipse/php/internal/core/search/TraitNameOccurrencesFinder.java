@@ -59,22 +59,19 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, className);
 		fASTRoot.accept(this);
 		if (nodeToFullName.containsKey(nameNode)) {
 			String fullName = nodeToFullName.get(nameNode);
-			for (Iterator<Identifier> iterator = nodeToFullName.keySet()
-					.iterator(); iterator.hasNext();) {
+			for (Iterator<Identifier> iterator = nodeToFullName.keySet().iterator(); iterator.hasNext();) {
 				Identifier nameNode = iterator.next();
 				if (nodeToFullName.get(nameNode).equals(fullName)) {
-					fResult.add(new OccurrenceLocation(nameNode.getStart(),
-							nameNode.getLength(), getOccurrenceType(nameNode),
-							fDescription));
+					fResult.add(new OccurrenceLocation(nameNode.getStart(), nameNode.getLength(),
+							getOccurrenceType(nameNode), fDescription));
 				}
 			}
 		}
@@ -114,8 +111,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	public boolean visit(ClassDeclaration classDeclaration) {
 		if (classDeclaration instanceof TraitDeclaration) {
-			if (originalDeclarationNode == null
-					|| originalDeclarationNode == classDeclaration) {
+			if (originalDeclarationNode == null || originalDeclarationNode == classDeclaration) {
 				dealIdentifier(classDeclaration.getName());
 			}
 		}
@@ -124,8 +120,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(TraitDeclaration classDeclaration) {
-		if (originalDeclarationNode == null
-				|| originalDeclarationNode == classDeclaration) {
+		if (originalDeclarationNode == null || originalDeclarationNode == classDeclaration) {
 			dealIdentifier(classDeclaration.getName());
 		}
 		return true;
@@ -142,8 +137,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	public boolean visit(TraitPrecedenceStatement tps) {
 		if (tps.getPrecedence().getMethodReference().getClassName() instanceof Identifier) {
-			dealIdentifier(tps.getPrecedence().getMethodReference()
-					.getClassName());
+			dealIdentifier(tps.getPrecedence().getMethodReference().getClassName());
 		}
 		for (NamespaceName namespace : tps.getPrecedence().getTrList()) {
 			if (namespace instanceof Identifier) {
@@ -156,8 +150,8 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(TraitAliasStatement tas) {
 		int type = tas.getAlias().getTraitMethod().getType();
 		if (type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
-			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas
-					.getAlias().getTraitMethod();
+			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas.getAlias()
+					.getTraitMethod();
 			if (reference.getClassName() != null) {
 				dealIdentifier(reference.getClassName());
 			}
@@ -170,8 +164,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	private void dealIdentifier(Identifier identifier) {
 		Identifier newIdentifier = getIdentifierForSelf(identifier);
-		String fullName = getFullName(newIdentifier, fLastUseParts,
-				fCurrentNamespace);
+		String fullName = getFullName(newIdentifier, fLastUseParts, fCurrentNamespace);
 		nodeToFullName.put(identifier, fullName);
 	}
 
@@ -193,8 +186,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {
-		return identifier != null && className != null
-				&& className.equalsIgnoreCase(identifier.getName());
+		return identifier != null && className != null && className.equalsIgnoreCase(identifier.getName());
 	}
 
 	/*

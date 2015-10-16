@@ -25,16 +25,14 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassDeclarationKeyword
  * 
  * @author michael
  */
-public class ClassDeclarationKeywordsStrategy extends
-		AbstractCompletionStrategy {
+public class ClassDeclarationKeywordsStrategy extends AbstractCompletionStrategy {
 
 	private static final String IMPLEMENTS_WITH_BLANK = " implements "; //$NON-NLS-1$
 	private static final String EXTENDS_WITH_BLANK = " extends "; //$NON-NLS-1$
 	private static final String IMPLEMENTS = "implements"; //$NON-NLS-1$
 	private static final String EXTENDS = "extends"; //$NON-NLS-1$
 
-	public ClassDeclarationKeywordsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public ClassDeclarationKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -52,15 +50,12 @@ public class ClassDeclarationKeywordsStrategy extends
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 		String prefix = concreteContext.getPrefix();
 		String statementText = concreteContext.getStatementText().toString();
-		if (CodeAssistUtils.startsWithIgnoreCase(EXTENDS, prefix)
-				&& statementText.indexOf(EXTENDS_WITH_BLANK) < 0) {
-			reporter.reportKeyword(EXTENDS, getSuffix(concreteContext),
-					replaceRange);
+		if (CodeAssistUtils.startsWithIgnoreCase(EXTENDS, prefix) && statementText.indexOf(EXTENDS_WITH_BLANK) < 0) {
+			reporter.reportKeyword(EXTENDS, getSuffix(concreteContext), replaceRange);
 		}
 		if (CodeAssistUtils.startsWithIgnoreCase(IMPLEMENTS, prefix)
 				&& statementText.indexOf(IMPLEMENTS_WITH_BLANK) < 0) {
-			reporter.reportKeyword(IMPLEMENTS, getSuffix(concreteContext),
-					replaceRange);
+			reporter.reportKeyword(IMPLEMENTS, getSuffix(concreteContext), replaceRange);
 		}
 	}
 

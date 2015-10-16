@@ -30,8 +30,7 @@ public class XMLWriter extends PrintWriter {
 		this(output, true);
 	}
 
-	public XMLWriter(OutputStream output, boolean printHeader)
-			throws UnsupportedEncodingException {
+	public XMLWriter(OutputStream output, boolean printHeader) throws UnsupportedEncodingException {
 		super(new OutputStreamWriter(output, "UTF8")); //$NON-NLS-1$
 		tab = 0;
 		if (printHeader) {
@@ -61,8 +60,7 @@ public class XMLWriter extends PrintWriter {
 		printTag(name, parameters, true, true);
 	}
 
-	public void printTag(String name, Map<String, ?> parameters,
-			boolean shouldTab, boolean newLine) {
+	public void printTag(String name, Map<String, ?> parameters, boolean shouldTab, boolean newLine) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<"); //$NON-NLS-1$
 		sb.append(name);

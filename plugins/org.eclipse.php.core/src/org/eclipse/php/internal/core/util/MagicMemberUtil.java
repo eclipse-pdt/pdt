@@ -116,8 +116,7 @@ public class MagicMemberUtil {
 						value = param.substring(equalIndex + 1).trim();
 						param = param.substring(0, equalIndex).trim();
 					}
-					String[] paramPair = WHITESPACE_SEPERATOR.split(param
-							.trim());
+					String[] paramPair = WHITESPACE_SEPERATOR.split(param.trim());
 					if (paramPair.length == 1) {
 						paramName[i] = paramPair[0];
 					} else if (paramPair.length == 2) {
@@ -131,8 +130,7 @@ public class MagicMemberUtil {
 				mi.parameterNames = paramName;
 				mi.parameterTypes = paramType;
 				mi.parameterInitializers = paramValue;
-				mi.desc = docValue.length() > endIndex ? docValue
-						.substring(endIndex + 1) : ""; //$NON-NLS-1$
+				mi.desc = docValue.length() > endIndex ? docValue.substring(endIndex + 1) : ""; //$NON-NLS-1$
 			} else {
 				mi.desc = docValue;
 			}

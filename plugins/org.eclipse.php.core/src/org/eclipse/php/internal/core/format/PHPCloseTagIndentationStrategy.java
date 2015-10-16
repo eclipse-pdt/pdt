@@ -18,8 +18,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  */
 public class PHPCloseTagIndentationStrategy extends DefaultIndentationStrategy {
-	public void placeMatchingBlanks(final IStructuredDocument document,
-			final StringBuffer result, final int lineNumber, final int forOffset) {
+	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuffer result, final int lineNumber,
+			final int forOffset) {
 		// Ignore default behavior (don't add previous line's blanks)
 	}
 

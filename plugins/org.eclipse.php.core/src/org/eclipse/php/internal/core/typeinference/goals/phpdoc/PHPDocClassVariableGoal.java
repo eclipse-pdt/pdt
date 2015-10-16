@@ -33,8 +33,7 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 		this(context, variableName, 0);
 	}
 
-	public PHPDocClassVariableGoal(TypeContext context, String variableName,
-			int offset) {
+	public PHPDocClassVariableGoal(TypeContext context, String variableName, int offset) {
 		super(context);
 		this.variableName = variableName;
 		this.offset = offset;
@@ -51,8 +50,7 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result
-				+ ((variableName == null) ? 0 : variableName.hashCode());
+		result = prime * result + ((variableName == null) ? 0 : variableName.hashCode());
 		return result;
 	}
 

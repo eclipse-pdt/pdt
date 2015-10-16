@@ -21,42 +21,38 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents if statement
- * <pre>e.g.<pre> 
- * if ($a > $b) {
- *   echo "a is bigger than b";
- * } elseif ($a == $b) {
- *   echo "a is equal to b";
- * } else {
- *   echo "a is smaller than b";
- * },
  * 
- * if ($a):
- *   echo "a is bigger than b";
- *   echo "a is NOT bigger than b";
- * endif;
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * if ($a > $b) { echo "a is bigger than b"; } elseif ($a == $b) { echo
+ * "a is equal to b"; } else { echo "a is smaller than b"; },
+ * 
+ * if ($a): echo "a is bigger than b"; echo "a is NOT bigger than b"; endif;
  */
 public class IfStatement extends Statement {
 
 	private Expression condition;
 	private Statement trueStatement;
 	private Statement falseStatement;
-	
+
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CONDITION_PROPERTY = 
-		new ChildPropertyDescriptor(IfStatement.class, "condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor TRUE_STATEMENT_PROPERTY = 
-		new ChildPropertyDescriptor(IfStatement.class, "trueStatement", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor FALSE_STATEMENT_PROPERTY = 
-		new ChildPropertyDescriptor(IfStatement.class, "falseStatement", Statement.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor CONDITION_PROPERTY = new ChildPropertyDescriptor(IfStatement.class,
+			"condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor TRUE_STATEMENT_PROPERTY = new ChildPropertyDescriptor(IfStatement.class,
+			"trueStatement", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FALSE_STATEMENT_PROPERTY = new ChildPropertyDescriptor(
+			IfStatement.class, "falseStatement", Statement.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
 		list.add(CONDITION_PROPERTY);
@@ -64,9 +60,9 @@ public class IfStatement extends Statement {
 		list.add(FALSE_STATEMENT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
-	
 
-	public IfStatement(int start, int end, AST ast, Expression condition, Statement trueStatement, Statement falseStatement) {
+	public IfStatement(int start, int end, AST ast, Expression condition, Statement trueStatement,
+			Statement falseStatement) {
 		super(start, end, ast);
 
 		if (condition == null || trueStatement == null) {
@@ -82,14 +78,14 @@ public class IfStatement extends Statement {
 	public IfStatement(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		condition.accept(visitor);
@@ -146,22 +142,24 @@ public class IfStatement extends Statement {
 	 * Returns the expression of this if statement.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getCondition() {
 		return this.condition;
 	}
-	
+
 	/**
 	 * Sets the condition of this if statement.
 	 * 
-	 * @param expression the expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setCondition(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -176,30 +174,33 @@ public class IfStatement extends Statement {
 	 * Returns the "then" part of this if statement.
 	 * 
 	 * @return the "then" statement node
-	 */ 
+	 */
 	public Statement getTrueStatement() {
 		return this.trueStatement;
 	}
-	
+
 	/**
 	 * Sets the "then" part of this if statement.
 	 * <p>
-	 * Special note: The Java language does not allow a local variable declaration
-	 * to appear as the "then" part of an if statement (they may only appear within a
-	 * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
-	 * as the thenStatement of a <code>IfStatement</code>. To get something that will
-	 * compile, be sure to embed the <code>VariableDeclarationStatement</code>
-	 * inside a <code>Block</code>.
+	 * Special note: The Java language does not allow a local variable
+	 * declaration to appear as the "then" part of an if statement (they may
+	 * only appear within a block). However, the AST will allow a
+	 * <code>VariableDeclarationStatement</code> as the thenStatement of a
+	 * <code>IfStatement</code>. To get something that will compile, be sure to
+	 * embed the <code>VariableDeclarationStatement</code> inside a
+	 * <code>Block</code>.
 	 * </p>
 	 * 
-	 * @param statement the "then" statement node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param statement
+	 *            the "then" statement node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setTrueStatement(Statement statement) {
 		if (statement == null) {
 			throw new IllegalArgumentException();
@@ -214,12 +215,12 @@ public class IfStatement extends Statement {
 	 * Returns the "else" part of this if statement, or <code>null</code> if
 	 * this if statement has <b>no</b> "else" part.
 	 * <p>
-	 * Note that there is a subtle difference between having no else 
-	 * statement and having an empty statement ("{}") or null statement (";").
+	 * Note that there is a subtle difference between having no else statement
+	 * and having an empty statement ("{}") or null statement (";").
 	 * </p>
 	 * 
 	 * @return the "else" statement node, or <code>null</code> if none
-	 */ 
+	 */
 	public Statement getFalseStatement() {
 		return this.falseStatement;
 	}
@@ -227,38 +228,39 @@ public class IfStatement extends Statement {
 	/**
 	 * Sets or clears the "else" part of this if statement.
 	 * <p>
-	 * Note that there is a subtle difference between having no else part
-	 * (as in <code>"if(true){}"</code>) and having an empty block (as in
-	 * "if(true){}else{}") or null statement (as in "if(true){}else;"). 
+	 * Note that there is a subtle difference between having no else part (as in
+	 * <code>"if(true){}"</code>) and having an empty block (as in
+	 * "if(true){}else{}") or null statement (as in "if(true){}else;").
 	 * </p>
 	 * <p>
-	 * Special note: The Java language does not allow a local variable declaration
-	 * to appear as the "else" part of an if statement (they may only appear within a
-	 * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
-	 * as the elseStatement of a <code>IfStatement</code>. To get something that will
-	 * compile, be sure to embed the <code>VariableDeclarationStatement</code>
-	 * inside a <code>Block</code>.
+	 * Special note: The Java language does not allow a local variable
+	 * declaration to appear as the "else" part of an if statement (they may
+	 * only appear within a block). However, the AST will allow a
+	 * <code>VariableDeclarationStatement</code> as the elseStatement of a
+	 * <code>IfStatement</code>. To get something that will compile, be sure to
+	 * embed the <code>VariableDeclarationStatement</code> inside a
+	 * <code>Block</code>.
 	 * </p>
 	 * 
-	 * @param statement the "else" statement node, or <code>null</code> if 
-	 *    there is none
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param statement
+	 *            the "else" statement node, or <code>null</code> if there is
+	 *            none
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setFalseStatement(Statement statement) {
 		ASTNode oldChild = this.falseStatement;
 		preReplaceChild(oldChild, statement, FALSE_STATEMENT_PROPERTY);
 		this.falseStatement = statement;
 		postReplaceChild(oldChild, statement, FALSE_STATEMENT_PROPERTY);
 	}
-	
-	
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -271,8 +273,9 @@ public class IfStatement extends Statement {
 		Expression condition = ASTNode.copySubtree(target, getCondition());
 		Statement trueStatement = ASTNode.copySubtree(target, getTrueStatement());
 		Statement falseStatement = ASTNode.copySubtree(target, getFalseStatement());
-		
-		final IfStatement result = new IfStatement(this.getStart(), this.getEnd(), target, condition, trueStatement, falseStatement);
+
+		final IfStatement result = new IfStatement(this.getStart(), this.getEnd(), target, condition, trueStatement,
+				falseStatement);
 		return result;
 	}
 
@@ -281,8 +284,8 @@ public class IfStatement extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CONDITION_PROPERTY) {

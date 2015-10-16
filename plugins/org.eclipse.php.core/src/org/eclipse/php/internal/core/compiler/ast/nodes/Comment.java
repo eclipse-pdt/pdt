@@ -19,12 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represents a PHP comment
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * // this is a single line comment
- * # this is a single line comment
- * /** this is php doc block (end php docblock here)
+ * // this is a single line comment # this is a single line comment /** this is
+ * php doc block (end php docblock here)
  */
 public class Comment extends ASTNode {
 

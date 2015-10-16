@@ -22,22 +22,18 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represent a 'use' statement.
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * use A;
- * use A as B;
- * use \A\B as C;
+ * use A; use A as B; use \A\B as C;
  */
 public class TraitUseStatement extends Statement {
 
-	private ASTNode.NodeList<NamespaceName> traitList = new ASTNode.NodeList<NamespaceName>(
-			TRAIT);
-	private ASTNode.NodeList<TraitStatement> tsList = new ASTNode.NodeList<TraitStatement>(
-			TRAIT_STATEMENT);
+	private ASTNode.NodeList<NamespaceName> traitList = new ASTNode.NodeList<NamespaceName>(TRAIT);
+	private ASTNode.NodeList<TraitStatement> tsList = new ASTNode.NodeList<TraitStatement>(TRAIT_STATEMENT);
 
-	public static final ChildListPropertyDescriptor TRAIT = new ChildListPropertyDescriptor(
-			TraitUseStatement.class,
+	public static final ChildListPropertyDescriptor TRAIT = new ChildListPropertyDescriptor(TraitUseStatement.class,
 			"traitList", NamespaceName.class, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor TRAIT_STATEMENT = new ChildListPropertyDescriptor(
 			TraitUseStatement.class, "tsList", TraitStatement.class, CYCLE_RISK); //$NON-NLS-1$
@@ -49,15 +45,13 @@ public class TraitUseStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(TRAIT);
 		propertyList.add(TRAIT_STATEMENT);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public TraitUseStatement(int start, int end, AST ast,
-			List<NamespaceName> traitList, List<TraitStatement> tsList) {
+	public TraitUseStatement(int start, int end, AST ast, List<NamespaceName> traitList, List<TraitStatement> tsList) {
 		super(start, end, ast);
 
 		if (traitList != null) {
@@ -144,18 +138,16 @@ public class TraitUseStatement extends Statement {
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List<NamespaceName> traitList = ASTNode.copySubtrees(target,
-				getTraitList());
+		final List<NamespaceName> traitList = ASTNode.copySubtrees(target, getTraitList());
 		List<TraitStatement> tsList = ASTNode.copySubtrees(target, getTsList());
-		final TraitUseStatement result = new TraitUseStatement(this.getStart(),
-				this.getEnd(), target, traitList, tsList);
+		final TraitUseStatement result = new TraitUseStatement(this.getStart(), this.getEnd(), target, traitList,
+				tsList);
 
 		return result;
 	}

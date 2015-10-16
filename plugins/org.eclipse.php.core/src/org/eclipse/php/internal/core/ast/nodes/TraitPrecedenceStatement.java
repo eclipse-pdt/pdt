@@ -6,8 +6,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class TraitPrecedenceStatement extends TraitStatement {
 	private TraitPrecedence precedence;
 
-	public TraitPrecedenceStatement(int start, int end, AST ast,
-			TraitPrecedence precedence) {
+	public TraitPrecedenceStatement(int start, int end, AST ast, TraitPrecedence precedence) {
 		super(start, end, ast, precedence);
 		this.precedence = precedence;
 	}
@@ -44,10 +43,9 @@ public class TraitPrecedenceStatement extends TraitStatement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		TraitPrecedence precedence = ASTNode.copySubtree(target,
-				getPrecedence());
-		final TraitPrecedenceStatement result = new TraitPrecedenceStatement(
-				this.getStart(), this.getEnd(), target, precedence);
+		TraitPrecedence precedence = ASTNode.copySubtree(target, getPrecedence());
+		final TraitPrecedenceStatement result = new TraitPrecedenceStatement(this.getStart(), this.getEnd(), target,
+				precedence);
 		return result;
 	}
 

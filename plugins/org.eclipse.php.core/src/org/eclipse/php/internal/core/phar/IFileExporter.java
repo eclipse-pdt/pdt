@@ -40,13 +40,11 @@ public interface IFileExporter {
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	public void write(IFile resource, String destinationPath)
-			throws IOException, CoreException;
+	public void write(IFile resource, String destinationPath) throws IOException, CoreException;
 
 	public void writeStub(IStub stub) throws IOException, CoreException;
 
-	public void write(IFolder resource, String destinationPath)
-			throws IOException, CoreException;
+	public void write(IFolder resource, String destinationPath) throws IOException, CoreException;
 
 	public void writeSignature() throws IOException;
 

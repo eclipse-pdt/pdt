@@ -65,8 +65,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		}
 	}
 
-	protected Map<String, String> createInitialParameters(ASTNode s)
-			throws Exception {
+	protected Map<String, String> createInitialParameters(ASTNode s) throws Exception {
 		Map<String, String> parameters = new LinkedHashMap<String, String>();
 
 		// Print offset information:
@@ -97,8 +96,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			}
 			String modifiers = buf.toString();
 			parameters.put("modifiers", //$NON-NLS-1$
-					modifiers.length() > 0 ? modifiers.substring(1)
-							: modifiers);
+					modifiers.length() > 0 ? modifiers.substring(1) : modifiers);
 		}
 
 		return parameters;
@@ -339,8 +337,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ReflectionArrayVariableReference s)
-			throws Exception {
+	public boolean endvisit(ReflectionArrayVariableReference s) throws Exception {
 		xmlWriter.endTag("ReflectionArrayVariableReference"); //$NON-NLS-1$
 		return true;
 	}
@@ -350,8 +347,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ReflectionStaticMethodInvocation s)
-			throws Exception {
+	public boolean endvisit(ReflectionStaticMethodInvocation s) throws Exception {
 		xmlWriter.endTag("ReflectionStaticMethodInvocation"); //$NON-NLS-1$
 		return true;
 	}
@@ -1036,8 +1032,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(UseStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getStatementType() != UseStatement.T_NONE) {
-			parameters.put("statementType",
-					String.valueOf(s.getStatementType()));
+			parameters.put("statementType", String.valueOf(s.getStatementType()));
 		}
 		xmlWriter.startTag("UseStatement", parameters); //$NON-NLS-1$
 
@@ -1059,8 +1054,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(UsePart s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getStatementType() != UseStatement.T_NONE) {
-			parameters.put("statementType",
-					String.valueOf(s.getStatementType()));
+			parameters.put("statementType", String.valueOf(s.getStatementType()));
 		}
 		xmlWriter.startTag("UsePart", parameters); //$NON-NLS-1$
 		s.getNamespace().traverse(this);
@@ -1143,8 +1137,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	// php5.4 starts
 	Map<String, String> EMPTY_MAP = new HashMap<String, String>();
 
-	public boolean visit(FullyQualifiedTraitMethodReference s)
-			throws Exception {
+	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("functionName", s.getFunctionName()); //$NON-NLS-1$
 		xmlWriter.startTag("FullyQualifiedTraitMethodReference", parameters); //$NON-NLS-1$
@@ -1196,8 +1189,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(FullyQualifiedTraitMethodReference s)
-			throws Exception {
+	public boolean endvisit(FullyQualifiedTraitMethodReference s) throws Exception {
 		xmlWriter.endTag("FullyQualifiedTraitMethodReference"); //$NON-NLS-1$
 		return false;
 	}

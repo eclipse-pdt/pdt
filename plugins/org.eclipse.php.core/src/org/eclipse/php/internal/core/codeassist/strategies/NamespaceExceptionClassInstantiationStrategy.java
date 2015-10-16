@@ -11,8 +11,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
-public class NamespaceExceptionClassInstantiationStrategy extends
-		NamespaceClassInstantiationStrategy {
+public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClassInstantiationStrategy {
 
 	private static final String CORE_PHP = "Core.php"; //$NON-NLS-1$
 	private static final String BASIC_PHP = "basic.php"; //$NON-NLS-1$
@@ -20,13 +19,11 @@ public class NamespaceExceptionClassInstantiationStrategy extends
 
 	private IType exceptionType;
 
-	public NamespaceExceptionClassInstantiationStrategy(
-			ICompletionContext context) {
+	public NamespaceExceptionClassInstantiationStrategy(ICompletionContext context) {
 		super(context);
 	}
 
-	public IType[] getTypes(NamespaceMemberContext context)
-			throws BadLocationException {
+	public IType[] getTypes(NamespaceMemberContext context) throws BadLocationException {
 		IType exceptionType = getExceptionType();
 		if (exceptionType == null)
 			return super.getTypes(context);
@@ -36,11 +33,9 @@ public class NamespaceExceptionClassInstantiationStrategy extends
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		try {
 			if (scriptProject != null) {
-				typeHierarchy = exceptionType.newTypeHierarchy(scriptProject,
-						new NullProgressMonitor());
+				typeHierarchy = exceptionType.newTypeHierarchy(scriptProject, new NullProgressMonitor());
 			} else {
-				typeHierarchy = exceptionType
-						.newTypeHierarchy(new NullProgressMonitor());
+				typeHierarchy = exceptionType.newTypeHierarchy(new NullProgressMonitor());
 			}
 
 			IType[] classes = typeHierarchy.getAllSubtypes(exceptionType);
@@ -71,8 +66,7 @@ public class NamespaceExceptionClassInstantiationStrategy extends
 		if (exceptionType != null)
 			return exceptionType;
 		IDLTKSearchScope scope = createSearchScope();
-		IType[] exceptionTypes = PhpModelAccess.getDefault().findTypes(
-				EXCEPTION, MatchRule.EXACT, 0, 0, scope, null);
+		IType[] exceptionTypes = PhpModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, 0, 0, scope, null);
 		for (int i = 0; i < exceptionTypes.length; i++) {
 			if (isExctptionType(exceptionTypes[i])) {
 				exceptionType = exceptionTypes[i];
@@ -83,9 +77,8 @@ public class NamespaceExceptionClassInstantiationStrategy extends
 	}
 
 	private boolean isExctptionType(IType iType) {
-		if (EXCEPTION.equals(iType.getElementName())
-				&& (CORE_PHP.equals(iType.getParent().getElementName()) || BASIC_PHP
-						.equals(iType.getParent().getElementName())))
+		if (EXCEPTION.equals(iType.getElementName()) && (CORE_PHP.equals(iType.getParent().getElementName())
+				|| BASIC_PHP.equals(iType.getParent().getElementName())))
 			return true;
 		return false;
 	}

@@ -20,8 +20,7 @@ public final class CoreMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.core.CoreMessages";//$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	private static ResourceBundle fResourceBundle;
 
 	private CoreMessages() {

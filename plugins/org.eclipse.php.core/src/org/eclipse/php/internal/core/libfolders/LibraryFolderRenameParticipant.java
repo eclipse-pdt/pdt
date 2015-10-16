@@ -38,14 +38,13 @@ public class LibraryFolderRenameParticipant extends RenameParticipant {
 	private IFolder fFolder;
 
 	@Override
-	public RefactoringStatus checkConditions(IProgressMonitor monitor,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkConditions(IProgressMonitor monitor, CheckConditionsContext context)
+			throws OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor monitor) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		IProject project = fFolder.getProject();
 
 		String newName = getArguments().getNewName();

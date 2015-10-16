@@ -18,10 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents an infix expression
- * <pre>e.g.<pre> $a + 1,
- * 3 - 2,
- * foo() * $a->bar(),
- * 'string'.$c
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a + 1, 3 - 2, foo() * $a->bar(), 'string'.$c
  */
 public class InfixExpression extends Expression {
 
@@ -82,8 +84,7 @@ public class InfixExpression extends Expression {
 	private final int operator;
 	private final Expression left;
 
-	public InfixExpression(int start, int end, Expression left, int operator,
-			Expression right) {
+	public InfixExpression(int start, int end, Expression left, int operator, Expression right) {
 		super(start, end);
 
 		assert right != null && left != null;

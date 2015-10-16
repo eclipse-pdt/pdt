@@ -33,9 +33,9 @@ public class SignatureBufferedOutputStream extends OutputStream {
 
 	public SignatureBufferedOutputStream(OutputStream out, PharPackage pharData) {
 		this(out);
-		//		Assert.isNotNull(pharData.getSignature(), "The PHAR's signature is null"); //$NON-NLS-1$
-		if (!pharData.isUseSignature()
-				|| !Digest.DIGEST_MAP.containsKey(pharData.getSignature())) {
+		// Assert.isNotNull(pharData.getSignature(), "The PHAR's signature is
+		// null"); //$NON-NLS-1$
+		if (!pharData.isUseSignature() || !Digest.DIGEST_MAP.containsKey(pharData.getSignature())) {
 			digest = Digest.NULL_DIGEST;
 		} else {
 			digest = Digest.DIGEST_MAP.get(pharData.getSignature()).getDigest();
@@ -49,8 +49,7 @@ public class SignatureBufferedOutputStream extends OutputStream {
 	}
 
 	@Override
-	public synchronized void write(byte[] b, int off, int len)
-			throws IOException {
+	public synchronized void write(byte[] b, int off, int len) throws IOException {
 		innerOutputStream.write(b, off, len);
 		digest.update(b, off, len);
 	}

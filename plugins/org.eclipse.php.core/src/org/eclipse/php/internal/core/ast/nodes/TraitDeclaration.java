@@ -6,11 +6,9 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 
 public class TraitDeclaration extends ClassDeclaration {
 
-	public TraitDeclaration(int start, int end, AST ast, int modifier,
-			Identifier className, Expression superClass, List interfaces,
-			Block body) {
-		super(start, end, ast, modifier, className, superClass, interfaces,
-				body);
+	public TraitDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass,
+			List interfaces, Block body) {
+		super(start, end, ast, modifier, className, superClass, interfaces, body);
 	}
 
 	public TraitDeclaration(AST ast) {
@@ -33,8 +31,8 @@ public class TraitDeclaration extends ClassDeclaration {
 		final int modifier = getModifier();
 		final Identifier name = ASTNode.copySubtree(target, getName());
 
-		final TraitDeclaration result = new TraitDeclaration(getStart(),
-				getEnd(), target, modifier, name, getName(), interfaces(), body);
+		final TraitDeclaration result = new TraitDeclaration(getStart(), getEnd(), target, modifier, name, getName(),
+				interfaces(), body);
 		return result;
 	}
 

@@ -57,9 +57,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, '$' + globalName);
@@ -113,8 +112,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Visit $a on global references: $a = 5;
 	 */
 	public boolean visit(Variable variable) {
-		if (!variable.isDollared()
-				|| variable.getName().getType() != ASTNode.IDENTIFIER) {
+		if (!variable.isDollared() || variable.getName().getType() != ASTNode.IDENTIFIER) {
 			return true;
 		}
 
@@ -151,8 +149,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (variableName.getType() == ASTNode.VARIABLE) {
 					final Variable var = (Variable) variableName;
 					Expression varName = var.getName();
-					if (var.isDollared()
-							&& varName.getType() == ASTNode.IDENTIFIER) {
+					if (var.isDollared() && varName.getType() == ASTNode.IDENTIFIER) {
 						final String name = ((Identifier) varName).getName();
 						if ("GLOBALS".equals(name) || "_GLOBALS".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
 							addOccurrence(scalar);
@@ -199,8 +196,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 						Scalar scalar = (Scalar) index;
 						final String stringValue = scalar.getStringValue();
 						if (stringValue.length() > 2 && isQuated(stringValue)) {
-							if (globalName.equals(stringValue.substring(1,
-									stringValue.length() - 1))) {
+							if (globalName.equals(stringValue.substring(1, stringValue.length() - 1))) {
 								addOccurrence(scalar);
 							}
 						}
@@ -223,8 +219,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
 			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + globalName);
 		}
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
-				readWriteType, desc));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
 	}
 
 	/*
@@ -244,8 +239,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (assignment.getLeftHandSide() == node) {
 					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 				}
-			} else if (parentType == ASTNode.POSTFIX_EXPRESSION
-					|| parentType == ASTNode.PREFIX_EXPRESSION
+			} else if (parentType == ASTNode.POSTFIX_EXPRESSION || parentType == ASTNode.PREFIX_EXPRESSION
 					|| parentType == ASTNode.CATCH_CLAUSE) {
 				return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 			} else if (parentType == ASTNode.FOR_EACH_STATEMENT) {

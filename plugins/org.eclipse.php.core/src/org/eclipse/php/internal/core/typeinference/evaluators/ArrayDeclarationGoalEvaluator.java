@@ -33,17 +33,15 @@ public class ArrayDeclarationGoalEvaluator extends GoalEvaluator {
 		if ((typedGoal.getExpression().getNode() instanceof Assignment)) {
 
 			if ((((Assignment) typedGoal.getExpression().getNode()).getValue() instanceof ArrayCreation)) {
-				ArrayCreation arrayCreation = (ArrayCreation) ((Assignment) typedGoal
-						.getExpression().getNode()).getValue();
+				ArrayCreation arrayCreation = (ArrayCreation) ((Assignment) typedGoal.getExpression().getNode())
+						.getValue();
 
 				for (ArrayElement arrayElement : arrayCreation.getElements()) {
-					subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(),
-							arrayElement.getValue()));
+					subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(), arrayElement.getValue()));
 				}
 				subGoals.toArray(new IGoal[subGoals.size()]);
 
-				List<Declaration> decls = typedGoal.getExpression()
-						.getDeclarations();
+				List<Declaration> decls = typedGoal.getExpression().getDeclarations();
 
 				IContext context = goal.getContext();
 				for (int i = 0; i < decls.size(); ++i) {
@@ -51,23 +49,19 @@ public class ArrayDeclarationGoalEvaluator extends GoalEvaluator {
 					// TODO check ArrayCreation and its element type
 					if (decl instanceof ArrayDeclaration) {
 						ArrayDeclaration arrayDeclaration = (ArrayDeclaration) decl;
-						subGoals.add(new ArrayDeclarationGoal(context,
-								arrayDeclaration));
+						subGoals.add(new ArrayDeclarationGoal(context, arrayDeclaration));
 					} else {
 						ASTNode declNode = decl.getNode();
 						if (declNode instanceof ForEachStatement) {
-							subGoals.add(new ForeachStatementGoal(context,
-									((ForEachStatement) declNode)
-											.getExpression()));
+							subGoals.add(
+									new ForeachStatementGoal(context, ((ForEachStatement) declNode).getExpression()));
 						} else {
-							subGoals.add(new ExpressionTypeGoal(context,
-									declNode));
+							subGoals.add(new ExpressionTypeGoal(context, declNode));
 						}
 					}
 				}
 
-			} else if ((((Assignment) typedGoal.getExpression().getNode())
-					.getValue() instanceof PHPCallExpression)) {
+			} else if ((((Assignment) typedGoal.getExpression().getNode()).getValue() instanceof PHPCallExpression)) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=336995
 				// TODO $form['path_redirect']['table'] =
 				// path_redirect_list_redirects(array(), array('redirect' =>

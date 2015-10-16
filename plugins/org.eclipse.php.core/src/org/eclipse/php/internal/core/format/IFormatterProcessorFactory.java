@@ -38,9 +38,8 @@ public interface IFormatterProcessorFactory {
 	 * @return An ICodeFormattingProcessor that will format the PHP code.
 	 * @throws Exception
 	 */
-	public ICodeFormattingProcessor getCodeFormattingProcessor(
-			IDocument document, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region) throws Exception;
+	public ICodeFormattingProcessor getCodeFormattingProcessor(IDocument document, PHPVersion phpVersion,
+			boolean useShortTags, IRegion region) throws Exception;
 
 	public void setDefaultProject(IProject project);
 

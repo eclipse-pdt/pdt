@@ -8,11 +8,9 @@ import org.eclipse.dltk.ast.statements.Block;
 
 public class TraitDeclaration extends ClassDeclaration {
 
-	public TraitDeclaration(int start, int end, int nameStart, int nameEnd,
-			int modifier, String className, TypeReference superClass,
-			List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
-		super(start, end, nameStart, nameEnd, modifier, className, superClass,
-				interfaces, body, phpDoc);
+	public TraitDeclaration(int start, int end, int nameStart, int nameEnd, int modifier, String className,
+			TypeReference superClass, List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
+		super(start, end, nameStart, nameEnd, modifier, className, superClass, interfaces, body, phpDoc);
 	}
 
 	/**

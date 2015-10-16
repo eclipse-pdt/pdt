@@ -155,11 +155,10 @@ public class DeclarationScope {
 							// (leave
 							// 'isGlobal' flag the same)
 					if (decl instanceof ArrayDeclaration) {
-						decl = new Declaration(
-								declNode instanceof GlobalStatement, declNode);
+						decl = new Declaration(declNode instanceof GlobalStatement, declNode);
 						varDecls.set(level, decl);
-					} else if (!(declNode instanceof Assignment && (((Assignment) declNode)
-							.getVariable() instanceof ArrayVariableReference))) {
+					} else if (!(declNode instanceof Assignment
+							&& (((Assignment) declNode).getVariable() instanceof ArrayVariableReference))) {
 						// bug 414814
 						decl.setNode(declNode);
 					}
@@ -169,19 +168,15 @@ public class DeclarationScope {
 			}
 		}
 		// add new declaration
-		if (declNode instanceof Assignment
-				&& (((Assignment) declNode).getValue() instanceof ArrayCreation)) {
-			varDecls.addLast(new ArrayDeclaration(
-					declNode instanceof GlobalStatement, declNode));
+		if (declNode instanceof Assignment && (((Assignment) declNode).getValue() instanceof ArrayCreation)) {
+			varDecls.addLast(new ArrayDeclaration(declNode instanceof GlobalStatement, declNode));
 
 		} else {
-			varDecls.addLast(new Declaration(
-					declNode instanceof GlobalStatement, declNode));
+			varDecls.addLast(new Declaration(declNode instanceof GlobalStatement, declNode));
 		}
 	}
 
-	public static boolean isInSameBlock(Statement block, ASTNode oldNode,
-			ASTNode newNode) {
+	public static boolean isInSameBlock(Statement block, ASTNode oldNode, ASTNode newNode) {
 		if (block instanceof IfStatement) {
 			IfStatement ifStatement = (IfStatement) block;
 			Statement oldBlock = getBlock(ifStatement, oldNode);
@@ -198,12 +193,10 @@ public class DeclarationScope {
 	private static Statement getBlock(IfStatement ifStatement, ASTNode node) {
 		Statement falseStatement = ifStatement.getFalseStatement();
 		Statement trueStatement = ifStatement.getTrueStatement();
-		if (trueStatement != null
-				&& trueStatement.sourceStart() <= node.sourceStart()
+		if (trueStatement != null && trueStatement.sourceStart() <= node.sourceStart()
 				&& trueStatement.sourceEnd() >= node.sourceEnd()) {
 			return trueStatement;
-		} else if (falseStatement != null
-				&& falseStatement.sourceStart() <= node.sourceStart()
+		} else if (falseStatement != null && falseStatement.sourceStart() <= node.sourceStart()
 				&& falseStatement.sourceEnd() >= node.sourceEnd()) {
 			return falseStatement;
 		}

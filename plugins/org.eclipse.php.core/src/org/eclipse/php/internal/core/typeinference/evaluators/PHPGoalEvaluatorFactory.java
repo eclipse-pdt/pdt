@@ -63,8 +63,7 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			IConfigurationElement element = elements[i];
 			try {
 				int priority = getPriority(element);
-				IGoalEvaluatorFactory factory = (IGoalEvaluatorFactory) element
-						.createExecutableExtension("class"); //$NON-NLS-1$
+				IGoalEvaluatorFactory factory = (IGoalEvaluatorFactory) element.createExecutableExtension("class"); //$NON-NLS-1$
 				if (factory != null) {
 					factories.add(new FactoryInfo(priority, factory));
 				}
@@ -89,8 +88,7 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			return null;
 		}
 		for (int i = 0; i < factoryInfos.length; i++) {
-			GoalEvaluator evaluator = factoryInfos[i].factory
-					.createEvaluator(goal);
+			GoalEvaluator evaluator = factoryInfos[i].factory.createEvaluator(goal);
 			if (evaluator != null) {
 				return evaluator;
 			}

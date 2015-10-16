@@ -14,10 +14,10 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 
-
-
 /**
- * This strategy completes global elements: classes, functions, variables, etc... 
+ * This strategy completes global elements: classes, functions, variables,
+ * etc...
+ * 
  * @author michael
  */
 public abstract class GlobalElementStrategy extends AbstractCompletionStrategy {

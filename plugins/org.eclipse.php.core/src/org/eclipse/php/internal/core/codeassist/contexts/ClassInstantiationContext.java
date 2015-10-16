@@ -31,8 +31,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
  */
 public class ClassInstantiationContext extends StatementContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -41,8 +40,8 @@ public class ClassInstantiationContext extends StatementContext {
 			String previousWord = getPreviousWord();
 			String previous2Word = getPreviousWord(2);
 			if ("new".equalsIgnoreCase(previousWord) && !"throw".equalsIgnoreCase(previous2Word)) { //$NON-NLS-1$ //$NON-NLS-2$
- 				return true;
- 			}
+				return true;
+			}
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
@@ -52,8 +51,7 @@ public class ClassInstantiationContext extends StatementContext {
 
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
-		if (prefix.length() > 0
-				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			return prefix.substring(1);
 		}
 		return prefix;

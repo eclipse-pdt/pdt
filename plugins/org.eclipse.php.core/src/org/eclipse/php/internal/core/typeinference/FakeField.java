@@ -35,8 +35,7 @@ public class FakeField extends SourceField {
 		this.length = length;
 	}
 
-	public FakeField(ModelElement parent, String name, int offset, int length,
-			int modifiers) {
+	public FakeField(ModelElement parent, String name, int offset, int length, int modifiers) {
 		super(parent, name);
 		this.offset = offset;
 		this.length = length;

@@ -49,8 +49,7 @@ public class RenameLibraryFolderChange extends Change {
 
 	@Override
 	public String getName() {
-		return NLS.bind(Messages.RenameLibraryFolderChange_name,
-				fNewFolder.getFullPath());
+		return NLS.bind(Messages.RenameLibraryFolderChange_name, fNewFolder.getFullPath());
 	}
 
 	@Override
@@ -58,8 +57,7 @@ public class RenameLibraryFolderChange extends Change {
 	}
 
 	@Override
-	public RefactoringStatus isValid(IProgressMonitor monitor)
-			throws CoreException, OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 

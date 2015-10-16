@@ -29,8 +29,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 
 	public NonFinalClassesStrategy(ICompletionContext context) {
-		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace
-				| Modifiers.AccFinal);
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace | Modifiers.AccFinal);
 	}
 
 	@Override
@@ -38,8 +37,7 @@ public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 		// let NamespaceNonFinalClassesStrategy to deal with namespace prefix
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(
-						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 		super.apply(reporter);

@@ -46,8 +46,7 @@ import org.eclipse.php.internal.core.phar.PharPath;
  */
 public class PHPSearchEngine implements IIncludepathListener {
 
-	private static Pattern RELATIVE_PATH_PATTERN = Pattern
-			.compile("\\.\\.?[/\\\\].*"); //$NON-NLS-1$
+	private static Pattern RELATIVE_PATH_PATTERN = Pattern.compile("\\.\\.?[/\\\\].*"); //$NON-NLS-1$
 
 	private Map<IProject, IncludePath[]> projectIncludePaths;
 	private static PHPSearchEngine instance = new PHPSearchEngine();
@@ -76,30 +75,24 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 *            Current project to which current script belongs
 	 * @return resolved path, or <code>null</code> in case of failure
 	 */
-	public static Result<?, ?> find(String path, String currentWorkingDir,
-			String currentScriptDir, IProject currentProject) {
-		return getInstance().internalFind(path, currentWorkingDir,
-				currentScriptDir, currentProject);
+	public static Result<?, ?> find(String path, String currentWorkingDir, String currentScriptDir,
+			IProject currentProject) {
+		return getInstance().internalFind(path, currentWorkingDir, currentScriptDir, currentProject);
 	}
 
-	public static Result<?, ?> find(String path, String currentWorkingDir,
-			String currentScriptDir, IProject currentProject,
-			Set<String> exclusiveFiles) {
-		return getInstance().internalFind(path, currentWorkingDir,
-				currentScriptDir, currentProject, exclusiveFiles);
+	public static Result<?, ?> find(String path, String currentWorkingDir, String currentScriptDir,
+			IProject currentProject, Set<String> exclusiveFiles) {
+		return getInstance().internalFind(path, currentWorkingDir, currentScriptDir, currentProject, exclusiveFiles);
 	}
 
-	private Result<?, ?> internalFind(String path, String currentWorkingDir,
-			String currentScriptDir, IProject currentProject) {
-		return internalFind(path, currentWorkingDir, currentScriptDir,
-				currentProject, null);
+	private Result<?, ?> internalFind(String path, String currentWorkingDir, String currentScriptDir,
+			IProject currentProject) {
+		return internalFind(path, currentWorkingDir, currentScriptDir, currentProject, null);
 	}
 
-	private Result<?, ?> internalFind(String path, String currentWorkingDir,
-			String currentScriptDir, IProject currentProject,
-			Set<String> exclusiveFiles) {
-		if (path == null || currentWorkingDir == null
-				|| currentScriptDir == null || currentProject == null) {
+	private Result<?, ?> internalFind(String path, String currentWorkingDir, String currentScriptDir,
+			IProject currentProject, Set<String> exclusiveFiles) {
+		if (path == null || currentWorkingDir == null || currentScriptDir == null || currentProject == null) {
 			throw new NullPointerException(Messages.PHPSearchEngine_1);
 		}
 
@@ -120,18 +113,15 @@ public class PHPSearchEngine implements IIncludepathListener {
 		IncludePath[] includePaths = buildIncludePath(currentProject);
 		for (IncludePath includePath : includePaths) {
 			if (includePath.isBuildpath()) {
-				Result<?, ?> searchInBuildpathEntry = searchInBuildpathEntry(
-						path, (IBuildpathEntry) includePath.getEntry(),
-						currentProject);
+				Result<?, ?> searchInBuildpathEntry = searchInBuildpathEntry(path,
+						(IBuildpathEntry) includePath.getEntry(), currentProject);
 				if (searchInBuildpathEntry != null) {
 					return searchInBuildpathEntry;
 				}
 			} else if (includePath.getEntry() instanceof IFile) {
 				IFile resource = (IFile) includePath.getEntry();
 				Result result = new ResourceResult(resource);
-				if (exclusiveFiles == null
-						|| !exclusiveFiles.contains(resource.getLocation()
-								.toOSString())) {
+				if (exclusiveFiles == null || !exclusiveFiles.contains(resource.getLocation().toOSString())) {
 					return result;
 				} else {
 					list.add(result);
@@ -141,9 +131,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 				IResource resource = container.findMember(path);
 				if ((resource instanceof IFile)) {
 					Result result = new ResourceResult((IFile) resource);
-					if (exclusiveFiles == null
-							|| !exclusiveFiles.contains(resource.getLocation()
-									.toOSString())) {
+					if (exclusiveFiles == null || !exclusiveFiles.contains(resource.getLocation().toOSString())) {
 						return result;
 					} else {
 						list.add(result);
@@ -151,8 +139,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 
 				}
 			} else {
-				Logger.log(Logger.ERROR,
-						"Unknown IncludePath entry: " + includePath); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "Unknown IncludePath entry: " + includePath); //$NON-NLS-1$
 			}
 		}
 		if (!list.isEmpty()) {
@@ -163,15 +150,13 @@ public class PHPSearchEngine implements IIncludepathListener {
 		return searchExternalOrWorkspaceFile(currentScriptDir, path);
 	}
 
-	private static Result<?, ?> searchInBuildpathEntry(String path,
-			IBuildpathEntry entry, IProject currentProject) {
+	private static Result<?, ?> searchInBuildpathEntry(String path, IBuildpathEntry entry, IProject currentProject) {
 
 		IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 
 		if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 			IScriptProject scriptProject = DLTKCore.create(currentProject);
-			IProjectFragment[] projectFragments = scriptProject
-					.findProjectFragments(entry);
+			IProjectFragment[] projectFragments = scriptProject.findProjectFragments(entry);
 
 			if (projectFragments != null && projectFragments.length > 0) {
 				if (projectFragments[0] instanceof ArchiveProjectFragment) {
@@ -184,32 +169,20 @@ public class PHPSearchEngine implements IIncludepathListener {
 					}
 					PharPath pharPath = PharPath.getPharPath(new Path(path));
 					if (pharPath != null) {
-						if (external
-								&& apfp.equals(new Path(pharPath.getPharName()))
-								|| !external
-								&& apfp.lastSegment().equals(
-										new Path(pharPath.getPharName())
-												.lastSegment())) {
+						if (external && apfp.equals(new Path(pharPath.getPharName())) || !external
+								&& apfp.lastSegment().equals(new Path(pharPath.getPharName()).lastSegment())) {
 							if (pharPath.isPhar()) {
 								final String stubName = PharConstants.STUB_PATH;
-								pharPath.setFolder(new Path(stubName)
-										.removeLastSegments(1).toString());
-								pharPath.setFile(new Path(stubName)
-										.lastSegment());
+								pharPath.setFolder(new Path(stubName).removeLastSegments(1).toString());
+								pharPath.setFile(new Path(stubName).lastSegment());
 							}
-							IScriptFolder scriptFolder = apf
-									.getScriptFolder(new Path(pharPath
-											.getFolder()));
+							IScriptFolder scriptFolder = apf.getScriptFolder(new Path(pharPath.getFolder()));
 							try {
-								IModelElement[] children = scriptFolder
-										.getChildren();
+								IModelElement[] children = scriptFolder.getChildren();
 								if (children != null && children.length > 0) {
 									for (int i = 0; i < children.length; i++) {
-										if (((ISourceModule) children[i])
-												.getElementName().equals(
-														pharPath.getFile())) {
-											return new IncludedPharFileResult(
-													scriptFolder,
+										if (((ISourceModule) children[i]).getElementName().equals(pharPath.getFile())) {
+											return new IncludedPharFileResult(scriptFolder,
 													(ISourceModule) children[i]);
 										}
 									}
@@ -238,18 +211,14 @@ public class PHPSearchEngine implements IIncludepathListener {
 				return new IncludedFileResult(entry, file);
 			}
 		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-					.getRoot();
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			IProject project = workspaceRoot.getProject(entryPath.segment(0));
 			if (project.isAccessible()) {
 				IScriptProject scriptProject = DLTKCore.create(project);
 				try {
-					for (IProjectFragment fragment : scriptProject
-							.getProjectFragments()) {
-						if (fragment.getResource() instanceof IFolder
-								|| fragment.getResource() instanceof IProject) {
-							IResource resource = ((IContainer) fragment
-									.getResource()).findMember(path);
+					for (IProjectFragment fragment : scriptProject.getProjectFragments()) {
+						if (fragment.getResource() instanceof IFolder || fragment.getResource() instanceof IProject) {
+							IResource resource = ((IContainer) fragment.getResource()).findMember(path);
 							if (resource instanceof IFile) {
 								return new ResourceResult((IFile) resource);
 							}
@@ -259,8 +228,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 				}
 			}
 		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-					.getRoot();
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = workspaceRoot.findMember(entryPath);
 			if (resource instanceof IContainer) {
 				resource = ((IContainer) resource).findMember(path);
@@ -271,20 +239,15 @@ public class PHPSearchEngine implements IIncludepathListener {
 		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 			try {
 				IScriptProject scriptProject = DLTKCore.create(currentProject);
-				IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-						entry.getPath(), scriptProject);
+				IBuildpathContainer container = DLTKCore.getBuildpathContainer(entry.getPath(), scriptProject);
 				if (container != null) {
-					IBuildpathEntry[] buildpathEntries = container
-							.getBuildpathEntries();
+					IBuildpathEntry[] buildpathEntries = container.getBuildpathEntries();
 					if (buildpathEntries != null) {
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
-							Result<?, ?> result = searchInBuildpathEntry(path,
-									buildpathEntry, currentProject);
+							Result<?, ?> result = searchInBuildpathEntry(path, buildpathEntry, currentProject);
 							if (result != null) {
-								IProjectFragment[] projectFragments = scriptProject
-										.findProjectFragments(entry);
-								((IncludedFileResult) result)
-										.setProjectFragments(projectFragments);
+								IProjectFragment[] projectFragments = scriptProject.findProjectFragments(entry);
+								((IncludedFileResult) result).setProjectFragments(projectFragments);
 								return result;
 							}
 						}
@@ -298,10 +261,8 @@ public class PHPSearchEngine implements IIncludepathListener {
 		return null;
 	}
 
-	private static Result<?, ?> searchExternalOrWorkspaceFile(String directory,
-			String relativeFile) {
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(directory);
+	private static Result<?, ?> searchExternalOrWorkspaceFile(String directory, String relativeFile) {
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(directory);
 		if (resource instanceof IContainer) {
 			IContainer container = (IContainer) resource;
 			IResource file = container.findMember(relativeFile);
@@ -319,17 +280,13 @@ public class PHPSearchEngine implements IIncludepathListener {
 
 	private static Result<?, ?> searchExternalOrWorkspaceFile(File file) {
 		if (file.exists()) {
-			IFile res = ResourcesPlugin
-					.getWorkspace()
-					.getRoot()
-					.getFileForLocation(
-							Path.fromOSString(file.getAbsolutePath()));
+			IFile res = ResourcesPlugin.getWorkspace().getRoot()
+					.getFileForLocation(Path.fromOSString(file.getAbsolutePath()));
 			if (res != null) {
 				return new ResourceResult(res);
 			}
 			// for linked resources
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
-					.findFilesForLocationURI(file.toURI());
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
 			if (files != null && files.length != 0) {
 				return new ResourceResult(files[0]);
 			}
@@ -365,8 +322,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 *            Array of include path objects (it can be one of: IContainer,
 	 *            IncludePathEntry)
 	 */
-	public static void buildIncludePath(IProject project,
-			Set<IncludePath> results) {
+	public static void buildIncludePath(IProject project, Set<IncludePath> results) {
 		if (results.contains(project)) {
 			return;
 		}
@@ -374,23 +330,20 @@ public class PHPSearchEngine implements IIncludepathListener {
 			return;
 		}
 		// Collect include paths:
-		results.addAll(Arrays.asList(getInstance().getProjectIncludePath(
-				project)));
+		results.addAll(Arrays.asList(getInstance().getProjectIncludePath(project)));
 	}
 
 	private IncludePath[] getProjectIncludePath(IProject project) {
 		IncludePath[] includePaths = projectIncludePaths.get(project);
 		if (includePaths == null) {
-			includePaths = IncludePathManager.getInstance().getIncludePaths(
-					project);
+			includePaths = IncludePathManager.getInstance().getIncludePaths(project);
 			projectIncludePaths.put(project, includePaths);
 		}
 		return includePaths;
 	}
 
 	public void refresh(IProject project) {
-		IncludePath[] includePaths = IncludePathManager.getInstance()
-				.getIncludePaths(project);
+		IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
 		projectIncludePaths.put(project, includePaths);
 	}
 
@@ -435,8 +388,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 	/**
 	 * Result for included file (from Include Path)
 	 */
-	public static class IncludedFileResult extends
-			Result<IBuildpathEntry, File> {
+	public static class IncludedFileResult extends Result<IBuildpathEntry, File> {
 		private IProjectFragment[] projectFragments;
 
 		public IncludedFileResult(IBuildpathEntry container, File file) {
@@ -455,10 +407,8 @@ public class PHPSearchEngine implements IIncludepathListener {
 	/**
 	 * Result for included file (from Include Path)
 	 */
-	public static class IncludedPharFileResult extends
-			Result<IScriptFolder, ISourceModule> {
-		public IncludedPharFileResult(IScriptFolder container,
-				ISourceModule file) {
+	public static class IncludedPharFileResult extends Result<IScriptFolder, ISourceModule> {
+		public IncludedPharFileResult(IScriptFolder container, ISourceModule file) {
 			super(container, file);
 		}
 	}

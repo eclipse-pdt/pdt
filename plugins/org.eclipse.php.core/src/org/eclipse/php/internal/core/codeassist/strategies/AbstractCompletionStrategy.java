@@ -46,8 +46,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		this.context = context;
 	}
 
-	public AbstractCompletionStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public AbstractCompletionStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		this.context = context;
 		this.elementFilter = elementFilter;
 	}
@@ -69,8 +68,8 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return context;
 	}
 
-	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
-			ICompletionContext context) throws BadLocationException {
+	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(ICompletionContext context)
+			throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
@@ -98,8 +97,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord) ? "" : NamespaceReference.NAMESPACE_DELIMITER; //$NON-NLS-1$
 	}
 
-	public ISourceRange getReplacementRangeWithBraces(ICompletionContext context)
-			throws BadLocationException {
+	public ISourceRange getReplacementRangeWithBraces(ICompletionContext context) throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
@@ -117,14 +115,12 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		if (document.getLength() == start) {
 			endOfReplacement = start;
 		} else if (endOfReplacement < document.getLength() - 2) {
-			if (document.getChar(endOfReplacement) == '('
-					&& document.getChar(endOfReplacement + 1) == ')') {
+			if (document.getChar(endOfReplacement) == '(' && document.getChar(endOfReplacement + 1) == ')') {
 				endOfReplacement += 2;
 			}
 		}
 
-		SourceRange replacementRange = new SourceRange(start, endOfReplacement
-				- start);
+		SourceRange replacementRange = new SourceRange(start, endOfReplacement - start);
 		return replacementRange;
 	}
 
@@ -166,31 +162,26 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	 * @param prefix
 	 *            String prefix
 	 */
-	protected IModelElement[] filterByCase(IModelElement[] elements,
-			String prefix) {
-		List<IModelElement> result = new ArrayList<IModelElement>(
-				elements.length);
+	protected IModelElement[] filterByCase(IModelElement[] elements, String prefix) {
+		List<IModelElement> result = new ArrayList<IModelElement>(elements.length);
 		for (IModelElement element : elements) {
 			if (element.getElementName().startsWith(prefix)) {
 				result.add(element);
 			}
 		}
-		return (IModelElement[]) result
-				.toArray(new IModelElement[result.size()]);
+		return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 	}
 
 	/**
 	 * Creates search scope
 	 */
 	protected IDLTKSearchScope createSearchScope() {
-		ISourceModule sourceModule = ((AbstractCompletionContext) context)
-				.getSourceModule();
+		ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		if (scriptProject != null) {
 			return SearchEngine.createSearchScope(scriptProject);
 		}
-		IProjectFragment projectFragment = (IProjectFragment) sourceModule
-				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		IProjectFragment projectFragment = (IProjectFragment) sourceModule.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		if (projectFragment != null) {
 			return SearchEngine.createSearchScope(projectFragment);
 		}
@@ -199,10 +190,8 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	}
 
 	protected boolean isInsertMode() {
-		IEclipsePreferences preferenceStore = InstanceScope.INSTANCE
-				.getNode(PHPCorePlugin.ID);
-		boolean noOverwrite = preferenceStore.getBoolean(
-				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
+		IEclipsePreferences preferenceStore = InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID);
+		boolean noOverwrite = preferenceStore.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
 		return noOverwrite;
 	}
 }

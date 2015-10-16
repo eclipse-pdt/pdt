@@ -80,8 +80,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 		if (pos != -1) {
 			final char[] result = new char[pos];
 			pattern.getChars(0, pos, result, 0);
-			return new String(CharOperation.replace(result,
-					TYPE_DELIMITER.toCharArray(), new char[] { '$' }));
+			return new String(CharOperation.replace(result, TYPE_DELIMITER.toCharArray(), new char[] { '$' }));
 		}
 		return null;
 	}
@@ -91,8 +90,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 	}
 
 	public ITypePattern parseType(String patternString) {
-		return new TypePatten(extractPHPTypeQualification(patternString),
-				extractPHPTypeChars(patternString));
+		return new TypePatten(extractPHPTypeQualification(patternString), extractPHPTypeChars(patternString));
 
 	}
 }

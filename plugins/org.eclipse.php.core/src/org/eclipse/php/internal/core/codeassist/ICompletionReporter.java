@@ -43,8 +43,7 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportResource(IModelElement model, IPath relative,
-			String suffix, ISourceRange replaceRange);
+	public void reportResource(IModelElement model, IPath relative, String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports type: interface, namespace or class
@@ -72,11 +71,9 @@ public interface ICompletionReporter {
 	 * @param extraInfo
 	 *            extraInfo for CompletionProposal
 	 */
-	public void reportType(IType type, String suffix,
-			ISourceRange replaceRange, Object extraInfo);
+	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo);
 
-	public void reportType(IType type, String suffix,
-			ISourceRange replaceRange, Object extraInfo, int subRelevance);
+	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance);
 
 	/**
 	 * Reports method or function
@@ -89,8 +86,7 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportMethod(IMethod method, String suffix,
-			ISourceRange replaceRange);
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports method or function
@@ -105,11 +101,10 @@ public interface ICompletionReporter {
 	 * @param extraInfo
 	 *            extraInfo for CompletionProposal
 	 */
-	public void reportMethod(IMethod method, String suffix,
-			ISourceRange replaceRange, Object extraInfo);
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo);
 
-	public void reportMethod(IMethod method, String suffix,
-			ISourceRange replaceRange, Object extraInfo, int subRelevance);
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
+			int subRelevance);
 
 	/**
 	 * Reports field: variable, constant
@@ -124,11 +119,10 @@ public interface ICompletionReporter {
 	 * @param removeDollar
 	 *            Remove dollar from the variable in completion
 	 */
-	public void reportField(IField field, String suffix,
-			ISourceRange replaceRange, boolean removeDollar);
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar);
 
-	public void reportField(IField field, String suffix,
-			ISourceRange replaceRange, boolean removeDollar, int subRelevance);
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
+			int subRelevance);
 
 	/**
 	 * Reports PHP keyword
@@ -141,11 +135,9 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportKeyword(String keyword, String suffix,
-			ISourceRange replaceRange);
+	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange);
 
-	public void reportKeyword(String keyword, String suffix,
-			ISourceRange replaceRange, int subRelevance);
+	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange, int subRelevance);
 
 	/**
 	 * @since 2.3
@@ -153,7 +145,6 @@ public interface ICompletionReporter {
 	 */
 	public IModuleSource getModule();
 
-	public void reportField(IField field, String suffix,
-			ISourceRange replaceRange, boolean removeDollar, int subRelevance,
-			Object extraInfo);
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
+			int subRelevance, Object extraInfo);
 }

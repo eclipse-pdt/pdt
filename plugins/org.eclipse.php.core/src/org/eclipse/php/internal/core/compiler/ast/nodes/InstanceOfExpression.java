@@ -18,9 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represent instanceof expression
- * <pre>e.g.<pre> $a instanceof MyClass,
- * foo() instanceof $myClass,
- * $a instanceof $b->$myClass
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a instanceof MyClass, foo() instanceof $myClass, $a instanceof $b->$myClass
  */
 public class InstanceOfExpression extends Expression {
 

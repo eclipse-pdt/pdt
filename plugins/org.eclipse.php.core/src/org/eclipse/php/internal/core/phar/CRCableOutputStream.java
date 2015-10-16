@@ -41,8 +41,7 @@ public class CRCableOutputStream extends OutputStream implements CRCable {
 	}
 
 	@Override
-	public synchronized void write(byte[] b, int off, int len)
-			throws IOException {
+	public synchronized void write(byte[] b, int off, int len) throws IOException {
 		innerOutputStream.write(b, off, len);
 		crc.update(b, off, len);
 	}

@@ -17,7 +17,12 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 
 /**
  * Represnts a constant class access
- * <pre>e.g.<pre> MyClass::CONST
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * MyClass::CONST
  */
 public class StaticConstantAccess extends StaticDispatch {
 

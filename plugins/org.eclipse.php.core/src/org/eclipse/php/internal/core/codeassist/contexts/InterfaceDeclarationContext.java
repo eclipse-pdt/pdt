@@ -26,19 +26,16 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * 
  * @author michael
  */
-public abstract class InterfaceDeclarationContext
-		extends TypeDeclarationContext {
+public abstract class InterfaceDeclarationContext extends TypeDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 		int typeEnd = getTypeEnd();
 		if (typeEnd >= 10) {
 			TextSequence statementText = getStatementText();
-			String typeString = statementText
-					.subSequence(typeEnd - 10, typeEnd - 1).toString();
+			String typeString = statementText.subSequence(typeEnd - 10, typeEnd - 1).toString();
 			if ("interface".equalsIgnoreCase(typeString)) { //$NON-NLS-1$
 				return true;
 			}

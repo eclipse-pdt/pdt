@@ -60,22 +60,19 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, className);
 		fASTRoot.accept(this);
 		if (nodeToFullName.containsKey(nameNode)) {
 			String fullName = nodeToFullName.get(nameNode);
-			for (Iterator<Identifier> iterator = nodeToFullName.keySet()
-					.iterator(); iterator.hasNext();) {
+			for (Iterator<Identifier> iterator = nodeToFullName.keySet().iterator(); iterator.hasNext();) {
 				Identifier nameNode = iterator.next();
 				if (nodeToFullName.get(nameNode).equals(fullName)) {
-					fResult.add(new OccurrenceLocation(nameNode.getStart(),
-							nameNode.getLength(), getOccurrenceType(nameNode),
-							fDescription));
+					fResult.add(new OccurrenceLocation(nameNode.getStart(), nameNode.getLength(),
+							getOccurrenceType(nameNode), fDescription));
 				}
 			}
 		}
@@ -114,18 +111,15 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(ClassDeclaration classDeclaration) {
-		if (originalDeclarationNode == null
-				|| originalDeclarationNode == classDeclaration) {
+		if (originalDeclarationNode == null || originalDeclarationNode == classDeclaration) {
 			dealIdentifier(classDeclaration.getName());
 		}
-		checkSuper(classDeclaration.getSuperClass(),
-				classDeclaration.interfaces());
+		checkSuper(classDeclaration.getSuperClass(), classDeclaration.interfaces());
 		return true;
 	}
 
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
-		if (originalDeclarationNode == null
-				|| originalDeclarationNode == interfaceDeclaration) {
+		if (originalDeclarationNode == null || originalDeclarationNode == interfaceDeclaration) {
 			dealIdentifier(interfaceDeclaration.getName());
 		}
 		checkSuper(null, interfaceDeclaration.interfaces());
@@ -154,15 +148,11 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		final ASTNode parent = methodDeclaration.getParent();
-		if (parent.getType() == ASTNode.BLOCK
-				&& parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
-			ClassDeclaration classDeclaration = (ClassDeclaration) parent
-					.getParent();
-			final Identifier functionName = methodDeclaration.getFunction()
-					.getFunctionName();
+		if (parent.getType() == ASTNode.BLOCK && parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
+			ClassDeclaration classDeclaration = (ClassDeclaration) parent.getParent();
+			final Identifier functionName = methodDeclaration.getFunction().getFunctionName();
 			if (checkForNameEquality(functionName)) {
-				String fullName = getFullName(classDeclaration.getName(),
-						fLastUseParts, fCurrentNamespace);
+				String fullName = getFullName(classDeclaration.getName(), fLastUseParts, fCurrentNamespace);
 				nodeToFullName.put(functionName, fullName);
 			}
 		}
@@ -200,8 +190,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	private void dealIdentifier(Identifier identifier) {
 		Identifier newIdentifier = getIdentifierForSelf(identifier);
-		String fullName = getFullName(newIdentifier, fLastUseParts,
-				fCurrentNamespace);
+		String fullName = getFullName(newIdentifier, fLastUseParts, fCurrentNamespace);
 		nodeToFullName.put(identifier, fullName);
 	}
 
@@ -223,8 +212,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {
-		return identifier != null && className != null
-				&& className.equalsIgnoreCase(identifier.getName());
+		return identifier != null && className != null && className.equalsIgnoreCase(identifier.getName());
 	}
 
 	/*

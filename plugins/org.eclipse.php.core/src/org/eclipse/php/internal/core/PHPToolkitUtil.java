@@ -39,14 +39,12 @@ public class PHPToolkitUtil {
 	public static final String BZ2_EXTENSTION = "bz2"; //$NON-NLS-1$
 	public static final String GZ_EXTENSTION = "gz"; //$NON-NLS-1$
 	public static final String ZIP_EXTENSTION = "zip"; //$NON-NLS-1$
-	public static final String[] PHAR_EXTENSTIONS = new String[] {
-			PHAR_EXTENSTION, TAR_EXTENSTION, BZ2_EXTENSTION, GZ_EXTENSTION,
-			ZIP_EXTENSTION };
+	public static final String[] PHAR_EXTENSTIONS = new String[] { PHAR_EXTENSTION, TAR_EXTENSTION, BZ2_EXTENSTION,
+			GZ_EXTENSTION, ZIP_EXTENSTION };
 
 	public static boolean isPhpElement(final IModelElement modelElement) {
 		Assert.isNotNull(modelElement);
-		IModelElement sourceModule = modelElement
-				.getAncestor(IModelElement.SOURCE_MODULE);
+		IModelElement sourceModule = modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 		if (sourceModule != null) {
 			return isPhpFile((ISourceModule) sourceModule);
 		}
@@ -60,11 +58,9 @@ public class PHPToolkitUtil {
 				if (isPhar(resource)) {
 					return true;
 				}
-				IContentDescription contentDescription = ((IFile) resource)
-						.getContentDescription();
+				IContentDescription contentDescription = ((IFile) resource).getContentDescription();
 				if (contentDescription != null) {
-					return ContentTypeIdForPHP.ContentTypeID_PHP
-							.equals(contentDescription.getContentType().getId());
+					return ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId());
 				}
 			}
 		} catch (CoreException e) {
@@ -108,8 +104,7 @@ public class PHPToolkitUtil {
 			return hasPhpExtention(file);
 		}
 
-		return ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription
-				.getContentType().getId());
+		return ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId());
 	}
 
 	public static boolean hasPhpExtention(final IFile file) {
@@ -120,8 +115,7 @@ public class PHPToolkitUtil {
 		}
 		final IContentType type = Platform.getContentTypeManager()
 				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-		final String[] validExtensions = type
-				.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		for (String validExtension : validExtensions) {
 			if (extension.equalsIgnoreCase(validExtension)) {
 				return true;
@@ -152,8 +146,7 @@ public class PHPToolkitUtil {
 
 		final IContentType type = Platform.getContentTypeManager()
 				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-		final String[] validExtensions = type
-				.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		for (String validExtension : validExtensions) {
 			if (extension.equalsIgnoreCase(validExtension)) {
 				return true;
@@ -228,8 +221,7 @@ public class PHPToolkitUtil {
 	 * @return source module
 	 */
 	public static ISourceModule getSourceModule(String element) {
-		IFile file = ResourcesPlugin.getWorkspace().getRoot()
-				.getFileForLocation(new Path(element));
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(element));
 		if (file != null) {
 			return (ISourceModule) DLTKCore.create(file);
 		}
@@ -245,8 +237,7 @@ public class PHPToolkitUtil {
 					archive = new PharArchiveFile(localFile);
 				} else if (ZIP_EXTENSTION.equals(extension)) {
 					archive = new ZipArchiveFile(localFile);
-				} else if (TAR_EXTENSTION.equals(extension)
-						|| GZ_EXTENSTION.equals(extension)
+				} else if (TAR_EXTENSTION.equals(extension) || GZ_EXTENSTION.equals(extension)
 						|| BZ2_EXTENSTION.equals(extension)) {
 
 					archive = new TarArchiveFile(localFile);
@@ -276,8 +267,7 @@ public class PHPToolkitUtil {
 
 	public static void setProjectVersion(IProject project) {
 		String versionName = CorePreferencesSupport.getInstance()
-				.getWorkspacePreferencesValue(
-						PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
+				.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 
 		PHPVersion version = PHPVersion.byAlias(versionName);
 		if (version != null && ProjectOptions.getDefaultPhpVersion() != version) {

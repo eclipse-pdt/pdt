@@ -65,32 +65,26 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages
-				.format(
-						CoreMessages
-								.getString("LocalVariableOccurrencesFinder.1"), fIdentifier.getName()); //$NON-NLS-1$
+		fDescription = Messages.format(CoreMessages.getString("LocalVariableOccurrencesFinder.1"), //$NON-NLS-1$
+				fIdentifier.getName());
 		fFunctionDeclaration.accept(this);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse
-	 * .php.internal.core.ast.nodes.Variable)
+	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * eclipse .php.internal.core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
-		if (name.getType() == ASTNode.IDENTIFIER
-				&& variable.isDollared()
+		if (name.getType() == ASTNode.IDENTIFIER && variable.isDollared()
 				&& variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS) {
-			if (((Identifier) name).getName()
-					.equals(this.fIdentifier.getName())) {
+			if (((Identifier) name).getName().equals(this.fIdentifier.getName())) {
 				addOccurrence(variable);
 			}
 		}
@@ -101,11 +95,9 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		int readWriteType = getOccurrenceType(node);
 		String desc = fDescription;
 		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
-			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + fIdentifier
-					.getName());
+			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + fIdentifier.getName());
 		}
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
-				readWriteType, desc));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
 	}
 
 	/*
@@ -141,13 +133,11 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 			}
 		}
 
-		if ((parentType == ASTNode.FOR_EACH_STATEMENT && node
-				.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY)
-				|| parentType == ASTNode.FORMAL_PARAMETER
-				|| parentType == ASTNode.CATCH_CLAUSE
+		if ((parentType == ASTNode.FOR_EACH_STATEMENT
+				&& node.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY)
+				|| parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.CATCH_CLAUSE
 				|| parentType == ASTNode.PREFIX_EXPRESSION
-				|| parentType == ASTNode.REFERENCE
-				&& parent.getParent().getType() == ASTNode.FORMAL_PARAMETER
+				|| parentType == ASTNode.REFERENCE && parent.getParent().getType() == ASTNode.FORMAL_PARAMETER
 				|| parentType == ASTNode.POSTFIX_EXPRESSION) {
 			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 		}

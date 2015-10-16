@@ -26,13 +26,12 @@ import org.eclipse.php.internal.core.codeassist.contexts.InstanceOfContext;
  * 
  * @author michael
  */
-public class NamespaceElementsCompositeStrategy extends
-		AbstractCompletionStrategy {
+public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 
-	public NamespaceElementsCompositeStrategy(ICompletionContext context,
-			ICompletionContext[] allContexts, boolean isGlobalNamespace) {
+	public NamespaceElementsCompositeStrategy(ICompletionContext context, ICompletionContext[] allContexts,
+			boolean isGlobalNamespace) {
 		super(context);
 
 		boolean hasNewClassContext = false;
@@ -55,8 +54,7 @@ public class NamespaceElementsCompositeStrategy extends
 			if (hasNewClassContext) {
 				strategies.add(new ClassInstantiationStrategy(context));
 			} else if (hasNewExceptionClassContext) {
-				strategies
-						.add(new ExceptionClassInstantiationStrategy(context));
+				strategies.add(new ExceptionClassInstantiationStrategy(context));
 			} else if (hasInstanceOfContext) {
 				strategies.add(new InstanceOfStrategy(context));
 			} else {
@@ -66,12 +64,9 @@ public class NamespaceElementsCompositeStrategy extends
 			}
 		} else {
 			if (hasNewClassContext) {
-				strategies
-						.add(new NamespaceClassInstantiationStrategy(context));
+				strategies.add(new NamespaceClassInstantiationStrategy(context));
 			} else if (hasNewExceptionClassContext) {
-				strategies
-						.add(new NamespaceExceptionClassInstantiationStrategy(
-								context));
+				strategies.add(new NamespaceExceptionClassInstantiationStrategy(context));
 			} else if (hasInstanceOfContext) {
 				strategies.add(new NamespaceInstanceOfStrategy(context));
 			} else {

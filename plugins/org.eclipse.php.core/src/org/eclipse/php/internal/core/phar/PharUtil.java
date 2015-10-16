@@ -20,17 +20,14 @@ import org.eclipse.php.internal.core.phar.digest.Digest;
 
 public class PharUtil {
 
-	public static ByteArrayInputStream getStubInputStream(IStub stub)
-			throws IOException, CoreException {
+	public static ByteArrayInputStream getStubInputStream(IStub stub) throws IOException, CoreException {
 		ByteArrayOutputStream stubOutput = new ByteArrayOutputStream();
 		stub.write(stubOutput);
-		ByteArrayInputStream fileInput = new ByteArrayInputStream(stubOutput
-				.toByteArray());
+		ByteArrayInputStream fileInput = new ByteArrayInputStream(stubOutput.toByteArray());
 		return fileInput;
 	}
 
-	public static ByteArrayInputStream getInputStream(byte[] signature)
-			throws IOException {
+	public static ByteArrayInputStream getInputStream(byte[] signature) throws IOException {
 		ByteArrayInputStream fileInput = new ByteArrayInputStream(signature);
 		return fileInput;
 	}
@@ -58,8 +55,8 @@ public class PharUtil {
 		byte[] versionBytes = new byte[versionNumberLength / 2];
 
 		for (int i = 0; i < versionBytes.length; i++) {
-			versionBytes[i] = (byte) (versionNumbers.get(i * 2).intValue() * 16 + versionNumbers
-					.get(i * 2 + 1).intValue());
+			versionBytes[i] = (byte) (versionNumbers.get(i * 2).intValue() * 16
+					+ versionNumbers.get(i * 2 + 1).intValue());
 		}
 		return versionBytes;
 	}
@@ -87,8 +84,7 @@ public class PharUtil {
 		int currentByte = -1;
 		// if currentByte is equal to char '_',we will not read the next
 		// byte
-		while (!stubHasBeenFound
-				&& (currentByte == PharConstants.Underline || (n = bis.read()) != -1)) {
+		while (!stubHasBeenFound && (currentByte == PharConstants.Underline || (n = bis.read()) != -1)) {
 			if (n == PharConstants.Underline) {
 				boolean match = false;
 				int j = 1;
@@ -153,10 +149,8 @@ public class PharUtil {
 		throw new IOException(string);
 	}
 
-	public static byte[] getWholeSignature(byte[] signature,
-			PharPackage pharPackage) {
-		byte[] tmp = comcat(signature, Digest.DIGEST_MAP.get(
-				pharPackage.getSignature()).getBitMap());
+	public static byte[] getWholeSignature(byte[] signature, PharPackage pharPackage) {
+		byte[] tmp = comcat(signature, Digest.DIGEST_MAP.get(pharPackage.getSignature()).getBitMap());
 		tmp = comcat(tmp, PharConstants.GBMB);
 		return tmp;
 	}
@@ -184,14 +178,12 @@ public class PharUtil {
 
 	}
 
-	public static boolean checkSignature(File file, Digest digest, int end)
-			throws IOException {
+	public static boolean checkSignature(File file, Digest digest, int end) throws IOException {
 		MessageDigest messageDigest = digest.getDigest();
 		messageDigest.reset();
 		int length = 0;
 
-		InputStream contentStream = new BufferedInputStream(
-				new FileInputStream(file));
+		InputStream contentStream = new BufferedInputStream(new FileInputStream(file));
 		try {
 			int n;
 			int size = 4096;
@@ -241,8 +233,7 @@ public class PharUtil {
 	}
 
 	public static byte[] getGlobalBitmap(PharPackage pharPackage) {
-		byte[] globalBitmap = PharUtil
-				.getCopy(PharConstants.Default_Global_Bitmap);
+		byte[] globalBitmap = PharUtil.getCopy(PharConstants.Default_Global_Bitmap);
 		// if(pharData.)
 		switch (pharPackage.getCompressType()) {
 		case PharConstants.BZ2_COMPRESSED:
@@ -278,8 +269,7 @@ public class PharUtil {
 	}
 
 	// if the length is too length,it will not skip that long
-	public static void skip(BufferedInputStream bis, long length)
-			throws IOException {
+	public static void skip(BufferedInputStream bis, long length) throws IOException {
 		long n;
 		while ((n = bis.skip(length)) != 0) {
 			length = length - n;

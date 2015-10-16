@@ -52,8 +52,7 @@ public class PHPKeywords {
 		 * @param suffix
 		 * @param suffixOffset
 		 */
-		public KeywordData(String name, String suffix, int suffixOffset,
-				boolean ignoreCase) {
+		public KeywordData(String name, String suffix, int suffixOffset, boolean ignoreCase) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
@@ -64,8 +63,7 @@ public class PHPKeywords {
 			this(name, suffix, suffixOffset, false);
 		}
 
-		public KeywordData(String name, String suffix, int suffixOffset,
-				int context, boolean ignoreCase) {
+		public KeywordData(String name, String suffix, int suffixOffset, int context, boolean ignoreCase) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
@@ -73,8 +71,7 @@ public class PHPKeywords {
 			this.ignoreCase = ignoreCase;
 		}
 
-		public KeywordData(String name, String suffix, int suffixOffset,
-				int context) {
+		public KeywordData(String name, String suffix, int suffixOffset, int context) {
 			this(name, suffix, suffixOffset, context, false);
 		}
 
@@ -104,8 +101,7 @@ public class PHPKeywords {
 		}
 
 		public int compareTo(KeywordData o) {
-			return this.ignoreCase ? this.name.compareToIgnoreCase(o.name)
-					: this.name.compareTo(o.name);
+			return this.ignoreCase ? this.name.compareToIgnoreCase(o.name) : this.name.compareTo(o.name);
 		}
 	}
 
@@ -158,8 +154,8 @@ public class PHPKeywords {
 			return result;
 		}
 		for (KeywordData data : keywordData) {
-			if (data.name.startsWith(prefix) || (data.ignoreCase && data.name
-					.toLowerCase().startsWith(prefix.toLowerCase()))) {
+			if (data.name.startsWith(prefix)
+					|| (data.ignoreCase && data.name.toLowerCase().startsWith(prefix.toLowerCase()))) {
 				result.add(data);
 			}
 		}
@@ -178,8 +174,8 @@ public class PHPKeywords {
 			return result;
 		}
 		for (KeywordData data : keywordData) {
-			if (data.name.startsWith(prefix) || (data.ignoreCase && data.name
-					.toLowerCase().startsWith(prefix.toLowerCase()))) {
+			if (data.name.startsWith(prefix)
+					|| (data.ignoreCase && data.name.toLowerCase().startsWith(prefix.toLowerCase()))) {
 				result.add(data.name);
 			}
 		}

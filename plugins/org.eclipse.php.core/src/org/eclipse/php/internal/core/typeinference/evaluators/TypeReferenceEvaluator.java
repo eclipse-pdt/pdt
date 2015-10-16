@@ -59,10 +59,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 	private boolean isSelfOrStatic() {
 		String name = typeReference.getName();
-		if (goal.getContext() instanceof ISourceModuleContext
-				&& PHPVersion.PHP5_4.isLessThan(ProjectOptions
-						.getPhpVersion(((ISourceModuleContext) goal
-								.getContext()).getSourceModule()))) {
+		if (goal.getContext() instanceof ISourceModuleContext && PHPVersion.PHP5_4.isLessThan(
+				ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule()))) {
 			name = name.toLowerCase();
 		}
 
@@ -71,10 +69,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 	private boolean isParent() {
 		String name = typeReference.getName();
-		if (goal.getContext() instanceof ISourceModuleContext
-				&& PHPVersion.PHP5_4.isLessThan(ProjectOptions
-						.getPhpVersion(((ISourceModuleContext) goal
-								.getContext()).getSourceModule()))) {
+		if (goal.getContext() instanceof ISourceModuleContext && PHPVersion.PHP5_4.isLessThan(
+				ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule()))) {
 			name = name.toLowerCase();
 		}
 
@@ -93,19 +89,14 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 					result = instanceType;
 				}
 			}
-		} else if (isParent()) { //$NON-NLS-1$
+		} else if (isParent()) { // $NON-NLS-1$
 			if (context instanceof MethodContext) {
 				final MethodContext methodContext = (MethodContext) context;
 				ModuleDeclaration rootNode = methodContext.getRootNode();
-				ISourceModule sourceModule = ((ISourceModuleContext) context)
-						.getSourceModule();
-				final IType currentNamespace = PHPModelUtils
-						.getCurrentNamespace(sourceModule,
-								rootNode.sourceStart());
-				final ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration(sourceModule);
-				final MethodDeclaration methodDecl = methodContext
-						.getMethodNode();
+				ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
+				final IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, rootNode.sourceStart());
+				final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+				final MethodDeclaration methodDecl = methodContext.getMethodNode();
 
 				// Look for parent class types:
 				final List<IEvaluatedType> types = new LinkedList<IEvaluatedType>();
@@ -114,17 +105,13 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						private TypeDeclaration currentType;
 						private boolean found;
 
-						public boolean visit(MethodDeclaration s)
-								throws Exception {
-							if (s == methodDecl
-									&& currentType instanceof ClassDeclaration) {
+						public boolean visit(MethodDeclaration s) throws Exception {
+							if (s == methodDecl && currentType instanceof ClassDeclaration) {
 								ClassDeclaration classDecl = (ClassDeclaration) currentType;
 
-								ASTListNode superClasses = classDecl
-										.getSuperClasses();
+								ASTListNode superClasses = classDecl.getSuperClasses();
 								List<ASTNode> childs = superClasses.getChilds();
-								for (Iterator<ASTNode> iterator = childs
-										.iterator(); iterator.hasNext();) {
+								for (Iterator<ASTNode> iterator = childs.iterator(); iterator.hasNext();) {
 									ASTNode node = (ASTNode) iterator.next();
 									NamespaceReference namespace = null;
 									SimpleReference reference = null;
@@ -135,81 +122,49 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 											FullyQualifiedReference ref = (FullyQualifiedReference) node;
 											namespace = ref.getNamespace();
 										}
-										if (namespace != null
-												&& !namespace.getName().equals(
-														"")) { //$NON-NLS-1$
+										if (namespace != null && !namespace.getName().equals("")) { //$NON-NLS-1$
 											String nsName = namespace.getName();
 											if (nsName.equals("\\")) { //$NON-NLS-1$
 												typeName = nsName + typeName;
 											} else {
-												if (nsName
-														.startsWith("namespace\\")) { //$NON-NLS-1$
-													nsName = nsName.replace(
-															"namespace\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
+												if (nsName.startsWith("namespace\\")) { //$NON-NLS-1$
+													nsName = nsName.replace("namespace\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
 												}
-												typeName = nsName
-														+ NamespaceReference.NAMESPACE_SEPARATOR
-														+ typeName;
+												typeName = nsName + NamespaceReference.NAMESPACE_SEPARATOR + typeName;
 											}
 										}
-										if (typeName
-												.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+										if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
 											// check if the first part
 											// is an
 											// alias,then get the full
 											// name
-											String prefix = typeName.substring(
-													0,
+											String prefix = typeName.substring(0,
 													typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-											final Map<String, UsePart> result = PHPModelUtils
-													.getAliasToNSMap(
-															prefix,
-															moduleDeclaration,
-															reference
-																	.sourceStart(),
-															currentNamespace,
-															true);
+											final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix,
+													moduleDeclaration, reference.sourceStart(), currentNamespace, true);
 											if (result.containsKey(prefix)) {
-												String fullName = result
-														.get(prefix)
-														.getNamespace()
+												String fullName = result.get(prefix).getNamespace()
 														.getFullyQualifiedName();
-												typeName = typeName.replace(
-														prefix, fullName);
+												typeName = typeName.replace(prefix, fullName);
 											}
-										} else if (typeName
-												.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+										} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 
 											String prefix = typeName;
-											final Map<String, UsePart> result = PHPModelUtils
-													.getAliasToNSMap(
-															prefix,
-															moduleDeclaration,
-															reference
-																	.sourceStart(),
-															currentNamespace,
-															true);
+											final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix,
+													moduleDeclaration, reference.sourceStart(), currentNamespace, true);
 											if (result.containsKey(prefix)) {
-												String fullName = result
-														.get(prefix)
-														.getNamespace()
+												String fullName = result.get(prefix).getNamespace()
 														.getFullyQualifiedName();
 												typeName = fullName;
 											}
 										}
-										IEvaluatedType type = PHPSimpleTypes
-												.fromString(typeName);
+										IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
 										if (type == null) {
-											if (typeName
-													.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+											if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
 													|| currentNamespace == null) {
-												type = new PHPClassType(
-														typeName);
+												type = new PHPClassType(typeName);
 											} else {
-												type = new PHPClassType(
-														currentNamespace
-																.getElementName(),
-														typeName);
+												type = new PHPClassType(currentNamespace.getElementName(), typeName);
 											}
 										}
 
@@ -231,14 +186,12 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 							return !found;
 						}
 
-						public boolean visit(TypeDeclaration s)
-								throws Exception {
+						public boolean visit(TypeDeclaration s) throws Exception {
 							this.currentType = s;
 							return !found;
 						}
 
-						public boolean endvisit(TypeDeclaration s)
-								throws Exception {
+						public boolean endvisit(TypeDeclaration s) throws Exception {
 							this.currentType = null;
 							return super.endvisit(s);
 						}
@@ -256,8 +209,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				if (types.size() == 1) {
 					result = types.get(0);
 				} else if (types.size() > 1) {
-					result = new AmbiguousType(
-							types.toArray(new IEvaluatedType[types.size()]));
+					result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 				}
 			}
 		} else {
@@ -270,27 +222,21 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			String fullyQualifiedName;
 			// If the namespace was prefixed explicitly - use it:
 			if (typeReference instanceof FullyQualifiedReference) {
-				fullyQualifiedName = ((FullyQualifiedReference) typeReference)
-						.getFullyQualifiedName();
+				fullyQualifiedName = ((FullyQualifiedReference) typeReference).getFullyQualifiedName();
 			} else {
 				fullyQualifiedName = typeReference.getName();
 
-				className = PHPEvaluationUtils
-						.extractArrayType(fullyQualifiedName);
+				className = PHPEvaluationUtils.extractArrayType(fullyQualifiedName);
 				className = PHPModelUtils.extractElementName(className);
 			}
-			ISourceModule sourceModule = ((ISourceModuleContext) context)
-					.getSourceModule();
+			ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
 			int offset = typeReference.sourceStart();
-			String extractedNamespace = PHPModelUtils.extractNamespaceName(
-					fullyQualifiedName, sourceModule, offset);
+			String extractedNamespace = PHPModelUtils.extractNamespaceName(fullyQualifiedName, sourceModule, offset);
 			if (extractedNamespace != null) {
 				parentNamespace = extractedNamespace;
-				className = PHPModelUtils.getRealName(fullyQualifiedName,
-						sourceModule, offset, className);
+				className = PHPModelUtils.getRealName(fullyQualifiedName, sourceModule, offset, className);
 			}
-			if (PHPModelUtils.isInUseTraitStatement(
-					((ISourceModuleContext) context).getRootNode(),
+			if (PHPModelUtils.isInUseTraitStatement(((ISourceModuleContext) context).getRootNode(),
 					typeReference.sourceStart())) {
 				if (parentNamespace != null) {
 					result = new PHPTraitType(parentNamespace, className);

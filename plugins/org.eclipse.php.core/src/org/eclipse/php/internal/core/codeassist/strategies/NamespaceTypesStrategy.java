@@ -34,8 +34,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
  */
 public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 
-	public NamespaceTypesStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public NamespaceTypesStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -51,7 +50,7 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
 		// now we compute type suffix in PHPCompletionProposalCollector
-		String suffix = "";//$NON-NLS-1$ 
+		String suffix = "";//$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {
@@ -59,16 +58,14 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		}
 	}
 
-	public IType[] getTypes(NamespaceMemberContext context)
-			throws BadLocationException {
+	public IType[] getTypes(NamespaceMemberContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
 		List<IType> result = new LinkedList<IType>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(
-							type.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
 						result.add(type);
 					}
 				}

@@ -64,8 +64,7 @@ public abstract class ClassMemberContext extends StatementContext {
 	private IType[] types;
 	private int elementStart;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -79,19 +78,15 @@ public abstract class ClassMemberContext extends StatementContext {
 		// .getOriginalOffset(0) - 2);
 		// statementText1.toString();
 		int totalLength = statementText.length();
-		elementStart = PHPTextSequenceUtilities
-				.readBackwardSpaces(statementText, totalLength);
-		elementStart = PHPTextSequenceUtilities
-				.readIdentifierStartIndex(statementText, elementStart, true);
-		elementStart = PHPTextSequenceUtilities
-				.readBackwardSpaces(statementText, elementStart);
+		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength);
+		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, elementStart, true);
+		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart);
 		if (elementStart <= 2) { // there's no trigger of length less than 2
 			// characters
 			return false;
 		}
 
-		String triggerText = statementText
-				.subSequence(elementStart - 2, elementStart).toString();
+		String triggerText = statementText.subSequence(elementStart - 2, elementStart).toString();
 		if (triggerText.equals("->")) { //$NON-NLS-1$
 			triggerType = Trigger.OBJECT;
 		} else if (triggerText.equals("::")) { //$NON-NLS-1$
@@ -107,16 +102,14 @@ public abstract class ClassMemberContext extends StatementContext {
 			while (enclosingElement instanceof IMethod) {
 				enclosingElement = enclosingElement.getParent();
 			}
-			if (enclosingElement instanceof IType && PHPFlags
-					.isAnonymous(((IType) enclosingElement).getFlags())) {
+			if (enclosingElement instanceof IType && PHPFlags.isAnonymous(((IType) enclosingElement).getFlags())) {
 				tmpTypes.add((IType) enclosingElement);
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
 
-		tmpTypes.addAll(Arrays.asList(getCompanion().getLeftHandType(this,
-				!isInUseTraitStatement())));
+		tmpTypes.addAll(Arrays.asList(getCompanion().getLeftHandType(this, !isInUseTraitStatement())));
 		types = tmpTypes.toArray(new IType[0]);
 		return true;
 	}
@@ -156,23 +149,20 @@ public abstract class ClassMemberContext extends StatementContext {
 
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || phpToken
-				.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
+		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR
+				|| phpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion
-					.getPhpToken(phpToken.getEnd());
+			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
 
 			if (phpToken.getTextLength() == phpToken.getLength()) {
 				int addOffset = 0;
 				if (nextRegion.getType() == PHPRegionTypes.PHP_TOKEN
-						|| nextRegion
-								.getType() == PHPRegionTypes.PHP_SEMICOLON) {
+						|| nextRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
 					addOffset = phpToken.getEnd();
 				} else {
 					addOffset = nextRegion.getTextEnd();
 				}
-				return getRegionCollection().getStartOffset()
-						+ phpScriptRegion.getStart() + addOffset;
+				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + addOffset;
 			}
 		}
 		return super.getPrefixEnd();

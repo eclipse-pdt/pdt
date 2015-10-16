@@ -35,13 +35,11 @@ public class ClassInstanceCreation extends Expression {
 	private final CallArgumentsList ctorParams;
 	private final AnonymousClassDeclaration anonymousClassDeclaration;
 
-	public ClassInstanceCreation(int start, int end, Expression className,
-			CallArgumentsList ctorParams) {
+	public ClassInstanceCreation(int start, int end, Expression className, CallArgumentsList ctorParams) {
 		this(start, end, className, ctorParams, null);
 	}
 
-	public ClassInstanceCreation(int start, int end, Expression className,
-			CallArgumentsList ctorParams,
+	public ClassInstanceCreation(int start, int end, Expression className, CallArgumentsList ctorParams,
 			AnonymousClassDeclaration anonymousClass) {
 		super(start, end);
 

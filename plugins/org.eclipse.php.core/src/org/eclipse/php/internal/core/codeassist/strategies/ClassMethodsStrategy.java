@@ -36,8 +36,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class ClassMethodsStrategy extends ClassMembersStrategy {
 
-	public ClassMethodsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public ClassMethodsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -52,11 +51,10 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		}
 
 		ClassMemberContext concreteContext = (ClassMemberContext) context;
-		CompletionRequestor requestor = concreteContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
 
-		String prefix = concreteContext.getPrefix().isEmpty() ? concreteContext
-				.getPreviousWord() : concreteContext.getPrefix();
+		String prefix = concreteContext.getPrefix().isEmpty() ? concreteContext.getPreviousWord()
+				: concreteContext.getPrefix();
 		boolean isParentCall = isParentCall(concreteContext);
 		String suffix = getSuffix(concreteContext);
 
@@ -69,44 +67,35 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
 		Set<String> magicMethods = new HashSet<String>();
-		magicMethods.addAll(Arrays.asList(PHPMagicMethods
-				.getMethods(phpVersion)));
+		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
 
 		boolean exactName = requestor.isContextInformationMode();
 		// for methodName(|),we need set exactName to true
-		if (!exactName
-				&& concreteContext.getOffset() - 1 >= 0
-				&& concreteContext.getDocument().getChar(
-						concreteContext.getOffset() - 1) == '(') {
+		if (!exactName && concreteContext.getOffset() - 1 >= 0
+				&& concreteContext.getDocument().getChar(concreteContext.getOffset() - 1) == '(') {
 			exactName = true;
 		}
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
-				ITypeHierarchy hierarchy = getCompanion()
-						.getSuperTypeHierarchy(type, null);
+				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 
-				IMethod[] methods = isParentCall ? PHPModelUtils
-						.getSuperTypeHierarchyMethod(type, hierarchy, prefix,
-								exactName, null) : PHPModelUtils
-						.getTypeHierarchyMethod(type, hierarchy, prefix,
-								exactName, null);
+				IMethod[] methods = isParentCall
+						? PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, null)
+						: PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, prefix, exactName, null);
 
-				boolean inConstructor = isInConstructor(type,
-						type.getMethods(), concreteContext);
-				for (IMethod method : removeOverriddenElements(Arrays
-						.asList(methods))) {
+				boolean inConstructor = isInConstructor(type, type.getMethods(), concreteContext);
+				for (IMethod method : removeOverriddenElements(Arrays.asList(methods))) {
 
 					if (concreteContext.isInUseTraitStatement()) {
 						// result.add(method);
 						reporter.reportMethod((IMethod) method, "", //$NON-NLS-1$
 								replaceRange, ProposalExtraInfo.METHOD_ONLY);
-					} else if ((!PHPModelUtils.isConstructor(method) || inConstructor
-							&& isSuperConstructor(method, type, concreteContext))
+					} else if ((!PHPModelUtils.isConstructor(method)
+							|| inConstructor && isSuperConstructor(method, type, concreteContext))
 							&& !isFiltered(method, type, concreteContext)) {
 						if (magicMethods.contains(method.getElementName())) {
-							reporter.reportMethod(method, suffix, replaceRange,
-									ProposalExtraInfo.MAGIC_METHOD);
+							reporter.reportMethod(method, suffix, replaceRange, ProposalExtraInfo.MAGIC_METHOD);
 						} else {
 							result.add(method);
 						}
@@ -121,18 +110,14 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		}
 	}
 
-	private boolean isInConstructor(IType type, IMethod[] methods,
-			ClassMemberContext concreteContext) {
+	private boolean isInConstructor(IType type, IMethod[] methods, ClassMemberContext concreteContext) {
 		try {
 			for (int i = 0; i < methods.length; i++) {
 				IMethod method = methods[i];
-				if (PHPModelUtils.isConstructor(method)
-						&& method.getDeclaringType().equals(type)) {
+				if (PHPModelUtils.isConstructor(method) && method.getDeclaringType().equals(type)) {
 					ISourceRange construtorRange = method.getSourceRange();
-					if (concreteContext.getOffset() > construtorRange
-							.getOffset()
-							&& concreteContext.getOffset() < construtorRange
-									.getOffset() + construtorRange.getLength()) {
+					if (concreteContext.getOffset() > construtorRange.getOffset() && concreteContext
+							.getOffset() < construtorRange.getOffset() + construtorRange.getLength()) {
 						return true;
 					}
 				}
@@ -142,11 +127,9 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		return false;
 	}
 
-	private boolean isSuperConstructor(IMethod method, IType type,
-			ClassMemberContext context) {
-		if (PHPModelUtils.isConstructor(method)
-				&& context.getTriggerType() == Trigger.CLASS
-				&& isParent(context) && !method.getDeclaringType().equals(type)) {
+	private boolean isSuperConstructor(IMethod method, IType type, ClassMemberContext context) {
+		if (PHPModelUtils.isConstructor(method) && context.getTriggerType() == Trigger.CLASS && isParent(context)
+				&& !method.getDeclaringType().equals(type)) {
 			return true;
 		}
 		return false;
@@ -159,8 +142,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 	 * @return
 	 */
 	private boolean isParent(ClassMemberContext context) {
-		return !isThisCall(context) && isParentCall(context)
-				&& isDirectParentCall(context);
+		return !isThisCall(context) && isParentCall(context) && isDirectParentCall(context);
 	}
 
 	// private IMethod getConstructor(IType type, IMethod[] methods) {
@@ -175,12 +157,10 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 	// }
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
-		return super.showNonStaticMembers(context)
-				|| context.getTriggerType() == Trigger.CLASS;
+		return super.showNonStaticMembers(context) || context.getTriggerType() == Trigger.CLASS;
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext)
-			throws BadLocationException {
+	public String getSuffix(AbstractCompletionContext abstractContext) throws BadLocationException {
 		// look for method bracket or end of line
 		IDocument document = abstractContext.getDocument();
 		int offset = abstractContext.getOffset();

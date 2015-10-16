@@ -58,9 +58,8 @@ public class PHPClassType extends ClassType implements IClassType {
 			// check is global namespace
 			if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				// make the type name fully qualified:
-				typeName = new StringBuilder()
-						.append(NamespaceReference.NAMESPACE_SEPARATOR)
-						.append(typeName).toString();
+				typeName = new StringBuilder().append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName)
+						.toString();
 				i += 1;
 			}
 			this.namespace = typeName.substring(0, i);
@@ -78,15 +77,13 @@ public class PHPClassType extends ClassType implements IClassType {
 		}
 
 		// make the namespace fully qualified
-		if (namespace.length() > 0
-				&& namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (namespace.length() > 0 && namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 			namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
 		}
 
 		this.namespace = namespace;
-		this.typeName = new StringBuilder(namespace)
-				.append(NamespaceReference.NAMESPACE_SEPARATOR)
-				.append(typeName).toString();
+		this.typeName = new StringBuilder(namespace).append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName)
+				.toString();
 	}
 
 	/**
@@ -132,37 +129,29 @@ public class PHPClassType extends ClassType implements IClassType {
 	 *            Offset in file here the type was referenced
 	 * @return
 	 */
-	public static PHPClassType fromTypeName(String typeName,
-			ISourceModule sourceModule, int offset) {
-		String namespace = PHPModelUtils.extractNamespaceName(typeName,
-				sourceModule, offset);
-		final ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+	public static PHPClassType fromTypeName(String typeName, ISourceModule sourceModule, int offset) {
+		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
+		final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		if (PHPModelUtils.isInUseTraitStatement(moduleDeclaration, offset)) {
 
 			if (namespace != null) {
-				return new PHPTraitType(namespace,
-						PHPModelUtils.extractElementName(typeName));
+				return new PHPTraitType(namespace, PHPModelUtils.extractElementName(typeName));
 			}
 			return new PHPTraitType(typeName);
 		} else {
 
 			if (namespace != null) {
-				return new PHPClassType(namespace,
-						PHPModelUtils.extractElementName(typeName));
+				return new PHPClassType(namespace, PHPModelUtils.extractElementName(typeName));
 			}
 			return new PHPClassType(typeName);
 		}
 	}
 
-	public static PHPClassType fromTraitName(String typeName,
-			ISourceModule sourceModule, int offset) {
-		String namespace = PHPModelUtils.extractNamespaceName(typeName,
-				sourceModule, offset);
+	public static PHPClassType fromTraitName(String typeName, ISourceModule sourceModule, int offset) {
+		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
 
 		if (namespace != null) {
-			return new PHPTraitType(namespace,
-					PHPModelUtils.extractElementName(typeName));
+			return new PHPTraitType(namespace, PHPModelUtils.extractElementName(typeName));
 		}
 		return new PHPTraitType(typeName);
 	}
@@ -179,8 +168,7 @@ public class PHPClassType extends ClassType implements IClassType {
 			if (PHPFlags.isTrait(type.getFlags())) {
 				IType namespace = type.getDeclaringType();
 				if (namespace != null) {
-					return new PHPTraitType(namespace.getElementName(),
-							elementName);
+					return new PHPTraitType(namespace.getElementName(), elementName);
 				}
 				return new PHPTraitType(elementName);
 			}
@@ -200,8 +188,8 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * @return
 	 */
 	public static IEvaluatedType fromSimpleReference(SimpleReference name) {
-		String typeName = name instanceof FullyQualifiedReference ? ((FullyQualifiedReference) name)
-				.getFullyQualifiedName() : name.getName();
+		String typeName = name instanceof FullyQualifiedReference
+				? ((FullyQualifiedReference) name).getFullyQualifiedName() : name.getName();
 		IEvaluatedType simpleType = PHPSimpleTypes.fromString(typeName);
 		if (simpleType != null) {
 			return simpleType;
@@ -212,10 +200,8 @@ public class PHPClassType extends ClassType implements IClassType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((namespace == null) ? 0 : namespace.hashCode());
-		result = prime * result
-				+ ((typeName == null) ? 0 : typeName.hashCode());
+		result = prime * result + ((namespace == null) ? 0 : namespace.hashCode());
+		result = prime * result + ((typeName == null) ? 0 : typeName.hashCode());
 		return result;
 	}
 

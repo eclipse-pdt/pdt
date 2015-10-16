@@ -45,19 +45,18 @@ public class YieldExpression extends Expression {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
-			YieldExpression.class, "expression", Expression.class, OPTIONAL, //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(YieldExpression.class,
+			"expression", Expression.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
 
 	/**
 	 * The "key" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor KEY_PROPERTY = new ChildPropertyDescriptor(
-			YieldExpression.class, "key", Expression.class, OPTIONAL, //$NON-NLS-1$
-			CYCLE_RISK);
+	public static final ChildPropertyDescriptor KEY_PROPERTY = new ChildPropertyDescriptor(YieldExpression.class, "key", //$NON-NLS-1$
+			Expression.class, OPTIONAL, CYCLE_RISK);
 
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
-			YieldExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(YieldExpression.class,
+			"operator", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -66,8 +65,7 @@ public class YieldExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(KEY_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
@@ -86,8 +84,7 @@ public class YieldExpression extends Expression {
 		this(start, end, ast, expr, OP_NONE);
 	}
 
-	public YieldExpression(int start, int end, AST ast, Expression key,
-			Expression expr) {
+	public YieldExpression(int start, int end, AST ast, Expression key, Expression expr) {
 		super(start, end, ast);
 		if (key != null) {
 			setKey(key);
@@ -98,8 +95,7 @@ public class YieldExpression extends Expression {
 		this.operator = OP_NONE;
 	}
 
-	public YieldExpression(int start, int end, AST ast, Expression expr,
-			int operator) {
+	public YieldExpression(int start, int end, AST ast, Expression expr, int operator) {
 		super(start, end, ast);
 
 		if (expr != null) {
@@ -237,8 +233,7 @@ public class YieldExpression extends Expression {
 		return operator;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
 				return getExpression();
@@ -258,8 +253,7 @@ public class YieldExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
@@ -284,15 +278,13 @@ public class YieldExpression extends Expression {
 	ASTNode clone0(AST target) {
 		final Expression key = ASTNode.copySubtree(target, getKey());
 		final Expression expr = ASTNode.copySubtree(target, getExpression());
-		final YieldExpression result = new YieldExpression(this.getStart(),
-				this.getEnd(), target, key, expr);
+		final YieldExpression result = new YieldExpression(this.getStart(), this.getEnd(), target, key, expr);
 		result.setOperator(operator);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

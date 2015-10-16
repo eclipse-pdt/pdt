@@ -19,8 +19,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 public class UseFunctionNameContext extends UseStatementContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -28,8 +27,7 @@ public class UseFunctionNameContext extends UseStatementContext {
 		try {
 			String previousWord = getPreviousWord();
 			if ("function".equalsIgnoreCase(previousWord) //$NON-NLS-1$
-					&& getPrefix().indexOf(
-							NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
+					&& getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
 				return true;
 			}
 		} catch (BadLocationException e) {

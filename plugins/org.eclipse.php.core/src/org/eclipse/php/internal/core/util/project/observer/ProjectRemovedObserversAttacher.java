@@ -46,8 +46,7 @@ public class ProjectRemovedObserversAttacher {
 	 * @param project
 	 * @param projectChangeObserver
 	 */
-	public boolean addProjectClosedObserver(IProject project,
-			IProjectClosedObserver projectChangeObserver) {
+	public boolean addProjectClosedObserver(IProject project, IProjectClosedObserver projectChangeObserver) {
 		if (resourceChangeListener == null) {
 			resourceChangeListener = new IResourceChangeListener() {
 				public void resourceChanged(IResourceChangeEvent event) {
@@ -56,20 +55,17 @@ public class ProjectRemovedObserversAttacher {
 						return;
 					}
 					// always the workspace so the children must be projects
-					IResourceDelta[] affectedChildren = resourceDelta
-							.getAffectedChildren(IResourceDelta.CHANGED);
+					IResourceDelta[] affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.CHANGED);
 					if (affectedChildren.length > 0) {
 						handleClosedProjects(affectedChildren);
 					} else {
-						affectedChildren = resourceDelta
-								.getAffectedChildren(IResourceDelta.REMOVED);
+						affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.REMOVED);
 						handleRemovedProjects(affectedChildren);
 					}
 				}
 			};
 		}
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-				resourceChangeListener);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 
 		if (project == null || !project.isAccessible()) {
 			return false;
@@ -113,18 +109,15 @@ public class ProjectRemovedObserversAttacher {
 				.remove(project);
 		compositeProjectChangeObserver.clear();
 		if (project2CompositeProjectChangeObserver.isEmpty()) {
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-					resourceChangeListener);
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
 		}
 	}
 
-	private CompositeProjectChangeObserver getCompositeProjectChangeObserver(
-			IProject project) {
+	private CompositeProjectChangeObserver getCompositeProjectChangeObserver(IProject project) {
 		Object object = project2CompositeProjectChangeObserver.get(project);
 		if (object == null) {
 			CompositeProjectChangeObserver compositeProjectChangeObserver = new CompositeProjectChangeObserver();
-			project2CompositeProjectChangeObserver.put(project,
-					compositeProjectChangeObserver);
+			project2CompositeProjectChangeObserver.put(project, compositeProjectChangeObserver);
 			return compositeProjectChangeObserver;
 		}
 

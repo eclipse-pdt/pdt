@@ -29,14 +29,12 @@ public class PharEntryBufferedRandomInputStream extends InputStream {
 	private int totalLength;
 	private BufferedRandomInputStream bufferedRandomInputStream;
 
-	public PharEntryBufferedRandomInputStream(File file, PharEntry pharEntry)
-			throws IOException {
+	public PharEntryBufferedRandomInputStream(File file, PharEntry pharEntry) throws IOException {
 		// super(file);
 		bufferedRandomInputStream = new BufferedRandomInputStream(file);
 		this.pharEntry = pharEntry;
 		totalLength = pharEntry.getCsize();
-		if (bufferedRandomInputStream.skip(pharEntry.getPosition()) != pharEntry
-				.getPosition()) {
+		if (bufferedRandomInputStream.skip(pharEntry.getPosition()) != pharEntry.getPosition()) {
 			throw new IOException(Messages.PharEntry_Too_Long);
 		}
 	}

@@ -59,8 +59,8 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 					}
 				}
 				if (namespace == null) {
-					String fullName = PHPModelUtils.getFullName(typeName,
-							methodContext.getSourceModule(), parameter.start());
+					String fullName = PHPModelUtils.getFullName(typeName, methodContext.getSourceModule(),
+							parameter.start());
 					typeName = PHPModelUtils.extractElementName(fullName);
 					namespace = PHPModelUtils.extractNameSpaceName(fullName);
 				}
@@ -75,34 +75,23 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		} else {
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
-				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
-						.getMethodNode();
+				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext.getMethodNode();
 				ISourceModule sourceModule = methodContext.getSourceModule();
 				PHPDocBlock[] docBlocks = new PHPDocBlock[0];
 				try {
-					IModelElement element = sourceModule
-							.getElementAt(methodDeclaration.getNameStart());
+					IModelElement element = sourceModule.getElementAt(methodDeclaration.getNameStart());
 					if (element instanceof IMethod) {
 						IMethod method = (IMethod) element;
 						if (method.getDeclaringType() != null) {
-							docBlocks = PHPModelUtils
-									.getTypeHierarchyMethodDoc(
-											method.getDeclaringType(),
-											methodContext.getCache() != null ? methodContext
-													.getCache()
-													.getSuperTypeHierarchy(
-															method.getDeclaringType(),
-															null)
-													: null, method
-													.getElementName(), true,
-											null);
+							docBlocks = PHPModelUtils.getTypeHierarchyMethodDoc(method.getDeclaringType(),
+									methodContext.getCache() != null ? methodContext.getCache()
+											.getSuperTypeHierarchy(method.getDeclaringType(), null) : null,
+									method.getElementName(), true, null);
 						} else {
-							docBlocks = new PHPDocBlock[] { methodDeclaration
-									.getPHPDoc() };
+							docBlocks = new PHPDocBlock[] { methodDeclaration.getPHPDoc() };
 						}
 					} else {
-						docBlocks = new PHPDocBlock[] { methodDeclaration
-								.getPHPDoc() };
+						docBlocks = new PHPDocBlock[] { methodDeclaration.getPHPDoc() };
 					}
 
 				} catch (CoreException e) {
@@ -120,20 +109,15 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 							if (parameter.isVariadic()) {
 								parameterName = ELLIPSIS + parameterName;
 							}
-							if (tag.getVariableReference().getName()
-									.equals(parameterName)) {
+							if (tag.getVariableReference().getName().equals(parameterName)) {
 								MultiTypeType multiType = new MultiTypeType();
-								for (TypeReference paramType : tag
-										.getTypeReferences()) {
+								for (TypeReference paramType : tag.getTypeReferences()) {
 									String typeName = paramType.getName();
 
-									typeName = PHPEvaluationUtils
-											.extractArrayType(typeName);
+									typeName = PHPEvaluationUtils.extractArrayType(typeName);
 
-									multiType.addType(PHPClassType
-											.fromTypeName(typeName,
-													sourceModule,
-													paramType.sourceStart()));
+									multiType.addType(
+											PHPClassType.fromTypeName(typeName, sourceModule, paramType.sourceStart()));
 								}
 								// when it is not true multi type
 								if (multiType.size() == 1) {
@@ -147,8 +131,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 						}
 					}
 				}
-				if (result == null
-						&& parameter.getInitialization() instanceof Scalar) {
+				if (result == null && parameter.getInitialization() instanceof Scalar) {
 					Scalar scalar = (Scalar) parameter.getInitialization();
 					result = PHPSimpleTypes.fromString(scalar.getType());
 					if (result == null) {

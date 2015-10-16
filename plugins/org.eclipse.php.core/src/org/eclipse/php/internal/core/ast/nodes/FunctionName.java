@@ -20,10 +20,13 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Holds a function name. 
- * note that the function name can be expression, 
- * <pre>e.g.<pre> foo() - the name is foo 
- * $a() - the variable $a holds the function name
+ * Holds a function name. note that the function name can be expression,
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * foo() - the name is foo $a() - the variable $a holds the function name
  */
 public class FunctionName extends ASTNode {
 
@@ -32,29 +35,28 @@ public class FunctionName extends ASTNode {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(FunctionName.class, "functionName", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(FunctionName.class,
+			"functionName", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
+	}
+
 	public FunctionName(int start, int end, AST ast, Expression functionName) {
 		super(start, end, ast);
 
 		if (functionName == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setName(functionName);
 	}
 
@@ -68,7 +70,7 @@ public class FunctionName extends ASTNode {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		name.accept(visitor);
@@ -101,7 +103,7 @@ public class FunctionName extends ASTNode {
 	 * Returns the name expression of this function name.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getName() {
 		return this.name;
 	}
@@ -112,18 +114,20 @@ public class FunctionName extends ASTNode {
 	public Expression getFunctionName() {
 		return this.name;
 	}
-		
+
 	/**
 	 * Sets the expression of this function name expression.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setName(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -133,7 +137,7 @@ public class FunctionName extends ASTNode {
 		this.name = expression;
 		postReplaceChild(oldChild, expression, NAME_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
@@ -146,9 +150,8 @@ public class FunctionName extends ASTNode {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -167,5 +170,5 @@ public class FunctionName extends ASTNode {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 }

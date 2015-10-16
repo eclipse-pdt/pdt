@@ -47,8 +47,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
-	public GlobalConstantsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public GlobalConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -60,8 +59,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		ICompletionContext context = getContext();
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = abstractContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
 		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
 			return;
@@ -88,8 +86,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 		IType enclosingType = null;
 		try {
-			IModelElement enclosingElement = sourceModule
-					.getElementAt(abstractContext.getOffset());
+			IModelElement enclosingElement = sourceModule.getElementAt(abstractContext.getOffset());
 
 			if (enclosingElement != null && enclosingElement instanceof IType) {
 				enclosingType = (IType) enclosingElement;
@@ -102,9 +99,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		IDLTKSearchScope scope = null;
 		IModelElement[] enclosingTypeConstants = null;
 
-		if (enclosingType != null
-				&& isStartOfStatement(prefix, abstractContext,
-						abstractContext.getOffset())) {
+		if (enclosingType != null && isStartOfStatement(prefix, abstractContext, abstractContext.getOffset())) {
 			// See the case of testClassStatement1.pdtt and
 			// testClassStatement2.pdtt
 			scope = SearchEngine.createSearchScope(enclosingType);
@@ -112,12 +107,11 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			scope = getSearchScope(abstractContext);
 		}
 
-		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix,
-				matchRule, Modifiers.AccConstant, 0, scope, null);
+		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
+				scope, null);
 
 		if (isCaseSensitive()) {
-			enclosingTypeConstants = filterByCase(enclosingTypeConstants,
-					prefix);
+			enclosingTypeConstants = filterByCase(enclosingTypeConstants, prefix);
 		}
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=310383
 		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
@@ -130,8 +124,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		addAlias(reporter);
 	}
 
-	protected void addAlias(ICompletionReporter reporter)
-			throws BadLocationException {
+	protected void addAlias(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		if (abstractContext.getCompletionRequestor().isContextInformationMode()) {
@@ -144,58 +137,48 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		IModuleSource module = reporter.getModule();
 		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
 				.getModelElement();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		final int offset = abstractContext.getOffset();
-		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule,
-				offset);
+		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 
-		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(
-				prefix, moduleDeclaration, offset, namespace, false);
+		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset, namespace,
+				false);
 		reportAlias(reporter, abstractContext, module, result);
 	}
 
-	protected void reportAlias(ICompletionReporter reporter,
-			AbstractCompletionContext abstractContext, IModuleSource module,
-			final Map<String, UsePart> result) throws BadLocationException {
+	protected void reportAlias(ICompletionReporter reporter, AbstractCompletionContext abstractContext,
+			IModuleSource module, final Map<String, UsePart> result) throws BadLocationException {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
-			String fullName = entry.getValue().getNamespace()
-					.getFullyQualifiedName();
+			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
 			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				fullName = fullName.substring(1);
 			}
-			IField[] elements = PhpModelAccess.getDefault().findFields(null,
-					fullName, MatchRule.PREFIX, 0, 0, scope, null);
+			IField[] elements = PhpModelAccess.getDefault().findFields(null, fullName, MatchRule.PREFIX, 0, 0, scope,
+					null);
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();
-				reportAlias(reporter, scope, module, replacementRange,
-						elements[i], elementName,
+				reportAlias(reporter, scope, module, replacementRange, elements[i], elementName,
 						elementName.replace(fullName, name));
 			}
 
-			elements = PhpModelAccess.getDefault().findFields(fullName,
-					MatchRule.EXACT, 0, 0, scope, null);
+			elements = PhpModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();
-				reportAlias(reporter, scope, module, replacementRange,
-						elements[i], elementName, name);
+				reportAlias(reporter, scope, module, replacementRange, elements[i], elementName, name);
 			}
 		}
 	}
 
-	protected void reportAlias(ICompletionReporter reporter,
-			IDLTKSearchScope scope, IModuleSource module,
-			ISourceRange replacementRange, IMember member, String fullName,
-			String alias) {
-		reporter.reportField(new AliasField((ModelElement) member, fullName,
-				alias), "", replacementRange, false, 0, getExtraInfo()); //$NON-NLS-1$
+	protected void reportAlias(ICompletionReporter reporter, IDLTKSearchScope scope, IModuleSource module,
+			ISourceRange replacementRange, IMember member, String fullName, String alias) {
+		reporter.reportField(new AliasField((ModelElement) member, fullName, alias), "", replacementRange, false, 0, //$NON-NLS-1$
+				getExtraInfo());
 	}
 
-	private boolean isStartOfStatement(String prefix,
-			AbstractCompletionContext abstractContext, int offset) {
+	private boolean isStartOfStatement(String prefix, AbstractCompletionContext abstractContext, int offset) {
 		IDocument doc = abstractContext.getDocument();
 		try {
 			int pos = offset - prefix.length() - 1;
@@ -214,8 +197,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 	}
 
 	private IModelElement[] filterClassConstants(IModelElement[] elements) {
-		List<IModelElement> result = new ArrayList<IModelElement>(
-				elements.length);
+		List<IModelElement> result = new ArrayList<IModelElement>(elements.length);
 		for (IModelElement element : elements) {
 			try {
 				if ((((IField) element).getFlags() & PHPCoreConstants.AccClassField) == 0) {
@@ -225,16 +207,14 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return (IModelElement[]) result
-				.toArray(new IModelElement[result.size()]);
+		return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 	}
 
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT;
 	}
 
-	private IDLTKSearchScope getSearchScope(
-			AbstractCompletionContext abstractContext) {
+	private IDLTKSearchScope getSearchScope(AbstractCompletionContext abstractContext) {
 		IDLTKSearchScope scope = createSearchScope();
 		return scope;
 	}

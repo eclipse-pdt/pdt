@@ -35,8 +35,7 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 		// String suffix = getSuffix(completionContext);
 		// addAlias(reporter, suffix);
 		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(
-						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 

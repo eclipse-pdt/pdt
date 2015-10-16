@@ -17,8 +17,13 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- *  Represents an reference to a variable to be used inside function call.
- *  <pre>e.g.<pre> &$a, &$a[0], &$$a, &$a{'key'}
+ * Represents an reference to a variable to be used inside function call.
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * &$a, &$a[0], &$$a, &$a{'key'}
  */
 public class ReferenceExpression extends Expression {
 

@@ -16,8 +16,7 @@ import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
 
-public abstract class CodeCompletionRequestor extends CompletionRequestor
-		implements CompletionRequestorExtension {
+public abstract class CodeCompletionRequestor extends CompletionRequestor implements CompletionRequestorExtension {
 	List<CompletionProposal> proposals;
 	Comparator sorter;
 

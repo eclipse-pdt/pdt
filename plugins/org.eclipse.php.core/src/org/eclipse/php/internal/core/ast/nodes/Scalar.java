@@ -22,13 +22,11 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents a scalar
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * 'string',
- * 1,
- * 1.3,
- * __CLASS__
+ * 'string', 1, 1.3, __CLASS__
  */
 public class Scalar extends VariableBase {
 
@@ -51,10 +49,10 @@ public class Scalar extends VariableBase {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final SimplePropertyDescriptor VALUE_PROPERTY = new SimplePropertyDescriptor(
-			Scalar.class, "stringValue", String.class, MANDATORY); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor TYPE_PROPERTY = new SimplePropertyDescriptor(
-			Scalar.class, "scalarType", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor VALUE_PROPERTY = new SimplePropertyDescriptor(Scalar.class,
+			"stringValue", String.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor TYPE_PROPERTY = new SimplePropertyDescriptor(Scalar.class,
+			"scalarType", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -63,8 +61,7 @@ public class Scalar extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		propertyList.add(VALUE_PROPERTY);
 		propertyList.add(TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -148,7 +145,8 @@ public class Scalar extends VariableBase {
 	/**
 	 * Sets the type of this scalar
 	 * 
-	 * @param new operator of this unary operation
+	 * @param new
+	 *            operator of this unary operation
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
@@ -167,8 +165,7 @@ public class Scalar extends VariableBase {
 		postValueChange(TYPE_PROPERTY);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == TYPE_PROPERTY) {
 			if (get) {
 				return getScalarType();
@@ -193,7 +190,8 @@ public class Scalar extends VariableBase {
 	/**
 	 * Sets the value of this scalar
 	 * 
-	 * @param new operator of this unary operation
+	 * @param new
+	 *            operator of this unary operation
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
@@ -212,8 +210,7 @@ public class Scalar extends VariableBase {
 		postValueChange(VALUE_PROPERTY);
 	}
 
-	final Object internalGetSetObjectProperty(
-			SimplePropertyDescriptor property, boolean get, Object value) {
+	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == VALUE_PROPERTY) {
 			if (get) {
 				return getStringValue();
@@ -236,19 +233,16 @@ public class Scalar extends VariableBase {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Scalar result = new Scalar(this.getStart(), this.getEnd(),
-				target, getStringValue(), getScalarType());
+		final Scalar result = new Scalar(this.getStart(), this.getEnd(), target, getStringValue(), getScalarType());
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}

@@ -22,8 +22,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a declare statement
- * <pre>e.g.<pre> declare(ticks=1) { }
- * declare(ticks=2) { for ($x = 1; $x < 50; ++$x) {  }  }
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * declare(ticks=1) { } declare(ticks=2) { for ($x = 1; $x < 50; ++$x) { } }
  */
 public class DeclareStatement extends Statement {
 
@@ -31,7 +35,8 @@ public class DeclareStatement extends Statement {
 	private final List<? extends Expression> directiveValues;
 	private final Statement action;
 
-	public DeclareStatement(int start, int end, List<String> directiveNames, List<? extends Expression> directiveValues, Statement action) {
+	public DeclareStatement(int start, int end, List<String> directiveNames, List<? extends Expression> directiveValues,
+			Statement action) {
 		super(start, end);
 
 		assert directiveNames != null && directiveValues != null && directiveNames.size() == directiveValues.size();

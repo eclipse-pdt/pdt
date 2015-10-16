@@ -21,12 +21,9 @@ public class IndentationObject {
 	private char indentationChar;
 
 	public IndentationObject(IStructuredDocument document) {
-		IFormatterCommonPrferences preferences = FormatterUtils
-				.getFormatterCommonPrferences();
-		this.indentationWrappedLineSize = preferences
-				.getIndentationWrappedLineSize(document);
-		this.indentationArrayInitSize = preferences
-				.getIndentationArrayInitSize(document);
+		IFormatterCommonPrferences preferences = FormatterUtils.getFormatterCommonPrferences();
+		this.indentationWrappedLineSize = preferences.getIndentationWrappedLineSize(document);
+		this.indentationArrayInitSize = preferences.getIndentationArrayInitSize(document);
 		this.indentationSize = preferences.getIndentationSize(document);
 		this.indentationChar = preferences.getIndentationChar(document);
 	}

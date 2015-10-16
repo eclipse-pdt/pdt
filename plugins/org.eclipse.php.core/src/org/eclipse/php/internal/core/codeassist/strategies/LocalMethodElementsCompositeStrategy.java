@@ -24,8 +24,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
  * 
  * @author michael
  */
-public class LocalMethodElementsCompositeStrategy extends
-		AbstractCompletionStrategy {
+public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 

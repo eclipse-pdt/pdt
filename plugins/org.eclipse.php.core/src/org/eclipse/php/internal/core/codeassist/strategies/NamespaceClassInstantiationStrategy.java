@@ -31,8 +31,7 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  */
 public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy {
 
-	public NamespaceClassInstantiationStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public NamespaceClassInstantiationStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -44,8 +43,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 
 		ICompletionContext context = getContext();
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
-		CompletionRequestor requestor = concreteContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
 
 		IType enclosingClass = null;
 		try {
@@ -85,12 +83,9 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 
 			try {
 				if (ctor != null) {
-					if (!PHPFlags.isPrivate(ctor.getFlags())
-							|| type.equals(enclosingClass)) {
-						FakeMethod ctorMethod = new FakeMethod(
-								(ModelElement) type, type.getElementName()) {
-							public boolean isConstructor()
-									throws ModelException {
+					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
+						FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
+							public boolean isConstructor() throws ModelException {
 								return true;
 							}
 						};
@@ -102,9 +97,8 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 					if (PHPFlags.isClass(flags)) {
 						// here we use fake method,and do the real work in class
 						// ParameterGuessingProposal
-						IMethod ctorMethod = FakeConstructor
-								.createFakeConstructor(null, type,
-										type.equals(enclosingClass));
+						IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, type,
+								type.equals(enclosingClass));
 						reporter.reportMethod(ctorMethod, suffix, replaceRange);
 					}
 				}

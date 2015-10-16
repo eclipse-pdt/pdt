@@ -37,8 +37,7 @@ public class PharFile {
 	private PharEntry stubEntry;
 	private PharEntry signatureEntry;
 
-	public PharFile(PharFile oldPharFile, File file) throws IOException,
-			PharException {
+	public PharFile(PharFile oldPharFile, File file) throws IOException, PharException {
 		this.file = file;
 
 		if (oldPharFile != null && oldPharFile.file.equals(file)) {
@@ -171,10 +170,8 @@ public class PharFile {
 				signatureEntry.setPosition(currentIndex);
 
 			} else {
-				signatureEntry.setPosition(pharEntryList.get(fileNumber - 1)
-						.getEnd());
-				PharUtil.skip(bis, pharEntryList.get(fileNumber - 1).getEnd()
-						- currentIndex);
+				signatureEntry.setPosition(pharEntryList.get(fileNumber - 1).getEnd());
+				PharUtil.skip(bis, pharEntryList.get(fileNumber - 1).getEnd() - currentIndex);
 				signatureLength = bis.available();
 			}
 			if (signatureLength <= 4) {
@@ -191,15 +188,12 @@ public class PharFile {
 				buffer = new byte[4];
 				read(bis, buffer);
 				boolean found = false;
-				for (Iterator<Digest> iterator = Digest.DIGEST_MAP.values()
-						.iterator(); iterator.hasNext();) {
+				for (Iterator<Digest> iterator = Digest.DIGEST_MAP.values().iterator(); iterator.hasNext();) {
 					Digest digest = iterator.next();
 					if (PharUtil.byteArrayEquals(digest.getBitMap(), buffer)) {
 						if (digest.getDigest().digest().length != signatureLength - 8
-								|| !PharUtil.checkSignature(file, digest,
-										signatureEntry.getPosition())) {
-							throw new PharException(
-									Messages.Phar_Signature_Corrupted);
+								|| !PharUtil.checkSignature(file, digest, signatureEntry.getPosition())) {
+							throw new PharException(Messages.Phar_Signature_Corrupted);
 						} else {
 							found = true;
 							break;
@@ -237,8 +231,7 @@ public class PharFile {
 				lineSeparatorLength++;
 			}
 		}
-		bytesAfterStub = bytesAfterStub.subList(lineSeparatorLength,
-				bytesAfterStub.size());
+		bytesAfterStub = bytesAfterStub.subList(lineSeparatorLength, bytesAfterStub.size());
 		stubLength = currentIndex - bytesAfterStub.size();
 		// read(bis);
 		// read(bis);
@@ -300,8 +293,7 @@ public class PharFile {
 		int currentByte = -1;
 		bytesAfterStub = new ArrayList<Integer>();
 		// if currentByte is equal to char '_',we will not read the next byte
-		while (!stubHasBeenFound
-				&& (currentByte == PharConstants.Underline || (n = read(bis)) != -1)) {
+		while (!stubHasBeenFound && (currentByte == PharConstants.Underline || (n = read(bis)) != -1)) {
 			if (n == PharConstants.Underline) {
 				boolean match = false;
 				int j = 1;
@@ -350,8 +342,7 @@ public class PharFile {
 		return sb.toString();
 	}
 
-	private int read(BufferedInputStream bis, byte[] buffer)
-			throws IOException, PharException {
+	private int read(BufferedInputStream bis, byte[] buffer) throws IOException, PharException {
 		int result = bis.read(buffer);
 		if (result != buffer.length) {
 			PharUtil.throwPharException(Messages.Phar_Corrupted);
@@ -371,10 +362,7 @@ public class PharFile {
 		if (subBytes.length > 0) {
 			result = PharUtil.getPositive(subBytes[subBytes.length - 1]);
 			for (int i = 0; i < subBytes.length - 1; i++) {
-				result = result
-						* 256
-						+ PharUtil
-								.getPositive(subBytes[subBytes.length - 2 - i]);
+				result = result * 256 + PharUtil.getPositive(subBytes[subBytes.length - 2 - i]);
 			}
 		}
 		return result;

@@ -266,8 +266,7 @@ public interface IntMap {
 		 * 
 		 * <pre>
 		 * (e1.getKey() == null ? e2.getKey() == null : e1.getKey().equals(e2.getKey()))
-		 * 		&amp;&amp; (e1.getValue() == null ? e2.getValue() == null : e1.getValue()
-		 * 				.equals(e2.getValue()))
+		 * 		&amp;&amp; (e1.getValue() == null ? e2.getValue() == null : e1.getValue().equals(e2.getValue()))
 		 * </pre>
 		 * 
 		 * This ensures that the <tt>equals</tt> method works properly across
@@ -285,8 +284,7 @@ public interface IntMap {
 		 * map entry <tt>e</tt> is defined to be:
 		 * 
 		 * <pre>
-		 * (e.getKey() == null ? 0 : e.getKey().hashCode())
-		 * 		&circ; (e.getValue() == null ? 0 : e.getValue().hashCode())
+		 * (e.getKey() == null ? 0 : e.getKey().hashCode()) &circ; (e.getValue() == null ? 0 : e.getValue().hashCode())
 		 * </pre>
 		 * 
 		 * This ensures that <tt>e1.equals(e2)</tt> implies that

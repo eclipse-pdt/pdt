@@ -30,8 +30,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 	public ReferenceTree(Node root) {
 		assert root != null;
 		this.root = root;
-		isLanguageModel = LanguageModelInitializer.isLanguageModelElement(root
-				.getFile());
+		isLanguageModel = LanguageModelInitializer.isLanguageModelElement(root.getFile());
 	}
 
 	public Node getRoot() {

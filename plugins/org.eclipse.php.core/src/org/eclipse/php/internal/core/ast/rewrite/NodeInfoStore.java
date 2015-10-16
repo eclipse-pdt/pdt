@@ -129,17 +129,14 @@ public final class NodeInfoStore {
 			case ASTNode.METHOD_INVOCATION:
 				MethodInvocation methodInvocation = (MethodInvocation) node;
 				methodInvocation.setDispatcher(this.ast.newVariable("a")); //$NON-NLS-1$
-				FunctionName fName = this.ast.newFunctionName(this.ast
-						.newIdentifier("a")); //$NON-NLS-1$
-				FunctionInvocation mInvocation = this.ast
-						.newFunctionInvocation();
+				FunctionName fName = this.ast.newFunctionName(this.ast.newIdentifier("a")); //$NON-NLS-1$
+				FunctionInvocation mInvocation = this.ast.newFunctionInvocation();
 				mInvocation.setFunctionName(fName);
 				methodInvocation.setMethod(mInvocation);
 				break;
 			case ASTNode.STATIC_METHOD_INVOCATION: {
 				StaticMethodInvocation sMethod = (StaticMethodInvocation) node;
-				FunctionInvocation functionInvocation = this.ast
-						.newFunctionInvocation();
+				FunctionInvocation functionInvocation = this.ast.newFunctionInvocation();
 				FunctionName functionName = this.ast.newFunctionName();
 				functionName.setName(this.ast.newIdentifier("")); //$NON-NLS-1$
 				functionInvocation.setFunctionName(functionName);
@@ -149,8 +146,7 @@ public final class NodeInfoStore {
 			}
 			case ASTNode.CLASS_INSTANCE_CREATION:
 				ClassInstanceCreation inst = (ClassInstanceCreation) node;
-				inst.setClassName(this.ast.newClassName(this.ast
-						.newIdentifier("a"))); //$NON-NLS-1$
+				inst.setClassName(this.ast.newClassName(this.ast.newIdentifier("a"))); //$NON-NLS-1$
 				break;
 			}
 			return node;

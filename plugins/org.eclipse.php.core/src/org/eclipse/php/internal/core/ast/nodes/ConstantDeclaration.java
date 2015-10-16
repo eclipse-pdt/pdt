@@ -31,10 +31,8 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ConstantDeclaration extends Statement {
 
-	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<Identifier>(
-			NAMES_PROPERTY);
-	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(
-			INITIALIZERS_PROPERTY);
+	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<Identifier>(NAMES_PROPERTY);
+	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(INITIALIZERS_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
@@ -52,19 +50,16 @@ public class ConstantDeclaration extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		properyList.add(NAMES_PROPERTY);
 		properyList.add(INITIALIZERS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public ConstantDeclaration(int start, int end, AST ast,
-			List<Identifier> names, List<Expression> initializers) {
+	public ConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
 		super(start, end, ast);
 
-		if (names == null || initializers == null
-				|| names.size() != initializers.size()) {
+		if (names == null || initializers == null || names.size() != initializers.size()) {
 			throw new IllegalArgumentException();
 		}
 
@@ -76,8 +71,7 @@ public class ConstantDeclaration extends Statement {
 		}
 	}
 
-	public ConstantDeclaration(int start, int end, AST ast,
-			List variablesAndDefaults) {
+	public ConstantDeclaration(int start, int end, AST ast, List variablesAndDefaults) {
 		super(start, end, ast);
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
@@ -85,8 +79,7 @@ public class ConstantDeclaration extends Statement {
 
 		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext();) {
 			ASTNode[] element = (ASTNode[]) iter.next();
-			assert element != null && element.length == 2 && element[0] != null
-					&& element[1] != null;
+			assert element != null && element.length == 2 && element[0] != null && element[1] != null;
 
 			this.names.add((Identifier) element[0]);
 			this.initializers.add((Expression) element[1]);
@@ -174,8 +167,7 @@ public class ConstantDeclaration extends Statement {
 		return this.names;
 	}
 
-	final List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == NAMES_PROPERTY) {
 			return names();
 		}
@@ -211,17 +203,15 @@ public class ConstantDeclaration extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final List names = ASTNode.copySubtrees(target, this.names());
-		final List initializers = ASTNode.copySubtrees(target,
-				this.initializers());
-		final ConstantDeclaration ccd = new ConstantDeclaration(this.getStart(),
-				this.getEnd(), target, names, initializers);
+		final List initializers = ASTNode.copySubtrees(target, this.initializers());
+		final ConstantDeclaration ccd = new ConstantDeclaration(this.getStart(), this.getEnd(), target, names,
+				initializers);
 		return ccd;
 
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

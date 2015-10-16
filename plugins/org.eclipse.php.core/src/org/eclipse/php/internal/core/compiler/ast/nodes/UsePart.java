@@ -34,8 +34,7 @@ public class UsePart extends ASTNode {
 		this(namespace, alias, UseStatement.T_NONE);
 	}
 
-	public UsePart(FullyQualifiedReference namespace, SimpleReference alias,
-			int statementType) {
+	public UsePart(FullyQualifiedReference namespace, SimpleReference alias, int statementType) {
 		this.setNamespace(namespace);
 		this.setAlias(alias);
 		this.statementType = statementType;

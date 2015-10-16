@@ -34,8 +34,7 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 	}
 
 	@Deprecated
-	public NamespacesStrategy(ICompletionContext context,
-			boolean addClassInNamespace) {
+	public NamespacesStrategy(ICompletionContext context, boolean addClassInNamespace) {
 		super(context, 0, 0, addClassInNamespace);
 	}
 
@@ -43,8 +42,7 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		return ""; //$NON-NLS-1$
 	}
 
-	protected IType[] getTypes(AbstractCompletionContext context)
-			throws BadLocationException {
+	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
@@ -53,12 +51,12 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findNamespaces(null, prefix,
-					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.EXACT, trueFlag, falseFlag, scope,
+					null);
 		}
-		
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix,
-				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
+				falseFlag, scope, null);
 		List<IType> result = new ArrayList<IType>();
 		String lastNamespace = null;
 		for (IType namespace : namespaces) {

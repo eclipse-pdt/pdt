@@ -67,8 +67,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return companion;
 	}
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (sourceModule == null) {
 			throw new IllegalArgumentException();
 		}
@@ -76,35 +75,27 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
-		this.phpVersion = ProjectOptions.getPhpVersion(sourceModule
-				.getScriptProject().getProject());
+		this.phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 
 		try {
 			this.document = determineDocument(sourceModule, requestor);
 			if (this.document != null) {
 
-				structuredDocumentRegion = determineStructuredDocumentRegion(
-						document, offset);
+				structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
 				if (structuredDocumentRegion != null) {
 
-					regionCollection = determineRegionCollection(document,
-							structuredDocumentRegion, offset);
+					regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
 					if (regionCollection != null) {
 
-						phpScriptRegion = determinePhpRegion(document,
-								regionCollection, offset);
+						phpScriptRegion = determinePhpRegion(document, regionCollection, offset);
 						if (phpScriptRegion != null) {
 
-							partitionType = determinePartitionType(
-									regionCollection, phpScriptRegion, offset);
+							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
 							if (partitionType != null) {
 
 								String prefix = getPrefix();
-								if (prefix.length() > 0
-										&& (!Character
-												.isJavaIdentifierStart(prefix
-														.charAt(0)) && prefix
-												.charAt(0) != '\\')) {
+								if (prefix.length() > 0 && (!Character.isJavaIdentifierStart(prefix.charAt(0))
+										&& prefix.charAt(0) != '\\')) {
 									return false;
 								}
 								return true;
@@ -131,8 +122,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return structured document region or <code>null</code> in case it could
 	 *         not be determined
 	 */
-	protected IStructuredDocumentRegion determineStructuredDocumentRegion(
-			IStructuredDocument document, int offset) {
+	protected IStructuredDocumentRegion determineStructuredDocumentRegion(IStructuredDocument document, int offset) {
 
 		IStructuredDocumentRegion sdRegion = null;
 
@@ -153,9 +143,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return text region collection or <code>null</code> in case it could not
 	 *         be determined
 	 */
-	protected ITextRegionCollection determineRegionCollection(
-			IStructuredDocument document, IStructuredDocumentRegion sdRegion,
-			int offset) {
+	protected ITextRegionCollection determineRegionCollection(IStructuredDocument document,
+			IStructuredDocumentRegion sdRegion, int offset) {
 		ITextRegionCollection regionCollection = sdRegion;
 
 		ITextRegion textRegion = determineTextRegion(document, sdRegion, offset);
@@ -171,8 +160,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @param regionCollection
 	 * @param offset
 	 */
-	protected ITextRegion determineTextRegion(IStructuredDocument document,
-			ITextRegionCollection regionCollection, int offset) {
+	protected ITextRegion determineTextRegion(IStructuredDocument document, ITextRegionCollection regionCollection,
+			int offset) {
 		ITextRegion textRegion;
 		// in case we are at the end of the document, asking for completion
 		if (offset == document.getLength()) {
@@ -190,10 +179,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return php script region or <code>null</code> in case it could not be
 	 *         determined
 	 */
-	protected IPhpScriptRegion determinePhpRegion(IStructuredDocument document,
-			ITextRegionCollection regionCollection, int offset) {
-		ITextRegion textRegion = determineTextRegion(document,
-				regionCollection, offset);
+	protected IPhpScriptRegion determinePhpRegion(IStructuredDocument document, ITextRegionCollection regionCollection,
+			int offset) {
+		ITextRegion textRegion = determineTextRegion(document, regionCollection, offset);
 		IPhpScriptRegion phpScriptRegion = null;
 
 		if (textRegion != null) {
@@ -201,8 +189,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				return null;
 			} else if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 				if (regionCollection.getStartOffset(textRegion) == offset) {
-					textRegion = regionCollection
-							.getRegionAtCharacterOffset(offset - 1);
+					textRegion = regionCollection.getRegionAtCharacterOffset(offset - 1);
 				} else {
 					return null;
 				}
@@ -227,25 +214,18 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return partition type (see {@link PHPRegionTypes})
 	 * @throws BadLocationException
 	 */
-	protected String determinePartitionType(
-			ITextRegionCollection regionCollection,
-			IPhpScriptRegion phpScriptRegion, int offset)
-			throws BadLocationException {
-		int internalOffset = getOffset(offset, regionCollection,
-				phpScriptRegion);
+	protected String determinePartitionType(ITextRegionCollection regionCollection, IPhpScriptRegion phpScriptRegion,
+			int offset) throws BadLocationException {
+		int internalOffset = getOffset(offset, regionCollection, phpScriptRegion);
 		String partitionType = phpScriptRegion.getPartition(internalOffset);
 
 		// if we are at the begining of multi-line comment or docBlock then we
 		// should get completion.
-		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT
-				|| partitionType == PHPPartitionTypes.PHP_DOC) {
-			String regionType = phpScriptRegion.getPhpToken(internalOffset)
-					.getType();
-			if (regionType == PHPRegionTypes.PHP_COMMENT_START
-					|| regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
+		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
+			String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
+			if (regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
 				if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
-					partitionType = phpScriptRegion
-							.getPartition(internalOffset - 1);
+					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
 				}
 			}
 		}
@@ -265,9 +245,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws IOException
 	 * @throws ResourceAlreadyExists
 	 */
-	protected IStructuredDocument determineDocument(ISourceModule module,
-			CompletionRequestor requestor) throws ResourceAlreadyExists,
-			IOException, CoreException {
+	protected IStructuredDocument determineDocument(ISourceModule module, CompletionRequestor requestor)
+			throws ResourceAlreadyExists, IOException, CoreException {
 		IStructuredDocument document = null;
 
 		if (requestor instanceof IPHPCompletionRequestor) {
@@ -282,18 +261,14 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				IFile file = (IFile) module.getResource();
 				if (file != null) {
 					if (file.exists()) {
-						structuredModel = StructuredModelManager
-								.getModelManager()
-								.getExistingModelForRead(file);
+						structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
 						if (structuredModel != null) {
 							document = structuredModel.getStructuredDocument();
 						} else {
-							document = StructuredModelManager.getModelManager()
-									.createStructuredDocumentFor(file);
+							document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
 						}
 					} else {
-						document = StructuredModelManager.getModelManager()
-								.createNewStructuredDocumentFor(file);
+						document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
 						document.set(module.getSource());
 					}
 				}
@@ -376,13 +351,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
 	public TextSequence getStatementText() {
-		return PHPTextSequenceUtilities.getStatement(offset,
-				structuredDocumentRegion, true);
+		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
 	public TextSequence getStatementText(int offset) {
-		return PHPTextSequenceUtilities.getStatement(offset,
-				structuredDocumentRegion, true);
+		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
 	/**
@@ -397,8 +370,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		// determine whether there are whitespaces before the cursor
 		int statementLength = statementText.length();
-		int statementEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength);
+		int statementEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength);
 		return statementLength != statementEnd;
 	}
 
@@ -430,24 +402,21 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		TextSequence statementText = getStatementText();
 
 		int statementLength = statementText.length();
-		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength); // read whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, wordEnd, true);
+		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																									// whitespace
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return ""; //$NON-NLS-1$
 		}
-		String previousWord = statementText.subSequence(wordStart, wordEnd)
-				.toString();
+		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
 
 		if (hasWhitespaceBeforeCursor()) {
 			return previousWord;
 		}
 
-		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
-				wordStart - 1); // read whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, wordEnd, true);
+		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
+																								// whitespace
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return ""; //$NON-NLS-1$
 		}
@@ -465,33 +434,29 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		TextSequence statementText = getStatementText();
 
 		int statementLength = statementText.length();
-		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength); // read whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, wordEnd, true);
+		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																									// whitespace
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		for (int i = 0; i < times - 1; i++) {
 			statementLength = wordStart;
-			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, statementLength); // read whitespace
-			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					phpVersion, statementText, wordEnd, true);
+			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																									// whitespace
+			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		}
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return ""; //$NON-NLS-1$
 		}
-		String previousWord = statementText.subSequence(wordStart, wordEnd)
-				.toString();
+		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
 
 		if (hasWhitespaceBeforeCursor()) {
 			return previousWord;
 		}
 
-		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
-				wordStart - 1); // read whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, wordEnd, true);
+		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
+																								// whitespace
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return ""; //$NON-NLS-1$
 		}
@@ -509,17 +474,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		TextSequence statementText = getStatementText();
 
 		int statementLength = statementText.length();
-		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength); // read whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, wordEnd, true);
+		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																									// whitespace
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		for (int i = 0; i < times - 1; i++) {
 			statementLength = wordStart;
-			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, statementLength); // read whitespace
-			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					phpVersion, statementText, wordEnd, true);
+			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																									// whitespace
+			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		}
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
@@ -530,10 +493,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			return wordStart;
 		}
 
-		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
-				wordStart - 1); // read whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, wordEnd, true);
+		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
+																								// whitespace
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 		// if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 		// return wordStart;
 		// }
@@ -552,14 +514,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	public ITextRegion getPHPToken(int offset) throws BadLocationException {
-		return phpScriptRegion.getPhpToken(getOffset(offset, regionCollection,
-				phpScriptRegion));
+		return phpScriptRegion.getPhpToken(getOffset(offset, regionCollection, phpScriptRegion));
 	}
 
-	private int getOffset(int offset, ITextRegionCollection regionCollection,
-			IPhpScriptRegion phpScriptRegion) {
-		int result = offset - regionCollection.getStartOffset()
-				- phpScriptRegion.getStart() - 1;
+	private int getOffset(int offset, ITextRegionCollection regionCollection, IPhpScriptRegion phpScriptRegion) {
+		int result = offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1;
 		if (result < 0) {
 			result = 0;
 		}
@@ -582,10 +541,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 		TextSequence statementText = getStatementText();
 		int statementLength = statementText.length();
-		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength); // read whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, prefixEnd, true);
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																										// whitespace
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, prefixEnd, true);
 		return statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
 
@@ -597,15 +555,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		int endOffset = regionCollection.getStartOffset()
-				+ phpScriptRegion.getStart() + phpToken.getTextEnd();
+		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
 		if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=475671
 			for (int index = offset; index < endOffset; index++) {
 				char charAt = document.getChar(index);
 				// Stop on quote (even in a heredoc section) or on whitespace:
-				if (Character.isWhitespace(charAt) || charAt == '\''
-						|| charAt == '"') {
+				if (Character.isWhitespace(charAt) || charAt == '\'' || charAt == '"') {
 					return index;
 				}
 			}
@@ -647,8 +603,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			if (phpToken == null) {
 				return null;
 			} else {
-				offset = regionCollection.getStartOffset()
-						+ phpScriptRegion.getStart() + phpToken.getEnd();
+				offset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getEnd();
 			}
 		}
 
@@ -662,18 +617,14 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public String getNextWord() throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken();
-		return document
-				.get(regionCollection.getStartOffset()
-						+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
-						nextPHPToken.getTextLength());
+		return document.get(regionCollection.getStartOffset() + phpScriptRegion.getStart() + nextPHPToken.getStart(),
+				nextPHPToken.getTextLength());
 	}
 
 	public String getNextWord(int times) throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken(times);
-		return document
-				.get(regionCollection.getStartOffset()
-						+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
-						nextPHPToken.getTextLength());
+		return document.get(regionCollection.getStartOffset() + phpScriptRegion.getStart() + nextPHPToken.getStart(),
+				nextPHPToken.getTextLength());
 	}
 
 	/**
@@ -705,8 +656,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return getUseTraitStatementContext(offset, structuredDocumentRegion);
 	}
 
-	public int getUseTraitStatementContext(int offset,
-			IStructuredDocumentRegion sdRegion) {
+	public int getUseTraitStatementContext(int offset, IStructuredDocumentRegion sdRegion) {
 		List<String> types = new ArrayList<String>();
 		if (sdRegion == null) {
 			sdRegion = structuredDocumentRegion;
@@ -715,8 +665,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
 		}
-		ITextRegion tRegion = sdRegion
-				.getRegionAtCharacterOffset(documentOffset);
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
 
 		ITextRegionCollection container = sdRegion;
 
@@ -725,20 +674,17 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = container.getRegionAtCharacterOffset(container
-					.getStartOffset() + tRegion.getStart() - 1);
+			tRegion = container.getRegionAtCharacterOffset(container.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
-		if (tRegion != null
-				&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 
 			try {
 				// Set default starting position to the beginning of the
 				// PhpScriptRegion:
-				int startOffset = container.getStartOffset()
-						+ phpScriptRegion.getStart();
+				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
 
 				// Now, search backwards for the statement start (in this
 				// PhpScriptRegion):
@@ -746,8 +692,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				if (documentOffset == startOffset) {
 					startTokenRegion = phpScriptRegion.getPhpToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion.getPhpToken(offset
-							- startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
 				}
 				// If statement start is at the beginning of the PHP script
 				// region:
@@ -768,8 +713,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						break;
 					}
 
-					startTokenRegion = phpScriptRegion
-							.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
 				}
 
 			} catch (BadLocationException e) {
@@ -777,8 +721,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 		if (types.size() == 1) {
 			String type = types.get(0);
-			if (type == PHPRegionTypes.PHP_CURLY_OPEN
-					|| type == PHPRegionTypes.PHP_INSTEADOF
+			if (type == PHPRegionTypes.PHP_CURLY_OPEN || type == PHPRegionTypes.PHP_INSTEADOF
 					|| type == PHPRegionTypes.PHP_SEMICOLON) {
 				return TRAIT_NAME;
 			} else if (type == PHPRegionTypes.PHP_AS) {
@@ -791,26 +734,22 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			String type1 = types.get(0);
 			String type = types.get(1);
 			try {
-				if (type == PHPRegionTypes.PHP_SEMICOLON
-						&& type1 == PHPRegionTypes.PHP_LABEL
+				if (type == PHPRegionTypes.PHP_SEMICOLON && type1 == PHPRegionTypes.PHP_LABEL
 						&& Character.isWhitespace(document.getChar(offset - 1))) {
 
 					return TRAIT_KEYWORD;
 				}
 			} catch (BadLocationException e) {
 			}
-			if (type == PHPRegionTypes.PHP_CURLY_OPEN
-					|| type == PHPRegionTypes.PHP_INSTEADOF
-					|| type == PHPRegionTypes.PHP_SEMICOLON
-					|| type1 == PHPRegionTypes.PHP_LABEL) {
+			if (type == PHPRegionTypes.PHP_CURLY_OPEN || type == PHPRegionTypes.PHP_INSTEADOF
+					|| type == PHPRegionTypes.PHP_SEMICOLON || type1 == PHPRegionTypes.PHP_LABEL) {
 				return TRAIT_NAME;
 			}
 		} else if (types.size() == 3) {
 			String type = types.get(0);
 			String type1 = types.get(1);
 			String type2 = types.get(2);
-			if (type == PHPRegionTypes.PHP_LABEL
-					&& type1 == PHPRegionTypes.PHP_LABEL
+			if (type == PHPRegionTypes.PHP_LABEL && type1 == PHPRegionTypes.PHP_LABEL
 					&& type2 == PHPRegionTypes.PHP_SEMICOLON) {
 				return TRAIT_KEYWORD;
 			}
@@ -818,8 +757,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			String type = types.get(0);
 			String type1 = types.get(1);
 			String type2 = types.get(2);
-			if (type == PHPRegionTypes.PHP_LABEL
-					&& type1 == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
+			if (type == PHPRegionTypes.PHP_LABEL && type1 == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
 					&& type2 == PHPRegionTypes.PHP_LABEL) {
 				return TRAIT_KEYWORD;
 			}
@@ -834,10 +772,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	private List<String> useTypes;
 
-	public boolean isInUseTraitStatement(int offset,
-			IStructuredDocumentRegion sdRegion) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule
-				.getScriptProject().getProject());
+	public boolean isInUseTraitStatement(int offset, IStructuredDocumentRegion sdRegion) {
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
 			return false;
 		}
@@ -851,8 +787,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
 		}
-		ITextRegion tRegion = sdRegion
-				.getRegionAtCharacterOffset(documentOffset);
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
 
 		ITextRegionCollection container = sdRegion;
 
@@ -861,20 +796,17 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = container.getRegionAtCharacterOffset(container
-					.getStartOffset() + tRegion.getStart() - 1);
+			tRegion = container.getRegionAtCharacterOffset(container.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
-		if (tRegion != null
-				&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 
 			try {
 				// Set default starting position to the beginning of the
 				// PhpScriptRegion:
-				int startOffset = container.getStartOffset()
-						+ phpScriptRegion.getStart();
+				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
 
 				// Now, search backwards for the statement start (in this
 				// PhpScriptRegion):
@@ -882,8 +814,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				if (documentOffset == startOffset) {
 					startTokenRegion = phpScriptRegion.getPhpToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion.getPhpToken(offset
-							- startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
 				}
 				// If statement start is at the beginning of the PHP script
 				// region:
@@ -895,14 +826,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
 						// startOffset += startTokenRegion.getEnd();
-						TextSequence statementText1 = getStatementText(startOffset
-								+ startTokenRegion.getStart() - 1);
+						TextSequence statementText1 = getStatementText(startOffset + startTokenRegion.getStart() - 1);
 						startTokenRegion = phpScriptRegion
-								.getPhpToken(startTokenRegion.getStart()
-										- statementText1.length());
+								.getPhpToken(startTokenRegion.getStart() - statementText1.length());
 						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
-							String[] types = statementText1.toString().trim()
-									.substring(3).trim().split(","); //$NON-NLS-1$
+							String[] types = statementText1.toString().trim().substring(3).trim().split(","); //$NON-NLS-1$
 							useTypes = new ArrayList<String>();
 							for (String type : types) {
 								useTypes.add(type.trim());
@@ -915,8 +843,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						return false;
 					}
 
-					startTokenRegion = phpScriptRegion
-							.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
 				}
 
 			} catch (BadLocationException e) {

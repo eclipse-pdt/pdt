@@ -26,8 +26,7 @@ import org.eclipse.text.edits.MultiTextEdit;
  * 
  * @author shalom
  */
-public class DefaultCodeFormattingProcessor extends AbstractVisitor implements
-		ICodeFormattingProcessor {
+public class DefaultCodeFormattingProcessor extends AbstractVisitor implements ICodeFormattingProcessor {
 	private final Map options;
 
 	public DefaultCodeFormattingProcessor(Map options) {
@@ -36,13 +35,11 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements
 
 	public String createIndentationString(int indentationUnits) {
 		if (indentationUnits > 0) {
-			String useTabs = (String) options
-					.get(PHPCoreConstants.FORMATTER_USE_TABS);
+			String useTabs = (String) options.get(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTabs != null) {
 				String indentation = "\t"; //$NON-NLS-1$
 				if ("false".equalsIgnoreCase(useTabs)) { //$NON-NLS-1$
-					String sizeValue = (String) options
-							.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+					String sizeValue = (String) options.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 					if (sizeValue != null) {
 						StringBuffer sb = new StringBuffer();
 						int size = Integer.parseInt(sizeValue);

@@ -53,13 +53,11 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 
 			List<ICompletionContextResolver> resolvers = new LinkedList<ICompletionContextResolver>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
-					.getConfigurationElementsFor(
-							"org.eclipse.php.core.completionContextResolvers"); //$NON-NLS-1$
+					.getConfigurationElementsFor("org.eclipse.php.core.completionContextResolvers"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("resolver")) { //$NON-NLS-1$
 					try {
-						resolvers.add((ICompletionContextResolver) element
-								.createExecutableExtension("class")); //$NON-NLS-1$
+						resolvers.add((ICompletionContextResolver) element.createExecutableExtension("class")); //$NON-NLS-1$
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}
@@ -73,42 +71,29 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 	}
 
 	public ICompletionContext[] createContexts() {
-		return new ICompletionContext[] { new PHPDocTagStartContext(),
-				new PHPDocThrowsStartContext(), new PHPDocParamTagContext(),
-				new PHPDocReturnTagContext(), new PHPDocMagicTagsContext(),
-				new PHPDocVarStartContext(), new ArrayKeyContext(),
-				new CatchTypeContext(), new CatchVariableContext(),
-				new ClassDeclarationKeywordContext(), new ClassExtendsContext(),
-				new ClassImplementsContext(), new ClassInstantiationContext(),
-				new ClassObjMemberContext(), new ClassStatementContext(),
-				new ClassStaticMemberContext(),
-				new FunctionParameterTypeContext(),
-				new FunctionReturnTypeContext(),
-				new FunctionParameterValueContext(),
-				new FunctionParameterVariableContext(), new MethodNameContext(),
-				new GlobalStatementContext(),
-				new GlobalMethodStatementContext(), new InstanceOfContext(),
-				new InterfaceExtendsContext(),
-				new InterfaceDeclarationKeywordContext(), new UseAliasContext(),
-				new UseNameContext(), new UseConstNameContext(),
-				new UseFunctionNameContext(), new NamespaceMemberContext(),
-				new NamespaceNameContext(), new GotoStatementContext(),
-				new NamespaceUseNameContext(),
-				new NamespaceUseFunctionNameContext(),
-				new NamespaceUseConstNameContext(), new NamespaceDeclContext(),
-				new IncludeStatementContext(),
-				new ExceptionClassInstantiationContext(),
-				new TypeCastingContext(), new NamespacePHPDocVarStartContext(),
-				new QuotesContext() };
+		return new ICompletionContext[] { new PHPDocTagStartContext(), new PHPDocThrowsStartContext(),
+				new PHPDocParamTagContext(), new PHPDocReturnTagContext(), new PHPDocMagicTagsContext(),
+				new PHPDocVarStartContext(), new ArrayKeyContext(), new CatchTypeContext(), new CatchVariableContext(),
+				new ClassDeclarationKeywordContext(), new ClassExtendsContext(), new ClassImplementsContext(),
+				new ClassInstantiationContext(), new ClassObjMemberContext(), new ClassStatementContext(),
+				new ClassStaticMemberContext(), new FunctionParameterTypeContext(), new FunctionReturnTypeContext(),
+				new FunctionParameterValueContext(), new FunctionParameterVariableContext(), new MethodNameContext(),
+				new GlobalStatementContext(), new GlobalMethodStatementContext(), new InstanceOfContext(),
+				new InterfaceExtendsContext(), new InterfaceDeclarationKeywordContext(), new UseAliasContext(),
+				new UseNameContext(), new UseConstNameContext(), new UseFunctionNameContext(),
+				new NamespaceMemberContext(), new NamespaceNameContext(), new GotoStatementContext(),
+				new NamespaceUseNameContext(), new NamespaceUseFunctionNameContext(),
+				new NamespaceUseConstNameContext(), new NamespaceDeclContext(), new IncludeStatementContext(),
+				new ExceptionClassInstantiationContext(), new TypeCastingContext(),
+				new NamespacePHPDocVarStartContext(), new QuotesContext() };
 	}
 
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor, CompletionCompanion companion) {
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor,
+			CompletionCompanion companion) {
 		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
 		ICompletionContext[] contexts;
 		if (requestor instanceof CompletionRequestorExtension) {
-			contexts = ((CompletionRequestorExtension) requestor)
-					.createContexts();
+			contexts = ((CompletionRequestorExtension) requestor).createContexts();
 		} else {
 			contexts = createContexts();
 		}

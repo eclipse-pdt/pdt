@@ -27,14 +27,11 @@ public class ArrayDeclaration extends Declaration {
 	 */
 	public void addDeclaration(ASTNode declNode) {
 		// add new declaration
-		if (declNode instanceof Assignment
-				&& (((Assignment) declNode).getValue() instanceof ArrayCreation)) {
-			decls.addLast(new ArrayDeclaration(
-					declNode instanceof GlobalStatement, declNode));
+		if (declNode instanceof Assignment && (((Assignment) declNode).getValue() instanceof ArrayCreation)) {
+			decls.addLast(new ArrayDeclaration(declNode instanceof GlobalStatement, declNode));
 
 		} else {
-			decls.addLast(new Declaration(declNode instanceof GlobalStatement,
-					declNode));
+			decls.addLast(new Declaration(declNode instanceof GlobalStatement, declNode));
 		}
 
 	}

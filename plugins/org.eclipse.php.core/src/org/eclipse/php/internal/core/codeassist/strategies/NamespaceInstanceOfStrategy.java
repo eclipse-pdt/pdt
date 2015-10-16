@@ -14,8 +14,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 
-	public NamespaceInstanceOfStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public NamespaceInstanceOfStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -30,15 +29,13 @@ public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 
 		ISourceRange replaceRange = getReplacementRange(context);
 
-		String suffix = "";//$NON-NLS-1$ 
+		String suffix = "";//$NON-NLS-1$
 		String nsSuffix = getNSSuffix(concreteContext);
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
-				reporter.reportType(type,
-						PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
-						replaceRange, null);
+				reporter.reportType(type, PHPFlags.isNamespace(flags) ? nsSuffix : suffix, replaceRange, null);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}

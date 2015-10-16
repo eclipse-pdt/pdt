@@ -45,8 +45,7 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
  *      ://manual.phpdoc.org/HTMLSmartyConverter
  *      /HandS/phpDocumentor/tutorial_tags.return.pkg.html}
  */
-public class PHPDocMethodReturnTypeEvaluator extends
-		AbstractMethodReturnTypeEvaluator {
+public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator {
 
 	/**
 	 * Holds the result of evaluated types that this evaluator resolved
@@ -71,25 +70,20 @@ public class PHPDocMethodReturnTypeEvaluator extends
 				}
 
 				evaluateReturnType(returnTypeList, docBlock, method);
-				typeNames = returnTypeList.toArray(new String[returnTypeList
-						.size()]);
+				typeNames = returnTypeList.toArray(new String[returnTypeList.size()]);
 			}
 			if (typeNames != null) {
 				AbstractMethodReturnTypeGoal goal = (AbstractMethodReturnTypeGoal) getGoal();
-				IModelElement space = currentNamespace != null ? currentNamespace
-						: method.getSourceModule();
-				evaluated.addAll(Arrays.asList(PHPEvaluationUtils
-						.evaluatePHPDocType(typeNames, space, PHPModelUtils
-								.getDocBlock(method).sourceStart(), goal
-								.getTypes())));
+				IModelElement space = currentNamespace != null ? currentNamespace : method.getSourceModule();
+				evaluated.addAll(Arrays.asList(PHPEvaluationUtils.evaluatePHPDocType(typeNames, space,
+						PHPModelUtils.getDocBlock(method).sourceStart(), goal.getTypes())));
 			}
 		}
 
 		return IGoal.NO_GOALS;
 	}
 
-	private void evaluateReturnType(List<String> returnTypeList,
-			PHPDocBlock docBlock, IMethod method) {
+	private void evaluateReturnType(List<String> returnTypeList, PHPDocBlock docBlock, IMethod method) {
 		PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
 		PHPDocTag[] inherit = docBlock.getTags(PHPDocTagKinds.INHERITDOC);
 
@@ -103,23 +97,18 @@ public class PHPDocMethodReturnTypeEvaluator extends
 					if (context instanceof IModelCacheContext) {
 						cache = ((IModelCacheContext) context).getCache();
 					}
-					IType[] superClasses = PHPModelUtils.getSuperClasses(
-							type,
-							cache == null ? null : cache.getSuperTypeHierarchy(
-									type, null));
+					IType[] superClasses = PHPModelUtils.getSuperClasses(type,
+							cache == null ? null : cache.getSuperTypeHierarchy(type, null));
 
 					for (IType superClass : superClasses) {
-						IMethod superClassMethod = superClass.getMethod(method
-								.getElementName());
+						IMethod superClassMethod = superClass.getMethod(method.getElementName());
 
 						if (superClassMethod != null) {
-							PHPDocBlock superDocBlock = PHPModelUtils
-									.getDocBlock(superClassMethod);
+							PHPDocBlock superDocBlock = PHPModelUtils.getDocBlock(superClassMethod);
 							if (superDocBlock == null) {
 								continue;
 							}
-							evaluateReturnType(returnTypeList, superDocBlock,
-									superClassMethod);
+							evaluateReturnType(returnTypeList, superDocBlock, superClassMethod);
 						}
 					}
 				} catch (ModelException e) {

@@ -17,10 +17,14 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 
 public class Selection {
 
-	/** Flag indicating that the AST node somehow intersects with the selection. */
+	/**
+	 * Flag indicating that the AST node somehow intersects with the selection.
+	 */
 	public static final int INTERSECTS = 0;
 
-	/** Flag that indicates that an AST node appears before the selected nodes. */
+	/**
+	 * Flag that indicates that an AST node appears before the selected nodes.
+	 */
 	public static final int BEFORE = 1;
 
 	/** Flag indicating that an AST node is covered by the selection. */
@@ -134,26 +138,22 @@ public class Selection {
 
 	public boolean covers(ASTNode node) {
 		int nodeStart = node.getStart();
-		return fStart <= nodeStart
-				&& nodeStart + node.getLength() <= fExclusiveEnd;
+		return fStart <= nodeStart && nodeStart + node.getLength() <= fExclusiveEnd;
 	}
 
 	public boolean coveredBy(ASTNode node) {
 		int nodeStart = node.getStart();
-		return nodeStart <= fStart
-				&& fExclusiveEnd <= nodeStart + node.getLength();
+		return nodeStart <= fStart && fExclusiveEnd <= nodeStart + node.getLength();
 	}
 
 	public boolean coveredBy(IRegion region) {
 		int rangeStart = region.getOffset();
-		return rangeStart <= fStart
-				&& fExclusiveEnd <= rangeStart + region.getLength();
+		return rangeStart <= fStart && fExclusiveEnd <= rangeStart + region.getLength();
 	}
 
 	public boolean endsIn(ASTNode node) {
 		int nodeStart = node.getStart();
-		return nodeStart < fExclusiveEnd
-				&& fExclusiveEnd < nodeStart + node.getLength();
+		return nodeStart < fExclusiveEnd && fExclusiveEnd < nodeStart + node.getLength();
 	}
 
 	public boolean liesOutside(ASTNode node) {

@@ -29,8 +29,7 @@ public class FullyQualifiedReference extends TypeReference {
 		super(token);
 	}
 
-	public FullyQualifiedReference(int start, int end, String name,
-			NamespaceReference namespace) {
+	public FullyQualifiedReference(int start, int end, String name, NamespaceReference namespace) {
 		super(start, end, name);
 		this.namespace = namespace;
 	}
@@ -74,8 +73,7 @@ public class FullyQualifiedReference extends TypeReference {
 
 		String name = namespace.getName();
 		StringBuilder buf = new StringBuilder(name);
-		if (name.length() == 0
-				|| name.charAt(name.length() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (name.length() == 0 || name.charAt(name.length() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
 			buf.append(NamespaceReference.NAMESPACE_SEPARATOR);
 		}
 		buf.append(getName());

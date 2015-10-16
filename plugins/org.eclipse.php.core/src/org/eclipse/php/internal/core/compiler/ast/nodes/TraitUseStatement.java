@@ -23,20 +23,18 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represent a 'use' statement.
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * use A;
- * use A as B;
- * use \A\B as C;
+ * use A; use A as B; use \A\B as C;
  */
 public class TraitUseStatement extends Statement {
 
 	private List<TypeReference> traitList;
 	private List<TraitStatement> tsList;
 
-	public TraitUseStatement(int start, int end, List<TypeReference> traitList,
-			List<TraitStatement> tsList) {
+	public TraitUseStatement(int start, int end, List<TypeReference> traitList, List<TraitStatement> tsList) {
 		super(start, end);
 
 		assert traitList != null;

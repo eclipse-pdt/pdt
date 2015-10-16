@@ -28,10 +28,8 @@ public class PostfixExpressionEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		PostfixExpression postfixExpression = (PostfixExpression) typedGoal
-				.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-				postfixExpression.getVariable()) };
+		PostfixExpression postfixExpression = (PostfixExpression) typedGoal.getExpression();
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), postfixExpression.getVariable()) };
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {

@@ -20,11 +20,9 @@ import org.eclipse.php.internal.core.codeassist.strategies.LocalMethodVariablesS
  * 
  * @author zhaozw
  */
-public class LocalMethodVariablesStrategyForTemplate extends
-		LocalMethodVariablesStrategy {
+public class LocalMethodVariablesStrategyForTemplate extends LocalMethodVariablesStrategy {
 
-	public LocalMethodVariablesStrategyForTemplate(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public LocalMethodVariablesStrategyForTemplate(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 

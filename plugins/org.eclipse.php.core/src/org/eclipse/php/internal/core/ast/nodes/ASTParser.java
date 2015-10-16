@@ -49,14 +49,13 @@ public class ASTParser {
 	private final AST ast;
 	private final ISourceModule sourceModule;
 
-	private ASTParser(Reader reader, PHPVersion phpVersion, boolean useASPTags,
-			boolean useShortTags) throws IOException {
+	private ASTParser(Reader reader, PHPVersion phpVersion, boolean useASPTags, boolean useShortTags)
+			throws IOException {
 		this(reader, phpVersion, useASPTags, useShortTags, null);
 	}
 
-	private ASTParser(Reader reader, PHPVersion phpVersion, boolean useASPTags,
-			boolean useShortTags, ISourceModule sourceModule)
-					throws IOException {
+	private ASTParser(Reader reader, PHPVersion phpVersion, boolean useASPTags, boolean useShortTags,
+			ISourceModule sourceModule) throws IOException {
 
 		this.sourceModule = sourceModule;
 		this.ast = new AST(reader, phpVersion, useASPTags, useShortTags);
@@ -66,8 +65,7 @@ public class ASTParser {
 		if (sourceModule != null) {
 			this.ast.setFlag(AST.RESOLVED_BINDINGS);
 			// try {
-			this.ast.setBindingResolver(new DefaultBindingResolver(sourceModule,
-					sourceModule.getOwner()));
+			this.ast.setBindingResolver(new DefaultBindingResolver(sourceModule, sourceModule.getOwner()));
 			// } catch (ModelException e) {
 			// throw new IOException("ModelException " + e.getMessage());
 			// }
@@ -77,8 +75,7 @@ public class ASTParser {
 	/**
 	 * Factory methods for ASTParser
 	 */
-	public static ASTParser newParser(PHPVersion version,
-			boolean useShortTags) {
+	public static ASTParser newParser(PHPVersion version, boolean useShortTags) {
 		try {
 			return new ASTParser(new StringReader(""), version, false, //$NON-NLS-1$
 					useShortTags);
@@ -100,23 +97,18 @@ public class ASTParser {
 	 * Factory methods for ASTParser
 	 */
 	public static ASTParser newParser(ISourceModule sourceModule) {
-		PHPVersion phpVersion = ProjectOptions
-				.getPhpVersion(sourceModule.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 
 		return newParser(phpVersion, sourceModule);
 	}
 
-	public static ASTParser newParser(PHPVersion version,
-			ISourceModule sourceModule) {
+	public static ASTParser newParser(PHPVersion version, ISourceModule sourceModule) {
 		if (sourceModule == null) {
-			throw new IllegalStateException(
-					"ASTParser - Can't parser with null ISourceModule"); //$NON-NLS-1$
+			throw new IllegalStateException("ASTParser - Can't parser with null ISourceModule"); //$NON-NLS-1$
 		}
 		try {
 			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$
-					version, false,
-					ProjectOptions.useShortTags(
-							sourceModule.getScriptProject().getProject()),
+					version, false, ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()),
 					sourceModule);
 			parser.setSource(sourceModule.getSourceAsCharArray());
 			return parser;
@@ -127,22 +119,19 @@ public class ASTParser {
 		}
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version,
-			boolean useShortTags) throws IOException {
+	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useShortTags) throws IOException {
 		return new ASTParser(reader, version, false, useShortTags);
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version,
-			boolean useASPTags, boolean useShortTags) throws IOException {
+	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, boolean useShortTags)
+			throws IOException {
 		return new ASTParser(reader, version, useASPTags, useShortTags);
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version,
-			boolean useASPTags, ISourceModule sourceModule) throws IOException {
+	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, ISourceModule sourceModule)
+			throws IOException {
 		return new ASTParser(reader, version, useASPTags,
-				ProjectOptions.useShortTags(
-						sourceModule.getScriptProject().getProject()),
-				sourceModule);
+				ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()), sourceModule);
 	}
 
 	/**
@@ -170,10 +159,8 @@ public class ASTParser {
 	 * @throws IOException
 	 * @throws ModelException
 	 */
-	public void setSource(ISourceModule sourceModule)
-			throws IOException, ModelException {
-		this.ast.setSource(
-				new CharArrayReader(sourceModule.getSourceAsCharArray()));
+	public void setSource(ISourceModule sourceModule) throws IOException, ModelException {
+		this.ast.setSource(new CharArrayReader(sourceModule.getSourceAsCharArray()));
 	}
 
 	/**
@@ -185,8 +172,7 @@ public class ASTParser {
 	 * @throws Exception
 	 *             - for exception occurs on the parsing step
 	 */
-	public Program createAST(IProgressMonitor progressMonitor)
-			throws Exception {
+	public Program createAST(IProgressMonitor progressMonitor) throws Exception {
 		if (progressMonitor == null) {
 			progressMonitor = new NullProgressMonitor();
 		}
@@ -223,68 +209,56 @@ public class ASTParser {
 	 *********************************************************************************/
 	// php 5.3 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer createEmptyLexer_53() {
-		return new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
+		return new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
 	}
 
 	// php 7 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer createEmptyLexer_7() {
-		return new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
+		return new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
 	}
 
 	private static org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser createEmptyParser_7() {
-		return new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser(
-				createEmptyLexer_7());
+		return new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser(createEmptyLexer_7());
 	}
 
 	// php 5.6 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer createEmptyLexer_56() {
-		return new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
+		return new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
 	}
 
 	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser createEmptyParser_56() {
-		return new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser(
-				createEmptyLexer_56());
+		return new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser(createEmptyLexer_56());
 	}
 
 	// php 5.5 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer createEmptyLexer_55() {
-		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
+		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
 	}
 
 	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser createEmptyParser_55() {
-		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser(
-				createEmptyLexer_55());
+		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser(createEmptyLexer_55());
 	}
 
 	// php 5.4 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer createEmptyLexer_54() {
-		return new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
+		return new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
 	}
 
 	private static org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser createEmptyParser_54() {
-		return new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser(
-				createEmptyLexer_54());
+		return new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser(createEmptyLexer_54());
 	}
 
 	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser createEmptyParser_53() {
-		return new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(
-				createEmptyLexer_53());
+		return new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(createEmptyLexer_53());
 	}
 
 	// php 5 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer createEmptyLexer_5() {
-		return new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
+		return new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
 	}
 
 	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser createEmptyParser_5() {
-		return new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(
-				createEmptyLexer_5());
+		return new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(createEmptyLexer_5());
 	}
 
 	/**
@@ -296,11 +270,9 @@ public class ASTParser {
 	 * @throws Exception
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
-	public static final Program parse(String phpCode, boolean aspTagsAsPhp,
-			boolean useShortTags) throws Exception {
+	public static final Program parse(String phpCode, boolean aspTagsAsPhp, boolean useShortTags) throws Exception {
 		StringReader reader = new StringReader(phpCode);
-		return parse(reader, aspTagsAsPhp,
-				ProjectOptions.getDefaultPhpVersion(), useShortTags);
+		return parse(reader, aspTagsAsPhp, ProjectOptions.getDefaultPhpVersion(), useShortTags);
 	}
 
 	/**
@@ -312,29 +284,24 @@ public class ASTParser {
 	 * @throws Exception
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
-	public static final Program parse(File phpFile, boolean aspTagsAsPhp,
-			boolean useShortTags) throws Exception {
+	public static final Program parse(File phpFile, boolean aspTagsAsPhp, boolean useShortTags) throws Exception {
 		final Reader reader = new FileReader(phpFile);
-		return parse(reader, aspTagsAsPhp,
-				ProjectOptions.getDefaultPhpVersion(), useShortTags);
+		return parse(reader, aspTagsAsPhp, ProjectOptions.getDefaultPhpVersion(), useShortTags);
 	}
 
 	/**
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
-	public static final Program parse(final IDocument phpDocument,
-			boolean aspTagsAsPhp, PHPVersion phpVersion, boolean useShortTags)
-					throws Exception {
-		return parse(phpDocument, aspTagsAsPhp, phpVersion, 0,
-				phpDocument.getLength(), useShortTags);
+	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, PHPVersion phpVersion,
+			boolean useShortTags) throws Exception {
+		return parse(phpDocument, aspTagsAsPhp, phpVersion, 0, phpDocument.getLength(), useShortTags);
 	}
 
 	/**
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
-	public static final Program parse(final IDocument phpDocument,
-			boolean aspTagsAsPhp, PHPVersion phpVersion, final int offset,
-			final int length, boolean useShortTags) throws Exception {
+	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, PHPVersion phpVersion,
+			final int offset, final int length, boolean useShortTags) throws Exception {
 		final Reader reader = new InputStreamReader(new InputStream() {
 			private int index = offset;
 			private final int size = offset + length;
@@ -356,10 +323,9 @@ public class ASTParser {
 	/**
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
-	public static final Program parse(IDocument phpDocument,
-			boolean aspTagsAsPhp, boolean useShortTags) throws Exception {
-		return parse(phpDocument, aspTagsAsPhp,
-				ProjectOptions.getDefaultPhpVersion(), useShortTags);
+	public static final Program parse(IDocument phpDocument, boolean aspTagsAsPhp, boolean useShortTags)
+			throws Exception {
+		return parse(phpDocument, aspTagsAsPhp, ProjectOptions.getDefaultPhpVersion(), useShortTags);
 	}
 
 	/**
@@ -367,8 +333,7 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(String phpCode) throws Exception {
-		return parse(phpCode, true,
-				ProjectOptions.useShortTags((IProject) null));
+		return parse(phpCode, true, ProjectOptions.useShortTags((IProject) null));
 	}
 
 	/**
@@ -376,8 +341,7 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(File phpFile) throws Exception {
-		return parse(phpFile, true,
-				ProjectOptions.useShortTags((IProject) null));
+		return parse(phpFile, true, ProjectOptions.useShortTags((IProject) null));
 	}
 
 	/**
@@ -385,8 +349,7 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(Reader reader) throws Exception {
-		return parse(reader, true, ProjectOptions.getDefaultPhpVersion(),
-				ProjectOptions.useShortTags((IProject) null));
+		return parse(reader, true, ProjectOptions.getDefaultPhpVersion(), ProjectOptions.useShortTags((IProject) null));
 	}
 
 	/**
@@ -395,12 +358,10 @@ public class ASTParser {
 	 * @throws Exception
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
-	public synchronized static Program parse(Reader reader,
-			boolean aspTagsAsPhp, PHPVersion phpVersion, boolean useShortTags)
-					throws Exception {
+	public synchronized static Program parse(Reader reader, boolean aspTagsAsPhp, PHPVersion phpVersion,
+			boolean useShortTags) throws Exception {
 		AST ast = new AST(EMPTY_STRING_READER, phpVersion, false, useShortTags);
-		final Scanner lexer = getLexer(ast, reader, phpVersion, aspTagsAsPhp,
-				useShortTags);
+		final Scanner lexer = getLexer(ast, reader, phpVersion, aspTagsAsPhp, useShortTags);
 		final lr_parser phpParser = getParser(phpVersion, ast);
 		phpParser.setScanner(lexer);
 
@@ -418,66 +379,56 @@ public class ASTParser {
 	 * @return
 	 * @throws IOException
 	 */
-	private static Scanner getLexer(AST ast, Reader reader,
-			PHPVersion phpVersion, boolean aspTagsAsPhp, boolean useShortTags)
-					throws IOException {
+	private static Scanner getLexer(AST ast, Reader reader, PHPVersion phpVersion, boolean aspTagsAsPhp,
+			boolean useShortTags) throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer5.setUseShortTags(useShortTags);
 			lexer5.setAST(ast);
 			return lexer5;
 		} else if (PHPVersion.PHP5 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer5.setUseShortTags(useShortTags);
 			lexer5.setAST(ast);
 			return lexer5;
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer lexer53 = getLexer53(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer lexer53 = getLexer53(reader);
 			lexer53.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer53.setUseShortTags(useShortTags);
 			lexer53.setAST(ast);
 			return lexer53;
 		} else if (PHPVersion.PHP5_4 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer lexer54 = getLexer54(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer lexer54 = getLexer54(reader);
 			lexer54.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer54.setUseShortTags(useShortTags);
 			lexer54.setAST(ast);
 			return lexer54;
 		} else if (PHPVersion.PHP5_5 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer lexer55 = getLexer55(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer lexer55 = getLexer55(reader);
 			lexer55.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer55.setUseShortTags(useShortTags);
 			lexer55.setAST(ast);
 			return lexer55;
 		} else if (PHPVersion.PHP5_6 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer lexer56 = getLexer56(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer lexer56 = getLexer56(reader);
 			lexer56.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer56.setUseShortTags(useShortTags);
 			lexer56.setAST(ast);
 			return lexer56;
 		} else if (PHPVersion.PHP7_0 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer lexer7 = getLexer7(
-					reader);
+			final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer lexer7 = getLexer7(reader);
 			lexer7.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer7.setUseShortTags(useShortTags);
 			lexer7.setAST(ast);
 			return lexer7;
 		} else {
-			throw new IllegalArgumentException(
-					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
+			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
 		}
 	}
 
-	private static lr_parser getParser(PHPVersion phpVersion, AST ast)
-			throws IOException {
+	private static lr_parser getParser(PHPVersion phpVersion, AST ast) throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
 			org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser parser = createEmptyParser_5();
 			parser.setAST(ast);
@@ -507,8 +458,7 @@ public class ASTParser {
 			parser.setAST(ast);
 			return parser;
 		} else {
-			throw new IllegalArgumentException(
-					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
+			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
 		}
 
 	}
@@ -518,8 +468,8 @@ public class ASTParser {
 	 * @return the singleton
 	 *         {@link org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer}
 	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer getLexer7(
-			Reader reader) throws IOException {
+	private static org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer getLexer7(Reader reader)
+			throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer phpAstLexer7 = createEmptyLexer_7();
 		phpAstLexer7.yyreset(reader);
 		phpAstLexer7.resetCommentList();
@@ -531,8 +481,8 @@ public class ASTParser {
 	 * @return the singleton
 	 *         {@link org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer}
 	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer getLexer56(
-			Reader reader) throws IOException {
+	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer getLexer56(Reader reader)
+			throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer phpAstLexer56 = createEmptyLexer_56();
 		phpAstLexer56.yyreset(reader);
 		phpAstLexer56.resetCommentList();
@@ -544,8 +494,8 @@ public class ASTParser {
 	 * @return the singleton
 	 *         {@link org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer}
 	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer getLexer53(
-			Reader reader) throws IOException {
+	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer getLexer53(Reader reader)
+			throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer phpAstLexer53 = createEmptyLexer_53();
 		phpAstLexer53.yyreset(reader);
 		phpAstLexer53.resetCommentList();
@@ -557,8 +507,8 @@ public class ASTParser {
 	 * @return the singleton
 	 *         {@link org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer}
 	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer getLexer54(
-			Reader reader) throws IOException {
+	private static org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer getLexer54(Reader reader)
+			throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer phpAstLexer54 = createEmptyLexer_54();
 		phpAstLexer54.yyreset(reader);
 		phpAstLexer54.resetCommentList();
@@ -570,8 +520,8 @@ public class ASTParser {
 	 * @return the singleton
 	 *         {@link org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer}
 	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer getLexer55(
-			Reader reader) throws IOException {
+	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer getLexer55(Reader reader)
+			throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer phpAstLexer55 = createEmptyLexer_55();
 		phpAstLexer55.yyreset(reader);
 		phpAstLexer55.resetCommentList();
@@ -583,8 +533,8 @@ public class ASTParser {
 	 * @return the singleton
 	 *         {@link org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer}
 	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer getLexer5(
-			Reader reader) throws IOException {
+	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer getLexer5(Reader reader)
+			throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer phpAstLexer5 = createEmptyLexer_5();
 		phpAstLexer5.yyreset(reader);
 		phpAstLexer5.resetCommentList();

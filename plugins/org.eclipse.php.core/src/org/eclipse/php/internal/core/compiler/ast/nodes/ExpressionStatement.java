@@ -19,9 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * This class holds the expression that should be evaluated.
- * <pre>e.g.<pre> $a = 5;
- * $a;
- * 3+2;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a = 5; $a; 3+2;
  */
 public class ExpressionStatement extends Statement {
 

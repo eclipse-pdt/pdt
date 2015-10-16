@@ -20,15 +20,15 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a case statement.
- * A case statement is part of switch statement
- * <pre>e.g.<pre> 
- * case expr:
- *   statement1;
- *   break;,
+ * Represents a case statement. A case statement is part of switch statement
  * 
- * default:
- *   statement2; 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * case expr: statement1; break;,
+ * 
+ * default: statement2;
  */
 public class SwitchCase extends Statement {
 
@@ -39,14 +39,16 @@ public class SwitchCase extends Statement {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor VALUE_PROPERTY = new ChildPropertyDescriptor(SwitchCase.class, "value", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor ACTIONS_PROPERTY = new ChildListPropertyDescriptor(SwitchCase.class, "actions", Statement.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor IS_DEFAULT_PROPERTY = new SimplePropertyDescriptor(SwitchCase.class, "isDefault", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor VALUE_PROPERTY = new ChildPropertyDescriptor(SwitchCase.class, "value", //$NON-NLS-1$
+			Expression.class, OPTIONAL, CYCLE_RISK);
+	public static final ChildListPropertyDescriptor ACTIONS_PROPERTY = new ChildListPropertyDescriptor(SwitchCase.class,
+			"actions", Statement.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_DEFAULT_PROPERTY = new SimplePropertyDescriptor(SwitchCase.class,
+			"isDefault", Boolean.class, OPTIONAL); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
@@ -75,7 +77,8 @@ public class SwitchCase extends Statement {
 	}
 
 	public SwitchCase(int start, int end, AST ast, Expression value, List actions, boolean isDefault) {
-		this(start, end, ast, value, actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
+		this(start, end, ast, value,
+				actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
 	}
 
 	public SwitchCase(AST ast) {
@@ -149,6 +152,7 @@ public class SwitchCase extends Statement {
 
 	/**
 	 * The actions of this case statement
+	 * 
 	 * @return List of actions of this case statement
 	 */
 	public List<Statement> actions() {
@@ -165,8 +169,9 @@ public class SwitchCase extends Statement {
 	/**
 	 * Set to true if this case statement represents a 'default' case
 	 * 
-	 * @param isDefault 
-	 * @exception IllegalArgumentException if the argument is incorrect
+	 * @param isDefault
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
 	 */
 	public void setIsDefault(boolean isDefault) {
 		preValueChange(IS_DEFAULT_PROPERTY);
@@ -176,6 +181,7 @@ public class SwitchCase extends Statement {
 
 	/**
 	 * The value (expression) of this case statement
+	 * 
 	 * @return value (expression) of this case statement
 	 */
 	public Expression getValue() {
@@ -185,14 +191,16 @@ public class SwitchCase extends Statement {
 	/**
 	 * Sets the value of this case statement
 	 * 
-	 * @param value the value of this case statement.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * <li>the SwitchCase is the default case</li>
-	 * </ul>
+	 * @param value
+	 *            the value of this case statement.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                <li>the SwitchCase is the default case</li>
+	 *                </ul>
 	 */
 	public void setValue(Expression value) {
 		if (isDefault || value == null) {
@@ -205,7 +213,7 @@ public class SwitchCase extends Statement {
 		postReplaceChild(oldChild, value, VALUE_PROPERTY);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -239,8 +247,12 @@ public class SwitchCase extends Statement {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.ASTNode#internalGetChildListProperty(org.eclipse.php.internal.core.ast.nodes.ChildListPropertyDescriptor)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.core.ast.nodes.ASTNode#
+	 * internalGetChildListProperty(org.eclipse.php.internal.core.ast.nodes.
+	 * ChildListPropertyDescriptor)
 	 */
 	@Override
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {

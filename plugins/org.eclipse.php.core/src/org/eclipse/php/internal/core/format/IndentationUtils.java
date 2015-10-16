@@ -27,21 +27,18 @@ public class IndentationUtils {
 	 */
 	public static boolean isRegionTypeAllowedMultiline(String regionType) {
 		// TODO maybe there are other type need to be added
-		return regionType != null
-				&& !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
+		return regionType != null && !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
 				&& !PHPRegionTypes.PHP_COMMENT_START.equals(regionType)
 				&& !PHPRegionTypes.PHP_LINE_COMMENT.equals(regionType)
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=458777
 				// && !PHPRegionTypes.PHP_LABEL.equals(regionType)
-				&& !PHPRegionTypes.PHP_CASE.equals(regionType)
-				&& !PHPRegionTypes.PHP_DEFAULT.equals(regionType);
+				&& !PHPRegionTypes.PHP_CASE.equals(regionType) && !PHPRegionTypes.PHP_DEFAULT.equals(regionType);
 	}
 
 	/**
 	 * Check if the line contains any non blank chars.
 	 */
-	public static boolean isBlanks(final IStructuredDocument document,
-			final int startOffset, final int endOffset)
+	public static boolean isBlanks(final IStructuredDocument document, final int startOffset, final int endOffset)
 			throws BadLocationException {
 		for (int i = startOffset; i < endOffset; i++) {
 			if (!Character.isWhitespace(document.getChar(i))) {
@@ -51,8 +48,8 @@ public class IndentationUtils {
 		return true;
 	}
 
-	public static int moveLineStartToNonBlankChar(IStructuredDocument document,
-			int lineStart, int currLineIndex, boolean moveAfterNonBlankChar) {
+	public static int moveLineStartToNonBlankChar(IStructuredDocument document, int lineStart, int currLineIndex,
+			boolean moveAfterNonBlankChar) {
 		try {
 			int lineLength = document.getLineLength(currLineIndex);
 			for (int i = 0; i < lineLength; i++) {
@@ -69,11 +66,9 @@ public class IndentationUtils {
 		return lineStart;
 	}
 
-	public static boolean inBracelessBlock(PHPHeuristicScanner scanner,
-			IStructuredDocument document, int offset) {
+	public static boolean inBracelessBlock(PHPHeuristicScanner scanner, IStructuredDocument document, int offset) {
 		try {
-			if (scanner.isBracelessBlockStart(offset - 1,
-					PHPHeuristicScanner.UNBOUND)
+			if (scanner.isBracelessBlockStart(offset - 1, PHPHeuristicScanner.UNBOUND)
 					&& scanner.nextToken(offset, PHPHeuristicScanner.UNBOUND) != PHPHeuristicScanner.TokenLBRACE) {
 				return true;
 			}

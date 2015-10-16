@@ -22,8 +22,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents the static statement
- * <pre>e.g.<pre> static $a
- * static $a, $b=5;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * static $a static $a, $b=5;
  */
 public class StaticStatement extends Statement {
 

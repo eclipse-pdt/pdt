@@ -25,8 +25,7 @@ import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
  * 
  * @author Roy, 2006
  */
-public class PhpStructuredDocumentReParser extends
-		XMLStructuredDocumentReParser {
+public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser {
 
 	public PhpStructuredDocumentReParser() {
 		super();
@@ -59,8 +58,7 @@ public class PhpStructuredDocumentReParser extends
 	 * #150363)
 	 */
 	protected StructuredDocumentEvent checkForCrossStructuredDocumentRegionSyntax() {
-		StructuredDocumentEvent result = super
-				.checkForCrossStructuredDocumentRegionSyntax();
+		StructuredDocumentEvent result = super.checkForCrossStructuredDocumentRegionSyntax();
 		if (result == null) {
 			result = checkForCriticalKey("<%"); //$NON-NLS-1$
 			if (result == null)
@@ -73,10 +71,9 @@ public class PhpStructuredDocumentReParser extends
 	/**
 	 * Change PHP Script Regions nodes...
 	 */
-	protected StructuredDocumentEvent regionCheck(
-			IStructuredDocumentRegion oldNode, IStructuredDocumentRegion newNode) {
-		final StructuredDocumentEvent event = super.regionCheck(oldNode,
-				newNode);
+	protected StructuredDocumentEvent regionCheck(IStructuredDocumentRegion oldNode,
+			IStructuredDocumentRegion newNode) {
+		final StructuredDocumentEvent event = super.regionCheck(oldNode, newNode);
 
 		if (event instanceof RegionChangedEvent) {
 			RegionChangedEvent changedEvent = (RegionChangedEvent) event;
@@ -103,8 +100,7 @@ public class PhpStructuredDocumentReParser extends
 		// content
 		if (dirtyStart.equals(dirtyEnd)) {
 			ITextRegion region = dirtyStart.getRegionAtCharacterOffset(fStart);
-			if (region != null
-					&& region.getType().equals(PHPRegionContext.PHP_CONTENT)
+			if (region != null && region.getType().equals(PHPRegionContext.PHP_CONTENT)
 					&& (dirtyStart.getStart() + region.getEnd() >= (fStart + fLengthToReplace))) {
 				return null;
 			}

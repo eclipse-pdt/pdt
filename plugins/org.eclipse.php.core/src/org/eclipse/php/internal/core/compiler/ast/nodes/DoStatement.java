@@ -17,8 +17,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 
 public class DoStatement extends WhileStatement {
 
-	public DoStatement(int start, int end, Expression condition,
-			Statement action) {
+	public DoStatement(int start, int end, Expression condition, Statement action) {
 		super(start, end, condition, action);
 	}
 

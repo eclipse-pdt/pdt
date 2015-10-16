@@ -16,7 +16,8 @@ import org.eclipse.dltk.ast.expressions.Expression;
 
 public class ReflectionStaticMethodInvocation extends ReflectionCallExpression {
 
-	public ReflectionStaticMethodInvocation(int start, int end, Expression receiver, Expression name, CallArgumentsList args) {
+	public ReflectionStaticMethodInvocation(int start, int end, Expression receiver, Expression name,
+			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
 

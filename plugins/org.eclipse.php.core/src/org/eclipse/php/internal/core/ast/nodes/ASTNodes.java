@@ -15,55 +15,52 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 
 ;
 
-
 /**
  * Utilities used for Ast nodes
+ * 
  * @author Eden
  *
  */
 public class ASTNodes {
 
-
 	public static ASTNode getParent(ASTNode node, Class parentClass) {
-		if (node == null) 
+		if (node == null)
 			return null;
-		
+
 		do {
-			node= node.getParent();
+			node = node.getParent();
 		} while (node != null && !parentClass.isInstance(node));
 		return node;
 	}
-	
+
 	public static ASTNode getParent(ASTNode node, int nodeType) {
-		if (node == null) 
+		if (node == null)
 			return null;
-		
+
 		do {
-			node= node.getParent();
+			node = node.getParent();
 		} while (node != null && node.getType() != nodeType);
 		return node;
 	}
-	
-	/** 
+
+	/**
 	 * @param node
-	 * @return whether the given node is the only statement of a control statement
+	 * @return whether the given node is the only statement of a control
+	 *         statement
 	 */
 	public static boolean isControlStatement(ASTNode node) {
-		assert node != null;		
+		assert node != null;
 		int type = node.getType();
-		
-		return  (type == ASTNode.IF_STATEMENT
-		|| type == ASTNode.FOR_STATEMENT
-		|| type == ASTNode.FOR_EACH_STATEMENT
-		|| type == ASTNode.WHILE_STATEMENT
-		|| type == ASTNode.DO_STATEMENT
-		);
+
+		return (type == ASTNode.IF_STATEMENT || type == ASTNode.FOR_STATEMENT || type == ASTNode.FOR_EACH_STATEMENT
+				|| type == ASTNode.WHILE_STATEMENT || type == ASTNode.DO_STATEMENT);
 	}
-	
+
 	/**
-	 * Aggregates the strings for a given node 
+	 * Aggregates the strings for a given node
+	 * 
 	 * @param node
-	 * @return the aggregated strings for a given node 
+	 * @return the aggregated strings for a given node
 	 */
 	public static String getScalars(ASTNode node) {
 		final StringBuilder builder = new StringBuilder();
@@ -74,11 +71,10 @@ public class ASTNodes {
 				builder.append(scalar.getStringValue());
 				return true;
 			}
-				
+
 		});
-		
+
 		return builder.toString();
 	}
-	
-	
+
 }

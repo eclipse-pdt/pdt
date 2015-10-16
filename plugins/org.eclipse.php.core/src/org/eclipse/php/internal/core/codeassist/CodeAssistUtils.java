@@ -78,40 +78,32 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	public static IType[] getVariableType(IType[] types, String propertyName,
-			int offset) {
+	public static IType[] getVariableType(IType[] types, String propertyName, int offset) {
 		if (types != null) {
 			for (IType type : types) {
 				PHPClassType classType = PHPClassType.fromIType(type);
 
-				ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration(type.getSourceModule(), null);
-				FileContext fileContext = new FileContext(
-						type.getSourceModule(), moduleDeclaration, offset);
-				TypeContext typeContext = new TypeContext(fileContext,
-						classType);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(type.getSourceModule(),
+						null);
+				FileContext fileContext = new FileContext(type.getSourceModule(), moduleDeclaration, offset);
+				TypeContext typeContext = new TypeContext(fileContext, classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 
 				if (!propertyName.startsWith(DOLLAR)) {
 					propertyName = DOLLAR + propertyName;
 				}
-				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(
-						typeContext, propertyName, offset);
-				IEvaluatedType evaluatedType = typeInferencer
-						.evaluateTypePHPDoc(phpDocGoal, 3000);
+				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(typeContext, propertyName, offset);
+				IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
-				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
-						evaluatedType, fileContext, offset);
+				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 				if (modelElements != null) {
 					return modelElements;
 				}
 
-				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(
-						typeContext, types, propertyName);
+				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(typeContext, types, propertyName);
 				evaluatedType = typeInferencer.evaluateType(goal);
 
-				modelElements = PHPTypeInferenceUtils.getModelElements(
-						evaluatedType, fileContext, offset);
+				modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 				if (modelElements != null) {
 					return modelElements;
 				}
@@ -128,26 +120,20 @@ public class CodeAssistUtils {
 	 * @param position
 	 * @return
 	 */
-	public static IType[] getArrayVariableType(ISourceModule sourceModule,
-			String variableName, int position) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
-		IContext context = ASTUtils.findContext(sourceModule,
-				moduleDeclaration, position);
+	public static IType[] getArrayVariableType(ISourceModule sourceModule, String variableName, int position) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, position);
 		if (context != null) {
-			VariableReference varReference = getVariableReference(variableName,
-					position);
-			ExpressionTypeGoal goal = new ExpressionTypeGoal(context,
-					varReference);
+			VariableReference varReference = getVariableReference(variableName, position);
+			ExpressionTypeGoal goal = new ExpressionTypeGoal(context, varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-			if (evaluatedType instanceof MultiTypeType
-					|| evaluatedType instanceof AmbiguousType) {
+			if (evaluatedType instanceof MultiTypeType || evaluatedType instanceof AmbiguousType) {
 				return getTypes(position, context, evaluatedType);
 			}
 
-			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
-					evaluatedType, (ISourceModuleContext) context, position);
+			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType,
+					(ISourceModuleContext) context, position);
 			if (modelElements != null) {
 				return modelElements;
 			}
@@ -155,27 +141,23 @@ public class CodeAssistUtils {
 		return EMPTY_TYPES;
 	}
 
-	private static IType[] getTypes(int position, IContext context,
-			IEvaluatedType evaluatedType) {
+	private static IType[] getTypes(int position, IContext context, IEvaluatedType evaluatedType) {
 		List<IType> tmpList = new LinkedList<IType>();
 		List<IEvaluatedType> possibleTypes = new LinkedList<IEvaluatedType>();
 		if (evaluatedType instanceof MultiTypeType) {
 			possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
 		} else if (evaluatedType instanceof AmbiguousType) {
-			possibleTypes.addAll(Arrays.asList(((AmbiguousType) evaluatedType)
-					.getPossibleTypes()));
+			possibleTypes.addAll(Arrays.asList(((AmbiguousType) evaluatedType).getPossibleTypes()));
 		} else {
 			possibleTypes.add(evaluatedType);
 		}
 		for (IEvaluatedType possibleType : possibleTypes) {
 			IType[] tmpArray;
-			if (possibleType instanceof MultiTypeType
-					|| possibleType instanceof AmbiguousType) {
+			if (possibleType instanceof MultiTypeType || possibleType instanceof AmbiguousType) {
 				tmpArray = getTypes(position, context, possibleType);
 			} else {
-				tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType,
-						(ISourceModuleContext) context, position,
-						(IModelAccessCache) null);
+				tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType, (ISourceModuleContext) context,
+						position, (IModelAccessCache) null);
 			}
 			if (tmpArray != null) {
 				tmpList.addAll(Arrays.asList(tmpArray));
@@ -193,17 +175,12 @@ public class CodeAssistUtils {
 	 * @param position
 	 * @return
 	 */
-	public static IType[] getVariableType(ISourceModule sourceModule,
-			String variableName, int position) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
-		IContext context = ASTUtils.findContext(sourceModule,
-				moduleDeclaration, position);
+	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, position);
 		if (context != null) {
-			VariableReference varReference = getVariableReference(variableName,
-					position);
-			ExpressionTypeGoal goal = new ExpressionTypeGoal(context,
-					varReference);
+			VariableReference varReference = getVariableReference(variableName, position);
+			ExpressionTypeGoal goal = new ExpressionTypeGoal(context, varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
 
@@ -217,8 +194,7 @@ public class CodeAssistUtils {
 		return EMPTY_TYPES;
 	}
 
-	private static VariableReference getVariableReference(String variableName,
-			int position) {
+	private static VariableReference getVariableReference(String variableName, int position) {
 		String start = ""; //$NON-NLS-1$
 		int arrayType = 0;
 		if (variableName.endsWith("]")) { //$NON-NLS-1$
@@ -231,11 +207,9 @@ public class CodeAssistUtils {
 		if (!"".equals(start)) { //$NON-NLS-1$
 			int startIndex = variableName.indexOf(start);
 			String name = variableName.substring(0, startIndex);
-			return new ArrayVariableReference(position, position
-					+ variableName.length(), name, null, arrayType);
+			return new ArrayVariableReference(position, position + variableName.length(), name, null, arrayType);
 		}
-		return new VariableReference(position,
-				position + variableName.length(), variableName);
+		return new VariableReference(position, position + variableName.length(), variableName);
 	}
 
 	/**
@@ -248,15 +222,12 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getFunctionReturnType(IType[] types, String method,
 			org.eclipse.dltk.core.ISourceModule sourceModule, int offset) {
-		return getFunctionReturnType(types, method, USE_PHPDOC, sourceModule,
-				offset);
+		return getFunctionReturnType(types, method, USE_PHPDOC, sourceModule, offset);
 	}
 
-	public static IType[] getFunctionReturnType(IType[] types, String method,
-			int mask, org.eclipse.dltk.core.ISourceModule sourceModule,
-			int offset) {
-		return getFunctionReturnType(types, method, mask, sourceModule, offset,
-				null);
+	public static IType[] getFunctionReturnType(IType[] types, String method, int mask,
+			org.eclipse.dltk.core.ISourceModule sourceModule, int offset) {
+		return getFunctionReturnType(types, method, mask, sourceModule, offset, null);
 	}
 
 	/**
@@ -267,40 +238,35 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	public static IType[] getFunctionReturnType(IType[] types, String method,
-			int mask, org.eclipse.dltk.core.ISourceModule sourceModule,
-			int offset, String[] argNames) {
+	public static IType[] getFunctionReturnType(IType[] types, String method, int mask,
+			org.eclipse.dltk.core.ISourceModule sourceModule, int offset, String[] argNames) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
-		IContext context = ASTUtils.findContext(sourceModule,
-				moduleDeclaration, offset);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
 
 		IEvaluatedType evaluatedType;
 		IType[] modelElements;
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
-			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method, argNames, offset);
+			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(context, types, method, argNames,
+					offset);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 
-			modelElements = PHPTypeInferenceUtils.getModelElements(
-					evaluatedType, (ISourceModuleContext) context, offset);
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context,
+					offset);
 			if (modelElements != null && modelElements.length > 0) {
 				return modelElements;
 			}
 		}
 
-		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method, argNames, offset);
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(context, types, method, argNames,
+				offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
-		if (evaluatedType instanceof PHPThisClassType
-				&& ((PHPThisClassType) evaluatedType).getType() != null) {
-			modelElements = new IType[] { ((PHPThisClassType) evaluatedType)
-					.getType() };
+		if (evaluatedType instanceof PHPThisClassType && ((PHPThisClassType) evaluatedType).getType() != null) {
+			modelElements = new IType[] { ((PHPThisClassType) evaluatedType).getType() };
 		} else {
-			modelElements = PHPTypeInferenceUtils.getModelElements(
-					evaluatedType, (ISourceModuleContext) context, offset);
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context,
+					offset);
 		}
 		if (modelElements != null) {
 			return modelElements;
@@ -324,8 +290,7 @@ public class CodeAssistUtils {
 		if (type != null && method != null) {
 			try {
 				int flags = type.getFlags();
-				if (!PHPFlags.isAbstract(flags) && !PHPFlags.isInterface(flags)
-						&& !PHPFlags.isInterface(flags)) {
+				if (!PHPFlags.isAbstract(flags) && !PHPFlags.isInterface(flags) && !PHPFlags.isInterface(flags)) {
 					return type;
 				}
 			} catch (ModelException e) {
@@ -345,10 +310,10 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	public static IType[] getTypesFor(ISourceModule sourceModule,
-			TextSequence statementText, int endPosition, int offset) {
-		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, endPosition); // read whitespace
+	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
+			int offset) {
+		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read
+																								// whitespace
 
 		boolean isClassTriger = false;
 
@@ -356,8 +321,7 @@ public class CodeAssistUtils {
 			return EMPTY_TYPES;
 		}
 
-		String triggerText = statementText.subSequence(endPosition - 2,
-				endPosition).toString();
+		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
@@ -365,28 +329,22 @@ public class CodeAssistUtils {
 			return EMPTY_TYPES;
 		}
 
-		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, endPosition - triggerText.length());
+		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
+				endPosition - triggerText.length());
 
-		int lastObjectOperator = PHPTextSequenceUtilities
-				.getPrivousTriggerIndex(statementText, propertyEndPosition);
-		String text = statementText.subSequence(0, propertyEndPosition)
-				.toString();
+		int lastObjectOperator = PHPTextSequenceUtilities.getPrivousTriggerIndex(statementText, propertyEndPosition);
+		String text = statementText.subSequence(0, propertyEndPosition).toString();
 		if (lastObjectOperator == -1
-				|| (text.indexOf('>') >= 0
-						&& text.indexOf("=>") != text.indexOf('>') - 1 && text.indexOf("->") < 0)) { //$NON-NLS-1$ //$NON-NLS-2$
+				|| (text.indexOf('>') >= 0 && text.indexOf("=>") != text.indexOf('>') - 1 && text.indexOf("->") < 0)) { //$NON-NLS-1$ //$NON-NLS-2$
 			// if there is no "->" or "::" in the left sequence then we need to
 			// calc the object type
-			return innerGetClassName(sourceModule, statementText,
-					propertyEndPosition, isClassTriger, offset);
+			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset);
 		}
 
-		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(
-				statementText, lastObjectOperator + triggerText.length());
-		String propertyName = statementText.subSequence(propertyStartPosition,
-				propertyEndPosition).toString();
-		IType[] types = getTypesFor(sourceModule, statementText,
-				propertyStartPosition, offset);
+		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText,
+				lastObjectOperator + triggerText.length());
+		String propertyName = statementText.subSequence(propertyStartPosition, propertyEndPosition).toString();
+		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset);
 
 		int bracketIndex = propertyName.indexOf('(');
 
@@ -396,8 +354,7 @@ public class CodeAssistUtils {
 		}
 
 		boolean arrayReference = false;
-		PHPVersion version = ProjectOptions.getPhpVersion(sourceModule
-				.getScriptProject().getProject());
+		PHPVersion version = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 		if (propertyName.endsWith("]") //$NON-NLS-1$
 				&& version.isGreaterThan(PHPVersion.PHP5_3)) {
 			int closeBracketIndex = propertyName.lastIndexOf(')');
@@ -409,16 +366,13 @@ public class CodeAssistUtils {
 		}
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(version,
-				propertyName.substring(bracketIndex));
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(version, propertyName.substring(bracketIndex));
 		Set<IType> result = new LinkedHashSet<IType>();
 		IType[] returnTypes = null;
 		if (arrayReference) {
-			returnTypes = getFunctionArrayReturnType(types, functionName,
-					USE_PHPDOC, sourceModule, offset, argNames);
+			returnTypes = getFunctionArrayReturnType(types, functionName, USE_PHPDOC, sourceModule, offset, argNames);
 		} else {
-			returnTypes = getFunctionReturnType(types, functionName,
-					USE_PHPDOC, sourceModule, offset, argNames);
+			returnTypes = getFunctionReturnType(types, functionName, USE_PHPDOC, sourceModule, offset, argNames);
 		}
 		if (returnTypes != null) {
 			result.addAll(Arrays.asList(returnTypes));
@@ -426,15 +380,14 @@ public class CodeAssistUtils {
 		return result.toArray(new IType[result.size()]);
 	}
 
-	public static IType[] getTraitsFor(ISourceModule sourceModule,
-			TextSequence statementText, int endPosition, int offset) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule
-				.getScriptProject().getProject());
+	public static IType[] getTraitsFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
+			int offset) {
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
 			return EMPTY_TYPES;
 		}
-		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, endPosition); // read whitespace
+		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read
+																								// whitespace
 
 		boolean isClassTriger = false;
 
@@ -442,8 +395,7 @@ public class CodeAssistUtils {
 			return EMPTY_TYPES;
 		}
 
-		String triggerText = statementText.subSequence(endPosition - 2,
-				endPosition).toString();
+		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
@@ -451,24 +403,19 @@ public class CodeAssistUtils {
 			return EMPTY_TYPES;
 		}
 
-		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, endPosition - triggerText.length());
+		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
+				endPosition - triggerText.length());
 		// int lastObjectOperator = PHPTextSequenceUtilities
 		// .getPrivousTriggerIndex(statementText, propertyEndPosition);
 		// String text = statementText.subSequence(0, propertyEndPosition)
 		// .toString();
-		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, propertyEndPosition, true);
-		String className = statementText.subSequence(classNameStart,
-				propertyEndPosition).toString();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
-		FileContext context = new FileContext(sourceModule, moduleDeclaration,
-				offset);
-		IEvaluatedType type = PHPClassType.fromTraitName(className,
-				sourceModule, offset);
-		IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type,
-				context, offset);
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
+				propertyEndPosition, true);
+		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
+		IEvaluatedType type = PHPClassType.fromTraitName(className, sourceModule, offset);
+		IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
 		if (modelElements != null) {
 			return modelElements;
 		}
@@ -486,10 +433,9 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	private static IType[] getFunctionArrayReturnType(IType[] types,
-			String method, ISourceModule sourceModule, int offset) {
-		return getFunctionArrayReturnType(types, method, USE_PHPDOC,
-				sourceModule, offset);
+	private static IType[] getFunctionArrayReturnType(IType[] types, String method, ISourceModule sourceModule,
+			int offset) {
+		return getFunctionArrayReturnType(types, method, USE_PHPDOC, sourceModule, offset);
 	}
 
 	/**
@@ -502,10 +448,9 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	private static IType[] getFunctionArrayReturnType(IType[] types,
-			String method, int mask, ISourceModule sourceModule, int offset) {
-		return getFunctionArrayReturnType(types, method, mask, sourceModule,
-				offset, null);
+	private static IType[] getFunctionArrayReturnType(IType[] types, String method, int mask,
+			ISourceModule sourceModule, int offset) {
+		return getFunctionArrayReturnType(types, method, mask, sourceModule, offset, null);
 	}
 
 	/**
@@ -518,14 +463,11 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	private static IType[] getFunctionArrayReturnType(IType[] types,
-			String method, int mask, ISourceModule sourceModule, int offset,
-			String[] argNames) {
+	private static IType[] getFunctionArrayReturnType(IType[] types, String method, int mask,
+			ISourceModule sourceModule, int offset, String[] argNames) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
-		IContext context = ASTUtils.findContext(sourceModule,
-				moduleDeclaration, offset);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
 		// XXX context cannot be null
 		if (context == null) {
 			context = new BasicContext(sourceModule, moduleDeclaration);
@@ -535,8 +477,8 @@ public class CodeAssistUtils {
 		IEvaluatedType evaluatedType;
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
-			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method, argNames, offset);
+			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(context, types, method, argNames,
+					offset);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 			List<IEvaluatedType> possibleTypes = null;
 			if (!PHPTypeInferenceUtils.isSimple(evaluatedType)) {
@@ -544,21 +486,17 @@ public class CodeAssistUtils {
 					possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
 				} else if (evaluatedType instanceof AmbiguousType) {
 					possibleTypes = new ArrayList<IEvaluatedType>();
-					for (IEvaluatedType pType : ((AmbiguousType) evaluatedType)
-							.getPossibleTypes()) {
+					for (IEvaluatedType pType : ((AmbiguousType) evaluatedType).getPossibleTypes()) {
 						if (pType instanceof MultiTypeType) {
-							possibleTypes.addAll(((MultiTypeType) pType)
-									.getTypes());
+							possibleTypes.addAll(((MultiTypeType) pType).getTypes());
 						}
 					}
 				}
 				if (possibleTypes != null && possibleTypes.size() > 0) {
 					List<IType> tmpList = new LinkedList<IType>();
 					for (IEvaluatedType possibleType : possibleTypes) {
-						IType[] tmpArray = PHPTypeInferenceUtils
-								.getModelElements(possibleType,
-										(ISourceModuleContext) context, offset,
-										(IModelAccessCache) null);
+						IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType,
+								(ISourceModuleContext) context, offset, (IModelAccessCache) null);
 						if (tmpArray != null && tmpArray.length > 0) {
 							tmpList.addAll(Arrays.asList(tmpArray));
 						}
@@ -575,18 +513,16 @@ public class CodeAssistUtils {
 			// }
 		}
 
-		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method, argNames, offset);
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(context, types, method, argNames,
+				offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 
 		if (evaluatedType instanceof MultiTypeType) {
 			List<IType> tmpList = new LinkedList<IType>();
-			List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType)
-					.getTypes();
+			List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
-				IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
-						possibleType, (ISourceModuleContext) context, offset,
-						(IModelAccessCache) null);
+				IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType, (ISourceModuleContext) context,
+						offset, (IModelAccessCache) null);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}
@@ -601,26 +537,23 @@ public class CodeAssistUtils {
 	/**
 	 * Getting an instance and finding its type.
 	 */
-	private static IType[] innerGetClassName(ISourceModule sourceModule,
-			TextSequence statementText, int propertyEndPosition,
-			boolean isClassTriger, int offset) {
+	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText,
+			int propertyEndPosition, boolean isClassTriger, int offset) {
 
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule
-				.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 
-		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				phpVersion, statementText, propertyEndPosition, true);
-		String className = statementText.subSequence(classNameStart,
-				propertyEndPosition).toString();
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
+				propertyEndPosition, true);
+		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger && className != null && className.length() != 0) {
-			final String comparable = PHPVersion.PHP5_4.isLessThan(phpVersion) ? className
-					.toLowerCase() : className;
+			final String comparable = PHPVersion.PHP5_4.isLessThan(phpVersion) ? className.toLowerCase() : className;
 			if ("self".equals(comparable) //$NON-NLS-1$
 					|| "parent".equals(comparable) //$NON-NLS-1$
 					|| (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static" //$NON-NLS-1$
-					.equals(comparable))) {
-				IType classData = PHPModelUtils.getCurrentType(sourceModule,
-						offset - className.length() - 2); // the offset before
+							.equals(comparable))) {
+				IType classData = PHPModelUtils.getCurrentType(sourceModule, offset - className.length() - 2); // the
+																												// offset
+																												// before
 				// "self::",
 				// "parent::" or
 				// "static::"
@@ -631,19 +564,13 @@ public class CodeAssistUtils {
 			if (className.length() > 0) {
 				if (className.startsWith("$") //$NON-NLS-1$
 						&& phpVersion.isGreaterThan(PHPVersion.PHP5)) {
-					int statementStart = statementText
-							.getOriginalOffset(classNameStart);
-					return getVariableType(sourceModule, className,
-							statementStart);
+					int statementStart = statementText.getOriginalOffset(classNameStart);
+					return getVariableType(sourceModule, className, statementStart);
 				} else {
-					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(sourceModule, null);
-					FileContext context = new FileContext(sourceModule,
-							moduleDeclaration, offset);
-					IEvaluatedType type = PHPClassType.fromTypeName(className,
-							sourceModule, offset);
-					IType[] modelElements = PHPTypeInferenceUtils
-							.getModelElements(type, context, offset);
+					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+					FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
+					IEvaluatedType type = PHPClassType.fromTypeName(className, sourceModule, offset);
+					IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
 					if (modelElements != null) {
 						return modelElements;
 					}
@@ -653,38 +580,29 @@ public class CodeAssistUtils {
 		}
 		if (className.length() == 0) {
 			// this can happen if the first char before the property is ']'
-			String testedVar = statementText
-					.subSequence(0, propertyEndPosition).toString().trim();
+			String testedVar = statementText.subSequence(0, propertyEndPosition).toString().trim();
 			if (testedVar != null && testedVar.length() != 0) {
 				// check for $GLOBALS['myVar'] scenario
 				Matcher m = globalPattern.matcher(testedVar);
 				if (m.matches()) {
 					// $GLOBALS['myVar'] => 'myVar'
-					String quotedVarName = testedVar.substring(
-							testedVar.indexOf('[') + 1, testedVar.indexOf(']'))
+					String quotedVarName = testedVar.substring(testedVar.indexOf('[') + 1, testedVar.indexOf(']'))
 							.trim();
 					// 'myVar' => $myVar
-					className = DOLLAR
-							+ quotedVarName.substring(1,
-									quotedVarName.length() - 1); //$NON-NLS-1$
+					className = DOLLAR + quotedVarName.substring(1, quotedVarName.length() - 1); // $NON-NLS-1$
 					// check for $array[0] scenario
 				} else if (testedVar.endsWith("}")) { //$NON-NLS-1$
 					className = testedVar;
 				} else if (testedVar.endsWith("]")) { //$NON-NLS-1$
 					if (statementText.toString().lastIndexOf('[') > 0) {
 						int end = statementText.toString().lastIndexOf('[');
-						int classNameStart1 = PHPTextSequenceUtilities
-								.readIdentifierStartIndex(phpVersion,
-										statementText, end, true);
-						className = statementText.subSequence(classNameStart1,
-								end).toString();
+						int classNameStart1 = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion,
+								statementText, end, true);
+						className = statementText.subSequence(classNameStart1, end).toString();
 						// if its object call calc the object type.
-						if (className.length() > 0
-								&& className.charAt(0) == '$') {
-							int statementStart = statementText
-									.getOriginalOffset(classNameStart);
-							return getArrayVariableType(sourceModule,
-									className, statementStart);
+						if (className.length() > 0 && className.charAt(0) == '$') {
+							int statementStart = statementText.getOriginalOffset(classNameStart);
+							return getArrayVariableType(sourceModule, className, statementStart);
 						}
 					}
 					className = testedVar;
@@ -693,13 +611,11 @@ public class CodeAssistUtils {
 		}
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
-			int statementStart = statementText
-					.getOriginalOffset(classNameStart);
+			int statementStart = statementText.getOriginalOffset(classNameStart);
 			return getVariableType(sourceModule, className, statementStart);
 		}
 		boolean arrayReference = false;
-		if (statementText.charAt(propertyEndPosition - 1) == ']'
-				&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+		if (statementText.charAt(propertyEndPosition - 1) == ']' && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			int closeBracketIndex = statementText.toString().lastIndexOf(')');
 			if (closeBracketIndex >= 0) {
 				if (statementText.toString().indexOf('[', closeBracketIndex) > closeBracketIndex) {
@@ -709,32 +625,21 @@ public class CodeAssistUtils {
 			}
 		}
 		// if its function call calc the return type.
-		if (propertyEndPosition > 0
-				&& statementText.charAt(propertyEndPosition - 1) == ')') {
-			int functionNameEnd = PHPModelUtils.getFunctionNameEndOffset(
-					statementText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities
-					.readIdentifierStartIndex(phpVersion, statementText,
-							functionNameEnd, false);
+		if (propertyEndPosition > 0 && statementText.charAt(propertyEndPosition - 1) == ')') {
+			int functionNameEnd = PHPModelUtils.getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
+			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
+					functionNameEnd, false);
 
-			String functionName = statementText
-					.subSequence(functionNameStart, functionNameEnd).toString()
-					.trim();
+			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString().trim();
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
-			if (functionNameStart == functionNameEnd
-					&& statementText.charAt(functionNameStart) == '('
-					&& propertyEndPosition - 1 > functionNameStart + 1
-					&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
-				TextSequence newClassStatementText = statementText
-						.subTextSequence(functionNameStart + 1,
-								propertyEndPosition - 1);
-				String newClassName = PHPModelUtils
-						.getClassNameForNewStatement(newClassStatementText,
-								phpVersion);
+			if (functionNameStart == functionNameEnd && statementText.charAt(functionNameStart) == '('
+					&& propertyEndPosition - 1 > functionNameStart + 1 && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+				TextSequence newClassStatementText = statementText.subTextSequence(functionNameStart + 1,
+						propertyEndPosition - 1);
+				String newClassName = PHPModelUtils.getClassNameForNewStatement(newClassStatementText, phpVersion);
 				try {
-					return PHPModelUtils.getTypes(newClassName, sourceModule,
-							offset, null, null);
+					return PHPModelUtils.getTypes(newClassName, sourceModule, offset, null, null);
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
@@ -761,38 +666,29 @@ public class CodeAssistUtils {
 				// }
 
 			} else {
-				String[] argNames = PHPTextSequenceUtilities.getArgNames(
-						phpVersion, statementText.subSequence(functionNameEnd,
-								propertyEndPosition - 1));
+				String[] argNames = PHPTextSequenceUtilities.getArgNames(phpVersion,
+						statementText.subSequence(functionNameEnd, propertyEndPosition - 1));
 				if (arrayReference) {
 
-					IType[] types = getFunctionArrayReturnType(null,
-							functionName, USE_PHPDOC, sourceModule, offset,
+					IType[] types = getFunctionArrayReturnType(null, functionName, USE_PHPDOC, sourceModule, offset,
 							argNames);
 					if (types != null) {
 						returnTypes.addAll(Arrays.asList(types));
 					}
 				} else {
-					IType[] types = getFunctionReturnType(null, functionName,
-							USE_PHPDOC, sourceModule, offset, argNames);
+					IType[] types = getFunctionReturnType(null, functionName, USE_PHPDOC, sourceModule, offset,
+							argNames);
 					if (types != null && types.length > 0) {
 						returnTypes.addAll(Arrays.asList(types));
 					} else {
-						IType namespace = PHPModelUtils.getCurrentNamespace(
-								sourceModule, offset);
-						ModuleDeclaration moduleDeclaration = SourceParserUtil
-								.getModuleDeclaration(sourceModule);
-						Map<String, UsePart> useParts = PHPModelUtils
-								.getAliasToNSMap(functionName,
-										moduleDeclaration, offset, namespace,
-										true);
+						IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+						ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+						Map<String, UsePart> useParts = PHPModelUtils.getAliasToNSMap(functionName, moduleDeclaration,
+								offset, namespace, true);
 						if (useParts.containsKey(functionName)) {
-							String name = useParts.get(functionName)
-									.getNamespace().getFullyQualifiedName();
-							name = NamespaceReference.NAMESPACE_SEPARATOR
-									+ name;
-							types = getFunctionReturnType(null, name,
-									USE_PHPDOC, sourceModule, offset, argNames);
+							String name = useParts.get(functionName).getNamespace().getFullyQualifiedName();
+							name = NamespaceReference.NAMESPACE_SEPARATOR + name;
+							types = getFunctionReturnType(null, name, USE_PHPDOC, sourceModule, offset, argNames);
 							if (types != null) {
 								returnTypes.addAll(Arrays.asList(types));
 							}
@@ -814,13 +710,11 @@ public class CodeAssistUtils {
 	 * @param functionName
 	 * @return
 	 */
-	public static boolean isClassFunctionCall(ISourceModule sourceModule,
-			IType[] className, String functionName) {
+	public static boolean isClassFunctionCall(ISourceModule sourceModule, IType[] className, String functionName) {
 		for (IType type : className) {
 			IMethod[] classMethod;
 			try {
-				classMethod = PHPModelUtils.getTypeHierarchyMethod(type,
-						functionName, true, null);
+				classMethod = PHPModelUtils.getTypeHierarchyMethod(type, functionName, true, null);
 				if (classMethod != null) {
 					return true;
 				}

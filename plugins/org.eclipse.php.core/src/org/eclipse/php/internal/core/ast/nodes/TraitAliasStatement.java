@@ -44,8 +44,7 @@ public class TraitAliasStatement extends TraitStatement {
 	@Override
 	ASTNode clone0(AST target) {
 		TraitAlias alias = ASTNode.copySubtree(target, getAlias());
-		final TraitAliasStatement result = new TraitAliasStatement(
-				this.getStart(), this.getEnd(), target, alias);
+		final TraitAliasStatement result = new TraitAliasStatement(this.getStart(), this.getEnd(), target, alias);
 		return result;
 	}
 

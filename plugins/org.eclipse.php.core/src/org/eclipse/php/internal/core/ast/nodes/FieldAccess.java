@@ -21,7 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a field access
- * <pre>e.g.<pre> $a->$b
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a->$b
  */
 public class FieldAccess extends Dispatch {
 
@@ -30,29 +35,29 @@ public class FieldAccess extends Dispatch {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor DISPATCHER_PROPERTY = 
-		new ChildPropertyDescriptor(FieldAccess.class, "dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor FIELD_PROPERTY = 
-		new ChildPropertyDescriptor(FieldAccess.class, "field", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor DISPATCHER_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class,
+			"dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FIELD_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class, "field", //$NON-NLS-1$
+			Variable.class, MANDATORY, CYCLE_RISK);
 
 	@Override
 	ChildPropertyDescriptor getDispatcherProperty() {
 		return FieldAccess.DISPATCHER_PROPERTY;
 	}
-	
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(FIELD_PROPERTY);
-		propertyList.add(DISPATCHER_PROPERTY);		
+		propertyList.add(DISPATCHER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
-	
+
 	public FieldAccess(int start, int end, AST ast, VariableBase dispatcher, Variable field) {
 		super(start, end, ast, dispatcher);
 
@@ -65,15 +70,15 @@ public class FieldAccess extends Dispatch {
 	public FieldAccess(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
 		getDispatcher().accept(visitor);
 		field.accept(visitor);
@@ -117,25 +122,26 @@ public class FieldAccess extends Dispatch {
 		return field;
 	}
 
-
 	/**
 	 * see {@link #getField()}
 	 */
 	public VariableBase getMember() {
 		return getField();
 	}
-	
+
 	/**
 	 * Sets the field component of this field access.
 	 * 
-	 * @param variable the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param variable
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setField(Variable variable) {
 		if (variable == null) {
 			throw new IllegalArgumentException();
@@ -144,8 +150,8 @@ public class FieldAccess extends Dispatch {
 		preReplaceChild(oldChild, variable, FIELD_PROPERTY);
 		this.field = variable;
 		postReplaceChild(oldChild, variable, FIELD_PROPERTY);
-	}	
-	
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FIELD_PROPERTY) {
 			if (get) {
@@ -158,15 +164,14 @@ public class FieldAccess extends Dispatch {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
-
 
 	@Override
 	ASTNode clone0(AST target) {
@@ -180,14 +185,14 @@ public class FieldAccess extends Dispatch {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/**
 	 * Resolves and returns the binding for the field accessed by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
-	 */			
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
+	 */
 	public IVariableBinding resolveFieldBinding() {
 		return this.ast.getBindingResolver().resolveField(this);
 	}

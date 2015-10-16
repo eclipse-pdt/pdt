@@ -100,15 +100,13 @@ public class ASTMatcher {
 	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
-	public final boolean safeSubtreeListMatch(Collection list1,
-			Collection list2) {
+	public final boolean safeSubtreeListMatch(Collection list1, Collection list2) {
 		int size1 = list1.size();
 		int size2 = list2.size();
 		if (size1 != size2) {
 			return false;
 		}
-		for (Iterator it1 = list1.iterator(), it2 = list2.iterator(); it1
-				.hasNext();) {
+		for (Iterator it1 = list1.iterator(), it2 = list2.iterator(); it1.hasNext();) {
 			ASTNode n1 = (ASTNode) it1.next();
 			ASTNode n2 = (ASTNode) it2.next();
 			if (n1 == null && n2 == null) {
@@ -145,8 +143,7 @@ public class ASTMatcher {
 	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
-	public final boolean safeSubtreeListMatch(Expression[] list1,
-			Expression[] list2) {
+	public final boolean safeSubtreeListMatch(Expression[] list1, Expression[] list2) {
 		return safeSubtreeListMatch(Arrays.asList(list1), Arrays.asList(list2));
 	}
 
@@ -169,8 +166,7 @@ public class ASTMatcher {
 	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
-	public final boolean safeSubtreeListMatch(Statement[] list1,
-			Statement[] list2) {
+	public final boolean safeSubtreeListMatch(Statement[] list1, Statement[] list2) {
 		return safeSubtreeListMatch(Arrays.asList(list1), Arrays.asList(list2));
 	}
 
@@ -193,8 +189,7 @@ public class ASTMatcher {
 	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
-	public final boolean safeSubtreeListMatch(ASTNode[] list1,
-			ASTNode[] list2) {
+	public final boolean safeSubtreeListMatch(ASTNode[] list1, ASTNode[] list2) {
 		return safeSubtreeListMatch(Arrays.asList(list1), Arrays.asList(list2));
 	}
 
@@ -277,8 +272,7 @@ public class ASTMatcher {
 		}
 		ArrayAccess o = (ArrayAccess) other;
 
-		return (safeSubtreeMatch(node.getName(), o.getName())
-				&& safeSubtreeMatch(node.getIndex(), o.getIndex())
+		return (safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getIndex(), o.getIndex())
 				&& safeEquals(node.getArrayType(), o.getArrayType()));
 	}
 
@@ -297,8 +291,7 @@ public class ASTMatcher {
 		}
 		ArrayElement o = (ArrayElement) other;
 
-		return (safeSubtreeMatch(node.getKey(), o.getKey())
-				&& safeSubtreeMatch(node.getValue(), o.getValue()));
+		return (safeSubtreeMatch(node.getKey(), o.getKey()) && safeSubtreeMatch(node.getValue(), o.getValue()));
 	}
 
 	public boolean match(Assignment node, Object other) {
@@ -308,10 +301,8 @@ public class ASTMatcher {
 		Assignment o = (Assignment) other;
 
 		return (safeEquals(node.getOperator(), o.getOperator())
-				&& safeSubtreeMatch(node.getRightHandSide(),
-						o.getRightHandSide())
-				&& safeSubtreeMatch(node.getLeftHandSide(),
-						o.getLeftHandSide()));
+				&& safeSubtreeMatch(node.getRightHandSide(), o.getRightHandSide())
+				&& safeSubtreeMatch(node.getLeftHandSide(), o.getLeftHandSide()));
 	}
 
 	public boolean match(ASTError node, Object other) {
@@ -334,8 +325,7 @@ public class ASTMatcher {
 		}
 		Block o = (Block) other;
 
-		return (safeEquals(node.isCurly(), o.isCurly())
-				&& safeSubtreeListMatch(node.statements(), o.statements()));
+		return (safeEquals(node.isCurly(), o.isCurly()) && safeSubtreeListMatch(node.statements(), o.statements()));
 	}
 
 	public boolean match(BreakStatement node, Object other) {
@@ -395,8 +385,7 @@ public class ASTMatcher {
 		}
 		TypeDeclaration o = (TypeDeclaration) other;
 
-		return (safeSubtreeMatch(node.getName(), o.getName())
-				&& safeSubtreeMatch(node.getBody(), o.getBody())
+		return (safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getBody(), o.getBody())
 				&& safeSubtreeListMatch(node.interfaces(), o.interfaces()));
 	}
 
@@ -408,8 +397,7 @@ public class ASTMatcher {
 
 		return (safeSubtreeMatch(node.getClassName(), o.getClassName())
 				&& safeSubtreeListMatch(node.ctorParams(), o.ctorParams())
-				&& safeSubtreeMatch(node.getAnonymousClassDeclaration(),
-						o.getAnonymousClassDeclaration()));
+				&& safeSubtreeMatch(node.getAnonymousClassDeclaration(), o.getAnonymousClassDeclaration()));
 	}
 
 	public boolean match(ClassName node, Object other) {
@@ -463,10 +451,8 @@ public class ASTMatcher {
 		DeclareStatement o = (DeclareStatement) other;
 
 		return (safeSubtreeMatch(node.getBody(), o.getBody())
-				&& safeSubtreeListMatch(node.directiveNames(),
-						o.directiveNames())
-				&& safeSubtreeListMatch(node.directiveValues(),
-						o.directiveValues()));
+				&& safeSubtreeListMatch(node.directiveNames(), o.directiveNames())
+				&& safeSubtreeListMatch(node.directiveValues(), o.directiveValues()));
 	}
 
 	public boolean match(DoStatement node, Object other) {
@@ -524,10 +510,8 @@ public class ASTMatcher {
 		FieldsDeclaration o = (FieldsDeclaration) other;
 
 		return (safeEquals(node.getModifier(), o.getModifier())
-				&& safeSubtreeListMatch(node.getInitialValues(),
-						o.getInitialValues())
-				&& safeSubtreeListMatch(node.getVariableNames(),
-						o.getVariableNames()));
+				&& safeSubtreeListMatch(node.getInitialValues(), o.getInitialValues())
+				&& safeSubtreeListMatch(node.getVariableNames(), o.getVariableNames()));
 	}
 
 	public boolean match(ForEachStatement node, Object other) {
@@ -536,8 +520,7 @@ public class ASTMatcher {
 		}
 		ForEachStatement o = (ForEachStatement) other;
 
-		return (safeSubtreeMatch(node.getExpression(), o.getExpression())
-				&& safeSubtreeMatch(node.getKey(), o.getKey())
+		return (safeSubtreeMatch(node.getExpression(), o.getExpression()) && safeSubtreeMatch(node.getKey(), o.getKey())
 				&& safeSubtreeMatch(node.getValue(), o.getValue())
 				&& safeSubtreeMatch(node.getStatement(), o.getStatement()));
 	}
@@ -548,14 +531,10 @@ public class ASTMatcher {
 		}
 		FormalParameter o = (FormalParameter) other;
 
-		return (safeEquals(node.isMandatory(), o.isMandatory())
-				&& safeEquals(node.isVariadic(), o.isVariadic())
-				&& safeSubtreeMatch(node.getParameterType(),
-						o.getParameterType())
-				&& safeSubtreeMatch(node.getParameterName(),
-						o.getParameterName())
-				&& safeSubtreeMatch(node.getDefaultValue(),
-						o.getDefaultValue()));
+		return (safeEquals(node.isMandatory(), o.isMandatory()) && safeEquals(node.isVariadic(), o.isVariadic())
+				&& safeSubtreeMatch(node.getParameterType(), o.getParameterType())
+				&& safeSubtreeMatch(node.getParameterName(), o.getParameterName())
+				&& safeSubtreeMatch(node.getDefaultValue(), o.getDefaultValue()));
 	}
 
 	public boolean match(ForStatement node, Object other) {
@@ -576,11 +555,9 @@ public class ASTMatcher {
 		}
 		FunctionDeclaration o = (FunctionDeclaration) other;
 
-		return (safeEquals(node.isReference(), o.isReference())
-				&& safeSubtreeMatch(node.getBody(), o.getBody())
+		return (safeEquals(node.isReference(), o.isReference()) && safeSubtreeMatch(node.getBody(), o.getBody())
 				&& safeSubtreeMatch(node.getFunctionName(), o.getFunctionName())
-				&& safeSubtreeListMatch(node.formalParameters(),
-						o.formalParameters())
+				&& safeSubtreeListMatch(node.formalParameters(), o.formalParameters())
 				&& safeSubtreeMatch(node.getReturnType(), o.getReturnType()));
 	}
 
@@ -628,10 +605,8 @@ public class ASTMatcher {
 		IfStatement o = (IfStatement) other;
 
 		return (safeSubtreeMatch(node.getCondition(), o.getCondition())
-				&& safeSubtreeMatch(node.getTrueStatement(),
-						o.getTrueStatement())
-				&& safeSubtreeMatch(node.getFalseStatement(),
-						o.getFalseStatement()));
+				&& safeSubtreeMatch(node.getTrueStatement(), o.getTrueStatement())
+				&& safeSubtreeMatch(node.getFalseStatement(), o.getFalseStatement()));
 	}
 
 	public boolean match(IgnoreError node, Object other) {
@@ -659,8 +634,7 @@ public class ASTMatcher {
 		}
 		InfixExpression o = (InfixExpression) other;
 
-		return (safeEquals(node.getOperator(), o.getOperator())
-				&& safeSubtreeMatch(node.getRight(), o.getRight())
+		return (safeEquals(node.getOperator(), o.getOperator()) && safeSubtreeMatch(node.getRight(), o.getRight())
 				&& safeSubtreeMatch(node.getLeft(), o.getLeft()));
 	}
 
@@ -757,8 +731,7 @@ public class ASTMatcher {
 		Program o = (Program) other;
 
 		return (safeSubtreeListMatch(node.statements(), o.statements())
-				&& safeSubtreeListMatch(((Map) node.comments()).values(),
-						((Map) o.comments()).values()));
+				&& safeSubtreeListMatch(((Map) node.comments()).values(), ((Map) o.comments()).values()));
 	}
 
 	public boolean match(Quote node, Object other) {
@@ -804,8 +777,7 @@ public class ASTMatcher {
 		}
 		YieldExpression o = (YieldExpression) other;
 
-		return safeSubtreeMatch(node.getKey(), o.getKey())
-				&& safeSubtreeMatch(node.getExpression(), o.getExpression());
+		return safeSubtreeMatch(node.getKey(), o.getKey()) && safeSubtreeMatch(node.getExpression(), o.getExpression());
 	}
 
 	public boolean match(Scalar node, Object other) {
@@ -824,8 +796,7 @@ public class ASTMatcher {
 		}
 		SingleFieldDeclaration o = (SingleFieldDeclaration) other;
 
-		return (safeSubtreeMatch(node.getName(), o.getName())
-				&& safeSubtreeMatch(node.getValue(), o.getValue()));
+		return (safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getValue(), o.getValue()));
 	}
 
 	public boolean match(StaticConstantAccess node, Object other) {
@@ -875,8 +846,7 @@ public class ASTMatcher {
 		}
 		SwitchCase o = (SwitchCase) other;
 
-		return (safeEquals(node.isDefault(), o.isDefault())
-				&& safeSubtreeMatch(node.getValue(), o.getValue())
+		return (safeEquals(node.isDefault(), o.isDefault()) && safeSubtreeMatch(node.getValue(), o.getValue())
 				&& safeSubtreeListMatch(node.getActions(), o.getActions()));
 	}
 
@@ -906,8 +876,7 @@ public class ASTMatcher {
 		TryStatement o = (TryStatement) other;
 
 		return (safeSubtreeMatch(node.getTryStatement(), o.getTryStatement())
-				&& safeSubtreeListMatch(node.getCatchClauses(),
-						o.getCatchClauses())
+				&& safeSubtreeListMatch(node.getCatchClauses(), o.getCatchClauses())
 				&& safeSubtreeMatch(node.finallyClause(), o.finallyClause()));
 	}
 
@@ -926,8 +895,7 @@ public class ASTMatcher {
 		}
 		UnaryOperation o = (UnaryOperation) other;
 
-		return (safeEquals(node.getOperator(), o.getOperator())
-				&& safeSubtreeMatch(node.getExpr(), o.getExpr()));
+		return (safeEquals(node.getOperator(), o.getOperator()) && safeSubtreeMatch(node.getExpr(), o.getExpr()));
 	}
 
 	public boolean match(Variable node, Object other) {
@@ -955,8 +923,7 @@ public class ASTMatcher {
 			return false;
 		}
 		NamespaceDeclaration o = (NamespaceDeclaration) other;
-		return safeSubtreeMatch(node.getName(), o.getName())
-				&& safeSubtreeMatch(node.getBody(), o.getBody());
+		return safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getBody(), o.getBody());
 	}
 
 	public boolean match(NamespaceName node, Object other) {
@@ -964,8 +931,7 @@ public class ASTMatcher {
 			return false;
 		}
 		NamespaceName o = (NamespaceName) other;
-		return safeEquals(node.isGlobal(), o.isGlobal())
-				&& safeEquals(node.isCurrent(), o.isCurrent())
+		return safeEquals(node.isGlobal(), o.isGlobal()) && safeEquals(node.isCurrent(), o.isCurrent())
 				&& safeSubtreeListMatch(node.segments(), o.segments());
 	}
 
@@ -974,8 +940,7 @@ public class ASTMatcher {
 			return false;
 		}
 		UseStatementPart o = (UseStatementPart) other;
-		return safeSubtreeMatch(node.getName(), o.getName())
-				&& safeSubtreeMatch(node.getAlias(), o.getAlias())
+		return safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getAlias(), o.getAlias())
 				&& node.getStatementType() == o.getStatementType();
 	}
 
@@ -1011,13 +976,10 @@ public class ASTMatcher {
 		}
 		LambdaFunctionDeclaration o = (LambdaFunctionDeclaration) other;
 
-		return (safeEquals(node.isReference(), o.isReference())
-				&& safeEquals(node.isStatic(), o.isStatic())
+		return (safeEquals(node.isReference(), o.isReference()) && safeEquals(node.isStatic(), o.isStatic())
 				&& safeSubtreeMatch(node.getBody(), o.getBody())
-				&& safeSubtreeListMatch(node.formalParameters(),
-						o.formalParameters())
-				&& safeSubtreeListMatch(node.lexicalVariables(),
-						o.lexicalVariables())
+				&& safeSubtreeListMatch(node.formalParameters(), o.formalParameters())
+				&& safeSubtreeListMatch(node.lexicalVariables(), o.lexicalVariables())
 				&& safeSubtreeMatch(node.getReturnType(), o.getReturnType()));
 	}
 
@@ -1057,8 +1019,7 @@ public class ASTMatcher {
 		}
 		TraitPrecedence o = (TraitPrecedence) other;
 
-		return (safeSubtreeMatch(node.getMethodReference(),
-				o.getMethodReference()))
+		return (safeSubtreeMatch(node.getMethodReference(), o.getMethodReference()))
 				&& (safeSubtreeListMatch(node.getTrList(), o.getTrList()));
 	}
 
@@ -1068,13 +1029,11 @@ public class ASTMatcher {
 		}
 		TraitAlias o = (TraitAlias) other;
 
-		return safeSubtreeMatch(node.getTraitMethod(), o.getTraitMethod())
-				&& node.getModifier() == o.getModifier()
+		return safeSubtreeMatch(node.getTraitMethod(), o.getTraitMethod()) && node.getModifier() == o.getModifier()
 				&& node.getFunctionName().equals(o.getFunctionName());
 	}
 
-	public boolean match(FullyQualifiedTraitMethodReference node,
-			Object other) {
+	public boolean match(FullyQualifiedTraitMethodReference node, Object other) {
 		if (!(other instanceof FullyQualifiedTraitMethodReference)) {
 			return false;
 		}

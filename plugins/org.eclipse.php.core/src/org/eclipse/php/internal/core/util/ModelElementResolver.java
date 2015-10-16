@@ -46,8 +46,7 @@ public class ModelElementResolver {
 		IModelElement[] modelElements = null;
 
 		ContextFinder visitor = new ContextFinder(sourceModule, offset);
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		try {
 			moduleDeclaration.traverse(visitor);
 		} catch (Exception e) {
@@ -57,10 +56,9 @@ public class ModelElementResolver {
 		if (visitor.getNode() != null) {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer
-					.evaluateType(new ExpressionTypeGoal(visitor.getContext(),
-							visitor.getNode()));
-			modelElements = PHPTypeInferenceUtils.getModelElements(
-					evaluatedType, (FileContext) visitor.getContext(), offset);
+					.evaluateType(new ExpressionTypeGoal(visitor.getContext(), visitor.getNode()));
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (FileContext) visitor.getContext(),
+					offset);
 		}
 
 		return modelElements;
@@ -69,8 +67,7 @@ public class ModelElementResolver {
 	/**
 	 * Finds binding context for the given AST node for internal usages only.
 	 */
-	private static class ContextFinder extends
-			org.eclipse.php.internal.core.typeinference.context.ContextFinder {
+	private static class ContextFinder extends org.eclipse.php.internal.core.typeinference.context.ContextFinder {
 
 		private IContext context;
 		private ASTNode node;

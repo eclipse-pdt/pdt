@@ -20,11 +20,13 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a list expression.
- * The list contains variables and/or other lists.
+ * Represents a list expression. The list contains variables and/or other lists.
  *
- * <pre>e.g.<pre> list($a,$b) = array (1,2),
- * list($a, list($b, $c))
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * list($a,$b) = array (1,2), list($a, list($b, $c))
  */
 public class ListVariable extends Expression {
 

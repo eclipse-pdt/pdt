@@ -12,8 +12,8 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class TraitAlias extends Expression {
 
 	// TODO need modifier start offset,change functionName to scalar
-	public TraitAlias(int start, int end, AST ast, Expression traitMethod,
-			int modifier, int modifierOffset, Identifier functionName) {
+	public TraitAlias(int start, int end, AST ast, Expression traitMethod, int modifier, int modifierOffset,
+			Identifier functionName) {
 		super(start, end, ast);
 		setTraitMethod(traitMethod);
 		setModifier(modifier);
@@ -34,13 +34,11 @@ public class TraitAlias extends Expression {
 	 */
 	private Identifier functionName;
 
-	public static final ChildPropertyDescriptor TRAIT_METHOD = new ChildPropertyDescriptor(
-			TraitAlias.class,
+	public static final ChildPropertyDescriptor TRAIT_METHOD = new ChildPropertyDescriptor(TraitAlias.class,
 			"traitMethod", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor MODIFIER = new SimplePropertyDescriptor(
-			TraitAlias.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor FUNCTION_NAME = new ChildPropertyDescriptor(
-			TraitAlias.class,
+	public static final SimplePropertyDescriptor MODIFIER = new SimplePropertyDescriptor(TraitAlias.class, "modifier", //$NON-NLS-1$
+			Integer.class, OPTIONAL);
+	public static final ChildPropertyDescriptor FUNCTION_NAME = new ChildPropertyDescriptor(TraitAlias.class,
 			"functionName", Identifier.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
@@ -50,8 +48,7 @@ public class TraitAlias extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(TRAIT_METHOD);
 		propertyList.add(MODIFIER);
 		propertyList.add(FUNCTION_NAME);
@@ -160,17 +157,14 @@ public class TraitAlias extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		Expression traitMethod = ASTNode.copySubtree(target, getTraitMethod());
-		Identifier functionName = ASTNode
-				.copySubtree(target, getFunctionName());
-		final TraitAlias result = new TraitAlias(this.getStart(),
-				this.getEnd(), target, traitMethod, modifier, modifierOffset,
-				functionName);
+		Identifier functionName = ASTNode.copySubtree(target, getFunctionName());
+		final TraitAlias result = new TraitAlias(this.getStart(), this.getEnd(), target, traitMethod, modifier,
+				modifierOffset, functionName);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
@@ -189,8 +183,7 @@ public class TraitAlias extends Expression {
 	// }
 
 	@Override
-	int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == MODIFIER) {
 			if (get) {
 				return getModifier();
@@ -203,8 +196,7 @@ public class TraitAlias extends Expression {
 		return super.internalGetSetIntProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == TRAIT_METHOD) {
 			if (get) {
 				return getTraitMethod();

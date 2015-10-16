@@ -31,13 +31,10 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
  * 
  * @author shalom
  */
-public abstract class AbstractOccurrencesFinder extends AbstractVisitor
-		implements IOccurrencesFinder {
+public abstract class AbstractOccurrencesFinder extends AbstractVisitor implements IOccurrencesFinder {
 
-	protected static final String BASE_DESCRIPTION = CoreMessages
-			.getString("AbstractOccurrencesFinder.0"); //$NON-NLS-1$
-	protected static final String BASE_WRITE_DESCRIPTION = CoreMessages
-			.getString("AbstractOccurrencesFinder.1"); //$NON-NLS-1$
+	protected static final String BASE_DESCRIPTION = CoreMessages.getString("AbstractOccurrencesFinder.0"); //$NON-NLS-1$
+	protected static final String BASE_WRITE_DESCRIPTION = CoreMessages.getString("AbstractOccurrencesFinder.1"); //$NON-NLS-1$
 	protected static final String BRACKETS = "()"; //$NON-NLS-1$
 
 	protected List<OccurrenceLocation> fResult;
@@ -106,15 +103,14 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 
 			IResource resource = node.getSourceModule().getUnderlyingResource();
 			if (resource != null) {
-				IMarker[] markers = resource.findMarkers(
-						DefaultProblem.MARKER_TYPE_PROBLEM, true,
-						IResource.DEPTH_ONE);
+				IMarker[] markers = resource.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ONE);
 				ProblemDesc[] problems = new ProblemDesc[markers.length];
 				for (int i = 0; i < markers.length; ++i) {
-					problems[i] = new ProblemDesc(markers[i].getAttribute("id",//$NON-NLS-1$
-							0), markers[i].getAttribute(IMarker.CHAR_START, 0),
-							markers[i].getAttribute(IMarker.CHAR_END, 0),
-							markers[i].getAttribute(IMarker.SEVERITY, 0));
+					problems[i] = new ProblemDesc(
+							markers[i].getAttribute("id", //$NON-NLS-1$
+									0),
+							markers[i].getAttribute(IMarker.CHAR_START, 0),
+							markers[i].getAttribute(IMarker.CHAR_END, 0), markers[i].getAttribute(IMarker.SEVERITY, 0));
 				}
 				return problems;
 			}
@@ -149,8 +145,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 	 *            Occurrence location
 	 */
 	protected void addOccurrence(OccurrenceLocation location) {
-		if (!hasProblems(location.getOffset(),
-				location.getOffset() + location.getLength())) {
+		if (!hasProblems(location.getOffset(), location.getOffset() + location.getLength())) {
 			fResult.add(location);
 		}
 	}
@@ -242,8 +237,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 				name = part.getAlias().getName();
 			} else {
 				name = part.getName().getName();
-				int index = name
-						.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+				int index = name.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 				if (index >= 0) {
 					name = name.substring(index + 1);
 				}
@@ -253,36 +247,28 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 		return true;
 	}
 
-	public static String getFullName(Identifier identifier,
-			Map<String, UseStatementPart> lastUseParts,
+	public static String getFullName(Identifier identifier, Map<String, UseStatementPart> lastUseParts,
 			NamespaceDeclaration currentNamespace) {
 		return getFullName(identifier.getName(), lastUseParts, currentNamespace);
 	}
 
-	public static String getFullName(String fullName,
-			Map<String, UseStatementPart> lastUseParts,
+	public static String getFullName(String fullName, Map<String, UseStatementPart> lastUseParts,
 			NamespaceDeclaration currentNamespace) {
 		if (fullName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-			int index = fullName
-					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			int index = fullName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 			if (index >= 0) {
 				String namespace = fullName.substring(0, index);
 				if (lastUseParts.containsKey(namespace)) {
-					fullName = new StringBuilder(lastUseParts.get(namespace)
-							.getName().getName())
-							.append(NamespaceReference.NAMESPACE_SEPARATOR)
-							.append(fullName.substring(index + 1)).toString();
+					fullName = new StringBuilder(lastUseParts.get(namespace).getName().getName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR).append(fullName.substring(index + 1))
+							.toString();
 				}
 			} else if (lastUseParts.containsKey(fullName)) {
-				fullName = new StringBuilder(lastUseParts.get(fullName)
-						.getName().getName()).toString();
+				fullName = new StringBuilder(lastUseParts.get(fullName).getName().getName()).toString();
 			} else {
-				if (currentNamespace != null
-						&& currentNamespace.getName() != null) {
-					fullName = new StringBuilder(currentNamespace.getName()
-							.getName())
-							.append(NamespaceReference.NAMESPACE_SEPARATOR)
-							.append(fullName).toString();
+				if (currentNamespace != null && currentNamespace.getName() != null) {
+					fullName = new StringBuilder(currentNamespace.getName().getName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR).append(fullName).toString();
 				}
 			}
 		}

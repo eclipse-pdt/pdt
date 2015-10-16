@@ -116,8 +116,7 @@ public class WeakCollection implements Collection {
 	public boolean containsAll(Collection c) {
 		boolean containsAll = true;
 		if (c instanceof WeakCollection) {
-			containsAll = refrencedCollection
-					.containsAll(((WeakCollection) c).refrencedCollection);
+			containsAll = refrencedCollection.containsAll(((WeakCollection) c).refrencedCollection);
 		} else {
 			Iterator it = c.iterator();
 			while (it.hasNext()) {
@@ -131,8 +130,7 @@ public class WeakCollection implements Collection {
 	public boolean addAll(Collection c) {
 		boolean modified = false;
 		if (c instanceof WeakCollection) {
-			modified = refrencedCollection
-					.addAll(((WeakCollection) c).refrencedCollection);
+			modified = refrencedCollection.addAll(((WeakCollection) c).refrencedCollection);
 		} else {
 			Iterator it = c.iterator();
 			while (it.hasNext()) {
@@ -146,8 +144,7 @@ public class WeakCollection implements Collection {
 	public boolean removeAll(Collection c) {
 		boolean modified = false;
 		if (c instanceof WeakCollection) {
-			modified = refrencedCollection
-					.removeAll(((WeakCollection) c).refrencedCollection);
+			modified = refrencedCollection.removeAll(((WeakCollection) c).refrencedCollection);
 		} else {
 			Iterator it = c.iterator();
 			while (it.hasNext()) {
@@ -178,8 +175,7 @@ public class WeakCollection implements Collection {
 	public boolean retainAll(Collection c) {
 		boolean modified = false;
 		if (c instanceof WeakCollection) {
-			modified = refrencedCollection
-					.retainAll(((WeakCollection) c).refrencedCollection);
+			modified = refrencedCollection.retainAll(((WeakCollection) c).refrencedCollection);
 		} else {
 			Iterator it = iterator();
 			while (it.hasNext()) {
@@ -198,8 +194,7 @@ public class WeakCollection implements Collection {
 	public boolean equals(Object o) {
 		boolean isEqual = false;
 		if (o instanceof WeakCollection) {
-			if (refrencedCollection
-					.equals(((WeakCollection) o).refrencedCollection))
+			if (refrencedCollection.equals(((WeakCollection) o).refrencedCollection))
 				isEqual = true;
 		}
 		return isEqual;
@@ -232,8 +227,7 @@ public class WeakCollection implements Collection {
 		private Object nextObject = null;
 
 		public WeakIterator() {
-			referencedIterator = WeakCollection.this.refrencedCollection
-					.iterator();
+			referencedIterator = WeakCollection.this.refrencedCollection.iterator();
 		}
 
 		/**

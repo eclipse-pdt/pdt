@@ -30,16 +30,14 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public class CatchTypeContext extends CatchContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 
 		int classEnd = getCatchStart() + 5; // "catch"
 		TextSequence statementText = getStatementText();
-		statementText = statementText.subTextSequence(classEnd, statementText
-				.length());
+		statementText = statementText.subTextSequence(classEnd, statementText.length());
 
 		int startPosition = 0;
 		for (; startPosition < statementText.length(); startPosition++) {
@@ -52,10 +50,13 @@ public class CatchTypeContext extends CatchContext {
 			return false;
 		}
 
-		startPosition = PHPTextSequenceUtilities.readForwardSpaces(
-				statementText, startPosition + 1); // + 1 for the '('
-		int endPosition = PHPTextSequenceUtilities.readIdentifierEndIndex(
-				getPhpVersion(), statementText, startPosition, false);
+		startPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, startPosition + 1); // +
+																										// 1
+																										// for
+																										// the
+																										// '('
+		int endPosition = PHPTextSequenceUtilities.readIdentifierEndIndex(getPhpVersion(), statementText, startPosition,
+				false);
 		// String className = statementText.subSequence(startPosition,
 		// endPosition).toString();
 

@@ -135,8 +135,7 @@ public class TarFile {
 	 * @throws TarException
 	 * @throws IOException
 	 */
-	public InputStream getInputStream(TarEntry entry) throws TarException,
-			IOException {
+	public InputStream getInputStream(TarEntry entry) throws TarException, IOException {
 		if (entryStream == null || !entryStream.skipToEntry(entry)) {
 			if (internalEntryStream != null) {
 				internalEntryStream.close();
@@ -151,8 +150,7 @@ public class TarFile {
 				internalEntryStream.close();
 				internalEntryStream = new FileInputStream(file);
 				try {
-					internalEntryStream = new CBZip2InputStream(
-							internalEntryStream);
+					internalEntryStream = new CBZip2InputStream(internalEntryStream);
 				} catch (IOException e1) {
 					// If it is not compressed we close
 					// the old one and recreate
@@ -161,8 +159,7 @@ public class TarFile {
 					try {
 						internalEntryStream.read();
 						internalEntryStream.read();
-						internalEntryStream = new CBZip2InputStream(
-								internalEntryStream);
+						internalEntryStream = new CBZip2InputStream(internalEntryStream);
 					} catch (IOException e2) {
 						// If it is not compressed we close
 						// the old one and recreate

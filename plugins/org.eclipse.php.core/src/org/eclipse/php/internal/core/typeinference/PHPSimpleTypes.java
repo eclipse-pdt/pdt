@@ -26,18 +26,14 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 public class PHPSimpleTypes {
 
 	private static final Map<String, IEvaluatedType> SIMPLE_TYPES;
-	public static final IEvaluatedType NUMBER = new SimpleType(
-			SimpleType.TYPE_NUMBER);
-	public static final IEvaluatedType BOOLEAN = new SimpleType(
-			SimpleType.TYPE_BOOLEAN);
-	public static final IEvaluatedType STRING = new SimpleType(
-			SimpleType.TYPE_STRING);
+	public static final IEvaluatedType NUMBER = new SimpleType(SimpleType.TYPE_NUMBER);
+	public static final IEvaluatedType BOOLEAN = new SimpleType(SimpleType.TYPE_BOOLEAN);
+	public static final IEvaluatedType STRING = new SimpleType(SimpleType.TYPE_STRING);
 	public static final IEvaluatedType OBJECT = new PHPClassType("object"); //$NON-NLS-1$
 	public static final IEvaluatedType RESOURCE = new PHPClassType("resource"); //$NON-NLS-1$
 	public static final IEvaluatedType ARRAY = new MultiTypeType();
 	public static final IEvaluatedType VOID = new PHPClassType("void"); //$NON-NLS-1$
-	public static final IEvaluatedType NULL = new SimpleType(
-			SimpleType.TYPE_NULL);
+	public static final IEvaluatedType NULL = new SimpleType(SimpleType.TYPE_NULL);
 	public static final IEvaluatedType MIXED = new PHPClassType("mixed"); //$NON-NLS-1$
 
 	static {

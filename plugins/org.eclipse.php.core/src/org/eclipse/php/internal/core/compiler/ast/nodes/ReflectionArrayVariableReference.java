@@ -33,12 +33,12 @@ public class ReflectionArrayVariableReference extends ReflectionVariableReferenc
 
 	public static String getArrayType(int type) {
 		switch (type) {
-			case VARIABLE_ARRAY:
-				return "array"; //$NON-NLS-1$
-			case VARIABLE_HASHTABLE:
-				return "hashtable"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case VARIABLE_ARRAY:
+			return "array"; //$NON-NLS-1$
+		case VARIABLE_HASHTABLE:
+			return "hashtable"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -53,7 +53,6 @@ public class ReflectionArrayVariableReference extends ReflectionVariableReferenc
 	public int getKind() {
 		return ASTNodeKinds.REFLECTION_ARRAY_ACCESS;
 	}
-
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);

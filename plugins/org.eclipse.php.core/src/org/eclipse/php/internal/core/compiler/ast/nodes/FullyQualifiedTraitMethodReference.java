@@ -9,8 +9,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	private String functionName;
 	private TypeReference className;
 
-	public FullyQualifiedTraitMethodReference(int start, int end,
-			TypeReference className, String functionName) {
+	public FullyQualifiedTraitMethodReference(int start, int end, TypeReference className, String functionName) {
 		super(start, end);
 		this.className = className;
 		this.functionName = functionName;

@@ -19,17 +19,16 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a for each statement
- * <pre>e.g.<pre>
- * foreach (array_expression as $value)
- *   statement;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * foreach (array_expression as $value) statement;
  *
- * foreach (array_expression as $key => $value)
- *   statement;
+ * foreach (array_expression as $key => $value) statement;
  *
- * foreach (array_expression as $key => $value):
- *   statement;
- *   ...
- * endforeach;
+ * foreach (array_expression as $key => $value): statement; ... endforeach;
  */
 public class ForEachStatement extends Statement {
 
@@ -38,7 +37,8 @@ public class ForEachStatement extends Statement {
 	private final Expression value;
 	private final Statement statement;
 
-	public ForEachStatement(int start, int end, Expression expression, Expression key, Expression value, Statement statement) {
+	public ForEachStatement(int start, int end, Expression expression, Expression key, Expression value,
+			Statement statement) {
 		super(start, end);
 
 		assert expression != null && value != null && statement != null;

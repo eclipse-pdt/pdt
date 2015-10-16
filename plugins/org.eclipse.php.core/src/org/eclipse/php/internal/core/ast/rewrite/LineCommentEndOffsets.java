@@ -56,8 +56,7 @@ public class LineCommentEndOffsets {
 	}
 
 	private boolean isLineComment(Object curr) {
-		return curr instanceof Comment
-				&& ((Comment) curr).getCommentType() == Comment.TYPE_SINGLE_LINE;
+		return curr instanceof Comment && ((Comment) curr).getCommentType() == Comment.TYPE_SINGLE_LINE;
 	}
 
 	public boolean isEndOfLineComment(int offset) {
@@ -65,9 +64,7 @@ public class LineCommentEndOffsets {
 	}
 
 	public boolean isEndOfLineComment(int offset, char[] content) {
-		if (offset < 0
-				|| (offset < content.length && !IndentManipulation
-						.isLineDelimiterChar(content[offset]))) {
+		if (offset < 0 || (offset < content.length && !IndentManipulation.isLineDelimiterChar(content[offset]))) {
 			return false;
 		}
 		return Arrays.binarySearch(getOffsets(), offset) >= 0;

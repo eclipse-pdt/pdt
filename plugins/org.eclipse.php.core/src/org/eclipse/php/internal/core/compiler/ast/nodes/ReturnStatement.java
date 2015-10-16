@@ -19,8 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represent a return statement
- * <pre>e.g.<pre> return;
- * return $a;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * return; return $a;
  */
 public class ReturnStatement extends Statement {
 

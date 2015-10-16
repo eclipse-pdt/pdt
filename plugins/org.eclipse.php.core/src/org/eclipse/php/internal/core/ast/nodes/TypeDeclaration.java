@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.List;
 
 /**
- * Represents base class for class declaration and interface declaration  
+ * Represents base class for class declaration and interface declaration
  */
 public abstract class TypeDeclaration extends Statement {
 
@@ -25,17 +25,20 @@ public abstract class TypeDeclaration extends Statement {
 	/**
 	 * The structural property of this node type.
 	 */
-	protected abstract ChildPropertyDescriptor getNameProperty(); 
+	protected abstract ChildPropertyDescriptor getNameProperty();
+
 	protected abstract ChildListPropertyDescriptor getInterfacesProperty();
-	protected abstract ChildPropertyDescriptor getBodyProperty();	
-	
-	public TypeDeclaration(int start, int end, AST ast, final Identifier name, final Identifier[] interfaces, final Block body) {
+
+	protected abstract ChildPropertyDescriptor getBodyProperty();
+
+	public TypeDeclaration(int start, int end, AST ast, final Identifier name, final Identifier[] interfaces,
+			final Block body) {
 		super(start, end, ast);
 
 		if (name == null || body == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setName(name);
 		setBody(body);
 		if (interfaces != null) {
@@ -50,7 +53,8 @@ public abstract class TypeDeclaration extends Statement {
 	}
 
 	/**
-	 * The body component of this type declaration node 
+	 * The body component of this type declaration node
+	 * 
 	 * @return body component of this type declaration node
 	 */
 	public Block getBody() {
@@ -60,14 +64,16 @@ public abstract class TypeDeclaration extends Statement {
 	/**
 	 * Sets the name of this parameter
 	 * 
-	 * @param name of this type declaration.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param name
+	 *            of this type declaration.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setBody(Block block) {
 		if (block == null) {
 			throw new IllegalArgumentException();
@@ -77,8 +83,8 @@ public abstract class TypeDeclaration extends Statement {
 		preReplaceChild(oldChild, block, getBodyProperty());
 		this.body = block;
 		postReplaceChild(oldChild, block, getBodyProperty());
-	}	
-	
+	}
+
 	/**
 	 * @deprecated use interfaces()
 	 */
@@ -92,26 +98,29 @@ public abstract class TypeDeclaration extends Statement {
 	public List<Identifier> interfaces() {
 		return this.interfaces;
 	}
-	
+
 	/**
 	 * The name of the type declaration node
+	 * 
 	 * @return name of the type declaration node
 	 */
 	public Identifier getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Sets the name of this parameter
 	 * 
-	 * @param name of this type declaration.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param name
+	 *            of this type declaration.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setName(Identifier id) {
 		if (id == null) {
 			throw new IllegalArgumentException();
@@ -121,8 +130,8 @@ public abstract class TypeDeclaration extends Statement {
 		preReplaceChild(oldChild, id, getNameProperty());
 		this.name = id;
 		postReplaceChild(oldChild, id, getNameProperty());
-	}	
-	
+	}
+
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == getNameProperty()) {
 			if (get) {
@@ -144,8 +153,8 @@ public abstract class TypeDeclaration extends Statement {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == getInterfacesProperty()) {
@@ -154,16 +163,15 @@ public abstract class TypeDeclaration extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
 	}
-	
+
 	/**
-	 * Resolves and returns the binding for this type	
+	 * Resolves and returns the binding for this type
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public final ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveType(this);
 	}
-	
-	
+
 }

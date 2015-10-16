@@ -7,11 +7,9 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespacePHPDocVarStartContext;
 
-public class NamespaceDocTypesCompositeStrategy extends
-		AbstractCompletionStrategy {
+public class NamespaceDocTypesCompositeStrategy extends AbstractCompletionStrategy {
 
-	public NamespaceDocTypesCompositeStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public NamespaceDocTypesCompositeStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -34,8 +32,7 @@ public class NamespaceDocTypesCompositeStrategy extends
 			};
 			strategy.apply(reporter);
 		} else {
-			NamespaceDocTypesStrategy strategy = new NamespaceDocTypesStrategy(
-					context);
+			NamespaceDocTypesStrategy strategy = new NamespaceDocTypesStrategy(context);
 			strategy.apply(reporter);
 		}
 	}

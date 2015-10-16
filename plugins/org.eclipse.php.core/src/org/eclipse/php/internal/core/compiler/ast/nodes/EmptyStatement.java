@@ -18,8 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * This class represents an empty statement.
- * <pre>e.g.<pre> ;
- * while(true); - the while statement contains empty statement
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * ; while(true); - the while statement contains empty statement
  */
 public class EmptyStatement extends Statement {
 

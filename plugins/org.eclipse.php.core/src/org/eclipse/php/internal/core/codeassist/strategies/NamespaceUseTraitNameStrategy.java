@@ -30,7 +30,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 
 		NamespaceUseNameContext concreteContext = (NamespaceUseNameContext) context;
 		// now we compute type suffix in PHPCompletionProposalCollector
-		String suffix = "";//$NON-NLS-1$ 
+		String suffix = "";//$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {
@@ -38,8 +38,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 		}
 	}
 
-	public IType[] getTypes(NamespaceUseNameContext context)
-			throws BadLocationException {
+	public IType[] getTypes(NamespaceUseNameContext context) throws BadLocationException {
 		if (context.getNamespaces() == null) {
 			return new IType[0];
 		}
@@ -50,8 +49,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 			try {
 				for (IType type : ns.getTypes()) {
 					if (PHPFlags.isTrait(type.getFlags())
-							&& CodeAssistUtils.startsWithIgnoreCase(
-									type.getElementName(), prefix)) {
+							&& CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
 						result.add(type);
 					}
 				}

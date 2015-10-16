@@ -21,22 +21,26 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a parsing error
- * <pre>e.g.<pre> echo ;
- * for () {}
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * echo ; for () {}
  */
 public class ASTError extends Statement {
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(0);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
-	
+
 	public ASTError(int start, int end, AST ast) {
 		super(start, end, ast);
 	}
@@ -44,7 +48,7 @@ public class ASTError extends Statement {
 	public ASTError(AST ast) {
 		super(ast);
 	}
-	
+
 	public void childrenAccept(Visitor visitor) {
 	}
 
@@ -66,13 +70,13 @@ public class ASTError extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public int getType() {
 		return ASTNode.AST_ERROR;
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

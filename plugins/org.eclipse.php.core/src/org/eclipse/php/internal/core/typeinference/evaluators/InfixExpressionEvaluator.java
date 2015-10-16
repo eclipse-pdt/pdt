@@ -29,8 +29,7 @@ public class InfixExpressionEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		InfixExpression infixExpression = (InfixExpression) typedGoal
-				.getExpression();
+		InfixExpression infixExpression = (InfixExpression) typedGoal.getExpression();
 		int operator = infixExpression.getOperatorType();
 		switch (operator) {
 		case InfixExpression.OP_IS_IDENTICAL:

@@ -22,32 +22,39 @@ public interface Visitable {
 
 	/**
 	 * Visit only the actual node
+	 * 
 	 * @param visitor
 	 */
 	public void accept(Visitor visitor);
 
 	/**
 	 * Visit the children of the actual node (without visiting the actual)
+	 * 
 	 * @param visitor
 	 */
 	public void childrenAccept(Visitor visitor);
 
 	/**
 	 * Visit the actual node then go down to visit the children nodes
+	 * 
 	 * @param visitor
 	 */
 	public void traverseTopDown(Visitor visitor);
 
 	/**
 	 * Visit the children nodes then go up to the actual node
+	 * 
 	 * @param visitor
 	 */
 	public void traverseBottomUp(Visitor visitor);
 
 	/**
 	 * Buffers the actual node information
-	 * @param buffer - buffer to write the content to
-	 * @param tab - indentation
+	 * 
+	 * @param buffer
+	 *            - buffer to write the content to
+	 * @param tab
+	 *            - indentation
 	 */
 	public void toString(StringBuffer buffer, String tab);
 }

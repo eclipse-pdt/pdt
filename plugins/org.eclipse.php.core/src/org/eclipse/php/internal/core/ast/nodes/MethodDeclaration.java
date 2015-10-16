@@ -20,8 +20,8 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a function declaration in a class
- * Holds the function modifier
+ * Represents a function declaration in a class Holds the function modifier
+ * 
  * @see {@link FunctionDeclaration}
  */
 public class MethodDeclaration extends BodyDeclaration {
@@ -32,12 +32,12 @@ public class MethodDeclaration extends BodyDeclaration {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor FUNCTION_PROPERTY = 
-		new ChildPropertyDescriptor(MethodDeclaration.class, "function", FunctionDeclaration.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
-		new SimplePropertyDescriptor(MethodDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor COMMENT_PROPERTY = 
-		new ChildPropertyDescriptor(Comment.class, "comment", Comment.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FUNCTION_PROPERTY = new ChildPropertyDescriptor(MethodDeclaration.class,
+			"function", FunctionDeclaration.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
+			MethodDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor COMMENT_PROPERTY = new ChildPropertyDescriptor(Comment.class, "comment", //$NON-NLS-1$
+			Comment.class, OPTIONAL, NO_CYCLE_RISK);
 
 	@Override
 	public final SimplePropertyDescriptor getModifierProperty() {
@@ -45,9 +45,8 @@ public class MethodDeclaration extends BodyDeclaration {
 	}
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
@@ -59,7 +58,8 @@ public class MethodDeclaration extends BodyDeclaration {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function, boolean shouldComplete) {
+	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function,
+			boolean shouldComplete) {
 		super(start, end, ast, modifier, shouldComplete);
 
 		if (function == null) {
@@ -129,13 +129,15 @@ public class MethodDeclaration extends BodyDeclaration {
 	/**
 	 * Sets the function of this declaration
 	 * 
-	 * @param expression the new function declaration
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param expression
+	 *            the new function declaration
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setFunction(FunctionDeclaration expression) {
 		if (expression == null) {
@@ -183,7 +185,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -205,10 +207,10 @@ public class MethodDeclaration extends BodyDeclaration {
 	}
 
 	/**
-	 * Resolves and returns the binding for this method 
+	 * Resolves and returns the binding for this method
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);

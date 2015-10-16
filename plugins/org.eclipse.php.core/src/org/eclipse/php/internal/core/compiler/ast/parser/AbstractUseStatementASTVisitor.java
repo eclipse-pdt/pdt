@@ -26,8 +26,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
  * 
  * <p>
  * This visitor is optimized for performance to look not deeper than the
- * necessary level in the AST tree. As described in the <a
- * href="http://php.net/manual/en/language.namespaces.importing.php">PHP
+ * necessary level in the AST tree. As described in the
+ * <a href="http://php.net/manual/en/language.namespaces.importing.php">PHP
  * Manual</a> use statements can be legally placed only in the global scope of a
  * file or inside namespace declarations.
  * </p>

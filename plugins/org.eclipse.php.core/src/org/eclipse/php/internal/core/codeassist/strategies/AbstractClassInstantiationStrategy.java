@@ -22,13 +22,11 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
  * @author vadim.p
  * 
  */
-public abstract class AbstractClassInstantiationStrategy extends
-		GlobalTypesStrategy {
+public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStrategy {
 
 	private IType enclosingClass;
 
-	public AbstractClassInstantiationStrategy(ICompletionContext context,
-			int trueFlag, int falseFlag) {
+	public AbstractClassInstantiationStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
 	}
 
@@ -63,18 +61,15 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
-			if (!concreteContext.getCompletionRequestor()
-					.isContextInformationMode()) {
+			if (!concreteContext.getCompletionRequestor().isContextInformationMode()) {
 				// here we use fake method,and do the real work in class
 				// ParameterGuessingProposal
-				IMethod ctorMethod = FakeConstructor.createFakeConstructor(
-						null, type, type.equals(enclosingClass));
+				IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, type, type.equals(enclosingClass));
 				reporter.reportMethod(ctorMethod, suffix, replaceRange);
 			} else {
 				// if this is context information mode,we use this,
 				// because the number of types' length is very small
-				IMethod[] ctors = FakeConstructor.getConstructors(type,
-						type.equals(enclosingClass));
+				IMethod[] ctors = FakeConstructor.getConstructors(type, type.equals(enclosingClass));
 				if (ctors != null && ctors.length == 2) {
 					if (ctors[1] != null) {
 						reporter.reportMethod(ctors[1], suffix, replaceRange);
@@ -89,14 +84,10 @@ public abstract class AbstractClassInstantiationStrategy extends
 	}
 
 	@Override
-	protected void reportAlias(ICompletionReporter reporter,
-			IDLTKSearchScope scope, IModuleSource module,
-			ISourceRange replacementRange, IType type,
-			String fullyQualifiedName, String alias, String suffix) {
-		IType aliasType = new AliasType((ModelElement) type,
-				fullyQualifiedName, alias);
-		IMethod ctorMethod = FakeConstructor.createFakeConstructor(null,
-				aliasType, type.equals(enclosingClass));
+	protected void reportAlias(ICompletionReporter reporter, IDLTKSearchScope scope, IModuleSource module,
+			ISourceRange replacementRange, IType type, String fullyQualifiedName, String alias, String suffix) {
+		IType aliasType = new AliasType((ModelElement) type, fullyQualifiedName, alias);
+		IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, aliasType, type.equals(enclosingClass));
 		reporter.reportMethod(ctorMethod, "", replacementRange); //$NON-NLS-1$
 	}
 
@@ -109,14 +100,14 @@ public abstract class AbstractClassInstantiationStrategy extends
 				nextChar = abstractContext.getNextChar();
 			} else {
 				ISourceRange replacementRange = getReplacementRange(abstractContext);
-				nextChar = abstractContext.getChar(replacementRange.getOffset()
-						+ replacementRange.getLength());
+				nextChar = abstractContext.getChar(replacementRange.getOffset() + replacementRange.getLength());
 			}
 
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return '(' == nextChar ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return '(' == nextChar ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$
+											// //$NON-NLS-3$
 	}
 
 }

@@ -34,8 +34,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class ClassInstanceCreation extends VariableBase {
 
 	private ClassName className;
-	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<Expression>(
-			CTOR_PARAMS_PROPERTY);
+	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<Expression>(CTOR_PARAMS_PROPERTY);
 	private AnonymousClassDeclaration anonymousClassDeclaration;
 	/**
 	 * The structural property of this node type.
@@ -57,16 +56,14 @@ public class ClassInstanceCreation extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(CTOR_PARAMS_PROPERTY);
 		propertyList.add(ANONYMOUS_CLASS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public ClassInstanceCreation(int start, int end, AST ast,
-			ClassName className, Expression[] ctorParams) {
+	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams) {
 		super(start, end, ast);
 		if (className == null || ctorParams == null) {
 			throw new IllegalArgumentException();
@@ -78,12 +75,10 @@ public class ClassInstanceCreation extends VariableBase {
 		}
 	}
 
-	public ClassInstanceCreation(int start, int end, AST ast,
-			ClassName className, Expression[] ctorParams,
+	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams,
 			AnonymousClassDeclaration anonymousClassDeclaration) {
 		super(start, end, ast);
-		if (className == null || anonymousClassDeclaration == null
-				|| ctorParams == null) {
+		if (className == null || anonymousClassDeclaration == null || ctorParams == null) {
 			throw new IllegalArgumentException();
 		}
 		setClassName(className);
@@ -105,21 +100,15 @@ public class ClassInstanceCreation extends VariableBase {
 		visitor.endVisit(this);
 	}
 
-	public ClassInstanceCreation(int start, int end, AST ast,
-			ClassName className, List ctorParams) {
+	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List ctorParams) {
 		this(start, end, ast, className,
-				ctorParams == null ? null
-						: (Expression[]) ctorParams
-								.toArray(new Expression[ctorParams.size()]));
+				ctorParams == null ? null : (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]));
 	}
 
-	public ClassInstanceCreation(int start, int end, AST ast,
-			ClassName className, List ctorParams,
+	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List ctorParams,
 			AnonymousClassDeclaration anonymousClassDeclaration) {
 		this(start, end, ast, className,
-				ctorParams == null ? null
-						: (Expression[]) ctorParams
-								.toArray(new Expression[ctorParams.size()]),
+				ctorParams == null ? null : (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]),
 				anonymousClassDeclaration);
 	}
 
@@ -222,21 +211,17 @@ public class ClassInstanceCreation extends VariableBase {
 		return anonymousClassDeclaration;
 	}
 
-	public void setAnonymousClassDeclaration(
-			AnonymousClassDeclaration anonymousClassDeclaration) {
+	public void setAnonymousClassDeclaration(AnonymousClassDeclaration anonymousClassDeclaration) {
 		if (anonymousClassDeclaration == null) {
 			throw new IllegalArgumentException();
 		}
 		ASTNode oldChild = this.anonymousClassDeclaration;
-		preReplaceChild(oldChild, anonymousClassDeclaration,
-				ANONYMOUS_CLASS_PROPERTY);
+		preReplaceChild(oldChild, anonymousClassDeclaration, ANONYMOUS_CLASS_PROPERTY);
 		this.anonymousClassDeclaration = anonymousClassDeclaration;
-		postReplaceChild(oldChild, anonymousClassDeclaration,
-				ANONYMOUS_CLASS_PROPERTY);
+		postReplaceChild(oldChild, anonymousClassDeclaration, ANONYMOUS_CLASS_PROPERTY);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASSNAME_PROPERTY) {
 			if (get) {
 				return getClassName();
@@ -257,8 +242,7 @@ public class ClassInstanceCreation extends VariableBase {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	public List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	public List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == CTOR_PARAMS_PROPERTY) {
 			return ctorParams();
 		}
@@ -292,25 +276,21 @@ public class ClassInstanceCreation extends VariableBase {
 	@Override
 	ASTNode clone0(AST target) {
 		final List params = ASTNode.copySubtrees(target, ctorParams());
-		AnonymousClassDeclaration acd = ASTNode.copySubtree(target,
-				getAnonymousClassDeclaration());
+		AnonymousClassDeclaration acd = ASTNode.copySubtree(target, getAnonymousClassDeclaration());
 		final ClassName cn = ASTNode.copySubtree(target, getClassName());
-		return new ClassInstanceCreation(this.getStart(), this.getEnd(), target,
-				cn, params, acd);
+		return new ClassInstanceCreation(this.getStart(), this.getEnd(), target, cn, params, acd);
 	}
 
 	public ClassInstanceCreation cloneWithNewStart(int offset) {
 		AST target = getAST();
 		final List params = ASTNode.copySubtrees(target, ctorParams());
 		final ClassName cn = ASTNode.copySubtree(target, getClassName());
-		final ClassInstanceCreation result = new ClassInstanceCreation(offset,
-				this.getEnd(), target, cn, params);
+		final ClassInstanceCreation result = new ClassInstanceCreation(offset, this.getEnd(), target, cn, params);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

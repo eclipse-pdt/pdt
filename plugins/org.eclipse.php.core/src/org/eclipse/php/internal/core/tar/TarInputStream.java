@@ -56,8 +56,7 @@ public class TarInputStream extends FilterInputStream {
 	 * @throws TarException
 	 * @throws IOException
 	 */
-	TarInputStream(InputStream in, TarEntry entry) throws TarException,
-			IOException {
+	TarInputStream(InputStream in, TarEntry entry) throws TarException, IOException {
 		super(in);
 		skipToEntry(entry);
 	}
@@ -122,8 +121,7 @@ public class TarInputStream extends FilterInputStream {
 			if (header[pos + i] == ' ') {
 				continue;
 			}
-			if (header[pos + i] == 0
-					|| !Character.isDigit((char) header[pos + i])) {
+			if (header[pos + i] == 0 || !Character.isDigit((char) header[pos + i])) {
 				break;
 			}
 			checksumString.append((char) header[pos + i]);
@@ -301,8 +299,7 @@ public class TarInputStream extends FilterInputStream {
 			byte[] longNameData = new byte[(int) entry.getSize()];
 			int bytesread = 0;
 			while (bytesread < longNameData.length) {
-				int cur = read(longNameData, bytesread, longNameData.length
-						- bytesread);
+				int cur = read(longNameData, bytesread, longNameData.length - bytesread);
 				if (cur < 0) {
 					throw new IOException("early end of stream"); //$NON-NLS-1$
 				}

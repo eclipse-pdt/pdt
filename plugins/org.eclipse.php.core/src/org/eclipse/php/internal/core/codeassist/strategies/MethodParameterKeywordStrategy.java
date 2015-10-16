@@ -29,8 +29,7 @@ public class MethodParameterKeywordStrategy extends KeywordsStrategy {
 	 * @param context
 	 * @param elementFilter
 	 */
-	public MethodParameterKeywordStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public MethodParameterKeywordStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 

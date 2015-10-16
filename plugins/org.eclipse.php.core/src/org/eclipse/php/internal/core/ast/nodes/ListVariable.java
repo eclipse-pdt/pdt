@@ -20,11 +20,13 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a list expression.
- * The list contains variables and/or other lists.
- *  
- * <pre>e.g.<pre> list($a,$b) = array (1,2),
- * list($a, list($b, $c))
+ * Represents a list expression. The list contains variables and/or other lists.
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * list($a,$b) = array (1,2), list($a, list($b, $c))
  */
 public class ListVariable extends VariableBase {
 
@@ -33,22 +35,21 @@ public class ListVariable extends VariableBase {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor VARIABLES_PROPERTY = 
-		new ChildListPropertyDescriptor(ListVariable.class, "variables", VariableBase.class, CYCLE_RISK); //$NON-NLS-1$
-	
+	public static final ChildListPropertyDescriptor VARIABLES_PROPERTY = new ChildListPropertyDescriptor(
+			ListVariable.class, "variables", VariableBase.class, CYCLE_RISK); //$NON-NLS-1$
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		properyList.add(VARIABLES_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
-	
+
 	private ListVariable(int start, int end, AST ast, VariableBase[] variables) {
 		super(start, end, ast);
 
@@ -63,9 +64,10 @@ public class ListVariable extends VariableBase {
 	public ListVariable(AST ast) {
 		super(ast);
 	}
-	
+
 	public ListVariable(int start, int end, AST ast, List variables) {
-		this(start, end, ast, variables == null ? null : (VariableBase[]) variables.toArray(new VariableBase[variables.size()]));
+		this(start, end, ast,
+				variables == null ? null : (VariableBase[]) variables.toArray(new VariableBase[variables.size()]));
 	}
 
 	public void accept0(Visitor visitor) {
@@ -74,7 +76,7 @@ public class ListVariable extends VariableBase {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.variables) {
@@ -112,7 +114,7 @@ public class ListVariable extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use {@link #variables()} 
+	 * @deprecated use {@link #variables()}
 	 */
 	public VariableBase[] getVariables() {
 		return variables.toArray(new VariableBase[this.variables.size()]);
@@ -124,8 +126,8 @@ public class ListVariable extends VariableBase {
 	public List<VariableBase> variables() {
 		return variables;
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -140,7 +142,7 @@ public class ListVariable extends VariableBase {
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
 	}
-	
+
 	@Override
 	ASTNode clone0(AST target) {
 		final List variables = ASTNode.copySubtrees(target, variables());

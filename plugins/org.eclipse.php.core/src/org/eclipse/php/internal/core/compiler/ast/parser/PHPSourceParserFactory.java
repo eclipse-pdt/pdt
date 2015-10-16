@@ -20,8 +20,7 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
-public class PHPSourceParserFactory extends AbstractSourceParser
-		implements ISourceParserFactory, ISourceParser {
+public class PHPSourceParserFactory extends AbstractSourceParser implements ISourceParserFactory, ISourceParser {
 
 	public ISourceParser createSourceParser() {
 		return this;
@@ -34,8 +33,7 @@ public class PHPSourceParserFactory extends AbstractSourceParser
 	 * org.eclipse.dltk.ast.parser.ISourceParser#parse(org.eclipse.dltk.compiler
 	 * .env.IModuleSource, org.eclipse.dltk.compiler.problem.IProblemReporter)
 	 */
-	public IModuleDeclaration parse(IModuleSource module,
-			IProblemReporter reporter) {
+	public IModuleDeclaration parse(IModuleSource module, IProblemReporter reporter) {
 		final String fileName = module.getFileName();
 		AbstractPHPSourceParser parser = createParser(fileName);
 		return parser.parse(module, reporter);
@@ -58,35 +56,27 @@ public class PHPSourceParserFactory extends AbstractSourceParser
 	 * @return source parser instance or <code>null</code> in case PHP version
 	 *         is incompatibleS
 	 */
-	public static AbstractPHPSourceParser createParser(String fileName,
-			PHPVersion phpVersion) {
+	public static AbstractPHPSourceParser createParser(String fileName, PHPVersion phpVersion) {
 		if (PHPVersion.PHP4 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_3 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_4 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_5 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PhpSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_6 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpSourceParser(fileName);
 		}
 		if (PHPVersion.PHP7_0 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PhpSourceParser(
-					fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PhpSourceParser(fileName);
 		}
 		return null;
 	}

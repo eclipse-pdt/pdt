@@ -15,11 +15,9 @@ import java.io.OutputStream;
 
 import org.eclipse.php.internal.core.tar.GZIPOutputStreamForPhar;
 
-public class GZPharEntryBufferedOutputStream extends
-		PharEntryBufferedOutputStream {
+public class GZPharEntryBufferedOutputStream extends PharEntryBufferedOutputStream {
 
-	public GZPharEntryBufferedOutputStream(OutputStream innerStream)
-			throws IOException {
+	public GZPharEntryBufferedOutputStream(OutputStream innerStream) throws IOException {
 		super(new GZIPOutputStreamForPhar(innerStream));
 	}
 }

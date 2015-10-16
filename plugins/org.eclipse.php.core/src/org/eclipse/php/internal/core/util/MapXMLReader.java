@@ -64,11 +64,9 @@ public class MapXMLReader {
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 */
-	public static Map readMap(InputSource input) throws IOException,
-			ParserConfigurationException, SAXException {
+	public static Map readMap(InputSource input) throws IOException, ParserConfigurationException, SAXException {
 		Map map = new HashMap();
-		DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder();
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document dom = builder.parse(input);
 		NodeList keys = dom.getElementsByTagName(MapXMLWriter.KEY_TAG);
 		for (int i = 0; i < keys.getLength(); i++) {

@@ -11,13 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-
 /**
  * Represents a base class for method invocation and field access
- * <pre>e.g.<pre> $a->$b,
- * foo()->bar(),
- * $myClass->foo()->bar(),
- * A::$a->foo()
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a->$b, foo()->bar(), $myClass->foo()->bar(), A::$a->foo()
  */
 public abstract class Dispatch extends VariableBase {
 
@@ -35,27 +36,29 @@ public abstract class Dispatch extends VariableBase {
 	public Dispatch(AST ast) {
 		super(ast);
 	}
-	
+
 	/**
 	 * The dispatcher component of this dispatch expression
 	 * 
-	 * @return dispatcher component of this dispatch expression 
+	 * @return dispatcher component of this dispatch expression
 	 */
 	public VariableBase getDispatcher() {
 		return dispatcher;
 	}
-	
+
 	/**
 	 * Sets the dispatcher expression of this field access.
 	 * 
-	 * @param dispatcher the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param dispatcher
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setDispatcher(VariableBase dispatcher) {
 		if (dispatcher == null) {
 			throw new IllegalArgumentException();
@@ -65,7 +68,7 @@ public abstract class Dispatch extends VariableBase {
 		this.dispatcher = dispatcher;
 		postReplaceChild(oldChild, dispatcher, getDispatcherProperty());
 	}
-	
+
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == getDispatcherProperty()) {
 			if (get) {
@@ -78,13 +81,12 @@ public abstract class Dispatch extends VariableBase {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
 
 	/**
 	 * @return the property descriptor of the dispatcher variable
 	 */
 	abstract ChildPropertyDescriptor getDispatcherProperty();
-	
+
 	/**
 	 * @return the property of the dispatch
 	 */

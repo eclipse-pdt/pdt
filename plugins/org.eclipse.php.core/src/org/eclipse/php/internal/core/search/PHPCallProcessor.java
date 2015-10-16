@@ -44,29 +44,25 @@ public class PHPCallProcessor implements ICallProcessor {
 				return;
 			}
 
-			if (match.getElement() != null
-					&& match.getElement() instanceof IModelElement) {
+			if (match.getElement() != null && match.getElement() instanceof IModelElement) {
 				IModelElement member = (IModelElement) match.getElement();
 
-				SimpleReference ref = new SimpleReference(match.getOffset(),
-						match.getOffset() + match.getLength(), EMPTY_STRING);
+				SimpleReference ref = new SimpleReference(match.getOffset(), match.getOffset() + match.getLength(),
+						EMPTY_STRING);
 				result.put(ref, member);
 			}
 		}
 	}
 
 	@Override
-	public Map process(IModelElement parent, IModelElement member,
-			IDLTKSearchScope scope, IProgressMonitor monitor) {
+	public Map process(IModelElement parent, IModelElement member, IDLTKSearchScope scope, IProgressMonitor monitor) {
 
-		SearchPattern pattern = SearchPattern.createPattern(member,
-				IDLTKSearchConstants.REFERENCES, SearchPattern.R_EXACT_MATCH
-						| SearchPattern.R_ERASURE_MATCH,
-				scope.getLanguageToolkit());
+		SearchPattern pattern = SearchPattern.createPattern(member, IDLTKSearchConstants.REFERENCES,
+				SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH, scope.getLanguageToolkit());
 		Requestor req = new Requestor(member);
 		try {
-			engine.search(pattern, new SearchParticipant[] { SearchEngine
-					.getDefaultSearchParticipant() }, scope, req, monitor);
+			engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, req,
+					monitor);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

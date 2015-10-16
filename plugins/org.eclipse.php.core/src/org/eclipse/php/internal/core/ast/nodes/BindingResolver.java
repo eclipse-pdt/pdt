@@ -89,7 +89,8 @@ public class BindingResolver {
 	 * originated.
 	 * 
 	 * The default implementation of this method returns <code>null</code>.
-	 * Subclasses may reimplement. </p>
+	 * Subclasses may reimplement.
+	 * </p>
 	 * 
 	 * @param bindingKey
 	 *            the binding key
@@ -141,8 +142,7 @@ public class BindingResolver {
 	 *            the old type binding
 	 * @return the new type binding
 	 */
-	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding,
-			ISourceModule sourceModule) {
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding, ISourceModule sourceModule) {
 		return null;
 	}
 
@@ -240,8 +240,7 @@ public class BindingResolver {
 		return null;
 	}
 
-	boolean isResolvedTypeInferredFromExpectedType(
-			MethodInvocation methodInvocation) {
+	boolean isResolvedTypeInferredFromExpectedType(MethodInvocation methodInvocation) {
 		return false;
 	}
 
@@ -768,9 +767,9 @@ public class BindingResolver {
 	 * 
 	 * @param name
 	 *            the name of a well known type
-	 * @return the corresponding type binding, or <code>null<code> if the
-	 *   named type is not considered well known or if no binding can be found
-	 *   for it
+	 * @return the corresponding type binding, or <code>null<code> if the named
+	 *         type is not considered well known or if no binding can be found
+	 *         for it
 	 */
 	ITypeBinding resolveWellKnownType(String name) {
 		return null;
@@ -847,8 +846,7 @@ public class BindingResolver {
 	 *            Indicate whether to use the File-Network in order to filter
 	 *            the results.
 	 */
-	public IModelElement[] getModelElements(int offset, int length,
-			boolean filter) {
+	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
 		return null;
 	}
 

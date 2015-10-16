@@ -22,10 +22,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a global statement
- * <pre>e.g.<pre> global $a
- * global $a, $b
- * global ${foo()->bar()},
- * global $$a
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * global $a global $a, $b global ${foo()->bar()}, global $$a
  */
 public class GlobalStatement extends Statement {
 

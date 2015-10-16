@@ -21,10 +21,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Holds a variable and an index that point to array or hashtable
- * <pre>e.g.<pre> $a[],
- * $a[1],
- * $a[$b],
- * $a{'name'}
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a[], $a[1], $a[$b], $a{'name'}
  */
 public class ArrayVariableReference extends VariableReference {
 
@@ -67,12 +69,12 @@ public class ArrayVariableReference extends VariableReference {
 
 	public static String getArrayType(int type) {
 		switch (type) {
-			case VARIABLE_ARRAY:
-				return "array"; //$NON-NLS-1$
-			case VARIABLE_HASHTABLE:
-				return "hashtable"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case VARIABLE_ARRAY:
+			return "array"; //$NON-NLS-1$
+		case VARIABLE_HASHTABLE:
+			return "hashtable"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

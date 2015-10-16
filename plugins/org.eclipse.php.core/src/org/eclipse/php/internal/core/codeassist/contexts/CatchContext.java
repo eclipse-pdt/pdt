@@ -32,13 +32,11 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class CatchContext extends StatementContext {
 
-	protected static final Pattern CATCH_PATTERN = Pattern.compile(
-			"catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	protected static final Pattern CATCH_PATTERN = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private int catchStart;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

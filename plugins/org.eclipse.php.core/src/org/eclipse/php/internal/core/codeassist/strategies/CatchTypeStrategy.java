@@ -22,8 +22,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
  */
 public class CatchTypeStrategy extends GlobalTypesStrategy {
 
-	public CatchTypeStrategy(ICompletionContext context, int trueFlag,
-			int falseFlag) {
+	public CatchTypeStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
 	}
 
@@ -34,6 +33,7 @@ public class CatchTypeStrategy extends GlobalTypesStrategy {
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return " "; //$NON-NLS-1$
 	}
+
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}

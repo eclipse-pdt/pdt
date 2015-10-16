@@ -86,7 +86,6 @@ public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 	 * @param mi
 	 *            Method information structure
 	 */
-	public void modifyMethodInfo(MethodDeclaration methodDeclaration,
-			MethodInfo mi) {
+	public void modifyMethodInfo(MethodDeclaration methodDeclaration, MethodInfo mi) {
 	}
 }

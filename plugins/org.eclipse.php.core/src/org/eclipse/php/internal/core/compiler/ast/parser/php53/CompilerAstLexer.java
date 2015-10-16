@@ -21,8 +21,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
-public class CompilerAstLexer extends
-		org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer {
+public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer {
 
 	private PHPDocBlock latestDocBlock;
 
@@ -42,8 +41,7 @@ public class CompilerAstLexer extends
 
 	protected void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition
-				+ getTokenLength(), type);
+		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
 		getCommentList().add(comment);
 	}
 

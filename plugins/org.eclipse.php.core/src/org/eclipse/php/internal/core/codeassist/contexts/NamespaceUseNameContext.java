@@ -31,8 +31,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public class NamespaceUseNameContext extends AbstractNamespaceUseContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -40,8 +39,7 @@ public class NamespaceUseNameContext extends AbstractNamespaceUseContext {
 		try {
 			if (useTrait) {
 				TextSequence statementText = getStatementText();
-				if (statementText.toString().indexOf('{') >= 0
-						|| statementText.toString().indexOf('}') >= 0) {
+				if (statementText.toString().indexOf('{') >= 0 || statementText.toString().indexOf('}') >= 0) {
 					return false;
 				}
 			} else {

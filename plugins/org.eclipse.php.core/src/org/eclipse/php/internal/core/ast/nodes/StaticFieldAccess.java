@@ -20,9 +20,13 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a static field access. 
- * <pre>e.g.<pre> MyClass::$a
- * MyClass::$$a[3]
+ * Represents a static field access.
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * MyClass::$a MyClass::$$a[3]
  */
 public class StaticFieldAccess extends StaticDispatch {
 
@@ -31,31 +35,29 @@ public class StaticFieldAccess extends StaticDispatch {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(StaticFieldAccess.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor FIELD_PROPERTY = 
-		new ChildPropertyDescriptor(StaticFieldAccess.class, "field", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = new ChildPropertyDescriptor(
+			StaticFieldAccess.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FIELD_PROPERTY = new ChildPropertyDescriptor(StaticFieldAccess.class,
+			"field", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
 	ChildPropertyDescriptor getClassNameProperty() {
 		return CLASS_NAME_PROPERTY;
 	}
-	
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(FIELD_PROPERTY);
 		properyList.add(CLASS_NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
-	
+
 	public StaticFieldAccess(int start, int end, AST ast, Expression className, Variable field) {
 		super(start, end, ast, className);
 
@@ -75,7 +77,7 @@ public class StaticFieldAccess extends StaticDispatch {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		getClassName().accept(visitor);
@@ -121,14 +123,16 @@ public class StaticFieldAccess extends StaticDispatch {
 	/**
 	 * Sets the variable declaration of this catch clause.
 	 * 
-	 * @param exception the exception variable declaration node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param exception
+	 *            the exception variable declaration node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setField(Variable variable) {
 		if (variable == null) {
 			throw new IllegalArgumentException();
@@ -150,13 +154,13 @@ public class StaticFieldAccess extends StaticDispatch {
 		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
-	}	
-	
+	}
+
 	public ASTNode getMember() {
 		return getField();
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -176,14 +180,14 @@ public class StaticFieldAccess extends StaticDispatch {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/**
 	 * Resolves and returns the binding for the field accessed by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
-	 */	
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
+	 */
 	public IVariableBinding resolveFieldBinding() {
 		return this.ast.getBindingResolver().resolveField(this);
 	}

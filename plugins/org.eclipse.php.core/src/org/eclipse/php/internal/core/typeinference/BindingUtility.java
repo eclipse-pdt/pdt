@@ -77,8 +77,7 @@ public class BindingUtility {
 		this.rootNode = rootNode;
 	}
 
-	public BindingUtility(ISourceModule sourceModule,
-			IModelAccessCache modelAccessCache) {
+	public BindingUtility(ISourceModule sourceModule, IModelAccessCache modelAccessCache) {
 		this(sourceModule);
 		this.modelAccessCache = modelAccessCache;
 	}
@@ -128,8 +127,7 @@ public class BindingUtility {
 	 *             if the given element is <code>null</code>.
 	 * @throws ModelException
 	 */
-	public IEvaluatedType getType(SourceRefElement element)
-			throws ModelException {
+	public IEvaluatedType getType(SourceRefElement element) throws ModelException {
 		if (element == null) {
 			throw new NullPointerException();
 		}
@@ -154,24 +152,19 @@ public class BindingUtility {
 	 * @throws IllegalArgumentException
 	 *             in case if context cannot be found for the given node.
 	 */
-	public IEvaluatedType getType(int startOffset, int length)
-			throws ModelException {
+	public IEvaluatedType getType(int startOffset, int length) throws ModelException {
 		return getType(new SourceRange(startOffset, length));
 	}
 
 	protected IPHPTypeInferencer getTypeInferencer() {
-		return cachedInferencer == null ? new PHPTypeInferencer()
-				: cachedInferencer;
+		return cachedInferencer == null ? new PHPTypeInferencer() : cachedInferencer;
 	}
 
-	protected IEvaluatedType getType(SourceRange sourceRange, IContext context,
-			ASTNode node) {
-		return getTypeInferencer().evaluateType(
-				new ExpressionTypeGoal(context, node), timeLimit);
+	protected IEvaluatedType getType(SourceRange sourceRange, IContext context, ASTNode node) {
+		return getTypeInferencer().evaluateType(new ExpressionTypeGoal(context, node), timeLimit);
 	}
 
-	protected ContextFinder getContext(SourceRange sourceRange)
-			throws ModelException {
+	protected ContextFinder getContext(SourceRange sourceRange) throws ModelException {
 		ContextFinder contextFinder = new ContextFinder(sourceRange);
 		try {
 			rootNode.traverse(contextFinder);
@@ -179,21 +172,19 @@ public class BindingUtility {
 			throw new ModelException(e, IStatus.ERROR);
 		}
 		if (contextFinder.getNode() == null) {
-			throw new ModelException(new IllegalArgumentException(
-					"AST node can not be found for the given source range: " //$NON-NLS-1$
-							+ sourceRange), IStatus.ERROR);
+			throw new ModelException(
+					new IllegalArgumentException("AST node can not be found for the given source range: " //$NON-NLS-1$
+							+ sourceRange),
+					IStatus.ERROR);
 		}
 		return contextFinder;
 	}
 
-	protected IEvaluatedType getType(SourceRange sourceRange)
-			throws ModelException {
+	protected IEvaluatedType getType(SourceRange sourceRange) throws ModelException {
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			ContextFinder contextFinder = getContext(sourceRange);
-			evaluatedTypesCache.put(
-					sourceRange,
-					getType(sourceRange, contextFinder.getContext(),
-							contextFinder.getNode()));
+			evaluatedTypesCache.put(sourceRange,
+					getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
 		}
 		return evaluatedTypesCache.get(sourceRange);
 	}
@@ -234,8 +225,7 @@ public class BindingUtility {
 	 *             if the given element is <code>null</code>.
 	 * @throws ModelException
 	 */
-	public IModelElement[] getModelElement(SourceRefElement element)
-			throws ModelException {
+	public IModelElement[] getModelElement(SourceRefElement element) throws ModelException {
 		if (element == null) {
 			throw new NullPointerException();
 		}
@@ -263,8 +253,7 @@ public class BindingUtility {
 	 *             in case if context cannot be found for the given node.
 	 * @see #getModelElement(int, int, boolean)
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length)
-			throws ModelException {
+	public IModelElement[] getModelElement(int startOffset, int length) throws ModelException {
 		return getModelElement(startOffset, length, true);
 	}
 
@@ -287,8 +276,7 @@ public class BindingUtility {
 	 *             in case if context cannot be found for the given node.
 	 * @see #getModelElement(int, int, boolean)
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length,
-			IModelAccessCache cache) throws ModelException {
+	public IModelElement[] getModelElement(int startOffset, int length, IModelAccessCache cache) throws ModelException {
 		return getModelElement(startOffset, length, true, cache);
 	}
 
@@ -309,8 +297,7 @@ public class BindingUtility {
 	 * @throws IllegalArgumentException
 	 *             in case if context cannot be found for the given node.
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length,
-			boolean filter) throws ModelException {
+	public IModelElement[] getModelElement(int startOffset, int length, boolean filter) throws ModelException {
 		return getModelElement(new SourceRange(startOffset, length), filter);
 	}
 
@@ -333,29 +320,24 @@ public class BindingUtility {
 	 * @throws IllegalArgumentException
 	 *             in case if context cannot be found for the given node.
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length,
-			boolean filter, IModelAccessCache cache) throws ModelException {
-		return getModelElement(new SourceRange(startOffset, length), filter,
-				cache);
+	public IModelElement[] getModelElement(int startOffset, int length, boolean filter, IModelAccessCache cache)
+			throws ModelException {
+		return getModelElement(new SourceRange(startOffset, length), filter, cache);
 	}
 
-	protected IModelElement[] getModelElement(SourceRange sourceRange,
-			boolean filter) throws ModelException {
+	protected IModelElement[] getModelElement(SourceRange sourceRange, boolean filter) throws ModelException {
 		return getModelElement(sourceRange, filter, null);
 	}
 
-	protected IModelElement[] getModelElement(SourceRange sourceRange,
-			boolean filter, IModelAccessCache cache) throws ModelException {
+	protected IModelElement[] getModelElement(SourceRange sourceRange, boolean filter, IModelAccessCache cache)
+			throws ModelException {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
-			evaluatedTypesCache.put(
-					sourceRange,
-					getType(sourceRange, contextFinder.getContext(),
-							contextFinder.getNode()));
+			evaluatedTypesCache.put(sourceRange,
+					getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
 		}
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
-		return PHPTypeInferenceUtils.getModelElements(evaluatedType,
-				(ISourceModuleContext) contextFinder.getContext(),
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext(),
 				sourceRange.getOffset(), cache);
 	}
 
@@ -368,8 +350,7 @@ public class BindingUtility {
 	 *         null.
 	 * @throws Exception
 	 */
-	public IModelElement getFieldByPosition(int start, int length)
-			throws Exception {
+	public IModelElement getFieldByPosition(int start, int length) throws Exception {
 		SourceRange sourceRange = new SourceRange(start, length);
 		ContextFinder contextFinder = getContext(sourceRange);
 		ASTNode node = contextFinder.getNode();
@@ -386,8 +367,7 @@ public class BindingUtility {
 
 			Declaration[] decls = varDecSearcher.getDeclarations();
 			if (decls != null && decls.length > 0) {
-				return this.sourceModule.getElementAt(decls[0].getNode()
-						.sourceStart());
+				return this.sourceModule.getElementAt(decls[0].getNode().sourceStart());
 			}
 		}
 
@@ -461,8 +441,7 @@ public class BindingUtility {
 	/**
 	 * Finds binding context for the given AST node for internal usages only.
 	 */
-	private class ContextFinder extends
-			org.eclipse.php.internal.core.typeinference.context.ContextFinder {
+	private class ContextFinder extends org.eclipse.php.internal.core.typeinference.context.ContextFinder {
 
 		private SourceRange sourceRange;
 		private IContext context;
@@ -496,8 +475,7 @@ public class BindingUtility {
 			if (node.sourceEnd() < sourceRange.offset) {
 				return false;
 			}
-			if (node.sourceStart() <= sourceRange.offset
-					&& node.sourceEnd() >= sourceRange.getEnd()) {
+			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
 				if (!contextStack.isEmpty()) {
 					this.context = contextStack.peek();
 					this.node = node;
@@ -511,12 +489,10 @@ public class BindingUtility {
 	public IEvaluatedType[] getFunctionReturnType(IMethod functionElement) {
 
 		ISourceModule sourceModule = functionElement.getSourceModule();
-		ModuleDeclaration sourceModuleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+		ModuleDeclaration sourceModuleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		MethodDeclaration functionDeclaration = null;
 		try {
-			functionDeclaration = PHPModelUtils.getNodeByMethod(
-					sourceModuleDeclaration, functionElement);
+			functionDeclaration = PHPModelUtils.getNodeByMethod(sourceModuleDeclaration, functionElement);
 
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
@@ -538,8 +514,9 @@ public class BindingUtility {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464921
 					// do not evaluate content of inner lambda functions
 					if (node instanceof LambdaFunctionDeclaration
-					// but never exclude top node (even if this case cannot
-					// happen here)
+							// but never exclude top node (even if this case
+							// cannot
+							// happen here)
 							&& node != topDeclaration) {
 						return false;
 					}
@@ -574,9 +551,8 @@ public class BindingUtility {
 			try {
 				ContextFinder contextFinder = getContext(sourceRange);
 				IContext context = contextFinder.getContext();
-				IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-						.resolveExpression(getTypeInferencer(), sourceModule,
-								sourceModuleDeclaration, context, expr);
+				IEvaluatedType resolvedExpression = PHPTypeInferenceUtils.resolveExpression(getTypeInferencer(),
+						sourceModule, sourceModuleDeclaration, context, expr);
 				if (resolvedExpression != null) {
 					evaluated.add(resolvedExpression);
 				}
@@ -597,10 +573,8 @@ public class BindingUtility {
 					try {
 						ContextFinder contextFinder = getContext(sourceRange);
 						IContext context = contextFinder.getContext();
-						IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-								.resolveExpression(getTypeInferencer(),
-										sourceModule, sourceModuleDeclaration,
-										context, expr);
+						IEvaluatedType resolvedExpression = PHPTypeInferenceUtils.resolveExpression(getTypeInferencer(),
+								sourceModule, sourceModuleDeclaration, context, expr);
 						if (resolvedExpression != null) {
 							generator.getTypes().add(resolvedExpression);
 						}
@@ -615,8 +589,7 @@ public class BindingUtility {
 				evaluated.add(generator);
 			}
 		}
-		return (IEvaluatedType[]) evaluated
-				.toArray(new IEvaluatedType[evaluated.size()]);
+		return (IEvaluatedType[]) evaluated.toArray(new IEvaluatedType[evaluated.size()]);
 	}
 
 	/**

@@ -20,10 +20,13 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Holds a class name. 
- * note that the class name can be expression, 
- * <pre>e.g.<pre> MyClass,
- * getClassName() - the function getClassName return a class name
+ * Holds a class name. note that the class name can be expression,
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * MyClass, getClassName() - the function getClassName return a class name
  * $className - the variable $a holds the class name
  */
 public class ClassName extends ASTNode {
@@ -33,21 +36,20 @@ public class ClassName extends ASTNode {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(ClassName.class, "name", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(ClassName.class, "name", //$NON-NLS-1$
+			Expression.class, MANDATORY, CYCLE_RISK);
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
+	}
 
 	public ClassName(int start, int end, AST ast, Expression className) {
 		super(start, end, ast);
@@ -61,15 +63,15 @@ public class ClassName extends ASTNode {
 	public ClassName(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
 		name.accept(visitor);
 	}
@@ -102,27 +104,29 @@ public class ClassName extends ASTNode {
 	public Expression getClassName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Returns the expression of this class name .
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getName() {
 		return this.name;
 	}
-		
+
 	/**
 	 * Sets the expression of this class name.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setClassName(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -132,7 +136,7 @@ public class ClassName extends ASTNode {
 		this.name = expression;
 		postReplaceChild(oldChild, expression, NAME_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
@@ -145,8 +149,8 @@ public class ClassName extends ASTNode {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

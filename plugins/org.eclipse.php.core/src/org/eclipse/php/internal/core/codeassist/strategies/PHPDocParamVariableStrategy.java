@@ -24,8 +24,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  */
 public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 
-	public PHPDocParamVariableStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public PHPDocParamVariableStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -45,8 +44,7 @@ public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			super.apply(reporter);
 		} else if (prev.equalsIgnoreCase("param")) { //$NON-NLS-1$
-			final PHPDocReturnTypeStrategy returnStrategy = new PHPDocReturnTypeStrategy(
-					context);
+			final PHPDocReturnTypeStrategy returnStrategy = new PHPDocReturnTypeStrategy(context);
 			returnStrategy.apply(reporter);
 
 		}

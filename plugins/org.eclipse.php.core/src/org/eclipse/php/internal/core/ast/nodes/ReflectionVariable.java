@@ -21,19 +21,23 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents an indirect reference to a variable.
- * <pre>e.g.<pre> $$a
- * $$foo()
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $$a $$foo()
  */
 public class ReflectionVariable extends Variable {
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(ReflectionVariable.class, "name", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor DOLLARED_PROPERTY = 
-		new SimplePropertyDescriptor(ReflectionVariable.class, "isDollared", Boolean.class, OPTIONAL); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(ReflectionVariable.class,
+			"name", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor DOLLARED_PROPERTY = new SimplePropertyDescriptor(
+			ReflectionVariable.class, "isDollared", Boolean.class, OPTIONAL); //$NON-NLS-1$
+
 	/**
 	 * @return the name PROPERTY
 	 */
@@ -47,20 +51,20 @@ public class ReflectionVariable extends Variable {
 	public SimplePropertyDescriptor getDollaredProperty() {
 		return ReflectionVariable.DOLLARED_PROPERTY;
 	}
-	
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(DOLLARED_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
-	
+
 	public ReflectionVariable(int start, int end, AST ast, Expression variable) {
 		super(start, end, ast, variable);
 	}
@@ -75,8 +79,8 @@ public class ReflectionVariable extends Variable {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ReflectionVariable"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -88,25 +92,25 @@ public class ReflectionVariable extends Variable {
 	public int getType() {
 		return ASTNode.REFLECTION_VARIABLE;
 	}
-	
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
-  
+
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression expr = ASTNode.copySubtree(target, getName());
 		final ReflectionVariable result = new ReflectionVariable(getStart(), getEnd(), target, expr);
 		return result;
 	}
-	
+
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 }

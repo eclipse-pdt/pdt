@@ -48,8 +48,7 @@ public class LanguageModelContainer implements IBuildpathContainer {
 			try {
 				List<IBuildpathEntry> entries = new LinkedList<IBuildpathEntry>();
 
-				for (ILanguageModelProvider provider : LanguageModelInitializer
-						.getContributedProviders()) {
+				for (ILanguageModelProvider provider : LanguageModelInitializer.getContributedProviders()) {
 
 					// Get the location where language model files reside
 					// in provider's plug-in:
@@ -62,55 +61,44 @@ public class LanguageModelContainer implements IBuildpathContainer {
 						path = copyToInstanceLocation(provider, path, project);
 						if (path != null) {
 
-							LanguageModelInitializer.addPathName(path,
-									provider.getName());
+							LanguageModelInitializer.addPathName(path, provider.getName());
 
-							IEnvironment environment = EnvironmentManager
-									.getEnvironment(project);
+							IEnvironment environment = EnvironmentManager.getEnvironment(project);
 							if (environment != null) {
-								path = EnvironmentPathUtils.getFullPath(
-										environment, path);
+								path = EnvironmentPathUtils.getFullPath(environment, path);
 							}
-							entries.add(DLTKCore.newLibraryEntry(path,
-									IBuildpathEntry.NO_ACCESS_RULES,
-									IBuildpathEntry.NO_EXTRA_ATTRIBUTES,
-									BuildpathEntry.INCLUDE_ALL,
+							entries.add(DLTKCore.newLibraryEntry(path, IBuildpathEntry.NO_ACCESS_RULES,
+									IBuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL,
 									BuildpathEntry.EXCLUDE_NONE, false, true));
 						}
 					}
 				}
-				buildPathEntries = (IBuildpathEntry[]) entries
-						.toArray(new IBuildpathEntry[entries.size()]);
+				buildPathEntries = (IBuildpathEntry[]) entries.toArray(new IBuildpathEntry[entries.size()]);
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
-		return buildPathEntries != null ? buildPathEntries
-				: new IBuildpathEntry[0];
+		return buildPathEntries != null ? buildPathEntries : new IBuildpathEntry[0];
 	}
 
-	protected IPath copyToInstanceLocation(ILanguageModelProvider provider,
-			IPath path, IScriptProject project) {
+	protected IPath copyToInstanceLocation(ILanguageModelProvider provider, IPath path, IScriptProject project) {
 
 		try {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("$nl$", Platform.getNL()); //$NON-NLS-1$
-			URL url = FileLocator.find(provider.getPlugin().getBundle(),
-					provider.getPath(project), map);
+			URL url = FileLocator.find(provider.getPlugin().getBundle(), provider.getPath(project), map);
 			File sourceFile = new File(FileLocator.toFileURL(url).getPath());
 			LocalFile sourceDir = new LocalFile(sourceFile);
 
-			IPath targetPath = LanguageModelInitializer.getTargetLocation(
-					provider, Path.fromOSString(sourceFile.getAbsolutePath()),
-					project);
+			IPath targetPath = LanguageModelInitializer.getTargetLocation(provider,
+					Path.fromOSString(sourceFile.getAbsolutePath()), project);
 			LocalFile targetDir = new LocalFile(targetPath.toFile());
 
 			IFileInfo targetInfo = targetDir.fetchInfo();
 			boolean update = !targetInfo.exists();
 			if (!update) {
 				IFileInfo sourceInfo = sourceDir.fetchInfo();
-				update = targetInfo.getLastModified() < sourceInfo
-						.getLastModified();
+				update = targetInfo.getLastModified() < sourceInfo.getLastModified();
 			}
 
 			if (update) {

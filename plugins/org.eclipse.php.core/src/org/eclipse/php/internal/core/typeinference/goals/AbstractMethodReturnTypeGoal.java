@@ -32,8 +32,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	private String[] argNames;
 	private int offset;
 
-	public AbstractMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, int offset) {
+	public AbstractMethodReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName, int offset) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
@@ -41,8 +40,8 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		this.offset = offset;
 	}
 
-	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName, String[] argNames, int offset) {
+	public AbstractMethodReturnTypeGoal(IContext context, IType[] types, String methodName, String[] argNames,
+			int offset) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
@@ -51,14 +50,12 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		this.offset = offset;
 	}
 
-	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName, int offset) {
+	public AbstractMethodReturnTypeGoal(IContext context, IType[] types, String methodName, int offset) {
 		this(context, types, methodName, null, offset);
 	}
 
-	public AbstractMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, String[] argNames,
-			int offset) {
+	public AbstractMethodReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName,
+			String[] argNames, int offset) {
 		this(context, evaluatedType, methodName, offset);
 		this.argNames = argNames;
 	}
@@ -83,11 +80,8 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 				if (context instanceof IModelCacheContext) {
 					cache = ((IModelCacheContext) context).getCache();
 				}
-				types = PHPTypeInferenceUtils.getModelElements(evaluatedType,
-						cnt,
-						cnt instanceof MethodContext ? ((MethodContext) cnt)
-								.getMethodNode().start() : cnt.getRootNode()
-								.end(), cache);
+				types = PHPTypeInferenceUtils.getModelElements(evaluatedType, cnt, cnt instanceof MethodContext
+						? ((MethodContext) cnt).getMethodNode().start() : cnt.getRootNode().end(), cache);
 			}
 		}
 		return types;
@@ -100,10 +94,8 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result
-				+ ((evaluatedType == null) ? 0 : evaluatedType.hashCode());
-		result = prime * result
-				+ ((methodName == null) ? 0 : methodName.hashCode());
+		result = prime * result + ((evaluatedType == null) ? 0 : evaluatedType.hashCode());
+		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
 		result = prime * result + Arrays.hashCode(types);
 		return result;
 	}

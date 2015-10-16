@@ -149,8 +149,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		}
 	}
 
-	public int read(final byte[] dest, final int offs, final int len)
-			throws IOException {
+	public int read(final byte[] dest, final int offs, final int len) throws IOException {
 		if (offs < 0) {
 			throw new IndexOutOfBoundsException("offs(" + offs + ") < 0."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -241,8 +240,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		char magic4 = bsGetUByte();
 		char magic5 = bsGetUByte();
 
-		if (magic0 == 0x17 && magic1 == 0x72 && magic2 == 0x45
-				&& magic3 == 0x38 && magic4 == 0x50 && magic5 == 0x90) {
+		if (magic0 == 0x17 && magic1 == 0x72 && magic2 == 0x45 && magic3 == 0x38 && magic4 == 0x50 && magic5 == 0x90) {
 			complete(); // end of file
 		} else if (magic0 != 0x31 || // '1'
 				magic1 != 0x41 || // ')'
@@ -280,15 +278,13 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		if (this.storedBlockCRC != this.computedBlockCRC) {
 			// make next blocks readable without error
 			// (repair feature, not yet documented, not tested)
-			this.computedCombinedCRC = (this.storedCombinedCRC << 1)
-					| (this.storedCombinedCRC >>> 31);
+			this.computedCombinedCRC = (this.storedCombinedCRC << 1) | (this.storedCombinedCRC >>> 31);
 			this.computedCombinedCRC ^= this.storedBlockCRC;
 
 			reportCRCError();
 		}
 
-		this.computedCombinedCRC = (this.computedCombinedCRC << 1)
-				| (this.computedCombinedCRC >>> 31);
+		this.computedCombinedCRC = (this.computedCombinedCRC << 1) | (this.computedCombinedCRC >>> 31);
 		this.computedCombinedCRC ^= this.computedBlockCRC;
 	}
 
@@ -371,8 +367,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 	/**
 	 * Called by createHuffmanDecodingTables() exclusively.
 	 */
-	private static void hbCreateDecodeTables(final int[] limit,
-			final int[] base, final int[] perm, final char[] length,
+	private static void hbCreateDecodeTables(final int[] limit, final int[] base, final int[] perm, final char[] length,
 			final int minLen, final int maxLen, final int alphaSize) {
 		for (int i = minLen, pp = 0; i <= maxLen; i++) {
 			for (int j = 0; j < alphaSize; j++) {
@@ -493,8 +488,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 	/**
 	 * Called by recvDecodingTables() exclusively.
 	 */
-	private void createHuffmanDecodingTables(final int alphaSize,
-			final int nGroups) {
+	private void createHuffmanDecodingTables(final int alphaSize, final int nGroups) {
 		final Data dataShadow = this.data;
 		final char[][] len = dataShadow.temp_charArray2d;
 		final int[] minLens = dataShadow.minLens;
@@ -515,8 +509,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 					minLen = lent;
 				}
 			}
-			hbCreateDecodeTables(limit[t], base[t], perm[t], len[t], minLen,
-					maxLen, alphaSize);
+			hbCreateDecodeTables(limit[t], base[t], perm[t], len[t], minLen, maxLen, alphaSize);
 			minLens[t] = minLen;
 		}
 	}
@@ -599,8 +592,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 							throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 						}
 					}
-					int zvec = (bsBuffShadow >> (bsLiveShadow - zn))
-							& ((1 << zn) - 1);
+					int zvec = (bsBuffShadow >> (bsLiveShadow - zn)) & ((1 << zn) - 1);
 					bsLiveShadow -= zn;
 
 					while (zvec > limit_zt[zn]) {
@@ -612,13 +604,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 								bsLiveShadow += 8;
 								continue;
 							} else {
-								throw new IOException(
-										"unexpected end of stream"); //$NON-NLS-1$
+								throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 							}
 						}
 						bsLiveShadow--;
-						zvec = (zvec << 1)
-								| ((bsBuffShadow >> bsLiveShadow) & 1);
+						zvec = (zvec << 1) | ((bsBuffShadow >> bsLiveShadow) & 1);
 					}
 					nextSym = perm_zt[zvec - base_zt[zn]];
 				}
@@ -682,8 +672,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 						throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 					}
 				}
-				int zvec = (bsBuffShadow >> (bsLiveShadow - zn))
-						& ((1 << zn) - 1);
+				int zvec = (bsBuffShadow >> (bsLiveShadow - zn)) & ((1 << zn) - 1);
 				bsLiveShadow -= zn;
 
 				while (zvec > limit_zt[zn]) {

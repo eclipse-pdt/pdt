@@ -32,8 +32,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
  */
 public class ClassExtendsContext extends ClassDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -52,8 +51,7 @@ public class ClassExtendsContext extends ClassDeclarationContext {
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
 		if (getPhpVersion().isGreaterThan(PHPVersion.PHP5)) {
-			if (prefix.length() > 0
-					&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				prefix = prefix.substring(1);
 			}
 		}

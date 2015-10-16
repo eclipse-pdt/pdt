@@ -70,8 +70,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(IS_STATIC);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
@@ -81,25 +80,18 @@ public class LambdaFunctionDeclaration extends Expression {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end, AST ast,
-			List formalParameters, List lexicalVars, Block body,
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body,
 			final boolean isReference) {
-		this(start, end, ast, formalParameters, lexicalVars, body, isReference,
-				false, -1);
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference, false, -1);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end, AST ast,
-			List formalParameters, List lexicalVars, Block body,
-			final boolean isReference, final boolean isStatic,
-			int staticStart) {
-		this(start, end, ast, formalParameters, lexicalVars, body, isReference,
-				isStatic, staticStart, null);
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body,
+			final boolean isReference, final boolean isStatic, int staticStart) {
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference, isStatic, staticStart, null);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end, AST ast,
-			List formalParameters, List lexicalVars, Block body,
-			final boolean isReference, final boolean isStatic, int staticStart,
-			Identifier returnType) {
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body,
+			final boolean isReference, final boolean isStatic, int staticStart, Identifier returnType) {
 		super(start, end, ast);
 
 		if (formalParameters == null) {
@@ -332,8 +324,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final boolean internalGetSetBooleanProperty(
-			SimplePropertyDescriptor property, boolean get, boolean value) {
+	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_REFERENCE_PROPERTY) {
 			if (get) {
 				return isReference();
@@ -353,8 +344,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();
@@ -375,8 +365,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(
-			ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == FORMAL_PARAMETERS_PROPERTY) {
 			return formalParameters();
 		}
@@ -398,22 +387,17 @@ public class LambdaFunctionDeclaration extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final List formalParams = ASTNode.copySubtrees(target,
-				formalParameters());
-		final List lexicalVars = ASTNode.copySubtrees(target,
-				lexicalVariables());
+		final List formalParams = ASTNode.copySubtrees(target, formalParameters());
+		final List lexicalVars = ASTNode.copySubtrees(target, lexicalVariables());
 		final boolean isRef = isReference();
-		final Identifier returnType = ASTNode.copySubtree(target,
-				getReturnType());
-		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(
-				getStart(), getEnd(), target, formalParams, lexicalVars, body,
-				isRef, isStatic(), this.staticStart, returnType);
+		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
+		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(getStart(), getEnd(), target,
+				formalParams, lexicalVars, body, isRef, isStatic(), this.staticStart, returnType);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

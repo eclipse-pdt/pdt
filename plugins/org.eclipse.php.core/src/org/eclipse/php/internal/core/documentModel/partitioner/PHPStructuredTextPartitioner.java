@@ -18,11 +18,9 @@ import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-public class PHPStructuredTextPartitioner extends
-		StructuredTextPartitionerForHTML {
+public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML {
 
-	public String getContentType(final int offset,
-			final boolean preferOpenPartitions) {
+	public String getContentType(final int offset, final boolean preferOpenPartitions) {
 		final ITypedRegion partition = getPartition(offset);
 		return partition == null ? null : partition.getType();
 	}
@@ -57,15 +55,12 @@ public class PHPStructuredTextPartitioner extends
 	 * @return
 	 */
 	private static final boolean isPhpRegion(final String regionType) {
-		return regionType == PHPRegionContext.PHP_OPEN
-				|| regionType == PHPRegionContext.PHP_CLOSE
+		return regionType == PHPRegionContext.PHP_OPEN || regionType == PHPRegionContext.PHP_CLOSE
 				|| regionType == PHPRegionContext.PHP_CONTENT;
 	}
 
-	private final static String[] configuredContentTypes = new String[] {
-			PHPPartitionTypes.PHP_DEFAULT,
-			PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT,
-			PHPPartitionTypes.PHP_MULTI_LINE_COMMENT,
+	private final static String[] configuredContentTypes = new String[] { PHPPartitionTypes.PHP_DEFAULT,
+			PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT, PHPPartitionTypes.PHP_MULTI_LINE_COMMENT,
 			PHPPartitionTypes.PHP_DOC, PHPPartitionTypes.PHP_QUOTED_STRING };
 
 	public static String[] getConfiguredContentTypes() {
@@ -92,10 +87,8 @@ public class PHPStructuredTextPartitioner extends
 			return super.getPartition(offset - 1);
 		}
 		ITypedRegion result = super.getPartition(offset);
-		if (offset > 0
-				&& result.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
-			IStructuredDocumentRegion structuredDocumentRegion = fStructuredDocument
-					.getRegionAtCharacterOffset(offset);
+		if (offset > 0 && result.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
+			IStructuredDocumentRegion structuredDocumentRegion = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (structuredDocumentRegion.getStartOffset() == offset) {
 				return super.getPartition(offset - 1);
 			}

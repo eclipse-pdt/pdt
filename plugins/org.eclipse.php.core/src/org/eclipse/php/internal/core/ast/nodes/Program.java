@@ -37,31 +37,29 @@ public class Program extends ASTNode {
 	/**
 	 * Statements array of php program
 	 */
-	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(
-			STATEMENTS_PROPERTY);
+	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(STATEMENTS_PROPERTY);
 
 	/**
 	 * Comments array of the php program
 	 */
-	private final ASTNode.NodeList<Comment> comments = new ASTNode.NodeList<Comment>(
-			COMMENTS_PROPERTY);
+	private final ASTNode.NodeList<Comment> comments = new ASTNode.NodeList<Comment>(COMMENTS_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = new ChildListPropertyDescriptor(
-			Program.class, "statements", Statement.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor COMMENTS_PROPERTY = new ChildListPropertyDescriptor(
-			Program.class, "comments", Comment.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = new ChildListPropertyDescriptor(Program.class,
+			"statements", Statement.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor COMMENTS_PROPERTY = new ChildListPropertyDescriptor(Program.class,
+			"comments", Comment.class, NO_CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		properyList.add(STATEMENTS_PROPERTY);
 		properyList.add(COMMENTS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -91,8 +89,7 @@ public class Program extends ASTNode {
 	 */
 	private int[] lineEndTable = {};
 
-	private Program(int start, int end, AST ast, Statement[] statements,
-			List comments) {
+	private Program(int start, int end, AST ast, Statement[] statements, List comments) {
 		super(start, end, ast);
 
 		if (statements == null || comments == null) {
@@ -107,10 +104,8 @@ public class Program extends ASTNode {
 		}
 	}
 
-	public Program(int start, int end, AST ast, List statements,
-			List commentList) {
-		this(start, end, ast, (Statement[]) statements
-				.toArray(new Statement[statements.size()]), commentList);
+	public Program(int start, int end, AST ast, List statements, List commentList) {
+		this(start, end, ast, (Statement[]) statements.toArray(new Statement[statements.size()]), commentList);
 	}
 
 	public Program(AST ast) {
@@ -125,12 +120,12 @@ public class Program extends ASTNode {
 	 * source text, it is problematic to locate comments in relation to the
 	 * structure of an AST. The one exception is doc comments which, by
 	 * convention, immediately precede type, field, and method declarations;
-	 * these comments are located in the AST by
-	 * {@link BodyDeclaration#getPhpdoc BodyDeclaration.getPhpdoc}. Other
-	 * comments do not show up in the AST. The table of comments is provided for
-	 * clients that need to find the source ranges of all comments in the
-	 * original source string. It includes entries for comments of all kinds
-	 * (line, block, and doc), arranged in order of increasing source position.
+	 * these comments are located in the AST by {@link BodyDeclaration#getPhpdoc
+	 * BodyDeclaration.getPhpdoc}. Other comments do not show up in the AST. The
+	 * table of comments is provided for clients that need to find the source
+	 * ranges of all comments in the original source string. It includes entries
+	 * for comments of all kinds (line, block, and doc), arranged in order of
+	 * increasing source position.
 	 * </p>
 	 * <p>
 	 * Note on comment parenting: The {@link ASTNode#getParent() getParent()} of
@@ -230,8 +225,7 @@ public class Program extends ASTNode {
 			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB)
-				.append("</Statements>\n").append(TAB).append("<Comments>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append("</Statements>\n").append(TAB).append("<Comments>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (ASTNode comment : this.comments) {
 			comment.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
@@ -279,8 +273,8 @@ public class Program extends ASTNode {
 	 * @since 3.0
 	 */
 	public void initCommentMapper(IDocument document, AstLexer scanner) {
-		this.commentMapper = new DefaultCommentMapper(this.getComments()
-				.toArray(new Comment[this.getComments().size()]));
+		this.commentMapper = new DefaultCommentMapper(
+				this.getComments().toArray(new Comment[this.getComments().size()]));
 		this.commentMapper.initialize(this, scanner, document);
 	}
 
@@ -352,8 +346,7 @@ public class Program extends ASTNode {
 		final int previousLineOffset = this.lineEndTable[line - 2];
 		// previousLineOffset + 1 is the first character of the current line
 		final int offsetForLine = previousLineOffset + 1;
-		final int currentLineEnd = line == length + 1 ? getStart()
-				+ getLength() - 1 : this.lineEndTable[line - 1];
+		final int currentLineEnd = line == length + 1 ? getStart() + getLength() - 1 : this.lineEndTable[line - 1];
 		if (offsetForLine > currentLineEnd) {
 			return -1;
 		} else {
@@ -485,8 +478,7 @@ public class Program extends ASTNode {
 		final int previousLineOffset = this.lineEndTable[line - 2];
 		// previousLineOffset + 1 is the first character of the current line
 		final int offsetForLine = previousLineOffset + 1;
-		final int currentLineEnd = line == length + 1 ? getStart()
-				+ getLength() - 1 : this.lineEndTable[line - 1];
+		final int currentLineEnd = line == length + 1 ? getStart() + getLength() - 1 : this.lineEndTable[line - 1];
 		if ((offsetForLine + column) > currentLineEnd) {
 			return -1;
 		} else {
@@ -545,8 +537,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #getComments() } of the
-	 * first leading comments associated with the given node.
+	 * Return the index in the whole comments list {@link #getComments() } of
+	 * the first leading comments associated with the given node.
 	 * 
 	 * @param node
 	 *            the node
@@ -565,8 +557,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #getComments() } of the
-	 * last trailing comments associated with the given node.
+	 * Return the index in the whole comments list {@link #getComments() } of
+	 * the last trailing comments associated with the given node.
 	 * 
 	 * @param node
 	 *            the node
@@ -646,14 +638,12 @@ public class Program extends ASTNode {
 	ASTNode clone0(AST target) {
 		final List statements = ASTNode.copySubtrees(target, statements());
 		final List comments = ASTNode.copySubtrees(target, comments());
-		final Program result = new Program(this.getStart(), this.getEnd(),
-				target, statements, comments);
+		final Program result = new Program(this.getStart(), this.getEnd(), target, statements, comments);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
@@ -678,8 +668,7 @@ public class Program extends ASTNode {
 	 * @return
 	 */
 	public ASTNode findDeclaringNode(IBinding binding) {
-		ISourceReference phpElement = (ISourceReference) binding
-				.getPHPElement();
+		ISourceReference phpElement = (ISourceReference) binding.getPHPElement();
 		try {
 			return getElementAt(phpElement.getSourceRange().getOffset());
 		} catch (ModelException e) {

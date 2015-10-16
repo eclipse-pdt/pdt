@@ -46,13 +46,11 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 
 	private boolean showPhpVariables = true;
 
-	public GlobalVariablesStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public GlobalVariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
-	public GlobalVariablesStrategy(ICompletionContext context,
-			boolean showPhpVariables) {
+	public GlobalVariablesStrategy(ICompletionContext context, boolean showPhpVariables) {
 		super(context);
 		this.showPhpVariables = showPhpVariables;
 	}
@@ -61,8 +59,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
-	public void apply(ICompletionReporter reporter)
-			throws BadLocationException {
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
@@ -71,8 +68,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		if (prefix.length() > 0 && !prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
-		CompletionRequestor requestor = abstractContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
@@ -80,19 +76,16 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		}
 
 		IField[] fields = null;
-		if (showVarsFromOtherFiles(
-				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
+		if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
 			IDLTKSearchScope scope = createSearchScope();
-			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
-					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
-		} else if (showVarsFromOtherFiles(
-				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
+			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccGlobal,
+					Modifiers.AccConstant, scope, null);
+		} else if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
 			// FIXME why we can't get $myGlobalVar from php
 			// code:list($myGlobalVar) = 0;
-			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(
-					abstractContext.getSourceModule());
-			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
-					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
+			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(abstractContext.getSourceModule());
+			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccGlobal,
+					Modifiers.AccConstant, scope, null);
 		}
 
 		List<IField> result = new LinkedList<IField>();
@@ -100,8 +93,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			result.addAll(Arrays.asList(fields));
 		}
 
-		fields = PHPModelUtils.getFileFields(abstractContext.getSourceModule(),
-				prefix, false, null);
+		fields = PHPModelUtils.getFileFields(abstractContext.getSourceModule(), prefix, false, null);
 		if (fields != null) {
 			result.addAll(Arrays.asList(fields));
 		}
@@ -116,24 +108,18 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			PHPVersion phpVersion = abstractContext.getPhpVersion();
 			for (String variable : PHPVariables.getVariables(phpVersion)) {
 				if (variable.startsWith(prefix)) {
-					if (!requestor.isContextInformationMode()
-							|| variable.length() == prefix.length()) {
+					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 						reporter.reportField(
-								new FakeField(
-										(ModelElement) abstractContext
-												.getSourceModule(),
-										variable, 0, 0),
-								"", replaceRange, false); // NON-NLS-1 //$NON-NLS-1$
+								new FakeField((ModelElement) abstractContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
+								replaceRange, false); // NON-NLS-1
 					}
 				}
 			}
 		}
 	}
 
-	private IDLTKSearchScope createSearchScopeWithReferencedFiles(
-			ISourceModule sourceModule) {
-		ReferenceTree tree = FileNetworkUtility
-				.buildReferencedFilesTree(sourceModule, null);
+	private IDLTKSearchScope createSearchScopeWithReferencedFiles(ISourceModule sourceModule) {
+		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 		Set<ISourceModule> list = new HashSet<ISourceModule>();
 		list.add(sourceModule);
 		if (tree != null && tree.getRoot() != null) {
@@ -142,8 +128,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 				getNodeChildren(tree.getRoot(), list);
 			}
 		}
-		return BasicSearchEngine.createSearchScope(
-				list.toArray(new ISourceModule[list.size()]),
+		return BasicSearchEngine.createSearchScope(list.toArray(new ISourceModule[list.size()]),
 				DLTKLanguageManager.getLanguageToolkit(sourceModule));
 	}
 
@@ -159,8 +144,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 	}
 
 	protected boolean showVarsFromOtherFiles(String id) {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, id,
-				true, null);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, id, true, null);
 	}
 
 	@Override
@@ -168,8 +152,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
-			ISourceModule sourceModule = ((AbstractCompletionContext) context)
-					.getSourceModule();
+			ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
 			return SearchEngine.createSearchScope(sourceModule);
 		}
 		return super.createSearchScope();

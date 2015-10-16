@@ -42,8 +42,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 	protected IEncodedDocument newEncodedDocument() {
 		IEncodedDocument doc = super.newEncodedDocument();
 		assert doc instanceof BasicStructuredDocument;
-		((BasicStructuredDocument) doc)
-				.setReParser(new PhpStructuredDocumentReParser());
+		((BasicStructuredDocument) doc).setReParser(new PhpStructuredDocumentReParser());
 
 		// doc.setPreferredLineDelimiter( "\n" );
 		return doc;
@@ -81,12 +80,11 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 
 		private IFile fIFile;
 
-
 		private InputStream fInputStream;
-		
-		private static final String CHARSET_UTF_16= "UTF-16"; //$NON-NLS-1$
-		
-		private static final String CHARSET_UTF_16LE= "UTF-16LE"; //$NON-NLS-1$
+
+		private static final String CHARSET_UTF_16 = "UTF-16"; //$NON-NLS-1$
+
+		private static final String CHARSET_UTF_16LE = "UTF-16LE"; //$NON-NLS-1$
 
 		public void set(IFile iFile) throws CoreException, IOException {
 			super.set(iFile);
@@ -99,11 +97,9 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 			fInputStream = inputStream;
 		}
 
-		protected EncodingMemento createMemento(
-				IContentDescription contentDescription) {
+		protected EncodingMemento createMemento(IContentDescription contentDescription) {
 			EncodingMemento result;
-			String appropriateDefault = contentDescription.getContentType()
-					.getDefaultCharset();
+			String appropriateDefault = contentDescription.getContentType().getDefaultCharset();
 			String detectedCharset = (String) contentDescription
 					.getProperty(IContentDescriptionExtended.DETECTED_CHARSET);
 			String unSupportedCharset = (String) contentDescription
@@ -112,8 +108,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 
 			// Set default workbench encoding:
 			if (detectedCharset == null && appropriateDefault == null) {
-				detectedCharset = javaCharset = appropriateDefault = ResourcesPlugin
-						.getEncoding();
+				detectedCharset = javaCharset = appropriateDefault = ResourcesPlugin.getEncoding();
 			}
 
 			// integrity checks for debugging
@@ -122,28 +117,26 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 			} else if (javaCharset.length() == 0) {
 				Logger.log(Logger.INFO_DEBUG, "charset equaled emptyString!"); //$NON-NLS-1$
 			}
-			byte[] BOM = (byte[]) contentDescription
-					.getProperty(IContentDescription.BYTE_ORDER_MARK);
+			byte[] BOM = (byte[]) contentDescription.getProperty(IContentDescription.BYTE_ORDER_MARK);
 			// result = (EncodingMemento)
 			// contentDescription.getProperty(IContentDescriptionExtended.ENCODING_MEMENTO);
-			result = createEncodingMemento(BOM, javaCharset, detectedCharset,
-					unSupportedCharset, appropriateDefault, null);
+			result = createEncodingMemento(BOM, javaCharset, detectedCharset, unSupportedCharset, appropriateDefault,
+					null);
 			if (!result.isValid()) {
 				result.setAppropriateDefault(appropriateDefault);
 				// integrity check for debugging "invalid" cases.
 				// the apprriate default we have, should equal what's in the
 				// detected field. (not sure this is always required)
 				if (DEBUG) {
-					if (appropriateDefault != null
-							&& !appropriateDefault.equals(detectedCharset)) {
-						Logger
-								.log(Logger.INFO_DEBUG,
-										"appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
+					if (appropriateDefault != null && !appropriateDefault.equals(detectedCharset)) {
+						Logger.log(Logger.INFO_DEBUG,
+								"appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
 					}
 				}
 			}
 			return result;
 		}
+
 		@Override
 		public Reader getCodedReader() throws CoreException, IOException {
 			Reader reader = super.getCodedReader();
@@ -154,7 +147,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 				return reader;
 			} catch (Exception e) {
 			}
-			
+
 			InputStream is = getResettableStream();
 			EncodingMemento encodingMemento = getEncodingMemento();
 			String charsetName = encodingMemento.getJavaCharsetName();
@@ -168,9 +161,11 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 			if (fEncodingRule == EncodingRule.FORCE_DEFAULT) {
 				charsetName = encodingMemento.getAppropriateDefault();
 			}
-			
-			// [228366] For files that have a unicode BOM, and a charset name of UTF-16, the charset decoder needs "UTF-16LE"
-			if(CHARSET_UTF_16.equals(charsetName) && encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE)
+
+			// [228366] For files that have a unicode BOM, and a charset name of
+			// UTF-16, the charset decoder needs "UTF-16LE"
+			if (CHARSET_UTF_16.equals(charsetName)
+					&& encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE)
 				charsetName = CHARSET_UTF_16LE;
 			reader = new BufferedReader(new InputStreamReader(is, charsetName), CodedIO.MAX_BUF_SIZE);
 			return reader;
@@ -183,6 +178,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 				result = true;
 			return result;
 		}
+
 		private InputStream getResettableStream() throws CoreException, IOException {
 
 			InputStream resettableStream = null;
@@ -192,8 +188,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 				try {
 					// note we always get contents, even if out of synch
 					inputStream = fIFile.getContents(true);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					// SHOULD actually check for existence of
 					// fIStorage, but
 					// for now will just assume core exception
@@ -204,8 +199,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 					inputStream = new NullInputStream();
 				}
 				resettableStream = new BufferedInputStream(inputStream, CodedIO.MAX_BUF_SIZE);
-			}
-			else {
+			} else {
 				if (fInputStream != null) {
 					if (fInputStream.markSupported()) {
 						resettableStream = fInputStream;
@@ -215,8 +209,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 						// catch (IOException e) {
 						// // assumed just hasn't been marked yet, so ignore
 						// }
-					}
-					else {
+					} else {
 						resettableStream = new BufferedInputStream(fInputStream, CodedIO.MAX_BUF_SIZE);
 					}
 				}

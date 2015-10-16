@@ -18,9 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents an assignment statement.
- * <pre>e.g.<pre> $a = 5,
- * $a += 5,
- * $a .= $b,
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a = 5, $a += 5, $a .= $b,
  */
 public class Assignment extends Expression {
 
@@ -57,8 +60,7 @@ public class Assignment extends Expression {
 	private final int operator;
 	private final Expression value;
 
-	public Assignment(int start, int end, Expression variable, int operator,
-			Expression value) {
+	public Assignment(int start, int end, Expression variable, int operator, Expression value) {
 		super(start, end);
 
 		assert variable != null && value != null;

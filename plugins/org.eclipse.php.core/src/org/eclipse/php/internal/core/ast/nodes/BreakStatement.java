@@ -21,8 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represent a break statement
- * <pre>e.g.<pre> break;
- * break $a;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * break; break $a;
  */
 public class BreakStatement extends Statement {
 
@@ -31,22 +35,21 @@ public class BreakStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(BreakStatement.class, "expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(BreakStatement.class,
+			"expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
-		
+
 	public BreakStatement(int start, int end, AST ast) {
 		this(start, end, ast, null);
 	}
@@ -54,13 +57,13 @@ public class BreakStatement extends Statement {
 	public BreakStatement(AST ast) {
 		super(ast);
 	}
-	
+
 	public BreakStatement(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
 
 		if (expr != null) {
-			setExpression(expr);	
-		}		
+			setExpression(expr);
+		}
 	}
 
 	public void accept0(Visitor visitor) {
@@ -69,8 +72,8 @@ public class BreakStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
 		if (expression != null) {
 			expression.accept(visitor);
@@ -110,7 +113,7 @@ public class BreakStatement extends Statement {
 	 * Returns the expression of this break expression.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return expression;
 	}
@@ -121,18 +124,20 @@ public class BreakStatement extends Statement {
 	public Expression getExpr() {
 		return expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this break expression.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		ASTNode oldChild = this.expression;
 		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
@@ -152,8 +157,8 @@ public class BreakStatement extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {

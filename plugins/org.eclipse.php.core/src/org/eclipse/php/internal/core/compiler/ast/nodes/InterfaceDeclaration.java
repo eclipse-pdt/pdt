@@ -26,24 +26,20 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * <pre>
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * interface MyInterface { },
- * interface MyInterface extends Interface1, Interface2 {
- *  const MY_CONSTANT = 3;
- *  public function myFunction($a);
- * }
+ * interface MyInterface { }, interface MyInterface extends Interface1,
+ * Interface2 { const MY_CONSTANT = 3; public function myFunction($a); }
  */
-public class InterfaceDeclaration extends TypeDeclaration implements
-		IPHPDocAwareDeclaration, IRecoverable {
+public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable {
 
 	private PHPDocBlock phpDoc;
 	private boolean isRecovered;
 
-	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd,
-			String interfaceName, List<TypeReference> interfaces, Block body,
-			PHPDocBlock phpDoc) {
+	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd, String interfaceName,
+			List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
 		super(interfaceName, nameStart, nameEnd, start, end);
 
 		this.phpDoc = phpDoc;

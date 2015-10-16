@@ -71,8 +71,7 @@ public class VersionUtils {
 		return strings;
 	}
 
-	private static void alignVersionLists(List<List<String>> versions,
-			int parts) {
+	private static void alignVersionLists(List<List<String>> versions, int parts) {
 		int length = 0;
 		for (int i = 0; i < versions.size(); i++)
 			length = Math.max(length, versions.get(i).size());
@@ -86,22 +85,19 @@ public class VersionUtils {
 		}
 	}
 
-	private static boolean equal(List<String> version1, List<String> version2,
-			int parts) {
+	private static boolean equal(List<String> version1, List<String> version2, int parts) {
 		List<List<String>> lists = new ArrayList<List<String>>();
 		lists.add(version1);
 		lists.add(version2);
 		alignVersionLists(lists, parts);
 		for (int i = 0; i < version1.size(); i++) {
-			if (0 != compare((String) version1.get(i),
-					(String) version2.get(i)))
+			if (0 != compare((String) version1.get(i), (String) version2.get(i)))
 				return false;
 		}
 		return true;
 	}
 
-	private static boolean greater(List<String> version1, List<String> version2,
-			int parts) {
+	private static boolean greater(List<String> version1, List<String> version2, int parts) {
 		List<List<String>> lists = new ArrayList<List<String>>();
 		lists.add(version1);
 		lists.add(version2);

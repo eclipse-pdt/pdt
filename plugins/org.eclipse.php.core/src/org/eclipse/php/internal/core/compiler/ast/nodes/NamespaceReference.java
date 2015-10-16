@@ -34,8 +34,7 @@ public class NamespaceReference extends TypeReference {
 		super(start, end, name);
 	}
 
-	public NamespaceReference(int start, int end, String name, boolean global,
-			boolean local) {
+	public NamespaceReference(int start, int end, String name, boolean global, boolean local) {
 		super(start, end, name);
 	}
 

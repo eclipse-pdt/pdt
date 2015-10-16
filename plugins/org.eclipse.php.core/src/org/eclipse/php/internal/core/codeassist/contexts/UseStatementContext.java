@@ -33,20 +33,17 @@ public abstract class UseStatementContext extends StatementContext {
 
 	protected boolean useTrait;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 
-		useTrait = new ClassStatementContext().isValid(sourceModule, offset,
-				requestor);
+		useTrait = new ClassStatementContext().isValid(sourceModule, offset, requestor);
 		TextSequence statementText = getStatementText();
 		if (statementText.length() >= 4) {
 			if ("use".equalsIgnoreCase( //$NON-NLS-1$
 					statementText.subSequence(0, 3).toString())
-					&& Character.isWhitespace(
-							statementText.subSequence(3, 4).charAt(0))) {
+					&& Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
 				return true;
 			}
 		}

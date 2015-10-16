@@ -31,10 +31,8 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  */
 public class VariableBinding implements IVariableBinding {
 
-	private static final int VALID_MODIFIERS = Modifiers.AccPublic
-			| Modifiers.AccProtected | Modifiers.AccPrivate
-			| Modifiers.AccDefault | Modifiers.AccConstant
-			| Modifiers.AccStatic | Modifiers.AccGlobal;
+	private static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate
+			| Modifiers.AccDefault | Modifiers.AccConstant | Modifiers.AccStatic | Modifiers.AccGlobal;
 
 	private final BindingResolver resolver;
 	private final IMember modelElement;
@@ -58,8 +56,7 @@ public class VariableBinding implements IVariableBinding {
 		this.isFakeField = modelElement instanceof FakeField;
 	}
 
-	public VariableBinding(DefaultBindingResolver resolver,
-			IMember modelElement, Variable variable, int id) {
+	public VariableBinding(DefaultBindingResolver resolver, IMember modelElement, Variable variable, int id) {
 		this.resolver = resolver;
 		this.modelElement = modelElement;
 		this.isFakeField = modelElement instanceof FakeField;
@@ -105,9 +102,8 @@ public class VariableBinding implements IVariableBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getDeclaringFunction
-	 * ()
+	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#
+	 * getDeclaringFunction ()
 	 */
 	public IFunctionBinding getDeclaringFunction() {
 		// TODO ?
@@ -149,8 +145,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isField()
 	 */
 	public boolean isField() {
-		return IModelElement.FIELD == modelElement.getElementType()
-				&& !isFakeField && getDeclaringClass() != null;
+		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField && getDeclaringClass() != null;
 	}
 
 	/*
@@ -169,8 +164,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isLocal()
 	 */
 	public boolean isLocal() {
-		return IModelElement.FIELD == modelElement.getElementType()
-				&& !isFakeField && getDeclaringClass() == null;
+		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField && getDeclaringClass() == null;
 	}
 
 	/*
@@ -242,8 +236,7 @@ public class VariableBinding implements IVariableBinding {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof IVariableBinding) {
-			return this.modelElement == ((IVariableBinding) obj)
-					.getPHPElement();
+			return this.modelElement == ((IVariableBinding) obj).getPHPElement();
 		}
 
 		return false;

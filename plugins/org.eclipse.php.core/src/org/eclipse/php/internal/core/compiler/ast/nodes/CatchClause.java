@@ -21,7 +21,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a catch clause (as part of a try statement)
- * <pre>e.g.<pre> catch (ClassName $e) { },
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * catch (ClassName $e) { },
  *
  */
 public class CatchClause extends Statement {

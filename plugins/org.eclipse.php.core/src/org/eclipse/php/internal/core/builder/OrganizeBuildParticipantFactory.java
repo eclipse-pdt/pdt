@@ -39,15 +39,12 @@ import org.eclipse.php.internal.core.search.Messages;
 /**
  * @author Yannick de Lange <yannickl88@gmail.com>
  */
-public class OrganizeBuildParticipantFactory
-		extends AbstractBuildParticipantType implements IExecutableExtension {
+public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantType implements IExecutableExtension {
 
-	private static final String UNUSED_MESSAGE = CoreMessages
-			.getString("use_unused"); //$NON-NLS-1$
+	private static final String UNUSED_MESSAGE = CoreMessages.getString("use_unused"); //$NON-NLS-1$
 
 	@Override
-	public IBuildParticipant createBuildParticipant(IScriptProject project)
-			throws CoreException {
+	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
 
 		if (natureId != null) {
 			return new OrganizeBuildParticipantParticipant();
@@ -57,18 +54,16 @@ public class OrganizeBuildParticipantFactory
 
 	private String natureId = null;
 
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
 	}
 
-	private static class OrganizeBuildParticipantParticipant
-			implements IBuildParticipant {
+	private static class OrganizeBuildParticipantParticipant implements IBuildParticipant {
 		@Override
 		public void build(IBuildContext context) throws CoreException {
 			IModelElement element = context.getModelElement();
-			if (LibraryFolderManager.getInstance()
-					.isInLibraryFolder(element.getResource())) {
+			if (LibraryFolderManager.getInstance().isInLibraryFolder(element.getResource())) {
 				// skip syntax check for code inside library folders
 				return;
 			}
@@ -78,11 +73,10 @@ public class OrganizeBuildParticipantFactory
 			if (moduleDeclaration != null) {
 				// Run the validation visitor:
 				try {
-					UseStatement[] statements = ASTUtils.getUseStatements(
-							moduleDeclaration, context.getContents().length);
+					UseStatement[] statements = ASTUtils.getUseStatements(moduleDeclaration,
+							context.getContents().length);
 
-					moduleDeclaration.traverse(
-							new ImportValidationVisitor(context, statements));
+					moduleDeclaration.traverse(new ImportValidationVisitor(context, statements));
 				} catch (Exception e) {
 				}
 			}
@@ -95,8 +89,7 @@ public class OrganizeBuildParticipantFactory
 		private UseStatement[] statements;
 		private NamespaceDeclaration currentNamespace;
 
-		public ImportValidationVisitor(IBuildContext context,
-				UseStatement[] statements) {
+		public ImportValidationVisitor(IBuildContext context, UseStatement[] statements) {
 			this.context = context;
 			this.statements = statements;
 			doc = new Document(new String(context.getContents()));
@@ -114,10 +107,8 @@ public class OrganizeBuildParticipantFactory
 			}
 
 			String total;
-			if (this.currentNamespace != null
-					&& this.currentNamespace.isBracketed()) {
-				total = DocumentUtils.stripUseStatements(statements, doc,
-						this.currentNamespace.sourceStart(),
+			if (this.currentNamespace != null && this.currentNamespace.isBracketed()) {
+				total = DocumentUtils.stripUseStatements(statements, doc, this.currentNamespace.sourceStart(),
 						this.currentNamespace.sourceEnd());
 			} else {
 				total = DocumentUtils.stripUseStatements(statements, doc);
@@ -127,20 +118,14 @@ public class OrganizeBuildParticipantFactory
 				if (DocumentUtils.containsUseStatement(part, total)) {
 					continue;
 				}
-				int sourceStart = multiPart ? part.getNamespace().sourceStart()
-						: s.sourceStart();
-				int sourceEnd = multiPart ? part.getNamespace().sourceEnd()
-						: s.sourceEnd();
-				int lineNumber = context.getLineTracker()
-						.getLineNumberOfOffset(sourceStart);
+				int sourceStart = multiPart ? part.getNamespace().sourceStart() : s.sourceStart();
+				int sourceEnd = multiPart ? part.getNamespace().sourceEnd() : s.sourceEnd();
+				int lineNumber = context.getLineTracker().getLineNumberOfOffset(sourceStart);
 
-				DefaultProblem problem = new DefaultProblem(
-						context.getFile().getName(),
-						Messages.format(UNUSED_MESSAGE,
-								part.getNamespace().getFullyQualifiedName()),
-						PhpProblemIdentifier.USE_STATEMENTS, new String[0],
-						ProblemSeverities.Warning, sourceStart, sourceEnd,
-						lineNumber, -1);
+				DefaultProblem problem = new DefaultProblem(context.getFile().getName(),
+						Messages.format(UNUSED_MESSAGE, part.getNamespace().getFullyQualifiedName()),
+						PhpProblemIdentifier.USE_STATEMENTS, new String[0], ProblemSeverities.Warning, sourceStart,
+						sourceEnd, lineNumber, -1);
 
 				context.getProblemReporter().reportProblem(problem);
 			}

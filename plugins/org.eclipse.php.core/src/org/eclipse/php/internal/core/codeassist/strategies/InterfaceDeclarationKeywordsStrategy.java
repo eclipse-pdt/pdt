@@ -24,11 +24,9 @@ import org.eclipse.php.internal.core.codeassist.contexts.InterfaceDeclarationKey
  * 
  * @author michael
  */
-public class InterfaceDeclarationKeywordsStrategy extends
-		AbstractCompletionStrategy {
+public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStrategy {
 
-	public InterfaceDeclarationKeywordsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public InterfaceDeclarationKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -46,8 +44,7 @@ public class InterfaceDeclarationKeywordsStrategy extends
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		if (!concreteContext.hasExtends()) {
-			reporter.reportKeyword(
-					"extends", getSuffix(concreteContext), replaceRange); //$NON-NLS-1$
+			reporter.reportKeyword("extends", getSuffix(concreteContext), replaceRange); //$NON-NLS-1$
 		}
 	}
 

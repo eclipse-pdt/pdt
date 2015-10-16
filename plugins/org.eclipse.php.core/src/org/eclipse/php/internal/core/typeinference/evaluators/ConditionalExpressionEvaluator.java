@@ -40,17 +40,14 @@ public class ConditionalExpressionEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		ConditionalExpression conditionalExpression = (ConditionalExpression) typedGoal
-				.getExpression();
+		ConditionalExpression conditionalExpression = (ConditionalExpression) typedGoal.getExpression();
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=339405
 		List<IGoal> result = new ArrayList<IGoal>();
 		if (conditionalExpression.getIfTrue() != null) {
-			result.add(new ExpressionTypeGoal(goal.getContext(),
-					conditionalExpression.getIfTrue()));
+			result.add(new ExpressionTypeGoal(goal.getContext(), conditionalExpression.getIfTrue()));
 		}
 		if (conditionalExpression.getIfFalse() != null) {
-			result.add(new ExpressionTypeGoal(goal.getContext(),
-					conditionalExpression.getIfFalse()));
+			result.add(new ExpressionTypeGoal(goal.getContext(), conditionalExpression.getIfFalse()));
 		}
 		return result.toArray(new IGoal[result.size()]);
 	}

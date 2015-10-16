@@ -30,8 +30,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
  */
 public abstract class PHPDocContext extends AbstractCompletionContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -45,8 +44,7 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
 		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
-		while (!Character.isWhitespace(getChar(prefixEnd))
-				&& getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
+		while (!Character.isWhitespace(getChar(prefixEnd)) && getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
 			++prefixEnd;
 		}
 		return prefixEnd;

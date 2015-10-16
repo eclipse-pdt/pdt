@@ -26,8 +26,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -41,8 +40,7 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 		if (curr < 1) {
 			return false;
 		}
-		curr = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText,
-				curr, false);
+		curr = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, curr, false);
 		if (curr < 1) {
 			return false;
 		}

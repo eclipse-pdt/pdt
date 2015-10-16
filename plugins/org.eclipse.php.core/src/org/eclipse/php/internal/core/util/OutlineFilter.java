@@ -12,8 +12,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class OutlineFilter {
 
-	public static IModelElement[] filterChildrenForOutline(Object parent,
-			IModelElement[] children) {
+	public static IModelElement[] filterChildrenForOutline(Object parent, IModelElement[] children) {
 		return filterDuplicatePublicVars(parent, filter(children));
 	}
 
@@ -43,24 +42,21 @@ public class OutlineFilter {
 		return result;
 	}
 
-	public static IModelElement[] filterDuplicatePublicVars(Object parent,
-			IModelElement[] children) {
+	public static IModelElement[] filterDuplicatePublicVars(Object parent, IModelElement[] children) {
 		// public variables can only exist in ISourceModule
 		if (!(parent instanceof ISourceModule)) {
 			return children;
 		}
-		Set<IModelElement> result = new TreeSet<IModelElement>(
-				new Comparator<IModelElement>() {
-					public int compare(IModelElement o1, IModelElement o2) {
-						// filter duplications of variables
-						if (o1 instanceof IField && o2 instanceof IField
-								&& PHPModelUtils.isSameField((IField) o1,
-										(IField) o2)) {
-							return 0;
-						}
-						return 1;
-					}
-				});
+		Set<IModelElement> result = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+			public int compare(IModelElement o1, IModelElement o2) {
+				// filter duplications of variables
+				if (o1 instanceof IField && o2 instanceof IField
+						&& PHPModelUtils.isSameField((IField) o1, (IField) o2)) {
+					return 0;
+				}
+				return 1;
+			}
+		});
 		for (int i = 0; i < children.length; i++) {
 			result.add(children[i]);
 		}
@@ -77,8 +73,7 @@ public class OutlineFilter {
 		if (parent != null) {
 			int parentType = parent.getElementType();
 			if (element.getElementType() == IModelElement.FIELD) {
-				if (!(parentType == IModelElement.METHOD)
-						&& !(parentType == IModelElement.TYPE)) {
+				if (!(parentType == IModelElement.METHOD) && !(parentType == IModelElement.TYPE)) {
 					return false;
 				}
 				if (parentType == IModelElement.METHOD) {

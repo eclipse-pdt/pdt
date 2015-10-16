@@ -46,8 +46,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 	private static final String CLASS_KEYWORD = "class"; //$NON-NLS-1$
 	private static final String STD_CLASS = "stdClass"; //$NON-NLS-1$
 
-	public ClassFieldsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public ClassFieldsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -62,8 +61,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		}
 
 		ClassMemberContext concreteContext = (ClassMemberContext) context;
-		CompletionRequestor requestor = concreteContext
-				.getCompletionRequestor();
+		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
 
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
@@ -72,30 +70,25 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
-				ITypeHierarchy hierarchy = getCompanion()
-						.getSuperTypeHierarchy(type, null);
+				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 				IField[] fields = null;
 
 				if (concreteContext instanceof ClassStaticMemberContext
 						&& concreteContext.getTriggerType() == Trigger.CLASS
-						&& ((ClassStaticMemberContext) concreteContext)
-								.isParent()) {
+						&& ((ClassStaticMemberContext) concreteContext).isParent()) {
 					List<IField> superTypes = new ArrayList<IField>();
 					for (IType currType : hierarchy.getAllSupertypes(type)) {
-						superTypes.addAll(Arrays.asList(PHPModelUtils
-								.getTypeField(currType, prefix,
-										requestor.isContextInformationMode())));
+						superTypes.addAll(Arrays.asList(
+								PHPModelUtils.getTypeField(currType, prefix, requestor.isContextInformationMode())));
 					}
 
 					fields = superTypes.toArray(new IField[superTypes.size()]);
 				} else {
-					fields = PHPModelUtils.getTypeHierarchyField(type,
-							hierarchy, prefix,
+					fields = PHPModelUtils.getTypeHierarchyField(type, hierarchy, prefix,
 							requestor.isContextInformationMode(), null);
 				}
 
-				for (IField field : removeOverriddenElements(Arrays
-						.asList(fields))) {
+				for (IField field : removeOverriddenElements(Arrays.asList(fields))) {
 					if (concreteContext.isInUseTraitStatement()) {
 						result.add(field);
 					} else if (!isFiltered(field, type, concreteContext)) {
@@ -106,28 +99,20 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
-		if (concreteContext instanceof ClassStaticMemberContext
-				&& concreteContext.getTriggerType() == Trigger.CLASS
+		if (concreteContext instanceof ClassStaticMemberContext && concreteContext.getTriggerType() == Trigger.CLASS
 				&& !concreteContext.isInUseTraitStatement()
-				&& PHPVersion.PHP5_4
-						.isLessThan(concreteContext.getPhpVersion())
-				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD
-						.equals(prefix.toLowerCase()))) {
+				&& PHPVersion.PHP5_4.isLessThan(concreteContext.getPhpVersion())
+				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD.equals(prefix.toLowerCase()))) {
 			try {
 				ITextRegion phpToken = concreteContext.getPhpScriptRegion()
-						.getPhpToken(
-								concreteContext.getPHPToken().getStart() - 1);
-				if (PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM.equals(phpToken
-						.getType())) {
-					phpToken = concreteContext
-							.getPHPToken(phpToken.getStart() - 1);
+						.getPhpToken(concreteContext.getPHPToken().getStart() - 1);
+				if (PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM.equals(phpToken.getType())) {
+					phpToken = concreteContext.getPHPToken(phpToken.getStart() - 1);
 				}
 
 				if (isStaticCall(phpToken.getType())) {
-					result.add(new FakeField(new FakeType(
-							(ModelElement) concreteContext.getSourceModule(),
-							STD_CLASS), CLASS_KEYWORD, Modifiers.AccConstant
-							| Modifiers.AccPublic));
+					result.add(new FakeField(new FakeType((ModelElement) concreteContext.getSourceModule(), STD_CLASS),
+							CLASS_KEYWORD, Modifiers.AccConstant | Modifiers.AccPublic));
 				}
 			} catch (BadLocationException e) {
 				Logger.logException(e);
@@ -135,16 +120,13 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		}
 
 		for (IField field : result) {
-			reporter.reportField(field, getSuffix(), replaceRange,
-					concreteContext.getTriggerType() == Trigger.OBJECT);
+			reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
 		}
 	}
 
 	private boolean isStaticCall(String type) {
-		return PHPRegionTypes.PHP_LABEL.equals(type)
-				|| PHPRegionTypes.PHP_PARENT.equals(type)
-				|| PHPRegionTypes.PHP_SELF.equals(type)
-				|| PHPRegionTypes.PHP_NS_SEPARATOR.equals(type);
+		return PHPRegionTypes.PHP_LABEL.equals(type) || PHPRegionTypes.PHP_PARENT.equals(type)
+				|| PHPRegionTypes.PHP_SELF.equals(type) || PHPRegionTypes.PHP_NS_SEPARATOR.equals(type);
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {

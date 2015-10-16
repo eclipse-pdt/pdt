@@ -48,8 +48,7 @@ public class BlockingQueue {
 		return queueOut(0);
 	}
 
-	public synchronized Object queueOut(long timeout)
-			throws InterruptedException {
+	public synchronized Object queueOut(long timeout) throws InterruptedException {
 		releaseFlag = false;
 		Object rv = emptyObject;
 		do {
@@ -60,7 +59,7 @@ public class BlockingQueue {
 				}
 			}
 			if (content.isEmpty()) {
-				// System.out.println("content is empty, i dont know why  " +
+				// System.out.println("content is empty, i dont know why " +
 				// Thread.currentThread());
 			} else {
 				rv = content.remove(0);

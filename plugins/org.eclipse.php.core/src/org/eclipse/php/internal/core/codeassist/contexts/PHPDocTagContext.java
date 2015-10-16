@@ -46,11 +46,9 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 
 	public void setPatterns(IProject project) {
 		if (project != null) {
-			todos = TaskPatternsProvider.getInstance().getPatternsForProject(
-					project);
+			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 		} else {
-			todos = TaskPatternsProvider.getInstance()
-					.getPetternsForWorkspace();
+			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
 		}
 	}
 
@@ -62,8 +60,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		return list;
 	}
 
-	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers,
-			int startPosition) {
+	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers, int startPosition) {
 		Matcher minimal = null;
 		int size = matchers.size();
 		for (int i = 0; i < size;) {
@@ -87,8 +84,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		return matcher != null;
 	}
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -98,10 +94,9 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		int tagEnd = statementText.length();
 		boolean found = false;
 		do {
-			tagEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
-					tagEnd);
-			tagStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					getPhpVersion(), getStatementText(), tagEnd, true);
+			tagEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, tagEnd);
+			tagStart = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), getStatementText(), tagEnd,
+					true);
 
 			tagName = statementText.subSequence(tagStart, tagEnd).toString();
 
@@ -119,8 +114,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
-		if (prefix.length() > 0
-				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			return prefix.substring(1);
 		}
 		return prefix;

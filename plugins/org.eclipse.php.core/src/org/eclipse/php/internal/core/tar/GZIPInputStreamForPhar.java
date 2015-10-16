@@ -107,14 +107,13 @@ public class GZIPInputStreamForPhar extends InflaterInputStream {
 		ensureOpen();
 		if (eos) {
 			return -1;
-		} 
-		//if reach the end and still read here will throw an exception
-		//nomally this will not happen,but it happens when run unit tests
-		//so add an isEnd method to class PharEntryBufferedRandomInputStream
-		if(in instanceof PharEntryBufferedRandomInputStream
-				&& ((PharEntryBufferedRandomInputStream)in).isEnd()){
-				len = -1;
-		}else{
+		}
+		// if reach the end and still read here will throw an exception
+		// nomally this will not happen,but it happens when run unit tests
+		// so add an isEnd method to class PharEntryBufferedRandomInputStream
+		if (in instanceof PharEntryBufferedRandomInputStream && ((PharEntryBufferedRandomInputStream) in).isEnd()) {
+			len = -1;
+		} else {
 			len = super.read(buf, off, len);
 		}
 		if (len == -1) {

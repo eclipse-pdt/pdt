@@ -34,20 +34,18 @@ public class IndentationBaseDetector {
 	private int offset;
 	private Region textSequenceRegion;
 
-	public IndentationBaseDetector(IStructuredDocument document,
-			int currLineIndex, final int offset) throws BadLocationException {
+	public IndentationBaseDetector(IStructuredDocument document, int currLineIndex, final int offset)
+			throws BadLocationException {
 		this.document = document;
 		this.currLineIndex = currLineIndex;
 		this.offset = offset;
 
 		IRegion lineInfo = document.getLineInformation(currLineIndex);
-		this.textSequenceRegion = PHPTextSequenceUtilities
-				.getStatementRegion(lineInfo.getOffset(), document
-						.getRegionAtCharacterOffset(lineInfo.getOffset()), true);
+		this.textSequenceRegion = PHPTextSequenceUtilities.getStatementRegion(lineInfo.getOffset(),
+				document.getRegionAtCharacterOffset(lineInfo.getOffset()), true);
 	}
 
-	public int getIndentationBaseLine(boolean checkMultiLine)
-			throws BadLocationException {
+	public int getIndentationBaseLine(boolean checkMultiLine) throws BadLocationException {
 		if (checkMultiLine) {
 			currLineIndex = adjustLine(currLineIndex, offset);
 		}
@@ -55,44 +53,37 @@ public class IndentationBaseDetector {
 			if (isIndentationBase(offset, currLineIndex, checkMultiLine)) {
 				return currLineIndex;
 			}
-			currLineIndex = getNextLineIndex(offset, currLineIndex,
-					checkMultiLine);
+			currLineIndex = getNextLineIndex(offset, currLineIndex, checkMultiLine);
 		}
 		return 0;
 	}
 
-	private int adjustLine(int currLineIndex, int offset)
-			throws BadLocationException {
+	private int adjustLine(int currLineIndex, int offset) throws BadLocationException {
 		// TODO ignore the comment
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
 
 		int lineEnd = lineInfo.getOffset() + lineInfo.getLength();
 		lineEnd = Math.min(lineEnd, offset);
 		if (lineEnd == lineInfo.getOffset()) {
-			lineEnd = IndentationUtils.moveLineStartToNonBlankChar(document,
-					lineEnd, currLineIndex, false);
+			lineEnd = IndentationUtils.moveLineStartToNonBlankChar(document, lineEnd, currLineIndex, false);
 		}
 		if (lineEnd == document.getLength() && lineEnd > 0) {
 			lineEnd--;
 		}
-		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, lineEnd, true);
+		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, lineEnd, true);
 		int token = scanner.previousToken(lineEnd, PHPHeuristicScanner.UNBOUND);
 		if (token == PHPHeuristicScanner.TokenSEMICOLON) {
-			token = scanner.previousToken(scanner.getPosition(),
-					PHPHeuristicScanner.UNBOUND);
+			token = scanner.previousToken(scanner.getPosition(), PHPHeuristicScanner.UNBOUND);
 		}
 		if (token == PHPHeuristicScanner.TokenRPAREN) {
-			int peer = scanner.findOpeningPeer(scanner.getPosition(),
-					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LPAREN,
-					PHPHeuristicScanner.RPAREN);
+			int peer = scanner.findOpeningPeer(scanner.getPosition(), PHPHeuristicScanner.UNBOUND,
+					PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 			if (peer != PHPHeuristicScanner.NOT_FOUND) {
 				return document.getLineOfOffset(scanner.getPosition());
 			}
 		} else if (token == PHPHeuristicScanner.TokenRBRACKET) {
-			int peer = scanner.findOpeningPeer(scanner.getPosition(),
-					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACKET,
-					PHPHeuristicScanner.RBRACKET);
+			int peer = scanner.findOpeningPeer(scanner.getPosition(), PHPHeuristicScanner.UNBOUND,
+					PHPHeuristicScanner.LBRACKET, PHPHeuristicScanner.RBRACKET);
 			if (peer != PHPHeuristicScanner.NOT_FOUND) {
 				return document.getLineOfOffset(scanner.getPosition());
 			}
@@ -101,16 +92,15 @@ public class IndentationBaseDetector {
 		return currLineIndex;
 	}
 
-	private boolean isIndentationBase(int offset, int currLineIndex,
-			boolean checkMultiLine) throws BadLocationException {
+	private boolean isIndentationBase(int offset, int currLineIndex, boolean checkMultiLine)
+			throws BadLocationException {
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
 
 		if (lineInfo.getLength() == 0) {
 			return false;
 		}
 
-		final int checkedOffset = Math.min(
-				lineInfo.getOffset() + lineInfo.getLength(), offset);
+		final int checkedOffset = Math.min(lineInfo.getOffset() + lineInfo.getLength(), offset);
 
 		int lineStartOffset = lineInfo.getOffset();
 
@@ -118,8 +108,7 @@ public class IndentationBaseDetector {
 			return false;
 		}
 
-		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, checkedOffset, true);
+		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, checkedOffset, true);
 		if (IndentationUtils.inBracelessBlock(scanner, document, checkedOffset)) {
 			return true;
 		}
@@ -133,48 +122,41 @@ public class IndentationBaseDetector {
 		// tRegion in the previos line
 
 		// checked line beginning offset (after incrementing spaces in beginning
-		final String checkedLineBeginState = FormatterUtils.getPartitionType(
-				document, lineStartOffset, true);
+		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStartOffset, true);
 
 		// checked line end
-		final String checkedLineEndState = FormatterUtils.getPartitionType(
-				document, checkedOffset, true);
+		final String checkedLineEndState = FormatterUtils.getPartitionType(document, checkedOffset, true);
 
 		// the current potential line for formatting begin offset
-		final String forLineEndState = FormatterUtils.getPartitionType(
-				document, offset);
+		final String forLineEndState = FormatterUtils.getPartitionType(document, offset);
 		if (isMultilineAfterBraceless(checkedOffset)) {
 			// braceless block end go up
 			return false;
 		}
 
-		boolean shouldNotConsiderAsIndentationBase = shouldNotConsiderAsIndentationBase(
-				checkedLineBeginState, forLineEndState);
+		boolean shouldNotConsiderAsIndentationBase = shouldNotConsiderAsIndentationBase(checkedLineBeginState,
+				forLineEndState);
 
-		if ((shouldNotConsiderAsIndentationBase || (checkMultiLine
-				&& isInMultiLineStatement(checkedLineBeginState,
-						checkedLineEndState, checkedOffset, lineStartOffset,
-						currLineIndex) && !isMultilineContentInsideBraceless(checkedOffset)))
+		if ((shouldNotConsiderAsIndentationBase
+				|| (checkMultiLine && isInMultiLineStatement(checkedLineBeginState, checkedLineEndState, checkedOffset,
+						lineStartOffset, currLineIndex) && !isMultilineContentInsideBraceless(checkedOffset)))
 				&& !lineContainIncompleteBlock(checkedOffset, lineStartOffset)) {
 			return false;
 		}
 
 		// Fix bug #201688
-		if (((checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_DOC))
+		if (((checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
+				|| (checkedLineBeginState == PHPPartitionTypes.PHP_DOC))
 				&& (checkedLineBeginState == forLineEndState)) {
 			// the whole document
-			final IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(lineStartOffset);
+			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineStartOffset);
 			// the whole PHP script
-			ITextRegion phpScriptRegion = sdRegion
-					.getRegionAtCharacterOffset(lineStartOffset);
-			int phpContentStartOffset = sdRegion
-					.getStartOffset(phpScriptRegion);
+			ITextRegion phpScriptRegion = sdRegion.getRegionAtCharacterOffset(lineStartOffset);
+			int phpContentStartOffset = sdRegion.getStartOffset(phpScriptRegion);
 
 			if (phpScriptRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
-				phpScriptRegion = container
-						.getRegionAtCharacterOffset(lineStartOffset);
+				phpScriptRegion = container.getRegionAtCharacterOffset(lineStartOffset);
 				phpContentStartOffset += phpScriptRegion.getStart();
 			}
 
@@ -185,8 +167,7 @@ public class IndentationBaseDetector {
 				ContextRegion checkedRegion = (ContextRegion) scriptRegion
 						.getPhpToken(lineStartOffset - phpContentStartOffset);
 				// the current region we need to format
-				ContextRegion currentRegion = (ContextRegion) scriptRegion
-						.getPhpToken(offset - phpContentStartOffset);
+				ContextRegion currentRegion = (ContextRegion) scriptRegion.getPhpToken(offset - phpContentStartOffset);
 				String checkedType = checkedRegion.getType();
 				String currentType = currentRegion.getType();
 				// if we are in the beginning of a comment (DOC or Multi
@@ -195,24 +176,18 @@ public class IndentationBaseDetector {
 				// beginning of the previous multi comment
 				if (currentType.equals(PHPRegionTypes.PHPDOC_COMMENT_START)
 						|| currentType.equals(PHPRegionTypes.PHP_COMMENT_START)) {
-					return checkedType
-							.equals(PHPRegionTypes.PHPDOC_COMMENT_START)
-							|| checkedType
-									.equals(PHPRegionTypes.PHP_COMMENT_START);
+					return checkedType.equals(PHPRegionTypes.PHPDOC_COMMENT_START)
+							|| checkedType.equals(PHPRegionTypes.PHP_COMMENT_START);
 				}
 			}
 		}
-		return lineShouldIndent(checkedLineBeginState, checkedLineEndState)
-				|| forLineEndState == checkedLineBeginState;
+		return lineShouldIndent(checkedLineBeginState, checkedLineEndState) || forLineEndState == checkedLineBeginState;
 	}
 
-	private int getMultiLineStatementStartOffset(int currLineIndex)
-			throws BadLocationException {
+	private int getMultiLineStatementStartOffset(int currLineIndex) throws BadLocationException {
 		if (textSequenceRegion.getLength() != 0
-				&& IndentationUtils
-						.isRegionTypeAllowedMultiline(FormatterUtils
-								.getRegionType(document,
-										textSequenceRegion.getOffset()))
+				&& IndentationUtils.isRegionTypeAllowedMultiline(
+						FormatterUtils.getRegionType(document, textSequenceRegion.getOffset()))
 				&& document.getLineOfOffset(textSequenceRegion.getOffset()) < currLineIndex) {
 			return document.getLineOfOffset(textSequenceRegion.getOffset());
 		}
@@ -220,65 +195,47 @@ public class IndentationBaseDetector {
 		return -1;
 	}
 
-	private boolean lineContainIncompleteBlock(int checkedOffset,
-			int lineStartOffset) throws BadLocationException {
+	private boolean lineContainIncompleteBlock(int checkedOffset, int lineStartOffset) throws BadLocationException {
 		if (checkedOffset == document.getLength() && checkedOffset > 0) {
 			checkedOffset--;
 		}
-		if (textSequenceRegion.getLength() != 0
-				&& IndentationUtils
-						.isRegionTypeAllowedMultiline(FormatterUtils
-								.getRegionType(document,
-										textSequenceRegion.getOffset()))) {
-			PHPHeuristicScanner scanner = PHPHeuristicScanner
-					.createHeuristicScanner(document, lineStartOffset, true);
+		if (textSequenceRegion.getLength() != 0 && IndentationUtils
+				.isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(document, textSequenceRegion.getOffset()))) {
+			PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, lineStartOffset, true);
 			// search for opening pear only in this line
-			int statementStart = document.getLineInformationOfOffset(
-					checkedOffset).getOffset();
+			int statementStart = document.getLineInformationOfOffset(checkedOffset).getOffset();
 
-			int openParenPeer = scanner.findOpeningPeer(checkedOffset - 1,
-					statementStart, PHPHeuristicScanner.LPAREN,
+			int openParenPeer = scanner.findOpeningPeer(checkedOffset - 1, statementStart, PHPHeuristicScanner.LPAREN,
 					PHPHeuristicScanner.RPAREN);
 
-			int bound = openParenPeer != -1 ? Math.max(statementStart,
-					openParenPeer) : statementStart;
-			int openBracePeer = scanner.findOpeningPeer(checkedOffset - 1,
-					bound, PHPHeuristicScanner.LBRACE,
+			int bound = openParenPeer != -1 ? Math.max(statementStart, openParenPeer) : statementStart;
+			int openBracePeer = scanner.findOpeningPeer(checkedOffset - 1, bound, PHPHeuristicScanner.LBRACE,
 					PHPHeuristicScanner.RBRACE);
 
-			bound = openBracePeer != -1 || openParenPeer != -1 ? Math.max(
-					statementStart, Math.max(openParenPeer, openBracePeer))
-					: statementStart;
-			int openBracketPeer = scanner.findOpeningPeer(checkedOffset - 1,
-					bound, PHPHeuristicScanner.LBRACKET,
+			bound = openBracePeer != -1 || openParenPeer != -1
+					? Math.max(statementStart, Math.max(openParenPeer, openBracePeer)) : statementStart;
+			int openBracketPeer = scanner.findOpeningPeer(checkedOffset - 1, bound, PHPHeuristicScanner.LBRACKET,
 					PHPHeuristicScanner.RBRACKET);
 
 			int biggest = Math.max(openParenPeer, openBracePeer);
 			biggest = Math.max(biggest, openBracketPeer);
-			if (biggest != PHPHeuristicScanner.NOT_FOUND
-					&& biggest >= lineStartOffset) {
+			if (biggest != PHPHeuristicScanner.NOT_FOUND && biggest >= lineStartOffset) {
 				// the whole document
-				final IStructuredDocumentRegion sdRegion = document
-						.getRegionAtCharacterOffset(lineStartOffset);
+				final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineStartOffset);
 				// the whole PHP script
-				ITextRegion phpScriptRegion = sdRegion
-						.getRegionAtCharacterOffset(lineStartOffset);
+				ITextRegion phpScriptRegion = sdRegion.getRegionAtCharacterOffset(lineStartOffset);
 
 				if (phpScriptRegion instanceof ITextRegionContainer) {
 					ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
-					phpScriptRegion = container
-							.getRegionAtCharacterOffset(lineStartOffset);
+					phpScriptRegion = container.getRegionAtCharacterOffset(lineStartOffset);
 				}
 
-				if (phpScriptRegion instanceof IPhpScriptRegion
-						&& lineStartOffset <= phpScriptRegion.getEnd()) {
+				if (phpScriptRegion instanceof IPhpScriptRegion && lineStartOffset <= phpScriptRegion.getEnd()) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
 					ITextRegion[] tokens = null;
 					try {
-						tokens = scriptRegion.getPhpTokens(
-								Math.min(lineStartOffset - 1,
-										scriptRegion.getEnd()), biggest
-										- lineStartOffset + 1);
+						tokens = scriptRegion.getPhpTokens(Math.min(lineStartOffset - 1, scriptRegion.getEnd()),
+								biggest - lineStartOffset + 1);
 					} catch (BadLocationException e) {
 						// ignore it, scriptRegion.getEnd() is greater than last
 						// phpToken
@@ -291,21 +248,17 @@ public class IndentationBaseDetector {
 						}
 						if (biggest == openParenPeer) {
 							if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
-									|| tokenTypeSet
-											.contains(PHPRegionTypes.PHP_FUNCTION)
-									|| tokenTypeSet
-											.contains(PHPRegionTypes.PHP_ARRAY)) {
+									|| tokenTypeSet.contains(PHPRegionTypes.PHP_FUNCTION)
+									|| tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
 								return true;
 							}
 						} else if (biggest == openBracePeer) {
 							if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
-									|| tokenTypeSet
-											.contains(PHPRegionTypes.PHP_FUNCTION)) {
+									|| tokenTypeSet.contains(PHPRegionTypes.PHP_FUNCTION)) {
 								return true;
 							}
-						} else if (biggest == openBracketPeer
-								&& scanner.previousToken(biggest - 1,
-										PHPHeuristicScanner.UNBOUND) < PHPHeuristicScanner.TokenIDENT) {
+						} else if (biggest == openBracketPeer && scanner.previousToken(biggest - 1,
+								PHPHeuristicScanner.UNBOUND) < PHPHeuristicScanner.TokenIDENT) {
 							return true;
 						} else {
 							if (tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
@@ -319,27 +272,20 @@ public class IndentationBaseDetector {
 		return false;
 	}
 
-	private int getNextLineIndex(int offset, int currLineIndex,
-			boolean checkMultiLine) throws BadLocationException {
+	private int getNextLineIndex(int offset, int currLineIndex, boolean checkMultiLine) throws BadLocationException {
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
-		final int currLineEndOffset = lineInfo.getOffset()
-				+ lineInfo.getLength();
-		String checkedLineBeginState = FormatterUtils.getPartitionType(
-				document, lineInfo.getOffset(), true);
+		final int currLineEndOffset = lineInfo.getOffset() + lineInfo.getLength();
+		String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset(), true);
 
-		String forLineEndState = FormatterUtils.getPartitionType(document,
-				currLineEndOffset);
+		String forLineEndState = FormatterUtils.getPartitionType(document, currLineEndOffset);
 
-		int insideBraceless = getMultilineInsideBraceless(Math.min(
-				currLineEndOffset, offset));
+		int insideBraceless = getMultilineInsideBraceless(Math.min(currLineEndOffset, offset));
 		if (insideBraceless >= 0) {
 			return document.getLineOfOffset(insideBraceless);
 		}
 		if (isMultilineType(checkedLineBeginState)
-				&& (checkMultiLine || shouldNotConsiderAsIndentationBase(
-						checkedLineBeginState, forLineEndState))) {
-			int index = getMultiLineStatementStartOffset(lineInfo.getOffset(),
-					currLineIndex);
+				&& (checkMultiLine || shouldNotConsiderAsIndentationBase(checkedLineBeginState, forLineEndState))) {
+			int index = getMultiLineStatementStartOffset(lineInfo.getOffset(), currLineIndex);
 			if (index > -1) {
 				return index;
 			}
@@ -356,15 +302,12 @@ public class IndentationBaseDetector {
 		return currLineIndex - 1;
 	}
 
-	private int getMultiLineStatementStartOffset(int lineStartOffset,
-			int currLineIndex) {
+	private int getMultiLineStatementStartOffset(int lineStartOffset, int currLineIndex) {
 		if (textSequenceRegion.getLength() != 0) {
 			int textOriginalOffset = textSequenceRegion.getOffset();
 			int textSequenceLine = document.getLineOfOffset(textOriginalOffset);
-			if (textSequenceLine < currLineIndex
-					&& IndentationUtils
-							.isRegionTypeAllowedMultiline(FormatterUtils
-									.getRegionType(document, textOriginalOffset))) {
+			if (textSequenceLine < currLineIndex && IndentationUtils
+					.isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(document, textOriginalOffset))) {
 				return textSequenceLine;
 			}
 		}
@@ -374,56 +317,45 @@ public class IndentationBaseDetector {
 
 	private int getMultilineInsideBraceless(int checkedOffset) {
 		try {
-			PHPHeuristicScanner scanner = PHPHeuristicScanner
-					.createHeuristicScanner(document, checkedOffset - 1, true);
-			int start = scanner.previousToken(checkedOffset - 1,
-					PHPHeuristicScanner.UNBOUND);
+			PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, checkedOffset - 1, true);
+			int start = scanner.previousToken(checkedOffset - 1, PHPHeuristicScanner.UNBOUND);
 			if (!(start == PHPHeuristicScanner.TokenRBRACE))
 				return -1;
 
-			int openingPeer = scanner.findOpeningPeer(scanner.getPosition(),
-					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
-					PHPHeuristicScanner.RBRACE);
+			int openingPeer = scanner.findOpeningPeer(scanner.getPosition(), PHPHeuristicScanner.UNBOUND,
+					PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
 			if (openingPeer == PHPHeuristicScanner.NOT_FOUND) {
 				return -1;
 			}
-			int prev = scanner.previousToken(openingPeer - 1,
-					PHPHeuristicScanner.UNBOUND);
+			int prev = scanner.previousToken(openingPeer - 1, PHPHeuristicScanner.UNBOUND);
 			if (prev == PHPHeuristicScanner.TokenRPAREN) {
-				int openParent = scanner.findOpeningPeer(scanner.getPosition(),
-						PHPHeuristicScanner.UNBOUND,
+				int openParent = scanner.findOpeningPeer(scanner.getPosition(), PHPHeuristicScanner.UNBOUND,
 						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 				if (openParent == PHPHeuristicScanner.NOT_FOUND) {
 					return -1;
 				}
-				prev = scanner.previousToken(openParent - 1,
-						PHPHeuristicScanner.UNBOUND);
+				prev = scanner.previousToken(openParent - 1, PHPHeuristicScanner.UNBOUND);
 			}
-			if (!IndentationUtils.inBracelessBlock(scanner, document,
-					scanner.getPosition() - 1)) {
+			if (!IndentationUtils.inBracelessBlock(scanner, document, scanner.getPosition() - 1)) {
 				return -1;
 			}
 
 			// move to first from braceless
-			prev = scanner.previousToken(scanner.getPosition() - 1,
-					PHPHeuristicScanner.UNBOUND);
+			prev = scanner.previousToken(scanner.getPosition() - 1, PHPHeuristicScanner.UNBOUND);
 
 			// we inside braceless block. Now we have to move before it
 			if (prev == PHPHeuristicScanner.TokenRPAREN) {
 				// if, for, while or similar
-				int openParent = scanner.findOpeningPeer(scanner.getPosition(),
-						PHPHeuristicScanner.UNBOUND,
+				int openParent = scanner.findOpeningPeer(scanner.getPosition(), PHPHeuristicScanner.UNBOUND,
 						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 				if (openParent == PHPHeuristicScanner.NOT_FOUND) {
 					return -1;
 				}
 			}
-			prev = scanner.previousToken(scanner.getPosition() - 1,
-					PHPHeuristicScanner.UNBOUND);
+			prev = scanner.previousToken(scanner.getPosition() - 1, PHPHeuristicScanner.UNBOUND);
 			int result = scanner.getPosition();
 			if (prev == PHPHeuristicScanner.TokenIF) {
-				prev = scanner
-						.previousToken(start, PHPHeuristicScanner.UNBOUND);
+				prev = scanner.previousToken(start, PHPHeuristicScanner.UNBOUND);
 				if (prev == PHPHeuristicScanner.TokenELSE) {
 					result = scanner.getPosition();
 				}
@@ -439,13 +371,10 @@ public class IndentationBaseDetector {
 
 	private boolean isMultilineContentInsideBraceless(int checkedOffset) {
 		try {
-			PHPHeuristicScanner scanner = PHPHeuristicScanner
-					.createHeuristicScanner(document, checkedOffset - 1, true);
-			int start = scanner.previousToken(checkedOffset - 1,
-					PHPHeuristicScanner.UNBOUND);
+			PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, checkedOffset - 1, true);
+			int start = scanner.previousToken(checkedOffset - 1, PHPHeuristicScanner.UNBOUND);
 			if (start == PHPHeuristicScanner.TokenLBRACE) {
-				if (scanner.isBracelessBlockStart(scanner.getPosition() - 1,
-						PHPHeuristicScanner.UNBOUND)) {
+				if (scanner.isBracelessBlockStart(scanner.getPosition() - 1, PHPHeuristicScanner.UNBOUND)) {
 					return true;
 				}
 			}
@@ -454,24 +383,19 @@ public class IndentationBaseDetector {
 		return false;
 	}
 
-	private boolean lineShouldIndent(final String beginState,
-			final String endState) {
-		return beginState == PHPPartitionTypes.PHP_DEFAULT
-				|| endState == PHPPartitionTypes.PHP_DEFAULT;
+	private boolean lineShouldIndent(final String beginState, final String endState) {
+		return beginState == PHPPartitionTypes.PHP_DEFAULT || endState == PHPPartitionTypes.PHP_DEFAULT;
 	}
 
-	private boolean isInMultiLineStatement(String checkedLineBeginState,
-			String checkedLineEndState, int checkedOffset, int lineStartOffset,
-			int currLineIndex) throws BadLocationException {
-		return getMultiLineStatementStartOffset(currLineIndex) > -1 ? true
-				: false;
+	private boolean isInMultiLineStatement(String checkedLineBeginState, String checkedLineEndState, int checkedOffset,
+			int lineStartOffset, int currLineIndex) throws BadLocationException {
+		return getMultiLineStatementStartOffset(currLineIndex) > -1 ? true : false;
 	}
 
 	/**
 	 * @since 2.2
 	 */
-	private boolean shouldNotConsiderAsIndentationBase(
-			final String currentState, final String forState) {
+	private boolean shouldNotConsiderAsIndentationBase(final String currentState, final String forState) {
 		return currentState != forState && isMultilineType(currentState);
 	}
 
@@ -481,8 +405,7 @@ public class IndentationBaseDetector {
 
 	private boolean isMultilineType(final String state) {
 		return state.equals(PHPPartitionTypes.PHP_QUOTED_STRING)
-				|| state.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
-				|| state.equals(PHPPartitionTypes.PHP_DOC);
+				|| state.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || state.equals(PHPPartitionTypes.PHP_DOC);
 	}
 
 }

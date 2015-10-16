@@ -55,8 +55,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	}
 
 	@Override
-	public IStatus runInWorkspace(IProgressMonitor monitor)
-			throws CoreException {
+	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 
@@ -74,8 +73,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 				try {
 					lfm.useAsLibraryFolder(folders, monitor);
 				} catch (Exception e) {
-					return new Status(IStatus.ERROR, PHPCorePlugin.ID,
-							e.getLocalizedMessage(), e);
+					return new Status(IStatus.ERROR, PHPCorePlugin.ID, e.getLocalizedMessage(), e);
 				}
 			}
 		}
@@ -95,8 +93,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	 */
 	@SuppressWarnings("restriction")
 	private boolean hasDisabledPreference(IProject project) {
-		PreferencesWrapper prefs = PreferencesWrapper.getPreferences(project,
-				null);
+		PreferencesWrapper prefs = PreferencesWrapper.getPreferences(project, null);
 		return prefs.get(PrefConstants.disabled, null) != null;
 	}
 

@@ -44,21 +44,17 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 	PharPackage pharPackage;
 	int fileNumber = 0;
 
-	public PharBufferedOutputStream(
-			SignatureBufferedOutputStream fileContentStream2,
-			PharPackage pharPackage) throws IOException {
+	public PharBufferedOutputStream(SignatureBufferedOutputStream fileContentStream2, PharPackage pharPackage)
+			throws IOException {
 		this.os = fileContentStream2;
 		manifest = File.createTempFile("temp1", ".tmp"); //$NON-NLS-1$ //$NON-NLS-2$
-		manifestOutputStream = new BufferedOutputStream(new FileOutputStream(
-				manifest));
+		manifestOutputStream = new BufferedOutputStream(new FileOutputStream(manifest));
 
 		fileDescription = File.createTempFile("temp2", ".tmp"); //$NON-NLS-1$ //$NON-NLS-2$
-		fileDescriptionOutputStream = new BufferedOutputStream(
-				new FileOutputStream(fileDescription));
+		fileDescriptionOutputStream = new BufferedOutputStream(new FileOutputStream(fileDescription));
 
 		fileContent = File.createTempFile("temp3", ".tmp"); //$NON-NLS-1$ //$NON-NLS-2$
-		fileContentStream = new NumberedBufferedOutputStream(
-				new FileOutputStream(fileContent));
+		fileContentStream = new NumberedBufferedOutputStream(new FileOutputStream(fileContent));
 		this.pharPackage = pharPackage;
 	}
 
@@ -99,8 +95,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 		writeInt(manifestOutputStream, fileNumber);
 
 		// write Version
-		manifestOutputStream.write(PharUtil.getStubVersionBytes(pharPackage
-				.getStubVersion()));
+		manifestOutputStream.write(PharUtil.getStubVersionBytes(pharPackage.getStubVersion()));
 		// manifestOutputStream.write(new byte[] { 17, 0 });
 		// writeString(manifestOutputStream,pharData.getStubVersion());
 		// write bitmap
@@ -115,8 +110,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 
 	private void writeTempFileToStream(File file) throws IOException {
 
-		InputStream contentStream = new BufferedInputStream(
-				new FileInputStream(file));
+		InputStream contentStream = new BufferedInputStream(new FileInputStream(file));
 		try {
 			int n;
 			byte[] readBuffer = new byte[4096];
@@ -144,8 +138,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 	private void setEntryInfo() throws IOException {
 		// if(currentEntry != null){
 		// fileContentStream.flush();
-		currentEntry.setCompressedSize(fileContentStream.getCurrent()
-				- currentIndex);
+		currentEntry.setCompressedSize(fileContentStream.getCurrent() - currentIndex);
 		currentEntry.setCrc(getCrc(currentOutputStream));
 		currentIndex = fileContentStream.getCurrent();
 		// }
@@ -164,11 +157,9 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 			if (currentEntry.getMethod() == PharConstants.NONE_COMPRESSED) {
 				currentOutputStream = fileContentStream;
 			} else if (currentEntry.getMethod() == PharConstants.BZ2_COMPRESSED) {
-				currentOutputStream = new CBZip2OutputStreamForPhar(
-						fileContentStream);
+				currentOutputStream = new CBZip2OutputStreamForPhar(fileContentStream);
 			} else if (currentEntry.getMethod() == PharConstants.GZ_COMPRESSED) {
-				currentOutputStream = new GZIPOutputStreamForPhar(
-						fileContentStream);
+				currentOutputStream = new GZIPOutputStreamForPhar(fileContentStream);
 			}
 			currentOutputStream = new CRCableOutputStream(currentOutputStream);
 		}
@@ -191,11 +182,9 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 		writeString(fileDescriptionOutputStream, currentEntry.getName());
 		writeInt(fileDescriptionOutputStream, (int) currentEntry.getSize());
 		writeInt(fileDescriptionOutputStream, (int) currentEntry.getTime());
-		writeInt(fileDescriptionOutputStream, (int) currentEntry
-				.getCompressedSize());
+		writeInt(fileDescriptionOutputStream, (int) currentEntry.getCompressedSize());
 		writeInt(fileDescriptionOutputStream, (int) currentEntry.getCrc());
-		fileDescriptionOutputStream
-				.write(PharUtil.getBitmapBytes(currentEntry));
+		fileDescriptionOutputStream.write(PharUtil.getBitmapBytes(currentEntry));
 		// writeInt(fileDescriptionOutputStream, (int)
 		// currentEntry.getMethod());
 		writeInt(fileDescriptionOutputStream, 0);

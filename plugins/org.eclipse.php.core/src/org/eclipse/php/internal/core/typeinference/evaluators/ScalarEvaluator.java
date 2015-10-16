@@ -46,14 +46,11 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 			if ("this".equalsIgnoreCase(scalar.getValue())) { //$NON-NLS-1$
 				IContext context = goal.getContext();
 				if (context instanceof MethodContext) {
-					MethodDeclaration methodNode = ((MethodContext) context)
-							.getMethodNode();
+					MethodDeclaration methodNode = ((MethodContext) context).getMethodNode();
 					if (methodNode != null) {
-						String declaringTypeName = methodNode
-								.getDeclaringTypeName();
+						String declaringTypeName = methodNode.getDeclaringTypeName();
 						if (declaringTypeName != null) {
-							IEvaluatedType resolved = PHPSimpleTypes
-									.fromString(declaringTypeName);
+							IEvaluatedType resolved = PHPSimpleTypes.fromString(declaringTypeName);
 							if (resolved == null) {
 								return new PHPClassType(declaringTypeName);
 							}

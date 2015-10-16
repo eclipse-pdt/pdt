@@ -17,28 +17,24 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 	private int elementStart;
 	private boolean isGlobal;
 
-	protected boolean validateNamespace(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	protected boolean validateNamespace(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (getPhpVersion().isLessThan(PHPVersion.PHP5_3)) {
 			return false;
 		}
 
 		TextSequence statementText = getStatementText();
 		int totalLength = statementText.length();
-		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, totalLength); // read whitespace
-		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				statementText, endPosition, true);
+		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read
+																									// whitespace
+		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 
-		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, elementStart);
+		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart);
 		if (elementStart < 1) { // there's no trigger of length less than 1
 								// characters
 			return false;
 		}
 
-		String triggerText = statementText.subSequence(elementStart - 1,
-				elementStart).toString();
+		String triggerText = statementText.subSequence(elementStart - 1, elementStart).toString();
 		if (!triggerText.equals(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
@@ -49,12 +45,9 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 			return true;
 		}
 
-		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, elementStart - 1);
-		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(
-				statementText, endNamespace, false);
-		String nsName = statementText.subSequence(nsNameStart, elementStart)
-				.toString();
+		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart - 1);
+		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
+		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
 		if (!nsName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
@@ -62,8 +55,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 			nsName = NamespaceReference.NAMESPACE_DELIMITER + nsName;
 		}
 		try {
-			namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule,
-					offset, null, null);
+			namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule, offset, null, null);
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
@@ -104,28 +96,24 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 		}
 		TextSequence statementText = getStatementText();
 		int statementLength = statementText.length();
-		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength); // read whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				statementText, prefixEnd, true);
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
+																										// whitespace
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, prefixEnd, true);
 		return statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
 
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
-		// Check that there's no other (whitespace) characters
-		// after the namespace separator, otherwise there's no reason
-		// to retrieve the next region.
-				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER
-						.length()) {
+				// Check that there's no other (whitespace) characters
+				// after the namespace separator, otherwise there's no reason
+				// to retrieve the next region.
+				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER.length()) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
-					.getEnd());
+			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
 			// Also check that we only retrieve PHP labels.
 			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
-				return getRegionCollection().getStartOffset()
-						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}
 		}
 		return super.getPrefixEnd();

@@ -29,7 +29,7 @@ public class NamespaceUseNameStrategy extends AbstractCompletionStrategy {
 
 		NamespaceUseNameContext concreteContext = (NamespaceUseNameContext) context;
 		// now we compute type suffix in PHPCompletionProposalCollector
-		String suffix = "";//$NON-NLS-1$ 
+		String suffix = "";//$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {
@@ -37,16 +37,14 @@ public class NamespaceUseNameStrategy extends AbstractCompletionStrategy {
 		}
 	}
 
-	public IType[] getTypes(NamespaceUseNameContext context)
-			throws BadLocationException {
+	public IType[] getTypes(NamespaceUseNameContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
 		List<IType> result = new LinkedList<IType>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(
-							type.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
 						result.add(type);
 					}
 				}

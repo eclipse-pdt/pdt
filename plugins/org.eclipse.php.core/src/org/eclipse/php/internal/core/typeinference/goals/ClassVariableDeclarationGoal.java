@@ -19,8 +19,7 @@ import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 
-public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements
-		IGoal {
+public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements IGoal {
 
 	private IType[] types;
 	private String variableName;
@@ -37,8 +36,7 @@ public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements
 	 * @param types
 	 * @param variableName
 	 */
-	public ClassVariableDeclarationGoal(IContext context, IType[] types,
-			String variableName) {
+	public ClassVariableDeclarationGoal(IContext context, IType[] types, String variableName) {
 		super(context);
 		this.types = types;
 		this.variableName = variableName;
@@ -56,8 +54,7 @@ public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + Arrays.hashCode(types);
-		result = prime * result
-				+ ((variableName == null) ? 0 : variableName.hashCode());
+		result = prime * result + ((variableName == null) ? 0 : variableName.hashCode());
 		return result;
 	}
 

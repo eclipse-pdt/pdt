@@ -36,8 +36,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		this.indentationObject = indentationObject;
 	}
 
-	public void placeMatchingBlanks(IStructuredDocument document,
-			StringBuffer result, int lineNumber, int offset)
+	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int offset)
 			throws BadLocationException {
 
 		IRegion indentationBase = null;
@@ -49,8 +48,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		 * state then it will not ignore it as it should.
 		 */
 
-		IStructuredDocumentRegion sdRegion = document
-				.getRegionAtCharacterOffset(offset);
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 		if (sdRegion == null) {
 			return;
 		}
@@ -84,15 +82,12 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 					}
 				} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
 					curlyCount++;
-				} else if ((token == PHPRegionTypes.PHP_CASE)
-						|| (token == PHPRegionTypes.PHP_DEFAULT)) {
+				} else if ((token == PHPRegionTypes.PHP_CASE) || (token == PHPRegionTypes.PHP_DEFAULT)) {
 					if (curlyCount == 0)
 						found = true;
 				}
 				if (found) {
-					indentationBase = document
-							.getLineInformationOfOffset(tRegion.getStart()
-									+ regionStart);
+					indentationBase = document.getLineInformationOfOffset(tRegion.getStart() + regionStart);
 					break;
 				}
 				if (tRegion.getStart() > 0) {
@@ -104,8 +99,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		}
 
 		if (indentationBase != null) {
-			String blanks = FormatterUtils.getLineBlanks(document,
-					indentationBase);
+			String blanks = FormatterUtils.getLineBlanks(document, indentationBase);
 			result.append(blanks);
 			if (addIndentation) {
 				if (indentationObject == null) {

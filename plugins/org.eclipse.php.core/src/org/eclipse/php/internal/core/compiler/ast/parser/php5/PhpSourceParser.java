@@ -27,8 +27,7 @@ public class PhpSourceParser extends AbstractPHPSourceParser {
 		super(fileName);
 	}
 
-	public IModuleDeclaration parse(Reader in, IProblemReporter reporter,
-			boolean useShortTags) throws Exception {
+	public IModuleDeclaration parse(Reader in, IProblemReporter reporter, boolean useShortTags) throws Exception {
 		CompilerAstLexer lexer = new CompilerAstLexer(in);
 		lexer.setUseShortTags(useShortTags);
 		CompilerAstParser parser = new CompilerAstParser(lexer);

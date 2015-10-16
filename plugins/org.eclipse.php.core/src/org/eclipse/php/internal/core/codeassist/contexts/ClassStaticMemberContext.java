@@ -49,8 +49,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	private boolean isDirectSelf;
 	private boolean isFunctionParameterContext = false;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule);
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -61,8 +60,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 
 		// if method parameter context, return false
 		FunctionParameterDefaultValueContext parameterDefaultValueContext = new FunctionParameterDefaultValueContext();
-		if (parameterDefaultValueContext.isValid(sourceModule, offset,
-				requestor)) {
+		if (parameterDefaultValueContext.isValid(sourceModule, offset, requestor)) {
 			this.isFunctionParameterContext = true;
 		}
 
@@ -71,11 +69,11 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(lhsIndex,
-					elementStart - getTriggerType().getName().length())
+			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length())
 					.toString();
 
-			if (parentText.equals("parent") || (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("parent"))) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (parentText.equals("parent") //$NON-NLS-1$
+					|| (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("parent"))) { //$NON-NLS-1$
 				isParent = isDirectParent = true;
 			}
 		}
@@ -84,10 +82,10 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(lhsIndex,
-					elementStart - getTriggerType().getName().length())
+			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length())
 					.toString();
-			if (parentText.equals("self") || (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("self"))) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (parentText.equals("self") //$NON-NLS-1$
+					|| (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("self"))) { //$NON-NLS-1$
 				isSelf = isDirectSelf = true;
 			}
 		}
@@ -95,60 +93,46 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		if (!isParent || !isSelf) {
 			IType[] types = getLhsTypes();
 			if (types != null && types.length > 0) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration(sourceModule);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 				if (moduleDeclaration != null) {
-					IContext context = ASTUtils.findContext(sourceModule,
-							moduleDeclaration, offset);
+					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
 					if (context instanceof MethodContext) {
-						IEvaluatedType instanceType = ((MethodContext) context)
-								.getInstanceType();
+						IEvaluatedType instanceType = ((MethodContext) context).getInstanceType();
 						if (instanceType instanceof PHPClassType) {
 							PHPClassType classType = (PHPClassType) instanceType;
 							String typeName = classType.getTypeName();
 							String namespace = classType.getNamespace();
 							if (namespace != null && namespace.length() > 0) {
-								int i = typeName
-										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								if (i != -1) {
 									typeName = typeName.substring(i + 1);
 								}
 								if (namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 									namespace = namespace.substring(1);
 								}
-								IType currentNamespace = PHPModelUtils
-										.getCurrentNamespace(types[0]);
+								IType currentNamespace = PHPModelUtils.getCurrentNamespace(types[0]);
 								if (!isParent) {
-									if (currentNamespace != null
-											&& types.length >= 2) {
+									if (currentNamespace != null && types.length >= 2) {
 										IType parentType = types[1];
-										isParent = namespace
-												.equals(currentNamespace
-														.getElementName())
-												&& typeName.equals(parentType
-														.getElementName());
+										isParent = namespace.equals(currentNamespace.getElementName())
+												&& typeName.equals(parentType.getElementName());
 									}
 								}
 								if (!isSelf) {
 									if (currentNamespace != null) {
-										isSelf = namespace
-												.equals(currentNamespace
-														.getElementName())
-												&& typeName.equals(types[0]
-														.getElementName());
+										isSelf = namespace.equals(currentNamespace.getElementName())
+												&& typeName.equals(types[0].getElementName());
 									}
 								}
 							} else {
 								if (!isParent) {
 									if (types.length >= 2) {
 										IType parentType = types[1];
-										isParent = typeName.equals(parentType
-												.getElementName());
+										isParent = typeName.equals(parentType.getElementName());
 									}
 								}
 								if (!isSelf) {
-									isSelf = typeName.equals(types[0]
-											.getElementName());
+									isSelf = typeName.equals(types[0].getElementName());
 								}
 							}
 						}

@@ -62,28 +62,23 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format(BASE_DESCRIPTION, functionName
-				+ BRACKETS);
+		fDescription = Messages.format(BASE_DESCRIPTION, functionName + BRACKETS);
 		if (erroneousNode != null) {
 			// Add just this node in order to handle re-factoring properly
-			fResult.add(new OccurrenceLocation(erroneousNode.getStart(),
-					erroneousNode.getLength(),
+			fResult.add(new OccurrenceLocation(erroneousNode.getStart(), erroneousNode.getLength(),
 					getOccurrenceType(erroneousNode), fDescription));
 		} else {
 			fASTRoot.accept(this);
 			if (nodeToFullName.containsKey(nameNode)) {
 				String fullName = nodeToFullName.get(nameNode);
-				for (Iterator<Identifier> iterator = nodeToFullName.keySet()
-						.iterator(); iterator.hasNext();) {
+				for (Iterator<Identifier> iterator = nodeToFullName.keySet().iterator(); iterator.hasNext();) {
 					Identifier nameNode = iterator.next();
 					if (nodeToFullName.get(nameNode).equals(fullName)) {
-						fResult.add(new OccurrenceLocation(nameNode.getStart(),
-								nameNode.getLength(),
+						fResult.add(new OccurrenceLocation(nameNode.getStart(), nameNode.getLength(),
 								getOccurrenceType(nameNode), fDescription));
 					}
 				}
@@ -98,15 +93,13 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 		// Handle nesting functions that might be nested inside a method
 		// declaration
 		ASTNode parent = functionDeclaration.getParent();
-		while (parent.getType() == ASTNode.BLOCK
-				|| parent.getType() == ASTNode.FUNCTION_DECLARATION) {
+		while (parent.getType() == ASTNode.BLOCK || parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 			parent = parent.getParent();
 		}
 		if (parent.getType() != ASTNode.METHOD_DECLARATION) {
 			// check the function name
 			Identifier name = functionDeclaration.getFunctionName();
-			String fullName = getFullName(name, fLastUseParts,
-					fCurrentNamespace);
+			String fullName = getFullName(name, fLastUseParts, fCurrentNamespace);
 			nodeToFullName.put(name, fullName);
 			// if (this.functionName.equalsIgnoreCase(fullName)) {
 			// fResult.add(new OccurrenceLocation(name.getStart(), name
@@ -120,16 +113,13 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * skip static call invocation, and add to changes list the global calls
 	 */
 	public boolean visit(FunctionInvocation functionInvocation) {
-		final Expression functionName = functionInvocation.getFunctionName()
-				.getName();
+		final Expression functionName = functionInvocation.getFunctionName().getName();
 		final int invocationParent = functionInvocation.getParent().getType();
-		if ((functionName.getType() == ASTNode.IDENTIFIER || functionName
-				.getType() == ASTNode.NAMESPACE_NAME)
+		if ((functionName.getType() == ASTNode.IDENTIFIER || functionName.getType() == ASTNode.NAMESPACE_NAME)
 				&& invocationParent != ASTNode.METHOD_INVOCATION
 				&& invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 			final Identifier identifier = (Identifier) functionName;
-			String fullName = getFullName(identifier, fLastUseParts,
-					fCurrentNamespace);
+			String fullName = getFullName(identifier, fLastUseParts, fCurrentNamespace);
 			nodeToFullName.put(identifier, fullName);
 			// if (this.functionName.equalsIgnoreCase(fullName)) {
 			// fResult.add(new OccurrenceLocation(functionName.getStart(),

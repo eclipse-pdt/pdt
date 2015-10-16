@@ -27,12 +27,10 @@ import org.eclipse.dltk.core.IDLTKLanguageToolkitExtension;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 
-public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
-		IDLTKLanguageToolkitExtension {
+public class PHPLanguageToolkit extends AbstractLanguageToolkit implements IDLTKLanguageToolkitExtension {
 
-	private static final IContentType PHP_CONTENT_TYPE = Platform
-			.getContentTypeManager().getContentType(
-					ContentTypeIdForPHP.ContentTypeID_PHP);
+	private static final IContentType PHP_CONTENT_TYPE = Platform.getContentTypeManager()
+			.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 
 	private static PHPLanguageToolkit toolkit = new PHPLanguageToolkit();
 
@@ -76,8 +74,7 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
 
 	@Override
 	public IStatus validateSourceModule(IResource resource) {
-		return (PHP_CONTENT_TYPE.isAssociatedWith(resource.getName())) ? Status.OK_STATUS
-				: Status.CANCEL_STATUS;
+		return (PHP_CONTENT_TYPE.isAssociatedWith(resource.getName())) ? Status.OK_STATUS : Status.CANCEL_STATUS;
 	}
 
 }

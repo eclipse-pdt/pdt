@@ -33,8 +33,7 @@ public final class ListRewrite {
 	private StructuralPropertyDescriptor childProperty;
 	private ASTRewrite rewriter;
 
-	/* package */ListRewrite(ASTRewrite rewriter, ASTNode parent,
-			StructuralPropertyDescriptor childProperty) {
+	/* package */ ListRewrite(ASTRewrite rewriter, ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		this.rewriter = rewriter;
 		this.parent = parent;
 		this.childProperty = childProperty;
@@ -45,8 +44,7 @@ public final class ListRewrite {
 	}
 
 	private ListRewriteEvent getEvent() {
-		return getRewriteStore().getListEvent(this.parent, this.childProperty,
-				true);
+		return getRewriteStore().getListEvent(this.parent, this.childProperty, true);
 	}
 
 	/**
@@ -134,8 +132,7 @@ public final class ListRewrite {
 	 *             (or placeholder), or if the described modification is
 	 *             otherwise invalid (not a member of this node's original list)
 	 */
-	public void replace(ASTNode node, ASTNode replacement,
-			TextEditGroup editGroup) {
+	public void replace(ASTNode node, ASTNode replacement, TextEditGroup editGroup) {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
@@ -170,8 +167,7 @@ public final class ListRewrite {
 	 *             member of the list (original or new), or if the described
 	 *             modification is otherwise invalid
 	 */
-	public void insertAfter(ASTNode node, ASTNode element,
-			TextEditGroup editGroup) {
+	public void insertAfter(ASTNode node, ASTNode element, TextEditGroup editGroup) {
 		if (node == null || element == null) {
 			throw new IllegalArgumentException();
 		}
@@ -207,8 +203,7 @@ public final class ListRewrite {
 	 *             member of the list (original or new), or if the described
 	 *             modification is otherwise invalid
 	 */
-	public void insertBefore(ASTNode node, ASTNode element,
-			TextEditGroup editGroup) {
+	public void insertBefore(ASTNode node, ASTNode element, TextEditGroup editGroup) {
 		if (node == null || element == null) {
 			throw new IllegalArgumentException();
 		}
@@ -297,12 +292,10 @@ public final class ListRewrite {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
-		internalInsertAt(node, index, isInsertBoundToPreviousByDefault(node),
-				editGroup);
+		internalInsertAt(node, index, isInsertBoundToPreviousByDefault(node), editGroup);
 	}
 
-	private void internalInsertAt(ASTNode node, int index,
-			boolean boundToPrevious, TextEditGroup editGroup) {
+	private void internalInsertAt(ASTNode node, int index, boolean boundToPrevious, TextEditGroup editGroup) {
 		RewriteEvent event = getEvent().insert(node, index);
 		if (boundToPrevious) {
 			getRewriteStore().setInsertBoundToPrevious(node);
@@ -312,8 +305,8 @@ public final class ListRewrite {
 		}
 	}
 
-	private ASTNode createTargetNode(ASTNode first, ASTNode last,
-			boolean isMove, ASTNode replacingNode, TextEditGroup editGroup) {
+	private ASTNode createTargetNode(ASTNode first, ASTNode last, boolean isMove, ASTNode replacingNode,
+			TextEditGroup editGroup) {
 		if (first == null || last == null) {
 			throw new IllegalArgumentException();
 		}
@@ -330,9 +323,8 @@ public final class ListRewrite {
 		}
 
 		Block internalPlaceHolder = nodeStore.createCollapsePlaceholder();
-		CopySourceInfo info = getRewriteStore().createRangeCopy(this.parent,
-				this.childProperty, first, last, isMove, internalPlaceHolder,
-				replacingNode, editGroup);
+		CopySourceInfo info = getRewriteStore().createRangeCopy(this.parent, this.childProperty, first, last, isMove,
+				internalPlaceHolder, replacingNode, editGroup);
 		nodeStore.markAsCopyTarget(placeholder, info);
 
 		return placeholder;
@@ -420,13 +412,12 @@ public final class ListRewrite {
 	 *             <code>null</code>, if a node is not a child of the current
 	 *             list or if the first node is not before the last node. An
 	 *             <code>IllegalArgumentException
-	 * </code> is also thrown if the moved range is overlapping with
-	 *             an other moved or copied range.
+	 * </code> is also thrown if the moved range is overlapping with an other
+	 *             moved or copied range.
 	 * 
 	 * @since 3.1
 	 */
-	public final ASTNode createMoveTarget(ASTNode first, ASTNode last,
-			ASTNode replacingNode, TextEditGroup editGroup) {
+	public final ASTNode createMoveTarget(ASTNode first, ASTNode last, ASTNode replacingNode, TextEditGroup editGroup) {
 		if (first == last) {
 			replace(first, replacingNode, editGroup);
 			return this.rewriter.createMoveTarget(first);

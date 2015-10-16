@@ -11,6 +11,7 @@ public class Messages extends NLS {
 	public static String AbstractASTParser_6;
 	public static String AbstractASTParser_7;
 	public static String PHPSourceParserFactory_0;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

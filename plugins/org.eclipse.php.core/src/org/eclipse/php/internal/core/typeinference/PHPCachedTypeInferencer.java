@@ -97,8 +97,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 		}
 
 		@Override
-		public void goalStateChanged(IGoal goal, GoalState state,
-				GoalState oldState) {
+		public void goalStateChanged(IGoal goal, GoalState state, GoalState oldState) {
 
 		}
 
@@ -107,18 +106,16 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 		}
 
 		@Override
-		public void evaluatorInitialized(GoalEvaluator evaluator,
-				IGoal[] subgoals, long time) {
+		public void evaluatorInitialized(GoalEvaluator evaluator, IGoal[] subgoals, long time) {
 		}
 
 		@Override
-		public void evaluatorReceivedResult(GoalEvaluator evaluator,
-				IGoal finishedGoal, IGoal[] newSubgoals, long time) {
+		public void evaluatorReceivedResult(GoalEvaluator evaluator, IGoal finishedGoal, IGoal[] newSubgoals,
+				long time) {
 		}
 
 		@Override
-		public void evaluatorProducedResult(GoalEvaluator evaluator,
-				Object result, long time) {
+		public void evaluatorProducedResult(GoalEvaluator evaluator, Object result, long time) {
 			if (!(evaluator instanceof FakeGoalEvaluator)) {
 				cache.put(evaluator.getGoal(), new Result(result));
 			}
@@ -160,8 +157,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 	public IEvaluatedType evaluateType(AbstractTypeGoal goal, IPruner pruner) {
 		if (!cache.containsKey(goal)) {
 			synchronized (engine) {
-				cache.put(goal,
-						new Result(engine.evaluateGoal(goal, pruner, stat)));
+				cache.put(goal, new Result(engine.evaluateGoal(goal, pruner, stat)));
 			}
 		}
 
@@ -179,8 +175,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
-			if (goal instanceof MethodElementReturnTypeGoal
-					|| goal instanceof ClassVariableDeclarationGoal) {
+			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);
@@ -198,8 +193,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are PHPDoc (liteweight) goals pruned
-			if (goal instanceof PHPDocMethodReturnTypeGoal
-					|| goal instanceof PHPDocClassVariableGoal) {
+			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

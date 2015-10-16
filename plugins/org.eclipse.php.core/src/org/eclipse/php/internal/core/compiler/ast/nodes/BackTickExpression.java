@@ -21,7 +21,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents back tick expression
- * <pre>e.g.<pre>
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
  * `.\exec.sh`
  */
 public class BackTickExpression extends Expression {

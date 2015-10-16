@@ -18,7 +18,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents ignore error expression
- * <pre>e.g.<pre> '@$a->foo()'
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * '@$a->foo()'
  */
 public class IgnoreError extends Expression {
 

@@ -84,8 +84,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 	}
 
-	protected List getChildList(ASTNode parent,
-			StructuralPropertyDescriptor childProperty) {
+	protected List getChildList(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		Object ret = getAttribute(parent, childProperty);
 		if (ret instanceof List) {
 			return (List) ret;
@@ -93,31 +92,26 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		return Collections.EMPTY_LIST;
 	}
 
-	protected ASTNode getChildNode(ASTNode parent,
-			StructuralPropertyDescriptor childProperty) {
+	protected ASTNode getChildNode(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return (ASTNode) getAttribute(parent, childProperty);
 	}
 
-	protected int getIntAttribute(ASTNode parent,
-			StructuralPropertyDescriptor childProperty) {
+	protected int getIntAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return ((Integer) getAttribute(parent, childProperty)).intValue();
 	}
 
-	protected boolean getBooleanAttribute(ASTNode parent,
-			StructuralPropertyDescriptor childProperty) {
+	protected boolean getBooleanAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return ((Boolean) getAttribute(parent, childProperty)).booleanValue();
 	}
 
-	protected Object getAttribute(ASTNode parent,
-			StructuralPropertyDescriptor childProperty) {
+	protected Object getAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		if (store != null)
 			return this.store.getNewValue(parent, childProperty);
 
 		return null;
 	}
 
-	protected void visitList(ASTNode parent,
-			StructuralPropertyDescriptor childProperty, String separator) {
+	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator) {
 		List list = getChildList(parent, childProperty);
 		for (int i = 0; i < list.size(); i++) {
 			if (separator != null && i > 0) {
@@ -127,9 +121,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 	}
 
-	protected void visitList(ASTNode parent,
-			StructuralPropertyDescriptor childProperty, String separator,
-			String lead, String post) {
+	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator, String lead,
+			String post) {
 		List list = getChildList(parent, childProperty);
 		if (!list.isEmpty()) {
 			this.result.append(lead);
@@ -153,8 +146,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (arrayAccess.getName() != null) {
 			arrayAccess.getName().accept(this);
 		}
-		boolean isVariableHashtable = arrayAccess
-				.getArrayType() == ArrayAccess.VARIABLE_HASHTABLE;
+		boolean isVariableHashtable = arrayAccess.getArrayType() == ArrayAccess.VARIABLE_HASHTABLE;
 		if (isVariableHashtable) {
 			result.append('{');
 		} else {
@@ -225,26 +217,22 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (block.isBracketed()) {
 			result.append("}\n"); //$NON-NLS-1$
 		} else if (block.isColon()) {
-			StructuralPropertyDescriptor locationInParent = block
-					.getLocationInParent();
+			StructuralPropertyDescriptor locationInParent = block.getLocationInParent();
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
-				if (((IfStatement) block.getParent())
-						.getFalseStatement() == null) {
+				if (((IfStatement) block.getParent()).getFalseStatement() == null) {
 					// End the if statement
 					result.append("endif;\n"); //$NON-NLS-1$
 				} else {
 					// Just add a new line char
 					result.append("\n"); //$NON-NLS-1$
 				}
-			} else
-				if (locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY) {
+			} else if (locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY) {
 				result.append("endif;\n"); //$NON-NLS-1$
 			} else if (locationInParent == WhileStatement.BODY_PROPERTY) {
 				result.append("endwhile;\n"); //$NON-NLS-1$
 			} else if (locationInParent == ForStatement.BODY_PROPERTY) {
 				result.append("endfor;\n"); //$NON-NLS-1$
-			} else
-				if (locationInParent == ForEachStatement.STATEMENT_PROPERTY) {
+			} else if (locationInParent == ForEachStatement.STATEMENT_PROPERTY) {
 				result.append("endforeach;\n"); //$NON-NLS-1$
 			} else if (locationInParent == SwitchStatement.BODY_PROPERTY) {
 				result.append("endswitch;\n"); //$NON-NLS-1$
@@ -290,10 +278,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		result.append("const "); //$NON-NLS-1$
 		boolean isFirst = true;
-		Identifier[] variableNames = classConstantDeclaration
-				.getVariableNames();
-		Expression[] constantValues = classConstantDeclaration
-				.getConstantValues();
+		Identifier[] variableNames = classConstantDeclaration.getVariableNames();
+		Expression[] constantValues = classConstantDeclaration.getConstantValues();
 		for (int i = 0; i < variableNames.length; i++) {
 			if (!isFirst) {
 				result.append(", "); //$NON-NLS-1$
@@ -336,8 +322,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append("new "); //$NON-NLS-1$
 		classInstanceCreation.getClassName().accept(this);
 		Expression[] ctorParams = classInstanceCreation.getCtorParams();
-		if (classInstanceCreation.getEnd() != classInstanceCreation
-				.getClassName().getEnd()
+		if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
 				|| classInstanceCreation.getClassName().getStart() == -1) {
 			result.append("("); //$NON-NLS-1$
 		}
@@ -348,8 +333,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				ctorParams[i].accept(this);
 			}
 		}
-		if (classInstanceCreation.getEnd() != classInstanceCreation
-				.getClassName().getEnd()
+		if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
 				|| classInstanceCreation.getClassName().getStart() == -1) {
 			result.append(")"); //$NON-NLS-1$
 		}
@@ -631,8 +615,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 		functionDeclaration.getFunctionName().accept(this);
 		result.append('(');
-		List<FormalParameter> formalParametersList = functionDeclaration
-				.formalParameters();
+		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
 		FormalParameter[] formalParameters = formalParametersList
 				.toArray(new FormalParameter[formalParametersList.size()]);
 		if (formalParameters.length != 0) {
@@ -743,8 +726,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(InfixExpression infixExpression) {
 		infixExpression.getLeft().accept(this);
 		result.append(' ');
-		result.append(
-				InfixExpression.getOperator(infixExpression.getOperator()));
+		result.append(InfixExpression.getOperator(infixExpression.getOperator()));
 		result.append(' ');
 		infixExpression.getRight().accept(this);
 		return false;
@@ -803,8 +785,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append('&');
 		}
 		result.append('(');
-		List<FormalParameter> formalParametersList = functionDeclaration
-				.formalParameters();
+		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
 		Iterator<FormalParameter> paramIt = formalParametersList.iterator();
 		while (paramIt.hasNext()) {
 			paramIt.next().accept(this);
@@ -814,8 +795,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 		result.append(')');
 
-		List<Expression> lexicalVariables = functionDeclaration
-				.lexicalVariables();
+		List<Expression> lexicalVariables = functionDeclaration.lexicalVariables();
 		if (lexicalVariables.size() > 0) {
 			result.append(" use ("); //$NON-NLS-1$
 			Iterator<Expression> it = lexicalVariables.iterator();
@@ -863,15 +843,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(PostfixExpression postfixExpressions) {
 		postfixExpressions.getVariable().accept(this);
-		result.append(PostfixExpression
-				.getOperator(postfixExpressions.getOperator()));
+		result.append(PostfixExpression.getOperator(postfixExpressions.getOperator()));
 		return false;
 	}
 
 	public boolean visit(PrefixExpression prefixExpression) {
 		prefixExpression.getVariable().accept(this);
-		result.append(
-				PrefixExpression.getOperator(prefixExpression.getOperator()));
+		result.append(PrefixExpression.getOperator(prefixExpression.getOperator()));
 		return false;
 	}
 

@@ -55,24 +55,20 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] init() {
-		final VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal)
-				.getExpression();
+		final VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal).getExpression();
 		IContext context = goal.getContext();
 		// Handle $this variable reference
 		if (variableReference.getName().equals("$this")) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				final LambdaFunctionDeclaration[] lambdas = new LambdaFunctionDeclaration[1];
-				ContextFinder contextFinder = new ContextFinder(
-						methodContext.getSourceModule()) {
+				ContextFinder contextFinder = new ContextFinder(methodContext.getSourceModule()) {
 					@Override
 					public boolean visit(Expression s) throws Exception {
 						if (s instanceof LambdaFunctionDeclaration) {
 							LambdaFunctionDeclaration lambda = (LambdaFunctionDeclaration) s;
-							if (variableReference.sourceStart() > lambda
-									.sourceStart()
-									&& variableReference.sourceEnd() < lambda
-											.sourceEnd()) {
+							if (variableReference.sourceStart() > lambda.sourceStart()
+									&& variableReference.sourceEnd() < lambda.sourceEnd()) {
 								lambdas[0] = lambda;
 							}
 						}
@@ -84,15 +80,11 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				} catch (Exception e) {
 				}
 				PHPVersion phpVersion = ProjectOptions
-						.getPhpVersion(methodContext.getSourceModule()
-								.getScriptProject().getProject());
-				if (lambdas[0] != null
-						&& (lambdas[0].isStatic() || phpVersion
-								.isLessThan(PHPVersion.PHP5_4))) {
+						.getPhpVersion(methodContext.getSourceModule().getScriptProject().getProject());
+				if (lambdas[0] != null && (lambdas[0].isStatic() || phpVersion.isLessThan(PHPVersion.PHP5_4))) {
 					this.results.add(new SimpleType(SimpleType.TYPE_NULL));
 				} else {
-					IEvaluatedType instanceType = methodContext
-							.getInstanceType();
+					IEvaluatedType instanceType = methodContext.getInstanceType();
 					if (instanceType != null) {
 						this.results.add(instanceType);
 					} else {
@@ -112,15 +104,13 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					localScopeNode = ((MethodContext) context).getMethodNode();
 				}
 				LocalReferenceDeclSearcher varDecSearcher = new LocalReferenceDeclSearcher(
-						typedContext.getSourceModule(), variableReference,
-						localScopeNode);
+						typedContext.getSourceModule(), variableReference, localScopeNode);
 				rootNode.traverse(varDecSearcher);
 				PHPModuleDeclaration phpModule = (PHPModuleDeclaration) rootNode;
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
 				List<VarComment> varComments = phpModule.getVarComments();
-				List<VarComment> newList = new ArrayList<VarComment>(phpModule
-						.getVarComments().size());
+				List<VarComment> newList = new ArrayList<VarComment>(phpModule.getVarComments().size());
 				newList.addAll(varComments);
 				Collections.sort(newList, new Comparator<VarComment>() {
 
@@ -129,12 +119,10 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					}
 				});
 				for (VarComment varComment : newList) {
-					if (varComment.sourceStart() > variableReference
-							.sourceStart()) {
+					if (varComment.sourceStart() > variableReference.sourceStart()) {
 						continue;
 					}
-					if (varComment.getVariableReference().getName()
-							.equals(variableReference.getName())) {
+					if (varComment.getVariableReference().getName().equals(variableReference.getName())) {
 						List<IGoal> goals = new LinkedList<IGoal>();
 						for (TypeReference ref : varComment.getTypeReferences()) {
 							goals.add(new ExpressionTypeGoal(context, ref));
@@ -143,8 +131,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					}
 				}
 
-				List<PHPDocBlock> docBlocks = new ArrayList<PHPDocBlock>(
-						phpModule.getPhpDocBlocks().size());
+				List<PHPDocBlock> docBlocks = new ArrayList<PHPDocBlock>(phpModule.getPhpDocBlocks().size());
 				docBlocks.addAll(phpModule.getPhpDocBlocks());
 				Collections.sort(docBlocks, new Comparator<PHPDocBlock>() {
 
@@ -155,25 +142,19 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				});
 				for (PHPDocBlock block : docBlocks) {
 					if (block.sourceStart() > variableReference.sourceStart()
-							|| localScopeNode.sourceStart() > block
-									.sourceStart()) {
+							|| localScopeNode.sourceStart() > block.sourceStart()) {
 						continue;
 					}
 
 					for (PHPDocTag tag : block.getTags(PHPDocTagKinds.VAR)) {
-						if (tag.isValidVarTag()
-								&& tag.getVariableReference() != null
-								&& tag.getVariableReference().getName()
-										.equals(variableReference.getName())) {
+						if (tag.isValidVarTag() && tag.getVariableReference() != null
+								&& tag.getVariableReference().getName().equals(variableReference.getName())) {
 							List<IGoal> goals = new LinkedList<IGoal>();
 							for (TypeReference type : tag.getTypeReferences()) {
-								goals.add(new ExpressionTypeGoal(
-										context,
-										new TypeReference(tag.sourceStart(),
-												tag.sourceEnd(), type.getName())));
+								goals.add(new ExpressionTypeGoal(context,
+										new TypeReference(tag.sourceStart(), tag.sourceEnd(), type.getName())));
 							}
-							return (IGoal[]) goals.toArray(new IGoal[goals
-									.size()]);
+							return (IGoal[]) goals.toArray(new IGoal[goals.size()]);
 						}
 					}
 				}
@@ -185,28 +166,23 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					// TODO check ArrayCreation and its element type
 					if (decl instanceof ArrayDeclaration) {
 						ArrayDeclaration arrayDeclaration = (ArrayDeclaration) decl;
-						subGoals.add(new ArrayDeclarationGoal(context,
-								arrayDeclaration));
+						subGoals.add(new ArrayDeclarationGoal(context, arrayDeclaration));
 					} else if (decl.getNode() instanceof GlobalStatement) {
 						mergeWithGlobalScope = true;
 					} else {
 						ASTNode declNode = decl.getNode();
 						if (declNode instanceof ForEachStatement) {
-							subGoals.add(new ForeachStatementGoal(context,
-									((ForEachStatement) declNode)
-											.getExpression()));
+							subGoals.add(
+									new ForeachStatementGoal(context, ((ForEachStatement) declNode).getExpression()));
 						} else {
-							subGoals.add(new ExpressionTypeGoal(context,
-									declNode));
+							subGoals.add(new ExpressionTypeGoal(context, declNode));
 						}
 					}
 				}
-				if (mergeWithGlobalScope
-						|| (decls.length == 0 && context.getClass() == FileContext.class)) {
+				if (mergeWithGlobalScope || (decls.length == 0 && context.getClass() == FileContext.class)) {
 					// collect all global variables, and merge results with
 					// existing declarations
-					subGoals.add(new GlobalVariableReferencesGoal(context,
-							variableReference.getName()));
+					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
 				}
 				return subGoals.toArray(new IGoal[subGoals.size()]);
 			}
@@ -231,8 +207,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 	}
 
 	public static class LocalReferenceDeclSearcher
-			extends
-			org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
+			extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
 
 		private final String variableName;
 		private final int variableOffset;
@@ -240,8 +215,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		private IContext variableContext;
 		private int variableLevel;
 
-		public LocalReferenceDeclSearcher(ISourceModule sourceModule,
-				VariableReference variableReference, ASTNode localScopeNode) {
+		public LocalReferenceDeclSearcher(ISourceModule sourceModule, VariableReference variableReference,
+				ASTNode localScopeNode) {
 			super(sourceModule);
 			variableName = variableReference.getName();
 			variableOffset = variableReference.sourceStart();
@@ -249,13 +224,10 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		}
 
 		public Declaration[] getDeclarations() {
-			Declaration[] declarations = getScope(variableContext)
-					.getDeclarations(variableName);
+			Declaration[] declarations = getScope(variableContext).getDeclarations(variableName);
 			if (variableLevel > 0 && variableLevel < declarations.length) {
-				Declaration[] newDecls = new Declaration[declarations.length
-						- variableLevel];
-				System.arraycopy(declarations, variableLevel, newDecls, 0,
-						newDecls.length);
+				Declaration[] newDecls = new Declaration[declarations.length - variableLevel];
+				System.arraycopy(declarations, variableLevel, newDecls, 0, newDecls.length);
 				declarations = newDecls;
 			}
 
@@ -265,27 +237,23 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					filteredDecls.add(decl);
 				}
 			}
-			return (Declaration[]) filteredDecls
-					.toArray(new Declaration[filteredDecls.size()]);
+			return (Declaration[]) filteredDecls.toArray(new Declaration[filteredDecls.size()]);
 		}
 
 		protected void postProcess(Expression node) {
 			if (node instanceof InstanceOfExpression) {
 				InstanceOfExpression expr = (InstanceOfExpression) node;
 				if (expr.getExpr() instanceof VariableReference) {
-					VariableReference varReference = (VariableReference) expr
-							.getExpr();
+					VariableReference varReference = (VariableReference) expr.getExpr();
 					if (variableName.equals(varReference.getName())) {
-						getScope().addDeclaration(variableName,
-								expr.getClassName());
+						getScope().addDeclaration(variableName, expr.getClassName());
 					}
 				}
 			}
 		}
 
 		protected void postProcessGeneral(ASTNode node) {
-			if (node.sourceStart() <= variableOffset
-					&& node.sourceEnd() >= variableOffset) {
+			if (node.sourceStart() <= variableOffset && node.sourceEnd() >= variableOffset) {
 				variableContext = contextStack.peek();
 				variableLevel = getScope(variableContext).getInnerBlockLevel();
 			}

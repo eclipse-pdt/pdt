@@ -56,8 +56,7 @@ public class FakeMethod extends SourceMethod {
 		this.flags = modifiers;
 	}
 
-	public FakeMethod(ModelElement parent, String name, int offset, int length,
-			int nameOffset, int nameLength) {
+	public FakeMethod(ModelElement parent, String name, int offset, int length, int nameOffset, int nameLength) {
 		super(parent, name);
 		this.offset = offset;
 		this.length = length;
@@ -117,13 +116,11 @@ public class FakeMethod extends SourceMethod {
 			return false;
 		}
 		FakeMethod fm = (FakeMethod) o;
-		return this.name.equals(fm.name)
-				&& getRealParent(this.parent).equals(getRealParent(fm.parent));
+		return this.name.equals(fm.name) && getRealParent(this.parent).equals(getRealParent(fm.parent));
 	}
 
 	public int hashCode() {
-		return Util.combineHashCodes(this.name.hashCode(),
-				getRealParent(this.parent).hashCode());
+		return Util.combineHashCodes(this.name.hashCode(), getRealParent(this.parent).hashCode());
 	}
 
 	public IModelElement getRealParent(IModelElement type) {

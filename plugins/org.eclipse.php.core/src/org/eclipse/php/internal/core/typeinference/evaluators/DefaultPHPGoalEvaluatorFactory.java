@@ -73,8 +73,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		ASTNode expression = exprGoal.getExpression();
 		Class<?> expressionClass = expression.getClass();
 
-		if (expressionClass == InterfaceDeclaration.class
-				|| expressionClass == ClassDeclaration.class
+		if (expressionClass == InterfaceDeclaration.class || expressionClass == ClassDeclaration.class
 				|| expressionClass == TraitDeclaration.class) {
 			return new PHPClassEvaluator(exprGoal, (TypeDeclaration) expression);
 		}
@@ -85,22 +84,19 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			Scalar scalar = (Scalar) expression;
 			return new ScalarEvaluator(exprGoal, scalar);
 		}
-		if (expressionClass == TypeReference.class
-				|| expressionClass == FullyQualifiedReference.class) {
+		if (expressionClass == TypeReference.class || expressionClass == FullyQualifiedReference.class) {
 			TypeReference type = (TypeReference) expression;
 			return new TypeReferenceEvaluator(exprGoal, type);
 		}
 		if (expressionClass == TraitAliasStatement.class) {
 			TraitAliasStatement tas = (TraitAliasStatement) expression;
 			if (tas.getAlias().getTraitMethod() instanceof FullyQualifiedTraitMethodReference) {
-				FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas
-						.getAlias().getTraitMethod();
-				return new TypeReferenceEvaluator(exprGoal,
-						reference.getClassName());
+				FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas.getAlias()
+						.getTraitMethod();
+				return new TypeReferenceEvaluator(exprGoal, reference.getClassName());
 			}
 		}
-		if (expressionClass == PHPCallExpression.class
-				|| expressionClass == StaticMethodInvocation.class) {
+		if (expressionClass == PHPCallExpression.class || expressionClass == StaticMethodInvocation.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
 		}
 		if (expressionClass == ClassInstanceCreation.class) {
@@ -124,17 +120,14 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == VariableReference.class) {
 			return new VariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == BackTickExpression.class
-				|| expressionClass == Quote.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(
-					SimpleType.TYPE_STRING));
+		if (expressionClass == BackTickExpression.class || expressionClass == Quote.class) {
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
 		}
 		if (expressionClass == CloneExpression.class) {
 			return new CloneEvaluator(exprGoal);
 		}
 		if (expressionClass == InstanceOfExpression.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(
-					SimpleType.TYPE_BOOLEAN));
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_BOOLEAN));
 		}
 		if (expressionClass == ConditionalExpression.class) {
 			return new ConditionalExpressionEvaluator(exprGoal);
@@ -146,15 +139,13 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 				|| expressionClass == ReflectionArrayVariableReference.class) {
 			return new ArrayVariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == FieldAccess.class
-				|| expressionClass == StaticFieldAccess.class) {
+		if (expressionClass == FieldAccess.class || expressionClass == StaticFieldAccess.class) {
 			return new FieldAccessEvaluator(exprGoal);
 		}
 		if (expressionClass == StaticConstantAccess.class) {
 			return new StaticConstantAccessEvaluator(exprGoal);
 		}
-		if (expressionClass == FormalParameter.class
-				|| expressionClass == FormalParameterByReference.class) {
+		if (expressionClass == FormalParameter.class || expressionClass == FormalParameterByReference.class) {
 			return new FormalParameterEvaluator(exprGoal);
 		}
 		if (expressionClass == CatchClause.class) {

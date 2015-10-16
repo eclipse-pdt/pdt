@@ -30,8 +30,7 @@ public class FunctionParameterTypeContext extends FunctionParameterContext {
 	private IMethod enclosingMethod;
 	private IType enclosingType;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -40,8 +39,7 @@ public class FunctionParameterTypeContext extends FunctionParameterContext {
 		if (triggerChar == '(' || triggerChar == ',') {
 			// check whether enclosing element is a method
 			try {
-				IModelElement enclosingElement = sourceModule
-						.getElementAt(offset);
+				IModelElement enclosingElement = sourceModule.getElementAt(offset);
 				while (enclosingElement instanceof IField) {
 					enclosingElement = enclosingElement.getParent();
 				}
@@ -51,8 +49,7 @@ public class FunctionParameterTypeContext extends FunctionParameterContext {
 				enclosingElement = enclosingMethod = (IMethod) enclosingElement;
 
 				// find the most outer enclosing type if exists
-				while (enclosingElement != null
-						&& !(enclosingElement instanceof IType)) {
+				while (enclosingElement != null && !(enclosingElement instanceof IType)) {
 					enclosingElement = enclosingElement.getParent();
 				}
 				enclosingType = (IType) enclosingElement;

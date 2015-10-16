@@ -6,6 +6,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.core.util.messages"; //$NON-NLS-1$
 	public static String PHPSearchEngine_1;
 	public static String UnixChmodUtil_0;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

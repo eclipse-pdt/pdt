@@ -28,8 +28,8 @@ public class BuildPathUtils {
 	 * @param entries
 	 * @throws ModelException
 	 */
-	public static void addEntriesToBuildPath(IScriptProject scriptProject,
-			List<IBuildpathEntry> entries) throws ModelException {
+	public static void addEntriesToBuildPath(IScriptProject scriptProject, List<IBuildpathEntry> entries)
+			throws ModelException {
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
 		// get the current buildpath entries, in order to add/remove entries
@@ -46,8 +46,7 @@ public class BuildPathUtils {
 		}
 
 		// set the new updated buildpath for the project
-		scriptProject.setRawBuildpath(newRawBuildpath
-				.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
 
 	}
 
@@ -59,8 +58,7 @@ public class BuildPathUtils {
 	 * @param entries
 	 * @throws ModelException
 	 */
-	public static void addNonDupEntriesToBuildPath(
-			IScriptProject scriptProject, List<IBuildpathEntry> entries)
+	public static void addNonDupEntriesToBuildPath(IScriptProject scriptProject, List<IBuildpathEntry> entries)
 			throws ModelException {
 
 		// get the current buildpath entries, in order to add/remove entries
@@ -75,16 +73,14 @@ public class BuildPathUtils {
 		}
 
 		for (IBuildpathEntry buildpathEntry : entries) {
-			if (!buildpathContains(newRawBuildpath
-					.toArray(new IBuildpathEntry[newRawBuildpath.size()]),
+			if (!buildpathContains(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]),
 					buildpathEntry)) {
 				newRawBuildpath.add(buildpathEntry);
 			}
 		}
 
 		// set the new updated buildpath for the project
-		scriptProject.setRawBuildpath(newRawBuildpath
-				.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
 
 	}
 
@@ -94,14 +90,11 @@ public class BuildPathUtils {
 	 * returned. The check is applied on path only. exclusion/inclusion patterns
 	 * are ignored.
 	 */
-	public static boolean buildpathContains(IBuildpathEntry[] list,
-			IBuildpathEntry entry) {
+	public static boolean buildpathContains(IBuildpathEntry[] list, IBuildpathEntry entry) {
 		for (int i = 0; i < list.length; i++) {
 			IBuildpathEntry other = list[i];
-			if (other.getContentKind() == entry.getContentKind()
-					&& other.getEntryKind() == entry.getEntryKind()
-					&& other.isExported() == entry.isExported()
-					&& other.getPath().equals(entry.getPath())) {
+			if (other.getContentKind() == entry.getContentKind() && other.getEntryKind() == entry.getEntryKind()
+					&& other.isExported() == entry.isExported() && other.getPath().equals(entry.getPath())) {
 				return true;
 			}
 		}
@@ -115,8 +108,8 @@ public class BuildPathUtils {
 	 * @param buildpathEntry
 	 * @throws ModelException
 	 */
-	public static void removeEntryFromBuildPath(IScriptProject scriptProject,
-			IBuildpathEntry buildpathEntry) throws ModelException {
+	public static void removeEntryFromBuildPath(IScriptProject scriptProject, IBuildpathEntry buildpathEntry)
+			throws ModelException {
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
 		// get the current buildpath entries, in order to remove the given
@@ -131,8 +124,7 @@ public class BuildPathUtils {
 		}
 
 		// set the new updated buildpath for the project
-		scriptProject.setRawBuildpath(newRawBuildpath
-				.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
 
 	}
 
@@ -145,8 +137,7 @@ public class BuildPathUtils {
 	 * @param resourcePath
 	 * @return
 	 */
-	public static boolean isContainedInBuildpath(IPath resourcePath,
-			IScriptProject project) {
+	public static boolean isContainedInBuildpath(IPath resourcePath, IScriptProject project) {
 		boolean result = false;
 		if (resourcePath == null) {
 			return false;
@@ -169,8 +160,7 @@ public class BuildPathUtils {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IPath buildPathEntryPath = buildpathEntry.getPath();
 				if (buildPathEntryPath.isPrefixOf(resourcePath)
-						|| resourcePath.toString().equals(
-								buildPathEntryPath.toString())) {
+						|| resourcePath.toString().equals(buildPathEntryPath.toString())) {
 					result = true;
 				}
 			}
@@ -186,8 +176,7 @@ public class BuildPathUtils {
 	 * @param project
 	 * @return
 	 */
-	public static boolean isInBuildpath(IPath resourcePath,
-			IScriptProject project) {
+	public static boolean isInBuildpath(IPath resourcePath, IScriptProject project) {
 		boolean result = false;
 		if (resourcePath == null) {
 			return false;
@@ -208,8 +197,7 @@ public class BuildPathUtils {
 		for (IBuildpathEntry buildpathEntry : buildpath) {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IPath buildPathEntryPath = buildpathEntry.getPath();
-				if (resourcePath.toString().equals(
-						buildPathEntryPath.toString())) {
+				if (resourcePath.toString().equals(buildPathEntryPath.toString())) {
 					result = true;
 				}
 			}
@@ -225,8 +213,7 @@ public class BuildPathUtils {
 	 * @param project
 	 * @return
 	 */
-	public static List<IBuildpathEntry> getContainedBuildpathes(
-			IPath resourcePath, IScriptProject project) {
+	public static List<IBuildpathEntry> getContainedBuildpathes(IPath resourcePath, IScriptProject project) {
 		if (resourcePath == null) {
 			return Collections.EMPTY_LIST;
 		}
@@ -249,8 +236,7 @@ public class BuildPathUtils {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IPath buildPathEntryPath = buildpathEntry.getPath();
 				if (resourcePath.isPrefixOf(buildPathEntryPath)
-						|| resourcePath.toString().equals(
-								buildPathEntryPath.toString())) {
+						|| resourcePath.toString().equals(buildPathEntryPath.toString())) {
 					result.add(buildpathEntry);
 				}
 			}

@@ -28,6 +28,5 @@ public interface IPharBuilderExtension {
 	 * @throws CoreException
 	 *             thrown when the file could not be written
 	 */
-	public void writeFile(File file, IPath destinationPath)
-			throws CoreException;
+	public void writeFile(File file, IPath destinationPath) throws CoreException;
 }

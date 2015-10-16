@@ -22,11 +22,11 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents namespace declaration:
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * namespace MyNamespace;
- *namespace MyProject\Sub\Level;
+ * namespace MyNamespace; namespace MyProject\Sub\Level;
  */
 public class NamespaceDeclaration extends Statement {
 
@@ -37,12 +37,10 @@ public class NamespaceDeclaration extends Statement {
 	/**
 	 * The "namespace" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(
-			NamespaceDeclaration.class,
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(NamespaceDeclaration.class,
 			"name", NamespaceName.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
 
-	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
-			NamespaceDeclaration.class,
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(NamespaceDeclaration.class,
 			"body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	public static final SimplePropertyDescriptor BRACKETED_PROPERTY = new SimplePropertyDescriptor(
@@ -53,9 +51,9 @@ public class NamespaceDeclaration extends Statement {
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(BODY_PROPERTY);
 		properyList.add(BRACKETED_PROPERTY);
@@ -66,13 +64,11 @@ public class NamespaceDeclaration extends Statement {
 		super(ast);
 	}
 
-	public NamespaceDeclaration(int start, int end, AST ast,
-			NamespaceName name, Block body, boolean bracketed) {
+	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body, boolean bracketed) {
 		super(start, end, ast);
 
 		if (!bracketed && name == null) {
-			throw new IllegalArgumentException(
-					"Namespace name must not be null in an un-bracketed statement"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Namespace name must not be null in an un-bracketed statement"); //$NON-NLS-1$
 		}
 
 		this.bracketed = bracketed;
@@ -251,19 +247,17 @@ public class NamespaceDeclaration extends Statement {
 		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final boolean bracketed = isBracketed();
-		final NamespaceDeclaration result = new NamespaceDeclaration(this
-				.getStart(), this.getEnd(), target, name, body, bracketed);
+		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name, body,
+				bracketed);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property,
-			boolean get, boolean value) {
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == BRACKETED_PROPERTY) {
 			if (get) {
 				return isBracketed();
@@ -275,8 +269,7 @@ public class NamespaceDeclaration extends Statement {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();

@@ -10,11 +10,9 @@ import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
-public class LocalMethodVariablesStrategyForArray extends
-		AbstractCompletionStrategy {
+public class LocalMethodVariablesStrategyForArray extends AbstractCompletionStrategy {
 
-	public LocalMethodVariablesStrategyForArray(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public LocalMethodVariablesStrategyForArray(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -33,8 +31,7 @@ public class LocalMethodVariablesStrategyForArray extends
 		CompletionRequestor requestor = arrayContext.getCompletionRequestor();
 		IModelElement enclosingElement;
 		try {
-			enclosingElement = arrayContext.getSourceModule().getElementAt(
-					arrayContext.getOffset());
+			enclosingElement = arrayContext.getSourceModule().getElementAt(arrayContext.getOffset());
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
@@ -49,15 +46,13 @@ public class LocalMethodVariablesStrategyForArray extends
 				IType declaringType = enclosingMethod.getDeclaringType();
 				if (declaringType != null) {
 					if ("$this".startsWith(prefix)) { //$NON-NLS-1$
-						reporter.reportField(
-								new FakeField((ModelElement) declaringType,
-										"$this", 0, 0), "", replaceRange, false); //NON-NLS-1  //$NON-NLS-1$//$NON-NLS-2$
+						reporter.reportField(new FakeField((ModelElement) declaringType, "$this", 0, 0), "", //$NON-NLS-1$//$NON-NLS-2$
+								replaceRange, false); // NON-NLS-1
 					}
 				}
 			}
 
-			for (IModelElement element : PHPModelUtils.getMethodFields(
-					enclosingMethod, prefix,
+			for (IModelElement element : PHPModelUtils.getMethodFields(enclosingMethod, prefix,
 					requestor.isContextInformationMode(), null)) {
 				reporter.reportField((IField) element, "", replaceRange, false); //$NON-NLS-1$
 			}

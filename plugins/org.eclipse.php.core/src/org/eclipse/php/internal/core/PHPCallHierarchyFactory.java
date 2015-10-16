@@ -30,8 +30,7 @@ public class PHPCallHierarchyFactory implements ICallHierarchyFactory {
 	 * org.eclipse.dltk.core.search.IDLTKSearchScope)
 	 */
 	@Override
-	public ICalleeProcessor createCalleeProcessor(IMethod method,
-			IProgressMonitor monitor, IDLTKSearchScope scope) {
+	public ICalleeProcessor createCalleeProcessor(IMethod method, IProgressMonitor monitor, IDLTKSearchScope scope) {
 		return new PHPCalleeProcessor(method, monitor, scope);
 	}
 

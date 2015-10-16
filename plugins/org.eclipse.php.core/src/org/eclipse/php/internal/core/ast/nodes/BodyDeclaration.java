@@ -22,13 +22,13 @@ public abstract class BodyDeclaration extends Statement {
 	private int modifier;
 
 	/**
-	 * Should be implemented by concrete implementations of body  
+	 * Should be implemented by concrete implementations of body
 	 */
 	public abstract SimplePropertyDescriptor getModifierProperty();
-	
+
 	public BodyDeclaration(int start, int end, AST ast, int modifier, boolean shouldComplete) {
 		super(start, end, ast);
-		
+
 		setModifier(shouldComplete ? completeModifier(modifier) : modifier);
 	}
 
@@ -41,7 +41,8 @@ public abstract class BodyDeclaration extends Statement {
 	}
 
 	/**
-	 * Complets the modidifer to public if needed 
+	 * Complets the modidifer to public if needed
+	 * 
 	 * @param mod
 	 */
 	private static int completeModifier(int mod) {
@@ -58,13 +59,15 @@ public abstract class BodyDeclaration extends Statement {
 	public int getModifier() {
 		return modifier;
 	}
-	
+
 	/**
 	 * Sets the operator of this assignment expression.
 	 * 
-	 * @param assignmentOperator the assignment operator
-	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 * @param assignmentOperator
+	 *            the assignment operator
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
+	 */
 	public void setModifier(int modifier) {
 		if (PHPFlags.toString(modifier) == null) {
 			throw new IllegalArgumentException("Invalid modifier"); //$NON-NLS-1$
@@ -72,7 +75,7 @@ public abstract class BodyDeclaration extends Statement {
 		preValueChange(getModifierProperty());
 		this.modifier = modifier;
 		postValueChange(getModifierProperty());
-	}	
+	}
 
 	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == getModifierProperty()) {
@@ -88,37 +91,44 @@ public abstract class BodyDeclaration extends Statement {
 	}
 
 	/**
-	 * This is a utility for member modifiers 
-	 * @deprecated use DLTK {@link Modifiers} instead 
+	 * This is a utility for member modifiers
+	 * 
+	 * @deprecated use DLTK {@link Modifiers} instead
 	 */
 	public static class Modifier {
 		/**
-		 * The <code>int</code> value representing the <code>public</code> modifier.
+		 * The <code>int</code> value representing the <code>public</code>
+		 * modifier.
 		 */
 		public static final int PUBLIC = 0x00000001;
 
 		/**
-		 * The <code>int</code> value representing the <code>private</code> modifier.
+		 * The <code>int</code> value representing the <code>private</code>
+		 * modifier.
 		 */
 		public static final int PRIVATE = 0x00000002;
 
 		/**
-		 * The <code>int</code> value representing the <code>protected</code> modifier.
+		 * The <code>int</code> value representing the <code>protected</code>
+		 * modifier.
 		 */
 		public static final int PROTECTED = 0x00000004;
 
 		/**
-		 * The <code>int</code> value representing the <code>static</code> modifier.
+		 * The <code>int</code> value representing the <code>static</code>
+		 * modifier.
 		 */
 		public static final int STATIC = 0x00000008;
 
 		/**
-		 * The <code>int</code> value representing the <code>final</code> modifier.
+		 * The <code>int</code> value representing the <code>final</code>
+		 * modifier.
 		 */
 		public static final int FINAL = 0x00000010;
 
 		/**
-		 * The <code>int</code> value representing the <code>abstract</code> modifier.
+		 * The <code>int</code> value representing the <code>abstract</code>
+		 * modifier.
 		 */
 		public static final int ABSTRACT = 0x00000400;
 
@@ -126,9 +136,10 @@ public abstract class BodyDeclaration extends Statement {
 		 * Return <tt>true</tt> if the integer argument includes the
 		 * <tt>public</tt> modifer, <tt>false</tt> otherwise.
 		 *
-		 * @param 	mod a set of modifers
+		 * @param mod
+		 *            a set of modifers
 		 * @return <tt>true</tt> if <code>mod</code> includes the
-		 * <tt>public</tt> modifier; <tt>false</tt> otherwise.
+		 *         <tt>public</tt> modifier; <tt>false</tt> otherwise.
 		 */
 		public static boolean isPublic(int mod) {
 			return (mod & PUBLIC) != 0;
@@ -138,9 +149,10 @@ public abstract class BodyDeclaration extends Statement {
 		 * Return <tt>true</tt> if the integer argument includes the
 		 * <tt>private</tt> modifer, <tt>false</tt> otherwise.
 		 *
-		 * @param 	mod a set of modifers
+		 * @param mod
+		 *            a set of modifers
 		 * @return <tt>true</tt> if <code>mod</code> includes the
-		 * <tt>private</tt> modifier; <tt>false</tt> otherwise.
+		 *         <tt>private</tt> modifier; <tt>false</tt> otherwise.
 		 */
 		public static boolean isPrivate(int mod) {
 			return (mod & PRIVATE) != 0;
@@ -150,9 +162,10 @@ public abstract class BodyDeclaration extends Statement {
 		 * Return <tt>true</tt> if the integer argument includes the
 		 * <tt>protected</tt> modifer, <tt>false</tt> otherwise.
 		 *
-		 * @param 	mod a set of modifers
+		 * @param mod
+		 *            a set of modifers
 		 * @return <tt>true</tt> if <code>mod</code> includes the
-		 * <tt>protected</tt> modifier; <tt>false</tt> otherwise.
+		 *         <tt>protected</tt> modifier; <tt>false</tt> otherwise.
 		 */
 		public static boolean isProtected(int mod) {
 			return (mod & PROTECTED) != 0;
@@ -162,9 +175,10 @@ public abstract class BodyDeclaration extends Statement {
 		 * Return <tt>true</tt> if the integer argument includes the
 		 * <tt>static</tt> modifer, <tt>false</tt> otherwise.
 		 *
-		 * @param 	mod a set of modifers
+		 * @param mod
+		 *            a set of modifers
 		 * @return <tt>true</tt> if <code>mod</code> includes the
-		 * <tt>static</tt> modifier; <tt>false</tt> otherwise.
+		 *         <tt>static</tt> modifier; <tt>false</tt> otherwise.
 		 */
 		public static boolean isStatic(int mod) {
 			return (mod & STATIC) != 0;
@@ -174,9 +188,10 @@ public abstract class BodyDeclaration extends Statement {
 		 * Return <tt>true</tt> if the integer argument includes the
 		 * <tt>final</tt> modifer, <tt>false</tt> otherwise.
 		 *
-		 * @param 	mod a set of modifers
-		 * @return <tt>true</tt> if <code>mod</code> includes the
-		 * <tt>final</tt> modifier; <tt>false</tt> otherwise.
+		 * @param mod
+		 *            a set of modifers
+		 * @return <tt>true</tt> if <code>mod</code> includes the <tt>final</tt>
+		 *         modifier; <tt>false</tt> otherwise.
 		 */
 		public static boolean isFinal(int mod) {
 			return (mod & FINAL) != 0;
@@ -186,9 +201,10 @@ public abstract class BodyDeclaration extends Statement {
 		 * Return <tt>true</tt> if the integer argument includes the
 		 * <tt>abstract</tt> modifer, <tt>false</tt> otherwise.
 		 *
-		 * @param 	mod a set of modifers
+		 * @param mod
+		 *            a set of modifers
 		 * @return <tt>true</tt> if <code>mod</code> includes the
-		 * <tt>abstract</tt> modifier; <tt>false</tt> otherwise.
+		 *         <tt>abstract</tt> modifier; <tt>false</tt> otherwise.
 		 */
 		public static boolean isAbstract(int mod) {
 			return (mod & ABSTRACT) != 0;
@@ -207,7 +223,7 @@ public abstract class BodyDeclaration extends Statement {
 				sb.append("private "); //$NON-NLS-1$
 			}
 
-			//Canonical order
+			// Canonical order
 			if ((mod & ABSTRACT) != 0) {
 				sb.append("abstract "); //$NON-NLS-1$
 			}

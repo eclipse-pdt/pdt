@@ -30,8 +30,7 @@ public class StubFile {
 		try {
 			// if currentByte is equal to char '_',we will not read the next
 			// byte
-			while (!stubHasBeenFound
-					&& (currentByte == '_' || (n = bis.read()) != -1)) {
+			while (!stubHasBeenFound && (currentByte == '_' || (n = bis.read()) != -1)) {
 				if (n == '_') {
 					boolean match = false;
 					int j = 1;
@@ -50,8 +49,7 @@ public class StubFile {
 						if (bis.available() > 0) {
 							j = 0;
 							match = false;
-							for (; j < PharConstants.STUB_TAIL.length
-									&& n != -1; j++) {
+							for (; j < PharConstants.STUB_TAIL.length && n != -1; j++) {
 								n = bis.read();
 								if (n == PharConstants.STUB_TAIL[j]) {
 									if (j == PharConstants.STUB_TAIL.length - 1) {
@@ -72,8 +70,7 @@ public class StubFile {
 				}
 			}
 			if (!stubHasBeenFound) {
-				PharUtil
-						.throwPharException("the file is not a well formated stub"); //$NON-NLS-1$
+				PharUtil.throwPharException("the file is not a well formated stub"); //$NON-NLS-1$
 			}
 		} finally {
 			bis.close();

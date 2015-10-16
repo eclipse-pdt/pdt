@@ -58,15 +58,13 @@ public class Stub implements IStub {
 
 	}
 
-	private InputStream getStubInputStream() throws CoreException,
-			FileNotFoundException {
+	private InputStream getStubInputStream() throws CoreException, FileNotFoundException {
 		InputStream contentStream = null;
 		IFile stubFile = jarPackage.getStubFile();
 		if (stubFile.exists()) {
 			contentStream = stubFile.getContents(false);
 		} else {
-			contentStream = new BufferedInputStream(new FileInputStream(
-					jarPackage.getStubLocation().toFile()));
+			contentStream = new BufferedInputStream(new FileInputStream(jarPackage.getStubLocation().toFile()));
 		}
 		return contentStream;
 	}

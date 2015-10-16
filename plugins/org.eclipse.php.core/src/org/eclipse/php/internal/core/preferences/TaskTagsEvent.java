@@ -43,8 +43,7 @@ public class TaskTagsEvent extends EventObject {
 	 * @param isCaseSensitive
 	 *            Indicate that the tags should be compiled as case-sensitive.
 	 */
-	public TaskTagsEvent(TaskTagsProvider provider, IProject project,
-			TaskTag[] tags, boolean isCaseSensitive) {
+	public TaskTagsEvent(TaskTagsProvider provider, IProject project, TaskTag[] tags, boolean isCaseSensitive) {
 		super(provider);
 		this.project = project;
 		this.tags = tags;

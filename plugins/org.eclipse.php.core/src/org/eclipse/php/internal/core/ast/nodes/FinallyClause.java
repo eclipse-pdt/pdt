@@ -22,9 +22,11 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents a catch clause (as part of a try statement)
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
- * <pre> catch (ExceptionClassName $variable) { body; },
+ * <pre>
+ * catch (ExceptionClassName $variable) { body; },
  * 
  */
 public class FinallyClause extends Statement {
@@ -34,8 +36,7 @@ public class FinallyClause extends Statement {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
-			FinallyClause.class,
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(FinallyClause.class,
 			"statement", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
@@ -45,8 +46,7 @@ public class FinallyClause extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
@@ -141,22 +141,19 @@ public class FinallyClause extends Statement {
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
 
-		FinallyClause result = new FinallyClause(this.getStart(),
-				this.getEnd(), target, body);
+		FinallyClause result = new FinallyClause(this.getStart(), this.getEnd(), target, body);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();

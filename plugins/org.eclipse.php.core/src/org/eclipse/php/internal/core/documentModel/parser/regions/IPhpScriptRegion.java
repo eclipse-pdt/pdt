@@ -32,11 +32,9 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @param min
 	 * @throws BadLocationException
 	 */
-	public abstract ITextRegion[] getPhpTokens(int from, int length)
-			throws BadLocationException;
+	public abstract ITextRegion[] getPhpTokens(int from, int length) throws BadLocationException;
 
-	public abstract ITextRegion[] getUpdatedPhpTokens()
-			throws BadLocationException;
+	public abstract ITextRegion[] getUpdatedPhpTokens() throws BadLocationException;
 
 	public int getUpdatedTokensStart();
 
@@ -50,8 +48,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return region (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract ITextRegion getPhpToken(int offset)
-			throws BadLocationException;
+	public abstract ITextRegion getPhpToken(int offset) throws BadLocationException;
 
 	/**
 	 * returns the php partition type of the token that lay in the given offset
@@ -75,8 +72,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return php token type (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract String getPhpTokenType(int offset)
-			throws BadLocationException;
+	public abstract String getPhpTokenType(int offset) throws BadLocationException;
 
 	/**
 	 * Returns true if the given offset is in line comment
@@ -85,8 +81,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public abstract boolean isLineComment(int relativeOffset)
-			throws BadLocationException;
+	public abstract boolean isLineComment(int relativeOffset) throws BadLocationException;
 
 	/**
 	 * Performs a complete reparse in the document on the given interval

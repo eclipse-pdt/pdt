@@ -13,15 +13,13 @@ package org.eclipse.php.internal.core.tar;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CBZip2OutputStreamForPhar extends CBZip2OutputStream implements
-		CRCable {
+public class CBZip2OutputStreamForPhar extends CBZip2OutputStream implements CRCable {
 
 	public CBZip2OutputStreamForPhar(OutputStream inStream) throws IOException {
 		this(inStream, 4);
 	}
 
-	public CBZip2OutputStreamForPhar(OutputStream inStream, int inBlockSize)
-			throws IOException {
+	public CBZip2OutputStreamForPhar(OutputStream inStream, int inBlockSize) throws IOException {
 		super(inStream, inBlockSize);
 	}
 

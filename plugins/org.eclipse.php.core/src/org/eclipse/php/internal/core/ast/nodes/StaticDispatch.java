@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-
 /**
  * base class for all the static access
  */
@@ -23,14 +22,14 @@ public abstract class StaticDispatch extends VariableBase {
 	 * The structural property of this node type.
 	 */
 	abstract ChildPropertyDescriptor getClassNameProperty();
-	
+
 	public StaticDispatch(int start, int end, AST ast, Expression className) {
 		super(start, end, ast);
 
 		if (className == null) {
 			throw new IllegalArgumentException();
 		}
-		setClassName(className);	
+		setClassName(className);
 	}
 
 	public StaticDispatch(AST ast) {
@@ -44,14 +43,16 @@ public abstract class StaticDispatch extends VariableBase {
 	/**
 	 * Sets the class name expression
 	 * 
-	 * @param name the class name of this dispatch
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param name
+	 *            the class name of this dispatch
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setClassName(Expression name) {
 		if (name == null) {
 			throw new IllegalArgumentException();
@@ -61,8 +62,8 @@ public abstract class StaticDispatch extends VariableBase {
 		preReplaceChild(oldChild, name, getClassNameProperty());
 		this.className = name;
 		postReplaceChild(oldChild, name, getClassNameProperty());
-	}	
-	
+	}
+
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == getClassNameProperty()) {
 			if (get) {
@@ -75,7 +76,6 @@ public abstract class StaticDispatch extends VariableBase {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	
+
 	public abstract ASTNode getMember();
 }

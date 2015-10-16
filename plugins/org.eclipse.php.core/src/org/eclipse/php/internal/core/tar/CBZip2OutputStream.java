@@ -51,8 +51,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 		}
 	}
 
-	protected static void hbMakeCodeLengths(char[] len, int[] freq,
-			int alphaSize, int maxLen) {
+	protected static void hbMakeCodeLengths(char[] len, int[] freq, int alphaSize, int maxLen) {
 		/*
 		 * Nodes and heap entries run from 1. Entry 0 for both the heap and
 		 * nodes is a sentinel.
@@ -108,8 +107,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 						if (yy > nHeap) {
 							break;
 						}
-						if (yy < nHeap
-								&& weight[heap[yy + 1]] < weight[heap[yy]]) {
+						if (yy < nHeap && weight[heap[yy + 1]] < weight[heap[yy]]) {
 							yy++;
 						}
 						if (weight[tmp] < weight[heap[yy]]) {
@@ -132,8 +130,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 						if (yy > nHeap) {
 							break;
 						}
-						if (yy < nHeap
-								&& weight[heap[yy + 1]] < weight[heap[yy]]) {
+						if (yy < nHeap && weight[heap[yy + 1]] < weight[heap[yy]]) {
 							yy++;
 						}
 						if (weight[tmp] < weight[heap[yy]]) {
@@ -254,8 +251,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 		this(inStream, 9);
 	}
 
-	public CBZip2OutputStream(OutputStream inStream, int inBlockSize)
-			throws IOException {
+	public CBZip2OutputStream(OutputStream inStream, int inBlockSize) throws IOException {
 		block = null;
 		quadrant = null;
 		zptr = null;
@@ -473,8 +469,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 		bsFinishedWithStream();
 	}
 
-	private void hbAssignCodes(int[] code, char[] length, int minLen,
-			int maxLen, int alphaSize) {
+	private void hbAssignCodes(int[] code, char[] length, int minLen, int maxLen, int alphaSize) {
 		int n, vec, i;
 
 		vec = 0;
@@ -573,7 +568,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 			nGroups = 6;
 		}
 
-		/* Generate an initial set of coding tables */{
+		/* Generate an initial set of coding tables */ {
 			int nPart, remF, tFreq, aFreq;
 
 			nPart = nGroups;
@@ -588,8 +583,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 					aFreq += mtfFreq[ge];
 				}
 
-				if (ge > gs && nPart != nGroups && nPart != 1
-						&& ((nGroups - nPart) % 2 == 1)) {
+				if (ge > gs && nPart != nGroups && nPart != 1 && ((nGroups - nPart) % 2 == 1)) {
 					aFreq -= mtfFreq[ge];
 					ge--;
 				}
@@ -844,8 +838,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 				ge = nMTF - 1;
 			}
 			for (i = gs; i <= ge; i++) {
-				bsW(len[selector[selCtr]][szptr[i]],
-						code[selector[selCtr]][szptr[i]]);
+				bsW(len[selector[selCtr]][szptr[i]], code[selector[selCtr]][szptr[i]]);
 			}
 
 			gs = ge + 1;
@@ -1008,8 +1001,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 				continue;
 			}
 
-			med = med3(block[zptr[lo] + d + 1], block[zptr[hi] + d + 1],
-					block[zptr[(lo + hi) >> 1] + d + 1]);
+			med = med3(block[zptr[lo] + d + 1], block[zptr[hi] + d + 1], block[zptr[(lo + hi) >> 1] + d + 1]);
 
 			unLo = ltLo = lo;
 			unHi = gtHi = hi;
@@ -1113,7 +1105,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 		 * for block.
 		 */
 
-		// if (verbosity >= 4) fprintf ( stderr, "   sort initialise ...\n" );
+		// if (verbosity >= 4) fprintf ( stderr, " sort initialise ...\n" );
 		for (i = 0; i < NUM_OVERSHOOT_BYTES; i++) {
 			block[last + i + 2] = block[(i % (last + 1)) + 1];
 		}
@@ -1188,8 +1180,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 					for (i = h; i <= 255; i++) {
 						vv = runningOrder[i];
 						j = i;
-						while ((ftab[((runningOrder[j - h]) + 1) << 8] - ftab[(runningOrder[j
-								- h]) << 8]) > (ftab[((vv) + 1) << 8] - ftab[(vv) << 8])) {
+						while ((ftab[((runningOrder[j - h]) + 1) << 8]
+								- ftab[(runningOrder[j - h]) << 8]) > (ftab[((vv) + 1) << 8] - ftab[(vv) << 8])) {
 							runningOrder[j] = runningOrder[j - h];
 							j = j - h;
 							if (j <= (h - 1)) {
@@ -1476,8 +1468,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 	 * Possibly because the number of elems to sort is usually small, typically
 	 * <= 20.
 	 */
-	private int[] incs = { 1, 4, 13, 40, 121, 364, 1093, 3280, 9841, 29524,
-			88573, 265720, 797161, 2391484 };
+	private int[] incs = { 1, 4, 13, 40, 121, 364, 1093, 3280, 9841, 29524, 88573, 265720, 797161, 2391484 };
 
 	private void allocateCompressStructures() {
 		int n = baseBlockSize * blockSize100k;

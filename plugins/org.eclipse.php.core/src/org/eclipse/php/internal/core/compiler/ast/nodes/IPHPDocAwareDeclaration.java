@@ -12,8 +12,9 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 /**
- * This interface used by all AST declaration nodes that can
- * hold a PHPDoc description above the title. For example:
+ * This interface used by all AST declaration nodes that can hold a PHPDoc
+ * description above the title. For example:
+ * 
  * <pre>
  * /**
  *  * This PHPDoc section is related to the class declaration
@@ -26,6 +27,7 @@ public interface IPHPDocAwareDeclaration {
 
 	/**
 	 * Returns PHPDoc block relevant to this node
+	 * 
 	 * @return PHPDoc block
 	 */
 	public PHPDocBlock getPHPDoc();

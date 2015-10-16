@@ -13,15 +13,13 @@ package org.eclipse.php.internal.core.phar;
 import java.io.File;
 import java.io.IOException;
 
-public class GZPharEntryBufferedRandomInputStream extends
-		PharEntryBufferedRandomInputStream {
+public class GZPharEntryBufferedRandomInputStream extends PharEntryBufferedRandomInputStream {
 	byte[] header = new byte[] { 31, -117, 8, 0, 0, 0, 0, 0, 0, 0 };
 	byte[] tailer;
 	protected int headerIndex;
 	protected int tailerIndex;
 
-	public GZPharEntryBufferedRandomInputStream(File file, PharEntry pharEntry)
-			throws IOException {
+	public GZPharEntryBufferedRandomInputStream(File file, PharEntry pharEntry) throws IOException {
 		super(file, pharEntry);
 		tailer = comcat(pharEntry.getCrcByte(), pharEntry.getSizeByte());
 		headerIndex = 0;

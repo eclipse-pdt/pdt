@@ -39,8 +39,7 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 	 * @param context
 	 * @param elementFilter
 	 */
-	public FunctionParameterKeywordTypeStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public FunctionParameterKeywordTypeStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -60,13 +59,11 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			try {
 				int flags = context.getEnclosingType().getFlags();
 				if (!PHPFlags.isNamespace(flags)) {
-					String pref = PHPVersion.PHP5_4.isLessThan(context
-							.getPhpVersion()) ? prefix.toLowerCase() : prefix;
+					String pref = PHPVersion.PHP5_4.isLessThan(context.getPhpVersion()) ? prefix.toLowerCase() : prefix;
 
 					for (String keyword : KEYWORDS) {
 						if (keyword.startsWith(pref)) {
-							reporter.reportKeyword(keyword, suffix,
-									replaceRange);
+							reporter.reportKeyword(keyword, suffix, replaceRange);
 						}
 					}
 				}

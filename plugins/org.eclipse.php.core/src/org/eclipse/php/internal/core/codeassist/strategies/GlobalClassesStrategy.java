@@ -26,8 +26,7 @@ public class GlobalClassesStrategy extends GlobalTypesStrategy {
 		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace);
 	}
 
-	public GlobalClassesStrategy(ICompletionContext context, int trueFlag,
-			int falseFlag) {
+	public GlobalClassesStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
 	}
 

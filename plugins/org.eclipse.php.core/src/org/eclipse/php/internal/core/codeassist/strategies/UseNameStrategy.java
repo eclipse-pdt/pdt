@@ -24,8 +24,7 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 	private static final String FUNCTION_KEYWORD = "function"; //$NON-NLS-1$
 	private static final String CONST_KEYWORD = "const"; //$NON-NLS-1$
 
-	public UseNameStrategy(ICompletionContext context, int trueFlag,
-			int falseFlag) {
+	public UseNameStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
 	}
 
@@ -37,8 +36,7 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(
-						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 
@@ -47,13 +45,10 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 		super.apply(reporter);
 	}
 
-	private void reportKeyword(String keyword, ICompletionReporter reporter)
-			throws BadLocationException {
+	private void reportKeyword(String keyword, ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix() == null
-				|| keyword.startsWith(completionContext.getPrefix())) {
-			reporter.reportKeyword(keyword,
-					IPHPKeywordsInitializer.WHITESPACE_SUFFIX,
+		if (completionContext.getPrefix() == null || keyword.startsWith(completionContext.getPrefix())) {
+			reporter.reportKeyword(keyword, IPHPKeywordsInitializer.WHITESPACE_SUFFIX,
 					getReplacementRange(completionContext));
 		}
 	}

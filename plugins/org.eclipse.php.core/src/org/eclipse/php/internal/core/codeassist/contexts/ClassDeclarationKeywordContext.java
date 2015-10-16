@@ -30,15 +30,13 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public class ClassDeclarationKeywordContext extends ClassDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 
 		TextSequence statementText = getStatementText();
-		statementText = statementText.subTextSequence(getTypeIdentifierEnd(),
-				statementText.length());
+		statementText = statementText.subTextSequence(getTypeIdentifierEnd(), statementText.length());
 
 		if (!hasExtends() && !hasImplements()) { // the cursor position is right
 													// after the class name

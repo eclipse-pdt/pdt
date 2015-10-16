@@ -35,16 +35,13 @@ public class TraitUtils {
 		final ISourceModule sourceModule = type.getSourceModule();
 		try {
 			final ISourceRange sourceRange = type.getSourceRange();
-			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(sourceModule);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 			moduleDeclaration.traverse(new TraitUseStatementVisitor() {
 				@Override
 				public boolean visit(TraitUseStatement s) throws Exception {
 					if (s.sourceStart() > sourceRange.getOffset()
-							&& s.sourceEnd() < sourceRange.getOffset()
-									+ sourceRange.getLength()) {
-						parse(sourceModule, sourceRange.getOffset(), s,
-								useTrait);
+							&& s.sourceEnd() < sourceRange.getOffset() + sourceRange.getLength()) {
+						parse(sourceModule, sourceRange.getOffset(), s, useTrait);
 					}
 					return false;
 				}
@@ -55,8 +52,8 @@ public class TraitUtils {
 		return useTrait;
 	}
 
-	public static UseTrait parse(ISourceModule sourceModule, int offset,
-			TraitUseStatement statement, UseTrait useTrait) {
+	public static UseTrait parse(ISourceModule sourceModule, int offset, TraitUseStatement statement,
+			UseTrait useTrait) {
 		if (useTrait == null) {
 			useTrait = new UseTrait();
 		}
@@ -65,12 +62,10 @@ public class TraitUtils {
 			if (typeReference instanceof FullyQualifiedReference) {
 				FullyQualifiedReference reference = (FullyQualifiedReference) typeReference;
 				if (reference.getNamespace() != null) {
-					name = reference.getNamespace().getName()
-							+ NamespaceReference.NAMESPACE_SEPARATOR + name;
+					name = reference.getNamespace().getName() + NamespaceReference.NAMESPACE_SEPARATOR + name;
 				}
 			}
-			useTrait.getTraits().add(
-					PHPModelUtils.getFullName(name, sourceModule, offset));
+			useTrait.getTraits().add(PHPModelUtils.getFullName(name, sourceModule, offset));
 		}
 
 		for (TraitStatement traitStatement : statement.getTsList()) {
@@ -85,16 +80,13 @@ public class TraitUtils {
 					ta.traitMethodName = simpleReference.getName();
 					ta.newMethodVisibility = new_name.getAlias().getModifier();
 					if (new_name.getAlias().getMethodName() != null) {
-						ta.newMethodName = new_name.getAlias().getMethodName()
-								.getName();
+						ta.newMethodName = new_name.getAlias().getMethodName().getName();
 					}
 					useTrait.getTraitAliases().add(ta);
-					List<TraitAliasObject> traitAliases = useTrait
-							.getAliasMap().get(ta.traitMethodName);
+					List<TraitAliasObject> traitAliases = useTrait.getAliasMap().get(ta.traitMethodName);
 					if (traitAliases == null) {
 						traitAliases = new ArrayList<TraitAliasObject>();
-						useTrait.getAliasMap().put(ta.traitMethodName,
-								traitAliases);
+						useTrait.getAliasMap().put(ta.traitMethodName, traitAliases);
 					}
 					traitAliases.add(ta);
 					// useTrait.getAliasMap().put(ta.traitMethodName, ta);
@@ -102,21 +94,18 @@ public class TraitUtils {
 					FullyQualifiedTraitMethodReference simpleReference = (FullyQualifiedTraitMethodReference) traitMethod;
 
 					TraitAliasObject ta = new TraitAliasObject();
-					ta.traitName = PHPModelUtils.getFullName(simpleReference
-							.getClassName().getName(), sourceModule, offset);
+					ta.traitName = PHPModelUtils.getFullName(simpleReference.getClassName().getName(), sourceModule,
+							offset);
 					ta.traitMethodName = simpleReference.getFunctionName();
 					ta.newMethodVisibility = new_name.getAlias().getModifier();
 					if (new_name.getAlias().getMethodName() != null) {
-						ta.newMethodName = new_name.getAlias().getMethodName()
-								.getName();
+						ta.newMethodName = new_name.getAlias().getMethodName().getName();
 					}
 					useTrait.getTraitAliases().add(ta);
-					List<TraitAliasObject> traitAliases = useTrait
-							.getAliasMap().get(ta.traitMethodName);
+					List<TraitAliasObject> traitAliases = useTrait.getAliasMap().get(ta.traitMethodName);
 					if (traitAliases == null) {
 						traitAliases = new ArrayList<TraitAliasObject>();
-						useTrait.getAliasMap().put(ta.traitMethodName,
-								traitAliases);
+						useTrait.getAliasMap().put(ta.traitMethodName, traitAliases);
 					}
 					traitAliases.add(ta);
 					// useTrait.getAliasMap().put(ta.traitMethodName, ta);
@@ -125,14 +114,11 @@ public class TraitUtils {
 			} else if (traitStatement instanceof TraitPrecedenceStatement) {
 				TraitPrecedenceStatement new_name = (TraitPrecedenceStatement) traitStatement;
 				TraitPrecedenceObject tpo = new TraitPrecedenceObject();
-				tpo.traitName = PHPModelUtils.getFullName(new_name
-						.getPrecedence().getMethodReference().getClassName()
-						.getName(), sourceModule, offset);
-				tpo.traitMethodName = new_name.getPrecedence()
-						.getMethodReference().getFunctionName();
+				tpo.traitName = PHPModelUtils.getFullName(
+						new_name.getPrecedence().getMethodReference().getClassName().getName(), sourceModule, offset);
+				tpo.traitMethodName = new_name.getPrecedence().getMethodReference().getFunctionName();
 
-				for (TypeReference typeReference : new_name.getPrecedence()
-						.getTrList()) {
+				for (TypeReference typeReference : new_name.getPrecedence().getTrList()) {
 					tpo.insteadofTraitNameList.add(typeReference.getName());
 				}
 				useTrait.getPrecedenceMap().put(tpo.traitMethodName, tpo);
@@ -147,8 +133,8 @@ public class TraitUtils {
 		List<IField> fieldList = new ArrayList<IField>();
 		Set<String> traitNameSet = new HashSet<String>();
 		for (String trait : useTrait.getTraits()) {
-			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait,
-					MatchRule.EXACT, 0, 0, createSearchScope(type), null);
+			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
+					createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
 				String traitName = PHPModelUtils.getFullName(traitType);
 				if (!trait.equals(traitName)) {
@@ -164,8 +150,7 @@ public class TraitUtils {
 					fields = PHPModelUtils.getTypeField(traitType, "", false); //$NON-NLS-1$
 					// fields = traitType.getFields();
 					for (IField field : fields) {
-						List<IField> aliasList = getFieldWrapper(useTrait,
-								field, type);
+						List<IField> aliasList = getFieldWrapper(useTrait, field, type);
 						for (IField alias : aliasList) {
 							if (alias == null) {
 								continue;
@@ -186,8 +171,7 @@ public class TraitUtils {
 		return fieldList.toArray(new IField[fieldList.size()]);
 	}
 
-	private static List<IField> getFieldWrapper(UseTrait useTrait,
-			IField field, IType type) {
+	private static List<IField> getFieldWrapper(UseTrait useTrait, IField field, IType type) {
 		List<IField> result = new ArrayList<IField>();
 		String fieldName = field.getElementName();
 		if (fieldName.startsWith("$")) { //$NON-NLS-1$
@@ -199,17 +183,14 @@ public class TraitUtils {
 		if (tpo != null) {
 			shouldAddSelf = false;
 		}
-		List<TraitAliasObject> aliasList = useTrait.getAliasMap()
-				.get(fieldName);
+		List<TraitAliasObject> aliasList = useTrait.getAliasMap().get(fieldName);
 		String fullName = PHPModelUtils.getFullName(field.getDeclaringType());
 		if (aliasList != null) {
 			for (TraitAliasObject tao : aliasList) {
 				if ((tao.traitName == null || fullName.equals(tao.traitName))) {
-					IField alias = new FieldWrapper(field,
-							tao.newMethodVisibility, tao.newMethodName, type);
+					IField alias = new FieldWrapper(field, tao.newMethodVisibility, tao.newMethodName, type);
 					result.add(alias);
-					if (fieldName.equals(tao.newMethodName)
-							|| tao.newMethodName == null) {
+					if (fieldName.equals(tao.newMethodName) || tao.newMethodName == null) {
 						changeVisibility = true;
 					}
 				}
@@ -239,8 +220,8 @@ public class TraitUtils {
 		List<IMethod> fieldList = new ArrayList<IMethod>();
 		Set<String> traitNameSet = new HashSet<String>();
 		for (String trait : useTrait.getTraits()) {
-			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait,
-					MatchRule.EXACT, 0, 0, createSearchScope(type), null);
+			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
+					createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
 				String traitName = PHPModelUtils.getFullName(traitType);
 				if (!trait.equals(traitName)) {
@@ -257,8 +238,7 @@ public class TraitUtils {
 					// methods = traitType.getMethods();
 					for (IMethod method : methods) {
 
-						List<IMethod> aliasList = getMethodWrapper(useTrait,
-								method, type);
+						List<IMethod> aliasList = getMethodWrapper(useTrait, method, type);
 						for (IMethod alias : aliasList) {
 							if (alias == null) {
 								continue;
@@ -276,8 +256,7 @@ public class TraitUtils {
 		return fieldList.toArray(new IMethod[fieldList.size()]);
 	}
 
-	private static List<IMethod> getMethodWrapper(UseTrait useTrait,
-			IMethod method, IType type) {
+	private static List<IMethod> getMethodWrapper(UseTrait useTrait, IMethod method, IType type) {
 
 		List<IMethod> result = new ArrayList<IMethod>();
 		String methodName = method.getElementName();
@@ -287,17 +266,14 @@ public class TraitUtils {
 		if (tpo != null) {
 			shouldAddSelf = false;
 		}
-		List<TraitAliasObject> aliasList = useTrait.getAliasMap().get(
-				methodName);
+		List<TraitAliasObject> aliasList = useTrait.getAliasMap().get(methodName);
 		String fullName = PHPModelUtils.getFullName(method.getDeclaringType());
 		if (aliasList != null) {
 			for (TraitAliasObject tao : aliasList) {
 				if ((tao.traitName == null || fullName.equals(tao.traitName))) {
-					IMethod alias = new MethodWrapper(method,
-							tao.newMethodVisibility, tao.newMethodName, type);
+					IMethod alias = new MethodWrapper(method, tao.newMethodVisibility, tao.newMethodName, type);
 					result.add(alias);
-					if (methodName.equals(tao.newMethodName)
-							|| tao.newMethodName == null) {
+					if (methodName.equals(tao.newMethodName) || tao.newMethodName == null) {
 						changeVisibility = true;
 					}
 				}
@@ -333,8 +309,7 @@ public class TraitUtils {
 		if (scriptProject != null) {
 			return SearchEngine.createSearchScope(scriptProject);
 		}
-		IProjectFragment projectFragment = (IProjectFragment) sourceModule
-				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		IProjectFragment projectFragment = (IProjectFragment) sourceModule.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		if (projectFragment != null) {
 			return SearchEngine.createSearchScope(projectFragment);
 		}
@@ -349,8 +324,7 @@ public class TraitUtils {
 		public boolean useAlias();
 	}
 
-	private static class FieldWrapper extends SourceField implements
-			ITraitMember {
+	private static class FieldWrapper extends SourceField implements ITraitMember {
 
 		private int flags = -1;
 		private String name;
@@ -419,8 +393,7 @@ public class TraitUtils {
 
 	}
 
-	private static class MethodWrapper extends SourceMethod implements
-			ITraitMember {
+	private static class MethodWrapper extends SourceMethod implements ITraitMember {
 
 		private int flags = -1;
 		private String name;

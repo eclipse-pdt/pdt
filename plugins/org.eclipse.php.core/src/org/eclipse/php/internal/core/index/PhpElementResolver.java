@@ -34,9 +34,8 @@ public class PhpElementResolver implements IElementResolver {
 	private static final Pattern SEPARATOR_PATTERN = Pattern.compile(","); //$NON-NLS-1$
 	private static final String[] EMPTY = new String[0];
 
-	public IModelElement resolve(int elementType, int flags, int offset,
-			int length, int nameOffset, int nameLength, String elementName,
-			String metadata, String doc, String qualifier, String parent,
+	public IModelElement resolve(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
+			String elementName, String metadata, String doc, String qualifier, String parent,
 			ISourceModule sourceModule) {
 
 		int occurrenceCount = 1;
@@ -60,8 +59,7 @@ public class PhpElementResolver implements IElementResolver {
 		ModelElement parentElement = (ModelElement) sourceModule;
 		if (qualifier != null) {
 			// namespace:
-			parentElement = new IndexType(parentElement, qualifier,
-					Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc,
+			parentElement = new IndexType(parentElement, qualifier, Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc,
 					occurrenceCount);
 		}
 		if (parent != null) {
@@ -78,16 +76,15 @@ public class PhpElementResolver implements IElementResolver {
 			// a namespace cannot have a nested namespace otherwise
 			// occurrenceCount will be applied to both!
 			assert qualifier == null;
-			return new IndexType(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, superClassNames, doc,
-					occurrenceCount);
+			return new IndexType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
+					superClassNames, doc, occurrenceCount);
 
 		case IModelElement.TYPE:
 			if (metadataToDecode != null) {
 				superClassNames = SEPARATOR_PATTERN.split(metadataToDecode);
 			}
-			return new IndexType(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, superClassNames, doc, 1);
+			return new IndexType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
+					superClassNames, doc, 1);
 
 		case IModelElement.METHOD:
 			String[] parameters;
@@ -96,20 +93,19 @@ public class PhpElementResolver implements IElementResolver {
 			} else {
 				parameters = EMPTY;
 			}
-			return new IndexMethod(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, parameters, doc, 1);
+			return new IndexMethod(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
+					parameters, doc, 1);
 
 		case IModelElement.FIELD:
-			return new IndexField(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, doc, 1);
+			return new IndexField(parentElement, elementName, flags, offset, length, nameOffset, nameLength, doc, 1);
 
 		case IModelElement.IMPORT_DECLARATION:
 			// XXX: replace with import declaration element
 			return new IncludeField(parentElement, metadataToDecode);
 
 		default:
-			Logger.log(Logger.WARNING, PhpElementResolver.class.getName()
-					+ ": Unsupported element type (" + elementType + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING,
+					PhpElementResolver.class.getName() + ": Unsupported element type (" + elementType + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}
@@ -155,17 +151,15 @@ public class PhpElementResolver implements IElementResolver {
 		return (info != null && info.containsKey("d")); //$NON-NLS-1$
 	}
 
-	private static class IndexField extends SourceField implements
-			IPHPDocAwareElement {
+	private static class IndexField extends SourceField implements IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
 		private String doc;
 
-		public IndexField(ModelElement parent, String name, int flags,
-				int offset, int length, int nameOffset, int nameLength,
-				String doc, int occurrenceCount) {
+		public IndexField(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
+				int nameLength, String doc, int occurrenceCount) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
@@ -204,16 +198,14 @@ public class PhpElementResolver implements IElementResolver {
 			Map<String, String> info = decodeDocInfo(doc);
 			if (info != null) {
 				String types = info.get("v"); //$NON-NLS-1$
-				types = types.replace(Constants.DOT,
-						Constants.TYPE_SEPERATOR_CHAR);
+				types = types.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
 				return types;
 			}
 			return null;
 		}
 	}
 
-	private static class IndexMethod extends SourceMethod implements
-			IPHPDocAwareElement {
+	private static class IndexMethod extends SourceMethod implements IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
@@ -221,9 +213,8 @@ public class PhpElementResolver implements IElementResolver {
 		private IParameter[] parameters;
 		private String doc;
 
-		public IndexMethod(ModelElement parent, String name, int flags,
-				int offset, int length, int nameOffset, int nameLength,
-				String[] parameterNames, String doc, int occurrenceCount) {
+		public IndexMethod(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
+				int nameLength, String[] parameterNames, String doc, int occurrenceCount) {
 
 			super(parent, name);
 			this.flags = flags;
@@ -244,8 +235,7 @@ public class PhpElementResolver implements IElementResolver {
 							type = null;
 						}
 						if (type != null) {
-							type = type.replace(Constants.DOT,
-									Constants.TYPE_SEPERATOR_CHAR);
+							type = type.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
 						}
 						String param = values[1];
 
@@ -253,8 +243,7 @@ public class PhpElementResolver implements IElementResolver {
 						if (PhpIndexingVisitor.NULL_VALUE.equals(defaultValue)) {
 							defaultValue = null;
 						}
-						this.parameters[i] = new MethodParameterInfo(param,
-								type, defaultValue);
+						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue);
 					}
 				}
 			}
@@ -313,8 +302,7 @@ public class PhpElementResolver implements IElementResolver {
 
 	}
 
-	private static class IndexType extends SourceType implements
-			IPHPDocAwareElement {
+	private static class IndexType extends SourceType implements IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
@@ -322,9 +310,8 @@ public class PhpElementResolver implements IElementResolver {
 		private String[] superClassNames;
 		private String doc;
 
-		public IndexType(ModelElement parent, String name, int flags,
-				int offset, int length, int nameOffset, int nameLength,
-				String[] superClassNames, String doc, int occurrenceCount) {
+		public IndexType(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
+				int nameLength, String[] superClassNames, String doc, int occurrenceCount) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);

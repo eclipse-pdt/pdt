@@ -23,13 +23,12 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * Will be used for special code assist in doc blocks such as:
  * 
  * <pre>
- *   @var My|
+ *   &#64;var My|
  * </pre>
  */
 public abstract class AbstractPHPDocTagStartContext extends PHPDocTagContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

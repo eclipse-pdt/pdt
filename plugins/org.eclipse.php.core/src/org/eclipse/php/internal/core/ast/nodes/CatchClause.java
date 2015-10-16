@@ -21,7 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents a catch clause (as part of a try statement)
- * <pre>e.g.<pre> catch (ExceptionClassName $variable) { body; },
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * catch (ExceptionClassName $variable) { body; },
  * 
  */
 public class CatchClause extends Statement {
@@ -33,25 +38,24 @@ public class CatchClause extends Statement {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(CatchClause.class, "className", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = 
-		new ChildPropertyDescriptor(CatchClause.class, "variable", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(CatchClause.class, "statement", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
+			"className", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
+			"variable", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
+			"statement", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(CLASS_NAME_PROPERTY);
 		properyList.add(VARIABLE_PROPERTY);
-		properyList.add(BODY_PROPERTY);		
+		properyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
@@ -64,7 +68,7 @@ public class CatchClause extends Statement {
 		if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		this.className = className;
 		this.variable = variable;
 		this.body = statement;
@@ -77,14 +81,14 @@ public class CatchClause extends Statement {
 	public CatchClause(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		className.accept(visitor);
@@ -136,53 +140,56 @@ public class CatchClause extends Statement {
 	 * Returns the class name of this catch clause.
 	 * 
 	 * @return the exception variable declaration node
-	 */ 
+	 */
 	public Expression getClassName() {
 		return this.className;
 	}
-		
+
 	/**
 	 * Sets the variable declaration of this catch clause.
 	 * 
-	 * @param exception the exception variable declaration node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param exception
+	 *            the exception variable declaration node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setClassName(Expression className) {
 		if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
 			throw new IllegalArgumentException();
 		}
 		ASTNode oldChild = this.className;
 		preReplaceChild(oldChild, className, CLASS_NAME_PROPERTY);
-		this.className= className;
+		this.className = className;
 		postReplaceChild(oldChild, className, CLASS_NAME_PROPERTY);
 	}
-	
-	
+
 	/**
 	 * Returns the exception variable declaration of this catch clause.
 	 * 
 	 * @return the exception variable declaration node
-	 */ 
+	 */
 	public Variable getVariable() {
 		return this.variable;
 	}
-		
+
 	/**
 	 * Sets the variable declaration of this catch clause.
 	 * 
-	 * @param exception the exception variable declaration node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param exception
+	 *            the exception variable declaration node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setVariable(Variable variable) {
 		if (variable == null) {
 			throw new IllegalArgumentException();
@@ -192,27 +199,29 @@ public class CatchClause extends Statement {
 		this.variable = variable;
 		postReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
 	}
-	
+
 	/**
 	 * Returns the body of this catch clause.
 	 * 
 	 * @return the catch clause body
-	 */ 
+	 */
 	public Block getBody() {
 		return this.body;
 	}
-	
+
 	/**
 	 * Sets the body of this catch clause.
 	 * 
-	 * @param body the catch clause block node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param body
+	 *            the catch clause block node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setBody(Block body) {
 		if (body == null) {
 			throw new IllegalArgumentException();
@@ -222,9 +231,8 @@ public class CatchClause extends Statement {
 		this.body = body;
 		postReplaceChild(oldChild, body, BODY_PROPERTY);
 	}
-	
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -237,19 +245,18 @@ public class CatchClause extends Statement {
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final Expression className = ASTNode.copySubtree(target, getClassName());
 		final Variable variable = ASTNode.copySubtree(target, getVariable());
-		
+
 		CatchClause result = new CatchClause(this.getStart(), this.getEnd(), target, className, variable, body);
 		return result;
 	}
-
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASS_NAME_PROPERTY) {
@@ -278,5 +285,5 @@ public class CatchClause extends Statement {
 		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
-	}	
+	}
 }

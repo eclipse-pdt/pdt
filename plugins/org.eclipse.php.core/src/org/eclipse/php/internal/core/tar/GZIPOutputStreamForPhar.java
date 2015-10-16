@@ -16,8 +16,7 @@ import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
-public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements
-		CRCable {
+public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRCable {
 	/**
 	 * CRC-32 of uncompressed data.
 	 */
@@ -37,8 +36,7 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements
 	 * @exception IllegalArgumentException
 	 *                if size is <= 0
 	 */
-	public GZIPOutputStreamForPhar(OutputStream out, int size)
-			throws IOException {
+	public GZIPOutputStreamForPhar(OutputStream out, int size) throws IOException {
 		super(out, new Deflater(Deflater.DEFAULT_COMPRESSION, true), size);
 		crc.reset();
 	}
@@ -68,8 +66,7 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements
 	 * @exception IOException
 	 *                If an I/O error has occurred.
 	 */
-	public synchronized void write(byte[] buf, int off, int len)
-			throws IOException {
+	public synchronized void write(byte[] buf, int off, int len) throws IOException {
 		super.write(buf, off, len);
 		crc.update(buf, off, len);
 	}

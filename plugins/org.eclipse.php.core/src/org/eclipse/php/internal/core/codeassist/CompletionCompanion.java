@@ -66,16 +66,12 @@ public class CompletionCompanion {
 		if (!rhTypesCache.containsKey(offset)) {
 
 			TextSequence statementText = aContext.getStatementText();
-			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, statementText.length());
-			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					statementText, triggerEnd, true);
-			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, triggerEnd);
+			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementText.length());
+			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, triggerEnd, true);
+			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, triggerEnd);
 
-			rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(
-					aContext.getSourceModule(), statementText, triggerEnd,
-					offset));
+			rhTypesCache.put(offset,
+					CodeAssistUtils.getTypesFor(aContext.getSourceModule(), statementText, triggerEnd, offset));
 		}
 		return rhTypesCache.get(offset);
 	}
@@ -86,21 +82,16 @@ public class CompletionCompanion {
 		if (!rhTypesCache.containsKey(offset)) {
 
 			TextSequence statementText = aContext.getStatementText();
-			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, statementText.length());
-			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					statementText, triggerEnd, true);
-			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-					statementText, triggerEnd);
+			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementText.length());
+			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, triggerEnd, true);
+			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, triggerEnd);
 
 			if (isType) {
-				rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(
-						aContext.getSourceModule(), statementText, triggerEnd,
-						offset));
+				rhTypesCache.put(offset,
+						CodeAssistUtils.getTypesFor(aContext.getSourceModule(), statementText, triggerEnd, offset));
 			} else {
-				rhTypesCache.put(offset, CodeAssistUtils.getTraitsFor(
-						aContext.getSourceModule(), statementText, triggerEnd,
-						offset));
+				rhTypesCache.put(offset,
+						CodeAssistUtils.getTraitsFor(aContext.getSourceModule(), statementText, triggerEnd, offset));
 			}
 		}
 		return rhTypesCache.get(offset);
@@ -111,8 +102,7 @@ public class CompletionCompanion {
 	 * 
 	 * @throws ModelException
 	 */
-	public ITypeHierarchy getSuperTypeHierarchy(IType type,
-			IProgressMonitor monitor) throws ModelException {
+	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
 		if (!superHierarchyCache.containsKey(type)) {
 			superHierarchyCache.put(type, type.newSupertypeHierarchy(monitor));
 		}

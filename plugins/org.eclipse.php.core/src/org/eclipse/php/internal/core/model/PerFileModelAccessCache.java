@@ -42,20 +42,16 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 */
 	public PerFileModelAccessCache(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;
-		allTraitsCache = Collections
-				.synchronizedMap(new HashMap<String, Collection<IType>>());
-		allTypesCache = Collections
-				.synchronizedMap(new HashMap<String, Collection<IType>>());
-		allNamespacesCache = Collections
-				.synchronizedMap(new HashMap<String, Collection<IType>>());
+		allTraitsCache = Collections.synchronizedMap(new HashMap<String, Collection<IType>>());
+		allTypesCache = Collections.synchronizedMap(new HashMap<String, Collection<IType>>());
+		allNamespacesCache = Collections.synchronizedMap(new HashMap<String, Collection<IType>>());
 	}
 
 	public ISourceModule getSourceModule() {
 		return sourceModule;
 	}
 
-	public ITypeHierarchy getSuperTypeHierarchy(IType type,
-			IProgressMonitor monitor) throws ModelException {
+	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
 
 		ITypeHierarchy hierarchy = hierarchyCache.get(type);
 		if (hierarchy == null) {
@@ -74,18 +70,15 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @param monitor
 	 *            Progress monitor
 	 */
-	public ReferenceTree getFileHierarchy(ISourceModule sourceModule,
-			IProgressMonitor monitor) {
+	public ReferenceTree getFileHierarchy(ISourceModule sourceModule, IProgressMonitor monitor) {
 
 		if (!this.sourceModule.equals(sourceModule)) {
 			// Invoke a new search, since we only cache for the original file in
 			// this class:
-			return FileNetworkUtility.buildReferencedFilesTree(sourceModule,
-					monitor);
+			return FileNetworkUtility.buildReferencedFilesTree(sourceModule, monitor);
 		}
 		if (fileHierarchy == null) {
-			fileHierarchy = FileNetworkUtility.buildReferencedFilesTree(
-					sourceModule, monitor);
+			fileHierarchy = FileNetworkUtility.buildReferencedFilesTree(sourceModule, monitor);
 		}
 		return fileHierarchy;
 	}
@@ -101,8 +94,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Progress monitor
 	 * @return
 	 */
-	protected <T extends IModelElement> Collection<T> filterElements(
-			ISourceModule sourceModule, Collection<T> elements,
+	protected <T extends IModelElement> Collection<T> filterElements(ISourceModule sourceModule, Collection<T> elements,
 			IProgressMonitor monitor) {
 
 		if (elements == null) {
@@ -125,8 +117,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			return filteredElements;
 		}
 
-		return PHPModelUtils.fileNetworkFilter(sourceModule, elements, this,
-				monitor);
+		return PHPModelUtils.fileNetworkFilter(sourceModule, elements, this, monitor);
 	}
 
 	/**
@@ -141,8 +132,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return a collection of functions according to a given name, or
 	 *         <code>null</code> if not found
 	 */
-	public Collection<IMethod> getGlobalFunctions(ISourceModule sourceModule,
-			String functionName, IProgressMonitor monitor) {
+	public Collection<IMethod> getGlobalFunctions(ISourceModule sourceModule, String functionName,
+			IProgressMonitor monitor) {
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=342465
 		if (functionName == null) {
@@ -154,31 +145,24 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// Invoke a new search, since we only cache for the original file in
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			functions = Arrays.asList(PhpModelAccess.getDefault().findMethods(
-					functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0,
-					scope, monitor));
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			functions = Arrays.asList(PhpModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT,
+					Modifiers.AccGlobal, 0, scope, monitor));
 
 		} else {
 			functionName = functionName.toLowerCase();
 
 			if (globalFunctionsCache == null) {
-				globalFunctionsCache = Collections
-						.synchronizedMap(new HashMap<String, Collection<IMethod>>());
+				globalFunctionsCache = Collections.synchronizedMap(new HashMap<String, Collection<IMethod>>());
 
 				functionName = functionName.toLowerCase();
 				if (!globalFunctionsCache.containsKey(functionName)) {
-					IScriptProject scriptProject = sourceModule
-							.getScriptProject();
-					IDLTKSearchScope scope = SearchEngine
-							.createSearchScope(scriptProject);
+					IScriptProject scriptProject = sourceModule.getScriptProject();
+					IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-					IMethod[] allFunctions = PhpModelAccess.getDefault()
-							.findMethods(functionName, MatchRule.EXACT,
-									Modifiers.AccGlobal, 0, scope, monitor);
-					Collection<IMethod> funcList = new ArrayList<IMethod>(
-							allFunctions.length);
+					IMethod[] allFunctions = PhpModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT,
+							Modifiers.AccGlobal, 0, scope, monitor);
+					Collection<IMethod> funcList = new ArrayList<IMethod>(allFunctions.length);
 					for (IMethod function : allFunctions) {
 						funcList.add(function);
 					}
@@ -202,8 +186,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return a collection of types according to a given name, or
 	 *         <code>null</code> if not found
 	 */
-	public Collection<IType> getTypes(ISourceModule sourceModule,
-			String typeName, String namespaceName, IProgressMonitor monitor) {
+	public Collection<IType> getTypes(ISourceModule sourceModule, String typeName, String namespaceName,
+			IProgressMonitor monitor) {
 
 		Collection<IType> types;
 
@@ -211,11 +195,9 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// Invoke a new search, since we only cache for the original file in
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			types = Arrays.asList(PhpModelAccess.getDefault()
-					.findTypes(namespaceName, typeName, MatchRule.EXACT, 0, 0,
-							scope, null));
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			types = Arrays.asList(
+					PhpModelAccess.getDefault().findTypes(namespaceName, typeName, MatchRule.EXACT, 0, 0, scope, null));
 
 		} else {
 			typeName = typeName.toLowerCase();
@@ -236,14 +218,10 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			final String searchFor = key.toString();
 			if (!allTypesCache.containsKey(searchFor)) {
 				IScriptProject scriptProject = sourceModule.getScriptProject();
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(scriptProject);
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-				allTypesCache.put(
-						searchFor,
-						Arrays.asList(PhpModelAccess.getDefault().findTypes(
-								namespaceName, typeName, MatchRule.EXACT, 0, 0,
-								scope, null)));
+				allTypesCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findTypes(namespaceName,
+						typeName, MatchRule.EXACT, 0, 0, scope, null)));
 			}
 
 			types = allTypesCache.get(searchFor);
@@ -263,8 +241,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Progress monitor
 	 * @return namespaces collection if found, otherwise <code>null</code>
 	 */
-	public Collection<IType> getNamespaces(ISourceModule sourceModule,
-			String namespaceName, IProgressMonitor monitor) {
+	public Collection<IType> getNamespaces(ISourceModule sourceModule, String namespaceName, IProgressMonitor monitor) {
 
 		Collection<IType> namespaces;
 
@@ -272,22 +249,18 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// Invoke a new search, since we only cache for the original file in
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			namespaces = Arrays.asList(PhpModelAccess.getDefault()
-					.findNamespaces(null, namespaceName, MatchRule.EXACT, 0, 0,
-							scope, null));
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			namespaces = Arrays.asList(PhpModelAccess.getDefault().findNamespaces(null, namespaceName, MatchRule.EXACT,
+					0, 0, scope, null));
 
 		} else {
 			final String searchFor = namespaceName.toLowerCase();
 			if (!allNamespacesCache.containsKey(searchFor)) {
 				IScriptProject scriptProject = sourceModule.getScriptProject();
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(scriptProject);
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-				allNamespacesCache.put(searchFor, Arrays.asList(PhpModelAccess
-						.getDefault().findNamespaces(null, namespaceName,
-								MatchRule.EXACT, 0, 0, scope, null)));
+				allNamespacesCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findNamespaces(null,
+						namespaceName, MatchRule.EXACT, 0, 0, scope, null)));
 			}
 
 			namespaces = allNamespacesCache.get(searchFor);
@@ -307,8 +280,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return a collection of traits according to a given name, or
 	 *         <code>null</code> if not found
 	 */
-	public Collection<IType> getTraits(ISourceModule sourceModule,
-			String typeName, String namespaceName, IProgressMonitor monitor) {
+	public Collection<IType> getTraits(ISourceModule sourceModule, String typeName, String namespaceName,
+			IProgressMonitor monitor) {
 
 		Collection<IType> types;
 
@@ -316,10 +289,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// Invoke a new search, since we only cache for the original file in
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			types = Arrays.asList(PhpModelAccess.getDefault().findTraits(
-					typeName, MatchRule.EXACT, 0, 0, scope, null));
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			types = Arrays.asList(PhpModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null));
 
 		} else {
 			typeName = typeName.toLowerCase();
@@ -341,14 +312,10 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			final String searchFor = key.toString();
 			if (!allTraitsCache.containsKey(searchFor)) {
 				IScriptProject scriptProject = sourceModule.getScriptProject();
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(scriptProject);
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-				allTraitsCache.put(
-						searchFor,
-						Arrays.asList(PhpModelAccess.getDefault().findTraits(
-								namespaceName, typeName, MatchRule.PREFIX, 0,
-								0, scope, null)));
+				allTraitsCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findTraits(namespaceName,
+						typeName, MatchRule.PREFIX, 0, 0, scope, null)));
 			}
 
 			types = allTraitsCache.get(searchFor);
@@ -368,11 +335,9 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return classes collection if found, otherwise <code>null</code>
 	 * @throws ModelException
 	 */
-	public Collection<IType> getClasses(ISourceModule sourceModule,
-			String name, String namespaceName, IProgressMonitor monitor)
-			throws ModelException {
-		Collection<IType> allTypes = getTypes(sourceModule, name,
-				namespaceName, monitor);
+	public Collection<IType> getClasses(ISourceModule sourceModule, String name, String namespaceName,
+			IProgressMonitor monitor) throws ModelException {
+		Collection<IType> allTypes = getTypes(sourceModule, name, namespaceName, monitor);
 		if (allTypes == null) {
 			return null;
 		}
@@ -397,11 +362,9 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return interfaces collection if found, otherwise <code>null</code>
 	 * @throws ModelException
 	 */
-	public Collection<IType> getInterfaces(ISourceModule sourceModule,
-			String name, String namespaceName, IProgressMonitor monitor)
-			throws ModelException {
-		Collection<IType> allTypes = getTypes(sourceModule, name,
-				namespaceName, monitor);
+	public Collection<IType> getInterfaces(ISourceModule sourceModule, String name, String namespaceName,
+			IProgressMonitor monitor) throws ModelException {
+		Collection<IType> allTypes = getTypes(sourceModule, name, namespaceName, monitor);
 		if (allTypes == null) {
 			return null;
 		}
@@ -426,9 +389,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return classes collection if found, otherwise <code>null</code>
 	 * @throws ModelException
 	 */
-	public Collection<IType> getClassesOrInterfaces(ISourceModule sourceModule,
-			String name, String namespaceName, IProgressMonitor monitor)
-			throws ModelException {
+	public Collection<IType> getClassesOrInterfaces(ISourceModule sourceModule, String name, String namespaceName,
+			IProgressMonitor monitor) throws ModelException {
 		return getTypes(sourceModule, name, namespaceName, monitor);
 	}
 

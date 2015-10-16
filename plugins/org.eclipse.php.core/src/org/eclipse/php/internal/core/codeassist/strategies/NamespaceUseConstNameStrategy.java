@@ -40,25 +40,22 @@ public class NamespaceUseConstNameStrategy extends AbstractCompletionStrategy {
 		}
 
 		NamespaceUseConstNameContext concreteContext = (NamespaceUseConstNameContext) context;
-		String suffix = "";//$NON-NLS-1$ 
+		String suffix = "";//$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IField field : getFields(concreteContext)) {
-			reporter.reportField(field, suffix, replaceRange, false, 0,
-					getExtraInfo());
+			reporter.reportField(field, suffix, replaceRange, false, 0, getExtraInfo());
 		}
 	}
 
-	public IField[] getFields(NamespaceUseConstNameContext context)
-			throws BadLocationException {
+	public IField[] getFields(NamespaceUseConstNameContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
 		List<IField> result = new LinkedList<IField>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IField field : ns.getFields()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(
-							field.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(field.getElementName(), prefix)) {
 						result.add(field);
 					}
 				}
@@ -80,8 +77,6 @@ public class NamespaceUseConstNameStrategy extends AbstractCompletionStrategy {
 	}
 
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.DEFAULT
-				| ProposalExtraInfo.NO_INSERT_NAMESPACE
-				| ProposalExtraInfo.NO_INSERT_USE;
+		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.NO_INSERT_NAMESPACE | ProposalExtraInfo.NO_INSERT_USE;
 	}
 }

@@ -37,8 +37,7 @@ public class PharConstants {
 
 	public static final byte R = '\r';
 	public static final byte N = '\n';
-	public static final byte[] Line_Seperator = System.getProperty(
-			"line.separator").getBytes(); //$NON-NLS-1$
+	public static final byte[] Line_Seperator = System.getProperty("line.separator").getBytes(); //$NON-NLS-1$
 	public static final byte Underline = '_';
 
 	public static final String EMPTY_STRING = ""; //$NON-NLS-1$

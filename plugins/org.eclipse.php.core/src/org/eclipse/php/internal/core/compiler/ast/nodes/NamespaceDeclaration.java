@@ -19,13 +19,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a namespace declaration
+ * 
  * <pre>
- * <pre>e.g.<pre>
- * namespace A;
- * namespace A {
- * }
- * namespace {
- * }
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * namespace A; namespace A { } namespace { }
  */
 public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration {
 
@@ -33,7 +34,8 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	private PHPDocBlock phpDoc;
 	private boolean braketed = true;
 
-	public NamespaceDeclaration(int start, int end, int nameStart, int nameEnd, String className, Block body, PHPDocBlock phpDoc) {
+	public NamespaceDeclaration(int start, int end, int nameStart, int nameEnd, String className, Block body,
+			PHPDocBlock phpDoc) {
 		super(className, nameStart, nameEnd, start, end);
 		this.phpDoc = phpDoc;
 		if (body == null) {
@@ -41,31 +43,32 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 		}
 		setBody(body);
 	}
-	
+
 	public void setBracketed(boolean bracketed) {
 		this.braketed = bracketed;
 	}
-	
+
 	public boolean isBracketed() {
 		return braketed;
 	}
-	
+
 	public boolean isGlobal() {
 		return getName() == GLOBAL;
 	}
-	
+
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
-	
+
 	public void addStatement(Statement statement) {
-		// If there's no body - create one that will hold the namespace statements
+		// If there's no body - create one that will hold the namespace
+		// statements
 		getBody().addStatement(statement);
-		
+
 		getBody().setEnd(statement.sourceEnd());
 		setEnd(statement.sourceEnd());
 	}
-	
+
 	public int getKind() {
 		return ASTNodeKinds.NAMESPACE_DECLARATION;
 	}

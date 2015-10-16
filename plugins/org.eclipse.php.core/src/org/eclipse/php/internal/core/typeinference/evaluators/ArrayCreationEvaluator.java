@@ -37,8 +37,7 @@ public class ArrayCreationEvaluator extends GoalEvaluator {
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (ArrayElement arrayElement : arrayCreation.getElements()) {
-			subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(),
-					arrayElement.getValue()));
+			subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(), arrayElement.getValue()));
 		}
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}

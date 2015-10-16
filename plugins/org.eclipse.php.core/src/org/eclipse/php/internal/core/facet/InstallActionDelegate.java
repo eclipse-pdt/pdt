@@ -20,8 +20,8 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 public class InstallActionDelegate implements IDelegate {
 
-	public void execute(IProject arg0, IProjectFacetVersion arg1, Object arg2,
-			IProgressMonitor arg3) throws CoreException {
+	public void execute(IProject arg0, IProjectFacetVersion arg1, Object arg2, IProgressMonitor arg3)
+			throws CoreException {
 		// does nothing
 	}
 

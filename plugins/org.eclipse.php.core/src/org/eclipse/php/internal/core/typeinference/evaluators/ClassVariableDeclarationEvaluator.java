@@ -61,8 +61,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		if (types == null) {
 			TypeContext context = (TypeContext) typedGoal.getContext();
-			types = PHPTypeInferenceUtils.getModelElements(
-					context.getInstanceType(), context);
+			types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context);
 		}
 		if (types == null) {
 			return null;
@@ -74,8 +73,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			cache = ((IModelCacheContext) context).getCache();
 		}
 
-		String variableName = PHPEvaluationUtils.removeArrayBrackets(typedGoal
-				.getVariableName());
+		String variableName = PHPEvaluationUtils.removeArrayBrackets(typedGoal.getVariableName());
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (final IType type : types) {
@@ -84,38 +82,28 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				if (cache != null) {
 					hierarchy = cache.getSuperTypeHierarchy(type, null);
 				}
-				IField[] fields = PHPModelUtils.getTypeHierarchyField(type,
-						hierarchy, variableName, true, null);
+				IField[] fields = PHPModelUtils.getTypeHierarchyField(type, hierarchy, variableName, true, null);
 				Map<IType, IType> fieldDeclaringTypeSet = new HashMap<IType, IType>();
 				for (IField field : fields) {
 					IType declaringType = field.getDeclaringType();
 					if (declaringType != null) {
 						fieldDeclaringTypeSet.put(declaringType, type);
-						ISourceModule sourceModule = declaringType
-								.getSourceModule();
-						ModuleDeclaration moduleDeclaration = SourceParserUtil
-								.getModuleDeclaration(sourceModule);
-						TypeDeclaration typeDeclaration = PHPModelUtils
-								.getNodeByClass(moduleDeclaration,
-										declaringType);
+						ISourceModule sourceModule = declaringType.getSourceModule();
+						ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+						TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration,
+								declaringType);
 
-						if (typeDeclaration != null
-								&& field instanceof SourceRefElement) {
+						if (typeDeclaration != null && field instanceof SourceRefElement) {
 							ISourceReference sourceRefElement = (ISourceReference) field;
-							ISourceRange sourceRange = sourceRefElement
-									.getSourceRange();
+							ISourceRange sourceRange = sourceRefElement.getSourceRange();
 
-							ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(
-									sourceModule, typeDeclaration,
-									sourceRange.getOffset(),
-									sourceRange.getLength(), null, type,
+							ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(sourceModule,
+									typeDeclaration, sourceRange.getOffset(), sourceRange.getLength(), null, type,
 									declaringType);
 							try {
 								moduleDeclaration.traverse(searcher);
 								if (searcher.getResult() != null) {
-									subGoals.add(new ExpressionTypeGoal(
-											searcher.getContext(), searcher
-													.getResult()));
+									subGoals.add(new ExpressionTypeGoal(searcher.getContext(), searcher.getResult()));
 								}
 							} catch (Exception e) {
 								if (DLTKCore.DEBUG) {
@@ -129,10 +117,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				addGoalFromStaticDeclaration(variableName, subGoals, type, null);
 
 				fieldDeclaringTypeSet.remove(type);
-				for (Entry<IType, IType> entry : fieldDeclaringTypeSet
-						.entrySet()) {
-					addGoalFromStaticDeclaration(variableName, subGoals,
-							entry.getKey(), entry.getValue());
+				for (Entry<IType, IType> entry : fieldDeclaringTypeSet.entrySet()) {
+					addGoalFromStaticDeclaration(variableName, subGoals, entry.getKey(), entry.getValue());
 				}
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG) {
@@ -146,41 +132,33 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
-	protected void addGoalFromStaticDeclaration(String variableName,
-			final List<IGoal> subGoals, final IType declaringType,
-			IType realType) throws ModelException {
+	protected void addGoalFromStaticDeclaration(String variableName, final List<IGoal> subGoals,
+			final IType declaringType, IType realType) throws ModelException {
 		ISourceModule sourceModule = declaringType.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
-		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(
-				moduleDeclaration, declaringType);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, declaringType);
 
 		// try to search declarations of type "self::$var =" or
 		// "$this->var ="
 		ClassDeclarationSearcher searcher;
 		if (realType != null) {
-			searcher = new ClassDeclarationSearcher(sourceModule,
-					typeDeclaration, 0, 0, variableName, realType,
+			searcher = new ClassDeclarationSearcher(sourceModule, typeDeclaration, 0, 0, variableName, realType,
 					declaringType);
 		} else {
-			searcher = new ClassDeclarationSearcher(sourceModule,
-					typeDeclaration, 0, 0, variableName);
+			searcher = new ClassDeclarationSearcher(sourceModule, typeDeclaration, 0, 0, variableName);
 		}
 		try {
 			moduleDeclaration.traverse(searcher);
-			for (Entry<ASTNode, IContext> entry : searcher
-					.getStaticDeclarations().entrySet()) {
+			for (Entry<ASTNode, IContext> entry : searcher.getStaticDeclarations().entrySet()) {
 				final IContext context = entry.getValue();
 				if (context instanceof MethodContext) {
 					MethodContext methodContext = (MethodContext) context;
 					methodContext.setCurrentType(realType);
 				}
 				if (context instanceof IModelCacheContext
-						&& ClassVariableDeclarationEvaluator.this.goal
-								.getContext() instanceof IModelCacheContext) {
-					((IModelCacheContext) context)
-							.setCache(((IModelCacheContext) ClassVariableDeclarationEvaluator.this.goal
-									.getContext()).getCache());
+						&& ClassVariableDeclarationEvaluator.this.goal.getContext() instanceof IModelCacheContext) {
+					((IModelCacheContext) context).setCache(
+							((IModelCacheContext) ClassVariableDeclarationEvaluator.this.goal.getContext()).getCache());
 				}
 				subGoals.add(new ExpressionTypeGoal(context, entry.getKey()));
 			}
@@ -198,26 +176,22 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 * @param variableName
 	 * @param cache
 	 */
-	private void resolveMagicClassVariableDeclaration(IType[] types,
-			String variableName, IModelAccessCache cache) {
+	private void resolveMagicClassVariableDeclaration(IType[] types, String variableName, IModelAccessCache cache) {
 		for (IType type : types) {
 			resolveMagicClassVariableDeclaration(variableName, type, cache);
 			try {
-				if (evaluated.isEmpty() && type.getSuperClasses() != null
-						&& type.getSuperClasses().length > 0) {
+				if (evaluated.isEmpty() && type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 
 					ITypeHierarchy hierarchy = null;
 					if (cache != null) {
 						hierarchy = cache.getSuperTypeHierarchy(type, null);
 					}
-					IType[] superClasses = PHPModelUtils.getSuperClasses(type,
-							hierarchy);
+					IType[] superClasses = PHPModelUtils.getSuperClasses(type, hierarchy);
 
 					for (int i = 0; i < superClasses.length
 					/* && evaluated.isEmpty() */; i++) {
 						IType superClass = superClasses[i];
-						resolveMagicClassVariableDeclaration(variableName,
-								superClass, cache);
+						resolveMagicClassVariableDeclaration(variableName, superClass, cache);
 					}
 				}
 			} catch (ModelException e) {
@@ -226,25 +200,21 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 	}
 
-	protected void resolveMagicClassVariableDeclaration(String variableName,
-			IType type, IModelAccessCache cache) {
+	protected void resolveMagicClassVariableDeclaration(String variableName, IType type, IModelAccessCache cache) {
 		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
 		if (docBlock == null) {
 			return;
 		}
 		for (PHPDocTag tag : docBlock.getTags()) {
 			final int tagKind = tag.getTagKind();
-			if (tagKind == PHPDocTag.PROPERTY
-					|| tagKind == PHPDocTag.PROPERTY_READ
+			if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ
 					|| tagKind == PHPDocTag.PROPERTY_WRITE) {
-				final Collection<String> typeNames = PHPEvaluationUtils
-						.getTypeBinding(variableName, tag);
+				final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(variableName, tag);
 				for (String typeName : typeNames) {
 					if (typeName.trim().isEmpty()) {
 						continue;
 					}
-					IEvaluatedType resolved = PHPSimpleTypes
-							.fromString(typeName);
+					IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);
 					if (resolved == null) {
 						resolved = new PHPClassType(typeName);
 					}
@@ -283,9 +253,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		private ISourceModule sourceModule;
 		private Map<ASTNode, IContext> staticDeclarations = new HashMap<ASTNode, IContext>();
 
-		public ClassDeclarationSearcher(ISourceModule sourceModule,
-				TypeDeclaration typeDeclaration, int offset, int length,
-				String variableName) {
+		public ClassDeclarationSearcher(ISourceModule sourceModule, TypeDeclaration typeDeclaration, int offset,
+				int length, String variableName) {
 			super(sourceModule);
 			this.typeDeclaration = typeDeclaration;
 			this.offset = offset;
@@ -294,9 +263,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			this.variableName = variableName;
 		}
 
-		public ClassDeclarationSearcher(ISourceModule sourceModule,
-				TypeDeclaration typeDeclaration, int offset, int length,
-				String variableName, IType realType, IType declaringType) {
+		public ClassDeclarationSearcher(ISourceModule sourceModule, TypeDeclaration typeDeclaration, int offset,
+				int length, String variableName, IType realType, IType declaringType) {
 			super(sourceModule, realType, declaringType);
 			this.typeDeclaration = typeDeclaration;
 			this.offset = offset;
@@ -316,27 +284,23 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		public IContext getContext() {
 			if (context instanceof IModelCacheContext
 					&& ClassVariableDeclarationEvaluator.this.goal.getContext() instanceof IModelCacheContext) {
-				((IModelCacheContext) context)
-						.setCache(((IModelCacheContext) ClassVariableDeclarationEvaluator.this.goal
-								.getContext()).getCache());
+				((IModelCacheContext) context).setCache(
+						((IModelCacheContext) ClassVariableDeclarationEvaluator.this.goal.getContext()).getCache());
 			}
 			return context;
 		}
 
 		public boolean visit(Statement e) throws Exception {
-			if (typeDeclaration.sourceStart() < e.sourceStart()
-					&& typeDeclaration.sourceEnd() > e.sourceEnd()) {
+			if (typeDeclaration.sourceStart() < e.sourceStart() && typeDeclaration.sourceEnd() > e.sourceEnd()) {
 				if (e instanceof PHPFieldDeclaration) {
 					PHPFieldDeclaration phpFieldDecl = (PHPFieldDeclaration) e;
 					if (phpFieldDecl.getDeclarationStart() == offset
-							&& phpFieldDecl.sourceEnd()
-									- phpFieldDecl.getDeclarationStart() == length) {
+							&& phpFieldDecl.sourceEnd() - phpFieldDecl.getDeclarationStart() == length) {
 						result = ((PHPFieldDeclaration) e).getVariableValue();
 						if (result instanceof Scalar) {
 							Scalar scalar = (Scalar) result;
 							if (scalar.getScalarType() == Scalar.TYPE_STRING
-									&& scalar.getValue().toLowerCase()
-											.equals(NULL)) {
+									&& scalar.getValue().toLowerCase().equals(NULL)) {
 								result = null;
 							}
 						}
@@ -348,11 +312,9 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 
 		public boolean visit(Expression e) throws Exception {
-			if (typeDeclaration.sourceStart() < e.sourceStart()
-					&& typeDeclaration.sourceEnd() > e.sourceEnd()) {
+			if (typeDeclaration.sourceStart() < e.sourceStart() && typeDeclaration.sourceEnd() > e.sourceEnd()) {
 				if (e instanceof Assignment) {
-					if (e.sourceStart() == offset
-							&& e.sourceEnd() - e.sourceStart() == length) {
+					if (e.sourceStart() == offset && e.sourceEnd() - e.sourceStart() == length) {
 						result = ((Assignment) e).getValue();
 						context = contextStack.peek();
 					} else if (variableName != null) {
@@ -366,11 +328,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 							if (isSelf(dispatcher)) {
 								Expression field = fieldAccess.getField();
 								if (field instanceof VariableReference
-										&& variableName
-												.equals(((VariableReference) field)
-														.getName())) {
-									staticDeclarations.put(right,
-											contextStack.peek());
+										&& variableName.equals(((VariableReference) field).getName())) {
+									staticDeclarations.put(right, contextStack.peek());
 								}
 							}
 						} else if (left instanceof FieldAccess) {
@@ -380,11 +339,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 									&& "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
 								Expression field = fieldAccess.getField();
 								if (field instanceof SimpleReference
-										&& variableName
-												.equals('$' + ((SimpleReference) field)
-														.getName())) {
-									staticDeclarations.put(right,
-											contextStack.peek());
+										&& variableName.equals('$' + ((SimpleReference) field).getName())) {
+									staticDeclarations.put(right, contextStack.peek());
 								}
 							}
 						}
@@ -404,8 +360,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			}
 			if ("self".equals(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
 				return true;
-			} else if (PHPVersion.PHP5_4.isLessThan(ProjectOptions
-					.getPhpVersion(sourceModule))
+			} else if (PHPVersion.PHP5_4.isLessThan(ProjectOptions.getPhpVersion(sourceModule))
 					&& "self".equals(((TypeReference) dispatcher).getName() //$NON-NLS-1$
 							.toLowerCase())) {
 				return true;

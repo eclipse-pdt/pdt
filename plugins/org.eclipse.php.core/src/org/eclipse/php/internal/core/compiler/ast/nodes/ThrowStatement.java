@@ -19,7 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represent a break statement
- * <pre>e.g.<pre> throw $exceptionClass;
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * throw $exceptionClass;
  */
 public class ThrowStatement extends Statement {
 

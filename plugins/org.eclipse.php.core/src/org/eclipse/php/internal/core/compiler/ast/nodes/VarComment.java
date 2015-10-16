@@ -19,8 +19,7 @@ public class VarComment extends Comment {
 	private VariableReference variableReference;
 	private TypeReference[] typeReference;
 
-	public VarComment(int start, int end, VariableReference variableReference,
-			TypeReference[] typeReference) {
+	public VarComment(int start, int end, VariableReference variableReference, TypeReference[] typeReference) {
 		super(start, end, Comment.TYPE_MULTILINE);
 		this.variableReference = variableReference;
 		this.typeReference = typeReference;

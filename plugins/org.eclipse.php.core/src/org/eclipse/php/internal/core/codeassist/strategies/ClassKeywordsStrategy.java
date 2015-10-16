@@ -29,8 +29,7 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 
 	private TextSequence statementText;
 
-	public ClassKeywordsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public ClassKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -40,8 +39,7 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
-		statementText = ((AbstractCompletionContext) context)
-				.getStatementText();
+		statementText = ((AbstractCompletionContext) context).getStatementText();
 		super.apply(reporter);
 	}
 
@@ -58,8 +56,7 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 		if (i != -1) {
 			if ((i == 0 || Character.isWhitespace(statementText.charAt(i - 1))
 					&& statementText.length() > (i + keyword.name.length())
-					&& Character.isWhitespace(statementText.charAt(i
-							+ keyword.name.length())))) {
+					&& Character.isWhitespace(statementText.charAt(i + keyword.name.length())))) {
 				return true;
 			}
 		}

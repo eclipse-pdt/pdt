@@ -17,14 +17,11 @@ import org.eclipse.php.internal.core.ast.nodes.*;
 
 public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 
-	private static final String TARGET_OF = CoreMessages
-			.getString("BreakContinueTargetFinder.0"); //$NON-NLS-1$
+	private static final String TARGET_OF = CoreMessages.getString("BreakContinueTargetFinder.0"); //$NON-NLS-1$
 	public static final String ID = "BreakContinueTargetFinder"; //$NON-NLS-1$
-	private static final int[] TARGETS = { ASTNode.FOR_STATEMENT,
-			ASTNode.WHILE_STATEMENT, ASTNode.SWITCH_STATEMENT,
+	private static final int[] TARGETS = { ASTNode.FOR_STATEMENT, ASTNode.WHILE_STATEMENT, ASTNode.SWITCH_STATEMENT,
 			ASTNode.FOR_EACH_STATEMENT, ASTNode.DO_STATEMENT };
-	private static final int[] STOPPERS = { ASTNode.PROGRAM,
-			ASTNode.FUNCTION_DECLARATION };
+	private static final int[] STOPPERS = { ASTNode.PROGRAM, ASTNode.FUNCTION_DECLARATION };
 
 	private Statement statement;
 	private int nestingLevel;
@@ -108,9 +105,8 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
-	 * ()
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * findOccurrences ()
 	 */
 	protected void findOccurrences() {
 		if (nestingLevel == 0) {
@@ -121,9 +117,8 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 		if (nestingLevel > 1) {
 			nestingStr = ' ' + Integer.toString(nestingLevel);
 		}
-		fDescription = Messages
-				.format(TARGET_OF,
-						(statement.getType() == ASTNode.BREAK_STATEMENT) ? "break" + nestingStr : "continue" + nestingStr); //$NON-NLS-1$ //$NON-NLS-2$
+		fDescription = Messages.format(TARGET_OF,
+				(statement.getType() == ASTNode.BREAK_STATEMENT) ? "break" + nestingStr : "continue" + nestingStr); //$NON-NLS-1$ //$NON-NLS-2$
 		// No need for the visitor. Just traverse up the AST tree and locate the
 		// target.
 		addOccurrences();
@@ -147,14 +142,12 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 				nestingCount++;
 				if (nestingCount == nestingLevel) {
 					// Found the target level
-					fResult.add(new OccurrenceLocation(parent.getStart(),
-							getLength(parent), getOccurrenceType(null),
+					fResult.add(new OccurrenceLocation(parent.getStart(), getLength(parent), getOccurrenceType(null),
 							fDescription));
 					// In cases where we have a block, mark the closing curly
 					// bracket
 					if (blockEnd > -1) {
-						fResult.add(new OccurrenceLocation(blockEnd - 1, 1,
-								getOccurrenceType(null), fDescription));
+						fResult.add(new OccurrenceLocation(blockEnd - 1, 1, getOccurrenceType(null), fDescription));
 					}
 					targetFound = true;
 				} else {

@@ -30,8 +30,7 @@ public class CastEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		CastExpression castExpression = (CastExpression) typedGoal
-				.getExpression();
+		CastExpression castExpression = (CastExpression) typedGoal.getExpression();
 		int operator = castExpression.getCastType();
 		switch (operator) {
 		case CastExpression.TYPE_INT:
@@ -45,8 +44,7 @@ public class CastEvaluator extends GoalEvaluator {
 			result = new SimpleType(SimpleType.TYPE_ARRAY);
 			break;
 		case CastExpression.TYPE_OBJECT:
-			return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(),
-					castExpression.getExpr()) };
+			return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), castExpression.getExpr()) };
 		case CastExpression.TYPE_BOOL:
 			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
 			break;

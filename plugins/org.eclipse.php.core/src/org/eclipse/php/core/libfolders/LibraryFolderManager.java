@@ -65,11 +65,9 @@ public class LibraryFolderManager {
 	 * </p>
 	 */
 	private LibraryFolderManager() {
-		listeners = Collections
-				.synchronizedSet(new HashSet<ILibraryFolderChangeListener>());
+		listeners = Collections.synchronizedSet(new HashSet<ILibraryFolderChangeListener>());
 
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-				new AutoDetectLibraryFolderListener(),
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(new AutoDetectLibraryFolderListener(),
 				IResourceChangeEvent.POST_CHANGE);
 	}
 
@@ -153,8 +151,7 @@ public class LibraryFolderManager {
 	 * @see {@link #useAsSourceFolder(IFolder[], IProgressMonitor)}
 	 */
 	public void useAsLibraryFolder(IFolder[] folders, IProgressMonitor monitor)
-			throws OperationCanceledException, InterruptedException,
-			CoreException {
+			throws OperationCanceledException, InterruptedException, CoreException {
 		disableValidation(folders);
 
 		folders = removeNonExisting(folders);
@@ -207,8 +204,7 @@ public class LibraryFolderManager {
 	 * @see {@link #useAsLibraryFolder(IFolder[], IProgressMonitor)}
 	 */
 	public void useAsSourceFolder(IFolder[] folders, IProgressMonitor monitor)
-			throws OperationCanceledException, InterruptedException,
-			CoreException {
+			throws OperationCanceledException, InterruptedException, CoreException {
 		enableValidation(folders);
 
 		folders = removeNonExisting(folders);
@@ -475,8 +471,7 @@ public class LibraryFolderManager {
 	 * @throws CoreException
 	 *             if the folder does not exist or is in a closed project
 	 */
-	private void collectAllSubfolders(IFolder folder, Collection<IFolder> result)
-			throws CoreException {
+	private void collectAllSubfolders(IFolder folder, Collection<IFolder> result) throws CoreException {
 		result.add(folder);
 
 		for (IResource child : folder.members()) {
@@ -549,8 +544,7 @@ public class LibraryFolderManager {
 	 */
 	private void deleteMarkers(IResource[] resources) throws CoreException {
 		for (IResource resource : resources) {
-			resource.deleteMarkers(IMarker.PROBLEM, true,
-					IResource.DEPTH_INFINITE);
+			resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			resource.deleteMarkers(IMarker.TASK, true, IResource.DEPTH_INFINITE);
 		}
 	}
@@ -567,8 +561,7 @@ public class LibraryFolderManager {
 	 * @throws CoreException
 	 *             if touching of any of the resources fails
 	 */
-	private void revalidate(IResource[] resources, IProgressMonitor monitor)
-			throws CoreException {
+	private void revalidate(IResource[] resources, IProgressMonitor monitor) throws CoreException {
 		for (IResource resource : resources) {
 			deepTouch(resource, monitor);
 		}
@@ -587,8 +580,7 @@ public class LibraryFolderManager {
 	 * @throws CoreException
 	 *             if touching of any of the resources fails
 	 */
-	private void deepTouch(IResource resource, IProgressMonitor monitor)
-			throws CoreException {
+	private void deepTouch(IResource resource, IProgressMonitor monitor) throws CoreException {
 		resource.touch(monitor);
 
 		// touch recursively resources inside folders and projects
@@ -612,8 +604,7 @@ public class LibraryFolderManager {
 	 * @throws InterruptedException
 	 *             if this thread is interrupted while waiting
 	 */
-	private void waitValidationJobs(IProgressMonitor monitor)
-			throws OperationCanceledException, InterruptedException {
+	private void waitValidationJobs(IProgressMonitor monitor) throws OperationCanceledException, InterruptedException {
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, monitor);
 	}
 

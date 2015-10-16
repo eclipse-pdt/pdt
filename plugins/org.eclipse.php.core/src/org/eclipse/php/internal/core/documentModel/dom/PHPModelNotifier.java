@@ -48,8 +48,8 @@ public class PHPModelNotifier implements XMLModelNotifier {
 		String reason;
 		int type;
 
-		NotifyEvent(INodeNotifier notifier, int type, Object changedFeature,
-				Object oldValue, Object newValue, int pos) {
+		NotifyEvent(INodeNotifier notifier, int type, Object changedFeature, Object oldValue, Object newValue,
+				int pos) {
 			this.notifier = notifier;
 			this.type = type;
 			this.changedFeature = changedFeature;
@@ -219,8 +219,8 @@ public class PHPModelNotifier implements XMLModelNotifier {
 
 	/**
 	 */
-	private void notify(INodeNotifier notifier, int eventType,
-			Object changedFeature, Object oldValue, Object newValue, int pos) {
+	private void notify(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue,
+			int pos) {
 		if (notifier == null)
 			return;
 		if (this.changing && !this.flushing) {
@@ -232,10 +232,8 @@ public class PHPModelNotifier implements XMLModelNotifier {
 			// trivial and not needed at that initial point.
 			// But even for that one document event, in the new model case,
 			// it is still important to defer it.
-			if ((!doingNewModel)
-					|| (((Node) notifier).getNodeType() == Node.DOCUMENT_NODE)) {
-				this.events.addElement(new NotifyEvent(notifier, eventType,
-						changedFeature, oldValue, newValue, pos));
+			if ((!doingNewModel) || (((Node) notifier).getNodeType() == Node.DOCUMENT_NODE)) {
+				this.events.addElement(new NotifyEvent(notifier, eventType, changedFeature, oldValue, newValue, pos));
 			}
 			return;
 		}
@@ -247,9 +245,8 @@ public class PHPModelNotifier implements XMLModelNotifier {
 			// since would indicate a program error.
 			notifier.notify(eventType, changedFeature, oldValue, newValue, pos);
 		} catch (Exception e) {
-			Logger
-					.logException(
-							"A structured model client threw following exception during adapter notification (" + INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " )", e); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.logException("A structured model client threw following exception during adapter notification (" //$NON-NLS-1$
+					+ INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " )", e); //$NON-NLS-1$
 		}
 	}
 
@@ -274,21 +271,16 @@ public class PHPModelNotifier implements XMLModelNotifier {
 				// shouldn't be redunancies)
 				if (event.type == INodeNotifier.ADD) {
 					for (int n = i + 1; n < count; n++) {
-						NotifyEvent next = (NotifyEvent) this.events
-								.elementAt(n);
+						NotifyEvent next = (NotifyEvent) this.events.elementAt(n);
 						if (next == null)
 							continue; // error
-						if (next.type == INodeNotifier.REMOVE
-								&& next.oldValue == event.newValue) {
+						if (next.type == INodeNotifier.REMOVE && next.oldValue == event.newValue) {
 							// Added then removed later, discard both
 							event.discarded = true;
 							next.discarded = true;
 							if (Debug.debugNotifyDeferred) {
-								event.reason = event.reason
-										+ ADDED_THEN_REMOVED
-										+ "(see " + n + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-								next.reason = next.reason + ADDED_THEN_REMOVED
-										+ "(see " + i + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+								event.reason = event.reason + ADDED_THEN_REMOVED + "(see " + n + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+								next.reason = next.reason + ADDED_THEN_REMOVED + "(see " + i + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 							}
 							break;
 						}
@@ -297,27 +289,20 @@ public class PHPModelNotifier implements XMLModelNotifier {
 						continue;
 					if (fOptimizeDeferredAccordingToParentAdded) {
 						for (int p = 0; p < i; p++) {
-							NotifyEvent prev = (NotifyEvent) this.events
-									.elementAt(p);
+							NotifyEvent prev = (NotifyEvent) this.events.elementAt(p);
 							if (prev == null)
 								continue; // error
-							if (prev.type == INodeNotifier.REMOVE
-									&& prev.oldValue == event.notifier) {
+							if (prev.type == INodeNotifier.REMOVE && prev.oldValue == event.notifier) {
 								// parent is reparented, do not discard
 								if (Debug.debugNotifyDeferred) {
-									event.reason = event.reason
-											+ PARENT_IS_REPARENTED
-											+ "(see " + p + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+									event.reason = event.reason + PARENT_IS_REPARENTED + "(see " + p + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 								}
 								break;
-							} else if (prev.type == INodeNotifier.ADD
-									&& prev.newValue == event.notifier) {
+							} else if (prev.type == INodeNotifier.ADD && prev.newValue == event.notifier) {
 								// parent has been added, discard this
 								event.discarded = true;
 								if (Debug.debugNotifyDeferred) {
-									event.reason = event.reason
-											+ PARENT_IS_ADDED
-											+ "(see " + p + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+									event.reason = event.reason + PARENT_IS_ADDED + "(see " + p + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 								}
 								break;
 							}
@@ -328,8 +313,7 @@ public class PHPModelNotifier implements XMLModelNotifier {
 				} else if (event.type == INodeNotifier.REMOVE) {
 					if (fOptimizeDeferredAccordingToParentRemoved) {
 						for (int n = i + 1; n < count; n++) {
-							NotifyEvent next = (NotifyEvent) this.events
-									.elementAt(n);
+							NotifyEvent next = (NotifyEvent) this.events.elementAt(n);
 							if (next == null)
 								continue; // error
 							if (next.type == INodeNotifier.REMOVE) {
@@ -337,9 +321,7 @@ public class PHPModelNotifier implements XMLModelNotifier {
 									// parent will be removed, discard this
 									event.discarded = true;
 									if (Debug.debugNotifyDeferred) {
-										event.reason = event.reason
-												+ PARENT_IS_REMOVED_TOO
-												+ "(see " + n + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+										event.reason = event.reason + PARENT_IS_REMOVED_TOO + "(see " + n + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 									}
 									break;
 								}
@@ -350,8 +332,7 @@ public class PHPModelNotifier implements XMLModelNotifier {
 					}
 				}
 			}
-			notify(event.notifier, event.type, event.changedFeature,
-					event.oldValue, event.newValue, event.pos);
+			notify(event.notifier, event.type, event.changedFeature, event.oldValue, event.newValue, event.pos);
 		}
 		if (Debug.debugNotifyDeferred) {
 			for (int l = 0; l < count; l++) {
@@ -389,12 +370,10 @@ public class PHPModelNotifier implements XMLModelNotifier {
 			// comes in between "about to change" and "changed" events. We do
 			// log, however,
 			// since would indicate a program error.
-			notifier.notify(INodeNotifier.STRUCTURE_CHANGED, null, null, null,
-					-1);
+			notifier.notify(INodeNotifier.STRUCTURE_CHANGED, null, null, null, -1);
 		} catch (Exception e) {
-			Logger
-					.logException(
-							"A structured model client threw following exception during adapter notification (" + INodeNotifier.EVENT_TYPE_STRINGS[INodeNotifier.STRUCTURE_CHANGED] + " )", e); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.logException("A structured model client threw following exception during adapter notification (" //$NON-NLS-1$
+					+ INodeNotifier.EVENT_TYPE_STRINGS[INodeNotifier.STRUCTURE_CHANGED] + " )", e); //$NON-NLS-1$
 		}
 
 	}
@@ -416,10 +395,8 @@ public class PHPModelNotifier implements XMLModelNotifier {
 			// already 'document',
 			// or if already equal to this 'node',
 			// then no need to re-calculate
-			if (changedRoot.getNodeType() != Node.DOCUMENT_NODE
-					&& changedRoot != node) {
-				Node common = ((NodeImpl) this.changedRoot)
-						.getCommonAncestor(node);
+			if (changedRoot.getNodeType() != Node.DOCUMENT_NODE && changedRoot != node) {
+				Node common = ((NodeImpl) this.changedRoot).getCommonAncestor(node);
 				if (common != null)
 					this.changedRoot = common;
 				else
@@ -488,8 +465,7 @@ public class PHPModelNotifier implements XMLModelNotifier {
 			notifier = (IDOMNode) node;
 			// PHP ELEMENTS CHANGE: meaning - do not optimize php elements!
 			final boolean isPhpContent = node.getNodeType() == Node.TEXT_NODE
-					&& ((TextImpl) node).getFirstStructuredDocumentRegion()
-							.getType() == PHPRegionContext.PHP_CONTENT;
+					&& ((TextImpl) node).getFirstStructuredDocumentRegion().getType() == PHPRegionContext.PHP_CONTENT;
 			String value = isPhpContent ? null : node.getNodeValue();
 			// end of change
 			int offset = notifier.getStartOffset();
@@ -497,8 +473,7 @@ public class PHPModelNotifier implements XMLModelNotifier {
 			if (node.getNodeType() != Node.ELEMENT_NODE) {
 				IDOMNode parent = (IDOMNode) node.getParentNode();
 				if (parent != null) {
-					notify(parent, INodeNotifier.CONTENT_CHANGED, node, null,
-							value, offset);
+					notify(parent, INodeNotifier.CONTENT_CHANGED, node, null, value, offset);
 				}
 			}
 		}

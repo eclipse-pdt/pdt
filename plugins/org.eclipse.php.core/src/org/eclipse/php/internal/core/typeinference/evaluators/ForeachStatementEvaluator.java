@@ -36,15 +36,13 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ForeachStatementGoal typedGoal = (ForeachStatementGoal) goal;
-		return new IGoal[] { new IteratorTypeGoal(goal.getContext(),
-				typedGoal.getExpression()) };
+		return new IGoal[] { new IteratorTypeGoal(goal.getContext(), typedGoal.getExpression()) };
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof MultiTypeType) {
 			List<IEvaluatedType> types = ((MultiTypeType) result).getTypes();
-			this.result = new AmbiguousType(
-					types.toArray(new IEvaluatedType[types.size()]));
+			this.result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 		} else if (result instanceof AmbiguousType) {
 			this.result = (AmbiguousType) result;
 		}

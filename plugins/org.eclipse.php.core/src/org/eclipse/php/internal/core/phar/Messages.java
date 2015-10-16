@@ -27,6 +27,7 @@ public class Messages extends NLS {
 	public static String Phar_Corrupted;
 	public static String Stub_Invalid;
 	public static String PharEntry_Too_Long;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

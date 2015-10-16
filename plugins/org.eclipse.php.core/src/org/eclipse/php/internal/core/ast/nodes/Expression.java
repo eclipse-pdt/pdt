@@ -19,18 +19,19 @@ public abstract class Expression extends ASTNode {
 	public Expression(int start, int end, AST ast) {
 		super(start, end, ast);
 	}
-	
+
 	public Expression(AST ast) {
 		super(ast);
 	}
 
 	/**
-	 * A static scalar expression is a "compile-time evaluated scalar" 
-	 * i.e. expression that can be evaluated before execution time.
+	 * A static scalar expression is a "compile-time evaluated scalar" i.e.
+	 * expression that can be evaluated before execution time.
 	 * 
-	 * In PHP static scalars can be scalars, unary operations or array creations nodes 
-	 * it can be used in declare statement, formal parameter list, 
-	 * static statement and class constant declaration
+	 * In PHP static scalars can be scalars, unary operations or array creations
+	 * nodes it can be used in declare statement, formal parameter list, static
+	 * statement and class constant declaration
+	 * 
 	 * @return true if the expression is static scalar, false otherwise
 	 */
 	public boolean isStaticScalar() {
@@ -46,8 +47,9 @@ public abstract class Expression extends ASTNode {
 		}
 		final int parentType = parent.getType();
 
-		// check - formal parameter and declare statement 
-		if (parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.DECLARE_STATEMENT || parentType == ASTNode.CONSTANT_DECLARATION) {
+		// check - formal parameter and declare statement
+		if (parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.DECLARE_STATEMENT
+				|| parentType == ASTNode.CONSTANT_DECLARATION) {
 			return true;
 		}
 		// check - static statement
@@ -56,34 +58,35 @@ public abstract class Expression extends ASTNode {
 			if (grandpa == null) {
 				return false;
 			}
-			
+
 			if (grandpa.getType() == ASTNode.STATIC_STATEMENT) {
 				return true;
 			}
 			return false;
 		}
 
-		// array elements nodes are static scalars only if their parent array creation 
-		// are static scalars. like static $a = array( '5' => 4 ) 
+		// array elements nodes are static scalars only if their parent array
+		// creation
+		// are static scalars. like static $a = array( '5' => 4 )
 		if (parentType == ASTNode.ARRAY_ELEMENT) {
 			final ASTNode grandpa = parent.getParent();
 			if (grandpa == null || grandpa.getType() != ASTNode.ARRAY_CREATION) {
 				return false;
 			}
-			
+
 			Expression grandpaExpression = (Expression) grandpa;
 			return grandpaExpression.isStaticScalar();
 		}
-		
-		// check recursively for static scalars 
+
+		// check recursively for static scalars
 		if (parentType == ASTNode.SCALAR || parentType == ASTNode.UNARY_OPERATION || parentType == ARRAY_CREATION) {
 			final Expression parentExpression = (Expression) parent;
-			return parentExpression.isStaticScalar(); 
+			return parentExpression.isStaticScalar();
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * @return true if this is expression is the "null" expression
 	 */
@@ -95,24 +98,24 @@ public abstract class Expression extends ASTNode {
 			}
 		}
 		return false;
-	}	
-	
+	}
+
 	/**
 	 * Resolves and returns the binding for the type of this expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved	 
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveExpressionType(this);
 	}
-	
+
 	/**
 	 * Resolves and returns the constant expression value
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
-	 */	
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
+	 */
 	public Object resolveConstantExpressionValue() {
 		return this.ast.getBindingResolver().resolveConstantExpressionValue(this);
 	}

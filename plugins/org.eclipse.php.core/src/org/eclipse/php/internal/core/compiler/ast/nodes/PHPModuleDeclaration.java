@@ -33,8 +33,8 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	private List<VarComment> varComments;
 	private List<PHPDocBlock> phpDocBlocks = new LinkedList<PHPDocBlock>();
 
-	public PHPModuleDeclaration(int start, int end, List<Statement> statements,
-			List<ASTError> errors, List<VarComment> varComments) {
+	public PHPModuleDeclaration(int start, int end, List<Statement> statements, List<ASTError> errors,
+			List<VarComment> varComments) {
 		super(end - start, true);
 		setStatements(statements);
 		setStart(start);
@@ -58,20 +58,16 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 					node.traverse(new ASTVisitor() {
 						private Stack<ASTNode> parentStack = new Stack<ASTNode>();
 
-						public boolean visit(MethodDeclaration s)
-								throws Exception {
+						public boolean visit(MethodDeclaration s) throws Exception {
 							if (s != node
-									&& (parentStack.isEmpty() || !(parentStack
-											.peek() instanceof TypeDeclaration))) {
+									&& (parentStack.isEmpty() || !(parentStack.peek() instanceof TypeDeclaration))) {
 								getFunctionList().add(s);
 							}
 							return super.visit(s);
 						}
 
-						public boolean visit(TypeDeclaration s)
-								throws Exception {
-							if (s instanceof NamespaceDeclaration
-									&& ((NamespaceDeclaration) s).isGlobal()) {
+						public boolean visit(TypeDeclaration s) throws Exception {
+							if (s instanceof NamespaceDeclaration && ((NamespaceDeclaration) s).isGlobal()) {
 								return super.visit(s);
 							}
 							parentStack.add(s);
@@ -79,10 +75,8 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 							return super.visit(s);
 						}
 
-						public boolean endvisit(TypeDeclaration s)
-								throws Exception {
-							if (s instanceof NamespaceDeclaration
-									&& ((NamespaceDeclaration) s).isGlobal()) {
+						public boolean endvisit(TypeDeclaration s) throws Exception {
+							if (s instanceof NamespaceDeclaration && ((NamespaceDeclaration) s).isGlobal()) {
 								return super.endvisit(s);
 							}
 							parentStack.pop();

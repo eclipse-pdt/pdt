@@ -34,8 +34,7 @@ public class MethodNameContext extends FunctionDeclarationContext {
 
 	private IType declaringClass;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -49,8 +48,7 @@ public class MethodNameContext extends FunctionDeclarationContext {
 			}
 		}
 
-		declaringClass = PHPModelUtils.getCurrentType(getSourceModule(),
-				statementText.getOriginalOffset(functionEnd));
+		declaringClass = PHPModelUtils.getCurrentType(getSourceModule(), statementText.getOriginalOffset(functionEnd));
 		if (declaringClass == null) {
 			return false;
 		}

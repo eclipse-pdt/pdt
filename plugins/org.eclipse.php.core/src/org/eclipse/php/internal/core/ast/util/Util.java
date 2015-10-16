@@ -155,8 +155,7 @@ public class Util {
 	 * before end (end is not included). Returns the index of the character
 	 * immediately after the signature if valid, or -1 if not valid.
 	 */
-	private static int checkTypeSignature(String sig, int start, int end,
-			boolean allowVoid) {
+	private static int checkTypeSignature(String sig, int start, int end, boolean allowVoid) {
 		if (start >= end)
 			return -1;
 		int i = start;
@@ -385,8 +384,7 @@ public class Util {
 	 *         separator between each part and appending the given name at the
 	 *         end
 	 */
-	public static final String concatWith(String[] array, String name,
-			char separator) {
+	public static final String concatWith(String[] array, String name, char separator) {
 
 		if (array == null || array.length == 0)
 			return name;
@@ -571,8 +569,7 @@ public class Util {
 	 * elements compare true with equals. The original arrays are left
 	 * untouched.
 	 */
-	public static boolean equalArraysOrNullSortFirst(Comparable[] a,
-			Comparable[] b) {
+	public static boolean equalArraysOrNullSortFirst(Comparable[] a, Comparable[] b) {
 		if (a == b)
 			return true;
 		if (a == null || b == null)
@@ -786,22 +783,19 @@ public class Util {
 			if (!ENABLE_PHP_LIKE_EXTENSIONS)
 				PHP_LIKE_EXTENSIONS = new char[][] { "php".toCharArray() }; //$NON-NLS-1$
 			else {
-				IContentType javaContentType = Platform.getContentTypeManager()
-						.getContentType(PHPNature.ID);
+				IContentType javaContentType = Platform.getContentTypeManager().getContentType(PHPNature.ID);
 				HashSet fileExtensions = new HashSet();
 				// content types derived from java content type should be
 				// included
 				// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
-				IContentType[] contentTypes = Platform.getContentTypeManager()
-						.getAllContentTypes();
+				IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
 				for (int i = 0, length = contentTypes.length; i < length; i++) {
 					if (contentTypes[i].isKindOf(javaContentType)) { // note
 						// that
 						// javaContentType.isKindOf(javaContentType)
 						// ==
 						// true
-						String[] fileExtension = contentTypes[i]
-								.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+						String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 						for (int j = 0, length2 = fileExtension.length; j < length2; j++) {
 							fileExtensions.add(fileExtension[j]);
 						}
@@ -811,7 +805,8 @@ public class Util {
 				// note that file extensions contains "java" as it is defined in
 				// JDT Core's plugin.xml
 				char[][] extensions = new char[length][];
-				extensions[0] = "php".toCharArray(); // ensure that "java" is //$NON-NLS-1$
+				extensions[0] = "php".toCharArray(); // ensure //$NON-NLS-1$
+														// that "java" is
 				// first
 				int index = 1;
 				Iterator iterator = fileExtensions.iterator();
@@ -830,10 +825,10 @@ public class Util {
 	/**
 	 * Get the jdk level of this root. The value can be:
 	 * <ul>
-	 * <li>major<<16 + minor : see predefined constants on ClassFileConstants</li>
-	 * <li>
-	 * <code>0</null> if the root is a source package fragment root or if a Java model exception occured
+	 * <li>major<<16 + minor : see predefined constants on ClassFileConstants
 	 * </li>
+	 * <li><code>0</null> if the root is a source package fragment root or if a
+	 * Java model exception occured</li>
 	 * </ul>
 	 * Returns the jdk level
 	 */
@@ -890,20 +885,17 @@ public class Util {
 		// line delimiter in project preference
 		IScopeContext[] scopeContext;
 		if (project != null) {
-			scopeContext = new IScopeContext[] { new ProjectScope(
-					project.getProject()) };
-			lineSeparator = Platform.getPreferencesService().getString(
-					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-					scopeContext);
+			scopeContext = new IScopeContext[] { new ProjectScope(project.getProject()) };
+			lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+					Platform.PREF_LINE_SEPARATOR, null, scopeContext);
 			if (lineSeparator != null)
 				return lineSeparator;
 		}
 
 		// line delimiter in workspace preference
 		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };
-		lineSeparator = Platform.getPreferencesService().getString(
-				Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-				scopeContext);
+		lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
+				null, scopeContext);
 		if (lineSeparator != null)
 			return lineSeparator;
 
@@ -1005,8 +997,7 @@ public class Util {
 		String[] args = new String[length];
 		int count = 0;
 
-		StringTokenizer tokenizer = new StringTokenizer(argumentsString,
-				ARGUMENTS_DELIMITER);
+		StringTokenizer tokenizer = new StringTokenizer(argumentsString, ARGUMENTS_DELIMITER);
 		while (tokenizer.hasMoreTokens()) {
 			String argument = tokenizer.nextToken();
 			if (argument.equals(EMPTY_ARGUMENT))
@@ -1024,8 +1015,7 @@ public class Util {
 	/**
 	 * Returns the given file's contents as a byte array.
 	 */
-	public static byte[] getResourceContentsAsByteArray(IFile file)
-			throws ModelException {
+	public static byte[] getResourceContentsAsByteArray(IFile file) throws ModelException {
 		InputStream stream = null;
 		try {
 			stream = file.getContents(true);
@@ -1033,8 +1023,7 @@ public class Util {
 			throw new ModelException(e);
 		}
 		try {
-			return org.eclipse.dltk.compiler.util.Util
-					.getInputStreamAsByteArray(stream, -1);
+			return org.eclipse.dltk.compiler.util.Util.getInputStreamAsByteArray(stream, -1);
 		} catch (IOException e) {
 			throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
 		} finally {
@@ -1049,8 +1038,7 @@ public class Util {
 	/**
 	 * Returns the given file's contents as a character array.
 	 */
-	public static char[] getResourceContentsAsCharArray(IFile file)
-			throws ModelException {
+	public static char[] getResourceContentsAsCharArray(IFile file) throws ModelException {
 		// Get encoding from file
 		String encoding;
 		try {
@@ -1062,8 +1050,7 @@ public class Util {
 		return getResourceContentsAsCharArray(file, encoding);
 	}
 
-	public static char[] getResourceContentsAsCharArray(IFile file,
-			String encoding) throws ModelException {
+	public static char[] getResourceContentsAsCharArray(IFile file, String encoding) throws ModelException {
 		// Get file length
 		// workaround https://bugs.eclipse.org/bugs/show_bug.cgi?id=130736 by
 		// using java.io.File if possible
@@ -1072,8 +1059,7 @@ public class Util {
 		if (location == null) {
 			// non local file
 			try {
-				length = EFS.getStore(file.getLocationURI()).fetchInfo()
-						.getLength();
+				length = EFS.getStore(file.getLocationURI()).fetchInfo().getLength();
 			} catch (CoreException e) {
 				throw new ModelException(e);
 			}
@@ -1087,12 +1073,10 @@ public class Util {
 		try {
 			stream = file.getContents(true);
 		} catch (CoreException e) {
-			throw new ModelException(e,
-					IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+			throw new ModelException(e, IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 		}
 		try {
-			return org.eclipse.dltk.compiler.util.Util
-					.getInputStreamAsCharArray(stream, (int) length, encoding);
+			return org.eclipse.dltk.compiler.util.Util.getInputStreamAsCharArray(stream, (int) length, encoding);
 		} catch (IOException e) {
 			throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
 		} finally {
@@ -1183,10 +1167,9 @@ public class Util {
 	 * type).getName().getFullyQualifiedName()); break; case
 	 * ASTNode.WILDCARD_TYPE: buffer.append('?'); WildcardType wildcardType =
 	 * (WildcardType) type; Type bound = wildcardType.getBound(); if (bound ==
-	 * null) return; if (wildcardType.isUpperBound()) {
-	 * buffer.append(" extends "); //$NON-NLS-1$ } else {
-	 * buffer.append(" super "); //$NON-NLS-1$ } getFullyQualifiedName(bound,
-	 * buffer); break; } }
+	 * null) return; if (wildcardType.isUpperBound()) { buffer.append(
+	 * " extends "); //$NON-NLS-1$ } else { buffer.append(" super ");
+	 * //$NON-NLS-1$ } getFullyQualifiedName(bound, buffer); break; } }
 	 */
 	/**
 	 * Returns a trimmed version the simples names returned by Signature.
@@ -1203,8 +1186,7 @@ public class Util {
 	 * Returns the index of the most specific argument paths which is strictly
 	 * enclosing the path to check
 	 */
-	public static int indexOfEnclosingPath(IPath checkedPath, IPath[] paths,
-			int pathCount) {
+	public static int indexOfEnclosingPath(IPath checkedPath, IPath[] paths, int pathCount) {
 
 		int bestMatch = -1, bestLength = -1;
 		for (int i = 0; i < pathCount; i++) {
@@ -1251,8 +1233,7 @@ public class Util {
 	 * Returns the index of the first argument paths which is equal to the path
 	 * to check
 	 */
-	public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths,
-			int pathCount) {
+	public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths, int pathCount) {
 
 		for (int i = 0; i < pathCount; i++) {
 			if (paths[i].equals(checkedPath))
@@ -1265,8 +1246,7 @@ public class Util {
 	 * Returns the index of the first argument paths which is strictly nested
 	 * inside the path to check
 	 */
-	public static int indexOfNestedPath(IPath checkedPath, IPath[] paths,
-			int pathCount) {
+	public static int indexOfNestedPath(IPath checkedPath, IPath[] paths, int pathCount) {
 
 		for (int i = 0; i < pathCount; i++) {
 			if (checkedPath.equals(paths[i]))
@@ -1295,8 +1275,7 @@ public class Util {
 	 */
 	public static boolean isReadOnly(IResource resource) {
 		if (isReadOnlySupported()) {
-			ResourceAttributes resourceAttributes = resource
-					.getResourceAttributes();
+			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 			if (resourceAttributes == null)
 				return false; // not supported on this platform for this
 			// resource
@@ -1438,6 +1417,7 @@ public class Util {
 	 * @param complianceLevel
 	 *            the compliance level
 	 */
+
 	/*
 	 * public static boolean isValidFolderNameForPackage(String folderName,
 	 * String sourceLevel, String complianceLevel) { return
@@ -1483,15 +1463,13 @@ public class Util {
 	 * The last '$' is at lastDollar. The last character of the type name is at
 	 * end-1.
 	 */
-	public static String localTypeName(String binaryTypeName, int lastDollar,
-			int end) {
+	public static String localTypeName(String binaryTypeName, int lastDollar, int end) {
 		if (lastDollar > 0 && binaryTypeName.charAt(lastDollar - 1) == '$')
 			// local name starts with a dollar sign
 			// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=103466)
 			return binaryTypeName;
 		int nameStart = lastDollar + 1;
-		while (nameStart < end
-				&& Character.isDigit(binaryTypeName.charAt(nameStart)))
+		while (nameStart < end && Character.isDigit(binaryTypeName.charAt(nameStart)))
 			nameStart++;
 		return binaryTypeName.substring(nameStart, end);
 	}
@@ -1501,12 +1479,10 @@ public class Util {
 	 */
 	public static void log(Throwable e, String message) {
 		Throwable nestedException;
-		if (e instanceof ModelException
-				&& (nestedException = ((ModelException) e).getException()) != null) {
+		if (e instanceof ModelException && (nestedException = ((ModelException) e).getException()) != null) {
 			e = nestedException;
 		}
-		IStatus status = new Status(IStatus.ERROR, PHPCorePlugin.ID,
-				IStatus.ERROR, message, e);
+		IStatus status = new Status(IStatus.ERROR, PHPCorePlugin.ID, IStatus.ERROR, message, e);
 		PHPCorePlugin.getDefault().getLog().log(status);
 	}
 
@@ -1593,8 +1569,7 @@ public class Util {
 	 * use given buffer's line sepatator.
 	 */
 	public static String normalizeCRs(String text, String buffer) {
-		return new String(
-				normalizeCRs(text.toCharArray(), buffer.toCharArray()));
+		return new String(normalizeCRs(text.toCharArray(), buffer.toCharArray()));
 	}
 
 	/**
@@ -1670,8 +1645,7 @@ public class Util {
 	/**
 	 * Sort the comparable objects in the given collection.
 	 */
-	private static void quickSort(Comparable[] sortedCollection, int left,
-			int right) {
+	private static void quickSort(Comparable[] sortedCollection, int left, int right) {
 		int original_left = left;
 		int original_right = right;
 		Comparable mid = sortedCollection[left + (right - left) / 2];
@@ -1728,8 +1702,7 @@ public class Util {
 	/**
 	 * Sort the objects in the given collection using the given comparer.
 	 */
-	private static void quickSort(Object[] sortedCollection, int left,
-			int right, Comparer comparer) {
+	private static void quickSort(Object[] sortedCollection, int left, int right, Comparer comparer) {
 		int original_left = left;
 		int original_right = right;
 		Object mid = sortedCollection[left + (right - left) / 2];
@@ -1838,7 +1811,8 @@ public class Util {
 
 	/**
 	 * Return a new array which is the split of the given string using the given
-	 * divider. The given end is exclusive and the given start is inclusive. <br>
+	 * divider. The given end is exclusive and the given start is inclusive.
+	 * <br>
 	 * <br>
 	 * For example:
 	 * <ol>
@@ -1869,8 +1843,7 @@ public class Util {
 	 *             if start is lower than 0 or end is greater than the array
 	 *             length
 	 */
-	public static final String[] splitOn(char divider, String string,
-			int start, int end) {
+	public static final String[] splitOn(char divider, String string, int start, int end) {
 		int length = string == null ? 0 : string.length();
 		if (length == 0 || start > end)
 			return CharOperation.NO_STRINGS;
@@ -1903,8 +1876,7 @@ public class Util {
 	 */
 	public static void setReadOnly(IResource resource, boolean readOnly) {
 		if (isReadOnlySupported()) {
-			ResourceAttributes resourceAttributes = resource
-					.getResourceAttributes();
+			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 			if (resourceAttributes == null)
 				return; // not supported on this platform for this resource
 			resourceAttributes.setReadOnly(readOnly);
@@ -1974,8 +1946,7 @@ public class Util {
 		System.arraycopy(elements, 0, copy, 0, len);
 		sort(copy, new Comparer() {
 			public int compare(Object a, Object b) {
-				return ((ModelElement) a).toStringWithAncestors().compareTo(
-						((ModelElement) b).toStringWithAncestors());
+				return ((ModelElement) a).toStringWithAncestors().compareTo(((ModelElement) b).toStringWithAncestors());
 			}
 		});
 		return copy;
@@ -2011,8 +1982,7 @@ public class Util {
 	 * last element of the prefix is a prefix of the corresponding element in
 	 * the compound name.
 	 */
-	public static boolean startsWithIgnoreCase(String[] compoundName,
-			String[] prefix, boolean partialMatch) {
+	public static boolean startsWithIgnoreCase(String[] compoundName, String[] prefix, boolean partialMatch) {
 		int prefixLength = prefix.length;
 		int nameLength = compoundName.length;
 		if (prefixLength > nameLength)
@@ -2022,16 +1992,15 @@ public class Util {
 				return false;
 		}
 		return (partialMatch || prefixLength == nameLength)
-				&& compoundName[prefixLength - 1].toLowerCase().startsWith(
-						prefix[prefixLength - 1].toLowerCase());
+				&& compoundName[prefixLength - 1].toLowerCase().startsWith(prefix[prefixLength - 1].toLowerCase());
 	}
 
 	/*
 	 * Returns whether the given compound name matches the given pattern.
 	 */
-	public static boolean matchesWithIgnoreCase(String[] compoundName,
-			String pattern) {
-		if (pattern.equals("*"))return true; //$NON-NLS-1$
+	public static boolean matchesWithIgnoreCase(String[] compoundName, String pattern) {
+		if (pattern.equals("*")) //$NON-NLS-1$
+			return true;
 		int nameLength = compoundName.length;
 		if (pattern.length() == 0)
 			return nameLength == 0;
@@ -2097,8 +2066,7 @@ public class Util {
 	 * is on the local file system. Otherwise fetch it. Returns null if unable
 	 * to fetch it.
 	 */
-	public static File toLocalFile(URI uri, IProgressMonitor monitor)
-			throws CoreException {
+	public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException {
 		IFileStore fileStore = EFS.getStore(uri);
 		File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
 		if (localFile == null)
@@ -2148,8 +2116,7 @@ public class Util {
 		return result;
 	}
 
-	private static void appendArrayTypeSignature(char[] string, int start,
-			StringBuffer buffer, boolean compact) {
+	private static void appendArrayTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact) {
 		int length = string.length;
 		// need a minimum 2 char
 		if (start >= length - 1) {
@@ -2177,8 +2144,7 @@ public class Util {
 		}
 	}
 
-	private static void appendClassTypeSignature(char[] string, int start,
-			StringBuffer buffer, boolean compact) {
+	private static void appendClassTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact) {
 		char c = string[start];
 		if (c != Signature.C_RESOLVED) {
 			return;
@@ -2216,8 +2182,7 @@ public class Util {
 		}
 	}
 
-	static void appendTypeSignature(char[] string, int start,
-			StringBuffer buffer, boolean compact) {
+	static void appendTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact) {
 		char c = string[start];
 		switch (c) {
 		case Signature.C_ARRAY:
@@ -2260,11 +2225,10 @@ public class Util {
 		}
 	}
 
-	public static String toString(char[] declaringClass, char[] methodName,
-			char[] methodSignature, boolean includeReturnType, boolean compact) {
+	public static String toString(char[] declaringClass, char[] methodName, char[] methodSignature,
+			boolean includeReturnType, boolean compact) {
 		final boolean isConstructor = CharOperation.equals(methodName, INIT);
-		int firstParen = CharOperation.indexOf(Signature.C_PARAM_START,
-				methodSignature);
+		int firstParen = CharOperation.indexOf(Signature.C_PARAM_START, methodSignature);
 		if (firstParen == -1) {
 			return ""; //$NON-NLS-1$
 		}
@@ -2282,8 +2246,7 @@ public class Util {
 				CharOperation.replace(declaringClass, '/', '.');
 				declaringClassSignature = declaringClass;
 			}
-			int lastIndexOfSlash = CharOperation.lastIndexOf('.',
-					declaringClassSignature);
+			int lastIndexOfSlash = CharOperation.lastIndexOf('.', declaringClassSignature);
 			if (compact && lastIndexOfSlash != -1) {
 				buffer.append(declaringClassSignature, lastIndexOfSlash + 1,
 						declaringClassSignature.length - lastIndexOfSlash - 1);
@@ -2377,8 +2340,7 @@ public class Util {
 			int end = log.indexOf('\n', start);
 			printStream.print(Thread.currentThread());
 			printStream.print(" "); //$NON-NLS-1$
-			printStream.print(log.substring(start, end == -1 ? log.length()
-					: end + 1));
+			printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
 			start = end + 1;
 		} while (start != 0);
 		printStream.println();
@@ -2635,8 +2597,7 @@ public class Util {
 		int p = start;
 		while (true) {
 			char c = string[p];
-			if (c == '<' || c == '>' || c == ':' || c == ';' || c == '.'
-					|| c == '/') {
+			if (c == '<' || c == '>' || c == ':' || c == ';' || c == '.' || c == '/') {
 				return p - 1;
 			}
 			p++;
@@ -2847,9 +2808,9 @@ public class Util {
 	 * Get all type arguments from an array of signatures.
 	 * 
 	 * Example: For following type X<Y<Z>,V<W>,U>.A<B> signatures is: [
-	 * ['L','X',
-	 * '<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L'
-	 * ,'U',';',>',';'], ['L','A','<','L','B',';','>',';'] ]
+	 * ['L','X', '<','L','Y','<','L','Z',';'>',';','L','V','
+	 * <','L','W',';'>',';','L' ,'U',';',>',';'], ['L','A','
+	 * <','L','B',';','>',';'] ]
 	 * 
 	 * @see #splitTypeLevelsSignature(String) Then, this method returns: [ [
 	 *      ['L','Y','<','L','Z',';'>',';'], ['L','V','<','L','W',';'>',';'],
@@ -2899,20 +2860,21 @@ public class Util {
 	 * constant.stringValue(); default: memberValuePair.valueKind =
 	 * IMemberValuePair.K_UNKNOWN; return null; } }
 	 *//**
-	 * Split signatures of all levels from a type unique key.
-	 * 
-	 * Example: For following type X<Y<Z>,V<W>,U>.A<B>, unique key is:
-	 * "LX<LY<LZ;>;LV<LW;>;LU;>.LA<LB;>;"
-	 * 
-	 * The return splitted signatures array is: [
-	 * ['L','X','<','L','Y','<','L','Z'
-	 * ,';'>',';','L','V','<','L','W',';'>',';','L','U','>',';'],
-	 * ['L','A','<','L','B',';','>',';']
-	 * 
-	 * @param typeSignature
-	 *            ParameterizedSourceType type signature
-	 * @return char[][] Array of signatures for each level of given unique key
-	 */
+		 * Split signatures of all levels from a type unique key.
+		 * 
+		 * Example: For following type X<Y<Z>,V<W>,U>.A<B>, unique key is:
+		 * "LX<LY<LZ;>;LV<LW;>;LU;>.LA<LB;>;"
+		 * 
+		 * The return splitted signatures array is: [
+		 * ['L','X','<','L','Y','<','L','Z' ,';'>',';','L','V','
+		 * <','L','W',';'>',';','L','U','>',';'], ['L','A','
+		 * <','L','B',';','>',';']
+		 * 
+		 * @param typeSignature
+		 *            ParameterizedSourceType type signature
+		 * @return char[][] Array of signatures for each level of given unique
+		 *         key
+		 */
 	public final static char[][] splitTypeLevelsSignature(String typeSignature) {
 		// In case of IJavaElement signature, replace '$' by '.'
 		char[] source = Signature.removeCapture(typeSignature.toCharArray());
@@ -2932,9 +2894,8 @@ public class Util {
 				paramOpening--;
 				if (paramOpening == 0) {
 					if (signaturesCount == signatures.length) {
-						System.arraycopy(signatures, 0,
-								signatures = new char[signaturesCount + 10][],
-								0, signaturesCount);
+						System.arraycopy(signatures, 0, signatures = new char[signaturesCount + 10][], 0,
+								signaturesCount);
 					}
 					typeArgsCount = 0;
 				}
@@ -2953,13 +2914,11 @@ public class Util {
 			case '.':
 				if (paramOpening == 0) {
 					if (signaturesCount == signatures.length) {
-						System.arraycopy(signatures, 0,
-								signatures = new char[signaturesCount + 10][],
-								0, signaturesCount);
+						System.arraycopy(signatures, 0, signatures = new char[signaturesCount + 10][], 0,
+								signaturesCount);
 					}
 					signatures[signaturesCount] = new char[idx + 1];
-					System.arraycopy(source, 0, signatures[signaturesCount], 0,
-							idx);
+					System.arraycopy(source, 0, signatures[signaturesCount], 0, idx);
 					signatures[signaturesCount][idx] = Signature.C_SEMICOLON;
 					signaturesCount++;
 				}
@@ -2982,20 +2941,16 @@ public class Util {
 	/*
 	 * Can throw IllegalArgumentException or ArrayIndexOutOfBoundsException
 	 */
-	public static String toAnchor(char[] methodSignature, String methodName,
-			boolean isVarArgs) {
+	public static String toAnchor(char[] methodSignature, String methodName, boolean isVarArgs) {
 		try {
-			return new String(toAnchor(methodSignature,
-					methodName.toCharArray(), isVarArgs));
+			return new String(toAnchor(methodSignature, methodName.toCharArray(), isVarArgs));
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
 	}
 
-	private static char[] toAnchor(char[] methodSignature, char[] methodName,
-			boolean isVargArgs) {
-		int firstParen = CharOperation.indexOf(Signature.C_PARAM_START,
-				methodSignature);
+	private static char[] toAnchor(char[] methodSignature, char[] methodName, boolean isVargArgs) {
+		int firstParen = CharOperation.indexOf(Signature.C_PARAM_START, methodSignature);
 		if (firstParen == -1) {
 			throw new IllegalArgumentException();
 		}
@@ -3027,8 +2982,7 @@ public class Util {
 		return result;
 	}
 
-	private static int appendTypeSignatureForAnchor(char[] string, int start,
-			StringBuffer buffer, boolean isVarArgs) {
+	private static int appendTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer, boolean isVarArgs) {
 		// need a minimum 1 char
 		if (start >= string.length) {
 			throw new IllegalArgumentException();
@@ -3037,8 +2991,7 @@ public class Util {
 		if (isVarArgs) {
 			switch (c) {
 			case Signature.C_ARRAY:
-				return appendArrayTypeSignatureForAnchor(string, start, buffer,
-						true);
+				return appendArrayTypeSignatureForAnchor(string, start, buffer, true);
 			case Signature.C_RESOLVED:
 			case Signature.C_TYPE_VARIABLE:
 			case Signature.C_BOOLEAN:
@@ -3061,8 +3014,7 @@ public class Util {
 		} else {
 			switch (c) {
 			case Signature.C_ARRAY:
-				return appendArrayTypeSignatureForAnchor(string, start, buffer,
-						false);
+				return appendArrayTypeSignatureForAnchor(string, start, buffer, false);
 			case Signature.C_RESOLVED:
 				return appendClassTypeSignatureForAnchor(string, start, buffer);
 			case Signature.C_TYPE_VARIABLE:
@@ -3097,21 +3049,18 @@ public class Util {
 				buffer.append(VOID);
 				return start;
 			case Signature.C_CAPTURE:
-				return appendCaptureTypeSignatureForAnchor(string, start,
-						buffer);
+				return appendCaptureTypeSignatureForAnchor(string, start, buffer);
 			case Signature.C_STAR:
 			case Signature.C_EXTENDS:
 			case Signature.C_SUPER:
-				return appendTypeArgumentSignatureForAnchor(string, start,
-						buffer);
+				return appendTypeArgumentSignatureForAnchor(string, start, buffer);
 			default:
 				throw new IllegalArgumentException();
 			}
 		}
 	}
 
-	private static int appendTypeArgumentSignatureForAnchor(char[] string,
-			int start, StringBuffer buffer) {
+	private static int appendTypeArgumentSignatureForAnchor(char[] string, int start, StringBuffer buffer) {
 		// need a minimum 1 char
 		if (start >= string.length) {
 			throw new IllegalArgumentException();
@@ -3121,18 +3070,15 @@ public class Util {
 		case Signature.C_STAR:
 			return start;
 		case Signature.C_EXTENDS:
-			return appendTypeSignatureForAnchor(string, start + 1, buffer,
-					false);
+			return appendTypeSignatureForAnchor(string, start + 1, buffer, false);
 		case Signature.C_SUPER:
-			return appendTypeSignatureForAnchor(string, start + 1, buffer,
-					false);
+			return appendTypeSignatureForAnchor(string, start + 1, buffer, false);
 		default:
 			return appendTypeSignatureForAnchor(string, start, buffer, false);
 		}
 	}
 
-	private static int appendCaptureTypeSignatureForAnchor(char[] string,
-			int start, StringBuffer buffer) {
+	private static int appendCaptureTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer) {
 		// need a minimum 2 char
 		if (start >= string.length - 1) {
 			throw new IllegalArgumentException();
@@ -3144,8 +3090,8 @@ public class Util {
 		return appendTypeArgumentSignatureForAnchor(string, start + 1, buffer);
 	}
 
-	private static int appendArrayTypeSignatureForAnchor(char[] string,
-			int start, StringBuffer buffer, boolean isVarArgs) {
+	private static int appendArrayTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer,
+			boolean isVarArgs) {
 		int length = string.length;
 		// need a minimum 2 char
 		if (start >= length - 1) {
@@ -3180,8 +3126,7 @@ public class Util {
 		return e;
 	}
 
-	private static int appendClassTypeSignatureForAnchor(char[] string,
-			int start, StringBuffer buffer) {
+	private static int appendClassTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer) {
 		// need a minimum 3 chars "Lx;"
 		if (start >= string.length - 2) {
 			throw new IllegalArgumentException();
@@ -3265,8 +3210,7 @@ public class Util {
 					lineDelimiter = ""; //$NON-NLS-1$
 				}
 				IRegion lineInformation = document.getLineInformation(i);
-				result[i] = lineInformation.getOffset()
-						+ lineInformation.getLength() + lineDelimiter.length();
+				result[i] = lineInformation.getOffset() + lineInformation.getLength() + lineDelimiter.length();
 			} catch (BadLocationException e) {
 				// This may happen when main thread modified file content and
 				// numberOfLines is no longer valid for the document. No need to

@@ -21,15 +21,15 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a case statement.
- * A case statement is part of switch statement
- * <pre>e.g.<pre>
- * case expr:
- *   statement1;
- *   break;,
+ * Represents a case statement. A case statement is part of switch statement
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * case expr: statement1; break;,
  *
- * default:
- *   statement2;
+ * default: statement2;
  */
 public class SwitchCase extends Statement {
 

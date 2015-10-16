@@ -42,8 +42,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	ClassStaticMemberContext staticMemberContext;
 	boolean isFunctionParameterContext = false;
 
-	public ClassMembersStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public ClassMembersStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -51,50 +50,41 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		super(context);
 		if (context instanceof ClassStaticMemberContext) {
 			staticMemberContext = (ClassStaticMemberContext) context;
-			isFunctionParameterContext = staticMemberContext
-					.isFunctionParameterContext();
+			isFunctionParameterContext = staticMemberContext.isFunctionParameterContext();
 		}
 
 	}
 
 	protected boolean showStaticMembers(ClassMemberContext context) {
-		return context.getTriggerType() == Trigger.CLASS
-				|| context.getPhpVersion().isGreaterThan(PHPVersion.PHP5);
+		return context.getTriggerType() == Trigger.CLASS || context.getPhpVersion().isGreaterThan(PHPVersion.PHP5);
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
-		return context.getTriggerType() == Trigger.OBJECT
-				|| isParentCall(context);
+		return context.getTriggerType() == Trigger.OBJECT || isParentCall(context);
 	}
 
 	protected boolean isThisCall(ClassMemberContext context) {
-		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context)
-				.isThis());
+		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context).isThis());
 	}
 
 	protected boolean isDirectThis(ClassMemberContext context) {
-		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context)
-				.isDirectThis());
+		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context).isDirectThis());
 	}
 
 	protected boolean isSelfCall(ClassMemberContext context) {
-		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context)
-				.isSelf());
+		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isSelf());
 	}
 
 	protected boolean isDirectSelfCall(ClassMemberContext context) {
-		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context)
-				.isDirectSelf());
+		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isDirectSelf());
 	}
 
 	protected boolean isParentCall(ClassMemberContext context) {
-		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context)
-				.isParent());
+		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isParent());
 	}
 
 	protected boolean isDirectParentCall(ClassMemberContext context) {
-		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context)
-				.isDirectParent());
+		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isDirectParent());
 	}
 
 	protected boolean showStrictOptions() {
@@ -110,8 +100,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 * @throws ModelException
 	 */
-	protected boolean isVisible(IMember member, ClassMemberContext context)
-			throws ModelException {
+	protected boolean isVisible(IMember member, ClassMemberContext context) throws ModelException {
 		if (isThisCall(context) || isSelfCall(context)) {
 			return true;
 		}
@@ -132,8 +121,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 * @throws ModelException
 	 */
-	protected boolean isFiltered(IMember member, IType type,
-			ClassMemberContext context) throws ModelException {
+	protected boolean isFiltered(IMember member, IType type, ClassMemberContext context) throws ModelException {
 		/* check 0 */
 		int flags = member.getFlags();
 		if (PHPFlags.isConstant(member.getFlags())) {
@@ -147,12 +135,10 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			/* check 2 */
 			if (member instanceof IField) {
 				/* check 3 */
-				if (context.getTriggerType() == Trigger.CLASS
-						&& !isFunctionParameterContext) {
+				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					/* check 5 */
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isParent(context)) { // is Parent
 							return true; // 1:1
 						} else if (isSelfKeyword(context)) {
@@ -177,9 +163,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isThisKeyWord(context) && showStrictOptions()) {
 							return false; // 1:5
 						} else if (isIndirectThis(context)) {
@@ -190,8 +175,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					} else if (PHPFlags.isProtected(flags)) {
 						if (isThisKeyWord(context) && showStrictOptions()) {
 							return false; // 2:5
-						} else if (isIndirectThis(context)
-								&& isDirectThis(context)) {
+						} else if (isIndirectThis(context) && isDirectThis(context)) {
 							return true;// 2:6
 						} else if (isSimpleArrow(context)) {
 							return true;// 2:7
@@ -199,33 +183,25 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					} else if (PHPFlags.isPublic(flags)) {
 						if (isThisKeyWord(context) && showStrictOptions()) {
 							return false; // 3:5
-						} else if (isIndirectThis(context)
-								&& showStrictOptions()) {
+						} else if (isIndirectThis(context) && showStrictOptions()) {
 							return false;// 3:6
-						} else if (isSimpleArrow(context)
-								&& showStrictOptions()) {
+						} else if (isSimpleArrow(context) && showStrictOptions()) {
 							return false;// 3:7
 						}
 					}
 				}
 
 			} else if (member instanceof IMethod) {
-				if (context.getTriggerType() == Trigger.CLASS
-						&& !isFunctionParameterContext) {
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isParent(context)) {
 							return true; // 5:1
 						} else if (isSelfCall(context)) {
 							return false;// 5:2
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)
-								&& isSelfCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context) && isSelfCall(context)) {
 							return false;// 5:3
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)
-								&& !isSelfCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context) && !isSelfCall(context)) {
 							return true;// 5:4
 						}
 					} else if (PHPFlags.isProtected(flags)) {
@@ -233,13 +209,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							return false; // 6:1
 						} else if (isSelfCall(context)) {
 							return false;// 6:2
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)
-								&& isSelfCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context) && isSelfCall(context)) {
 							return false;// 6:3
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)
-								&& !isSelfCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context) && !isSelfCall(context)) {
 							return true;// 6:4
 						}
 					} else if (PHPFlags.isPublic(flags)) {
@@ -247,12 +219,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							return false; // 7:1
 						} else if (isSelfCall(context)) {
 							return false;// 7:2
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)
-								&& isSelfCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context) && isSelfCall(context)) {
 							return false;// 7:3
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context)) {
 							return false;
 						}
 					} else if (PHPFlags.isDefault(flags)) {
@@ -260,19 +229,15 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							return false; // 8:1
 						} else if (isSelfCall(context)) {
 							return false;// 8:2
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)
-								&& isSelfCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context) && isSelfCall(context)) {
 							return false;// 8:3
-						} else if (!isThisCall(context)
-								&& !isParentCall(context)) {
+						} else if (!isThisCall(context) && !isParentCall(context)) {
 							return false;
 						}
 					}
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 5:5
 						} else if (isIndirectThis(context)) {
@@ -310,13 +275,11 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		} else {
 			// not static
 			if (member instanceof IField) {
-				if (context.getTriggerType() == Trigger.CLASS
-						&& !isFunctionParameterContext) {
+				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					return true; // 9:1 - 12:4
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 9:5
 						} else if (isIndirectThis(context)) {
@@ -344,11 +307,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				}
 
 			} else if (member instanceof IMethod) {
-				if (context.getTriggerType() == Trigger.CLASS
-						&& !isFunctionParameterContext) {
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isParent(context)) {
 							return true; // 13:1
 						} else if (isSelfKeyword(context)) {
@@ -375,8 +336,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							return false;// 15:2
 						} else if (isStaticAccessFromInsideClass(context)) {
 							return false;// 15:3
-						} else if (isStaticAccessFromOutsideClass(context)
-								&& showStrictOptions()) {
+						} else if (isStaticAccessFromOutsideClass(context) && showStrictOptions()) {
 							return false;// 15:4
 						}
 					} else if (PHPFlags.isDefault(flags)) {
@@ -386,15 +346,13 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							return false;// 16:2
 						} else if (isStaticAccessFromInsideClass(context)) {
 							return false;// 16:3
-						} else if (isStaticAccessFromOutsideClass(context)
-								&& showStrictOptions()) {
+						} else if (isStaticAccessFromOutsideClass(context) && showStrictOptions()) {
 							return false;// 16:4
 						}
 					}
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
-					if (PHPFlags.isPrivate(flags)
-							&& (member.getDeclaringType().equals(type) || isTraitMember(
-									context.getPhpVersion(), type, member))) {
+					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+							|| isTraitMember(context.getPhpVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 13:5
 						} else if (isIndirectThis(context)) {
@@ -435,17 +393,14 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		return true;
 	}
 
-	private boolean isTraitMember(PHPVersion phpVersion, IType type,
-			IMember member) {
+	private boolean isTraitMember(PHPVersion phpVersion, IType type, IMember member) {
 		return isTraitMember(phpVersion, type, member, new HashSet<IType>());
 	}
 
-	private boolean isTraitMember(PHPVersion phpVersion, IType type,
-			IMember member, Set<IType> typeSet) {
+	private boolean isTraitMember(PHPVersion phpVersion, IType type, IMember member, Set<IType> typeSet) {
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			UseTrait useTrait = TraitUtils.parse(type);
-			String typeName = PHPModelUtils.getFullName(member
-					.getDeclaringType());
+			String typeName = PHPModelUtils.getFullName(member.getDeclaringType());
 			for (String trait : useTrait.getTraits()) {
 				if (trait.equals(typeName)) {
 					return true;
@@ -453,8 +408,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			}
 
 			for (String trait : useTrait.getTraits()) {
-				IType[] traits = PhpModelAccess.getDefault().findTraits(trait,
-						MatchRule.EXACT, 0, 0,
+				IType[] traits = PhpModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
 						TraitUtils.createSearchScope(type), null);
 
 				for (IType traitType : traits) {
@@ -472,8 +426,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 */
 	private boolean isParent(ClassMemberContext context) {
-		return !isThisCall(context) && isParentCall(context)
-				&& isDirectParentCall(context);
+		return !isThisCall(context) && isParentCall(context) && isDirectParentCall(context);
 	}
 
 	/**
@@ -483,8 +436,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 */
 	private boolean isSelfKeyword(ClassMemberContext context) {
-		return !isThisCall(context) && !isParentCall(context)
-				&& isSelfCall(context) && isDirectSelfCall(context);
+		return !isThisCall(context) && !isParentCall(context) && isSelfCall(context) && isDirectSelfCall(context);
 	}
 
 	/**
@@ -495,8 +447,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 */
 	private boolean isStaticAccessFromInsideClass(ClassMemberContext context) {
-		return !isThisCall(context) && !isParentCall(context)
-				&& isSelfCall(context) && !isDirectSelfCall(context);
+		return !isThisCall(context) && !isParentCall(context) && isSelfCall(context) && !isDirectSelfCall(context);
 	}
 
 	/**
@@ -509,8 +460,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 */
 	private boolean isStaticAccessFromOutsideClass(ClassMemberContext context) {
-		return !isThisCall(context) && !isParentCall(context)
-				&& !isSelfCall(context) && !isDirectSelfCall(context);
+		return !isThisCall(context) && !isParentCall(context) && !isSelfCall(context) && !isDirectSelfCall(context);
 	}
 
 	/**
@@ -551,8 +501,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 *            Class/Interface memebers in type hierarchy order (from bottom
 	 *            to up)
 	 */
-	protected <T extends IMember> Collection<T> removeOverriddenElements(
-			Collection<T> members) {
+	protected <T extends IMember> Collection<T> removeOverriddenElements(Collection<T> members) {
 		List<T> result = new LinkedList<T>();
 		List<T> newMembers = new ArrayList<T>();
 		newMembers.addAll(members);

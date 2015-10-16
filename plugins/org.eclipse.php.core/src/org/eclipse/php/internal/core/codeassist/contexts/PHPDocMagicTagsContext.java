@@ -43,8 +43,7 @@ public class PHPDocMagicTagsContext extends PHPDocTagContext {
 		TAGS.add("method"); //$NON-NLS-1$
 	}
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

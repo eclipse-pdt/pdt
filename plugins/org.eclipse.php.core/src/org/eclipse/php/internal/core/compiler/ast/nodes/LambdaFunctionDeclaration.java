@@ -40,26 +40,18 @@ public class LambdaFunctionDeclaration extends Expression {
 	private Block body = new Block();
 	private TypeReference returnType;
 
-	public LambdaFunctionDeclaration(int start, int end,
-			List<FormalParameter> formalParameters,
-			List<? extends Expression> lexicalVars, Block body,
-			final boolean isReference) {
-		this(start, end, formalParameters, lexicalVars, body, isReference,
-				false);
+	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body, final boolean isReference) {
+		this(start, end, formalParameters, lexicalVars, body, isReference, false);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end,
-			List<FormalParameter> formalParameters,
-			List<? extends Expression> lexicalVars, Block body,
-			final boolean isReference, boolean isStatic) {
-		this(start, end, formalParameters, lexicalVars, body, isReference,
-				isStatic, null);
+	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body, final boolean isReference, boolean isStatic) {
+		this(start, end, formalParameters, lexicalVars, body, isReference, isStatic, null);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end,
-			List<FormalParameter> formalParameters,
-			List<? extends Expression> lexicalVars, Block body,
-			final boolean isReference, boolean isStatic,
+	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body, final boolean isReference, boolean isStatic,
 			TypeReference returnType) {
 		super(start, end);
 

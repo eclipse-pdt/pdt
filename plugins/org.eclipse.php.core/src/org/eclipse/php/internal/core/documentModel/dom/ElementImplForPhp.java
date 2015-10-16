@@ -30,8 +30,7 @@ import org.w3c.dom.Node;
  * 
  * @author Roy, 2007
  */
-public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
-		IImplForPhp {
+public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, IImplForPhp {
 
 	private static final String WORKBENCH_ADAPTER = "org.eclipse.ui.model.IWorkbenchAdapter"; //$NON-NLS-1$
 	private IModelElement modelElement;
@@ -41,9 +40,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 	}
 
 	public Object getAdapter(Class adapter) {
-		if (adapter != null
-				&& adapter.getName().equals(
-						WORKBENCH_ADAPTER)) {
+		if (adapter != null && adapter.getName().equals(WORKBENCH_ADAPTER)) {
 			return null;
 		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
@@ -93,8 +90,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
-		if (isPhpTag() && type instanceof Class
-				&& ValidationAdapter.class.isAssignableFrom((Class) type)) {
+		if (isPhpTag() && type instanceof Class && ValidationAdapter.class.isAssignableFrom((Class) type)) {
 			return nullValidator;
 		}
 		return super.getExistingAdapter(type);

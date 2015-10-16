@@ -31,8 +31,7 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 
 	private int variantLength = 0;
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -41,17 +40,14 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		return isIncludeStatement(statementText);
 	}
 
-	private final boolean isIncludeStatement(TextSequence statementText,
-			String variant) {
+	private final boolean isIncludeStatement(TextSequence statementText, String variant) {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=333165
 		if (statementText.length() < variant.length() + 1) {
 			return false;
 		}
 		final int length = variant.length();
-		if (variant.equalsIgnoreCase(statementText.subSequence(0, length)
-				.toString())
-				&& Character.isWhitespace(statementText.subSequence(length,
-						length + 1).charAt(0))) {
+		if (variant.equalsIgnoreCase(statementText.subSequence(0, length).toString())
+				&& Character.isWhitespace(statementText.subSequence(length, length + 1).charAt(0))) {
 			this.variantLength = variant.length();
 			return true;
 		}
@@ -59,7 +55,8 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 	}
 
 	private final boolean isIncludeStatement(TextSequence statementText) {
-		return isIncludeStatement(statementText, "require_once") || isIncludeStatement(statementText, "require") || isIncludeStatement(statementText, "include_once") || isIncludeStatement(statementText, "include"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return isIncludeStatement(statementText, "require_once") || isIncludeStatement(statementText, "require") //$NON-NLS-1$ //$NON-NLS-2$
+				|| isIncludeStatement(statementText, "include_once") || isIncludeStatement(statementText, "include"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public boolean isExclusive() {
@@ -72,10 +69,8 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		}
 		TextSequence statementText = getStatementText();
 		int prefixEnd = statementText.length();
-		final TextSequence cutTextSequence = statementText.cutTextSequence(0,
-				this.variantLength);
-		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(
-				cutTextSequence, 0, new char[] { '\'', '"' });
+		final TextSequence cutTextSequence = statementText.cutTextSequence(0, this.variantLength);
+		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(cutTextSequence, 0, new char[] { '\'', '"' });
 		int i = this.variantLength + prefixStart + 1;
 		if (i <= prefixEnd) {
 			return statementText.subSequence(i, prefixEnd).toString();

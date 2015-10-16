@@ -44,15 +44,12 @@ public class PhpIndentationFormatter {
 	private boolean isInHeredoc;
 	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
-	public PhpIndentationFormatter(int start, int length,
-			IndentationObject indentationObject) {
+	public PhpIndentationFormatter(int start, int length, IndentationObject indentationObject) {
 		this.start = start;
 		this.length = length;
-		this.defaultIndentationStrategy = new DefaultIndentationStrategy(
-				indentationObject);
+		this.defaultIndentationStrategy = new DefaultIndentationStrategy(indentationObject);
 		this.curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
-		this.caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy(
-				indentationObject);
+		this.caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy(indentationObject);
 		this.commentIndentationStrategy = new CommentIndentationStrategy();
 		this.phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
 	}
@@ -97,8 +94,7 @@ public class PhpIndentationFormatter {
 		try {
 
 			// get original line information
-			final IRegion originalLineInfo = document
-					.getLineInformation(lineNumber);
+			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
 			final int orginalLineStart = originalLineInfo.getOffset();
 			final int originalLineLength = originalLineInfo.getLength();
 
@@ -107,10 +103,8 @@ public class PhpIndentationFormatter {
 				return;
 
 			// get formatted line information
-			final String lineText = document.get(orginalLineStart,
-					originalLineLength);
-			final IRegion formattedLineInformation = getFormattedLineInformation(
-					originalLineInfo, lineText);
+			final String lineText = document.get(orginalLineStart, originalLineLength);
+			final IRegion formattedLineInformation = getFormattedLineInformation(originalLineInfo, lineText);
 
 			if (!shouldReformat(document, formattedLineInformation)) {
 				return;
@@ -118,12 +112,10 @@ public class PhpIndentationFormatter {
 
 			// remove ending spaces.
 			final int formattedLineStart = formattedLineInformation.getOffset();
-			final int formattedTextEnd = formattedLineStart
-					+ formattedLineInformation.getLength();
+			final int formattedTextEnd = formattedLineStart + formattedLineInformation.getLength();
 			final int originalTextEnd = orginalLineStart + originalLineLength;
 			if (formattedTextEnd != originalTextEnd) {
-				document.replace(formattedTextEnd, originalTextEnd
-						- formattedTextEnd, ""); //$NON-NLS-1$
+				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, ""); //$NON-NLS-1$
 				// in case there is no text in the line just quit (since the
 				// formatted of empty line is empty line)
 				if (formattedLineStart == formattedTextEnd) {
@@ -132,19 +124,15 @@ public class PhpIndentationFormatter {
 			}
 
 			// get regions
-			final int startingWhiteSpaces = formattedLineStart
-					- orginalLineStart;
+			final int startingWhiteSpaces = formattedLineStart - orginalLineStart;
 			final IIndentationStrategy insertionStrategy;
-			final IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(formattedLineStart);
-			ITextRegion firstTokenInLine = sdRegion
-					.getRegionAtCharacterOffset(formattedLineStart);
+			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
+			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion lastTokenInLine = null;
 			int regionStart = sdRegion.getStartOffset(firstTokenInLine);
 			if (firstTokenInLine instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) firstTokenInLine;
-				firstTokenInLine = container
-						.getRegionAtCharacterOffset(formattedLineStart);
+				firstTokenInLine = container.getRegionAtCharacterOffset(formattedLineStart);
 				regionStart += firstTokenInLine.getStart();
 			}
 			int scriptRegionLength = 0;
@@ -154,24 +142,19 @@ public class PhpIndentationFormatter {
 					return;
 				}
 				scriptRegionLength = scriptRegion.getStart();
-				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart
-						- regionStart);
+				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
 				if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < orginalLineStart
 						&& firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 					firstTokenInLine = scriptRegion
-							.getPhpToken(formattedLineStart - regionStart
-									+ firstTokenInLine.getLength());
+							.getPhpToken(formattedLineStart - regionStart + firstTokenInLine.getLength());
 				}
 				if (formattedTextEnd <= scriptRegion.getEnd()) {
 
-					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd
-							- regionStart - 1);
-					if (lastTokenInLine.getEnd() + sdRegion.getStartOffset() > orginalLineStart
-							+ originalLineLength
+					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd - regionStart - 1);
+					if (lastTokenInLine.getEnd() + sdRegion.getStartOffset() > orginalLineStart + originalLineLength
 							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 						lastTokenInLine = scriptRegion
-								.getPhpToken(formattedTextEnd - regionStart - 1
-										- lastTokenInLine.getLength());
+								.getPhpToken(formattedTextEnd - regionStart - 1 - lastTokenInLine.getLength());
 					}
 				}
 			}
@@ -189,8 +172,7 @@ public class PhpIndentationFormatter {
 			}
 
 			if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-				int startLine = document.getLineOfOffset(firstTokenInLine
-						.getStart() + scriptRegionLength);
+				int startLine = document.getLineOfOffset(firstTokenInLine.getStart() + scriptRegionLength);
 				if (startLine < lineNumber) {
 					ignoreLines.add(lineNumber);
 					return;
@@ -201,28 +183,25 @@ public class PhpIndentationFormatter {
 				ignoreLines.add(lineNumber);
 				return;
 			}
-			if (firstTokenType == PHPRegionTypes.PHP_CASE
-					|| firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
+			if (firstTokenType == PHPRegionTypes.PHP_CASE || firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
 				insertionStrategy = caseDefaultIndentationStrategy;
 			} else if (isPHPCommentRegion(firstTokenType)) {
 				insertionStrategy = commentIndentationStrategy;
 			} else if (firstTokenType == PHPRegionTypes.PHP_CLOSETAG) {
 				insertionStrategy = phpCloseTagIndentationStrategy;
 			} else {
-				insertionStrategy = getIndentationStrategy(lineText
-						.charAt(startingWhiteSpaces));
+				insertionStrategy = getIndentationStrategy(lineText.charAt(startingWhiteSpaces));
 			}
 
 			// Fill the buffer with blanks as if we added a "\n" to the end of
 			// the prev element.
 			// insertionStrategy.placeMatchingBlanks(editor,doc,insertionStrtegyKey,resultBuffer,startOffset-1);
-			insertionStrategy.placeMatchingBlanks(document, resultBuffer,
-					lineNumber, document.getLineOffset(lineNumber));
+			insertionStrategy.placeMatchingBlanks(document, resultBuffer, lineNumber,
+					document.getLineOffset(lineNumber));
 
 			// replace the starting spaces
 			final String newIndentation = resultBuffer.toString();
-			final String oldIndentation = lineText.substring(0,
-					startingWhiteSpaces);
+			final String oldIndentation = lineText.substring(0, startingWhiteSpaces);
 			char newChar = '\0';
 			if (newIndentation.length() > 0) {
 				newChar = newIndentation.charAt(0);
@@ -231,10 +210,8 @@ public class PhpIndentationFormatter {
 			if (oldIndentation.length() > 0) {
 				oldChar = oldIndentation.charAt(0);
 			}
-			if (newIndentation.length() != oldIndentation.length()
-					|| newChar != oldChar) {
-				document.replaceText(sdRegion, orginalLineStart,
-						startingWhiteSpaces, newIndentation);
+			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
+				document.replaceText(sdRegion, orginalLineStart, startingWhiteSpaces, newIndentation);
 			}
 
 		} catch (BadLocationException e) {
@@ -246,8 +223,7 @@ public class PhpIndentationFormatter {
 	 * @return whether we are inside a php comment
 	 */
 	private boolean isPHPCommentRegion(String tokenType) {
-		return (tokenType == PHPRegionTypes.PHP_COMMENT
-				|| tokenType == PHPRegionTypes.PHP_COMMENT_END
+		return (tokenType == PHPRegionTypes.PHP_COMMENT || tokenType == PHPRegionTypes.PHP_COMMENT_END
 				|| tokenType == PHPRegionTypes.PHPDOC_COMMENT || tokenType == PHPRegionTypes.PHPDOC_COMMENT_END);
 	}
 
@@ -256,8 +232,7 @@ public class PhpIndentationFormatter {
 	 *         is an O(n) implementation (firstly it looks a bit complicated but
 	 *         it worth it, the previous version was 3*n on the string's length)
 	 */
-	private IRegion getFormattedLineInformation(IRegion lineInfo,
-			String lineText) {
+	private IRegion getFormattedLineInformation(IRegion lineInfo, String lineText) {
 		// start checking from left and right to the center
 		int leftNonWhitespaceChar = 0;
 		int rightNonWhitespaceChar = lineText.length() - 1;
@@ -273,8 +248,7 @@ public class PhpIndentationFormatter {
 				leftNonWhitespaceChar++;
 			if (rightIsWhiteSpace)
 				rightNonWhitespaceChar--;
-			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace)
-					&& (leftNonWhitespaceChar < rightNonWhitespaceChar);
+			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace) && (leftNonWhitespaceChar < rightNonWhitespaceChar);
 		}
 
 		// if line is empty then the indexes were switched
@@ -283,21 +257,18 @@ public class PhpIndentationFormatter {
 
 		// if there are no changes - return the original line information, else
 		// build a fixed region
-		return leftNonWhitespaceChar == 0
-				&& rightNonWhitespaceChar == lineText.length() - 1 ? lineInfo
-				: new SimpleStructuredRegion(lineInfo.getOffset()
-						+ leftNonWhitespaceChar, rightNonWhitespaceChar
-						- leftNonWhitespaceChar + 1);
+		return leftNonWhitespaceChar == 0 && rightNonWhitespaceChar == lineText.length() - 1 ? lineInfo
+				: new SimpleStructuredRegion(lineInfo.getOffset() + leftNonWhitespaceChar,
+						rightNonWhitespaceChar - leftNonWhitespaceChar + 1);
 	}
 
-	private boolean shouldReformat(IStructuredDocument document,
-			IRegion lineInfo) {
-		final String checkedLineBeginState = FormatterUtils.getPartitionType(
-				document, lineInfo.getOffset());
+	private boolean shouldReformat(IStructuredDocument document, IRegion lineInfo) {
+		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset());
 		return ((checkedLineBeginState == PHPPartitionTypes.PHP_DEFAULT)
 				|| (checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
 				|| (checkedLineBeginState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
-				|| (checkedLineBeginState == PHPPartitionTypes.PHP_DOC) || (checkedLineBeginState == PHPPartitionTypes.PHP_QUOTED_STRING));
+				|| (checkedLineBeginState == PHPPartitionTypes.PHP_DOC)
+				|| (checkedLineBeginState == PHPPartitionTypes.PHP_QUOTED_STRING));
 	}
 
 	protected final int getStart() {

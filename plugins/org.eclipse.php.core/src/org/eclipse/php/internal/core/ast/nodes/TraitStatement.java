@@ -12,9 +12,8 @@ public abstract class TraitStatement extends Statement {
 
 	private Expression exp;
 
-	public static final ChildPropertyDescriptor EXP = new ChildPropertyDescriptor(
-			TraitStatement.class,
-			"exp", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXP = new ChildPropertyDescriptor(TraitStatement.class, "exp", //$NON-NLS-1$
+			Expression.class, MANDATORY, CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -23,8 +22,7 @@ public abstract class TraitStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(EXP);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
@@ -98,13 +96,11 @@ public abstract class TraitStatement extends Statement {
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXP) {
 			if (get) {
 				return getExp();

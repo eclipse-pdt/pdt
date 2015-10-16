@@ -21,10 +21,13 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents include, include_once, require and require_once expressions
- * <pre>e.g.<pre> include('myFile.php'),
- * include_once($myFile),
- * require($myClass->getFileName()),
- * require_once(A::FILE_NAME)
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * include('myFile.php'), include_once($myFile),
+ * require($myClass->getFileName()), require_once(A::FILE_NAME)
  */
 public class Include extends Expression {
 
@@ -35,28 +38,27 @@ public class Include extends Expression {
 
 	private Expression expression;
 	private int includeType;
-	
+
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(Include.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor INCLUDE_TYPE_PROPERTY = 
-		new SimplePropertyDescriptor(Include.class, "includeType", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(Include.class,
+			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor INCLUDE_TYPE_PROPERTY = new SimplePropertyDescriptor(Include.class,
+			"includeType", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(INCLUDE_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
+	}
 
 	public Include(int start, int end, AST ast, Expression expr, int type) {
 		super(start, end, ast);
@@ -74,16 +76,16 @@ public class Include extends Expression {
 
 	public static String getType(int type) {
 		switch (type) {
-			case IT_REQUIRE:
-				return "require"; //$NON-NLS-1$
-			case IT_REQUIRE_ONCE:
-				return "require_once"; //$NON-NLS-1$
-			case IT_INCLUDE:
-				return "include"; //$NON-NLS-1$
-			case IT_INCLUDE_ONCE:
-				return "include_once"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case IT_REQUIRE:
+			return "require"; //$NON-NLS-1$
+		case IT_REQUIRE_ONCE:
+			return "require_once"; //$NON-NLS-1$
+		case IT_INCLUDE:
+			return "include"; //$NON-NLS-1$
+		case IT_INCLUDE_ONCE:
+			return "include_once"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -93,7 +95,7 @@ public class Include extends Expression {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
@@ -121,12 +123,11 @@ public class Include extends Expression {
 		return ASTNode.INCLUDE;
 	}
 
-
 	/**
 	 * Returns the expression of this include.
 	 * 
 	 * @return the expression node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return expression;
 	}
@@ -137,18 +138,20 @@ public class Include extends Expression {
 	public Expression getExpr() {
 		return expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this include expression.
 	 * 
-	 * @param expression the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -158,7 +161,7 @@ public class Include extends Expression {
 		this.expression = expression;
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -173,8 +176,9 @@ public class Include extends Expression {
 	}
 
 	/**
-	 * the include type one of the following {@link #IT_INCLUDE_ONCE}, {@link #IT_INCLUDE},
-	 * 	{@link #IT_REQUIRE_ONCE}, {@link #IT_REQUIRE}
+	 * the include type one of the following {@link #IT_INCLUDE_ONCE},
+	 * {@link #IT_INCLUDE}, {@link #IT_REQUIRE_ONCE}, {@link #IT_REQUIRE}
+	 * 
 	 * @return include type
 	 */
 	public int getIncludeType() {
@@ -184,24 +188,26 @@ public class Include extends Expression {
 	/**
 	 * Sets the operator of this unary operation
 	 * 
-	 * @param new operator of this unary operation
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param new
+	 *            operator of this unary operation
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public final void setIncludetype(int value) {
 		if (getType(value) == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		preValueChange(INCLUDE_TYPE_PROPERTY);
 		this.includeType = value;
 		postValueChange(INCLUDE_TYPE_PROPERTY);
 	}
-	
+
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == INCLUDE_TYPE_PROPERTY) {
 			if (get) {
@@ -214,8 +220,8 @@ public class Include extends Expression {
 		// allow default implementation to flag the error
 		return super.internalGetSetIntProperty(property, get, value);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -235,13 +241,14 @@ public class Include extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/**
-	 * Resolves and returns the binding for the source named in this include declaration.
+	 * Resolves and returns the binding for the source named in this include
+	 * declaration.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
-	 */	
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
+	 */
 	public IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveInclude(this);
 	}

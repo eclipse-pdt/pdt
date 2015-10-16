@@ -18,8 +18,7 @@ public class TraitAlias extends Expression {
 	 */
 	private SimpleReference methodName;
 
-	public TraitAlias(Expression traitMethod, int modifier,
-			SimpleReference methodName) {
+	public TraitAlias(Expression traitMethod, int modifier, SimpleReference methodName) {
 		this.traitMethod = traitMethod;
 		this.modifier = modifier;
 		this.methodName = methodName;

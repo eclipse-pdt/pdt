@@ -21,8 +21,7 @@ import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
  * 
  * @author michael
  */
-public class TypeContext extends InstanceContext implements INamespaceContext,
-		IModelCacheContext {
+public class TypeContext extends InstanceContext implements INamespaceContext, IModelCacheContext {
 
 	private String namespaceName;
 	private IModelAccessCache cache;
@@ -50,8 +49,7 @@ public class TypeContext extends InstanceContext implements INamespaceContext,
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result
-				+ ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
 		return result;
 	}
 

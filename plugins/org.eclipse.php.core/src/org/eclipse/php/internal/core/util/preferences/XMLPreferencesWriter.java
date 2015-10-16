@@ -107,8 +107,7 @@ public class XMLPreferencesWriter {
 	 *             {@link XMLPreferencesWriter#write(IEclipsePreferences, String, List)}
 	 *             instead
 	 */
-	public static void write(Preferences pluginPreferences, String prefsKey,
-			IXMLPreferencesStorable[] objects) {
+	public static void write(Preferences pluginPreferences, String prefsKey, IXMLPreferencesStorable[] objects) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, objects);
 		pluginPreferences.setValue(prefsKey, sb.toString());
@@ -125,11 +124,10 @@ public class XMLPreferencesWriter {
 	 * @param objects
 	 *            The IXMLPreferencesStorables to store.
 	 */
-	public static void write(IEclipsePreferences pluginPreferences,
-			String prefsKey, List<IXMLPreferencesStorable> objects) {
+	public static void write(IEclipsePreferences pluginPreferences, String prefsKey,
+			List<IXMLPreferencesStorable> objects) {
 		StringBuffer sb = new StringBuffer();
-		appendDelimitedString(sb,
-				objects.toArray(new IXMLPreferencesStorable[objects.size()]));
+		appendDelimitedString(sb, objects.toArray(new IXMLPreferencesStorable[objects.size()]));
 		pluginPreferences.put(prefsKey, sb.toString());
 		try {
 			pluginPreferences.flush();
@@ -155,8 +153,7 @@ public class XMLPreferencesWriter {
 	 *             {@link XMLPreferencesWriter#write(IEclipsePreferences, String, IXMLPreferencesStorable)}
 	 *             instead
 	 */
-	public static void write(Preferences pluginPreferences, String prefsKey,
-			IXMLPreferencesStorable object) {
+	public static void write(Preferences pluginPreferences, String prefsKey, IXMLPreferencesStorable object) {
 		StringBuffer sb = new StringBuffer();
 		write(sb, object.storeToMap());
 		pluginPreferences.setValue(prefsKey, sb.toString());
@@ -172,8 +169,7 @@ public class XMLPreferencesWriter {
 	 * @param object
 	 *            The IXMLPreferencesStorable to store.
 	 */
-	public static void write(IEclipsePreferences pluginPreferences,
-			String prefsKey, IXMLPreferencesStorable object) {
+	public static void write(IEclipsePreferences pluginPreferences, String prefsKey, IXMLPreferencesStorable object) {
 		StringBuffer sb = new StringBuffer();
 		write(sb, object.storeToMap());
 		pluginPreferences.put(prefsKey, sb.toString());
@@ -185,8 +181,7 @@ public class XMLPreferencesWriter {
 	}
 
 	// Append the elements one by one into the given StringBuffer.
-	protected static void appendDelimitedString(StringBuffer buffer,
-			IXMLPreferencesStorable[] elements) {
+	protected static void appendDelimitedString(StringBuffer buffer, IXMLPreferencesStorable[] elements) {
 		if (elements != null) {
 			for (int i = 0; i < elements.length; ++i) {
 				write(buffer, elements[i].storeToMap());
@@ -197,11 +192,10 @@ public class XMLPreferencesWriter {
 		}
 	}
 
-	public static String storableElementsToString(
-			IXMLPreferencesStorable[] elements) {
+	public static String storableElementsToString(IXMLPreferencesStorable[] elements) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, elements);
 		return sb.toString();
 	}
-	
+
 }

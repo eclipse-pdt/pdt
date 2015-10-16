@@ -46,8 +46,8 @@ public interface ICompletionContextResolver {
 	 * @throws IOException
 	 * @throws ResourceAlreadyExists
 	 */
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor, CompletionCompanion companion);
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor,
+			CompletionCompanion companion);
 
 	/**
 	 * Creates known completion contexts

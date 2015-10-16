@@ -21,9 +21,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents an assignment statement.
- * <pre>e.g.<pre> $a = 5,
- * $a += 5,
- * $a .= $b,
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * $a = 5, $a += 5, $a .= $b,
  */
 public class Assignment extends Expression implements IOperationNode {
 
@@ -61,13 +64,12 @@ public class Assignment extends Expression implements IOperationNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(
-			Assignment.class,
+	public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class,
 			"variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
-			Assignment.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(
-			Assignment.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(Assignment.class,
+			"operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class,
+			"value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -76,19 +78,16 @@ public class Assignment extends Expression implements IOperationNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(LEFT_HAND_SIDE_PROPERTY);
 		properyList.add(OPERATOR_PROPERTY);
 		properyList.add(RIGHT_HAND_SIDE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public Assignment(int start, int end, AST ast, VariableBase leftHandSide,
-			int operator, Expression rightHandSide) {
+	public Assignment(int start, int end, AST ast, VariableBase leftHandSide, int operator, Expression rightHandSide) {
 		super(start, end, ast);
-		if (leftHandSide == null || rightHandSide == null
-				|| getOperator(operator) == null) {
+		if (leftHandSide == null || rightHandSide == null || getOperator(operator) == null) {
 			throw new IllegalArgumentException();
 		}
 
@@ -313,23 +312,19 @@ public class Assignment extends Expression implements IOperationNode {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final VariableBase left = ASTNode
-				.copySubtree(target, getLeftHandSide());
-		final Expression right = ASTNode
-				.copySubtree(target, getRightHandSide());
-		final Assignment result = new Assignment(this.getStart(),
-				this.getEnd(), target, left, this.getOperator(), right);
+		final VariableBase left = ASTNode.copySubtree(target, getLeftHandSide());
+		final Expression right = ASTNode.copySubtree(target, getRightHandSide());
+		final Assignment result = new Assignment(this.getStart(), this.getEnd(), target, left, this.getOperator(),
+				right);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
-			boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
@@ -342,8 +337,7 @@ public class Assignment extends Expression implements IOperationNode {
 		return super.internalGetSetIntProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == LEFT_HAND_SIDE_PROPERTY) {
 			if (get) {
 				return getLeftHandSide();

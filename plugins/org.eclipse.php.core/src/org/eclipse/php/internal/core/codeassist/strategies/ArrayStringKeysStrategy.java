@@ -38,8 +38,7 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  */
 public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 
-	public ArrayStringKeysStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
+	public ArrayStringKeysStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -55,21 +54,17 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 
 		ISourceRange replaceRange = getReplacementRange(context);
 		ArrayKeyContext arrayContext = (ArrayKeyContext) context;
-		boolean endsWithQuota = arrayContext.getNextChar() == '\''
-				|| arrayContext.getNextChar() == '\"';
+		boolean endsWithQuota = arrayContext.getNextChar() == '\'' || arrayContext.getNextChar() == '\"';
 		if (arrayContext.hasQuotes() && !(endsWithQuota)) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=401766
-			replaceRange = new SourceRange(replaceRange.getOffset(),
-					replaceRange.getLength() + 1);
+			replaceRange = new SourceRange(replaceRange.getOffset(), replaceRange.getLength() + 1);
 		}
 		CompletionRequestor requestor = arrayContext.getCompletionRequestor();
 
 		String prefix = arrayContext.getPrefix();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(arrayContext.getSourceModule());
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(arrayContext.getSourceModule());
 		try {
-			ArrayKeyFinder finder = new ArrayKeyFinder(prefix,
-					arrayContext.getOffset());
+			ArrayKeyFinder finder = new ArrayKeyFinder(prefix, arrayContext.getOffset());
 			moduleDeclaration.traverse(finder);
 			Set<String> names = finder.getNames();
 			int extraObject = ProposalExtraInfo.DEFAULT;
@@ -79,10 +74,8 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			for (String name : names) {
 
 				if (!requestor.isContextInformationMode()) {
-					reporter.reportField(new FakeField(
-							(ModelElement) arrayContext.getSourceModule(),
-							name, 0, 0), "", replaceRange, false, 0, //$NON-NLS-1$
-							extraObject); // NON-NLS-1
+					reporter.reportField(new FakeField((ModelElement) arrayContext.getSourceModule(), name, 0, 0), "", //$NON-NLS-1$
+							replaceRange, false, 0, extraObject); // NON-NLS-1
 				}
 
 			}
@@ -90,15 +83,13 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 		}
 	}
 
-	protected void reportVariables(ICompletionReporter reporter,
-			ArrayKeyContext context, String[] variables, String prefix)
-			throws BadLocationException {
+	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables,
+			String prefix) throws BadLocationException {
 		reportVariables(reporter, context, variables, prefix, false);
 	}
 
-	protected void reportVariables(ICompletionReporter reporter,
-			ArrayKeyContext context, String[] variables, String prefix,
-			boolean removeDollar) throws BadLocationException {
+	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables,
+			String prefix, boolean removeDollar) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
 		ISourceRange replaceRange = getReplacementRange(context);
 		for (String variable : variables) {
@@ -106,11 +97,8 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				variable = variable.substring(1);
 			}
 			if (variable.startsWith(prefix)) {
-				if (!requestor.isContextInformationMode()
-						|| variable.length() == prefix.length()) {
-					reporter.reportField(
-							new FakeField((ModelElement) context
-									.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
+				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
+					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
 							replaceRange, false); // NON-NLS-1
 				}
 			}
@@ -136,10 +124,8 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				Scalar scalar = (Scalar) s.getKey();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
-					if (!scalar.getValue().equals(key)
-							&& key.length() > 0
-							&& key.toLowerCase().startsWith(
-									prefix.toLowerCase())) {
+					if (!scalar.getValue().equals(key) && key.length() > 0
+							&& key.toLowerCase().startsWith(prefix.toLowerCase())) {
 						names.add(key);
 					}
 				}
@@ -155,10 +141,8 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				Scalar scalar = (Scalar) s.getIndex();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
-					if (!scalar.getValue().equals(key)
-							&& key.length() > 0
-							&& key.toLowerCase().startsWith(
-									prefix.toLowerCase())) {
+					if (!scalar.getValue().equals(key) && key.length() > 0
+							&& key.toLowerCase().startsWith(prefix.toLowerCase())) {
 						names.add(key);
 					}
 				}
@@ -166,16 +150,13 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			return super.visit(s);
 		}
 
-		public boolean visit(ReflectionArrayVariableReference s)
-				throws Exception {
+		public boolean visit(ReflectionArrayVariableReference s) throws Exception {
 			if (s.getIndex() instanceof Scalar) {
 				Scalar scalar = (Scalar) s.getIndex();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
-					if (!scalar.getValue().equals(key)
-							&& key.length() > 0
-							&& key.toLowerCase().startsWith(
-									prefix.toLowerCase())) {
+					if (!scalar.getValue().equals(key) && key.length() > 0
+							&& key.toLowerCase().startsWith(prefix.toLowerCase())) {
 						names.add(key);
 					}
 				}

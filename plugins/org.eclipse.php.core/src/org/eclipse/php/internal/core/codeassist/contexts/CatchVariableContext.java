@@ -15,7 +15,8 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
 /**
- * This context represents state when staying in catch statement variable part. <br/>
+ * This context represents state when staying in catch statement variable part.
+ * <br/>
  * Examples:
  * 
  * <pre>
@@ -27,8 +28,7 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class CatchVariableContext extends CatchContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

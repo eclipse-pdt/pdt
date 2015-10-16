@@ -22,11 +22,11 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents a parenthesis expression
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
- * ( $a == 2 );
- * echo ($a);
+ * ( $a == 2 ); echo ($a);
  */
 public class ParenthesisExpression extends VariableBase {
 
@@ -36,8 +36,7 @@ public class ParenthesisExpression extends VariableBase {
 	 * The "expression" structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
-			ParenthesisExpression.class,
-			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			ParenthesisExpression.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -46,8 +45,7 @@ public class ParenthesisExpression extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
@@ -152,8 +150,7 @@ public class ParenthesisExpression extends VariableBase {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
-			boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
 				return getExpression();
@@ -177,14 +174,12 @@ public class ParenthesisExpression extends VariableBase {
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression expr = ASTNode.copySubtree(target, getExpression());
-		final ParenthesisExpression result = new ParenthesisExpression(
-				this.getStart(), this.getEnd(), target, expr);
+		final ParenthesisExpression result = new ParenthesisExpression(this.getStart(), this.getEnd(), target, expr);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

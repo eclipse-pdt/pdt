@@ -87,18 +87,15 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @param sourceModule
 	 *            of this resolver
 	 */
-	public DefaultBindingResolver(ISourceModule sourceModule,
-			WorkingCopyOwner owner) {
+	public DefaultBindingResolver(ISourceModule sourceModule, WorkingCopyOwner owner) {
 		this.sourceModule = sourceModule;
 		this.workingCopyOwner = owner;
 		this.bindingTables = new BindingTables();
 		this.modelAccessCache = new PerFileModelAccessCache(sourceModule);
-		this.bindingUtil = new BindingUtility(this.sourceModule,
-				this.modelAccessCache);
+		this.bindingUtil = new BindingUtility(this.sourceModule, this.modelAccessCache);
 	}
 
-	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
-			IModelElement modelElement) {
+	private ITypeBinding internalGetTypeBinding(IEvaluatedType type, IModelElement modelElement) {
 		String typeName = type.getTypeName();
 		if (typeName == null) {
 			return null;
@@ -112,8 +109,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		return (ITypeBinding) binding;
 	}
 
-	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
-			IModelElement[] modelElements) {
+	private ITypeBinding internalGetTypeBinding(IEvaluatedType type, IModelElement[] modelElements) {
 		String typeName = type.getTypeName();
 		if (typeName == null) {
 			return null;
@@ -156,8 +152,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (types != null && types.length > 0) {
-			return internalGetTypeBinding(PHPClassType.fromIType(types[0]),
-					types);
+			return internalGetTypeBinding(PHPClassType.fromIType(types[0]), types);
 		}
 		return null;
 	}
@@ -200,11 +195,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		try {
 			int flags = method.getFlags();
 			if (!PHPFlags.isAbstract(flags)) {
-				IEvaluatedType[] evaluatedFunctionReturnTypes = bindingUtil
-						.getFunctionReturnType(method);
+				IEvaluatedType[] evaluatedFunctionReturnTypes = bindingUtil.getFunctionReturnType(method);
 				for (IEvaluatedType currentEvaluatedType : evaluatedFunctionReturnTypes) {
-					ITypeBinding typeBinding = getTypeBinding(
-							currentEvaluatedType, sourceModule);
+					ITypeBinding typeBinding = getTypeBinding(currentEvaluatedType, sourceModule);
 					if (typeBinding != null) {
 						result.add(typeBinding);
 					}
@@ -213,11 +206,8 @@ public class DefaultBindingResolver extends BindingResolver {
 				IModelElement parentElement = method.getParent();
 				if (parentElement instanceof IType) {
 					IType parent = (IType) parentElement;
-					IType[] functionReturnTypes = CodeAssistUtils
-							.getFunctionReturnType(new IType[] { parent },
-									method.getElementName(),
-									CodeAssistUtils.USE_PHPDOC,
-									method.getSourceModule(), 0);
+					IType[] functionReturnTypes = CodeAssistUtils.getFunctionReturnType(new IType[] { parent },
+							method.getElementName(), CodeAssistUtils.USE_PHPDOC, method.getSourceModule(), 0);
 					for (IType currentEvaluatedType : functionReturnTypes) {
 						ITypeBinding typeBinding = getTypeBinding(currentEvaluatedType);
 						if (typeBinding != null) {
@@ -275,11 +265,9 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @see #getModelElements(int, int)
 	 * @see BindingUtility#getModelElement(int, int, boolean)
 	 */
-	public IModelElement[] getModelElements(int offset, int length,
-			boolean filter) {
+	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
 		try {
-			return bindingUtil.getModelElement(offset, length, filter,
-					getModelAccessCache());
+			return bindingUtil.getModelElement(offset, length, filter, getModelAccessCache());
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -296,10 +284,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	IBinding resolveName(Identifier name) {
 		// workaround for bug 253193's "ctrl+T not functional on methods"
 		FunctionName functionName = getFunctionName(name);
-		if (functionName != null
-				&& functionName.getParent() instanceof FunctionInvocation) {
-			return resolveFunction((FunctionInvocation) functionName
-					.getParent());
+		if (functionName != null && functionName.getParent() instanceof FunctionInvocation) {
+			return resolveFunction((FunctionInvocation) functionName.getParent());
 		}
 		// end
 		if (name.getParent() instanceof Variable) {
@@ -339,13 +325,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	IMethodBinding resolveMethod(MethodDeclaration method) {
 		if (method == null || method.getFunction() == null) {
-			throw new IllegalArgumentException(
-					"Can not resolve null expression"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Can not resolve null expression"); //$NON-NLS-1$
 		}
 
 		try {
-			IModelElement elementAt = sourceModule.getElementAt(method
-					.getStart());
+			IModelElement elementAt = sourceModule.getElementAt(method.getStart());
 			if (elementAt instanceof IMethod) {
 				return getMethodBinding((IMethod) elementAt);
 			}
@@ -367,15 +351,13 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	ITypeBinding resolveExpressionType(Expression expression) {
 		if (expression == null) {
-			throw new IllegalArgumentException(
-					"Can not resolve null expression"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Can not resolve null expression"); //$NON-NLS-1$
 		}
 		int start = expression.getStart();
 		int length = expression.getLength();
 		IEvaluatedType type = getEvaluatedType(start, length);
 		if (type != null) {
-			IModelElement[] modelElements = getModelElements(start, length,
-					false);
+			IModelElement[] modelElements = getModelElements(start, length, false);
 			return internalGetTypeBinding(type, modelElements);
 		} else {
 			return null;
@@ -399,8 +381,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * (org.eclipse.php.internal.core.ast.nodes.IBinding)
 	 */
 	@Override
-	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(
-			IBinding binding) {
+	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(IBinding binding) {
 		// TODO Auto-generated method stub
 		return super.findDeclaringNode(binding);
 	}
@@ -413,8 +394,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * (java.lang.String)
 	 */
 	@Override
-	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(
-			String bindingKey) {
+	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(String bindingKey) {
 		// TODO Auto-generated method stub
 		return super.findDeclaringNode(bindingKey);
 	}
@@ -430,8 +410,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	ITypeBinding getTypeBinding(SingleFieldDeclaration fieldDeclaration) {
 		IModelElement[] modelElements;
 		try {
-			modelElements = this.bindingUtil.getModelElement(
-					fieldDeclaration.getStart(), fieldDeclaration.getLength(),
+			modelElements = this.bindingUtil.getModelElement(fieldDeclaration.getStart(), fieldDeclaration.getLength(),
 					getModelAccessCache());
 		} catch (ModelException e) {
 			Logger.logException(e);
@@ -444,8 +423,7 @@ public class DefaultBindingResolver extends BindingResolver {
 				for (IModelElement elem : modelElements) {
 					types.add((IType) elem);
 				}
-				return getTypeBinding((IType[]) types.toArray(new IType[types
-						.size()]));
+				return getTypeBinding((IType[]) types.toArray(new IType[types.size()]));
 			}
 		}
 		return super.getTypeBinding(fieldDeclaration);
@@ -459,8 +437,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * (org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
 	@Override
-	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding,
-			ISourceModule sourceModule) {
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding, ISourceModule sourceModule) {
 		if (referenceBinding != null) {
 			return internalGetTypeBinding(referenceBinding, sourceModule);
 		}
@@ -483,16 +460,15 @@ public class DefaultBindingResolver extends BindingResolver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#
+	 * resolveConstructor
 	 * (org.eclipse.php.internal.core.ast.nodes.ClassInstanceCreation)
 	 */
 	@Override
 	IMethodBinding resolveConstructor(ClassInstanceCreation expression) {
 		IModelElement[] modelElements;
 		try {
-			modelElements = sourceModule.codeSelect(expression.getStart(),
-					expression.getLength());
+			modelElements = sourceModule.codeSelect(expression.getStart(), expression.getLength());
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -511,8 +487,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#
+	 * resolveConstructor
 	 * (org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
 	 */
 	@Override
@@ -539,8 +515,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			if (!var.isDollared() && var.getName() instanceof Identifier) {
 				Identifier id = (Identifier) var.getName();
 				final String fieldName = "$" + id.getName(); //$NON-NLS-1$
-				final ITypeBinding type = fieldAccess.getDispatcher()
-						.resolveTypeBinding();
+				final ITypeBinding type = fieldAccess.getDispatcher().resolveTypeBinding();
 				return Bindings.findFieldInHierarchy(type, fieldName);
 			}
 		}
@@ -557,8 +532,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	@Override
 	IVariableBinding resolveField(StaticConstantAccess constantAccess) {
 		final Identifier constName = constantAccess.getConstant();
-		final ITypeBinding type = constantAccess.getClassName()
-				.resolveTypeBinding();
+		final ITypeBinding type = constantAccess.getClassName().resolveTypeBinding();
 		return Bindings.findFieldInHierarchy(type, constName.getName());
 	}
 
@@ -577,8 +551,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			if (var.isDollared() && var.getName() instanceof Identifier) {
 				Identifier id = (Identifier) var.getName();
 				final String fieldName = "$" + id.getName(); //$NON-NLS-1$
-				final ITypeBinding type = fieldAccess.getClassName()
-						.resolveTypeBinding();
+				final ITypeBinding type = fieldAccess.getClassName().resolveTypeBinding();
 				return Bindings.findFieldInHierarchy(type, fieldName);
 			}
 		}
@@ -597,8 +570,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		IModelElement[] modelElements = null;
 		try {
 			Identifier functionName = function.getFunctionName();
-			modelElements = sourceModule.codeSelect(functionName.getStart(),
-					functionName.getLength());
+			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -625,8 +597,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		IModelElement[] modelElements = null;
 		try {
 			FunctionName functionName = function.getFunctionName();
-			modelElements = sourceModule.codeSelect(functionName.getStart(),
-					functionName.getLength());
+			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -653,8 +624,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		IModelElement[] modelElements = null;
 		try {
 			FunctionName functionName = method.getMethod().getFunctionName();
-			modelElements = sourceModule.codeSelect(functionName.getStart(),
-					functionName.getLength());
+			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -681,8 +651,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		IModelElement[] modelElements = null;
 		try {
 			FunctionName functionName = method.getMethod().getFunctionName();
-			modelElements = sourceModule.codeSelect(functionName.getStart(),
-					functionName.getLength());
+			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -709,8 +678,7 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		IModelElement[] modelElements;
 		try {
-			modelElements = this.bindingUtil.getModelElement(type.getName()
-					.getStart(), type.getName().getLength(),
+			modelElements = this.bindingUtil.getModelElement(type.getName().getStart(), type.getName().getLength(),
 					getModelAccessCache());
 		} catch (ModelException e) {
 			Logger.logException(e);
@@ -723,8 +691,7 @@ public class DefaultBindingResolver extends BindingResolver {
 				for (IModelElement elem : modelElements) {
 					types.add((IType) elem);
 				}
-				return getTypeBinding((IType[]) types.toArray(new IType[types
-						.size()]));
+				return getTypeBinding((IType[]) types.toArray(new IType[types.size()]));
 			}
 		}
 		return super.resolveType(type);
@@ -733,8 +700,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveTypeParameter
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#
+	 * resolveTypeParameter
 	 * (org.eclipse.php.internal.core.ast.nodes.FormalParameter)
 	 */
 	@Override
@@ -767,8 +734,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	IVariableBinding resolveVariable(Variable variable) {
 		IModelElement modelElements = null;
 		try {
-			modelElements = bindingUtil.getFieldByPosition(variable.getStart(),
-					variable.getLength());
+			modelElements = bindingUtil.getFieldByPosition(variable.getStart(), variable.getLength());
 		} catch (ModelException e) {
 			Logger.logException(e);
 		} catch (Exception e) {
@@ -777,10 +743,8 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		if (modelElements != null) {
 			if (modelElements.getElementType() == IModelElement.FIELD) {
-				int id = LocalVariableIndex.perform(
-						variable.getEnclosingBodyNode(), variable);
-				return new VariableBinding(this, (IMember) modelElements,
-						variable, id);
+				int id = LocalVariableIndex.perform(variable.getEnclosingBodyNode(), variable);
+				return new VariableBinding(this, (IMember) modelElements, variable, id);
 			}
 
 		}
@@ -790,9 +754,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveWellKnownType
-	 * (java.lang.String)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#
+	 * resolveWellKnownType (java.lang.String)
 	 */
 	@Override
 	ITypeBinding resolveWellKnownType(String name) {
@@ -829,8 +792,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			switch (node.getType()) {
 			case ASTNode.METHOD_DECLARATION:
 				isProgramScope = false;
-				return internalPerform(
-						((MethodDeclaration) node).getFunction(), variable);
+				return internalPerform(((MethodDeclaration) node).getFunction(), variable);
 			case ASTNode.FUNCTION_DECLARATION:
 				isProgramScope = false;
 				return internalPerform((FunctionDeclaration) node, variable);
@@ -859,10 +821,8 @@ public class DefaultBindingResolver extends BindingResolver {
 				String variableName = ((Identifier) name).getName();
 				if (!variableName.equalsIgnoreCase("this") //$NON-NLS-1$
 						&& !variablesSet.contains(variableName)) {
-					String searchName = ((Identifier) this.variable.getName())
-							.getName();
-					if (variableName.equals(searchName)
-							&& variable.getType() == this.variable.getType()) {
+					String searchName = ((Identifier) this.variable.getName()).getName();
+					if (variableName.equals(searchName) && variable.getType() == this.variable.getType()) {
 						handleVariableBinding();
 					}
 

@@ -20,9 +20,13 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Holds a goto statement. 
- * <pre>e.g.<pre> 
- *goto START;
+ * Holds a goto statement.
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * goto START;
  */
 public class GotoStatement extends Statement {
 
@@ -31,21 +35,20 @@ public class GotoStatement extends Statement {
 	/**
 	 * The "expression" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor LABEL_PROPERTY = 
-		new ChildPropertyDescriptor(GotoStatement.class, "label", Identifier.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor LABEL_PROPERTY = new ChildPropertyDescriptor(GotoStatement.class,
+			"label", Identifier.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		propertyList.add(LABEL_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
+	}
 
 	public GotoStatement(int start, int end, AST ast, Identifier label) {
 		super(start, end, ast);
@@ -59,15 +62,15 @@ public class GotoStatement extends Statement {
 	public GotoStatement(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
 		label.accept(visitor);
 	}
@@ -98,22 +101,24 @@ public class GotoStatement extends Statement {
 	 * Returns the label of this goto label
 	 * 
 	 * @return the label label
-	 */ 
+	 */
 	public Identifier getLabel() {
 		return this.label;
 	}
-		
+
 	/**
 	 * Sets the label of this goto label
 	 * 
-	 * @param label of this goto label
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param label
+	 *            of this goto label
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setLabel(Identifier label) {
 		if (label == null) {
 			throw new IllegalArgumentException();
@@ -123,7 +128,7 @@ public class GotoStatement extends Statement {
 		this.label = label;
 		postReplaceChild(oldChild, label, LABEL_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == LABEL_PROPERTY) {
 			if (get) {
@@ -136,8 +141,8 @@ public class GotoStatement extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
