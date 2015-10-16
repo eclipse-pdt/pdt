@@ -75,27 +75,35 @@
   <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="%PHPScriptLaunch.label"
-            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
-            modes="run"
-            id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+            id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+            name="%PHPCLILaunchType.label"
+            public="true">
       </launchConfigurationType>
       <launchConfigurationType
-            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
             id="org.eclipse.php.debug.core.launching.webPageLaunch"
-            modes="run"
-            name="%webPageLaunchConfigurationType.label">
+            name="%PHPWebLaunchType.label"
+            public="true">
+      </launchConfigurationType>
+      <launchConfigurationType
+            id="org.eclipse.php.debug.core.remotePHPLaunchConfigurationType"
+            name="%PHPRemoteLaunchType.label"
+            public="false">
       </launchConfigurationType>
    </extension>
    
    <extension point="org.eclipse.debug.core.launchDelegates">
      <launchDelegate
            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
-           id="org.eclipse.php.debug.core.launching.launchDelegate.scriptDebug"
-           modes="debug"
+           id="org.eclipse.php.debug.core.launching.launchDelegate.phpExeRunDebug"
+           modes="run,  debug"
+           name="%PHPPDTLaunchDelegate.label"
            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
            type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+        <modeCombination
+              modes="run"
+              perspective="">
+        </modeCombination>
         <modeCombination
               modes="debug"
               perspective="org.eclipse.debug.ui.DebugPerspective">
@@ -103,11 +111,33 @@
      </launchDelegate>
      <launchDelegate
            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
-           id="org.eclipse.php.debug.core.launching.launchDelegate.webPageDebug"
-           modes="debug"
+           id="org.eclipse.php.debug.core.launching.launchDelegate.phpWebRunDebug"
+           modes="run,  debug"
+           name="%PHPPDTLaunchDelegate.label"
            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
            type="org.eclipse.php.debug.core.launching.webPageLaunch">
+        <modeCombination
+              modes="run"
+              perspective="">
+        </modeCombination>
+        <modeCombination
+              modes="debug"
+              perspective="org.eclipse.debug.ui.DebugPerspective">
+        </modeCombination>
+     </launchDelegate>
+     <launchDelegate
+           delegate="org.eclipse.php.internal.debug.core.launching.PHPRemoteLaunchConfigurationDelegate"
+           id="org.eclipse.php.debug.core.launching.launchDelegate.remotePHPRunDebug"
+           modes="run,  debug"
+           name="%PHPPDTLaunchDelegate.label"
+           sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+           sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+           type="org.eclipse.php.debug.core.remotePHPLaunchConfigurationType">
+        <modeCombination
+              modes="run"
+              perspective="">
+        </modeCombination>
         <modeCombination
               modes="debug"
               perspective="org.eclipse.debug.ui.DebugPerspective">
@@ -445,17 +475,5 @@
             name="XDebug Debugger Settings Provider"
             provider="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsProvider">
       </phpDebuggerSettingsProvider>
-   </extension>
-   <extension
-         point="org.eclipse.debug.core.launchConfigurationTypes">
-      <launchConfigurationType
-            delegate="org.eclipse.php.internal.debug.core.launching.PHPRemoteLaunchConfigurationDelegate"
-            id="org.eclipse.php.debug.core.remotePHPLaunchConfigurationType"
-            modes="run, debug, profile"
-            name="Remote PHP Launch"
-            public="false"
-            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
-            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php">
-      </launchConfigurationType>
    </extension>
 </plugin>
