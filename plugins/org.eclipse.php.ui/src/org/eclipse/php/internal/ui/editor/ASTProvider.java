@@ -565,7 +565,9 @@ public final class ASTProvider {
 			return true;
 		} else if (javaElement.getResource() != null) {
 			final IResource resource = javaElement.getResource();
-			if (ValidationFramework.getDefault().isSuspended(resource.getProject())) {
+			if (!resource.getProject().isAccessible()) {
+				return true;
+			} else if (ValidationFramework.getDefault().isSuspended(resource.getProject())) {
 				return true;
 			} else if (ValidationFramework.getDefault().getProjectSettings(resource.getProject()).getSuspend()) {
 				return true;
