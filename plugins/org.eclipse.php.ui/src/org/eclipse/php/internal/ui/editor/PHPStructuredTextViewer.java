@@ -123,7 +123,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
 								synchronized (PHPStructuredTextViewer.this) {
-									if (fPostSelectionOffset >= 0 && fPostSelectionLength >= 0) {
+									if (fPostSelectionOffset >= 0 && fPostSelectionLength >= 0
+											&& getDocument() != null) {
 										firePostSelectionChanged(fPostSelectionOffset, fPostSelectionLength);
 									}
 								}
