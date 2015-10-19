@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction.proposals;
 
+import java.util.Enumeration;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -18,9 +20,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.manipulation.SourceModuleChange;
+import org.eclipse.dltk.internal.core.BufferManager;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.internal.ui.DLTKUIStatus;
+import org.eclipse.dltk.internal.ui.editor.DocumentAdapter;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -373,16 +377,32 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 		String name = getName();
 		TextChange change;
 		if (!cu.getResource().exists()) {
-			String source;
-			try {
-				source = cu.getSource();
-			} catch (ModelException e) {
-				PHPUiPlugin.log(e);
-				source = new String(); // empty
+			IDocument doc = null;
+			Enumeration openBuffers = BufferManager.getDefaultBufferManager().getOpenBuffers();
+			while (openBuffers.hasMoreElements()) {
+				Object nextElement = openBuffers.nextElement();
+				if (nextElement instanceof DocumentAdapter) {
+					DocumentAdapter adapt = (DocumentAdapter) nextElement;
+					if (adapt.getOwner().equals(cu)) {
+						doc = adapt.getDocument();
+						break;
+					}
+				}
 			}
-			Document document = new Document(source);
-			document.setInitialLineDelimiter(StubUtility.getLineDelimiterUsed(cu.getScriptProject()));
-			change = new DocumentChange(name, document);
+
+			if (doc == null) {
+				String source;
+				try {
+					source = cu.getSource();
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+					source = new String(); // empty
+				}
+				doc = new Document(source);
+				((Document) doc).setInitialLineDelimiter(StubUtility.getLineDelimiterUsed(cu.getScriptProject()));
+			}
+
+			change = new DocumentChange(name, doc);
 		} else {
 			SourceModuleChange cuChange = new SourceModuleChange(name, cu);
 			cuChange.setSaveMode(TextFileChange.LEAVE_DIRTY);
