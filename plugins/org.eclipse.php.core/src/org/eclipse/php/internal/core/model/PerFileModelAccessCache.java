@@ -52,7 +52,9 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
-
+		if (!type.getScriptProject().getProject().isAccessible()) {
+			return null;
+		}
 		ITypeHierarchy hierarchy = hierarchyCache.get(type);
 		if (hierarchy == null) {
 			hierarchy = type.newSupertypeHierarchy(monitor);

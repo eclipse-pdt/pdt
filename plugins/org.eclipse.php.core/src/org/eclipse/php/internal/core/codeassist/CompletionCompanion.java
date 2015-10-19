@@ -103,6 +103,9 @@ public class CompletionCompanion {
 	 * @throws ModelException
 	 */
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
+		if (!type.getScriptProject().getProject().isAccessible()) {
+			return null;
+		}
 		if (!superHierarchyCache.containsKey(type)) {
 			superHierarchyCache.put(type, type.newSupertypeHierarchy(monitor));
 		}
