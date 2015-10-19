@@ -32,6 +32,17 @@ public final class WorkingSetMessages extends NLS {
 	public static String PhpWorkingSetPage_deselectAll_label;
 	public static String PhpWorkingSetPage_deselectAll_toolTip;
 
+	public static String ConfigureWorkingSetAssignementAction_DeselectAll_button;
+	public static String ConfigureWorkingSetAssignementAction_DialogMessage_multi;
+	public static String ConfigureWorkingSetAssignementAction_SelectAll_button;
+	public static String ConfigureWorkingSetAssignementAction_DialogMessage_specific;
+	public static String ConfigureWorkingSetAssignementAction_OnlyShowVisible_check;
+	public static String ConfigureWorkingSetAssignementAction_OnlyShowVisible_link;
+	public static String ConfigureWorkingSetAssignementAction_WorkingSetAssignments_title;
+	public static String ConfigureWorkingSetAssignementAction_WorkingSets_actionLabel;
+	public static String ConfigureWorkingSetAssignementAction_New_button;
+	public static String ConfigureWorkingSetAssignementAction_XofY_label;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, WorkingSetMessages.class);
 	}

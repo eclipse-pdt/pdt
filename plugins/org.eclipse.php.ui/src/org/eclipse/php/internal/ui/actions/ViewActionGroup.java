@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.actions;
 import org.eclipse.dltk.internal.ui.workingsets.IWorkingSetActionGroup;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetMessages;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetModel;
+import org.eclipse.dltk.ui.IContextMenuConstants;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -19,6 +20,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.internal.ui.workingset.ConfigureWorkingSetAssignementAction;
 import org.eclipse.php.internal.ui.workingset.PHPWorkingSetFilterActionGroup;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
@@ -39,6 +41,8 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 	private IMenuManager fMenuManager;
 	private IWorkingSetActionGroup fActiveActionGroup;
 	private WorkingSetShowActionGroup fShowActionGroup;
+	private final ConfigureWorkingSetAssignementAction fWorkingSetAssignementAction;
+	private final IWorkbenchPartSite fSite;
 	private PHPWorkingSetFilterActionGroup fFilterActionGroup;
 
 	public ViewActionGroup(int mode, IPropertyChangeListener changeListener, IWorkbenchPartSite site) {
@@ -52,6 +56,9 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		}
 		fFilterActionGroup = new PHPWorkingSetFilterActionGroup(site, fChangeListener);
 		fShowActionGroup = new WorkingSetShowActionGroup(site);
+		fWorkingSetAssignementAction = new ConfigureWorkingSetAssignementAction(site);
+		site.getSelectionProvider().addSelectionChangedListener(fWorkingSetAssignementAction);
+		fSite = site;
 		fMode = mode;
 		if (showWorkingSets())
 			fActiveActionGroup = fShowActionGroup;
@@ -62,12 +69,22 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 	public void dispose() {
 		fFilterActionGroup.dispose();
 		fShowActionGroup.dispose();
+		fSite.getSelectionProvider().removeSelectionChangedListener(fWorkingSetAssignementAction);
 		fChangeListener = null;
 		super.dispose();
 	}
 
 	public void setWorkingSetModel(WorkingSetModel model) {
 		fShowActionGroup.setWorkingSetMode(model);
+		fWorkingSetAssignementAction.setWorkingSetModel(model);
+	}
+
+	@Override
+	public void fillContextMenu(IMenuManager menu) {
+		if (fWorkingSetAssignementAction.isEnabled()) {
+			menu.appendToGroup(IContextMenuConstants.GROUP_BUILD, fWorkingSetAssignementAction);
+		}
+		super.fillContextMenu(menu);
 	}
 
 	/**
