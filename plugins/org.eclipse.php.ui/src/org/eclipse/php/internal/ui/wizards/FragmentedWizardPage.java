@@ -35,7 +35,7 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 	protected boolean isEmptyError = false;
 
 	public FragmentedWizardPage(WizardFragment fragment) {
-		super(fragment.toString());
+		super(fragment.getName());
 		this.fragment = fragment;
 	}
 
@@ -51,7 +51,7 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 			comp = new Composite(parentComp, SWT.NONE);
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			Label label = new Label(comp, SWT.NONE);
-			label.setText(Messages.FragmentedWizardPage_0); 
+			label.setText(Messages.FragmentedWizardPage_0);
 		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);

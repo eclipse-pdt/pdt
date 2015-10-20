@@ -449,7 +449,8 @@ public final class PHPUIMessages extends NLS {
 	public static String FragmentedWizard_1;
 	public static String PHPFileCreationWizardPage_4;
 	public static String FragmentedWizard_0;
-
+	public static String FragmentedWizard_2;
+	public static String FragmentedWizard_3;
 	public static String FragmentedWizard_7;
 	public static String PHPFileCreationWizardPage_3;
 	public static String PHPManualPreferencePage_0;
