@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.ui.wizard;
 
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.ui.Logger;
+import org.eclipse.php.internal.server.ui.Messages;
 import org.eclipse.php.internal.server.ui.PathMapperCompositeFragment;
 import org.eclipse.php.internal.ui.wizards.CompositeWizardFragment;
 import org.eclipse.php.internal.ui.wizards.IWizardHandle;

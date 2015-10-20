@@ -112,5 +112,4 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 		}
 		return false;
 	}
-
 }

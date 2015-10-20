@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.wizards.CompositeWizardFragment;
 import org.eclipse.php.internal.ui.wizards.IWizardHandle;
 import org.eclipse.php.internal.ui.wizards.WizardControlWrapper;
