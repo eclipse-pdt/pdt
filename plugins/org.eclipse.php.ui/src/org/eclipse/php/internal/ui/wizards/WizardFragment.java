@@ -219,4 +219,13 @@ public abstract class WizardFragment {
 	protected void setComplete(boolean complete) {
 		this.isComplete = complete;
 	}
+
+	/**
+	 * Returns fragment name.
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.toString();
+	}
 }

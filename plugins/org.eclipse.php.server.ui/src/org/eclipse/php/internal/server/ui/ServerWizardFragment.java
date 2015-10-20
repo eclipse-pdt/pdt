@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.wizards.CompositeWizardFragment;
@@ -114,5 +115,10 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 			getWizardModel().putObject(WizardModel.SERVER, null);
 			ServersManager.save();
 		}
+	}
+
+	@Override
+	public String getName() {
+		return PHPServerUIMessages.getString("ServerCompositeFragment.newPhpServer"); //$NON-NLS-1$
 	}
 }

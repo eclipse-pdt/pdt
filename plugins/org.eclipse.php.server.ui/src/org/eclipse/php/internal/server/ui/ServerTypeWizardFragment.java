@@ -12,6 +12,7 @@ package org.eclipse.php.internal.server.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.ui.wizards.CompositeWizardFragment;
 import org.eclipse.php.internal.ui.wizards.IWizardHandle;
@@ -107,6 +108,11 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 */
 	public IServerType getType() {
 		return comp != null ? comp.getType() : null;
+	}
+
+	@Override
+	public String getName() {
+		return PHPServerUIMessages.getString("ServerTypeCompositeFragment.Title"); //$NON-NLS-1$
 	}
 
 }

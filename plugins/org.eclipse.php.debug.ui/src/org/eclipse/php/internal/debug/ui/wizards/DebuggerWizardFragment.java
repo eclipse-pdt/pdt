@@ -113,4 +113,8 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 		return false;
 	}
 
+	@Override
+	public String getName() {
+		return Messages.DebuggerCompositeFragment_Debugger_settings;
+	}
 }
