@@ -42,6 +42,7 @@ public abstract class WizardFragment {
 	private WizardModel wizardModel;
 	private boolean isComplete = true;
 	private List listImpl;
+	private String name = this.toString();
 
 	/**
 	 * Returns <code>true</code> if this fragment has an associated UI, and
@@ -218,5 +219,23 @@ public abstract class WizardFragment {
 	 */
 	protected void setComplete(boolean complete) {
 		this.isComplete = complete;
+	}
+
+	/**
+	 * Returns fragment name.
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets fragment name.
+	 * 
+	 * @param name
+	 */
+	protected void setName(String name) {
+		this.name = name;
 	}
 }
