@@ -35,7 +35,7 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 	protected boolean isEmptyError = false;
 
 	public FragmentedWizardPage(WizardFragment fragment) {
-		super(fragment.toString());
+		super(fragment.getName());
 		this.fragment = fragment;
 	}
 

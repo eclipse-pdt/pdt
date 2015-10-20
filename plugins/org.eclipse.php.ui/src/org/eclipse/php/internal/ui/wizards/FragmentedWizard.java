@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
@@ -202,6 +203,7 @@ public class FragmentedWizard implements IWizard {
 								FragmentedWizardPage page = getFragmentData(fragment);
 								if (page.getControl() == null && pageContainerHook != null) {
 									page.createControl(pageContainerHook);
+									page.getControl().setVisible(false);
 								}
 								fragment.enter();
 								fragment.exit();
@@ -246,8 +248,9 @@ public class FragmentedWizard implements IWizard {
 						try {
 							WizardFragment fragment = (WizardFragment) iterator.next();
 							if (!executeTask(fragment, FINISH, monitor)) {
-								status = new Status(IStatus.ERROR, PHPUiPlugin.ID,
-										"Error during wizard page execution."); //$NON-NLS-1$
+								FragmentedWizardPage page = getFragmentData(fragment);
+								String message = MessageFormat.format(PHPUIMessages.FragmentedWizard_2, page.getName());
+								status = new Status(IStatus.ERROR, PHPUiPlugin.ID, message);
 							}
 						} catch (CoreException e) {
 							PHPUiPlugin.log(e);
@@ -263,6 +266,7 @@ public class FragmentedWizard implements IWizard {
 			else
 				runnable.run(new NullProgressMonitor());
 			if (status.getSeverity() != IStatus.OK) {
+				openError(PHPUIMessages.FragmentedWizard_3, status);
 				return false;
 			}
 			return true;
@@ -374,13 +378,11 @@ public class FragmentedWizard implements IWizard {
 				WizardFragment fragment = (WizardFragment) iterator.next();
 				FragmentedWizardPage page = getFragmentData(fragment);
 				if (fragment.hasComposite()) {
-					if (page != null) {
-						addPage(page);
-					} else {
+					if (page == null) {
 						page = new FragmentedWizardPage(fragment);
 						fragmentData.put(fragment, page);
-						addPage(page);
 					}
+					addPage(page);
 				}
 			}
 		} catch (Exception e) {
@@ -438,6 +440,7 @@ public class FragmentedWizard implements IWizard {
 		for (int i = 0; i < pages.size(); i++) {
 			IWizardPage page = (IWizardPage) pages.get(i);
 			page.createControl(pageContainer);
+			page.getControl().setVisible(false);
 		}
 	}
 
