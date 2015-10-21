@@ -109,19 +109,9 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
-	public boolean visit(ClassDeclaration classDeclaration) {
-		if (classDeclaration instanceof TraitDeclaration) {
-			if (originalDeclarationNode == null || originalDeclarationNode == classDeclaration) {
-				dealIdentifier(classDeclaration.getName());
-			}
-		}
-
-		return true;
-	}
-
-	public boolean visit(TraitDeclaration classDeclaration) {
-		if (originalDeclarationNode == null || originalDeclarationNode == classDeclaration) {
-			dealIdentifier(classDeclaration.getName());
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		if (originalDeclarationNode == null || originalDeclarationNode == traitDeclaration) {
+			dealIdentifier(traitDeclaration.getName());
 		}
 		return true;
 	}

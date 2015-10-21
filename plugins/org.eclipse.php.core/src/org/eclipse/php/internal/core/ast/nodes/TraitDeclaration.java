@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 public class TraitDeclaration extends ClassDeclaration {
 
@@ -54,4 +55,11 @@ public class TraitDeclaration extends ClassDeclaration {
 		return ASTNode.CLASS_DECLARATION;
 	}
 
+	public void accept0(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}
 }

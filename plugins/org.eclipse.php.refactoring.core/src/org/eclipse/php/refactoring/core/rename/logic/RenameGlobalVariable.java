@@ -33,8 +33,7 @@ public class RenameGlobalVariable extends AbstractRename {
 	 */
 	private boolean isGlobalScope = true;
 
-	public RenameGlobalVariable(IFile file, String oldName, String newName,
-			boolean searchTextual) {
+	public RenameGlobalVariable(IFile file, String oldName, String newName, boolean searchTextual) {
 		super(file, oldName, newName, searchTextual);
 	}
 
@@ -57,6 +56,15 @@ public class RenameGlobalVariable extends AbstractRename {
 	}
 
 	public void endVisit(ClassDeclaration classDeclaration) {
+		setGlobalScope();
+	}
+
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		setNonGlobalScope();
+		return true;
+	}
+
+	public void endVisit(TraitDeclaration traitDeclaration) {
 		setGlobalScope();
 	}
 
@@ -151,10 +159,8 @@ public class RenameGlobalVariable extends AbstractRename {
 	}
 
 	private boolean isScalarNeedChange(Scalar scalar, final String stringValue) {
-		return scalar.getScalarType() == Scalar.TYPE_STRING
-				&& (stringValue.equals(oldName) || stringValue.length() > 2
-						&& stringValue.substring(1, stringValue.length() - 1)
-								.equals(oldName));
+		return scalar.getScalarType() == Scalar.TYPE_STRING && (stringValue.equals(oldName)
+				|| stringValue.length() > 2 && stringValue.substring(1, stringValue.length() - 1).equals(oldName));
 	}
 
 	public String getRenameDescription() {

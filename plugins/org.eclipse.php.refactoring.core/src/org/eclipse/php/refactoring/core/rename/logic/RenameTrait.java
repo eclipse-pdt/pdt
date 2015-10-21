@@ -26,17 +26,15 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  */
 public class RenameTrait extends AbstractRename {
 
-	private static final String RENAME_CLASS = PhpRefactoringCoreMessages
-			.getString("RenameClassName.0"); //$NON-NLS-1$
+	private static final String RENAME_CLASS = PhpRefactoringCoreMessages.getString("RenameClassName.0"); //$NON-NLS-1$
 	private ASTNode originalDeclaration;
 	private IType[] types;
 
-	public RenameTrait(IFile file, ASTNode originalNode, String oldName,
-			String newName, boolean searchTextual, IType[] types) {
+	public RenameTrait(IFile file, ASTNode originalNode, String oldName, String newName, boolean searchTextual,
+			IType[] types) {
 		super(file, oldName, newName, searchTextual);
 		if (originalNode != null) {
-			originalDeclaration = RefactoringUtility
-					.getTypeOrClassInstance(originalNode);
+			originalDeclaration = RefactoringUtility.getTypeOrClassInstance(originalNode);
 		}
 		this.types = types;
 	}
@@ -73,10 +71,8 @@ public class RenameTrait extends AbstractRename {
 
 			if (identifier instanceof NamespaceName) {
 				NamespaceName namespaceName = (NamespaceName) identifier;
-				if (namespaceName.segments() != null
-						&& namespaceName.segments().size() > 0) {
-					identifier = namespaceName.segments().get(
-							namespaceName.segments().size() - 1);
+				if (namespaceName.segments() != null && namespaceName.segments().size() > 0) {
+					identifier = namespaceName.segments().get(namespaceName.segments().size() - 1);
 				}
 			}
 
@@ -85,27 +81,21 @@ public class RenameTrait extends AbstractRename {
 		return false;
 	}
 
-	public boolean visit(ClassDeclaration classDeclaration) {
-		if (classDeclaration instanceof TraitDeclaration) {
-			ITypeBinding originalType = null;
+	public boolean visit(TraitDeclaration classDeclaration) {
+		ITypeBinding originalType = null;
 
-			if (originalDeclaration != null) {
-				if (originalDeclaration instanceof TraitDeclaration) {
-					originalType = ((TraitDeclaration) originalDeclaration)
-							.resolveTypeBinding();
-				} else if (originalDeclaration instanceof NamespaceName) {
-					originalType = ((NamespaceName) originalDeclaration)
-							.resolveTypeBinding();
-				}
+		if (originalDeclaration != null) {
+			if (originalDeclaration instanceof TraitDeclaration) {
+				originalType = ((TraitDeclaration) originalDeclaration).resolveTypeBinding();
+			} else if (originalDeclaration instanceof NamespaceName) {
+				originalType = ((NamespaceName) originalDeclaration).resolveTypeBinding();
 			}
+		}
 
-			ITypeBinding currType = classDeclaration.resolveTypeBinding();
-			if (originalDeclaration == null
-					|| originalDeclaration.getStart() == classDeclaration
-							.getStart() || originalType.equals(currType)
-					|| originalType.isSubTypeCompatible(currType)) {
-				checkIdentifier(classDeclaration.getName());
-			}
+		ITypeBinding currType = classDeclaration.resolveTypeBinding();
+		if (originalDeclaration == null || originalDeclaration.getStart() == classDeclaration.getStart()
+				|| originalType.equals(currType) || originalType.isSubTypeCompatible(currType)) {
+			checkIdentifier(classDeclaration.getName());
 		}
 
 		return true;
@@ -122,8 +112,7 @@ public class RenameTrait extends AbstractRename {
 
 	public boolean visit(TraitPrecedenceStatement tps) {
 		if (tps.getPrecedence().getMethodReference().getClassName() instanceof Identifier) {
-			checkIdentifier(tps.getPrecedence().getMethodReference()
-					.getClassName());
+			checkIdentifier(tps.getPrecedence().getMethodReference().getClassName());
 		}
 		for (NamespaceName namespace : tps.getPrecedence().getTrList()) {
 			if (namespace instanceof Identifier) {
@@ -136,8 +125,8 @@ public class RenameTrait extends AbstractRename {
 	public boolean visit(TraitAliasStatement tas) {
 		int type = tas.getAlias().getTraitMethod().getType();
 		if (type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
-			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas
-					.getAlias().getTraitMethod();
+			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas.getAlias()
+					.getTraitMethod();
 			if (reference.getClassName() instanceof Identifier) {
 				checkIdentifier(reference.getClassName());
 			}
@@ -155,8 +144,7 @@ public class RenameTrait extends AbstractRename {
 				return;
 			} else {
 				try {
-					IModelElement[] elements = identifier.getProgramRoot()
-							.getSourceModule()
+					IModelElement[] elements = identifier.getProgramRoot().getSourceModule()
 							.codeSelect(identifier.getStart(), 0);
 					for (int i = 0; i < elements.length; i++) {
 						for (int j = 0; j < types.length; j++) {
@@ -175,8 +163,7 @@ public class RenameTrait extends AbstractRename {
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {
-		return identifier != null && identifier.getName() != null
-				&& identifier.getName().equalsIgnoreCase(oldName);
+		return identifier != null && identifier.getName() != null && identifier.getName().equalsIgnoreCase(oldName);
 	}
 
 	public String getRenameDescription() {

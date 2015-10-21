@@ -323,6 +323,11 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		checkTypeDeclaration(traitDeclaration);
+		return false;
+	}
+
 	/**
 	 * context
 	 */

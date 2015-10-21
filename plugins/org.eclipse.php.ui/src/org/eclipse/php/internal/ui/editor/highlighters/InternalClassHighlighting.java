@@ -78,6 +78,11 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		public boolean visit(TraitDeclaration traitDeclaration) {
+			checkSuper(traitDeclaration.getSuperClass(), traitDeclaration.interfaces());
+			return true;
+		}
+
 		/**
 		 * Checks if the supers are with the name of the class
 		 * 

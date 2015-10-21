@@ -153,6 +153,10 @@ public class HierarchicalVisitor extends AbstractVisitor {
 		return visit((TypeDeclaration) classDeclaration);
 	}
 
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		return visit((TypeDeclaration) traitDeclaration);
+	}
+
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
 		return visit((Expression) classInstanceCreation);
 	}
