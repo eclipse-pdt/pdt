@@ -560,6 +560,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append(' ');
 		}
 
+		if (formalParameter.isVariadic()) {
+			result.append("...");
+		}
+
 		formalParameter.getParameterName().accept(this);
 		Expression defaultValue = formalParameter.getDefaultValue();
 		if (defaultValue != null /* && defaultValue.getLength() > 0 */) {
