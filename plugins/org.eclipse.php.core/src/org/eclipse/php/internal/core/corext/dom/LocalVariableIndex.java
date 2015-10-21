@@ -85,6 +85,10 @@ public class LocalVariableIndex extends AbstractVisitor {
 		return !isProgramScope;
 	}
 
+	public boolean visit(TraitDeclaration classDeclaration) {
+		return !isProgramScope;
+	}
+
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		return !isProgramScope;
 	}

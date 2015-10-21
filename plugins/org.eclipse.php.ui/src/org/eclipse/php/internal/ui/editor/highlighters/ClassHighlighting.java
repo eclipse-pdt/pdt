@@ -33,6 +33,18 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
+		public boolean visit(TraitDeclaration trait) {
+			highlight(trait.getName());
+			Expression superClass = trait.getSuperClass();
+			if (superClass instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) superClass);
+			} else if (superClass != null) {
+				highlight(superClass);
+			}
+			return true;
+		}
+
+		@Override
 		public boolean visit(ClassInstanceCreation clazz) {
 			Expression name = clazz.getClassName().getName();
 			if (name instanceof Identifier) {

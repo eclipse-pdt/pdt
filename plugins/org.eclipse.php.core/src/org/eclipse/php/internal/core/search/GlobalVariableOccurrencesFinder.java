@@ -77,6 +77,15 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		setGlobalScope(true);
 	}
 
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		setGlobalScope(false);
+		return true;
+	}
+
+	public void endVisit(TraitDeclaration traitDeclaration) {
+		setGlobalScope(true);
+	}
+
 	/**
 	 * change the name of the function
 	 */

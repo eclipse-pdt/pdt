@@ -118,6 +118,14 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		if (originalDeclarationNode == null || originalDeclarationNode == traitDeclaration) {
+			dealIdentifier(traitDeclaration.getName());
+		}
+		checkSuper(traitDeclaration.getSuperClass(), traitDeclaration.interfaces());
+		return true;
+	}
+
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		if (originalDeclarationNode == null || originalDeclarationNode == interfaceDeclaration) {
 			dealIdentifier(interfaceDeclaration.getName());

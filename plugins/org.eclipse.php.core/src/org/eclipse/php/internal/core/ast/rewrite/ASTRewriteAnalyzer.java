@@ -3713,21 +3713,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(node);
 		}
 		try {
-			// Rewrite the modifier property
-			// rewriteClassDeclarationModifier(classDeclaration);
 			// Rewrite the super-class property
-			// rewriteClassDeclarationSuperClass(classDeclaration);
-			// Rewrite the interfaces
-			// int pos;
-			// if (classDeclaration.getSuperClass() == null) {
-			// pos = classDeclaration.getName().getEnd();
-			// } else {
-			// pos = classDeclaration.getSuperClass().getEnd();
-			// }
-			// rewriteNodeList(classDeclaration,
-			// ClassDeclaration.INTERFACES_PROPERTY, pos, " implements ",
-			// ", ");
-			// Rewrite the name and the body
+			rewriteClassDeclarationSuperClass(node);
 			return rewriteRequiredNodeVisit(node, ClassDeclaration.NAME_PROPERTY, ClassDeclaration.BODY_PROPERTY);
 		} catch (Exception e) {
 			handleException(e);
