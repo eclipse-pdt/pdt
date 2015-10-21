@@ -477,6 +477,12 @@ final class Closure  {
 	 */
 	public function call ($newthis, $parameters = null) {}
 
+	/**
+	 * @param mixed $args [optional]
+	 * @return mixed
+	 */
+	public function __invoke(...$args) { }
+
 }
 
 /**
