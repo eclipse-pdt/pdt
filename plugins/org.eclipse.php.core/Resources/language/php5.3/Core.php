@@ -145,6 +145,12 @@ final class Closure  {
 
 	private function __construct () {}
 
+	/**
+	 * @param mixed $args [optional]
+	 * @return mixed
+	 */
+	public function __invoke(...$args) {}
+
 }
 
 /**

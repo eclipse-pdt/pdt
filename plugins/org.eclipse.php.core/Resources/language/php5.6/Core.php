@@ -158,6 +158,12 @@ final class Closure  {
 	 */
 	public function bindTo ($newthis, $newscope = null) {}
 
+	/**
+	 * @param mixed $args [optional]
+	 * @return mixed
+	 */
+	public function __invoke(...$args) {}
+
 }
 
 final class Generator implements Iterator, Traversable {
