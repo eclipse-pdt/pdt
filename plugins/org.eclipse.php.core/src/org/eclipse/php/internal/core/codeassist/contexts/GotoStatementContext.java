@@ -14,7 +14,6 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
 
@@ -33,11 +32,10 @@ public class GotoStatementContext extends StatementContext {
 		}
 		try {
 			if (GOTO_KEYWORD.equalsIgnoreCase(getPreviousWord())) {
-				currentElement = sourceModule.getElementAt(offset);
+				currentElement = getEnclosingElement();
 				return true;
 			}
 		} catch (BadLocationException e) {
-		} catch (ModelException e) {
 		}
 		return false;
 	}

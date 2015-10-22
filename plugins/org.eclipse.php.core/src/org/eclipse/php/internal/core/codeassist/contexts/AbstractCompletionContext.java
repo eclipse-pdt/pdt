@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -851,6 +852,59 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 
 		return false;
+	}
+
+	/**
+	 * This method get enclosing type elemnt. It completly ignore statements
+	 * without {
+	 */
+	protected IModelElement getEnclosingElement() {
+		try {
+			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
+			if (offset >= document.getLength()) {
+				offset = document.getLength() - 1;
+			}
+			int open = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
+					PHPHeuristicScanner.RBRACE);
+			int close = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND,
+					PHPHeuristicScanner.RBRACE, PHPHeuristicScanner.LBRACE);
+			if (close > open) {
+				if (open > 0) {
+					open = heuristicScanner.findOpeningPeer(open - 1, PHPHeuristicScanner.UNBOUND,
+							PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
+				} else {
+					open = -1;
+				}
+			}
+			TextSequence statementText = getStatementText();
+			int statementStart = statementText.length() > 0 ? statementText.getOriginalOffset(0) + 1 : -1;
+			if (open < 0 && statementStart < 0) {
+				return sourceModule.getElementAt(offset);
+			}
+			IModelElement elementAt = sourceModule.getElementAt(open);
+			IModelElement elementAt2 = sourceModule.getElementAt(statementStart);
+			if (elementAt == null && elementAt2 == null) {
+				return sourceModule.getElementAt(offset);
+			}
+			if (elementAt instanceof ISourceReference && elementAt2 instanceof ISourceReference) {
+				if (((ISourceReference) elementAt).getSourceRange().getOffset() > ((ISourceReference) elementAt2)
+						.getSourceRange().getOffset()) {
+					return elementAt;
+				} else {
+					return elementAt2;
+				}
+			} else if (elementAt != null) {
+				return elementAt;
+			}
+
+			return elementAt2;
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+
+		return null;
 	}
 
 	public List<String> getUseTypes() {
