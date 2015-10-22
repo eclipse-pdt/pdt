@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
@@ -851,6 +851,48 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 
 		return false;
+	}
+
+	protected IModelElement getEnclosingElement() {
+		TextSequence statementText = getStatementText();
+		int startOffset = offset;
+		if (statementText.length() > 0) {
+			startOffset = statementText.getOriginalOffset(0);
+		} else {
+			try {
+				while (startOffset > 0) {
+					if (Character.isWhitespace(document.getChar(startOffset))) {
+						startOffset--;
+						continue;
+					}
+					break;
+				}
+				char ch = document.getChar(startOffset);
+				if (ch == ';' || ch == '}' || ch == '{') {
+					startOffset++;
+				}
+			} catch (BadLocationException e) {
+				Logger.logException(e);
+			}
+		}
+
+		try {
+			// System.out.println(document.getChar(offset));
+			IModelElement elementAt = sourceModule.getElementAt(startOffset);
+			if (elementAt instanceof ISourceReference) {
+				ISourceReference ref = (ISourceReference) elementAt;
+				int lastChar = ref.getSourceRange().getOffset() + ref.getSourceRange().getLength() - 1;
+				if (lastChar <= startOffset && document.getChar(lastChar - 1) == '}') {
+					return elementAt.getParent();
+				}
+			}
+			return elementAt;
+		} catch (ModelException e) {
+			Logger.logException(e);
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+		return null;
 	}
 
 	public List<String> getUseTypes() {

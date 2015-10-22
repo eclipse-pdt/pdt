@@ -98,7 +98,7 @@ public abstract class ClassMemberContext extends StatementContext {
 		// to support anonymous classes fields/methods CA
 		List<IType> tmpTypes = new ArrayList<IType>();
 		try {
-			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			IModelElement enclosingElement = getEnclosingElement();
 			while (enclosingElement instanceof IMethod) {
 				enclosingElement = enclosingElement.getParent();
 			}
