@@ -36,7 +36,7 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 
 		// check whether enclosing element is class
 		try {
-			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			IModelElement enclosingElement = getEnclosingElement();
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
