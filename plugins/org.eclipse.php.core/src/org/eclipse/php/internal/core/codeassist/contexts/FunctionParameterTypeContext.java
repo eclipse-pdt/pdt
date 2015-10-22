@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
  * This context represents the state when staying in a function parameter
@@ -38,25 +37,21 @@ public class FunctionParameterTypeContext extends FunctionParameterContext {
 		char triggerChar = getTriggerChar();
 		if (triggerChar == '(' || triggerChar == ',') {
 			// check whether enclosing element is a method
-			try {
-				IModelElement enclosingElement = sourceModule.getElementAt(offset);
-				while (enclosingElement instanceof IField) {
-					enclosingElement = enclosingElement.getParent();
-				}
-				if (!(enclosingElement instanceof IMethod)) {
-					return false;
-				}
-				enclosingElement = enclosingMethod = (IMethod) enclosingElement;
-
-				// find the most outer enclosing type if exists
-				while (enclosingElement != null && !(enclosingElement instanceof IType)) {
-					enclosingElement = enclosingElement.getParent();
-				}
-				enclosingType = (IType) enclosingElement;
-
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
+			IModelElement enclosingElement = getEnclosingElement();
+			while (enclosingElement instanceof IField) {
+				enclosingElement = enclosingElement.getParent();
 			}
+			if (!(enclosingElement instanceof IMethod)) {
+				return false;
+			}
+			enclosingElement = enclosingMethod = (IMethod) enclosingElement;
+
+			// find the most outer enclosing type if exists
+			while (enclosingElement != null && !(enclosingElement instanceof IType)) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			enclosingType = (IType) enclosingElement;
+
 			return true;
 		} else {
 			return false;

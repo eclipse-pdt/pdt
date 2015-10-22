@@ -41,7 +41,7 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 
 		// check whether enclosing element is not a class
 		try {
-			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			IModelElement enclosingElement = getEnclosingElement();
 			if (enclosingElement == null) {
 				int actualOffset = offset - 1;
 				try {
