@@ -12,8 +12,10 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 
 /**
  * This context represents state when staying in a class statements. <br/>
@@ -28,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * @author michael
  */
 public final class ClassStatementContext extends AbstractGlobalStatementContext {
+	private boolean isAssignment = false;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -41,12 +44,21 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 				enclosingElement = enclosingElement.getParent();
 			}
 			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
+				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset, true);
+				isAssignment = scanner.scanBackward(offset, ((IType) enclosingElement).getSourceRange().getOffset(),
+						'=') > -1;
 				return true;
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
 		}
 
 		return false;
+	}
+
+	public boolean isAssignment() {
+		return isAssignment;
 	}
 }

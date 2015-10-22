@@ -89,7 +89,6 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 	}
 
 	protected ICompletionStrategy[] createStrategies(ICompletionContext context, ICompletionContext[] allContexts) {
-
 		Class<? extends ICompletionContext> contextClass = context.getClass();
 
 		if (contextClass == PHPDocTagStartContext.class) {
@@ -140,6 +139,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == MethodNameContext.class) {
 			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
 		}
+
 		if (contextClass == ClassStatementContext.class) {
 			if (((AbstractCompletionContext) context).isInUseTraitStatement()) {
 				int type = ((AbstractCompletionContext) context).getUseTraitStatementContext();
@@ -150,9 +150,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				} else {
 					return new ICompletionStrategy[] {};
 				}
+			} else if (((ClassStatementContext) context).isAssignment()) {
+				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context),
+						new GlobalConstantsStrategy(context) };
 			} else {
 				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context),
-						new GlobalConstantsStrategy(context),
+						// new GlobalConstantsStrategy(context),
 						// new GlobalTypesStrategy(context)
 				};
 			}

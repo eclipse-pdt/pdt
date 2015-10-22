@@ -1,0 +1,11 @@
+--TEST--
+Test Constant
+--FILE--
+<?php
+const TEST1 = 0;
+class Clazz {
+    public $var = TEST|
+}
+?>
+--EXPECT--
+field(TEST1)
