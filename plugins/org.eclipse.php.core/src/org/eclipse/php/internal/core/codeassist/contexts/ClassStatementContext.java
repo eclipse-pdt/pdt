@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * @author michael
  */
 public final class ClassStatementContext extends AbstractGlobalStatementContext {
+	private boolean isAssignment = false;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -41,6 +42,10 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 				enclosingElement = enclosingElement.getParent();
 			}
 			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
+				String statementText = getStatementText().toString();
+				if (statementText.length() > 0 && statementText.toString().indexOf('=') != -1) {
+					isAssignment = true;
+				}
 				return true;
 			}
 		} catch (ModelException e) {
@@ -48,5 +53,9 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 		}
 
 		return false;
+	}
+
+	public boolean isAssignment() {
+		return isAssignment;
 	}
 }
