@@ -133,7 +133,6 @@ public class ClassDeclaration extends TypeDeclaration {
 		if (superClass != null) {
 			superClass.traverseTopDown(visitor);
 		}
-		Identifier[] interfaces = getInterfaces();
 		for (Object object : interfaces()) {
 			final ASTNode node = (ASTNode) object;
 			node.traverseTopDown(visitor);
@@ -146,7 +145,6 @@ public class ClassDeclaration extends TypeDeclaration {
 		if (superClass != null) {
 			superClass.traverseBottomUp(visitor);
 		}
-		Identifier[] interfaces = getInterfaces();
 		for (Object object : interfaces()) {
 			final ASTNode node = (ASTNode) object;
 			node.traverseBottomUp(visitor);

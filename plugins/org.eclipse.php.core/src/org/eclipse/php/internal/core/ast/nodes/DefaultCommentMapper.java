@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -251,11 +251,11 @@ public class DefaultCommentMapper {
 		this.trailingPtr = -1;
 
 		// Init comments
-		final Collection commentsCollection = unit.getComments();
+		final List<Comment> commentsCollection = unit.comments();
 		if (this.comments == null) {
 			return;
 		}
-		this.comments = (Comment[]) commentsCollection.toArray(new Comment[commentsCollection.size()]);
+		this.comments = commentsCollection.toArray(new Comment[commentsCollection.size()]);
 		int size = this.comments.length;
 		if (size == 0) {
 			return;

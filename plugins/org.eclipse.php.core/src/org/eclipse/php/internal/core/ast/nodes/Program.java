@@ -273,8 +273,7 @@ public class Program extends ASTNode {
 	 * @since 3.0
 	 */
 	public void initCommentMapper(IDocument document, AstLexer scanner) {
-		this.commentMapper = new DefaultCommentMapper(
-				this.getComments().toArray(new Comment[this.getComments().size()]));
+		this.commentMapper = new DefaultCommentMapper(this.comments().toArray(new Comment[this.comments().size()]));
 		this.commentMapper.initialize(this, scanner, document);
 	}
 
@@ -537,8 +536,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #getComments() } of
-	 * the first leading comments associated with the given node.
+	 * Return the index in the whole comments list {@link #comments() } of the
+	 * first leading comments associated with the given node.
 	 * 
 	 * @param node
 	 *            the node
@@ -557,8 +556,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #getComments() } of
-	 * the last trailing comments associated with the given node.
+	 * Return the index in the whole comments list {@link #comments() } of the
+	 * last trailing comments associated with the given node.
 	 * 
 	 * @param node
 	 *            the node

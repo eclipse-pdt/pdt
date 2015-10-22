@@ -44,9 +44,7 @@ public class Locator extends ApplyAll {
 		}
 
 		// visit the nodes
-		Statement[] statements = program.getStatements();
-		for (int i = 0; i < statements.length; i++) {
-			Statement statement = statements[i];
+		for (Statement statement : program.statements()) {
 			if (inNode(statement, offset)) {
 				return statement;
 			}

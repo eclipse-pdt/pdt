@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.rewrite;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -165,10 +164,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ArrayCreation arrayCreation) {
 		result.append("array("); //$NON-NLS-1$
-		ArrayElement[] elements = arrayCreation.getElements();
-		for (int i = 0; i < elements.length; i++) {
-			elements[i].accept(this);
-			result.append(","); //$NON-NLS-1$
+		Iterator<ArrayElement> elements = arrayCreation.elements().iterator();
+		if (elements.hasNext()) {
+			elements.next().accept(this);
+			while (elements.hasNext()) {
+				result.append(","); //$NON-NLS-1$
+				elements.next().accept(this);
+			}
 		}
 		result.append(")"); //$NON-NLS-1$
 		return false;
@@ -197,9 +199,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(BackTickExpression backTickExpression) {
 		result.append("`"); //$NON-NLS-1$
-		Expression[] expressions = backTickExpression.getExpressions();
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].accept(this);
+		for (Expression expr : backTickExpression.expressions()) {
+			expr.accept(this);
 		}
 		result.append("`"); //$NON-NLS-1$
 		return false;
@@ -243,9 +244,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(BreakStatement breakStatement) {
 		result.append("break"); //$NON-NLS-1$
-		if (breakStatement.getExpr() != null) {
+		if (breakStatement.getExpression() != null) {
 			result.append(' ');
-			breakStatement.getExpr().accept(this);
+			breakStatement.getExpression().accept(this);
 		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
@@ -253,9 +254,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(CastExpression castExpression) {
 		result.append("("); //$NON-NLS-1$
-		result.append(CastExpression.getCastType(castExpression.getCastType()));
+		result.append(CastExpression.getCastType(castExpression.getCastingType()));
 		result.append(")"); //$NON-NLS-1$
-		castExpression.getExpr().accept(this);
+		castExpression.getExpression().accept(this);
 		return false;
 	}
 
@@ -265,7 +266,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(" "); //$NON-NLS-1$
 		catchClause.getVariable().accept(this);
 		result.append(") "); //$NON-NLS-1$
-		catchClause.getStatement().accept(this);
+		catchClause.getBody().accept(this);
 		return false;
 	}
 
@@ -278,15 +279,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		result.append("const "); //$NON-NLS-1$
 		boolean isFirst = true;
-		Identifier[] variableNames = classConstantDeclaration.getVariableNames();
-		Expression[] constantValues = classConstantDeclaration.getConstantValues();
-		for (int i = 0; i < variableNames.length; i++) {
+		List<Identifier> variableNames = classConstantDeclaration.names();
+		List<Expression> constantValues = classConstantDeclaration.initializers();
+		for (int i = 0; i < variableNames.size(); i++) {
 			if (!isFirst) {
 				result.append(", "); //$NON-NLS-1$
 			}
-			variableNames[i].accept(this);
+			variableNames.get(i).accept(this);
 			result.append(" = "); //$NON-NLS-1$
-			constantValues[i].accept(this);
+			constantValues.get(i).accept(this);
 			isFirst = false;
 		}
 		result.append(";\n"); //$NON-NLS-1$
@@ -316,13 +317,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append(" extends "); //$NON-NLS-1$
 			classDeclaration.getSuperClass().accept(this);
 		}
-		Identifier[] interfaces = classDeclaration.getInterfaces();
-		if (interfaces != null && interfaces.length != 0) {
+		Iterator<Identifier> iterator = classDeclaration.interfaces().iterator();
+		if (!iterator.hasNext()) {
 			result.append(" implements "); //$NON-NLS-1$
-			interfaces[0].accept(this);
-			for (int i = 1; i < interfaces.length; i++) {
+			iterator.next().accept(this);
+			while (iterator.hasNext()) {
 				result.append(" , "); //$NON-NLS-1$
-				interfaces[i].accept(this);
+				iterator.next().accept(this);
 			}
 		}
 		classDeclaration.getBody().accept(this);
@@ -332,16 +333,16 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
 		result.append("new "); //$NON-NLS-1$
 		classInstanceCreation.getClassName().accept(this);
-		Expression[] ctorParams = classInstanceCreation.getCtorParams();
 		if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
 				|| classInstanceCreation.getClassName().getStart() == -1) {
 			result.append("("); //$NON-NLS-1$
 		}
-		if (ctorParams.length != 0) {
-			ctorParams[0].accept(this);
-			for (int i = 1; i < ctorParams.length; i++) {
+		Iterator<Expression> ctorParams = classInstanceCreation.ctorParams().iterator();
+		if (ctorParams.hasNext()) {
+			ctorParams.next().accept(this);
+			while (ctorParams.hasNext()) {
 				result.append(","); //$NON-NLS-1$
-				ctorParams[i].accept(this);
+				ctorParams.next().accept(this);
 			}
 		}
 		if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
@@ -352,13 +353,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(ClassName className) {
-		className.getClassName().accept(this);
+		className.getName().accept(this);
 		return false;
 	}
 
 	public boolean visit(CloneExpression cloneExpression) {
 		result.append("clone "); //$NON-NLS-1$
-		cloneExpression.getExpr().accept(this);
+		cloneExpression.getExpression().accept(this);
 		return false;
 	}
 
@@ -392,8 +393,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ContinueStatement continueStatement) {
 		result.append("continue "); //$NON-NLS-1$
-		if (continueStatement.getExpr() != null) {
-			continueStatement.getExpr().accept(this);
+		if (continueStatement.getExpression() != null) {
+			continueStatement.getExpression().accept(this);
 		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
@@ -402,19 +403,19 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(DeclareStatement declareStatement) {
 		result.append("declare ("); //$NON-NLS-1$
 		boolean isFirst = true;
-		Identifier[] directiveNames = declareStatement.getDirectiveNames();
-		Expression[] directiveValues = declareStatement.getDirectiveValues();
-		for (int i = 0; i < directiveNames.length; i++) {
+		List<Identifier> directiveNames = declareStatement.directiveNames();
+		List<Expression> directiveValues = declareStatement.directiveValues();
+		for (int i = 0; i < directiveNames.size(); i++) {
 			if (!isFirst) {
 				result.append(", "); //$NON-NLS-1$
 			}
-			directiveNames[i].accept(this);
+			directiveNames.get(i).accept(this);
 			result.append(" = "); //$NON-NLS-1$
-			directiveValues[i].accept(this);
+			directiveValues.get(i).accept(this);
 			isFirst = false;
 		}
 		result.append(")"); //$NON-NLS-1$
-		declareStatement.getAction().accept(this);
+		declareStatement.getBody().accept(this);
 		return false;
 	}
 
@@ -585,35 +586,35 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(ForStatement forStatement) {
-		boolean isFirst = true;
 		result.append("for ("); //$NON-NLS-1$
-		Expression[] initializations = forStatement.getInitializations();
-		Expression[] conditions = forStatement.getConditions();
-		Expression[] increasements = forStatement.getIncreasements();
-		for (int i = 0; i < initializations.length; i++) {
-			if (!isFirst) {
+
+		Iterator<Expression> expressions = forStatement.initializers().iterator();
+		if (expressions.hasNext()) {
+			expressions.next().accept(this);
+			while (expressions.hasNext()) {
 				result.append(", "); //$NON-NLS-1$
+				expressions.next().accept(this);
 			}
-			initializations[i].accept(this);
-			isFirst = false;
 		}
-		isFirst = true;
+
 		result.append(" ; "); //$NON-NLS-1$
-		for (int i = 0; i < conditions.length; i++) {
-			if (!isFirst) {
+		expressions = forStatement.conditions().iterator();
+		if (expressions.hasNext()) {
+			expressions.next().accept(this);
+			while (expressions.hasNext()) {
 				result.append(", "); //$NON-NLS-1$
+				expressions.next().accept(this);
 			}
-			conditions[i].accept(this);
-			isFirst = false;
 		}
-		isFirst = true;
+
 		result.append(" ; "); //$NON-NLS-1$
-		for (int i = 0; i < increasements.length; i++) {
-			if (!isFirst) {
+		expressions = forStatement.updaters().iterator();
+		if (expressions.hasNext()) {
+			expressions.next().accept(this);
+			while (expressions.hasNext()) {
 				result.append(", "); //$NON-NLS-1$
+				expressions.next().accept(this);
 			}
-			increasements[i].accept(this);
-			isFirst = false;
 		}
 		result.append(" ) "); //$NON-NLS-1$
 		Statement body = forStatement.getBody();
@@ -656,12 +657,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(FunctionInvocation functionInvocation) {
 		functionInvocation.getFunctionName().accept(this);
 		result.append('(');
-		Expression[] parameters = functionInvocation.getParameters();
-		if (parameters.length != 0) {
-			parameters[0].accept(this);
-			for (int i = 1; i < parameters.length; i++) {
+		Iterator<Expression> parameters = functionInvocation.parameters().iterator();
+		if (parameters.hasNext()) {
+			parameters.next().accept(this);
+			while (parameters.hasNext()) {
 				result.append(',');
-				parameters[i].accept(this);
+				parameters.next().accept(this);
 			}
 		}
 		result.append(')');
@@ -669,20 +670,19 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(FunctionName functionName) {
-		functionName.getFunctionName().accept(this);
+		functionName.getName().accept(this);
 		return false;
 	}
 
 	public boolean visit(GlobalStatement globalStatement) {
 		result.append("global "); //$NON-NLS-1$
-		boolean isFirst = true;
-		Variable[] variables = globalStatement.getVariables();
-		for (int i = 0; i < variables.length; i++) {
-			if (!isFirst) {
+		Iterator<Variable> variables = globalStatement.variables().iterator();
+		if (variables.hasNext()) {
+			variables.next().accept(this);
+			while (variables.hasNext()) {
 				result.append(", "); //$NON-NLS-1$
+				variables.next().accept(this);
 			}
-			variables[i].accept(this);
-			isFirst = false;
 		}
 		result.append(";\n "); //$NON-NLS-1$
 		return false;
@@ -726,14 +726,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(IgnoreError ignoreError) {
 		result.append("@"); //$NON-NLS-1$
-		ignoreError.getExpr().accept(this);
+		ignoreError.getExpression().accept(this);
 		return false;
 	}
 
 	public boolean visit(Include include) {
 		result.append(Include.getType(include.getIncludeType()));
 		result.append(" ("); //$NON-NLS-1$
-		include.getExpr().accept(this);
+		include.getExpression().accept(this);
 		result.append(")"); //$NON-NLS-1$
 		return false;
 	}
@@ -753,7 +753,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
-		instanceOfExpression.getExpr().accept(this);
+		instanceOfExpression.getExpression().accept(this);
 		result.append(" instanceof "); //$NON-NLS-1$
 		instanceOfExpression.getClassName().accept(this);
 		return false;
@@ -781,14 +781,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ListVariable listVariable) {
 		result.append("list("); //$NON-NLS-1$
-		boolean isFirst = true;
-		VariableBase[] variables = listVariable.getVariables();
-		for (int i = 0; i < variables.length; i++) {
-			if (!isFirst) {
+		Iterator<VariableBase> variables = listVariable.variables().iterator();
+		if (variables.hasNext()) {
+			variables.next().accept(this);
+			while (variables.hasNext()) {
 				result.append(", "); //$NON-NLS-1$
+				variables.next().accept(this);
 			}
-			variables[i].accept(this);
-			isFirst = false;
 		}
 		result.append(")"); //$NON-NLS-1$
 		return false;
@@ -848,8 +847,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
 		result.append("("); //$NON-NLS-1$
-		if (parenthesisExpression.getExpr() != null) {
-			parenthesisExpression.getExpr().accept(this);
+		if (parenthesisExpression.getExpression() != null) {
+			parenthesisExpression.getExpression().accept(this);
 		}
 		result.append(")"); //$NON-NLS-1$
 
@@ -870,28 +869,27 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(Program program) {
 		boolean isPhpState = false;
-		Statement[] statements = program.getStatements();
-		for (int i = 0; i < statements.length; i++) {
-			boolean isHtml = statements[i] instanceof InLineHtml;
+		for (Statement statement : program.statements()) {
+			boolean isHtml = statement instanceof InLineHtml;
 
 			if (!isHtml && !isPhpState) {
 				// html -> php
 				result.append("<?php\n"); //$NON-NLS-1$
-				statements[i].accept(this);
+				statement.accept(this);
 				isPhpState = true;
 			} else if (!isHtml && isPhpState) {
 				// php -> php
-				statements[i].accept(this);
+				statement.accept(this);
 				result.append("\n"); //$NON-NLS-1$
 			} else if (isHtml && isPhpState) {
 				// php -> html
 				result.append("?>\n"); //$NON-NLS-1$
-				statements[i].accept(this);
+				statement.accept(this);
 				result.append("\n"); //$NON-NLS-1$
 				isPhpState = false;
 			} else {
 				// html first
-				statements[i].accept(this);
+				statement.accept(this);
 				result.append("\n"); //$NON-NLS-1$
 			}
 		}
@@ -900,9 +898,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append("?>\n"); //$NON-NLS-1$
 		}
 
-		Collection comments = program.getComments();
-		for (Iterator iter = comments.iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
+		for (Comment comment : program.comments()) {
 			comment.accept(this);
 		}
 		return false;
@@ -912,17 +908,17 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		switch (quote.getQuoteType()) {
 		case 0:
 			result.append("\""); //$NON-NLS-1$
-			acceptQuoteExpression(quote.getExpressions());
+			acceptQuoteExpression(quote.expressions());
 			result.append("\""); //$NON-NLS-1$
 			break;
 		case 1:
 			result.append("\'"); //$NON-NLS-1$
-			acceptQuoteExpression(quote.getExpressions());
+			acceptQuoteExpression(quote.expressions());
 			result.append("\'"); //$NON-NLS-1$
 			break;
 		case 2:
 			result.append("<<<Heredoc\n"); //$NON-NLS-1$
-			acceptQuoteExpression(quote.getExpressions());
+			acceptQuoteExpression(quote.expressions());
 			result.append("\nHeredoc"); //$NON-NLS-1$
 		}
 		return false;
@@ -936,14 +932,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ReflectionVariable reflectionVariable) {
 		result.append("$"); //$NON-NLS-1$
-		reflectionVariable.getVariableName().accept(this);
+		reflectionVariable.getName().accept(this);
 		return false;
 	}
 
 	public boolean visit(ReturnStatement returnStatement) {
 		result.append("return "); //$NON-NLS-1$
-		if (returnStatement.getExpr() != null) {
-			returnStatement.getExpr().accept(this);
+		if (returnStatement.getExpression() != null) {
+			returnStatement.getExpression().accept(this);
 		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
@@ -951,8 +947,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(YieldExpression returnStatement) {
 		result.append("yield "); //$NON-NLS-1$
-		if (returnStatement.getExpr() != null) {
-			returnStatement.getExpr().accept(this);
+		if (returnStatement.getExpression() != null) {
+			returnStatement.getExpression().accept(this);
 		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
@@ -990,14 +986,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(StaticStatement staticStatement) {
 		result.append("static "); //$NON-NLS-1$
-		boolean isFirst = true;
-		Expression[] expressions = staticStatement.getExpressions();
-		for (int i = 0; i < expressions.length; i++) {
-			if (!isFirst) {
+		Iterator<Expression> expressions = staticStatement.expressions().iterator();
+		if (expressions.hasNext()) {
+			expressions.next().accept(this);
+			while (expressions.hasNext()) {
 				result.append(", "); //$NON-NLS-1$
+				expressions.next().accept(this);
 			}
-			expressions[i].accept(this);
-			isFirst = false;
 		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
@@ -1013,9 +1008,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				result.append(":\n"); //$NON-NLS-1$
 			}
 		}
-		Statement[] actions = switchCase.getActions();
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].accept(this);
+		for (Statement act : switchCase.actions()) {
+			act.accept(this);
 		}
 		return false;
 	}
@@ -1095,9 +1089,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		return false;
 	}
 
-	private void acceptQuoteExpression(Expression[] expressions) {
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].accept(this);
+	private void acceptQuoteExpression(List<Expression> expressions) {
+		for (Expression expr : expressions) {
+			expr.accept(this);
 		}
 	}
 
