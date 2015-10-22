@@ -107,8 +107,9 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 
 			currentNS = null;
 			try {
-				if (sourceModule.getElementAt(offset) != null) {
-					IType type = (IType) sourceModule.getElementAt(offset).getAncestor(IModelElement.TYPE);
+				IModelElement enclosingElement = getEnclosingElement();
+				if (enclosingElement != null) {
+					IType type = (IType) enclosingElement.getAncestor(IModelElement.TYPE);
 					if (type != null && type.getParent() instanceof IType) {
 						type = (IType) type.getParent();
 					}
