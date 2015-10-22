@@ -18,10 +18,13 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
@@ -30,6 +33,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -851,6 +855,33 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 
 		return false;
+	}
+
+	/**
+	 * This method get enclosing type elemnt. It completly ignore statements
+	 * without {
+	 * 
+	 * TODO: Add support for IField and IMethod without body
+	 */
+	protected IModelElement getEnclosingElement() {
+		try {
+			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
+
+			int open = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
+					PHPHeuristicScanner.RBRACE);
+
+			if (open < 0) {
+				return sourceModule.getElementAt(offset);
+			}
+
+			return sourceModule.getElementAt(open);
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+
+		return null;
 	}
 
 	public List<String> getUseTypes() {
