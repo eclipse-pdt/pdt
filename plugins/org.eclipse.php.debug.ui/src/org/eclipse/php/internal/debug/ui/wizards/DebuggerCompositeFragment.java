@@ -403,14 +403,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		} else {
 			String debuggerId = modifiedValuesCache.debuggerId;
 			// Set combo to appropriate debugger ID
-			String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
-			String[] values = debuggerCombo.getItems();
-			for (int i = 0; i < values.length; i++) {
-				if (values[i].equals(name)) {
-					debuggerCombo.select(i);
-					break;
-				}
-			}
+			selectDebugger(debuggerId);
 		}
 	}
 
@@ -428,14 +421,24 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			detectedDebuggerId = modifiedValuesCache.debuggerId;
 		}
 		// Set combo to appropriate debugger ID
-		String name = PHPDebuggersRegistry.getDebuggerName(detectedDebuggerId);
-		String[] values = debuggerCombo.getItems();
-		for (int i = 0; i < values.length; i++) {
-			if (values[i].equals(name)) {
-				debuggerCombo.select(i);
-				break;
+		selectDebugger(detectedDebuggerId);
+	}
+
+	private void selectDebugger(String debuggerId) {
+		final String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				String[] values = debuggerCombo.getItems();
+				for (int i = 0; i < values.length; i++) {
+					if (values[i].equals(name)) {
+						debuggerCombo.select(i);
+						break;
+					}
+				}
 			}
-		}
+		});
 	}
 
 	private String fetchDebugger(PHPexeItem exeItem) {
