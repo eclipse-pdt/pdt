@@ -107,7 +107,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 				detectDebugger = true;
 			} else if (!updatingDebuggerId && event.getProperty().equals(IPHPexeItemProperties.PROP_DEBUGGER_ID)) {
 				modifiedValuesCache.debuggerId = (String) event.getNewValue();
-				setDebugger();
+				Display.getDefault().syncExec(new SelectDebuggerRunnable());
 			}
 		}
 
@@ -119,8 +119,17 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (!updatingDebuggerId && event.getPropertyName().equals(Server.DEBUGGER)) {
 				modifiedValuesCache.debuggerId = (String) event.getNewValue();
-				setDebugger();
+				Display.getDefault().syncExec(new SelectDebuggerRunnable());
 			}
+		}
+
+	}
+
+	private class SelectDebuggerRunnable implements Runnable {
+
+		@Override
+		public void run() {
+			selectDebugger(modifiedValuesCache.debuggerId);
 		}
 
 	}
@@ -401,16 +410,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			detectDebugger();
 			detectDebugger = false;
 		} else {
-			String debuggerId = modifiedValuesCache.debuggerId;
 			// Set combo to appropriate debugger ID
-			String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
-			String[] values = debuggerCombo.getItems();
-			for (int i = 0; i < values.length; i++) {
-				if (values[i].equals(name)) {
-					debuggerCombo.select(i);
-					break;
-				}
-			}
+			selectDebugger(modifiedValuesCache.debuggerId);
 		}
 	}
 
@@ -428,7 +429,11 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			detectedDebuggerId = modifiedValuesCache.debuggerId;
 		}
 		// Set combo to appropriate debugger ID
-		String name = PHPDebuggersRegistry.getDebuggerName(detectedDebuggerId);
+		selectDebugger(detectedDebuggerId);
+	}
+
+	private void selectDebugger(String debuggerId) {
+		final String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
 		String[] values = debuggerCombo.getItems();
 		for (int i = 0; i < values.length; i++) {
 			if (values[i].equals(name)) {
