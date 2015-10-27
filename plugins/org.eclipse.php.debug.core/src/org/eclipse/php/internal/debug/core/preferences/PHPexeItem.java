@@ -334,11 +334,11 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 		copy.uniqueId = uniqueId;
 		copy.editable = editable;
 		copy.defaultForPHPVersionList = new ArrayList<PHPVersion>(defaultForPHPVersionList);
+		copy.setExecutable(getExecutable());
 		copy.setSapiType(getSapiType());
 		copy.setName(getName());
 		copy.setINILocation(getINILocation());
 		copy.setDetectedINILocation(getDetectedINILocation());
-		copy.setExecutable(getExecutable());
 		copy.setVersion(getVersion());
 		copy.setLoadDefaultINI(isLoadDefaultINI());
 		copy.setDebuggerID(getDebuggerID());
