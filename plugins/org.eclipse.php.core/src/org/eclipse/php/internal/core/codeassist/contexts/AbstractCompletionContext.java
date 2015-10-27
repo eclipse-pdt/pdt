@@ -866,14 +866,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			}
 			int open = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
 					PHPHeuristicScanner.RBRACE);
-			int close = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND,
-					PHPHeuristicScanner.RBRACE, PHPHeuristicScanner.LBRACE);
-			if (close > open) {
-				if (open > 0) {
+			if (open > -1) {
+				int close = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND,
+						PHPHeuristicScanner.RBRACE, PHPHeuristicScanner.LBRACE);
+				if (close > open && open == heuristicScanner.findOpeningPeer(close - 1, PHPHeuristicScanner.UNBOUND,
+						PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE)) {
 					open = heuristicScanner.findOpeningPeer(open - 1, PHPHeuristicScanner.UNBOUND,
 							PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
-				} else {
-					open = -1;
 				}
 			}
 			TextSequence statementText = getStatementText();
@@ -886,6 +885,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			if (elementAt == null && elementAt2 == null) {
 				return sourceModule.getElementAt(offset);
 			}
+
 			if (elementAt instanceof ISourceReference && elementAt2 instanceof ISourceReference) {
 				if (((ISourceReference) elementAt).getSourceRange().getOffset() > ((ISourceReference) elementAt2)
 						.getSourceRange().getOffset()) {
