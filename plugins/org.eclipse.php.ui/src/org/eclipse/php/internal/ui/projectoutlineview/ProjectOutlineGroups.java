@@ -111,8 +111,7 @@ public enum ProjectOutlineGroups {
 					}
 				}
 				for (Entry<String, List<IType>> entry : nsByName.entrySet()) {
-					childrenList.add(new NamespaceNode(ProjectOutlineContentProvider.scripProject, entry.getKey(),
-							entry.getValue().toArray(new IType[entry.getValue().size()])));
+					childrenList.add(new NamespaceNode(ProjectOutlineContentProvider.scripProject, entry.getKey()));
 				}
 
 				break;
