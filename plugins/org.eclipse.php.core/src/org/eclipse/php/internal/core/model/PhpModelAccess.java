@@ -131,7 +131,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result.toArray(new IField[result.size()]);
 	}
 
-	public IField[] findFileField(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
+	public IField[] findFileFields(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IField> result = new LinkedList<IField>();
 		if (!findFileElements(IModelElement.FIELD, qualifier, name, matchRule, trueFlags, falseFlags, scope, result,

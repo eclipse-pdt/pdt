@@ -20,22 +20,30 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 public class NamespaceNode extends SourceType {
-	private IType[] namespaces;
-
-	public NamespaceNode(IModelElement modelElement, String name, IType[] namespaces) {
+	public NamespaceNode(IModelElement modelElement, String name) {
 		super((ModelElement) modelElement, name);
-		this.namespaces = namespaces;
+	}
+
+	@Deprecated
+	public NamespaceNode(IModelElement modelElement, String name, IType[] namespaces) {
+		this(modelElement, name);
 	}
 
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
 		List<IModelElement> children = new LinkedList<IModelElement>();
-		for (IType namespace : namespaces) {
-			children.addAll(Arrays.asList(namespace.getChildren()));
-		}
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
+		PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+		children.addAll(Arrays.asList(modelAccess.findTypes(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
+		children.addAll(Arrays.asList(modelAccess.findFunctions(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
+		children.addAll(Arrays.asList(modelAccess.findFileFields(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
 		return children.toArray(new IModelElement[children.size()]);
 	}
 

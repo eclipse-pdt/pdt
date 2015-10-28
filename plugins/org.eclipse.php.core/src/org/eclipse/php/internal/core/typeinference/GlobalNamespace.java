@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -22,6 +23,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
@@ -39,26 +41,28 @@ public class GlobalNamespace extends SourceType {
 
 	public IField[] getFields() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findFileFields(null, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
+		return PhpModelAccess.getDefault().findFileFields(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
+				0, scope, null);
 	}
 
 	public IMethod[] getMethods() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findFunctions(null, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
+		return PhpModelAccess.getDefault().findFunctions(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
+				0, scope, null);
 	}
 
 	public IType[] getTypes() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findTypes(null, MatchRule.PREFIX, Modifiers.AccGlobal,
-				Modifiers.AccNameSpace, scope, null);
+		return PhpModelAccess.getDefault().findTypes(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0, 0,
+				scope, null);
 	}
 
-	public IModelElement[] getChildren() throws ModelException {
-		List<IModelElement> result = new LinkedList<IModelElement>();
-		result.addAll(Arrays.asList(getFields()));
-		result.addAll(Arrays.asList(getMethods()));
-		result.addAll(Arrays.asList(getTypes()));
-		return result.toArray(new IModelElement[result.size()]);
+	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
+		List<IModelElement> children = new LinkedList<IModelElement>();
+		children.addAll(Arrays.asList(getFields()));
+		children.addAll(Arrays.asList(getMethods()));
+		children.addAll(Arrays.asList(getTypes()));
+		return children.toArray(new IModelElement[children.size()]);
 	}
 
 	public int getFlags() throws ModelException {

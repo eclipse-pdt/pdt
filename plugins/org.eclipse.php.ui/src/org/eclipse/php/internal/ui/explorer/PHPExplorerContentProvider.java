@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.ui.explorer;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -21,7 +20,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.IOpenable;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.index2.search.ISearchEngine;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.SearchFor;
+import org.eclipse.dltk.core.index2.search.ISearchRequestor;
+import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.*;
@@ -33,12 +36,13 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.GlobalNamespace;
 import org.eclipse.php.internal.ui.Logger;
@@ -63,6 +67,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		implements IIncludepathListener /* , IResourceChangeListener */, IElementChangedListener {
 	public final static ArrayList<Object> EMPTY_LIST = new ArrayList<Object>();
 	StandardJavaScriptElementContentProvider jsContentProvider;
+
+	private static int[] SEARCH_IN = { IModelElement.TYPE, IModelElement.METHOD, IModelElement.FIELD };
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
@@ -189,7 +195,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					if (groupByNamespace && parentElement instanceof IModelElement
 							&& isSourceFolder(DLTKCore.create(resource))
 							&& supportsNamespaces(((IOpenable) parentElement).getScriptProject())) {
-						returnChildren.add(new GlobalNamespace((IModelElement) parentElement));
+						if (hasGlobals((IModelElement) parentElement)) {
+							returnChildren.add(new GlobalNamespace((IModelElement) parentElement));
+						}
 
 						returnChildren.addAll(collectNamespaces(DLTKCore.create(resource)));
 
@@ -262,6 +270,30 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return NO_CHILDREN;
 	}
 
+	private boolean hasGlobals(IModelElement parent) {
+		final boolean[] result = new boolean[1];
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(parent, IDLTKSearchScope.SOURCES);
+		ISearchEngine searchEngine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+		ISearchRequestor requestor = new ISearchRequestor() {
+
+			@Override
+			public void match(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
+					String elementName, String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+				result[0] = true;
+			}
+		};
+		for (int type : SEARCH_IN) {
+			searchEngine.search(type, PHPCoreConstants.GLOBAL_NAMESPACE, null, 0, 0, 1, SearchFor.DECLARATIONS,
+					MatchRule.PREFIX, scope, requestor, null);
+			if (result[0]) {
+				return true;
+			}
+		}
+
+		return result[0];
+	}
+
 	private boolean isSourceFolder(IModelElement modelElement) {
 		ScriptProject project = (ScriptProject) modelElement.getScriptProject();
 		IBuildpathEntry[] buildpath = null;
@@ -309,46 +341,29 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	}
 
 	protected Object[] getAllNamespaces(final IScriptProject project) throws ModelException {
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, IDLTKSearchScope.SOURCES);
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0, scope,
-				null);
-		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
-		for (IType ns : namespaces) {
-			String elementName = ns.getElementName();
-			List<IType> l = aggregated.get(elementName);
-			if (l == null) {
-				l = new LinkedList<IType>();
-				aggregated.put(elementName, l);
-			}
-			l.add(ns);
-		}
-		List<IType> result = new LinkedList<IType>();
-		for (Entry<String, List<IType>> entry : aggregated.entrySet()) {
-			result.add(new NamespaceNode(project, entry.getKey(),
-					entry.getValue().toArray(new IType[entry.getValue().size()])));
-		}
-		return result.toArray();
+		return collectNamespaces(project).toArray();
 	}
 
 	protected List<IType> collectNamespaces(IModelElement create) throws ModelException {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(create, IDLTKSearchScope.SOURCES);
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0, scope,
-				null);
-		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
-		for (IType ns : namespaces) {
-			String elementName = ns.getElementName();
-			List<IType> l = aggregated.get(elementName);
-			if (l == null) {
-				l = new LinkedList<IType>();
-				aggregated.put(elementName, l);
-			}
-			l.add(ns);
-		}
+
+		final Set<String> names = new HashSet<String>();
+		ISearchEngine searchEngine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+		searchEngine.search(IModelElement.PACKAGE_DECLARATION, null, null, 0, 0, 0, SearchFor.DECLARATIONS,
+				MatchRule.PREFIX, scope, new ISearchRequestor() {
+
+					@Override
+					public void match(int elementType, int flags, int offset, int length, int nameOffset,
+							int nameLength, String elementName, String metadata, String doc, String qualifier,
+							String parent, ISourceModule sourceModule, boolean isReference) {
+						names.add(elementName);
+					}
+				}, null);
+
 		List<IType> result = new LinkedList<IType>();
-		for (Entry<String, List<IType>> entry : aggregated.entrySet()) {
-			result.add(new NamespaceNode(create, entry.getKey(),
-					entry.getValue().toArray(new IType[entry.getValue().size()])));
+		for (String entry : names) {
+			result.add(new NamespaceNode(create, entry));
 		}
 
 		return result;
