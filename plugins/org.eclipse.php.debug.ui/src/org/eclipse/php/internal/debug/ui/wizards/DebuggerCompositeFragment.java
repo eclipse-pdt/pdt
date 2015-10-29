@@ -486,12 +486,16 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	}
 
 	private void registerListeners(Object debuggerOwner) {
-		if (phpExeListener == null && debuggerOwner instanceof PHPexeItem) {
-			phpExeListener = new PHPExeListener();
+		if (debuggerOwner instanceof PHPexeItem) {
+			if (phpExeListener == null) {
+				phpExeListener = new PHPExeListener();
+			}
 			((PHPexeItem) debuggerOwner).addPHPexeListener(phpExeListener);
 		}
-		if (phpServerListener == null && debuggerOwner instanceof Server) {
-			phpServerListener = new PHPServerListener();
+		if (debuggerOwner instanceof Server) {
+			if (phpServerListener == null) {
+				phpServerListener = new PHPServerListener();
+			}
 			((Server) debuggerOwner).addPropertyChangeListener(phpServerListener);
 		}
 	}
