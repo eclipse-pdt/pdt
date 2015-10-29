@@ -239,9 +239,10 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		if (debuggerOwner != null && !(debuggerOwner instanceof IUniqueIdentityElement)) {
 			throw new IllegalArgumentException("The given object is not a PHP Server or Executable"); //$NON-NLS-1$
 		}
-		registerListeners(debuggerOwner);
-		createDescription(debuggerOwner);
+		unregisterListeners();
 		super.setData(debuggerOwner);
+		registerListeners();
+		createDescription(debuggerOwner);
 		init();
 		validate();
 	}
@@ -485,23 +486,33 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		}
 	}
 
-	private void registerListeners(Object debuggerOwner) {
-		if (phpExeListener == null && debuggerOwner instanceof PHPexeItem) {
-			phpExeListener = new PHPExeListener();
-			((PHPexeItem) debuggerOwner).addPHPexeListener(phpExeListener);
+	private void registerListeners() {
+		Object data = getData();
+
+		if (data instanceof PHPexeItem) {
+			if (phpExeListener == null) {
+				phpExeListener = new PHPExeListener();
+			}
+			((PHPexeItem) data).addPHPexeListener(phpExeListener);
 		}
-		if (phpServerListener == null && debuggerOwner instanceof Server) {
-			phpServerListener = new PHPServerListener();
-			((Server) debuggerOwner).addPropertyChangeListener(phpServerListener);
+		if (data instanceof Server) {
+			if (phpServerListener == null) {
+				phpServerListener = new PHPServerListener();
+			}
+			((Server) data).addPropertyChangeListener(phpServerListener);
 		}
 	}
 
 	private void unregisterListeners() {
+		Object data = getData();
+		if (data == null)
+			return;
+
 		if (phpExeListener != null) {
-			((PHPexeItem) getData()).removePHPexeListener(phpExeListener);
+			((PHPexeItem) data).removePHPexeListener(phpExeListener);
 		}
 		if (phpServerListener != null) {
-			((Server) getData()).removePropertyChangeListener(phpServerListener);
+			((Server) data).removePropertyChangeListener(phpServerListener);
 		}
 	}
 

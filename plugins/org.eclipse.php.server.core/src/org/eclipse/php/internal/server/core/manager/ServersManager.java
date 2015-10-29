@@ -612,7 +612,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			server.restoreFromMap(serverMap);
 			String serverName = server.getName();
 			servers.put(serverName, server);
-			// Register the manager as a Server lister to get nofitications
+			// Register the manager as a Server lister to get notifications
 			// about attribute changes.
 			server.addPropertyChangeListener(this);
 			upgrader.check(serverMap);

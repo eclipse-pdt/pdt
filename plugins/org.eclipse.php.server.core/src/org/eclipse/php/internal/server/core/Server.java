@@ -85,10 +85,11 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	}
 
 	/**
-	 * Add a property change listener to this server.
+	 * Add a property change listener to this server. The same listener will not
+	 * be added twice.
 	 * 
 	 * @param listener
-	 *            java.beans.PropertyChangeListener
+	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		helper.addPropertyChangeListener(listener);
@@ -98,7 +99,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	 * Remove a property change listener from this server.
 	 * 
 	 * @param listener
-	 *            java.beans.PropertyChangeListener
+	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		helper.removePropertyChangeListener(listener);

@@ -13,7 +13,10 @@ package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.core.runtime.ListenerList;
 
 /**
  * Server helper class.
@@ -22,7 +25,7 @@ public class ServerHelper {
 	protected Map<String, String> map;
 
 	// property change listeners
-	private transient List<PropertyChangeListener> propertyListeners;
+	private transient ListenerList propertyListeners = new ListenerList();
 	private Server server;
 
 	public ServerHelper(Server server) {
@@ -43,15 +46,13 @@ public class ServerHelper {
 	}
 
 	/**
-	 * Add a property change listener to this server.
+	 * Add a property change listener to this server. The same listener will not
+	 * be added twice.
 	 * 
 	 * @param listener
-	 *            java.beans.PropertyChangeListener
+	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		if (propertyListeners == null) {
-			propertyListeners = new ArrayList<PropertyChangeListener>(2);
-		}
 		propertyListeners.add(listener);
 	}
 
@@ -59,12 +60,10 @@ public class ServerHelper {
 	 * Remove a property change listener from this server.
 	 * 
 	 * @param listener
-	 *            java.beans.PropertyChangeListener
+	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		if (propertyListeners != null) {
-			propertyListeners.remove(listener);
-		}
+		propertyListeners.remove(listener);
 	}
 
 	/**
@@ -82,19 +81,13 @@ public class ServerHelper {
 			return;
 
 		PropertyChangeEvent event = new PropertyChangeEvent(server, propertyName, oldValue, newValue);
-		try {
-			Iterator<PropertyChangeListener> iterator = propertyListeners.iterator();
-			while (iterator.hasNext()) {
-				try {
-					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
-					listener.propertyChange(event);
-				} catch (Exception e) {
-					Logger.logException("Error firing property change event", //$NON-NLS-1$
-							e);
-				}
+		for (Object listener : propertyListeners.getListeners()) {
+			try {
+				PropertyChangeListener propertyListener = (PropertyChangeListener) listener;
+				propertyListener.propertyChange(event);
+			} catch (Exception e) {
+				Logger.logException("Error firing property change event", e);//$NON-NLS-1$
 			}
-		} catch (Exception e) {
-			Logger.logException("Error in property event", e); //$NON-NLS-1$
 		}
 	}
 
