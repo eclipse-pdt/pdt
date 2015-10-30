@@ -2075,8 +2075,7 @@ public class PHPModelUtils {
 																					// after
 					// 'new'
 					newClassName = newClassStatementText.subSequence(newClassNameStart, newClassNameEnd).toString();
-
-					return newClassName;
+					return newClassName.trim();
 				}
 			} else if (newClassName.startsWith("new")) { //$NON-NLS-1$
 				return newClassName.substring(3).trim();
