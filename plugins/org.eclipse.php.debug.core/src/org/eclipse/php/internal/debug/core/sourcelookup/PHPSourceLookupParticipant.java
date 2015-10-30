@@ -101,7 +101,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 
 				// try a phar
 				final PharPath pharPath = PharPath.getPharPath(new Path(fileName));
-				if (pharPath != null) {
+				if (pharPath != null && !pharPath.getFile().isEmpty()) {
 
 					try {
 						final PharArchiveFile archiveFile = new PharArchiveFile(pharPath.getPharName());
@@ -167,6 +167,21 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		 */
 		public String toString() {
 			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof ExternalEntryFile))
+				return false;
+			ExternalEntryFile other = (ExternalEntryFile) obj;
+			if (!fileName.toLowerCase().equals(other.fileName.toLowerCase()))
+				return false;
+			return true;
+		}
+		
+		@Override
+		public int hashCode() {
+			return fileName.toLowerCase().hashCode();
 		}
 
 	}
