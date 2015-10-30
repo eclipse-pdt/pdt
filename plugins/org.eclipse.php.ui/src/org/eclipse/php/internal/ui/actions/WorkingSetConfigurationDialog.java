@@ -330,8 +330,13 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	}
 
 	private List<IWorkingSet> getResultWorkingSets() {
-		IWorkingSet[] checked = (IWorkingSet[]) fTableViewer.getCheckedElements();
-		return new ArrayList<IWorkingSet>(Arrays.asList(checked));
+		List<IWorkingSet> result = new LinkedList<IWorkingSet>();
+		for (Object o : fTableViewer.getCheckedElements()) {
+			if (o instanceof IWorkingSet) {
+				result.add((IWorkingSet) o);
+			}
+		}
+		return result;
 	}
 
 	/**
