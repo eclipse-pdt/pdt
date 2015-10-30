@@ -60,7 +60,11 @@ public class CodeAssistUtils {
 
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
+	private static final String[] KEYWORD_FUNCTION_NAMES = { "return", "yield", "print", "echo" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String NEW = "new"; //$NON-NLS-1$
+
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
+
 	private static final Pattern globalPattern = Pattern
 			.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
 
@@ -301,6 +305,11 @@ public class CodeAssistUtils {
 		return null;
 	}
 
+	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
+			int offset) {
+		return getTypesFor(sourceModule, statementText, endPosition, offset, null);
+	}
+
 	/**
 	 * This method finds types for the receiver in the statement text.
 	 * 
@@ -311,7 +320,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
-			int offset) {
+			int offset, String triggerText) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read
 																								// whitespace
 
@@ -320,17 +329,18 @@ public class CodeAssistUtils {
 		if (endPosition < 2) {
 			return EMPTY_TYPES;
 		}
-
-		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
+		int propertyEndPosition = endPosition;
+		if (triggerText == null) {
+			triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
+			propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
+					endPosition - triggerText.length());
+		}
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
 		} else {
 			return EMPTY_TYPES;
 		}
-
-		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
-				endPosition - triggerText.length());
 
 		int lastObjectOperator = PHPTextSequenceUtilities.getPrivousTriggerIndex(statementText, propertyEndPosition);
 		String text = statementText.subSequence(0, propertyEndPosition).toString();
@@ -631,12 +641,23 @@ public class CodeAssistUtils {
 					functionNameEnd, false);
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString().trim();
+			if (isKeyword(functionName)) {
+				functionName = null;
+				functionNameStart = functionNameEnd = PHPTextSequenceUtilities.readForwardSpaces(statementText,
+						functionNameEnd);
+			}
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
 			if (functionNameStart == functionNameEnd && statementText.charAt(functionNameStart) == '('
 					&& propertyEndPosition - 1 > functionNameStart + 1 && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 				TextSequence newClassStatementText = statementText.subTextSequence(functionNameStart + 1,
 						propertyEndPosition - 1);
+				if (newClassStatementText.length() < 4
+						|| !newClassStatementText.subSequence(0, 3).toString().equals(NEW)) {
+					return getTypesFor(sourceModule, newClassStatementText, newClassStatementText.length(),
+							newClassStatementText.length(),
+							isClassTriger ? PAAMAYIM_NEKUDOTAIM : OBJECT_FUNCTIONS_TRIGGER);
+				}
 				String newClassName = PHPModelUtils.getClassNameForNewStatement(newClassStatementText, phpVersion);
 				try {
 					return PHPModelUtils.getTypes(newClassName, sourceModule, offset, null, null);
@@ -699,6 +720,15 @@ public class CodeAssistUtils {
 			return returnTypes.toArray(new IType[returnTypes.size()]);
 		}
 		return EMPTY_TYPES;
+	}
+
+	private static boolean isKeyword(String functionName) {
+		for (String k : KEYWORD_FUNCTION_NAMES) {
+			if (k.equalsIgnoreCase(functionName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
