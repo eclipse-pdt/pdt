@@ -1,0 +1,15 @@
+--TEST--
+Test return with call/access chain.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class Foo {
+    public function bar() {}
+}
+function test() {
+    $x = new Foo();
+    ((($x)))->|
+}
+--EXPECT--
+method(bar)
