@@ -1,0 +1,12 @@
+--TEST--
+Test new class dereference with space
+--FILE--
+<?php
+class Foo {
+	function bar($param) {
+	}
+}
+
+(new Foo ())->|;
+--EXPECT--
+method(bar)
