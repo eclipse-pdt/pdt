@@ -78,9 +78,15 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE
 											|| tRegion.getType() == PHPRegionTypes.PHP_THIS
 											|| PHPPartitionTypes.isPHPDocTagState(tRegion.getType())) {
-										structuredTextViewer.setSelectedRange(container.getStartOffset()
-												+ phpScriptRegion.getStart() + tRegion.getStart(),
-												tRegion.getTextLength());
+										int regionStart = container.getStartOffset() + phpScriptRegion.getStart();
+										if (caretPosition == regionStart + tRegion.getTextEnd()) {
+											final IDocument document = textViewer.getDocument();
+											IRegion region = findWord(document, caretPosition);
+											textViewer.setSelectedRange(region.getOffset(), region.getLength());
+										} else {
+											int offset = regionStart + tRegion.getStart();
+											textViewer.setSelectedRange(offset, tRegion.getTextLength());
+										}
 										return; // Stop processing
 									}
 
