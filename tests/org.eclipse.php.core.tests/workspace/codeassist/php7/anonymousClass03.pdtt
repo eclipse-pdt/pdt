@@ -1,0 +1,21 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+interface Calculator
+{
+
+    function calculate($a, $b): int;
+}
+
+$calculator = new class() implements Calculator {
+
+    public function calculate($a, $b): int
+    {
+        return $a + $b;
+    }
+};
+
+echo $calculator->|
+--EXPECT--
+method(calculate)

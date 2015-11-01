@@ -157,6 +157,13 @@ public class PHPTypeInferenceUtils {
 		if (isSimple(evaluatedType)) {
 			return null;
 		}
+		if (evaluatedType instanceof AnonymousClassInstanceType) {
+			IType type = ((AnonymousClassInstanceType) evaluatedType).getType();
+			if (type != null) {
+				return new IType[] { type };
+			}
+			return null;
+		}
 		if (evaluatedType instanceof ModelClassType) {
 			return new IType[] { ((ModelClassType) evaluatedType).getTypeDeclaration() };
 		}
