@@ -23,6 +23,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.AnonymousClassInstanceType;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class InstanceCreationEvaluator extends GoalEvaluator {
@@ -36,6 +37,12 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal.getExpression();
+		if (expression.getAnonymousClassDeclaration() != null
+				&& typedGoal.getContext() instanceof ISourceModuleContext) {
+			result = new AnonymousClassInstanceType(((ISourceModuleContext) typedGoal.getContext()).getSourceModule(),
+					expression.getAnonymousClassDeclaration());
+			return IGoal.NO_GOALS;
+		}
 		Expression className = expression.getClassName();
 		if ((className instanceof TypeReference)) {
 			if (isSelf((TypeReference) className) && (goal.getContext() instanceof MethodContext)) {
