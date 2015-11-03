@@ -81,8 +81,10 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 										int regionStart = container.getStartOffset() + phpScriptRegion.getStart();
 										if (caretPosition == regionStart + tRegion.getTextEnd()) {
 											final IDocument document = textViewer.getDocument();
-											IRegion region = findWord(document, caretPosition);
-											textViewer.setSelectedRange(region.getOffset(), region.getLength());
+											IRegion region = findWord(document, caretPosition - 1);
+											if (region != null) {
+												textViewer.setSelectedRange(region.getOffset(), region.getLength());
+											}
 										} else {
 											int offset = regionStart + tRegion.getStart();
 											textViewer.setSelectedRange(offset, tRegion.getTextLength());
