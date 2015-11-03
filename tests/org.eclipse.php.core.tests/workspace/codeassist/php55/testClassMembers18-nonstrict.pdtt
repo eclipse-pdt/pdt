@@ -1,0 +1,17 @@
+--TEST--
+Show own class static members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+class NewClass
+{
+    public static function abc() 
+    {
+        echo static::|;
+    }
+}
+--EXPECT--
+field(class)
+method(abc)

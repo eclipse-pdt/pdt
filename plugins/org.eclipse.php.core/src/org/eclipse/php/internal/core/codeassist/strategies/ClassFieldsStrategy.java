@@ -126,7 +126,8 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 
 	private boolean isStaticCall(String type) {
 		return PHPRegionTypes.PHP_LABEL.equals(type) || PHPRegionTypes.PHP_PARENT.equals(type)
-				|| PHPRegionTypes.PHP_SELF.equals(type) || PHPRegionTypes.PHP_NS_SEPARATOR.equals(type);
+				|| PHPRegionTypes.PHP_SELF.equals(type) || PHPRegionTypes.PHP_NS_SEPARATOR.equals(type)
+				|| PHPRegionTypes.PHP_STATIC.equals(type);
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
