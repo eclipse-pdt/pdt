@@ -865,6 +865,11 @@ public class PHPLaunchUtilities {
 			buf.append('"');
 		}
 
+		// Bug 460926 - required by Zend PHP executables
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			buf.append("/usr/lib").append(File.pathSeparatorChar); //$NON-NLS-1$
+		}
+
 		File libDirectory = new File(phpExeDir.getParentFile(), "lib"); //$NON-NLS-1$
 		if (libDirectory.exists()) {
 			buf.append(libDirectory.getAbsolutePath());
@@ -889,11 +894,11 @@ public class PHPLaunchUtilities {
 	}
 
 	private static String getLibrarySearchEnvVariable() {
-		String os = System.getProperty("os.name"); //$NON-NLS-1$
-		if (os.startsWith("Win")) { //$NON-NLS-1$
+		String os = Platform.getOS();
+		if (Platform.OS_WIN32.equals(os)) {
 			return null; // "PATH";
 		}
-		if (os.startsWith("Mac")) { //$NON-NLS-1$
+		if (Platform.OS_MACOSX.equals(os)) {
 			return "DYLD_FALLBACK_LIBRARY_PATH"; //$NON-NLS-1$
 		}
 		return "LD_LIBRARY_PATH"; //$NON-NLS-1$
