@@ -149,7 +149,7 @@ import org.eclipse.php.internal.core.PHPVersion;
     }
     
     protected void handleVarComment() {
-    	commentStartPosition = zzStartRead;
+    	commentStartPosition = getTokenStartPosition();
     	addComment(Comment.TYPE_MULTILINE);
     }
         
