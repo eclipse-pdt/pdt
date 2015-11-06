@@ -36,19 +36,298 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.w3c.dom.Node;
 
+/**
+ * DBGp session.
+ */
 public class DBGpSession {
+
+	/**
+	 * Reads all responses from DBGp based debugger, this runs on a background
+	 * job thread.
+	 */
+	private class ResponseReader extends Job {
+
+		public ResponseReader() {
+			super("DBGp Response Reader"); //$NON-NLS-1$
+			setSystem(true);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			byte[] response = null;
+			while (sessionActive) {
+				/*
+				 * Here we need to block waiting for a response then process
+				 * that response by related handler.
+				 */
+				try {
+					response = readResponse();
+					if (response != null) {
+						DBGpResponse parsedResponse = new DBGpResponse();
+						parsedResponse.parseResponse(response);
+						int respErrorCode = parsedResponse.getErrorCode();
+						/*
+						 * We have received something back from the debugger so
+						 * first we try to process a stop or break async
+						 * response, even if the response was invalid.
+						 */
+						if (respErrorCode == DBGpResponse.ERROR_OK
+								|| respErrorCode == DBGpResponse.ERROR_INVALID_RESPONSE) {
+							int respType = parsedResponse.getType();
+							if (respType == DBGpResponse.RESPONSE) {
+								if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+									(new ResponseHandler()).perform(ResponseHandlerAction.HANDLE_STOP, parsedResponse);
+								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
+									(new ResponseHandler()).perform(ResponseHandlerAction.HANDLE_BREAK, parsedResponse);
+								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPING)) {
+									(new ResponseHandler()).perform(ResponseHandlerAction.HANDLE_STOPPING,
+											parsedResponse);
+								}
+							} else if (respType == DBGpResponse.STREAM
+									&& respErrorCode != DBGpResponse.ERROR_INVALID_RESPONSE) {
+								(new ResponseHandler()).perform(ResponseHandlerAction.HANDLE_STREAM, parsedResponse);
+							} else {
+								DBGpLogger.logWarning("Unknown type of XML: " //$NON-NLS-1$
+										+ response, DBGpSession.this, null);
+							}
+						}
+						/*
+						 * Unblock any Sync caller who might be waiting
+						 * regardless of what we got back.
+						 */
+						unblockSyncCaller(parsedResponse);
+					}
+				} catch (Throwable t) {
+					DBGpLogger.logException("Unexpected exception. Terminating the debug session", //$NON-NLS-1$
+							this, t);
+				}
+			}
+			/*
+			 * If the socket is closed or the session terminated then we inform
+			 * the debug target.
+			 */
+			try {
+				/*
+				 * Wait a very brief period to ensure console displays
+				 * everything before stating the debug session has ended.
+				 */
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+			/*
+			 * End the session here as we most likely terminated cleanly. It
+			 * doesn't matter if endSession is called multiple times.
+			 */
+			endSession();
+			return Status.OK_STATUS;
+		}
+
+		/**
+		 * unblock a sync caller
+		 * 
+		 * @param parsedResponse
+		 */
+		private void unblockSyncCaller(DBGpResponse parsedResponse) {
+			/*
+			 * Look to see if another thread is waiting for this response, if
+			 * not then the response is lost must protect if the response
+			 * doesn't include a txn id.
+			 */
+			Integer idObj = null;
+			try {
+				idObj = Integer.valueOf(parsedResponse.getId());
+			} catch (NumberFormatException nfe) {
+				idObj = Integer.valueOf(DBGpCmd.getLastIdSent());
+				if (DBGpLogger.debugResp()) {
+					DBGpLogger.debug("no txn id, using last which was" //$NON-NLS-1$
+							+ idObj.toString());
+				}
+			}
+			if (savedResponses.containsKey(idObj)) {
+				postAndSignalCaller(idObj, parsedResponse);
+
+			} else {
+				/*
+				 * No one waiting for the response, so we need to check the
+				 * response was ok and generate log info. This could have been a
+				 * response to an async invocation.
+				 */
+				DBGpUtils.isGoodDBGpResponse(this, parsedResponse);
+			}
+		}
+
+	}
+
+	/**
+	 * Handles action related to given response type.
+	 */
+	private class ResponseHandler extends Job {
+
+		private ResponseHandlerAction actionType;
+		private DBGpResponse response;
+
+		public ResponseHandler() {
+			super("DBGp Response Handler"); //$NON-NLS-1$
+			setSystem(true);
+			setUser(false);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			switch (actionType) {
+			case HANDLE_BREAK: {
+				handleBreak();
+				break;
+			}
+			case HANDLE_STOPPING: {
+				handleStopping();
+				break;
+			}
+			case HANDLE_STOP: {
+				handleStop();
+				break;
+			}
+			case HANDLE_STREAM: {
+				handleStream();
+				break;
+			}
+			default:
+				break;
+			}
+			return Status.OK_STATUS;
+		}
+
+		void perform(ResponseHandlerAction actionType, DBGpResponse response) {
+			this.actionType = actionType;
+			this.response = response;
+			schedule();
+		}
+
+		private void handleStream() {
+			// OK, we need to put the stream somewhere
+			String data = response.getStreamData();
+			if (data != null) {
+				byte[] streamData = Base64.decode(data);
+				String streamStr;
+				try {
+					streamStr = new String(streamData, outputEncoding);
+				} catch (UnsupportedEncodingException e) {
+					DBGpLogger.logException("invalid encoding: " //$NON-NLS-1$
+							+ outputEncoding, this, e);
+					streamStr = new String(streamData);
+				}
+				debugTarget.getOutputBuffer().append(streamStr);
+			}
+		}
+
+		private void handleStopping() {
+			// For the moment we will ignore the reason and just stop.
+			response = sendSyncCmd(DBGpCommand.stop, null);
+			if (response.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+				handleStop();
+			} else {
+				// Log a problem but still stop
+				handleStop();
+			}
+		}
+
+		/**
+		 * script has stopped, either by request or reached the end
+		 * 
+		 */
+		private void handleStop() {
+			unblockAllCallers(response);
+			endSession();
+		}
+
+		/**
+		 * script has suspended
+		 * 
+		 * @param parsedResponse
+		 */
+		private void handleBreak() {
+			// Handle the break status response information.
+			// this occurs when:
+			// 1. a break point is hit
+			// 2. a step command ends and we are suspended
+			// 3. a command has failed, you get the status = break, reason=ok,
+			// then you get the error information
+			if (response.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
+				/*
+				 * We have suspended, so now we can go off and handle
+				 * outstanding breakpoint requests
+				 * debugTarget.processDBGpQueuedCmds();
+				 */
+				if (response.getReason().equals(DBGpResponse.REASON_OK)) {
+					// we have hit a breakpoint, or completed a step
+					String cmd = response.getCommand();
+					if (cmd.equals(DBGpCommand.run)) {
+						/*
+						 * OK we hit a break point somewhere, we need to get the
+						 * stack information to find out which breakpoint we hit
+						 * as no info is provided in the response. We cannot use
+						 * the DBGpTarget version here as we do an async call.
+						 * Plus we need to handle the possibility of
+						 * STATUS_STOPPED being returned.
+						 */
+						response = sendSyncCmd(DBGpCommand.stackGet, null);
+						if (response != null) {
+							/*
+							 * We could have received a stop here so we need to
+							 * check for this.
+							 */
+							if (response.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+								handleStop();
+							} else {
+								Node stackData = response.getParentNode().getFirstChild();
+								String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
+								int lineno = 0;
+								try {
+									lineno = Integer.parseInt(line);
+									String filename = DBGpUtils
+											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
+									filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
+									debugTarget.breakpointHit(filename, lineno);
+								} catch (NumberFormatException nfe) {
+									DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
+											this, nfe);
+								}
+							}
+						}
+					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
+							|| cmd.equals(DBGpCommand.stepOver)) {
+						// Step hit
+						// No need to setup any information ?
+						debugTarget.suspended(DebugEvent.STEP_END);
+					} else {
+						/*
+						 * we got another status response, probably due to
+						 * cannot get property error.
+						 */
+					}
+				}
+			}
+		}
+
+	}
+
+	private static enum ResponseHandlerAction {
+
+		HANDLE_BREAK, HANDLE_STOPPING, HANDLE_STOP, HANDLE_STREAM;
+
+	}
 
 	public static final String DEFAULT_SESSION_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
 	public static final String DEFAULT_BINARY_ENCODING = Charset.defaultCharset().name();
 	public static final String DEFAULT_OUTPUT_ENCODING = Charset.defaultCharset().name();
 
 	private Socket DBGpSocket;
-	private AsyncResponseHandlerJob responseHandler;
+	private ResponseReader responseHandler;
 	private DBGpCommand DBGpCmd;
 	private DataInputStream DBGpReader;
 	private boolean sessionActive = false;
 	private DBGpTarget debugTarget;
-	private Hashtable savedResponses = new Hashtable();
+	private Hashtable<Integer, Object> savedResponses = new Hashtable<Integer, Object>();
 	private String ideKey;
 	private String sessionId;
 	private String initialScript;
@@ -56,7 +335,6 @@ public class DBGpSession {
 	private String engineVersion;
 	private String threadId;
 	private long creationTime;
-
 	private String sessionEncoding;
 	private String outputEncoding;
 	private String binaryEncoding;
@@ -75,7 +353,6 @@ public class DBGpSession {
 		creationTime = System.currentTimeMillis();
 		DBGpSocket = connection;
 		sessionEncoding = DEFAULT_SESSION_ENCODING;
-
 		boolean isGood = false;
 		try {
 			DBGpCmd = new DBGpCommand(DBGpSocket);
@@ -107,7 +384,6 @@ public class DBGpSession {
 			if (!isGood) {
 				endSession();
 			}
-
 		} catch (UnsupportedEncodingException e) {
 			DBGpLogger.logException("UnsupportedEncodingException - 1", this, e); //$NON-NLS-1$
 			endSession();
@@ -124,7 +400,7 @@ public class DBGpSession {
 	 * 
 	 */
 	public void startSession() {
-		responseHandler = new AsyncResponseHandlerJob();
+		responseHandler = new ResponseReader();
 		responseHandler.schedule();
 	}
 
@@ -179,14 +455,15 @@ public class DBGpSession {
 	 */
 	public DBGpResponse sendSyncCmd(String cmd, String arguments) {
 		if (sessionActive) {
-			// this must be done before the command is sent because
-			// the savedResponses must have the id and event in the
-			// table so that the response handler can locate it.
+			/*
+			 * this must be done before the command is sent because the
+			 * savedResponses must have the id and event in the table so that
+			 * the response handler can locate it.
+			 */
 			int id = DBGpCommand.getNextId();
 			Event idev = new Event();
 			Integer idObj = Integer.valueOf(id);
 			savedResponses.put(idObj, idev);
-
 			try {
 				DBGpCmd.send(cmd, arguments, id, sessionEncoding);
 				idev.waitForEvent(); // wait forever
@@ -202,430 +479,25 @@ public class DBGpSession {
 	}
 
 	/**
-	 * only call this if you are on the response thread to send a sync command
-	 * 
-	 * @param cmd
-	 *            the command
-	 * @param args
-	 *            its arguments
-	 * @return the response.
-	 */
-	public DBGpResponse sendSyncCmdOnResponseThread(String cmd, String args) {
-		sendAsyncCmd(cmd, args); // can't send Sync command as we block waiting
-									// for the response thread
-		byte[] response = readResponse();
-		DBGpResponse parsedResponse = null;
-		if (response != null) {
-			parsedResponse = new DBGpResponse();
-			parsedResponse.parseResponse(response);
-		}
-		return parsedResponse;
-	}
-
-	/**
-	 * process all responses from DBGp based debugger, this runs on a background
-	 * thread
-	 */
-	private class AsyncResponseHandlerJob extends Job {
-
-		public AsyncResponseHandlerJob() {
-			super("DBGp Response Handler"); //$NON-NLS-1$
-			setSystem(true);
-		}
-
-		protected IStatus run(IProgressMonitor monitor) {
-			byte[] response = null;
-			while (sessionActive) {
-				// here we need to block waiting for a response
-				// then process that response
-
-				try {
-					response = readResponse();
-					if (response != null) {
-						DBGpResponse parsedResponse = new DBGpResponse();
-						parsedResponse.parseResponse(response);
-						int respErrorCode = parsedResponse.getErrorCode();
-
-						// we have a received something back from the debuggee
-						// so first
-						// we try to process a stop or break async response,
-						// even if the
-						// response was invalid.
-						if (respErrorCode == DBGpResponse.ERROR_OK
-								|| respErrorCode == DBGpResponse.ERROR_INVALID_RESPONSE) {
-							int respType = parsedResponse.getType();
-
-							if (respType == DBGpResponse.RESPONSE) {
-								if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-									handleStopStatus(parsedResponse);
-								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
-									handleBreakStatus(parsedResponse);
-								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPING)) {
-									handleStoppingStatus(parsedResponse);
-								}
-							} else if (respType == DBGpResponse.STREAM
-									&& respErrorCode != DBGpResponse.ERROR_INVALID_RESPONSE) {
-								handleStreamData(parsedResponse);
-							} else {
-								DBGpLogger.logWarning("Unknown type of XML: " //$NON-NLS-1$
-										+ response, DBGpSession.this, null);
-							}
-						}
-
-						// unblock any Sync caller who might be waiting
-						// regardless of what we got back
-						unblockSyncCaller(parsedResponse);
-					}
-				} catch (Throwable t) {
-					DBGpLogger.logException("Unexpected exception. Terminating the debug session", //$NON-NLS-1$
-							this, t);
-
-					// send a dummy response back to unblock the target. It will
-					// know that the session has
-					// ended, but the dummy response will allow it to exit its
-					// current method.
-					// TODO: cleanup commented out code: may not be needed
-					// anymore
-					// unblockAllCallers(null);
-					// endSession(); // end the session to exit the response
-					// loop.
-				}
-			}
-
-			// if the socket is closed or the session terminated then we inform
-			// the debug target
-			try {
-				// wait a very brief period to ensure console
-				// displays everything before stating the debug
-				// session has ended.
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-			}
-			// end the session here as we most likely terminated cleanly. It
-			// doesn't matter if
-			// endSession is called multiple times.
-			endSession();
-			return Status.OK_STATUS;
-		}
-
-		/**
-		 * unblock a sync caller
-		 * 
-		 * @param parsedResponse
-		 */
-		private void unblockSyncCaller(DBGpResponse parsedResponse) {
-			// look to see if another thread is waiting for this response, if
-			// not then
-			// the response is lost
-			// must protect if the response doesn't include a txn id
-			Integer idObj = null;
-			try {
-				idObj = Integer.valueOf(parsedResponse.getId());
-			} catch (NumberFormatException nfe) {
-				idObj = Integer.valueOf(DBGpCmd.getLastIdSent());
-				if (DBGpLogger.debugResp()) {
-					DBGpLogger.debug("no txn id, using last which was" //$NON-NLS-1$
-							+ idObj.toString());
-				}
-			}
-			if (savedResponses.containsKey(idObj)) {
-				postAndSignalCaller(idObj, parsedResponse);
-
-			} else {
-				// no one waiting for the response, so we need to check the
-				// response was
-				// ok and generate log info. This could have been a response to
-				// an async
-				// invocation.
-				DBGpUtils.isGoodDBGpResponse(this, parsedResponse);
-			}
-		}
-
-		/**
-		 * This has yet to be implemented.
-		 * 
-		 * @param parsedResponse
-		 */
-		private void handleStreamData(DBGpResponse parsedResponse) {
-			// ok, we need to put the stream somewhere
-			/*
-			 * IConsole console = DebugUITools.getConsole(debugTarget); if
-			 * (console != null && console instanceof TextConsole) { TextConsole
-			 * tc = (TextConsole)console; IDocument doc = tc.getDocument();
-			 * doc.set(doc.get() + parsedResponse.getStreamData()); }
-			 */
-			String data = parsedResponse.getStreamData();
-			if (data != null) {
-				byte[] streamData = Base64.decode(data);
-
-				String streamStr;
-				try {
-					streamStr = new String(streamData, outputEncoding);
-				} catch (UnsupportedEncodingException e) {
-					DBGpLogger.logException("invalid encoding: " //$NON-NLS-1$
-							+ outputEncoding, this, e);
-					streamStr = new String(streamData);
-				}
-				debugTarget.getOutputBuffer().append(streamStr);
-			}
-		}
-
-		private void handleStoppingStatus(DBGpResponse parsedResponse) {
-			// For the moment we will ignore the reason and just stop.
-			DBGpResponse stoppedResponse = sendSyncCmdOnResponseThread(DBGpCommand.stop, null);
-			if (stoppedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-				handleStopStatus(stoppedResponse);
-			} else {
-				// log a problem but still stop
-				handleStopStatus(stoppedResponse);
-			}
-		}
-
-		/**
-		 * script has stopped, either by request or reached the end
-		 * 
-		 */
-		private void handleStopStatus(DBGpResponse parsedResponse) {
-			unblockAllCallers(parsedResponse);
-			endSession();
-		}
-
-		/**
-		 * script has suspended
-		 * 
-		 * @param parsedResponse
-		 */
-		private void handleBreakStatus(DBGpResponse parsedResponse) {
-			// Handle the break status response information.
-			// this occurs when
-			// 1. a break point is hit
-			// 2. a step command ends and we are suspended
-			// 3. a command has failed, you get the status = break, reason=ok,
-			// then you get the error information
-			if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
-				// we have suspended, so now we can go off and handle
-				// outstanding breakpoint requests
-				// debugTarget.processDBGpQueuedCmds();
-				if (parsedResponse.getReason().equals(DBGpResponse.REASON_OK)) {
-					// we have hit a breakpoint, or completed a step
-					String cmd = parsedResponse.getCommand();
-
-					if (cmd.equals(DBGpCommand.run)) {
-						// breakpoint hit, cannot fire the suspended event until
-						// stack is created, thread info
-						// setup.
-						processBreakpointHit();
-					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
-							|| cmd.equals(DBGpCommand.stepOver)) {
-						// step hit
-						// no need to setup any information ?
-						debugTarget.suspended(DebugEvent.STEP_END);
-					} else {
-						// we got another status response, probably due to
-						// cannot get property error
-					}
-				}
-			}
-		}
-
-		/**
-		 * process a suspend from a breakpoint
-		 * 
-		 */
-		private void processBreakpointHit() {
-			// ok we hit a break point somewhere, we need to get the stack
-			// information
-			// to find out which breakpoint we hit as no info is provided in the
-			// response. We cannot use the DBGpTarget version here as we do
-			// an async call. Plus we need to handle the possibility of
-			// STATUS_STOPPED
-			// being returned.
-
-			// Todo: Improvement: update DBGpTarget with the latest stack
-			// information
-			DBGpResponse parsedResponse = sendSyncCmdOnResponseThread(DBGpCommand.stackGet, null);
-			if (parsedResponse != null) {
-
-				// we could have received a stop here so we need to check for
-				// this
-				if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-					handleStopStatus(parsedResponse);
-				} else {
-					Node stackData = parsedResponse.getParentNode().getFirstChild(); // get
-																						// the
-																						// first
-																						// stack
-																						// entry
-					String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
-					int lineno = 0;
-					try {
-						lineno = Integer.parseInt(line);
-						String filename = DBGpUtils
-								.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
-						filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
-						debugTarget.breakpointHit(filename, lineno);
-					} catch (NumberFormatException nfe) {
-						DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
-								this, nfe);
-					}
-				}
-			}
-		}
-	}
-
-	private void unblockAllCallers(DBGpResponse parsedResponse) {
-		if (parsedResponse == null) {
-			// if null passed in, create a dummy response.
-			parsedResponse = new DBGpResponse();
-			parsedResponse.parseResponse(null);
-		}
-		Set keys = savedResponses.keySet();
-		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
-			Integer idObj = (Integer) iterator.next();
-			postAndSignalCaller(idObj, parsedResponse);
-		}
-	}
-
-	private void postAndSignalCaller(Integer idObj, DBGpResponse parsedResponse) {
-		Object responder = savedResponses.get(idObj);
-		if (responder instanceof Event) {
-			// we have an event for the id so we need to respond
-			// and unblock the caller, otherwise it has already
-			// been done (maybe from unblockAllCallers)
-			Event idev = (Event) responder;
-			savedResponses.put(idObj, parsedResponse);
-			idev.signalEvent();
-		}
-	}
-
-	/**
-	 * DBGp protocol is as follows "xxx\0" where xxx is the length of the
-	 * message to follow "message\0" where message is the data we are interested
-	 * in.
-	 * 
-	 * @return
-	 */
-	private byte[] readResponse() {
-		byte byteArray[];
-		byte receivedByte;
-		int remainingBytesToRead = 0;
-
-		try {
-
-			// the first part of the DBGp protocol is the length
-			// as a string, so we read it and convert it to an int
-			while ((receivedByte = DBGpReader.readByte()) != 0) {
-				remainingBytesToRead = remainingBytesToRead * 10 + receivedByte - 48;
-			}
-
-			byteArray = new byte[remainingBytesToRead];
-			int totalBytesSoFar = 0;
-			while ((remainingBytesToRead > 0)) {
-
-				// need to handle situation where we could block still waiting
-				// for more info ?
-				int bytesReceived = DBGpReader.read(byteArray, totalBytesSoFar, remainingBytesToRead);
-				remainingBytesToRead -= bytesReceived;
-				totalBytesSoFar += bytesReceived;
-			}
-
-			// final part of the protocol is a null value
-			if ((DBGpReader.readByte()) != 0) {
-				// unexpected message so the message is not valid, end the
-				// session as things
-				// could become very confused.
-				endSession();
-				return null;
-			}
-		} catch (IOException e) {
-			// the exception could be caused by the user terminating or
-			// disconnecting
-			// however due to the nature of the debug framework, a termination
-			// request
-			// may not be sent to the debug target or may be sent after it
-			// terminates
-			// the process, so we cannot rely on testing the debug target for
-			// it's
-			// state to determine if there has been any user activity that may
-			// have caused this.
-			// we could have tested and even check the type of exception but on
-			// windows
-			// you get SocketException: Connection Reset and on Linux you get
-			// EOFException, so for other platforms you don't know what to
-			// expect as an
-			// exception. So it is better to ignore the information
-			endSession();
-			return null;
-		}
-
-		try {
-			if (DBGpLogger.debugResp()) {
-				DBGpLogger.debug("Response: " //$NON-NLS-1$
-						+ new String(byteArray, sessionEncoding));
-			}
-			return byteArray;
-		} catch (UnsupportedEncodingException e) {
-			DBGpLogger.logException("UnsupportedEncodingException - 2", this, e); //$NON-NLS-1$
-			endSession();
-		}
-		return null;
-	}
-
-	private void determineEncodings() {
-		ILaunch launch = getDebugTarget().getLaunch();
-		ILaunchConfiguration launchConfig = launch.getLaunchConfiguration();
-		outputEncoding = getCharset(IDebugParametersKeys.OUTPUT_ENCODING, launchConfig);
-		binaryEncoding = getCharset(IDebugParametersKeys.TRANSFER_ENCODING, launchConfig);
-	}
-
-	private String getCharset(String encodingKey, ILaunchConfiguration launchConfig) {
-		String charset = null;
-		String outputEncoding = null;
-		if (launchConfig != null) {
-			try {
-				outputEncoding = launchConfig.getAttribute(encodingKey, ""); //$NON-NLS-1$
-			} catch (CoreException e) {
-			}
-		}
-		if (outputEncoding == null || outputEncoding.length() == 0) {
-			// null will return it from the main preferences
-			if (encodingKey == IDebugParametersKeys.OUTPUT_ENCODING) {
-				outputEncoding = PHPProjectPreferences.getOutputEncoding(null);
-			} else {
-				outputEncoding = PHPProjectPreferences.getTransferEncoding(null);
-			}
-		}
-		if (outputEncoding == null || Charset.isSupported(outputEncoding) == false) {
-			charset = Charset.defaultCharset().name();
-		} else {
-			charset = outputEncoding;
-		}
-		return charset;
-	}
-
-	/**
 	 * end this session
 	 * 
 	 */
-	public synchronized void endSession() {
-
-		// we are ending the session so ensure anything that is waiting for a
-		// response
-		// is unblocked.
+	public void endSession() {
+		/*
+		 * We are ending the session so ensure anything that is waiting for a
+		 * response is unblocked.
+		 */
 		unblockAllCallers(null);
 		if (sessionActive) {
 			sessionActive = false;
 			try {
 				DBGpSocket.shutdownInput();
 			} catch (IOException e) {
-
 			}
 			try {
 				DBGpSocket.shutdownOutput();
 			} catch (IOException e) {
-
 			}
-
 			try {
 				DBGpSocket.close();
 
@@ -692,19 +564,8 @@ public class DBGpSession {
 	 */
 	public void setDebugTarget(DBGpTarget debugTarget) {
 		this.debugTarget = debugTarget;
-		// now we have a target we can determine the user defined encodings
+		// Now we have a target we can determine the user defined encodings
 		determineEncodings();
-	}
-
-	public String toString() {
-		StringBuffer strBuf = new StringBuffer(getIdeKey());
-		if (getSessionId() != null) {
-			strBuf.append(" - Session:"); //$NON-NLS-1$
-			strBuf.append(getSessionId());
-		} else {
-			strBuf.append(" - Web Server Session"); //$NON-NLS-1$
-		}
-		return strBuf.toString();
 	}
 
 	/**
@@ -753,4 +614,140 @@ public class DBGpSession {
 	public String getRemoteHostname() {
 		return DBGpSocket.getInetAddress().getHostName();
 	}
+
+	public String toString() {
+		StringBuffer strBuf = new StringBuffer(getIdeKey());
+		if (getSessionId() != null) {
+			strBuf.append(" - Session:"); //$NON-NLS-1$
+			strBuf.append(getSessionId());
+		} else {
+			strBuf.append(" - Web Server Session"); //$NON-NLS-1$
+		}
+		return strBuf.toString();
+	}
+
+	private void unblockAllCallers(DBGpResponse parsedResponse) {
+		if (parsedResponse == null) {
+			// if null passed in, create a dummy response.
+			parsedResponse = new DBGpResponse();
+			parsedResponse.parseResponse(null);
+		}
+		Set<Integer> keys = savedResponses.keySet();
+		for (Iterator<Integer> iterator = keys.iterator(); iterator.hasNext();) {
+			Integer idObj = (Integer) iterator.next();
+			postAndSignalCaller(idObj, parsedResponse);
+		}
+	}
+
+	private void postAndSignalCaller(Integer idObj, DBGpResponse parsedResponse) {
+		Object responder = savedResponses.get(idObj);
+		if (responder instanceof Event) {
+			/*
+			 * We have an event for the id so we need to respond and unblock the
+			 * caller, otherwise it has already been done (maybe from
+			 * unblockAllCallers)
+			 */
+			Event idev = (Event) responder;
+			savedResponses.put(idObj, parsedResponse);
+			idev.signalEvent();
+		}
+	}
+
+	/**
+	 * DBGp protocol is as follows "xxx\0" where xxx is the length of the
+	 * message to follow "message\0" where message is the data we are interested
+	 * in.
+	 * 
+	 * @return
+	 */
+	private byte[] readResponse() {
+		byte byteArray[];
+		byte receivedByte;
+		int remainingBytesToRead = 0;
+		try {
+			/*
+			 * The first part of the DBGp protocol is the length as a string, so
+			 * we read it and convert it to an int
+			 */
+			while ((receivedByte = DBGpReader.readByte()) != 0) {
+				remainingBytesToRead = remainingBytesToRead * 10 + receivedByte - 48;
+			}
+			byteArray = new byte[remainingBytesToRead];
+			int totalBytesSoFar = 0;
+			while ((remainingBytesToRead > 0)) {
+				int bytesReceived = DBGpReader.read(byteArray, totalBytesSoFar, remainingBytesToRead);
+				remainingBytesToRead -= bytesReceived;
+				totalBytesSoFar += bytesReceived;
+			}
+			// Final part of the protocol is a null value
+			if ((DBGpReader.readByte()) != 0) {
+				/*
+				 * Unexpected message so the message is not valid, end the
+				 * session as things could become very confused.
+				 */
+				endSession();
+				return null;
+			}
+		} catch (IOException e) {
+			/*
+			 * The exception could be caused by the user terminating or
+			 * disconnecting however due to the nature of the debug framework, a
+			 * termination request may not be sent to the debug target or may be
+			 * sent after it terminates the process, so we cannot rely on
+			 * testing the debug target for it's state to determine if there has
+			 * been any user activity that may have caused this. we could have
+			 * tested and even check the type of exception but on windows you
+			 * get SocketException: Connection Reset and on Linux you get
+			 * EOFException, so for other platforms you don't know what to
+			 * expect as an exception. So it is better to ignore the
+			 * information.
+			 */
+			endSession();
+			return null;
+		}
+		try {
+			if (DBGpLogger.debugResp()) {
+				DBGpLogger.debug("Response: " //$NON-NLS-1$
+						+ new String(byteArray, sessionEncoding));
+			}
+			return byteArray;
+		} catch (UnsupportedEncodingException e) {
+			DBGpLogger.logException("UnsupportedEncodingException - 2", this, e); //$NON-NLS-1$
+			endSession();
+		}
+		return null;
+	}
+
+	private void determineEncodings() {
+		ILaunch launch = getDebugTarget().getLaunch();
+		ILaunchConfiguration launchConfig = launch.getLaunchConfiguration();
+		outputEncoding = getCharset(IDebugParametersKeys.OUTPUT_ENCODING, launchConfig);
+		binaryEncoding = getCharset(IDebugParametersKeys.TRANSFER_ENCODING, launchConfig);
+	}
+
+	private String getCharset(String encodingKey, ILaunchConfiguration launchConfig) {
+		String charset = null;
+		String outputEncoding = null;
+		if (launchConfig != null) {
+			try {
+				outputEncoding = launchConfig.getAttribute(encodingKey, ""); //$NON-NLS-1$
+			} catch (CoreException e) {
+			}
+		}
+		if (outputEncoding == null || outputEncoding.length() == 0) {
+			// null will return it from the main preferences
+			if (encodingKey == IDebugParametersKeys.OUTPUT_ENCODING) {
+				outputEncoding = PHPProjectPreferences.getOutputEncoding(null);
+			} else {
+				outputEncoding = PHPProjectPreferences.getTransferEncoding(null);
+			}
+		}
+		if (outputEncoding == null || Charset.isSupported(outputEncoding) == false) {
+			charset = Charset.defaultCharset().name();
+		} else {
+			charset = outputEncoding;
+		}
+		return charset;
+	}
+
 }

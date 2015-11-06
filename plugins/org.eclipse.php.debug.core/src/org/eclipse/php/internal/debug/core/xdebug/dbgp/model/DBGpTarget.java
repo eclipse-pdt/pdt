@@ -1877,7 +1877,7 @@ public class DBGpTarget extends DBGpElement
 						if (DBGpLogger.debugBP()) {
 							DBGpLogger.debug("Breakpoint Add requested immediately"); //$NON-NLS-1$
 						}
-						sendBreakpointAddCmd(bp, false);
+						sendBreakpointAddCmd(bp);
 					} else if (isRunning()) {
 
 						// we are running and async mode is not supported
@@ -1911,7 +1911,7 @@ public class DBGpTarget extends DBGpElement
 	 * @param bp
 	 * @param onResponseThread
 	 */
-	private void sendBreakpointAddCmd(DBGpBreakpoint bp, boolean onResponseThread) {
+	private void sendBreakpointAddCmd(DBGpBreakpoint bp) {
 		bp.resetConditionChanged();
 		String fileName = bp.getFileName();
 		int lineNumber = bp.getLineNumber();
@@ -1944,11 +1944,7 @@ public class DBGpTarget extends DBGpElement
 		}
 
 		DBGpResponse resp;
-		if (onResponseThread) {
-			resp = session.sendSyncCmdOnResponseThread(DBGpCommand.breakPointSet, args);
-		} else {
-			resp = session.sendSyncCmd(DBGpCommand.breakPointSet, args);
-		}
+		resp = session.sendSyncCmd(DBGpCommand.breakPointSet, args);
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			/*
 			 * <response command="breakpoint_set"
@@ -1988,7 +1984,7 @@ public class DBGpTarget extends DBGpElement
 				if (DBGpLogger.debugBP()) {
 					DBGpLogger.debug("Immediately removing of breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 				}
-				sendBreakpointRemoveCmd(bp, false);
+				sendBreakpointRemoveCmd(bp);
 			} else if (isRunning()) {
 
 				// running and not suspended and no async support, so we must
@@ -2009,18 +2005,14 @@ public class DBGpTarget extends DBGpElement
 	 * @param bp
 	 * @param onResponseThread
 	 */
-	private void sendBreakpointRemoveCmd(DBGpBreakpoint bp, boolean onResponseThread) {
+	private void sendBreakpointRemoveCmd(DBGpBreakpoint bp) {
 		// we are suspended
 		String args = "-d " + bp.getID(); //$NON-NLS-1$
 		if (DBGpLogger.debugBP()) {
 			DBGpLogger.debug("Removing breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 		}
 		DBGpResponse resp;
-		if (onResponseThread) {
-			resp = session.sendSyncCmdOnResponseThread(DBGpCommand.breakPointRemove, args);
-		} else {
-			resp = session.sendSyncCmd(DBGpCommand.breakPointRemove, args);
-		}
+		resp = session.sendSyncCmd(DBGpCommand.breakPointRemove, args);
 		DBGpUtils.isGoodDBGpResponse(this, resp); // used to log the
 		// result
 	}
@@ -2246,9 +2238,9 @@ public class DBGpTarget extends DBGpElement
 		for (int i = 0; i < DBGpCmdQueue.size(); i++) {
 			DBGpBreakpointCmd bpCmd = (DBGpBreakpointCmd) DBGpCmdQueue.get(i);
 			if (bpCmd.getCmd().equals(DBGpCommand.breakPointSet)) {
-				sendBreakpointAddCmd(bpCmd.getBp(), true);
+				sendBreakpointAddCmd(bpCmd.getBp());
 			} else if (bpCmd.getCmd().equals(DBGpCommand.breakPointRemove)) {
-				sendBreakpointRemoveCmd(bpCmd.getBp(), true);
+				sendBreakpointRemoveCmd(bpCmd.getBp());
 			}
 		}
 		DBGpCmdQueue.clear();
