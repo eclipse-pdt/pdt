@@ -250,10 +250,10 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPModelPresentation_ParallelRequests;
 
 	public static String PHPModelPresentation_PHP_Applications;
-	public static String PHPPrimitiveValueEditor_0;
-	public static String PHPPrimitiveValueEditor_1;
-	public static String PHPPrimitiveValueEditor_2;
-	public static String PHPPrimitiveValueEditor_3;
+	public static String AbstractVariableValueEditor_ChangeValueTitle;
+	public static String AbstractVariableValueEditor_EnterValue;
+	public static String AbstractVariableValueEditor_ErrorChangingValue;
+	public static String AbstractVariableValueEditor_UnexpectedErrorWhileValueChange;
 
 	public static String PHPResourceSelectionDialog_selectResource;
 	public static String PHPRunToLineAdapter_0;
@@ -284,9 +284,9 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String XDebugModelPresentation_Waiting;
 	public static String XDebugPresentation_line;
-	public static String XDebugVariableValueEditor_0;
+	public static String AbstractVariableValueEditor_UnexpectedError;
 
-	public static String XDebugVariableValueEditor_invalidValue;
+	public static String AbstractVariableValueEditor_InvalidValue;
 
 	static {
 		// load message values from bundle file

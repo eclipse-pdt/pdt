@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.model;
 
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
 
+import java.text.MessageFormat;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
@@ -23,6 +24,7 @@ import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
 
 /**
@@ -125,6 +127,10 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 					+ "\"]"; //$NON-NLS-1$
 			changeVar = new DefaultExpression(exp);
 		}
+		int valueType = value.getVariable().getValue().getType();
+		if (valueType == ExpressionValue.STRING_TYPE) {
+			expression = MessageFormat.format("\"{0}\"", expression); //$NON-NLS-1$
+		}
 		boolean status = expressionManager.assignValue(changeVar, expression, 1);
 		if (!status) {
 			Logger.debugMSG("[" + this //$NON-NLS-1$
@@ -133,7 +139,6 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 		expressionManager.update(changeVar, 1);
 		value.updateValue(changeVar.getValue());
 		fireChangeEvent(DebugEvent.CONTENT);
-
 	}
 
 	/*
@@ -167,7 +172,24 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang
 	 * .String)
 	 */
-	public boolean verifyValue(String expression) throws DebugException {
+	public boolean verifyValue(String value) throws DebugException {
+		switch (variable.getValue().getType()) {
+		case ExpressionValue.BOOLEAN_TYPE: {
+			if (!value.equalsIgnoreCase(String.valueOf(false)) && !value.equalsIgnoreCase(String.valueOf(true))) {
+				return false;
+			}
+			break;
+		}
+		case ExpressionValue.DOUBLE_TYPE:
+		case ExpressionValue.INT_TYPE: {
+			try {
+				Double.parseDouble(value);
+				return true;
+			} catch (NumberFormatException nfe) {
+				return false;
+			}
+		}
+		}
 		return true;
 	}
 
@@ -182,6 +204,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IWatchExpressionFactoryAdapter.class) {
 			return new WatchExpressionFactoryAdapter();
