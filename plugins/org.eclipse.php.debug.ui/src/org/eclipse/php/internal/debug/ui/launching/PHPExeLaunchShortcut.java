@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.debug.ui.launching;
 
 import java.io.File;
+import java.util.Arrays;
 
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.*;
@@ -34,9 +35,12 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.PHPRuntime;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.ui.Logger;
@@ -185,8 +189,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 							PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
-				PHPexeItem defaultEXE = getDefaultPHPExe(project);
-				String phpExeName = (defaultEXE != null) ? defaultEXE.getExecutable().getAbsolutePath().toString()
+				PHPexeItem bestMatchExe = getBestMatchPHPExe(project);
+				String phpExeName = (bestMatchExe != null) ? bestMatchExe.getExecutable().getAbsolutePath().toString()
 						: null;
 
 				if (phpExeName == null) {
@@ -200,7 +204,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 
 				// Launch the app
 				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, phpFileLocation,
-						defaultEXE, mode, configType, res);
+						bestMatchExe, mode, configType, res);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -221,15 +225,18 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		}
 	}
 
-	// Returns the default php executable name for the current project.
-	// In case the project does not have any special settings, return the
-	// workspace default.
-	private static PHPexeItem getDefaultPHPExe(IProject project) {
+	private static PHPexeItem getBestMatchPHPExe(IProject project) {
 		PHPexeItem defaultItem = PHPDebugPlugin.getPHPexeItem(project);
-		if (defaultItem != null) {
+		if (defaultItem == null) {
+			defaultItem = PHPDebugPlugin.getWorkspaceDefaultExe();
+		}
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+		PHPexeItem[] matchingItems = PHPexes.getInstance().getCompatibleItems(PHPexes.getInstance().getAllItems(),
+				phpVersion);
+		if (Arrays.asList(matchingItems).contains(defaultItem)) {
 			return defaultItem;
 		}
-		return PHPDebugPlugin.getWorkspaceDefaultExe();
+		return matchingItems.length != 0 ? matchingItems[0] : null;
 	}
 
 	// Creates a preferences scope for the given project.
@@ -250,7 +257,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * @return a re-useable config or <code>null</code> if none
 	 */
 	protected static ILaunchConfiguration findLaunchConfiguration(IProject phpProject, String phpPathString,
-			String phpFileFullLocation, PHPexeItem defaultEXE, String mode, ILaunchConfigurationType configType,
+			String phpFileFullLocation, PHPexeItem bestMatchExe, String mode, ILaunchConfigurationType configType,
 			IResource res) {
 		ILaunchConfiguration config = null;
 
@@ -273,7 +280,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 			}
 
 			if (config == null) {
-				config = createConfiguration(phpProject, phpPathString, phpFileFullLocation, defaultEXE, configType,
+				config = createConfiguration(phpProject, phpPathString, phpFileFullLocation, bestMatchExe, configType,
 						res);
 			}
 		} catch (CoreException ce) {
@@ -288,22 +295,25 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * @param res
 	 */
 	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString,
-			String phpFileFullLocation, PHPexeItem defaultEXE, ILaunchConfigurationType configType, IResource res)
+			String phpFileFullLocation, PHPexeItem bestMatchExe, ILaunchConfigurationType configType, IResource res)
 					throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
 
 		// Set the delegate class according to selected executable.
-		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, defaultEXE.getDebuggerID());
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, bestMatchExe.getDebuggerID());
 		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-				.getDebuggerConfiguration(defaultEXE.getDebuggerID());
+				.getDebuggerConfiguration(bestMatchExe.getDebuggerID());
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 				debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(IPHPDebugConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
 		wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
-				defaultEXE.getExecutable().getAbsolutePath().toString());
-		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
+				bestMatchExe.getExecutable().getAbsolutePath().toString());
+		if (!bestMatchExe.isDefault()) {
+			wc.setAttribute(PHPRuntime.PHP_CONTAINER, PHPRuntime.newPHPContainerPath(bestMatchExe).toPortableString());
+		}
+		String iniPath = bestMatchExe.getINILocation() != null ? bestMatchExe.getINILocation().toString() : null;
 		wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
