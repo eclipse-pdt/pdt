@@ -15,16 +15,14 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IExpressionManager;
 import org.eclipse.debug.core.model.IWatchExpression;
 import org.eclipse.debug.internal.ui.actions.expressions.WatchExpressionAction;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.*;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -61,6 +59,8 @@ public class PHPWatchAction extends WatchExpressionAction
 				// create the new watch expression
 				IWatchExpression watchExpression = expressionManager.newWatchExpression(expression.trim());
 				expressionManager.addExpression(watchExpression);
+				// show expression view
+				showExpressionsView();
 				// refresh and re-evaluate
 				watchExpression.setExpressionContext(getContext());
 			} catch (Exception e) {
@@ -74,4 +74,26 @@ public class PHPWatchAction extends WatchExpressionAction
 	 */
 	public void dispose() {
 	}
+
+	/**
+	 * Make the expression view visible or open one if required.
+	 */
+	protected void showExpressionsView() {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null
+				|| activePage.getActivePart().getSite().getId().equals(IDebugUIConstants.ID_EXPRESSION_VIEW)) {
+			return;
+		}
+		IViewPart part = activePage.findView(IDebugUIConstants.ID_EXPRESSION_VIEW);
+		if (part == null) {
+			try {
+				activePage.showView(IDebugUIConstants.ID_EXPRESSION_VIEW);
+			} catch (PartInitException e) {
+				Logger.logException(e);
+			}
+		} else {
+			activePage.bringToTop(part);
+		}
+	}
+
 }
