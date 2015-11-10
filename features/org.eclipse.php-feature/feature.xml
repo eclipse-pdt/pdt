@@ -34,8 +34,8 @@
    <requires>
       <import feature="org.eclipse.dltk.core" version="5.3.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.dltk.core.index" version="5.3.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.jsdt.feature" version="1.6.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.web_ui.feature" version="3.6.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst.jsdt.feature"/>
+      <import feature="org.eclipse.wst.web_ui.feature"/>
    </requires>
 
    <plugin
