@@ -109,6 +109,8 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		if (sessID != null) {
 			parameters.put(DEBUG_SESSION_ID, sessID);
 		}
+		// Disable Z-Ray
+		parameters.put(ZRAY_DISABLE, "1"); //$NON-NLS-1$
 
 		return parameters;
 	}
