@@ -11,9 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger.handlers;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -128,30 +130,31 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 	}
 
 	protected IBreakpoint[] findBreakpoints(String localPath, PHPDebugTarget debugTarget) {
-
 		IBreakpointManager breakpointManager = debugTarget.getBreakpointManager();
 		if (!breakpointManager.isEnabled()) {
 			return new IBreakpoint[0];
 		}
-
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
-		List<IBreakpoint> l = new LinkedList<IBreakpoint>();
-
+		List<IBreakpoint> matches = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
-
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(localPath);
-
-			// if (resource != null) {
-			if (bp.getMarker().getResource().equals(resource)) {
-				l.add(bp);
-				continue;
+			// Might be a linked resource
+			if (resource == null) {
+				IResource[] resources = ResourcesPlugin.getWorkspace().getRoot()
+						.findFilesForLocationURI(URIUtil.toURI(localPath));
+				if (resources.length > 0) {
+					resource = resources[0];
+				}
 			}
-			// } else {
+			File bpFile = bp.getMarker().getResource().getRawLocation().makeAbsolute().toFile();
 			try {
+				if (bp.getMarker().getResource().equals(resource) || localPath.equals(bpFile.getCanonicalPath())) {
+					matches.add(bp);
+					continue;
+				}
 				String secondaryId = (String) bp.getMarker()
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 				if (secondaryId != null) {
-
 					IPath path = Path.fromPortableString(secondaryId);
 					if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
 						String fullPathString = path.toString();
@@ -160,19 +163,17 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 					} else {
 						path = EnvironmentPathUtils.getLocalPath(path);
 					}
-
 					secondaryId = path.toString();
 					if (VirtualPath.isAbsolute(localPath)
 							&& (new VirtualPath(localPath).equals(new VirtualPath(secondaryId)))
 							|| resource != null && secondaryId.equals(resource.getLocation().toString())) {
-						l.add(bp);
+						matches.add(bp);
 					}
 				}
 			} catch (Exception e) {
 				PHPDebugPlugin.log(e);
 			}
-			// }
 		}
-		return l.toArray(new IBreakpoint[l.size()]);
+		return matches.toArray(new IBreakpoint[matches.size()]);
 	}
 }

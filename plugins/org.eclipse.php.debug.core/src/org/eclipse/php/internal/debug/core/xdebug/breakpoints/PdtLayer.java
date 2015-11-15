@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -23,6 +26,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
@@ -65,20 +69,26 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					Breakpoint zBP = lineBreakpoint.getRuntimeBreakpoint();
 					String bFileName = zBP.getFileName();
+					File lineBreakpointFile = lineBreakpoint.getMarker().getResource().getRawLocation().makeAbsolute()
+							.toFile();
 					int bLineNumber = zBP.getLineNumber();
-					if (bLineNumber == lineno && bFileName.equals(filename)) {
-						bpFound = breakpoint;
-						if (DBGpLogger.debugBP()) {
-							DBGpLogger.debug("breakpoint at " + filename + "(" //$NON-NLS-1$ //$NON-NLS-2$
-									+ lineno + ") found"); //$NON-NLS-1$
+					try {
+						if (bLineNumber == lineno && (bFileName.equals(filename)
+								|| filename.equals(lineBreakpointFile.getCanonicalPath()))) {
+							bpFound = breakpoint;
+							if (DBGpLogger.debugBP()) {
+								DBGpLogger.debug("breakpoint at " + filename + "(" //$NON-NLS-1$ //$NON-NLS-2$
+										+ lineno + ") found"); //$NON-NLS-1$
+							}
 						}
-
+					} catch (IOException e) {
+						Logger.logException(e);
 					}
-
-					// remove all RunToLine breakpoints while we search through
-					// the
-					// list of all our breakpoints looking for the one that was
-					// hit
+					/*
+					 * Remove all RunToLine breakpoints while we search through
+					 * the list of all our breakpoints looking for the one that
+					 * was hit.
+					 */
 					if (breakpoint instanceof PHPRunToLineBreakpoint) {
 						IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 						try {
