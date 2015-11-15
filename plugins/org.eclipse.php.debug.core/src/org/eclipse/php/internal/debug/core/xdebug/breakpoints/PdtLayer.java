@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -23,6 +27,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
@@ -54,7 +59,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return new PdtBreakpoint((PHPLineBreakpoint) breakpoint);
 	}
 
-	public IBreakpoint findBreakpointHit(String filename, int lineno) {
+	public IBreakpoint findBreakpointHit(String sourceFileLocation, int lineno) {
 		IBreakpoint bpFound = null;
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
 				.getBreakpoints(getBreakpointModelID());
@@ -64,21 +69,34 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 				if (breakpoint instanceof PHPLineBreakpoint) {
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					Breakpoint zBP = lineBreakpoint.getRuntimeBreakpoint();
-					String bFileName = zBP.getFileName();
+					String bpFileLocation = zBP.getFileName();
+					String lineBreakpointFileLocation = lineBreakpoint.getMarker().getResource().getLocation()
+							.toOSString();
+					/*
+					 * Use NIO libraries to handle comparison of files that
+					 * might contains symbolic links in their paths.
+					 */
+					java.nio.file.Path lineBreakpointFilePath = FileSystems.getDefault()
+							.getPath(lineBreakpointFileLocation);
+					java.nio.file.Path sourceFilePath = FileSystems.getDefault().getPath(sourceFileLocation);
 					int bLineNumber = zBP.getLineNumber();
-					if (bLineNumber == lineno && bFileName.equals(filename)) {
-						bpFound = breakpoint;
-						if (DBGpLogger.debugBP()) {
-							DBGpLogger.debug("breakpoint at " + filename + "(" //$NON-NLS-1$ //$NON-NLS-2$
-									+ lineno + ") found"); //$NON-NLS-1$
+					try {
+						if (bLineNumber == lineno && (bpFileLocation.equals(sourceFileLocation)
+								|| Files.isSameFile(lineBreakpointFilePath, sourceFilePath))) {
+							bpFound = breakpoint;
+							if (DBGpLogger.debugBP()) {
+								DBGpLogger.debug("breakpoint at " + sourceFileLocation + "(" //$NON-NLS-1$ //$NON-NLS-2$
+										+ lineno + ") found"); //$NON-NLS-1$
+							}
 						}
-
+					} catch (IOException e) {
+						Logger.logException(e);
 					}
-
-					// remove all RunToLine breakpoints while we search through
-					// the
-					// list of all our breakpoints looking for the one that was
-					// hit
+					/*
+					 * Remove all RunToLine breakpoints while we search through
+					 * the list of all our breakpoints looking for the one that
+					 * was hit.
+					 */
 					if (breakpoint instanceof PHPRunToLineBreakpoint) {
 						IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 						try {
