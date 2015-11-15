@@ -11,8 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -58,7 +59,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return new PdtBreakpoint((PHPLineBreakpoint) breakpoint);
 	}
 
-	public IBreakpoint findBreakpointHit(String filename, int lineno) {
+	public IBreakpoint findBreakpointHit(String sourceFileLocation, int lineno) {
 		IBreakpoint bpFound = null;
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
 				.getBreakpoints(getBreakpointModelID());
@@ -68,16 +69,23 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 				if (breakpoint instanceof PHPLineBreakpoint) {
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					Breakpoint zBP = lineBreakpoint.getRuntimeBreakpoint();
-					String bFileName = zBP.getFileName();
-					File lineBreakpointFile = lineBreakpoint.getMarker().getResource().getRawLocation().makeAbsolute()
-							.toFile();
+					String bpFileLocation = zBP.getFileName();
+					String lineBreakpointFileLocation = lineBreakpoint.getMarker().getResource().getLocation()
+							.toOSString();
+					/*
+					 * Use NIO libraries to handle comparison of files that
+					 * might contains symbolic links in their paths.
+					 */
+					java.nio.file.Path lineBreakpointFilePath = FileSystems.getDefault()
+							.getPath(lineBreakpointFileLocation);
+					java.nio.file.Path sourceFilePath = FileSystems.getDefault().getPath(sourceFileLocation);
 					int bLineNumber = zBP.getLineNumber();
 					try {
-						if (bLineNumber == lineno && (bFileName.equals(filename)
-								|| filename.equals(lineBreakpointFile.getCanonicalPath()))) {
+						if (bLineNumber == lineno && (bpFileLocation.equals(sourceFileLocation)
+								|| Files.isSameFile(lineBreakpointFilePath, sourceFilePath))) {
 							bpFound = breakpoint;
 							if (DBGpLogger.debugBP()) {
-								DBGpLogger.debug("breakpoint at " + filename + "(" //$NON-NLS-1$ //$NON-NLS-2$
+								DBGpLogger.debug("breakpoint at " + sourceFileLocation + "(" //$NON-NLS-1$ //$NON-NLS-2$
 										+ lineno + ") found"); //$NON-NLS-1$
 							}
 						}

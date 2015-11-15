@@ -11,7 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger.handlers;
 
-import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		isFirstFileToDebug = false;
 	}
 
-	protected IBreakpoint[] findBreakpoints(String localPath, PHPDebugTarget debugTarget) {
+	protected IBreakpoint[] findBreakpoints(String processFileLocation, PHPDebugTarget debugTarget) {
 		IBreakpointManager breakpointManager = debugTarget.getBreakpointManager();
 		if (!breakpointManager.isEnabled()) {
 			return new IBreakpoint[0];
@@ -137,18 +138,24 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> matches = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(localPath);
-			// Might be a linked resource
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(processFileLocation);
+			// Might be an Eclipse linked resource
 			if (resource == null) {
 				IResource[] resources = ResourcesPlugin.getWorkspace().getRoot()
-						.findFilesForLocationURI(URIUtil.toURI(localPath));
+						.findFilesForLocationURI(URIUtil.toURI(processFileLocation));
 				if (resources.length > 0) {
 					resource = resources[0];
 				}
 			}
-			File bpFile = bp.getMarker().getResource().getRawLocation().makeAbsolute().toFile();
 			try {
-				if (bp.getMarker().getResource().equals(resource) || localPath.equals(bpFile.getCanonicalPath())) {
+				String bpFileLocation = bp.getMarker().getResource().getRawLocation().makeAbsolute().toOSString();
+				/*
+				 * Use NIO libraries to handle comparison of files that might
+				 * contains symbolic links in their paths.
+				 */
+				java.nio.file.Path bpFilePath = FileSystems.getDefault().getPath(bpFileLocation, ""); //$NON-NLS-1$
+				java.nio.file.Path processFilePath = FileSystems.getDefault().getPath(processFileLocation, ""); //$NON-NLS-1$
+				if (bp.getMarker().getResource().equals(resource) || Files.isSameFile(bpFilePath, processFilePath)) {
 					matches.add(bp);
 					continue;
 				}
@@ -164,8 +171,8 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 						path = EnvironmentPathUtils.getLocalPath(path);
 					}
 					secondaryId = path.toString();
-					if (VirtualPath.isAbsolute(localPath)
-							&& (new VirtualPath(localPath).equals(new VirtualPath(secondaryId)))
+					if (VirtualPath.isAbsolute(processFileLocation)
+							&& (new VirtualPath(processFileLocation).equals(new VirtualPath(secondaryId)))
 							|| resource != null && secondaryId.equals(resource.getLocation().toString())) {
 						matches.add(bp);
 					}

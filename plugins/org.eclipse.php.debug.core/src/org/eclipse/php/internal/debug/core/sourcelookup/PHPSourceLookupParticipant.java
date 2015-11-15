@@ -14,6 +14,8 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.LinkedList;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
@@ -52,9 +54,10 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 
 		public static Object find(final String sourceLocation) {
 			final LinkedList<IResource> matches = new LinkedList<IResource>();
-			final IPath sourceLocationPath = new Path(sourceLocation);
-			final String sourceFileName = sourceLocationPath.lastSegment();
+			final java.nio.file.Path sourceLocationPath = FileSystems.getDefault().getPath(sourceLocation);
+			final String sourceFileName = (new Path(sourceLocation)).lastSegment();
 			try {
+				long tb = System.currentTimeMillis();
 				ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {
 					@Override
 					public boolean visit(IResource resource) throws CoreException {
@@ -62,10 +65,17 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 							if (resource.getType() != IResource.FILE) {
 								return true;
 							}
-							if ((resource.getName().equals(sourceFileName) || resource.isLinked())
-									&& resource.getRawLocation().makeAbsolute().toFile().getCanonicalPath()
-											.equals(sourceLocation)) {
-								matches.add(resource);
+							if (resource.getName().equals(sourceFileName) || resource.isLinked()) {
+								/*
+								 * Use NIO libraries to handle comparison of
+								 * files that might contains symbolic links in
+								 * their paths.
+								 */
+								String fileLocation = resource.getLocation().toOSString();
+								java.nio.file.Path currentFilePath = FileSystems.getDefault().getPath(fileLocation); // $NON-NLS-1$
+								if (Files.isSameFile(sourceLocationPath, currentFilePath)) {
+									matches.add(resource);
+								}
 							}
 						} catch (IOException e) {
 							PHPDebugPlugin.log(e);
@@ -73,6 +83,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 						return true;
 					}
 				});
+				long ta = System.currentTimeMillis();
+				System.err.println(ta - tb);
 			} catch (CoreException e) {
 				PHPDebugPlugin.log(e);
 			}
