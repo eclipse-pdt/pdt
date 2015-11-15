@@ -14,9 +14,15 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.util.LinkedList;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -34,6 +40,7 @@ import org.eclipse.dltk.internal.core.util.HandleFactory;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharPath;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 
@@ -41,84 +48,65 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
  * The PHP source lookup participant knows how to translate a PHP stack frame
  * into a source file name
  */
+@SuppressWarnings("restriction")
 public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.internal.core.sourcelookup.ISourceLookupParticipant
-	 * #getSourceName(java.lang.Object)
+
+	/**
+	 * Helper class for finding workspace files that might point to provided
+	 * source location by means of being a linked/symbolic link files or be a
+	 * part of the chained structure that might consist of linked/symbolic link
+	 * directories/files.
 	 */
-	public String getSourceName(Object object) throws CoreException {
-		if (object instanceof PHPStackFrame) {
-			return ((PHPStackFrame) object).getSourceName();
-		}
-		if (object instanceof DBGpStackFrame) {
-			String src = ((DBGpStackFrame) object).getSourceName();
-			if (src == null) {
-				src = ((DBGpStackFrame) object).getQualifiedFile();
-				IPath p = new Path(src);
-				src = p.lastSegment();
-			}
-			return src;
-		}
-		return null;
-	}
+	private static final class LinkSubjectFileFinder {
 
-	public Object[] findSourceElements(Object object) throws CoreException {
-		Object[] sourceElements = EMPTY;
-		try {
-			sourceElements = super.findSourceElements(object);
-		} catch (Throwable e) {
-			// Check if the lookup failed because the source is outside the
-			// workspace.
-		}
-
-		if (sourceElements == EMPTY) {
-			// If the lookup returned an empty elements array, check if the
-			// source is outside the workspace.
-			String fileName = null;
-			if (object instanceof PHPStackFrame) {
-				fileName = ((PHPStackFrame) object).getSourceName();
-			} else if (object instanceof DBGpStackFrame) {
-				fileName = ((DBGpStackFrame) object).getQualifiedFile();
-			}
-
-			if (fileName != null) {
-				HandleFactory fac = new HandleFactory();
-				IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
-				IPath localPath = EnvironmentPathUtils.getFile(LocalEnvironment.getInstance(), new Path(fileName))
-						.getFullPath();
-				Openable openable = fac.createOpenable(localPath.toString(), scope);
-				if (openable instanceof IStorage) {
-					return new Object[] { openable };
-				}
-
-				File file = new File(fileName);
-				if (file.exists()) {
-					return new Object[] { new LocalFile(file) };
-				}
-
-				// try a phar
-				final PharPath pharPath = PharPath.getPharPath(new Path(fileName));
-				if (pharPath != null && !pharPath.getFile().isEmpty()) {
-
-					try {
-						final PharArchiveFile archiveFile = new PharArchiveFile(pharPath.getPharName());
-						final IArchiveEntry entry = archiveFile.getArchiveEntry((pharPath.getFolder().length() == 0 ? "" //$NON-NLS-1$
-								: pharPath.getFolder() + "/") //$NON-NLS-1$
-								+ pharPath.getFile());
-						return new Object[] { new ExternalEntryFile(fileName, archiveFile, entry) };
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+		public static Object find(final String sourceLocation) {
+			final LinkedList<IResource> matches = new LinkedList<IResource>();
+			final java.nio.file.Path sourceLocationPath = FileSystems.getDefault().getPath(sourceLocation);
+			final String sourceFileName = (new Path(sourceLocation)).lastSegment();
+			try {
+				ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {
+					@Override
+					public boolean visit(IResource resource) throws CoreException {
+						try {
+							// Retreat if we already have a match
+							if (!matches.isEmpty()) {
+								return false;
+							}
+							// We are looking for files only
+							if (resource.getType() != IResource.FILE) {
+								return true;
+							}
+							/*
+							 * The goal of this pre-check condition is to reduce
+							 * the amount of files to be checked by NIO
+							 * (comparing with NIO can be time consuming).
+							 */
+							if (resource.getName().equals(sourceFileName) || resource.isLinked()
+									|| (resource.getResourceAttributes() != null
+											&& resource.getResourceAttributes().isSymbolicLink())) {
+								/*
+								 * Use NIO libraries to handle comparison of
+								 * files that might contains symbolic links in
+								 * their paths.
+								 */
+								String fileLocation = resource.getLocation().toOSString();
+								java.nio.file.Path currentFilePath = FileSystems.getDefault().getPath(fileLocation); // $NON-NLS-1$
+								if (Files.isSameFile(sourceLocationPath, currentFilePath)) {
+									matches.add(resource);
+								}
+							}
+						} catch (IOException e) {
+							PHPDebugPlugin.log(e);
+						}
+						return true;
 					}
-				}
-
-				return EMPTY;
+				});
+			} catch (CoreException e) {
+				PHPDebugPlugin.log(e);
 			}
+			return !matches.isEmpty() ? matches.getFirst() : null;
 		}
-		return sourceElements;
+
 	}
 
 	private static final class ExternalEntryFile extends PlatformObject implements IStorage {
@@ -169,21 +157,92 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof ExternalEntryFile))
-				return false;
-			ExternalEntryFile other = (ExternalEntryFile) obj;
-			if (!fileName.toLowerCase().equals(other.fileName.toLowerCase()))
-				return false;
-			return true;
-		}
-		
-		@Override
-		public int hashCode() {
-			return fileName.toLowerCase().hashCode();
-		}
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.internal.core.sourcelookup.ISourceLookupParticipant
+	 * #getSourceName(java.lang.Object)
+	 */
+	public String getSourceName(Object object) throws CoreException {
+		if (object instanceof PHPStackFrame) {
+			return ((PHPStackFrame) object).getSourceName();
+		}
+		if (object instanceof DBGpStackFrame) {
+			String sourceName = ((DBGpStackFrame) object).getSourceName();
+			if (sourceName == null) {
+				sourceName = ((DBGpStackFrame) object).getQualifiedFile();
+				IPath path = new Path(sourceName);
+				sourceName = path.lastSegment();
+			}
+			return sourceName;
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant#
+	 * findSourceElements(java.lang.Object)
+	 */
+	public Object[] findSourceElements(Object object) throws CoreException {
+		Object[] sourceElements = EMPTY;
+		try {
+			sourceElements = super.findSourceElements(object);
+		} catch (CoreException e) {
+			// Check if the lookup failed because the source is outside the
+			// workspace.
+		}
+		if (sourceElements == EMPTY) {
+			// If the lookup returned an empty elements array, check if the
+			// source is outside the workspace.
+			String sourceFilePath = null;
+			if (object instanceof PHPStackFrame) {
+				sourceFilePath = ((PHPStackFrame) object).getSourceName();
+			} else if (object instanceof DBGpStackFrame) {
+				sourceFilePath = ((DBGpStackFrame) object).getQualifiedFile();
+			}
+			if (sourceFilePath != null) {
+				// Check if we have it in DLTK model
+				HandleFactory handleFactory = new HandleFactory();
+				IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+				IPath localPath = EnvironmentPathUtils.getFile(LocalEnvironment.getInstance(), new Path(sourceFilePath))
+						.getFullPath();
+				Openable openable = handleFactory.createOpenable(localPath.toString(), scope);
+				if (openable instanceof IStorage) {
+					return new Object[] { openable };
+				}
+				// Check if we have corresponding "linked chain subject" file
+				Object linkedFile = LinkSubjectFileFinder.find(sourceFilePath);
+				if (linkedFile != null) {
+					return new Object[] { linkedFile };
+				}
+				// Check if it is local non-workspace file
+				File file = new File(sourceFilePath);
+				if (file.exists()) {
+					return new Object[] { new LocalFile(file) };
+				}
+				// Check if it is not a file from PHAR
+				final PharPath pharPath = PharPath.getPharPath(new Path(sourceFilePath));
+				if (pharPath != null) {
+					try {
+						final PharArchiveFile archiveFile = new PharArchiveFile(pharPath.getPharName());
+						final IArchiveEntry entry = archiveFile.getArchiveEntry((pharPath.getFolder().length() == 0 ? "" //$NON-NLS-1$
+								: pharPath.getFolder() + "/") //$NON-NLS-1$
+								+ pharPath.getFile());
+						return new Object[] { new ExternalEntryFile(sourceFilePath, archiveFile, entry) };
+					} catch (Exception e) {
+						PHPDebugPlugin.log(e);
+					}
+				}
+				// Nothing from above
+				return EMPTY;
+			}
+		}
+		return sourceElements;
 	}
 
 }
