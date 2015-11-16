@@ -4843,6 +4843,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// TODO: Added a new preference?
 			insertSpace();
 			appendToBuffer("use"); //$NON-NLS-1$
+			insertSpace();
 
 			appendToBuffer(OPEN_PARN);
 			if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
