@@ -19,5 +19,6 @@ namespace Bar {
 }
 namespace MySpace {
 	use function Bar\foo;
+	
 	foo()
 }
