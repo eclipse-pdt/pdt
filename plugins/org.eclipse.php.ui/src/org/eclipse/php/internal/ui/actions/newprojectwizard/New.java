@@ -1,6 +1,10 @@
 package org.eclipse.php.internal.ui.actions.newprojectwizard;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -13,7 +17,6 @@ import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 import org.eclipse.ui.internal.LegacyResourceSupport;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.handlers.WizardHandler;
-import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.eclipse.ui.wizards.IWizardRegistry;
@@ -81,7 +84,7 @@ public final class New extends WizardHandler {
 				IWorkbenchPart part = activeWorkbenchWindow.getPartService().getActivePart();
 				if (part instanceof IEditorPart) {
 					IEditorInput input = ((IEditorPart) part).getEditorInput();
-					Object resource = Util.getAdapter(input, resourceClass);
+					Object resource = getAdapter(input, resourceClass);
 					if (resource != null) {
 						selectionToPass = new StructuredSelection(resource);
 					}
@@ -89,6 +92,44 @@ public final class New extends WizardHandler {
 			}
 		}
 		return selectionToPass;
+	}
+
+	/**
+	 * Since Eclipse Neon org.eclipse.ui.internal.util.Util.getAdapter is
+	 * removed. This is exact copy of this method.
+	 * 
+	 * @param sourceObject
+	 * @param adapterType
+	 * @return
+	 */
+	public <T> T getAdapter(Object sourceObject, Class<T> adapterType) {
+		Assert.isNotNull(adapterType);
+		if (sourceObject == null) {
+			return null;
+		}
+		if (adapterType.isInstance(sourceObject)) {
+			return adapterType.cast(sourceObject);
+		}
+
+		if (sourceObject instanceof IAdaptable) {
+			IAdaptable adaptable = (IAdaptable) sourceObject;
+
+			T result = adaptable.getAdapter(adapterType);
+			if (result != null) {
+				// Sanity-check
+				Assert.isTrue(adapterType.isInstance(result));
+				return result;
+			}
+		}
+
+		if (!(sourceObject instanceof PlatformObject)) {
+			T result = Platform.getAdapterManager().getAdapter(sourceObject, adapterType);
+			if (result != null) {
+				return result;
+			}
+		}
+
+		return null;
 	}
 
 	protected void executeHandler(ExecutionEvent event) {
