@@ -25,6 +25,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -172,16 +173,17 @@ public class UseStatementInjector {
 
 									NamespaceDeclaration currentNamespace = getCurrentNamespace(program, sourceModule,
 											offset - 1);
+									List<Statement> statements = program.statements();
 									if (currentNamespace != null) {
-										List<Statement> statements = currentNamespace.getBody().statements();
 										// insert in the beginning of the
 										// current namespace:
-										addUseStatement(offset, newUseStatement, statements, document);
-									} else {
-										addUseStatement(offset, newUseStatement, program.statements(), document);
+										statements = currentNamespace.getBody().statements();
 									}
 
+									int index = getLastUsestatementIndex(statements, offset);
+									addUseStatement(index, newUseStatement, statements, document);
 									ast.setInsertUseStatement(true);
+
 									TextEdit edits = program.rewrite(document, createOptions(modelElement));
 									// workaround for bug 400976:
 									// when current offset is in a php section
@@ -213,7 +215,11 @@ public class UseStatementInjector {
 										newEdits.addChild(new InsertEdit(0, "?>"));
 										newEdits.addChild(new InsertEdit(0, lineDelim));
 										edits = newEdits;
+									} else if (index == 0 && edits.getChildrenSize() == 2) {
+										// workaround for bug 435134
+										addBlankLineEdit(edits, document);
 									}
+
 									edits.apply(document);
 									ast.setInsertUseStatement(false);
 
@@ -321,16 +327,16 @@ public class UseStatementInjector {
 						.newUseStatement(Arrays.asList(new UseStatementPart[] { newUseStatementPart }), type);
 
 				NamespaceDeclaration currentNamespace = getCurrentNamespace(program, sourceModule, offset - 1);
+				List<Statement> statements = program.statements();
 				if (currentNamespace != null) {
-					List<Statement> statements = currentNamespace.getBody().statements();
-					// insert in the beginning of the current
-					// namespace:
-					addUseStatement(offset, newUseStatement, statements, document);
-				} else {
-					addUseStatement(offset, newUseStatement, program.statements(), document);
+					// insert in the beginning of the current namespace:
+					statements = currentNamespace.getBody().statements();
 				}
 
+				int index = getLastUsestatementIndex(statements, offset);
+				addUseStatement(index, newUseStatement, statements, document);
 				ast.setInsertUseStatement(true);
+
 				TextEdit edits = program.rewrite(document, createOptions(modelElement));
 				// workaround for bug 400976:
 				// when current offset is in a php section that only contains
@@ -344,8 +350,11 @@ public class UseStatementInjector {
 				// edits having all their offset = 0 (and their length = 0)
 				// should be enough to detect use statements that will be
 				// wrongly inserted outside any existing php section...
+
 				if (new Region(0, 0).equals(edits.getRegion())) {
 					String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
+					// String lineDelim =
+					// TextUtilities.getDefaultLineDelimiter(document);
 					MultiTextEdit newEdits = new MultiTextEdit();
 					newEdits.addChild(new InsertEdit(0, "<?php"));
 					newEdits.addChild(new InsertEdit(0, lineDelim));
@@ -356,6 +365,9 @@ public class UseStatementInjector {
 					newEdits.addChild(new InsertEdit(0, "?>"));
 					newEdits.addChild(new InsertEdit(0, lineDelim));
 					edits = newEdits;
+				} else if (index == 0 && edits.getChildrenSize() == 2) {
+					// workaround for bug 435134
+					addBlankLineEdit(edits, document);
 				}
 				edits.apply(document);
 				ast.setInsertUseStatement(false);
@@ -580,9 +592,8 @@ public class UseStatementInjector {
 		return UseStatement.T_NONE;
 	}
 
-	private void addUseStatement(int offset, UseStatement newUseStatement, List<Statement> statements,
+	private void addUseStatement(int index, UseStatement newUseStatement, List<Statement> statements,
 			IDocument document) {
-		int index = getLastUsestatementIndex(statements, offset);
 		if (index > 0) { // workaround for bug 393253
 			try {
 				int beginLine = document.getLineOfOffset(statements.get(index - 1).getEnd()) + 1;
@@ -591,6 +602,14 @@ public class UseStatementInjector {
 			}
 		}
 		statements.add(index, newUseStatement);
+	}
+
+	private void addBlankLineEdit(TextEdit edits, IDocument document) throws BadLocationException {
+		String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
+		int changeOffset = edits.getChildren()[0].getOffset();
+		IRegion region = document.getLineInformationOfOffset(changeOffset);
+		String space = document.get(region.getOffset(), changeOffset - region.getOffset());
+		edits.addChild(new InsertEdit(changeOffset, lineDelim + space));
 	}
 
 	private boolean isSameNamespace(String namespaceName, Program program, ISourceModule sourceModule, int offset) {
@@ -609,7 +628,7 @@ public class UseStatementInjector {
 	}
 
 	private Map<Object, Object> createOptions(IModelElement modelElement) {
-		Map<Object, Object> options = new HashMap(PHPCorePlugin.getOptions());
+		Map<Object, Object> options = new HashMap<Object, Object>(PHPCorePlugin.getOptions());
 
 		if (modelElement == null || modelElement.getScriptProject() == null) {
 			return options;

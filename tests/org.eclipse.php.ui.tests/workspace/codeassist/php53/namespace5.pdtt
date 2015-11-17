@@ -39,6 +39,7 @@ namespace bar\baz
 namespace foo
 {
 	use bar;
+	
 	class TestAbsolute
 	{
 		/**
