@@ -179,16 +179,13 @@ public class DBGpSession {
 				handleBreak();
 				break;
 			}
-			case HANDLE_STOPPING: {
-				handleStopping();
-				break;
-			}
-			case HANDLE_STOP: {
-				handleStop();
-				break;
-			}
 			case HANDLE_STREAM: {
 				handleStream();
+				break;
+			}
+			case HANDLE_STOPPING:
+			case HANDLE_STOP: {
+				handleStop();
 				break;
 			}
 			default:
@@ -220,23 +217,12 @@ public class DBGpSession {
 			}
 		}
 
-		private void handleStopping() {
-			// For the moment we will ignore the reason and just stop.
-			response = sendSyncCmd(DBGpCommand.stop, null);
-			if (response.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-				handleStop();
-			} else {
-				// Log a problem but still stop
-				handleStop();
-			}
-		}
 
 		/**
 		 * script has stopped, either by request or reached the end
 		 * 
 		 */
 		private void handleStop() {
-			unblockAllCallers(response);
 			endSession();
 		}
 
@@ -482,7 +468,7 @@ public class DBGpSession {
 	 * end this session
 	 * 
 	 */
-	public void endSession() {
+	public synchronized void endSession() {
 		/*
 		 * We are ending the session so ensure anything that is waiting for a
 		 * response is unblocked.
