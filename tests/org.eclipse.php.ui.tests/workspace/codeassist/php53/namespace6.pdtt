@@ -26,6 +26,7 @@ class BBB extends A {}
 
 namespace Foo2 {
 use Foo\BBB;
+
 $b = new BBB($foo);
 }
 ?>

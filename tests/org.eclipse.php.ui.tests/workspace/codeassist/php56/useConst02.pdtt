@@ -19,5 +19,6 @@ namespace Bar {
 
 namespace Foo {
 	use const Bar\MAXI;
+	
 	MAXI
 }
