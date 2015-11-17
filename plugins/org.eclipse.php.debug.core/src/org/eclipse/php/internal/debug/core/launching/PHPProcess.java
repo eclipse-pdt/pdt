@@ -28,7 +28,6 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	private ILaunch fLaunch;
 	private String fName;
 	private Map<String, String> fAttributes;
-	private boolean fTerminated;
 	private IConsole fConsole = null;
 	private PHPStreamsProxy fProxy;
 	private PHPHyperLink fPHPHyperLink;
@@ -44,7 +43,6 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	public PHPProcess(ILaunch launch, String name) {
 		fLaunch = launch;
 		fName = name;
-		fTerminated = false;
 		fProxy = new PHPStreamsProxy();
 		fireCreationEvent();
 	}
@@ -163,7 +161,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
 	public boolean isTerminated() {
-		return fTerminated || fDebugTarget.isTerminated();
+		return fDebugTarget.isTerminated();
 	}
 
 	/*
@@ -172,11 +170,11 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
 	public void terminate() throws DebugException {
-		if (isTerminated())
-			return;
-		fTerminated = true;
+		// Terminate debug target
+		if (fDebugTarget.canTerminate()) {
+			fDebugTarget.terminate();
+		}
 		fireTerminateEvent();
-		fLaunch.terminate();
 	}
 
 	/**

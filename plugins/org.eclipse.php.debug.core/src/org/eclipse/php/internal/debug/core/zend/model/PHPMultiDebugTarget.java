@@ -177,7 +177,6 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 			for (IPHPDebugTarget target : fDebugTargets)
 				target.terminate();
 		DebugPlugin.getDefault().removeDebugEventListener(this);
-		fProcess.terminate();
 		fireTerminateEvent();
 		fTerminated = true;
 	}

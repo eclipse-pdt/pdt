@@ -448,11 +448,6 @@ public class PHPDebugTarget extends PHPDebugElement
 		fTerminated = true;
 		fSuspended = false;
 		fThreads = new IThread[0];
-		try {
-			fProcess.terminate();
-		} catch (DebugException e) {
-			// PHPprocess doesn't throw this exception
-		}
 		Logger.debugMSG("PHPDebugTarget: Calling removeBreakpointListener(this);"); //$NON-NLS-1$
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(this);
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointManagerListener(this);
