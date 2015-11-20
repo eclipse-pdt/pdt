@@ -322,6 +322,8 @@ public class DBGpTarget extends DBGpElement
 
 	private DBGpValueStorage valueStorage = new DBGpValueStorage();
 
+	private boolean hasInitialSource = true;
+
 	/**
 	 * Base constructor
 	 * 
@@ -541,19 +543,9 @@ public class DBGpTarget extends DBGpElement
 			} else {
 				// either no file was found, or the user pressed the stop
 				// debugger
-				if (isTerminated() == false) {
+				if (!isTerminated()) {
 					// stop wasn't pressed
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							// No appropriate file located or no file selected.
-							// Debug Terminated
-							MessageDialog.openError(Display.getDefault().getActiveShell(),
-									PHPDebugCoreMessages.XDebugMessage_debugError,
-									PHPDebugCoreMessages.XDebug_DBGpTarget_0);
-						}
-					});
-					session.endSession();
-					terminateDebugTarget(true);
+					hasInitialSource = false;
 				}
 			}
 		} catch (Exception e) {
@@ -573,33 +565,39 @@ public class DBGpTarget extends DBGpElement
 		stackFrames = null;
 		currentVariables = null;
 		superGlobalVars = null;
-		// clear any previous debug output object and create a new one.
+		// Clear any previous debug output object and create a new one.
 		debugOutput = new DebugOutput();
-
 		session.startSession();
-
-		// we are effectively suspended once the session has handshaked until we
-		// run
+		// We are suspended once the session has handshake until we run
 		setState(STATE_STARTED_SUSPENDED);
 		negotiateDBGpFeatures();
 		loadPredefinedBreakpoints();
-		if (!stopAtStart) {
-			// set state before issuing a run otherwise a timing window occurs
-			// where
-			// a run could suspend, the thread sets state to suspend but then
-			// this
-			// thread sets it to running.
+		if (!hasInitialSource) {
 			setState(STATE_STARTED_RUNNING);
 			session.sendAsyncCmd(DBGpCommand.run);
-		} else {
-			// first say we are suspended on a breakpoint to trigger a
-			// perspective switch
-			// then do an initial step into to step onto the 1st line
-			suspended(DebugEvent.BREAKPOINT);
-			try {
-				stepInto();
-			} catch (DebugException e) {
-			}
+			// Reset initial source flag
+			hasInitialSource = true;
+			return;
+		}
+		if (!stopAtStart) {
+			/*
+			 * Set state before issuing a run otherwise a timing window occurs
+			 * where a run could suspend, the thread sets state to suspend but
+			 * then this thread sets it to running.
+			 */
+			setState(STATE_STARTED_RUNNING);
+			session.sendAsyncCmd(DBGpCommand.run);
+			return;
+		}
+		/*
+		 * We have a related source and "Break at First Line" option on. First
+		 * say we are suspended on a breakpoint to trigger a perspective switch
+		 * then do an initial step into to step onto the 1st line
+		 */
+		suspended(DebugEvent.BREAKPOINT);
+		try {
+			stepInto();
+		} catch (DebugException e) {
 		}
 	}
 
