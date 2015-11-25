@@ -967,7 +967,7 @@
 			<!-- =========================================================================== -->
          <menu
                label="%Refactoring.menu.label"
-               path="edit"
+               path="sourceMenuId"
                id="org.eclipse.pdt.ui.refactoring.menu">
             <separator name="reorgGroup"/>
          </menu>
