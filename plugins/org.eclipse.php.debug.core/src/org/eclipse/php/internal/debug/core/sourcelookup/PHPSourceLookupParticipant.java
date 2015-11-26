@@ -14,19 +14,16 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.util.LinkedList;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
 import org.eclipse.dltk.core.IArchiveEntry;
 import org.eclipse.dltk.core.IModelStatusConstants;
@@ -40,7 +37,9 @@ import org.eclipse.dltk.internal.core.util.HandleFactory;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharPath;
+import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 
@@ -59,10 +58,15 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	 */
 	private static final class LinkSubjectFileFinder {
 
-		public static Object find(final String sourceLocation) {
+		public static Object find(final String sourceLocation, Object element) {
 			final LinkedList<IResource> matches = new LinkedList<IResource>();
-			final java.nio.file.Path sourceLocationPath = FileSystems.getDefault().getPath(sourceLocation);
 			final String sourceFileName = (new Path(sourceLocation)).lastSegment();
+			IProject project = null;
+			if (element instanceof IStackFrame) {
+				IDebugTarget target = ((IStackFrame) element).getDebugTarget();
+				project = PHPLaunchUtilities.getProject(target);
+			}
+			final IProject debugProject = project;
 			try {
 				ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {
 					@Override
@@ -76,6 +80,11 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 							if (resource.getType() != IResource.FILE) {
 								return true;
 							}
+							// If we have a related project, check if it is its
+							// resource
+							if (debugProject != null && !resource.getProject().equals(debugProject)) {
+								return true;
+							}
 							/*
 							 * The goal of this pre-check condition is to reduce
 							 * the amount of files to be checked by NIO
@@ -84,14 +93,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 							if (resource.getName().equals(sourceFileName) || resource.isLinked()
 									|| (resource.getResourceAttributes() != null
 											&& resource.getResourceAttributes().isSymbolicLink())) {
-								/*
-								 * Use NIO libraries to handle comparison of
-								 * files that might contains symbolic links in
-								 * their paths.
-								 */
 								String fileLocation = resource.getLocation().toOSString();
-								java.nio.file.Path currentFilePath = FileSystems.getDefault().getPath(fileLocation); // $NON-NLS-1$
-								if (Files.isSameFile(sourceLocationPath, currentFilePath)) {
+								if (FileUtils.isSameFile(sourceLocation, fileLocation)) {
 									matches.add(resource);
 								}
 							}
@@ -216,7 +219,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 					return new Object[] { openable };
 				}
 				// Check if we have corresponding "linked chain subject" file
-				Object linkedFile = LinkSubjectFileFinder.find(sourceFilePath);
+				Object linkedFile = LinkSubjectFileFinder.find(sourceFilePath, object);
 				if (linkedFile != null) {
 					return new Object[] { linkedFile };
 				}

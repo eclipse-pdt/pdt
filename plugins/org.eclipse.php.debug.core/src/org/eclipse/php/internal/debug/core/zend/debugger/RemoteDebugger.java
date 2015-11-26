@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
@@ -404,17 +406,23 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
 		IPath path = Path.fromPortableString(localFile);
-
-		// check if this is valid workspace path to avoid IAE
-		// e.g. when using debug URL, localFile can be "c:\Program Files\..."
-		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
+		/*
+		 * check if this is valid workspace path to avoid IAE e.g. when using
+		 * debug URL, localFile can be "c:\Program Files\..." see
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
+		 */
 		if (path.segmentCount() >= 2) {
-
-			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			if (debugTarget.isPHPCGI() && wsFile.exists() && wsFile.getLocation() != null) {
-				File fsFile = wsFile.getLocation().toFile();
-				if (fsFile.exists()) {
-					return fsFile.getAbsolutePath();
+			if (debugTarget.isPHPCGI()) {
+				IFile workspaceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				try {
+					String localFileLocation = localFile;
+					IPath wsFileLocation = workspaceFile.getLocation();
+					if (wsFileLocation != null) {
+						localFileLocation = wsFileLocation.makeAbsolute().toOSString();
+					}
+					return FileUtils.toRealPath(localFileLocation, true);
+				} catch (IOException e) {
+					// ignore as target file might just not exist
 				}
 			}
 		}

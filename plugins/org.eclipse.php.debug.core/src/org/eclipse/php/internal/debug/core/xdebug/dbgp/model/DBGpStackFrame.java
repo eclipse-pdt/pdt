@@ -12,8 +12,8 @@
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
@@ -60,9 +60,9 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
 		String function = DBGpResponse.getAttribute(stackData, "where"); //$NON-NLS-1$
 		// check to see if the file exists in the workspace
-		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(qualifiedFile));
-		if (fileFound.length > 0) {
-			IFile file = fileFound[0];
+		IResource fileFound = ResourcesPlugin.getWorkspace().getRoot().findMember(qualifiedFile);
+		if (fileFound != null) {
+			IFile file = (IFile) fileFound;
 			// get the file found in workspace and show project/file
 			String projectName = file.getProject().getName();
 			String projectRelPath = file.getProjectRelativePath().toString();
