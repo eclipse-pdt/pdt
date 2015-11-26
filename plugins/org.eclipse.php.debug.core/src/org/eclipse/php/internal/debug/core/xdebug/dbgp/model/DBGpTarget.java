@@ -27,6 +27,8 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.*;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.php.internal.debug.core.model.BreakpointSet;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
@@ -323,6 +325,8 @@ public class DBGpTarget extends DBGpElement
 	private DBGpValueStorage valueStorage = new DBGpValueStorage();
 
 	private boolean hasInitialSource = true;
+
+	private BreakpointSet breakpointSet;
 
 	/**
 	 * Base constructor
@@ -1826,9 +1830,11 @@ public class DBGpTarget extends DBGpElement
 	 * .debug.core.model.IBreakpoint)
 	 */
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		// cannot use this method to reject a breakpoint appearing
-		// in the editor.
-		return bpFacade.supportsBreakpoint(breakpoint);
+		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+			boolean support = getBreakpointSet().supportsBreakpoint(breakpoint);
+			return support;
+		}
+		return false;
 	}
 
 	/*
@@ -2418,6 +2424,13 @@ public class DBGpTarget extends DBGpElement
 	 */
 	boolean storeValue(DBGpValue value, Node property) {
 		return valueStorage.store(value, property);
+	}
+
+	private BreakpointSet getBreakpointSet() {
+		if (breakpointSet == null) {
+			breakpointSet = new BreakpointSet(PHPLaunchUtilities.getProject(this), !webLaunch);
+		}
+		return breakpointSet;
 	}
 
 }

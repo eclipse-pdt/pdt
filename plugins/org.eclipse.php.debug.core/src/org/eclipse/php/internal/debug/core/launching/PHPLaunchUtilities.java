@@ -26,6 +26,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
@@ -1006,6 +1007,26 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
+	 * Returns the project that is related to given debug target or
+	 * <code>null</code> if there is no any.
+	 * 
+	 * @param target
+	 * @return project that is related to given debug target or
+	 *         <code>null</code> if there is no any
+	 */
+	public static IProject getProject(IDebugTarget target) {
+		ILaunch launch = target.getLaunch();
+		if (launch == null) {
+			return null;
+		}
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		if (launchConfiguration == null) {
+			return null;
+		}
+		return getProject(launchConfiguration);
+	}
+
+	/**
 	 * Returns the project that is related to the launch configuration.
 	 * 
 	 * @param configuration
@@ -1013,7 +1034,14 @@ public class PHPLaunchUtilities {
 	 */
 	private static IProject getProject(ILaunchConfiguration configuration) {
 		try {
+			String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
+			if (projectName != null) {
+				return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			}
 			String fileNameString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+			if (fileNameString == null) {
+				return null;
+			}
 			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			final IPath filePath = new Path(fileNameString);
 			IResource res = workspaceRoot.findMember(filePath);
