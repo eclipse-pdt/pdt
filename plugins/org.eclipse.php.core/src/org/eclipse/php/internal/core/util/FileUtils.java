@@ -12,6 +12,9 @@
 package org.eclipse.php.internal.core.util;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -189,4 +192,51 @@ public class FileUtils {
 		}
 		return true;
 	}
+
+	/**
+	 * <p>
+	 * Checks if provided locations are pointing to the same file in current OS
+	 * file system.
+	 * </p>
+	 * <p>
+	 * <b>NOTE:</b> this method is using NIO libraries to first check if files
+	 * related to provided locations exist and then resolve symbolic links while
+	 * checking if both paths are pointing to the same file.
+	 * </p>
+	 * 
+	 * @param path1
+	 * @param path2
+	 * @return <code>true</code> if paths are pointing to the same file,
+	 *         <code>false</code> otherwise
+	 * @throws IOException
+	 */
+	public static boolean isSameFile(String path1, String path2) throws IOException {
+		java.nio.file.Path p1 = FileSystems.getDefault().getPath(path1);
+		java.nio.file.Path p2 = FileSystems.getDefault().getPath(path2);
+		return Files.exists(p1) && Files.exists(p2) && Files.isSameFile(p1, p2);
+	}
+
+	/**
+	 * <p>
+	 * Returns the absolute path in the local file system for provided path.
+	 * </p>
+	 * <p>
+	 * <b>NOTE:</b> this method is using NIO libraries to resolve symbolic links
+	 * while computing the absolute path in underlying OS file system.
+	 * </p>
+	 * 
+	 * @param path
+	 * @param resolveSymlinks
+	 * @return resolved path
+	 * @throws IOException
+	 */
+	public static String toRealPath(String path, boolean resolveSymlinks) throws IOException {
+		java.nio.file.Path nioPath = FileSystems.getDefault().getPath(path);
+		if (Files.exists(nioPath)) {
+			return resolveSymlinks ? nioPath.toRealPath().toString()
+					: nioPath.toRealPath(LinkOption.NOFOLLOW_LINKS).toString();
+		}
+		throw new FileNotFoundException(nioPath.toString());
+	}
+
 }

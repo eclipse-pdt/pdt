@@ -12,8 +12,6 @@
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -26,6 +24,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
+import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
@@ -70,19 +69,9 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					Breakpoint zBP = lineBreakpoint.getRuntimeBreakpoint();
 					String bpFileLocation = zBP.getFileName();
-					String lineBreakpointFileLocation = lineBreakpoint.getMarker().getResource().getLocation()
-							.toOSString();
-					/*
-					 * Use NIO libraries to handle comparison of files that
-					 * might contains symbolic links in their paths.
-					 */
-					java.nio.file.Path lineBreakpointFilePath = FileSystems.getDefault()
-							.getPath(lineBreakpointFileLocation);
-					java.nio.file.Path sourceFilePath = FileSystems.getDefault().getPath(sourceFileLocation);
 					int bLineNumber = zBP.getLineNumber();
 					try {
-						if (bLineNumber == lineno && (bpFileLocation.equals(sourceFileLocation)
-								|| Files.isSameFile(lineBreakpointFilePath, sourceFilePath))) {
+						if (bLineNumber == lineno && FileUtils.isSameFile(bpFileLocation, sourceFileLocation)) {
 							bpFound = breakpoint;
 							if (DBGpLogger.debugBP()) {
 								DBGpLogger.debug("breakpoint at " + sourceFileLocation + "(" //$NON-NLS-1$ //$NON-NLS-2$
