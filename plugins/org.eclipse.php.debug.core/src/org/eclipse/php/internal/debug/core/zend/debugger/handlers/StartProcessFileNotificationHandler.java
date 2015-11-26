@@ -11,13 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger.handlers;
 
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -31,9 +29,12 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
@@ -139,26 +140,39 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		List<IBreakpoint> matches = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(processFileLocation);
-			// Might be an Eclipse linked resource
-			if (resource == null) {
-				IResource[] resources = ResourcesPlugin.getWorkspace().getRoot()
-						.findFilesForLocationURI(URIUtil.toURI(processFileLocation));
-				if (resources.length > 0) {
-					resource = resources[0];
-				}
-			}
 			try {
-				String bpFileLocation = bp.getMarker().getResource().getRawLocation().makeAbsolute().toOSString();
 				/*
-				 * Use NIO libraries to handle comparison of files that might
-				 * contains symbolic links in their paths.
+				 * Check if breakpoint marker resource is the same as the one
+				 * found for file location that should be processed.
 				 */
-				java.nio.file.Path bpFilePath = FileSystems.getDefault().getPath(bpFileLocation, ""); //$NON-NLS-1$
-				java.nio.file.Path processFilePath = FileSystems.getDefault().getPath(processFileLocation, ""); //$NON-NLS-1$
-				if (bp.getMarker().getResource().equals(resource) || Files.isSameFile(bpFilePath, processFilePath)) {
+				if (bp.getMarker().getResource().equals(resource)) {
 					matches.add(bp);
 					continue;
 				}
+				/*
+				 * If previous check failed, try to establish if PHP breakpoint
+				 * file location is pointing to the same file as the one that
+				 * should be processed. Symbolic links will also be resolved.
+				 */
+				String bpMarkerFileLocation = bp.getMarker().getResource().getLocation().toOSString();
+				String phpBpFileLocation = ((PHPLineBreakpoint) bp).getRuntimeBreakpoint().getFileName();
+				if (FileUtils.isSameFile(bpMarkerFileLocation, processFileLocation)
+						|| FileUtils.isSameFile(phpBpFileLocation, processFileLocation)) {
+					/*
+					 * If there is a debug target related project then we can
+					 * filter out possible breakpoint duplicates (in case of
+					 * symbolic links)
+					 */
+					IProject debugProject = PHPLaunchUtilities.getProject(debugTarget);
+					if (debugProject == null || debugProject.equals(bp.getMarker().getResource().getProject())) {
+						matches.add(bp);
+					}
+					continue;
+				}
+				/*
+				 * Breakpoint may also correspond to a PHP script from project
+				 * external libraries. Try to check it as well.
+				 */
 				String secondaryId = (String) bp.getMarker()
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 				if (secondaryId != null) {
