@@ -427,11 +427,11 @@ public class DBGpMultiSessionTarget extends DBGpElement
 					}
 				}
 			}
-			if (targetState == STATE_TERMINATING && debugTargets.size() == 0) {
-				// session listening was removed when we went to
-				// STATE_TERMINATING
-				terminateMultiSessionDebugTarget();
-			}
+		}
+		if (targetState == STATE_TERMINATING && debugTargets.size() == 0) {
+			// session listening was removed when we went to
+			// STATE_TERMINATING
+			terminateMultiSessionDebugTarget();
 		}
 	}
 
