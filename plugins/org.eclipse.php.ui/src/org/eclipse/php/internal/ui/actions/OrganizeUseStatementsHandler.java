@@ -21,9 +21,7 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.corext.util.DocumentUtils;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.*;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -38,8 +36,16 @@ public class OrganizeUseStatementsHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorPart input = HandlerUtil.getActiveEditor(event);
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (workbenchWindow == null) {
+			return null;
+		}
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+		if (page == null) {
+			return null;
+		}
 
+		IEditorPart input = page.getActiveEditor();
 		if (input instanceof PHPStructuredEditor) {
 			PHPStructuredEditor ite = (PHPStructuredEditor) input;
 			IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
