@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.ILaunch;
@@ -170,6 +171,8 @@ public class DBGpSession {
 			super("DBGp Response Handler"); //$NON-NLS-1$
 			setSystem(true);
 			setUser(false);
+			// Should be performed one after another
+			setRule(schedulingRule);
 		}
 
 		@Override
@@ -216,7 +219,6 @@ public class DBGpSession {
 				debugTarget.getOutputBuffer().append(streamStr);
 			}
 		}
-
 
 		/**
 		 * script has stopped, either by request or reached the end
@@ -306,6 +308,17 @@ public class DBGpSession {
 	public static final String DEFAULT_SESSION_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
 	public static final String DEFAULT_BINARY_ENCODING = Charset.defaultCharset().name();
 	public static final String DEFAULT_OUTPUT_ENCODING = Charset.defaultCharset().name();
+
+	private final ISchedulingRule schedulingRule = new ISchedulingRule() {
+		@Override
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+		@Override
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+	};
 
 	private Socket DBGpSocket;
 	private ResponseReader responseHandler;
@@ -486,7 +499,6 @@ public class DBGpSession {
 			}
 			try {
 				DBGpSocket.close();
-
 			} catch (IOException e) {
 				// Ignore the exception except for debug purposes
 				DBGpLogger.debugException(e);
