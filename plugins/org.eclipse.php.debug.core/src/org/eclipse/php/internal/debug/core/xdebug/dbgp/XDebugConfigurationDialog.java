@@ -291,15 +291,10 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 
 	// Initialize the dialog's values.
 	private void internalInitializeValues() {
-		// TODO: move to preference manager
 		IPreferencesService service = Platform.getPreferencesService();
 
-		int port = PHPDebugPlugin.getDefaultPreferences().getInt(XDebugPreferenceMgr.XDEBUG_PREF_PORT, 0);
-		if (0 == port) {
-			XDebugPreferenceMgr.setDefaults();
-			port = XDebugPreferenceMgr.getPort();
-		}
-		portTextBox.setText(Integer.toString(port));
+		portTextBox.setText(
+				Integer.toString(service.getInt(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_PORT, 9000, null)));
 		showGlobals.setSelection(
 				service.getBoolean(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS, false, null));
 		useMultiSession.setSelection(

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+
 /**
  * Constants set for XDebug debugger owner settings.
  * 
@@ -26,7 +28,8 @@ public class XDebugDebuggerSettingsConstants {
 	public static final String PROP_PROXY_IDE_KEY = "proxyIdeKey"; //$NON-NLS-1$
 	public static final String PROP_PROXY_ADDRESS = "proxyAddress"; //$NON-NLS-1$
 
-	public static final String DEFAULT_CLIENT_PORT = "9000"; //$NON-NLS-1$
+	public static final String DEFAULT_CLIENT_PORT = String
+			.valueOf(PHPDebugPlugin.getDebugPort(XDebugDebuggerConfiguration.ID));
 	public static final String DEFAULT_PROXY_ENABLE = "false"; //$NON-NLS-1$
 	public static final String DEFAULT_PROXY_IDE_KEY = "ECLIPSE_DBGP_xxx"; //$NON-NLS-1$
 	public static final String DEFAULT_PROXY_ADDRESS = ""; //$NON-NLS-1$
