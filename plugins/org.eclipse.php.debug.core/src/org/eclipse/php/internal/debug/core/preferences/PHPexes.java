@@ -163,6 +163,11 @@ public class PHPexes {
 		if (exes != null) {
 			exes.remove(original.getName());
 		}
+		// Check if was default and name has changed
+		boolean updateDefault = false;
+		if (original.isDefault() && !original.getName().equals(copy.getName())) {
+			updateDefault = true;
+		}
 		// Update original item
 		original.setName(copy.getName());
 		original.setExecutable(copy.getExecutable());
@@ -180,6 +185,9 @@ public class PHPexes {
 			items.put(debuggerID, exes);
 		}
 		exes.put(original.getName(), original);
+		if (updateDefault) {
+			setDefaultItem(original);
+		}
 	}
 
 	/**
