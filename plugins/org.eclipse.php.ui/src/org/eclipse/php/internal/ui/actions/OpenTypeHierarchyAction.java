@@ -43,6 +43,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
@@ -155,9 +156,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	 * is a TYPE (e.g. Class or Interface).
 	 */
 	private boolean isEnabled(ITextSelection selection) {
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
-		// exclude selection having selection.getLength() <= 0
-		if (fEditor == null || selection == null || selection.getLength() <= 0)
+		if (fEditor == null || selection == null)
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
@@ -190,19 +189,32 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	 */
 	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
 		IModelElement element = null;
-		try {
-			Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
-			if (ast != null) {
-				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
-					IBinding binding = ((Identifier) selectedNode).resolveBinding();
-					if (binding != null) {
-						element = binding.getPHPElement();
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
+		// exclude selection having selection.getLength() <= 0
+		if (length == 0) {
+			try {
+				IModelElement[] codeSelect = sourceModule.codeSelect(offset, length);
+				if (codeSelect.length > 0) {
+					element = codeSelect[0];
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		} else {
+			try {
+				Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
+				if (ast != null) {
+					ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
+					if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
+						IBinding binding = ((Identifier) selectedNode).resolveBinding();
+						if (binding != null) {
+							element = binding.getPHPElement();
+						}
 					}
 				}
+			} catch (Exception e) {
+				// Logger.logException(e);
 			}
-		} catch (Exception e) {
-			// Logger.logException(e);
 		}
 		if (element == null) {
 			// try to get the top level
