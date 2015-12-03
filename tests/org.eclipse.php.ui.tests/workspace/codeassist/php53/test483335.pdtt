@@ -1,0 +1,36 @@
+--TEST--
+Bug http://eclip.se/483335
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+
+namespace Bar {
+
+	class Test {
+		static function toMap() {
+		}
+	}
+}
+
+namespace Boo {
+
+	Test|::toMap ();
+}
+--EXPECT--
+<?php
+
+namespace Bar {
+
+	class Test {
+		static function toMap() {
+		}
+	}
+}
+
+namespace Boo {
+
+	use Bar\Test;
+	
+	Test::toMap ();
+}
