@@ -284,7 +284,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				}
 				String nextWord = null;
 				try {
-					nextWord = document.get(getReplacementOffset(), 2);// "::".length()
+					nextWord = document.get(getReplacementOffset() + getReplacementLength(), 2);// "::".length()
 				} catch (BadLocationException e) {
 				}
 				return DOUBLE_COLON.equals(nextWord) ? defaultResult : DOUBLE_COLON;
