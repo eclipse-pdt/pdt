@@ -241,6 +241,8 @@ public class DBGpSession {
 			// 3. a command has failed, you get the status = break, reason=ok,
 			// then you get the error information
 			if (response.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
+				Node breakData = response.getParentNode().getFirstChild();
+				String exception = DBGpResponse.getAttribute(breakData, "exception"); //$NON-NLS-1$
 				/*
 				 * We have suspended, so now we can go off and handle
 				 * outstanding breakpoint requests
@@ -249,7 +251,7 @@ public class DBGpSession {
 				if (response.getReason().equals(DBGpResponse.REASON_OK)) {
 					// we have hit a breakpoint, or completed a step
 					String cmd = response.getCommand();
-					if (cmd.equals(DBGpCommand.run)) {
+					if (cmd.equals(DBGpCommand.run) || !exception.isEmpty()) {
 						/*
 						 * OK we hit a break point somewhere, we need to get the
 						 * stack information to find out which breakpoint we hit
@@ -275,7 +277,7 @@ public class DBGpSession {
 									String filename = DBGpUtils
 											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
 									filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
-									debugTarget.breakpointHit(filename, lineno);
+									debugTarget.breakpointHit(filename, lineno, exception);
 								} catch (NumberFormatException nfe) {
 									DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
 											this, nfe);
@@ -284,8 +286,6 @@ public class DBGpSession {
 						}
 					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
 							|| cmd.equals(DBGpCommand.stepOver)) {
-						// Step hit
-						// No need to setup any information ?
 						debugTarget.suspended(DebugEvent.STEP_END);
 					} else {
 						/*
