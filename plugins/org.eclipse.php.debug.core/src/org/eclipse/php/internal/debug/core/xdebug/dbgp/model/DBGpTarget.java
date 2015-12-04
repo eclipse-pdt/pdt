@@ -17,6 +17,7 @@ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIN
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
 
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
@@ -28,10 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
-import org.eclipse.php.internal.debug.core.model.BreakpointSet;
-import org.eclipse.php.internal.debug.core.model.DebugOutput;
-import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
-import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -39,6 +37,8 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.Mapping
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
+import org.eclipse.php.internal.debug.core.xdebug.breakpoints.DBGpExceptionBreakpoint;
+import org.eclipse.php.internal.debug.core.xdebug.breakpoints.DBGpLineBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
@@ -1831,6 +1831,8 @@ public class DBGpTarget extends DBGpElement
 	 */
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+			if (breakpoint instanceof IPHPExceptionBreakpoint)
+				return true;
 			boolean support = getBreakpointSet().supportsBreakpoint(breakpoint);
 			return support;
 		}
@@ -1904,25 +1906,30 @@ public class DBGpTarget extends DBGpElement
 	 * @param onResponseThread
 	 */
 	private void sendBreakpointAddCmd(DBGpBreakpoint bp) {
-		bp.resetConditionChanged();
-		String fileName = bp.getFileName();
-		int lineNumber = bp.getLineNumber();
-
-		// create the add breakpoint command
+		String args = ""; //$NON-NLS-1$
 		String debugMsg = null;
-		if (DBGpLogger.debugBP()) {
-			debugMsg = "adding breakpoint to file:" + fileName + ", at Line Number: " + lineNumber; //$NON-NLS-1$ //$NON-NLS-2$
+		// Check if it is standard line breakpoint
+		if (bp instanceof DBGpLineBreakpoint) {
+			String fileName = bp.getFileName();
+			int lineNumber = bp.getLineNumber();
+			// create the add breakpoint command
+			if (DBGpLogger.debugBP()) {
+				debugMsg = "adding breakpoint to file:" + fileName + ", at Line Number: " + lineNumber; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			fileName = mapToExternalFileIfRequired(bp);
+			args = "-t line -f " + DBGpUtils.getFileURIString(fileName) + " -n " + lineNumber; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		fileName = mapToExternalFileIfRequired(bp);
-
-		String args = "-t line -f " + DBGpUtils.getFileURIString(fileName) + " -n " + lineNumber; //$NON-NLS-1$ //$NON-NLS-2$
-
+		// Check if it is an exception breakpoint
+		else if (bp instanceof DBGpExceptionBreakpoint) {
+			args = MessageFormat.format("-t exception -x {0}", bp.getException()); //$NON-NLS-1$
+		}
+		// Add condition data if there is any
+		bp.resetConditionChanged();
 		DBGpBreakpointCondition condition = new DBGpBreakpointCondition(bp);
 		if (condition.getType() == DBGpBreakpointCondition.EXPR) {
 			if (debugMsg != null) {
 				debugMsg += " with expression:" + condition.getExpression(); //$NON-NLS-1$
 			}
-
 			// we use session encoding before converting to Base64.
 			args += " -- " + Base64.encode(getSessionEncodingBytes(condition.getExpression())); //$NON-NLS-1$
 		} else if (condition.getType() == DBGpBreakpointCondition.HIT) {
@@ -1934,7 +1941,6 @@ public class DBGpTarget extends DBGpElement
 		if (debugMsg != null) {
 			DBGpLogger.debug(debugMsg);
 		}
-
 		DBGpResponse resp;
 		resp = session.sendSyncCmd(DBGpCommand.breakPointSet, args);
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
@@ -1943,14 +1949,12 @@ public class DBGpTarget extends DBGpElement
 			 * transaction_id="TRANSACTION_ID" state="STATE"
 			 * id="BREAKPOINT_ID"/>
 			 */
-			// TODO: note that you don't get state from XDebug even though the
-			// document says so, assume optional and if not provided, assume bp
-			// is
-			// enabled.
 			String bpId = resp.getTopAttribute("id"); //$NON-NLS-1$
-			// luckily even though it is a string, the XDebug implementation
-			// defines the id as being a c int.
-			bp.setID(Integer.parseInt(bpId));
+			if (bp instanceof DBGpLineBreakpoint) {
+				bp.setID(Integer.parseInt(bpId));
+			} else if (bp instanceof DBGpExceptionBreakpoint) {
+				((IPHPExceptionBreakpoint) bp.getBreakpoint()).setId(this, Integer.parseInt(bpId));
+			}
 			if (DBGpLogger.debugBP()) {
 				DBGpLogger.debug("Breakpoint installed with id: " + bpId); //$NON-NLS-1$
 			}
@@ -1970,7 +1974,6 @@ public class DBGpTarget extends DBGpElement
 		if (supportsBreakpoint(breakpoint)) {
 			DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
 			if (isSuspended() || (asyncSupported && isRunning())) {
-
 				// aysnc mode and running or we are suspended so send the remove
 				// request
 				if (DBGpLogger.debugBP()) {
@@ -1978,7 +1981,6 @@ public class DBGpTarget extends DBGpElement
 				}
 				sendBreakpointRemoveCmd(bp);
 			} else if (isRunning()) {
-
 				// running and not suspended and no async support, so we must
 				// defer the removal.
 				if (DBGpLogger.debugBP()) {
@@ -1998,8 +2000,14 @@ public class DBGpTarget extends DBGpElement
 	 * @param onResponseThread
 	 */
 	private void sendBreakpointRemoveCmd(DBGpBreakpoint bp) {
+		int bpId = -1;
+		if (bp instanceof DBGpLineBreakpoint) {
+			bpId = bp.getID();
+		} else if (bp instanceof DBGpExceptionBreakpoint) {
+			bpId = ((IPHPExceptionBreakpoint) bp.getBreakpoint()).getId(this);
+		}
 		// we are suspended
-		String args = "-d " + bp.getID(); //$NON-NLS-1$
+		String args = "-d " + bpId; //$NON-NLS-1$
 		if (DBGpLogger.debugBP()) {
 			DBGpLogger.debug("Removing breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 		}
@@ -2074,11 +2082,15 @@ public class DBGpTarget extends DBGpElement
 	 * @param event
 	 *            debug event
 	 */
-	public void breakpointHit(String filename, int lineno) {
+	public void breakpointHit(String filename, int lineno, String exception) {
 		// useful method to be called by the response listener when a
 		// break point has occurred
-		IBreakpoint breakpoint = findBreakpointHit(filename, lineno);
+		IBreakpoint breakpoint = findBreakpointHit(filename, lineno, exception);
 		if (breakpoint != null) {
+			if (breakpoint instanceof IPHPExceptionBreakpoint) {
+				IPHPExceptionBreakpoint exceptionBreakpoint = (IPHPExceptionBreakpoint) breakpoint;
+				exceptionBreakpoint.setLine(this, lineno);
+			}
 			langThread.setBreakpoints(new IBreakpoint[] { breakpoint });
 		} else {
 			// set it to an empty set as specified by the API.
@@ -2094,10 +2106,11 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @param filename
 	 * @param lineno
-	 * @return
+	 * @param exception
+	 * @return breakpoint
 	 */
-	private IBreakpoint findBreakpointHit(String filename, int lineno) {
-		return bpFacade.findBreakpointHit(filename, lineno);
+	private IBreakpoint findBreakpointHit(String filename, int lineno, String exception) {
+		return bpFacade.findBreakpointHit(filename, lineno, exception);
 	}
 
 	/**

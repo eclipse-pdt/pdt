@@ -49,6 +49,12 @@
         id="org.eclipse.php.debug.ui.commands.InspectDelegate"
         name="%ActionDefinition.inspect.name">
   </command>
+  <command
+        defaultHandler="org.eclipse.php.internal.debug.ui.actions.AddPHPExceptionBreakpointHandler"
+        description="%AddExceptionBreakpoint.command.description"
+        id="org.eclipse.php.debug.ui.addExceptionBreakpoint"
+        name="%AddExceptionBreakpoint.command.name">
+  </command>
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -718,5 +724,54 @@
             name="Zend Debugger Web Launch Settings"
             section="org.eclipse.php.internal.debug.ui.launching.ZendDebuggerWebLaunchSettingsSection">
       </phpDebuggerLaunchSettingsSection>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.debug.ui.BreakpointView">
+         <command
+               commandId="org.eclipse.php.debug.ui.addExceptionBreakpoint"
+               icon="icon/full/elcl16/perror_bp.png"
+               id="addExceptionBreakpoint"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            name="org.eclipse.php.debug.ui.phpExceptionBreakpointAnnotation">
+      </type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationImageProvider="org.eclipse.php.internal.debug.ui.breakpoint.PHPExceptionBreakpointAnnotationImageProvider"
+            annotationType="org.eclipse.php.debug.ui.phpExceptionBreakpointAnnotation"
+            colorPreferenceKey="phpExceptionBreakpointAnnotationColor"
+            colorPreferenceValue="255,155,155"
+            contributesToHeader="false"
+            highlightPreferenceKey="phpExceptionBreakpointAnnotationHighlight"
+            highlightPreferenceValue="true"
+            icon="icon/full/obj16/pexception_ann.png"
+            includeOnPreferencePage="true"
+            isGoToNextNavigationTarget="false"
+            isGoToNextNavigationTargetKey="phpExceptionBreakpointAnnotationGoToNextNavigationTarget"
+            isGoToPreviousNavigationTarget="false"
+            isGoToPreviousNavigationTargetKey="phpExceptionBreakpointAnnotationGoToPreviousNavigationTarget"
+            label="%PHPExceptionBreakpointAnnotation.label"
+            overviewRulerPreferenceKey="phpExceptionBreakpointAnnotationOverviewRuler"
+            overviewRulerPreferenceValue="false"
+            presentationLayer="10"
+            showInNextPrevDropdownToolbarAction="false"
+            showInNextPrevDropdownToolbarActionKey="phpExceptionBreakpointAnnotationShowInNextPrev"
+            textPreferenceKey="phpExceptionBreakpointAnnotationText"
+            textPreferenceValue="false"
+            textStylePreferenceKey="phpExceptionBreakpointAnnotationTextStyle"
+            textStylePreferenceValue="NONE"
+            verticalRulerPreferenceKey="phpExceptionBreakpointAnnotationVerticalRuler"
+            verticalRulerPreferenceValue="true">
+      </specification>
    </extension>
 </plugin>
