@@ -70,6 +70,11 @@
             class="org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint"
             id="org.eclipse.php.debug.core.lineBreakpoint">
       </breakpoint>
+      <breakpoint
+            class="org.eclipse.php.internal.debug.core.model.PHPExceptionBreakpoint"
+            id="org.eclipse.php.debug.core.exceptionBreakpoint"
+            markerType="org.eclipse.php.debug.core.PHPExceptionBreakpointMarker">
+      </breakpoint>
    </extension> 
   
   <extension
@@ -475,5 +480,15 @@
             name="XDebug Debugger Settings Provider"
             provider="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsProvider">
       </phpDebuggerSettingsProvider>
+   </extension>
+   <extension
+         id="PHPExceptionBreakpointMarker"
+         point="org.eclipse.core.resources.markers">
+      <persistent
+            value="true">
+      </persistent>
+      <super
+            type="org.eclipse.debug.core.breakpointMarker">
+      </super>
    </extension>
 </plugin>
