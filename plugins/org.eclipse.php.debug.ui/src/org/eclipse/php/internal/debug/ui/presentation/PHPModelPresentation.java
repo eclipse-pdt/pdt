@@ -41,6 +41,7 @@ import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
@@ -91,7 +92,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof PHPConditionalBreakpoint) {
-			return getBreakpointImage((PHPConditionalBreakpoint) element);
+			return getLineBreakpointImage((PHPConditionalBreakpoint) element);
+		} else if (element instanceof PHPExceptionBreakpoint) {
+			return getExceptionBreakpointImage((PHPExceptionBreakpoint) element);
 		} else if (element instanceof IVariable) {
 			return getVariableImage((IVariable) element);
 		}
@@ -112,6 +115,8 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return getStackFrameText((IStackFrame) element);
 		} else if (element instanceof ILineBreakpoint) {
 			return getLineBreakpointText((ILineBreakpoint) element);
+		} else if (element instanceof PHPExceptionBreakpoint) {
+			return getExceptionBreakpointText((PHPExceptionBreakpoint) element);
 		}
 		return null;
 
@@ -232,7 +237,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * breakpoint is not conditional, return null and let the default breakpoint
 	 * icon.
 	 */
-	protected Image getBreakpointImage(PHPConditionalBreakpoint breakpoint) {
+	protected Image getLineBreakpointImage(PHPConditionalBreakpoint breakpoint) {
 		try {
 			if (breakpoint.isConditionEnabled()) {
 				PHPBreakpointImageDescriptor descriptor;
@@ -251,6 +256,18 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return null;
 		}
 		return null;
+	}
+
+	protected Image getExceptionBreakpointImage(PHPExceptionBreakpoint breakpoint) {
+		try {
+			if (breakpoint.isEnabled()) {
+				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_ELCL_EXCEPTION_BREAKPOINT);
+			} else {
+				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_DLCL_EXCEPTION_BREAKPOINT);
+			}
+		} catch (CoreException e) {
+			return null;
+		}
 	}
 
 	protected ImageDescriptorRegistry getDebugImageRegistry() {
@@ -300,6 +317,10 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			Logger.logException(e);
 		}
 		return null;
+	}
+
+	protected String getExceptionBreakpointText(PHPExceptionBreakpoint breakpoint) {
+		return breakpoint.getExceptionName();
 	}
 
 	protected String getTargetText(IDebugTarget target) {

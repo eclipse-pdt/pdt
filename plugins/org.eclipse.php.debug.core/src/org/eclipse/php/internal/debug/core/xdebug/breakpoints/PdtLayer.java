@@ -27,6 +27,7 @@ import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.model.PHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
@@ -55,7 +56,13 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 	}
 
 	public DBGpBreakpoint createDBGpBreakpoint(IBreakpoint breakpoint) {
-		return new PdtBreakpoint((PHPLineBreakpoint) breakpoint);
+		if (breakpoint instanceof PHPLineBreakpoint) {
+			return new DBGpLineBreakpoint((PHPLineBreakpoint) breakpoint);
+		}
+		if (breakpoint instanceof PHPExceptionBreakpoint) {
+			return new DBGpExceptionBreakpoint((PHPExceptionBreakpoint) breakpoint);
+		}
+		return null;
 	}
 
 	public IBreakpoint findBreakpointHit(String sourceFileLocation, int lineno) {

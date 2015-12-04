@@ -34,6 +34,8 @@ public class PHPDebugUIImages {
 	// Set of predefined Image Descriptors.
 	private static final String T_OBJ = ICONS_PATH + "obj16/"; //$NON-NLS-1$
 	private static final String T_OVR = ICONS_PATH + "ovr16/"; //$NON-NLS-1$
+	private static final String T_ELCL = ICONS_PATH + "elcl16/"; //$NON-NLS-1$
+	private static final String T_DLCL = ICONS_PATH + "dlcl16/"; //$NON-NLS-1$
 	private static final String T_WIZBAN = ICONS_PATH + "wizban/"; //$NON-NLS-1$
 
 	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT = "IMG_OVR_CONDITIONAL_BREAKPOINT"; //$NON-NLS-1$
@@ -60,6 +62,11 @@ public class PHPDebugUIImages {
 	public static final String IMG_OBJ_MEMBER_LOCAL = "IMG_OBJ_MEMBER_LOCAL"; //$NON-NLS-1$
 	public static final String IMG_OBJ_MEMBER_SUPER_GLOBAL = "IMG_OBJ_MEMBER_SUPER_GLOBAL"; //$NON-NLS-1$
 	public static final String IMG_OBJ_MEMBER_VIRTUAL_CLASS = "IMG_OBJ_MEMBER_VIRTUAL_CLASS"; //$NON-NLS-1$
+	public static final String IMG_OBJ_PHP_EXCEPTION = "IMG_OBJ_PHP_EXCEPTION"; //$NON-NLS-1$
+	public static final String IMG_OBJ_PHP_MOCK_EXCEPTION = "IMG_OBJ_PHP_MOCK_EXCEPTION"; //$NON-NLS-1$
+
+	public static final String IMG_ELCL_EXCEPTION_BREAKPOINT = "IMG_ELCL_EXCEPTION_BREAKPOINT"; //$NON-NLS-1$
+	public static final String IMG_DLCL_EXCEPTION_BREAKPOINT = "IMG_DLCL_EXCEPTION_BREAKPOINT"; //$NON-NLS-1$
 
 	/**
 	 * Returns the image managed under the given key in this registry.
@@ -119,6 +126,10 @@ public class PHPDebugUIImages {
 		declareRegistryImage(IMG_OBJ_MEMBER_PUBLIC_ACCESS, T_OBJ + "member_public_access.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_PROTECTED_ACCESS, T_OBJ + "member_protected_access.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_PRIVATE_ACCESS, T_OBJ + "member_private_access.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PHP_EXCEPTION, T_OBJ + "php_exception.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PHP_MOCK_EXCEPTION, T_OBJ + "php_mock_exception.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_ELCL_EXCEPTION_BREAKPOINT, T_ELCL + "php_exception_bp.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_DLCL_EXCEPTION_BREAKPOINT, T_DLCL + "php_exception_bp.png"); //$NON-NLS-1$
 	}
 
 	/**

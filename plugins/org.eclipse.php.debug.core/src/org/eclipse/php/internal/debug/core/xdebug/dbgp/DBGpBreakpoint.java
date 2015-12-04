@@ -30,6 +30,8 @@ public interface DBGpBreakpoint {
 
 	public int getLineNumber();
 
+	public boolean isException();
+
 	public boolean isConditional();
 
 	public boolean isConditionEnabled();
@@ -39,5 +41,7 @@ public interface DBGpBreakpoint {
 	public void resetConditionChanged();
 
 	public String getExpression();
+
+	public String getException();
 
 }

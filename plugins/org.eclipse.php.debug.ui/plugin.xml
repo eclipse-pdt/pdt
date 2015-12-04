@@ -49,6 +49,12 @@
         id="org.eclipse.php.debug.ui.commands.InspectDelegate"
         name="%ActionDefinition.inspect.name">
   </command>
+  <command
+        defaultHandler="org.eclipse.php.internal.debug.ui.actions.AddPHPExceptionBreakpointHandler"
+        description="%AddExceptionBreakpoint.command.description"
+        id="org.eclipse.php.debug.ui.addExceptionBreakpoint"
+        name="%AddExceptionBreakpoint.command.name">
+  </command>
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -718,5 +724,18 @@
             name="Zend Debugger Web Launch Settings"
             section="org.eclipse.php.internal.debug.ui.launching.ZendDebuggerWebLaunchSettingsSection">
       </phpDebuggerLaunchSettingsSection>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.debug.ui.BreakpointView">
+         <command
+               commandId="org.eclipse.php.debug.ui.addExceptionBreakpoint"
+               icon="icon/full/obj16/php_exception.png"
+               id="addExceptionBreakpoint"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
 </plugin>
