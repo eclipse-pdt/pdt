@@ -360,6 +360,9 @@ public class PHPDebugTarget extends PHPDebugElement
 	 */
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+			if (breakpoint instanceof IPHPExceptionBreakpoint)
+				// Not supported
+				return false;
 			boolean support = fBreakpointSet.supportsBreakpoint(breakpoint);
 			return support;
 		}

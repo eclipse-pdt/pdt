@@ -35,6 +35,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
@@ -144,6 +145,10 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 		}
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		for (IBreakpoint element : breakpoints) {
+			if (element instanceof IPHPExceptionBreakpoint) {
+				// Not supported
+				continue;
+			}
 			IResource resourceWithBreakPoint = element.getMarker().getResource();
 			String resourcePathName = ""; //$NON-NLS-1$
 			// handle a breakpoint on external file
@@ -190,7 +195,7 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 					}
 					runtimeBreakpoint.setID(tmpBreakpoint.getID());
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logger.logException(e);
 				}
 			}
 		}

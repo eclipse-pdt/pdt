@@ -63,9 +63,12 @@ public class ReadyNotificationHandler implements IDebugMessageHandler {
 	private boolean isBreakPointExistInFile(PHPDebugTarget debugTarget, String currentFile) throws CoreException {
 		IBreakpoint[] bPoints = debugTarget.getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		for (IBreakpoint bp : bPoints) {
-			if (bp.isEnabled() && FileUtils.checkIfEqualFilePaths(
-					((PHPConditionalBreakpoint) bp).getRuntimeBreakpoint().getFileName(), currentFile)) {
-				return true;
+			if (bp instanceof PHPConditionalBreakpoint) {
+				PHPConditionalBreakpoint breakpoint = (PHPConditionalBreakpoint) bp;
+				if (breakpoint.isEnabled() && FileUtils
+						.checkIfEqualFilePaths(breakpoint.getRuntimeBreakpoint().getFileName(), currentFile)) {
+					return true;
+				}
 			}
 		}
 		return false;

@@ -22,7 +22,7 @@ public interface DBGpBreakpointFacade {
 
 	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber) throws DebugException;
 
-	public IBreakpoint findBreakpointHit(String filename, int lineno);
+	public IBreakpoint findBreakpointHit(String filename, int lineno, String exception);
 
 	public String getBreakpointModelID();
 }

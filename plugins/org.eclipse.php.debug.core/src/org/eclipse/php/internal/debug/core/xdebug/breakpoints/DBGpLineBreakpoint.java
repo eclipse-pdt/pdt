@@ -22,10 +22,9 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 /**
- * 
- *
+ * DBGp line breakpoint.
  */
-public class PdtBreakpoint implements DBGpBreakpoint {
+public class DBGpLineBreakpoint implements DBGpBreakpoint {
 
 	private PHPLineBreakpoint bp;
 	private IFile workspaceFile;
@@ -34,7 +33,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @param breakpoint
 	 */
-	public PdtBreakpoint(PHPLineBreakpoint breakpoint) {
+	public DBGpLineBreakpoint(PHPLineBreakpoint breakpoint) {
 		bp = breakpoint;
 		IMarker marker = bp.getMarker();
 
@@ -204,4 +203,15 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean isException() {
+		return false;
+	}
+
+	@Override
+	public String getException() {
+		return null;
+	}
+
 }
