@@ -27,6 +27,7 @@ import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.model.PHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
@@ -55,17 +56,23 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 	}
 
 	public DBGpBreakpoint createDBGpBreakpoint(IBreakpoint breakpoint) {
-		return new PdtBreakpoint((PHPLineBreakpoint) breakpoint);
+		if (breakpoint instanceof PHPLineBreakpoint) {
+			return new DBGpLineBreakpoint((PHPLineBreakpoint) breakpoint);
+		}
+		if (breakpoint instanceof PHPExceptionBreakpoint) {
+			return new DBGpExceptionBreakpoint((PHPExceptionBreakpoint) breakpoint);
+		}
+		return null;
 	}
 
-	public IBreakpoint findBreakpointHit(String sourceFileLocation, int lineno) {
+	public IBreakpoint findBreakpointHit(String sourceFileLocation, int lineno, String exception) {
 		IBreakpoint bpFound = null;
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
 				.getBreakpoints(getBreakpointModelID());
 		for (int i = 0; i < breakpoints.length; i++) {
 			IBreakpoint breakpoint = breakpoints[i];
 			if (supportsBreakpoint(breakpoint)) {
-				if (breakpoint instanceof PHPLineBreakpoint) {
+				if (breakpoint instanceof PHPLineBreakpoint && exception.isEmpty()) {
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					Breakpoint zBP = lineBreakpoint.getRuntimeBreakpoint();
 					String bpFileLocation = zBP.getFileName();
@@ -97,6 +104,11 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 							DBGpLogger.logException("Exception trying to remove a runtoline breakpoint", //$NON-NLS-1$
 									this, e);
 						}
+					}
+				} else if (breakpoint instanceof PHPExceptionBreakpoint) {
+					PHPExceptionBreakpoint exBreakpoint = (PHPExceptionBreakpoint) breakpoint;
+					if (exBreakpoint.getName().equals(exception)) {
+						bpFound = exBreakpoint;
 					}
 				}
 			}

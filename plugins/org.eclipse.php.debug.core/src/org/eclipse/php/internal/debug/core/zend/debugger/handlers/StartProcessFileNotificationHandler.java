@@ -34,6 +34,7 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
@@ -139,6 +140,10 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> matches = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
+			if (bp instanceof PHPExceptionBreakpoint) {
+				// Not supported
+				continue;
+			}
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(processFileLocation);
 			try {
 				/*
