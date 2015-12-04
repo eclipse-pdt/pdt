@@ -17,6 +17,7 @@ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIN
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
 
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
@@ -28,10 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
-import org.eclipse.php.internal.debug.core.model.BreakpointSet;
-import org.eclipse.php.internal.debug.core.model.DebugOutput;
-import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
-import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -39,15 +37,13 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.Mapping
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
+import org.eclipse.php.internal.debug.core.xdebug.breakpoints.DBGpExceptionBreakpoint;
+import org.eclipse.php.internal.debug.core.xdebug.breakpoints.DBGpLineBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
@@ -1831,6 +1827,8 @@ public class DBGpTarget extends DBGpElement
 	 */
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+			if (breakpoint instanceof PHPExceptionBreakpoint)
+				return true;
 			boolean support = getBreakpointSet().supportsBreakpoint(breakpoint);
 			return support;
 		}
@@ -1897,13 +1895,33 @@ public class DBGpTarget extends DBGpElement
 		}
 	}
 
+	private void sendBreakpointExceptionAddCmd(DBGpBreakpoint bp) {
+		String args = MessageFormat.format("-t exception -x {0}", bp.getException()); //$NON-NLS-1$
+		DBGpResponse resp = session.sendSyncCmd(DBGpCommand.breakPointSet, args);
+		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+			String bpId = resp.getTopAttribute("id"); //$NON-NLS-1$
+			bp.setID(Integer.parseInt(bpId));
+			if (DBGpLogger.debugBP()) {
+				DBGpLogger.debug("Exception breakpoint installed with id: " + bpId); //$NON-NLS-1$
+			}
+		}
+	}
+
+	private void sendBreakpointAddCmd(DBGpBreakpoint bp) {
+		if (bp instanceof DBGpLineBreakpoint) {
+			sendBreakpointLineAddCmd(bp);
+		} else if (bp instanceof DBGpExceptionBreakpoint) {
+			sendBreakpointExceptionAddCmd(bp);
+		}
+	}
+
 	/**
 	 * create and send the breakpoint add command
 	 * 
 	 * @param bp
 	 * @param onResponseThread
 	 */
-	private void sendBreakpointAddCmd(DBGpBreakpoint bp) {
+	private void sendBreakpointLineAddCmd(DBGpBreakpoint bp) {
 		bp.resetConditionChanged();
 		String fileName = bp.getFileName();
 		int lineNumber = bp.getLineNumber();
@@ -2074,10 +2092,10 @@ public class DBGpTarget extends DBGpElement
 	 * @param event
 	 *            debug event
 	 */
-	public void breakpointHit(String filename, int lineno) {
+	public void breakpointHit(String filename, int lineno, String exception) {
 		// useful method to be called by the response listener when a
 		// break point has occurred
-		IBreakpoint breakpoint = findBreakpointHit(filename, lineno);
+		IBreakpoint breakpoint = findBreakpointHit(filename, lineno, exception);
 		if (breakpoint != null) {
 			langThread.setBreakpoints(new IBreakpoint[] { breakpoint });
 		} else {
@@ -2096,8 +2114,8 @@ public class DBGpTarget extends DBGpElement
 	 * @param lineno
 	 * @return
 	 */
-	private IBreakpoint findBreakpointHit(String filename, int lineno) {
-		return bpFacade.findBreakpointHit(filename, lineno);
+	private IBreakpoint findBreakpointHit(String filename, int lineno, String exception) {
+		return bpFacade.findBreakpointHit(filename, lineno, exception);
 	}
 
 	/**
