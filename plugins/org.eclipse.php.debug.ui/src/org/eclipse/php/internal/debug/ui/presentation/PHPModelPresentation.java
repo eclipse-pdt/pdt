@@ -14,6 +14,8 @@ package org.eclipse.php.internal.debug.ui.presentation;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
@@ -23,10 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.*;
-import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.debug.ui.IDebugModelPresentation;
-import org.eclipse.debug.ui.IDebugUIConstants;
-import org.eclipse.debug.ui.IValueDetailListener;
+import org.eclipse.debug.ui.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -36,8 +35,15 @@ import org.eclipse.dltk.internal.debug.ui.ExternalFileEditorInput;
 import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
 import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
@@ -46,16 +52,20 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.ui.*;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
+import org.eclipse.php.internal.debug.ui.breakpoint.PHPExceptionBreakpointAnnotation;
 import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 import com.ibm.icu.text.MessageFormat;
@@ -64,9 +74,10 @@ import com.ibm.icu.text.MessageFormat;
  * Renders PHP debug elements
  */
 @SuppressWarnings("restriction")
-public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
+public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation, IDebugEditorPresentation {
 
 	private ImageDescriptorRegistry fDebugImageRegistry;
+	private Map<IThread, Annotation> fExceptionAnnotations = new HashMap<IThread, Annotation>();
 
 	/*
 	 * (non-Javadoc)
@@ -91,7 +102,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof PHPConditionalBreakpoint) {
-			return getBreakpointImage((PHPConditionalBreakpoint) element);
+			return getLineBreakpointImage((PHPConditionalBreakpoint) element);
+		} else if (element instanceof IPHPExceptionBreakpoint) {
+			return getExceptionBreakpointImage((IPHPExceptionBreakpoint) element);
 		} else if (element instanceof IVariable) {
 			return getVariableImage((IVariable) element);
 		}
@@ -112,6 +125,8 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return getStackFrameText((IStackFrame) element);
 		} else if (element instanceof ILineBreakpoint) {
 			return getLineBreakpointText((ILineBreakpoint) element);
+		} else if (element instanceof IPHPExceptionBreakpoint) {
+			return getExceptionBreakpointText((IPHPExceptionBreakpoint) element);
 		}
 		return null;
 
@@ -169,6 +184,54 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * String , java.lang.Object)
 	 */
 	public void setAttribute(String attribute, Object value) {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugEditorPresentation#addAnnotations(org.eclipse.
+	 * ui.IEditorPart, org.eclipse.debug.core.model.IStackFrame)
+	 */
+	@Override
+	public boolean addAnnotations(IEditorPart editorPart, IStackFrame frame) {
+		IBreakpoint[] breakpoints = frame.getThread().getBreakpoints();
+		for (IBreakpoint breakpoint : breakpoints) {
+			if (breakpoint instanceof IPHPExceptionBreakpoint) {
+				IPHPExceptionBreakpoint exceptionBreakpoint = (IPHPExceptionBreakpoint) breakpoint;
+				try {
+					if (frame.getLineNumber() == exceptionBreakpoint.getLine(frame.getDebugTarget())) {
+						addExceptionAnnotation(editorPart, frame, exceptionBreakpoint);
+						return true;
+					}
+				} catch (DebugException e) {
+					Logger.logException(e);
+				}
+			}
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.ui.IDebugEditorPresentation#removeAnnotations(org.
+	 * eclipse.ui.IEditorPart, org.eclipse.debug.core.model.IThread)
+	 */
+	@Override
+	public void removeAnnotations(IEditorPart editorPart, IThread thread) {
+		ITextEditor textEditor = editorPart.getAdapter(ITextEditor.class);
+		IDocumentProvider docProvider = textEditor.getDocumentProvider();
+		IEditorInput editorInput = textEditor.getEditorInput();
+		// If there is no annotation model, there's nothing more to do
+		IAnnotationModel annModel = docProvider.getAnnotationModel(editorInput);
+		if (annModel == null) {
+			return;
+		}
+		Annotation annotation = fExceptionAnnotations.remove(thread);
+		if (annotation != null) {
+			annModel.removeAnnotation(annotation);
+		}
 	}
 
 	protected Image getVariableImage(IVariable variable) {
@@ -232,7 +295,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * breakpoint is not conditional, return null and let the default breakpoint
 	 * icon.
 	 */
-	protected Image getBreakpointImage(PHPConditionalBreakpoint breakpoint) {
+	protected Image getLineBreakpointImage(PHPConditionalBreakpoint breakpoint) {
 		try {
 			if (breakpoint.isConditionEnabled()) {
 				PHPBreakpointImageDescriptor descriptor;
@@ -251,6 +314,32 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return null;
 		}
 		return null;
+	}
+
+	protected Image getExceptionBreakpointImage(IPHPExceptionBreakpoint breakpoint) {
+		try {
+			switch (breakpoint.getType()) {
+			case EXCEPTION: {
+				if (breakpoint.isEnabled()) {
+					return PHPDebugUIImages.get(PHPDebugUIImages.IMG_ELCL_EXCEPTION_BREAKPOINT);
+				} else {
+					return PHPDebugUIImages.get(PHPDebugUIImages.IMG_DLCL_EXCEPTION_BREAKPOINT);
+				}
+			}
+			case ERROR: {
+				if (breakpoint.isEnabled()) {
+					return PHPDebugUIImages.get(PHPDebugUIImages.IMG_ELCL_ERROR_BREAKPOINT);
+				} else {
+					return PHPDebugUIImages.get(PHPDebugUIImages.IMG_DLCL_ERROR_BREAKPOINT);
+				}
+			}
+			default:
+				return null;
+			}
+
+		} catch (CoreException e) {
+			return null;
+		}
 	}
 
 	protected ImageDescriptorRegistry getDebugImageRegistry() {
@@ -302,6 +391,16 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		return null;
 	}
 
+	protected String getExceptionBreakpointText(IPHPExceptionBreakpoint breakpoint) {
+		switch (breakpoint.getType()) {
+		case EXCEPTION:
+			return breakpoint.getExceptionName() + PHPDebugUIMessages.PHPModelPresentation_Break_on_exception;
+		case ERROR:
+			return breakpoint.getExceptionName() + PHPDebugUIMessages.PHPModelPresentation_Break_on_error_condition;
+		}
+		return null;
+	}
+
 	protected String getTargetText(IDebugTarget target) {
 		String label = ""; //$NON-NLS-1$
 		if (target.isTerminated()) {
@@ -337,6 +436,8 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 				// one in PHP
 				if (breakpoint instanceof PHPLineBreakpoint) {
 					buf.append(PHPDebugUIMessages.MPresentation_SLineBreakpoint_1);
+				} else if (breakpoint instanceof IPHPExceptionBreakpoint) {
+					buf.append(PHPDebugUIMessages.MPresentation_SExceptionBreakpoint_1);
 				}
 			}
 		} else if (thread.isTerminated()) {
@@ -413,6 +514,56 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		} catch (Exception e) {
 		}
 		return location;
+	}
+
+	private void addExceptionAnnotation(IEditorPart editorPart, IStackFrame frame, IPHPExceptionBreakpoint breakpoint) {
+		ITextEditor textEditor = editorPart.getAdapter(ITextEditor.class);
+		IDocumentProvider docProvider = textEditor.getDocumentProvider();
+		IEditorInput editorInput = textEditor.getEditorInput();
+		// If there is no annotation model, there's nothing more to do
+		IAnnotationModel annModel = docProvider.getAnnotationModel(editorInput);
+		if (annModel == null) {
+			return;
+		}
+		Position position = null;
+		int charStart = -1;
+		int length = -1;
+		try {
+			charStart = frame.getCharStart();
+			length = frame.getCharEnd() - charStart;
+		} catch (DebugException de) {
+		}
+		if (charStart < 0) {
+			IDocument doc = docProvider.getDocument(editorInput);
+			if (doc == null) {
+				return;
+			}
+			try {
+				int lineNumber = frame.getLineNumber() - 1;
+				IRegion region = doc.getLineInformation(lineNumber);
+				charStart = region.getOffset();
+				length = region.getLength();
+			} catch (BadLocationException ble) {
+				return;
+			} catch (DebugException de) {
+				return;
+			}
+		}
+		if (charStart < 0) {
+			return;
+		}
+		position = new Position(charStart, length);
+		if (frame.isTerminated()) {
+			return;
+		}
+		Annotation annotation = fExceptionAnnotations.remove(frame.getThread());
+		if (annotation != null) {
+			annModel.removeAnnotation(annotation);
+		}
+		// Add/replace exception breakpoint annotation
+		annotation = new PHPExceptionBreakpointAnnotation(breakpoint);
+		fExceptionAnnotations.put(frame.getThread(), annotation);
+		annModel.addAnnotation(annotation, position);
 	}
 
 }
