@@ -93,6 +93,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String MPresentation_ATLine_1;
 	public static String MPresentation_PHP_APP_1;
 	public static String MPresentation_SLineBreakpoint_1;
+	public static String MPresentation_SExceptionBreakpoint_1;
 	public static String MPresentation_Stepping_1;
 	public static String MPresentation_Suspended_1;
 	public static String MPresentation_Terminated_1;
