@@ -13,6 +13,7 @@
 	</parent>
 	<modules>
 		<module>org.eclipse.php-feature</module>
+		<module>org.eclipse.php.plain-feature</module>
 		<module>org.eclipse.php.mylyn-feature</module>
 		<module>org.eclipse.php.source-feature</module>
 		<module>org.eclipse.php.test-feature</module>
