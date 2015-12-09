@@ -235,8 +235,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 				phpVersion);
 		if (Arrays.asList(matchingItems).contains(defaultItem)) {
 			return defaultItem;
+		} else if (matchingItems.length > 0) {
+			return matchingItems[0];
 		}
-		return matchingItems.length != 0 ? matchingItems[0] : null;
+		return defaultItem;
 	}
 
 	// Creates a preferences scope for the given project.
