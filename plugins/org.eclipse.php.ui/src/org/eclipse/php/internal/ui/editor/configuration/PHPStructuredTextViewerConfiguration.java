@@ -61,7 +61,9 @@ import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSStructuredContentAssistProcessor;
@@ -689,6 +691,32 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public void setHighlighter(ReconcilerHighlighter highlighter) {
 		fHighlighter = highlighter;
 		super.setHighlighter(highlighter);
+	}
+
+	@Override
+	public int getTabWidth(ISourceViewer sourceViewer) {
+		ITextEditor editor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
+		if (editor == null) {
+			return super.getTabWidth(sourceViewer);
+		}
+		IDocument document = getDocument(sourceViewer);
+		if (document == null) {
+			return super.getTabWidth(sourceViewer);
+		}
+		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
+		int tabSize = formatterCommonPrferences.getTabSize(document);
+		return tabSize;
+	}
+
+	private IDocument getDocument(ISourceViewer sourceViewer) {
+		ITextEditor editor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
+		if (editor == null) {
+			return null;
+		}
+
+		IEditorInput input = editor.getEditorInput();
+		IDocumentProvider provider = editor.getDocumentProvider();
+		return provider.getDocument(input);
 	}
 
 }

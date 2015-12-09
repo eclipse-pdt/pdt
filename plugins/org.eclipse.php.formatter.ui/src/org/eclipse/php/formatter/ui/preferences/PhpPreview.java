@@ -79,6 +79,7 @@ public abstract class PhpPreview {
 		final int topPixelRange0 = totalPixels0 > height ? totalPixels0 - height : 0;
 
 		fText.setRedraw(false);
+		fText.setTabs(codeFormatterPreferences.tabSize);
 		doFormatPreview();
 
 		final int totalPixels1 = getHeightOfAllLines(fText);

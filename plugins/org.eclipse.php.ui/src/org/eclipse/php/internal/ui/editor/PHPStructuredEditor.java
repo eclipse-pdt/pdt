@@ -72,9 +72,7 @@ import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
-import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
-import org.eclipse.php.internal.core.preferences.PreferencesSupport;
+import org.eclipse.php.internal.core.preferences.*;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
@@ -143,6 +141,7 @@ import com.ibm.icu.text.BreakIterator;
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
+	private static final String FORMATTER_PLUGIN_ID = "org.eclipse.php.formatter.core"; //$NON-NLS-1$
 
 	private IContentOutlinePage fPHPOutlinePage;
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
@@ -432,6 +431,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 	private IPreferencesPropagatorListener fPhpVersionListener;
+	private IPreferencesPropagatorListener fFormatterProfileListener;
 	private IPreferenceChangeListener fPreferencesListener;
 
 	private void doSelectionChanged(ISelection selection) {
@@ -1184,6 +1184,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (fPhpVersionListener != null) {
 			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(fPhpVersionListener);
 			fPhpVersionListener = null;
+		}
+		if (fFormatterProfileListener != null) {
+			// workaround for bug 409116
+			PreferencesPropagator propagator = PreferencePropagatorFactory.getInstance()
+					.getPreferencePropagator(FORMATTER_PLUGIN_ID);
+			propagator.removePropagatorListener(fFormatterProfileListener,
+					"org.eclipse.php.formatter.core.formatter.tabulation.size"); //$NON-NLS-1$
+			propagator.removePropagatorListener(fFormatterProfileListener, "formatterProfile"); //$NON-NLS-1$
+			fFormatterProfileListener = null;
 		}
 		if (fPreferencesListener != null) {
 			InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID).removePreferenceChangeListener(fPreferencesListener);
@@ -2381,6 +2390,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected void handlePreferenceStoreChanged(final PropertyChangeEvent event) {
 		final String property = event.getProperty();
 		try {
+			if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH.equals(property)) {
+				/*
+				 * Ignore tab setting since we rely on the formatter
+				 * preferences. We do this outside the try-finally block to
+				 * avoid that EDITOR_TAB_WIDTH is handled by the sub-class
+				 * (AbstractDecoratedTextEditor).
+				 */
+				return;
+			}
+
 			if (PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)
 					|| PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS.equals(property)) {
 				updateHoverBehavior();
@@ -2618,6 +2637,31 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler,
 			int styles) {
+		fFormatterProfileListener = new IPreferencesPropagatorListener() {
+			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+				StyledText textWidget = getSourceViewer().getTextWidget();
+				int tabWidth = getSourceViewerConfiguration().getTabWidth(getSourceViewer());
+				if (textWidget.getTabs() != tabWidth) {
+					textWidget.setTabs(tabWidth);
+				}
+			}
+
+			public IProject getProject() {
+				IScriptProject scriptProject = PHPStructuredEditor.this.getProject();
+				if (scriptProject != null) {
+					return scriptProject.getProject();
+				}
+				return null;
+			}
+		};
+
+		// workaround for bug 409116
+		PreferencesPropagator propagator = PreferencePropagatorFactory.getInstance()
+				.getPreferencePropagator(FORMATTER_PLUGIN_ID);
+		propagator.addPropagatorListener(fFormatterProfileListener,
+				"org.eclipse.php.formatter.core.formatter.tabulation.size"); //$NON-NLS-1$
+		propagator.addPropagatorListener(fFormatterProfileListener, "formatterProfile"); //$NON-NLS-1$
+
 		return new PHPStructuredTextViewer(this, parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(),
 				styles);
 	}
