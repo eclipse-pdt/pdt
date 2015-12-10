@@ -160,6 +160,21 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof ExternalEntryFile))
+				return false;
+			ExternalEntryFile other = (ExternalEntryFile) obj;
+			if (!fileName.toLowerCase().equals(other.fileName.toLowerCase()))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			return fileName.toLowerCase().hashCode();
+		}
+
 	}
 
 	/*
@@ -230,7 +245,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 				}
 				// Check if it is not a file from PHAR
 				final PharPath pharPath = PharPath.getPharPath(new Path(sourceFilePath));
-				if (pharPath != null) {
+				if (pharPath != null && !pharPath.getFile().isEmpty()) {
 					try {
 						final PharArchiveFile archiveFile = new PharArchiveFile(pharPath.getPharName());
 						final IArchiveEntry entry = archiveFile.getArchiveEntry((pharPath.getFolder().length() == 0 ? "" //$NON-NLS-1$
