@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -83,6 +84,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] { "//", "#", EMPTY }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String COMPLETION_PROPOSAL_SIZE_SECTION = "completion_proposal_size"; //$NON-NLS-1$
 
 	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
 	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
@@ -256,6 +258,15 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+
+			IDialogSettings dialogSettings = PHPUiPlugin.getDefault().getDialogSettings();
+			if (dialogSettings != null) {
+				IDialogSettings section = dialogSettings.getSection(COMPLETION_PROPOSAL_SIZE_SECTION);
+				if (section == null) {
+					section = dialogSettings.addNewSection(COMPLETION_PROPOSAL_SIZE_SECTION);
+				}
+				fContentAssistant.setRestoreCompletionProposalSize(section);
+			}
 
 			IPreferencesService preferencesService = Platform.getPreferencesService();
 			fContentAssistant.enableAutoActivation(preferencesService.getBoolean(PHPCorePlugin.ID,
