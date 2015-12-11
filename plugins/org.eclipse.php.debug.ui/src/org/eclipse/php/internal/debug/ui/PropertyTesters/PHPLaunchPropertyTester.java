@@ -103,8 +103,8 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 */
 	private boolean isWebPageProjectLaunch(Object[] args, IProject resource) {
 		try {
-			final Server localServer = ServersManager.getLocalServer(resource);
-			if (localServer == null) {
+			final Server server = ServersManager.getDefaultServer(resource);
+			if (server == null || ServersManager.isNoneServer(server)) {
 				return false;
 			}
 			return PHPToolkitUtil.isPhpProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$

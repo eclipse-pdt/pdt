@@ -25,7 +25,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtilities;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
@@ -65,13 +64,11 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	private String basePath;
 
 	public PHPWebPageLaunchDialog(String mode, IScriptProject obj, String basePath) {
-		super(PHPDebugUIPlugin.getActiveWorkbenchShell());
-		// , "Launch Web Page", null, "", INFORMATION, new String[] {
-		// IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.mode = mode;
 		this.project = obj;
 		this.basePath = basePath;
-		this.server = ServersManager.getLocalServer(obj.getProject());
+		this.server = ServersManager.getDefaultServer(obj.getProject());
 	}
 
 	/**
@@ -80,6 +77,7 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 
+		setDialogTitle(this.mode);
 		setTitle(getActionTitle(this.mode));
 		setMessage(getActionMessage(this.mode));
 		setTitleImage(ServersPluginImages.DESC_WIZ_SERVER.createImage());
@@ -135,6 +133,16 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 			return PHPServerUIMessages.getString("PHPWebPageLaunchDialog.5"); //$NON-NLS-1$
 		}
 		throw new IllegalArgumentException();
+	}
+
+	private void setDialogTitle(String mode) {
+		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
+			getShell().setText(PHPServerUIMessages.getString("PHPWebPageLaunchDialog.3")); //$NON-NLS-1$
+		} else if (ILaunchManager.RUN_MODE.equals(mode)) {
+			getShell().setText(PHPServerUIMessages.getString("PHPWebPageLaunchDialog.4")); //$NON-NLS-1$
+		} else if (ILaunchManager.PROFILE_MODE.equals(mode)) {
+			getShell().setText(PHPServerUIMessages.getString("PHPWebPageLaunchDialog.5")); //$NON-NLS-1$
+		}
 	}
 
 	// In case this is a debug mode, display 'Break on first line' attribute
