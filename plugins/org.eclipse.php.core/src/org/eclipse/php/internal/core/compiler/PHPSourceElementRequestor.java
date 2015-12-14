@@ -935,8 +935,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			info.declarationStart = assignment.sourceStart();
 
 			fInfoStack.push(info);
-			fRequestor.enterField(info);
-
+			if (assignment.getOperatorType() == Assignment.OP_EQUAL) {
+				fRequestor.enterField(info);
+			} else {
+				ISourceElementRequestor sourceElementRequestor = (ISourceElementRequestor) fRequestor;
+				sourceElementRequestor.enterFieldCheckDuplicates(info);
+			}
 			fNodes.push(assignment);
 		}
 		return true;
