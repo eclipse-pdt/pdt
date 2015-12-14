@@ -15,4 +15,10 @@
 	        id="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
 	        name="PHP Code Formatter Common Preferences"/>     
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.php.formatter.core.CodeFormatterPreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>
