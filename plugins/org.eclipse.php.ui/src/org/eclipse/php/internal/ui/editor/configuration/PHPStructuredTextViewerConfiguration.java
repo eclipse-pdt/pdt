@@ -695,21 +695,23 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	public int getTabWidth(ISourceViewer sourceViewer) {
-		ITextEditor editor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
-		if (editor == null) {
-			return super.getTabWidth(sourceViewer);
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			ITextEditor editor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
+			if (editor == null) {
+				return super.getTabWidth(sourceViewer);
+			}
+			IDocument document = getDocument(editor);
+			if (document == null) {
+				return super.getTabWidth(sourceViewer);
+			}
+			IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
+			int tabSize = formatterCommonPrferences.getTabSize(document);
+			return tabSize;
 		}
-		IDocument document = getDocument(sourceViewer);
-		if (document == null) {
-			return super.getTabWidth(sourceViewer);
-		}
-		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
-		int tabSize = formatterCommonPrferences.getTabSize(document);
-		return tabSize;
+		return super.getTabWidth(sourceViewer);
 	}
 
-	private IDocument getDocument(ISourceViewer sourceViewer) {
-		ITextEditor editor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
+	private IDocument getDocument(ITextEditor editor) {
 		if (editor == null) {
 			return null;
 		}
