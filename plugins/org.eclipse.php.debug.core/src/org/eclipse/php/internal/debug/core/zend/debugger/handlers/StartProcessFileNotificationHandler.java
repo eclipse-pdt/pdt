@@ -29,8 +29,10 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
@@ -140,27 +142,30 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> matches = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
-			if (bp instanceof IPHPExceptionBreakpoint) {
-				// Not supported
+			if (bp instanceof IPHPExceptionBreakpoint || PharPath.isPharPath(new Path(processFileLocation))) {
+				/*
+				 * Not supported by Zend Debugger engine - exception breakpoints
+				 * and handling breakpoints in PHAR files.
+				 */
 				continue;
 			}
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(processFileLocation);
+			/*
+			 * Check if breakpoint marker resource is the same as the one found
+			 * for file location that should be processed.
+			 */
+			if (bp.getMarker().getResource().equals(resource)) {
+				matches.add(bp);
+				continue;
+			}
+			/*
+			 * If previous check failed, try to establish if PHP breakpoint file
+			 * location is pointing to the same file as the one that should be
+			 * processed. Symbolic links will also be resolved.
+			 */
+			String bpMarkerFileLocation = bp.getMarker().getResource().getLocation().toOSString();
+			String phpBpFileLocation = ((PHPLineBreakpoint) bp).getRuntimeBreakpoint().getFileName();
 			try {
-				/*
-				 * Check if breakpoint marker resource is the same as the one
-				 * found for file location that should be processed.
-				 */
-				if (bp.getMarker().getResource().equals(resource)) {
-					matches.add(bp);
-					continue;
-				}
-				/*
-				 * If previous check failed, try to establish if PHP breakpoint
-				 * file location is pointing to the same file as the one that
-				 * should be processed. Symbolic links will also be resolved.
-				 */
-				String bpMarkerFileLocation = bp.getMarker().getResource().getLocation().toOSString();
-				String phpBpFileLocation = ((PHPLineBreakpoint) bp).getRuntimeBreakpoint().getFileName();
 				if (FileUtils.isSameFile(bpMarkerFileLocation, processFileLocation)
 						|| FileUtils.isSameFile(phpBpFileLocation, processFileLocation)) {
 					/*
@@ -174,30 +179,39 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 					}
 					continue;
 				}
-				/*
-				 * Breakpoint may also correspond to a PHP script from project
-				 * external libraries. Try to check it as well.
-				 */
-				String secondaryId = (String) bp.getMarker()
-						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-				if (secondaryId != null) {
-					IPath path = Path.fromPortableString(secondaryId);
-					if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
-						String fullPathString = path.toString();
-						String absolutePath = fullPathString.substring(fullPathString.indexOf(':') + 1);
-						path = Path.fromPortableString(absolutePath);
-					} else {
-						path = EnvironmentPathUtils.getLocalPath(path);
-					}
-					secondaryId = path.toString();
-					if (VirtualPath.isAbsolute(processFileLocation)
-							&& (new VirtualPath(processFileLocation).equals(new VirtualPath(secondaryId)))
-							|| resource != null && secondaryId.equals(resource.getLocation().toString())) {
-						matches.add(bp);
-					}
-				}
 			} catch (Exception e) {
-				PHPDebugPlugin.log(e);
+				/*
+				 * Ignore as some path descriptors might be illegal for this
+				 * check e.g. DLTK external library scripts (see next step).
+				 */
+			}
+			/*
+			 * Breakpoint may also correspond to a PHP script from project
+			 * external libraries. Try to check it as well.
+			 */
+			String secondaryId = null;
+			try {
+				secondaryId = (String) bp.getMarker()
+						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+			} catch (CoreException e) {
+				// Should never be thrown, anyway...
+				Logger.logException(e);
+			}
+			if (secondaryId != null) {
+				IPath path = Path.fromPortableString(secondaryId);
+				if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
+					String fullPathString = path.toString();
+					String absolutePath = fullPathString.substring(fullPathString.indexOf(':') + 1);
+					path = Path.fromPortableString(absolutePath);
+				} else {
+					path = EnvironmentPathUtils.getLocalPath(path);
+				}
+				secondaryId = path.toString();
+				if (VirtualPath.isAbsolute(processFileLocation)
+						&& (new VirtualPath(processFileLocation).equals(new VirtualPath(secondaryId)))
+						|| resource != null && secondaryId.equals(resource.getLocation().toString())) {
+					matches.add(bp);
+				}
 			}
 		}
 		return matches.toArray(new IBreakpoint[matches.size()]);

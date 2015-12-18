@@ -40,13 +40,17 @@ public class PharPath {
 		this.file = file;
 	}
 
+	public boolean isPhar() {
+		return (folder == null || folder.trim().length() == 0) && (file == null || file.trim().length() == 0);
+	}
+
 	public static PharPath getPharPath(IPath path) {
+		if (!isPharPath(path)) {
+			return null;
+		}
 		String pharName;
 		String folder = PharConstants.EMPTY_STRING;
 		String file = PharConstants.EMPTY_STRING;
-		if (!path.toString().startsWith(PharConstants.PHAR_PREFIX)) {
-			return null;
-		}
 		if (PharConstants.WINDOWS) {
 			path = path.setDevice(null);
 		} else {
@@ -79,7 +83,11 @@ public class PharPath {
 		return null;
 	}
 
-	public boolean isPhar() {
-		return (folder == null || folder.trim().length() == 0) && (file == null || file.trim().length() == 0);
+	public static boolean isPharPath(IPath path) {
+		if (path.toString().startsWith(PharConstants.PHAR_PREFIX)) {
+			return true;
+		}
+		return false;
 	}
+
 }

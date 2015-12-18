@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -26,7 +24,6 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -85,9 +82,14 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 										+ lineno + ") found"); //$NON-NLS-1$
 							}
 						}
-					} catch (IOException e) {
-						Logger.logException(e);
+					} catch (Exception e) {
+						/*
+						 * Ignore as some path descriptors might be illegal for
+						 * this check e.g. DLTK external library scripts (see
+						 * next step).
+						 */
 					}
+					// TODO - support for DLTK external libraries
 					/*
 					 * Remove all RunToLine breakpoints while we search through
 					 * the list of all our breakpoints looking for the one that

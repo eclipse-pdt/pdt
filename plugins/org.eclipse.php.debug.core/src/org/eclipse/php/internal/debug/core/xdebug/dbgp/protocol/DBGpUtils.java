@@ -43,7 +43,6 @@ public class DBGpUtils {
 		if (encoded.containsKey(fileName)) {
 			return (String) encoded.get(fileName);
 		}
-
 		String fileURIStr = ""; //$NON-NLS-1$
 		if (fileName == null || fileName.length() == 0) {
 			return fileURIStr;
@@ -52,7 +51,7 @@ public class DBGpUtils {
 		if (fileName.charAt(0) != '/') {
 			fileName = "/" + fileName; //$NON-NLS-1$
 		}
-
+		fileName = adjustFileNameForURI(fileName);
 		try {
 			URI uri = new URI("file", "", fileName, null, null); //$NON-NLS-1$ //$NON-NLS-2$
 			fileURIStr = uri.toASCIIString();
@@ -72,6 +71,7 @@ public class DBGpUtils {
 	public static String getFilenameFromURIString(String fileURIStr) {
 		String filePath = ""; //$NON-NLS-1$
 		try {
+			fileURIStr = adjustFileNameForURI(fileURIStr);
 			URI uri = new URI(fileURIStr);
 			filePath = uri.getPath();
 			if (filePath != null && filePath.length() > 2 && filePath.charAt(2) == ':') {
@@ -80,7 +80,6 @@ public class DBGpUtils {
 		} catch (URISyntaxException e) {
 			DBGpLogger.logException("URISyntaxException - 2", null, e); //$NON-NLS-1$
 		}
-
 		return filePath;
 	}
 
@@ -141,4 +140,10 @@ public class DBGpUtils {
 			}
 		});
 	}
+
+	private static String adjustFileNameForURI(String fileName) {
+		// Ensure that all white spaces are converted
+		return fileName.replaceAll(" ", "%20"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 }
