@@ -15,6 +15,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -67,6 +68,16 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 																												// the
 																												// full
 																												// path.
+			// Resolve DLTK external sources/libraries paths
+			IPath path = Path.fromPortableString(fileName);
+			if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
+				String fullPathString = path.toString();
+				String absolutePath = fullPathString.substring(fullPathString.indexOf(':') + 1);
+				path = Path.fromPortableString(absolutePath);
+			} else {
+				path = EnvironmentPathUtils.getLocalPath(path);
+			}
+			fileName = path.toString();
 
 			// adding bps to these include files has strange affects. If one
 			// fails to add the first time it is because it removes one

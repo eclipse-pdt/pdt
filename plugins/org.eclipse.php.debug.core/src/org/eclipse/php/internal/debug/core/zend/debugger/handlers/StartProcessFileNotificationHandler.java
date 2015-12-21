@@ -174,10 +174,11 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 					 * symbolic links)
 					 */
 					IProject debugProject = PHPLaunchUtilities.getProject(debugTarget);
-					if (debugProject == null || debugProject.equals(bp.getMarker().getResource().getProject())) {
+					IProject bpProject = bp.getMarker().getResource().getProject();
+					if (debugProject == null || bpProject == null || debugProject.equals(bpProject)) {
 						matches.add(bp);
+						continue;
 					}
-					continue;
 				}
 			} catch (Exception e) {
 				/*
