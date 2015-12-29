@@ -2637,31 +2637,32 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler,
 			int styles) {
-		fFormatterProfileListener = new IPreferencesPropagatorListener() {
-			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-				StyledText textWidget = getSourceViewer().getTextWidget();
-				int tabWidth = getSourceViewerConfiguration().getTabWidth(getSourceViewer());
-				if (textWidget.getTabs() != tabWidth) {
-					textWidget.setTabs(tabWidth);
+		if (getProject() != null) {
+			fFormatterProfileListener = new IPreferencesPropagatorListener() {
+				public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+					StyledText textWidget = getSourceViewer().getTextWidget();
+					int tabWidth = getSourceViewerConfiguration().getTabWidth(getSourceViewer());
+					if (textWidget.getTabs() != tabWidth) {
+						textWidget.setTabs(tabWidth);
+					}
 				}
-			}
 
-			public IProject getProject() {
-				IScriptProject scriptProject = PHPStructuredEditor.this.getProject();
-				if (scriptProject != null) {
-					return scriptProject.getProject();
+				public IProject getProject() {
+					IScriptProject scriptProject = PHPStructuredEditor.this.getProject();
+					if (scriptProject != null) {
+						return scriptProject.getProject();
+					}
+					return null;
 				}
-				return null;
-			}
-		};
+			};
 
-		// workaround for bug 409116
-		PreferencesPropagator propagator = PreferencePropagatorFactory.getInstance()
-				.getPreferencePropagator(FORMATTER_PLUGIN_ID);
-		propagator.addPropagatorListener(fFormatterProfileListener,
-				"org.eclipse.php.formatter.core.formatter.tabulation.size"); //$NON-NLS-1$
-		propagator.addPropagatorListener(fFormatterProfileListener, "formatterProfile"); //$NON-NLS-1$
-
+			// workaround for bug 409116
+			PreferencesPropagator propagator = PreferencePropagatorFactory.getInstance()
+					.getPreferencePropagator(FORMATTER_PLUGIN_ID);
+			propagator.addPropagatorListener(fFormatterProfileListener,
+					"org.eclipse.php.formatter.core.formatter.tabulation.size"); //$NON-NLS-1$
+			propagator.addPropagatorListener(fFormatterProfileListener, "formatterProfile"); //$NON-NLS-1$
+		}
 		return new PHPStructuredTextViewer(this, parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(),
 				styles);
 	}
