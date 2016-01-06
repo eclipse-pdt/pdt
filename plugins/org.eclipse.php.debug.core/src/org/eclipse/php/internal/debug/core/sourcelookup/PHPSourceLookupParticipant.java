@@ -233,16 +233,6 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 				if (openable instanceof IStorage) {
 					return new Object[] { openable };
 				}
-				// Check if we have corresponding "linked chain subject" file
-				Object linkedFile = LinkSubjectFileFinder.find(sourceFilePath, object);
-				if (linkedFile != null) {
-					return new Object[] { linkedFile };
-				}
-				// Check if it is local non-workspace file
-				File file = new File(sourceFilePath);
-				if (file.exists()) {
-					return new Object[] { new LocalFile(file) };
-				}
 				// Check if it is not a file from PHAR
 				final PharPath pharPath = PharPath.getPharPath(new Path(sourceFilePath));
 				if (pharPath != null && !pharPath.getFile().isEmpty()) {
@@ -255,6 +245,16 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 					} catch (Exception e) {
 						PHPDebugPlugin.log(e);
 					}
+				}
+				// Check if we have corresponding "linked chain subject" file
+				Object linkedFile = LinkSubjectFileFinder.find(sourceFilePath, object);
+				if (linkedFile != null) {
+					return new Object[] { linkedFile };
+				}
+				// None from above succeeded - just open file if it exists
+				File file = new File(sourceFilePath);
+				if (file.exists()) {
+					return new Object[] { new LocalFile(file) };
 				}
 				// Nothing from above
 				return EMPTY;

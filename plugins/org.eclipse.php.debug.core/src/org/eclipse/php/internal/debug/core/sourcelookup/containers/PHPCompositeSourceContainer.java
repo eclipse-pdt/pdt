@@ -14,11 +14,13 @@ package org.eclipse.php.internal.debug.core.sourcelookup.containers;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
@@ -75,7 +77,16 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 	}
 
 	public Object[] findSourceElements(String name) throws CoreException {
+		// Might be a workspace relative location
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
+		// Might be an absolute location in file system
+		if (resource == null && Path.EMPTY.isValidPath(name)) {
+			IResource[] matches = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocationURI(URIUtil.toURI((new Path(name)).makeAbsolute()));
+			if (matches.length > 0) {
+				resource = matches[0];
+			}
+		}
 		if (resource != null) {
 			return new Object[] { resource };
 		}
