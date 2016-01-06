@@ -50,17 +50,6 @@ public interface IProblemLocation {
 	 */
 	String getMarkerType();
 
-	/**
-	 * Returns the id of problem. Note that problem ids are defined per problem
-	 * marker type. See {@link org.eclipse.jdt.core.compiler.IProblem} for id
-	 * definitions for problems of type
-	 * <code>org.eclipse.jdt.core.problem</code> and
-	 * <code>org.eclipse.jdt.core.task</code>.
-	 * 
-	 * @return The id of the problem.
-	 */
-	int getProblemId();
-
 	IProblemIdentifier getProblemIdentifier();
 
 	/**

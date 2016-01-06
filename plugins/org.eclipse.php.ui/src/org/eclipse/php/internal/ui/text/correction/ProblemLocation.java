@@ -11,12 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
-import java.util.Scanner;
-
-import org.eclipse.dltk.compiler.problem.CategorizedProblem;
-import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
-import org.eclipse.dltk.compiler.problem.IProblemIdentifierExtension;
+import org.eclipse.dltk.compiler.problem.*;
 import org.eclipse.dltk.core.IModelMarker;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.editor.ScriptMarkerAnnotation;
@@ -29,28 +24,15 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
  */
 public class ProblemLocation implements IProblemLocation {
 
-	private final int fId;
+	private final IProblemIdentifier fIdentifier;
 	private final String[] fArguments;
 	private final int fOffset;
 	private final int fLength;
 	private final boolean fIsError;
 	private final String fMarkerType;
-	private final IProblemIdentifier fIdentifier;
 
 	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
-		if (annotation.getId() != null) {
-			Scanner scan = new Scanner(annotation.getId().name());
-			if (scan.hasNextInt()) {
-				fId = scan.nextInt();
-			} else {
-				fId = -1;
-			}
-			fIdentifier = annotation.getId();
-			scan.close();
-		} else {
-			fId = -1;
-			fIdentifier = null;
-		}
+		fIdentifier = annotation.getId();
 		fArguments = annotation.getArguments();
 		fOffset = offset;
 		fLength = length;
@@ -60,31 +42,19 @@ public class ProblemLocation implements IProblemLocation {
 		fMarkerType = markerType != null ? markerType : IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER;
 	}
 
-	public ProblemLocation(int offset, int length, int id, String[] arguments, boolean isError, String markerType) {
-		fId = id;
+	public ProblemLocation(int offset, int length, IProblemIdentifier id, String[] arguments, boolean isError,
+			String markerType) {
+		fIdentifier = id;
 		fArguments = arguments;
 		fOffset = offset;
 		fLength = length;
 		fIsError = isError;
 		fMarkerType = markerType;
-		fIdentifier = null;
 	}
 
 	@SuppressWarnings("deprecation")
 	public ProblemLocation(IProblem problem) {
-		if (problem.getID() != null) {
-			Scanner scan = new Scanner(problem.getID().name());
-			if (scan.hasNextInt()) {
-				fId = scan.nextInt();
-			} else {
-				fId = -1;
-			}
-			fIdentifier = problem.getID();
-			scan.close();
-		} else {
-			fId = -1;
-			fIdentifier = null;
-		}
+		fIdentifier = problem.getID();
 		fArguments = problem.getArguments();
 		fOffset = problem.getSourceStart();
 		fLength = problem.getSourceEnd() - fOffset + 1;
@@ -96,17 +66,6 @@ public class ProblemLocation implements IProblemLocation {
 		} else {
 			fMarkerType = IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER;
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getProblemId
-	 * ()
-	 */
-	public int getProblemId() {
-		return fId;
 	}
 
 	public IProblemIdentifier getProblemIdentifier() {
@@ -187,7 +146,7 @@ public class ProblemLocation implements IProblemLocation {
 
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId)).append('\n');
+		buf.append(Messages.ProblemLocation_0).append(DefaultProblemIdentifier.encode(fIdentifier)).append('\n');
 		buf.append('[').append(fOffset).append(", ").append(fLength).append(']') //$NON-NLS-1$
 				.append('\n');
 		String[] arg = fArguments;
@@ -197,38 +156,6 @@ public class ProblemLocation implements IProblemLocation {
 				buf.append('\n');
 			}
 		}
-		return buf.toString();
-	}
-
-	private String getErrorCode(int code) {
-		StringBuffer buf = new StringBuffer();
-
-		if ((code & IProblem.TypeRelated) != 0) {
-			buf.append(Messages.ProblemLocation_2);
-		}
-		if ((code & IProblem.FieldRelated) != 0) {
-			buf.append(Messages.ProblemLocation_3);
-		}
-		if ((code & IProblem.ConstructorRelated) != 0) {
-			buf.append(Messages.ProblemLocation_4);
-		}
-		if ((code & IProblem.MethodRelated) != 0) {
-			buf.append(Messages.ProblemLocation_5);
-		}
-		if ((code & IProblem.ImportRelated) != 0) {
-			buf.append(Messages.ProblemLocation_6);
-		}
-		if ((code & IProblem.Internal) != 0) {
-			buf.append(Messages.ProblemLocation_7);
-		}
-		if ((code & IProblem.Syntax) != 0) {
-			buf.append(Messages.ProblemLocation_8);
-		}
-		if ((code & IProblem.Documentation) != 0) {
-			buf.append(Messages.ProblemLocation_9);
-		}
-		buf.append(code & IProblem.IgnoreCategoriesMask);
-
 		return buf.toString();
 	}
 
