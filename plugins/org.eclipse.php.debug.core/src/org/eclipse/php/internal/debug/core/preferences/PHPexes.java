@@ -417,10 +417,6 @@ public class PHPexes {
 	private void load() {
 		items = new HashMap<String, HashMap<String, PHPexeItem>>();
 
-		// Load the executable items that were defined in the registered
-		// extensions
-		loadExtensions();
-
 		// Load the user-defined executable items
 
 		// Load the item names array
@@ -532,6 +528,11 @@ public class PHPexes {
 				}
 			}
 		}
+
+		// Load the executable items that were defined in the registered
+		// extensions
+		loadExtensions();
+
 		// Check if PHP exe items preferences need upgrade
 		(new PHPexesUpgrade()).upgrade();
 	}
@@ -603,7 +604,12 @@ public class PHPexes {
 							newItem.setUniqueId(uniqueID);
 							storeItem(newItem);
 							if (isDefault) {
-								setDefaultItem(newItem);
+								String defaultExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+										.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
+								// Make it a default item if there is no any
+								if (defaultExeName == null || getItem(defaultExeName) == null) {
+									setDefaultItem(newItem);
+								}
 							}
 							itemFound = true;
 						}
