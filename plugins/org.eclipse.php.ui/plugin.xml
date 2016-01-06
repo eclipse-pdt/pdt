@@ -2587,4 +2587,11 @@
 	         </handledMarkerTypes>
 	    </quickFixProcessor>
 	</extension>
+   <extension
+         point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+           class="org.eclipse.php.internal.ui.text.correction.CorrectionMarkerResolutionGenerator"
+           markerType="org.eclipse.php.core.phpproblemmarker">
+      </markerResolutionGenerator>
+   </extension>
 </plugin>
