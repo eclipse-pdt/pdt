@@ -10,17 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.quickfix;
 
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
-import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.core.corext.util.DocumentUtils;
 import org.eclipse.php.internal.ui.text.correction.IInvocationContext;
 import org.eclipse.php.internal.ui.text.correction.IProblemLocation;
 import org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor;
@@ -28,27 +29,24 @@ import org.eclipse.php.internal.ui.text.correction.IQuickFixProcessorExtension;
 import org.eclipse.php.internal.ui.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
 import org.eclipse.text.edits.TextEditGroup;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 public class UnusedUseStatementProcessor implements IQuickFixProcessor, IQuickFixProcessorExtension {
 	private final static String ORGANIZE_USE_STATEMENTS_ID = "org.eclipse.php.ui.editor.organize.use.statements"; //$NON-NLS-1$
 
-	private class RunCommandProposal extends AbstractCorrectionProposal {
+	private class OrganizeUseStatementsProposal extends AbstractCorrectionProposal {
 
-		public RunCommandProposal() {
+		private final IInvocationContext context;
+
+		public OrganizeUseStatementsProposal(IInvocationContext context) {
 			super(Messages.UnusedUseStatementProcessor_CommandName, 10,
 					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_CHANGE), ORGANIZE_USE_STATEMENTS_ID);
+			this.context = context;
 		}
 
 		@Override
 		public void apply(IDocument document) {
-			ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-			try {
-				service.getCommand(getCommandId()).executeWithChecks(new ExecutionEvent());
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(context.getCompilationUnit());
+			DocumentUtils.sortUseStatements(moduleDeclaration, document);
 		}
 
 		@Override
@@ -119,7 +117,8 @@ public class UnusedUseStatementProcessor implements IQuickFixProcessor, IQuickFi
 		if (!detect) {
 			return null;
 		}
-		return new IScriptCompletionProposal[] { new RunCommandProposal(), new RemoveImportProposal(context) };
+		return new IScriptCompletionProposal[] { new OrganizeUseStatementsProposal(context),
+				new RemoveImportProposal(context) };
 	}
 
 }
