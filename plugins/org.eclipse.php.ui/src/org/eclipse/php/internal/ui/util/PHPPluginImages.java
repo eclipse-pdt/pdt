@@ -99,6 +99,8 @@ public class PHPPluginImages {
 	public static final String IMG_TEMPLATE = NAME_PREFIX + "phptpldata16.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_EXTJAR = NAME_PREFIX + "jar_l_obj.png"; //$NON-NLS-1$
 
+	public static final String IMG_CORRECTION_MULTI_FIX = NAME_PREFIX + "correction_multi_fix.gif"; //$NON-NLS-1$
+
 	public static final ImageDescriptor DESC_MISC_PUBLIC = createManaged(T_OBJ, IMG_MISC_PUBLIC);
 	public static final ImageDescriptor DESC_MISC_PROTECTED = createManaged(T_OBJ, IMG_MISC_PROTECTED);
 	public static final ImageDescriptor DESC_MISC_PRIVATE = createManaged(T_OBJ, IMG_MISC_PRIVATE);
@@ -172,6 +174,9 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_TEMPLATE = createManaged(CLASS_BROWSER, IMG_TEMPLATE);
 	public static final ImageDescriptor DESC_OBJS_EXTJAR = createManaged(T_OBJ, IMG_OBJS_EXTJAR);
 	public static final ImageDescriptor DESC_OBJS_TRAIT = createManaged(T_OBJ, IMG_OBJS_TRAIT);
+
+	public static final ImageDescriptor DESC_DLCL_CONFIGURE_ANNOTATIONS = create(T_DLCL, "configure_annotations.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_ELCL_CONFIGURE_ANNOTATIONS = create(T_ELCL, "configure_annotations.gif"); //$NON-NLS-1$
 
 	/**
 	 * Returns the image managed under the given key in this registry.
