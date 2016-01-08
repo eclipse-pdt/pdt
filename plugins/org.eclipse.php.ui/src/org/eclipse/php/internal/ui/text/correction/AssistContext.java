@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.TextInvocationContext;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -123,7 +124,12 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 			}
 			if (fASTRoot == null) {
 				// see bug 63554
-				// fASTRoot= ASTResolving.createQuickFixAST(fProgram, null);
+				ASTParser parser = ASTParser.newParser(fProgram);
+				try {
+					fASTRoot = parser.createAST(null);
+				} catch (Exception e) {
+					PHPUiPlugin.log(e);
+				}
 			}
 		}
 		return fASTRoot;

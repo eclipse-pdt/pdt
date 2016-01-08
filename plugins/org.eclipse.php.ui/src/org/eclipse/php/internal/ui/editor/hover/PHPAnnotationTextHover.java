@@ -11,15 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
-import org.eclipse.dltk.internal.ui.text.hover.AbstractAnnotationHover;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.information.IInformationProviderExtension2;
-import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover.PresenterControlCreator;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 
-public class PHPAnnotationTextHover extends AbstractAnnotationHover
-		implements IPHPTextHover, IInformationProviderExtension2 {
+public class PHPAnnotationTextHover extends AbstractAnnotationHover implements IPHPTextHover {
 
 	public PHPAnnotationTextHover() {
 		super(true);
@@ -29,22 +24,4 @@ public class PHPAnnotationTextHover extends AbstractAnnotationHover
 		return null;
 	}
 
-	/**
-	 * The presentation control creator.
-	 * 
-	 * @since 3.2
-	 */
-	private IInformationControlCreator fPresenterControlCreator;
-
-	/*
-	 * @seeorg.eclipse.jface.text.ITextHoverExtension2#
-	 * getInformationPresenterControlCreator()
-	 * 
-	 * @since 3.1
-	 */
-	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fPresenterControlCreator == null)
-			fPresenterControlCreator = new PresenterControlCreator();
-		return fPresenterControlCreator;
-	}
 }

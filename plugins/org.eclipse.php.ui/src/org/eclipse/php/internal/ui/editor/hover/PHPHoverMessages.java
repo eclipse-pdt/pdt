@@ -16,6 +16,7 @@ final class PHPHoverMessages extends NLS {
 	public static String AbstractAnnotationHover_action_configureAnnotationPreferences;
 	public static String AbstractAnnotationHover_message_singleQuickFix;
 	public static String AbstractAnnotationHover_message_multipleQuickFix;
+	public static String AbstractAnnotationHover_multifix_variable_description;
 
 	public static String JavadocHover_back;
 	public static String JavadocHover_back_toElement_toolTip;

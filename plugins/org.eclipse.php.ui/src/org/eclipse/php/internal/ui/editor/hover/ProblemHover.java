@@ -11,88 +11,135 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
-import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
-import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
-import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.information.IInformationProviderExtension2;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.editor.IScriptAnnotation;
+import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.php.internal.ui.editor.contentassist.CompletionProposalComparator;
+import org.eclipse.php.internal.ui.text.correction.*;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.texteditor.MarkerAnnotation;
 
-public class ProblemHover extends AbstractScriptEditorTextHover
-		implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
+public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHover {
 
-	private static final ProblemHoverProcessor annotationHover = new ProblemHoverProcessor();
+	protected static class ProblemInfo extends AnnotationInfo {
 
-	/**
-	 * The hover control creator.
-	 * 
-	 * @since 3.2
-	 */
-	private IInformationControlCreator fHoverControlCreator;
+		private static final ICompletionProposal[] NO_PROPOSALS = new ICompletionProposal[0];
 
-	/**
-	 * The presentation control creator.
-	 * 
-	 * @since 3.2
-	 */
-	private IInformationControlCreator fPresenterControlCreator;
-
-	/*
-	 * @see
-	 * IInformationProviderExtension2#getInformationPresenterControlCreator()
-	 * 
-	 * @since 3.1 This is the format of the window on focus
-	 */
-	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fPresenterControlCreator == null) {
-			fPresenterControlCreator = new AbstractReusableInformationControlCreator() {
-
-				/*
-				 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
-				 * AbstractReusableInformationControlCreator
-				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
-				 */
-				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new DefaultInformationControl(parent, new HTMLTextPresenter(false));
-				}
-			};
+		public ProblemInfo(Annotation annotation, Position position, ITextViewer textViewer) {
+			super(annotation, position, textViewer);
 		}
-		return fPresenterControlCreator;
-	}
 
-	/*
-	 * @see ITextHoverExtension#getHoverControlCreator()
-	 * 
-	 * @since 3.2 - This is the format of the window on hover
-	 */
-	public IInformationControlCreator getHoverControlCreator() {
-		if (fHoverControlCreator == null) {
-			fHoverControlCreator = new AbstractReusableInformationControlCreator() {
-				/*
-				 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
-				 * AbstractReusableInformationControlCreator
-				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
-				 */
-				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString(),
-							new HTMLTextPresenter(true));
-				}
-			};
+		@Override
+		public ICompletionProposal[] getCompletionProposals() {
+			if (annotation instanceof IScriptAnnotation) {
+				ICompletionProposal[] result = getScriptAnnotationFixes((IScriptAnnotation) annotation);
+				if (result.length > 0)
+					return result;
+			}
+
+			if (annotation instanceof MarkerAnnotation)
+				return getMarkerAnnotationFixes((MarkerAnnotation) annotation);
+
+			return NO_PROPOSALS;
 		}
-		return fHoverControlCreator;
+
+		@SuppressWarnings("unchecked")
+		private ICompletionProposal[] getScriptAnnotationFixes(IScriptAnnotation scriptAnnotation) {
+			ProblemLocation location = new ProblemLocation(position.getOffset(), position.getLength(),
+					scriptAnnotation);
+			ISourceModule cu = scriptAnnotation.getSourceModule();
+			if (cu == null)
+				return NO_PROPOSALS;
+
+			ISourceViewer sourceViewer = null;
+			if (viewer instanceof ISourceViewer)
+				sourceViewer = (ISourceViewer) viewer;
+
+			IInvocationContext context = new AssistContext(cu, sourceViewer, location.getOffset(), location.getLength(),
+					SharedASTProvider.WAIT_ACTIVE_ONLY);
+
+			ArrayList<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
+			PHPCorrectionProcessor.collectCorrections(context, new IProblemLocation[] { location }, proposals);
+			Collections.sort(proposals, new CompletionProposalComparator());
+
+			return proposals.toArray(new ICompletionProposal[proposals.size()]);
+		}
+
+		private ICompletionProposal[] getMarkerAnnotationFixes(MarkerAnnotation markerAnnotation) {
+			if (markerAnnotation.isQuickFixableStateSet() && !markerAnnotation.isQuickFixable())
+				return NO_PROPOSALS;
+
+			IMarker marker = markerAnnotation.getMarker();
+
+			ISourceModule cu = getSourceModule(marker);
+			if (cu == null)
+				return NO_PROPOSALS;
+
+			IEditorInput input = EditorUtility.getEditorInput(cu);
+			if (input == null)
+				return NO_PROPOSALS;
+
+			IAnnotationModel model = DLTKUIPlugin.getDocumentProvider().getAnnotationModel(input);
+			if (model == null)
+				return NO_PROPOSALS;
+
+			ISourceViewer sourceViewer = null;
+			if (viewer instanceof ISourceViewer)
+				sourceViewer = (ISourceViewer) viewer;
+
+			AssistContext context = new AssistContext(cu, sourceViewer, position.getOffset(), position.getLength());
+
+			ArrayList<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
+			PHPCorrectionProcessor.collectProposals(context, model, new Annotation[] { markerAnnotation }, true, false,
+					proposals);
+
+			return proposals.toArray(new ICompletionProposal[proposals.size()]);
+		}
+
+		private static ISourceModule getSourceModule(IMarker marker) {
+			IResource res = marker.getResource();
+			if (res instanceof IFile && res.isAccessible()) {
+				IModelElement element = DLTKCore.create((IFile) res);
+				if (element instanceof ISourceModule)
+					return (ISourceModule) element;
+			}
+			return null;
+		}
+
 	}
 
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		return annotationHover.getHoverInfo(textViewer, hoverRegion);
+	public ProblemHover() {
+		super(false);
 	}
 
-	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		return annotationHover.getHoverRegion(textViewer, offset);
+	@Override
+	protected AnnotationInfo createAnnotationInfo(Annotation annotation, Position position, ITextViewer textViewer) {
+		return new ProblemInfo(annotation, position, textViewer);
 	}
 
+	@Override
 	public IHoverMessageDecorator getMessageDecorator() {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
