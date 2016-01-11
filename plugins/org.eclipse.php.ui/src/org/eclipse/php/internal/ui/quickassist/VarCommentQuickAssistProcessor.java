@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Janko Richter and others.
+ * Copyright (c) 2016 Janko Richter and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Janko Richter - initial API and implementation
+ *     Kaloyan Raev - Bug 485550 - Improve insert variable comment quick assist
  *******************************************************************************/
 package org.eclipse.php.internal.ui.quickassist;
 
@@ -21,7 +22,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -38,6 +38,7 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.IInvocationContext;
 import org.eclipse.php.internal.ui.text.correction.IProblemLocation;
 import org.eclipse.php.internal.ui.text.correction.IQuickAssistProcessor;
@@ -63,35 +64,31 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 		public VarCommentCorrectionProposal(ASTNode variableNode, ISourceModule sourceModule) {
 			super(Messages.VarCommentQuickAssistProcessor_name, 0,
-					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_ADD), COMMAND_ID);
+					DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_ANNOTATION), COMMAND_ID);
 			this.variableNode = variableNode;
 			this.sourceModule = sourceModule;
 		}
 
 		@Override
 		public void apply(IDocument document) {
+			try {
+				SelectionDialog dialog = createTypeDialog(document);
+				int result = dialog.open();
+				if (result != IDialogConstants.OK_ID) {
+					return;
+				}
 
-			SelectionDialog dialog = createTypeDialog();
-			int result = dialog.open();
-			if (result != IDialogConstants.OK_ID) {
-				return;
-			}
-
-			TextEdit textEdit = null;
-			Object[] types = dialog.getResult();
-			if (types != null && types.length == 1 && types[0] instanceof IModelElement) {
-				try {
+				TextEdit textEdit = null;
+				Object[] types = dialog.getResult();
+				if (types != null && types.length == 1 && types[0] instanceof IModelElement) {
 					textEdit = createTextEditForType(document, (IModelElement) types[0]);
-				} catch (BadLocationException e) {
 				}
-			}
 
-			if (null != textEdit) {
-				try {
+				if (null != textEdit) {
 					textEdit.apply(document);
-				} catch (MalformedTreeException e) {
-				} catch (BadLocationException e) {
 				}
+			} catch (BadLocationException | ModelException | MalformedTreeException e) {
+				PHPUiPlugin.log(e);
 			}
 		}
 
@@ -99,16 +96,12 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 		 * Creates the variable comment for given type
 		 */
 		private TextEdit createTextEditForType(IDocument document, IModelElement selectedType)
-				throws BadLocationException {
+				throws BadLocationException, ModelException {
 
 			String typeName = selectedType.getElementName();
 			IModelElement parent = selectedType.getParent();
-			try {
-				if (parent instanceof IMember && PHPFlags.isNamespace(((IMember) parent).getFlags())) {
-					typeName = parent.getElementName() + '\\' + typeName;
-				}
-			} catch (ModelException e) {
-				return null;
+			if (parent instanceof IMember && PHPFlags.isNamespace(((IMember) parent).getFlags())) {
+				typeName = parent.getElementName() + '\\' + typeName;
 			}
 
 			typeName = typeName.trim();
@@ -145,19 +138,22 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 		/**
 		 * Creates the dialog to select type
+		 * 
+		 * @throws BadLocationException
+		 *             if variable name cannot be determined
 		 */
-		private SelectionDialog createTypeDialog() {
+		private SelectionDialog createTypeDialog(IDocument document) throws BadLocationException {
 
+			String varName = document.get(variableNode.getStart(), variableNode.getLength());
 			IDLTKUILanguageToolkit languageToolkit = PHPUILanguageToolkit.getInstance();
-			String languageName = languageToolkit.getCoreToolkit().getLanguageName();
 
 			final Shell parent = DLTKUIPlugin.getActiveWorkbenchShell();
 			IDLTKSearchScope searchScope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 			OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(parent, true,
 					PlatformUI.getWorkbench().getProgressService(), searchScope, IDLTKSearchConstants.TYPE,
 					languageToolkit);
-			dialog.setTitle(NLS.bind(DLTKUIMessages.OpenTypeAction_dialogTitle, languageName));
-			dialog.setMessage(DLTKUIMessages.OpenTypeAction_dialogMessage);
+			dialog.setTitle(Messages.VarCommentQuickAssistProcessor_OpenTypeAction_dialogTitle);
+			dialog.setMessage(NLS.bind(Messages.VarCommentQuickAssistProcessor_OpenTypeAction_dialogMessage, varName));
 			dialog.setFilter(""); //$NON-NLS-1$
 
 			return dialog;
@@ -165,7 +161,7 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 		@Override
 		public String getAdditionalProposalInfo() {
-			return null;
+			return Messages.VarCommentQuickAssistProcessor_AdditionalProposalInfo;
 		}
 
 	}
