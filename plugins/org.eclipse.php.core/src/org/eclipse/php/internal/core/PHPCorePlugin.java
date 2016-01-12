@@ -103,6 +103,9 @@ public class PHPCorePlugin extends Plugin {
 				}
 
 				checkStructureVersionAndReindex();
+				
+				// startup symbolic links cache
+				PHPSymbolicLinksCache.INSTANCE.startup();
 
 				return Status.OK_STATUS;
 			}

@@ -35,6 +35,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.util.HandleFactory;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.PHPSymbolicLinksCache;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.core.util.FileUtils;
@@ -50,15 +51,17 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 @SuppressWarnings("restriction")
 public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant {
 
+	private LinkSubjectFileFinder linkSubjectFileFinder = new LinkSubjectFileFinder();
+
 	/**
 	 * Helper class for finding workspace files that might point to provided
 	 * source location by means of being a linked/symbolic link files or be a
 	 * part of the chained structure that might consist of linked/symbolic link
 	 * directories/files.
 	 */
-	private static final class LinkSubjectFileFinder {
+	private final class LinkSubjectFileFinder {
 
-		public static Object find(final String sourceLocation, Object element) {
+		public Object find(final String sourceLocation, Object element) {
 			final LinkedList<IResource> matches = new LinkedList<IResource>();
 			final String sourceFileName = (new Path(sourceLocation)).lastSegment();
 			IProject project = null;
@@ -66,9 +69,9 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 				IDebugTarget target = ((IStackFrame) element).getDebugTarget();
 				project = PHPLaunchUtilities.getProject(target);
 			}
-			final IProject debugProject = project;
+			final IResource scope = project != null ? project : ResourcesPlugin.getWorkspace().getRoot();
 			try {
-				ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {
+				scope.accept(new IResourceVisitor() {
 					@Override
 					public boolean visit(IResource resource) throws CoreException {
 						try {
@@ -80,19 +83,13 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 							if (resource.getType() != IResource.FILE) {
 								return true;
 							}
-							// If we have a related project, check if it is its
-							// resource
-							if (debugProject != null && !resource.getProject().equals(debugProject)) {
-								return true;
-							}
 							/*
 							 * The goal of this pre-check condition is to reduce
 							 * the amount of files to be checked by NIO
-							 * (comparing with NIO can be time consuming).
+							 * (comparing with NIO can be time consuming ).
 							 */
 							if (resource.getName().equals(sourceFileName) || resource.isLinked()
-									|| (resource.getResourceAttributes() != null
-											&& resource.getResourceAttributes().isSymbolicLink())) {
+									|| PHPSymbolicLinksCache.INSTANCE.isSymbolicLink(resource)) {
 								String fileLocation = resource.getLocation().toOSString();
 								if (FileUtils.isSameFile(sourceLocation, fileLocation)) {
 									matches.add(resource);
@@ -246,18 +243,18 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 						PHPDebugPlugin.log(e);
 					}
 				}
+				// Check if file exists before moving on to the next checks
+				File file = new File(sourceFilePath);
+				if (!file.exists()) {
+					return EMPTY;
+				}
 				// Check if we have corresponding "linked chain subject" file
-				Object linkedFile = LinkSubjectFileFinder.find(sourceFilePath, object);
+				Object linkedFile = linkSubjectFileFinder.find(sourceFilePath, object);
 				if (linkedFile != null) {
 					return new Object[] { linkedFile };
 				}
-				// None from above succeeded - just open file if it exists
-				File file = new File(sourceFilePath);
-				if (file.exists()) {
-					return new Object[] { new LocalFile(file) };
-				}
-				// Nothing from above
-				return EMPTY;
+				// None from above succeeded - just open external file
+				return new Object[] { new LocalFile(file) };
 			}
 		}
 		return sourceElements;
