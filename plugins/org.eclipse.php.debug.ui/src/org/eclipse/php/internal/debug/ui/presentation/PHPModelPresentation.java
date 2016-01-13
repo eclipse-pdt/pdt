@@ -564,6 +564,45 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		annotation = new PHPExceptionBreakpointAnnotation(breakpoint);
 		fExceptionAnnotations.put(frame.getThread(), annotation);
 		annModel.addAnnotation(annotation, position);
+		// Position editor to current frame (exception line)
+		positionEditor(textEditor, frame);
+	}
+
+	private void positionEditor(ITextEditor editor, IStackFrame frame) {
+		try {
+			int charStart = frame.getCharStart();
+			if (charStart >= 0) {
+				editor.selectAndReveal(charStart, 0);
+				return;
+			}
+			int lineNumber = frame.getLineNumber();
+			lineNumber--;
+			IRegion region = getLineInformation(editor, lineNumber);
+			if (region != null) {
+				editor.selectAndReveal(region.getOffset(), 0);
+			}
+		} catch (DebugException e) {
+		}
+	}
+
+	private IRegion getLineInformation(ITextEditor editor, int lineNumber) {
+		IDocumentProvider provider = editor.getDocumentProvider();
+		IEditorInput input = editor.getEditorInput();
+		try {
+			provider.connect(input);
+		} catch (CoreException e) {
+			return null;
+		}
+		try {
+			IDocument document = provider.getDocument(input);
+			if (document != null) {
+				return document.getLineInformation(lineNumber);
+			}
+		} catch (BadLocationException e) {
+		} finally {
+			provider.disconnect(input);
+		}
+		return null;
 	}
 
 }
