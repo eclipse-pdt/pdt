@@ -21,13 +21,16 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.corext.SourceRange;
+import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.*;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -1387,6 +1390,11 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			FoldingStructureComputationContext ctx) {
 		try {
 			ISourceRange range = reference.getSourceRange();
+			if (reference instanceof SourceMethod) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=443379
+				int length = range.getLength() - (reference.getNameRange().getOffset() - range.getOffset());
+				range = new SourceRange(reference.getNameRange().getOffset(), length);
+			}
 			if (!SourceRange.isAvailable(range))
 				return new IRegion[0];
 			List<IRegion> regions = new ArrayList<IRegion>();
