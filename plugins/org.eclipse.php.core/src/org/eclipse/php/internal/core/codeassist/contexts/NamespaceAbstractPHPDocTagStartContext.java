@@ -60,6 +60,10 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 		}
 		if (!stack.empty()) {
 			String lastWord = stack.pop();
+			String[] elements = lastWord.split("[|]"); //$NON-NLS-1$
+			if (elements.length > 1) {
+				lastWord = elements[elements.length - 1];
+			}
 			if (lastWord.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 				if (!stack.empty() && isPrefix(lastWord)) {
 					if (lastWord.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {

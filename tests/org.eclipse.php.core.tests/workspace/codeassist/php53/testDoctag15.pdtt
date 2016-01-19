@@ -1,0 +1,32 @@
+--TEST--
+Test @param
+--FILE--
+<?
+namespace foo\bar\baz1
+{
+
+    class Target
+    {
+
+        function foo_bar_baz();
+    }
+}
+namespace foo
+{
+
+    class TestAbsolute
+    {
+
+        /**
+         *
+         * @param \foo\| $first
+         *
+         */
+        function test($first)
+        {}
+    }
+}
+?>
+--EXPECT--
+type(TestAbsolute)
+type(foo\bar\baz1)

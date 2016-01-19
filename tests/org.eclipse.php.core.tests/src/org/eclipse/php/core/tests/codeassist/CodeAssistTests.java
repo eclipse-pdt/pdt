@@ -35,6 +35,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -50,8 +51,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
 public class CodeAssistTests {
-
-	protected static final char OFFSET_CHAR = '|';
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -77,6 +76,8 @@ public class CodeAssistTests {
 						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
 						"/workspace/codeassist/php7" });
 	};
+
+	protected static final String DEFAULT_CURSOR = "|";
 
 	protected IProject project;
 	protected IFile testFile;
@@ -123,7 +124,7 @@ public class CodeAssistTests {
 	public void assist(String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
-		CompletionProposal[] proposals = getProposals(pdttFile.getFile(), pdttFile.getOtherFiles());
+		CompletionProposal[] proposals = getProposals(pdttFile);
 		compareProposals(proposals, pdttFile);
 	}
 
@@ -152,8 +153,11 @@ public class CodeAssistTests {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected int createFile(String data, String[] otherFiles) throws Exception {
-		int offset = data.lastIndexOf(OFFSET_CHAR);
+	protected int createFile(PdttFile pdttFile) throws Exception {
+		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
+		String data = pdttFile.getFile();
+		String[] otherFiles = pdttFile.getOtherFiles();
+		int offset = data.lastIndexOf(cursor);
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
@@ -184,8 +188,8 @@ public class CodeAssistTests {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public CompletionProposal[] getProposals(String data, String[] otherFiles) throws Exception {
-		int offset = createFile(data, otherFiles);
+	public CompletionProposal[] getProposals(PdttFile pdttFile) throws Exception {
+		int offset = createFile(pdttFile);
 		return getProposals(offset);
 	}
 
@@ -201,6 +205,11 @@ public class CodeAssistTests {
 			}
 		});
 		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
+	}
+
+	private static String getCursor(PdttFile pdttFile) {
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("cursor");
 	}
 
 	public static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {

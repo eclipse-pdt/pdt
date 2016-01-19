@@ -40,13 +40,11 @@ public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 		PHPDocTagContext tagContext = (PHPDocTagContext) context;
 
 		String prefix = tagContext.getPrefix();
-		String prev = tagContext.getPreviousWord();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			super.apply(reporter);
-		} else if (prev.equalsIgnoreCase("param")) { //$NON-NLS-1$
+		} else {
 			final PHPDocReturnTypeStrategy returnStrategy = new PHPDocReturnTypeStrategy(context);
 			returnStrategy.apply(reporter);
-
 		}
 	}
 

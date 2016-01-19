@@ -16,12 +16,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Protectable;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestResult;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -33,6 +27,12 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.AbstractProjectSuite;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+
+import junit.framework.Protectable;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
 
 public class CodeAssistProjectTests extends AbstractProjectSuite {
 
@@ -96,7 +96,7 @@ public class CodeAssistProjectTests extends AbstractProjectSuite {
 							CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(file.getAbsolutePath());
 
 							String data = pdttFile.getFile();
-							int offset = data.lastIndexOf(CodeAssistTests.OFFSET_CHAR);
+							int offset = data.lastIndexOf(CodeAssistTests.DEFAULT_CURSOR);
 							if (offset == -1) {
 								throw new IllegalArgumentException("Offset character is not set");
 							}

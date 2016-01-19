@@ -1,0 +1,33 @@
+--TEST--
+Test @return
+--CONFIG--
+cursor: _
+--FILE--
+<?
+namespace foo\bar\baz1
+{
+
+    class Target
+    {
+
+        function foo_bar_baz();
+    }
+}
+namespace foo
+{
+
+    class TestAbsolute
+    {
+
+        /**
+         *
+         * @return string|\foo\bar\baz1\_ $first
+         *
+         */
+        function test($first)
+        {}
+    }
+}
+?>
+--EXPECT--
+type(Target)
