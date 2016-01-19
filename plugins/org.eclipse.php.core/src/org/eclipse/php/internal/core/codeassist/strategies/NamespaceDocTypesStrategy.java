@@ -87,9 +87,13 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
+		String lastNamespace = null;
 		for (IType ns : context.getPossibleNamespaces()) {
 			if (context.getNsPrefix() == null) {
-				result.add(ns);
+				if (!ns.getElementName().equals(lastNamespace)) {
+					result.add(ns);
+				}
+				lastNamespace = ns.getElementName();
 			} else {
 				String fullName = ns.getElementName();
 				String alias = getAlias(ns, context.getNsPrefix());
