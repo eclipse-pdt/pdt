@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
@@ -1390,11 +1389,6 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			FoldingStructureComputationContext ctx) {
 		try {
 			ISourceRange range = reference.getSourceRange();
-			if (reference instanceof SourceMethod) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=443379
-				int length = range.getLength() - (reference.getNameRange().getOffset() - range.getOffset());
-				range = new SourceRange(reference.getNameRange().getOffset(), length);
-			}
 			if (!SourceRange.isAvailable(range))
 				return new IRegion[0];
 			List<IRegion> regions = new ArrayList<IRegion>();
@@ -1423,12 +1417,15 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				regions.add(new Region(start, end - start));
 			}
 
-			// shift -> start
-			regions.add(new Region(shift, range.getLength()));
-
-			IRegion[] result = new IRegion[regions.size()];
-			regions.toArray(result);
-			return result;
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=443379
+			int offset = range.getOffset();
+			int length = range.getLength();
+			if (reference.getNameRange() != null) {
+				offset = reference.getNameRange().getOffset();
+				length = range.getLength() - (reference.getNameRange().getOffset() - range.getOffset());
+			}
+			regions.add(new Region(offset, length));
+			return regions.toArray(new IRegion[0]);
 		} catch (ModelException e) {
 		}
 
