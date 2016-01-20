@@ -32,6 +32,7 @@ public class NamespacePHPDocVarStartContext extends NamespaceAbstractPHPDocTagSt
 	public static List<String> TAGS = new ArrayList<String>();
 
 	static {
+		TAGS.add("throws"); //$NON-NLS-1$
 		TAGS.add("param"); //$NON-NLS-1$
 		TAGS.add("return"); //$NON-NLS-1$
 		TAGS.add("see"); //$NON-NLS-1$
