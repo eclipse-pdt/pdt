@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Kaloyan Raev - Bug 486224 - ASTRewriteFormatter does not respect project settings
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.rewrite;
 
@@ -15,8 +16,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -216,7 +220,7 @@ import org.eclipse.text.edits.*;
 
 	public String createIndentString(int indentationUnits) {
 		try {
-			return createCodeFormatter(this.options, new Region(0, 0), createDocument("", null)) //$NON-NLS-1$
+			return createCodeFormatter(this.options, new Region(0, 0), document)
 					.createIndentationString(indentationUnits);
 		} catch (Exception e) {
 			Logger.logException(e);
