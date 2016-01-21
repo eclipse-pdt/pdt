@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -216,7 +219,7 @@ import org.eclipse.text.edits.*;
 
 	public String createIndentString(int indentationUnits) {
 		try {
-			return createCodeFormatter(this.options, new Region(0, 0), createDocument("", null)) //$NON-NLS-1$
+			return createCodeFormatter(this.options, new Region(0, 0), document) // $NON-NLS-1$
 					.createIndentationString(indentationUnits);
 		} catch (Exception e) {
 			Logger.logException(e);
