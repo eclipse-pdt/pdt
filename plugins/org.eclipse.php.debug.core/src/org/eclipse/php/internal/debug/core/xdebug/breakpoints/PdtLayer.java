@@ -11,12 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
@@ -26,7 +22,6 @@ import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
@@ -90,23 +85,6 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 						 */
 					}
 					// TODO - support for DLTK external libraries
-					/*
-					 * Remove all RunToLine breakpoints while we search through
-					 * the list of all our breakpoints looking for the one that
-					 * was hit.
-					 */
-					if (breakpoint instanceof PHPRunToLineBreakpoint) {
-						IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
-						try {
-							if (DBGpLogger.debugBP()) {
-								DBGpLogger.debug("removing runtoline breakpoint"); //$NON-NLS-1$
-							}
-							bmgr.removeBreakpoint(breakpoint, true);
-						} catch (CoreException e) {
-							DBGpLogger.logException("Exception trying to remove a runtoline breakpoint", //$NON-NLS-1$
-									this, e);
-						}
-					}
 				} else if (breakpoint instanceof IPHPExceptionBreakpoint) {
 					IPHPExceptionBreakpoint exBreakpoint = (IPHPExceptionBreakpoint) breakpoint;
 					if (exBreakpoint.getExceptionName().equals(exception)) {
@@ -132,10 +110,6 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 			return true;
 		}
 		return false;
-	}
-
-	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber) throws DebugException {
-		return new PHPRunToLineBreakpoint(fileName, lineNumber);
 	}
 
 	public String getSystemDebugProperty() {

@@ -11,16 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 
 public interface DBGpBreakpointFacade {
 	public DBGpBreakpoint createDBGpBreakpoint(IBreakpoint breakpoint);
 
 	public boolean supportsBreakpoint(IBreakpoint bp);
-
-	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber) throws DebugException;
 
 	public IBreakpoint findBreakpointHit(String filename, int lineno, String exception);
 
