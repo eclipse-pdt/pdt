@@ -2093,10 +2093,9 @@ public class DBGpTarget extends DBGpElement
 			}
 			langThread.setBreakpoints(new IBreakpoint[] { breakpoint });
 		} else {
-			// set it to an empty set as specified by the API.
+			// might be a hit caused by "Run To Line" command.
 			langThread.setBreakpoints(new IBreakpoint[0]);
 		}
-
 		// fire event once everything has been established
 		suspended(DebugEvent.BREAKPOINT);
 	}
@@ -2125,31 +2124,6 @@ public class DBGpTarget extends DBGpElement
 		IBreakpoint[] breakpoints = bmgr.getBreakpoints(bpFacade.getBreakpointModelID());
 		for (int i = 0; i < breakpoints.length; i++) {
 			breakpointAdded(breakpoints[i]);
-		}
-	}
-
-	/**
-	 * request a run to line
-	 * 
-	 * @param fileName
-	 * @param lineNumber
-	 */
-	public void runToLine(IFile fileName, int lineNumber) {
-		if (DBGpLogger.debugBP()) {
-			DBGpLogger.debug("runtoline: " + fileName + " " + lineNumber); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		if (isSuspended()) {
-			try {
-				IBreakpoint breakpoint = bpFacade.createRunToLineBreakpoint(fileName, lineNumber);
-				IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
-				bmgr.addBreakpoint(breakpoint);
-				resume();
-			} catch (DebugException e) {
-				DBGpLogger.logException("Unexpected DebugException", this, e); //$NON-NLS-1$
-			} catch (CoreException e) {
-				DBGpLogger.logException("Unexpected CoreException", this, e); //$NON-NLS-1$
-			}
 		}
 	}
 

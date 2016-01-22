@@ -105,18 +105,9 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 									.getAdapter(IDebugTarget.class);
 							if (debugTarget != null) {
 								IFile file = getFile(textEditor);
-								// TODO: we need a to call a debugger specific
-								// api, so an extension point is
-								// required here for different debuggers to plug
-								// into.
-								if (debugTarget instanceof PHPDebugTarget) {
-									IBreakpoint breakpoint = new PHPRunToLineBreakpoint(file, lineNumber);
-									RunToLineHandler handler = new RunToLineHandler(debugTarget, target, breakpoint);
-									handler.run(new NullProgressMonitor());
-								} else if (debugTarget instanceof DBGpTarget) {
-									DBGpTarget t = (DBGpTarget) debugTarget;
-									t.runToLine(file, lineNumber);
-								}
+								IBreakpoint breakpoint = new PHPRunToLineBreakpoint(file, lineNumber);
+								RunToLineHandler handler = new RunToLineHandler(debugTarget, target, breakpoint);
+								handler.run(new NullProgressMonitor());
 								return;
 							}
 						}
