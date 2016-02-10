@@ -103,7 +103,7 @@ public class PHPCorePlugin extends Plugin {
 				}
 
 				checkStructureVersionAndReindex();
-				
+
 				// startup symbolic links cache
 				PHPSymbolicLinksCache.INSTANCE.startup();
 
@@ -194,10 +194,12 @@ public class PHPCorePlugin extends Plugin {
 			reindexAllProjects(workspace);
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
+		} catch (CoreException e) {
+			PHPCorePlugin.log(e);
 		}
 	}
 
-	private void reindexAllProjects(IWorkspace workspace) throws ModelException {
+	private void reindexAllProjects(IWorkspace workspace) throws CoreException {
 		IProject[] projects = workspace.getRoot().getProjects();
 
 		// remove from index:
@@ -205,7 +207,7 @@ public class PHPCorePlugin extends Plugin {
 			if (!project.isAccessible()) {
 				continue;
 			}
-			if (project.isOpen()) {
+			if (project.isOpen() && PHPToolkitUtil.isPhpProject(project)) {
 				IScriptProject scriptProject = DLTKCore.create(project);
 				IProjectFragment[] projectFragments = scriptProject.getProjectFragments();
 				for (IProjectFragment projectFragment : projectFragments) {
