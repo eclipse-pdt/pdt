@@ -645,10 +645,18 @@ public class CodeGeneration {
 			MethodDeclaration methodDeclaration = (MethodDeclaration) elementAt;
 			resolvedBinding = methodDeclaration.resolveMethodBinding();
 			formalParameters = methodDeclaration.getFunction().formalParameters();
+			Identifier returnType = methodDeclaration.getFunction().getReturnType();
+			if (returnType != null) {
+				retType = returnType.getName();
+			}
 		} else if (elementAt instanceof FunctionDeclaration) {
 			FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
 			resolvedBinding = functionDeclaration.resolveFunctionBinding();
 			formalParameters = functionDeclaration.formalParameters();
+			Identifier returnType = functionDeclaration.getReturnType();
+			if (returnType != null) {
+				retType = returnType.getName();
+			}
 		}
 		final List<String> exceptions = new ArrayList<String>();
 		elementAt.accept(new AbstractVisitor() {
@@ -714,24 +722,29 @@ public class CodeGeneration {
 
 		StringBuilder returnTypeBuffer = new StringBuilder();
 		if (null != resolvedBinding) {
-			returnTypes = resolvedBinding.getReturnType();
-			if (null != returnTypes && returnTypes.length > 0) {
-				List<ITypeBinding> returnTypesList = removeDuplicateTypes(returnTypes);
-				for (ITypeBinding returnType : returnTypesList) {
-					if (returnType.isUnknown()) {
-						// show unknown types as if they were null types, even
-						// if looking for returnType.isUnknown() is not the same
-						// as looking for returnType.isNullType()
-						returnTypeBuffer.append(PHPSimpleTypes.NULL.getTypeName())
-								.append(Constants.TYPE_SEPERATOR_CHAR);
-					} else if (returnType.isAmbiguous()) {
-						returnTypeBuffer.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
-					} else if (!appendAllPossibleTypes(returnType.getEvaluatedType(), returnTypeBuffer)) {
-						returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR);
+			// check if the return type has already been determined by the
+			// function/method signature (PHP 7)
+			if (retType == null) {
+				// no return type in the signature - try to evaluate it
+				returnTypes = resolvedBinding.getReturnType();
+				if (null != returnTypes && returnTypes.length > 0) {
+					List<ITypeBinding> returnTypesList = removeDuplicateTypes(returnTypes);
+					for (ITypeBinding returnType : returnTypesList) {
+						if (returnType.isUnknown()) {
+							// show unknown types as if they were null types,
+							// even if looking for returnType.isUnknown() is not
+							// the same as looking for returnType.isNullType()
+							returnTypeBuffer.append(PHPSimpleTypes.NULL.getTypeName())
+									.append(Constants.TYPE_SEPERATOR_CHAR);
+						} else if (returnType.isAmbiguous()) {
+							returnTypeBuffer.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
+						} else if (!appendAllPossibleTypes(returnType.getEvaluatedType(), returnTypeBuffer)) {
+							returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR);
+						}
 					}
-				}
-				if (returnTypeBuffer.length() > 0) {
-					retType = returnTypeBuffer.substring(0, returnTypeBuffer.length() - 1);
+					if (returnTypeBuffer.length() > 0) {
+						retType = returnTypeBuffer.substring(0, returnTypeBuffer.length() - 1);
+					}
 				}
 			}
 
@@ -1122,7 +1135,7 @@ public class CodeGeneration {
 	 */
 	public static String getSetterComment(IScriptProject sp, String declaringTypeName, String methodName,
 			String fieldName, String fieldType, String paramName, String bareFieldName, String lineDelimiter)
-					throws CoreException {
+			throws CoreException {
 		return StubUtility.getSetterComment(sp, declaringTypeName, methodName, fieldName, fieldType, paramName,
 				bareFieldName, lineDelimiter);
 	}

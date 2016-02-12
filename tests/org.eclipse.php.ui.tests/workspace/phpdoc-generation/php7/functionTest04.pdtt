@@ -1,0 +1,21 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+class SomeClass {
+	/**|
+	 */
+	function function_name(int $param) : String {
+	}
+}
+--EXPECT--
+<?php
+class SomeClass {
+	/**
+	 * 
+	 * @param int $param
+	 * @return String
+	 */
+	function function_name(int $param) : String {
+	}
+}
