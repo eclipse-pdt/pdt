@@ -1,0 +1,9 @@
+Code-Review+1: Michal Niewrzal <michal.n@zend.com>
+Verified+1: Michal Niewrzal <michal.n@zend.com>
+Verified+1: Hudson CI
+Code-Review+2: Kaloyan Raev <kaloyan.r@zend.com>
+Submitted-by: Kaloyan Raev <kaloyan.r@zend.com>
+Submitted-at: Fri, 12 Feb 2016 11:12:30 -0500
+Reviewed-on: https://git.eclipse.org/r/66500
+Project: pdt/org.eclipse.pdt
+Branch: refs/heads/master
