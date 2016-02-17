@@ -18,7 +18,10 @@ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIR
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -27,9 +30,13 @@ import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
-import org.eclipse.php.internal.debug.core.*;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.PHPDebugUtil;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -159,76 +166,6 @@ public class DBGpTarget extends DBGpElement
 		}
 	}
 
-	private static class DBGpValueStorage {
-
-		private static final String KEY_SEPARATOR = ">>>"; //$NON-NLS-1$
-		private static final String TAG_WATCH = "watch-value"; //$NON-NLS-1$
-		private static final String TAG_CONTEXT = "context-value"; //$NON-NLS-1$
-
-		private Map<String, String> current = new HashMap<String, String>();
-		private Map<String, String> previous = new HashMap<String, String>();
-
-		public synchronized boolean store(DBGpValue value, Node property) {
-			if (DBGpResponse.getAttribute(property, "name").equals("$this")) //$NON-NLS-1$ //$NON-NLS-2$
-				return false;
-			boolean hasChanged = false;
-			String key = createKey(value, property);
-			String valueAsString = null;
-			try {
-				valueAsString = value == null ? null : value.getValueString();
-			} catch (DebugException e) {
-				// should not happen, nonetheless...
-				Logger.logException(e);
-			}
-			String cached = previous.get(key);
-			if (cached != null && !cached.equals(valueAsString))
-				hasChanged = true;
-			current.put(key, valueAsString);
-			return hasChanged;
-		}
-
-		public synchronized void reset() {
-			previous = current;
-			current = new HashMap<String, String>();
-		}
-
-		private String createKey(DBGpValue value, Node property) {
-			String key;
-			String level = value == null ? "0" : value.getOwner().getStackLevel(); //$NON-NLS-1$
-			String valuePath = DBGpResponse.getAttribute(property, "fullname"); //$NON-NLS-1$
-			/*
-			 * If is empty then it means that this is watch expression result.
-			 * In this case build dummy chain from scratch to cache its value.
-			 */
-			if (valuePath.isEmpty()) {
-				StringBuilder chain = new StringBuilder();
-				boolean done = false;
-				Object exp = (Object) property.getUserData("eval-watch"); //$NON-NLS-1$
-				if (exp == null) {
-					chain.append(DBGpResponse.getAttribute(property, "name")); //$NON-NLS-1$
-				} else {
-					chain.append((String) exp);
-					done = true;
-				}
-				Node next = property.getParentNode();
-				while (!done && next != null) {
-					String element = DBGpResponse.getAttribute(next, "name"); //$NON-NLS-1$
-					if (element.isEmpty()) {
-						element = (String) next.getUserData("eval-watch"); //$NON-NLS-1$
-						chain.insert(0, element + KEY_SEPARATOR);
-						break;
-					}
-					chain.insert(0, element + KEY_SEPARATOR);
-					next = next.getParentNode();
-				}
-				key = TAG_WATCH + KEY_SEPARATOR + level + KEY_SEPARATOR + chain.toString();
-			} else {
-				key = TAG_CONTEXT + KEY_SEPARATOR + level + KEY_SEPARATOR + valuePath;
-			}
-			return key;
-		}
-	}
-
 	// used to identify this debug target with the associated
 	// script being debugged.
 	private String sessionID;
@@ -321,8 +258,6 @@ public class DBGpTarget extends DBGpElement
 	// need to have something in case a target is terminated before
 	// a session is initiated to stop a NPE in the debug view
 	private DebugOutput debugOutput = new DebugOutput();
-
-	private DBGpValueStorage valueStorage = new DBGpValueStorage();
 
 	private boolean hasInitialSource = true;
 
@@ -1236,7 +1171,6 @@ public class DBGpTarget extends DBGpElement
 		currentVariables = null;
 		superGlobalVars = null;
 		stepping = false;
-		valueStorage.reset();
 		fireSuspendEvent(detail);
 		langThread.fireSuspendEvent(detail);
 	}
@@ -1346,21 +1280,21 @@ public class DBGpTarget extends DBGpElement
 	 * different line number then existing is being updated with the use of data
 	 * from incoming one.
 	 * 
-	 * @param previousFrame
-	 * @param incomingFrame
+	 * @param previous
+	 * @param incoming
 	 * @return merged frame
 	 * @throws DebugException
 	 */
-	private IStackFrame mergeFrame(DBGpStackFrame previousFrame, DBGpStackFrame incomingFrame) throws DebugException {
-		if (previousFrame.getThread() == incomingFrame.getThread()
-				&& previousFrame.getName().equals(incomingFrame.getName())
-				&& previousFrame.getStackLevel().equals(incomingFrame.getStackLevel())
-				&& previousFrame.getSourceName().equals(incomingFrame.getSourceName())
-				&& previousFrame.getQualifiedFile().equals(incomingFrame.getQualifiedFile())) {
-			previousFrame.update(incomingFrame.getLineNumber());
-			return previousFrame;
+	private IStackFrame mergeFrame(DBGpStackFrame previous, DBGpStackFrame incoming) throws DebugException {
+		if (previous.getThread() == incoming.getThread()
+				&& previous.getName().equals(incoming.getName())
+				&& previous.getStackLevel().equals(incoming.getStackLevel())
+				&& previous.getSourceName().equals(incoming.getSourceName())
+				&& previous.getQualifiedFile().equals(incoming.getQualifiedFile())) {
+			previous.update(incoming.getDescriptor());
+			return previous;
 		}
-		return incomingFrame;
+		return incoming;
 	}
 
 	/**
@@ -1449,8 +1383,8 @@ public class DBGpTarget extends DBGpElement
 
 	private void setContextFacets(IVariable[] contextVariables) {
 		for (int i = 0; i < contextVariables.length; i++) {
-			if (contextVariables[i] instanceof AbstractDBGpBaseVariable) {
-				AbstractDBGpBaseVariable dbgpVariable = (AbstractDBGpBaseVariable) contextVariables[i];
+			if (contextVariables[i] instanceof DBGpVariable) {
+				DBGpVariable dbgpVariable = (DBGpVariable) contextVariables[i];
 				String endName;
 				try {
 					endName = dbgpVariable.getName();
@@ -1488,7 +1422,7 @@ public class DBGpTarget extends DBGpElement
 				Node property = properties.item(i);
 				if (shouldSkip(property))
 					continue;
-				variables.add(new DBGpVariable(this, property, reportedLevel));
+				variables.add(new DBGpVariable(this, property, Integer.valueOf(reportedLevel)));
 			}
 		}
 		return variables.toArray(new DBGpVariable[variables.size()]);
@@ -1505,8 +1439,8 @@ public class DBGpTarget extends DBGpElement
 	/**
 	 * set a variable to a particular value
 	 * 
-	 * @param fullName
-	 * @param stackLevel
+	 * @param fFullName
+	 * @param fStackLevel
 	 * @param data
 	 * @return
 	 */
@@ -1525,16 +1459,12 @@ public class DBGpTarget extends DBGpElement
 			encoded = Base64.encode(data.getBytes());
 		}
 		String fullName = var.getFullName();
-		String stackLevel = var.getStackLevel();
+		String stackLevel = String.valueOf(var.getStackLevel());
 		String args = "-n " + fullName + " -d " + stackLevel + " -l " + encoded.length() + " -- " + encoded; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		try {
-			if (var.getReferenceTypeName().equals(DBGpVariable.PHP_STRING)) {
-				// this ensures XDebug doesn't use eval
-				args = "-t string " + args; //$NON-NLS-1$
-			}
-		} catch (DebugException e) {
+		if (var.getDataType() == DataType.PHP_STRING) {
+			// this ensures XDebug doesn't use eval
+			args = "-t string " + args; //$NON-NLS-1$
 		}
-
 		DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propSet, args);
 		boolean success = false;
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
@@ -2425,18 +2355,6 @@ public class DBGpTarget extends DBGpElement
 
 	public boolean isWaiting() {
 		return hasState(STATE_STARTED_SESSION_WAIT);
-	}
-
-	/**
-	 * Adds variable's value to the storage.
-	 * 
-	 * @param value
-	 * @param property
-	 * @return <code>true</code> if given value has changed since previous
-	 *         suspension, <code>false</code> otherwise
-	 */
-	boolean storeValue(DBGpValue value, Node property) {
-		return valueStorage.store(value, property);
 	}
 
 	private BreakpointSet getBreakpointSet() {

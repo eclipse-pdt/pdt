@@ -35,48 +35,16 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	private int lineNo; // line within the file of this stack frame
 	private String name = ""; // string to display in debugger for //$NON-NLS-1$
 								// this stack frame
-	private IVariable[] variables;
+	private IVariable[] currentVariables;
+	private IVariable[] previousVariables;
+	private Node descriptor;
 
 	// private IVariable[] variables; // variables exposed to this stack frame
 
 	public DBGpStackFrame(DBGpThread threadOwner, Node stackData) {
 		super(threadOwner.getDebugTarget());
 		owningThread = threadOwner;
-
-		// parse the xml information about a stack
-
-		/*
-		 * <stack level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"
-		 * where="" cmdbegin="line_number:offset" cmdend="line_number:offset"/>
-		 * <stack level="{NUM}" type="file|eval|?" filename="..."
-		 * lineno="{NUM}"> <input level="{NUM}" type="file|eval|?"
-		 * filename="..." lineno="{NUM}"/> </stack> </response>
-		 */
-
-		String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
-		stackLevel = DBGpResponse.getAttribute(stackData, "level"); //$NON-NLS-1$
-		lineNo = Integer.parseInt(line);
-		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
-		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
-		String function = DBGpResponse.getAttribute(stackData, "where"); //$NON-NLS-1$
-		// check to see if the file exists in the workspace
-		IResource fileFound = ResourcesPlugin.getWorkspace().getRoot().findMember(qualifiedFile);
-		if (fileFound != null) {
-			IFile file = (IFile) fileFound;
-			// get the file found in workspace and show project/file
-			String projectName = file.getProject().getName();
-			String projectRelPath = file.getProjectRelativePath().toString();
-			fileName = projectName + "/" + projectRelPath; //$NON-NLS-1$
-		} else {
-			// fileName = null;
-			fileName = qualifiedFile;
-		}
-		name = fileName + "." + function + "()"; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	void update(int lineNo) throws DebugException {
-		this.lineNo = lineNo;
-		this.variables = null;
+		update(stackData);
 	}
 
 	/*
@@ -149,14 +117,18 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
-	public IVariable[] getVariables() throws DebugException {
-		// see equals() as to where variables cannot be cached in the stack
-		// frame
+	public synchronized IVariable[] getVariables() throws DebugException {
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
-		if (variables == null) {
-			variables = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
+		if (currentVariables == null) {
+			// fetch new set of variables
+			IVariable[] incoming = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
+			currentVariables = new IVariable[incoming.length];
+			for (int i = 0; i < incoming.length; i++) {
+				DBGpVariable variable = ((DBGpVariable) incoming[i]);
+				currentVariables[i] = merge(variable);
+			}
 		}
-		return variables;
+		return currentVariables;
 	}
 
 	/*
@@ -369,4 +341,66 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	public String getStackLevel() {
 		return stackLevel;
 	}
+
+	protected Node getDescriptor() {
+		return descriptor;
+	}
+
+	protected void update(Node stackData) {
+		// Reset state
+		this.previousVariables = currentVariables;
+		this.currentVariables = null;
+		// Set up new descriptor
+		descriptor = stackData;
+		String line = DBGpResponse.getAttribute(descriptor, "lineno"); //$NON-NLS-1$
+		stackLevel = DBGpResponse.getAttribute(descriptor, "level"); //$NON-NLS-1$
+		lineNo = Integer.parseInt(line);
+		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(descriptor, "filename")); //$NON-NLS-1$
+		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
+		String function = DBGpResponse.getAttribute(descriptor, "where"); //$NON-NLS-1$
+		// check to see if the file exists in the workspace
+		IResource fileFound = ResourcesPlugin.getWorkspace().getRoot().findMember(qualifiedFile);
+		if (fileFound != null) {
+			IFile file = (IFile) fileFound;
+			// get the file found in workspace and show project/file
+			String projectName = file.getProject().getName();
+			String projectRelPath = file.getProjectRelativePath().toString();
+			fileName = projectName + "/" + projectRelPath; //$NON-NLS-1$
+		} else {
+			// fileName = null;
+			fileName = qualifiedFile;
+		}
+		name = fileName + "." + function + "()"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	/**
+	 * Merges incoming variable. Merge is done by means of checking if related
+	 * child variable existed in "one step back" state of a frame. If related
+	 * variable existed, it is updated with the use of the most recent
+	 * descriptor and returned instead of the incoming one.
+	 * 
+	 * @param variable
+	 * @param descriptor
+	 * @return merged variable
+	 */
+	protected IVariable merge(IVariable variable) {
+		if (previousVariables == null)
+			return variable;
+		if (!(variable instanceof DBGpVariable))
+			return variable;
+		DBGpVariable incoming = (DBGpVariable) variable;
+		if (incoming.getFullName().isEmpty())
+			return incoming;
+		for (IVariable stored : previousVariables) {
+			if (stored instanceof DBGpVariable) {
+				DBGpVariable previous = (DBGpVariable) stored;
+				if (previous.getFullName().equals(incoming.getFullName())) {
+					((DBGpVariable) stored).update(incoming.getDescriptor());
+					return stored;
+				}
+			}
+		}
+		return variable;
+	}
+
 }

@@ -89,7 +89,6 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 
 		public void evaluate() {
 			// Logger.debug("getValue() for: " + expressionText);
-			String stackLevel = "0"; //$NON-NLS-1$
 			String testExp = expressionText.trim();
 			Node result = null;
 
@@ -103,8 +102,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			 */
 			result = debugTarget.eval(testExp);
 			if (result != null) {
-				result.setUserData("eval-watch", expressionText, null); //$NON-NLS-1$
-				IVariable tempVar = new DBGpVariable(debugTarget, result, stackLevel);
+				IVariable tempVar = new DBGpVariable(debugTarget, result, 0);
 				evalResult = null;
 				try {
 					evalResult = tempVar.getValue();

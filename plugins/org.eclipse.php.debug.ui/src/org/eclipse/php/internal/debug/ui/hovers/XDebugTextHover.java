@@ -101,7 +101,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2"); //$NON-NLS-1$
+		IVariable tempVar = new DBGpVariable(debugTarget, resp, -1);
 
 		IValue val = null;
 
@@ -134,7 +134,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2"); //$NON-NLS-1$
+		IVariable tempVar = new DBGpVariable(debugTarget, resp, -1);
 
 		IValue val = null;
 

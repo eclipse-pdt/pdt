@@ -287,6 +287,15 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (facetOwner.hasFacet(VIRTUAL_PARTITION)) {
 			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_VIRTUAL_CONTAINER);
 		}
+		if (facetOwner.hasFacet(Facet.VIRTUAL_LENGTH)) {
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_VIRTUAL_LENGTH);
+		}
+		if (facetOwner.hasFacet(Facet.VIRTUAL_UNINIT)) {
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_VIRTUAL_UNINIT);
+		}
+		if (facetOwner.hasFacet(Facet.VIRTUAL_ARRAY_MEMBER)) {
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_VIRTUAL_ARRAY);
+		}
 		return null;
 	}
 
