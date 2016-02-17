@@ -62,9 +62,12 @@ public class PHPDebugUIImages {
 	public static final String IMG_OBJ_MEMBER_LOCAL = "IMG_OBJ_MEMBER_LOCAL"; //$NON-NLS-1$
 	public static final String IMG_OBJ_MEMBER_SUPER_GLOBAL = "IMG_OBJ_MEMBER_SUPER_GLOBAL"; //$NON-NLS-1$
 	public static final String IMG_OBJ_MEMBER_VIRTUAL_CLASS = "IMG_OBJ_MEMBER_VIRTUAL_CLASS"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_VIRTUAL_LENGTH = "IMG_OBJ_MEMBER_VIRTUAL_LENGTH"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_VIRTUAL_UNINIT = "IMG_OBJ_MEMBER_VIRTUAL_UNINIT"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_VIRTUAL_ARRAY = "IMG_OBJ_MEMBER_VIRTUAL_ARRAY"; //$NON-NLS-1$
 	public static final String IMG_OBJ_EXCEPTION_ANNOTATION = "IMG_OBJ_EXCEPTION_ANNOTATION"; //$NON-NLS-1$
 	public static final String IMG_OBJ_ERROR_ANNOTATION = "IMG_OBJ_ERROR_ANNOTATION"; //$NON-NLS-1$
-	
+
 	public static final String IMG_ELCL_EXCEPTION_BREAKPOINT = "IMG_ELCL_EXCEPTION_BREAKPOINT"; //$NON-NLS-1$
 	public static final String IMG_DLCL_EXCEPTION_BREAKPOINT = "IMG_DLCL_EXCEPTION_BREAKPOINT"; //$NON-NLS-1$
 	public static final String IMG_ELCL_ERROR_BREAKPOINT = "IMG_ELCL_ERROR_BREAKPOINT"; //$NON-NLS-1$
@@ -123,6 +126,9 @@ public class PHPDebugUIImages {
 		declareRegistryImage(IMG_OBJ_MEMBER_LOCAL, T_OBJ + "member_local.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_SUPER_GLOBAL, T_OBJ + "member_super_global.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CLASS, T_OBJ + "member_virtual_class.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_LENGTH, T_OBJ + "member_virtual_length.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_UNINIT, T_OBJ + "member_virtual_uninit.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_ARRAY, T_OBJ + "member_virtual_array.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_ARRAY, T_OBJ + "member_array.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CONTAINER, T_OBJ + "member_virtual_container.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_PUBLIC_ACCESS, T_OBJ + "member_public_access.png"); //$NON-NLS-1$

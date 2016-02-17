@@ -71,7 +71,19 @@ public interface IVariableFacet {
 		/**
 		 * Facet indicating that corresponding element is 'virtual partition'.
 		 */
-		VIRTUAL_PARTITION;
+		VIRTUAL_PARTITION,
+		/**
+		 * Facet indicating that corresponding element is an element length.
+		 */
+		VIRTUAL_LENGTH,
+		/**
+		 * Facet indicating that corresponding element is uninitialized.
+		 */
+		VIRTUAL_UNINIT,
+		/**
+		 * Facet indicating that corresponding element is 'virtual array' member.
+		 */
+		VIRTUAL_ARRAY_MEMBER;
 
 	}
 

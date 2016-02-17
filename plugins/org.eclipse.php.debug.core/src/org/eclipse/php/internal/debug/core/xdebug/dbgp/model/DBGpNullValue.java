@@ -11,32 +11,60 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import org.eclipse.debug.core.DebugException;
-import org.w3c.dom.Node;
+/**
+ * DBGp null value.
+ * 
+ * @author Bartlomiej Laczkowski
+ */
+public class DBGpNullValue extends AbstractDBGpValue {
 
-public class DBGpNullValue extends DBGpValue {
-
-	public DBGpNullValue(DBGpVariable owningVariable, Node property) {
-		super(owningVariable, property);
-		setModifiable(false); // will never be modifiable, unknown type
+	/**
+	 * Creates new DBGp null value.
+	 * 
+	 * @param owner
+	 */
+	public DBGpNullValue(DBGpVariable owner) {
+		super(owner);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+	 * AbstractDBGpValue.DBGpValueData)
 	 */
-	public String getReferenceTypeName() throws DebugException {
-		return DBGpVariable.PHP_NULL;
+	@Override
+	protected String createValueString(DBGpValueData valueData) {
+		String valueString = valueData.getValueString();
+		if (valueString != null)
+			return valueString.trim();
+		return DataType.PHP_NULL.getText();
 	}
 
-	void genValueString(String data) {
-		if (data != null) {
-			setValueString(data.trim());
-		} else {
-			setValueString(DBGpVariable.PHP_NULL);
-		}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * supportsValueModification()
+	 */
+	@Override
+	protected boolean supportsValueModification() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * verifyValue(java.lang.String)
+	 */
+	@Override
+	protected boolean verifyValue(String expression) {
+		return true;
 	}
 
 }

@@ -11,11 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.views.variables;
 
+import org.eclipse.debug.core.model.IWatchExpression;
 import org.eclipse.debug.internal.ui.viewers.model.provisional.IElementEditor;
+import org.eclipse.debug.internal.ui.viewers.model.provisional.IElementLabelProvider;
 import org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactory;
 import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
 import org.eclipse.php.internal.debug.ui.model.PHPModelProxyFactory;
@@ -31,21 +34,31 @@ public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 
 	private static IElementEditor fElementEditor = new PHPVariableColumnEditor();
 	private static IModelProxyFactory fgModelFactory = new PHPModelProxyFactory();
+	private static IElementLabelProvider fgLPVariable = new PHPVariableLabelProvider();
+	private static IElementLabelProvider fgLPExpression = new PHPExpressionLabelProvider();
 
 	/**
 	 * Override the default one to provide the PHP specific adapters.
 	 */
 	@SuppressWarnings("unchecked")
-	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adapterType.equals(IElementEditor.class)) {
 			if (adaptableObject instanceof PHPVariable) {
-				return fElementEditor;
+				return (T) fElementEditor;
 			}
 		}
 		if (adapterType.equals(IModelProxyFactory.class)) {
 			if (adaptableObject instanceof PHPLaunch || adaptableObject instanceof PHPMultiDebugTarget
 					|| adaptableObject instanceof DBGpMultiSessionTarget)
-				return fgModelFactory;
+				return (T) fgModelFactory;
+		}
+		if (adapterType.equals(IElementLabelProvider.class)) {
+			if (adaptableObject instanceof DBGpVariable) {
+				return (T) fgLPVariable;
+			}
+			if (adaptableObject instanceof IWatchExpression) {
+				return (T) fgLPExpression;
+			}
 		}
 		return super.getAdapter(adaptableObject, adapterType);
 	}

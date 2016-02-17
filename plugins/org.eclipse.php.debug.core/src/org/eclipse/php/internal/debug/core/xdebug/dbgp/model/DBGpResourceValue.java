@@ -11,33 +11,60 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import org.eclipse.debug.core.DebugException;
-import org.w3c.dom.Node;
+/**
+ * DBGp resource value.
+ * 
+ * @author Bartlomiej Laczkowski
+ */
+public class DBGpResourceValue extends AbstractDBGpValue {
 
-public class DBGpResourceValue extends DBGpValue {
-
-	public DBGpResourceValue(DBGpVariable owningVariable, Node property) {
-		super(owningVariable);
-		setModifiable(false);
-		simpleParseNode(property);
+	/**
+	 * Creates new DBGp resource value.
+	 * 
+	 * @param owner
+	 */
+	public DBGpResourceValue(DBGpVariable owner) {
+		super(owner);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+	 * AbstractDBGpValue.DBGpValueData)
 	 */
-	public String getReferenceTypeName() throws DebugException {
-		return DBGpVariable.PHP_RESOURCE;
+	@Override
+	protected String createValueString(DBGpValueData valueData) {
+		String valueString = valueData.getValueString();
+		if (valueString != null && valueString.trim().length() > 0)
+			return valueString;
+		return ""; //$NON-NLS-1$
 	}
 
-	void genValueString(String data) {
-		if (data != null && data.trim().length() > 0) {
-			setValueString(data);
-		} else {
-			setValueString(""); //$NON-NLS-1$
-		}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * supportsValueModification()
+	 */
+	@Override
+	protected boolean supportsValueModification() {
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * verifyValue(java.lang.String)
+	 */
+	@Override
+	protected boolean verifyValue(String expression) {
+		return false;
 	}
 
 }

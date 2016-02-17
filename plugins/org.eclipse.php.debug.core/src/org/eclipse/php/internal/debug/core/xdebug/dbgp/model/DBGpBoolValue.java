@@ -11,63 +11,22 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import org.eclipse.debug.core.DebugException;
-import org.w3c.dom.Node;
+/**
+ * DBGp boolean value.
+ * 
+ * @author Bartlomiej Laczkowski
+ */
+public class DBGpBoolValue extends AbstractDBGpValue {
 
-public class DBGpBoolValue extends DBGpValue {
-
-	String[] allowedValues = { "false", "true" }; //$NON-NLS-1$ //$NON-NLS-2$
-
-	public DBGpBoolValue(DBGpVariable owningVariable, Node property) {
-		super(owningVariable, property);
-		setModifiable(true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
-	 */
-	public String getReferenceTypeName() throws DebugException {
-		return DBGpVariable.PHP_BOOL;
-	}
+	private static final String[] fAllowedValues = { "false", "true" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
+	 * Creates new DBGp boolean value.
 	 * 
+	 * @param owner
 	 */
-	void genValueString(String data) {
-		setValueString(IDBGpModelConstants.INVALID_VAR_CONTENT);
-		if (data != null) {
-			try {
-				int bool = Integer.parseInt(data);
-				if (1 == bool) {
-					setValueString("true"); //$NON-NLS-1$
-				} else if (0 == bool) {
-					setValueString("false"); //$NON-NLS-1$
-				}
-			} catch (NumberFormatException nfe) {
-
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.
-	 * String )
-	 */
-	public void setValue(String expression) throws DebugException {
-		String data;
-		if (expression.equals("true")) { //$NON-NLS-1$
-			data = "1"; //$NON-NLS-1$
-		} else if (expression.equals("false")) { //$NON-NLS-1$
-			data = "0"; //$NON-NLS-1$
-		} else {
-			data = expression;
-		}
-		genValueString(data);
+	public DBGpBoolValue(DBGpVariable owner) {
+		super(owner);
 	}
 
 	/*
@@ -77,13 +36,49 @@ public class DBGpBoolValue extends DBGpValue {
 	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
 	 * .String)
 	 */
-	boolean verifyValue(String expression) throws DebugException {
-		boolean allowed = false;
-		for (int i = 0; i < allowedValues.length && false == allowed; i++) {
-			if (expression.equals(allowedValues[i])) {
-				allowed = true;
+	protected boolean verifyValue(String expression) {
+		for (String allowed : fAllowedValues) {
+			if (expression.equals(allowed)) {
+				return true;
 			}
 		}
-		return allowed;
+		return false;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * createValueString()
+	 */
+	@Override
+	protected String createValueString(DBGpValueData data) {
+		String valueString = data.getValueString();
+		if (valueString != null) {
+			try {
+				int bool = Integer.parseInt(valueString);
+				if (1 == bool) {
+					return fAllowedValues[1];
+				} else if (0 == bool) {
+					return fAllowedValues[0];
+				}
+			} catch (NumberFormatException nfe) {
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * supportsValueModification()
+	 */
+	@Override
+	protected boolean supportsValueModification() {
+		return true;
+	}
+
 }
