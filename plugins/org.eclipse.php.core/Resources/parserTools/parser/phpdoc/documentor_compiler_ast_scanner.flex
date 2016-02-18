@@ -306,7 +306,7 @@ TABS_AND_SPACES=[ \t]*
 ANY_CHAR=(.|[\n])
 NEWLINE=("\r"|"\n"|"\r\n")
 LINESTART=({TABS_AND_SPACES}"*"?{TABS_AND_SPACES})
-EMPTYLINE=({LINESTART}{TABS_AND_SPACES}{NEWLINE})
+EMPTYLINE=({LINESTART}{TABS_AND_SPACES})
 PHPDOCSTART="/**"{TABS_AND_SPACES}
 
 
@@ -385,9 +385,9 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
     return -1;
 }
 
-<ST_IN_SHORT_DESC>^{EMPTYLINE}  {startLongDescState(false);}
+<ST_IN_SHORT_DESC>^{EMPTYLINE}{NEWLINE} {startLongDescState(false);}
 
-<ST_IN_SHORT_DESC>(([ \t]+)"."|"."([ \t]+)|"."{NEWLINE}) {
+<ST_IN_SHORT_DESC>([.]+[ \t]+{NEWLINE}?)|([.]+{NEWLINE}) {
     appendText();
     startLongDescState(true);
 }
@@ -437,7 +437,7 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 
 <ST_IN_LONG_DESC>{TABS_AND_SPACES}("*/") {handleDocEnd_longDesc();return -1;}
 
-<ST_IN_LONG_DESC>{NEWLINE}   {appendText();}
+<ST_IN_LONG_DESC>{NEWLINE}     {appendText();}
 
 <ST_IN_LONG_DESC>.             {}
 
