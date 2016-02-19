@@ -6,6 +6,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.editor.contentassist.messages"; //$NON-NLS-1$
 	public static String AutoActivationTrigger_0;
 	public static String ParameterGuessingProposal_0;
+	public static String PHPContentAssistant_0;
 
 	static {
 		// initialize resource bundle

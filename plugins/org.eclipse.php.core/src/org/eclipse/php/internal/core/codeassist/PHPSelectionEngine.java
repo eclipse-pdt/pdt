@@ -57,6 +57,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
+import org.eclipse.php.internal.core.util.PHPBuildUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -88,7 +89,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private PHPVersion phpVersion;
 
 	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
-
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return EMPTY;
 		}
@@ -117,7 +117,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						null, null);
 				return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
 			}
-		} catch (Exception e) {
+		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
 
@@ -150,7 +150,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (document == null) {
 			return EMPTY;
 		}
-		IModelElement[] elements = internalResolve(document, sourceModule, cache, offset, end);
+		IModelElement[] elements = null;
+		try {
+			elements = internalResolve(document, sourceModule, cache, offset, end);
+		} catch (BadLocationException e1) {
+			PHPCorePlugin.log(e1);
+		} catch (CoreException e1) {
+			PHPCorePlugin.log(e1);
+		}
 		if (elements == null) {
 			return EMPTY;
 		}
@@ -219,6 +226,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private IModelElement[] internalASTResolve(ISourceModule sourceModule, IModelAccessCache cache, int offset, int end)
 			throws ModelException {
+		if (PHPBuildUtils.isIndexing()) {
+			return null;
+		}
+
 		String source;
 
 		try {
@@ -270,8 +281,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (context instanceof IModelCacheContext) {
 			((IModelCacheContext) context).setCache(cache);
 		}
-
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 
 		// Function call:
 		if (node instanceof PHPCallExpression) {
@@ -365,7 +374,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if (name.length() > 0 && name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					name = name.substring(1);
 				}
-
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 				types = PhpModelAccess.getDefault().findNamespaces(null, name, MatchRule.EXACT, 0, 0, scope, null);
 
 				if (types == null || types.length == 0) {
@@ -526,7 +535,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private IModelElement[] internalResolve(IStructuredDocument sDoc, ISourceModule sourceModule,
-			IModelAccessCache cache, int offset, int end) {
+			IModelAccessCache cache, int offset, int end) throws BadLocationException, CoreException {
 		IStructuredDocumentRegion sRegion = sDoc.getRegionAtCharacterOffset(offset);
 		if (sRegion == null) {
 			return EMPTY;
@@ -538,236 +547,238 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		try {
-			if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
-				// Determine element name:
-				int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
-				TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(),
-						sRegion, true);
-				if (statement.length() == 0) {
-					return EMPTY;
+
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+			tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+			// Determine element name:
+			int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
+			TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion,
+					true);
+			if (statement.length() == 0) {
+				return EMPTY;
+			}
+			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
+			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, endPosition,
+					true);
+			String elementName = statement.subSequence(startPosition, endPosition).toString();
+
+			// Determine previous word:
+			int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
+			int prevWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, prevWordEnd,
+					false);
+			String prevWord = statement.subSequence(prevWordStart, prevWordEnd).toString();
+
+			// Determine next word:
+			ITextRegion nextRegion = tRegion;
+			do {
+				nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
+				if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType())
+						&& nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
+					break;
 				}
-				int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
-				int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement,
-						endPosition, true);
-				String elementName = statement.subSequence(startPosition, endPosition).toString();
+			} while (nextRegion.getEnd() < phpScriptRegion.getLength());
 
-				// Determine previous word:
-				int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
-				int prevWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement,
-						prevWordEnd, false);
-				String prevWord = statement.subSequence(prevWordStart, prevWordEnd).toString();
+			String nextWord = sDoc.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(),
+					nextRegion.getTextLength());
 
-				// Determine next word:
-				ITextRegion nextRegion = tRegion;
-				do {
-					nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
-					if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType())
-							&& nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
-						break;
-					}
-				} while (nextRegion.getEnd() < phpScriptRegion.getLength());
+			if (elementName.isEmpty()) {
+				return EMPTY;
+			}
+			IType containerType = PHPModelUtils.getCurrentType(sourceModule, offset);
+			if (containerType == null) {
+				containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+			}
 
-				String nextWord = sDoc.get(
-						container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(),
-						nextRegion.getTextLength());
-
-				if (elementName.length() > 0) {
-					IType containerType = PHPModelUtils.getCurrentType(sourceModule, offset);
-					if (containerType == null) {
-						containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
-					}
-
-					// If we are in function declaration:
-					if (FUNCTION.equalsIgnoreCase(prevWord)) {
-						if (containerType != null) {
-							return PHPModelUtils.getTypeMethod(containerType, elementName, true);
-						}
-						return getFunction(sourceModule, elementName);
-					}
-
-					// If we are in class declaration:
-					if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)) {
-						if (containerType != null) {
-							if (containerType.getElementName().equalsIgnoreCase(elementName)) {
-								containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
-							}
-							if (containerType != null) {
-								return PHPModelUtils.getTypeType(containerType, elementName, true);
-							}
-						}
-						return getClass(sourceModule, elementName);
-					}
-
-					// Class instantiation:
-					if (NEW.equalsIgnoreCase(prevWord)) {
-						return getConstructorsIfAny(
-								extractClasses(PHPModelUtils.getTypes(elementName, sourceModule, offset, cache, null)));
-					}
-
-					// Handle extends and implements:
-					// Check that the statement suites the condition. If
-					// class or interface keywords don't appear in the
-					// beginning of the statement or they are alone there.
-					boolean isClassDeclaration = false;
-					if (statement.length() > 6 && (CLASS.equals(statement.subSequence(0, 5).toString())
-							&& (isClassDeclaration = true)
-							|| statement.length() > 10 && INTERFACE.equals(statement.subSequence(0, 9).toString()))) {
-
-						IModelElement[] generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration,
-								prevWord, elementName, offset);
-						if (generalizationTypes != null) {
-							return generalizationTypes;
-						}
-
-						// Multiple extensions and implementations:
-						int listStartPosition = PHPTextSequenceUtilities.readIdentifierListStartIndex(statement,
-								endPosition);
-
-						// Determine pre-list word:
-						int preListWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, listStartPosition);
-						int preListWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement,
-								preListWordEnd, false);
-						String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
-
-						generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration, preListWord,
-								elementName, offset);
-						if (generalizationTypes != null) {
-							return generalizationTypes;
-						}
-					}
-
-					// Previous trigger:
-					String trigger = null;
-					if (startPosition > 2) {
-						trigger = statement.subSequence(startPosition - 2, startPosition).toString();
-					}
-
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471764
-					// use first word of statement, not "prevWord"
-					int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(statement, 0);
-					String firstWord = statement.subSequence(0, firstWordEnd).toString();
-
-					// If this is variable:
-					if (elementName.charAt(0) == '$' && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
-						// Don't show escaped variables within PHP string:
-						if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
-							try {
-								char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
-								if (charBefore == '\\') {
-									return EMPTY;
-								}
-							} catch (BadLocationException e) {
-								PHPCorePlugin.log(e);
-							}
-						}
-
-						// If we are in var definition:
-						if (containerType != null) {
-							if (VAR.equalsIgnoreCase(firstWord) || PRIVATE.equalsIgnoreCase(firstWord)
-									|| STATIC.equalsIgnoreCase(firstWord) || PUBLIC.equalsIgnoreCase(firstWord)
-									|| PROTECTED.equalsIgnoreCase(firstWord)) {
-								return PHPModelUtils.getTypeField(containerType, elementName, true);
-							}
-							if (THIS.equalsIgnoreCase(elementName)) {
-								return new IModelElement[] { containerType };
-							}
-						}
-
-						return getGlobalOrMethodFields(sourceModule, offset, elementName);
-					}
-
-					// If we are at class constant definition:
+			if (!PHPBuildUtils.isIndexing()) {
+				// If we are in function declaration:
+				if (FUNCTION.equalsIgnoreCase(prevWord)) {
 					if (containerType != null) {
-						if (CONST.equalsIgnoreCase(firstWord)) {
-							return PHPModelUtils.getTypeField(containerType, elementName, true);
+						return PHPModelUtils.getTypeMethod(containerType, elementName, true);
+					}
+					return getFunction(sourceModule, elementName);
+				}
+
+				// If we are in class declaration:
+				if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)) {
+					if (containerType != null) {
+						if (containerType.getElementName().equalsIgnoreCase(elementName)) {
+							containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+						}
+						if (containerType != null) {
+							return PHPModelUtils.getTypeType(containerType, elementName, true);
 						}
 					}
+					return getClass(sourceModule, elementName);
+				}
 
-					// We are at class trigger:
-					if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
-						return PHPModelUtils.getTypes(elementName, sourceModule, offset, cache, null);
-					}
-					if (NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord)) {
-						IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-						return PhpModelAccess.getDefault().findNamespaces(null, elementName, MatchRule.EXACT, 0, 0,
-								scope, null);
-					}
+				// Class instantiation:
+				if (NEW.equalsIgnoreCase(prevWord)) {
+					return getConstructorsIfAny(
+							extractClasses(PHPModelUtils.getTypes(elementName, sourceModule, offset, cache, null)));
+				}
 
-					IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset);
+				// Handle extends and implements:
+				// Check that the statement suites the condition. If
+				// class or interface keywords don't appear in the
+				// beginning of the statement or they are alone there.
+				boolean isClassDeclaration = false;
+				if (statement.length() > 6 && (CLASS.equals(statement.subSequence(0, 5).toString())
+						&& (isClassDeclaration = true)
+						|| statement.length() > 10 && INTERFACE.equals(statement.subSequence(0, 9).toString()))) {
 
-					// Is it function or method:
-					if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) {
-						if (types != null && types.length > 0) {
-							List<IMethod> methods = new LinkedList<IMethod>();
-							for (IType t : types) {
-								methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
-										cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
-							}
-							return methods.toArray(new IMethod[methods.size()]);
-						}
-						return PHPModelUtils.getFunctions(elementName, sourceModule, offset, cache, null);
-					}
-					if ((INSTEADOF.equals(nextWord) || AS.equals(nextWord))
-							&& (!PAAMAYIM_NEKUDOTAIM.equals(trigger) && !OBJECT_OPERATOR.equals(trigger))) {
-						if (types != null && types.length > 0) {
-							List<IMethod> methods = new LinkedList<IMethod>();
-							for (IType t : types) {
-								methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
-										cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
-							}
-							return methods.toArray(new IMethod[methods.size()]);
-						}
-					}
-					if (types != null && types.length > 0) {
-						// Check whether this is a class constant:
-						if (startPosition > 0) {
-							if (PAAMAYIM_NEKUDOTAIM.equals(trigger) && elementName.charAt(0) != '$') {
-								List<IModelElement> fields = new LinkedList<IModelElement>();
-								for (IType t : types) {
-									IField[] typeFields = PHPModelUtils.getTypeField(t, elementName, true);
-									for (IField currentField : typeFields) {
-										fields.add(currentField);
-									}
-								}
-								return fields.toArray(new IModelElement[fields.size()]);
-							}
-						}
-
-						// What can it be? Only class variables:
-						// Set<IModelElement> fields = new
-						// TreeSet<IModelElement>(
-						// new SourceFieldComparator());
-						final List<IField> fields = new ArrayList<IField>();
-						for (IType t : types) {
-							fields.addAll(Arrays.asList(getTypeHierarchyField(t, cache.getSuperTypeHierarchy(t, null),
-									elementName, true, null)));
-						}
-						return fields.toArray(new IModelElement[fields.size()]);
+					IModelElement[] generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration,
+							prevWord, elementName, offset);
+					if (generalizationTypes != null) {
+						return generalizationTypes;
 					}
 
-					// This can be only global constant, if we've reached
-					// here:
-					IField[] fields = PHPModelUtils.getFields(elementName, sourceModule, offset, cache, null);
-					if (fields != null && fields.length > 0) {
-						return fields;
-					}
+					// Multiple extensions and implementations:
+					int listStartPosition = PHPTextSequenceUtilities.readIdentifierListStartIndex(statement,
+							endPosition);
 
-					ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-					fields = findFieldAliases(elementName, sourceModule, parsedUnit, containerType, offset);
-					if (fields != null && fields.length > 0) {
-						return fields;
-					}
+					// Determine pre-list word:
+					int preListWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, listStartPosition);
+					int preListWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, preListWordEnd,
+							false);
+					String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
 
-					// Return class if nothing else found.
-					return PHPModelUtils.getTypes(elementName, sourceModule, offset, cache, null);
+					generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration, preListWord,
+							elementName, offset);
+					if (generalizationTypes != null) {
+						return generalizationTypes;
+					}
 				}
 			}
-		} catch (Exception e) {
-			PHPCorePlugin.log(e);
+
+			// Previous trigger:
+			String trigger = null;
+			if (startPosition > 2) {
+				trigger = statement.subSequence(startPosition - 2, startPosition).toString();
+			}
+
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471764
+			// use first word of statement, not "prevWord"
+			int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(statement, 0);
+			String firstWord = statement.subSequence(0, firstWordEnd).toString();
+
+			// If this is variable:
+			if (elementName.charAt(0) == '$' && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
+				// Don't show escaped variables within PHP string:
+				if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
+					try {
+						char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
+						if (charBefore == '\\') {
+							return EMPTY;
+						}
+					} catch (BadLocationException e) {
+						PHPCorePlugin.log(e);
+					}
+				}
+
+				// If we are in var definition:
+				if (containerType != null) {
+					if (VAR.equalsIgnoreCase(firstWord) || PRIVATE.equalsIgnoreCase(firstWord)
+							|| STATIC.equalsIgnoreCase(firstWord) || PUBLIC.equalsIgnoreCase(firstWord)
+							|| PROTECTED.equalsIgnoreCase(firstWord)) {
+						return PHPModelUtils.getTypeField(containerType, elementName, true);
+					}
+					if (THIS.equalsIgnoreCase(elementName)) {
+						return new IModelElement[] { containerType };
+					}
+				}
+
+				return getGlobalOrMethodFields(sourceModule, offset, elementName);
+			}
+
+			if (!PHPBuildUtils.isIndexing()) {
+				// If we are at class constant definition:
+				if (containerType != null) {
+					if (CONST.equalsIgnoreCase(firstWord)) {
+						return PHPModelUtils.getTypeField(containerType, elementName, true);
+					}
+				}
+
+				// We are at class trigger:
+				if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
+					return PHPModelUtils.getTypes(elementName, sourceModule, offset, cache, null);
+				}
+				if (NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord)) {
+					IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+					return PhpModelAccess.getDefault().findNamespaces(null, elementName, MatchRule.EXACT, 0, 0, scope,
+							null);
+				}
+
+				IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset);
+
+				// Is it function or method:
+				if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) {
+					if (types != null && types.length > 0) {
+						List<IMethod> methods = new LinkedList<IMethod>();
+						for (IType t : types) {
+							methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
+									cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
+						}
+						return methods.toArray(new IMethod[methods.size()]);
+					}
+					return PHPModelUtils.getFunctions(elementName, sourceModule, offset, cache, null);
+				}
+				if ((INSTEADOF.equals(nextWord) || AS.equals(nextWord))
+						&& (!PAAMAYIM_NEKUDOTAIM.equals(trigger) && !OBJECT_OPERATOR.equals(trigger))) {
+					if (types != null && types.length > 0) {
+						List<IMethod> methods = new LinkedList<IMethod>();
+						for (IType t : types) {
+							methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
+									cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
+						}
+						return methods.toArray(new IMethod[methods.size()]);
+					}
+				}
+				if (types != null && types.length > 0) {
+					// Check whether this is a class constant:
+					if (startPosition > 0) {
+						if (PAAMAYIM_NEKUDOTAIM.equals(trigger) && elementName.charAt(0) != '$') {
+							List<IModelElement> fields = new LinkedList<IModelElement>();
+							for (IType t : types) {
+								IField[] typeFields = PHPModelUtils.getTypeField(t, elementName, true);
+								for (IField currentField : typeFields) {
+									fields.add(currentField);
+								}
+							}
+							return fields.toArray(new IModelElement[fields.size()]);
+						}
+					}
+
+					// What can it be? Only class variables:
+					// Set<IModelElement> fields = new
+					// TreeSet<IModelElement>(
+					// new SourceFieldComparator());
+					final List<IField> fields = new ArrayList<IField>();
+					for (IType t : types) {
+						fields.addAll(Arrays.asList(getTypeHierarchyField(t, cache.getSuperTypeHierarchy(t, null),
+								elementName, true, null)));
+					}
+					return fields.toArray(new IModelElement[fields.size()]);
+				}
+
+				// This can be only global constant, if we've reached
+				// here:
+				IField[] fields = PHPModelUtils.getFields(elementName, sourceModule, offset, cache, null);
+				if (fields != null && fields.length > 0) {
+					return fields;
+				}
+
+				ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+				fields = findFieldAliases(elementName, sourceModule, parsedUnit, containerType, offset);
+				if (fields != null && fields.length > 0) {
+					return fields;
+				}
+
+				// Return class if nothing else found.
+				return PHPModelUtils.getTypes(elementName, sourceModule, offset, cache, null);
+			}
 		}
+
 		return EMPTY;
 	}
 
@@ -1014,4 +1025,5 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			return 0;
 		}
 	}
+
 }
