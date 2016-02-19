@@ -175,7 +175,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 	 * in the process (when EOF is reached).
 	 * 
 	 * @return true when PHPDoc was parsed, false otherwise (false also implies
-	 *         that this scanner wasn't resetted)
+	 *         that underlying lexer was unavailable)
 	 */
 	protected boolean parsePHPDoc() {
 		final IDocumentorLexer documentorLexer = getDocumentorLexer(zzReader);

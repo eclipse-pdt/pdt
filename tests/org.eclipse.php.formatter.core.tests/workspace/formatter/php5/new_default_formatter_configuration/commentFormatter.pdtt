@@ -1,0 +1,80 @@
+--TEST--
+Test formatting for PHPDoc comments
+--FILE--
+<?php
+/**
+ * header.
+ */
+
+/**
+ * Generates .foo files, .foo2 files and much more... This sentence should go on second line.
+ *
+ * @param string $foo            
+ */
+function foo($foo)
+{}
+
+/**
+ * Generates .foo files, .foo2 files and much more ... This sentence should go on second line.
+ *
+ * @param string $foo            
+ */
+function foo2($foo)
+{}
+
+/**
+ * Generates .foo files, .foo2 files and much more...
+ * This sentence should stay on second line.
+ *
+ * @param string $foo            
+ */
+function foo3($foo)
+{}
+
+/**
+ * Generates .foo files, .foo2 files and much more ...
+ * This sentence should stay on second line.
+ *
+ * @param string $foo            
+ */
+function foo4($foo)
+{}
+?>
+--EXPECT--
+<?php
+/**
+ * header.
+ */
+/**
+ * Generates .foo files, .foo2 files and much more...
+ * This sentence should go on second line.
+ *
+ * @param string $foo        	
+ */
+function foo($foo) {
+}
+/**
+ * Generates .foo files, .foo2 files and much more ...
+ * This sentence should go on second line.
+ *
+ * @param string $foo        	
+ */
+function foo2($foo) {
+}
+/**
+ * Generates .foo files, .foo2 files and much more...
+ * This sentence should stay on second line.
+ *
+ * @param string $foo        	
+ */
+function foo3($foo) {
+}
+/**
+ * Generates .foo files, .foo2 files and much more ...
+ * This sentence should stay on second line.
+ *
+ * @param string $foo        	
+ */
+function foo4($foo) {
+}
+?>
