@@ -193,7 +193,7 @@ public class SelectionEngineTests {
 
 	protected IModelElement[] getSelection(String data) throws Exception {
 		ISourceRange range = createFile(data);
-		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
+		ISourceModule sourceModule = getSourceModule();
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
 		return elements;
 	}

@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuffer;
@@ -54,6 +55,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
@@ -64,6 +66,7 @@ public class FormatterAutoEditTests {
 	protected static final String DEFAULT_CURSOR = "|";
 
 	protected IProject project;
+	protected IFile testFile;
 	protected int count;
 
 	protected PHPVersion phpVersion;
@@ -115,9 +118,15 @@ public class FormatterAutoEditTests {
 			}
 		});
 
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+	}
+
+	@After
+	public void after() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
+		}
 	}
 
 	@AfterList
@@ -141,8 +150,8 @@ public class FormatterAutoEditTests {
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
-		final IFile file = createFile(pdttFile.getFile().trim());
-		final ISourceModule modelElement = (ISourceModule) DLTKCore.create(file);
+		final DocumentCommand cmd = createFile(pdttFile.getFile().trim(), cursor);
+		final ISourceModule modelElement = (ISourceModule) DLTKCore.create(testFile);
 		if (ScriptModelUtil.isPrimary(modelElement))
 			modelElement.becomeWorkingCopy(new IProblemRequestor() {
 
@@ -163,33 +172,9 @@ public class FormatterAutoEditTests {
 		final Exception[] err = new Exception[1];
 		final IEditorPart[] part = new IEditorPart[1];
 
-		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
+		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(testFile);
 		try {
 			final IDocument document = modelForEdit.getStructuredDocument();
-			String beforeFormat = document.get();
-			String data = document.get();
-			int firstOffset = data.indexOf(cursor);
-			int lastOffset = data.lastIndexOf(cursor);
-			if (lastOffset == -1) {
-				throw new IllegalArgumentException("Offset character is not set");
-			}
-
-			final DocumentCommand cmd = new DocumentCommand() {
-			};
-
-			// replace the offset character(s)
-			if (firstOffset == lastOffset) {
-				data = data.substring(0, lastOffset) + data.substring(lastOffset + cursor.length());
-				cmd.offset = lastOffset;
-				cmd.length = 0;
-			} else {
-				data = data.substring(0, firstOffset) + data.substring(firstOffset + cursor.length(), lastOffset)
-						+ data.substring(lastOffset + cursor.length());
-				cmd.offset = firstOffset;
-				cmd.length = lastOffset - (firstOffset + cursor.length());
-			}
-			final String newContent = data;
-
 			Display.getDefault().syncExec(new Runnable() {
 
 				@Override
@@ -197,11 +182,8 @@ public class FormatterAutoEditTests {
 					try {
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						IWorkbenchPage page = window.getActivePage();
-						part[0] = page.openEditor(new FileEditorInput(file), PHPUiConstants.PHP_EDITOR_ID);
+						part[0] = page.openEditor(new FileEditorInput(testFile), PHPUiConstants.PHP_EDITOR_ID);
 						part[0].setFocus();
-
-						document.set(newContent);
-						modelElement.reconcile(true, null, null);
 					} catch (Exception e) {
 						err[0] = e;
 					}
@@ -248,9 +230,6 @@ public class FormatterAutoEditTests {
 
 			PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
 
-			// change the document text as was before
-			// the formatting
-			document.set(beforeFormat);
 			modelForEdit.save();
 		} finally {
 			if (modelForEdit != null) {
@@ -278,10 +257,36 @@ public class FormatterAutoEditTests {
 		}
 	}
 
-	protected IFile createFile(String data) throws Exception {
-		IFile testFile = project.getFile("test" + (++count) + ".php");
+	protected DocumentCommand createFile(String data, String cursor) throws Exception {
+		int firstOffset = data.indexOf(cursor);
+		int lastOffset = data.lastIndexOf(cursor);
+		if (lastOffset == -1) {
+			throw new IllegalArgumentException("Offset character is not set");
+		}
+
+		final DocumentCommand cmd = new DocumentCommand() {
+		};
+
+		// replace the offset character(s)
+		if (firstOffset == lastOffset) {
+			data = data.substring(0, lastOffset) + data.substring(lastOffset + cursor.length());
+			cmd.offset = lastOffset;
+			cmd.length = 0;
+		} else {
+			data = data.substring(0, firstOffset) + data.substring(firstOffset + cursor.length(), lastOffset)
+					+ data.substring(lastOffset + cursor.length());
+			cmd.offset = firstOffset;
+			cmd.length = lastOffset - (firstOffset + cursor.length());
+		}
+
+		testFile = project.getFile("test" + (++count) + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		return testFile;
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		testFile.touch(new NullProgressMonitor());
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+		PHPCoreTests.waitForIndexer();
+
+		return cmd;
 	}
 
 }
