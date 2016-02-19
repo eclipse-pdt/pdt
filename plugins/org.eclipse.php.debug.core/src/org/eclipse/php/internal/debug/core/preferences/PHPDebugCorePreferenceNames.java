@@ -49,6 +49,7 @@ public class PHPDebugCorePreferenceNames {
 	public static final String OPEN_DEBUG_VIEWS = Debug_ID + "open_debug_views"; //$NON-NLS-1$
 	public static final String TRANSFER_ENCODING = Debug_ID + "transfer_encoding"; //$NON-NLS-1$
 	public static final String OUTPUT_ENCODING = Debug_ID + "output_encoding"; //$NON-NLS-1$
+	public static final String OVERWRITE_WAIT_FOR_BUILD = Debug_ID + ".overwrite_wait_for_build"; //$NON-NLS-1$
 	public static final String CONFIGURATION_DELEGATE_CLASS = Debug_ID + "configuration_delegate_class"; //$NON-NLS-1$
 
 	public static final String PHP_DEBUGGER_ID = Debug_ID + "php_debugger_id"; //$NON-NLS-1$

@@ -10,9 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeVerifier;
 import org.eclipse.ui.IStartup;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * This class is intended to perform early startup of a debugger plug-ins. The
@@ -32,6 +40,20 @@ public class DebugEarlyStartup implements IStartup {
 	 */
 	@Override
 	public void earlyStartup() {
+		// Overwrite "Wait for ongoing build to complete before launching"
+		IEclipsePreferences phpPrefs = PHPDebugPlugin.getInstancePreferences();
+		boolean overwriteWaitForBuild = phpPrefs.getBoolean(PHPDebugCorePreferenceNames.OVERWRITE_WAIT_FOR_BUILD, true);
+		if (overwriteWaitForBuild) {
+			// It will be done only once for the instance scope
+			phpPrefs.putBoolean(PHPDebugCorePreferenceNames.OVERWRITE_WAIT_FOR_BUILD, false);
+			IEclipsePreferences debugPrefs = InstanceScope.INSTANCE.getNode(DebugUIPlugin.getUniqueIdentifier());
+			debugPrefs.put(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD, MessageDialogWithToggle.PROMPT);
+			try {
+				debugPrefs.flush();
+				phpPrefs.flush();
+			} catch (BackingStoreException e) {
+			}
+		}
 		// Verify all of the available PHP executables
 		PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 	}

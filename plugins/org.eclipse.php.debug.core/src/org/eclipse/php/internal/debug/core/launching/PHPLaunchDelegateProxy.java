@@ -54,7 +54,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 */
 	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
-		return getConfigurationDelegate(configuration).buildForLaunch(configuration, mode, monitor);
+		return false;
 	}
 
 	/*
