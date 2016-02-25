@@ -866,11 +866,6 @@ public class PHPLaunchUtilities {
 			buf.append('"');
 		}
 
-		// Bug 460926 - required by Zend PHP executables
-		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
-			buf.append("/usr/lib").append(File.pathSeparatorChar); //$NON-NLS-1$
-		}
-
 		File libDirectory = new File(phpExeDir.getParentFile(), "lib"); //$NON-NLS-1$
 		if (libDirectory.exists()) {
 			buf.append(libDirectory.getAbsolutePath());
@@ -967,7 +962,7 @@ public class PHPLaunchUtilities {
 
 	public static String[] getCommandLineForPHP54BuildinServer(ILaunchConfiguration configuration, String phpExe,
 			String phpConfigDir, String server, String root, String routerFile, String[] args, boolean useDefaultPHPIni)
-					throws CoreException {
+			throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
 		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on" //$NON-NLS-1$
