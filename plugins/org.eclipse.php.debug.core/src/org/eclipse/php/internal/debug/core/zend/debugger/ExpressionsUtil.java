@@ -28,7 +28,7 @@ public class ExpressionsUtil {
 
 	private static final class FetchStaticsExpression extends DefaultExpression {
 
-		static final String FETCH_STATIC_MEMBERS = "eval(''if (class_exists(\"ReflectionClass\")) return (new ReflectionClass(\"{0}\"))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
+		static final String FETCH_STATIC_MEMBERS = "eval(''if (class_exists(\"ReflectionClass\") && class_exists(\"{0}\")) return (new ReflectionClass(\"{0}\"))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
 
 		public FetchStaticsExpression(String className) {
 			super(MessageFormat.format(FETCH_STATIC_MEMBERS, className));
