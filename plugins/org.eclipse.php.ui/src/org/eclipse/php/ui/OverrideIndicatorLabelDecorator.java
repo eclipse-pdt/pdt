@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
+import org.eclipse.php.internal.core.util.PHPBuildUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
@@ -166,7 +167,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 
 		IType type = method.getDeclaringType();
 
-		if (type != null) {
+		if (type != null && !PHPBuildUtils.isIndexing()) {
 			MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
 			IMethod defining = methodOverrideTester.findOverriddenMethod(method, true);
 			if (defining != null) {
