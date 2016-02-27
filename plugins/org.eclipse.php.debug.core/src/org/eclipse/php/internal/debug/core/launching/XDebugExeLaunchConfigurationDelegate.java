@@ -338,21 +338,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		return envVarString;
 	}
 
-	/**
-	 * create the LD_LIBRARY_PATH information
-	 * 
-	 * @param exePath
-	 *            the path to put into LD_LIBRARY_PATH
-	 * @return environment string
-	 */
 	private String getLibraryPath(IPath exePath) {
-		// TODO: Should append if already present
-		StringBuffer buf = new StringBuffer();
-		buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
-		buf.append('=');
-		exePath = exePath.removeLastSegments(1);
-		buf.append(exePath.toOSString());
-		return buf.toString();
+		return PHPLaunchUtilities.getLibrarySearchPathEnv(new File(exePath.removeLastSegments(1).toOSString()));
 	}
 
 	/**
