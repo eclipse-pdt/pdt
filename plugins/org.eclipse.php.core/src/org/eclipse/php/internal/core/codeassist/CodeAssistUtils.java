@@ -625,7 +625,8 @@ public class CodeAssistUtils {
 			return getVariableType(sourceModule, className, statementStart);
 		}
 		boolean arrayReference = false;
-		if (statementText.charAt(propertyEndPosition - 1) == ']' && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+		if (propertyEndPosition > 0 && statementText.charAt(propertyEndPosition - 1) == ']'
+				&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			int closeBracketIndex = statementText.toString().lastIndexOf(')');
 			if (closeBracketIndex >= 0) {
 				if (statementText.toString().indexOf('[', closeBracketIndex) > closeBracketIndex) {
