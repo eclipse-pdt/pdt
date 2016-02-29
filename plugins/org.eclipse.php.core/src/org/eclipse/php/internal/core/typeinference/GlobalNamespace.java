@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,8 +54,13 @@ public class GlobalNamespace extends SourceType {
 
 	public IType[] getTypes() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findTypes(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0, 0,
-				scope, null);
+		List<IType> types = new ArrayList<IType>();
+		types.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(PHPCoreConstants.GLOBAL_NAMESPACE, null,
+				MatchRule.PREFIX, 0, 0, scope, null)));
+
+		types.addAll(Arrays.asList(PhpModelAccess.getDefault().findTraits(PHPCoreConstants.GLOBAL_NAMESPACE, null,
+				MatchRule.PREFIX, 0, 0, scope, null)));
+		return types.toArray(new IType[types.size()]);
 	}
 
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {

@@ -42,6 +42,7 @@ public class NamespaceNode extends SourceType {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
 		PhpModelAccess modelAccess = PhpModelAccess.getDefault();
 		children.addAll(Arrays.asList(modelAccess.findTypes(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
+		children.addAll(Arrays.asList(modelAccess.findTraits(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
 		children.addAll(Arrays.asList(modelAccess.findFunctions(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
 		children.addAll(Arrays.asList(modelAccess.findFileFields(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
 		return children.toArray(new IModelElement[children.size()]);
