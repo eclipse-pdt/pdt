@@ -164,13 +164,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				// begin recording
 				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
-				// format the whole document !
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=486540
+				// format the whole document, not the active text selection
 				IRegion region;
-				if (selectionLength != 0) {
-					region = new Region(cursorPosition, selectionLength);
-				} else {
-					region = new Region(0, getDocument().getLength());
-				}
+				// if (selectionLength != 0) {
+				// region = new Region(cursorPosition, selectionLength);
+				// } else {
+				region = new Region(0, getDocument().getLength());
+				// }
 				if (fContentFormatter instanceof IContentFormatterExtension) {
 					IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
 					IFormattingContext context = new FormattingContext();
