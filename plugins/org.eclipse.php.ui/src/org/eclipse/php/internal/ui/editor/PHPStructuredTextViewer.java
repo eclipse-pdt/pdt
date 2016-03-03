@@ -74,6 +74,11 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
+	/** Text operation codes */
+	private static final int BASE = FORMAT_ACTIVE_ELEMENTS + 1; // see
+	// StructuredTextViewer.FORMAT_ACTIVE_ELEMENTS and
+	// StructuredTextViewer.CLEANUP_DOCUMENT
+	public static final int FORMAT_DOCUMENT_ON_SAVE = BASE + 1;
 
 	/**
 	 * Text operation code for requesting the outline for the current input.
@@ -158,15 +163,18 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		int topLine = getTextWidget().getTopIndex();
 
 		switch (operation) {
+		case FORMAT_DOCUMENT_ON_SAVE:
 		case FORMAT_DOCUMENT:
 			try {
 				setRedraw(false);
 				// begin recording
 				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
-				// format the whole document !
 				IRegion region;
-				if (selectionLength != 0) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=486540
+				// format the whole document on save, not the active text
+				// selection
+				if (operation != FORMAT_DOCUMENT_ON_SAVE && selectionLength != 0) {
 					region = new Region(cursorPosition, selectionLength);
 				} else {
 					region = new Region(0, getDocument().getLength());
@@ -346,6 +354,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 		if (operation == SHOW_OUTLINE) {
 			return fOutlinePresenter != null;
+		}
+		if (operation == FORMAT_DOCUMENT_ON_SAVE) {
+			return super.canDoOperation(FORMAT_DOCUMENT);
 		}
 		return super.canDoOperation(operation);
 	}
