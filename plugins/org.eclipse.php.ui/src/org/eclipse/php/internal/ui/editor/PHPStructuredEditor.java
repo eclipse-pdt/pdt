@@ -3386,7 +3386,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (formatOnSaveEnabled) {
-			getTextViewer().doOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT);
+			if (getTextViewer() instanceof PHPStructuredTextViewer) {
+				PHPStructuredTextViewer viewer = (PHPStructuredTextViewer) getTextViewer();
+				if (viewer.canDoOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT_ON_SAVE)) {
+					viewer.doOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT_ON_SAVE);
+				}
+			}
 		}
 
 		super.doSave(progressMonitor);
