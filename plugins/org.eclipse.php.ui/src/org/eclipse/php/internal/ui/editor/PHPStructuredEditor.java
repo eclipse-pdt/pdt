@@ -148,10 +148,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private CompositeActionGroup fContextMenuGroup;
 	private CompositeActionGroup fActionGroups;
 
-	private long fLastActionsUpdate;
+	private long fLastActionsUpdate = 0L;
 
 	/** Indicates whether the structure editor is displaying an external file */
-	protected boolean isExternal;
+	protected boolean isExternal = false;
 
 	/** The editor's save policy */
 	protected ISavePolicy fSavePolicy = null;
@@ -1019,7 +1019,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 							reparseRegion(doc, regionsIt, element.getStartOffset());
 						}
 						PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
-						textViewer.reconcile();
+						if (textViewer != null) {
+							textViewer.reconcile();
+						}
 					}
 				} catch (BadLocationException e) {
 				}
@@ -2382,7 +2384,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	protected void handleCursorPositionChanged() {
 		updateCursorDependentActions();
-		fCachedSelectedRange = getTextViewer().getSelectedRange();
+		if (getTextViewer() != null) {
+			fCachedSelectedRange = getTextViewer().getSelectedRange();
+		} else {
+			fCachedSelectedRange = null;
+		}
 		super.handleCursorPositionChanged();
 	}
 
@@ -3373,7 +3379,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			updateSaveActionsState(project.getProject());
 		}
 
-		if (saveActionsEnabled) {
+		if (formatOnSaveEnabled) {
+			if (getTextViewer() instanceof PHPStructuredTextViewer) {
+				PHPStructuredTextViewer viewer = (PHPStructuredTextViewer) getTextViewer();
+				if (viewer.canDoOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT_ON_SAVE)) {
+					viewer.doOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT_ON_SAVE);
+				}
+			}
+		}
+
+		if (saveActionsEnabled && getTextViewer() != null && getTextViewer().isEditable()) {
 			RemoveTrailingWhitespaceOperation op = new ExtendedRemoveTrailingWhitespaceOperation(
 					saveActionsIgnoreEmptyLines);
 			try {
@@ -3383,10 +3398,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
-		}
-
-		if (formatOnSaveEnabled) {
-			getTextViewer().doOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT);
 		}
 
 		super.doSave(progressMonitor);
