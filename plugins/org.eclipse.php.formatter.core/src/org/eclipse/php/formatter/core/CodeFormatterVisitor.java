@@ -2382,6 +2382,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (isPhpMode && !isHtmlStatement) {
 					// PHP -> PHP
 					if (!isStatementAfterError && getPhpStartTag(lastStatementEndOffset) != -1) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489361
+						// if previous statement was in a <?= ?> section and
+						// now we have a statement in a <?php ?> section,
+						// we're still in the PHP -> PHP case, but
+						// isPhpEqualTag is outdated
+						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 						insertNewLine();
 					}
 					if (isThrowOrReturnFormatCase(statements)) {
@@ -4217,6 +4223,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public boolean visit(Program program) {
+		isPhpEqualTag = false;
 		int lastStatementEndOffset = 0;
 		boolean isPhpMode = false;
 		List<Statement> statementList = program.statements();
@@ -4260,6 +4267,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					// PHP -> PHP
 					if (lastStatementEndOffset > 0) {
 						if (!isStatementAfterError && getPhpStartTag(lastStatementEndOffset) != -1) {
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489361
+							// if previous statement was in a <?= ?> section and
+							// now we have a statement in a <?php ?> section,
+							// we're still in the PHP -> PHP case, but
+							// isPhpEqualTag and indentationLevel are outdated
+							if (isPhpEqualTag) {
+								// no need to recalculate the indentation if
+								// previous statement was in a <?php ?> section
+								// (i.e. previous value of isPhpEqualTag was
+								// false)
+								indentationLevel = getPhpTagIndentationLevel(lastStatementEndOffset);
+							}
+							isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 							insertNewLine();
 						}
 						if (!isStatementAfterError) {

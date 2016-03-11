@@ -59,27 +59,21 @@ blah blah
 blah blah
 HEREDOC
 ?>
-<?=
-
-<<< HEREDOC
+<?=<<< HEREDOC
 blah blah
     barbaz
     blah
 blah blah
 HEREDOC;
 ?>
-<?=
-
-<<< HEREDOC
+<?=<<< HEREDOC
 blah blah
     barbaz
     blah
 blah blah
 HEREDOC
 ?>
-<?=
-
-foo ( <<< HEREDOC
+<?=foo ( <<< HEREDOC
 blah blah
     barbaz
     blah

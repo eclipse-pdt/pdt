@@ -1,0 +1,17 @@
+--TEST--
+Bug 489361 - broken formatting when <?= ?> section is directly followed by a <?php ?> section
+--FILE--
+<?=$value?>
+<?php
+foreach($list
+as $key
+=> $value) {
+
+}
+?>
+--EXPECT--
+<?=$value?>
+<?php
+foreach ( $list as $key => $value ) {
+}
+?>
