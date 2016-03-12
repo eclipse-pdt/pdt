@@ -1,0 +1,12 @@
+--TEST--
+Bug 489488 - unwanted trailing blanks when ?> is on same line than a single-line comment
+--FILE--
+<?php
+if (true) {
+	
+	// comment?> <?php } ?>
+--EXPECT--
+<?php
+if (true) {
+	
+	// comment?> <?php } ?>
