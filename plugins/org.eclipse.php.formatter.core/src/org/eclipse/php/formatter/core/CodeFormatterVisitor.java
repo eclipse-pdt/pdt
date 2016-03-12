@@ -982,6 +982,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						needInsertNewLine = false;
 					} else {
 						insertSpaces(1);
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489488
+						needIndentNewLine = false;
 						afterNewLine = EMPTY_STRING;
 					}
 				} else {
@@ -1002,6 +1004,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						lineWidth = 0;
 						needInsertNewLine = false;
 					} else {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489488
+						needIndentNewLine = false;
 						afterNewLine = EMPTY_STRING;
 					}
 				}
