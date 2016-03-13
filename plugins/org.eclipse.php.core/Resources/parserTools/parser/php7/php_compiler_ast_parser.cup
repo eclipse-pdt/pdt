@@ -2469,7 +2469,7 @@ non_empty_member_modifiers:list
 		if (modifier.doc != null) {
 			docBlock = modifier.doc;
 		}
-		result |= modifier.modifier;
+		result = appendPropertyModifier(listleft, listright, result, modifier.modifier);
 	}
 	RESULT = parser.new ModifierDocPair(result, docBlock);
 :}
@@ -2495,7 +2495,7 @@ method_modifiers ::=
 		if (modifier.doc != null) {
 			docBlock = modifier.doc;
 		}
-		result |= modifier.modifier;
+		result = appendMethodModifier(listleft, listright, result, modifier.modifier);
 	}
 	RESULT = parser.new ModifierDocPair(result, docBlock);
 :}
