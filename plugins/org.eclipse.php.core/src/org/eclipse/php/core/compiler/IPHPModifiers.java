@@ -42,5 +42,12 @@ public interface IPHPModifiers extends Modifiers {
 	public static final int AccDeprecated = (1 << Modifiers.USER_MODIFIER + 5);
 	public static final int AccAnonymous = (1 << Modifiers.USER_MODIFIER + 6);
 
+	/**
+	 * All access modifiers as one for compiler validation
+	 * 
+	 * @since 4.0
+	 */
+	public static final int AccessMask = AccPublic | AccPrivate | AccProtected;
+
 	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 7;
 }
