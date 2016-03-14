@@ -1,0 +1,20 @@
+--TEST--
+Test invalid modifiers reporting
+--FILE--
+<?php
+class A {
+    public private function accessModifiers() {}
+    abstract abstract public function abstractMethod() {}
+    static static public function multiStatic() {}
+    abstract final function invalidFinal1() {}
+    final abstract function invalidFinal2() {}
+    
+}
+?>
+--EXPECT--
+[line=3, start=20, end=34] Multiple access type modifiers are not allowed
+[line=4, start=69, end=93] Multiple abstract modifiers are not allowed
+[line=5, start=127, end=147] Multiple static modifiers are not allowed
+[line=6, start=178, end=192] Cannot use the final modifier on an abstract class member
+[line=7, start=225, end=239] Cannot use the final modifier on an abstract class member
+

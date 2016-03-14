@@ -272,6 +272,7 @@ non terminal Variable variable_class_name;
 non terminal Variable compound_variable;
 non terminal Expression dim_offset;
 non terminal ObjectDimList object_dim_list;
+non terminal ObjectDimList field_access_dim_list;
 non terminal DimList dim_list;
 non terminal VariableBase variable_name;
 non terminal Integer simple_indirect_reference;
@@ -2752,15 +2753,52 @@ reference_variable:var
 :}
 ;
 
-static_member ::=
-class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
+field_access_dim_list ::=
+field_access_dim_list:var T_OPEN_RECT dim_offset:index T_CLOSE_RECT:e
 {:
-	RESULT = new StaticFieldAccess(classNameleft, varright, parser.ast, className, var);
+	var.add(index, ArrayAccess.VARIABLE_ARRAY, eright);
+	RESULT = var;
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
+| field_access_dim_list:var T_CURLY_OPEN expr:index T_CURLY_CLOSE:e
 {:
-	RESULT = new StaticFieldAccess(classNameleft, varright, parser.ast, className, var);
+	var.add(index, ArrayAccess.VARIABLE_HASHTABLE, eright);
+	RESULT = var;
+:}
+
+| compound_variable:var
+{:
+	RESULT = new ObjectDimList(var);
+:}
+;
+
+static_member ::=
+class_name:className T_PAAMAYIM_NEKUDOTAYIM simple_indirect_reference:ref_count reference_variable:var
+{:
+	Variable finalVar = var;
+	for (int i=0; i<ref_count.intValue(); i++) {
+		finalVar = new ReflectionVariable(ref_countright - i - 1, varright, parser.ast, finalVar);
+	}
+	RESULT = new StaticFieldAccess(classNameleft, varright, parser.ast, className, finalVar);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM simple_indirect_reference:ref_count reference_variable:var
+{:
+	Variable finalVar = var;
+	for (int i=0; i<ref_count.intValue(); i++) {
+		finalVar = new ReflectionVariable(ref_countright - i - 1, varright, parser.ast, finalVar);
+	}
+	RESULT = new StaticFieldAccess(classNameleft, varright, parser.ast, className, finalVar);
+:}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM field_access_dim_list:var
+{:
+	RESULT = parser.resolveDimList(new StaticFieldAccess(classNameleft, var.variable.getEnd(),parser.ast, className, (Variable) var.variable), var.list);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM field_access_dim_list:var
+{:
+	RESULT = parser.resolveDimList(new StaticFieldAccess(classNameleft, var.variable.getEnd(), parser.ast, className, (Variable) var.variable), var.list);
 :}
 ;
 

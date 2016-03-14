@@ -1,0 +1,100 @@
+--TEST--
+Static array
+--FILE--
+<?php
+MyClass::$field;
+MyClass::$field[0];
+MyClass::$field{'something'};
+MyClass::${'fieldName'}['index'];
+MyClass::$$field[0];
+?>
+--EXPECT--
+<Program start='0' length='130'>
+	<Statements>
+		<ExpressionStatement start='6' length='16'>
+			<StaticFieldAccess start='6' length='15'>
+				<ClassName>
+					<NamespaceName start='6' length='7' global='false' current='false'>
+						<Identifier start='6' length='7' name='MyClass'/>
+					</NamespaceName>
+				</ClassName>
+				<Variable start='15' length='6' isDollared='true'>
+					<Identifier start='16' length='5' name='field'/>
+				</Variable>
+			</StaticFieldAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='23' length='19'>
+			<ArrayAccess start='23' length='18' type='array'>
+				<StaticFieldAccess start='23' length='15'>
+					<ClassName>
+						<NamespaceName start='23' length='7' global='false' current='false'>
+							<Identifier start='23' length='7' name='MyClass'/>
+						</NamespaceName>
+					</ClassName>
+					<Variable start='32' length='6' isDollared='true'>
+						<Identifier start='33' length='5' name='field'/>
+					</Variable>
+				</StaticFieldAccess>
+				<Index>
+					<Scalar start='39' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='43' length='29'>
+			<ArrayAccess start='43' length='28' type='hashtable'>
+				<StaticFieldAccess start='43' length='15'>
+					<ClassName>
+						<NamespaceName start='43' length='7' global='false' current='false'>
+							<Identifier start='43' length='7' name='MyClass'/>
+						</NamespaceName>
+					</ClassName>
+					<Variable start='52' length='6' isDollared='true'>
+						<Identifier start='53' length='5' name='field'/>
+					</Variable>
+				</StaticFieldAccess>
+				<Index>
+					<Scalar start='59' length='11' type='string' value='&apos;something&apos;'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='73' length='33'>
+			<ArrayAccess start='73' length='32' type='array'>
+				<StaticFieldAccess start='73' length='23'>
+					<ClassName>
+						<NamespaceName start='73' length='7' global='false' current='false'>
+							<Identifier start='73' length='7' name='MyClass'/>
+						</NamespaceName>
+					</ClassName>
+					<ReflectionVariable start='82' length='14'>
+						<Scalar start='84' length='11' type='string' value='&apos;fieldName&apos;'/>
+					</ReflectionVariable>
+				</StaticFieldAccess>
+				<Index>
+					<Scalar start='97' length='7' type='string' value='&apos;index&apos;'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='107' length='20'>
+			<ArrayAccess start='107' length='19' type='array'>
+				<StaticFieldAccess start='107' length='16'>
+					<ClassName>
+						<NamespaceName start='107' length='7' global='false' current='false'>
+							<Identifier start='107' length='7' name='MyClass'/>
+						</NamespaceName>
+					</ClassName>
+					<ReflectionVariable start='116' length='7'>
+						<Variable start='117' length='6' isDollared='true'>
+							<Identifier start='118' length='5' name='field'/>
+						</Variable>
+					</ReflectionVariable>
+				</StaticFieldAccess>
+				<Index>
+					<Scalar start='124' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='128' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

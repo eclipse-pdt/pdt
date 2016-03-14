@@ -1,0 +1,17 @@
+--TEST--
+Test invalid modifiers reporting
+--FILE--
+<?php
+class A {
+    public private $accessModifiers;
+    static static public $multiStatic;
+    abstract $abstractVar;
+    final $finalVar;
+    
+}
+?>
+--EXPECT--
+[line=3, start=20, end=34] Multiple access type modifiers are not allowed
+[line=4, start=57, end=77] Multiple static modifiers are not allowed
+[line=5, start=96, end=104] Properties cannot be declared abstract
+[line=6, start=123, end=128] Properties cannot be declared final
