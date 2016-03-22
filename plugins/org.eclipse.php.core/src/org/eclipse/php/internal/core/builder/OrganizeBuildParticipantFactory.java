@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.builder;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
@@ -25,9 +28,11 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -71,12 +76,22 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 					.get(IBuildContext.ATTR_MODULE_DECLARATION);
 
 			if (moduleDeclaration != null) {
+				ASTNode[] excludeNodes;
+				if (moduleDeclaration instanceof PHPModuleDeclaration) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=477908
+					// TODO: we could also exclude PHP single-quoted strings and
+					// parts of double-quoted strings and heredocs.
+					excludeNodes = ((PHPModuleDeclaration) moduleDeclaration).getCommentList().toArray(new ASTNode[0]);
+				} else {
+					excludeNodes = new ASTNode[0];
+				}
+
 				// Run the validation visitor:
 				try {
 					UseStatement[] statements = ASTUtils.getUseStatements(moduleDeclaration,
 							context.getContents().length);
 
-					moduleDeclaration.traverse(new ImportValidationVisitor(context, statements));
+					moduleDeclaration.traverse(new ImportValidationVisitor(context, statements, excludeNodes));
 				} catch (Exception e) {
 				}
 			}
@@ -87,11 +102,13 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 		private IBuildContext context;
 		private IDocument doc;
 		private UseStatement[] statements;
+		private ASTNode[] excludeNodes;
 		private NamespaceDeclaration currentNamespace;
 
-		public ImportValidationVisitor(IBuildContext context, UseStatement[] statements) {
+		public ImportValidationVisitor(IBuildContext context, UseStatement[] statements, ASTNode[] excludeNodes) {
 			this.context = context;
 			this.statements = statements;
+			this.excludeNodes = excludeNodes;
 			doc = new Document(new String(context.getContents()));
 		}
 
@@ -106,16 +123,18 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 				return super.visit(s);
 			}
 
+			List<Position> excludePositions = DocumentUtils.getExcludeSortedPositions(excludeNodes);
+
 			String total;
 			if (this.currentNamespace != null && this.currentNamespace.isBracketed()) {
 				total = DocumentUtils.stripUseStatements(statements, doc, this.currentNamespace.sourceStart(),
-						this.currentNamespace.sourceEnd());
+						this.currentNamespace.sourceEnd(), excludePositions);
 			} else {
-				total = DocumentUtils.stripUseStatements(statements, doc);
+				total = DocumentUtils.stripUseStatements(statements, doc, excludePositions);
 			}
 			boolean multiPart = s.getParts().size() > 1;
 			for (UsePart part : s.getParts()) {
-				if (DocumentUtils.containsUseStatement(part, total)) {
+				if (DocumentUtils.containsUseStatement(part, total, excludePositions)) {
 					continue;
 				}
 				int sourceStart = multiPart ? part.getNamespace().sourceStart() : s.sourceStart();
