@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,17 @@
 package org.eclipse.php.internal.core.corext.util;
 
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -77,24 +81,89 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * Check if a classname is used in a string
+	 * Check if a classname is used in a string. The "excludePositions" list
+	 * contains positions where we should NOT look if the classname is used
+	 * (typically in comment sections). It is important that the
+	 * "excludePositions" list is sorted by increasing position, or this method
+	 * won't work correctly.
 	 */
-	public static boolean containsUseStatement(UsePart part, String contents) {
+	public static boolean containsUseStatement(UsePart part, String contents, List<Position> excludePositions) {
 		String className = null != part.getAlias() ? part.getAlias().toString()
 				: (part.getNamespace() != null ? part.getNamespace().toString() : "");
 
-		return contents.matches("(?i:(?s).*\\b" + Pattern.quote(className) + "\\b.*)");
-	}
-
-	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc) {
-		return stripUseStatements(statements, old_doc, 0, old_doc.getLength());
+		Pattern p = Pattern.compile("(?i)\\b(" + Pattern.quote(className) + ")\\b");
+		Matcher m = p.matcher(contents);
+		int restartPos = 0;
+		while (m.find()) {
+			// No exclusion list, so we're good
+			if (excludePositions.isEmpty()) {
+				return true;
+			}
+			for (int i = restartPos; i < excludePositions.size(); i++) {
+				Position position = excludePositions.get(i);
+				// If current exclusion is before current match,
+				// we have to continue our checks
+				if (position.getOffset() + position.getLength() <= m.start()) {
+					// No further exclusions, we are good, current match is
+					// pertinent
+					if (i == excludePositions.size() - 1) {
+						return true;
+					}
+					restartPos++;
+					continue;
+				}
+				// Current exclusion is after current match, so we're also good
+				if (position.getOffset() >= m.end()) {
+					return true;
+				}
+				// Here we know that current exclusion overlaps current match,
+				// so current match is non-pertinent, we have to continue with
+				// next match
+				break;
+			}
+		}
+		// No pertinent match was found
+		return false;
 	}
 
 	/**
-	 * Remove all the given use statements from a document
+	 * Returns the positions of a list of ASTNodes. It is important that the
+	 * returned list is sorted by increasing position, or the other
+	 * DocumentUtils methods (using this list) won't work correctly.
+	 * 
+	 * @param nodes
+	 *            Node positions to exclude
+	 * @return sorted positions to exclude
 	 */
-	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc, int start, int end) {
+	public static List<Position> getExcludeSortedPositions(ASTNode[] nodes) {
+		List<Position> excludePositions = new ArrayList<Position>();
+		for (ASTNode n : nodes) {
+			excludePositions.add(new Position(n.sourceStart(), n.sourceEnd() - n.sourceStart()));
+		}
+		return excludePositions;
+	}
+
+	/**
+	 * Remove all the given use statements from a document. Be warned that the
+	 * "excludePositions" list will be updated to match the content of the
+	 * returned string. It is important that this list is sorted by increasing
+	 * position, or this method won't work correctly.
+	 */
+	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc,
+			List<Position> excludePositions) {
+		return stripUseStatements(statements, old_doc, 0, old_doc.getLength(), excludePositions);
+	}
+
+	/**
+	 * Remove all the given use statements from a document. Be warned that the
+	 * "excludePositions" list will be updated to match the content of the
+	 * returned string. It is important that this list is sorted by increasing
+	 * position, or this method won't work correctly.
+	 */
+	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc, int start, int end,
+			List<Position> excludePositions) {
 		int offset = 0;
+		int lowestStatementStart = Integer.MAX_VALUE;
 		IDocument doc = new Document(old_doc.get());
 
 		for (UseStatement statement : statements) {
@@ -102,6 +171,7 @@ public class DocumentUtils {
 				continue;
 			}
 			int length = statement.sourceEnd() - statement.sourceStart();
+			lowestStatementStart = Math.min(lowestStatementStart, statement.sourceStart());
 
 			try {
 				doc.replace(statement.sourceStart() - offset, length, "");
@@ -109,6 +179,17 @@ public class DocumentUtils {
 			}
 
 			offset += length;
+		}
+
+		if (offset > 0) {
+			for (int i = excludePositions.size() - 1; i >= 0; i--) {
+				Position position = excludePositions.get(i);
+				if (position.getOffset() >= lowestStatementStart) {
+					position.setOffset(position.getOffset() - offset);
+				} else {
+					break;
+				}
+			}
 		}
 
 		try {
@@ -170,18 +251,25 @@ public class DocumentUtils {
 		}
 
 		for (UseStatement statement : statements) {
+			List<Position> excludePositions;
+			if (moduleDeclaration instanceof PHPModuleDeclaration) {
+				excludePositions = getExcludeSortedPositions(
+						((PHPModuleDeclaration) moduleDeclaration).getCommentList().toArray(new ASTNode[0]));
+			} else {
+				excludePositions = new ArrayList<Position>();
+			}
 			String contents;
 			NamespaceDeclaration currentNamespace = visitor.getNamespaceDeclarationFor(statement);
 			if (currentNamespace != null && currentNamespace.isBracketed()) {
 				contents = DocumentUtils.stripUseStatements(statements, doc, currentNamespace.sourceStart(),
-						currentNamespace.sourceEnd());
+						currentNamespace.sourceEnd(), excludePositions);
 			} else {
-				contents = stripUseStatements(statements, doc);
+				contents = stripUseStatements(statements, doc, excludePositions);
 			}
 
 			Vector<UsePart> parts = new Vector<UsePart>();
 			for (UsePart part : statement.getParts()) {
-				if (containsUseStatement(part, contents)) {
+				if (containsUseStatement(part, contents, excludePositions)) {
 					parts.add(part);
 				}
 			}
