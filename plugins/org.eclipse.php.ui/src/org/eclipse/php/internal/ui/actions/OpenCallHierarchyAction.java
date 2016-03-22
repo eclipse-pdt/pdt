@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
@@ -261,16 +260,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		IModelElement element = null;
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
 		// exclude selection having selection.getLength() <= 0
-		if (length == 0) {
-			try {
-				IModelElement[] codeSelect = sourceModule.codeSelect(offset, length);
-				if (codeSelect.length > 0) {
-					element = codeSelect[0];
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-		} else {
+		if (length > 0) {
 			try {
 				Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
 				if (ast != null) {
@@ -289,8 +279,22 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		if (element == null) {
 			// try to get the top level
 			try {
-				element = sourceModule.getElementAt(offset);
+				if (length > 0) {
+					IModelElement[] codeSelect = sourceModule.codeSelect(offset, length);
+					if (codeSelect.length > 0) {
+						element = codeSelect[0];
+					}
+				} else {
+					element = sourceModule.getElementAt(offset);
+				}
 			} catch (ModelException e) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
+				// Can happen when offset + length >
+				// sourceModule.getBuffer().getLength()
+				// i.e. when deleting text at the end of the php file.
+				// In this case, there's no selected element and we can ignore
+				// the exception.
+				// Logger.logException(e);
 			}
 		}
 		return element;
