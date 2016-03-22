@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	private boolean hasErrors;
 	private List<VarComment> varComments;
 	private List<PHPDocBlock> phpDocBlocks = new LinkedList<PHPDocBlock>();
+	private List<Comment> commentList = new LinkedList<Comment>();
 
 	public PHPModuleDeclaration(int start, int end, List<Statement> statements, List<ASTError> errors,
 			List<VarComment> varComments) {
@@ -143,6 +144,10 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 
 	public List<PHPDocBlock> getPhpDocBlocks() {
 		return phpDocBlocks;
+	}
+
+	public List<Comment> getCommentList() {
+		return commentList;
 	}
 
 	private class ErrorSearcher extends ASTVisitor {

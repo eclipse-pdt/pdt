@@ -387,6 +387,9 @@ top_statement_list:statementList
 		} else if (c instanceof PHPDocBlock) {
 			program.getPhpDocBlocks().add((PHPDocBlock) c);
 		}
+		if (c instanceof Comment) {
+			program.getCommentList().add((Comment) c);
+		}
 	}
 
 	program.setStart(statementListleft);
