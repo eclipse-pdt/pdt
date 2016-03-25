@@ -2,7 +2,7 @@
 Must complete static fields from hierarchy
 --FILE--
 <?php
-include "Manager.php"
+include "Manager.php";
 
 class MyManager extends Manager {
 }
