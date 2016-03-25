@@ -22,10 +22,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
@@ -137,9 +134,14 @@ public class DocumentUtils {
 	 *            Node positions to exclude
 	 * @return sorted positions to exclude
 	 */
-	public static List<Position> getExcludeSortedPositions(ASTNode[] nodes) {
+	public static List<Position> getExcludeSortedAndFilteredPositions(ASTNode[] nodes) {
 		List<Position> excludePositions = new ArrayList<Position>();
 		for (ASTNode n : nodes) {
+			if (n instanceof PHPDocBlock) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=490434
+				// Do not handle PHPDoc comments for now
+				continue;
+			}
 			excludePositions.add(new Position(n.sourceStart(), n.sourceEnd() - n.sourceStart()));
 		}
 		return excludePositions;
@@ -255,7 +257,7 @@ public class DocumentUtils {
 		for (UseStatement statement : statements) {
 			List<Position> excludePositions;
 			if (moduleDeclaration instanceof PHPModuleDeclaration) {
-				excludePositions = getExcludeSortedPositions(
+				excludePositions = getExcludeSortedAndFilteredPositions(
 						((PHPModuleDeclaration) moduleDeclaration).getCommentList().toArray(new ASTNode[0]));
 			} else {
 				excludePositions = new ArrayList<Position>();

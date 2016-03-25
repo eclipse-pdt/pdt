@@ -27,6 +27,7 @@ new F();
 <?php
 use Boo\A;
 use Boo\B;
+use Boo\E;
 use Boo\F;
 
 //new A();

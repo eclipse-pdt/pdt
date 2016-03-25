@@ -123,7 +123,7 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 				return super.visit(s);
 			}
 
-			List<Position> excludePositions = DocumentUtils.getExcludeSortedPositions(excludeNodes);
+			List<Position> excludePositions = DocumentUtils.getExcludeSortedAndFilteredPositions(excludeNodes);
 
 			String total;
 			if (this.currentNamespace != null && this.currentNamespace.isBracketed()) {
