@@ -1,0 +1,37 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+echo Foo::$bar['baz']();
+echo Foo::$bar['baz'];
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="58">
+	<EchoStatement start="7" end="31">
+		<ReflectionStaticMethodInvocation start="12" end="30">
+			<FullyQualifiedReference start="12" end="15" name="Foo">
+			</FullyQualifiedReference>
+			<ArrayVariableReference start="17" end="28" type="array" name="$bar">
+				<Scalar start="22" end="27" type="string" value="&apos;baz&apos;">
+				</Scalar>
+			</ArrayVariableReference>
+			<PHPCallArgumentsList start="29" end="29">
+			</PHPCallArgumentsList>
+		</ReflectionStaticMethodInvocation>
+	</EchoStatement>
+	<EchoStatement start="32" end="54">
+		<ReflectionArrayVariableReference start="37" end="53">
+			<StaticFieldAccess start="37" end="46">
+				<FullyQualifiedReference start="37" end="40" name="Foo">
+				</FullyQualifiedReference>
+				<VariableReference start="42" end="46" name="$bar">
+				</VariableReference>
+			</StaticFieldAccess>
+			<Scalar start="47" end="52" type="string" value="&apos;baz&apos;">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</EchoStatement>
+	<EmptyStatement start="55" end="57">
+	</EmptyStatement>
+</ModuleDeclaration>
+

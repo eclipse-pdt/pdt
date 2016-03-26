@@ -23,6 +23,8 @@ public class ObjectDimList {
 
 	public DimList list;
 
+	public int refCount = 0;
+
 	public ObjectDimList(Expression variable) {
 		this.variable = variable;
 	}
