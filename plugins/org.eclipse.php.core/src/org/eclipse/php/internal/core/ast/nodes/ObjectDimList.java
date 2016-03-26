@@ -21,6 +21,8 @@ public class ObjectDimList {
 
 	public DimList list;
 
+	public int refCount = 0;
+
 	public ObjectDimList(VariableBase variable) {
 		this.variable = variable;
 	}
