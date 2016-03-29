@@ -51,10 +51,9 @@ public class DBGpUtils {
 		if (fileName.charAt(0) != '/') {
 			fileName = "/" + fileName; //$NON-NLS-1$
 		}
-		fileName = adjustFileNameForURI(fileName);
 		try {
 			URI uri = new URI("file", "", fileName, null, null); //$NON-NLS-1$ //$NON-NLS-2$
-			fileURIStr = uri.toASCIIString();
+			fileURIStr = adjustURIWhiteSpaces(uri.toASCIIString());
 			encoded.put(fileName, fileURIStr);
 		} catch (URISyntaxException e) {
 			DBGpLogger.logException("URISyntaxException - 1", null, e); //$NON-NLS-1$
@@ -71,7 +70,7 @@ public class DBGpUtils {
 	public static String getFilenameFromURIString(String fileURIStr) {
 		String filePath = ""; //$NON-NLS-1$
 		try {
-			fileURIStr = adjustFileNameForURI(fileURIStr);
+			fileURIStr = adjustURIWhiteSpaces(fileURIStr);
 			URI uri = new URI(fileURIStr);
 			filePath = uri.getPath();
 			if (filePath != null && filePath.length() > 2 && filePath.charAt(2) == ':') {
@@ -141,7 +140,7 @@ public class DBGpUtils {
 		});
 	}
 
-	private static String adjustFileNameForURI(String fileName) {
+	private static String adjustURIWhiteSpaces(String fileName) {
 		// Ensure that all white spaces are converted
 		return fileName.replaceAll(" ", "%20"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
