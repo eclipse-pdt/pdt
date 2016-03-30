@@ -37,8 +37,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private int fLineNumber;
 	private int fDepth;
 	private Expression[] fLocalVariables;
-
-	private PHPVariable[] fVariables;
+	private IVariable[] fCurrentVariables;
+	private IVariable[] fPreviousVariables;
 
 	/**
 	 * Create new PHP stack frame
@@ -83,10 +83,43 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fLocalVariables = localVariables;
 	}
 
-	void update(int lineNumber, Expression[] localVariables) throws DebugException {
-		fLineNumber = lineNumber;
-		fVariables = null;
-		fLocalVariables = localVariables;
+	protected void update(int lineNumber, Expression[] localVariables) throws DebugException {
+		this.fLineNumber = lineNumber;
+		// Reset state
+		this.fPreviousVariables = fCurrentVariables;
+		this.fCurrentVariables = null;
+		// Set new locals
+		this.fLocalVariables = localVariables;
+	}
+
+	/**
+	 * Merges incoming variable. Merge is done by means of checking if related
+	 * child variable existed in "one step back" state of a frame. If related
+	 * variable existed, it is updated with the use of the most recent
+	 * descriptor and returned instead of the incoming one.
+	 * 
+	 * @param variable
+	 * @param descriptor
+	 * @return merged variable
+	 */
+	protected IVariable merge(IVariable variable) {
+		if (fPreviousVariables == null)
+			return variable;
+		if (!(variable instanceof PHPVariable))
+			return variable;
+		PHPVariable incoming = (PHPVariable) variable;
+		if (incoming.getFullName().isEmpty())
+			return incoming;
+		for (IVariable stored : fPreviousVariables) {
+			if (stored instanceof PHPVariable) {
+				PHPVariable previous = (PHPVariable) stored;
+				if (previous.getFullName().equals(incoming.getFullName())) {
+					((PHPVariable) stored).update(incoming.getExpression());
+					return stored;
+				}
+			}
+		}
+		return variable;
 	}
 
 	/**
@@ -112,15 +145,16 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
-	public IVariable[] getVariables() throws DebugException {
+	public synchronized IVariable[] getVariables() throws DebugException {
 		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
-		if (fVariables == null) {
-			fVariables = new PHPVariable[localVariables.length];
+		if (fCurrentVariables == null) {
+			fCurrentVariables = new PHPVariable[localVariables.length];
 			for (int i = 0; i < localVariables.length; i++) {
-				fVariables[i] = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i], false);
+				PHPVariable incoming = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i]);
+				fCurrentVariables[i] = merge(incoming);
 			}
 		}
-		return fVariables;
+		return fCurrentVariables;
 	}
 
 	/*
