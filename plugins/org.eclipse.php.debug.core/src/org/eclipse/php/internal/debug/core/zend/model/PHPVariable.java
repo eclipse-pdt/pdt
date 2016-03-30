@@ -11,57 +11,47 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
 
 import java.text.MessageFormat;
+
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.actions.IWatchExpressionFactoryAdapter;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.model.IPHPDataType;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
-import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
 
 /**
  * A variable in a PHP stack frame
  */
-public class PHPVariable extends PHPDebugElement implements IVariable {
+public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataType {
 
-	private Expression variable;
-	private PHPValue value;
-	private boolean hasChanged = false;
-	private boolean global = false;
-	private String name = null;
+	private Expression fExpression;
+	private PHPValue fValue;
+	private boolean fHasChanged = false;
+	private String fName = null;
 
 	/**
 	 * Constructs a variable contained in the given stack frame with the given
 	 * name.
 	 * 
 	 */
-	public PHPVariable(PHPDebugTarget target, Expression variable) {
+	public PHPVariable(PHPDebugTarget target, Expression expression) {
 		super(target);
-		this.variable = variable;
-		this.global = false;
-		this.value = new PHPValue(target, variable);
-		this.hasChanged = target.storeValue(variable);
+		this.fExpression = expression;
+		this.fValue = new PHPValue(target, expression);
 	}
 
-	/**
-	 * Constructs a variable contained in the given stack frame with the given
-	 * name for a global variable.
-	 * 
-	 */
-	public PHPVariable(PHPDebugTarget target, Expression variable, boolean global) {
-		super(target);
-		this.variable = variable;
-		this.global = global;
-		this.value = new PHPValue(target, variable, global);
-		this.hasChanged = target.storeValue(variable);
+	@Override
+	public DataType getDataType() {
+		return fExpression.getValue().getDataType();
 	}
 
 	/*
@@ -70,7 +60,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#getValue()
 	 */
 	public IValue getValue() throws DebugException {
-		return value;
+		return fValue;
 	}
 
 	/*
@@ -79,18 +69,18 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#getName()
 	 */
 	public String getName() throws DebugException {
-		if (name == null) {
-			String endName = variable.getLastName();
-			if (variable.hasFacet(KIND_OBJECT_MEMBER)) {
+		if (fName == null) {
+			String endName = fExpression.getLastName();
+			if (fExpression.hasFacet(KIND_OBJECT_MEMBER)) {
 				int idx = endName.lastIndexOf(':');
 				if (idx != -1)
 					endName = endName.substring(idx + 1);
-			} else if (variable.hasFacet(KIND_ARRAY_MEMBER)) {
+			} else if (fExpression.hasFacet(KIND_ARRAY_MEMBER)) {
 				endName = '[' + endName + ']';
 			}
-			name = endName;
+			fName = endName;
 		}
-		return name;
+		return fName;
 	}
 
 	/*
@@ -99,7 +89,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
-		return value.getReferenceTypeName();
+		return fValue.getReferenceTypeName();
 	}
 
 	/*
@@ -108,7 +98,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#hasValueChanged()
 	 */
 	public boolean hasValueChanged() throws DebugException {
-		return hasChanged;
+		return fHasChanged;
 	}
 
 	/*
@@ -121,14 +111,8 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	public void setValue(String expression) throws DebugException {
 		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
 		ExpressionsManager expressionManager = debugTarget.getExpressionManager();
-		Expression changeVar = variable;
-		if (global) {
-			String exp = "$GLOBALS[\"" + variable.getFullName().substring(1) //$NON-NLS-1$
-					+ "\"]"; //$NON-NLS-1$
-			changeVar = new DefaultExpression(exp);
-		}
-		int valueType = value.getVariable().getValue().getType();
-		if (valueType == ExpressionValue.STRING_TYPE) {
+		Expression changeVar = fExpression;
+		if (fValue.getExpression().getValue().getDataType() == PHP_STRING) {
 			expression = MessageFormat.format("\"{0}\"", expression); //$NON-NLS-1$
 		}
 		boolean status = expressionManager.assignValue(changeVar, expression, 1);
@@ -137,7 +121,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 					+ "] PHPValue: Problem changing variable value"); //$NON-NLS-1$
 		}
 		expressionManager.update(changeVar, 1);
-		value.updateValue(changeVar.getValue());
+		fValue.updateValue(changeVar.getValue());
 		fireChangeEvent(DebugEvent.CONTENT);
 	}
 
@@ -160,7 +144,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 */
 	public boolean supportsValueModification() {
 		// Not supported yet
-		if (variable.hasFacet(MOD_STATIC) || variable.hasFacet(VIRTUAL_CLASS))
+		if (fExpression.hasFacet(MOD_STATIC) || fExpression.hasFacet(VIRTUAL_CLASS))
 			return false;
 		return true;
 	}
@@ -173,15 +157,15 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * .String)
 	 */
 	public boolean verifyValue(String value) throws DebugException {
-		switch (variable.getValue().getType()) {
-		case ExpressionValue.BOOLEAN_TYPE: {
+		switch (fExpression.getValue().getDataType()) {
+		case PHP_BOOL: {
 			if (!value.equalsIgnoreCase(String.valueOf(false)) && !value.equalsIgnoreCase(String.valueOf(true))) {
 				return false;
 			}
 			break;
 		}
-		case ExpressionValue.DOUBLE_TYPE:
-		case ExpressionValue.INT_TYPE: {
+		case PHP_FLOAT:
+		case PHP_INT: {
 			try {
 				Double.parseDouble(value);
 				return true;
@@ -189,6 +173,8 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 				return false;
 			}
 		}
+		default:
+			break;
 		}
 		return true;
 	}
@@ -210,9 +196,41 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 			return new WatchExpressionFactoryAdapter();
 		}
 		if (adapter == Expression.class || adapter == IVariableFacet.class) {
-			return variable;
+			return fExpression;
 		}
 		return super.getAdapter(adapter);
+	}
+
+	protected Expression getExpression() {
+		return fExpression;
+	}
+
+	protected String getFullName() {
+		return fExpression.getFullName();
+	}
+
+	protected void update(Expression expression) {
+		// Get previous data type
+		DataType previousDataType = getDataType();
+		// Catch previous value string if there is any
+		String previousValueString = null;
+		if (fValue != null) {
+			previousValueString = fExpression.getValue().getValueAsString();
+		}
+		// Bind new expression
+		fExpression = expression;
+		// Reset name
+		fName = null;
+		// Update value
+		if (fValue != null && fValue.getDataType() == previousDataType) {
+			fValue.update(expression);
+		} else {
+			fValue = new PHPValue((PHPDebugTarget) getDebugTarget(), fExpression);
+		}
+		// Check if value has changed
+		if (previousValueString != null) {
+			fHasChanged = !previousValueString.equals(fExpression.getValue().getValueAsString());
+		}
 	}
 
 }

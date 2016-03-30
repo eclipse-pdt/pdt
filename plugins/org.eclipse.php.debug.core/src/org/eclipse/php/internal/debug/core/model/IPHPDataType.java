@@ -31,6 +31,7 @@ public interface IPHPDataType {
 		PHP_ARRAY("array"), //$NON-NLS-1$
 		PHP_OBJECT("object"), //$NON-NLS-1$
 		PHP_RESOURCE("resource"), //$NON-NLS-1$
+		PHP_VIRTUAL_CLASS("class"), //$NON-NLS-1$
 		PHP_UNINITIALIZED("<uninitialized>"); //$NON-NLS-1$
 
 		private String type;

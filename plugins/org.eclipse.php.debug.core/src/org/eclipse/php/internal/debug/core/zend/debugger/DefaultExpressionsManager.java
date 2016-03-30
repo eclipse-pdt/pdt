@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
 import java.util.*;
 
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
@@ -107,23 +108,23 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	}
 
 	public void update(Expression expression, int depth) {
-		if (expression.getValue().getType() == ExpressionValue.VIRTUAL_CLASS_TYPE)
+		if (expression.getValue().getDataType() == PHP_VIRTUAL_CLASS)
 			return;
 		byte[] value = getExpressionValue(expression, depth);
 		ExpressionValue expressionValue = expressionValueDeserializer.deserializer(expression, value);
 		// Workaround for fetching static members for objects
-		if (expressionValue.getType() == ExpressionValue.OBJECT_TYPE) {
+		if (expressionValue.getDataType() == PHP_OBJECT) {
 			Expression[] expressionStaticNodes = ExpressionsUtil.fetchStaticMembers((String) expressionValue.getValue(),
 					this);
 			List<Expression> allNodes = new ArrayList<Expression>();
 			allNodes.addAll(Arrays.asList(expressionStaticNodes));
 			allNodes.addAll(Arrays.asList(expressionValue.getChildren()));
-			expressionValue = new ExpressionValue(ExpressionValue.OBJECT_TYPE, expressionValue.getValue(),
+			expressionValue = new ExpressionValue(PHP_OBJECT, expressionValue.getValue(),
 					expressionValue.getValueAsString(), allNodes.toArray(new Expression[allNodes.size()]),
 					expressionValue.getChildrenCount() + expressionStaticNodes.length);
 		}
 		// Sort object members by type & name
-		if (!PHPProjectPreferences.isSortByName() && expressionValue.getType() == ExpressionValue.OBJECT_TYPE)
+		if (!PHPProjectPreferences.isSortByName() && expressionValue.getDataType() == PHP_OBJECT)
 			VariablesUtil.sortObjectMembers(expressionValue.getOriChildren());
 		expression.setValue(expressionValue);
 	}

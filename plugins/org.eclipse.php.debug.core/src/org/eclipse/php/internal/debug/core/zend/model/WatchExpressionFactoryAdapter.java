@@ -27,7 +27,7 @@ public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAda
 		IValue value = variable.getValue();
 		if (value instanceof PHPValue) {
 			PHPValue phpValue = (PHPValue) value;
-			return phpValue.getVariable().getFullName();
+			return phpValue.getExpression().getFullName();
 		}
 		return variable.getName();
 	}

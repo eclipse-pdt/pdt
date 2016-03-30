@@ -11,11 +11,11 @@
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
-
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 
@@ -121,7 +121,7 @@ public class ExpressionsUtil {
 		if (staticMembers.length == 0)
 			return null;
 		Expression classStaticContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
-		ExpressionValue classStaticContextValue = new ExpressionValue(ExpressionValue.VIRTUAL_CLASS_TYPE, className,
+		ExpressionValue classStaticContextValue = new ExpressionValue(PHP_VIRTUAL_CLASS, className,
 				"Class of: " //$NON-NLS-1$
 						+ className,
 				staticMembers, staticMembers.length);

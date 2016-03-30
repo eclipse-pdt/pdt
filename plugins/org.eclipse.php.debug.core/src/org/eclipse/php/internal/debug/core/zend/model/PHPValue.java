@@ -16,10 +16,10 @@ import java.util.Arrays;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.model.IPHPDataType;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.VirtualPartition;
 import org.eclipse.php.internal.debug.core.model.VirtualPartition.IVariableProvider;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
@@ -27,48 +27,19 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
 /**
  * Value of a PHP variable.
  */
-public class PHPValue extends PHPDebugElement implements IValue {
+public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 
-	private static final String[] VARIABLE_TYPES = { "NULL", "INT", "STRING", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE", "CLASS" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	private static final int ARRAY_PARTITION_BOUNDARY = 100;
-	private Expression fVariable;
-	private ExpressionValue fValue;
-	private boolean fGlobal;
-	private IVariable[] fChildren;
+	protected Expression fExpression;
+	protected ExpressionValue fExpressionValue;
+	protected IVariable[] fCurrentVariables = null;
+	protected IVariable[] fPreviousVariables = null;
+	protected IVariable[] fPartitions = new IVariable[] {};
 
-	public PHPValue(PHPDebugTarget target, Expression variable, boolean global) {
+	public PHPValue(PHPDebugTarget target, Expression expression) {
 		super(target);
-
-		fValue = variable.getValue();
-		fVariable = variable;
-		fGlobal = global;
-	}
-
-	public PHPValue(PHPDebugTarget target, Expression variable) {
-		this(target, variable, false);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
-	 */
-	public String getReferenceTypeName() throws DebugException {
-		return VARIABLE_TYPES[fValue.getType()];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IValue#getValueString()
-	 */
-	public String getValueString() throws DebugException {
-		return fValue.getValueAsString();
-	}
-
-	public String getValue() throws DebugException {
-		return (String) (fValue.getValue());
+		fExpressionValue = expression.getValue();
+		fExpression = expression;
 	}
 
 	/*
@@ -83,94 +54,167 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
+	 */
+	public boolean hasVariables() throws DebugException {
+		switch (fExpressionValue.getDataType()) {
+		case PHP_ARRAY:
+		case PHP_OBJECT:
+		case PHP_VIRTUAL_CLASS:
+			return fExpressionValue.getChildrenCount() > 0;
+		default:
+			break;
+		}
+		return false;
+	}
+
+	@Override
+	public DataType getDataType() {
+		return fExpressionValue.getDataType();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
+	 */
+	public String getReferenceTypeName() throws DebugException {
+		return getDataType().getText().toUpperCase();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IValue#getValueString()
+	 */
+	public String getValueString() throws DebugException {
+		return fExpressionValue.getValueAsString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IValue#getVariables()
 	 */
-	public IVariable[] getVariables() throws DebugException {
-		if (fChildren == null) {
+	public synchronized IVariable[] getVariables() throws DebugException {
+		if (fCurrentVariables == null) {
 			requestVariables();
-			if (fChildren == null) {
-				fChildren = new IVariable[0];
+			if (fCurrentVariables == null) {
+				fCurrentVariables = new IVariable[0];
 			}
 			// Check if we should divide it into partitions
-			if (fValue.getType() == ExpressionValue.ARRAY_TYPE && fChildren.length >= ARRAY_PARTITION_BOUNDARY) {
+			if (fExpressionValue.getDataType() == DataType.PHP_ARRAY
+					&& fCurrentVariables.length >= ARRAY_PARTITION_BOUNDARY) {
 				createPartitions();
 			}
 		}
-		return fChildren;
+		if (!hasPartitions()) {
+			return fCurrentVariables;
+		}
+		return fPartitions;
+	}
+
+	public String getValue() throws DebugException {
+		return (String) (fExpressionValue.getValue());
+	}
+
+	public void updateValue(ExpressionValue value) {
+		fExpressionValue = value;
+		createVariables(fExpressionValue);
+	}
+
+	protected Expression getExpression() {
+		return fExpression;
+	}
+
+	/**
+	 * Checks if there are multiple partitions with variables.
+	 * 
+	 * @return <code>true</code> if there are multiple partitions with
+	 *         variables, <code>false</code> otherwise
+	 */
+	protected boolean hasPartitions() {
+		return fPartitions.length > 0;
+	}
+
+	protected void update(Expression expression) {
+		// Reset variables state
+		fPreviousVariables = fCurrentVariables;
+		fCurrentVariables = null;
+		// Bind to new expression
+		fExpression = expression;
+		fExpressionValue = fExpression.getValue();
+	}
+
+	/**
+	 * Merges incoming variable. Merge is done by means of checking if related
+	 * child variable existed in "one step back" state of a container. If
+	 * related variable existed, it is updated with the use of the most recent
+	 * descriptor and returned instead of the incoming one.
+	 * 
+	 * @param variable
+	 * @param descriptor
+	 * @return merged variable
+	 */
+	protected IVariable merge(IVariable variable) {
+		if (fPreviousVariables == null)
+			return variable;
+		if (!(variable instanceof PHPVariable))
+			return variable;
+		PHPVariable incoming = (PHPVariable) variable;
+		if (incoming.getFullName().isEmpty())
+			return incoming;
+		for (IVariable stored : fPreviousVariables) {
+			if (stored instanceof PHPVariable) {
+				PHPVariable previous = (PHPVariable) stored;
+				if (previous.getFullName().equals(incoming.getFullName())) {
+					((PHPVariable) stored).update(incoming.getExpression());
+					return stored;
+				}
+			}
+		}
+		return variable;
+	}
+
+	private void requestVariables() {
+		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
+		ExpressionsManager expressionManager = debugTarget.getExpressionManager();
+		Expression variable = fExpression;
+		expressionManager.update(variable, 1);
+		fExpressionValue = variable.getValue();
+		createVariables(fExpressionValue);
+	}
+
+	private void createVariables(ExpressionValue value) {
+		Expression[] children = value.getChildren();
+		if (children != null) {
+			fCurrentVariables = new PHPVariable[children.length];
+			for (int i = 0; i < children.length; i++) {
+				IVariable incoming = new PHPVariable((PHPDebugTarget) getDebugTarget(), children[i]);
+				fCurrentVariables[i] = merge(incoming);
+			}
+		}
 	}
 
 	private void createPartitions() {
-		int numChild = fChildren.length;
+		int numChild = fCurrentVariables.length;
 		int partitions = (int) Math.ceil(numChild / (double) 100);
-		IVariable[] children = new IVariable[partitions];
+		fPartitions = new IVariable[partitions];
 		for (int i = 0; i < partitions; i++) {
 			int startIndex = i * ARRAY_PARTITION_BOUNDARY;
 			int endIndex = (i + 1) * ARRAY_PARTITION_BOUNDARY - 1;
 			if (endIndex > numChild) {
 				endIndex = numChild - 1;
 			}
-			final IVariable[] vars = Arrays.copyOfRange(fChildren, startIndex, endIndex + 1);
+			final IVariable[] vars = Arrays.copyOfRange(fCurrentVariables, startIndex, endIndex + 1);
 			IVariable var = new VirtualPartition(this, new IVariableProvider() {
 				@Override
 				public IVariable[] getVariables() throws DebugException {
 					return vars;
 				}
 			}, startIndex, endIndex);
-			children[i] = var;
+			fPartitions[i] = var;
 		}
-		fChildren = children;
-	}
-
-	private void requestVariables() {
-		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
-		ExpressionsManager expressionManager = debugTarget.getExpressionManager();
-		Expression variable = fVariable;
-		if (fGlobal) {
-			String exp = "$GLOBALS[\"" + fVariable.getFullName().substring(1) //$NON-NLS-1$
-					+ "\"]"; //$NON-NLS-1$
-			variable = new DefaultExpression(exp);
-		}
-		expressionManager.update(variable, 1);
-		fValue = variable.getValue();
-
-		initChildren(fValue);
-	}
-
-	private void initChildren(ExpressionValue value) {
-		fChildren = null;
-		Expression[] children = value.getChildren();
-		if (children != null) {
-			fChildren = new PHPVariable[children.length];
-			for (int i = 0; i < children.length; i++) {
-				fChildren[i] = new PHPVariable((PHPDebugTarget) getDebugTarget(), children[i], fGlobal);
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
-	 */
-	public boolean hasVariables() throws DebugException {
-		boolean isArrayOrObject = fValue.getType() == 5 || fValue.getType() == 6 || fValue.getType() == 8;
-		if (!isArrayOrObject) {
-			return false;
-		}
-		return fValue.getChildrenCount() > 0;
-	}
-
-	public void updateValue(ExpressionValue value) {
-		fValue = value;
-		initChildren(fValue);
-	}
-
-	public boolean isPrimitive() {
-		return fValue.isPrimitive();
-	}
-
-	public Expression getVariable() {
-		return fVariable;
 	}
 
 }
