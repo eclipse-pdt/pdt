@@ -85,7 +85,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	/**
-	 * Filters given set of element according to a file network
+	 * Filters given set of elements according to a file network
 	 * 
 	 * @param sourceModule
 	 *            Current file
@@ -93,31 +93,10 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Elements set
 	 * @param monitor
 	 *            Progress monitor
-	 * @return
+	 * @return filtered elements
 	 */
-	protected <T extends IModelElement> Collection<T> filterElements(ISourceModule sourceModule, Collection<T> elements,
-			IProgressMonitor monitor) {
-
-		if (elements == null) {
-			return null;
-		}
-
-		// If it's just one element - return it
-		if (elements.size() == 1) {
-			return elements;
-		}
-
-		List<T> filteredElements = new LinkedList<T>();
-		// If some of elements belong to current file return just it:
-		for (T element : elements) {
-			if (sourceModule.equals(element.getOpenable())) {
-				filteredElements.add(element);
-			}
-		}
-		if (filteredElements.size() > 0) {
-			return filteredElements;
-		}
-
+	public <T extends IModelElement> Collection<T> filterModelElements(ISourceModule sourceModule,
+			Collection<T> elements, IProgressMonitor monitor) {
 		return PHPModelUtils.fileNetworkFilter(sourceModule, elements, this, monitor);
 	}
 
@@ -172,7 +151,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			}
 			functions = globalFunctionsCache.get(functionName);
 		}
-		return filterElements(sourceModule, functions, monitor);
+		return filterModelElements(sourceModule, functions, monitor);
 	}
 
 	/**
@@ -227,7 +206,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			types = allTypesCache.get(searchFor);
 		}
-		return filterElements(sourceModule, types, monitor);
+		return filterModelElements(sourceModule, types, monitor);
 	}
 
 	/**
@@ -266,7 +245,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			namespaces = allNamespacesCache.get(searchFor);
 		}
-		return filterElements(sourceModule, namespaces, monitor);
+		return namespaces;
 	}
 
 	/**
@@ -321,7 +300,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			types = allTraitsCache.get(searchFor);
 		}
-		return filterElements(sourceModule, types, monitor);
+		return filterModelElements(sourceModule, types, monitor);
 	}
 
 	/**

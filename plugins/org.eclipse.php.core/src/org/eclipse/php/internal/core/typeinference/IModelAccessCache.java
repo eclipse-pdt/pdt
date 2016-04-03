@@ -7,6 +7,11 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 
 public interface IModelAccessCache {
+	/**
+	 * Filters given set of elements according to a file network
+	 */
+	public <T extends IModelElement> Collection<T> filterModelElements(ISourceModule sourceModule,
+			Collection<T> elements, IProgressMonitor monitor);
 
 	public abstract ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException;
 
@@ -19,19 +24,22 @@ public interface IModelAccessCache {
 	public abstract ReferenceTree getFileHierarchy(ISourceModule sourceModule, IProgressMonitor monitor);
 
 	/**
-	 * Returns cached methods for the given name
+	 * Returns cached methods for the given name (with filter
+	 * filterModelElements() applied on result)
 	 */
 	public abstract Collection<IMethod> getGlobalFunctions(ISourceModule sourceModule, String functionName,
 			IProgressMonitor monitor);
 
 	/**
-	 * Returns cached types for the given name
+	 * Returns cached types for the given name (with filter
+	 * filterModelElements() applied on result)
 	 */
 	public abstract Collection<IType> getTypes(ISourceModule sourceModule, String typeName, String namespaceName,
 			IProgressMonitor monitor);
 
 	/**
-	 * Returns cached traits for the given name
+	 * Returns cached traits for the given name (with filter
+	 * filterModelElements() applied on result)
 	 */
 	public abstract Collection<IType> getTraits(ISourceModule sourceModule, String typeName, String namespaceName,
 			IProgressMonitor monitor);
@@ -55,7 +63,8 @@ public interface IModelAccessCache {
 			IProgressMonitor monitor) throws ModelException;
 
 	/**
-	 * Returns cached classes or interfaces for the given name
+	 * Returns cached classes or interfaces for the given name (with filter
+	 * filterModelElements() applied on result)
 	 */
 	public abstract Collection<IType> getClassesOrInterfaces(ISourceModule sourceModule, String typeName,
 			String namespaceName, IProgressMonitor monitor) throws ModelException;
