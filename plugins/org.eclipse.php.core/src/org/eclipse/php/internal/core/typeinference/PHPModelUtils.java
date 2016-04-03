@@ -281,7 +281,8 @@ public class PHPModelUtils {
 	public static <T extends IModelElement> Collection<T> fileNetworkFilter(ISourceModule sourceModule,
 			Collection<T> elements, IModelAccessCache cache, IProgressMonitor monitor) {
 
-		if (elements != null && elements.size() > 0) {
+		// If it's just one element (or less) - return it
+		if (elements != null && elements.size() > 1) {
 			List<T> filteredElements = new LinkedList<T>();
 
 			// If some of elements belong to current file return just it:
@@ -359,7 +360,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Determine whether givent elements represent the same type and name, but
+	 * Determine whether given elements represent the same type and name, but
 	 * declared in different files (determine whether file network filtering can
 	 * be used)
 	 * 
@@ -1015,7 +1016,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field declared unders specified namespace
+	 * This method returns field declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1027,7 +1028,7 @@ public class PHPModelUtils {
 	 *            Source module where the field is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declarated in the specified namespace, or null if there is
+	 * @return field declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
@@ -1037,7 +1038,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field declared unders specified namespace
+	 * This method returns field declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1051,7 +1052,7 @@ public class PHPModelUtils {
 	 *            Model access cache if available
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declarated in the specified namespace, or null if there is
+	 * @return field declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
@@ -1059,15 +1060,18 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		List<IField> result = new LinkedList<IField>();
+		Collection<IField> result = new LinkedList<IField>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeField(ns, prefix, exactName)));
+		}
+		if (cache != null) {
+			result = cache.filterModelElements(sourceModule, result, monitor);
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);
 	}
 
 	/**
-	 * This method returns method declared unders specified namespace
+	 * This method returns method declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1087,7 +1091,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns method declared unders specified namespace
+	 * This method returns method declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1107,9 +1111,12 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		List<IMethod> result = new LinkedList<IMethod>();
+		Collection<IMethod> result = new LinkedList<IMethod>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(ns, prefix, exactName)));
+		}
+		if (cache != null) {
+			result = cache.filterModelElements(sourceModule, result, monitor);
 		}
 		return (IMethod[]) result.toArray(new IMethod[result.size()]);
 	}
@@ -1155,13 +1162,19 @@ public class PHPModelUtils {
 			IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 		String namespace = extractNamespaceName(elementName, sourceModule, offset);
 		if (namespace != null && namespace.length() > 0) {
-			return getNamespaces(sourceModule, namespace, cache, monitor);
+			IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
+			if (cache != null) {
+				Collection<IType> result = Arrays.asList(namespaces);
+				result = cache.filterModelElements(sourceModule, result, monitor);
+				return (IType[]) result.toArray(new IType[result.size()]);
+			}
+			return namespaces;
 		}
 		return PhpModelAccess.NULL_TYPES;
 	}
 
 	/**
-	 * This method returns type declared unders specified namespace
+	 * This method returns type declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1173,7 +1186,7 @@ public class PHPModelUtils {
 	 *            Source module where the type is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return type declarated in the specified namespace, or null if there is
+	 * @return type declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
@@ -1183,7 +1196,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns type declared unders specified namespace
+	 * This method returns type declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1198,18 +1211,21 @@ public class PHPModelUtils {
 	 * @param monitor
 	 *            Progress monitor
 	 * @param isType
-	 * @return type declarated in the specified namespace, or null if there is
+	 * @return type declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
 	public static IType[] getNamespaceType(String namespace, String prefix, boolean exactName,
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor, boolean isType)
-					throws ModelException {
+			throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		List<IType> result = new LinkedList<IType>();
+		Collection<IType> result = new LinkedList<IType>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns, prefix, exactName, isType)));
+		}
+		if (cache != null) {
+			result = cache.filterModelElements(sourceModule, result, monitor);
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
