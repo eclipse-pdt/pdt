@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -281,7 +281,8 @@ public class PHPModelUtils {
 	public static <T extends IModelElement> Collection<T> fileNetworkFilter(ISourceModule sourceModule,
 			Collection<T> elements, IModelAccessCache cache, IProgressMonitor monitor) {
 
-		if (elements != null && elements.size() > 0) {
+		// If it's just one element (or less) - return it
+		if (elements != null && elements.size() > 1) {
 			List<T> filteredElements = new LinkedList<T>();
 
 			// If some of elements belong to current file return just it:
@@ -359,7 +360,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Determine whether givent elements represent the same type and name, but
+	 * Determine whether given elements represent the same type and name, but
 	 * declared in different files (determine whether file network filtering can
 	 * be used)
 	 * 
@@ -751,7 +752,7 @@ public class PHPModelUtils {
 
 					Collection<IField> filteredElements = filterElements(sourceModule, Arrays.asList(fields), cache,
 							monitor);
-					return (IField[]) filteredElements.toArray(new IField[filteredElements.size()]);
+					return filteredElements.toArray(new IField[filteredElements.size()]);
 				}
 			}
 		}
@@ -762,7 +763,7 @@ public class PHPModelUtils {
 		Collection<IField> filteredElements = null;
 		if (fields != null) {
 			filteredElements = filterElements(sourceModule, Arrays.asList(fields), cache, monitor);
-			return (IField[]) filteredElements.toArray(new IField[filteredElements.size()]);
+			return filteredElements.toArray(new IField[filteredElements.size()]);
 		}
 		return PhpModelAccess.NULL_FIELDS;
 	}
@@ -860,7 +861,7 @@ public class PHPModelUtils {
 
 		Collection<IMethod> filteredElements = filterElements(sourceModule, filterTrueGlobal(Arrays.asList(functions)),
 				null, monitor);
-		return (IMethod[]) filteredElements.toArray(new IMethod[filteredElements.size()]);
+		return filteredElements.toArray(new IMethod[filteredElements.size()]);
 	}
 
 	private static Collection<IMethod> filterTrueGlobal(Collection<IMethod> functions) {
@@ -1015,7 +1016,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field declared unders specified namespace
+	 * This method returns field declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1027,7 +1028,7 @@ public class PHPModelUtils {
 	 *            Source module where the field is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declarated in the specified namespace, or null if there is
+	 * @return field declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
@@ -1037,7 +1038,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field declared unders specified namespace
+	 * This method returns field declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1051,7 +1052,7 @@ public class PHPModelUtils {
 	 *            Model access cache if available
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declarated in the specified namespace, or null if there is
+	 * @return field declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
@@ -1059,15 +1060,18 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		List<IField> result = new LinkedList<IField>();
+		Collection<IField> result = new LinkedList<IField>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeField(ns, prefix, exactName)));
 		}
-		return (IField[]) result.toArray(new IField[result.size()]);
+		if (cache != null) {
+			result = cache.filterModelElements(sourceModule, result, monitor);
+		}
+		return result.toArray(new IField[result.size()]);
 	}
 
 	/**
-	 * This method returns method declared unders specified namespace
+	 * This method returns method declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1087,7 +1091,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns method declared unders specified namespace
+	 * This method returns method declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1107,11 +1111,14 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		List<IMethod> result = new LinkedList<IMethod>();
+		Collection<IMethod> result = new LinkedList<IMethod>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(ns, prefix, exactName)));
 		}
-		return (IMethod[]) result.toArray(new IMethod[result.size()]);
+		if (cache != null) {
+			result = cache.filterModelElements(sourceModule, result, monitor);
+		}
+		return result.toArray(new IMethod[result.size()]);
 	}
 
 	/**
@@ -1155,13 +1162,19 @@ public class PHPModelUtils {
 			IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 		String namespace = extractNamespaceName(elementName, sourceModule, offset);
 		if (namespace != null && namespace.length() > 0) {
-			return getNamespaces(sourceModule, namespace, cache, monitor);
+			IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
+			if (cache != null) {
+				Collection<IType> result = Arrays.asList(namespaces);
+				result = cache.filterModelElements(sourceModule, result, monitor);
+				return result.toArray(new IType[result.size()]);
+			}
+			return namespaces;
 		}
 		return PhpModelAccess.NULL_TYPES;
 	}
 
 	/**
-	 * This method returns type declared unders specified namespace
+	 * This method returns type declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1173,7 +1186,7 @@ public class PHPModelUtils {
 	 *            Source module where the type is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return type declarated in the specified namespace, or null if there is
+	 * @return type declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
@@ -1183,7 +1196,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns type declared unders specified namespace
+	 * This method returns type declared under specified namespace
 	 * 
 	 * @param namespace
 	 *            Namespace name
@@ -1198,20 +1211,23 @@ public class PHPModelUtils {
 	 * @param monitor
 	 *            Progress monitor
 	 * @param isType
-	 * @return type declarated in the specified namespace, or null if there is
+	 * @return type declared in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
 	public static IType[] getNamespaceType(String namespace, String prefix, boolean exactName,
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor, boolean isType)
-					throws ModelException {
+			throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		List<IType> result = new LinkedList<IType>();
+		Collection<IType> result = new LinkedList<IType>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns, prefix, exactName, isType)));
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		if (cache != null) {
+			result = cache.filterModelElements(sourceModule, result, monitor);
+		}
+		return result.toArray(new IType[result.size()]);
 	}
 
 	private static IType[] getNamespaces(ISourceModule sourceModule, String namespaceName, IModelAccessCache cache,
@@ -1221,7 +1237,7 @@ public class PHPModelUtils {
 			if (namespaces == null) {
 				return PhpModelAccess.NULL_TYPES;
 			}
-			return (IType[]) namespaces.toArray(new IType[namespaces.size()]);
+			return namespaces.toArray(new IType[namespaces.size()]);
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, namespaceName, MatchRule.EXACT, 0, 0,
@@ -1294,7 +1310,7 @@ public class PHPModelUtils {
 		}
 		Collection<IType> filtered = filterElements(type.getSourceModule(),
 				Arrays.asList(hierarchy.getAllSuperclasses(type)), null, null);
-		return (IType[]) filtered.toArray(new IType[filtered.size()]);
+		return filtered.toArray(new IType[filtered.size()]);
 	}
 
 	/**
@@ -1412,7 +1428,7 @@ public class PHPModelUtils {
 				}
 			}
 		}
-		return (IField[]) result.toArray(new IField[result.size()]);
+		return result.toArray(new IField[result.size()]);
 	}
 
 	/**
@@ -1643,7 +1659,7 @@ public class PHPModelUtils {
 				}
 			}
 		}
-		return (IMethod[]) result.toArray(new IMethod[result.size()]);
+		return result.toArray(new IMethod[result.size()]);
 	}
 
 	/**
@@ -1765,7 +1781,7 @@ public class PHPModelUtils {
 				result.add(type);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	public static IType[] getTraits(String typeName, ISourceModule sourceModule, int offset, IModelAccessCache cache,
@@ -1789,7 +1805,7 @@ public class PHPModelUtils {
 		for (IType type : types) {
 			result.addAll(Arrays.asList(getTypeField(type, prefix, exactName)));
 		}
-		return (IField[]) result.toArray(new IField[result.size()]);
+		return result.toArray(new IField[result.size()]);
 	}
 
 	/**
@@ -1808,7 +1824,7 @@ public class PHPModelUtils {
 		for (IType type : types) {
 			result.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
 		}
-		return (IMethod[]) result.toArray(new IMethod[result.size()]);
+		return result.toArray(new IMethod[result.size()]);
 	}
 
 	/**
@@ -1837,7 +1853,7 @@ public class PHPModelUtils {
 				result.add(t);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	public static IType[] getTypeType(IType type, String prefix, boolean exactName) throws ModelException {
@@ -1893,7 +1909,7 @@ public class PHPModelUtils {
 		}
 
 		Collection<IMethod> unimplementedMethods = abstractMethods.values();
-		return (IMethod[]) unimplementedMethods.toArray(new IMethod[unimplementedMethods.size()]);
+		return unimplementedMethods.toArray(new IMethod[unimplementedMethods.size()]);
 	}
 
 	private static void internalGetUnimplementedMethods(IType type, HashSet<String> nonAbstractMethods,
