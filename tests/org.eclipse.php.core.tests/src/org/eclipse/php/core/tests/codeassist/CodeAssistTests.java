@@ -204,7 +204,7 @@ public class CodeAssistTests {
 				proposals.add(proposal);
 			}
 		});
-		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
+		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
 	private static String getCursor(PdttFile pdttFile) {

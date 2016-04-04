@@ -34,7 +34,6 @@ import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
@@ -353,26 +352,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
 	public TextSequence getStatementText() {
-		return getStatementText(offset);
+		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
 	public TextSequence getStatementText(int offset) {
-		int startOffset = offset - 1;
-		try {
-			while (startOffset >= 0) {
-				char ch = getChar(startOffset);
-				if (ch == '\n' || ch == '{' || ch == '}' || ch == ';') {
-					startOffset = PHPTextSequenceUtilities.readForwardSpaces(getDocument(), startOffset + 1, offset);
-					return TextSequenceUtilities.createTextSequence(structuredDocumentRegion, startOffset,
-							offset - startOffset);
-				}
-				startOffset--;
-			}
-			return TextSequenceUtilities.createTextSequence(structuredDocumentRegion, 0, offset);
-		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
-			return TextSequenceUtilities.createTextSequence(structuredDocumentRegion, 0, 0);
-		}
+		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
 	/**

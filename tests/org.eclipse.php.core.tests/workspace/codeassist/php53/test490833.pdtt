@@ -1,0 +1,18 @@
+--TEST--
+Bug http://eclip.se/490833
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class Foo {
+
+	public function bar() {
+		return new Foo ();
+	}
+}
+$x = new Foo ();
+$x->bar()
+
+->|;
+--EXPECT--
+method(bar)
