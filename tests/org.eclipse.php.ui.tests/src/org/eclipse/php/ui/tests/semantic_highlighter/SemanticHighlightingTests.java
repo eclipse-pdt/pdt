@@ -16,9 +16,10 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -68,6 +69,7 @@ public class SemanticHighlightingTests {
 
 	protected IProject project;
 	protected IFile testFile;
+	protected List<IFile> otherFiles = null;
 	protected PHPVersion phpVersion;
 
 	@Parameters
@@ -101,6 +103,10 @@ public class SemanticHighlightingTests {
 		highlighters.put("super_global", new SuperGlobalHighlighting());
 	}
 
+	public SemanticHighlightingTests(PHPVersion version, String[] fileNames) {
+		this.phpVersion = version;
+	}
+
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("SemanticHighlighting_" + phpVersion);
@@ -131,17 +137,21 @@ public class SemanticHighlightingTests {
 			testFile.delete(true, null);
 			testFile = null;
 		}
-	}
-
-	public SemanticHighlightingTests(PHPVersion version, String[] fileNames) {
-		this.phpVersion = version;
+		if (otherFiles != null) {
+			for (IFile file : otherFiles) {
+				if (file != null) {
+					file.delete(true, null);
+				}
+			}
+			otherFiles = null;
+		}
 	}
 
 	@Test
 	public void highlighter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		String result = "";
-		createFile(new ByteArrayInputStream(pdttFile.getFile().getBytes()));
+		createFile(pdttFile);
 		ISourceModule module = getSourceModule();
 		assertNotNull(module);
 
@@ -188,14 +198,23 @@ public class SemanticHighlightingTests {
 		}
 	}
 
-	protected void createFile(InputStream inputStream) throws Exception {
+	protected void createFile(PdttFile pdttFile) throws Exception {
 		testFile = project.getFile("test.php");
-		testFile.create(inputStream, true, null);
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		testFile.create(new ByteArrayInputStream(pdttFile.getFile().getBytes()), true, null);
 
+		String[] otherFiles = pdttFile.getOtherFiles();
+		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
+		int i = 0;
+		for (String otherFileContent : otherFiles) {
+			IFile tmp = project.getFile(String.format("test%s.php", i));
+			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
+			this.otherFiles.add(i, tmp);
+			i++;
+		}
+
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
 	}
 
 	protected ISourceModule getSourceModule() {
