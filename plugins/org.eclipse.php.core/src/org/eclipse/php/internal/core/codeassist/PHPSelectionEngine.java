@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,15 +105,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 
 		// First, try to resolve using AST (if we have parsed it well):
-		IModelAccessCache cache = new PerFileModelAccessCache(sourceModule) {
-			@Override
-			protected <T extends IModelElement> Collection<T> filterElements(ISourceModule sourceModule,
-					Collection<T> elements, IProgressMonitor monitor) {
-				// override/removes filtering because
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=442964
-				return elements;
-			}
-		};
+		IModelAccessCache cache = new PerFileModelAccessCache(sourceModule);
 		try {
 			IModelElement[] elements = internalASTResolve(sourceModule, cache, offset, end);
 			if (elements != null) {
