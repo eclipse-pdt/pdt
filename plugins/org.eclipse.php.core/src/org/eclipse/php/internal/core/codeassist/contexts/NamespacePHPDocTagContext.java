@@ -91,8 +91,7 @@ public abstract class NamespacePHPDocTagContext extends NamespacePHPDocContext {
 		boolean found = false;
 		do {
 			tagEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, tagEnd);
-			tagStart = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), getStatementText(), tagEnd,
-					true);
+			tagStart = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText, tagEnd, true);
 
 			tagName = statementText.subSequence(tagStart, tagEnd).toString();
 
