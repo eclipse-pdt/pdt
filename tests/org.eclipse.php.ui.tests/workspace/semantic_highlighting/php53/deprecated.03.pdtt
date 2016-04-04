@@ -1,0 +1,77 @@
+--TEST--
+Bug 486092 - Deprecated not shown if in same namespace
+--FILE--
+<?php
+
+namespace App\Entity;
+
+class C {
+	public function index() {
+		$b = new \App\Entity\A ();
+	}
+	public function index() {
+		$b = new A ();
+	}
+}
+class D extends \App\Entity\B {
+	public function foo() {
+		$this->index ();
+	}
+}
+class E extends B {
+	public function foo() {
+		$this->index ();
+	}
+}
+/**
+ *
+ * @deprecated
+ *
+ */
+class F {
+	/**
+	 *
+	 * @deprecated
+	 *
+	 */
+	public function index() {
+	}
+	public function foo() {
+		$this->index ();
+	}
+}
+?>
+--FILE0--
+<?php
+
+namespace App\Entity;
+
+/**
+ *
+ * @deprecated
+ *
+ */
+class A {
+	public function index() {
+	}
+}
+class B {
+	
+	/**
+	 *
+	 * @deprecated
+	 *
+	 */
+	public function index() {
+	}
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(F)
+highlight(index)
+highlight(\App\Entity\A)
+highlight(A)
+highlight(index)
+highlight(index)
+highlight(index)
