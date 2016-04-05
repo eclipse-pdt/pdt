@@ -1,0 +1,16 @@
+--TEST--
+Bug 463556 - Array type hints are highlighted as types
+--FILE--
+<?php
+function my_func(DateTime $date, array $params) {
+}
+class A {
+	public function my_func(DateTime $date, array $params) {
+	}
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
+highlight(DateTime)
+highlight(A)
+highlight(DateTime)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006, 2016 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,12 +55,25 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		public boolean visit(InstanceOfExpression instanceOfExpression) {
+			Expression name = instanceOfExpression.getClassName().getName();
+			if (name instanceof Identifier) {
+				highlight(name);
+			} else if (name instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) name);
+			}
+			return true;
+		}
+
 		@Override
 		public boolean visit(FormalParameter param) {
 			Expression type = param.getParameterType();
 			if (type instanceof NamespaceName) {
 				highlightNamespaceType((NamespaceName) type);
-			} else if (type instanceof Identifier) {
+			} else if (type instanceof Identifier
+					// do not highlight array type hints as types
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=463556
+					&& !"array".equalsIgnoreCase(((Identifier) type).getName())) { //$NON-NLS-1$
 				highlight(type);
 			}
 			return true;

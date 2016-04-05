@@ -78,6 +78,7 @@ public class SemanticHighlightingTests {
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/semantic_highlighting/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/semantic_highlighting/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/semantic_highlighting/php54" });
 	};
 
 	@Context
