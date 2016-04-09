@@ -67,9 +67,33 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 
 	public void createPresentation(TextPresentation presentation, ITypedRegion region) {
 
-		PresentationCollector collector = new PresentationCollector(presentation);
-
-		fProvider.prepareRegions(region, region.getOffset(), region.getLength(), collector);
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=491328
+		// Workaround for bug 491328:
+		// Method
+		// PHPStructuredTextViewerConfiguration.getPresentationReconciler(ISourceViewer)
+		// returns a *new* PHPStructuredPresentationReconciler object
+		// containing a list of *new* StructuredDocumentDamagerRepairer
+		// objects for each *shared* LineStyleProvider object retrieved by
+		// method ReconcilerHighlighter.getProvider(String) and method
+		// PHPStructuredTextViewerConfiguration.getConfiguredContentTypes(ISourceViewer).
+		// Every thread initialized with
+		// PHPStructuredTextViewerConfiguration.getPresentationReconciler(ISourceViewer)
+		// will then work with their own instances of
+		// PHPStructuredPresentationReconciler and
+		// StructuredDocumentDamagerRepairer objects BUT will share same
+		// LineStyleProvider instance per content type, which can be
+		// problematic when multiple threads have simultaneous access to those
+		// shared LineStyleProvider objects.
+		// Since class LineStyleProvider isn't designed to be thread-safe for
+		// now, we protect at least concurrent access to
+		// main method LineStyleProvider.prepareRegions(...).
+		// Of course, it doesn't protect places where
+		// LineStyleProvider.prepareRegions(...) is called directly, like in
+		// Highlighter.prepareStyleRangesArray(...).
+		synchronized (fProvider) {
+			PresentationCollector collector = new PresentationCollector(presentation);
+			fProvider.prepareRegions(region, region.getOffset(), region.getLength(), collector);
+		}
 	}
 
 	public void setProvider(LineStyleProvider provider) {
