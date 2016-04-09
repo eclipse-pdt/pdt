@@ -673,6 +673,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 			for (int i = 0; i < contentTypes.length; i++) {
 				if (fHighlighter != null) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=491328
+					// Remember that sharing same LineStyleProvider instance
+					// here isn't thread-safe.
+					// See also
+					// StructuredDocumentDamagerRepairer.createPresentation(TextPresentation
+					// presentation, ITypedRegion region).
 					LineStyleProvider provider = fHighlighter.getProvider(contentTypes[i]);
 					if (provider == null)
 						continue;
