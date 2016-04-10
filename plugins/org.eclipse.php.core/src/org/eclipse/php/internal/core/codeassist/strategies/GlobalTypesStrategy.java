@@ -298,12 +298,12 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	}
 
 	private void addFilteredNamespaces(IType[] namespaces, List<IType> result) {
-		String lastNamespace = null;
+		Set<String> names = new HashSet<String>();
 		for (IType namespace : namespaces) {
-			if (!namespace.getElementName().equals(lastNamespace)) {
+			if (!names.contains(namespace.getElementName())) {
 				result.add(namespace);
+				names.add(namespace.getElementName());
 			}
-			lastNamespace = namespace.getElementName();
 		}
 	}
 

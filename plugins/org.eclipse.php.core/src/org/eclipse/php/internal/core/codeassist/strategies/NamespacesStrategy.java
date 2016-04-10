@@ -12,7 +12,9 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -58,12 +60,12 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
 				falseFlag, scope, null);
 		List<IType> result = new ArrayList<IType>();
-		String lastNamespace = null;
+		Set<String> names = new HashSet<String>();
 		for (IType namespace : namespaces) {
-			if (!namespace.getElementName().equals(lastNamespace)) {
+			if (!names.contains(namespace.getElementName())) {
 				result.add(namespace);
+				names.add(namespace.getElementName());
 			}
-			lastNamespace = namespace.getElementName();
 		}
 		return result.toArray(new IType[0]);
 	}
