@@ -20,7 +20,6 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -90,7 +89,6 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 			boolean isInline = store.getBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT);
 
 			ISourceViewer viewer = ((PHPStructuredEditor) fEditor).getTextViewer();
-			IDocument document = viewer.getDocument();
 
 			// this is work around for the case
 			// that the offset from editor is not accurate

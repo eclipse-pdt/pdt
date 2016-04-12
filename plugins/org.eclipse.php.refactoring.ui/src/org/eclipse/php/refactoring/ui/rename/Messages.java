@@ -32,6 +32,7 @@ public class Messages extends NLS {
 	public static String RenameLinkedMode_0;
 	public static String RenameLinkedMode_1;
 	public static String RenameLinkedMode_2;
+	public static String RenameLinkedMode_3;
 	public static String RenameLinkedMode_4;
 
 	static {

@@ -53,6 +53,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 
 public class RenameLinkedMode {
@@ -187,8 +188,13 @@ public class RenameLinkedMode {
 		// Not applicable to other editor input.
 		// E.g. external file.
 		if (!(input instanceof IFileEditorInput)) {
-			MessageDialog.openError(fEditor.getEditorSite().getShell(), Messages.RenameLinkedMode_1,
-					Messages.RenameLinkedMode_4);
+			if (input instanceof IURIEditorInput) {
+				MessageDialog.openError(fEditor.getEditorSite().getShell(), Messages.RenameLinkedMode_1,
+						Messages.RenameLinkedMode_3);
+			} else {
+				MessageDialog.openError(fEditor.getEditorSite().getShell(), Messages.RenameLinkedMode_1,
+						Messages.RenameLinkedMode_4);
+			}
 			return;
 		}
 		IFile file = ((IFileEditorInput) input).getFile();
