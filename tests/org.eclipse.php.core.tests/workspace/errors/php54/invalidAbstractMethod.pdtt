@@ -1,0 +1,45 @@
+--TEST--
+Bug 480280 - No error for non-abstract method with no body
+--FILE--
+<?php 
+trait Trait1 {
+    /* no error check is done here */
+    function foo1();
+
+    /* no error check is done here */
+    abstract function foo1();
+
+    abstract function foo1() {
+    	$a = 0;
+    }
+}
+
+class MyClass1 {
+    use Trait1;
+
+    function foo1();
+
+    abstract function foo1();
+
+    abstract function foo1() {
+    	$a = 0;
+    }
+}
+
+abstract class MyClass2 {
+    use Trait1;
+
+    function foo1();
+
+    abstract function foo1() {
+    	$a = 0;
+    }
+}
+?>
+--EXPECT--
+[line=12, start=155, end=200] abstract method cannot contain body
+[line=19, start=257, end=258] non-abstract method must contain body
+[line=21, start=288, end=289] non-abstract class cannot have abstract methods
+[line=24, start=295, end=340] abstract method cannot contain body
+[line=31, start=406, end=407] non-abstract method must contain body
+[line=34, start=413, end=458] abstract method cannot contain body

@@ -1,0 +1,111 @@
+--TEST--
+Bug 480280 - No error for non-abstract method with no body
+--FILE--
+<?php 
+trait Trait1 {
+    /* no error check is done here */
+    function foo1();
+
+    /* no error check is done here */
+    abstract function foo1();
+
+    abstract function foo1() {
+    	$a = 0;
+    }
+}
+
+class MyClass1 {
+    use Trait1;
+
+    function foo1();
+
+    abstract function foo1();
+
+    abstract function foo1() {
+    	$a = 0;
+    }
+}
+
+abstract class MyClass2 {
+    use Trait1;
+
+    function foo1();
+
+    abstract function foo1() {
+    	$a = 0;
+    }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="464">
+	<TraitDeclaration start="7" end="202" modifiers="" name="Trait1">
+		<PHPMethodDeclaration start="64" end="80" modifiers="public" name="foo1">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="124" end="149" modifiers="abstract" name="foo1">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="155" end="200" modifiers="abstract" name="foo1">
+			<ExpressionStatement start="187" end="194">
+				<Assignment start="187" end="193" operator="=">
+					<VariableReference start="187" end="189" name="$a">
+					</VariableReference>
+					<Scalar start="192" end="193" type="int" value="0">
+					</Scalar>
+				</Assignment>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="204" end="342" modifiers="" name="MyClass1">
+		<TraitUseStatement start="225" end="236">
+			<FullyQualifiedReference start="229" end="235" name="Trait1">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+		<PHPMethodDeclaration start="242" end="258" modifiers="public" name="foo1">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="264" end="289" modifiers="abstract" name="foo1">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="295" end="340" modifiers="abstract" name="foo1">
+			<ExpressionStatement start="327" end="334">
+				<Assignment start="327" end="333" operator="=">
+					<VariableReference start="327" end="329" name="$a">
+					</VariableReference>
+					<Scalar start="332" end="333" type="int" value="0">
+					</Scalar>
+				</Assignment>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ClassDeclaration start="344" end="460" modifiers="abstract" name="MyClass2">
+		<TraitUseStatement start="374" end="385">
+			<FullyQualifiedReference start="378" end="384" name="Trait1">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+		<PHPMethodDeclaration start="391" end="407" modifiers="public" name="foo1">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="413" end="458" modifiers="abstract" name="foo1">
+			<ExpressionStatement start="445" end="452">
+				<Assignment start="445" end="451" operator="=">
+					<VariableReference start="445" end="447" name="$a">
+					</VariableReference>
+					<Scalar start="450" end="451" type="int" value="0">
+					</Scalar>
+				</Assignment>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="461" end="463">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="155" end="200">
+		</ASTError>
+		<ASTError start="257" end="258">
+		</ASTError>
+		<ASTError start="288" end="289">
+		</ASTError>
+		<ASTError start="295" end="340">
+		</ASTError>
+		<ASTError start="406" end="407">
+		</ASTError>
+		<ASTError start="413" end="458">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>
