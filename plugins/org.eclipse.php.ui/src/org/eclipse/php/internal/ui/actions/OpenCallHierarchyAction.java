@@ -36,14 +36,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.IBinding;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.internal.ui.util.PHPSelectionUtil;
 import org.eclipse.ui.IWorkbenchSite;
 
 /**
@@ -173,8 +168,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
-			IModelElement element = getSelectionModelElement(selection.getOffset(), selection.getLength(),
-					sourceModule);
+			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
+					selection.getLength(), sourceModule);
 			if (element == null) {
 				return false;
 			}
@@ -246,58 +241,6 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Returns an {@link IModelElement} from the given selection. In case that
-	 * the element is not resolvable, return null.
-	 * 
-	 * @param selection
-	 * @param sourceModule
-	 * @return The {@link IModelElement} or null.
-	 */
-	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
-		IModelElement element = null;
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
-		// exclude selection having selection.getLength() <= 0
-		if (length > 0) {
-			try {
-				Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
-				if (ast != null) {
-					ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-					if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
-						IBinding binding = ((Identifier) selectedNode).resolveBinding();
-						if (binding != null) {
-							element = binding.getPHPElement();
-						}
-					}
-				}
-			} catch (Exception e) {
-				// Logger.logException(e);
-			}
-		}
-		if (element == null) {
-			// try to get the top level
-			try {
-				if (length > 0) {
-					IModelElement[] codeSelect = sourceModule.codeSelect(offset, length);
-					if (codeSelect.length > 0) {
-						element = codeSelect[0];
-					}
-				} else {
-					element = sourceModule.getElementAt(offset);
-				}
-			} catch (ModelException e) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
-				// Can happen when offset + length >
-				// sourceModule.getBuffer().getLength()
-				// i.e. when deleting text at the end of the php file.
-				// In this case, there's no selected element and we can ignore
-				// the exception.
-				// Logger.logException(e);
-			}
-		}
-		return element;
 	}
 
 	/*

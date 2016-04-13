@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008, 2015 IBM Corporation and others.
+ * Copyright (c) 2005, 2008, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,15 +43,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.IBinding;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.internal.ui.util.PHPSelectionUtil;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -160,8 +154,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
-			IModelElement element = getSelectionModelElement(selection.getOffset(), selection.getLength(),
-					sourceModule);
+			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
+					selection.getLength(), sourceModule);
 			if (element == null) {
 				lastSelectedElement = null;
 				return false;
@@ -179,56 +173,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		return false;
 	}
 
-	/**
-	 * Returns an {@link IModelElement} from the given selection. In case that
-	 * the element is not resolvable, return null.
-	 * 
-	 * @param selection
-	 * @param sourceModule
-	 * @return The {@link IModelElement} or null.
-	 */
-	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
-		IModelElement element = null;
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
-		// exclude selection having selection.getLength() <= 0
-		if (length == 0) {
-			try {
-				IModelElement[] codeSelect = sourceModule.codeSelect(offset, length);
-				if (codeSelect.length > 0) {
-					element = codeSelect[0];
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-		} else {
-			try {
-				Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
-				if (ast != null) {
-					ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-					if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
-						IBinding binding = ((Identifier) selectedNode).resolveBinding();
-						if (binding != null) {
-							element = binding.getPHPElement();
-						}
-					}
-				}
-			} catch (Exception e) {
-				// Logger.logException(e);
-			}
-		}
-		if (element == null) {
-			// try to get the top level
-			try {
-				IModelElement[] selected = sourceModule.codeSelect(offset, 1);
-				if (selected.length > 0) {
-					element = selected[0];
-				}
-			} catch (ModelException e) {
-			}
-		}
-		return element;
-	}
-
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
@@ -237,7 +181,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		if (input == null || !ActionUtil.isProcessable(getShell(), input) || !(input instanceof ISourceModule)) {
 			return;
 		}
-		final IModelElement selectionModelElement = getSelectionModelElement(selection.getOffset(),
+		final IModelElement selectionModelElement = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
 				selection.getLength(), (ISourceModule) input);
 		run(new IModelElement[] { selectionModelElement });
 	}
