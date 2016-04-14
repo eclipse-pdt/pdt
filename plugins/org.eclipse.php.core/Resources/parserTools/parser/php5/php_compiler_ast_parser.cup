@@ -1485,6 +1485,27 @@ method_body:body
 	}
 	TypeDeclaration type = (TypeDeclaration)parser.declarations.peek();
 	methodDeclaration.setDeclaringTypeName(type.getName());
+	if (body instanceof EmptyStatement) { /* method without body part */
+		if (type instanceof ClassDeclaration) {
+			if ((((ClassDeclaration)type).getModifiers() & Modifiers.AccAbstract) != 0) {
+				if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
+					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract method must contain body");
+				}
+			} else {
+				if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
+					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract method must contain body");
+				} else {
+					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract class cannot have abstract methods");
+				}
+			}
+		}
+	} else if (body == null) { /* method with body part */
+		if (type instanceof ClassDeclaration) {
+			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {
+				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "abstract method cannot contain body");
+			}
+		}
+	}
 :}
 
 | T_VAR_COMMENT
@@ -1503,7 +1524,8 @@ T_SEMICOLON:end /* abstract method */
 	methodDeclaration.getBody().setStart(endleft);
 	methodDeclaration.getBody().setEnd(endright);
 	methodDeclaration.setEnd(endright);
-	RESULT = null;
+	// return an EmptyStatement object to make distinction between an abstract method and a method with an empty body
+	RESULT = new EmptyStatement(endleft, endright);
 :}
 
 | T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end

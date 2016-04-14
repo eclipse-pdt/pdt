@@ -1,0 +1,28 @@
+--TEST--
+Bug 480280 - No error for non-abstract method with no body
+--FILE--
+<?php 
+class MyClass1 {
+    function foo1();
+
+    abstract function foo2();
+
+    abstract function foo3() {
+    	$a = 0;
+    }
+}
+
+abstract class MyClass2 {
+    function foo1();
+
+    abstract function foo2() {
+    	$a = 0;
+    }
+}
+?>
+--EXPECT--
+[line=5, start=37, end=41] non-abstract method must contain body
+[line=7, start=68, end=72] non-abstract class cannot have abstract methods
+[line=10, start=99, end=103] abstract method cannot contain body
+[line=15, start=169, end=173] non-abstract method must contain body
+[line=18, start=200, end=204] abstract method cannot contain body
