@@ -42,7 +42,7 @@ public class PHPKeywords {
 		public String name;
 		public String suffix;
 		public int suffixOffset;
-		public int context = GLOBAL;
+		public int context = PHPKeywords.GLOBAL | PHPKeywords.METHOD_BODY;
 		public boolean ignoreCase = false;
 
 		/**
