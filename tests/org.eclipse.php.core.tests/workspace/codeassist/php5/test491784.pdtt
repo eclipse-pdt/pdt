@@ -1,0 +1,11 @@
+--TEST--
+Test bug #491784
+--FILE--
+<?php
+class Something {
+	function abc() {
+		abstr|
+	}
+}
+
+--EXPECT--
