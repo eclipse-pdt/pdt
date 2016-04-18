@@ -28,8 +28,7 @@ import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
 public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider {
 	private static final PHPModelLabelProvider fLabelProvider = new PHPModelLabelProvider();
 
-	private static final String ENCLOSING_TYPE_SEPARATOR = new String(
-			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); // $NON-NLS-1$
+	private static final String ENCLOSING_TYPE_SEPARATOR = String.valueOf(NamespaceReference.NAMESPACE_SEPARATOR);
 
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();

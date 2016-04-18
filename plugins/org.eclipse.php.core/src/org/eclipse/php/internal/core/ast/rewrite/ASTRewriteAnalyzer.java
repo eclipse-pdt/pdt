@@ -252,7 +252,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			}
 			return new String(cont, lineStart, i - lineStart);
 		}
-		return new String();
+		return ""; //$NON-NLS-1$
 	}
 
 	final String getIndentAtOffset(int pos) {
@@ -988,7 +988,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					// to
 					// '>'
 					endPos = getScanner().getNextStartOffset(endPos/* , false */);
-					String replacement = needsSpaceOnRemoveAll ? String.valueOf(' ') : new String();
+					String replacement = needsSpaceOnRemoveAll ? String.valueOf(' ') : ""; //$NON-NLS-1$
 					doTextReplace(pos, endPos - pos, replacement, getEditGroup(children[children.length - 1]));
 					return endPos;
 				} else if (isAllInserted) {

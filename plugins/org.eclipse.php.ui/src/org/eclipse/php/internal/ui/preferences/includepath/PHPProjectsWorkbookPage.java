@@ -358,7 +358,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		int res = dialog.open();
 		if (res == Window.OK || res == AccessRulesDialog.SWITCH_PAGE) {
 			selElement.setAttribute(BPListElement.ACCESSRULES, dialog.getAccessRules());
-			selElement.setAttribute(BPListElement.COMBINE_ACCESSRULES, new Boolean(dialog.doCombineAccessRules()));
+			selElement.setAttribute(BPListElement.COMBINE_ACCESSRULES, dialog.doCombineAccessRules());
 			fProjectsList.refresh();
 			fBuildpathList.dialogFieldChanged(); // validate
 

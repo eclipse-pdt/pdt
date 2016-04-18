@@ -215,7 +215,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	 * Strip the leading directories from the path
 	 */
 	private String stripPath(String path) {
-		String pathOrig = new String(path);
+		String pathOrig = path;
 		for (int i = 0; i < stripLevel; i++) {
 			int firstSep = path.indexOf('/');
 			// If the first character was a seperator we must strip to the next

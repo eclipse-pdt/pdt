@@ -121,9 +121,9 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 					RefactoringMessages.ExtractMethodInputPage_protected,
 					RefactoringMessages.ExtractMethodInputPage_default,
 					RefactoringMessages.ExtractMethodInputPage_private };
-			Integer[] data = new Integer[] { new Integer(Modifiers.AccPublic), new Integer(Modifiers.AccProtected),
-					new Integer(Modifiers.AccDefault), new Integer(Modifiers.AccPrivate) };
-			Integer visibility = new Integer(fRefactoring.getVisibility());
+			Integer[] data = new Integer[] { Modifiers.AccPublic, Modifiers.AccProtected, Modifiers.AccDefault,
+					Modifiers.AccPrivate };
+			Integer visibility = fRefactoring.getVisibility();
 			for (int i = 0; i < labels.length; i++) {
 				Button radio = new Button(group, SWT.RADIO);
 				radio.setText(labels[i]);
@@ -193,8 +193,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		} else if (duplicates == 1) {
 			checkBox.setText(RefactoringMessages.ExtractMethodInputPage_duplicates_single);
 		} else {
-			checkBox.setText(
-					NLS.bind(RefactoringMessages.ExtractMethodInputPage_duplicates_multi, new Integer(duplicates)));
+			checkBox.setText(NLS.bind(RefactoringMessages.ExtractMethodInputPage_duplicates_multi, duplicates));
 		}
 		boolean enabled = duplicates > 0;
 

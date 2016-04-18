@@ -438,7 +438,7 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 			String linkText;
 			if (isMultiFix) {
 				linkText = MessageFormat.format(PHPHoverMessages.AbstractAnnotationHover_multifix_variable_description,
-						new Integer(count));
+						count);
 			} else {
 				linkText = proposal.getDisplayString();
 			}

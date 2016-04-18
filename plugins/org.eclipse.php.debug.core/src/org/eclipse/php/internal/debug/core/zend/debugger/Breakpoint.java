@@ -221,7 +221,7 @@ public class Breakpoint implements Cloneable {
 		if (this.enable != enable) {
 			boolean oldValue = this.enable;
 			this.enable = enable;
-			fireBreakpointChanged(this, ENABLE_CHANGED_PROPERTY, new Boolean(oldValue), new Boolean(enable));
+			fireBreakpointChanged(this, ENABLE_CHANGED_PROPERTY, oldValue, enable);
 		}
 	}
 

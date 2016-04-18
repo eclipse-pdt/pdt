@@ -83,8 +83,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				proposal);
 		final IModelElement modelElement = proposal.getModelElement();
 		if (modelElement != null) {
-			scriptProposal
-					.setProposalInfo(new ProposalInfo(modelElement.getScriptProject(), new String(proposal.getName())));
+			scriptProposal.setProposalInfo(new ProposalInfo(modelElement.getScriptProject(), proposal.getName()));
 		}
 		return scriptProposal;
 	}
@@ -151,8 +150,8 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 			return null;
 		}
 
-		String name = String.valueOf(proposal.getName());
-		String completion = new String(proposal.getCompletion());
+		String name = proposal.getName();
+		String completion = proposal.getCompletion();
 		int replaceStart = proposal.getReplaceStart();
 		String[] paramTypes;
 
@@ -207,7 +206,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	}
 
 	protected IScriptCompletionProposal createTypeProposal(final CompletionProposal typeProposal) {
-		String completion = new String(typeProposal.getCompletion());
+		String completion = typeProposal.getCompletion();
 		int replaceStart = typeProposal.getReplaceStart();
 		int length = getLength(typeProposal);
 		Image image = getImage(
