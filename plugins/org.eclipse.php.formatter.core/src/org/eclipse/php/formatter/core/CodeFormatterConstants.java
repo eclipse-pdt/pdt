@@ -4416,7 +4416,7 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_ENABLING_TAG = FormatterCorePlugin.PLUGIN_ID + ".formatter.enabling_tag"; //$NON-NLS-1$
 
-	public static final String EMPTY_STRING = new String(new char[0]);
+	public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	/**
 	 * Create a new alignment value according to the given values. This must be

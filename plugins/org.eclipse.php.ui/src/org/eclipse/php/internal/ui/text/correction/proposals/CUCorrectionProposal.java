@@ -396,7 +396,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 					source = cu.getSource();
 				} catch (ModelException e) {
 					PHPUiPlugin.log(e);
-					source = new String(); // empty
+					source = ""; //$NON-NLS-1$ // empty
 				}
 				doc = new Document(source);
 				((Document) doc).setInitialLineDelimiter(StubUtility.getLineDelimiterUsed(cu.getScriptProject()));

@@ -49,7 +49,7 @@ public class RenameProfileDialog extends StatusDialog {
 		fDuplicate = new StatusInfo(IStatus.ERROR,
 				FormatterMessages.RenameProfileDialog_status_message_profile_with_this_name_already_exists);
 		fEmpty = new StatusInfo(IStatus.ERROR, FormatterMessages.RenameProfileDialog_status_message_profile_name_empty);
-		fNoMessage = new StatusInfo(IStatus.ERROR, new String());
+		fNoMessage = new StatusInfo(IStatus.ERROR, ""); //$NON-NLS-1$
 	}
 
 	public Control createDialogArea(Composite parent) {

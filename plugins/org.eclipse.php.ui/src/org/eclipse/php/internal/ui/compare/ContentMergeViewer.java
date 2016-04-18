@@ -665,7 +665,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 				action.setEnabled(enabled);
 			}
 		}
-		getCompareConfiguration().setProperty(ICompareUIConstants.PROP_ANCESTOR_VISIBLE, new Boolean(visible));
+		getCompareConfiguration().setProperty(ICompareUIConstants.PROP_ANCESTOR_VISIBLE, visible);
 	}
 
 	// ---- input
@@ -1184,10 +1184,10 @@ public abstract class ContentMergeViewer extends ContentViewer
 		}
 	}
 
-	/*
-	 * Calculates the height of the header.
-	 */
-	/* package */int getHeaderHeight() {
+			/*
+			 * Calculates the height of the header.
+			 */
+			/* package */int getHeaderHeight() {
 		int headerHeight = fLeftLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y;
 		headerHeight = Math.max(headerHeight, fDirectionLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y);
 		return headerHeight;
@@ -1224,7 +1224,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 	}
 
 	private void fireDirtyState(boolean state) {
-		Utilities.firePropertyChange(fListenerList, cmv, CompareEditorInput.DIRTY_STATE, null, new Boolean(state));
+		Utilities.firePropertyChange(fListenerList, cmv, CompareEditorInput.DIRTY_STATE, null, state);
 	}
 
 	/**

@@ -35,7 +35,7 @@ public class XMLPreferencesReaderUI extends XMLPreferencesReader {
 	 */
 	public static HashMap[] read(IPreferenceStore store, String prefsKey) {
 		ArrayList maps = new ArrayList();
-		StringTokenizer st = new StringTokenizer(store.getString(prefsKey), new String(new char[] { DELIMITER }));
+		StringTokenizer st = new StringTokenizer(store.getString(prefsKey), String.valueOf(DELIMITER));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken()));
 		}
