@@ -112,9 +112,12 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		hendleDesc();
 		currTagId = firstState;
 		tagPosition = findTagPosition();
-		matchedTag = tagPosition > -1 ? new String(zzBuffer, tagPosition
-				+ _zzPushbackPos, zzMarkedPos - (tagPosition + _zzPushbackPos))
-		: "";
+		matchedTag = PHPDocTag.Tag.getFullTagValue(firstState);
+		if (matchedTag == null) {
+			matchedTag = tagPosition > -1 ? new String(zzBuffer, tagPosition
+					+ _zzPushbackPos, zzMarkedPos - (tagPosition + _zzPushbackPos))
+			: "";
+		}
 		sBuffer = new StringBuffer();
 		yybegin(ST_IN_TAGS);
 	}
@@ -135,9 +138,12 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		sBuffer = new StringBuffer();
 		currTagId = newTag;
 		tagPosition = findTagPosition();
-		matchedTag = tagPosition > -1 ? new String(zzBuffer, tagPosition
-				+ _zzPushbackPos, zzMarkedPos - (tagPosition + _zzPushbackPos))
-		: "";
+		matchedTag = PHPDocTag.Tag.getFullTagValue(newTag);
+		if (matchedTag == null) {
+			matchedTag = tagPosition > -1 ? new String(zzBuffer, tagPosition
+					+ _zzPushbackPos, zzMarkedPos - (tagPosition + _zzPushbackPos))
+			: "";
+		}
 	}
 
 	private void setTagValue() {

@@ -1,0 +1,25 @@
+--TEST--
+Test formatting @inheritdoc
+--FILE--
+<?php
+class Test {
+/**
+ * Toast a white-bread.
+ *
+ * {@inheritdoc} It only accepts white-bread thought.
+ */
+function function_name($param) {
+	
+}
+}
+--EXPECT--
+<?php
+class Test {
+	/**
+	 * Toast a white-bread.
+	 *
+	 * {@inheritdoc} It only accepts white-bread thought.
+	 */
+	function function_name($param) {
+	}
+}

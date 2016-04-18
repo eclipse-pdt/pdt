@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -28,45 +26,84 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 	public static final String ERROR = "ERROR!!!"; //$NON-NLS-1$
 
-	// Tag names are defined here in the same order as their associated tag
-	// kinds from class PHPDocTagKinds:
+	public enum Tag {
 
-	public static final String ABSTRACT_NAME = "abstract"; //$NON-NLS-1$
-	public static final String AUTHOR_NAME = "author"; //$NON-NLS-1$
-	public static final String DEPRECATED_NAME = "deprecated"; //$NON-NLS-1$
-	public static final String FINAL_NAME = "final"; //$NON-NLS-1$
-	public static final String GLOBAL_NAME = "global"; //$NON-NLS-1$
-	public static final String NAME_NAME = "name"; //$NON-NLS-1$
-	public static final String RETURN_NAME = "return"; //$NON-NLS-1$
-	public static final String PARAM_NAME = "param"; //$NON-NLS-1$
-	public static final String SEE_NAME = "see"; //$NON-NLS-1$
-	public static final String STATIC_NAME = "static"; //$NON-NLS-1$
-	public static final String STATICVAR_NAME = "staticvar"; //$NON-NLS-1$
-	public static final String TODO_NAME = "todo"; //$NON-NLS-1$
-	public static final String VAR_NAME = "var"; //$NON-NLS-1$
-	public static final String PACKAGE_NAME = "package"; //$NON-NLS-1$
-	public static final String ACCESS_NAME = "access"; //$NON-NLS-1$
-	public static final String CATEGORY_NAME = "category"; //$NON-NLS-1$
-	public static final String COPYRIGHT_NAME = "copyright"; //$NON-NLS-1$
-	public static final String DESC_NAME = "desc"; //$NON-NLS-1$
-	public static final String EXAMPLE_NAME = "example"; //$NON-NLS-1$
-	public static final String FILESOURCE_NAME = "filesource"; //$NON-NLS-1$
-	public static final String IGNORE_NAME = "ignore"; //$NON-NLS-1$
-	public static final String INTERNAL_NAME = "internal"; //$NON-NLS-1$
-	public static final String LICENSE_NAME = "license"; //$NON-NLS-1$
-	public static final String LINK_NAME = "link"; //$NON-NLS-1$
-	public static final String SINCE_NAME = "since"; //$NON-NLS-1$
-	public static final String SUBPACKAGE_NAME = "subpackage"; //$NON-NLS-1$
-	public static final String TUTORIAL_NAME = "tutorial"; //$NON-NLS-1$
-	public static final String USES_NAME = "uses"; //$NON-NLS-1$
-	public static final String VERSION_NAME = "version"; //$NON-NLS-1$
-	public static final String THROWS_NAME = "throws"; //$NON-NLS-1$
-	public static final String PROPERTY_NAME = "property"; //$NON-NLS-1$
-	public static final String PROPERTY_READ_NAME = "property-read"; //$NON-NLS-1$
-	public static final String PROPERTY_WRITE_NAME = "property-write"; //$NON-NLS-1$
-	public static final String METHOD_NAME = "method"; //$NON-NLS-1$
-	public static final String NAMESPACE_NAME = "namespace"; //$NON-NLS-1$
-	public static final String INHERITDOC_NAME = "inheritdoc"; //$NON-NLS-1$
+		ABSTRACT(PHPDocTagKinds.ABSTRACT, "abstract"), //$NON-NLS-1$
+		AUTHOR(PHPDocTagKinds.AUTHOR, "author"), //$NON-NLS-1$
+		DEPRECATED(PHPDocTagKinds.DEPRECATED, "deprecated"), //$NON-NLS-1$
+		FINAL(PHPDocTagKinds.FINAL, "final"), //$NON-NLS-1$
+		GLOBAL(PHPDocTagKinds.GLOBAL, "global"), //$NON-NLS-1$
+		NAME(PHPDocTagKinds.NAME, "name"), //$NON-NLS-1$
+		RETURN(PHPDocTagKinds.RETURN, "return"), //$NON-NLS-1$
+		PARAM(PHPDocTagKinds.PARAM, "param"), //$NON-NLS-1$
+		SEE(PHPDocTagKinds.SEE, "see"), //$NON-NLS-1$
+		STATIC(PHPDocTagKinds.STATIC, "static"), //$NON-NLS-1$
+		STATICVAR(PHPDocTagKinds.STATICVAR, "staticvar"), //$NON-NLS-1$
+		TODO(PHPDocTagKinds.TODO, "todo"), //$NON-NLS-1$
+		VAR(PHPDocTagKinds.VAR, "var"), //$NON-NLS-1$
+		PACKAGE(PHPDocTagKinds.PACKAGE, "package"), //$NON-NLS-1$
+		ACCESS(PHPDocTagKinds.ACCESS, "access"), //$NON-NLS-1$
+		CATEGORY(PHPDocTagKinds.CATEGORY, "category"), //$NON-NLS-1$
+		COPYRIGHT(PHPDocTagKinds.COPYRIGHT, "copyright"), //$NON-NLS-1$
+		DESC(PHPDocTagKinds.DESC, "desc"), //$NON-NLS-1$
+		EXAMPLE(PHPDocTagKinds.EXAMPLE, "example"), //$NON-NLS-1$
+		FILESOURCE(PHPDocTagKinds.FILESOURCE, "filesource"), //$NON-NLS-1$
+		IGNORE(PHPDocTagKinds.IGNORE, "ignore"), //$NON-NLS-1$
+		INTERNAL(PHPDocTagKinds.INTERNAL, "internal"), //$NON-NLS-1$
+		LICENSE(PHPDocTagKinds.LICENSE, "license"), //$NON-NLS-1$
+		LINK(PHPDocTagKinds.LINK, "link"), //$NON-NLS-1$
+		SINCE(PHPDocTagKinds.SINCE, "since"), //$NON-NLS-1$
+		SUBPACKAGE(PHPDocTagKinds.SUBPACKAGE, "subpackage"), //$NON-NLS-1$
+		TUTORIAL(PHPDocTagKinds.TUTORIAL, "tutorial"), //$NON-NLS-1$
+		USES(PHPDocTagKinds.USES, "uses"), //$NON-NLS-1$
+		VERSION(PHPDocTagKinds.VERSION, "version"), //$NON-NLS-1$
+		THROWS(PHPDocTagKinds.THROWS, "throws"), //$NON-NLS-1$
+		PROPERTY(PHPDocTagKinds.PROPERTY, "property"), //$NON-NLS-1$
+		PROPERTY_READ(PHPDocTagKinds.PROPERTY_READ, "property-read"), //$NON-NLS-1$
+		PROPERTY_WRITE(PHPDocTagKinds.PROPERTY_WRITE, "property-write"), //$NON-NLS-1$
+		METHOD(PHPDocTagKinds.METHOD, "method"), //$NON-NLS-1$
+		NAMESPACE(PHPDocTagKinds.NAMESPACE, "namespace"), //$NON-NLS-1$
+		INHERITDOC(PHPDocTagKinds.INHERITDOC, "inheritdoc", "{@inheritdoc}"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		int tagKind;
+		String name;
+		String fullTagValue;
+
+		private static class Mapping {
+			private static Map<Integer, Tag> map = new HashMap<Integer, Tag>();
+		}
+
+		private Tag(int tagKind, String name) {
+			this(tagKind, name, '@' + name);
+		}
+
+		private Tag(int tagKind, String name, String fullTagValue) {
+			this.tagKind = tagKind;
+			this.name = name;
+			this.fullTagValue = fullTagValue;
+			Mapping.map.put(tagKind, this);
+		}
+
+		public int getTagKind() {
+			return tagKind;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getFullTagValue() {
+			return fullTagValue;
+		}
+
+		public static String getTagName(int tagKind) {
+			return Mapping.map.get(tagKind).getName();
+		}
+
+		public static String getFullTagValue(int tagKind) {
+			return Mapping.map.get(tagKind).getFullTagValue();
+		}
+	}
 
 	private final int tagKind;
 	private final String matchedTag;
@@ -381,79 +418,9 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	public static String getTagKind(int kind) {
-		switch (kind) {
-		case ABSTRACT:
-			return ABSTRACT_NAME;
-		case AUTHOR:
-			return AUTHOR_NAME;
-		case DEPRECATED:
-			return DEPRECATED_NAME;
-		case FINAL:
-			return FINAL_NAME;
-		case GLOBAL:
-			return GLOBAL_NAME;
-		case NAME:
-			return NAME_NAME;
-		case RETURN:
-			return RETURN_NAME;
-		case PARAM:
-			return PARAM_NAME;
-		case SEE:
-			return SEE_NAME;
-		case STATIC:
-			return STATIC_NAME;
-		case STATICVAR:
-			return STATICVAR_NAME;
-		case TODO:
-			return TODO_NAME;
-		case VAR:
-			return VAR_NAME;
-		case PACKAGE:
-			return PACKAGE_NAME;
-		case ACCESS:
-			return ACCESS_NAME;
-		case CATEGORY:
-			return CATEGORY_NAME;
-		case COPYRIGHT:
-			return COPYRIGHT_NAME;
-		case DESC:
-			return DESC_NAME;
-		case EXAMPLE:
-			return EXAMPLE_NAME;
-		case FILESOURCE:
-			return FILESOURCE_NAME;
-		case IGNORE:
-			return IGNORE_NAME;
-		case INTERNAL:
-			return INTERNAL_NAME;
-		case LICENSE:
-			return LICENSE_NAME;
-		case LINK:
-			return LINK_NAME;
-		case SINCE:
-			return SINCE_NAME;
-		case SUBPACKAGE:
-			return SUBPACKAGE_NAME;
-		case TUTORIAL:
-			return TUTORIAL_NAME;
-		case USES:
-			return USES_NAME;
-		case VERSION:
-			return VERSION_NAME;
-		case THROWS:
-			return THROWS_NAME;
-		case PROPERTY:
-			return PROPERTY_NAME;
-		case PROPERTY_READ:
-			return PROPERTY_READ_NAME;
-		case PROPERTY_WRITE:
-			return PROPERTY_WRITE_NAME;
-		case METHOD:
-			return METHOD_NAME;
-		case NAMESPACE:
-			return NAMESPACE_NAME;
-		case INHERITDOC:
-			return INHERITDOC_NAME;
+		String name = Tag.getTagName(kind);
+		if (name != null) {
+			return name;
 		}
 		return ERROR;
 	}
