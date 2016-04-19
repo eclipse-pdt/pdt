@@ -92,7 +92,6 @@ The Breakpoints View [PHP Debug Perspective] is displayed by default as part of 
  * [Breakpoints](../../../016-concepts/136-breakpoints.md)
  * [Setting Breakpoints](../../../024-tasks/152-debugging/008-setting_breakpoints.md)
  * [Debug View](008-debug_view.md)[Variables View](016-variables_view.md)
- * [Parameter Stack View](032-parameter_stack.md)
  * [Debug Output View](048-debug_output_view.md)
  * [Browser Output View](056-browser_output_view.md)
  * [Expressions View](040-expressions_view.md)

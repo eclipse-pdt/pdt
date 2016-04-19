@@ -242,8 +242,6 @@ public interface IPHPHelpContextIds {
 
 	public static final String BREAKPOINTS_VIEW = PREFIX + "breakpoints_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/016-php_debug_perspective/024-breakpoints_view.md
 
-	public static final String PARAMETER_STACK = PREFIX + "parameter_stack"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/016-php_debug_perspective/032-parameter_stack.md
-
 	public static final String EXPRESSIONS_VIEW = PREFIX + "expressions_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/016-php_debug_perspective/040-expressions_view.md
 
 	public static final String DEBUG_OUTPUT_VIEW = PREFIX + "debug_output_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/016-php_debug_perspective/048-debug_output_view.md

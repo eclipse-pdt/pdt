@@ -66,7 +66,6 @@ The view's menu can be accessed through the view menu icon ![menu_icon.png](imag
  * [PHP Debug Perspective](000-index.md)
  * [Debug View](008-debug_view.md)
  * [Breakpoints View](024-breakpoints_view.md)
- * [Parameter Stack View](032-parameter_stack.md)
  * [Debug Output View](048-debug_output_view.md)
  * [Browser Output View](056-browser_output_view.md)
 
