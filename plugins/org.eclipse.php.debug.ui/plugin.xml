@@ -328,10 +328,6 @@
 	
 	<extension point="org.eclipse.ui.views">
       <!--  Add ICON icon="icons/full/obj16/xxx.gif" -->
-		<view class="org.eclipse.php.internal.debug.ui.views.PHPStackView"
-			category="org.eclipse.php.ui.views"
-			icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
-			name="%parameterStack.name" id="org.eclipse.debug.ui.PHPStackView" />
 		<view category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.debug.ui.views.DebugOutputView"
 			icon="icon/full/obj16/debug_output.png"

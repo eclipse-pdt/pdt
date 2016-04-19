@@ -22,7 +22,6 @@ The Browser Output View [PHP Debug Perspective] is displayed by default as part 
  * [Debug View](008-debug_view.md)
  * [Variables View](016-variables_view.md)
  * [Breakpoints View](024-breakpoints_view.md)
- * [Parameter Stack View](032-parameter_stack.md)
  * [Debug Output View](048-debug_output_view.md)
 
 <!--links-end-->

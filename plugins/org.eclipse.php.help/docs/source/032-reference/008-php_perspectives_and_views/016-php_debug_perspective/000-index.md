@@ -11,7 +11,6 @@ The PHP Debug Perspective contains the following views:
  * [Debug View](008-debug_view.md) - Here you can control (stop, pause, and resume) the debugging process. You can also decide whether to step into, step over or step return (step out of) certain functions.
  * [Variables View](016-variables_view.md)  - Displays the various variables in your script.
  * [Breakpoints View](024-breakpoints_view.md) - Displays the breakpoints you have entered.
- * [Parameter Stack View](032-parameter_stack.md) - Displays the parameters through which functions are reached.
  * [Debug Output View](048-debug_output_view.md) - Displays the textual output of the script. This will be updated as the debugging process continues.
  * [Browser Output View](056-browser_output_view.md) - Displays the output of the script to a browser. This will be updated as the debugging process continues.
  * [Expressions View](040-expressions_view.md) - Displays the progress of selected variables. The view will only be displayed if you have selected to watch a variable.
@@ -35,7 +34,6 @@ By default, a dialog will appear asking whether you want to open the Debug Persp
  * [Debug View](008-debug_view.md)
  * [Variables View](016-variables_view.md)
  * [Breakpoints View](024-breakpoints_view.md)
- * [Parameter Stack View](032-parameter_stack.md)
  * [Debug Output View](048-debug_output_view.md)
  * [Browser Output View](056-browser_output_view.md)
  * [Expressions View](040-expressions_view.md)

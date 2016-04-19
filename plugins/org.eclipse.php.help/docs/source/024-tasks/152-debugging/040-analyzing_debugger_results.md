@@ -27,7 +27,6 @@ During the debugging process (for PHP Script, PHP Web Page or URL), various view
  * [Debug View](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/008-debug_view.md)  - Here you can control (stop, pause, and resume) the debugging process. You can also decide whether to step into, step over or step return (step out off) certain functions.
  * [Variables](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/016-variables_view.md) - Will display the various variables in your script.
  * [Breakpoints](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/024-breakpoints_view.md) - Will display the breakpoints you have entered
- * [Parameter Stack](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/032-parameter_stack.md) - Will display the parameters through which functions are reached.
  * Editor Window - Will display the code at the relevant sections, according to which line is selected in the Debug View window.
  * [Debug Output](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/048-debug_output_view.md) - Will show the textual output of the script. This will be updated as the debugging process continues.
  * [Browser Output](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/056-browser_output_view.md) - Will show the output of the script to a browser. This will be updated as the debugging process continues.

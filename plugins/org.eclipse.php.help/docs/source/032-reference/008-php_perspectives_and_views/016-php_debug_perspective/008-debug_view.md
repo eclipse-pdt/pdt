@@ -57,7 +57,6 @@ The Debug View [PHP Debug Perspective] is displayed by default as part of the De
  * [PHP Debug Perspective](000-index.md)
  * [Variables View](016-variables_view.md)
  * [Breakpoints View](024-breakpoints_view.md)
- * [Parameter Stack View](032-parameter_stack.md)
  * [Debug Output View](048-debug_output_view.md)
  * [Browser Output View](056-browser_output_view.md)
  * [Expressions View](040-expressions_view.md)
