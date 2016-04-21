@@ -1487,6 +1487,12 @@
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.php.ui.editor.organize.use.statements"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            commandId="org.eclipse.dltk.ui.edit.text.script.search.references.in.workspace"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+G">
+      </key>
 
     <scheme
           description="%scheme.description"
