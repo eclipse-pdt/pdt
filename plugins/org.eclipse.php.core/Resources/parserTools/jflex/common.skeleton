@@ -324,7 +324,15 @@
 	 * user method - common.sse
 	 */
 	private void updateStartPos() {
-		startPos = zzMarkedPos;
+		updateStartPos(zzMarkedPos);
+	}
+
+
+	/**
+	 * user method - common.sse
+	 */
+	private void updateStartPos(int position) {
+		startPos = position;
 		oldString = null;
 	}
 

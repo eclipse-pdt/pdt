@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013, 2014, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2013, 2014, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
@@ -688,8 +689,8 @@ public class PHPDocumentationContentAccess {
 		Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPERATOR;
 		final PHPDocTag[] tags = doc.getTags();
 		for (PHPDocTag docTag : tags) {
-			final int tagKind = docTag.getTagKind();
-			if (member instanceof IMethod && tagKind == PHPDocTag.METHOD) {
+			final TagKind tagKind = docTag.getTagKind();
+			if (member instanceof IMethod && tagKind == TagKind.METHOD) {
 				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
 				String docTagValue = docTag.getValue().trim();
 				int index = docTagValue.indexOf('('); // $NON-NLS-1$
@@ -781,7 +782,7 @@ public class PHPDocumentationContentAccess {
 		String longDescription = fJavadoc.getLongDescription();
 		PHPDocTag[] tags = fJavadoc.getTags();
 		for (PHPDocTag tag : tags) {
-			if (PHPDocTag.PARAM == tag.getTagKind()) {
+			if (TagKind.PARAM == tag.getTagKind()) {
 				parameters.add(tag);
 				if (!tag.isValidParamTag()) {
 					if (parameterNames.size() > parameters.indexOf(tag))
@@ -792,31 +793,31 @@ public class PHPDocumentationContentAccess {
 						parameterNames.set(paramIndex, null);
 					}
 				}
-			} else if (PHPDocTag.RETURN == tag.getTagKind()) {
+			} else if (TagKind.RETURN == tag.getTagKind()) {
 				if (returnTag == null)
 					returnTag = tag; // the Javadoc tool only shows the first
 				// return tag
 
-			} else if (PHPDocTag.NAMESPACE == tag.getTagKind()) {
+			} else if (TagKind.NAMESPACE == tag.getTagKind()) {
 				if (namespaceTag == null)
 					namespaceTag = tag;
 
-			} else if (PHPDocTag.THROWS == tag.getTagKind()) {
+			} else if (TagKind.THROWS == tag.getTagKind()) {
 				exceptions.add(tag);
 				List<TypeReference> fragments = tag.getTypeReferences();
 				if (fragments.size() > 0) {
 					exceptionNames.add(fragments.get(0).getName());
 				}
 
-			} else if (PHPDocTag.SINCE == tag.getTagKind()) {
+			} else if (TagKind.SINCE == tag.getTagKind()) {
 				since.add(tag);
-			} else if (PHPDocTag.VERSION == tag.getTagKind()) {
+			} else if (TagKind.VERSION == tag.getTagKind()) {
 				versions.add(tag);
-			} else if (PHPDocTag.AUTHOR == tag.getTagKind()) {
+			} else if (TagKind.AUTHOR == tag.getTagKind()) {
 				authors.add(tag);
-			} else if (PHPDocTag.SEE == tag.getTagKind()) {
+			} else if (TagKind.SEE == tag.getTagKind()) {
 				sees.add(tag);
-			} else if (PHPDocTag.DEPRECATED == tag.getTagKind()) {
+			} else if (TagKind.DEPRECATED == tag.getTagKind()) {
 				if (deprecatedTag == null)
 					deprecatedTag = tag; // the Javadoc tool only shows the
 				// first deprecated tag
@@ -1008,7 +1009,7 @@ public class PHPDocumentationContentAccess {
 			fReturnDescription = new StringBuffer();
 			fBuf = fReturnDescription;
 
-			for (PHPDocTag tag : fJavadoc.getTags(PHPDocTag.RETURN)) {
+			for (PHPDocTag tag : fJavadoc.getTags(TagKind.RETURN)) {
 				handleContentElements(tag);
 				break;
 			}
@@ -1103,7 +1104,7 @@ public class PHPDocumentationContentAccess {
 		fExceptionDescriptions = new HashMap<String, StringBuffer>();
 		fExceptions = new ArrayList<PHPDocTag>();
 
-		List tags = Arrays.asList(fJavadoc.getTags(PHPDocTag.THROWS));
+		List tags = Arrays.asList(fJavadoc.getTags(TagKind.THROWS));
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fExceptions.add(tag);
@@ -1143,7 +1144,7 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			if (PHPDocTag.SEE == tag.getTagKind()) {
+			if (TagKind.SEE == tag.getTagKind()) {
 				handleSeeTag(tag);
 			} else {
 				handleContentElements(tag);
@@ -1184,9 +1185,9 @@ public class PHPDocumentationContentAccess {
 	private void handleBlockTags(List tags) {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
-			if (tag.getTagKind() == PHPDocTag.INHERITDOC) {
+			if (tag.getTagKind() == TagKind.INHERITDOC) {
 				continue;
-			} else if (tag.getTagKind() == PHPDocTag.VAR) {
+			} else if (tag.getTagKind() == TagKind.VAR) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=454140
 				// only print @var tags having empty variable name or
 				// having variable name matching the field description
@@ -1199,10 +1200,10 @@ public class PHPDocumentationContentAccess {
 				}
 				handleBlockTagTitle("Type"); //$NON-NLS-1$
 			} else {
-				handleBlockTagTitle(PHPDocTag.getTagKind(tag.getTagKind()));
+				handleBlockTagTitle(tag.getTagKind().getName());
 			}
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			if (tag.getTagKind() == PHPDocTag.LINK) {
+			if (tag.getTagKind() == TagKind.LINK) {
 				handleLinkTag(tag);
 			} else {
 				handleContentElements(tag);
@@ -1419,7 +1420,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private String getParameterInfo(PHPDocBlock phpDoc, String paramName, int infoType) {
-		for (PHPDocTag tag : phpDoc.getTags(PHPDocTag.PARAM)) {
+		for (PHPDocTag tag : phpDoc.getTags(TagKind.PARAM)) {
 			String name = getParameterInfo(tag, PARAMETER_NAME_TYPE);
 			if (name != null && name.equals(paramName)) {
 				return getParameterInfo(tag, infoType);

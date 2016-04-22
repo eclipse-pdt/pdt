@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
@@ -477,7 +478,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				if (type != null) {
 					parameterType[a] = type.getName();
 				} else if (docBlock != null) {
-					for (PHPDocTag tag : docBlock.getTags(PHPDocTag.PARAM)) {
+					for (PHPDocTag tag : docBlock.getTags(TagKind.PARAM)) {
 						if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(arg.getName())) {
 							parameterType[a] = tag.getSingleTypeReference().getName();
 							break;
@@ -496,7 +497,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (phpMethodDeclaration.getReturnType() != null) {
 			return phpMethodDeclaration.getReturnType().getName();
 		} else if (docBlock != null) {
-			for (PHPDocTag tag : docBlock.getTags(PHPDocTag.RETURN)) {
+			for (PHPDocTag tag : docBlock.getTags(TagKind.RETURN)) {
 				if (tag.getTypeReferences().size() > 0) {
 					return PHPModelUtils.appendTypeReferenceNames(tag.getTypeReferences());
 				}
@@ -620,9 +621,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPERATOR;
 				final PHPDocTag[] tags = doc.getTags();
 				for (PHPDocTag docTag : tags) {
-					final int tagKind = docTag.getTagKind();
-					if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ
-							|| tagKind == PHPDocTag.PROPERTY_WRITE) {
+					final TagKind tagKind = docTag.getTagKind();
+					if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ
+							|| tagKind == TagKind.PROPERTY_WRITE) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
 						final String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
@@ -642,7 +643,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						fRequestor.enterField(info);
 						fRequestor.exitField(info.nameSourceEnd);
 
-					} else if (tagKind == PHPDocTag.METHOD) {
+					} else if (tagKind == TagKind.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
 
 						// workaround for lack of method return type
@@ -742,7 +743,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.modifiers = markAsDeprecated(info.modifiers, declaration);
 		PHPDocBlock doc = declaration.getPHPDoc();
 		if (doc != null) {
-			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
+			for (PHPDocTag tag : doc.getTags(TagKind.VAR)) {
 				// do it like for
 				// PHPDocumentationContentAccess#handleBlockTags(List tags):
 				// variable name can be optional, but if present keep only
@@ -771,7 +772,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 * @return
 	 */
 	private int markAsDeprecated(int modifiers, PHPDocBlock phpDoc) {
-		if (phpDoc != null && phpDoc.getTags(PHPDocTag.DEPRECATED).length > 0) {
+		if (phpDoc != null && phpDoc.getTags(TagKind.DEPRECATED).length > 0) {
 			return modifiers | IPHPModifiers.AccDeprecated;
 		}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 
 public class PHPDocBlock extends Comment {
 
@@ -66,7 +67,7 @@ public class PHPDocBlock extends Comment {
 		return texts;
 	}
 
-	public PHPDocTag[] getTags(int kind) {
+	public PHPDocTag[] getTags(TagKind kind) {
 		List<PHPDocTag> res = new LinkedList<PHPDocTag>();
 		if (tags != null) {
 			for (PHPDocTag tag : tags) {
@@ -76,6 +77,20 @@ public class PHPDocBlock extends Comment {
 			}
 		}
 		return res.toArray(new PHPDocTag[res.size()]);
+	}
+
+	/**
+	 * For backward compatibility with PHPDocTagKinds. Use getTags(TagKind kind)
+	 * instead.
+	 * 
+	 * @deprecated
+	 */
+	public PHPDocTag[] getTags(int tagId) {
+		TagKind tagKind = TagKind.getTagKind(tagId);
+		if (tagKind == null) {
+			return new PHPDocTag[0];
+		}
+		return getTags(tagKind);
 	}
 
 	public void adjustStart(int start) {

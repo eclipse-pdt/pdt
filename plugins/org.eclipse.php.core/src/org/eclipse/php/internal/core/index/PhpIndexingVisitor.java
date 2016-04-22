@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -159,9 +160,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			if (docBlock != null) {
 				Map<String, String> info = new HashMap<String, String>();
 				for (PHPDocTag tag : docBlock.getTags()) {
-					if (tag.getTagKind() == PHPDocTag.DEPRECATED) {
+					if (tag.getTagKind() == TagKind.DEPRECATED) {
 						info.put("d", null); //$NON-NLS-1$
-					} else if (tag.getTagKind() == PHPDocTag.RETURN) {
+					} else if (tag.getTagKind() == TagKind.RETURN) {
 						StringBuilder buf = new StringBuilder();
 						for (TypeReference ref : tag.getTypeReferences()) {
 							String type = ref.getName().replaceAll(",", "~"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -171,7 +172,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 							buf.append(type);
 						}
 						info.put("r", buf.toString()); //$NON-NLS-1$
-					} else if (tag.getTagKind() == PHPDocTag.VAR) {
+					} else if (tag.getTagKind() == TagKind.VAR) {
 						if (tag.getTypeReferences().size() > 0) {
 							String typeNames = PHPModelUtils.appendTypeReferenceNames(tag.getTypeReferences());
 							typeNames = typeNames.replace(Constants.TYPE_SEPERATOR_CHAR, Constants.DOT);
@@ -365,7 +366,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	 * @return
 	 */
 	private int markAsDeprecated(int modifiers, PHPDocBlock phpDoc) {
-		if (phpDoc != null && phpDoc.getTags(PHPDocTag.DEPRECATED).length > 0) {
+		if (phpDoc != null && phpDoc.getTags(TagKind.DEPRECATED).length > 0) {
 			return modifiers | IPHPModifiers.AccDeprecated;
 		}
 
@@ -382,7 +383,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private String getParamType(PHPDocBlock docBlock, String paramName, String defaultType) {
 		String result = defaultType;
 		if (docBlock != null) {
-			for (PHPDocTag tag : docBlock.getTags(PHPDocTag.PARAM)) {
+			for (PHPDocTag tag : docBlock.getTags(TagKind.PARAM)) {
 				if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(paramName)) {
 					String typeNames = tag.getSingleTypeReference().getName();
 					result = typeNames.replace(Constants.TYPE_SEPERATOR_CHAR, Constants.DOT);
@@ -529,9 +530,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			final PHPDocBlock doc = declaration.getPHPDoc();
 			if (doc != null) {
 				for (PHPDocTag docTag : doc.getTags()) {
-					final int tagKind = docTag.getTagKind();
-					if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ
-							|| tagKind == PHPDocTag.PROPERTY_WRITE) {
+					final TagKind tagKind = docTag.getTagKind();
+					if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ
+							|| tagKind == TagKind.PROPERTY_WRITE) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
 						final String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
@@ -554,7 +555,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 										length, name, metadata.toString(), encodeDocInfo(info), fCurrentQualifier,
 										fCurrentParent));
 
-					} else if (tagKind == PHPDocTag.METHOD) {
+					} else if (tagKind == TagKind.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
 						String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {

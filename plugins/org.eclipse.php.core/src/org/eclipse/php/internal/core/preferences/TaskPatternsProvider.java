@@ -70,7 +70,7 @@ public class TaskPatternsProvider {
 		return workspacePatterns;
 	}
 
-	// If necessary, initialise the needed listeners on the given project and
+	// If necessary, initialize the needed listeners on the given project and
 	// update its patterns.
 	private void registerProject(IProject project) {
 		if (projectToListener.get(project) == null) {

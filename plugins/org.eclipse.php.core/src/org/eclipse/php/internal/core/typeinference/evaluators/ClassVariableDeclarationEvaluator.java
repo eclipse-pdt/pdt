@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
@@ -206,9 +207,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			return;
 		}
 		for (PHPDocTag tag : docBlock.getTags()) {
-			final int tagKind = tag.getTagKind();
-			if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ
-					|| tagKind == PHPDocTag.PROPERTY_WRITE) {
+			final TagKind tagKind = tag.getTagKind();
+			if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ || tagKind == TagKind.PROPERTY_WRITE) {
 				final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(variableName, tag);
 				for (String typeName : typeNames) {
 					if (typeName.trim().isEmpty()) {
