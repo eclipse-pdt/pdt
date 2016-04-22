@@ -176,18 +176,6 @@ public class PHPNewWizardMenu extends ContributionItem {
 		this.enabled = enabledValue;
 	}
 
-	/**
-	 * Removes all listeners from the containing workbench window.
-	 * <p>
-	 * This method should only be called if the shortcut menu is created with
-	 * <code>register = true</code>.
-	 * </p>
-	 * 
-	 * @deprecated
-	 */
-	public void deregisterListeners() {
-	}
-
 	/*
 	 * (non-Javadoc) Method declared on IContributionItem.
 	 */

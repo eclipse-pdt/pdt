@@ -45,20 +45,11 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	protected final int falseFlag;
 	protected static final IType[] EMPTY = {};
 	private boolean aliasAdded = false;
-	private boolean addClassInNamespace = false;
 
 	public GlobalTypesStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, null);
 		this.trueFlag = trueFlag;
 		this.falseFlag = falseFlag;
-	}
-
-	@Deprecated
-	public GlobalTypesStrategy(ICompletionContext context, int trueFlag, int falseFlag, boolean addClassInNamespace) {
-		super(context, null);
-		this.trueFlag = trueFlag;
-		this.falseFlag = falseFlag;
-		this.addClassInNamespace = addClassInNamespace;
 	}
 
 	public GlobalTypesStrategy(ICompletionContext context) {
@@ -108,14 +99,6 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				} else {
 					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange, extraInfo);
 				}
-				if (addClassInNamespace && isNamespace) {
-					IType[] subTypes = type.getTypes();
-					for (IType subType : subTypes) {
-						int subFlags = type.getFlags();
-						reporter.reportType(subType, PHPFlags.isNamespace(subFlags) ? nsSuffix : suffix,
-								replacementRange, extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE);
-					}
-				}
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -162,7 +145,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 	protected void reportAliasForNS(ICompletionReporter reporter, String suffix,
 			AbstractCompletionContext abstractContext, IModuleSource module, final Map<String, UsePart> result)
-					throws BadLocationException {
+			throws BadLocationException {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
@@ -382,8 +365,4 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		return ProposalExtraInfo.DEFAULT;
 	}
 
-	@Deprecated
-	public void setAddClassInNamespace(boolean addClassInNamespace) {
-		this.addClassInNamespace = addClassInNamespace;
-	}
 }

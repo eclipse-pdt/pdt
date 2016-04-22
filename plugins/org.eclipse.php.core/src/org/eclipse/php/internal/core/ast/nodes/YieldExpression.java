@@ -173,13 +173,6 @@ public class YieldExpression extends Expression {
 	}
 
 	/**
-	 * @deprecated see {@link #getExpression()}
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Sets the expression of this expression statement.
 	 * 
 	 * @param expression

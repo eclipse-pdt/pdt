@@ -133,13 +133,6 @@ public class StaticStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use #expressions()
-	 */
-	public Expression[] getExpressions() {
-		return this.expressions.toArray(new Expression[this.expressions.size()]);
-	}
-
-	/**
 	 * @return expression list of the static statement
 	 */
 	public List<Expression> expressions() {

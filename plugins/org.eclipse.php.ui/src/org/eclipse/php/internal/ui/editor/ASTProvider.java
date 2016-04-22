@@ -41,21 +41,6 @@ import org.eclipse.wst.validation.Validator;
 public final class ASTProvider {
 
 	/**
-	 * @deprecated Use {@link SharedASTProvider#WAIT_YES} instead.
-	 */
-	public static final WAIT_FLAG WAIT_YES = SharedASTProvider.WAIT_YES;
-
-	/**
-	 * @deprecated Use {@link SharedASTProvider#WAIT_ACTIVE_ONLY} instead.
-	 */
-	public static final WAIT_FLAG WAIT_ACTIVE_ONLY = SharedASTProvider.WAIT_ACTIVE_ONLY;
-
-	/**
-	 * @deprecated Use {@link SharedASTProvider#WAIT_NO} instead.
-	 */
-	public static final WAIT_FLAG WAIT_NO = SharedASTProvider.WAIT_NO;
-
-	/**
 	 * Tells whether this class is in debug mode.
 	 * 
 	 * @since 3.0

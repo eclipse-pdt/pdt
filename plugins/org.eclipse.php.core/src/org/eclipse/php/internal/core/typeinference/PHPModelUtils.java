@@ -105,19 +105,6 @@ public class PHPModelUtils {
 	 * @param element
 	 *            Element name
 	 * @return namespace prefix
-	 * @deprecated replaced by
-	 *             {@link PHPModelUtils#extractNameSpaceName(String)}
-	 */
-	public static String extractNameSapceName(String element) {
-		return extractNameSpaceName(element);
-	}
-
-	/**
-	 * Extracts the name space name from the given fully qualified name
-	 * 
-	 * @param element
-	 *            Element name
-	 * @return namespace prefix
 	 */
 	public static String extractNameSpaceName(String element) {
 		String nameSpaceName = null;

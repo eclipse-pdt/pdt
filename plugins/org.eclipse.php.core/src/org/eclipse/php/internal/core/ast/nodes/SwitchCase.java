@@ -144,13 +144,6 @@ public class SwitchCase extends Statement {
 	}
 
 	/**
-	 * @deprecated use #actions()
-	 */
-	public Statement[] getActions() {
-		return actions.toArray(new Statement[this.actions.size()]);
-	}
-
-	/**
 	 * The actions of this case statement
 	 * 
 	 * @return List of actions of this case statement

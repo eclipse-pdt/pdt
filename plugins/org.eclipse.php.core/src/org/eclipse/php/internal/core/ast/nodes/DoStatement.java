@@ -111,13 +111,6 @@ public class DoStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #getBody()}
-	 */
-	public Statement getAction() {
-		return body;
-	}
-
-	/**
 	 * @return the body component of this do statement
 	 */
 	public Statement getBody() {

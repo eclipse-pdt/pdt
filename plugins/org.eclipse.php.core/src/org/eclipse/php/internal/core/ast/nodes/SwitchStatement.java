@@ -121,13 +121,6 @@ public class SwitchStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated see {@link #getExpression()}
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Sets the expression of this switch statement.
 	 * 
 	 * @param expression
@@ -148,13 +141,6 @@ public class SwitchStatement extends Statement {
 		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 		this.expression = expression;
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
-	}
-
-	/**
-	 * @deprecated use #getBody()
-	 */
-	public Block getStatement() {
-		return body;
 	}
 
 	/**

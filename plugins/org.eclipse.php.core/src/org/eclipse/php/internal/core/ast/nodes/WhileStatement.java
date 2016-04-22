@@ -113,13 +113,6 @@ public class WhileStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #getBody()}
-	 */
-	public Statement getAction() {
-		return body;
-	}
-
-	/**
 	 * @return the body component of this while statement
 	 */
 	public Statement getBody() {

@@ -179,20 +179,6 @@ public class TryStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #catchClauses()}
-	 */
-	public CatchClause[] getCatchClauses() {
-		return (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]);
-	}
-
-	/**
-	 * @deprecated use {@link #getBody()}
-	 */
-	public Block getTryStatement() {
-		return tryStatement;
-	}
-
-	/**
 	 * Returns the body of this try statement.
 	 * 
 	 * @return the try body

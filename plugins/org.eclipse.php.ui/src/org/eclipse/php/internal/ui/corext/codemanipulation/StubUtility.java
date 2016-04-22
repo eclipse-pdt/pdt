@@ -555,21 +555,6 @@ public class StubUtility {
 		return document.get();
 	}
 
-	@Deprecated
-	public static String getVarComment(IScriptProject sp, String fieldType, String fieldName, String lineDelimiter)
-			throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.VARCOMMENT_ID, sp);
-		if (template == null) {
-			return null;
-		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		// context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
-		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-
-		return evaluateTemplate(context, template);
-	}
-
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 * 
@@ -707,7 +692,7 @@ public class StubUtility {
 
 	private static void insertTag(IDocument textBuffer, int offset, int length, String[] paramNames, String returnType,
 			String[] typeParameterNames, boolean isDeprecated, String lineDelimiter, List<String> newExceptions)
-					throws BadLocationException {
+			throws BadLocationException {
 		IRegion region = textBuffer.getLineInformationOfOffset(offset);
 		if (region == null) {
 			return;

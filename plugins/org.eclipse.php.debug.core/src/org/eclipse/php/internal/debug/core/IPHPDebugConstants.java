@@ -21,12 +21,6 @@ public interface IPHPDebugConstants {
 	public static final String ATTR_INI_LOCATION = "ATTR_INI_LOCATION"; //$NON-NLS-1$
 	public static final String ATTR_FILE = "ATTR_FILE"; //$NON-NLS-1$
 	public static final String ATTR_FILE_FULL_PATH = "ATTR_FILE_FULL_PATH"; //$NON-NLS-1$
-	/**
-	 * Use PHP_Project instead. Somehow this one is not used, and will be
-	 * removed in the future releases.
-	 */
-	@Deprecated
-	public static final String ATTR_PROJECT_NAME = "ATTR_PROJECT_NAME"; //$NON-NLS-1$
 
 	/**
 	 * Unique identifier for the PHP debug model (value

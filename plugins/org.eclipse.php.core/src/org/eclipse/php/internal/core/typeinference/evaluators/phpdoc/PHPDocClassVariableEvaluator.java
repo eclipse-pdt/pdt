@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -118,14 +117,6 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			evaluated.add((IEvaluatedType) result);
 		}
 		return IGoal.NO_GOALS;
-	}
-
-	/**
-	 * 
-	 * @deprecated will be removed in Mars
-	 */
-	public static MultiTypeType getArrayType(String type, IType currentNamespace, int offset) {
-		return PHPEvaluationUtils.getArrayType(type, currentNamespace, offset);
 	}
 
 }

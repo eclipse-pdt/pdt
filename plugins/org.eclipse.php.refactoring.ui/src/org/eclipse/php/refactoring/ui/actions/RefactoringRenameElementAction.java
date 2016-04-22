@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.actions;
 
+import java.io.StringReader;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -201,8 +202,9 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 				project = resource.getProject();
 
 				// locate the php element to refactor
-				final Program program = ASTParser.parse(doc, ProjectOptions.isSupportingAspTags(project),
+				ASTParser parser = ASTParser.newParser(new StringReader(doc.get()),
 						ProjectOptions.getPhpVersion(project), ProjectOptions.useShortTags(project));
+				final Program program = parser.createAST(new NullProgressMonitor());
 				locateNode = Locator.locateNode(program, offset);
 			}
 

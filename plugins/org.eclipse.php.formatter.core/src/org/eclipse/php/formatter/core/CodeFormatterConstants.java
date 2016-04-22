@@ -3657,25 +3657,6 @@ public class CodeFormatterConstants {
 
 	/**
 	 * <pre>
-	 * FORMATTER / Option to control whether blank lines are cleared inside comments
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.clear_blank_lines"
-	 *     - possible values:   { TRUE, FALSE }
-	 *     - default:           FALSE
-	 * </pre>
-	 * 
-	 * @see #TRUE
-	 * @see #FALSE
-	 * @since 3.1
-	 * @deprecated Use
-	 *             {@link #FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_BLOCK_COMMENT}
-	 *             and
-	 *             {@link #FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_JAVADOC_COMMENT}
-	 */
-	public final static String FORMATTER_COMMENT_CLEAR_BLANK_LINES = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.comment.clear_blank_lines"; //$NON-NLS-1$
-
-	/**
-	 * <pre>
 	 * FORMATTER / Option to control whether blank lines are cleared inside javadoc comments
 	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment"
 	 *     - possible values:   { TRUE, FALSE }
@@ -3703,25 +3684,6 @@ public class CodeFormatterConstants {
 	 */
 	public final static String FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_BLOCK_COMMENT = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.comment.clear_blank_lines_in_block_comment"; //$NON-NLS-1$
-
-	/**
-	 * <pre>
-	 * FORMATTER / Option to control whether comments are formatted
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_comments"
-	 *     - possible values:   { TRUE, FALSE }
-	 *     - default:           TRUE
-	 * </pre>
-	 * 
-	 * @see #TRUE
-	 * @see #FALSE
-	 * @since 3.1
-	 * @deprecated Use multiple settings for each kind of comments. See
-	 *             {@link #FORMATTER_COMMENT_FORMAT_BLOCK_COMMENT},
-	 *             {@link #FORMATTER_COMMENT_FORMAT_JAVADOC_COMMENT} and
-	 *             {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT}.
-	 */
-	public final static String FORMATTER_COMMENT_FORMAT = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.comment.format_comments"; //$NON-NLS-1$
 
 	/**
 	 * <pre>

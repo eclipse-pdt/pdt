@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.Logger;
 import org.w3c.dom.Document;
@@ -29,7 +28,6 @@ import org.w3c.dom.NodeList;
  * XML preferences reader for reading XML structures from the preferences store.
  * This class works in combination with IXMLPreferencesStorable.
  */
-@SuppressWarnings("deprecation")
 public class XMLPreferencesReader {
 
 	public static final char DELIMITER = (char) 5;
@@ -47,32 +45,6 @@ public class XMLPreferencesReader {
 		s = APOS_PATTERN.matcher(s).replaceAll("'"); //$NON-NLS-1$
 		s = AMP_PATTERN.matcher(s).replaceAll("&"); //$NON-NLS-1$
 		return s;
-	}
-
-	/**
-	 * Read XML nodes to values map
-	 * 
-	 * @param nodeList
-	 * @param skipEmptyNodes
-	 * @return values map
-	 * 
-	 * @deprecated Since 3.5 - use
-	 *             {@link XMLPreferencesReader#read(NodeList, boolean)} instead
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static HashMap read(NodeList nl) {
-		HashMap map = new HashMap(nl.getLength());
-		for (int i = 0; i < nl.getLength(); ++i) {
-			Node n = nl.item(i);
-			if (n.hasChildNodes()) {
-				if (n.getFirstChild().getNodeType() == Node.TEXT_NODE) {
-					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild().getNodeValue()));
-				} else {
-					map.put(n.getNodeName(), read(n.getChildNodes()));
-				}
-			}
-		}
-		return map;
 	}
 
 	/**
@@ -105,30 +77,6 @@ public class XMLPreferencesReader {
 	 * @param str
 	 * @param skipEmptyNodes
 	 * @return values map
-	 * 
-	 * @deprecated Since 3.5 - use
-	 *             {@link XMLPreferencesReader#read(String, boolean)} instead
-	 */
-	@SuppressWarnings("rawtypes")
-	protected static HashMap read(String str) {
-		try {
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-			// docBuilderFactory.setValidating(true);
-			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
-			return read(doc.getChildNodes());
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return null;
-	}
-
-	/**
-	 * Converts given XML string to values map
-	 * 
-	 * @param str
-	 * @param skipEmptyNodes
-	 * @return values map
 	 */
 	protected static Map<String, Object> read(String str, boolean skipEmptyNodes) {
 		try {
@@ -147,24 +95,6 @@ public class XMLPreferencesReader {
 	 * 
 	 * @param store
 	 * @param prefsKey
-	 * @return a map of elements from the preferences by a given key
-	 * 
-	 * @deprecated Since 3.5 - use
-	 *             {@link XMLPreferencesReader#read(IEclipsePreferences, String, boolean)}
-	 *             instead
-	 */
-	@SuppressWarnings("rawtypes")
-	@Deprecated
-	public static HashMap[] read(Preferences store, String prefsKey) {
-		String storedValue = store.getString(prefsKey);
-		return getHashFromStoredValue(storedValue);
-	}
-
-	/**
-	 * Reads a map of elements from the preferences by a given key.
-	 * 
-	 * @param store
-	 * @param prefsKey
 	 * @param skipEmptyNodes
 	 * @return a map of elements from the preferences by a given key
 	 */
@@ -173,27 +103,6 @@ public class XMLPreferencesReader {
 		if (storedValue == null)
 			return new ArrayList<Map<String, Object>>();
 		return getMapsFromValue(storedValue, skipEmptyNodes);
-	}
-
-	/**
-	 * Returns array of maps with stored values.
-	 * 
-	 * @param storedValue
-	 * @return array of maps with stored values
-	 * 
-	 * @deprecated Since 3.5 - use
-	 *             {@link XMLPreferencesReader#getMapsFromValue(String, boolean)}
-	 *             instead
-	 */
-	@Deprecated
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static HashMap[] getHashFromStoredValue(String storedValue) {
-		ArrayList maps = new ArrayList();
-		StringTokenizer st = new StringTokenizer(storedValue, new String(new char[] { DELIMITER }));
-		while (st.hasMoreTokens()) {
-			maps.add(read(st.nextToken()));
-		}
-		return (HashMap[]) maps.toArray(new HashMap[maps.size()]);
 	}
 
 	/**

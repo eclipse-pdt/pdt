@@ -432,16 +432,6 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		}));
 	}
 
-	/**
-	 * @deprecated see
-	 *             {@link org.eclipse.jface.text.ITextHover#getHoverInfo(ITextViewer, IRegion)}
-	 */
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		PHPDocumentationBrowserInformationControlInput info = (PHPDocumentationBrowserInformationControlInput) getHoverInfo2(
-				textViewer, hoverRegion);
-		return info != null ? info.getHtml() : null;
-	}
-
 	/*
 	 * @see
 	 * org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse

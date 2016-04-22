@@ -275,34 +275,6 @@ public class ForStatement extends Statement {
 		postReplaceChild(oldChild, statement, BODY_PROPERTY);
 	}
 
-	/**
-	 * @deprecated use {@link #getBody()}
-	 */
-	public Statement getAction() {
-		return body;
-	}
-
-	/**
-	 * @deprecated use {@link #conditions()}
-	 */
-	public Expression[] getConditions() {
-		return (Expression[]) conditions.toArray(new Expression[conditions.size()]);
-	}
-
-	/**
-	 * @deprecated use {@link #updaters()}
-	 */
-	public Expression[] getIncreasements() {
-		return (Expression[]) updaters.toArray(new Expression[conditions.size()]);
-	}
-
-	/**
-	 * @deprecated use {@link #initializers()}
-	 */
-	public Expression[] getInitializations() {
-		return (Expression[]) initializers.toArray(new Expression[conditions.size()]);
-	}
-
 	/*
 	 * Method declared on ASTNode.
 	 */

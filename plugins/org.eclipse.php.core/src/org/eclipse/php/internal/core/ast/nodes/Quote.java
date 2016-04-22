@@ -141,13 +141,6 @@ public class Quote extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use {@link #expressions()}
-	 */
-	public Expression[] getExpressions() {
-		return expressions.toArray(new Expression[this.expressions.size()]);
-	}
-
-	/**
 	 * @return expression list of the echo statement
 	 */
 	public List<Expression> expressions() {

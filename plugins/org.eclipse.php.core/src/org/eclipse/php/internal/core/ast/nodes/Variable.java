@@ -180,13 +180,6 @@ public class Variable extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use {@link #getName()}
-	 */
-	public Expression getVariableName() {
-		return name;
-	}
-
-	/**
 	 * Returns the name (expression) of this variable
 	 * 
 	 * @return the expression name node

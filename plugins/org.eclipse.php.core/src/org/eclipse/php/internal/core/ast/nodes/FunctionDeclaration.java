@@ -224,13 +224,6 @@ public class FunctionDeclaration extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #formalParameters()}
-	 */
-	public FormalParameter[] getFormalParameters() {
-		return formalParameters.toArray(new FormalParameter[this.formalParameters.size()]);
-	}
-
-	/**
 	 * List of the formal parameters of this function declaration
 	 * 
 	 * @return the parameters of this declaration

@@ -181,13 +181,6 @@ public class Block extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #statements()}
-	 */
-	public Statement[] getStatements() {
-		return (Statement[]) statements.toArray(new Statement[statements.size()]);
-	}
-
-	/**
 	 * Retrieves the statement parts of this block
 	 * 
 	 * @return statement parts of this block

@@ -136,13 +136,6 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	}
 
 	/**
-	 * @deprecated see {@link #getExpression()}
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Sets the expression of this unary operation.
 	 * 
 	 * @param expression

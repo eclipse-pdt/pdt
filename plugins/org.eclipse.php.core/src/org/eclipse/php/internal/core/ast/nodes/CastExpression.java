@@ -139,20 +139,6 @@ public class CastExpression extends Expression {
 	}
 
 	/**
-	 * @deprecated use #getCastingType()
-	 */
-	public int getCastType() {
-		return castingType;
-	}
-
-	/**
-	 * @deprecated use #getExpression
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Returns the type of this cast expression.
 	 * 
 	 * @return the cast type

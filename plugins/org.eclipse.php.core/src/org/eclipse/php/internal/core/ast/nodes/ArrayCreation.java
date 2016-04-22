@@ -158,13 +158,6 @@ public class ArrayCreation extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use elements()
-	 */
-	public ArrayElement[] getElements() {
-		return elements.toArray(new ArrayElement[elements.size()]);
-	}
-
-	/**
 	 * Retrieves elements parts of array creation
 	 * 
 	 * @return elements

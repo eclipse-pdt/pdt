@@ -175,20 +175,6 @@ public class Assignment extends Expression implements IOperationNode {
 	}
 
 	/**
-	 * @deprecated use {@link #getRightHandSide()}
-	 */
-	public Expression getValue() {
-		return rightHandSide;
-	}
-
-	/**
-	 * @deprecated use {@link #getLeftHandSide()}
-	 */
-	public VariableBase getVariable() {
-		return leftHandSide;
-	}
-
-	/**
 	 * Returns the operator of this assignment expression.
 	 * 
 	 * @return the assignment operator

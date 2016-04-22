@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -30,11 +29,6 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 public class NamespaceNode extends SourceType {
 	public NamespaceNode(IModelElement modelElement, String name) {
 		super((ModelElement) modelElement, name);
-	}
-
-	@Deprecated
-	public NamespaceNode(IModelElement modelElement, String name, IType[] namespaces) {
-		this(modelElement, name);
 	}
 
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {

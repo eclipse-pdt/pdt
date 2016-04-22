@@ -114,13 +114,6 @@ public class BackTickExpression extends Expression {
 	}
 
 	/**
-	 * @deprecated use #expressions()
-	 */
-	public Expression[] getExpressions() {
-		return this.expressions.toArray(new Expression[this.expressions.size()]);
-	}
-
-	/**
 	 * The expression list of the back tick command
 	 * 
 	 * @return expressions of this back tick expression
