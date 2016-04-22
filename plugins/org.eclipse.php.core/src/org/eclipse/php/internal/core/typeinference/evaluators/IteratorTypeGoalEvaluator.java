@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 IBM Corporation and others.
+ * Copyright (c) 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.typeinference.GeneratorClassType;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
@@ -183,7 +184,7 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 				if (docBlocks[i] == null) {
 					continue;
 				}
-				PHPDocTag[] tags = docBlocks[i].getTags(PHPDocTag.PARAM);
+				PHPDocTag[] tags = docBlocks[i].getTags(TagKind.PARAM);
 				for (int j = 0; j < tags.length; j++) {
 					PHPDocTag tag = tags[j];
 					if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(variableName)) {

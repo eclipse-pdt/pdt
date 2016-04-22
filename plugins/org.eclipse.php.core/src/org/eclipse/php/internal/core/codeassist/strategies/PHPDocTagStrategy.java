@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 
 /**
  * This strategy completes PHPDoc tag names.
@@ -26,14 +27,6 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  * @author michael
  */
 public class PHPDocTagStrategy extends AbstractCompletionStrategy {
-
-	public static final String[] PHPDOC_TAGS = { "abstract", "access", //$NON-NLS-1$ //$NON-NLS-2$
-			"author", "category", "copyright", "deprecated", "example", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			"final", "filesource", "global", "ignore", "internal", "license", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			"link", "method", "namespace", "name", "package", "param", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			"property", "return", "see", "since", "static", "staticvar", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			"subpackage", "todo", "throws", "tutorial", "uses", "var", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			"version" }; //$NON-NLS-1$
 
 	public PHPDocTagStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -55,12 +48,13 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 		ISourceRange replaceRange = getReplacementRange(tagContext);
 		String suffix = ""; //$NON-NLS-1$
 
-		for (String nextTag : PHPDOC_TAGS) {
-			if (CodeAssistUtils.startsWithIgnoreCase(nextTag, tagName)) {
-				if (!requestor.isContextInformationMode() || nextTag.length() == tagName.length()) {
+		for (TagKind nextTag : TagKind.values()) {
+			String nextTagName = nextTag.getName();
+			if (CodeAssistUtils.startsWithIgnoreCase(nextTagName, tagName)) {
+				if (!requestor.isContextInformationMode() || nextTagName.length() == tagName.length()) {
 
 					// Tags are reported like keywords:
-					reporter.reportKeyword(nextTag, suffix, replaceRange);
+					reporter.reportKeyword(nextTagName, suffix, replaceRange);
 				}
 			}
 		}

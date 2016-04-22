@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2015, 2016 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
@@ -1443,7 +1443,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private boolean canHandlePHPDocComment(PHPDocBlock comment, int offset) throws BadLocationException {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
 		// do not handle single-line PHPDoc comment with @var tag inside
-		PHPDocTag[] varTags = comment.getTags(PHPDocTagKinds.VAR);
+		PHPDocTag[] varTags = comment.getTags(TagKind.VAR);
 		if (varTags.length != 1) {
 			return true;
 		}
@@ -1715,7 +1715,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				appendToBuffer(reference);
 			}
 			newLineOfComment = false;
-			if (this.preferences.comment_insert_new_line_for_parameter && phpDocTag.getTagKind() == PHPDocTag.PARAM) {
+			if (this.preferences.comment_insert_new_line_for_parameter && phpDocTag.getTagKind() == TagKind.PARAM) {
 				if (insertTag && hasDesc) {
 					insertNewLineForPHPDoc();
 				}
@@ -1800,7 +1800,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 
 				if (this.preferences.comment_indent_root_tags && this.preferences.comment_indent_parameter_description
-						&& phpDocTag.getTagKind() == PHPDocTag.PARAM) {
+						&& phpDocTag.getTagKind() == TagKind.PARAM) {
 					for (int i = 0; i < preferences.indentationSize; i++) {
 						appendToBuffer(preferences.indentationChar);
 						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;

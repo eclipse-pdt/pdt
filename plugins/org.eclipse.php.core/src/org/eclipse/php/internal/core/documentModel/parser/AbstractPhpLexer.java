@@ -232,8 +232,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			int length = 0;
 			while (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
 				buffer.append(yytext());
+				length += yylength();
 				yylex = yylex();
-				length++;
 			}
 			bufferedTokens = new LinkedList<ITextRegion>();
 			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, 0, length, buffer.toString());
