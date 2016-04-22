@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
@@ -146,7 +147,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 						continue;
 					}
 
-					for (PHPDocTag tag : block.getTags(PHPDocTagKinds.VAR)) {
+					for (PHPDocTag tag : block.getTags(TagKind.VAR)) {
 						if (tag.isValidVarTag() && tag.getVariableReference() != null
 								&& tag.getVariableReference().getName().equals(variableReference.getName())) {
 							List<IGoal> goals = new LinkedList<IGoal>();

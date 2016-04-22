@@ -104,7 +104,11 @@
    */
   private boolean zzRefill() throws java.io.IOException {
 
-    oldString = new String(zzBuffer, startPos, zzMarkedPos-startPos);
+    String saveOldString = oldString;
+    oldString = new String(zzBuffer, startPos, zzMarkedPos - startPos);
+    if (saveOldString != null) {
+        oldString = saveOldString + oldString;
+    }
 
     /* first: make room (if you can) */
     if (zzStartRead > 0) {
@@ -178,10 +182,16 @@
 
     /* otherwise: need to refill the buffer */
 
+    String saveOldString = oldString;
+    oldString = null;
+
     /* first: make room (if you can) */
     if (zzRefill()) {
+        oldString = saveOldString;
         return YYEOF;
     }
+
+    oldString = saveOldString;
 
     return zzBuffer[zzCurrentPos++];
   }
@@ -324,7 +334,15 @@
 	 * user method - common.sse
 	 */
 	private void updateStartPos() {
-		startPos = zzMarkedPos;
+		updateStartPos(zzMarkedPos);
+	}
+
+
+	/**
+	 * user method - common.sse
+	 */
+	private void updateStartPos(int position) {
+		startPos = position;
 		oldString = null;
 	}
 
