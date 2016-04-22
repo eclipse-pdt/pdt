@@ -113,13 +113,6 @@ public class EchoStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use #expressions()
-	 */
-	public Expression[] getExpressions() {
-		return this.expressions.toArray(new Expression[this.expressions.size()]);
-	}
-
-	/**
 	 * @return expression list of the echo statement
 	 */
 	public List<Expression> expressions() {

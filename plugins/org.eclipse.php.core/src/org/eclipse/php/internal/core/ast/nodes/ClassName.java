@@ -99,13 +99,6 @@ public class ClassName extends ASTNode {
 	}
 
 	/**
-	 * @deprecated use {@link #getName()}
-	 */
-	public Expression getClassName() {
-		return this.name;
-	}
-
-	/**
 	 * Returns the expression of this class name .
 	 * 
 	 * @return the expression node

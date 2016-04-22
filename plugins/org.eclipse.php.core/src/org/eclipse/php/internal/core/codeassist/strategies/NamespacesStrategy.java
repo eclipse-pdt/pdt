@@ -35,11 +35,6 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		super(context, 0, 0);
 	}
 
-	@Deprecated
-	public NamespacesStrategy(ICompletionContext context, boolean addClassInNamespace) {
-		super(context, 0, 0, addClassInNamespace);
-	}
-
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

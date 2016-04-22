@@ -23,7 +23,6 @@ import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.Action;
@@ -559,7 +558,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 		super.setContentProvider(contentProvider);
 	}
 
-	/* package */IMergeViewerContentProvider getMergeContentProvider() {
+			/* package */IMergeViewerContentProvider getMergeContentProvider() {
 		return (IMergeViewerContentProvider) getContentProvider();
 	}
 
@@ -1261,20 +1260,6 @@ public abstract class ContentMergeViewer extends ContentViewer
 			if ((!isRightDirty() && !isLeftDirty()) || (isRightDirty() && !isLeftDirty()))
 				fireDirtyState(dirty);
 		}
-	}
-
-	/**
-	 * Method from the old internal <code>ISavable</code> interface Save the
-	 * viewers's content. Note: this method is for internal use only. Clients
-	 * should not call this method.
-	 * 
-	 * @param monitor
-	 *            a progress monitor
-	 * @throws CoreException
-	 * @deprecated use {@link IFlushable#flush(IProgressMonitor)}.
-	 */
-	public void save(IProgressMonitor monitor) throws CoreException {
-		flush(monitor);
 	}
 
 	/**

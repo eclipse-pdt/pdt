@@ -156,13 +156,6 @@ public class InstanceOfExpression extends Expression {
 	}
 
 	/**
-	 * @deprecated use #getExpression()
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * The expression of this instance of expression
 	 * 
 	 * @return expression of this instance of expression

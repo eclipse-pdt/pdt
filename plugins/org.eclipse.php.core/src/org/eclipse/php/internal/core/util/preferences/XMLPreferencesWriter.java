@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.Logger;
 import org.osgi.service.prefs.BackingStoreException;
@@ -91,29 +89,6 @@ public class XMLPreferencesWriter {
 	}
 
 	/**
-	 * Writes a group of IXMLPreferencesStorables to the given plugin
-	 * preferences. The caller to this method should also make sure that
-	 * {@link Plugin#savePluginPreferences()} is called in order to really store
-	 * the changes.
-	 * 
-	 * @param pluginPreferences
-	 *            A Preferences instance
-	 * @param prefsKey
-	 *            The key to store by.
-	 * @param objects
-	 *            The IXMLPreferencesStorables to store.
-	 * 
-	 * @deprecated Since 3.5 - use
-	 *             {@link XMLPreferencesWriter#write(IEclipsePreferences, String, List)}
-	 *             instead
-	 */
-	public static void write(Preferences pluginPreferences, String prefsKey, IXMLPreferencesStorable[] objects) {
-		StringBuffer sb = new StringBuffer();
-		appendDelimitedString(sb, objects);
-		pluginPreferences.setValue(prefsKey, sb.toString());
-	}
-
-	/**
 	 * Writes a group of IXMLPreferencesStorables to the given plug-in
 	 * preferences.
 	 * 
@@ -134,29 +109,6 @@ public class XMLPreferencesWriter {
 		} catch (BackingStoreException e) {
 			Logger.logException("Could not write XML preferences.", e); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * Writes an IXMLPreferencesStorable to the given plugin preferences. The
-	 * caller to this method should also make sure that
-	 * {@link Plugin#savePluginPreferences()} is called in order to really store
-	 * the changes.
-	 * 
-	 * @param pluginPreferences
-	 *            A Preferences instance
-	 * @param prefsKey
-	 *            The key to store by.
-	 * @param object
-	 *            The IXMLPreferencesStorable to store.
-	 * 
-	 * @deprecated Since 3.5 - use
-	 *             {@link XMLPreferencesWriter#write(IEclipsePreferences, String, IXMLPreferencesStorable)}
-	 *             instead
-	 */
-	public static void write(Preferences pluginPreferences, String prefsKey, IXMLPreferencesStorable object) {
-		StringBuffer sb = new StringBuffer();
-		write(sb, object.storeToMap());
-		pluginPreferences.setValue(prefsKey, sb.toString());
 	}
 
 	/**

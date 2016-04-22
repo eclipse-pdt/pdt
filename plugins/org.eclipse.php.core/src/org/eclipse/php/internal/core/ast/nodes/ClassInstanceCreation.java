@@ -250,13 +250,6 @@ public class ClassInstanceCreation extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use {@link #ctoParams()}
-	 */
-	public Expression[] getCtorParams() {
-		return ctorParams.toArray(new Expression[this.ctorParams.size()]);
-	}
-
-	/**
 	 * List of expressions that were given to the the constructor
 	 * 
 	 * @return list of expressions that were given to the the constructor

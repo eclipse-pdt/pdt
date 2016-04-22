@@ -114,13 +114,6 @@ public class ListVariable extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use {@link #variables()}
-	 */
-	public VariableBase[] getVariables() {
-		return variables.toArray(new VariableBase[this.variables.size()]);
-	}
-
-	/**
 	 * @return the list of variables
 	 */
 	public List<VariableBase> variables() {

@@ -106,13 +106,6 @@ public class ThrowStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated see {@link #getExpression()}
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Sets the expression of this throw statement.
 	 * 
 	 * @param expression

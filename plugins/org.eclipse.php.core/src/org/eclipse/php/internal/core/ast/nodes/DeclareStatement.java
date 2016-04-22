@@ -166,27 +166,6 @@ public class DeclareStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use #getBody()
-	 */
-	public Statement getAction() {
-		return body;
-	}
-
-	/**
-	 * @deprecated use {@link #directiveNames()}
-	 */
-	public Identifier[] getDirectiveNames() {
-		return directiveNames.toArray(new Identifier[directiveNames.size()]);
-	}
-
-	/**
-	 * @deprecated {@link #directiveValues()}
-	 */
-	public Expression[] getDirectiveValues() {
-		return directiveValues.toArray(new Expression[directiveValues.size()]);
-	}
-
-	/**
 	 * The list of directive names
 	 * 
 	 * @return List of directive names

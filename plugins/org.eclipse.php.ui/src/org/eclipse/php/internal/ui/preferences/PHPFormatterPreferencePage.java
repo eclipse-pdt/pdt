@@ -72,9 +72,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 			}
 		}
 
-		if (prefBlock == null) {
-			prefBlock = new PHPFormatterConfigurationWrapper();
-		} else {
+		if (prefBlock != null) {
 			hasExtensionsForPDT = true;
 		}
 

@@ -14,8 +14,6 @@ package org.eclipse.php.internal.core.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Preferences;
-
 /**
  * Desciption: This class is a factory for ProjectPreferencePropagators. It is a
  * singletone that contains a Map of ProjectPreference propagators based on the
@@ -61,17 +59,4 @@ public class PreferencePropagatorFactory {
 		}
 	}
 
-	/**
-	 * Returns a single instance of a {@link PreferencesPropagator} according to
-	 * the given nodeQualifier and the preferences store.
-	 * 
-	 * @param nodeQualifier
-	 * @return the ProjectPreferencesPropagator given a nodeQualifier and a
-	 *         preference store
-	 * @deprecated Since 3.7 Use method without nodeQualifier only
-	 */
-	@Deprecated
-	public static PreferencesPropagator getPreferencePropagator(String nodeQualifier, Preferences store) {
-		return getPreferencePropagator(nodeQualifier);
-	}
 }

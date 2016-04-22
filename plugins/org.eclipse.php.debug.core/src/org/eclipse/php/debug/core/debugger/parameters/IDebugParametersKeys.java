@@ -47,11 +47,4 @@ public interface IDebugParametersKeys {
 	public static final String PHP_WEB_SCRIPT_DEBUG = "php_web_script_debug"; //$NON-NLS-1$
 	public static final String PHP_WEB_PAGE_DEBUG = "php_web_page_debug"; //$NON-NLS-1$
 
-	/**
-	 * This parameter key is depreciated. We now use only the
-	 * {@value #FIRST_LINE_BREAKPOINT} in the launch configuration.
-	 * 
-	 * @deprecated
-	 */
-	public static final String OVERRIDE_FIRST_LINE_BREAKPOINT = "overrideFirstLineBreakpoint"; //$NON-NLS-1$
 }

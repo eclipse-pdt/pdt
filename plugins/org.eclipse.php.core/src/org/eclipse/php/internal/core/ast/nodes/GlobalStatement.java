@@ -116,13 +116,6 @@ public class GlobalStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #variables()}
-	 */
-	public Variable[] getVariables() {
-		return variables.toArray(new Variable[this.variables.size()]);
-	}
-
-	/**
 	 * @return the variables component of the global statement
 	 */
 	public List<Variable> variables() {

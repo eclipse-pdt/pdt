@@ -133,13 +133,6 @@ public class Include extends Expression {
 	}
 
 	/**
-	 * @deprecated see {@link #getExpression()}
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Sets the expression of this include expression.
 	 * 
 	 * @param expression

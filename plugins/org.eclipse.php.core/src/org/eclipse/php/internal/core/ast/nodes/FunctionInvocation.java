@@ -180,13 +180,6 @@ public class FunctionInvocation extends VariableBase {
 	}
 
 	/**
-	 * @deprecated use {@link #parameters()}
-	 */
-	public Expression[] getParameters() {
-		return parameters.toArray(new Expression[parameters.size()]);
-	}
-
-	/**
 	 * @return the parameters component of this function invocation expression
 	 */
 	public List<Expression> parameters() {

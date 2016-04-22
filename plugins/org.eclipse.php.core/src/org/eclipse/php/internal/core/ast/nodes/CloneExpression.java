@@ -107,13 +107,6 @@ public class CloneExpression extends Expression {
 	}
 
 	/**
-	 * @deprecated see {@link #getExpression()}
-	 */
-	public Expression getExpr() {
-		return expression;
-	}
-
-	/**
 	 * Sets the expression of this clone statement.
 	 * 
 	 * @param expression

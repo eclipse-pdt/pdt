@@ -146,18 +146,6 @@ public class PhpElementResolver implements IElementResolver {
 		return info;
 	}
 
-	/**
-	 * Deprecated, use modifiers instead
-	 * 
-	 * @param doc
-	 * @return
-	 */
-	@Deprecated
-	protected static boolean isDeprecated(String doc) {
-		Map<String, String> info = decodeDocInfo(doc);
-		return (info != null && info.containsKey("d")); //$NON-NLS-1$
-	}
-
 	private static class IndexField extends SourceField implements IPHPDocAwareElement {
 
 		private int flags;

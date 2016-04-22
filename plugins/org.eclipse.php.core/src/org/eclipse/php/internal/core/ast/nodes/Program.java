@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
@@ -155,13 +158,6 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * @deprecated use {@link #comments()}
-	 */
-	public Collection<Comment> getComments() {
-		return Collections.unmodifiableCollection(comments);
-	}
-
-	/**
 	 * see {@link #sourceModule}
 	 * 
 	 * @param typeRoot
@@ -235,13 +231,6 @@ public class Program extends ASTNode {
 
 	public int getType() {
 		return ASTNode.PROGRAM;
-	}
-
-	/**
-	 * @deprecated use {@link #statements()}
-	 */
-	public Statement[] getStatements() {
-		return statements.toArray(new Statement[this.statements.size()]);
 	}
 
 	/**

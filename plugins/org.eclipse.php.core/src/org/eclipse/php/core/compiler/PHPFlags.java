@@ -30,20 +30,6 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	}
 
 	/**
-	 * Returns whether the given integer includes the <code>internal</code>
-	 * modifier.
-	 * 
-	 * @param flags
-	 *            the flags
-	 * @return <code>true</code> if the <code>internal</code> modifier is
-	 *         included
-	 * @deprecated
-	 */
-	public static boolean isInternal(int flags) {
-		return (flags & Internal) != 0;
-	}
-
-	/**
 	 * Returns whether the given integer includes the <code>namespace</code>
 	 * modifier.
 	 * 

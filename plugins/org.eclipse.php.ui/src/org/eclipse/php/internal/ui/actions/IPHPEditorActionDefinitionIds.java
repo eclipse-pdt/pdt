@@ -158,15 +158,6 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	// miscellaneous
 
 	/**
-	 * Action definition ID of the toggle presentation tool bar button action
-	 * (value <code>"org.eclipse.php.ui.edit.text.toggle.presentation"</code>).
-	 * 
-	 * @deprecated as of 3.0 replaced by
-	 *             {@link org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds#TOGGLE_SHOW_SELECTED_ELEMENT_ONLY}
-	 */
-	public static final String TOGGLE_PRESENTATION = "org.eclipse.php.ui.edit.text.toggle.presentation"; //$NON-NLS-1$
-
-	/**
 	 * Action definition ID of the toggle text hover tool bar button action
 	 * (value <code>"org.eclipse.php.ui.edit.text.toggle.text.hover"</code>).
 	 */

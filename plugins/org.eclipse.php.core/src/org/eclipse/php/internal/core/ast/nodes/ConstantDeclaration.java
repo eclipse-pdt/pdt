@@ -178,20 +178,6 @@ public class ConstantDeclaration extends Statement {
 		return super.internalGetChildListProperty(property);
 	}
 
-	/**
-	 * @deprecated use {@link #initializers()}
-	 */
-	public Expression[] getConstantValues() {
-		return initializers.toArray(new Expression[initializers.size()]);
-	}
-
-	/**
-	 * @deprecated use {@link #names()}
-	 */
-	public Identifier[] getVariableNames() {
-		return (Identifier[]) names.toArray(new Identifier[names.size()]);
-	}
-
 	/*
 	 * Method declared on ASTNode.
 	 */

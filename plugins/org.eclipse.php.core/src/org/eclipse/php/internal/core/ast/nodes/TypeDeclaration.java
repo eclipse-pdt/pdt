@@ -86,13 +86,6 @@ public abstract class TypeDeclaration extends Statement {
 	}
 
 	/**
-	 * @deprecated use interfaces()
-	 */
-	public Identifier[] getInterfaces() {
-		return this.interfaces.toArray(new Identifier[interfaces.size()]);
-	}
-
-	/**
 	 * List of interfaces that this type implements / extends
 	 */
 	public List<Identifier> interfaces() {

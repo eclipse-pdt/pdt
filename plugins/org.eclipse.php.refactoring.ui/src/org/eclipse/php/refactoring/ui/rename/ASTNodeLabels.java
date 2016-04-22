@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.rename;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -250,18 +252,18 @@ public class ASTNodeLabels {
 
 		// parameters
 		if (getFlag(flags, M_PARAMETER_TYPES | M_PARAMETER_NAMES)) {
-			final FormalParameter[] parameters = declaration.getFormalParameters();
+			final List<FormalParameter> parameters = declaration.formalParameters();
 			buf.append('(');
 
-			int nParams = (parameters != null && getFlag(flags, M_PARAMETER_TYPES)) ? parameters.length : 0;
+			int nParams = (parameters != null && getFlag(flags, M_PARAMETER_TYPES)) ? parameters.size() : 0;
 
 			for (int i = 0; i < nParams; i++) {
 				if (i > 0) {
 					buf.append(COMMA_STRING); // $NON-NLS-1$
 					buf.append(" "); //$NON-NLS-1$
 				}
-				if (getFlag(flags, M_PARAMETER_TYPES) && parameters[i].getParameterType() != null) {
-					String t = parameters[i].getParameterType().toString();
+				if (getFlag(flags, M_PARAMETER_TYPES) && parameters.get(i).getParameterType() != null) {
+					String t = parameters.get(i).getParameterType().toString();
 					if (t == null) {
 						t = ""; //$NON-NLS-1$
 					} else {
@@ -270,7 +272,7 @@ public class ASTNodeLabels {
 					buf.append(t);
 				}
 				if (getFlag(flags, M_PARAMETER_NAMES)) {
-					buf.append("$" + parameters[i].getParameterNameIdentifier().getName()); //$NON-NLS-1$
+					buf.append("$" + parameters.get(i).getParameterNameIdentifier().getName()); //$NON-NLS-1$
 				}
 
 			}
@@ -387,13 +389,13 @@ public class ASTNodeLabels {
 		buf.append(function.getFunctionName().getName());
 		// parameters
 		buf.append('(');
-		FormalParameter[] parameters = function.getFormalParameters();
-		for (int i = 0; i < parameters.length; i++) {
+		List<FormalParameter> parameters = function.formalParameters();
+		for (int i = 0; i < parameters.size(); i++) {
 			if (i > 0) {
 				buf.append(COMMA_STRING); // $NON-NLS-1$
 			}
-			buf.append(parameters[i].getParameterType().toString());
-			buf.append(" $" + parameters[i].getParameterNameIdentifier().getName()); //$NON-NLS-1$
+			buf.append(parameters.get(i).getParameterType().toString());
+			buf.append(" $" + parameters.get(i).getParameterNameIdentifier().getName()); //$NON-NLS-1$
 		}
 		buf.append(')');
 	}

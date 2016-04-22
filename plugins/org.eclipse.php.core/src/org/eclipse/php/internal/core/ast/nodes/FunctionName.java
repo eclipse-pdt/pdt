@@ -109,13 +109,6 @@ public class FunctionName extends ASTNode {
 	}
 
 	/**
-	 * @deprecated see {@link #getName()}
-	 */
-	public Expression getFunctionName() {
-		return this.name;
-	}
-
-	/**
 	 * Sets the expression of this function name expression.
 	 * 
 	 * @param expression

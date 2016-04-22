@@ -17,7 +17,6 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.Logger;
 
@@ -25,20 +24,6 @@ public class PreferencesSupport {
 
 	private Map<IProject, ProjectScope> projectToScope;
 	private String nodeQualifier;
-
-	/**
-	 * Constructs a new PreferencesSupport.
-	 * 
-	 * @param nodeQualifier
-	 *            A string qualifier for the node (for example:
-	 *            PHPCorePlugin.ID)
-	 * @param preferenceStore
-	 *            The relevant preferences store.
-	 */
-	@Deprecated
-	public PreferencesSupport(String nodeQualifier, Preferences preferenceStore) {
-		this(nodeQualifier);
-	}
 
 	/**
 	 * Constructs a new PreferencesSupport.
@@ -116,18 +101,6 @@ public class PreferencesSupport {
 	 */
 	public String getWorkspacePreferencesValue(String key) {
 		return Platform.getPreferencesService().getString(nodeQualifier, key, null, null);
-	}
-
-	/**
-	 * Returns the value for the key, as found in the given preferences store.
-	 * 
-	 * @param key
-	 * @param preferenceStore
-	 * @return The String value
-	 */
-	@Deprecated
-	public static String getWorkspacePreferencesValue(String key, Preferences preferenceStore) {
-		return preferenceStore.getString(key);
 	}
 
 	/**

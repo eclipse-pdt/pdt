@@ -130,13 +130,6 @@ public class CatchClause extends Statement {
 	}
 
 	/**
-	 * @deprecated use #getBody()
-	 */
-	public Block getStatement() {
-		return body;
-	}
-
-	/**
 	 * Returns the class name of this catch clause.
 	 * 
 	 * @return the exception variable declaration node

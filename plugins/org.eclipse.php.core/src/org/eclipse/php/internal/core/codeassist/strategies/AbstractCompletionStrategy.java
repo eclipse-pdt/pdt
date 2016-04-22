@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -29,7 +30,6 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
  * This strategy contains common utilities of all completion strategies.
@@ -68,8 +68,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return context;
 	}
 
-	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(ICompletionContext context)
-			throws BadLocationException {
+	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
@@ -82,7 +81,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 			length = prefixEnd - start;
 		}
 
-		return new org.eclipse.dltk.internal.core.SourceRange(start, length);
+		return new SourceRange(start, length);
 	}
 
 	public String getNSSuffix(ICompletionContext context) {
@@ -109,7 +108,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 			length = prefixEnd - start;
 		}
 
-		IStructuredDocument document = completionContext.getDocument();
+		IDocument document = completionContext.getDocument();
 
 		int endOfReplacement = start + length;
 		if (document.getLength() == start) {
@@ -120,8 +119,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 			}
 		}
 
-		SourceRange replacementRange = new SourceRange(start, endOfReplacement - start);
-		return replacementRange;
+		return new SourceRange(start, endOfReplacement - start);
 	}
 
 	/**
