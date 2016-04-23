@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006, 2016 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -159,41 +159,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
 
 		// PHPDoc
-		fColorTypes.put(PHPRegionTypes.PHPDOC_METHOD, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_PROPERTY, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_VAR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_SEE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_NAME, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_DESC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_TODO, PreferenceConstants.EDITOR_TASK_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_LINK, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_EXAMPLE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_LICENSE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_PACKAGE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_VERSION, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_ABSTRACT, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_INTERNAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_TUTORIAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_CATEGORY, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_FINAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_SINCE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_PARAM, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_MAGIC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_RETURN, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_AUTHOR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_ACCESS, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_IGNORE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_THROWS, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_STATIC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_GLOBAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_USES, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_SUBPACKAGE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_FILESOURCE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_EXCEPTION, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_COPYRIGHT, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_STATICVAR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_NAMESPACE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_DEPRECATED, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_GENERIC_TAG, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT, PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_START, PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
@@ -728,36 +695,37 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					|| PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR.equals(prefKey)) {
 				addTextAttribute(prefKey);
-			} else if (PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NORMAL_COLOR)
-					.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_VARIABLE_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_STRING_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_COMMENT_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NUMBER_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_HEREDOC_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_TASK_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
-							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
-							.equals(prefKey)) {
+			} else
+				if (PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NORMAL_COLOR).equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_VARIABLE_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_STRING_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_COMMENT_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NUMBER_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_HEREDOC_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_TASK_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants
+								.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
+								.equals(prefKey)
+						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
+								.equals(prefKey)) {
 				boolean enabled = getColorPreferences().getBoolean(prefKey);
 				prefKey = prefKey.split("\\.")[1]; //$NON-NLS-1$
 				if (enabled) {

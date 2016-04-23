@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,88 +24,110 @@ import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
 public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
-	public static final String ERROR = "ERROR!!!"; //$NON-NLS-1$
+	public enum TagKind {
 
-	public enum Tag {
+		ABSTRACT("abstract"), //$NON-NLS-1$
+		AUTHOR("author"), //$NON-NLS-1$
+		DEPRECATED("deprecated"), //$NON-NLS-1$
+		FINAL("final"), //$NON-NLS-1$
+		GLOBAL("global"), //$NON-NLS-1$
+		NAME("name"), //$NON-NLS-1$
+		RETURN("return"), //$NON-NLS-1$
+		PARAM("param"), //$NON-NLS-1$
+		SEE("see"), //$NON-NLS-1$
+		STATIC("static"), //$NON-NLS-1$
+		STATICVAR("staticvar"), //$NON-NLS-1$
+		TODO("todo"), //$NON-NLS-1$
+		VAR("var"), //$NON-NLS-1$
+		PACKAGE("package"), //$NON-NLS-1$
+		ACCESS("access"), //$NON-NLS-1$
+		CATEGORY("category"), //$NON-NLS-1$
+		COPYRIGHT("copyright"), //$NON-NLS-1$
+		DESC("desc"), //$NON-NLS-1$
+		EXAMPLE("example"), //$NON-NLS-1$
+		FILESOURCE("filesource"), //$NON-NLS-1$
+		IGNORE("ignore"), //$NON-NLS-1$
+		INTERNAL("internal"), //$NON-NLS-1$
+		LICENSE("license"), //$NON-NLS-1$
+		LINK("link"), //$NON-NLS-1$
+		SINCE("since"), //$NON-NLS-1$
+		SUBPACKAGE("subpackage"), //$NON-NLS-1$
+		TUTORIAL("tutorial"), //$NON-NLS-1$
+		USES("uses"), //$NON-NLS-1$
+		VERSION("version"), //$NON-NLS-1$
+		THROWS("throws"), //$NON-NLS-1$
+		PROPERTY("property"), //$NON-NLS-1$
+		PROPERTY_READ("property-read"), //$NON-NLS-1$
+		PROPERTY_WRITE("property-write"), //$NON-NLS-1$
+		METHOD("method"), //$NON-NLS-1$
+		NAMESPACE("namespace"), //$NON-NLS-1$
+		INHERITDOC("inheritdoc", "{@inheritdoc}"), //$NON-NLS-1$ //$NON-NLS-2$
+		EXCEPTION("exception"), //$NON-NLS-1$
+		MAGIC("magic"); //$NON-NLS-1$
 
-		ABSTRACT(PHPDocTagKinds.ABSTRACT, "abstract"), //$NON-NLS-1$
-		AUTHOR(PHPDocTagKinds.AUTHOR, "author"), //$NON-NLS-1$
-		DEPRECATED(PHPDocTagKinds.DEPRECATED, "deprecated"), //$NON-NLS-1$
-		FINAL(PHPDocTagKinds.FINAL, "final"), //$NON-NLS-1$
-		GLOBAL(PHPDocTagKinds.GLOBAL, "global"), //$NON-NLS-1$
-		NAME(PHPDocTagKinds.NAME, "name"), //$NON-NLS-1$
-		RETURN(PHPDocTagKinds.RETURN, "return"), //$NON-NLS-1$
-		PARAM(PHPDocTagKinds.PARAM, "param"), //$NON-NLS-1$
-		SEE(PHPDocTagKinds.SEE, "see"), //$NON-NLS-1$
-		STATIC(PHPDocTagKinds.STATIC, "static"), //$NON-NLS-1$
-		STATICVAR(PHPDocTagKinds.STATICVAR, "staticvar"), //$NON-NLS-1$
-		TODO(PHPDocTagKinds.TODO, "todo"), //$NON-NLS-1$
-		VAR(PHPDocTagKinds.VAR, "var"), //$NON-NLS-1$
-		PACKAGE(PHPDocTagKinds.PACKAGE, "package"), //$NON-NLS-1$
-		ACCESS(PHPDocTagKinds.ACCESS, "access"), //$NON-NLS-1$
-		CATEGORY(PHPDocTagKinds.CATEGORY, "category"), //$NON-NLS-1$
-		COPYRIGHT(PHPDocTagKinds.COPYRIGHT, "copyright"), //$NON-NLS-1$
-		DESC(PHPDocTagKinds.DESC, "desc"), //$NON-NLS-1$
-		EXAMPLE(PHPDocTagKinds.EXAMPLE, "example"), //$NON-NLS-1$
-		FILESOURCE(PHPDocTagKinds.FILESOURCE, "filesource"), //$NON-NLS-1$
-		IGNORE(PHPDocTagKinds.IGNORE, "ignore"), //$NON-NLS-1$
-		INTERNAL(PHPDocTagKinds.INTERNAL, "internal"), //$NON-NLS-1$
-		LICENSE(PHPDocTagKinds.LICENSE, "license"), //$NON-NLS-1$
-		LINK(PHPDocTagKinds.LINK, "link"), //$NON-NLS-1$
-		SINCE(PHPDocTagKinds.SINCE, "since"), //$NON-NLS-1$
-		SUBPACKAGE(PHPDocTagKinds.SUBPACKAGE, "subpackage"), //$NON-NLS-1$
-		TUTORIAL(PHPDocTagKinds.TUTORIAL, "tutorial"), //$NON-NLS-1$
-		USES(PHPDocTagKinds.USES, "uses"), //$NON-NLS-1$
-		VERSION(PHPDocTagKinds.VERSION, "version"), //$NON-NLS-1$
-		THROWS(PHPDocTagKinds.THROWS, "throws"), //$NON-NLS-1$
-		PROPERTY(PHPDocTagKinds.PROPERTY, "property"), //$NON-NLS-1$
-		PROPERTY_READ(PHPDocTagKinds.PROPERTY_READ, "property-read"), //$NON-NLS-1$
-		PROPERTY_WRITE(PHPDocTagKinds.PROPERTY_WRITE, "property-write"), //$NON-NLS-1$
-		METHOD(PHPDocTagKinds.METHOD, "method"), //$NON-NLS-1$
-		NAMESPACE(PHPDocTagKinds.NAMESPACE, "namespace"), //$NON-NLS-1$
-		INHERITDOC(PHPDocTagKinds.INHERITDOC, "inheritdoc", "{@inheritdoc}"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		int tagKind;
 		String name;
-		String fullTagValue;
+		String value;
 
-		private static class Mapping {
-			private static Map<Integer, Tag> map = new HashMap<Integer, Tag>();
+		private static final class Mapping {
+			private static final Map<Integer, TagKind> mapIds = new HashMap<Integer, TagKind>();
+			private static final Map<String, TagKind> mapNames = new TreeMap<String, TagKind>(
+					String.CASE_INSENSITIVE_ORDER);
+			private static final Map<String, TagKind> mapValues = new TreeMap<String, TagKind>(
+					String.CASE_INSENSITIVE_ORDER);
 		}
 
-		private Tag(int tagKind, String name) {
-			this(tagKind, name, '@' + name);
+		private TagKind(String name) {
+			this(name, '@' + name);
 		}
 
-		private Tag(int tagKind, String name, String fullTagValue) {
-			this.tagKind = tagKind;
+		private TagKind(String name, String value) {
 			this.name = name;
-			this.fullTagValue = fullTagValue;
-			Mapping.map.put(tagKind, this);
+			this.value = value;
+			Mapping.mapIds.put(getId(), this);
+			Mapping.mapNames.put(this.name, this);
+			Mapping.mapValues.put(this.value, this);
 		}
 
-		public int getTagKind() {
-			return tagKind;
-		}
-
+		// will never be null
 		public String getName() {
 			return name;
 		}
 
-		public String getFullTagValue() {
-			return fullTagValue;
+		// will never be null
+		public String getValue() {
+			return value;
 		}
 
-		public static String getTagName(int tagKind) {
-			return Mapping.map.get(tagKind).getName();
+		// for backward compatibility with PHPDocTagKinds
+		public int getId() {
+			// the ordinal value of a TagKind element
+			// must be the value of its corresponding
+			// PHPDocTagKinds property, so for example
+			// getTagKind(PROPERTY_READ).ordinal() is equal to
+			// PHPDocTagKinds.PROPERTY_READ
+			return ordinal();
 		}
 
-		public static String getFullTagValue(int tagKind) {
-			return Mapping.map.get(tagKind).getFullTagValue();
+		// For backward compatibility with PHPDocTagKinds.
+		// Can be null.
+		public static TagKind getTagKind(int tagId) {
+			return Mapping.mapIds.get(tagId);
+		}
+
+		// Search a TagKind by its name.
+		// The search is case-insensitive.
+		public static TagKind getTagKindFromName(String name) {
+			return Mapping.mapNames.get(name);
+		}
+
+		// Search a TagKind by its value.
+		// The search is case-insensitive.
+		public static TagKind getTagKindFromValue(String value) {
+			return Mapping.mapValues.get(value);
 		}
 	}
 
-	private final int tagKind;
+	private final TagKind tagKind;
 	private final String matchedTag;
 	private String value;
 	private List<Scalar> texts;
@@ -116,9 +138,12 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	private List<String> descTexts;
 	private String trimmedDescText;
 
-	public PHPDocTag(int start, int end, int tagKind, String matchedTag, String value, List<Scalar> texts) {
+	public PHPDocTag(int start, int end, TagKind tag, String matchedTag, String value, List<Scalar> texts) {
 		super(start, end);
-		this.tagKind = tagKind;
+		if (!(0 <= start && start <= end) || tag == null || matchedTag == null || value == null || texts == null) {
+			throw new IllegalArgumentException();
+		}
+		this.tagKind = tag;
 		this.matchedTag = matchedTag;
 		this.value = value;
 		this.texts = texts;
@@ -251,13 +276,14 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		// For all unsupported tags
 		int wordsToSkip = 0;
 
-		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS || tagKind == SEE) {
+		if (tagKind == TagKind.RETURN || tagKind == TagKind.VAR || tagKind == TagKind.THROWS
+				|| tagKind == TagKind.SEE) {
 
 			// Read first word
 			int wordStart = PHPTextSequenceUtilities.readForwardSpaces(value, 0);
 			int wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, wordStart);
 
-			if (tagKind == VAR && wordStart < wordEnd) {
+			if (tagKind == TagKind.VAR && wordStart < wordEnd) {
 
 				String word = value.substring(wordStart, wordEnd);
 				if (word.charAt(0) == '$') {
@@ -280,7 +306,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				wordStart = PHPTextSequenceUtilities.readForwardSpaces(value, wordEnd);
 				wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, wordStart);
 			}
-			if (tagKind == VAR && variableReference == null && wordStart < wordEnd) {
+			if (tagKind == TagKind.VAR && variableReference == null && wordStart < wordEnd) {
 
 				String word = value.substring(wordStart, wordEnd);
 				if (word.charAt(0) == '$') {
@@ -289,7 +315,8 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 					wordsToSkip++;
 				}
 			}
-		} else if (tagKind == PARAM || tagKind == PROPERTY || tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
+		} else if (tagKind == TagKind.PARAM || tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ
+				|| tagKind == TagKind.PROPERTY_WRITE) {
 
 			int firstWordStart = PHPTextSequenceUtilities.readForwardSpaces(value, 0);
 			int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(value, firstWordStart);
@@ -346,7 +373,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		return ASTNodeKinds.PHP_DOC_TAG;
 	}
 
-	public int getTagKind() {
+	/**
+	 * @return a non-null TagKind element
+	 */
+	public TagKind getTagKind() {
 		return tagKind;
 	}
 
@@ -399,30 +429,22 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	public boolean isValidPropertiesTag() {
-		return (tagKind == PROPERTY || tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE)
+		return (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ || tagKind == TagKind.PROPERTY_WRITE)
 				&& singleTypeReference != null && variableReference != null;
 	}
 
 	public boolean isValidParamTag() {
-		return tagKind == PARAM && singleTypeReference != null && variableReference != null;
+		return tagKind == TagKind.PARAM && singleTypeReference != null && variableReference != null;
 	}
 
 	public boolean isValidVarTag() {
 		// NB: the variable reference is optional for @var tags
-		return tagKind == VAR && singleTypeReference != null;
+		return tagKind == TagKind.VAR && singleTypeReference != null;
 	}
 
 	public void adjustStart(int start) {
 		setStart(sourceStart() + start);
 		setEnd(sourceEnd() + start);
-	}
-
-	public static String getTagKind(int kind) {
-		String name = Tag.getTagName(kind);
-		if (name != null) {
-			return name;
-		}
-		return ERROR;
 	}
 
 }

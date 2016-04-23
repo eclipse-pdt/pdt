@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -345,10 +345,6 @@ public interface PHPRegionTypes {
 
 	static final String PHP_SELF = "PHP_SELF"; //$NON-NLS-1$
 
-	static final String PHPDOC_VAR = "PHPDOC_VAR"; //$NON-NLS-1$
-
-	static final String PHPDOC_SEE = "PHPDOC_SEE"; //$NON-NLS-1$
-
 	static final String PHP_COMMENT = "PHP_COMMENT"; //$NON-NLS-1$
 
 	static final String PHP_COMMENT_START = "PHP_COMMENT_START"; //$NON-NLS-1$
@@ -363,73 +359,11 @@ public interface PHPRegionTypes {
 
 	static final String PHPDOC_COMMENT_END = "PHPDOC_COMMENT_END"; //$NON-NLS-1$
 
-	static final String PHPDOC_NAME = "PHPDOC_NAME"; //$NON-NLS-1$
-
-	static final String PHPDOC_DESC = "PHPDOC_DESC"; //$NON-NLS-1$
-
 	static final String PHPDOC_TODO = "PHPDOC_TODO"; //$NON-NLS-1$
 
-	static final String PHPDOC_LINK = "PHPDOC_LINK"; //$NON-NLS-1$
-
-	static final String PHPDOC_EXAMPLE = "PHPDOC_EXAMPLE"; //$NON-NLS-1$
-
-	static final String PHPDOC_LICENSE = "PHPDOC_LICENSE"; //$NON-NLS-1$
-
-	static final String PHPDOC_PACKAGE = "PHPDOC_PACKAGE"; //$NON-NLS-1$
-
-	static final String PHPDOC_VERSION = "PHPDOC_VERSION"; //$NON-NLS-1$
-
-	static final String PHPDOC_ABSTRACT = "PHPDOC_ABSTRACT"; //$NON-NLS-1$
-
-	static final String PHPDOC_INTERNAL = "PHPDOC_INTERNAL"; //$NON-NLS-1$
-
-	static final String PHPDOC_TUTORIAL = "PHPDOC_TUTORIAL"; //$NON-NLS-1$
-
-	static final String PHPDOC_METHOD = "PHPDOC_METHOD"; //$NON-NLS-1$
-
-	static final String PHPDOC_PROPERTY = "PHPDOC_PROPERTY"; //$NON-NLS-1$
-
-	static final String PHPDOC_USES = "PHPDOC_USES"; //$NON-NLS-1$
-
-	static final String PHPDOC_CATEGORY = "PHPDOC_CATEGORY"; //$NON-NLS-1$
+	static final String PHPDOC_GENERIC_TAG = "PHPDOC_GENERIC_TAG"; //$NON-NLS-1$
 
 	static final String UNKNOWN_TOKEN = "UNKNOWN_TOKEN"; //$NON-NLS-1$
-
-	static final String PHPDOC_FINAL = "PHPDOC_FINAL"; //$NON-NLS-1$
-
-	static final String PHPDOC_SINCE = "PHPDOC_SINCE"; //$NON-NLS-1$
-
-	static final String PHPDOC_PARAM = "PHPDOC_PARAM"; //$NON-NLS-1$
-
-	static final String PHPDOC_MAGIC = "PHPDOC_MAGIC"; //$NON-NLS-1$
-
-	static final String PHPDOC_RETURN = "PHPDOC_RETURN"; //$NON-NLS-1$
-
-	static final String PHPDOC_AUTHOR = "PHPDOC_AUTHOR"; //$NON-NLS-1$
-
-	static final String PHPDOC_ACCESS = "PHPDOC_ACCESS"; //$NON-NLS-1$
-
-	static final String PHPDOC_IGNORE = "PHPDOC_IGNORE"; //$NON-NLS-1$
-
-	static final String PHPDOC_THROWS = "PHPDOC_THROWS"; //$NON-NLS-1$
-
-	static final String PHPDOC_STATIC = "PHPDOC_STATIC"; //$NON-NLS-1$
-
-	static final String PHPDOC_GLOBAL = "PHPDOC_GLOBAL"; //$NON-NLS-1$
-
-	static final String PHPDOC_SUBPACKAGE = "PHPDOC_SUBPACKAGE"; //$NON-NLS-1$
-
-	static final String PHPDOC_FILESOURCE = "PHPDOC_FILESOURCE"; //$NON-NLS-1$
-
-	static final String PHPDOC_EXCEPTION = "PHPDOC_EXCEPTION"; //$NON-NLS-1$
-
-	static final String PHPDOC_COPYRIGHT = "PHPDOC_COPYRIGHT"; //$NON-NLS-1$
-
-	static final String PHPDOC_STATICVAR = "PHPDOC_STATICVAR"; //$NON-NLS-1$
-
-	static final String PHPDOC_NAMESPACE = "PHPDOC_NAMESPACE"; //$NON-NLS-1$
-
-	static final String PHPDOC_DEPRECATED = "PHPDOC_DEPRECATED"; //$NON-NLS-1$
 
 	static final String PHP_HEREDOC_TAG = "PHP_HEREDOC_TAG"; //$NON-NLS-1$
 

@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.documentModel.parser.php56;
 
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%
@@ -668,42 +669,23 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
 <ST_PHP_DOC_COMMENT>{
 
-    "@access"        {return PHPDOC_ACCESS;}
-    "@abstract"      {return PHPDOC_ABSTRACT;}
-    "@author"        {return PHPDOC_AUTHOR;}
-    "@category"      {return PHPDOC_CATEGORY;}
-    "@copyright"     {return PHPDOC_COPYRIGHT;}
-    "@deprecated"    {return PHPDOC_DEPRECATED;}
-    "@desc"          {return PHPDOC_DESC;}
-    "@example"       {return PHPDOC_EXAMPLE;}
-    "@exception"     {return PHPDOC_EXCEPTION;}
-    "@final"         {return PHPDOC_FINAL;}
-    "@filesource"    {return PHPDOC_FILESOURCE;}
-    "@global"        {return PHPDOC_GLOBAL;}
-    "@ignore"        {return PHPDOC_IGNORE;}
-    "@internal"      {return PHPDOC_INTERNAL;}
-    "@license"       {return PHPDOC_LICENSE;}
-    "@link"          {return PHPDOC_LINK;}
-    "@magic"         {return PHPDOC_MAGIC;}
-    "@method"        {return PHPDOC_METHOD;}
-    "@namespace"     {return PHPDOC_NAMESPACE;}
-    "@name"          {return PHPDOC_NAME;}
-    "@package"       {return PHPDOC_PACKAGE;}
-    "@param"         {return PHPDOC_PARAM;}
-    "@property"      {return PHPDOC_PROPERTY;}
-    "@return"        {return PHPDOC_RETURN;}
-    "@see"           {return PHPDOC_SEE;}
-    "@since"         {return PHPDOC_SINCE;}
-    "@static"        {return PHPDOC_STATIC;}
-    "@staticvar"     {return PHPDOC_STATICVAR;}
-    "@subpackage"    {return PHPDOC_SUBPACKAGE;}
-    "@throws"        {return PHPDOC_THROWS;}
-    "@tutorial"      {return PHPDOC_TUTORIAL;}
-    "@uses"		     {return PHPDOC_USES;}
-    "@var"           {return PHPDOC_VAR;}
-    "@version"       {return PHPDOC_VERSION;}
+    "{@"[a-zA-Z-]+"}" {
+        if (TagKind.getTagKindFromValue(yytext()) != null) {
+            return PHPDOC_GENERIC_TAG;
+        }
+        return PHPDOC_COMMENT;
+    }
 
-   {ANY_CHAR}     {return PHPDOC_COMMENT;}
+    "@"[a-zA-Z-]+ {
+        TagKind tagkind = TagKind.getTagKindFromValue(yytext());
+        if (tagkind != null /* ignore @todo tag */
+            && !"@todo".equalsIgnoreCase(tagkind.getValue())) {
+                return PHPDOC_GENERIC_TAG;
+        }
+        return PHPDOC_COMMENT;
+    }
+
+    {ANY_CHAR} {return PHPDOC_COMMENT;}
 }
 
 <ST_PHP_IN_SCRIPTING>"/*" {
