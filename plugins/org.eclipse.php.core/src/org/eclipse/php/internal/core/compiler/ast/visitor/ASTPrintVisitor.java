@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -814,7 +814,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(PHPDocTag s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
-		parameters.put("tagKind", PHPDocTag.getTagKind(s.getTagKind())); //$NON-NLS-1$
+		parameters.put("tagKind", s.getTagKind().getName()); //$NON-NLS-1$
 		parameters.put("value", s.getValue()); //$NON-NLS-1$
 		xmlWriter.startTag("PHPDocTag", parameters); //$NON-NLS-1$
 		return true;

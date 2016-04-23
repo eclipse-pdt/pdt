@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+/**
+ * Replaced by PHPDocTag.TagKind#getId()
+ * 
+ * Each property value here can be used to retrieve the corresponding TagKind
+ * element, for example:<br>
+ * <code>PHPDocTag.TagKind.getTagKind(PROPERTY_READ);</code>
+ * 
+ * @deprecated
+ */
 public interface PHPDocTagKinds {
 
 	public static final int ABSTRACT = 0;
@@ -84,5 +93,9 @@ public interface PHPDocTagKinds {
 	public static final int NAMESPACE = 34;
 
 	public static final int INHERITDOC = 35;
+
+	public static final int EXCEPTION = 36;
+
+	public static final int MAGIC = 37;
 
 }

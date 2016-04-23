@@ -85,6 +85,7 @@
 
   /* The following fields are added in order to support the change in zzRefill */
   private String oldString = null;
+  private boolean useOldString = false;
   private int startPos = 0;
 
   /**
@@ -104,7 +105,13 @@
    */
   private boolean zzRefill() throws java.io.IOException {
 
-    oldString = new String(zzBuffer, startPos, zzMarkedPos-startPos);
+    if (useOldString) {
+        String saveOldString = oldString;
+        oldString = new String(zzBuffer, startPos, zzMarkedPos - startPos);
+        if (saveOldString != null) {
+            oldString = saveOldString + oldString;
+        }
+    }
 
     /* first: make room (if you can) */
     if (zzStartRead > 0) {
@@ -178,10 +185,16 @@
 
     /* otherwise: need to refill the buffer */
 
+    String saveOldString = oldString;
+    oldString = null;
+
     /* first: make room (if you can) */
     if (zzRefill()) {
+        oldString = saveOldString;
         return YYEOF;
     }
+
+    oldString = saveOldString;
 
     return zzBuffer[zzCurrentPos++];
   }
@@ -218,8 +231,8 @@
     zzEOFDone = false;
     zzEndRead = zzStartRead = 0;
     zzCurrentPos = zzMarkedPos = _zzPushbackPos = startPos = 0;
-    oldString = null;
     zzFinalHighSurrogate = 0;
+    oldString = null;
     yyline = yychar = yycolumn = 0;
     zzLexicalState = YYINITIAL;
     if (zzBuffer.length > ZZ_BUFFERSIZE)
@@ -324,7 +337,15 @@
 	 * user method - common.sse
 	 */
 	private void updateStartPos() {
-		startPos = zzMarkedPos;
+		updateStartPos(zzMarkedPos);
+	}
+
+
+	/**
+	 * user method - common.sse
+	 */
+	private void updateStartPos(int position) {
+		startPos = position;
 		oldString = null;
 	}
 
