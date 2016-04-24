@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>features</artifactId>
@@ -11,13 +12,6 @@
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<modules>
-		<module>org.eclipse.php-feature</module>
-		<module>org.eclipse.php.mylyn-feature</module>
-		<module>org.eclipse.php.source-feature</module>
-		<module>org.eclipse.php.test-feature</module>
-		<module>org.eclipse.php.sdk-feature</module>
-	</modules>
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -46,6 +40,23 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>eclipse-current</id>
+			<activation>
+				<property>
+					<name>!eclipseNext</name>
+				</property>
+			</activation>
+			<modules>
+				<module>org.eclipse.php.importer-feature</module>
+			</modules>
+		</profile>
 	</profiles>
-
+	<modules>
+		<module>org.eclipse.php-feature</module>
+		<module>org.eclipse.php.mylyn-feature</module>
+		<module>org.eclipse.php.source-feature</module>
+		<module>org.eclipse.php.test-feature</module>
+		<module>org.eclipse.php.sdk-feature</module>
+	</modules>
 </project>
