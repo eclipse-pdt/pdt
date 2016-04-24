@@ -87,5 +87,37 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>eclipse-next</id>
+			<activation>
+				<property>
+					<name>eclipseNext</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<id>copy-category</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target name="copy">
+										<copy file="${basedir}/category.next.xml" tofile="${basedir}/category.xml"
+											overwrite="true" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>
