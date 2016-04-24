@@ -15,6 +15,9 @@
    <feature url="features/org.eclipse.php.sdk_4.0.0.qualifier.jar" id="org.eclipse.php.sdk" version="4.0.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
+   <feature url="features/org.eclipse.php.importer_4.0.0.qualifier.jar" id="org.eclipse.php.importer" version="4.0.0.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
    <category-def name="org.eclipse.php.category" label="PHP Development Tools"/>
    <category-def name="org.eclipse.php.sdk.category" label="PHP Development Tools (SDK)"/>
 </site>
