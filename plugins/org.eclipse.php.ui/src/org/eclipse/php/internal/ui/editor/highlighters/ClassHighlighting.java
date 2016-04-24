@@ -7,12 +7,14 @@
  *
  * Contributors:
  *   William Candillon {wcandillon@gmail.com} - Initial implementation
+ *   Dawid Pakuła [469267]
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
@@ -70,11 +72,26 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			Expression type = param.getParameterType();
 			if (type instanceof NamespaceName) {
 				highlightNamespaceType((NamespaceName) type);
-			} else if (type instanceof Identifier
-					// do not highlight array type hints as types
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=463556
-					&& !"array".equalsIgnoreCase(((Identifier) type).getName())) { //$NON-NLS-1$
-				highlight(type);
+			} else if (type instanceof Identifier) {
+				if (!PHPSimpleTypes.isHintable(((Identifier) type).getName(), param.getAST().apiLevel())) {
+					highlight(type);
+				}
+			}
+			return true;
+		}
+
+		@Override
+		public boolean visit(FunctionDeclaration functionDeclaration) {
+			if (functionDeclaration.getReturnType() == null) {
+				return true;
+			}
+			Identifier type = functionDeclaration.getReturnType();
+			if (type instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) type);
+			} else if (type != null) {
+				if (!PHPSimpleTypes.isHintable(type.getName(), functionDeclaration.getAST().apiLevel())) {
+					highlight(type);
+				}
 			}
 			return true;
 		}
@@ -110,7 +127,9 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		private void highlightNamespaceType(NamespaceName name) {
 			List<Identifier> segments = name.segments();
 			Identifier segment = segments.get(segments.size() - 1);
-			highlight(segment);
+			if (!(segments.size() == 1 && PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel()))) {
+				highlight(segment);
+			}
 		}
 	}
 
