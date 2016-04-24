@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [469503]
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
@@ -26,6 +27,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.LabelProviderUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
@@ -39,7 +41,7 @@ import org.eclipse.swt.graphics.Image;
 public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
-		super(cp, store);
+		super(cp, store == null ? PHPUiPlugin.getDefault().getPreferenceStore() : store);
 		super.setIsFlatLayout(false);
 	}
 

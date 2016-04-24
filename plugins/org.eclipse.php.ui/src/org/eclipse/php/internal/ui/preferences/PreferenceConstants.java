@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 206 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Zend Technologies - initial API and implementation
+ *     Dawid Pakuła [469503]
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
@@ -1066,8 +1067,13 @@ public class PreferenceConstants {
 		store.setDefault(SHOW_PHP_CHILDREN, true);
 		store.setDefault(SHOW_CU_CHILDREN, true);
 
-		store.setDefault(APPEARANCE_METHOD_RETURNTYPE, false);
+		store.setDefault(APPEARANCE_METHOD_RETURNTYPE, true);
 		store.setDefault(APPEARANCE_METHOD_TYPEPARAMETERS, true);
+
+		store.setDefault(org.eclipse.dltk.ui.PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, true);
+		store.setDefault(org.eclipse.dltk.ui.PreferenceConstants.APPEARANCE_METHOD_TYPEPARAMETERS, true);
+		store.setDefault(org.eclipse.dltk.ui.PreferenceConstants.APPEARANCE_METHOD_PARAMETER_TYPES, false);
+		store.setDefault(org.eclipse.dltk.ui.PreferenceConstants.APPEARANCE_METHOD_PARAMETER_NAMES, true);
 		store.setDefault(APPEARANCE_ENABLE_VISIBILITY_SORT_ORDER, false);
 
 		store.setDefault(EDITOR_CLOSE_BRACKETS, true);
