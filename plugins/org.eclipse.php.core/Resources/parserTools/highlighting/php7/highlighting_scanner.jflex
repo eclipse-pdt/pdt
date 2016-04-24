@@ -42,6 +42,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_LINE_COMMENT
 %state ST_PHP_HIGHLIGHTING_ERROR
 %state ST_PHP_END_NOWDOC
+%state ST_PHP_IDENTIFIER
 
 %{
     public PhpLexer(int state){
@@ -152,10 +153,16 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_IN_SCRIPTING>"function" {
+    pushState(ST_PHP_IDENTIFIER);
+    return PHP_FUNCTION;
+}
+
+<ST_PHP_IDENTIFIER>"function" {
     return PHP_FUNCTION;
 }
 
 <ST_PHP_IN_SCRIPTING>"const" {
+    pushState(ST_PHP_IDENTIFIER);
     return PHP_CONST;
 }
 
@@ -332,7 +339,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     }
 }
 
-<ST_PHP_IN_SCRIPTING,ST_PHP_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
+<ST_PHP_IN_SCRIPTING,ST_PHP_LOOKING_FOR_PROPERTY,ST_PHP_IDENTIFIER>{WHITESPACE}+ {
 	return WHITESPACE;
 }
 
@@ -340,18 +347,22 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_OBJECT_OPERATOR;
 }
 
-<ST_PHP_LOOKING_FOR_PROPERTY>{LABEL} {
+<ST_PHP_LOOKING_FOR_PROPERTY,ST_PHP_IDENTIFIER>{LABEL} {
     popState();
     return PHP_LABEL;
 }
 
-<ST_PHP_LOOKING_FOR_PROPERTY>{ANY_CHAR} {
+<ST_PHP_LOOKING_FOR_PROPERTY,ST_PHP_IDENTIFIER>{ANY_CHAR} {
     yypushback(1);
     popState();
 }
 
 <ST_PHP_IN_SCRIPTING>"::" {
+    pushState(ST_PHP_IDENTIFIER);
     return PHP_PAAMAYIM_NEKUDOTAYIM;
+}
+<ST_PHP_IDENTIFIER>"::" {
+	return PHP_PAAMAYIM_NEKUDOTAYIM;
 }
 
 <ST_PHP_IN_SCRIPTING>"\\" {
@@ -504,6 +515,9 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
 <ST_PHP_IN_SCRIPTING>{TOKENS} {
     return PHP_TOKEN;
+}
+<ST_PHP_IDENTIFIER>"&" {
+	return PHP_TOKEN;
 }
 
 <ST_PHP_IN_SCRIPTING>{CLOSE_EXPRESSION} {
