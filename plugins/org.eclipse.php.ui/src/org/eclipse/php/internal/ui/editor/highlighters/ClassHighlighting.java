@@ -121,7 +121,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setEnabledByDefault(false).setDefaultTextColor(0, 80, 50);
+		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 80, 50);
 	}
 
 	public String getDisplayName() {

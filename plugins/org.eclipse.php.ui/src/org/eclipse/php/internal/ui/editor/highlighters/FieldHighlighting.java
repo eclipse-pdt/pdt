@@ -199,7 +199,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setDefaultTextColor(0, 0, 192);
+		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
 
 	public String getDisplayName() {
