@@ -17,6 +17,7 @@
 		<module>org.eclipse.php.source-feature</module>
 		<module>org.eclipse.php.test-feature</module>
 		<module>org.eclipse.php.sdk-feature</module>
+		<module>org.eclipse.php.importer-feature</module>
 	</modules>
 	<profiles>
 		<profile>
