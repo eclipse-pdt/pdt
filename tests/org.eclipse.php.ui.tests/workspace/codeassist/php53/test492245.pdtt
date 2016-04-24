@@ -1,0 +1,23 @@
+--TEST--
+Test implements type only
+Bug http://eclip.se/492245
+--FILE--
+<?php
+interface IFoo 
+{
+  const BAR = "";
+}
+
+class Foo implements IFoo|
+{}
+?>
+--EXPECT--
+<?php
+interface IFoo 
+{
+  const BAR = "";
+}
+
+class Foo implements IFoo
+{}
+?>

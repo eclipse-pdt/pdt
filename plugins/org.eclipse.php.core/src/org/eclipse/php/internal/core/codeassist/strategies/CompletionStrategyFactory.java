@@ -213,7 +213,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					new NamespaceNonFinalClassesStrategy(context) };
 		}
 		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalInterfacesStrategy(context) };
+			return new ICompletionStrategy[] { new NonFinalInterfacesStrategy(context) };
 		}
 		if (contextClass == NamespaceUseFunctionNameContext.class) {
 			return new ICompletionStrategy[] { new NamespaceUseFunctionNameStrategy(context) };
