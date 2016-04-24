@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [469267]
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
@@ -51,16 +52,19 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 	private TypeReference typeReference;
 	private IEvaluatedType result;
+	private PHPVersion phpVersion;
 
 	public TypeReferenceEvaluator(IGoal goal, TypeReference typeReference) {
 		super(goal);
 		this.typeReference = typeReference;
+		if (goal.getContext() instanceof ISourceModuleContext) {
+			phpVersion = ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule());
+		}
 	}
 
 	private boolean isSelfOrStatic() {
 		String name = typeReference.getName();
-		if (goal.getContext() instanceof ISourceModuleContext && PHPVersion.PHP5_4.isLessThan(
-				ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule()))) {
+		if (phpVersion != null && PHPVersion.PHP5_4.isLessThan(phpVersion)) {
 			name = name.toLowerCase();
 		}
 
@@ -69,8 +73,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 	private boolean isParent() {
 		String name = typeReference.getName();
-		if (goal.getContext() instanceof ISourceModuleContext && PHPVersion.PHP5_4.isLessThan(
-				ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule()))) {
+		if (phpVersion != null && PHPVersion.PHP5_4.isLessThan(phpVersion)) {
 			name = name.toLowerCase();
 		}
 
@@ -212,6 +215,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 					result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 				}
 			}
+		} else if (PHPSimpleTypes.isHintable(typeReference.getName(), phpVersion)) {
+			result = PHPSimpleTypes.fromString(typeReference.getName());
 		} else {
 			String parentNamespace = null;
 
