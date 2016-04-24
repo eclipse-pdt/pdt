@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
- *     Dawid Pakuła - [444025]
+ *     Dawid Pakuła [444025] [469503] 
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
@@ -17,7 +17,10 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.internal.ui.filters.FilterMessages;
-import org.eclipse.dltk.ui.*;
+import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.ProblemsLabelDecorator;
+import org.eclipse.dltk.ui.ScriptElementImageProvider;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -380,12 +383,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	class PHPAppearanceAwareLabelProvider extends AppearanceAwareLabelProvider {
 
 		public PHPAppearanceAwareLabelProvider(IPreferenceStore store) {
-			super(store);
+			super(store == null ? PHPUiPlugin.getDefault().getPreferenceStore() : store);
 			fImageLabelProvider = new UseStatementAwareImageProvider();
 		}
 
 		public PHPAppearanceAwareLabelProvider(long textFlags, int imageFlags, IPreferenceStore store) {
-			super(textFlags, imageFlags, store);
+			super(textFlags, imageFlags, store == null ? PHPUiPlugin.getDefault().getPreferenceStore() : store);
 			fImageLabelProvider = new UseStatementAwareImageProvider();
 		}
 

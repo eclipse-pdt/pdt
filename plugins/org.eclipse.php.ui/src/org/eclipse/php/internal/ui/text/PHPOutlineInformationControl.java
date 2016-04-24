@@ -39,7 +39,7 @@ import org.eclipse.ui.PlatformUI;
 public class PHPOutlineInformationControl extends ScriptOutlineInformationControl {
 
 	public PHPOutlineInformationControl(Shell parent, int shellStyle, int treeStyle, String commandId) {
-		super(parent, shellStyle, treeStyle, commandId, null);
+		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin.getDefault().getPreferenceStore());
 	}
 
 	protected ITypeHierarchy getSuperTypeHierarchy(org.eclipse.dltk.core.IType type) {
