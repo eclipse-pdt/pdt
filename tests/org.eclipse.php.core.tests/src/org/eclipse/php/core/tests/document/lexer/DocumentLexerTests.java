@@ -43,9 +43,7 @@ public class DocumentLexerTests {
 				"/workspace/document_lexer/php54", "/workspace/document_lexer/php55" });
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/document_lexer/php53",
 				"/workspace/document_lexer/php54", "/workspace/document_lexer/php56" });
-		TESTS.put(PHPVersion.PHP7_0,
-				new String[] { "/workspace/document_lexer/php53", "/workspace/document_lexer/php54",
-						"/workspace/document_lexer/php56", "/workspace/document_lexer/php7" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/document_lexer/php7" });
 	};
 
 	private final PHPVersion version;
@@ -60,12 +58,9 @@ public class DocumentLexerTests {
 		AbstractPhpLexer lexer = PhpLexerFactory.createLexer(
 				new InputStreamReader(new ByteArrayInputStream(pdttFile.getFile().trim().getBytes("UTF-8")), "UTF-8"),
 				version);
-		int inScriptingState = lexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(lexer); // different
-																								// lexers
-																								// have
-																								// different
-																								// state
-																								// codes
+		int inScriptingState = lexer.getScriptingState(); // different lexers
+															// have different
+															// state codes
 		lexer.initialize(inScriptingState);
 
 		StringBuilder actualBuf = new StringBuilder();
