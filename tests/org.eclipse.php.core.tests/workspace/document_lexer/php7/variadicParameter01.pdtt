@@ -1,0 +1,29 @@
+--TEST--
+Test variadic parameter
+--FILE--
+<?php 
+function test(...$args){
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE| 
+|2
+PHP_FUNCTION|function|36
+WHITESPACE| |36
+PHP_LABEL|test|2
+PHP_TOKEN|(|2
+PHP_TOKEN|.|2
+PHP_TOKEN|.|2
+PHP_TOKEN|.|2
+PHP_VARIABLE|$args|2
+PHP_TOKEN|)|2
+PHP_CURLY_OPEN|{|2
+WHITESPACE|
+|2
+PHP_CURLY_CLOSE|}|2
+WHITESPACE|
+|2
+PHP_CLOSETAG|?>|2

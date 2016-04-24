@@ -1,0 +1,22 @@
+--TEST--
+Test argument unpacking
+--FILE--
+<?php 
+var_dump(...$args)
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE| 
+|2
+PHP_LABEL|var_dump|2
+PHP_TOKEN|(|2
+PHP_TOKEN|.|2
+PHP_TOKEN|.|2
+PHP_TOKEN|.|2
+PHP_VARIABLE|$args|2
+PHP_TOKEN|)|2
+WHITESPACE|
+|2
+PHP_CLOSETAG|?>|2
