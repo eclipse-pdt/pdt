@@ -1,0 +1,17 @@
+--TEST--
+Test function return type completion
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+class String {
+    public function test(){}
+}
+class Foo {
+    public static function bar():string {}
+}
+
+Foo::bar()->|
+
+--EXPECT--
