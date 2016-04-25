@@ -119,9 +119,7 @@ public class PHPKeywords {
 		synchronized (instances) {
 			if (!instances.containsKey(version)) {
 				PHPKeywords instance;
-				if (PHPVersion.PHP4 == version) {
-					instance = new PHPKeywords(new KeywordInitializerPHP_4());
-				} else if (PHPVersion.PHP5 == version) {
+				if (PHPVersion.PHP5 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5());
 				} else if (PHPVersion.PHP5_3 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_3());
