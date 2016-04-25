@@ -93,10 +93,11 @@ public class TaskPatternsProvider {
 		for (int i = 0; i < workspaceTaskTags.length; i++) {
 			TaskTag tag = workspaceTaskTags[i];
 			String tagString = tag.getTag();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492373
 			if (caseSensitive) {
-				patterns[i] = Pattern.compile(tagString, Pattern.LITERAL);
+				patterns[i] = Pattern.compile("\\B" + Pattern.quote(tagString) + "\\b");
 			} else {
-				patterns[i] = Pattern.compile(tagString, Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
+				patterns[i] = Pattern.compile("\\B" + Pattern.quote(tagString) + "\\b", Pattern.CASE_INSENSITIVE);
 			}
 		}
 
