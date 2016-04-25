@@ -184,12 +184,7 @@ public class AST {
 	 */
 	private AstLexer getLexerInstance(Reader reader, PHPVersion phpVersion, boolean aspTagsAsPhp, boolean useShortTags)
 			throws IOException {
-		if (PHPVersion.PHP4 == phpVersion) {
-			final AstLexer lexer5 = getLexer5(reader);
-			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
-			lexer5.setUseShortTags(useShortTags);
-			return lexer5;
-		} else if (PHPVersion.PHP5 == phpVersion) {
+		if (PHPVersion.PHP5 == phpVersion) {
 			final AstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer5.setUseShortTags(useShortTags);
