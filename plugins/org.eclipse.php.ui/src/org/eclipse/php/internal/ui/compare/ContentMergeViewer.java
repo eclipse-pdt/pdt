@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -366,8 +366,24 @@ public abstract class ContentMergeViewer extends ContentViewer
 
 		// this is used to update the dirty status,if we use
 		// org.eclipse.php.internal.ui.compare.ContentMergeViewer,we will get a
-		// ClassCastException
-		cmv = new org.eclipse.compare.contentmergeviewer.ContentMergeViewer(fStyles, fBundle, fCompareConfiguration) {
+		// ClassCastException.
+		//
+		// Workaround for bug 492440:
+		// we have added our own
+		// this.fCompareConfiguration.addPropertyChangeListener(fPropertyChangeListener).
+		// Do not call
+		// org.eclipse.compare.contentmergeviewer.ContentMergeViewer.fCompareConfiguration.addPropertyChangeListener(fPropertyChangeListener)
+		// with
+		// org.eclipse.compare.contentmergeviewer.ContentMergeViewer.fCompareConfiguration
+		// equal to this.fCompareConfiguration or we'll end up with a NPE at
+		// org.eclipse.compare.contentmergeviewer.ContentMergeViewer.handlePropertyChangeEvent(ContentMergeViewer.java:548).
+		// Setting 3rd constructor parameter to null is enough here to create a
+		// fake CompareConfiguration object used to append the
+		// PropertyChangeListener
+		// org.eclipse.compare.contentmergeviewer.ContentMergeViewer.fPropertyChangeListener
+		// = new IPropertyChangeListener() {...}.
+		cmv = new org.eclipse.compare.contentmergeviewer.ContentMergeViewer(fStyles, fBundle,
+				/* fCompareConfiguration */ null) {
 
 			@Override
 			protected void createControls(Composite composite) {
@@ -558,7 +574,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 		super.setContentProvider(contentProvider);
 	}
 
-			/* package */IMergeViewerContentProvider getMergeContentProvider() {
+	/* package */IMergeViewerContentProvider getMergeContentProvider() {
 		return (IMergeViewerContentProvider) getContentProvider();
 	}
 
@@ -1183,10 +1199,10 @@ public abstract class ContentMergeViewer extends ContentViewer
 		}
 	}
 
-			/*
-			 * Calculates the height of the header.
-			 */
-			/* package */int getHeaderHeight() {
+	/*
+	 * Calculates the height of the header.
+	 */
+	/* package */int getHeaderHeight() {
 		int headerHeight = fLeftLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y;
 		headerHeight = Math.max(headerHeight, fDirectionLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y);
 		return headerHeight;
