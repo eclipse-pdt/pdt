@@ -46,7 +46,12 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 		}
 
 		curr = PHPTextSequenceUtilities.readBackwardSpaces(statementText, curr);
-		if (curr > 0 && statementText.charAt(curr - 1) == ':') {
+		if (curr < 1 || statementText.charAt(curr - 1) != ':') {
+			return false;
+		}
+
+		curr = PHPTextSequenceUtilities.readBackwardSpaces(statementText, curr - 1);
+		if (curr > 0 && statementText.charAt(curr - 1) == ')') {
 			return true;
 		}
 

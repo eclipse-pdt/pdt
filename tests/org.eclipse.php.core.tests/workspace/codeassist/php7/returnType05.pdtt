@@ -1,0 +1,10 @@
+--TEST--
+Test function return type completion
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+function function_name(): str| {
+}
+--EXPECT--
+keyword(string)
