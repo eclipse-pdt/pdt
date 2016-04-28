@@ -139,7 +139,7 @@ public class RefactoringASTParser {
 		if (cuNode != null) {
 			return cuNode;
 		} else {
-			return new RefactoringASTParser(ASTProvider.SHARED_AST_LEVEL, true).parse(typeRoot, null, resolveBindings,
+			return new RefactoringASTParser(PHPVersion.getLatestVersion(), true).parse(typeRoot, null, resolveBindings,
 					ASTProvider.SHARED_AST_STATEMENT_RECOVERY, ASTProvider.SHARED_BINDING_RECOVERY, pm);
 		}
 	}
