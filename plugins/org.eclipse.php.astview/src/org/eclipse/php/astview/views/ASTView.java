@@ -1207,14 +1207,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fExpandAction.setEnabled(!selection.isEmpty());
 		fCollapseAction.setEnabled(!selection.isEmpty());
 		fCopyAction.setEnabled(!selection.isEmpty());
-
-		boolean addEnabled = false;
-		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		if (structuredSelection.size() == 1 && fViewer.getTree().isFocusControl()) {
-			Object first = structuredSelection.getFirstElement();
-			Object unwrapped = ASTView.unwrapAttribute(first);
-			addEnabled = unwrapped != null;
-		}
 	}
 
 	protected void handleEditorPostSelectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -1402,7 +1394,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 
 	protected void performParseBindingFromKey() {
 		// TODO work on this action is required
-		String msg = "Parse Binding from Key";
+		// String msg = "Parse Binding from Key";
 		// String key= askForKey(msg);
 		// if (key == null)
 		// return;
@@ -1441,7 +1433,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		if (dialog.open() != Window.OK)
 			return;
 
-		String handleIdentifier = dialog.getValue();
 		// TODO : work on this action is required
 		/*
 		 * IJavaElement handle= JavaCore.create(handleIdentifier);

@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.wizard;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -570,11 +573,12 @@ public class ChangeParametersControl extends Composite {
 		// installParameterTypeContentAssist(editors[TYPE_PROP].getText());
 		// // editors[TYPE_PROP].setContentAssistant(assistant);
 		// }
-		if (fParamNameProposals.length > 0) {
-			SubjectControlContentAssistant assistant = installParameterNameContentAssist(
-					editors[NEWNAME_PROP].getText());
-			// editors[NEWNAME_PROP].setContentAssistant(assistant);
-		}
+		// if (fParamNameProposals.length > 0) {
+		// SubjectControlContentAssistant assistant =
+		// installParameterNameContentAssist(
+		// editors[NEWNAME_PROP].getText());
+		// editors[NEWNAME_PROP].setContentAssistant(assistant);
+		// }
 
 		for (int i = 0; i < editors.length; i++) {
 			final int editorColumn = i;

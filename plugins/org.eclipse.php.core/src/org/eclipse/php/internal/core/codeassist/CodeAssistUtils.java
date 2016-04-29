@@ -399,8 +399,6 @@ public class CodeAssistUtils {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read
 																								// whitespace
 
-		boolean isClassTriger = false;
-
 		if (endPosition < 2) {
 			return EMPTY_TYPES;
 		}
@@ -408,7 +406,6 @@ public class CodeAssistUtils {
 		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
-			isClassTriger = true;
 		} else {
 			return EMPTY_TYPES;
 		}

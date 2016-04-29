@@ -199,8 +199,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			for (Iterator iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
 					.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
-				ISemanticHighlighting highlighting = SemanticHighlightingManager.getInstance()
-						.getSemanticHighlightings().get(type);
+
 				HighlightingStyle highlightingStyle = highlightingStyleMap.get(type);
 				if (highlightingStyle.isEnabled()) {
 					Position[] positions = highlightingPositionMap.get(type);

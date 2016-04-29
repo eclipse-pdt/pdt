@@ -295,7 +295,6 @@ public class PhpTemplateVariables {
 			String[] knownVars = requestor.getVariables();
 			Set knownVarsSet = new HashSet(Arrays.asList(knownVars));
 
-			List params = variable.getVariableType().getParams();
 			String result = "$" + findUnusedName("index", knownVarsSet); //$NON-NLS-1$ //$NON-NLS-2$
 			variable.setValue(result);
 			variable.setResolved(true);

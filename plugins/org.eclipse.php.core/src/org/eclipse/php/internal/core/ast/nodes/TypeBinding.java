@@ -17,8 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -409,8 +407,6 @@ public class TypeBinding implements ITypeBinding {
 	protected IType[] getSuperTypes() {
 		if (superTypes == null) {
 			if (elements != null && elements.length > 0) {
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(elements[0].getScriptProject());
-
 				Set<String> superTypeNames = new HashSet<String>();
 				for (IModelElement element : elements) {
 					IType type = (IType) element;

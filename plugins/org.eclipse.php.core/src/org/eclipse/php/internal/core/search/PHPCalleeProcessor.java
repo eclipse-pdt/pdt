@@ -35,9 +35,7 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 	private class RequestorAdaptor extends SourceElementRequestorAdaptor {
 		@Override
 		public void acceptMethodReference(String methodName, int argCount, int sourcePosition, int sourceEndPosition) {
-			int off = 0;
 			try {
-				off = method.getSourceRange().getOffset();
 				if (sourcePosition < method.getSourceRange().getOffset()
 						|| sourceEndPosition > method.getSourceRange().getLength()
 								+ method.getSourceRange().getOffset()) {

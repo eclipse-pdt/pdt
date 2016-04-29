@@ -77,8 +77,8 @@ public class ASTMatcher {
 	 * @see #match(Javadoc,Object)
 	 * @since 3.0
 	 */
+	@Deprecated
 	public ASTMatcher(boolean matchDocTags) {
-		this.matchDocTags = matchDocTags;
 	}
 
 	/**
@@ -643,7 +643,6 @@ public class ASTMatcher {
 		if (!(other instanceof InLineHtml)) {
 			return false;
 		}
-		InLineHtml o = (InLineHtml) other;
 
 		return false;
 	}
@@ -864,7 +863,6 @@ public class ASTMatcher {
 		if (!(other instanceof ThrowStatement)) {
 			return false;
 		}
-		ThrowStatement o = (ThrowStatement) other;
 
 		return false;
 	}

@@ -40,15 +40,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implem
 		helpBuffer.setLength(0);
 		try {
 			IRegion startlineInfo = document.getLineInformationOfOffset(startOffset);
-			IRegion endlineInfo = null;
 
-			if (startlineInfo.getOffset() + startlineInfo.getLength() < endOffset) {
-				// meaning the begin and the end of the selection is not in the
-				// same line.
-				endlineInfo = document.getLineInformationOfOffset(endOffset);
-			} else {
-				endlineInfo = startlineInfo;
-			}
 			int lineNumber = document.getLineOfOffset(startOffset);
 
 			if (IndentationUtils.isBlanks(document, startlineInfo.getOffset(), startOffset)) {

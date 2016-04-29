@@ -69,8 +69,8 @@ public class ExtractVariableRefactoring extends Refactoring {
 	private ASTRewrite fRewriter;
 	private AST fAst;
 
-	public ExtractVariableRefactoring(ISourceModule source, IDocument document,
-			int offset, int length) throws CoreException {
+	public ExtractVariableRefactoring(ISourceModule source, IDocument document, int offset, int length)
+			throws CoreException {
 		this.sourceModule = source;
 		this.document = document;
 		this.selectionStartOffset = offset;
@@ -85,15 +85,13 @@ public class ExtractVariableRefactoring extends Refactoring {
 		fReplaceAllOccurrences = true; // default
 	}
 
-	private void recalculateLength(ISourceModule source, int offset)
-			throws CoreException {
+	private void recalculateLength(ISourceModule source, int offset) throws CoreException {
 		Program program = null;
 
 		try {
 			program = ASTUtils.createProgramFromSource(source);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					RefactoringPlugin.PLUGIN_ID, "Unexpected Error", e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR, RefactoringPlugin.PLUGIN_ID, "Unexpected Error", e)); //$NON-NLS-1$
 		}
 		ASTNode selectedNode = NodeFinder.perform(program, offset, 0);
 		ASTNode parent = selectedNode.getParent();
@@ -138,9 +136,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 			// check if the file is in sync
 			RefactoringStatus status = RefactoringUtility
-					.validateModifiesFiles(
-							new IResource[] { sourceModule.getResource() },
-							getValidationContext());
+					.validateModifiesFiles(new IResource[] { sourceModule.getResource() }, getValidationContext());
 			if (status.hasFatalError())
 				return status;
 
@@ -148,8 +144,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 				astRoot = ASTUtils.createProgramFromSource(sourceModule);
 			} catch (Exception e) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.0")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.0")); //$NON-NLS-1$
 			}
 
 			status.merge(checkSelection(status, new SubProgressMonitor(pm, 3)));
@@ -180,26 +175,23 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @param astRoot
 	 * @return
 	 */
-	private RefactoringStatus checkSelection(RefactoringStatus status,
-			IProgressMonitor pm) {
+	private RefactoringStatus checkSelection(RefactoringStatus status, IProgressMonitor pm) {
 
 		try {
-			pm.beginTask("", 8); //$NON-NLS-1$			
+			pm.beginTask("", 8); //$NON-NLS-1$
 
 			IExpressionFragment selectedExpression = getSelectedExpression();
 
 			if (selectedExpression == null) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
 			}
 			pm.worked(1);
 
 			enclosingBodyNode = getEnclosingBodyNode();
 			if (enclosingBodyNode == null)
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
 			pm.worked(1);
 
 			if (scopeHasSyntaxErrors(enclosingBodyNode)) {
@@ -208,8 +200,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 			}
 			pm.worked(1);
 
-			Expression expression = getSelectedExpression()
-					.getAssociatedExpression();
+			Expression expression = getSelectedExpression().getAssociatedExpression();
 
 			status.merge(canExtract(expression));
 
@@ -241,12 +232,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		matchingFragmentsStatus.merge(checkSemanticProblems(allMatches));
 
-		List<IASTFragment> result = new ArrayList<IASTFragment>(
-				allMatches.length);
+		List<IASTFragment> result = new ArrayList<IASTFragment>(allMatches.length);
 		for (int i = 0; i < allMatches.length; i++) {
 
-			Expression associatedExpression = getExpressionFromFragment(
-					allMatches[i]).getAssociatedExpression();
+			Expression associatedExpression = getExpressionFromFragment(allMatches[i]).getAssociatedExpression();
 			RefactoringStatus status = canExtract(associatedExpression);
 			// if the match has a fatal error, it is not added to the final
 			// array
@@ -255,11 +244,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 			}
 		}
 
-		validMatchingFragments = result
-				.toArray(new IASTFragment[result.size()]);
+		validMatchingFragments = result.toArray(new IASTFragment[result.size()]);
 
-		matchingFragmentsStatus
-				.merge(checkMatchingExpressions(validMatchingFragments));
+		matchingFragmentsStatus.merge(checkMatchingExpressions(validMatchingFragments));
 
 		return validMatchingFragments;
 	}
@@ -289,8 +276,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		ISourceRange region = null;
 		for (int i = 0; i < allMatches.length; i++) {
-			Expression associatedExpression = getExpressionFromFragment(
-					allMatches[i]).getAssociatedExpression();
+			Expression associatedExpression = getExpressionFromFragment(allMatches[i]).getAssociatedExpression();
 
 			if (isExpressionRightHandSide(associatedExpression)) {
 				if (!firstRighHandSideFlag) {
@@ -299,12 +285,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 					hasSemanticProblem = true;
 					break;
 				}
-			} else if (isExpressionLeftHandSide(associatedExpression)
-					&& !firstLeftHandSideFlag) {
+			} else if (isExpressionLeftHandSide(associatedExpression) && !firstLeftHandSideFlag) {
 				if (firstRighHandSideFlag) {
 					firstLeftHandSideFlag = true;
-					region = new org.eclipse.dltk.corext.SourceRange(
-							associatedExpression.getStart(),
+					region = new org.eclipse.dltk.corext.SourceRange(associatedExpression.getStart(),
 							associatedExpression.getLength());
 				}
 			}
@@ -312,8 +296,8 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		if (hasSemanticProblem) {
 			status.merge(RefactoringStatus.createWarningStatus(
-					PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.7"), new SourceModuleSourceContext(sourceModule, region))); //$NON-NLS-1$
+					PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.7"), //$NON-NLS-1$
+					new SourceModuleSourceContext(sourceModule, region)));
 		}
 
 		return status;
@@ -331,15 +315,12 @@ public class ExtractVariableRefactoring extends Refactoring {
 		IExpressionFragment selectedExpression = getSelectedExpression();
 
 		for (int i = 0; i < allMatches.length; i++) {
-			Expression associatedExpression = getExpressionFromFragment(
-					allMatches[i]).getAssociatedExpression();
+			Expression associatedExpression = getExpressionFromFragment(allMatches[i]).getAssociatedExpression();
 			boolean matchAppearsBeforeVariableDeclaration = createVariableDeclaration
-					&& (associatedExpression.getStart() < selectedExpression
-							.getStartPosition());
+					&& (associatedExpression.getStart() < selectedExpression.getStartPosition());
 			if (matchAppearsBeforeVariableDeclaration) {
 				status.merge(RefactoringStatus
-						.createErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.8"))); //$NON-NLS-1$
+						.createErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.8"))); //$NON-NLS-1$
 			}
 		}
 
@@ -351,67 +332,55 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		if (expression.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) expression;
-			if (scalar.getScalarType() == Scalar.TYPE_STRING
-					&& scalar.getStringValue().equalsIgnoreCase("null")) { //$NON-NLS-1$
+			if (scalar.getScalarType() == Scalar.TYPE_STRING && scalar.getStringValue().equalsIgnoreCase("null")) { //$NON-NLS-1$
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.5")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.5")); //$NON-NLS-1$
 			}
 		}
 
 		if (isDispatch(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
 		}
 
 		if (isFunctionName(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
 		}
 
 		if (isClassName(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
 		}
 
 		if (isExpressionLeftHandSide(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.10")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.10")); //$NON-NLS-1$
 		}
 
 		if (isUsedInForInitializerOrUpdaterOrIncrementor(expression))
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.11")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.11")); //$NON-NLS-1$
 
 		if (assignmentInStaticStatement(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.12")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.12")); //$NON-NLS-1$
 		}
 
 		if (expressionOfCatchVariable(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.13")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.13")); //$NON-NLS-1$
 		}
 
 		if (expression.isStaticScalar()) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.14")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.14")); //$NON-NLS-1$
 		}
 
 		if (expression.getType() == ASTNode.FORMAL_PARAMETER
-				|| (expression.getParent() != null && expression.getParent()
-						.getType() == ASTNode.FORMAL_PARAMETER)) {
+				|| (expression.getParent() != null && expression.getParent().getType() == ASTNode.FORMAL_PARAMETER)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
-							.getString("ExtractVariableRefactoring.15")); //$NON-NLS-1$
+					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.15")); //$NON-NLS-1$
 		}
 		return new RefactoringStatus();
 	}
@@ -484,8 +453,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @return true, in case the selection is in an invalid position in the for
 	 *         statement, false otherwise
 	 */
-	private boolean isUsedInForInitializerOrUpdaterOrIncrementor(
-			Expression expression) {
+	private boolean isUsedInForInitializerOrUpdaterOrIncrementor(Expression expression) {
 		boolean isInForStatement = false;
 		boolean isInBlock = false;
 
@@ -521,8 +489,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 	}
 
-	private boolean selectionIsInForAction(Expression expression,
-			Statement action) {
+	private boolean selectionIsInForAction(Expression expression, Statement action) {
 		ASTNode parent = expression.getParent();
 		while (parent != null && !(parent instanceof ForStatement)) {
 			if (parent == action) {
@@ -617,8 +584,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		IASTFragment selectedFragment;
 		try {
 			selectedFragment = ASTFragmentFactory.createFragmentForSourceRange(
-					new SourceRange(selectionStartOffset, selectionLength),
-					astRoot, document);
+					new SourceRange(selectionStartOffset, selectionLength), astRoot, document);
 		} catch (Exception e) {
 			// on bad region - return null
 			return null;
@@ -634,8 +600,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @param selectedFragment
 	 * @return the Expression for the given fragment
 	 */
-	private IExpressionFragment getExpressionFromFragment(
-			IASTFragment selectedFragment) {
+	private IExpressionFragment getExpressionFromFragment(IASTFragment selectedFragment) {
 
 		IExpressionFragment fragment = null;
 		if (selectedFragment instanceof IExpressionFragment) {
@@ -646,18 +611,15 @@ public class ExtractVariableRefactoring extends Refactoring {
 			if (associatedNode instanceof ExpressionStatement) {
 				ExpressionStatement exprStatement = (ExpressionStatement) associatedNode;
 				Expression expression = exprStatement.getExpression();
-				fragment = (IExpressionFragment) ASTFragmentFactory
-						.createFragmentForFullSubtree(expression);
+				fragment = (IExpressionFragment) ASTFragmentFactory.createFragmentForFullSubtree(expression);
 			} else if (associatedNode instanceof Assignment) {
 				Assignment assignment = (Assignment) associatedNode;
-				fragment = (IExpressionFragment) ASTFragmentFactory
-						.createFragmentForFullSubtree(assignment);
+				fragment = (IExpressionFragment) ASTFragmentFactory.createFragmentForFullSubtree(assignment);
 			} else if (associatedNode instanceof ArrayElement) {
 				ArrayElement arrayElement = (ArrayElement) associatedNode;
 				if (arrayElement.getKey() == null) {
 					fragment = (IExpressionFragment) ASTFragmentFactory
-							.createFragmentForFullSubtree(arrayElement
-									.getValue());
+							.createFragmentForFullSubtree(arrayElement.getValue());
 				}
 			}
 		}
@@ -689,12 +651,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 	private void replaceOccurances() throws CoreException {
 		IASTFragment[] fragmentsToReplace = retainOnlyReplacableMatches(false);
 		for (IASTFragment fragment : fragmentsToReplace) {
-			if (fragment.getAssociatedNode() != getSelectedExpression()
-					.getAssociatedNode()) {
+			if (fragment.getAssociatedNode() != getSelectedExpression().getAssociatedNode()) {
 				ISourceRange range = getReplaceOffsets(fragment);
 				// replace the existing statement
-				replaceSelectedExpressionWithVariableDeclaration(
-						getFullVariableName(), range.getOffset(),
+				replaceSelectedExpressionWithVariableDeclaration(getFullVariableName(), range.getOffset(),
 						range.getLength(), fragment.getAssociatedNode());
 			}
 		}
@@ -735,17 +695,16 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		IExpressionFragment selectedExpressionFragment = getSelectedExpression();
 
-		Expression selectedExpression = selectedExpressionFragment
-				.getAssociatedExpression(); // whole expression selected
+		Expression selectedExpression = selectedExpressionFragment.getAssociatedExpression(); // whole
+																								// expression
+																								// selected
 
 		if (shouldReplaceSelectedExpressionWithVariableDeclaration()) {
 			createVariableDeclaration = true;
-			ASTNode parentStatement = getParentStatement(selectedExpression);
+
 			// the new text that will replace the selected expression
-			String replacement = getFullVariableName()
-					+ " = " //$NON-NLS-1$
-					+ getASTNodeValue(getSelectedExpression()
-							.getAssociatedNode()) + ";"; //$NON-NLS-1$
+			String replacement = getFullVariableName() + " = " //$NON-NLS-1$
+					+ getASTNodeValue(getSelectedExpression().getAssociatedNode()) + ";"; //$NON-NLS-1$
 			replaceSelectedExpressionWithTempDeclaration(replacement);
 			// addReplaceExpressionWithTemp();
 		} else {
@@ -767,8 +726,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 			IASTFragment fragment = fragmentsToReplace[i];
 			if (!seen.add(fragment))
 				continue;
-			Identifier tempName = fRewriter.getAST().newIdentifier(
-					getFullVariableName());
+			Identifier tempName = fRewriter.getAST().newIdentifier(getFullVariableName());
 			TextEditGroup description = new TextEditGroup("replace "); //$NON-NLS-1$
 
 			fragment.replace(rewrite, tempName, description);
@@ -778,36 +736,25 @@ public class ExtractVariableRefactoring extends Refactoring {
 		}
 	}
 
-	private void createAndInsertVariableDeclaration(
-			Expression selectedExpression, ISourceRange range)
+	private void createAndInsertVariableDeclaration(Expression selectedExpression, ISourceRange range)
 			throws CoreException, BadLocationException {
 
-		if ((!fReplaceAllOccurrences)
-				|| (retainOnlyReplacableMatches(true).length <= 1)) {
-			boolean shouldWrapStatement = shouldWrapWithBlock(getParentStatement(selectedExpression)) ? true
-					: false;
+		if ((!fReplaceAllOccurrences) || (retainOnlyReplacableMatches(true).length <= 1)) {
 			// insertVariableDeclaration(selectedExpression, selectedExpression,
 			// shouldWrapStatement, range);
 			insertAt(selectedExpression);
 			return;
 		}
 
-		ASTNode[] firstReplaceNodeParents = getParents(getFirstReplacedExpression()
-				.getAssociatedNode());
+		ASTNode[] firstReplaceNodeParents = getParents(getFirstReplacedExpression().getAssociatedNode());
 		ASTNode[] commonPath = findDeepestCommonSuperNodePathForReplacedNodes();
 		Assert.isTrue(commonPath.length <= firstReplaceNodeParents.length);
 
 		ASTNode deepestCommonParent = firstReplaceNodeParents[commonPath.length - 1];
 
-		if (deepestCommonParent instanceof Block
-				|| deepestCommonParent instanceof Program) {
+		if (deepestCommonParent instanceof Block || deepestCommonParent instanceof Program) {
 			insertAt(firstReplaceNodeParents[commonPath.length]);
 		} else {
-			boolean shouldWrapStatement = false;
-			if (deepestCommonParent.getType() != ASTNode.PROGRAM) {
-				shouldWrapStatement = shouldWrapWithBlock(getParentStatement(deepestCommonParent)) ? true
-						: false;
-			}
 			insertAt(deepestCommonParent);
 		}
 	}
@@ -817,37 +764,28 @@ public class ExtractVariableRefactoring extends Refactoring {
 		TextEditGroup groupDescription = new TextEditGroup("dec Variable"); //$NON-NLS-1$
 
 		ASTNode parent = target.getParent();
-		StructuralPropertyDescriptor locationInParent = target
-				.getLocationInParent();
+		StructuralPropertyDescriptor locationInParent = target.getLocationInParent();
 
-		ASTNode parentStatement = getParentStatement(getSelectedExpression()
-				.getAssociatedNode());
 		// the new text that will replace the selected expression
-		String insertionString = getFullVariableName()
-				+ " = " //$NON-NLS-1$
-				+ getASTNodeValue(getSelectedExpression().getAssociatedNode())
-				+ ";"; //$NON-NLS-1$
+		String insertionString = getFullVariableName() + " = " //$NON-NLS-1$
+				+ getASTNodeValue(getSelectedExpression().getAssociatedNode()) + ";"; //$NON-NLS-1$
 
-		//+ System.getProperty("line.separator") + indentationBuffer; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		ASTNode declaration = fRewriter.createStringPlaceholder(
-				insertionString, ASTNode.EXPRESSION_STATEMENT);
+		// + System.getProperty("line.separator") + indentationBuffer;
+		// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ASTNode declaration = fRewriter.createStringPlaceholder(insertionString, ASTNode.EXPRESSION_STATEMENT);
 
-		while (locationInParent != Block.STATEMENTS_PROPERTY
-				&& locationInParent != SwitchStatement.BODY_PROPERTY) {
+		while (locationInParent != Block.STATEMENTS_PROPERTY && locationInParent != SwitchStatement.BODY_PROPERTY) {
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY
 					|| locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY
-					|| locationInParent == ForStatement.BODY_PROPERTY
-					|| locationInParent == DoStatement.BODY_PROPERTY
+					|| locationInParent == ForStatement.BODY_PROPERTY || locationInParent == DoStatement.BODY_PROPERTY
 					|| locationInParent == WhileStatement.BODY_PROPERTY) {
 				// create intermediate block if target was the body property of
 				// a control statement:
 				Block replacement = rewrite.getAST().newBlock();
-				ListRewrite replacementRewrite = rewrite.getListRewrite(
-						replacement, Block.STATEMENTS_PROPERTY);
+				ListRewrite replacementRewrite = rewrite.getListRewrite(replacement, Block.STATEMENTS_PROPERTY);
 
 				replacementRewrite.insertFirst(declaration, null);
-				replacementRewrite.insertLast(rewrite.createMoveTarget(target),
-						null);
+				replacementRewrite.insertLast(rewrite.createMoveTarget(target), null);
 				rewrite.replace(target, replacement, groupDescription);
 				return;
 			}
@@ -858,8 +796,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 			parent = parent.getParent();
 			locationInParent = target.getLocationInParent();
 		}
-		ListRewrite listRewrite = rewrite.getListRewrite(parent,
-				(ChildListPropertyDescriptor) locationInParent);
+		ListRewrite listRewrite = rewrite.getListRewrite(parent, (ChildListPropertyDescriptor) locationInParent);
 		listRewrite.insertBefore(declaration, target, groupDescription);
 	}
 
@@ -872,18 +809,12 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @throws CoreException
 	 * @throws BadLocationException
 	 */
-	private void insertVariableDeclaration(ASTNode target, ASTNode expr,
-			boolean shouldWrapStatement, SourceRange range)
+	private void insertVariableDeclaration(ASTNode target, ASTNode expr, boolean shouldWrapStatement, SourceRange range)
 			throws CoreException, BadLocationException {
-
-		ASTNode parentStatement = getParentStatement(target);
-		int statementOffset = parentStatement.getStart();
-		String indentationBuffer = getLineIndentation(statementOffset);
 
 		Block block = fAst.newBlock();
 		block.setIsCurly(true);
-		ListRewrite replacementRewrite = fRewriter.getListRewrite(block,
-				Block.STATEMENTS_PROPERTY);
+		ListRewrite replacementRewrite = fRewriter.getListRewrite(block, Block.STATEMENTS_PROPERTY);
 
 		// replacementRewrite.insertFirst(expr, null);
 
@@ -925,27 +856,26 @@ public class ExtractVariableRefactoring extends Refactoring {
 		// // ifState.setParent(parent, location)
 		// }
 
-		String expressionBuffer = getASTNodeValue(range.getOffset(),
-				range.getLength());
+		String expressionBuffer = getASTNodeValue(range.getOffset(), range.getLength());
 		String insertionString = getFullVariableName() + " = " //$NON-NLS-1$
 				+ expressionBuffer + ";"; //$NON-NLS-1$
-		//+ System.getProperty("line.separator") + indentationBuffer; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		ASTNode declaration = fRewriter.createStringPlaceholder(
-				insertionString, ASTNode.EXPRESSION_STATEMENT);
+		// + System.getProperty("line.separator") + indentationBuffer;
+		// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ASTNode declaration = fRewriter.createStringPlaceholder(insertionString, ASTNode.EXPRESSION_STATEMENT);
 
 		replacementRewrite.insertFirst(declaration, null);
 
 		replacementRewrite.insertLast(move, null);
 
 		TextEditGroup insertDesc = new TextEditGroup(
-				PhpRefactoringCoreMessages
-						.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
+				PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
 		textFileChange.addTextEditGroup(insertDesc);
 
 		fRewriter.replace(target.getParent(), block, insertDesc);
 
 		// if (shouldWrapStatement) {
-		//			insertionString = "{" + System.getProperty("line.separator") + insertionString; //$NON-NLS-1$ //$NON-NLS-2$
+		// insertionString = "{" + System.getProperty("line.separator") +
+		// insertionString; //$NON-NLS-1$ //$NON-NLS-2$
 		// }
 
 		// insert the new statement
@@ -954,14 +884,14 @@ public class ExtractVariableRefactoring extends Refactoring {
 		// addTextEditChange(insertEdit);
 
 		// replace the existing statement
-		String replacementStr = getFullVariableName();
+		// String replacementStr = getFullVariableName();
 		// replaceSelectedExpressionWithVariableDeclaration(replacementStr,
 		// range,
 		// expr);
 
 		// if needed, close the wrapping block
 		// if (shouldWrapStatement) {
-		//			String closeCurlyStr = "}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		// String closeCurlyStr = "}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		// insertEdit = new InsertEdit(parentStatement.getEnd(), closeCurlyStr);
 		// addTextEditChange(insertEdit);
 		// }
@@ -975,8 +905,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 */
 	private String getLineIndentation(int offset) throws BadLocationException {
 		IRegion region = document.getLineInformationOfOffset(offset);
-		String lineContent = document.get(region.getOffset(),
-				region.getLength());
+		String lineContent = document.get(region.getOffset(), region.getLength());
 
 		StringBuffer buff = new StringBuffer();
 
@@ -1019,8 +948,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		for (int i = 0; i < matchNodes.length; i++) {
 			matchingNodesParents[i] = getParents(matchNodes[i]);
 		}
-		List<Object> l = Arrays
-				.asList(getLongestArrayPrefix(matchingNodesParents));
+		List<Object> l = Arrays.asList(getLongestArrayPrefix(matchingNodesParents));
 		return l.toArray(new ASTNode[l.size()]);
 	}
 
@@ -1073,45 +1001,36 @@ public class ExtractVariableRefactoring extends Refactoring {
 	private boolean shouldReplaceSelectedExpressionWithVariableDeclaration() {
 		IExpressionFragment selectedFragment = getSelectedExpression();
 		return selectedFragment.getAssociatedNode().getParent().getType() == ASTNode.EXPRESSION_STATEMENT
-				&& selectedFragment.matches(ASTFragmentFactory
-						.createFragmentForFullSubtree(selectedFragment
-								.getAssociatedNode()));
+				&& selectedFragment
+						.matches(ASTFragmentFactory.createFragmentForFullSubtree(selectedFragment.getAssociatedNode()));
 	}
 
-	private void replaceSelectedExpressionWithTempDeclaration(String str)
-			throws CoreException {
+	private void replaceSelectedExpressionWithTempDeclaration(String str) throws CoreException {
 		ASTRewrite rewrite = fRewriter;
-		Expression selectedExpression = getSelectedExpression()
-				.getAssociatedExpression(); // whole expression selected
+		Expression selectedExpression = getSelectedExpression().getAssociatedExpression(); // whole
+																							// expression
+																							// selected
 
-		ASTNode declaration = fRewriter.createStringPlaceholder(str,
-				ASTNode.ASSIGNMENT);
+		ASTNode declaration = fRewriter.createStringPlaceholder(str, ASTNode.ASSIGNMENT);
 
-		ExpressionStatement parent = (ExpressionStatement) selectedExpression
-				.getParent();
+		ExpressionStatement parent = (ExpressionStatement) selectedExpression.getParent();
 
-		final TextEditGroup textEditGroup = new TextEditGroup(
-				CHANGE_DESCRIPTION);
+		final TextEditGroup textEditGroup = new TextEditGroup(CHANGE_DESCRIPTION);
 
-		TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(
-				textFileChange, textEditGroup);
+		TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(textFileChange, textEditGroup);
 		textFileChange.addTextEditChangeGroup(textEditChangeGroup);
 
 		rewrite.replace(parent, declaration, textEditGroup);
 	}
 
-	private void replaceSelectedExpressionWithVariableDeclaration(
-			String replacement, int start, int length, ASTNode astNode)
-			throws CoreException {
+	private void replaceSelectedExpressionWithVariableDeclaration(String replacement, int start, int length,
+			ASTNode astNode) throws CoreException {
 		// create replace change
-		ASTNode node = fRewriter.createStringPlaceholder(replacement,
-				ASTNode.ASSIGNMENT);
+		ASTNode node = fRewriter.createStringPlaceholder(replacement, ASTNode.ASSIGNMENT);
 
-		final TextEditGroup textEditGroup = new TextEditGroup(
-				CHANGE_DESCRIPTION);
+		final TextEditGroup textEditGroup = new TextEditGroup(CHANGE_DESCRIPTION);
 
-		TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(
-				textFileChange, textEditGroup);
+		TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(textFileChange, textEditGroup);
 		textFileChange.addTextEditChangeGroup(textEditChangeGroup);
 
 		fRewriter.replace(astNode, node, textEditGroup);
@@ -1119,8 +1038,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	private boolean shouldWrapWithBlock(ASTNode node) {
-		if (node.getParent() == null
-				|| !(node.getParent() instanceof Statement)) {
+		if (node.getParent() == null || !(node.getParent() instanceof Statement)) {
 			return false;
 		}
 		// in case the selected expression in the only element of a control
@@ -1144,8 +1062,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		return getASTNodeValue(node.getStart(), node.getLength());
 	}
 
-	private String getASTNodeValue(int start, int length)
-			throws BadLocationException {
+	private String getASTNodeValue(int start, int length) throws BadLocationException {
 		return document.get(start, length);
 	}
 
@@ -1156,12 +1073,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @param textEdit
 	 */
 	private void addTextEditChange(TextEdit textEdit) {
-		final TextEditGroup textEditGroup = new TextEditGroup(
-				CHANGE_DESCRIPTION);
+		final TextEditGroup textEditGroup = new TextEditGroup(CHANGE_DESCRIPTION);
 		textEditGroup.addTextEdit(textEdit);
 
-		TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(
-				textFileChange, textEditGroup);
+		TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(textFileChange, textEditGroup);
 		textFileChange.addTextEditChangeGroup(textEditChangeGroup);
 		textFileChange.addEdit(textEdit);
 	}
@@ -1174,8 +1089,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	private IASTFragment[] getMatchingFragments(boolean clean) {
 		if (fReplaceAllOccurrences) {
 			if (clean || allMatchingFragments == null) {
-				allMatchingFragments = ASTFragmentFactory
-						.createFragmentForFullSubtree(getEnclosingBodyNode())
+				allMatchingFragments = ASTFragmentFactory.createFragmentForFullSubtree(getEnclosingBodyNode())
 						.getSubFragmentsMatching(getSelectedExpression());
 				Comparator<IASTFragment> comparator = new Comparator<IASTFragment>() {
 
@@ -1204,18 +1118,16 @@ public class ExtractVariableRefactoring extends Refactoring {
 		// check if the user given variable name already exists in the function
 		// scope
 		if (enclosingBodyNode.getType() == ASTNode.FUNCTION_DECLARATION) {
-			if (PhpElementConciliator.localVariableAlreadyExists(
-					(FunctionDeclaration) enclosingBodyNode, name)) {
-				status.addWarning(NLS.bind(PhpRefactoringCoreMessages
-						.getString("ExtractVariableRefactoring.26"), name)); //$NON-NLS-1$
+			if (PhpElementConciliator.localVariableAlreadyExists((FunctionDeclaration) enclosingBodyNode, name)) {
+				status.addWarning(
+						NLS.bind(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.26"), name)); //$NON-NLS-1$
 			}
 		} else {
 			// check if the user given variable name already exists in the
 			// global scope
-			if (PhpElementConciliator.globalVariableAlreadyExists(
-					(Program) astRoot, name)) {
-				status.addWarning(NLS.bind(PhpRefactoringCoreMessages
-						.getString("ExtractVariableRefactoring.27"), name)); //$NON-NLS-1$
+			if (PhpElementConciliator.globalVariableAlreadyExists((Program) astRoot, name)) {
+				status.addWarning(
+						NLS.bind(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.27"), name)); //$NON-NLS-1$
 			}
 		}
 
@@ -1223,19 +1135,16 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages
-					.getString("ExtractVariableRefactoring.28"), 1); //$NON-NLS-1$
+			pm.beginTask(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.28"), 1); //$NON-NLS-1$
 
 			MultiTextEdit root = new MultiTextEdit();
 
 			rootChange = new CompositeChange(CHANGE_DESCRIPTION);
 			rootChange.markAsSynthetic();
 
-			textFileChange = new ProgramDocumentChange(CHANGE_DESCRIPTION,
-					document, astRoot);
+			textFileChange = new ProgramDocumentChange(CHANGE_DESCRIPTION, document, astRoot);
 			textFileChange.setEdit(root);
 			textFileChange.setTextType("php"); //$NON-NLS-1$
 			rootChange.add(textFileChange);
@@ -1246,11 +1155,11 @@ public class ExtractVariableRefactoring extends Refactoring {
 			try {
 				extractVariable();
 			} catch (CoreException exception) {
-				RefactoringPlugin.logException(PhpRefactoringCoreMessages
-						.getString("ExtractVariableRefactoring.29"), exception); //$NON-NLS-1$
+				RefactoringPlugin.logException(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.29"), //$NON-NLS-1$
+						exception);
 			} catch (BadLocationException e) {
-				RefactoringPlugin.logException(PhpRefactoringCoreMessages
-						.getString("ExtractVariableRefactoring.30"), e); //$NON-NLS-1$
+				RefactoringPlugin.logException(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.30"), //$NON-NLS-1$
+						e);
 			}
 
 			// handle matching occurrences
@@ -1268,8 +1177,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 	@Override
 	public String getName() {
-		return PhpRefactoringCoreMessages
-				.getString("ExtractVariableRefactoring.6"); //$NON-NLS-1$
+		return PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.6"); //$NON-NLS-1$
 	}
 
 	public Change getChange() {
@@ -1287,11 +1195,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 	public String[] guessTempNames() {
 		if (fGuessedTempNames == null) {
 
-			Expression expression = getSelectedExpression()
-					.getAssociatedExpression();
+			Expression expression = getSelectedExpression().getAssociatedExpression();
 			if (expression != null) {
-				fGuessedTempNames = RefactoringUtility
-						.getVariableNameSuggestions(expression);
+				fGuessedTempNames = RefactoringUtility.getVariableNameSuggestions(expression);
 
 			}
 

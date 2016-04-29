@@ -55,7 +55,6 @@ public class ShowGroupsAction extends Action {
 	public void run() {
 		IContentProvider contentProvider = treeViewer.getContentProvider();
 		if (contentProvider instanceof PHPOutlineContentProvider) {
-			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
 			// phpContentProvider.setShowGroups(isChecked());
 			treeViewer.refresh(false);
 			treeViewer.expandToLevel(2);

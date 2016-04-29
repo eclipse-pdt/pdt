@@ -43,8 +43,7 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 			// snippet like "if (true) foo(); else foo();" would match
 			// the pattern "foo(); foo();"
 			int nodeType = parent.getType();
-			return nodeType == ASTNode.BLOCK
-					|| nodeType == ASTNode.SWITCH_STATEMENT;
+			return nodeType == ASTNode.BLOCK || nodeType == ASTNode.SWITCH_STATEMENT;
 		}
 
 		public ASTNode[] getNodes() {
@@ -60,7 +59,7 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 		}
 
 		public IVariableBinding getMappedBinding(IVariableBinding org) {
-			Identifier name = (Identifier) fLocalMappings.get(org);
+			// Identifier name = (Identifier) fLocalMappings.get(org);
 			// TODO:???
 			return null;
 		}
@@ -81,18 +80,15 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 			if (first.getParent() == null)
 				return false;
 			ASTNode candidate = first.getParent().getParent();
-			if (candidate == null
-					|| candidate.getType() != ASTNode.METHOD_DECLARATION)
+			if (candidate == null || candidate.getType() != ASTNode.METHOD_DECLARATION)
 				return false;
 			MethodDeclaration method = (MethodDeclaration) candidate;
-			return method.getFunction().getBody().statements().size() == fNodes
-					.size();
+			return method.getFunction().getBody().statements().size() == fNodes.size();
 		}
 
 		public MethodDeclaration getEnclosingMethod() {
 			ASTNode first = (ASTNode) fNodes.get(0);
-			return (MethodDeclaration) ASTNodes.getParent(first,
-					ASTNode.METHOD_DECLARATION);
+			return (MethodDeclaration) ASTNodes.getParent(first, ASTNode.METHOD_DECLARATION);
 		}
 	}
 
@@ -103,8 +99,7 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 
 			Identifier snippet = (Identifier) s;
 
-			if (!(candidate.getParent() instanceof Variable)
-					|| !(snippet.getParent() instanceof Variable)) {
+			if (!(candidate.getParent() instanceof Variable) || !(snippet.getParent() instanceof Variable)) {
 				return false;
 			}
 
@@ -120,8 +115,7 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 				Identifier mapped = fMatch.getMappedName(sb);
 				if (mapped != null) {
 					Variable parent = (Variable) mapped.getParent();
-					IVariableBinding mappedBinding = parent
-							.resolveVariableBinding();
+					IVariableBinding mappedBinding = parent.resolveVariableBinding();
 					if (!cb.equals(mappedBinding))
 						return false;
 				}
@@ -147,9 +141,8 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 	}
 
 	public static Match[] perform(ASTNode start, ASTNode[] snippet) {
-		Assert.isTrue(start instanceof ClassDeclaration
-				|| start instanceof FunctionDeclaration
-				|| start instanceof Program);
+		Assert.isTrue(
+				start instanceof ClassDeclaration || start instanceof FunctionDeclaration || start instanceof Program);
 		SnippetFinder finder = new SnippetFinder(snippet);
 		start.accept(finder);
 		for (Iterator iter = finder.fResult.iterator(); iter.hasNext();) {
@@ -162,8 +155,7 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 				iter.remove();
 			}
 		}
-		return (Match[]) finder.fResult
-				.toArray(new Match[finder.fResult.size()]);
+		return (Match[]) finder.fResult.toArray(new Match[finder.fResult.size()]);
 	}
 
 	private static boolean isLeftHandSideOfAssignment(ASTNode node) {
@@ -212,8 +204,7 @@ import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 	private boolean matches(ASTNode node) {
 		if (isSnippetNode(node))
 			return false;
-		if (node.subtreeMatch(fMatcher, fSnippet[fIndex])
-				&& fMatch.hasCorrectNesting(node)) {
+		if (node.subtreeMatch(fMatcher, fSnippet[fIndex]) && fMatch.hasCorrectNesting(node)) {
 			fMatch.add(node);
 			fIndex++;
 			if (fIndex == fSnippet.length) {

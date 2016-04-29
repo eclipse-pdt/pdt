@@ -197,10 +197,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
-	private final boolean isCollapsed(ASTNode node) {
-		return this.nodeInfos.isCollapsed(node);
-	}
-
 	final boolean isInsertBoundToPrevious(ASTNode node) {
 		return this.eventStore.isInsertBoundToPrevious(node);
 	}
@@ -704,23 +700,26 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return doVisit(parent, property, offset);
 	}
 
-	private int rewriteDocumentation(ASTNode node, StructuralPropertyDescriptor property) {
-		int pos = rewriteNode(node, property, node.getStart(), ASTRewriteFormatter.NONE);
-		int changeKind = getChangeKind(node, property);
-		if (changeKind == RewriteEvent.INSERTED) {
-			String indent = getLineDelimiter() + getIndentAtOffset(pos);
-			doTextInsert(pos, indent, getEditGroup(node, property));
-		} else if (changeKind == RewriteEvent.REMOVED) {
-			try {
-				getScanner().readNext(pos/* , false */);
-				doTextRemove(pos, getScanner().getCurrentStartOffset() - pos, getEditGroup(node, property));
-				pos = getScanner().getCurrentStartOffset();
-			} catch (CoreException e) {
-				handleException(e);
-			}
-		}
-		return pos;
-	}
+	// private int rewriteDocumentation(ASTNode node,
+	// StructuralPropertyDescriptor property) {
+	// int pos = rewriteNode(node, property, node.getStart(),
+	// ASTRewriteFormatter.NONE);
+	// int changeKind = getChangeKind(node, property);
+	// if (changeKind == RewriteEvent.INSERTED) {
+	// String indent = getLineDelimiter() + getIndentAtOffset(pos);
+	// doTextInsert(pos, indent, getEditGroup(node, property));
+	// } else if (changeKind == RewriteEvent.REMOVED) {
+	// try {
+	// getScanner().readNext(pos/* , false */);
+	// doTextRemove(pos, getScanner().getCurrentStartOffset() - pos,
+	// getEditGroup(node, property));
+	// pos = getScanner().getCurrentStartOffset();
+	// } catch (CoreException e) {
+	// handleException(e);
+	// }
+	// }
+	// return pos;
+	// }
 
 	/*
 	 * endpos can be -1 -> use the end pos of the body
@@ -956,62 +955,71 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return listRewriter.rewriteList(parent, property, insertPos, leadString.toString());
 	}
 
-	private int rewriteOptionalTypeParameters(ASTNode parent, StructuralPropertyDescriptor property, int offset,
-			String keyword, boolean adjustOnNext, boolean needsSpaceOnRemoveAll) {
-		int pos = offset;
-		RewriteEvent event = getEvent(parent, property);
-		if (event != null && event.getChangeKind() != RewriteEvent.UNCHANGED) {
-			RewriteEvent[] children = event.getChildren();
-			try {
-				boolean isAllInserted = isAllOfKind(children, RewriteEvent.INSERTED);
-				if (isAllInserted && adjustOnNext) {
-					pos = getScanner().getNextStartOffset(pos/* , false */); // adjust
-					// on
-					// next
-					// element
-				}
-				boolean isAllRemoved = !isAllInserted && isAllOfKind(children, RewriteEvent.REMOVED);
-				if (isAllRemoved) { // all removed: set start to left bracket
-					int posBeforeOpenBracket = getScanner().getTokenStartOffset(
-							SymbolsProvider.getSymbol(SymbolsProvider.LESS_ID, scanner.getPHPVersion()), pos);
-					if (posBeforeOpenBracket != pos) {
-						needsSpaceOnRemoveAll = false;
-					}
-					pos = posBeforeOpenBracket;
-				}
-				pos = new ListRewriter().rewriteList(parent, property, pos, String.valueOf('<'), ", "); //$NON-NLS-1$
-				if (isAllRemoved) { // all removed: remove right and space up to
-					// next element
-					int endPos = getScanner().getTokenEndOffset(
-							SymbolsProvider.getSymbol(SymbolsProvider.GREATER_ID, scanner.getPHPVersion()), pos); // set
-																													// pos
-					// to
-					// '>'
-					endPos = getScanner().getNextStartOffset(endPos/* , false */);
-					String replacement = needsSpaceOnRemoveAll ? String.valueOf(' ') : ""; //$NON-NLS-1$
-					doTextReplace(pos, endPos - pos, replacement, getEditGroup(children[children.length - 1]));
-					return endPos;
-				} else if (isAllInserted) {
-					doTextInsert(pos, String.valueOf('>' + keyword), getEditGroup(children[children.length - 1]));
-					return pos;
-				}
-			} catch (CoreException e) {
-				handleException(e);
-			}
-		} else {
-			pos = doVisit(parent, property, pos);
-		}
-		if (pos != offset) { // list contained some type -> parse after closing
-			// bracket
-			try {
-				return getScanner().getTokenEndOffset(
-						SymbolsProvider.getSymbol(SymbolsProvider.GREATER_ID, scanner.getPHPVersion()), pos);
-			} catch (CoreException e) {
-				handleException(e);
-			}
-		}
-		return pos;
-	}
+	// private int rewriteOptionalTypeParameters(ASTNode parent,
+	// StructuralPropertyDescriptor property, int offset,
+	// String keyword, boolean adjustOnNext, boolean needsSpaceOnRemoveAll) {
+	// int pos = offset;
+	// RewriteEvent event = getEvent(parent, property);
+	// if (event != null && event.getChangeKind() != RewriteEvent.UNCHANGED) {
+	// RewriteEvent[] children = event.getChildren();
+	// try {
+	// boolean isAllInserted = isAllOfKind(children, RewriteEvent.INSERTED);
+	// if (isAllInserted && adjustOnNext) {
+	// pos = getScanner().getNextStartOffset(pos/* , false */); // adjust
+	// // on
+	// // next
+	// // element
+	// }
+	// boolean isAllRemoved = !isAllInserted && isAllOfKind(children,
+	// RewriteEvent.REMOVED);
+	// if (isAllRemoved) { // all removed: set start to left bracket
+	// int posBeforeOpenBracket = getScanner().getTokenStartOffset(
+	// SymbolsProvider.getSymbol(SymbolsProvider.LESS_ID,
+	// scanner.getPHPVersion()), pos);
+	// if (posBeforeOpenBracket != pos) {
+	// needsSpaceOnRemoveAll = false;
+	// }
+	// pos = posBeforeOpenBracket;
+	// }
+	// pos = new ListRewriter().rewriteList(parent, property, pos,
+	// String.valueOf('<'), ", "); //$NON-NLS-1$
+	// if (isAllRemoved) { // all removed: remove right and space up to
+	// // next element
+	// int endPos = getScanner().getTokenEndOffset(
+	// SymbolsProvider.getSymbol(SymbolsProvider.GREATER_ID,
+	// scanner.getPHPVersion()), pos); // set
+	// // pos
+	// // to
+	// // '>'
+	// endPos = getScanner().getNextStartOffset(endPos/* , false */);
+	// String replacement = needsSpaceOnRemoveAll ? String.valueOf(' ') : "";
+	// //$NON-NLS-1$
+	// doTextReplace(pos, endPos - pos, replacement,
+	// getEditGroup(children[children.length - 1]));
+	// return endPos;
+	// } else if (isAllInserted) {
+	// doTextInsert(pos, String.valueOf('>' + keyword),
+	// getEditGroup(children[children.length - 1]));
+	// return pos;
+	// }
+	// } catch (CoreException e) {
+	// handleException(e);
+	// }
+	// } else {
+	// pos = doVisit(parent, property, pos);
+	// }
+	// if (pos != offset) { // list contained some type -> parse after closing
+	// // bracket
+	// try {
+	// return getScanner().getTokenEndOffset(
+	// SymbolsProvider.getSymbol(SymbolsProvider.GREATER_ID,
+	// scanner.getPHPVersion()), pos);
+	// } catch (CoreException e) {
+	// handleException(e);
+	// }
+	// }
+	// return pos;
+	// }
 
 	private boolean isAllOfKind(RewriteEvent[] children, int kind) {
 		for (int i = 0; i < children.length; i++) {
@@ -1101,15 +1109,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				SymbolsProvider.getSymbol(SymbolsProvider.LBRACKET_ID, scanner.getPHPVersion()));
 	}
 
-	/*
-	 * Next token is a right bracket. Returns the offset of the closing bracket.
-	 * 
-	 * @throws CoreException
-	 */
-	private int getRightBracketStartPosition(int pos) throws CoreException {
-		return getSymbolStartPosition(pos,
-				SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID, scanner.getPHPVersion()));
-	}
+	// /*
+	// * Next token is a right bracket. Returns the offset of the closing
+	// bracket.
+	// *
+	// * @throws CoreException
+	// */
+	// private int getRightBracketStartPosition(int pos) throws CoreException {
+	// return getSymbolStartPosition(pos,
+	// SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID,
+	// scanner.getPHPVersion()));
+	// }
 
 	/*
 	 * A general call to get the scanner's start offset of the Symbol token.
@@ -1335,61 +1345,62 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
-	private int rewriteModifiers2(ASTNode node, ChildListPropertyDescriptor property, int pos) {
-		// RewriteEvent event = getEvent(node, property);
-		// if (event == null || event.getChangeKind() == RewriteEvent.UNCHANGED)
-		// {
-		// return doVisit(node, property, pos);
-		// }
-		// RewriteEvent[] children = event.getChildren();
-		// boolean isAllInsert = isAllOfKind(children, RewriteEvent.INSERTED);
-		// boolean isAllRemove = isAllOfKind(children, RewriteEvent.REMOVED);
-		// if (isAllInsert || isAllRemove) {
-		// // update pos
-		// try {
-		// pos = getScanner().getNextStartOffset(pos/*, false*/);
-		// } catch (CoreException e) {
-		// handleException(e);
-		// }
-		// }
-		//
-		// Prefix formatterPrefix;
-		// if (property == SingleVariableDeclaration.MODIFIERS2_PROPERTY)
-		// formatterPrefix = this.formatter.PARAM_ANNOTATION_SEPARATION;
-		// else
-		// formatterPrefix = this.formatter.ANNOTATION_SEPARATION;
-		//
-		// int endPos = new ModifierRewriter(formatterPrefix).rewriteList(node,
-		// property, pos, "", " "); //$NON-NLS-1$ //$NON-NLS-2$
-		//
-		// try {
-		// int nextPos = getScanner().getNextStartOffset(endPos/*, false*/);
-		//
-		// boolean lastUnchanged = children[children.length - 1].getChangeKind()
-		// != RewriteEvent.UNCHANGED;
-		//
-		// if (isAllRemove) {
-		// doTextRemove(endPos, nextPos - endPos,
-		// getEditGroup(children[children.length - 1]));
-		// return nextPos;
-		// } else if (isAllInsert || (nextPos == endPos && lastUnchanged)) { //
-		// see bug 165654
-		// RewriteEvent lastChild = children[children.length - 1];
-		// String separator;
-		// if (lastChild.getNewValue() instanceof Annotation) {
-		// separator = formatterPrefix.getPrefix(getIndent(pos));
-		// } else {
-		// separator = String.valueOf(' ');
-		// }
-		// doTextInsert(endPos, separator, getEditGroup(lastChild));
-		// }
-		// } catch (CoreException e) {
-		// handleException(e);
-		// }
-		// return endPos;
-		// TODO
-		return 0;
-	}
+	// private int rewriteModifiers2(ASTNode node, ChildListPropertyDescriptor
+	// property, int pos) {
+	// RewriteEvent event = getEvent(node, property);
+	// if (event == null || event.getChangeKind() == RewriteEvent.UNCHANGED)
+	// {
+	// return doVisit(node, property, pos);
+	// }
+	// RewriteEvent[] children = event.getChildren();
+	// boolean isAllInsert = isAllOfKind(children, RewriteEvent.INSERTED);
+	// boolean isAllRemove = isAllOfKind(children, RewriteEvent.REMOVED);
+	// if (isAllInsert || isAllRemove) {
+	// // update pos
+	// try {
+	// pos = getScanner().getNextStartOffset(pos/*, false*/);
+	// } catch (CoreException e) {
+	// handleException(e);
+	// }
+	// }
+	//
+	// Prefix formatterPrefix;
+	// if (property == SingleVariableDeclaration.MODIFIERS2_PROPERTY)
+	// formatterPrefix = this.formatter.PARAM_ANNOTATION_SEPARATION;
+	// else
+	// formatterPrefix = this.formatter.ANNOTATION_SEPARATION;
+	//
+	// int endPos = new ModifierRewriter(formatterPrefix).rewriteList(node,
+	// property, pos, "", " "); //$NON-NLS-1$ //$NON-NLS-2$
+	//
+	// try {
+	// int nextPos = getScanner().getNextStartOffset(endPos/*, false*/);
+	//
+	// boolean lastUnchanged = children[children.length - 1].getChangeKind()
+	// != RewriteEvent.UNCHANGED;
+	//
+	// if (isAllRemove) {
+	// doTextRemove(endPos, nextPos - endPos,
+	// getEditGroup(children[children.length - 1]));
+	// return nextPos;
+	// } else if (isAllInsert || (nextPos == endPos && lastUnchanged)) { //
+	// see bug 165654
+	// RewriteEvent lastChild = children[children.length - 1];
+	// String separator;
+	// if (lastChild.getNewValue() instanceof Annotation) {
+	// separator = formatterPrefix.getPrefix(getIndent(pos));
+	// } else {
+	// separator = String.valueOf(' ');
+	// }
+	// doTextInsert(endPos, separator, getEditGroup(lastChild));
+	// }
+	// } catch (CoreException e) {
+	// handleException(e);
+	// }
+	// return endPos;
+	// TODO
+	// return 0;
+	// }
 
 	private void replaceOperation(int posBeforeOperation, String newOperation, TextEditGroup editGroup) {
 		try {
@@ -1503,43 +1514,44 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
-	private void rewriteReturnType(MethodDeclaration node, boolean isConstructor, boolean isConstructorChange) {
-		// TODO
-		// ChildPropertyDescriptor property = (node.getAST().apiLevel() ==
-		// PHP4_INTERNAL) ? MethodDeclaration.RETURN_TYPE_PROPERTY :
-		// MethodDeclaration.RETURN_TYPE2_PROPERTY;
-		//
-		// // weakness in the AST: return type can exist, even if missing in
-		// source
-		// ASTNode originalReturnType = (ASTNode) getOriginalValue(node,
-		// property);
-		// boolean returnTypeExists = originalReturnType != null &&
-		// originalReturnType.getStart() != -1;
-		// if (!isConstructorChange && returnTypeExists) {
-		// rewriteRequiredNode(node, property);
-		// return;
-		// }
-		// // difficult cases: return type insert or remove
-		// ASTNode newReturnType = (ASTNode) getNewValue(node, property);
-		// if (isConstructorChange || !returnTypeExists && newReturnType !=
-		// originalReturnType) {
-		// // use the start offset of the method name to insert
-		// ASTNode originalMethodName = (ASTNode) getOriginalValue(node,
-		// MethodDeclaration.NAME_PROPERTY);
-		// int nextStart = originalMethodName.getStart(); // see bug 84049:
-		// can't use extended offset
-		// TextEditGroup editGroup = getEditGroup(node, property);
-		// if (isConstructor || !returnTypeExists) { // insert
-		// doTextInsert(nextStart, newReturnType, getIndent(nextStart), true,
-		// editGroup);
-		// doTextInsert(nextStart, " ", editGroup); //$NON-NLS-1$
-		// } else { // remove up to the method name
-		// int offset = getExtendedOffset(originalReturnType);
-		// doTextRemoveAndVisit(offset, nextStart - offset, originalReturnType,
-		// editGroup);
-		// }
-		// }
-	}
+	// private void rewriteReturnType(MethodDeclaration node, boolean
+	// isConstructor, boolean isConstructorChange) {
+	// TODO
+	// ChildPropertyDescriptor property = (node.getAST().apiLevel() ==
+	// PHP4_INTERNAL) ? MethodDeclaration.RETURN_TYPE_PROPERTY :
+	// MethodDeclaration.RETURN_TYPE2_PROPERTY;
+	//
+	// // weakness in the AST: return type can exist, even if missing in
+	// source
+	// ASTNode originalReturnType = (ASTNode) getOriginalValue(node,
+	// property);
+	// boolean returnTypeExists = originalReturnType != null &&
+	// originalReturnType.getStart() != -1;
+	// if (!isConstructorChange && returnTypeExists) {
+	// rewriteRequiredNode(node, property);
+	// return;
+	// }
+	// // difficult cases: return type insert or remove
+	// ASTNode newReturnType = (ASTNode) getNewValue(node, property);
+	// if (isConstructorChange || !returnTypeExists && newReturnType !=
+	// originalReturnType) {
+	// // use the start offset of the method name to insert
+	// ASTNode originalMethodName = (ASTNode) getOriginalValue(node,
+	// MethodDeclaration.NAME_PROPERTY);
+	// int nextStart = originalMethodName.getStart(); // see bug 84049:
+	// can't use extended offset
+	// TextEditGroup editGroup = getEditGroup(node, property);
+	// if (isConstructor || !returnTypeExists) { // insert
+	// doTextInsert(nextStart, newReturnType, getIndent(nextStart), true,
+	// editGroup);
+	// doTextInsert(nextStart, " ", editGroup); //$NON-NLS-1$
+	// } else { // remove up to the method name
+	// int offset = getExtendedOffset(originalReturnType);
+	// doTextRemoveAndVisit(offset, nextStart - offset, originalReturnType,
+	// editGroup);
+	// }
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -2338,9 +2350,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(node);
 		}
 
-		int pos = rewriteOptionalQualifier(node, MethodInvocation.DISPATCHER_PROPERTY, node.getStart());
+		rewriteOptionalQualifier(node, MethodInvocation.DISPATCHER_PROPERTY, node.getStart());
 		// pos = rewriteRequiredNode(node, MethodInvocation.NAME_PROPERTY);
-		pos = rewriteRequiredNode(node, MethodInvocation.METHOD_PROPERTY);
+		rewriteRequiredNode(node, MethodInvocation.METHOD_PROPERTY);
 		return false;
 	}
 
@@ -2481,7 +2493,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		int pos = rewriteRequiredNode(node, TryStatement.BODY_PROPERTY);
 
 		if (isChanged(node, TryStatement.CATCH_CLAUSES_PROPERTY)) {
-			int indent = getIndent(node.getStart());
+			// int indent = getIndent(node.getStart());
 			// String prefix = this.formatter.CATCH_BLOCK.getPrefix(indent);
 			// TODO - Get the formatter prefix for the catch clause indentation
 			String prefix = ""; //$NON-NLS-1$
@@ -2746,15 +2758,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Rewrite the interfaces in the class declaration
-	 * 
-	 * @param classDeclaration
-	 */
-	private void rewriteInterfaces(ClassDeclaration classDeclaration) {
-
 	}
 
 	/*

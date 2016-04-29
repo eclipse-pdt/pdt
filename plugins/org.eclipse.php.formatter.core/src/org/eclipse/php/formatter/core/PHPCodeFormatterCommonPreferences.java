@@ -80,7 +80,6 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		IStructuredModel structuredModel = null;
 		try {
 			if (document instanceof IStructuredDocument) {
-				IStructuredDocument structuredDocument = (IStructuredDocument) document;
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				if (structuredModel == null) {
 					try {

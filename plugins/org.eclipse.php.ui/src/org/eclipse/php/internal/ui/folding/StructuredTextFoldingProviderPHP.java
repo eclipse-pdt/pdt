@@ -1021,8 +1021,6 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * purposes
 	 */
 	private void addAllAdapters() {
-		final long start = System.currentTimeMillis();
-
 		if (fDocument != null) {
 			IStructuredModel sModel = null;
 			try {
@@ -1096,8 +1094,6 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * @return ProjectionModelNodeAdapterFactoryHTML
 	 */
 	private ProjectionModelNodeAdapterFactoryHTML getAdapterFactoryHTML(boolean createIfNeeded) {
-		final long start = System.currentTimeMillis();
-
 		ProjectionModelNodeAdapterFactoryHTML factory = null;
 		if (fDocument != null) {
 			IStructuredModel sModel = null;

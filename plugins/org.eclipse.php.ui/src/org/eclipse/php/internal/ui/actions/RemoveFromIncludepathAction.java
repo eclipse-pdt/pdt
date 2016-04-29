@@ -60,7 +60,6 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 				Logger.logException("Could not remove buildPathEntry", e); //$NON-NLS-1$
 			}
 		} else if (object instanceof IProjectFragment) {
-			IProjectFragment root = (IProjectFragment) object;
 		} else {
 			assert object instanceof IncludePath;
 

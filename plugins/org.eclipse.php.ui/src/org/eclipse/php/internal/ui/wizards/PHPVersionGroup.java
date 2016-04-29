@@ -130,15 +130,15 @@ public class PHPVersionGroup implements SelectionListener {
 	}
 
 	public void setPropertiesInDataModel(IProject project) {
-		if (fEnableProjectSettings.getSelection()) {
-			PHPVersion version = fConfigurationBlock.getPHPVersionValue();
-			boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
+		// if (fEnableProjectSettings.getSelection()) {
+		// PHPVersion version = fConfigurationBlock.getPHPVersionValue();
+		// boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
 
-			// FIXME : update project with values
-			// dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS,
-			// useASPTags);
-			// dataModel.setStringProperty(Keys.PHP_VERSION, version);
-		}
+		// FIXME : update project with values
+		// dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS,
+		// useASPTags);
+		// dataModel.setStringProperty(Keys.PHP_VERSION, version);
+		// }
 	}
 
 	protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener, IProject project,

@@ -452,7 +452,6 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(fixedOffset);
 					regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 				}
-				int regionStart = sdRegion.getStartOffset(tRegion);
 
 				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;

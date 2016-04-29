@@ -16,8 +16,6 @@ import java.io.*;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
@@ -26,7 +24,6 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredText
 import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.encoding.*;
-import org.eclipse.wst.sse.core.internal.encoding.util.Assert;
 import org.eclipse.wst.sse.core.internal.encoding.util.Logger;
 import org.eclipse.wst.sse.core.internal.encoding.util.NullInputStream;
 import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
