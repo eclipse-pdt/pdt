@@ -2884,7 +2884,6 @@ public class Util {
 		char[][] signatures = new char[10][];
 		int signaturesCount = 0;
 		// int[] lengthes = new int [10];
-		int typeArgsCount = 0;
 		int paramOpening = 0;
 
 		// Scan each signature character
@@ -2897,19 +2896,13 @@ public class Util {
 						System.arraycopy(signatures, 0, signatures = new char[signaturesCount + 10][], 0,
 								signaturesCount);
 					}
-					typeArgsCount = 0;
 				}
 				break;
 			case '<':
 				paramOpening++;
-				if (paramOpening == 1) {
-					typeArgsCount = 1;
-				}
 				break;
 			case '*':
 			case ';':
-				if (paramOpening == 1)
-					typeArgsCount++;
 				break;
 			case '.':
 				if (paramOpening == 0) {

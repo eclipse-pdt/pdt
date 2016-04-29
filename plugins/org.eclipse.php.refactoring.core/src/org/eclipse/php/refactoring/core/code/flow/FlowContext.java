@@ -16,7 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.internal.core.ast.nodes.TryStatement;
 
 public class FlowContext {
 
@@ -126,12 +128,10 @@ public class FlowContext {
 
 	// TODO resolve exceptions binding
 	boolean isExceptionCaught(ITypeBinding excpetionType) {
-		for (Iterator exceptions = fExceptionStack.iterator(); exceptions
-				.hasNext();) {
-			for (Iterator catchClauses = ((List) exceptions.next()).iterator(); catchClauses
-					.hasNext();) {
-				Expression catchedException = ((CatchClause) catchClauses
-						.next()).getClassName();
+		for (Iterator exceptions = fExceptionStack.iterator(); exceptions.hasNext();) {
+			for (Iterator catchClauses = ((List) exceptions.next()).iterator(); catchClauses.hasNext();) {
+				// Expression catchedException = ((CatchClause) catchClauses
+				// .next()).getClassName();
 				// IVariableBinding binding= catchedException.resolveBinding();
 				// if (binding == null)
 				// continue;

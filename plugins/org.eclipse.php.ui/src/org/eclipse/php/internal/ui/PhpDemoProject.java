@@ -57,7 +57,7 @@ public class PhpDemoProject {
 			testProject.open(null);
 			providePhpNatureToProject(testProject);
 
-			final IFile file = createFile(testProject, FILES_PATH, FILE_NAME1);
+			createFile(testProject, FILES_PATH, FILE_NAME1);
 			createFile(testProject, FILES_PATH, FILE_NAME2);
 			createFile(testProject, FILES_PATH, FILE_NAME3);
 			createFile(testProject, FILES_PATH, FILE_NAME5);

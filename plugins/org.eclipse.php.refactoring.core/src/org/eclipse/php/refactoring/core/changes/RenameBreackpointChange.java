@@ -47,9 +47,8 @@ public class RenameBreackpointChange extends Change {
 	 * @param fBreakpointAttributes3
 	 * @param fBreakpointAttributes2
 	 */
-	public RenameBreackpointChange(IPath source, IPath dest, String resName,
-			String newName, BucketMap<IResource, IBreakpoint> breakpoints,
-			Map<IBreakpoint, Map<String, Object>> breakpointAttributes) {
+	public RenameBreackpointChange(IPath source, IPath dest, String resName, String newName,
+			BucketMap<IResource, IBreakpoint> breakpoints, Map<IBreakpoint, Map<String, Object>> breakpointAttributes) {
 		fSource = source;
 		fDest = dest;
 		fName = resName;
@@ -74,8 +73,7 @@ public class RenameBreackpointChange extends Change {
 	}
 
 	@Override
-	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -84,11 +82,10 @@ public class RenameBreackpointChange extends Change {
 
 		// Breakpoint change is not undoable;
 		if (fBreakpoints == null || fBreakpointAttributes == null) {
-			return new RenameBreackpointChange(fDest, fSource, fNewName, fName,
-					null, null);
+			return new RenameBreackpointChange(fDest, fSource, fNewName, fName, null, null);
 		}
 		// Add the fBreakpoints that got removed after the rename action.
-		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
 		// WorkspaceJob createMarker = new WorkspaceJob("Creating markers") {
 		// @Override
 		// public IStatus runInWorkspace(IProgressMonitor monitor) throws
@@ -96,8 +93,7 @@ public class RenameBreackpointChange extends Change {
 		//
 		// synchronized (this) {
 		final IPath dest = fDest.append(fNewName);
-		final IBreakpointManager breakpointManager = DebugPlugin.getDefault()
-				.getBreakpointManager();
+		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 
 		// if (getResource()!=null && getResource().isAccessible()) { // in case
 		// the old file exists (fast undo-redo)
@@ -110,22 +106,16 @@ public class RenameBreackpointChange extends Change {
 		// }
 		for (final IResource markerResource : fBreakpoints.getKeys()) {
 			Set<IBreakpoint> breakPoints = fBreakpoints.get(markerResource);
-			final Path newPath = new Path(markerResource
-					.getFullPath()
-					.toString()
-					.replaceFirst(fSource.append(fName).toString(),
-							dest.toString()));
+			final Path newPath = new Path(markerResource.getFullPath().toString()
+					.replaceFirst(fSource.append(fName).toString(), dest.toString()));
 
-			final IResource newMarkerResource = ResourcesPlugin.getWorkspace()
-					.getRoot().findMember(newPath);
+			final IResource newMarkerResource = ResourcesPlugin.getWorkspace().getRoot().findMember(newPath);
 
 			for (final IBreakpoint breakpoint : breakPoints) {
-				final Map<String, Object> oldAttributesMap = fBreakpointAttributes
-						.get(breakpoint);
+				final Map<String, Object> oldAttributesMap = fBreakpointAttributes.get(breakpoint);
 
 				IWorkspaceRunnable wr = new IWorkspaceRunnable() {
-					public void run(IProgressMonitor monitor)
-							throws CoreException {
+					public void run(IProgressMonitor monitor) throws CoreException {
 						IMarker newMarker = newMarkerResource
 								.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"); //$NON-NLS-1$
 						// Fix the breakpoint's tooltip string before applying
@@ -134,27 +124,19 @@ public class RenameBreackpointChange extends Change {
 
 						final Map<String, Object> newAttributesMap = new HashMap<String, Object>();
 
-						String oldMessge = (String) oldAttributesMap
-								.get(IMarker.MESSAGE);
+						String oldMessge = (String) oldAttributesMap.get(IMarker.MESSAGE);
 						if (oldMessge != null) {
-							newAttributesMap.put(
-									IMarker.MESSAGE,
-									oldMessge.replaceFirst(fName,
-											dest.lastSegment()));
+							newAttributesMap.put(IMarker.MESSAGE, oldMessge.replaceFirst(fName, dest.lastSegment()));
 						}
 
-						newAttributesMap.put(IMarker.LOCATION,
-								newPath.toPortableString());
+						newAttributesMap.put(IMarker.LOCATION, newPath.toPortableString());
 
-						newAttributesMap.put(IMarker.LINE_NUMBER,
-								oldAttributesMap.get(IMarker.LINE_NUMBER));
+						newAttributesMap.put(IMarker.LINE_NUMBER, oldAttributesMap.get(IMarker.LINE_NUMBER));
 
-						newAttributesMap.put(IBreakpoint.ENABLED,
-								oldAttributesMap.get(IBreakpoint.ENABLED));
+						newAttributesMap.put(IBreakpoint.ENABLED, oldAttributesMap.get(IBreakpoint.ENABLED));
 
 						newAttributesMap.put(IBreakpoint.PERSISTED, false);
-						newAttributesMap.put(IBreakpoint.ID,
-								oldAttributesMap.get(IBreakpoint.ID));
+						newAttributesMap.put(IBreakpoint.ID, oldAttributesMap.get(IBreakpoint.ID));
 						newMarker.setAttributes(newAttributesMap);
 
 						PHPLineBreakpoint newBreakPoint = createBreakPoint(breakpoint);
@@ -169,8 +151,7 @@ public class RenameBreackpointChange extends Change {
 				};
 
 				try {
-					ResourcesPlugin.getWorkspace().run(wr,
-							getMarkerRule(newMarkerResource), 0, null);
+					ResourcesPlugin.getWorkspace().run(wr, getMarkerRule(newMarkerResource), 0, null);
 				} catch (CoreException e) {
 					throw new DebugException(e.getStatus());
 				}
@@ -187,8 +168,7 @@ public class RenameBreackpointChange extends Change {
 		// the markers
 
 		// Breakpoint change is not undoable;
-		return new RenameBreackpointChange(fDest, fSource, fNewName, fName,
-				null, null);
+		return new RenameBreackpointChange(fDest, fSource, fNewName, fName, null, null);
 	}
 
 	protected PHPLineBreakpoint createBreakPoint(IBreakpoint breakpoint) {
@@ -212,15 +192,13 @@ public class RenameBreackpointChange extends Change {
 	protected ISchedulingRule getMarkerRule(IResource resource) {
 		ISchedulingRule rule = null;
 		if (resource != null) {
-			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace()
-					.getRuleFactory();
+			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 			rule = ruleFactory.markerRule(resource);
 		}
 		return rule;
 	}
 
 	private IResource getResource() {
-		return ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(fSource.append(fName));
+		return ResourcesPlugin.getWorkspace().getRoot().findMember(fSource.append(fName));
 	}
 }

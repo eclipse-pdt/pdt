@@ -82,8 +82,9 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 				setEnabled(createWorkbenchAction(selection).isEnabled());
 				return;
 			}
-			List elements = selection.toList();
-			IResource[] resources = ActionUtils.getPHPResources(elements.toArray());
+			// List elements = selection.toList();
+			// IResource[] resources =
+			// ActionUtils.getPHPResources(elements.toArray());
 			// Collection<CodeData> refactorablePHPElements = new LinkedList();
 			// Object[] phpElements = ActionUtils.getPHPElements(elements);
 			// for (Object phpElement : phpElements) {

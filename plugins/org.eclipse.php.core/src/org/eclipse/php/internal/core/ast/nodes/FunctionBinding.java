@@ -14,19 +14,11 @@
  */
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * A PHP function binding. This class is also the base class for the
@@ -62,13 +54,13 @@ public class FunctionBinding implements IFunctionBinding {
 	 */
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
-		ArrayList<ITypeBinding> exceptions = new ArrayList<ITypeBinding>();
-		PHPDocBlock docBlock = PHPModelUtils.getDocBlock(modelElement);
-		for (PHPDocTag tag : docBlock.getTags(TagKind.THROWS)) {
-			List<TypeReference> references = tag.getTypeReferences();
-			// TODO - create ITypeBinding array from this TypeReference
-			// array
-		}
+		// ArrayList<ITypeBinding> exceptions = new ArrayList<ITypeBinding>();
+		// PHPDocBlock docBlock = PHPModelUtils.getDocBlock(modelElement);
+		// for (PHPDocTag tag : docBlock.getTags(TagKind.THROWS)) {
+		// List<TypeReference> references = tag.getTypeReferences();
+		// TODO - create ITypeBinding array from this TypeReference
+		// array
+		// }
 		return null;
 	}
 

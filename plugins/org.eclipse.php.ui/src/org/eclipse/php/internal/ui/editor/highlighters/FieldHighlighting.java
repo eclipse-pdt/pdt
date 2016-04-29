@@ -31,11 +31,9 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(SingleFieldDeclaration fieldDecl) {
-			ClassDeclaration cd = null;
 			ASTNode parent = fieldDecl.getParent();
 			while (parent != null) {
 				if (parent instanceof ClassDeclaration) {
-					cd = (ClassDeclaration) parent;
 					break;
 				}
 				parent = parent.getParent();

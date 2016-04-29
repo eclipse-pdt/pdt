@@ -159,7 +159,6 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 		int offset = command.offset;
 		IRegion lineInfo = document.getLineInformationOfOffset(offset);
 		int endOffset = lineInfo.getOffset() + lineInfo.getLength();
-		int whiteSpacesAdded = 0;
 		int lengthToCopyDown = endOffset - offset;
 
 		IStructuredDocumentRegion[] structuredDocumentRegions = document.getStructuredDocumentRegions(offset,

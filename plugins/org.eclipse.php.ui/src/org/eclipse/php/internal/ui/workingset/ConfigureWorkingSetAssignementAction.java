@@ -390,9 +390,6 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 				}
 			});
 
-			@SuppressWarnings("unused")
-			Label spacer = new Label(composite, SWT.NONE);
-
 			Button newWorkingSet = new Button(composite, SWT.PUSH);
 			newWorkingSet.setText(WorkingSetMessages.ConfigureWorkingSetAssignementAction_New_button);
 			setButtonLayoutData(newWorkingSet);

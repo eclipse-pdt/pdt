@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -243,9 +246,6 @@ public class Bindings {
 
 	private static void collectAbstractMethodsInHierarchy(ITypeBinding curr, List<IMethodBinding> methodsToOverride,
 			Set<String> overridenMethodsNames) {
-
-		Set<IMethodBinding> tempMethods = new TreeSet<IMethodBinding>();
-
 		// start of current IType method pass
 		if (curr != null) {
 			if (PHPFlags.isInterface(curr.getModifiers())) {
@@ -286,11 +286,12 @@ public class Bindings {
 				;
 			}
 			// this class has interfaces
-			ITypeBinding[] interfaceBindings = curr.getInterfaces();
-			for (ITypeBinding interfaceBinding : interfaceBindings) {
-				collectAbstractMethodsInHierarchy(superClassBinding, methodsToOverride, overridenMethodsNames);
-				;
-			}
+			// ITypeBinding[] interfaceBindings = curr.getInterfaces();
+			// for (ITypeBinding interfaceBinding : interfaceBindings) {
+			// collectAbstractMethodsInHierarchy(superClassBinding,
+			// methodsToOverride, overridenMethodsNames);
+			// ;
+			// }
 		}
 	}
 

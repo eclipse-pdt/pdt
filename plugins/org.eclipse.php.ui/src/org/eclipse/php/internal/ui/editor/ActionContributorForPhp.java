@@ -18,7 +18,10 @@ import java.util.ResourceBundle;
 
 import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
@@ -151,7 +154,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 			// The SSE's action contributor append the fOpentFileAction with the
 			// same name "Open Declaration".
 			// Do we really want to extends from SSE's action contributor?
-			IContributionItem item = navigateMenu.remove(new ActionContributionItem(fOpenFileAction));
+			navigateMenu.remove(new ActionContributionItem(fOpenFileAction));
 		}
 	}
 

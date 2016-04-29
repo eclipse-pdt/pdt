@@ -302,7 +302,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				IEnvironment environment = getEnvironment();
 				if (EnvironmentManager.isLocal(environment)) {
 					final IStatus locationStatus = workspace.validateProjectLocation(handle, projectPath);
-					File file = projectPath.toFile();
 					if (!locationStatus.isOK()) {
 						setErrorMessage(locationStatus.getMessage());
 						setPageComplete(false);
@@ -671,8 +670,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove, 3);
 		try {
 			try {
-				URI projLoc = getProjectHandle().getLocationURI();
-
 				boolean removeContent = !fKeepContent && getProjectHandle().isSynchronized(IResource.DEPTH_INFINITE);
 				getProjectHandle().delete(removeContent, false, new SubProgressMonitor(monitor, 2));
 

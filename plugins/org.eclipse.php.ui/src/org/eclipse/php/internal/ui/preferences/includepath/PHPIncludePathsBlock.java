@@ -275,7 +275,6 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
 		try {
 			IProject project = javaProject.getProject();
-			IPath projPath = project.getFullPath();
 			monitor.worked(1);
 
 			if (monitor.isCanceled()) {

@@ -1410,7 +1410,7 @@ public class ReorgPolicyFactory {
 			RefactoringStatus superStatus = super.verifyDestination(modelElement);
 			if (superStatus.hasFatalError())
 				return superStatus;
-			IScriptProject scriptProject = getDestinationScriptProject();
+			// IScriptProject scriptProject = getDestinationScriptProject();
 			// if (isParentOfAny(scriptProject, getProjectFragments()))
 			// return RefactoringStatus
 			// .createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_element2parent);

@@ -47,8 +47,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	private TokenScanner fScanner;
 	private RefactoringStatus fStatus;
 
-	public StatementAnalyzer(Program cunit, ISourceModule sourceModule,
-			IDocument document, Selection selection,
+	public StatementAnalyzer(Program cunit, ISourceModule sourceModule, IDocument document, Selection selection,
 			boolean traverseSelectedNode) throws CoreException, IOException {
 		super(selection, traverseSelectedNode);
 		Assert.isNotNull(cunit);
@@ -56,8 +55,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 		fDocument = document;
 		fFile = sourceModule;
 		fStatus = new RefactoringStatus();
-		fScanner = new TokenScanner(fCUnit.getAST().lexer(), document.get()
-				.toCharArray());
+		fScanner = new TokenScanner(fCUnit.getAST().lexer(), document.get().toCharArray());
 	}
 
 	protected void checkSelectedNodes() {
@@ -83,27 +81,20 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 
 				int selectionEnd = getSelection().getInclusiveEnd();
 				if (pos > 0 && pos <= selectionEnd) {
-					ISourceRange range = new SourceRange(lastNodeEnd, pos
-							- lastNodeEnd);
-					invalidSelection(
-							"The end of the selection contains characters that do not belong to a statement.", //$NON-NLS-1$
+					ISourceRange range = new SourceRange(lastNodeEnd, pos - lastNodeEnd);
+					invalidSelection("The end of the selection contains characters that do not belong to a statement.", //$NON-NLS-1$
 							new SourceModuleSourceContext(fFile,
-									new org.eclipse.dltk.corext.SourceRange(
-											range.getOffset(), range
-													.getLength())));
+									new org.eclipse.dltk.corext.SourceRange(range.getOffset(), range.getLength())));
 				}
 				return; // success
 			}
 		} catch (CoreException e) {
 			// fall through
 		}
-		ISourceRange range = new SourceRange(selectionOffset, node.getStart()
-				- selectionOffset + 1);
-		invalidSelection(
-				"The beginning of the selection contains characters that do not belong to a statement.", //$NON-NLS-1$
+		ISourceRange range = new SourceRange(selectionOffset, node.getStart() - selectionOffset + 1);
+		invalidSelection("The beginning of the selection contains characters that do not belong to a statement.", //$NON-NLS-1$
 				new SourceModuleSourceContext(fFile,
-						new org.eclipse.dltk.corext.SourceRange(range
-								.getOffset(), range.getLength())));
+						new org.eclipse.dltk.corext.SourceRange(range.getOffset(), range.getLength())));
 	}
 
 	public RefactoringStatus getStatus() {
@@ -126,14 +117,13 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 			super.endVisit(program);
 			return;
 		}
-		ASTNode selectedNode = getFirstSelectedNode();
-		Selection selection = getSelection();
-		if (program != selectedNode) {
-			ASTNode parent = selectedNode.getParent();
-			// TODO - add comment analyzer
-			// fStatus.merge(CommentAnalyzer.perform(selection,
-			// fScanner.getScanner(), parent.getStart(), parent.getLength()));
-		}
+		// ASTNode selectedNode = getFirstSelectedNode();
+		// if (program != selectedNode) {
+		// ASTNode parent = selectedNode.getParent();
+		// TODO - add comment analyzer
+		// fStatus.merge(CommentAnalyzer.perform(selection,
+		// fScanner.getScanner(), parent.getStart(), parent.getLength()));
+		// }
 		if (!fStatus.hasFatalError())
 			checkSelectedNodes();
 		super.endVisit(program);
@@ -145,8 +135,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	public void endVisit(DoStatement doStatement) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(doStatement, selectedNodes)) {
-			if (contains(selectedNodes, doStatement.getBody())
-					&& contains(selectedNodes, doStatement.getCondition())) {
+			if (contains(selectedNodes, doStatement.getBody()) && contains(selectedNodes, doStatement.getCondition())) {
 				invalidSelection("Operation not applicable to a 'do' statement's body and expression."); //$NON-NLS-1$
 			}
 		}
@@ -160,16 +149,13 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	public void endVisit(ForStatement node) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(node, selectedNodes)) {
-			boolean containsExpression = contains(selectedNodes,
-					node.conditions());
+			boolean containsExpression = contains(selectedNodes, node.conditions());
 			boolean containsUpdaters = contains(selectedNodes, node.updaters());
-			if (contains(selectedNodes, node.initializers())
-					&& containsExpression) {
+			if (contains(selectedNodes, node.initializers()) && containsExpression) {
 				invalidSelection("Operation not applicable to a 'for' statement's initializer and expression part."); //$NON-NLS-1$
 			} else if (containsExpression && containsUpdaters) {
 				invalidSelection("Operation not applicable to a 'for' statement's expression and updater part."); //$NON-NLS-1$
-			} else if (containsUpdaters
-					&& contains(selectedNodes, node.getBody())) {
+			} else if (containsUpdaters && contains(selectedNodes, node.getBody())) {
 				invalidSelection("Operation not applicable to a 'for' statement's updater and body part."); //$NON-NLS-1$
 			}
 		}
@@ -186,7 +172,8 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 			for (int i = 0; i < selectedNodes.length; i++) {
 				ASTNode topNode = selectedNodes[i];
 				if (cases.contains(topNode)) {
-					invalidSelection("Selection must either cover whole switch statement or parts of a single case block."); //$NON-NLS-1$
+					invalidSelection(
+							"Selection must either cover whole switch statement or parts of a single case block."); //$NON-NLS-1$
 					break;
 				}
 			}
@@ -204,12 +191,11 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 				invalidSelection("Selection must either cover whole try statement or parts of try or catch block."); //$NON-NLS-1$
 			} else {
 				List catchClauses = node.catchClauses();
-				for (Iterator iterator = catchClauses.iterator(); iterator
-						.hasNext();) {
+				for (Iterator iterator = catchClauses.iterator(); iterator.hasNext();) {
 					CatchClause element = (CatchClause) iterator.next();
-					if (element == firstSelectedNode
-							|| element.getBody() == firstSelectedNode) {
-						invalidSelection("Selection must either cover whole try statement or parts of try or catch block."); //$NON-NLS-1$
+					if (element == firstSelectedNode || element.getBody() == firstSelectedNode) {
+						invalidSelection(
+								"Selection must either cover whole try statement or parts of try or catch block."); //$NON-NLS-1$
 						// TODO - make sure this is the right condition
 					} else if (element.getClassName() == firstSelectedNode) {
 						invalidSelection("Operation is not applicable to a catch block's argument declaration."); //$NON-NLS-1$
@@ -232,8 +218,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	public void endVisit(WhileStatement node) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(node, selectedNodes)) {
-			if (contains(selectedNodes, node.getCondition())
-					&& contains(selectedNodes, node.getBody())) {
+			if (contains(selectedNodes, node.getCondition()) && contains(selectedNodes, node.getBody())) {
 				invalidSelection("Operation not applicable to a while statement's expression and body."); //$NON-NLS-1$
 			}
 		}
@@ -241,8 +226,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	}
 
 	private boolean doAfterValidation(ASTNode node, ASTNode[] selectedNodes) {
-		return selectedNodes.length > 0
-				&& node == selectedNodes[0].getParent()
+		return selectedNodes.length > 0 && node == selectedNodes[0].getParent()
 				&& getSelection().getEndVisitSelectionMode(node) == Selection.AFTER;
 	}
 
@@ -251,16 +235,14 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 		reset();
 	}
 
-	protected void invalidSelection(String message,
-			RefactoringStatusContext context) {
+	protected void invalidSelection(String message, RefactoringStatusContext context) {
 		fStatus.addFatalError(message, context);
 		reset();
 	}
 
 	private static List getSwitchCases(SwitchStatement node) {
 		List result = new ArrayList();
-		for (Iterator iter = node.getBody().statements().iterator(); iter
-				.hasNext();) {
+		for (Iterator iter = node.getBody().statements().iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof SwitchCase)
 				result.add(element);

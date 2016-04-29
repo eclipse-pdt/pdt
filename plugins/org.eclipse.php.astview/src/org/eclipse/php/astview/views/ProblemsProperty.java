@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.astview.views;
 
-import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -39,7 +37,7 @@ public class ProblemsProperty extends ASTAttribute {
 	 */
 	public Object[] getChildren() {
 		// TODO : how to get the IProblems
-		IProblem[] problems= null ; // fRoot.getProblems();
+		//IProblem[] problems= null ; // fRoot.getProblems();
 		return null;
 /*		Object[] res= new Object[problems.length];
 		for (int i= 0; i < res.length; i++) {

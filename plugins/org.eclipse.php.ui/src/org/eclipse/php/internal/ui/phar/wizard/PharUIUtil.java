@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.IArchive;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
@@ -114,16 +113,15 @@ public class PharUIUtil {
 
 				if (pharFile == null || !pharFile.exists())
 					return true;
-				IArchive archive = null;
 				if (PHPToolkitUtil.PHAR_EXTENSTION.equals(extension)) {
-					archive = new PharArchiveFile(pharFile);
+					new PharArchiveFile(pharFile);
 				} else if (PHPToolkitUtil.ZIP_EXTENSTION.equals(extension)) {
-					archive = new ZipArchiveFile(pharFile);
+					new ZipArchiveFile(pharFile);
 				} else if (PHPToolkitUtil.TAR_EXTENSTION.equals(extension)
 						|| PHPToolkitUtil.GZ_EXTENSTION.equals(extension)
 						|| PHPToolkitUtil.BZ2_EXTENSTION.equals(extension)) {
 
-					archive = new TarArchiveFile(pharFile);
+					new TarArchiveFile(pharFile);
 				}
 			} catch (Exception e) {
 				return true;
