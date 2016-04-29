@@ -334,7 +334,9 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 				return computeGuessingCompletion(prefix);
 			}
 		} catch (ModelException e) {
-			PHPCorePlugin.log(e);
+			if (!e.isDoesNotExist()) {
+				PHPCorePlugin.log(e);
+			}
 		}
 		return prefix + super.getReplacementString();
 	}

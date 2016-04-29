@@ -78,7 +78,9 @@ public class FakeConstructor extends FakeMethod {
 			}
 
 		} catch (ModelException e) {
-			PHPCorePlugin.log(e);
+			if (!e.isDoesNotExist()) {
+				PHPCorePlugin.log(e);
+			}
 		}
 		return constructors;
 	}

@@ -114,7 +114,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
 			}
 		} catch (ModelException e) {
-			PHPCorePlugin.log(e);
+			if (!e.isDoesNotExist()) {
+				PHPCorePlugin.log(e);
+			}
 		}
 
 		// Use the old way by playing with document & buffer:
@@ -151,6 +153,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			elements = internalResolve(document, sourceModule, cache, offset, end);
 		} catch (BadLocationException e1) {
 			PHPCorePlugin.log(e1);
+		} catch (ModelException e) {
+			if (!e.isDoesNotExist()) {
+				PHPCorePlugin.log(e);
+			}
 		} catch (CoreException e1) {
 			PHPCorePlugin.log(e1);
 		}
