@@ -25,6 +25,7 @@ public class FullyQualifiedReference extends TypeReference {
 
 	private NamespaceReference namespace;
 
+	@Deprecated
 	public FullyQualifiedReference(DLTKToken token) {
 		super(token);
 	}

@@ -26,6 +26,7 @@ public class NamespaceReference extends TypeReference {
 	private boolean global;
 	private boolean local;
 
+	@Deprecated
 	public NamespaceReference(DLTKToken token) {
 		super(token);
 	}

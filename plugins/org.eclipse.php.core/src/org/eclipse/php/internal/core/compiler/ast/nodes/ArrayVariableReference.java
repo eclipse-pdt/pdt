@@ -39,6 +39,7 @@ public class ArrayVariableReference extends VariableReference {
 	private final Expression index;
 	private final int arrayType;
 
+	@Deprecated
 	public ArrayVariableReference(DLTKToken token, Expression index, int arrayType) {
 		super(token);
 		this.index = index;

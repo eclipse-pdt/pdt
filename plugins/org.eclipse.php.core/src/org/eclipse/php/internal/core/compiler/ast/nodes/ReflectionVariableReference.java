@@ -35,6 +35,7 @@ public class ReflectionVariableReference extends Expression {
 		this.expression = name;
 	}
 
+	@Deprecated
 	public ReflectionVariableReference(DLTKToken token) {
 		super(token);
 	}
