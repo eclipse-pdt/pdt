@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
@@ -196,7 +195,6 @@ public final class ASTProvider {
 		}
 	}
 
-	public static final PHPVersion SHARED_AST_LEVEL = PHPVersion.PHP5_6;
 	public static final boolean SHARED_AST_STATEMENT_RECOVERY = true;
 	public static final boolean SHARED_BINDING_RECOVERY = true;
 
@@ -314,8 +312,8 @@ public final class ASTProvider {
 		synchronized (fReconcileLock) {
 			fIsReconciling = true;
 			fReconcilingJavaElement = javaElement;
+			cache(null, javaElement);
 		}
-		cache(null, javaElement);
 	}
 
 	/**
@@ -438,7 +436,7 @@ public final class ASTProvider {
 		boolean isActiveElement;
 		synchronized (this) {
 			isActiveElement = input.equals(fActiveJavaElement);
-			if (isActiveElement) {
+			if (isActiveElement && waitFlag == SharedASTProvider.WAIT_NO) {
 				if (fAST != null) {
 					if (DEBUG) {
 						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning cached AST:" //$NON-NLS-1$ //$NON-NLS-2$
@@ -446,14 +444,11 @@ public final class ASTProvider {
 					}
 					return fAST;
 				}
-				if (waitFlag == SharedASTProvider.WAIT_NO) {
-					if (DEBUG) {
-						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning null (WAIT_NO) for: " //$NON-NLS-1$ //$NON-NLS-2$
-								+ input.getElementName());
-					}
-					return null;
-
+				if (DEBUG) {
+					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning null (WAIT_NO) for: " //$NON-NLS-1$ //$NON-NLS-2$
+							+ input.getElementName());
 				}
+				return null;
 			}
 		}
 
@@ -495,6 +490,7 @@ public final class ASTProvider {
 						return fAST;
 					}
 				}
+
 				return getAST(input, waitFlag, progressMonitor);
 			} catch (InterruptedException e) {
 				return null; // thread has been interrupted don't compute AST
@@ -589,7 +585,7 @@ public final class ASTProvider {
 			return null;
 		}
 
-		final ASTParser parser = ASTParser.newParser(SHARED_AST_LEVEL, input);
+		final ASTParser parser = ASTParser.newParser(input);
 		if (parser == null) {
 			return null;
 		}
