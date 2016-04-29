@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.search.MethodExitsFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.search.FindOccurrencesEngine;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -90,11 +89,13 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 		try {
 			IModelElement resolveEnclosingElement;
 			resolveEnclosingElement = selection.resolveEnclosingElement();
-			Program astRoot = ASTProvider.getASTProvider().getAST((ISourceModule) resolveEnclosingElement,
+			Program astRoot = SharedASTProvider.getAST((ISourceModule) resolveEnclosingElement,
 					SharedASTProvider.WAIT_YES, null);
 			setEnabled(astRoot != null && new MethodExitsFinder().initialize(astRoot, selection.getOffset(),
 					selection.getLength()) == null);
 		} catch (ModelException e) {
+			PHPUiPlugin.log(e);
+		} catch (IOException e) {
 			PHPUiPlugin.log(e);
 		}
 	}
