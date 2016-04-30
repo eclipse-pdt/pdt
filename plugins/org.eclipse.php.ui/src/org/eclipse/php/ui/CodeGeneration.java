@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.ui;
 
-import java.io.IOException;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
@@ -31,7 +30,6 @@ import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
-import org.eclipse.php.ui.editor.SharedASTProvider;
 
 /**
  * Class that offers access to the templates contained in the 'code templates'
@@ -278,16 +276,17 @@ public class CodeGeneration {
 		Boolean isVar = false;
 		Program program = null;
 
-		try {
-			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
-			// bug 438661 will be fixed
-			program = SharedASTProvider.getAST(field.getSourceModule(), SharedASTProvider.WAIT_NO,
-					new NullProgressMonitor());
-		} catch (IOException e1) {
-		}
+		// XXX: do not call SharedASTProvider.getAST() due bug 466694 and
+		// until bug 438661 will be fixed
+		// try {
+		// program = SharedASTProvider.getAST(field.getSourceModule(),
+		// SharedASTProvider.WAIT_YES,
+		// new NullProgressMonitor());
+		// } catch (IOException e1) {
+		// }
 
 		if (program == null) {
-			program = generageProgram(field, null);
+			program = generateProgram(field, null);
 			if (program == null) {
 				return null;
 			}
@@ -594,16 +593,16 @@ public class CodeGeneration {
 		String[] parameterTypes = null;
 		Program program = null;
 
-		try {
-			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
-			// bug 438661 will be fixed
-			program = SharedASTProvider.getAST(method.getSourceModule(), SharedASTProvider.WAIT_NO,
-					new NullProgressMonitor());
-		} catch (IOException e1) {
-		}
+		// XXX: do not call SharedASTProvider.getAST() due bug 466694 and
+		// until bug 438661 will be fixed
+		// try {
+		// program = SharedASTProvider.getAST(method.getSourceModule(),
+		// SharedASTProvider.WAIT_YES, new NullProgressMonitor());
+		// } catch (IOException e1) {
+		// }
 
 		if (program == null) {
-			program = generageProgram(method, null);
+			program = generateProgram(method, null);
 			if (program == null) {
 				return null;
 			}
@@ -613,7 +612,7 @@ public class CodeGeneration {
 		try {
 			elementAt = program.getElementAt(method.getSourceRange().getOffset());
 		} catch (IllegalArgumentException e) {
-			program = generageProgram(method, null);
+			program = generateProgram(method, null);
 			if (program == null) {
 				return null;
 			}
@@ -625,7 +624,7 @@ public class CodeGeneration {
 
 		if (!(elementAt instanceof MethodDeclaration || elementAt instanceof FunctionDeclaration
 				|| elementAt.getParent() instanceof MethodDeclaration)) {
-			program = generageProgram(method, program);
+			program = generateProgram(method, program);
 			if (program == null) {
 				return null;
 			}
@@ -794,7 +793,8 @@ public class CodeGeneration {
 				retType, typeParameterNames, overridden, false, lineDelimiter, newExceptions);
 	}
 
-	private static Program generageProgram(IMember member, Program program) {
+	// XXX: make it private again once 438661 is fixed
+	public static Program generateProgram(IMember member, Program program) {
 		ISourceModule source = member.getSourceModule();
 		ASTParser parserForExpected = ASTParser
 				.newParser(ProjectOptions.getPhpVersion(source.getScriptProject().getProject()), source);

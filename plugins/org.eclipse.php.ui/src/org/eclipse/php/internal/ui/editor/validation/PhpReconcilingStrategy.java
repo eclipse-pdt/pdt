@@ -148,7 +148,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 				unit.reconcile(true, null, fProgressMonitor);
 			}
 
-			// read DOM AST from provider if avaiable
+			// read DOM AST from provider if available
 			Program createdAST = astProvider.getAST(unit, SharedASTProvider.WAIT_NO, fProgressMonitor);
 			if (astProvider.isActive(unit) && createdAST != null) {
 				return createdAST;

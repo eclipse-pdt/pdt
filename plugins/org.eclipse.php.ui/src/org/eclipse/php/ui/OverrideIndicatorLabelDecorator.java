@@ -19,7 +19,6 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.ImageImageDescriptor;
-import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -154,10 +153,16 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	protected int getOverrideIndicators(IMethod method) throws ModelException, IOException {
-		Program astRoot = SharedASTProvider.getAST(method.getSourceModule(), SharedASTProvider.WAIT_NO, null);
-		// XXX: WAIT_NO (instead of WAIT_ACTIVE_ONLY) due bug 443712 and until
-		// bug 438661 will be fixed (PHPReconcilingStrategy require access to
-		// UI thread)
+		Program astRoot = null;
+		// XXX: do not call SharedASTProvider.getAST() due bug 466694 and
+		// until bug 438661 will be fixed (PHPReconcilingStrategy require access
+		// to UI thread)
+		// Program astRoot = SharedASTProvider.getAST(method.getSourceModule(),
+		// SharedASTProvider.WAIT_YES, null);
+		if (astRoot == null) {
+			// XXX: must be removed once 438661 is fixed
+			astRoot = CodeGeneration.generateProgram(method, null);
+		}
 		if (astRoot != null) {
 			int res = findInHierarchyWithAST(astRoot, method);
 			if (res != -1) {
