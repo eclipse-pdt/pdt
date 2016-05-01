@@ -1,0 +1,14 @@
+--TEST--
+Bug 492770 - "format on save" adding wrong/annoying spaces on PHP7 closures with "commented name"
+--FILE--
+<?php
+function () {
+};
+function /*foobar*/ () {
+};
+--EXPECT--
+<?php
+function () {
+};
+function /*foobar*/ () {
+};

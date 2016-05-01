@@ -154,7 +154,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
 			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
-					throws Exception {
+			throws Exception {
 		this.phpVersion = phpVersion;
 		this.useShortTags = useShortTags;
 		this.document = document;
@@ -1508,7 +1508,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void initCommentIndentVariables(int offset, int startLine,
 			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
-					throws BadLocationException {
+			throws BadLocationException {
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
@@ -3151,7 +3151,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		// handle field modifiers
 		String modifier = fieldsDeclaration.getModifierString();
-		char firstChar = ' ';
+		char firstChar = SPACE;
 		try {
 			firstChar = document.getChar(fieldsDeclaration.getStart());
 		} catch (BadLocationException e) {
@@ -3336,7 +3336,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (functionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
 		} else {
-			buffer.append(' ');
+			buffer.append(SPACE);
 		}
 
 		buffer.append(functionDeclaration.getFunctionName().getName());
@@ -4825,14 +4825,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// handle referenced function with '&'
 		if (lambdaFunctionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
-		} else {
-			buffer.append(' ');
 		}
 
 		appendToBuffer(buffer.toString());
 		handleChars(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8);
 
-		if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
+		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
+				|| !lambdaFunctionDeclaration.isReference()) {
 			insertSpace();
 		}
 		appendToBuffer(OPEN_PARN);
@@ -4959,8 +4959,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		List<ReplaceEdit> allChanges = getChanges();
 		MultiTextEdit rootEdit = new MultiTextEdit();
 		for (ReplaceEdit edit : allChanges) {
-			TextEdit textEdit = new org.eclipse.text.edits.ReplaceEdit(edit.getOffset(), edit.getLength(),
-					edit.getText());
+			TextEdit textEdit = new ReplaceEdit(edit.getOffset(), edit.getLength(), edit.getText());
 			rootEdit.addChild(textEdit);
 		}
 		return rootEdit;
