@@ -43,6 +43,16 @@ public abstract class AbstractSemanticHighlighting
 
 	private final String preferenceKey = this.getClass().getName();
 
+	public AbstractSemanticHighlighting() {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=333322 (points 9 and
+		// 10):
+		// SemanticHighlightingManager#loadSemanticHighlightings() creates
+		// highlighters by doing
+		// elements[i].createExecutableExtension(CLASS_ATTR)
+		// so we can't do any additional configuration outside the constructor.
+		initDefaultPreferences();
+	}
+
 	public String getPreferenceKey() {
 		return preferenceKey;
 	}
@@ -174,7 +184,7 @@ public abstract class AbstractSemanticHighlighting
 
 	public abstract AbstractSemanticApply getSemanticApply();
 
-	public abstract void initDefaultPreferences();
+	protected abstract void initDefaultPreferences();
 
 	public int compareTo(AbstractSemanticHighlighting highlighter) {
 		return getPriority() - highlighter.getPriority();

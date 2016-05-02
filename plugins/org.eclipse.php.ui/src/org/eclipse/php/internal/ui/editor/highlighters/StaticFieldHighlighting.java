@@ -72,7 +72,7 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setItalicByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
 

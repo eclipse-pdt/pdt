@@ -81,7 +81,6 @@ public class SemanticHighlightingManager {
 	public SemanticHighlightingManager initDefaults(IPreferenceStore store) {
 		Collection<AbstractSemanticHighlighting> semanticHighlightings = highlightings.values();
 		for (AbstractSemanticHighlighting rule : semanticHighlightings) {
-			rule.initDefaultPreferences();
 			SemanticHighlightingStyle style = rule.getStyle();
 			setDefaultAndFireEvent(store, rule.getColorPreferenceKey(), style.getDefaultTextColor());
 			// setDefaultAndFireEvent(store,

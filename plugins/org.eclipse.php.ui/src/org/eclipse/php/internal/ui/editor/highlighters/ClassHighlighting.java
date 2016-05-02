@@ -139,7 +139,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 80, 50);
 	}
 

@@ -55,7 +55,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setEnabledByDefault(true).setUnderlineByDefault(true);
 	}
 

@@ -164,7 +164,6 @@ public class SemanticHighlightingTests {
 		AbstractSemanticHighlighting highlighter = highlighters.get(index);
 		assertNotNull(highlighter);
 		Program program = getProgram(module);
-		highlighter.initDefaultPreferences();
 		Position[] positions = highlighter.consumes(program);
 		assertNoDuplicates(highlighter.getDisplayName(), positions);
 		result += highlighter.getClass().getName() + ":\n";
@@ -177,7 +176,6 @@ public class SemanticHighlightingTests {
 		// We check the other highlighters for failure
 		for (AbstractSemanticHighlighting h : highlighters.values()) {
 			if (h != highlighter) {
-				h.initDefaultPreferences();
 				positions = h.consumes(program);
 				assertNoDuplicates(highlighter.getDisplayName(), positions);
 			}

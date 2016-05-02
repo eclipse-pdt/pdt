@@ -198,7 +198,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
 

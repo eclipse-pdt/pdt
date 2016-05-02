@@ -33,7 +33,7 @@ public class InternalConstantHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setEnabledByDefault(false).setItalicByDefault(true).setBoldByDefault(true).setDefaultTextColor(0, 0,
 				192);
 	}

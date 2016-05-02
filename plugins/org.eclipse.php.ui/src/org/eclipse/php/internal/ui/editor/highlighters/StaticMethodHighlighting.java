@@ -59,7 +59,7 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setItalicByDefault(true);
 	}
 

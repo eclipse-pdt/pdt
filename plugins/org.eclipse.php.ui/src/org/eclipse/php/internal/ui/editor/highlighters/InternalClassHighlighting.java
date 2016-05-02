@@ -138,7 +138,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
-	public void initDefaultPreferences() {
+	protected void initDefaultPreferences() {
 		getStyle().setEnabledByDefault(false).setDefaultTextColor(new RGB(0, 0, 192));
 	}
 
