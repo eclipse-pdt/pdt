@@ -1,0 +1,7 @@
+Verified+1: Hudson CI
+Code-Review+2: Kaloyan Raev <kaloyan.r@zend.com>
+Submitted-by: Kaloyan Raev <kaloyan.r@zend.com>
+Submitted-at: Tue, 03 May 2016 08:48:27 -0400
+Reviewed-on: https://git.eclipse.org/r/71869
+Project: pdt/org.eclipse.pdt
+Branch: refs/heads/master
