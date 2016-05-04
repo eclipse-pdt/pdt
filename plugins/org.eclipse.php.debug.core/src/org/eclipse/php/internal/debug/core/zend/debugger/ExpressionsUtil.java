@@ -28,7 +28,7 @@ public class ExpressionsUtil {
 
 	private static final class FetchStaticsExpression extends DefaultExpression {
 
-		static final String FETCH_STATIC_MEMBERS = "eval(''if (class_exists(\"ReflectionClass\") && class_exists(\"{0}\")) return (new ReflectionClass(\"{0}\"))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
+		static final String FETCH_STATIC_MEMBERS = "eval(''if (class_exists(\\''ReflectionClass\\'') && class_exists(\\''{0}\\'')) return (new ReflectionClass(\\''{0}\\''))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
 
 		public FetchStaticsExpression(String className) {
 			super(MessageFormat.format(FETCH_STATIC_MEMBERS, className));
@@ -43,8 +43,8 @@ public class ExpressionsUtil {
 
 	private static final class FetchStaticsVisibilityExpression extends DefaultExpression {
 
-		static final String FETCH_STATICS_MODIFIERS = "eval(''if (class_exists(\"ReflectionProperty\")) return array({0}); else return array();'');"; //$NON-NLS-1$
-		static final String TUPLE_ELEMENT = "(new ReflectionProperty(\"{0}\", \"{1}\"))->getModifiers()"; //$NON-NLS-1$
+		static final String FETCH_STATICS_MODIFIERS = "eval(''if (class_exists(\\''ReflectionProperty\\'')) return array({0}); else return array();'');"; //$NON-NLS-1$
+		static final String TUPLE_ELEMENT = "(new ReflectionProperty(\\''{0}\\'', \\''{1}\\''))->getModifiers()"; //$NON-NLS-1$
 
 		public FetchStaticsVisibilityExpression(String tuple) {
 			super(MessageFormat.format(FETCH_STATICS_MODIFIERS, tuple));
