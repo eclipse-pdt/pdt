@@ -259,9 +259,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 							wiz.selectionChanged(null, new StructuredSelection(project));
 							wiz.run(null);
 						}
-						return;
 					}
-
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
