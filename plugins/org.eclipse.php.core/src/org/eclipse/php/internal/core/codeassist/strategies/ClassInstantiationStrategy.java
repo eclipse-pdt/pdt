@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -26,24 +27,33 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
  */
 public class ClassInstantiationStrategy extends AbstractClassInstantiationStrategy {
 
+	private static final String CLASS_KEYWORD = "class"; //$NON-NLS-1$
+
 	public ClassInstantiationStrategy(ICompletionContext context) {
 		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace | Modifiers.AccAbstract);
 	}
 
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		// let NamespaceClassInstantiationStrategy to deal with namespace prefix
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
+		String prefix = completionContext.getPrefix();
+
 		String suffix = getSuffix(completionContext);
 		addAlias(reporter, suffix);
-		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+		// let NamespaceClassInstantiationStrategy to deal with namespace prefix
+		if (prefix != null && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 		super.apply(reporter);
-		ICompletionContext context = getContext();
-		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
-		addSelf(concreteContext, reporter);
+		addSelf(completionContext, reporter);
+
+		// for anonymous class (PHP 7)
+		prefix = completionContext.getPrefixWithoutProcessing();
+		if (completionContext.getPhpVersion().isGreaterThan(PHPVersion.PHP5_6)) {
+			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
+				reporter.reportKeyword(CLASS_KEYWORD, "", getReplacementRange(completionContext)); // $NON-NLS-1$
+			}
+		}
 	}
 
 }

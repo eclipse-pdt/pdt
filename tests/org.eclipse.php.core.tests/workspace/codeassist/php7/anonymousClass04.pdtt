@@ -1,0 +1,7 @@
+--TEST--
+Test anonymous class instantiation
+--FILE--
+<?php
+$var = new cla|
+--EXPECT--
+keyword(class)
