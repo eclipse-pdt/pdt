@@ -681,8 +681,10 @@ public class PHPLaunchUtilities {
 		}
 		for (String attribute : attributesArray) {
 			try {
-				int index = attribute.indexOf('=');
-				map.put(attribute.substring(0, index), attribute.substring(index + 1));
+				if (attribute != null) {
+					int index = attribute.indexOf('=');
+					map.put(attribute.substring(0, index), attribute.substring(index + 1));
+				}
 			} catch (Exception e) {
 				Logger.logException("Error while parsing launch attribute '" //$NON-NLS-1$
 						+ attribute + '\'', e);
