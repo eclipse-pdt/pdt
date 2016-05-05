@@ -357,12 +357,6 @@
 		<perspectiveExtension
 		      targetID="org.eclipse.debug.ui.DebugPerspective">
 		   <view
-		         id="org.eclipse.debug.ui.PHPStackView"
-		         relationship="stack"
-		         relative="org.eclipse.debug.ui.VariableView"
-		         visible="false">
-		   </view>
-		   <view
 		         id="org.eclipse.debug.ui.PHPDebugOutput"
 		         relationship="stack"
 		         relative="org.eclipse.ui.console.ConsoleView">
@@ -408,10 +402,6 @@
       </actionSetPartAssociation>
    </extension>
    
-	<extension point="org.eclipse.debug.ui.contextViewBindings">
-		<contextViewBinding contextId="org.eclipse.php.debug.ui.debugging"
-			viewId="org.eclipse.debug.ui.PHPStackView" />
-	</extension>
      
 	<!--
 	<extension
