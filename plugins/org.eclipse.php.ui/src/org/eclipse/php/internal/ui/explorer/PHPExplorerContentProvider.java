@@ -138,8 +138,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			// don't show local method variables:
 			if (parentElement instanceof IMethod) {
 				IMethod method = (IMethod) parentElement;
-				return OutlineFilter.filterChildrenForOutline(method,
-						method.getChildren());
+				return OutlineFilter.filterChildrenForOutline(method, method.getChildren());
 			}
 
 			// aggregate php projects and non php projects (includes closed
@@ -228,36 +227,13 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						IScriptProject scriptProject = (IScriptProject) parentElement;
 						IProject project = scriptProject.getProject();
 
-						// Add include path node
-						IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
-						IncludePathContainer incPathContainer = new IncludePathContainer(scriptProject, includePaths);
-						returnChildren.add(incPathContainer);
-
-						// Add the language library
-						Object[] projectChildren = getProjectFragments(scriptProject);
-						for (Object modelElement : projectChildren) {
-							if (modelElement instanceof BuildPathContainer
-									&& ((BuildPathContainer) modelElement).getBuildpathEntry().getPath()
-											.equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
-								returnChildren.add(modelElement);
-							}
-						}
-
 						boolean hasJsNature = JsNature.hasNature(project);
 						if (hasJsNature) {
 							ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(JavaScriptCore.create(project));
 							returnChildren.add(projectLibs);
 						}
 
-						// let extensions contribute explorer root elements
-						for (ITreeContentProvider provider : TreeContentProviderRegistry.getInstance()
-								.getTreeProviders()) {
-
-							Object[] providerChildren = provider.getChildren(parentElement);
-							if (providerChildren != null) {
-								returnChildren.addAll(new ArrayList<Object>(Arrays.asList(providerChildren)));
-							}
-						}
+						returnChildren.addAll(getScriptProjectContent(scriptProject));
 					}
 					return returnChildren.toArray();
 				}
@@ -271,6 +247,40 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		}
 
 		return NO_CHILDREN;
+	}
+
+	protected List<Object> getScriptProjectContent(IScriptProject scriptProject) {
+		List<Object> returnChildren = new ArrayList<Object>();
+		IProject project = scriptProject.getProject();
+
+		// Add include path node
+		IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
+		IncludePathContainer incPathContainer = new IncludePathContainer(scriptProject, includePaths);
+		returnChildren.add(incPathContainer);
+
+		// Add the language library
+		try {
+			Object[] projectChildren = getProjectFragments(scriptProject);
+			for (Object modelElement : projectChildren) {
+				if (modelElement instanceof BuildPathContainer && ((BuildPathContainer) modelElement)
+						.getBuildpathEntry().getPath().equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
+					returnChildren.add(modelElement);
+				}
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+
+		// let extensions contribute explorer root elements
+		for (ITreeContentProvider provider : TreeContentProviderRegistry.getInstance().getTreeProviders()) {
+
+			Object[] providerChildren = provider.getChildren(scriptProject);
+			if (providerChildren != null) {
+				returnChildren.addAll(new ArrayList<Object>(Arrays.asList(providerChildren)));
+			}
+		}
+
+		return returnChildren;
 	}
 
 	private boolean hasGlobals(IModelElement parent) {
