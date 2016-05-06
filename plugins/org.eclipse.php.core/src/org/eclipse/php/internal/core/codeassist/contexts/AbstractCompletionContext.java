@@ -529,7 +529,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	/**
 	 * Returns the word on which code assist was invoked
 	 * 
-	 * @return prefix
+	 * @return prefix (will never be null)
 	 * @throws BadLocationException
 	 */
 	public String getPrefix() throws BadLocationException {
