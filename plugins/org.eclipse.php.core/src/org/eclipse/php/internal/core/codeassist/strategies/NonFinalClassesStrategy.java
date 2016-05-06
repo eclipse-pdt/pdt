@@ -36,8 +36,7 @@ public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		// let NamespaceNonFinalClassesStrategy to deal with namespace prefix
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 		super.apply(reporter);

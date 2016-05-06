@@ -36,20 +36,18 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		String prefix = completionContext.getPrefix();
-
 		String suffix = getSuffix(completionContext);
 		addAlias(reporter, suffix);
 		// let NamespaceClassInstantiationStrategy to deal with namespace prefix
-		if (prefix != null && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 		super.apply(reporter);
 		addSelf(completionContext, reporter);
 
 		// for anonymous class (PHP 7)
-		prefix = completionContext.getPrefixWithoutProcessing();
 		if (completionContext.getPhpVersion().isGreaterThan(PHPVersion.PHP5_6)) {
+			String prefix = completionContext.getPrefixWithoutProcessing();
 			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
 				reporter.reportKeyword(CLASS_KEYWORD, "", getReplacementRange(completionContext)); // $NON-NLS-1$
 			}
