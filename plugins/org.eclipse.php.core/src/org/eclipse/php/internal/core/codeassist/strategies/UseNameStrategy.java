@@ -35,8 +35,7 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix() != null
-				&& completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
 
