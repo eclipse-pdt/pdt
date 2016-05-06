@@ -198,8 +198,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 	private void internalInitializeValues() {
 		IPreferencesService service = Platform.getPreferencesService();
 		fRunWithDebugInfo.setSelection(
-				service.getBoolean(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, false, null));
-
+				service.getBoolean(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, false, null));
 		fDebugTextBox.setText(Integer
 				.toString(service.getInt(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 0, null)));
 		IEclipsePreferences instanceScope = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID);
