@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -96,12 +95,7 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 	}
 
 	@Override
-	public Set<IFolder> getDirectoriesToIgnore(IProject arg0, IProgressMonitor arg1) {
-		return null;
-	}
-
-	@Override
-	public IWizard getConfigurationWizard() {
+	public Set<IFolder> getFoldersToIgnore(IProject arg0, IProgressMonitor arg1) {
 		return null;
 	}
 
