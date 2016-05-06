@@ -2464,6 +2464,9 @@
           <contentExtension pattern="org.eclipse.ui.navigator.resourceContent" />
           <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
           <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper"/>
+          <contentExtension
+                pattern="org.eclipse.php.ui.navigator.linkHelper">
+          </contentExtension>
        </includes>
     </viewerContentBinding>
     
@@ -2483,13 +2486,21 @@
           id="org.eclipse.php.ui.phpContent"
           labelProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelProvider"
           name="PHP Elements"
-          priority="normal">			
+          priority="normal">
           
           <triggerPoints>
           		<or>
-					<adapt type="org.eclipse.core.resources.IFile">
-						<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
-					</adapt>
+          			<and>
+						<instanceof	value="org.eclipse.core.resources.IResource" />
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+						</adapt>
+					</and>
+					<and>
+						<adapt type="org.eclipse.core.resources.IFile">
+							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
+						</adapt>
+					</and>
 					<instanceof value="org.eclipse.dltk.core.IMember" />
 					<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
 				</or>
@@ -2507,6 +2518,24 @@
 					</or>
 				</enablement>
 			</actionProvider>
+			
+			<actionProvider
+				class="org.eclipse.dltk.internal.ui.navigator.ScriptExplorerOpenActionProvider"
+				id="org.eclipse.php.ui.navigator.actions.OpenActions"
+				overrides="org.eclipse.ui.navigator.resources.OpenActions"> 
+				<enablement>
+					<or>
+						<and>
+							<instanceof	value="org.eclipse.core.resources.IResource" />
+							<adapt type="org.eclipse.core.resources.IProject">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+							</adapt>
+						</and>
+						<instanceof value="org.eclipse.dltk.core.IModelElement" />
+					</or>
+				</enablement>
+			</actionProvider>
+			
 			<commonSorter
 					class="org.eclipse.dltk.ui.ModelElementSorter"
 					id="org.eclipse.dltk.ui.modelElementorg.eclipse.internal.ui.navigator.ScriptDropAssistanteAlwaysRegardlessOfSuppressedExt">
@@ -2526,8 +2555,8 @@
 			<possibleChildren>
 				<instanceof	value="org.eclipse.dltk.core.IMember" />
 			</possibleChildren>
+		</navigatorContent>
 		
-	    </navigatorContent>
    		<commonFilter
 		        activeByDefault="false"
 		        class="org.eclipse.dltk.internal.ui.filters.EmptyPackageFilter"
@@ -2572,6 +2601,20 @@
             class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
             id="org.eclipse.php.ui.navigator.filtersr.ImportDeclarationFilter" />
  	</extension>
+	<extension
+	       point="org.eclipse.ui.navigator.linkHelper">
+	    <linkHelper
+	          class="org.eclipse.php.internal.ui.navigator.PHPNavigatorLinkHelper"
+	          id="org.eclipse.php.ui.navigator.linkHelper">
+			<editorInputEnablement>
+			</editorInputEnablement>
+	        <selectionEnablement>
+	            <instanceof
+	                  value="org.eclipse.dltk.core.IModelElement">
+	            </instanceof>
+	        </selectionEnablement>
+	    </linkHelper>
+	</extension>
  
 	<extension point="org.eclipse.php.ui.quickAssistProcessors">
 		<quickAssistProcessor
