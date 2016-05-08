@@ -14,17 +14,13 @@ package org.eclipse.php.core.tests.performance.filenetwork;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
@@ -33,14 +29,18 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/project/filenetwork/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-		/* "/workspace/project/filenetwork/php5", */
-		"/workspace/project/filenetwork/php53" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/filenetwork/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] {
+						/* "/workspace/project/filenetwork/php5", */
+						"/workspace/project/filenetwork/php53" });
 	};
 
 	protected IProject project;
@@ -55,8 +55,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 	protected IScriptProject SCRIPT_PROJECT;
 
 	public Test suite(final Map map) {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				map.get(ProjectSuite.PROJECT).toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto File Network Tests");
 
@@ -75,14 +74,11 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 			// PHPCorePerformanceTests.getDefault().getBundle()
 			// .getEntry(fileNames[0]).openStream());
 			// properties.load(inStream);
-			String[] fileNames = (String[]) map
-					.get(ProjectSuite.REFERENCED_FILE);
+			String[] fileNames = (String[]) map.get(ProjectSuite.REFERENCED_FILE);
 			if (fileNames != null) {
-				for (final String fileName : (String[]) map
-						.get(ProjectSuite.REFERENCED_FILE)) {
+				for (final String fileName : (String[]) map.get(ProjectSuite.REFERENCED_FILE)) {
 					try {
-						FileNetworkReferencedFilesTests test = new FileNetworkReferencedFilesTests(
-								fileName) {
+						FileNetworkReferencedFilesTests test = new FileNetworkReferencedFilesTests(fileName) {
 
 							protected void runTest() throws Throwable {
 								testReferencedFiles(fileName);
@@ -91,27 +87,25 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 						suite.addTest(test);
 					} catch (final Exception e) {
 						suite.addTest(new TestCase(fileName) { // dummy
-									// test
-									// indicating
-									// PDTT
-									// file
-									// parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
+							// test
+							// indicating
+							// PDTT
+							// file
+							// parsing
+							// failure
+							protected void runTest() throws Throwable {
+								throw e;
+							}
+						});
 					}
 				}
 			}
 
 			fileNames = (String[]) map.get(ProjectSuite.REFERENCING_FILE);
 			if (fileNames != null) {
-				for (final String fileName : (String[]) map
-						.get(ProjectSuite.REFERENCING_FILE)) {
+				for (final String fileName : (String[]) map.get(ProjectSuite.REFERENCING_FILE)) {
 					try {
-						FileNetworkReferencingFilesTests test = new FileNetworkReferencingFilesTests(
-								fileName) {
+						FileNetworkReferencingFilesTests test = new FileNetworkReferencingFilesTests(fileName) {
 
 							protected void runTest() throws Throwable {
 								testReferencingFiles(fileName);
@@ -120,16 +114,16 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 						suite.addTest(test);
 					} catch (final Exception e) {
 						suite.addTest(new TestCase(fileName) { // dummy
-									// test
-									// indicating
-									// PDTT
-									// file
-									// parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
+							// test
+							// indicating
+							// PDTT
+							// file
+							// parsing
+							// failure
+							protected void runTest() throws Throwable {
+								throw e;
+							}
+						});
 					}
 				}
 			}
@@ -143,13 +137,10 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 
 	public void testReferencingFiles(String fileName) throws Exception {
 		IFile file = project.getFile(fileName);
-		final ISourceModule sourceModule = (ISourceModule) DLTKCore
-				.create(file);
-		perfMonitor.execute("PerformanceTests.testReferencingfiles" + "_"
-				+ fileName, new Operation() {
+		final ISourceModule sourceModule = (ISourceModule) DLTKCore.create(file);
+		perfMonitor.execute("PerformanceTests.testReferencingfiles" + "_" + fileName, new Operation() {
 			public void run() throws Exception {
-				ReferenceTree tree = FileNetworkUtility
-						.buildReferencingFilesTree(sourceModule, null);
+				ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(sourceModule, null);
 				System.out.println(tree.toString());
 			}
 		}, 1, 10);
@@ -157,13 +148,10 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 
 	public void testReferencedFiles(String fileName) throws Exception {
 		IFile file = project.getFile(fileName);
-		final ISourceModule sourceModule = (ISourceModule) DLTKCore
-				.create(file);
-		perfMonitor.execute("PerformanceTests.testReferencedfiles" + "_"
-				+ fileName, new Operation() {
+		final ISourceModule sourceModule = (ISourceModule) DLTKCore.create(file);
+		perfMonitor.execute("PerformanceTests.testReferencedfiles" + "_" + fileName, new Operation() {
 			public void run() throws Exception {
-				ReferenceTree tree = FileNetworkUtility
-						.buildReferencedFilesTree(sourceModule, null);
+				ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 				System.out.println(tree.toString());
 			}
 		}, 1, 10);

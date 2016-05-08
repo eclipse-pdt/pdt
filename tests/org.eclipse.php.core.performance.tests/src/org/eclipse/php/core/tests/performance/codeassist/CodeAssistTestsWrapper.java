@@ -17,10 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -31,25 +27,29 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
 import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.internal.core.PHPVersion;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 
 	protected static final char OFFSET_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] {
-				"/workspace/project/codeassist/php5/exclusive",
-				"/workspace/project/codeassist/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-		/* "/workspace/project/codeassist/php5", */
-		"/workspace/project/codeassist/php53" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/project/codeassist/php5/exclusive", "/workspace/project/codeassist/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] {
+						/* "/workspace/project/codeassist/php5", */
+						"/workspace/project/codeassist/php53" });
 	};
 
 	protected IProject project;
@@ -64,22 +64,18 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 	}
 
 	public Test suite(final Map map) {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				map.get(ProjectSuite.PROJECT).toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Code Assist Tests");
 
-		final PHPVersion phpVersion = (PHPVersion) map
-				.get(ProjectSuite.PHP_VERSION);
+		final PHPVersion phpVersion = (PHPVersion) map.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project", map.get(
-					ProjectSuite.PROJECT).toString());
+			testsDirectory = testsDirectory.replaceAll("project", map.get(ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
 					final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
-							PHPCorePerformanceTests.getDefault().getBundle(),
-							fileName);
+							PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					CodeAssistTests test = new CodeAssistTests(fileName) {
 
 						protected void setUp() throws Exception {
@@ -93,29 +89,26 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 						}
 
 						protected void runTest() throws Throwable {
-							perfMonitor.execute(
-									"PerformanceTests.testCodeAssist" + "_"
-											+ fileName, new Operation() {
-										public void run() throws Exception {
-											CompletionProposal[] proposals = getProposals(pdttFile
-													.getFile());
-										}
-									}, 1, 10);
+							perfMonitor.execute("PerformanceTests.testCodeAssist" + "_" + fileName, new Operation() {
+								public void run() throws Exception {
+									CompletionProposal[] proposals = getProposals(pdttFile.getFile());
+								}
+							}, 1, 10);
 						}
 					};
 					suite.addTest(test);
 				} catch (final Exception e) {
 					suite.addTest(new TestCase(fileName) { // dummy
-								// test
-								// indicating
-								// PDTT
-								// file
-								// parsing
-								// failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						// test
+						// indicating
+						// PDTT
+						// file
+						// parsing
+						// failure
+						protected void runTest() throws Throwable {
+							throw e;
+						}
+					});
 				}
 			}
 		}
@@ -163,16 +156,14 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 		return getProposals(getSourceModule(), offset);
 	}
 
-	public static CompletionProposal[] getProposals(ISourceModule sourceModule,
-			int offset) throws ModelException {
+	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
 		sourceModule.codeComplete(offset, new CompletionRequestor() {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
 		});
-		return (CompletionProposal[]) proposals
-				.toArray(new CompletionProposal[proposals.size()]);
+		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
 	public class CodeAssistTests extends AbstractPDTTTest {
