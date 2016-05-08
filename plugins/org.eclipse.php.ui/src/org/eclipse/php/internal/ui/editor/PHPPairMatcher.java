@@ -149,21 +149,68 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		if (useGenericsHeuristic && !isTypeParameterBracket(offset, document, scanner))
 			return -1;
 
-		return scanner.findClosingPeer(offset + 1, openingPeer, closingPeer);
+		int closedAt = scanner.findClosingPeer(offset + 1, openingPeer, closingPeer);
+
+		if (closedAt != PHPHeuristicScanner.NOT_FOUND) {
+			// bug 493134 , detect mismatch, like call(function() {});
+			for (int i = 0; i < fPairs.length; i += 2) {
+				if (fPairs[i] == openingPeer) {
+					continue;
+				}
+				int pos = offset + 1;
+				int startPos = PHPHeuristicScanner.NOT_FOUND;
+				while (pos < closedAt) {
+					int closeAlternate = scanner.findClosingPeer(pos, fPairs[i], fPairs[i + 1]);
+					if (closeAlternate == PHPHeuristicScanner.NOT_FOUND) {
+						break;
+					} else if (closeAlternate < closedAt) {
+						startPos = scanner.findOpeningPeer(closeAlternate - 1, PHPHeuristicScanner.UNBOUND, fPairs[i],
+								fPairs[i + 1]);
+						if (startPos == PHPHeuristicScanner.NOT_FOUND) {
+							break;
+						} else if (startPos > offset) {
+							pos = closeAlternate + 1;
+						} else {
+							return PHPHeuristicScanner.NOT_FOUND;
+						}
+					} else if (closeAlternate > closedAt) {
+						startPos = scanner.findOpeningPeer(closeAlternate - 1, PHPHeuristicScanner.UNBOUND, fPairs[i],
+								fPairs[i + 1]);
+						if (startPos == PHPHeuristicScanner.NOT_FOUND || startPos < offset) {
+							break;
+						} else if (startPos > offset) {
+							return PHPHeuristicScanner.NOT_FOUND;
+						}
+					}
+				}
+
+			}
+		}
+
+		return closedAt;
 	}
 
 	private int searchForOpeningPeer(int offset, char openingPeer, char closingPeer, IDocument document)
 			throws BadLocationException {
 		boolean useGenericsHeuristic = openingPeer == '<';
-		if (useGenericsHeuristic && !fHighlightAngularBrackets)
+		if (useGenericsHeuristic && !fHighlightAngularBrackets) {
 			return -1;
+		}
 
 		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, false);
 		int peer = scanner.findOpeningPeer(offset - 1, PHPHeuristicScanner.UNBOUND, openingPeer, closingPeer);
-		if (peer == PHPHeuristicScanner.NOT_FOUND)
+		if (peer == PHPHeuristicScanner.NOT_FOUND) {
 			return -1;
-		if (useGenericsHeuristic && !isTypeParameterBracket(peer, document, scanner))
+		}
+		if (useGenericsHeuristic && !isTypeParameterBracket(peer, document, scanner)) {
 			return -1;
+		}
+
+		// bug 493134 , detect mismatch, like call(function() {call(|)});
+		if (searchForClosingPeer(peer, openingPeer, closingPeer, document) != offset) {
+			return -1;
+		}
+
 		return peer;
 	}
 
