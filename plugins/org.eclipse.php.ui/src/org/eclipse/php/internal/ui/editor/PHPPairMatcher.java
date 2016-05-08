@@ -44,13 +44,6 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		fPairs = pairs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.text.source.ICharacterPairMatcher#match(org.eclipse
-	 * .jface.text.IDocument, int)
-	 */
 	public IRegion match(IDocument document, int offset) {
 
 		fOffset = offset;
@@ -66,18 +59,14 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.eclipse.jface.text.source.ICharacterPairMatcher#getAnchor()
 	 */
 	public int getAnchor() {
 		return fAnchor;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.eclipse.jface.text.source.ICharacterPairMatcher#dispose()
 	 */
 	public void dispose() {
@@ -157,31 +146,23 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 				if (fPairs[i] == openingPeer) {
 					continue;
 				}
+				int depth = 0;
 				int pos = offset + 1;
-				int startPos = PHPHeuristicScanner.NOT_FOUND;
-				while (pos < closedAt) {
-					int closeAlternate = scanner.findClosingPeer(pos, fPairs[i], fPairs[i + 1]);
-					if (closeAlternate == PHPHeuristicScanner.NOT_FOUND) {
+				char[] pair = new char[] { fPairs[i], fPairs[i + 1] };
+				do {
+					int tmp = scanner.scanForward(pos, closedAt, pair);
+					if (tmp == PHPHeuristicScanner.NOT_FOUND) {
 						break;
-					} else if (closeAlternate < closedAt) {
-						startPos = scanner.findOpeningPeer(closeAlternate - 1, PHPHeuristicScanner.UNBOUND, fPairs[i],
-								fPairs[i + 1]);
-						if (startPos == PHPHeuristicScanner.NOT_FOUND) {
-							break;
-						} else if (startPos > offset) {
-							pos = closeAlternate + 1;
-						} else {
-							return PHPHeuristicScanner.NOT_FOUND;
-						}
-					} else if (closeAlternate > closedAt) {
-						startPos = scanner.findOpeningPeer(closeAlternate - 1, PHPHeuristicScanner.UNBOUND, fPairs[i],
-								fPairs[i + 1]);
-						if (startPos == PHPHeuristicScanner.NOT_FOUND || startPos < offset) {
-							break;
-						} else if (startPos > offset) {
-							return PHPHeuristicScanner.NOT_FOUND;
-						}
 					}
+					if (document.getChar(tmp) == pair[0]) {
+						depth++;
+					} else {
+						depth--;
+					}
+					pos = tmp + 1;
+				} while (pos < closedAt);
+				if (depth != 0) {
+					return PHPHeuristicScanner.NOT_FOUND;
 				}
 
 			}
