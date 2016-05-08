@@ -158,7 +158,6 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 					tRegion = container.getRegionAtCharacterOffset(currOffset);
 					regionStart += tRegion.getStart();
 				}
-
 				// This text region must be of type PhpScriptRegion:
 				if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
