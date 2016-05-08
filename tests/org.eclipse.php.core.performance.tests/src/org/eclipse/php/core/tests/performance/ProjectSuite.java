@@ -2,11 +2,6 @@ package org.eclipse.php.core.tests.performance;
 
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -20,7 +15,6 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.filenetwork.AbstractModelTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
@@ -34,6 +28,11 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+
+import junit.extensions.TestSetup;
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class ProjectSuite extends AbstractModelTests {
 	protected Map map;
@@ -56,15 +55,13 @@ public class ProjectSuite extends AbstractModelTests {
 	}
 
 	private String getProjectNameWithVersion(Map map) {
-		return map.get(PROJECT).toString() + "_"
-				+ ((PHPVersion) map.get(PHP_VERSION)).getAlias();
+		return map.get(PROJECT).toString() + "_" + ((PHPVersion) map.get(PHP_VERSION)).getAlias();
 	}
 
 	public Test suite(final Map map) {
 		this.map = map;
 
-		TestSuite suite = new TestSuite(getProjectNameWithVersion(map)
-				+ " Performance Tests");
+		TestSuite suite = new TestSuite(getProjectNameWithVersion(map) + " Performance Tests");
 
 		addTests(suite);
 
@@ -82,21 +79,16 @@ public class ProjectSuite extends AbstractModelTests {
 				IProjectDescription desc = project.getDescription();
 				desc.setNatureIds(new String[] { PHPNature.ID });
 				project.setDescription(desc, null);
-				ProjectOptions.setPhpVersion((PHPVersion) map.get(PHP_VERSION),
-						project.getProject());
+				ProjectOptions.setPhpVersion((PHPVersion) map.get(PHP_VERSION), project.getProject());
 				IFolder testFolder = project.getFolder("pdttest");
 				testFolder.create(true, true, null);
 
-				if (map.get(CHANGE_INCLUDE_PATH) != null
-						&& ((Boolean) map.get(CHANGE_INCLUDE_PATH))
-								.booleanValue()) {
+				if (map.get(CHANGE_INCLUDE_PATH) != null && ((Boolean) map.get(CHANGE_INCLUDE_PATH)).booleanValue()) {
 					String[] includePath = (String[]) map.get(INCLUDE_PATH);
 					IBuildpathEntry[] buildpathEntries = new IBuildpathEntry[includePath.length + 1];
-					buildpathEntries[buildpathEntries.length - 1] = DLTKCore
-							.newSourceEntry(testFolder.getFullPath());
+					buildpathEntries[buildpathEntries.length - 1] = DLTKCore.newSourceEntry(testFolder.getFullPath());
 					for (int i = 0; i < includePath.length; i++) {
-						buildpathEntries[i] = DLTKCore.newSourceEntry(project
-								.getFullPath().append(includePath[i]));
+						buildpathEntries[i] = DLTKCore.newSourceEntry(project.getFullPath().append(includePath[i]));
 					}
 					scriptProject.setRawBuildpath(buildpathEntries, null);
 				}
@@ -156,11 +148,9 @@ public class ProjectSuite extends AbstractModelTests {
 		}
 
 		public void runTest() throws Throwable {
-			final IProject project = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(map.get(PROJECT).toString());
+			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(PROJECT).toString());
 
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testBuildProject", new Operation() {
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testBuildProject", new Operation() {
 				public void run() throws Exception {
 					project.refreshLocal(IResource.DEPTH_INFINITE, null);
 					PHPCoreTests.waitForIndexer();
@@ -179,14 +169,11 @@ public class ProjectSuite extends AbstractModelTests {
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
-			final IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
+			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			modelAccess.findTypes("", MatchRule.PREFIX, 0, 0, scope, null);
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testSearchAllTypes", new Operation() {
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchAllTypes", new Operation() {
 				public void run() throws Exception {
-					modelAccess.findTypes("", MatchRule.PREFIX, 0, 0, scope,
-							null);
+					modelAccess.findTypes("", MatchRule.PREFIX, 0, 0, scope, null);
 				}
 			}, 10, 10);
 		}
@@ -202,15 +189,11 @@ public class ProjectSuite extends AbstractModelTests {
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
-			final IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			modelAccess.findMethods("", MatchRule.PREFIX, Modifiers.AccGlobal,
-					0, scope, null);
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testSearchAllFunctions", new Operation() {
+			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			modelAccess.findMethods("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchAllFunctions", new Operation() {
 				public void run() throws Exception {
-					modelAccess.findMethods("", MatchRule.PREFIX,
-							Modifiers.AccGlobal, 0, scope, null);
+					modelAccess.findMethods("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 				}
 			}, 10, 10);
 		}
@@ -226,15 +209,11 @@ public class ProjectSuite extends AbstractModelTests {
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
-			final IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			modelAccess.findFields("", MatchRule.PREFIX, Modifiers.AccGlobal,
-					0, scope, null);
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testSearchGlobalVariables", new Operation() {
+			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			modelAccess.findFields("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchGlobalVariables", new Operation() {
 				public void run() throws Exception {
-					modelAccess.findFields("", MatchRule.PREFIX,
-							Modifiers.AccGlobal, 0, scope, null);
+					modelAccess.findFields("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 				}
 			}, 10, 10);
 		}
@@ -242,8 +221,7 @@ public class ProjectSuite extends AbstractModelTests {
 
 	public class SearchIncludeStatementsTest extends AbstractPDTTTest {
 		public SearchIncludeStatementsTest() {
-			super(getProjectNameWithVersion(map)
-					+ "_SearchIncludeStatementsTest");
+			super(getProjectNameWithVersion(map) + "_SearchIncludeStatementsTest");
 		}
 
 		public void runTest() throws Throwable {
@@ -251,11 +229,9 @@ public class ProjectSuite extends AbstractModelTests {
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
-			final IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
+			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			modelAccess.findIncludes("", MatchRule.PREFIX, scope, null);
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testSearchIncludeStatements", new Operation() {
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchIncludeStatements", new Operation() {
 				public void run() throws Exception {
 					modelAccess.findIncludes("", MatchRule.PREFIX, scope, null);
 				}
@@ -272,17 +248,14 @@ public class ProjectSuite extends AbstractModelTests {
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
-			final IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			final IType[] exceptionType = PhpModelAccess.getDefault()
-					.findTypes(map.get(TYPE).toString(), MatchRule.EXACT, 0, 0,
-							scope, null);
+			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			final IType[] exceptionType = PhpModelAccess.getDefault().findTypes(map.get(TYPE).toString(),
+					MatchRule.EXACT, 0, 0, scope, null);
 
 			Assert.assertNotNull(exceptionType);
 			Assert.assertEquals(exceptionType.length, 1);
 
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testSuperTypeHierarchy", new Operation() {
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSuperTypeHierarchy", new Operation() {
 				public void run() throws Exception {
 					exceptionType[0].newSupertypeHierarchy(null);
 				}
@@ -299,17 +272,14 @@ public class ProjectSuite extends AbstractModelTests {
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
-			final IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(scriptProject);
-			final IType[] exceptionType = PhpModelAccess.getDefault()
-					.findTypes(map.get(TYPE).toString(), MatchRule.EXACT, 0, 0,
-							scope, null);
+			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			final IType[] exceptionType = PhpModelAccess.getDefault().findTypes(map.get(TYPE).toString(),
+					MatchRule.EXACT, 0, 0, scope, null);
 
 			Assert.assertNotNull(exceptionType);
 			Assert.assertEquals(exceptionType.length, 1);
 
-			perfMonitor.execute(getProjectNameWithVersion(map)
-					+ ".testTypeHierarchy", new Operation() {
+			perfMonitor.execute(getProjectNameWithVersion(map) + ".testTypeHierarchy", new Operation() {
 				public void run() throws Exception {
 					exceptionType[0].newTypeHierarchy(null);
 				}

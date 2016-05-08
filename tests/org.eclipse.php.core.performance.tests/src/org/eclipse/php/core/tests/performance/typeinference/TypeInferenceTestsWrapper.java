@@ -16,12 +16,6 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -35,9 +29,9 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
@@ -46,16 +40,22 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 
+import junit.extensions.TestSetup;
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 	protected static final int ENGINE_TIMEOUT = 100000;
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/project/typeinference/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-		// "/workspace/project/typeinference/php5",
-				"/workspace/project/typeinference/php53" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/typeinference/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] {
+						// "/workspace/project/typeinference/php5",
+						"/workspace/project/typeinference/php53" });
 	};
 
 	// private IFile testFile;
@@ -76,43 +76,34 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 	}
 
 	public Test suite(final Map map) {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				map.get(ProjectSuite.PROJECT).toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 
 		TestSuite suite = new TestSuite("Type Inference Tests");
 
-		final PHPVersion phpVersion = (PHPVersion) map
-				.get(ProjectSuite.PHP_VERSION);
+		final PHPVersion phpVersion = (PHPVersion) map.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project", map.get(
-					ProjectSuite.PROJECT).toString());
+			testsDirectory = testsDirectory.replaceAll("project", map.get(ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(
-							PHPCorePerformanceTests.getDefault().getBundle(),
-							fileName);
+					final PdttFile pdttFile = new PdttFile(PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					final String pruner = getPrunerType(pdttFile);
 
-					suite.addTest(new TypeInferenceTests(phpVersion.getAlias()
-							+ " - /" + fileName) {
+					suite.addTest(new TypeInferenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
 						protected void setUp() throws Exception {
-							PHPCoreTests.setProjectPhpVersion(project,
-									phpVersion);
+							PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 						}
 
 						protected void tearDown() throws Exception {
 						}
 
 						protected void runTest() throws Throwable {
-							String criteriaFunction = new File(fileName)
-									.getName().replaceAll("\\.pdtt", "");
+							String criteriaFunction = new File(fileName).getName().replaceAll("\\.pdtt", "");
 							String code = pdttFile.getFile();
 
-							findEvaluatedType(fileName, code, criteriaFunction,
-									pruner);
+							findEvaluatedType(fileName, code, criteriaFunction, pruner);
 						}
 					});
 				} catch (final Exception e) {
@@ -123,10 +114,10 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 															// file
 															// parsing
 															// failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						protected void runTest() throws Throwable {
+							throw e;
+						}
+					});
 				}
 			}
 		}
@@ -155,8 +146,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 		private ASTNode result;
 		private String criteriaFunction;
 
-		public ASTNodeSearcher(ISourceModule sourceModule,
-				String criteriaFunction) {
+		public ASTNodeSearcher(ISourceModule sourceModule, String criteriaFunction) {
 			super(sourceModule);
 			this.criteriaFunction = criteriaFunction;
 		}
@@ -165,8 +155,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 			if (node instanceof CallExpression) {
 				CallExpression callExpression = (CallExpression) node;
 				if (criteriaFunction.equals(callExpression.getName())) {
-					result = (ASTNode) callExpression.getArgs().getChilds()
-							.get(0);
+					result = (ASTNode) callExpression.getArgs().getChilds().get(0);
 					context = contextStack.peek();
 					return false;
 				}
@@ -183,12 +172,11 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 		}
 	}
 
-	protected void findEvaluatedType(String fileName, String code,
-			String criteriaFunction, final String pruner) throws Exception {
+	protected void findEvaluatedType(String fileName, String code, String criteriaFunction, final String pruner)
+			throws Exception {
 		IFile file = project.getFile("pdttest/test.php");
 		if (file.exists()) {
-			file.setContents(new ByteArrayInputStream(code.getBytes()), true,
-					false, null);
+			file.setContents(new ByteArrayInputStream(code.getBytes()), true, false, null);
 		} else {
 			file.create(new ByteArrayInputStream(code.getBytes()), true, null);
 		}
@@ -199,29 +187,22 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 			PHPCoreTests.waitForAutoBuild();
 
 			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
-			ModuleDeclaration moduleDecl = SourceParserUtil
-					.getModuleDeclaration(sourceModule);
+			ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);
 
-			ASTNodeSearcher searcher = new ASTNodeSearcher(sourceModule,
-					criteriaFunction);
+			ASTNodeSearcher searcher = new ASTNodeSearcher(sourceModule, criteriaFunction);
 			moduleDecl.traverse(searcher);
 
-			Assert.assertNotNull("Method call " + criteriaFunction
-					+ "() in code: " + code, searcher.getResult());
-			Assert.assertNotNull("Can't find context for " + criteriaFunction
-					+ "() in code: " + code, searcher.getContext());
+			Assert.assertNotNull("Method call " + criteriaFunction + "() in code: " + code, searcher.getResult());
+			Assert.assertNotNull("Can't find context for " + criteriaFunction + "() in code: " + code,
+					searcher.getContext());
 
-			final ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher
-					.getContext(), searcher.getResult());
-			perfMonitor.execute("PerformanceTests.testCodeAssist" + "_"
-					+ fileName, new Operation() {
+			final ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher.getContext(), searcher.getResult());
+			perfMonitor.execute("PerformanceTests.testCodeAssist" + "_" + fileName, new Operation() {
 				public void run() throws Exception {
 					if ("phpdocGoals".equals(pruner)) {
-						typeInferenceEngine.evaluateTypeHeavy(goal,
-								ENGINE_TIMEOUT);
+						typeInferenceEngine.evaluateTypeHeavy(goal, ENGINE_TIMEOUT);
 					} else if ("heavyGoals".equals(pruner)) {
-						typeInferenceEngine.evaluateTypePHPDoc(goal,
-								ENGINE_TIMEOUT);
+						typeInferenceEngine.evaluateTypePHPDoc(goal, ENGINE_TIMEOUT);
 					} else {
 						typeInferenceEngine.evaluateType(goal, ENGINE_TIMEOUT);
 					}

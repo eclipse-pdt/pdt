@@ -305,14 +305,6 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		WorkspaceAutoBuild.disable();
 	}
 
-	/**
-	 * Deprecated since 2012-01-11 because of the typo in method name.
-	 */
-	@Deprecated
-	public static void disableAutoBulid() throws CoreException {
-		WorkspaceAutoBuild.disable();
-	}
-
 	protected ISourceModule getSourceModule(String path) {
 		return (ISourceModule) DLTKCore.create(getFile(path));
 	}

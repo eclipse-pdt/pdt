@@ -15,10 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -28,8 +24,8 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.core.SourceRange;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
@@ -37,16 +33,20 @@ import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.core.tests.performance.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 
 	protected static final char SELECTION_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/project/selection/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-		/* "/workspace/project/selection/php5", */
-		"/workspace/project/selection/php53" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/selection/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] {
+						/* "/workspace/project/selection/php5", */
+						"/workspace/project/selection/php53" });
 	};
 
 	protected IProject project;
@@ -61,24 +61,19 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 	}
 
 	public Test suite(final Map map) {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				map.get(ProjectSuite.PROJECT).toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Selection Engine Tests");
 
-		final PHPVersion phpVersion = (PHPVersion) map
-				.get(ProjectSuite.PHP_VERSION);
+		final PHPVersion phpVersion = (PHPVersion) map.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project", map.get(
-					ProjectSuite.PROJECT).toString());
+			testsDirectory = testsDirectory.replaceAll("project", map.get(ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
 					final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
-							PHPCorePerformanceTests.getDefault().getBundle(),
-							fileName);
-					SelectionEngineTests test = new SelectionEngineTests(
-							fileName) {
+							PHPCorePerformanceTests.getDefault().getBundle(), fileName);
+					SelectionEngineTests test = new SelectionEngineTests(fileName) {
 
 						protected void setUp() throws Exception {
 						}
@@ -91,12 +86,10 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 						}
 
 						protected void runTest() throws Throwable {
-							perfMonitor.execute(
-									"PerformanceTests.testSelectionEngine"
-											+ "_" + fileName, new Operation() {
+							perfMonitor.execute("PerformanceTests.testSelectionEngine" + "_" + fileName,
+									new Operation() {
 										public void run() throws Exception {
-											IModelElement[] elements = getSelection(pdttFile
-													.getFile());
+											IModelElement[] elements = getSelection(pdttFile.getFile());
 										}
 									}, 1, 10);
 						}
@@ -106,16 +99,16 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 					suite.addTest(test);
 				} catch (final Exception e) {
 					suite.addTest(new TestCase(fileName) { // dummy
-								// test
-								// indicating
-								// PDTT
-								// file
-								// parsing
-								// failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						// test
+						// indicating
+						// PDTT
+						// file
+						// parsing
+						// failure
+						protected void runTest() throws Throwable {
+							throw e;
+						}
+					});
 				}
 			}
 		}
@@ -134,8 +127,7 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 	protected SourceRange createFile(String data) throws Exception {
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
-			throw new IllegalArgumentException(
-					"Selection characters are not set");
+			throw new IllegalArgumentException("Selection characters are not set");
 		}
 		// replace the left character
 		data = data.substring(0, left) + data.substring(left + 1);
@@ -159,8 +151,7 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 	protected IModelElement[] getSelection(String data) throws Exception {
 		SourceRange range = createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(),
-				range.getLength());
+		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
 		return elements;
 	}
 
