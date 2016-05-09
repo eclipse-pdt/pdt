@@ -16,6 +16,8 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
  * This context represents state when staying in a PHPDoc block. <br/>
@@ -48,5 +50,15 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 			++prefixEnd;
 		}
 		return prefixEnd;
+	}
+
+	@Override
+	public TextSequence getStatementText() {
+		return PHPTextSequenceUtilities.getStatement(getOffset(), getStructuredDocumentRegion(), false);
+	}
+
+	@Override
+	public TextSequence getStatementText(int offset) {
+		return PHPTextSequenceUtilities.getStatement(offset, getStructuredDocumentRegion(), false);
 	}
 }

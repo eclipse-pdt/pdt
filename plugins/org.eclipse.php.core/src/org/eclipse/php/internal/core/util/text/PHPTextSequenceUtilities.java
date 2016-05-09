@@ -38,11 +38,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPTextSequenceUtilities {
 
-	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/"); //$NON-NLS-1$
-	private static final String START_LINE_COMMENT = "//"; //$NON-NLS-1$
-	private static final String START_BLOCK_COMMENT = "/*"; //$NON-NLS-1$
-
-	private static final char END_LINE = '\n';
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
@@ -109,15 +104,23 @@ public class PHPTextSequenceUtilities {
 				} else {
 					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
 				}
+
+				List<IRegion> comments = new ArrayList<IRegion>();
 				while (true) {
 					// If statement start is at the beginning of the PHP script
 					// region:
 					if (startTokenRegion.getStart() == 0) {
 						break;
 					}
-					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
-							|| startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
-							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
+
+					String type = startTokenRegion.getType();
+					if (removeComments && PHPPartitionTypes.isPHPCommentState(type)) {
+						comments.add(new Region(phpScriptRegion.getStart() + startTokenRegion.getStart(),
+								startTokenRegion.getLength()));
+					}
+
+					if (type == PHPRegionTypes.PHP_CURLY_CLOSE || type == PHPRegionTypes.PHP_CURLY_OPEN
+							|| type == PHPRegionTypes.PHP_SEMICOLON
 					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */) {
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
@@ -126,13 +129,12 @@ public class PHPTextSequenceUtilities {
 					}
 					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
 				}
-
 				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset,
 						offset - startOffset);
 
 				// remove comments
 				if (removeComments) {
-					textSequence = removeComments(textSequence);
+					textSequence = removeComments(textSequence, comments);
 				}
 
 				// remove spaces from start.
@@ -175,60 +177,14 @@ public class PHPTextSequenceUtilities {
 		return new Region(textSequence.getOriginalOffset(0), textSequence.length());
 	}
 
-	private static TextSequence removeComments(TextSequence textSequence) {
-		List<IRegion> comments = collectComments(textSequence);
-		for (int i = comments.size() - 1; i >= 0; i--) {
-			IRegion commentStartRegion = comments.get(i);
-			int end = Math.min(commentStartRegion.getOffset() + commentStartRegion.getLength(), textSequence.length());
-			textSequence = textSequence.cutTextSequence(commentStartRegion.getOffset(), end);
+	private static TextSequence removeComments(TextSequence textSequence, List<IRegion> comments) {
+		int seqStart = textSequence.getOriginalOffset(0);
+		for (IRegion commentStartRegion : comments) {
+			int start = commentStartRegion.getOffset() - seqStart;
+			int end = Math.min(start + commentStartRegion.getLength(), textSequence.length());
+			textSequence = textSequence.cutTextSequence(start, end);
 		}
 		return textSequence;
-	}
-
-	private static List<IRegion> collectComments(TextSequence textSequence) {
-		StringBuffer buffer = new StringBuffer(textSequence);
-		List<IRegion> commentRegions = new ArrayList<IRegion>();
-		int start = 0;
-		int foundIndex = 0;
-		while ((foundIndex = buffer.indexOf("/", start)) != -1) { //$NON-NLS-1$
-			int commentStartPosition = foundIndex;
-			String currentType = TextSequenceUtilities.getType(textSequence, commentStartPosition);
-			if (PHPPartitionTypes.isPHPCommentState(currentType) && !PHPPartitionTypes.isPHPQuotesState(currentType)
-					&& commentStartPosition + 2 < textSequence.length()) {
-				String startCommentString = textSequence.subSequence(commentStartPosition, commentStartPosition + 2)
-						.toString();
-				if (startCommentString.equals(START_BLOCK_COMMENT)) {
-					// we are inside comment.
-					Matcher commentEndMatcher = COMMENT_END_PATTERN.matcher(textSequence);
-					boolean foundEnd = commentEndMatcher.find(commentStartPosition);
-					if (foundEnd) {
-						int commentEndPosition = commentEndMatcher.end();
-						IRegion range = new Region(commentStartPosition, commentEndPosition - commentStartPosition);
-						commentRegions.add(range);
-						start = commentEndPosition;
-					} else {
-						start = commentStartPosition + 2;
-					}
-				} else if (startCommentString.equals(START_LINE_COMMENT)) {
-					// we are inside line comment.
-					start = commentStartPosition + 2;
-					for (int commentEndPosition = start; commentEndPosition < textSequence
-							.length(); commentEndPosition++) {
-						if (textSequence.charAt(commentEndPosition) == END_LINE) {
-							IRegion range = new Region(commentStartPosition, commentEndPosition - commentStartPosition);
-							commentRegions.add(range);
-							start = commentEndPosition;
-							break;
-						}
-					}
-				} else {
-					start = commentStartPosition + 1;
-				}
-			} else {
-				start = commentStartPosition + 2;
-			}
-		}
-		return commentRegions;
 	}
 
 	public static int getMethodEndIndex(CharSequence textSequence, int offset) {
