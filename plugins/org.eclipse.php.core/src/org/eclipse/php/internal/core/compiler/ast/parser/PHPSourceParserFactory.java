@@ -17,8 +17,10 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserFactory;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.search.Messages;
 
 public class PHPSourceParserFactory extends AbstractSourceParser implements ISourceParserFactory, ISourceParser {
 
@@ -43,7 +45,12 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 		PHPVersion phpVersion = ProjectOptions.getPhpVersion(fileName);
 		AbstractPHPSourceParser parser = createParser(fileName, phpVersion);
 		if (parser == null) {
-			throw new IllegalStateException(Messages.PHPSourceParserFactory_0);
+			if (phpVersion == null) {
+				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
+			} else {
+				throw new IllegalArgumentException(
+						Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
+			}
 		}
 		return parser;
 	}
