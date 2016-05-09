@@ -14,8 +14,10 @@ package org.eclipse.php.internal.core.language.keywords;
 import java.util.*;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.search.Messages;
 
 /**
  * This class is used for retrieval PHP keywords information for the given PHP
@@ -132,7 +134,12 @@ public class PHPKeywords {
 				} else if (PHPVersion.PHP7_0 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_7());
 				} else {
-					throw new IllegalArgumentException(Messages.PHPKeywords_0);
+					if (version == null) {
+						throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
+					} else {
+						throw new IllegalArgumentException(
+								Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), version)); //$NON-NLS-1$
+					}
 				}
 				instances.put(version, instance);
 			}

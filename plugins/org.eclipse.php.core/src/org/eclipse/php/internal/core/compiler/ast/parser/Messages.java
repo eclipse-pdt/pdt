@@ -17,7 +17,6 @@ public class Messages extends NLS {
 	public static String AbstractASTParser_MultipleAccessModifiersError;
 	public static String AbstractASTParser_MultipleFinalModifierError;
 	public static String AbstractASTParser_MultipleStaticModifiersError;
-	public static String PHPSourceParserFactory_0;
 
 	static {
 		// initialize resource bundle
