@@ -907,6 +907,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return null;
 	}
 
+	protected IStructuredDocumentRegion getStructuredDocumentRegion() {
+		return structuredDocumentRegion;
+	}
+
 	public List<String> getUseTypes() {
 		return useTypes;
 	}
