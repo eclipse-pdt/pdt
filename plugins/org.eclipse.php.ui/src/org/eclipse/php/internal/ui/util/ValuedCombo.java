@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Composite;
 public class ValuedCombo extends Combo {
 
 	String[] viewedValues;
-	private List entryList;
+	private List<Entry> entryList;
 
-	public ValuedCombo(Composite composite, int style, List entryList) {
+	public ValuedCombo(Composite composite, int style, List<Entry> entryList) {
 		super(composite, style);
 
 		this.entryList = entryList;
@@ -33,10 +33,14 @@ public class ValuedCombo extends Combo {
 		}
 	}
 
+	public List<Entry> getEntryList() {
+		return entryList;
+	}
+
 	private void retrieveViewedItemsAsArray() {
 		viewedValues = new String[entryList.size()];
 		int i = 0;
-		for (Iterator entryIterator = entryList.iterator(); entryIterator.hasNext(); ++i) {
+		for (Iterator<Entry> entryIterator = entryList.iterator(); entryIterator.hasNext(); ++i) {
 			Entry entry = (Entry) entryIterator.next();
 			viewedValues[i] = entry.getViewedValue();
 		}
@@ -46,14 +50,15 @@ public class ValuedCombo extends Combo {
 		return ((Entry) entryList.get(getSelectionIndex())).getValue();
 	}
 
-	public void selectValue(String Value) {
-		for (Iterator entryIterator = entryList.iterator(); entryIterator.hasNext();) {
+	public boolean selectValue(String Value) {
+		for (Iterator<Entry> entryIterator = entryList.iterator(); entryIterator.hasNext();) {
 			Entry entry = (Entry) entryIterator.next();
 			if (entry.getValue().equals(Value)) {
 				setText(entry.getViewedValue());
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	protected void checkSubclass() {

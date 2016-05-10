@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
+import org.eclipse.php.internal.core.search.Messages;
 import org.eclipse.text.edits.TextEdit;
 
 import java_cup.runtime.Scanner;
@@ -215,8 +216,12 @@ public class AST {
 			lexer7.setUseShortTags(useShortTags);
 			return lexer7;
 		} else {
-			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
-					+ phpVersion);
+			if (phpVersion == null) {
+				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
+			} else {
+				throw new IllegalArgumentException(
+						Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -294,8 +299,12 @@ public class AST {
 			parser.setAST(this);
 			return parser;
 		} else {
-			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
-					+ phpVersion);
+			if (phpVersion == null) {
+				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
+			} else {
+				throw new IllegalArgumentException(
+						Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
+			}
 		}
 	}
 

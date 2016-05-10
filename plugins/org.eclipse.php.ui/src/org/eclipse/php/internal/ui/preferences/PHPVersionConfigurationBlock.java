@@ -144,7 +144,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		// FontMetrics fontMetrics = gc.getFontMetrics();
 		gc.dispose();
 
-		List entryList = prepareVersionEntryList();
+		List<Entry> entryList = prepareVersionEntryList();
 		versionCombo = new ValuedCombo(composite, SWT.READ_ONLY, entryList);
 		versionCombo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
@@ -179,8 +179,8 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		return new StatusInfo();
 	}
 
-	private List prepareVersionEntryList() {
-		ArrayList entryList = new ArrayList();
+	private List<Entry> prepareVersionEntryList() {
+		ArrayList<Entry> entryList = new ArrayList<Entry>();
 		for (int i = 0; i < PHP_VERSION_DESCRIPTIONS.length; i++) {
 			if (minimumVersion != null && PHPVersion.byAlias(PHP_VERSION_VALUES[i]).isLessThan(minimumVersion)) {
 				continue;
@@ -237,7 +237,15 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 
 	private void unpackPHPVersion() {
 		String currTags = getValue(PREF_PHP_VERSION);
-		versionCombo.selectValue(currTags);
+		boolean wasValueSelected = versionCombo.selectValue(currTags);
+		if (!wasValueSelected && !versionCombo.getEntryList().isEmpty()) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=493263
+			// In case the value could not be set (for example for an
+			// invalid or an obsolete PHP version), we force the selection
+			// of the top-most value of versionCombo, so it will later
+			// trigger a project rebuild if the user validates this value.
+			setPhpVersionValue(versionCombo.getEntryList().get(0).getValue());
+		}
 	}
 
 	private void unpackUseShortTags() {
