@@ -606,7 +606,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 			} catch (Exception f) {
 				// some other exception happened; never should
 				Logger.logException(f);
-				// ... but IllegalArgumentException("Unknown PHP version")
+				// ... but IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_*"))
 				// can be thrown from doScanEndPhp(), so avoid infinite loops
 				internalContext = null;
 				notFinished = false;

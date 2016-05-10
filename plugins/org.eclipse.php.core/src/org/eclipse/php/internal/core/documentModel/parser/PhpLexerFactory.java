@@ -2,7 +2,9 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 import java.io.Reader;
 
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.search.Messages;
 
 public class PhpLexerFactory {
 
@@ -25,6 +27,11 @@ public class PhpLexerFactory {
 		if (phpVersion == PHPVersion.PHP7_0) {
 			return new org.eclipse.php.internal.core.documentModel.parser.php7.PhpLexer(reader);
 		}
-		throw new IllegalArgumentException("Unknown PHP version"); //$NON-NLS-1$
+		if (phpVersion == null) {
+			throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
+		} else {
+			throw new IllegalArgumentException(
+					Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
+		}
 	}
 }
