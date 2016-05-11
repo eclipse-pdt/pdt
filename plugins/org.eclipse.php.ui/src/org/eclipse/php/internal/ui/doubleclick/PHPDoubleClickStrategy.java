@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,9 +95,7 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									// check if the user double clicked on a
 									// variable in the PHPDoc block
 									// fix bug#201079
-									if (tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT
-											|| tRegion.getType() == PHPRegionTypes.PHP_LINE_COMMENT
-											|| tRegion.getType() == PHPRegionTypes.PHP_COMMENT) {
+									if (PHPPartitionTypes.isPHPCommentState(tRegion.getType())) {
 										resetVariableSelectionRangeInComments(textViewer, structuredTextViewer);
 										return;
 									}

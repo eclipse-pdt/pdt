@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,11 +25,30 @@ public abstract class PHPPartitionTypes {
 	public static final String PHP_MULTI_LINE_COMMENT = "org.eclipse.php.PHP_MULTI_LINE_COMMENT"; //$NON-NLS-1$
 	public static final String PHP_DOC = "org.eclipse.php.PHP_DOC"; //$NON-NLS-1$
 	public static final String PHP_QUOTED_STRING = "org.eclipse.php.PHP_QUOTED_STRING"; //$NON-NLS-1$
-	public static final String PHP_COMMENT = "org.eclipse.php.PHP_COMMENT"; //$NON-NLS-1$
+
+	public static String getPartitionType(final String type) {
+		assert type != null;
+		if (isPHPMultiLineCommentState(type)) {
+			return PHP_MULTI_LINE_COMMENT;
+		}
+		if (isPHPLineCommentState(type)) {
+			return PHP_SINGLE_LINE_COMMENT;
+		}
+		if (isPHPDocState(type)) {
+			return PHP_DOC;
+		}
+		if (isPHPQuotesState(type)) {
+			return PHP_QUOTED_STRING;
+		}
+		if (isPHPRegularState(type)) {
+			return PHP_DEFAULT;
+		}
+		assert false;
+		return null;
+	}
 
 	public static boolean isPHPCommentState(final String type) {
-		return type == null ? false
-				: isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || isPHPDocState(type);
+		return isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || isPHPDocState(type);
 	}
 
 	public static boolean isPHPDocState(final String type) {
@@ -40,13 +59,38 @@ public abstract class PHPPartitionTypes {
 		return isPHPDocState(type) && !type.startsWith("PHPDOC_COMMENT"); //$NON-NLS-1$
 	}
 
+	public static boolean isPHPDocRegion(String type) {
+		return type == PHPRegionTypes.PHPDOC_COMMENT || isPHPDocTagState(type);
+	}
+
+	public static boolean isPHPDocStartRegion(String type) {
+		return type == PHPRegionTypes.PHPDOC_COMMENT_START;
+	}
+
+	public static boolean isPHPDocEndRegion(String type) {
+		return type == PHPRegionTypes.PHPDOC_COMMENT_END;
+	}
+
 	public static boolean isPHPLineCommentState(final String type) {
 		return type == PHPRegionTypes.PHP_LINE_COMMENT;
 	}
 
+	public static boolean isPHPMultiLineCommentStartRegion(String type) {
+		return type == PHPRegionTypes.PHP_COMMENT_START;
+	}
+
+	public static boolean isPHPMultiLineCommentRegion(String type) {
+		return type == PHPRegionTypes.PHP_COMMENT;
+	}
+
+	public static boolean isPHPMultiLineCommentEndRegion(String type) {
+		return type == PHPRegionTypes.PHP_COMMENT_END;
+	}
+
 	public static boolean isPHPMultiLineCommentState(final String type) {
-		return type == PHPRegionTypes.PHP_COMMENT || type == PHPRegionTypes.PHP_COMMENT_START
-				|| type == PHPRegionTypes.PHP_COMMENT_END;
+		return PHPPartitionTypes.isPHPMultiLineCommentStartRegion(type)
+				|| PHPPartitionTypes.isPHPMultiLineCommentRegion(type)
+				|| PHPPartitionTypes.isPHPMultiLineCommentEndRegion(type);
 	}
 
 	public static boolean isPHPQuotesState(final String type) {
@@ -153,10 +197,6 @@ public abstract class PHPPartitionTypes {
 		int startOffset = getPartitionStart(region, offset);
 		int endOffset = getPartitionEnd(region, offset);
 		return new TypedRegion(startOffset, endOffset - startOffset, partitionType);
-	}
-
-	public static boolean isPHPDocCommentState(String type) {
-		return type == PHPRegionTypes.PHPDOC_COMMENT;
 	}
 
 	public static boolean isPHPCondition(String type) {

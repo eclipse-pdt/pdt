@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.*;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
@@ -1447,19 +1448,19 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		try {
 			ITextRegion phpToken = textRegion.getPhpToken(0);
 			i = 0;
-			while (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START && i++ < 3) {
+			while (!PHPPartitionTypes.isPHPDocStartRegion(phpToken.getType()) && i++ < 3) {
 				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
-			if (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START) {
+			if (!PHPPartitionTypes.isPHPDocStartRegion(phpToken.getType())) {
 				return null;
 			}
 			int start = phpToken.getStart();
 			ITextRegion lastToken = null;
-			while (lastToken != phpToken && phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_END) {
+			while (lastToken != phpToken && !PHPPartitionTypes.isPHPDocEndRegion(phpToken.getType())) {
 				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
 
-			if (phpToken.getType() == PHPRegionTypes.PHPDOC_COMMENT_END) {
+			if (PHPPartitionTypes.isPHPDocEndRegion(phpToken.getType())) {
 				int end = phpToken.getEnd();
 				return new Region(sdRegion.getStartOffset() + textRegion.getStart() + start, end - start);
 			}

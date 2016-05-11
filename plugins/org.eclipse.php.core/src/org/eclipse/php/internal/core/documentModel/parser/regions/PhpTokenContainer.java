@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -158,18 +158,9 @@ public class PhpTokenContainer implements Cloneable {
 		}
 		assert token != null;
 		final String type = token.getType();
-
-		if (PHPPartitionTypes.isPHPMultiLineCommentState(type))
-			return PHPPartitionTypes.PHP_MULTI_LINE_COMMENT;
-		else if (PHPPartitionTypes.isPHPLineCommentState(type))
-			return PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
-		else if (PHPPartitionTypes.isPHPDocState(type))
-			return PHPPartitionTypes.PHP_DOC;
-		else if (PHPPartitionTypes.isPHPQuotesState(type))
-			return PHPPartitionTypes.PHP_QUOTED_STRING;
-		else {
-			return PHPPartitionTypes.PHP_DEFAULT;
-		}
+		final String partitionType = PHPPartitionTypes.getPartitionType(type);
+		assert partitionType != null;
+		return partitionType;
 	}
 
 	/**

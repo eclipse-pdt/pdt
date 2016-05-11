@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corporation and others.
+ * Copyright (c) 2014, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -174,10 +174,10 @@ public class IndentationBaseDetector {
 				// comment) and we have before another
 				// Doc comment or Multi comment, the base line we'll be the
 				// beginning of the previous multi comment
-				if (currentType.equals(PHPRegionTypes.PHPDOC_COMMENT_START)
-						|| currentType.equals(PHPRegionTypes.PHP_COMMENT_START)) {
-					return checkedType.equals(PHPRegionTypes.PHPDOC_COMMENT_START)
-							|| checkedType.equals(PHPRegionTypes.PHP_COMMENT_START);
+				if (PHPPartitionTypes.isPHPDocStartRegion(currentType)
+						|| PHPPartitionTypes.isPHPMultiLineCommentStartRegion(currentType)) {
+					return PHPPartitionTypes.isPHPDocStartRegion(checkedType)
+							|| PHPPartitionTypes.isPHPMultiLineCommentStartRegion(checkedType);
 				}
 			}
 		}
