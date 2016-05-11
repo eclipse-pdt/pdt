@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corporation and others.
+ * Copyright (c) 2014, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class IndentationUtils {
@@ -27,9 +28,9 @@ public class IndentationUtils {
 	 */
 	public static boolean isRegionTypeAllowedMultiline(String regionType) {
 		// TODO maybe there are other type need to be added
-		return regionType != null && !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
-				&& !PHPRegionTypes.PHP_COMMENT_START.equals(regionType)
-				&& !PHPRegionTypes.PHP_LINE_COMMENT.equals(regionType)
+		return regionType != null && !PHPPartitionTypes.isPHPDocStartRegion(regionType)
+				&& !PHPPartitionTypes.isPHPMultiLineCommentStartRegion(regionType)
+				&& !PHPPartitionTypes.isPHPLineCommentState(regionType)
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=458777
 				// && !PHPRegionTypes.PHP_LABEL.equals(regionType)
 				&& !PHPRegionTypes.PHP_CASE.equals(regionType) && !PHPRegionTypes.PHP_DEFAULT.equals(regionType);

@@ -52,12 +52,14 @@ public interface IPhpScriptRegion extends ITextRegion {
 
 	/**
 	 * returns the php partition type of the token that lay in the given offset
-	 * PHP valid types: PHP_DEFAULT - {@link PHPPartitionTypes#PHP_DEFAULT}
+	 * PHP valid types:<br>
+	 * PHP_DEFAULT - {@link PHPPartitionTypes#PHP_DEFAULT}<br>
 	 * PHP_SINGLE_LINE_COMMENT -
-	 * {@link PHPPartitionTypes#PHP_SINGLE_LINE_COMMENT} PHP_MULTI_LINE_COMMENT
-	 * - {@link PHPPartitionTypes#PHP_MULTI_LINE_COMMENT} PHP_DOC -
-	 * {@link PHPPartitionTypes#PHP_DOC} PHP_QUOTED_STRING -
-	 * {@link PHPPartitionTypes#PHP_QUOTED_STRING}
+	 * {@link PHPPartitionTypes#PHP_SINGLE_LINE_COMMENT}<br>
+	 * PHP_MULTI_LINE_COMMENT - {@link PHPPartitionTypes#PHP_MULTI_LINE_COMMENT}
+	 * <br>
+	 * PHP_DOC - {@link PHPPartitionTypes#PHP_DOC}<br>
+	 * PHP_QUOTED_STRING - {@link PHPPartitionTypes#PHP_QUOTED_STRING}<br>
 	 * 
 	 * @param offset
 	 * @throws BadLocationException
