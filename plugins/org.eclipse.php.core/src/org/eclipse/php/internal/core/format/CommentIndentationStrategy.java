@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -60,8 +60,8 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 		}
 
 		// Check if the previous line is the start of the comment.
-		if (tRegion.getType() == PHPRegionTypes.PHP_COMMENT_START
-				|| tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT_START) {
+		if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(tRegion.getType())
+				|| PHPPartitionTypes.isPHPDocStartRegion(tRegion.getType())) {
 			final String blanks = FormatterUtils.getLineBlanks(document, previousLine);
 			// add the indentation of jthe previous line and a single space in
 			// addition

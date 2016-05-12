@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IEditorPart;
@@ -145,7 +145,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 																	// cycles...
 								continue;
 
-							if (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token)) {
+							if (PHPPartitionTypes.isPHPMultiLineCommentState(token.getType())) {
 								// if we are somewhere within a comment
 								// (start/end/body), this will find the start
 								// and end tokens
@@ -194,9 +194,9 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 
 	private ITextRegion findCommentStartToken(ITextRegion token, PhpScriptRegion phpScriptRegion)
 			throws BadLocationException {
-		assert (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token));
+		assert PHPPartitionTypes.isPHPMultiLineCommentState(token.getType());
 
-		if (isCommentStartRegion(token)) {
+		if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(token.getType())) {
 			return token;
 		}
 		ITextRegion previousToken = phpScriptRegion.getPhpToken(token.getStart() - 1);
@@ -206,26 +206,14 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 
 	private ITextRegion findCommentEndToken(ITextRegion token, PhpScriptRegion phpScriptRegion)
 			throws BadLocationException {
-		assert (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token));
+		assert PHPPartitionTypes.isPHPMultiLineCommentState(token.getType());
 
-		if (isCommentEndRegion(token)) {
+		if (PHPPartitionTypes.isPHPMultiLineCommentEndRegion(token.getType())) {
 			return token;
 		}
 		ITextRegion nextToken = phpScriptRegion.getPhpToken(token.getEnd());
 		return findCommentEndToken(nextToken, phpScriptRegion);
 
-	}
-
-	private boolean isCommentRegion(ITextRegion token) {
-		return (token.getType().equals(PHPRegionTypes.PHP_COMMENT));
-	}
-
-	private boolean isCommentStartRegion(ITextRegion token) {
-		return (token.getType().equals(PHPRegionTypes.PHP_COMMENT_START));
-	}
-
-	private boolean isCommentEndRegion(ITextRegion token) {
-		return (token.getType().equals(PHPRegionTypes.PHP_COMMENT_END));
 	}
 
 	public class TextLocation {
