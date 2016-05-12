@@ -50,6 +50,7 @@ import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -1976,6 +1977,9 @@ public class PHPModelUtils {
 		try {
 			if (PHPFlags.isNamespace(type.getFlags())) {
 				return false;
+			}
+			if (PHPVersion.PHP5_4.isLessThan(ProjectOptions.getPhpVersion(type))) {
+				return true; // class constant always available
 			}
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type, hierarchy, "", false, null); //$NON-NLS-1$
