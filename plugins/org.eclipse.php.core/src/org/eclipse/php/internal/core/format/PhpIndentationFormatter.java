@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,8 +72,8 @@ public class PhpIndentationFormatter {
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
 
-		// TODO get token of each line then insert line seporator after { and
-		// after } if there is no line seporator
+		// TODO get token of each line then insert line separator after { and
+		// after } if there is no line separator
 		// format each line
 		for (; lineIndex <= endLineIndex; lineIndex++) {
 			formatLine(document, lineIndex);
@@ -185,7 +185,7 @@ public class PhpIndentationFormatter {
 			}
 			if (firstTokenType == PHPRegionTypes.PHP_CASE || firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
 				insertionStrategy = caseDefaultIndentationStrategy;
-			} else if (isPHPCommentRegion(firstTokenType)) {
+			} else if (isInsideOfPHPCommentRegion(firstTokenType)) {
 				insertionStrategy = commentIndentationStrategy;
 			} else if (firstTokenType == PHPRegionTypes.PHP_CLOSETAG) {
 				insertionStrategy = phpCloseTagIndentationStrategy;
@@ -222,9 +222,10 @@ public class PhpIndentationFormatter {
 	/**
 	 * @return whether we are inside a php comment
 	 */
-	private boolean isPHPCommentRegion(String tokenType) {
-		return (tokenType == PHPRegionTypes.PHP_COMMENT || tokenType == PHPRegionTypes.PHP_COMMENT_END
-				|| tokenType == PHPRegionTypes.PHPDOC_COMMENT || tokenType == PHPRegionTypes.PHPDOC_COMMENT_END);
+	private boolean isInsideOfPHPCommentRegion(String tokenType) {
+		return PHPPartitionTypes.isPHPMultiLineCommentRegion(tokenType)
+				|| PHPPartitionTypes.isPHPMultiLineCommentEndRegion(tokenType)
+				|| PHPPartitionTypes.isPHPDocRegion(tokenType) || PHPPartitionTypes.isPHPDocEndRegion(tokenType);
 	}
 
 	/**

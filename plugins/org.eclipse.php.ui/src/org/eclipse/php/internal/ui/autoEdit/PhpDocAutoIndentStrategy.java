@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
@@ -464,8 +463,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 						int currentRegionEndOffset = commentRegion.getEnd();
 						commentRegion = scriptRegion.getPhpToken(currentRegionEndOffset);
 						String tokenType = commentRegion.getType();
-						if (tokenType.equals(PHPRegionTypes.PHP_COMMENT_END)
-								|| PHPRegionTypes.PHPDOC_COMMENT_END.equals(tokenType)) {
+						if (PHPPartitionTypes.isPHPMultiLineCommentEndRegion(tokenType)
+								|| PHPPartitionTypes.isPHPDocEndRegion(tokenType)) {
 							break;
 						} else if (currentRegionEndOffset >= phpScriptEndOffset) {
 							isSpaceDeletionNeeded = true;
@@ -589,8 +588,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 								String tokenType = commentRegion.getType();
 								if (document.getLength() == offset
-										&& (tokenType.equals(PHPRegionTypes.PHPDOC_COMMENT_END)
-												|| tokenType.equals(PHPRegionTypes.PHP_COMMENT_END))
+										&& (PHPPartitionTypes.isPHPDocEndRegion(tokenType)
+												|| PHPPartitionTypes.isPHPMultiLineCommentEndRegion(tokenType))
 										&& document.get(offset - 2, 2).equals("*/")) { //$NON-NLS-1$
 
 									ITextRegion region = commentRegion;
@@ -599,8 +598,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									// PHPDOC_COMMENT_START/PHP_COMMENT_START
 									// tag
 									do {
-										if (region.getType() == PHPRegionTypes.PHPDOC_COMMENT_START
-												|| region.getType() == PHPRegionTypes.PHP_COMMENT_START
+										if (PHPPartitionTypes.isPHPDocStartRegion(region.getType())
+												|| PHPPartitionTypes.isPHPMultiLineCommentStartRegion(region.getType())
 												|| region.getStart() <= scriptRegion.getStart()) {
 											break;
 										}

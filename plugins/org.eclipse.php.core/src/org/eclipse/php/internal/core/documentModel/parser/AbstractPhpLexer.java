@@ -227,10 +227,10 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 		bufferedState = createLexicalStateMemento();
 		String yylex = yylex();
-		if (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
+		if (PHPPartitionTypes.isPHPDocRegion(yylex)) {
 			final StringBuffer buffer = new StringBuffer();
 			int length = 0;
-			while (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
+			while (PHPPartitionTypes.isPHPDocRegion(yylex)) {
 				buffer.append(yytext());
 				length += yylength();
 				yylex = yylex();

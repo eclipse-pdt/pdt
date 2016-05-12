@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
@@ -42,7 +43,7 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
-	private PhpTokenContainer tokensContaier = new PhpTokenContainer();
+	private PhpTokenContainer tokensContainer = new PhpTokenContainer();
 	private IProject project;
 	private int updatedTokensStart = -1;
 
@@ -90,14 +91,14 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @see IPhpScriptRegion#getPhpToken(int)
 	 */
 	public final ITextRegion getPhpToken(int offset) throws BadLocationException {
-		return tokensContaier.getToken(offset);
+		return tokensContainer.getToken(offset);
 	}
 
 	/**
 	 * @see IPhpScriptRegion#getPhpTokens(int, int)
 	 */
 	public final ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
-		return tokensContaier.getTokens(offset, length);
+		return tokensContainer.getTokens(offset, length);
 	}
 
 	/**
@@ -108,21 +109,21 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		if (updatedTokensStart == -1) {
 			return null;
 		}
-		return tokensContaier.getTokens(updatedTokensStart, updatedTokensEnd - updatedTokensStart);
+		return tokensContainer.getTokens(updatedTokensStart, updatedTokensEnd - updatedTokensStart);
 	}
 
 	/**
 	 * @see IPhpScriptRegion#getPartition(int)
 	 */
 	public String getPartition(int offset) throws BadLocationException {
-		return tokensContaier.getPartitionType(offset);
+		return tokensContainer.getPartitionType(offset);
 	}
 
 	/**
 	 * @see IPhpScriptRegion#isLineComment(int)
 	 */
 	public boolean isLineComment(int offset) throws BadLocationException {
-		final LexerState lexState = tokensContaier.getState(offset);
+		final LexerState lexState = tokensContainer.getState(offset);
 		return lexState != null && lexState.getTopState() == ST_PHP_LINE_COMMENT;
 	}
 
@@ -160,32 +161,33 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				return null;
 			}
 
-			synchronized (tokensContaier) {
+			synchronized (tokensContainer) {
 				// get the region to re-parse
-				ITextRegion tokenStart = tokensContaier.getToken(offset == 0 ? 0 : offset - 1);
-				ITextRegion tokenEnd = tokensContaier.getToken(offset + lengthToReplace);
+				ITextRegion tokenStart = tokensContainer.getToken(offset == 0 ? 0 : offset - 1);
+				ITextRegion tokenEnd = tokensContainer.getToken(offset + lengthToReplace);
 
 				// make sure, region to re-parse doesn't start with unknown
 				// token
 				while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenStart.getType()) && (tokenStart.getStart() > 0)) {
-					tokenStart = tokensContaier.getToken(tokenStart.getStart() - 1);
+					tokenStart = tokensContainer.getToken(tokenStart.getStart() - 1);
 				}
 
 				// move sure, region to re-parse doesn't end with unknown token
 				while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
-						&& (tokensContaier.getLastToken() != tokenEnd)) {
-					tokenEnd = tokensContaier.getToken(tokenEnd.getEnd());
+						&& (tokensContainer.getLastToken() != tokenEnd)) {
+					tokenEnd = tokensContainer.getToken(tokenEnd.getEnd());
 				}
 
 				boolean shouldDeprecatedKeyword = false;
-				int previousIndex = tokensContaier.phpTokens.indexOf(tokenStart) - 1;
+				int previousIndex = tokensContainer.phpTokens.indexOf(tokenStart) - 1;
 				if (previousIndex >= 0) {
-					ITextRegion previousRegion = tokensContaier.phpTokens.get(previousIndex);
+					ITextRegion previousRegion = tokensContainer.phpTokens.get(previousIndex);
 					if (PhpTokenContainer.deprecatedKeywordAfter(previousRegion.getType())) {
 						shouldDeprecatedKeyword = true;
 					}
-					if (tokenStart.getType().equals(PHPRegionTypes.PHP_COMMENT) && tokenStart.getLength() == 1
-							&& previousRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_START)) {
+					if (PHPPartitionTypes.isPHPMultiLineCommentRegion(tokenStart.getType())
+							&& tokenStart.getLength() == 1
+							&& PHPPartitionTypes.isPHPMultiLineCommentStartRegion(previousRegion.getType())) {
 						requestStart = previousRegion.getStart();
 					}
 
@@ -198,8 +200,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				}
 
 				// get start and end states
-				final LexerState startState = tokensContaier.getState(newTokenOffset);
-				final LexerState endState = tokensContaier.getState(tokenEnd.getEnd());
+				final LexerState startState = tokensContainer.getState(newTokenOffset);
+				final LexerState endState = tokensContainer.getState(tokenEnd.getEnd());
 
 				final PhpTokenContainer newContainer = new PhpTokenContainer();
 				final AbstractPhpLexer phpLexer = getPhpLexer(
@@ -246,7 +248,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				}
 
 				// 1. replace the regions
-				final ListIterator oldIterator = tokensContaier.removeTokensSubList(tokenStart, tokenEnd);
+				final ListIterator oldIterator = tokensContainer.removeTokensSubList(tokenStart, tokenEnd);
 
 				ITextRegion[] newTokens = newContainer.getPhpTokens(); // now,
 																		// add
@@ -263,7 +265,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				}
 
 				// 3. update state changes
-				tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), end);
+				tokensContainer.updateStateChanges(newContainer, tokenStart.getStart(), end);
 				updatedTokensStart = tokenStart.getStart();
 				updatedTokensEnd = end;
 				isFullReparsed = false;
@@ -313,7 +315,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			// XXX: we clone the tokens container for more safety (but it's not
 			// a deep copy, because tokens and lexer state changes are not
 			// cloned)
-			this.tokensContaier = (PhpTokenContainer) sRegion.tokensContaier.clone();
+			this.tokensContainer = (PhpTokenContainer) sRegion.tokensContainer.clone();
 			this.project = sRegion.project;
 			this.updatedTokensStart = sRegion.updatedTokensStart;
 			this.updatedTokensEnd = sRegion.updatedTokensEnd;
@@ -326,7 +328,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	private synchronized final boolean isHereDoc(final ITextRegion tokenStart) {
 		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
 			try {
-				final ITextRegion token = tokensContaier.getToken(tokenStart.getStart() - 1);
+				final ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
 				return token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2;
 			} catch (BadLocationException e) {
 				// never happens
@@ -334,9 +336,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 		} else if (tokenStart.getType() == PHPRegionTypes.PHP_LABEL) {
 			try {
-				ITextRegion token = tokensContaier.getToken(tokenStart.getStart() - 1);
+				ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
 				if (token != null) {
-					token = tokensContaier.getToken(token.getStart() - 1);
+					token = tokensContainer.getToken(token.getStart() - 1);
 					return token != null && (token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2);
 				}
 
@@ -404,15 +406,15 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		assert lexer != null;
 
 		int start = 0;
-		this.tokensContaier.getModelForCreation();
-		this.tokensContaier.reset();
+		this.tokensContainer.getModelForCreation();
+		this.tokensContainer.reset();
 		try {
 			Object state = lexer.createLexicalStateMemento();
 			String yylex = lexer.getNextToken();
 			int yylength = 0;
 			while (yylex != null && yylex != PHPRegionTypes.PHP_CLOSETAG) {
 				yylength = lexer.getLength();
-				this.tokensContaier.addLast(yylex, start, yylength, yylength, state);
+				this.tokensContainer.addLast(yylex, start, yylength, yylength, state);
 				start += yylength;
 				state = lexer.createLexicalStateMemento();
 				yylex = lexer.getNextToken();
@@ -423,7 +425,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		} catch (IOException e) {
 			Logger.logException(e);
 		} finally {
-			this.tokensContaier.releaseModelFromCreation();
+			this.tokensContainer.releaseModelFromCreation();
 		}
 	}
 

@@ -59,7 +59,6 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 							IPhpScriptRegion phpReg = (IPhpScriptRegion) textRegion;
 							String partition = phpReg.getPartition(offset - sdRegion.getStart());
 							if (partition.equals(PHPPartitionTypes.PHP_QUOTED_STRING)
-									|| partition.equals(PHPPartitionTypes.PHP_COMMENT)
 									|| partition.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
 									|| partition.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
 									|| partition.equals(PHPPartitionTypes.PHP_DOC)) {

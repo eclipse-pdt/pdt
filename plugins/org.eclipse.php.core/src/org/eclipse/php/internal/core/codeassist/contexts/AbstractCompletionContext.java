@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -224,7 +224,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		// should get completion.
 		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
 			String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
-			if (regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
+			if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(regionType)
+					|| PHPPartitionTypes.isPHPDocStartRegion(regionType)) {
 				if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
 					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
 				}
@@ -701,10 +702,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 					if (startTokenRegion.getStart() == 0) {
 						return NONE;
 					}
-					if (startTokenRegion.getType() != PHPRegionTypes.PHP_LINE_COMMENT
-							&& startTokenRegion.getType() != PHPRegionTypes.PHP_COMMENT
-							&& startTokenRegion.getType() != PHPRegionTypes.WHITESPACE
-							&& !startTokenRegion.getType().startsWith("PHPDOC")) { //$NON-NLS-1$
+					if (!PHPPartitionTypes.isPHPCommentState(startTokenRegion.getType())
+							&& startTokenRegion.getType() != PHPRegionTypes.WHITESPACE) {
 						types.add(startTokenRegion.getType());
 					}
 					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN

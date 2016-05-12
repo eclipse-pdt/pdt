@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -71,8 +71,9 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 								// We should always hit the PhpScriptRegion:
 								if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 									IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
-									tRegion = phpScriptRegion.getPhpToken(
-											caretPosition - container.getStartOffset() - phpScriptRegion.getStart());
+									int offset = caretPosition - container.getStartOffset()
+											- phpScriptRegion.getStart();
+									tRegion = phpScriptRegion.getPhpToken(offset);
 
 									// Handle double-click on PHPDoc tags:
 									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE
@@ -86,18 +87,25 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 												textViewer.setSelectedRange(region.getOffset(), region.getLength());
 											}
 										} else {
-											int offset = regionStart + tRegion.getStart();
-											textViewer.setSelectedRange(offset, tRegion.getTextLength());
+											textViewer.setSelectedRange(regionStart + tRegion.getStart(),
+													tRegion.getTextLength());
 										}
 										return; // Stop processing
 									}
 
-									// check if the user double clicked on a
-									// variable in the PHPDoc block
-									// fix bug#201079
-									if (tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT
-											|| tRegion.getType() == PHPRegionTypes.PHP_LINE_COMMENT
-											|| tRegion.getType() == PHPRegionTypes.PHP_COMMENT) {
+									// Check if the user double clicked on a
+									// variable in a PHP comment (fix
+									// bug#201079).
+									// https://bugs.eclipse.org/bugs/show_bug.cgi?id=493467
+									// TODO: we don't have a method like
+									// PHPPartitionTypes.isPHPLineCommentStartRegion(type)
+									// to determine if we're at the beginning
+									// of a single-line comment so for now check
+									// region type at offset - 1 to be sure that
+									// previous character is still in comment.
+									if (PHPPartitionTypes.isPHPCommentState(tRegion.getType()) && offset > 0
+											&& PHPPartitionTypes.isPHPCommentState(
+													phpScriptRegion.getPhpToken(offset - 1).getType())) {
 										resetVariableSelectionRangeInComments(textViewer, structuredTextViewer);
 										return;
 									}
