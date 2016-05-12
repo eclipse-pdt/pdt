@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -105,25 +103,7 @@ public class FormatterUtils {
 			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				int regionOffset = offset - regionStart;
-				ITextRegion innerRegion = scriptRegion.getPhpToken(regionOffset);
-				String partition = scriptRegion.getPartition(regionOffset);
-				// check if the offset is in the start of the php token
-				// because if so this means we're at PHP_DEFAULT partition type
-				if (offset - (sdRegion.getStart() + regionStart + innerRegion.getStart()) == 0) {
-					String regionType = innerRegion.getType();
-					// except for cases we're inside the fragments of comments
-					if (PHPPartitionTypes.isPHPDocCommentState(regionType)
-							|| regionType != PHPRegionTypes.PHPDOC_COMMENT_START) {
-						return partition;
-					}
-					if (PHPPartitionTypes.isPHPMultiLineCommentState(regionType)
-							|| regionType != PHPRegionTypes.PHP_COMMENT_START) {
-						return partition;
-					}
-
-					return PHPPartitionTypes.PHP_DEFAULT;
-				}
-				return partition;
+				return scriptRegion.getPartition(regionOffset);
 			}
 		} catch (final BadLocationException e) {
 		}

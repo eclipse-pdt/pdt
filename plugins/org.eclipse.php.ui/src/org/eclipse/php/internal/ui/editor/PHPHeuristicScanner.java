@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -327,12 +327,13 @@ final class PHPHeuristicScanner implements Symbols {
 	}
 
 	/**
-	 * Creates a PHPHeuristicScanner with a default partition type set to -
-	 * PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or
-	 * PHPPartitionTypes.PHP_DEFAULT. Matching open/close symbol will only be
-	 * looked for in the same partition type, so that for example a closing
-	 * bracket in a commented line will not match an opening bracket in the
-	 * code.
+	 * Creates a PHPHeuristicScanner with a default partition type set to
+	 * PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT,
+	 * PHPPartitionTypes.PHP_MULTI_LINE_COMMENT, PHPPartitionTypes.PHP_DOC,
+	 * PHPPartitionTypes.PHP_QUOTED_STRING or PHPPartitionTypes.PHP_DEFAULT.
+	 * Matching open/close symbol will only be looked for in the same partition
+	 * type, so that for example a closing bracket in a commented line will not
+	 * match an opening bracket in the code.
 	 * 
 	 * @param document
 	 *            the document to scan
@@ -949,11 +950,12 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Returns the partition at <code>position</code>. Classify the partition as
-	 * - PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or
-	 * PHPPartitionTypes.PHP_DEFAULT. Matching open/close symbol will only be
-	 * looked for in the same partition type, so that for example a closing
-	 * bracket in a commented line will not match an opening bracket in the
-	 * code.
+	 * PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT,
+	 * PHPPartitionTypes.PHP_MULTI_LINE_COMMENT, PHPPartitionTypes.PHP_DOC,
+	 * PHPPartitionTypes.PHP_QUOTED_STRING or PHPPartitionTypes.PHP_DEFAULT.
+	 * Matching open/close symbol will only be looked for in the same partition
+	 * type, so that for example a closing bracket in a commented line will not
+	 * match an opening bracket in the code.
 	 * 
 	 * @param position
 	 *            the position to get the partition for
@@ -975,18 +977,9 @@ final class PHPHeuristicScanner implements Symbols {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 					textRegion = phpScriptRegion
 							.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-					// handle comments
-					if (PHPPartitionTypes.isPHPCommentState(textRegion.getType())) {
-						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_COMMENT);
-					}
-					// handle strings
-					else if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
-						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_QUOTED_STRING);
-					}
-					// handle the rest
-					else if (PHPPartitionTypes.isPHPRegularState(textRegion.getType())) {
-						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_DEFAULT);
-					}
+
+					String partitionType = PHPPartitionTypes.getPartitionType(textRegion.getType());
+					return new TypedRegion(position, 0, partitionType);
 				}
 			}
 
