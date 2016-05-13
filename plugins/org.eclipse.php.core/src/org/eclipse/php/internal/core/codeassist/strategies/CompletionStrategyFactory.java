@@ -222,6 +222,14 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new NamespaceUseConstNameStrategy(context) };
 		}
 		if (contextClass == NamespaceMemberContext.class) {
+			if (allContexts.length > 0) {
+				for (ICompletionContext other : allContexts) {
+					if (other.getClass() == FunctionReturnTypeContext.class
+							|| other.getClass() == FunctionParameterTypeContext.class) {
+						return new ICompletionStrategy[0];
+					}
+				}
+			}
 			return new ICompletionStrategy[] { new NamespaceElementsCompositeStrategy(context, allContexts,
 					((NamespaceMemberContext) context).isGlobal()) };
 		}

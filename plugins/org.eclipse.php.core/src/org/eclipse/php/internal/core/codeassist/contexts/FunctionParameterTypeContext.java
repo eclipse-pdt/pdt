@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.jface.text.BadLocationException;
 
 /**
  * This context represents the state when staying in a function parameter
@@ -64,5 +65,15 @@ public class FunctionParameterTypeContext extends FunctionParameterContext {
 
 	public IType getEnclosingType() {
 		return enclosingType;
+	}
+
+	@Override
+	public String getPrefix() throws BadLocationException {
+		String pref = super.getPrefix();
+		if (pref.length() > 0 && pref.charAt(0) == '\\') {
+			pref = pref.substring(1);
+		}
+
+		return pref;
 	}
 }

@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -40,7 +41,7 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 		if (curr < 1) {
 			return false;
 		}
-		curr = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, curr, false);
+		curr = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, curr, false);
 		if (curr < 1) {
 			return false;
 		}
@@ -56,5 +57,15 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 		}
 
 		return false;
+	}
+
+	@Override
+	public String getPrefix() throws BadLocationException {
+		String pref = super.getPrefix();
+		if (pref.length() > 0 && pref.charAt(0) == '\\') {
+			pref = pref.substring(1);
+		}
+
+		return pref;
 	}
 }

@@ -41,7 +41,7 @@ public class FunctionReturnTypeStrategy extends GlobalTypesStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
-		String prefix = context.getPrefix();
+		String prefix = context.getPrefixWithoutProcessing();
 		String suffix = ""; //$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(context);
 		for (String type : TYPES) {
