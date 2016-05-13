@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.dltk.debug,
- org.eclipse.php.debug.core,
- org.eclipse.dltk.core.index.sql.h2
+ org.eclipse.php.debug.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
