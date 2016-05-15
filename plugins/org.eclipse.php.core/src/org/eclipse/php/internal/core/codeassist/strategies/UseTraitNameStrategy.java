@@ -20,10 +20,8 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 public class UseTraitNameStrategy extends GlobalTypesStrategy {
@@ -34,15 +32,6 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 
 	public UseTraitNameStrategy(ICompletionContext context) {
 		super(context);
-	}
-
-	@Override
-	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
-		super.apply(reporter);
 	}
 
 	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
