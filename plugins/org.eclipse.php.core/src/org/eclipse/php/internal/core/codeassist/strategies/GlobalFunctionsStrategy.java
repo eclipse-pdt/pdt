@@ -22,19 +22,21 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseFunctionNameContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
- * This strategy completes global functions
+ * This strategy completes functions
  * 
  * @author michael
  */
@@ -68,13 +70,34 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PhpModelAccess.getDefault().findFunctions(prefix, matchRule, 0, 0, scope, null);
+		IMethod[] functions;
+		String namespaceName = extractNamespace(prefix);
+		if (!abstractContext.isAbsolutePrefix() && !(context instanceof UseStatementContext)) {
+			String resolvedNamespaceName = resolveNamespace(namespaceName);
+			if (resolvedNamespaceName != null) {
+				namespaceName = resolvedNamespaceName;
+			} else {
+				String currentNamespace = abstractContext.getCurrentNamespace();
+				if (currentNamespace != null && namespaceName != null) {
+					namespaceName = currentNamespace + NamespaceReference.NAMESPACE_SEPARATOR + namespaceName;
+				}
+			}
+		} else {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			if (namespaceName == null) {
+				namespaceName = PHPCoreConstants.GLOBAL_NAMESPACE;
+			}
+
+		}
+		functions = PhpModelAccess.getDefault().findFunctions(namespaceName, extractMemberName(prefix), matchRule, 0, 0,
+				scope, null);
 
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);
-
+		String namespace = abstractContext.getCurrentNamespace();
 		for (IMethod method : functions) {
-			reporter.reportMethod(method, suffix, replacementRange, extraInfo);
+			reporter.reportMethod(method, suffix, replacementRange, extraInfo, getRelevance(namespace, method));
 		}
 
 		addAlias(reporter, suffix);

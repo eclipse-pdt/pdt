@@ -91,6 +91,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 
 			CompletionCompanion companion = new CompletionCompanion();
+
 			org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
 					.getModelElement();
 
