@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
@@ -23,7 +24,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 public class GlobalClassesStrategy extends GlobalTypesStrategy {
 
 	public GlobalClassesStrategy(ICompletionContext context) {
-		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace);
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace | IPHPModifiers.AccTrait);
 	}
 
 	public GlobalClassesStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
