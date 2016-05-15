@@ -35,6 +35,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseConstNameContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -107,8 +108,28 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			scope = getSearchScope(abstractContext);
 		}
 
-		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
-				scope, null);
+		String namespaceName = extractNamespace(prefix);
+		if (!abstractContext.isAbsolutePrefix() && !(context instanceof UseStatementContext)) {
+			String resolvedNamespaceName = resolveNamespace(namespaceName);
+			if (resolvedNamespaceName != null) {
+				namespaceName = resolvedNamespaceName;
+			} else {
+				String currentNamespace = abstractContext.getCurrentNamespace();
+				if (currentNamespace != null && namespaceName != null) {
+					namespaceName = currentNamespace + NamespaceReference.NAMESPACE_SEPARATOR + namespaceName;
+				}
+			}
+
+		} else {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			if (namespaceName == null) {
+				namespaceName = PHPCoreConstants.GLOBAL_NAMESPACE;
+			}
+
+		}
+		enclosingTypeConstants = PhpModelAccess.getDefault().findFileFields(namespaceName, extractMemberName(prefix),
+				matchRule, Modifiers.AccConstant, 0, scope, null);
 
 		if (isCaseSensitive()) {
 			enclosingTypeConstants = filterByCase(enclosingTypeConstants, prefix);
