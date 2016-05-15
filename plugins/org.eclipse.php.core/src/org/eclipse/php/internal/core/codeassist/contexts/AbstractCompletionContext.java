@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -59,6 +60,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private ITextRegionCollection regionCollection;
 	private IPhpScriptRegion phpScriptRegion;
 	private String partitionType;
+	private String currentNamespaceName;
+	private ISourceRange currentNamespaceRange;
 
 	public void init(CompletionCompanion companion) {
 		this.companion = companion;
@@ -72,7 +75,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		if (sourceModule == null) {
 			throw new IllegalArgumentException();
 		}
-
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
@@ -95,6 +97,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 							if (partitionType != null) {
 
 								String prefix = getPrefix();
+								determineNamespace();
 								if (prefix.length() > 0 && (!Character.isJavaIdentifierStart(prefix.charAt(0))
 										&& prefix.charAt(0) != '\\')) {
 									return false;
@@ -912,6 +915,88 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	public List<String> getUseTypes() {
 		return useTypes;
+	}
+
+	private void determineNamespace() throws BadLocationException {
+		int pos = offset;
+		if (pos >= document.getLength() - 1) {
+			pos = document.getLength() - 1;
+		}
+
+		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document,
+				IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, PHPPartitionTypes.PHP_DEFAULT);
+		int token = PHPHeuristicScanner.UNBOUND;
+		while (token != PHPHeuristicScanner.NOT_FOUND && pos > 0) {
+			token = scanner.previousToken(pos, PHPHeuristicScanner.UNBOUND);
+			pos = scanner.getPosition();
+			if (token != PHPHeuristicScanner.NOT_FOUND) {
+				ITextRegion textRegion = scanner.getTextRegion(pos);
+				if (textRegion != null && textRegion.getType() == PHPRegionTypes.PHP_NAMESPACE) {
+					int nameStart = scanner.findNonWhitespaceForward(pos, PHPHeuristicScanner.UNBOUND);
+					if (!Character.isWhitespace(document.getChar(pos))) {
+						continue;
+					}
+					int nameEnd = nameStart;
+					int detectRange = PHPHeuristicScanner.NOT_FOUND;
+					char part = document.getChar(nameEnd);
+					if (part != PHPHeuristicScanner.LBRACE) {
+						StringBuilder name = new StringBuilder();
+						while (Character.isJavaIdentifierPart(part) || part == NamespaceReference.NAMESPACE_SEPARATOR) {
+							name.append(part);
+							nameEnd++;
+							part = document.getChar(nameEnd);
+						}
+						currentNamespaceName = name.toString();
+						if (Character.isWhitespace(part)) {
+							nameEnd = scanner.findNonWhitespaceForward(nameEnd, PHPHeuristicScanner.UNBOUND);
+							if (nameEnd != PHPHeuristicScanner.NOT_FOUND) {
+								part = document.getChar(nameEnd);
+							}
+						}
+						if (part == PHPHeuristicScanner.LBRACE) {
+							detectRange = nameEnd;
+						}
+					} else {
+						detectRange = nameStart;
+					}
+					if (detectRange != PHPHeuristicScanner.NOT_FOUND) {
+						int close = scanner.findClosingPeer(detectRange, PHPHeuristicScanner.LBRACE,
+								PHPHeuristicScanner.RBRACE);
+						if (close != PHPHeuristicScanner.NOT_FOUND) {
+							currentNamespaceRange = new SourceRange(textRegion.getStart(),
+									close - textRegion.getStart());
+						}
+					}
+					break;
+				} else if (textRegion instanceof IPhpScriptRegion) {
+					pos = textRegion.getStart() - 1;
+				}
+			}
+		}
+		if (currentNamespaceRange == null) {
+			currentNamespaceRange = new SourceRange(0, document.getLength());
+		}
+	}
+
+	public String getCurrentNamespace() {
+		return currentNamespaceName;
+	}
+
+	public ISourceRange getCurrentNamespaceRange() {
+		return currentNamespaceRange;
+	}
+
+	public boolean isGlobalNamespace() {
+		return getCurrentNamespace() == null;
+	}
+
+	public boolean isAbsolutePrefix() {
+		String prefix = getPrefixWithoutProcessing();
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

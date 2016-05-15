@@ -107,8 +107,21 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			scope = getSearchScope(abstractContext);
 		}
 
-		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
-				scope, null);
+		String namespaceName = extractNamespace(prefix);
+		if (!abstractContext.isAbsolutePrefix()) {
+			if (namespaceName != null) {
+				namespaceName = resolveNamespace(namespaceName);
+			}
+		} else {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			if (namespaceName == null) {
+				namespaceName = PHPCoreConstants.GLOBAL_NAMESPACE;
+			}
+
+		}
+		enclosingTypeConstants = PhpModelAccess.getDefault().findFileFields(namespaceName, extractMemberName(prefix),
+				matchRule, Modifiers.AccConstant, 0, scope, null);
 
 		if (isCaseSensitive()) {
 			enclosingTypeConstants = filterByCase(enclosingTypeConstants, prefix);

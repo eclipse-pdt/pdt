@@ -9,6 +9,8 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -61,6 +63,14 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
+			try {
+				if (PHPFlags.isNamespace(type.getFlags())) {
+					reporter.reportType(type, suffix, replaceRange);
+					continue;
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 			if (!concreteContext.getCompletionRequestor().isContextInformationMode()) {
 				// here we use fake method,and do the real work in class
 				// ParameterGuessingProposal

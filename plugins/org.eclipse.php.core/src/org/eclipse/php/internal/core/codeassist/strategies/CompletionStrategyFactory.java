@@ -209,23 +209,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy(context) };
 		}
 		if (contextClass == ClassExtendsContext.class) {
-			return new ICompletionStrategy[] { new NonFinalClassesStrategy(context),
-					new NamespaceNonFinalClassesStrategy(context) };
+			return new ICompletionStrategy[] { new NonFinalClassesStrategy(context) };
 		}
 		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
 			return new ICompletionStrategy[] { new NonFinalInterfacesStrategy(context) };
 		}
-		if (contextClass == NamespaceUseFunctionNameContext.class) {
-			return new ICompletionStrategy[] { new NamespaceUseFunctionNameStrategy(context) };
-		}
-		if (contextClass == NamespaceUseConstNameContext.class) {
-			return new ICompletionStrategy[] { new NamespaceUseConstNameStrategy(context) };
-		}
-		if (contextClass == NamespaceMemberContext.class) {
-			return new ICompletionStrategy[] { new NamespaceElementsCompositeStrategy(context, allContexts,
-					((NamespaceMemberContext) context).isGlobal()) };
-		}
-		if (contextClass == NamespaceNameContext.class || contextClass == NamespaceDeclContext.class) {
+		if (contextClass == NamespaceDeclContext.class) {
 			return new ICompletionStrategy[] { new NamespacesStrategy(context) };
 		}
 		if (contextClass == QuotesContext.class) {
@@ -252,14 +241,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == UseFunctionNameContext.class) {
 			return new ICompletionStrategy[] { new GlobalFunctionsStrategy(context) };
 		}
-		if (contextClass == NamespaceUseNameContext.class) {
-			NamespaceUseNameContext useNameContext = (NamespaceUseNameContext) context;
-			if (useNameContext.isUseTrait()) {
-				return new ICompletionStrategy[] { new NamespaceUseTraitNameStrategy(context) };
-			} else {
-				return new ICompletionStrategy[] { new NamespaceUseNameStrategy(context) };
-			}
-		}
+
 		if (contextClass == IncludeStatementContext.class) {
 			return new ICompletionStrategy[] { new IncludeStatementStrategy(context) };
 		}
@@ -269,9 +251,6 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == GlobalMethodStatementContextForTemplate.class) {
 			return new ICompletionStrategy[] { new LocalMethodVariablesStrategyForTemplate(context) };
-		}
-		if (contextClass == NamespacePHPDocVarStartContext.class) {
-			return new ICompletionStrategy[] { new NamespaceDocTypesCompositeStrategy(context) };
 		}
 		return new ICompletionStrategy[] {};
 	}

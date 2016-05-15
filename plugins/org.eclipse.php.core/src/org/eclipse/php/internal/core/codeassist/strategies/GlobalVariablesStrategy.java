@@ -39,7 +39,7 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
- * This strategy completes global variables including constants
+ * This strategy completes variables including constants
  * 
  * @author michael
  */
