@@ -13,9 +13,6 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This context represents the state when staying after 'implements' keyword in
@@ -44,13 +41,4 @@ public class ClassImplementsContext extends ClassDeclarationContext {
 		return false;
 	}
 
-	public String getPrefix() throws BadLocationException {
-		String prefix = super.getPrefix();
-		if (getPhpVersion().isGreaterThan(PHPVersion.PHP5)) {
-			if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-				prefix = prefix.substring(1);
-			}
-		}
-		return prefix;
-	}
 }

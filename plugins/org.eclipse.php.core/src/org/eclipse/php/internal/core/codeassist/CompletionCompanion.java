@@ -43,7 +43,6 @@ public class CompletionCompanion {
 	private Map<IType, ITypeHierarchy> superHierarchyCache = new HashMap<IType, ITypeHierarchy>();
 
 	public CompletionCompanion() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
