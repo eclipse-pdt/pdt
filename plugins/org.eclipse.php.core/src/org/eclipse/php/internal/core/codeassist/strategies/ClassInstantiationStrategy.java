@@ -38,10 +38,6 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		String suffix = getSuffix(completionContext);
 		addAlias(reporter, suffix);
-		// let NamespaceClassInstantiationStrategy to deal with namespace prefix
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
 		super.apply(reporter);
 		addSelf(completionContext, reporter);
 
