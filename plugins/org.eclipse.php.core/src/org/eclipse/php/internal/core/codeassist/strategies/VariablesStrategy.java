@@ -39,24 +39,24 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
- * This strategy completes global variables including constants
+ * This strategy completes variables including constants
  * 
  * @author michael
  */
-public class GlobalVariablesStrategy extends GlobalElementStrategy {
+public class VariablesStrategy extends ElementsStrategy {
 
 	private boolean showPhpVariables = true;
 
-	public GlobalVariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public VariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
-	public GlobalVariablesStrategy(ICompletionContext context, boolean showPhpVariables) {
+	public VariablesStrategy(ICompletionContext context, boolean showPhpVariables) {
 		super(context);
 		this.showPhpVariables = showPhpVariables;
 	}
 
-	public GlobalVariablesStrategy(ICompletionContext context) {
+	public VariablesStrategy(ICompletionContext context) {
 		super(context);
 	}
 

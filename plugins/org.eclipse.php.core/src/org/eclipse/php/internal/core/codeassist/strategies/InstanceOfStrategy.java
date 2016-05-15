@@ -14,7 +14,6 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
@@ -23,7 +22,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
  * 
  * @author michael
  */
-public class InstanceOfStrategy extends GlobalTypesStrategy {
+public class InstanceOfStrategy extends TypesStrategy {
 
 	public InstanceOfStrategy(ICompletionContext context) {
 		super(context);
@@ -34,9 +33,6 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		// String suffix = getSuffix(completionContext);
 		// addAlias(reporter, suffix);
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
 
 		super.apply(reporter);
 		ICompletionContext context = getContext();

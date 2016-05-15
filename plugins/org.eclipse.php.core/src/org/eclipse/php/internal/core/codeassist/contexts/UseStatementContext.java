@@ -33,6 +33,15 @@ public abstract class UseStatementContext extends StatementContext {
 
 	protected boolean useTrait;
 
+	public static final String FUNCTION_KEYWORD = "function"; //$NON-NLS-1$
+	public static final String CONST_KEYWORD = "const"; //$NON-NLS-1$
+	public static final String USE_KEYWORD = "use"; //$NON-NLS-1$
+
+	@Override
+	public boolean isAbsolute() {
+		return !isUseTrait();
+	}
+
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -41,8 +50,7 @@ public abstract class UseStatementContext extends StatementContext {
 		useTrait = new ClassStatementContext().isValid(sourceModule, offset, requestor);
 		TextSequence statementText = getStatementText();
 		if (statementText.length() >= 4) {
-			if ("use".equalsIgnoreCase( //$NON-NLS-1$
-					statementText.subSequence(0, 3).toString())
+			if (USE_KEYWORD.equalsIgnoreCase(statementText.subSequence(0, 3).toString())
 					&& Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
 				return true;
 			}

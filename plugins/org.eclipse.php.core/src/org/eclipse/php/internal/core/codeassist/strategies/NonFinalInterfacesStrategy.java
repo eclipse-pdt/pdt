@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 
-public class NonFinalInterfacesStrategy extends GlobalInterfacesStrategy {
+public class NonFinalInterfacesStrategy extends InterfacesStrategy {
 
 	public NonFinalInterfacesStrategy(ICompletionContext context) {
 		super(context);

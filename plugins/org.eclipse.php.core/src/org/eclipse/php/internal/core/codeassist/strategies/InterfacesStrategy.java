@@ -16,13 +16,13 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
- * This strategy completes global classes
+ * This strategy completes interfaces
  * 
  * @author michael
  */
-public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
+public class InterfacesStrategy extends TypesStrategy {
 
-	public GlobalInterfacesStrategy(ICompletionContext context) {
+	public InterfacesStrategy(ICompletionContext context) {
 		super(context, Modifiers.AccInterface, 0);
 	}
 

@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.model.PHPModelAccess;
  * 
  * @author michael
  */
-public class NamespacesStrategy extends GlobalTypesStrategy {
+public class NamespacesStrategy extends TypesStrategy {
 
 	public NamespacesStrategy(ICompletionContext context) {
 		super(context, 0, 0);

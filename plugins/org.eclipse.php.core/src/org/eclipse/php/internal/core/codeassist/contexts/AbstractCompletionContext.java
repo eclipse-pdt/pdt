@@ -17,14 +17,21 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.CompletionCompanion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -59,6 +66,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private ITextRegionCollection regionCollection;
 	private IPHPScriptRegion phpScriptRegion;
 	private String partitionType;
+	private String currentNamespaceName;
+	private ISourceRange currentNamespaceRange;
+	private boolean namesCalculated = false;
+	private String memberName = null;
+	private String namespaceName = null;
+	private String resolvedNamespaceName = null;
+	private boolean absolute = false;
 
 	public void init(CompletionCompanion companion) {
 		this.companion = companion;
@@ -72,7 +86,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		if (sourceModule == null) {
 			throw new IllegalArgumentException();
 		}
-
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
@@ -95,6 +108,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 							if (partitionType != null) {
 
 								String prefix = getPrefix();
+								determineNamespace();
 								if (prefix.length() > 0 && (!Character.isJavaIdentifierStart(prefix.charAt(0))
 										&& prefix.charAt(0) != '\\')) {
 									return false;
@@ -934,4 +948,264 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return useTypes;
 	}
 
+	private void determineNamespace() throws BadLocationException {
+		int pos = offset;
+		if (pos >= document.getLength() - 1) {
+			pos = document.getLength() - 1;
+		}
+
+		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document,
+				IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, PHPPartitionTypes.PHP_DEFAULT);
+		int token = PHPHeuristicScanner.UNBOUND;
+		while (token != PHPHeuristicScanner.NOT_FOUND && pos > 0) {
+			token = scanner.previousToken(pos, PHPHeuristicScanner.UNBOUND);
+			pos = scanner.getPosition();
+			if (token != PHPHeuristicScanner.NOT_FOUND) {
+				ITextRegion textRegion = scanner.getTextRegion(pos);
+				if (textRegion != null && textRegion.getType() == PHPRegionTypes.PHP_NAMESPACE) {
+					int nameStart = scanner.findNonWhitespaceForward(pos, PHPHeuristicScanner.UNBOUND);
+					if (!Character.isWhitespace(document.getChar(pos))) {
+						continue;
+					}
+					int nameEnd = nameStart;
+					int detectRange = PHPHeuristicScanner.NOT_FOUND;
+					char part = document.getChar(nameEnd);
+					if (part != PHPHeuristicScanner.LBRACE) {
+						StringBuilder name = new StringBuilder();
+						while (Character.isJavaIdentifierPart(part) || part == NamespaceReference.NAMESPACE_SEPARATOR) {
+							name.append(part);
+							nameEnd++;
+							part = document.getChar(nameEnd);
+						}
+						currentNamespaceName = name.toString();
+						if (Character.isWhitespace(part)) {
+							nameEnd = scanner.findNonWhitespaceForward(nameEnd, PHPHeuristicScanner.UNBOUND);
+							if (nameEnd != PHPHeuristicScanner.NOT_FOUND) {
+								part = document.getChar(nameEnd);
+							}
+						}
+						if (part == PHPHeuristicScanner.LBRACE) {
+							detectRange = nameEnd;
+						}
+					} else {
+						detectRange = nameStart;
+					}
+					if (detectRange != PHPHeuristicScanner.NOT_FOUND) {
+						int close = scanner.findClosingPeer(detectRange, PHPHeuristicScanner.LBRACE,
+								PHPHeuristicScanner.RBRACE);
+						if (close != PHPHeuristicScanner.NOT_FOUND) {
+							currentNamespaceRange = new SourceRange(textRegion.getStart(),
+									close - textRegion.getStart());
+						}
+					}
+					break;
+				} else if (textRegion instanceof IPHPScriptRegion) {
+					pos = textRegion.getStart() - 1;
+				}
+			}
+		}
+		if (currentNamespaceRange == null) {
+			currentNamespaceRange = new SourceRange(0, document.getLength());
+		}
+	}
+
+	public String getCurrentNamespace() {
+		return currentNamespaceName;
+	}
+
+	public ISourceRange getCurrentNamespaceRange() {
+		return currentNamespaceRange;
+	}
+
+	public boolean isGlobalNamespace() {
+		return getCurrentNamespace() == null;
+	}
+
+	private void calculcateNames() throws BadLocationException {
+		if (namesCalculated) {
+			return;
+		}
+		namesCalculated = true;
+		String prefix = getNamesPrefix();
+		namespaceName = extractNamespace(prefix);
+		memberName = extractMemberName(prefix);
+
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			absolute = true;
+		} else {
+			absolute = false;
+		}
+
+		if (absolute || isAbsolute()) {
+			resolvedNamespaceName = namespaceName;
+		} else if (!absolute && namespaceName != null) {
+			resolvedNamespaceName = resolveNamespace(namespaceName);
+		}
+	}
+
+	protected String extractNamespace(String prefix) {
+		prefix = realPrefix(prefix);
+
+		int pos = prefix.lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
+		if (pos == -1) {
+			return null;
+		}
+
+		String name = prefix.substring(0, pos);
+		if (name.length() == 0) {
+			return null;
+		}
+
+		return name;
+	}
+
+	protected String extractMemberName(String prefix) {
+		prefix = realPrefix(prefix);
+
+		int pos = prefix.lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
+		if (pos == -1) {
+			return prefix;
+		}
+
+		return prefix.substring(pos + 1);
+	}
+
+	public String getNamesPrefix() throws BadLocationException {
+		return getPrefix();
+	}
+
+	public String getMemberName() throws BadLocationException {
+		calculcateNames();
+		return memberName;
+	}
+
+	public String getNamespaceName() throws BadLocationException {
+		calculcateNames();
+		return namespaceName;
+	}
+
+	public String getResolvedNamespaceName() throws BadLocationException {
+		calculcateNames();
+		return resolvedNamespaceName;
+	}
+
+	public boolean isAbsoluteName() throws BadLocationException {
+		calculcateNames();
+		return absolute;
+	}
+
+	public String getQualifier(boolean useGlobal) throws BadLocationException {
+		if (isAbsoluteName()) {
+			if (resolvedNamespaceName == null && useGlobal) {
+				return PHPCoreConstants.GLOBAL_NAMESPACE;
+			} else {
+				return resolvedNamespaceName;
+			}
+		} else {
+			return resolvedNamespaceName;
+		}
+	}
+
+	public boolean isAbsolute() {
+		return false;
+	}
+
+	public String resolveNamespace(String name) throws BadLocationException {
+		if (name == null) {
+			return getCurrentNamespace();
+		}
+		ISourceModule sourceModule = getSourceModule();
+		final ISourceRange validRange = getCurrentNamespaceRange();
+
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		try {
+			int searchEnd = name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			String search;
+			if (searchEnd < 1) {
+				search = name;
+			} else {
+				search = name.substring(0, searchEnd);
+			}
+			if ("namespace".equalsIgnoreCase(search)) {
+				search = getCurrentNamespace();
+				if (searchEnd < 1) {
+					return search;
+				} else {
+					return searchEnd + NamespaceReference.NAMESPACE_SEPARATOR + name.substring(searchEnd + 1);
+				}
+			}
+			AliasResolver aliasResolver = new AliasResolver(validRange, search);
+			moduleDeclaration.traverse(aliasResolver);
+			if (aliasResolver.stop) {
+				if (searchEnd < 1) {
+					name = aliasResolver.found;
+				} else {
+					name = aliasResolver.found + NamespaceReference.NAMESPACE_SEPARATOR + name.substring(searchEnd + 1);
+				}
+
+				return name;
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		String current = getCurrentNamespace();
+
+		if (current != null) {
+			return new StringBuilder(current).append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
+		}
+
+		return name;
+	}
+
+	protected String realPrefix(String prefix) {
+		prefix = prefix.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return prefix.substring(1);
+		}
+
+		return prefix;
+	}
+
+	class AliasResolver extends PHPASTVisitor {
+		boolean stop = false;
+		String found = null;
+		ISourceRange validRange;
+		String search;
+
+		public AliasResolver(ISourceRange validRange, String search) {
+			super();
+			this.validRange = validRange;
+			this.search = search;
+		}
+
+		@Override
+		public boolean visitGeneral(ASTNode node) throws Exception {
+			if (stop || node.sourceEnd() < validRange.getOffset()
+					|| node.sourceStart() > validRange.getOffset() + validRange.getLength()) {
+				return false;
+			}
+			return super.visitGeneral(node);
+		}
+
+		@Override
+		public boolean visit(UseStatement s) throws Exception {
+
+			if (s.getStatementType() != UseStatement.T_NONE) {
+				return false;
+			}
+			for (UsePart part : s.getParts()) {
+				if (part.getNamespace() == null || part.getStatementType() != UseStatement.T_NONE) {
+					continue;
+				}
+				String name = part.getAlias() != null ? part.getAlias().getName() : part.getNamespace().getName();
+				if (name.equalsIgnoreCase(search)) {
+					stop = true;
+					found = part.getNamespace().getFullyQualifiedName();
+					break;
+				}
+			}
+
+			return false;
+		}
+	}
 }
