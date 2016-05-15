@@ -233,11 +233,11 @@ public final class ImportRewrite {
 			if (namespaces.size() > 0) {
 				for (NamespaceDeclaration namespace : namespaces) {
 					this.restoreExistingImports.put(namespace, false);
-					this.existingImports.put(namespace, new ArrayList<>());
+					this.existingImports.put(namespace, new ArrayList<String>());
 				}
 			} else {
 				this.restoreExistingImports.put(null, false);
-				this.existingImports.put(null, new ArrayList<>());
+				this.existingImports.put(null, new ArrayList<String>());
 			}
 		}
 		this.filterImplicitImports = true;
@@ -482,7 +482,7 @@ public final class ImportRewrite {
 			this.addedImports = new HashMap<NamespaceDeclaration, List<String>>();
 		}
 		if (this.addedImports.get(namespace) == null) {
-			this.addedImports.put(namespace, new ArrayList<>());
+			this.addedImports.put(namespace, new ArrayList<String>());
 		}
 		this.addedImports.get(namespace).add(entry);
 	}
@@ -498,7 +498,7 @@ public final class ImportRewrite {
 				this.removedImports = new HashMap<NamespaceDeclaration, List<String>>();
 			}
 			if (this.removedImports.get(namespace) == null) {
-				this.removedImports.put(namespace, new ArrayList<>());
+				this.removedImports.put(namespace, new ArrayList<String>());
 			}
 			this.removedImports.get(namespace).add(entry);
 			return true;

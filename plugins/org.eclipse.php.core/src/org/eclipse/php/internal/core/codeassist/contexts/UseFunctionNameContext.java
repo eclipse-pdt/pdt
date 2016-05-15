@@ -26,8 +26,7 @@ public class UseFunctionNameContext extends UseStatementContext {
 
 		try {
 			String previousWord = getPreviousWord();
-			if ("function".equalsIgnoreCase(previousWord) //$NON-NLS-1$
-					&& getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
+			if ("function".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (BadLocationException e) {

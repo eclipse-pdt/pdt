@@ -27,6 +27,7 @@ import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -65,6 +66,10 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 			word = word.substring(1);
 		}
 		boolean result = isPrefix(prefix, word);
+		if (!result && prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			result = isPrefix(prefix.substring(1), word);
+		}
+
 		if (!result && ProposalExtraInfo.isClassInNamespace(getExtraInfo()) && (getModelElement() instanceof IType)) {
 			IType type = (IType) getModelElement();
 			result = isPrefix(prefix, PHPModelUtils.getFullName(type));

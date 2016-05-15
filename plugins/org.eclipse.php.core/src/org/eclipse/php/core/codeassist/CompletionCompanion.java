@@ -54,7 +54,6 @@ public class CompletionCompanion {
 	}
 
 	public CompletionCompanion() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
