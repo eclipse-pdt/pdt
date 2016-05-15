@@ -47,14 +47,4 @@ public class ClassExtendsContext extends ClassDeclarationContext {
 		}
 		return false;
 	}
-
-	public String getPrefix() throws BadLocationException {
-		String prefix = super.getPrefix();
-		if (getPhpVersion().isGreaterThan(PHPVersion.PHP5)) {
-			if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-				prefix = prefix.substring(1);
-			}
-		}
-		return prefix;
-	}
 }
