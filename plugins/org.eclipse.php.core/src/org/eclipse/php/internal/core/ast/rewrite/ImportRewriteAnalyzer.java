@@ -101,8 +101,8 @@ public final class ImportRewriteAnalyzer {
 
 	private void initialize(Program root, NamespaceDeclaration namespace, String[] importOrder,
 			Map<NamespaceDeclaration, Boolean> restoreExistingImports) {
-		this.packageEntries.put(namespace, new ArrayList<>(20));
-		this.importsCreated.put(namespace, new ArrayList<>());
+		this.packageEntries.put(namespace, new ArrayList<PackageEntry>(20));
+		this.importsCreated.put(namespace, new ArrayList<String>());
 		this.flags.put(namespace, 0);
 
 		this.replaceRange.put(namespace, evaluateReplaceRange(root, namespace));
