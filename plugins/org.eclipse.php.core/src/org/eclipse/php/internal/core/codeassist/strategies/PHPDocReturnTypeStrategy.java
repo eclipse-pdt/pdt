@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -55,7 +54,7 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 	};
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context) {
-		super(context, 0, Modifiers.AccNameSpace);
+		super(context, 0, 0);
 	}
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context, int trueFlag, int falseFlag) {

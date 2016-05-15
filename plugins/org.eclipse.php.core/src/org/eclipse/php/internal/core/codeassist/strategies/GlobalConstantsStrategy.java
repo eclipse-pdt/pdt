@@ -107,8 +107,14 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			scope = getSearchScope(abstractContext);
 		}
 
-		enclosingTypeConstants = PHPModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
-				scope, null);
+		String memberName = getMemberName();
+		String namespaceName = getQualifier(true);
+		if (abstractContext.isAbsolutePrefix()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+		enclosingTypeConstants = PHPModelAccess.getDefault().findFileFields(namespaceName, memberName, matchRule,
+				Modifiers.AccConstant, 0, scope, null);
 
 		if (isCaseSensitive()) {
 			enclosingTypeConstants = filterByCase(enclosingTypeConstants, prefix);
@@ -116,7 +122,8 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=310383
 		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
 		// workaround end
-		ISourceRange replaceRange = getReplacementRange(abstractContext);
+		ISourceRange replaceRange = abstractContext.isAbsolutePrefix() || isUseConstContext ? getReplacementRange(abstractContext)
+				: getReplacementRangeForMember(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
 			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
@@ -148,7 +155,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 	protected void reportAlias(ICompletionReporter reporter, AbstractCompletionContext abstractContext,
 			IModuleSource module, final Map<String, UsePart> result) throws BadLocationException {
-		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRangeForMember(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();

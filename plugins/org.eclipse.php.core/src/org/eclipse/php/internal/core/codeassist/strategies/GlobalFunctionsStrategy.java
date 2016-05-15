@@ -35,7 +35,7 @@ import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
- * This strategy completes global functions
+ * This strategy completes functions
  * 
  * @author michael
  */
@@ -69,13 +69,22 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PHPModelAccess.getDefault().findFunctions(prefix, matchRule, 0, 0, scope, null);
+		IMethod[] functions;
+		String memberName = getMemberName();
+		String namespaceName = getQualifier(true);
+		if (abstractContext.isAbsolutePrefix()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 
-		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		}
+		functions = PHPModelAccess.getDefault().findFunctions(namespaceName, memberName, matchRule, 0, 0, scope, null);
+
+		ISourceRange replacementRange = abstractContext.isAbsolutePrefix() || isUseFunctionContext
+				? getReplacementRange(abstractContext) : getReplacementRangeForMember(abstractContext);
 		String suffix = getSuffix(abstractContext);
-
+		String namespace = abstractContext.getCurrentNamespace();
 		for (IMethod method : functions) {
-			reporter.reportMethod(method, suffix, replacementRange, extraInfo);
+			reporter.reportMethod(method, suffix, replacementRange, extraInfo, getRelevance(namespace, method));
 		}
 
 		addAlias(reporter, suffix);

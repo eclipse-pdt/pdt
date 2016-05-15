@@ -33,7 +33,6 @@ import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseNameContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
@@ -75,14 +74,23 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
+
 		boolean isUseContext = context instanceof UseNameContext && !((UseNameContext) context).isUseTrait();
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = "";//$NON-NLS-1$
 		String nsSuffix = getNSSuffix(abstractContext);
 		int extraInfo = getExtraInfo();
+
+		if (abstractContext.isAbsolutePrefix()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+		}
+
 		if ((abstractContext.getOffset() - abstractContext.getPrefix().length() - 1 >= 0) && (abstractContext
 				.getDocument().getChar(abstractContext.getOffset() - abstractContext.getPrefix().length() - 1) == '\''
 				|| abstractContext.getDocument()
@@ -94,15 +102,21 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
 
+		String namespace = abstractContext.getCurrentNamespace();
+		if (abstractContext.isAbsolutePrefix()) {
+			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+		}
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
 				boolean isNamespace = PHPFlags.isNamespace(flags);
-				if (!isNamespace && isUseContext) {
+				int relevance = getRelevance(namespace, type);
+				if ((!isNamespace && isUseContext) || abstractContext.isAbsolutePrefix()) {
 					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
-							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE);
+							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE, relevance);
 				} else {
-					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange, extraInfo);
+					reporter.reportType(type, isNamespace ? nsSuffix : suffix,
+							isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);
 				}
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
@@ -237,40 +251,55 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PHPModelAccess.getDefault().findTypes(getQualifier(true), getMemberName(), MatchRule.EXACT, trueFlag,
+					falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
-		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
-			// Search by camel-case
-			IType[] types = PHPModelAccess.getDefault().findTypes(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
-					scope, null);
+		String memberName = getMemberName();
+		String namespaceName = getQualifier(false);
 
-			IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.CAMEL_CASE,
+		StringBuilder sb = new StringBuilder();
+		String altNamespacePrefix = null;
+		if (namespaceName != null) {
+			sb.append(namespaceName).append(NamespaceReference.NAMESPACE_SEPARATOR);
+		} else if (!isAbsolute() && context.getCurrentNamespace() != null && useCurrentNamespace) {
+			altNamespacePrefix = new StringBuilder().append(context.getCurrentNamespace())
+					.append(NamespaceReference.NAMESPACE_SEPARATOR).append(memberName).toString();
+		}
+		String namespacePrefix = sb.append(memberName).toString();
+		if (memberName.length() > 1 && memberName.toUpperCase().equals(memberName)) {
+			// Search by camel-case
+
+			IType[] types = PHPModelAccess.getDefault().findTypes(getQualifier(true), memberName, MatchRule.CAMEL_CASE,
 					trueFlag, falseFlag, scope, null);
 
 			result.addAll(Arrays.asList(types));
-			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
+			if ((falseFlag & PHPFlags.AccNameSpace) == 0 || isAbsolute() || namespaceName != null) {
+				if (namespacePrefix.length() > 0) {
+					IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespacePrefix.toString(),
+							MatchRule.CAMEL_CASE, trueFlag, 0, scope, null);
+					result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
+				}
+			}
 		}
-		IType[] types = PHPModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
-				scope, null);
-		IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
-				falseFlag, scope, null);
+		IType[] types = PHPModelAccess.getDefault().findTraitOrTypes(getQualifier(true), memberName, MatchRule.PREFIX,
+				trueFlag, falseFlag, scope, null);
 
-		if (context instanceof NamespaceMemberContext) {
-			for (IType type : types) {
-				if (PHPModelUtils.getFullName(type).startsWith(prefix)) {
-					result.add(type);
-				}
+		result.addAll(Arrays.asList(types));
+		if ((falseFlag & PHPFlags.AccNameSpace) == 0 || isAbsolute() || namespaceName != null
+				|| altNamespacePrefix != null) {
+			if (namespacePrefix.length() > 0) {
+				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespacePrefix, MatchRule.PREFIX,
+						trueFlag, 0, scope, null);
+				result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 			}
-			for (IType type : namespaces) {
-				if (PHPModelUtils.getFullName(type).startsWith(prefix)) {
-					result.add(type);
-				}
+			if (altNamespacePrefix != null) {
+				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, altNamespacePrefix,
+						MatchRule.PREFIX, trueFlag, 0, scope, null);
+				result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 			}
-		} else {
-			result.addAll(Arrays.asList(types));
-			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
+
 		}
 
 		return result.toArray(new IType[result.size()]);
@@ -344,7 +373,6 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	}
 
 	/**
-	 * 
 	 * @return
 	 */
 	protected int getExtraInfo() {

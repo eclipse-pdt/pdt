@@ -16,7 +16,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
- * This strategy completes global classes
+ * This strategy completes interfaces
  * 
  * @author michael
  */
