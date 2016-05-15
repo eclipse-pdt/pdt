@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 public class UseConstNameContext extends UseStatementContext {
 
@@ -26,8 +25,7 @@ public class UseConstNameContext extends UseStatementContext {
 
 		try {
 			String previousWord = getPreviousWord();
-			if ("const".equalsIgnoreCase(previousWord) //$NON-NLS-1$
-					&& getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
+			if ("const".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (BadLocationException e) {

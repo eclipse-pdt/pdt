@@ -16,7 +16,6 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.language.keywords.IPHPKeywordsInitializer;
 
 public class UseNameStrategy extends GlobalTypesStrategy {
@@ -26,22 +25,21 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 
 	public UseNameStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
+		setUseCurrentNamespace(false);
 	}
 
 	public UseNameStrategy(ICompletionContext context) {
 		super(context);
+		setUseCurrentNamespace(false);
 	}
 
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
 
 		reportKeyword(FUNCTION_KEYWORD, reporter);
 		reportKeyword(CONST_KEYWORD, reporter);
 		super.apply(reporter);
+		setUseCurrentNamespace(false);
 	}
 
 	private void reportKeyword(String keyword, ICompletionReporter reporter) throws BadLocationException {
