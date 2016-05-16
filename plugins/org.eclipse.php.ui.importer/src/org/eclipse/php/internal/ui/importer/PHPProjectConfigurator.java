@@ -33,8 +33,9 @@ import org.eclipse.ui.wizards.datatransfer.ProjectConfigurator;
 
 public class PHPProjectConfigurator implements ProjectConfigurator {
 
-	private static Set<String> SEARCHED_FILES = new HashSet<>(
-			Arrays.asList(new String[] { "index.php", "composer.json" })); //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String COMPOSER_JSON = "composer.json"; //$NON-NLS-1$
+
+	private static Set<String> SEARCHED_FILES = new HashSet<>(Arrays.asList(new String[] { "index.php" })); //$NON-NLS-1$
 
 	@Override
 	public Set<File> findConfigurableLocations(File root, IProgressMonitor monitor) {
@@ -50,8 +51,13 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 				for (File file : current.listFiles()) {
 					if (file.isDirectory()) {
 						directoriesToProcess.add(file);
-					} else if (file.isFile() && SEARCHED_FILES.contains(file.getName())) {
-						res.add(current);
+					} else if (file.isFile()) {
+						if (COMPOSER_JSON.equals(file.getName())) {
+							res.add(current);
+							return res;
+						} else if (SEARCHED_FILES.contains(file.getName())) {
+							res.add(current);
+						}
 					}
 				}
 			}
