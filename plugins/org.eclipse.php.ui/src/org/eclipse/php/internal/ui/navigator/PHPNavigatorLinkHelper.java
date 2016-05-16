@@ -26,7 +26,7 @@ public class PHPNavigatorLinkHelper implements ILinkHelper {
 	@Override
 	public IStructuredSelection findSelection(IEditorInput anInput) {
 		ISourceModule sourceModule = DLTKUIPlugin.getEditorInputModelElement(anInput);
-		return new StructuredSelection(sourceModule);
+		return sourceModule != null ? new StructuredSelection(sourceModule) : StructuredSelection.EMPTY;
 	}
 
 	@Override

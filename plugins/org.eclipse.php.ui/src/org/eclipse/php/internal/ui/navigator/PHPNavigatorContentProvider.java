@@ -55,8 +55,11 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 			IWorkspaceRoot root = (IWorkspaceRoot) parentElement;
 			return filterResourceProjects(root.getProjects());
 		} else if (parentElement instanceof IProject) {
-			IScriptProject scriptProject = DLTKCore.create((IProject) parentElement);
-			return getScriptProjectContent(scriptProject).toArray();
+			IProject project = (IProject) parentElement;
+			if (isPHPProject(project)) {
+				IScriptProject scriptProject = DLTKCore.create(project);
+				return super.getChildren(scriptProject);
+			}
 		} else if (parentElement instanceof IScriptModel) {
 			return filterResourceProjects(((IScriptModel) parentElement).getWorkspace().getRoot().getProjects());
 		} else if (parentElement instanceof IFile) {
