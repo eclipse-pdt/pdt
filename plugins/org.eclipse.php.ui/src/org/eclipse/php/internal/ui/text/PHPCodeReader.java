@@ -21,6 +21,7 @@ import org.eclipse.wst.sse.ui.internal.derived.SingleCharReader;
  * Reads from a document either forwards or backwards. May be configured to skip
  * comments and strings.
  */
+@Deprecated
 public class PHPCodeReader extends SingleCharReader {
 
 	/** The EOF character */

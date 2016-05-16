@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import org.eclipse.php.internal.core.phar.IOutputArchiveEntry;
 import org.eclipse.php.internal.core.phar.IStub;
 
+@Deprecated
 public class PharOutputStream extends FilterOutputStream {
 
 	public PharOutputStream(OutputStream out, IStub manifest) {

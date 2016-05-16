@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * @author seva Dialog field describing a separator.
  */
+@Deprecated
 public class Separator extends DialogField {
 
 	protected static GridData gridDataForSeperator(final int span, final int height) {

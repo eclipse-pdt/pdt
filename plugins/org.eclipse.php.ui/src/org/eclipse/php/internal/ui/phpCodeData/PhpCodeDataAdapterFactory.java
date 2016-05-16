@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.php.internal.ui.actions.filters.GenericActionFilter;
 import org.eclipse.ui.IActionFilter;
 
+@Deprecated
 public class PhpCodeDataAdapterFactory implements IAdapterFactory {
 
 	private static Map adapterType2Object = new HashMap(4);

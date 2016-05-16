@@ -22,6 +22,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 /**
  * IRunnableWithProgressAdapter to allow it to run an IWorkspaceRunnable.
  */
+@Deprecated
 public class WorkspaceRunnableAdapter implements IRunnableWithProgress {
 	private IWorkspaceRunnable workspaceRunnable;
 

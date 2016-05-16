@@ -20,6 +20,7 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
+@Deprecated
 public class PHPWizardPagesRegistry {
 
 	private static final String EXTENSION_POINT = "org.eclipse.php.ui.phpWizardPages"; //$NON-NLS-1$

@@ -28,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
  * Standard label provider for IStorage objects. Use this class when you want to
  * present IStorage objects in a viewer.
  */
+@Deprecated
 public class StorageLabelProvider extends LabelProvider {
 
 	private IEditorRegistry fEditorRegistry = PlatformUI.getWorkbench().getEditorRegistry();

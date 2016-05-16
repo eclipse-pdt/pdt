@@ -26,6 +26,7 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
  * PHPUILabelProvider that respects settings from the Appearance preference
  * page. Triggers a viewer update when a preference changes.
  */
+@Deprecated
 public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implements IPropertyChangeListener {
 
 	public final static long DEFAULT_TEXTFLAGS = ScriptElementLabels.ROOT_VARIABLE

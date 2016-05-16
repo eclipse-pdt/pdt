@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic.filter;
 
+@Deprecated
 public class RunnableFilter extends FilterDecorator {
 
 	private IResultHandler resultHandler;

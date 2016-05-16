@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WebPropertiesUtil;
 
+@Deprecated
 public class PHPRootComposite extends Composite {
 	protected Text contextRootField;
 	private String errorMessage = null;

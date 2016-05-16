@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelSynchHelper;
 
+@Deprecated
 public class PHPRootContextField {
 
 	private Text rootContext;

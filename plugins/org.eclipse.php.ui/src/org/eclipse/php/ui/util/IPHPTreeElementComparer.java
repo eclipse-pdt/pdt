@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IElementComparer;
  * @author guy.g
  * 
  */
+@Deprecated
 public interface IPHPTreeElementComparer extends IElementComparer {
 
 	public boolean supports(Object o);

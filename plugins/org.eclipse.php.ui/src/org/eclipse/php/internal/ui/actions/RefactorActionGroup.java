@@ -39,6 +39,7 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.Page;
 
+@Deprecated
 public class RefactorActionGroup extends ActionGroup {
 
 	public static final String MENU_ID = "org.eclipse.php.ui.refactoring.menu"; //$NON-NLS-1$

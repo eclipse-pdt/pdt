@@ -21,6 +21,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionGroup;
 
+@Deprecated
 public class ConvertProjectActionGroup extends ActionGroup {
 
 	private IWorkbenchSite fSite;

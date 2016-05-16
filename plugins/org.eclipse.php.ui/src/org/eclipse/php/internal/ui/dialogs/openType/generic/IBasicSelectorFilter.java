@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.IFilterChangeListener;
 
+@Deprecated
 public interface IBasicSelectorFilter {
 
 	public boolean select(Object element);

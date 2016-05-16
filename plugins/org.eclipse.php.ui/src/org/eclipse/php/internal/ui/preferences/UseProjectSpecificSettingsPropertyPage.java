@@ -41,6 +41,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.osgi.service.prefs.BackingStoreException;
 
+@Deprecated
 public abstract class UseProjectSpecificSettingsPropertyPage extends PropertyPage implements IWorkbenchPreferencePage {
 	/*
 	 * Disable link data, prevents the display of a "workspace" or "project"

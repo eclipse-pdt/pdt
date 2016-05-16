@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
  * @author shachar
  * 
  */
+@Deprecated
 public class PasswordDialogField extends StringDialogField {
 
 	/**

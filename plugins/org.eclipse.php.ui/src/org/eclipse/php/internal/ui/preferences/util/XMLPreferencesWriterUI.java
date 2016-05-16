@@ -21,6 +21,7 @@ import org.eclipse.ui.preferences.IWorkingCopyManager;
  * XML preferences writer for writing XML structures into the prefernces store.
  * This class works in combination with IXMLPreferencesStorable.
  */
+@Deprecated
 public class XMLPreferencesWriterUI extends XMLPreferencesWriter {
 
 	/**

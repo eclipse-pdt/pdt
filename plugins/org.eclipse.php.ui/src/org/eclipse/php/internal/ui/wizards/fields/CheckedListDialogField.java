@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Table;
  * 'Uncheck All'. List model is independend of widget creation. DialogFields
  * controls are: Label, List and Composite containing buttons.
  */
+@Deprecated
 public class CheckedListDialogField extends ListDialogField {
 
 	private int fCheckAllButtonIndex;

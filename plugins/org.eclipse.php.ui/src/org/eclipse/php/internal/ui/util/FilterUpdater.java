@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Control;
 
+@Deprecated
 public class FilterUpdater implements IResourceChangeListener {
 
 	private StructuredViewer fViewer;

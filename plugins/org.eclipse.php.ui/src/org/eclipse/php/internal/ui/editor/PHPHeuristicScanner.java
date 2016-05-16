@@ -36,6 +36,7 @@ import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
  * 
  * @see Eclipse 3.0
  */
+@Deprecated
 final class PHPHeuristicScanner implements Symbols {
 	/**
 	 * Returned by all methods when the requested position could not be found,

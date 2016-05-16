@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
+@Deprecated
 public class PHPCodeTemplatesPreferencePage extends TemplatePreferencePage {
 
 	public PHPCodeTemplatesPreferencePage() {

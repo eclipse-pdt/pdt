@@ -149,6 +149,7 @@ public class GenerateIncludePathActionGroup
 
 	}
 
+	@Deprecated
 	public static class CreateLocalSourceFolderAction extends CreateSourceFolderAction {
 
 		public CreateLocalSourceFolderAction() {
@@ -165,6 +166,7 @@ public class GenerateIncludePathActionGroup
 		}
 	}
 
+	@Deprecated
 	public static class CreateLinkedSourceFolderAction extends CreateSourceFolderAction {
 
 		public CreateLinkedSourceFolderAction() {
