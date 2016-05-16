@@ -20,9 +20,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.util.PHPBuildUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
@@ -90,9 +88,6 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 							fIsReset = false;
 							continue;
 						}
-					}
-					if (PHPBuildUtils.isIndexing()) {
-						continue;
 					}
 					showAssist(fShowStyle);
 					break;
@@ -265,22 +260,6 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 			declaredMethod.setAccessible(true);
 			return declaredMethod;
 		}
-	}
-
-	@Override
-	public String showPossibleCompletions() {
-		if (PHPBuildUtils.isIndexing()) {
-			String message = Messages.PHPContentAssistant_0;
-			DefaultToolTip toolTip = new DefaultToolTip(fViewer.getTextWidget(), SWT.NONE, true);
-			toolTip.setText(message);
-			toolTip.setShift(new Point(15, 0));
-			toolTip.setHideDelay(TOOLTIP_HIDE_DELAY);
-			Point cursorPoint = fViewer.getTextWidget().getLocationAtOffset(fViewer.getTextWidget().getCaretOffset());
-			toolTip.show(cursorPoint);
-			return message;
-		}
-
-		return super.showPossibleCompletions();
 	}
 
 	public boolean provide(IContentAssistProcessor processor) {

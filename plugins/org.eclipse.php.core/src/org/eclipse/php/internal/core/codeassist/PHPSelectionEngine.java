@@ -57,7 +57,6 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
-import org.eclipse.php.internal.core.util.PHPBuildUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -89,10 +88,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private PHPVersion phpVersion;
 
 	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
-		if (PHPBuildUtils.isIndexing()) {
-			return null;
-		}
-
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return EMPTY;
 		}

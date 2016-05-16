@@ -58,7 +58,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	IModuleSource module;
 
 	public void complete(IModuleSource module, int position, int i) {
-		complete(module, position, i, true);
+		complete(module, position, i, false);
 	}
 
 	public void complete(IModuleSource module, int position, int i, boolean waitForBuilder) {
@@ -118,46 +118,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			processedElements.clear();
 			processedPaths.clear();
 		}
-	}
-
-	private int nextKeywordRelevance() {
-		int relevance = relevanceKeyword--;
-		if (relevance < 1) {
-			relevance = 1;
-		}
-		return relevance;
-	}
-
-	private int nextMethodRelevance() {
-		int relevance = relevanceMethod--;
-		if (relevance < 1) {
-			relevance = 1;
-		}
-		return relevance;
-	}
-
-	private int nextClassRelevance() {
-		int relevance = relevanceClass--;
-		if (relevance < 1) {
-			relevance = 1;
-		}
-		return relevance;
-	}
-
-	private int nextVariableRelevance() {
-		int relevance = relevanceVar--;
-		if (relevance < 1) {
-			relevance = 1;
-		}
-		return relevance;
-	}
-
-	private int nextConstantRelevance() {
-		int relevance = relevanceConst--;
-		if (relevance < 1) {
-			relevance = 1;
-		}
-		return relevance;
 	}
 
 	@Override
