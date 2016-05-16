@@ -15,6 +15,7 @@ import java.io.OutputStream;
 
 import org.eclipse.php.internal.core.tar.CBZip2OutputStream;
 
+@Deprecated
 public class BZ2PharEntryBufferedOutputStream extends PharEntryBufferedOutputStream {
 
 	public BZ2PharEntryBufferedOutputStream(OutputStream innerStream) throws IOException {

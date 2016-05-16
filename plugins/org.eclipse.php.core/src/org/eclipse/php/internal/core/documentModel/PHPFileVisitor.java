@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
+@Deprecated
 public class PHPFileVisitor implements IResourceProxyVisitor {
 
 	protected List fFiles = new ArrayList();

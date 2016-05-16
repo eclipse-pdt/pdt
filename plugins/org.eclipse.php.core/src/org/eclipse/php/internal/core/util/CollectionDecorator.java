@@ -25,6 +25,7 @@ import java.util.Iterator;
  * @author erez
  * @version
  */
+@Deprecated
 public class CollectionDecorator implements Collection {
 
 	private Collection innerCollection;

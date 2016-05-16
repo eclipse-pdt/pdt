@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util;
 
+@Deprecated
 public interface Visitable {
 
 	public void accept(Visitor v) throws Exception;

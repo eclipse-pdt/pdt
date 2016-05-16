@@ -1319,6 +1319,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
+	@Deprecated
 	class ModifierRewriter extends ListRewriter {
 
 		private final Prefix annotationSeparation;

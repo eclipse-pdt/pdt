@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
  *      org.eclipse.core.runtime.IProgressMonitor)
  * @since 3.1
  */
+@Deprecated
 public abstract class ASTRequestor {
 
 	/**

@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
  * 
  * @author Roy, 2006
  */
+@Deprecated
 public class PHPModelNotifier implements XMLModelNotifier {
 
 	/* end: for debugging only */

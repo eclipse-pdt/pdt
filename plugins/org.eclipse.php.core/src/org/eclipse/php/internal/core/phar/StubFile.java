@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.phar;
 
 import java.io.*;
 
+@Deprecated
 public class StubFile {
 	private File file;
 

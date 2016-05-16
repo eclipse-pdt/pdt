@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.phar;
 import java.io.File;
 import java.io.IOException;
 
+@Deprecated
 public class GZPharEntryBufferedRandomInputStream extends PharEntryBufferedRandomInputStream {
 	byte[] header = new byte[] { 31, -117, 8, 0, 0, 0, 0, 0, 0, 0 };
 	byte[] tailer;

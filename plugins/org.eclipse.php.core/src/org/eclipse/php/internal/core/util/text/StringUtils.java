@@ -20,6 +20,7 @@ import java.util.Iterator;
  * @author seva, 2007
  * 
  */
+@Deprecated
 public class StringUtils {
 
 	private StringUtils() {

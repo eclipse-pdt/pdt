@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util.collections;
 
+@Deprecated
 public class IntList implements Cloneable {
 
 	private int minimumSize;

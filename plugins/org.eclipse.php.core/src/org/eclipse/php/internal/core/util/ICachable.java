@@ -16,6 +16,7 @@ import java.io.Serializable;
 /**
  * An interface for any cachable php data.
  */
+@Deprecated
 public interface ICachable extends Serializable {
 
 	/**

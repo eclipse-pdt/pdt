@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * @author seva, 2007 A hook to catch System.err and System.out
  */
+@Deprecated
 public class StringOutputStream extends OutputStream {
 
 	protected List<String> strings = new ArrayList<String>();

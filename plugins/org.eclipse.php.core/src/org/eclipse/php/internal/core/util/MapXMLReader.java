@@ -50,6 +50,7 @@ import org.xml.sax.SAXException;
  * </pre>
  * 
  */
+@Deprecated
 public class MapXMLReader {
 
 	/**

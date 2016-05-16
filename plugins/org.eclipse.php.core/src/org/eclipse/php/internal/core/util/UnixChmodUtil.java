@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util;
 
+@Deprecated
 public class UnixChmodUtil {
 
 	public static final int S_IRWXU = 00700; /*
