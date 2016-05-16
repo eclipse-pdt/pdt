@@ -2477,34 +2477,33 @@
     </viewerActionBinding>
  </extension>
  
- <extension
-       point="org.eclipse.ui.navigator.navigatorContent">
-    <navigatorContent
-          activeByDefault="true"
-          contentProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorContentProvider"
-          icon="icons/full/goto_phpRes_16.png"
-          id="org.eclipse.php.ui.phpContent"
-          labelProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelProvider"
-          name="PHP Elements"
-          priority="normal">
-          
-          <triggerPoints>
-          		<or>
-          			<and>
-						<instanceof	value="org.eclipse.core.resources.IResource" />
-						<adapt type="org.eclipse.core.resources.IProject">
-							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
-						</adapt>
-					</and>
-					<and>
-						<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
-						</adapt>
-					</and>
-					<instanceof value="org.eclipse.dltk.core.IMember" />
+<extension point="org.eclipse.ui.navigator.navigatorContent">
+	<navigatorContent
+		activeByDefault="true"
+		contentProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorContentProvider"
+		icon="icons/full/goto_phpRes_16.png"
+		id="org.eclipse.php.ui.phpContent"
+		labelProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelProvider"
+		name="PHP Elements"
+		priority="normal">
+
+			<triggerPoints>
+				<or>
+					<adapt type="org.eclipse.core.resources.IProject">
+						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+					</adapt>
+					<instanceof value="org.eclipse.dltk.core.IModelElement" />
+					<instanceof	value="org.eclipse.core.resources.IResource" />
 					<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
 				</or>
 			</triggerPoints>
+			
+			<possibleChildren>
+				<instanceof	value="org.eclipse.dltk.core.IModelElement" />
+				<instanceof value="org.eclipse.core.resources.IFolder"/>
+				<instanceof value="org.eclipse.core.resources.IFile"/>
+			</possibleChildren>
+			
 			<actionProvider 
 				class="org.eclipse.dltk.internal.ui.navigator.ScriptExplorerActionProvider"
 				id="org.eclipse.php.ui.navigator.actions.ViewActions">
@@ -2536,25 +2535,74 @@
 				</enablement>
 			</actionProvider>
 			
+			<actionProvider
+					class="org.eclipse.php.internal.ui.navigator.PHPNavigatorRefactorActionProvider"
+					id="org.eclipse.php.ui.navigator.actions.RefactorActions"
+					overrides="org.eclipse.ui.navigator.resources.actions.RefactorActions"> 
+				<enablement>
+					<or>
+						<and>
+							<instanceof value="org.eclipse.core.resources.IProject" />
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+						</and>
+						<adapt type="org.eclipse.core.resources.IFile">
+							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
+						</adapt>
+						<instanceof value="org.eclipse.dltk.core.IModelElement" />
+					</or>
+				</enablement>
+			</actionProvider>
+			
 			<commonSorter
 					class="org.eclipse.dltk.ui.ModelElementSorter"
 					id="org.eclipse.dltk.ui.modelElementorg.eclipse.internal.ui.navigator.ScriptDropAssistanteAlwaysRegardlessOfSuppressedExt">
-					 <parentExpression>
-	               <or>
-						<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.phpsource"/>
-						</adapt>
-	                  <instanceof value="org.eclipse.dltk.core.IMember"/>
-	                  <instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
-	               </or>
-	            </parentExpression>
+					<parentExpression>
+						<or>
+							<and>
+								<instanceof value="org.eclipse.core.resources.IProject" />
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+							</and>
+							<adapt type="org.eclipse.core.resources.IFile">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.phpsource"/>
+							</adapt>
+							<instanceof value="org.eclipse.dltk.core.IModelElement"/>
+							<instanceof value="org.eclipse.php.internal.core.includepath.IncludePath"/>
+							<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
+						</or>
+					</parentExpression>
 			</commonSorter>
-			<override
-               policy="InvokeAlwaysRegardlessOfSuppressedExt"
-               suppressedExtensionId="org.eclipse.team.ui.resourceContent"/>
-			<possibleChildren>
-				<instanceof	value="org.eclipse.dltk.core.IMember" />
-			</possibleChildren>
+			<override policy="InvokeAlwaysRegardlessOfSuppressedExt"
+				suppressedExtensionId="org.eclipse.ui.navigator.resourceContent"/>
+				
+			<commonWizard menuGroupId="org.eclipse.php.project.ui"
+				type="new" wizardId="org.eclipse.php.ui.wizards.PHPFileCreationWizard">
+      			<enablement>
+      				<or>
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+						</adapt>
+						<instanceof value="org.eclipse.dltk.core.IModelElement"/>
+	               </or>
+      			</enablement>
+			</commonWizard>
+   			<commonWizard
+         		menuGroupId="org.eclipse.php.project.ui"
+         		type="new"
+         		wizardId="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard">
+      			<enablement>
+         			<or>
+            			<adapt type="org.eclipse.core.resources.IProject">
+               				<test
+                     			property="org.eclipse.core.resources.projectNature"
+                     			value="org.eclipse.php.core.PHPNature">
+               				</test>
+            			</adapt>
+			            <instanceof
+			                  value="org.eclipse.dltk.core.IModelElement">
+			            </instanceof>
+        			</or>
+				</enablement>
+			</commonWizard>
 		</navigatorContent>
 		
    		<commonFilter
