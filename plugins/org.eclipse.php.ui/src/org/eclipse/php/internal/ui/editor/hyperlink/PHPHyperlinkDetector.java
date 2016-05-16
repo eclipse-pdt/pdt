@@ -27,7 +27,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.util.PHPBuildUtils;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 
@@ -76,8 +75,7 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 			IModelElement[] elements = null;
 			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
-			if ((elements == null || elements.length == 0) && input instanceof ISourceModule
-					&& !PHPBuildUtils.isIndexing()) {
+			if ((elements == null || elements.length == 0) && input instanceof ISourceModule) {
 				elements = PHPModelUtils.getTypeInString((ISourceModule) input, wordRegion);
 
 			}
