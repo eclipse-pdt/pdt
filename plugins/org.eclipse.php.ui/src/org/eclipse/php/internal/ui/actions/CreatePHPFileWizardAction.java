@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.actions;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardRegistry;
 
+@Deprecated
 public class CreatePHPFileWizardAction extends RunWizardAction {
 
 	public String getWizardId() {

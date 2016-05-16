@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.templates.TemplateVariableType;
 import org.eclipse.php.internal.ui.text.template.contentassist.MultiVariable;
 
+@Deprecated
 public final class PhpVariable extends MultiVariable {
 	private String fParamType;
 

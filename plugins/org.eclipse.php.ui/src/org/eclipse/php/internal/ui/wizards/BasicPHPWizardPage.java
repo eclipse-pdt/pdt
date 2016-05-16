@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+@Deprecated
 public abstract class BasicPHPWizardPage extends WizardPage {
 
 	private IStatus fCurrStatus;
@@ -212,6 +213,7 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 
 	}
 
+	@Deprecated
 	protected static class EnableSelectionAdapter extends SelectionAdapter {
 		private Control[] fEnable;
 		private Control[] fDisable;
@@ -238,6 +240,7 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 
 	} // end class EnableSelectionAdapter
 
+	@Deprecated
 	protected static class ToggleSelectionAdapter extends SelectionAdapter {
 		Control[] controls;
 

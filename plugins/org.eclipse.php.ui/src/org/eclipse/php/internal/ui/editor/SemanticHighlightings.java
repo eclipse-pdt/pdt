@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.RGB;
  * 
  * @since 3.0
  */
+@Deprecated
 public class SemanticHighlightings {
 
 	/**

@@ -9,6 +9,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.swt.graphics.Image;
 
+@Deprecated
 public class PHPStubCompletionProposal extends PHPCompletionProposal implements IPHPCompletionProposalExtension {
 	private CompletionProposal typeProposal;
 	private IDocument document;

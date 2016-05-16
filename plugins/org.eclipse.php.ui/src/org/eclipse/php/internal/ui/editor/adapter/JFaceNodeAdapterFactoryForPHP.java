@@ -26,6 +26,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
  * @author guy.g
  * 
  */
+@Deprecated
 public class JFaceNodeAdapterFactoryForPHP extends JFaceNodeAdapterFactory {
 
 	public JFaceNodeAdapterFactoryForPHP() {

@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
  * This class used for filtering non-class variable declarations, like: in
  * method, in function parameters, global variables, etc...
  */
+@Deprecated
 public class NonClassVariablesFilter extends ViewerFilter {
 
 	public boolean select(Viewer viewer, Object parentElement, Object element) {

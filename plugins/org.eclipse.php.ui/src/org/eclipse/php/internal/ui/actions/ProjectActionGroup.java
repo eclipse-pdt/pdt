@@ -37,6 +37,7 @@ import org.eclipse.ui.ide.IDEActionFactory;
  * 
  * @since 2.0
  */
+@Deprecated
 public class ProjectActionGroup extends ActionGroup {
 
 	private IWorkbenchSite fSite;

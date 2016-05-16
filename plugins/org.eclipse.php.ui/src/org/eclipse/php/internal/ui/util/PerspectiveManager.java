@@ -26,6 +26,7 @@ import org.eclipse.ui.*;
  * @author Eden K.,2007
  * 
  */
+@Deprecated
 public class PerspectiveManager {
 
 	/**

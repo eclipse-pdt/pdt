@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic;
 
+@Deprecated
 public interface IOkHandler {
 
 	public void okPressed(Object element);

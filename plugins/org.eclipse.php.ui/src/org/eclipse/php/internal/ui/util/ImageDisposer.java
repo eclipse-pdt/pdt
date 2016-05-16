@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Image;
  * Helper class to manage images that should be disposed when a control is
  * disposed contol.addWidgetListener(new ImageDisposer(myImage));
  */
+@Deprecated
 public class ImageDisposer implements DisposeListener {
 
 	private Image[] fImages;

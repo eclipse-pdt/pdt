@@ -16,6 +16,7 @@ package org.eclipse.php.internal.ui.style;
  * 
  * @author Roy, 2007
  */
+@Deprecated
 public interface IStyleConstantsPhp {
 
 	public static final String PHP_SINGLE_LINE_COMMENT = "org.eclipse.php.PHP_SINGLE_LINE_COMMENT"; //$NON-NLS-1$

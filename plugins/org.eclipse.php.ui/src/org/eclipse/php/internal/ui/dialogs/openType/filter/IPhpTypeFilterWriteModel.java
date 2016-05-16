@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.filter;
 
+@Deprecated
 public interface IPhpTypeFilterWriteModel {
 	public void setSelectClasses(boolean select);
 

@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 
+@Deprecated
 public class MultiElementSelection extends StructuredSelection {
 
 	private static final TreePath[] EMPTY_TREE_PATHS = new TreePath[0];

@@ -18,6 +18,7 @@ import org.eclipse.php.internal.ui.wizards.WizardModel;
  * A single operation for the new project wizard
  * 
  */
+@Deprecated
 public interface INewProjectWizardOperation {
 
 	/**

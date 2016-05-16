@@ -28,6 +28,7 @@ import org.eclipse.swt.graphics.Font;
  * 
  * @since 3.0
  */
+@Deprecated
 public class PHPSourcePreviewerUpdater {
 
 	/**

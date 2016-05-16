@@ -26,6 +26,7 @@ import org.osgi.framework.Bundle;
 /**
  * This class contains some utility methods for the PHP Search.
  */
+@Deprecated
 public class SearchUtil {
 
 	public static boolean isSearchPlugInActivated() {

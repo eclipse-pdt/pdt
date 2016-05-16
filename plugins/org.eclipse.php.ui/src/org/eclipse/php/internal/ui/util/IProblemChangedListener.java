@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.core.resources.IResource;
 
+@Deprecated
 public interface IProblemChangedListener {
 
 	/**

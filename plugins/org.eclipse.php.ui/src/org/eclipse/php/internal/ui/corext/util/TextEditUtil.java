@@ -19,6 +19,7 @@ import org.eclipse.text.edits.TextEdit;
 /**
  * @since 3.4
  */
+@Deprecated
 public class TextEditUtil {
 
 	/**

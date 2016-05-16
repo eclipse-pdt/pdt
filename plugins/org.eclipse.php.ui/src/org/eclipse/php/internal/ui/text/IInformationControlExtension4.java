@@ -18,6 +18,7 @@ package org.eclipse.php.internal.ui.text;
  * @see org.eclipse.jface.text.IInformationControl
  * @since 3.2
  */
+@Deprecated
 public interface IInformationControlExtension4 {
 
 	/**

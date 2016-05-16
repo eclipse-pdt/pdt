@@ -17,6 +17,7 @@ import org.eclipse.php.internal.ui.wizards.WizardFragment;
  * Factory for creating fragments for the new project wizard.
  * 
  */
+@Deprecated
 public interface INewProjectWizardFragementFactory {
 
 	/**

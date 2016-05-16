@@ -21,6 +21,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
+@Deprecated
 public class ShowGroupsAction extends Action {
 
 	public static final String PREF_SHOW_GROUPS = "ShowGroupsAction.show"; //$NON-NLS-1$

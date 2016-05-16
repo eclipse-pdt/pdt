@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
+@Deprecated
 public class CheckedTreeListDialogField extends TreeListDialogField {
 
 	private int fCheckAllButtonIndex;

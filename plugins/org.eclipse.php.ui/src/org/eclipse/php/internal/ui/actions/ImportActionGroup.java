@@ -20,6 +20,7 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.ExportResourcesAction;
 import org.eclipse.ui.actions.ImportResourcesAction;
 
+@Deprecated
 public class ImportActionGroup extends ActionGroup {
 
 	private static final String GROUP_IMPORT = "group.import"; //$NON-NLS-1$

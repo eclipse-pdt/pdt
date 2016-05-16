@@ -18,6 +18,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 /**
  * This class represents an event notifier for PropertyChangeEvents
  */
+@Deprecated
 public abstract class AbstractEventManager extends EventManager {
 
 	public void addPropertyChangeListener(final IPropertyChangeListener listener) {

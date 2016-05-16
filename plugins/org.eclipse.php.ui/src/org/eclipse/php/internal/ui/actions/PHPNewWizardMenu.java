@@ -30,6 +30,7 @@ import org.eclipse.ui.internal.actions.NewWizardShortcutAction;
 import org.eclipse.ui.internal.registry.WizardsRegistryReader;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 
+@Deprecated
 public class PHPNewWizardMenu extends ContributionItem {
 	private IAction showDlgAction;
 	private IAction newProjectAction;

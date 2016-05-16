@@ -15,6 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
+@Deprecated
 public abstract class AbstractToggleLinkingAction extends Action {
 
 	/**

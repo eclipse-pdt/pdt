@@ -22,6 +22,7 @@ import org.eclipse.jface.text.Position;
  * 
  * @since 3.0
  */
+@Deprecated
 class InclusivePositionUpdater implements IPositionUpdater {
 
 	/** The position category. */

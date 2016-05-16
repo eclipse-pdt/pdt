@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Widget;
  * focus of the viewers to provide the correct selection.
  * 
  */
+@Deprecated
 public class SelectionProviderMediator implements IPostSelectionProvider {
 
 	private class InternalListener implements ISelectionChangedListener, FocusListener {
