@@ -146,6 +146,10 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 		Object object = selection.getFirstElement();
 		setWindowIfEmpty();
 
+		if (object instanceof IResource) {
+			object = DLTKCore.create((IResource) object);
+		}
+
 		if (isScriptContainer(object)) {
 			IModelElement element = (IModelElement) object;
 			try {
