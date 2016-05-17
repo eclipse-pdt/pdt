@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -127,16 +128,15 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 					return 0;
 				}
 
-				IType parent = (IType) method.getParent();
-				if (parent.getSuperClasses() == null || parent.getSuperClasses().length == 0) {
+				if (!shouldCompute((IType) method.getParent())) {
 					return 0;
 				}
 
-				int flags = method.getFlags();
-				if (!method.isConstructor() && !Flags.isPrivate(flags) && !Flags.isStatic(flags)) {
-					int res = getOverrideIndicators(method);
-					return res;
+				if (!shouldCompute(method)) {
+					return 0;
 				}
+
+				return getOverrideIndicators(method);
 			} catch (ModelException e) {
 				if (!e.isDoesNotExist()) {
 					PHPUiPlugin.log(e);
@@ -148,6 +148,16 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 		return 0;
 	}
 
+	private boolean shouldCompute(IType parent) throws ModelException {
+		return !PHPFlags.isInterface(parent.getFlags()) && parent.getSuperClasses() != null
+				&& parent.getSuperClasses().length != 0;
+	}
+
+	private boolean shouldCompute(IMethod method) throws ModelException {
+		int flags = method.getFlags();
+		return !method.isConstructor() && !Flags.isPrivate(flags) && !Flags.isStatic(flags);
+	}
+
 	/**
 	 * Note: This method is for internal use only. Clients should not call this
 	 * method.
@@ -155,14 +165,27 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 * @param method
 	 *            The element to decorate
 	 * @return Resulting decorations (combination of
-	 *         JavaElementImageDescriptor.IMPLEMENTS and
-	 *         JavaElementImageDescriptor.OVERRIDES)
+	 *         ScriptElementImageDescriptor.IMPLEMENTS and
+	 *         ScriptElementImageDescriptor.OVERRIDES)
 	 * @throws ModelException
 	 * @throws IOException
 	 * 
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	protected int getOverrideIndicators(IMethod method) throws ModelException, IOException {
+		IType type = method.getDeclaringType();
+		if (type != null) {
+			MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
+			IMethod defining = methodOverrideTester.findOverriddenMethod(method, true);
+			if (defining != null) {
+				if (isAbstract(defining)) {
+					return ScriptElementImageDescriptor.IMPLEMENTS;
+				} else {
+					return ScriptElementImageDescriptor.OVERRIDES;
+				}
+			}
+		}
+
 		Program astRoot = null;
 		// XXX: do not call SharedASTProvider.getAST() due bug 466694 and
 		// until bug 438661 will be fixed (PHPReconcilingStrategy require access
@@ -180,27 +203,15 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 			}
 		}
 
-		IType type = method.getDeclaringType();
-
-		if (type != null) {
-			MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
-			IMethod defining = methodOverrideTester.findOverriddenMethod(method, true);
-			if (defining != null) {
-				if (isAbstract(defining)) {
-					return ScriptElementImageDescriptor.IMPLEMENTS;
-				} else {
-					return ScriptElementImageDescriptor.OVERRIDES;
-				}
-			}
-		}
 		return 0;
 	}
 
 	private int findInHierarchyWithAST(Program astRoot, IMethod method) throws ModelException {
-		SourceRange range = new SourceRange(method.getSourceRange().getOffset(), method.getSourceRange().getLength());
+		SourceRange range = new SourceRange(method.getNameRange().getOffset(), method.getNameRange().getLength());
 		ASTNode node = NodeFinder.perform(astRoot, range);
-		if (node instanceof Identifier && node.getParent() instanceof MethodDeclaration) {
-			IMethodBinding binding = ((MethodDeclaration) node.getParent()).resolveMethodBinding();
+		if (node instanceof Identifier && node.getParent() instanceof FunctionDeclaration
+				&& node.getParent().getParent() instanceof MethodDeclaration) {
+			IMethodBinding binding = ((MethodDeclaration) node.getParent().getParent()).resolveMethodBinding();
 			if (binding != null) {
 				IMethodBinding defining = Bindings.findOverriddenMethod(binding, true);
 				if (defining != null) {
