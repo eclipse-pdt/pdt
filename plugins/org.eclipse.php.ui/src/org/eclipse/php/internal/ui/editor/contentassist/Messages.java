@@ -7,6 +7,7 @@ public class Messages extends NLS {
 	public static String AutoActivationTrigger_0;
 	public static String ParameterGuessingProposal_0;
 	public static String PHPContentAssistant_0;
+	public static String AssignToLocalCompletionProposal_name;
 
 	static {
 		// initialize resource bundle

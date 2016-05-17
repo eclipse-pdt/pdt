@@ -1250,6 +1250,12 @@
             categoryId="org.eclipse.ui.category.edit"
             id="org.eclipse.pdt.ui.edit.text.select.last">
       </command>
+      <command
+            name="%ActionDefinition.assignToLocalCommand.name"
+            description="%ActionDefinition.assignToLocalCommand.description"
+            categoryId="org.eclipse.php.ui.category.source"
+            id="org.eclipse.php.internal.ui.assignToLocal.assist">
+      </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -1493,6 +1499,12 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+G">
       </key>
+      
+      <key
+            sequence="M1+2 L"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.php.internal.ui.assignToLocal.assist"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 
     <scheme
           description="%scheme.description"
@@ -2671,6 +2683,14 @@
 			class="org.eclipse.php.internal.ui.quickassist.VarCommentQuickAssistProcessor">
 			<command id="org.eclipse.php.ui.insertVarComment"/>
 		</quickAssistProcessor>
+	      <quickAssistProcessor
+	            id="org.eclipse.php.ui.quickassist.assignToLocalQuickAssistProcessor"
+	            name="%assignToLocalQuickAssitProcessor.name"
+	            class="org.eclipse.php.internal.ui.quickassist.AssignToLocalQuickAssistProcessor">
+	            <command
+	                  id="org.eclipse.php.internal.ui.assignToLocal.assist">
+	            </command>
+	      </quickAssistProcessor>
 	</extension>
 	<extension
 	       point="org.eclipse.php.ui.quickFixProcessors">
