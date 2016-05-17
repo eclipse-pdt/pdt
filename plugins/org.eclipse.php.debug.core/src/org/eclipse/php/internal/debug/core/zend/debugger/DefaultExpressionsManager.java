@@ -91,7 +91,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		Expression dummyClass = variables[variables.length - 1];
 		String className = (String) dummyClass.getValue().getValue();
 		// Check if we are in static context
-		if (!hasThis && className != null && !className.isEmpty()) {
+		if (!hasThis && !"0".equals(className)) { //$NON-NLS-1$
 			Expression staticClassContext = ExpressionsUtil.fetchStaticContext(className, this);
 			if (staticClassContext != null)
 				currentVariables.add(staticClassContext);
