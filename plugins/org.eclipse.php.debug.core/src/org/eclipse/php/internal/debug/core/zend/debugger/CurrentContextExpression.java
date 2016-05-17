@@ -23,10 +23,10 @@ public class CurrentContextExpression extends DefaultExpression {
 
 	private final static String GET_CURRENT_CONTEXT = "eval('" //$NON-NLS-1$
 			+ "if (isset($this)) {$this;}; " //$NON-NLS-1$
-			+ "if (defined(\\'__CLASS__\\')) " //$NON-NLS-1$
-			+ "{ return array_merge(get_defined_vars(), array(constant(\\'__CLASS__\\'))); } " //$NON-NLS-1$
+			+ "if (function_exists(\\'get_called_class\\')) " //$NON-NLS-1$
+			+ "{ return array_merge(get_defined_vars(), array(get_called_class())); } " //$NON-NLS-1$
 			+ "else " //$NON-NLS-1$
-			+ "{ return array_merge(get_defined_vars(), array(null)); }" //$NON-NLS-1$
+			+ "{ return array_merge(get_defined_vars(), array(false)); }" // $NON-NLS-1$
 			+ "')"; //$NON-NLS-1$
 
 	/**
