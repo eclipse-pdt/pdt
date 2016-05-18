@@ -47,6 +47,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
@@ -465,6 +466,39 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension extension : extensions) {
 			extension.modifyMethodInfo(methodDeclaration, mi);
 		}
+		if (mi.returnType != null) {
+			mi.modifiers |= IPHPModifiers.AccReturn;
+		} else if (methodDeclaration.getBody() != null) {
+			// check
+			ReturnDetector detector = new ReturnDetector();
+			try {
+				methodDeclaration.getBody().traverse(detector);
+				if (detector.found) {
+					mi.modifiers |= IPHPModifiers.AccReturn;
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+		}
+	}
+
+	private class ReturnDetector extends PHPASTVisitor {
+		boolean found = false;
+
+		@Override
+		public boolean visitGeneral(ASTNode node) throws Exception {
+			return !found;
+		}
+
+		public boolean visit(ReturnStatement node) {
+			found = true;
+			return false;
+		}
+
+		public boolean visit(YieldExpression node) {
+			found = true;
+			return false;
+		}
 	}
 
 	private String[] processParameterTypes(MethodDeclaration methodDeclaration) {
@@ -493,7 +527,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private String processReturnType(MethodDeclaration methodDeclaration) {
 		PHPMethodDeclaration phpMethodDeclaration = (PHPMethodDeclaration) methodDeclaration;
 		PHPDocBlock docBlock = phpMethodDeclaration.getPHPDoc();
-		String type = VOID_RETURN_TYPE;
 		if (phpMethodDeclaration.getReturnType() != null) {
 			return phpMethodDeclaration.getReturnType().getName();
 		} else if (docBlock != null) {
@@ -503,7 +536,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			}
 		}
-		return type;
+
+		return null;
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
