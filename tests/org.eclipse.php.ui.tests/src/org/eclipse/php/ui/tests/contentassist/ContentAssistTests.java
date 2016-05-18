@@ -28,6 +28,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
@@ -110,6 +112,7 @@ public class ContentAssistTests {
 
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		ProjectIndexerManager.indexProject(project);
 	}
 
 	@AfterList
@@ -122,12 +125,18 @@ public class ContentAssistTests {
 	@After
 	public void tearDown() throws Exception {
 		if (testFile != null) {
+			ProjectIndexerManager.removeSourceModule(DLTKCore.create(project),
+					testFile.getProjectRelativePath().toString());
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
-			for (IFile f : otherFiles) {
-				f.delete(true, null);
+			for (IFile file : otherFiles) {
+				if (file != null) {
+					ProjectIndexerManager.removeSourceModule(DLTKCore.create(project),
+							file.getProjectRelativePath().toString());
+					file.delete(true, null);
+				}
 			}
 			otherFiles = null;
 		}
@@ -151,12 +160,13 @@ public class ContentAssistTests {
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		final ByteArrayInputStream stream = new ByteArrayInputStream(data.getBytes());
 		final Exception[] err = new Exception[1];
+		createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
 		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
+					openEditor();
 					String result = executeAutoInsert(offset);
 					closeEditor();
 					if (!pdttFile.getExpected().trim().equals(result.trim())) {
@@ -229,15 +239,19 @@ public class ContentAssistTests {
 	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
 		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
 		testFile.create(inputStream, true, null);
+		ProjectIndexerManager.removeSourceModule(DLTKCore.create(project),
+				testFile.getProjectRelativePath().toString());
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
 			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
+			ProjectIndexerManager.removeSourceModule(DLTKCore.create(project),
+					otherFiles[i].getProjectRelativePath().toString());
 		}
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		PHPCoreTests.waitForIndexer();
+	}
+
+	protected void openEditor() throws Exception {
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 		IEditorInput input = new FileEditorInput(testFile);
