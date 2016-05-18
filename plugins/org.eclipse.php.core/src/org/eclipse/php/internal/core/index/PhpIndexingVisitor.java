@@ -43,6 +43,7 @@ import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.compiler.ReturnDetector;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -63,6 +64,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
+	public static final char QUALIFIER_SEPERATOR = ';';
+	public static final char RETURN_TYPE_SEPERATOR = ':';
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -135,6 +138,22 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				info.qualifier = PHPCoreConstants.GLOBAL_NAMESPACE;
 			}
 		}
+
+		if (node != null && (info.flags & IPHPModifiers.AccReturn) == 0 && node instanceof MethodDeclaration) {
+			MethodDeclaration m = (MethodDeclaration) node;
+			if (m.getBody() != null) {
+				ReturnDetector detector = new ReturnDetector();
+				try {
+					m.getBody().traverse(detector);
+					if (detector.hasReturn()) {
+						info.flags |= IPHPModifiers.AccReturn;
+					}
+				} catch (Exception e) {
+					Logger.logException(e);
+				}
+			}
+		}
+
 		requestor.addDeclaration(info);
 	}
 
@@ -304,7 +323,16 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 		StringBuilder metadata = new StringBuilder();
 		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-		metadata.append(";"); //$NON-NLS-1$
+		metadata.append(QUALIFIER_SEPERATOR);
+		if (method instanceof PHPMethodDeclaration) {
+			TypeReference returnType = ((PHPMethodDeclaration) method).getReturnType();
+			if (returnType != null) {
+				metadata.append(returnType.getName());
+				modifiers |= IPHPModifiers.AccReturn;
+			}
+		}
+		metadata.append(RETURN_TYPE_SEPERATOR);
+
 		List<Argument> arguments = method.getArguments();
 		if (arguments != null) {
 			Iterator<Argument> i = arguments.iterator();
@@ -413,7 +441,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			modifiers = markAsDeprecated(modifiers, type);
 			StringBuilder metadata = new StringBuilder();
 			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-			metadata.append(";"); //$NON-NLS-1$
+			metadata.append(QUALIFIER_SEPERATOR); // $NON-NLS-1$
 			modifyDeclaration(type,
 					new DeclarationInfo(IModelElement.PACKAGE_DECLARATION, modifiers, type.sourceStart(),
 							type.sourceEnd() - type.sourceStart(), type.getNameStart(),
@@ -446,7 +474,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			String[] superClasses = processSuperClasses(type);
 			StringBuilder metadata = new StringBuilder();
 			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-			metadata.append(";"); //$NON-NLS-1$
+			metadata.append(QUALIFIER_SEPERATOR);
 			for (int i = 0; i < superClasses.length; ++i) {
 				metadata.append(superClasses[i]);
 				if (i < superClasses.length - 1) {
@@ -548,7 +576,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 						StringBuilder metadata = new StringBuilder();
 						metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-						metadata.append(";"); //$NON-NLS-1$
+						metadata.append(QUALIFIER_SEPERATOR);
 
 						modifyDeclaration(null,
 								new DeclarationInfo(IModelElement.FIELD, Modifiers.AccPublic, offset, length, offset,
@@ -582,7 +610,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 						StringBuilder metadata = new StringBuilder();
 						metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-						metadata.append(";"); //$NON-NLS-1$
+						metadata.append(QUALIFIER_SEPERATOR); // $NON-NLS-1$
 
 						modifyDeclaration(null,
 								new DeclarationInfo(IModelElement.METHOD, methodModifiers, offset, length, offset,
@@ -641,7 +669,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 		StringBuilder metadata = new StringBuilder();
 		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-		metadata.append(";"); //$NON-NLS-1$
+		metadata.append(QUALIFIER_SEPERATOR);
 
 		modifyDeclaration(decl, new DeclarationInfo(IModelElement.FIELD, modifiers, decl.sourceStart(),
 				decl.sourceEnd() - decl.sourceStart(), decl.getNameStart(), decl.getNameEnd() - decl.getNameStart(),
@@ -702,7 +730,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			// Fake occurrenceCount, because we do always need one
 			// when metadata != null to make PhpElementResolver#resolve() happy
 			metadata.append(1);
-			metadata.append(";"); //$NON-NLS-1$
+			metadata.append(QUALIFIER_SEPERATOR);
 			metadata.append(fullPath);
 			modifyDeclaration(include, new DeclarationInfo(IModelElement.IMPORT_DECLARATION, 0, include.sourceStart(),
 					include.sourceEnd() - include.sourceStart(), filePath.sourceStart(),
@@ -723,7 +751,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		int length = constantName.sourceEnd();
 		StringBuilder metadata = new StringBuilder();
 		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-		metadata.append(";"); //$NON-NLS-1$
+		metadata.append(QUALIFIER_SEPERATOR);
 		modifyDeclaration(declaration,
 				new DeclarationInfo(IModelElement.FIELD, modifiers, offset, length, offset, length,
 						ASTUtils.stripQuotes(constantName.getName()), metadata.toString(), encodeDocInfo(declaration),
@@ -750,7 +778,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					int length = var.sourceEnd() - offset;
 					StringBuilder metadata = new StringBuilder();
 					metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-					metadata.append(";"); //$NON-NLS-1$
+					metadata.append(QUALIFIER_SEPERATOR);
 					modifyDeclaration(assignment,
 							new DeclarationInfo(IModelElement.FIELD, modifiers, offset, length, offset, length,
 									'$' + var.getName(), metadata.toString(), null, fCurrentQualifier, fCurrentParent));

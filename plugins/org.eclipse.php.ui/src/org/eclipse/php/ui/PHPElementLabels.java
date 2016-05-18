@@ -13,8 +13,11 @@ package org.eclipse.php.ui;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementLabels;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 
 public class PHPElementLabels extends ScriptElementLabels {
+	private final String MIXED_RETURN_TYPE = "mixed"; //$NON-NLS-1$
+	private final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
 
 	protected void getTypeLabel(IType type, long flags, StringBuffer buf) {
 		if (getFlag(flags, T_FULLY_QUALIFIED | T_CONTAINER_QUALIFIED)) {
@@ -113,11 +116,15 @@ public class PHPElementLabels extends ScriptElementLabels {
 
 			if (getFlag(flags, ScriptElementLabels.M_APP_RETURNTYPE) && method.exists() && !method.isConstructor()) {
 				String type = method.getType();
-				if (type != null) {
-					// int offset = buf.length();
-					buf.append(ScriptElementLabels.DECL_STRING);
-					buf.append(type);
+				if (type == null) {
+					if ((method.getFlags() & IPHPModifiers.AccReturn) != 0) {
+						type = MIXED_RETURN_TYPE;
+					} else {
+						type = VOID_RETURN_TYPE;
+					}
 				}
+				buf.append(ScriptElementLabels.DECL_STRING);
+				buf.append(type);
 			}
 
 			// post qualification
