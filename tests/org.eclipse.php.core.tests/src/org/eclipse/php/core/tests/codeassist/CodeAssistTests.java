@@ -24,10 +24,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
@@ -107,10 +104,12 @@ public class CodeAssistTests {
 		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
 			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		}
+		PHPCoreTests.index(project);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
+		PHPCoreTests.removeIndex(project);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
@@ -131,12 +130,14 @@ public class CodeAssistTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
+			PHPCoreTests.removeIndex(testFile);
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
+					PHPCoreTests.removeIndex(file);
 					file.delete(true, null);
 				}
 			}
@@ -166,18 +167,17 @@ public class CodeAssistTests {
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+		PHPCoreTests.index(testFile);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = project.getFile(String.format("test%s.php", i));
 			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
 			this.otherFiles.add(i, tmp);
+			PHPCoreTests.index(tmp);
 			i++;
 		}
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		testFile.touch(new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 		PHPCoreTests.waitForIndexer();
 		// PHPCoreTests.waitForAutoBuild();
 

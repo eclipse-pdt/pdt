@@ -12,14 +12,21 @@
 package org.eclipse.php.core.tests;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.osgi.framework.BundleContext;
@@ -168,6 +175,36 @@ public class PHPCoreTests extends Plugin {
 			ProjectOptions.setPhpVersion(phpVersion, project);
 			waitForAutoBuild();
 			waitForIndexer();
+		}
+	}
+
+	/**
+	 * Force index
+	 * 
+	 * @param resource
+	 */
+	public static void index(IResource resource) {
+		if (resource.getType() == IResource.PROJECT) {
+			ProjectIndexerManager.indexProject((IProject) resource);
+		} else if (resource.getType() == IResource.FILE) {
+			IModelElement module = DLTKCore.create((IFile) resource);
+			if (module instanceof ISourceModule) {
+				ProjectIndexerManager.indexSourceModule((ISourceModule) module, PHPLanguageToolkit.getDefault());
+			}
+		}
+	}
+
+	/**
+	 * Force removal from index IProject or IResource
+	 * 
+	 * @param resource
+	 */
+	public static void removeIndex(IResource resource) {
+		if (resource.getType() == IResource.PROJECT) {
+			ProjectIndexerManager.removeProject(resource.getFullPath());
+		} else if (resource.getType() == IResource.FILE) {
+			ProjectIndexerManager.removeSourceModule(DLTKCore.create(resource.getProject()),
+					resource.getProjectRelativePath().toString());
 		}
 	}
 }
