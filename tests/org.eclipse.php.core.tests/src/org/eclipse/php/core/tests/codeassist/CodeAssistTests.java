@@ -24,16 +24,14 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
@@ -41,6 +39,7 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -107,6 +106,7 @@ public class CodeAssistTests {
 		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
 			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		}
+		ProjectIndexerManager.indexProject(project);
 	}
 
 	@AfterList
@@ -131,12 +131,16 @@ public class CodeAssistTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
+			ProjectIndexerManager.removeSourceModule(DLTKCore.create(project),
+					testFile.getProjectRelativePath().toString());
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
+					ProjectIndexerManager.removeSourceModule(DLTKCore.create(project),
+							file.getProjectRelativePath().toString());
 					file.delete(true, null);
 				}
 			}
@@ -172,12 +176,13 @@ public class CodeAssistTests {
 			IFile tmp = project.getFile(String.format("test%s.php", i));
 			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
 			this.otherFiles.add(i, tmp);
+			ProjectIndexerManager.indexSourceModule((ISourceModule) DLTKCore.create(tmp),
+					PHPLanguageToolkit.getDefault());
 			i++;
 		}
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		testFile.touch(new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+		ProjectIndexerManager.indexSourceModule((ISourceModule) DLTKCore.create(testFile),
+				PHPLanguageToolkit.getDefault());
 		PHPCoreTests.waitForIndexer();
 		// PHPCoreTests.waitForAutoBuild();
 
