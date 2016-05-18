@@ -7,6 +7,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -52,7 +53,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
 		if (!type.getScriptProject().getProject().isAccessible()) {
-			return null;
+			return new TypeHierarchy();
 		}
 		ITypeHierarchy hierarchy = hierarchyCache.get(type);
 		if (hierarchy == null) {
