@@ -33,7 +33,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.osgi.util.NLS;
@@ -192,6 +191,9 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	}
 
 	public IContentProvider getContentProvider(final TreeViewer viewer) {
+		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=493711
+		viewer.setUseHashlookup(true);
+
 		if (MODE_PHP == mode) {
 			if (fContentProvider == null) {
 				fContentProvider = new PHPOutlineContentProvider(viewer);
@@ -311,16 +313,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 					| ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.T_TYPE_PARAMETERS);
 		}
 		return fSimpleLabelProvider;
-	}
-
-	@Override
-	public TransferDragSourceListener[] getTransferDragSourceListeners(TreeViewer treeViewer) {
-		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=493711
-		// this methods is not triggered during
-		// ConfigurableContentOutlinePage.unconfigure()
-		treeViewer.setUseHashlookup(true);
-
-		return super.getTransferDragSourceListeners(treeViewer);
 	}
 
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
