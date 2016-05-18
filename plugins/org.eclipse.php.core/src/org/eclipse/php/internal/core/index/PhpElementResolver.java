@@ -33,7 +33,10 @@ public class PhpElementResolver implements IElementResolver {
 	private static final String SPLIT_STR = ";"; //$NON-NLS-1$
 	private static final Pattern SPLIT_METADATA = Pattern.compile(SPLIT_STR);
 	private static final Pattern SEPARATOR_PATTERN = Pattern.compile(","); //$NON-NLS-1$
+	private static final char RETURN_TYPE_CHAR = ':';
+	private static final Pattern RETURN_TYPE_PATTERN = Pattern.compile(":"); //$NON-NLS-1$
 	private static final String[] EMPTY = new String[0];
+	private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
 	public IModelElement resolve(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
 			String elementName, String metadata, String doc, String qualifier, String parent,
@@ -94,14 +97,28 @@ public class PhpElementResolver implements IElementResolver {
 					superClassNames, doc, 1);
 
 		case IModelElement.METHOD:
-			String[] parameters;
-			if (metadataToDecode != null) {
-				parameters = SEPARATOR_PATTERN.split(metadataToDecode);
-			} else {
-				parameters = EMPTY;
+			String[] parameters = EMPTY;
+			String returnType = null;
+			if (metadataToDecode != null && metadataToDecode.length() > 1) {
+				if (metadataToDecode.charAt(0) == RETURN_TYPE_CHAR) {
+					returnType = null;
+					metadataToDecode = metadataToDecode.substring(1);
+				} else if (metadataToDecode.charAt(metadataToDecode.length() - 1) == RETURN_TYPE_CHAR) {
+					returnType = metadataToDecode.substring(0, metadataToDecode.length() - 1);
+					metadataToDecode = null;
+				} else {
+					String[] decoded = RETURN_TYPE_PATTERN.split(metadataToDecode);
+					if (decoded.length == 2) {
+						metadataToDecode = decoded[1];
+						returnType = decoded[0];
+					}
+				}
+				if (metadataToDecode != null) {
+					parameters = SEPARATOR_PATTERN.split(metadataToDecode);
+				}
 			}
-			return new IndexMethod(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
-					parameters, doc, 1);
+			return new IndexMethod(parentElement, elementName, returnType, flags, offset, length, nameOffset,
+					nameLength, parameters, doc, 1);
 
 		case IModelElement.FIELD:
 			return new IndexField(parentElement, elementName, flags, offset, length, nameOffset, nameLength, doc, 1);
@@ -205,13 +222,15 @@ public class PhpElementResolver implements IElementResolver {
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
+		private String returnType;
 		private IParameter[] parameters;
 		private String doc;
 
-		public IndexMethod(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
-				int nameLength, String[] parameterNames, String doc, int occurrenceCount) {
+		public IndexMethod(ModelElement parent, String name, String returnType, int flags, int offset, int length,
+				int nameOffset, int nameLength, String[] parameterNames, String doc, int occurrenceCount) {
 
 			super(parent, name);
+			this.returnType = returnType;
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
@@ -276,6 +295,9 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		public String[] getReturnTypes() {
+			if (returnType != null) {
+				return new String[] { returnType };
+			}
 			Map<String, String> info = decodeDocInfo(doc);
 			if (info != null) {
 				String types = info.get("r"); //$NON-NLS-1$

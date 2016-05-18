@@ -465,6 +465,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension extension : extensions) {
 			extension.modifyMethodInfo(methodDeclaration, mi);
 		}
+		if (mi.returnType != null) {
+			mi.modifiers |= IPHPModifiers.AccReturn;
+		} else if (methodDeclaration.getBody() != null) {
+			// check
+			ReturnDetector detector = new ReturnDetector();
+			try {
+				methodDeclaration.getBody().traverse(detector);
+				if (detector.hasReturn()) {
+					mi.modifiers |= IPHPModifiers.AccReturn;
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+		}
 	}
 
 	private String[] processParameterTypes(MethodDeclaration methodDeclaration) {
@@ -493,7 +507,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private String processReturnType(MethodDeclaration methodDeclaration) {
 		PHPMethodDeclaration phpMethodDeclaration = (PHPMethodDeclaration) methodDeclaration;
 		PHPDocBlock docBlock = phpMethodDeclaration.getPHPDoc();
-		String type = VOID_RETURN_TYPE;
 		if (phpMethodDeclaration.getReturnType() != null) {
 			return phpMethodDeclaration.getReturnType().getName();
 		} else if (docBlock != null) {
@@ -503,7 +516,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			}
 		}
-		return type;
+
+		return null;
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {

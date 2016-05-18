@@ -72,11 +72,12 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 				evaluateReturnType(returnTypeList, docBlock, method);
 				typeNames = returnTypeList.toArray(new String[returnTypeList.size()]);
 			}
-			if (typeNames != null) {
+			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+			if (docBlock != null && typeNames != null) {
 				AbstractMethodReturnTypeGoal goal = (AbstractMethodReturnTypeGoal) getGoal();
 				IModelElement space = currentNamespace != null ? currentNamespace : method.getSourceModule();
 				evaluated.addAll(Arrays.asList(PHPEvaluationUtils.evaluatePHPDocType(typeNames, space,
-						PHPModelUtils.getDocBlock(method).sourceStart(), goal.getTypes())));
+						docBlock.sourceStart(), goal.getTypes())));
 			}
 		}
 
