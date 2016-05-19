@@ -3064,7 +3064,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (model == null || inputElement == null || inputElement.getElementType() != IModelElement.SOURCE_MODULE)
 			return;
 
-		fOverrideIndicatorManager = new OverrideIndicatorManager(model, inputElement, null);
+		fOverrideIndicatorManager = new OverrideIndicatorManager(model);
 		addReconcileListener(fOverrideIndicatorManager);
 		if (provideAST) {
 			Job job = new Job("Installing override indicator") { //$NON-NLS-1$
