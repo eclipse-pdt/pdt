@@ -96,30 +96,25 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 		 */
 		public void open() {
 			try {
-				Program ast = SharedASTProvider.getAST((ISourceModule) fModelElement,
-						SharedASTProvider.WAIT_ACTIVE_ONLY, null);
-				if (ast != null) {
-					IModelElement modelElement = DLTKCore.create(fAstNodeKey);
-					if (modelElement instanceof IMethod) {
-						IMethod method = (IMethod) modelElement;
-						int offset = method.getSourceRange().getOffset();
-						int length = method.getSourceRange().getLength();
-						IEditorPart editor = EditorUtility.openInEditor(method, true);
-						EditorUtility.revealInEditor(editor, offset, length);
-						return;
-					}
+				IModelElement modelElement = DLTKCore.create(fAstNodeKey);
+				if (modelElement instanceof IMethod) {
+					IMethod method = (IMethod) modelElement;
+					int offset = method.getNameRange().getOffset();
+					int length = method.getNameRange().getLength();
+					IEditorPart editor = EditorUtility.openInEditor(method, true);
+					EditorUtility.revealInEditor(editor, offset, length);
+				} else {
+					String title = PHPUIMessages.OverrideIndicatorManager_open_error_title;
+					String message = PHPUIMessages.OverrideIndicatorManager_open_error_message;
+					MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), title, message);
 				}
 			} catch (Exception e) {
 				ExceptionHandler.handle(
 						new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Exception occurred", e)), //$NON-NLS-1$
 						PHPUIMessages.OverrideIndicatorManager_open_error_title,
-						PHPUIMessages.OverrideIndicatorManager_open_error_messageHasLogEntry);// $NON-NLS-2$
-																								// //$NON-NLS-3$
-				return;
+						PHPUIMessages.OverrideIndicatorManager_open_error_messageHasLogEntry);
 			}
-			String title = PHPUIMessages.OverrideIndicatorManager_open_error_title;// $NON-NLS-1$
-			String message = PHPUIMessages.OverrideIndicatorManager_open_error_message;// $NON-NLS-1$
-			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), title, message);
+
 		}
 	}
 
@@ -128,17 +123,17 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	private IAnnotationModel fAnnotationModel;
 	private Object fAnnotationModelLockObject;
 	private Annotation[] fOverrideAnnotations;
-	private IModelElement fModelElement;
 
-	public OverrideIndicatorManager(IAnnotationModel annotationModel, IModelElement modelElement, Program ast) {
+	public OverrideIndicatorManager(IAnnotationModel annotationModel) {
 		Assert.isNotNull(annotationModel);
-		Assert.isNotNull(modelElement);
 
-		fModelElement = modelElement;
 		fAnnotationModel = annotationModel;
 		fAnnotationModelLockObject = getLockObject(fAnnotationModel);
+	}
 
-		updateAnnotations(ast, new NullProgressMonitor());
+	@Deprecated
+	public OverrideIndicatorManager(IAnnotationModel annotationModel, IModelElement modelElement, Program ast) {
+		this(annotationModel);
 	}
 
 	/**
