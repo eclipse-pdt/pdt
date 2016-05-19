@@ -58,7 +58,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	IModuleSource module;
 
 	public void complete(IModuleSource module, int position, int i) {
-		complete(module, position, i, false);
+		complete(module, position, i, true);
 	}
 
 	public void complete(IModuleSource module, int position, int i, boolean waitForBuilder) {
