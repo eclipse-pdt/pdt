@@ -115,7 +115,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	}
 
 	public String getValue() throws DebugException {
-		return (String) (fExpressionValue.getValue());
+		return String.valueOf(fExpressionValue.getValue());
 	}
 
 	public void updateValue(ExpressionValue value) {
