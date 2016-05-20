@@ -25,7 +25,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.navigator.CommonActionProvider;
+import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 
 /**
  * An action group that contributes the "Use As Library Folder" and
@@ -33,12 +35,32 @@ import org.eclipse.ui.actions.ActionGroup;
  * 
  * @author Kaloyan Raev
  */
-public class LibraryFolderActionGroup extends ActionGroup {
+public class LibraryFolderActionGroup extends CommonActionProvider {
 
 	private IWorkbenchSite fSite;
 
+	/*
+	 * Empty constructor for extension point
+	 */
+	public LibraryFolderActionGroup() {
+	}
+
 	public LibraryFolderActionGroup(IViewPart part) {
 		fSite = part.getSite();
+	}
+
+	@Override
+	public void init(ICommonActionExtensionSite site) {
+		ICommonViewerWorkbenchSite workbenchSite = null;
+		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
+			workbenchSite = (ICommonViewerWorkbenchSite) site.getViewSite();
+		}
+
+		if (workbenchSite != null) {
+			if (workbenchSite.getSite() != null) {
+				fSite = workbenchSite.getSite();
+			}
+		}
 	}
 
 	@Override

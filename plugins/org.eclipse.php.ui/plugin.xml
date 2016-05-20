@@ -2565,6 +2565,16 @@
 				</enablement>
 			</actionProvider>
 			
+			<actionProvider
+				class="org.eclipse.php.internal.ui.actions.LibraryFolderActionGroup"
+				id="org.eclipse.php.ui.navigator.actions.LibraryFolderActions">
+				<enablement>
+					<or>
+						<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
+					</or>
+				</enablement>
+			</actionProvider>
+			
 			<commonSorter
 					class="org.eclipse.dltk.ui.ModelElementSorter"
 					id="org.eclipse.dltk.ui.modelElementorg.eclipse.internal.ui.navigator.ScriptDropAssistanteAlwaysRegardlessOfSuppressedExt">
