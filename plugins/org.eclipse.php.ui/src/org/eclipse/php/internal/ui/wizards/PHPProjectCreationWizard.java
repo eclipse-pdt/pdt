@@ -43,7 +43,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 	protected int fLastPageIndex = -1;
 
-	private PHPProjectWizardFacetsPage fFacetsPage;
+	// private PHPProjectWizardFacetsPage fFacetsPage;
 
 	public PHPProjectCreationWizard() {
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
@@ -60,10 +60,11 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 		fFirstPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page1Description);
 		addPage(fFirstPage);
 
-		fFacetsPage = new PHPProjectWizardFacetsPage(fFirstPage);
-		fFacetsPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_PageFacetsTitle);
-		fFacetsPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_PageFacetsDescription);
-		addPage(fFacetsPage);
+		// TODO hide until Facets support will be finished
+		// fFacetsPage = new PHPProjectWizardFacetsPage(fFirstPage);
+		// fFacetsPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_PageFacetsTitle);
+		// fFacetsPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_PageFacetsDescription);
+		// addPage(fFacetsPage);
 
 		// Second page (Include Path)
 		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
