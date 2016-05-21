@@ -1894,6 +1894,18 @@
 			</objectClass>
 		</enablement>
 	</decorator>
+		<decorator
+			label="%PHPLanguageLibraryDecorator.label"
+			state="true"
+			class="org.eclipse.php.ui.PHPLanguageLibraryDecorator"
+			id="org.eclipse.php.ui.languagelibrary.decorator"
+			lightweight="true">
+		<enablement>
+			<objectClass
+				name="org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer">
+			</objectClass>
+		</enablement>
+		</decorator>
 	</extension>
 	
 	<extension point="org.eclipse.ui.decorators">
