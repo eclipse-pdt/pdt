@@ -15,7 +15,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.eclipse.dltk.compiler.problem.CategorizedProblem;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifierExtension;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -37,16 +39,19 @@ public class ProblemNode extends ASTAttribute {
 
 	public Object[] getChildren() {
 		String[] arguments= fProblem.getArguments();
-		ArrayList children= new ArrayList();
+		ArrayList<GeneralAttribute> children= new ArrayList<GeneralAttribute>();
 		
 		children.add(new GeneralAttribute(this, "CONSTANT NAME", getConstantName()));
 		children.add(new GeneralAttribute(this, "ID", getErrorLabel()));
-		// TODO check this out for CONFIGURABLE SEVERITY
-//		children.add(new GeneralAttribute(this, "OPTION FOR CONFIGURABLE SEVERITY", DLTKCore.getOptionForConfigurableSeverity(fProblem.getID())));
-		if (fProblem instanceof CategorizedProblem) {
-			children.add(new GeneralAttribute(this, "CATEGORY ID", getCategoryCode()));
-			children.add(new GeneralAttribute(this, "MARKER TYPE", ((CategorizedProblem) fProblem).getMarkerType()));
+		children.add(new GeneralAttribute(this, "CATEGORY ID", getCategoryCode()));
+		String markerType = fProblem.isTask() ? DefaultProblem.MARKER_TYPE_TASK : DefaultProblem.MARKER_TYPE_PROBLEM;
+		if (fProblem.getID() instanceof IProblemIdentifierExtension) {
+			String tmp = ((IProblemIdentifierExtension)fProblem.getID()).getMarkerType();
+			if (tmp != null) {
+				markerType = tmp;
+			}
 		}
+		children.add(new GeneralAttribute(this, "MARKER TYPE", markerType)); //$NON-NLS-1$
 		for (int i= 0; i < arguments.length; i++) {
 			children.add(new GeneralAttribute(this, "ARGUMENT " + i, arguments[i]));
 		}

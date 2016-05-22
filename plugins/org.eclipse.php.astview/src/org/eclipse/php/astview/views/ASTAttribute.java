@@ -15,9 +15,6 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.swt.graphics.Image;
 
 
-/**
- *
- */
 public abstract class ASTAttribute {
 	
 	protected static final Object[] EMPTY= new Object[0];
