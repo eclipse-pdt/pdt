@@ -184,7 +184,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			typeName = typeName.toLowerCase();
 
 			// if the namespace is not blank, append it to the key.
-			final StringBuffer key = new StringBuffer();
+			final StringBuilder key = new StringBuilder();
 			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
 				String nameSpace = namespaceName;
 				if (namespaceName.startsWith("\\") //$NON-NLS-1$
@@ -277,7 +277,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			typeName = typeName.toLowerCase();
 
 			// if the namespace is not blank, append it to the key.
-			final StringBuffer key = new StringBuffer();
+			final StringBuilder key = new StringBuilder();
 			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
 				String nameSpace = namespaceName;
 				if (namespaceName.startsWith("\\") //$NON-NLS-1$

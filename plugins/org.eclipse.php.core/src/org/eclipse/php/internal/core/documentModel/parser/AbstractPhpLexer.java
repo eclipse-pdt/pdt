@@ -228,7 +228,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		bufferedState = createLexicalStateMemento();
 		String yylex = yylex();
 		if (PHPPartitionTypes.isPHPDocRegion(yylex)) {
-			final StringBuffer buffer = new StringBuffer();
+			final StringBuilder buffer = new StringBuilder();
 			int length = 0;
 			while (PHPPartitionTypes.isPHPDocRegion(yylex)) {
 				buffer.append(yytext());
