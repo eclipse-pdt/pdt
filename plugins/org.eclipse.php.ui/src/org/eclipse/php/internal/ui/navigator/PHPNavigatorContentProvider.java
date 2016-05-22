@@ -28,11 +28,25 @@ import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.IPipelinedTreeContentProvider;
 import org.eclipse.ui.navigator.PipelinedShapeModification;
 import org.eclipse.ui.navigator.PipelinedViewerUpdate;
+import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
 
 public class PHPNavigatorContentProvider extends PHPExplorerContentProvider implements IPipelinedTreeContentProvider {
 
+	public static final String PDT_EXTENSION_ID = "org.eclipse.php.ui.phpContent"; //$NON-NLS-1$
+
 	public PHPNavigatorContentProvider() {
 		super(true);
+	}
+
+	@Override
+	public void init(ICommonContentExtensionSite aConfig) {
+		IMemento memento = aConfig.getMemento();
+
+		restoreState(memento);
+		setIsFlatLayout(false);
+		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
+		setProvideMembers(showCUChildren);
 	}
 
 	@Override
@@ -60,6 +74,8 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 				IScriptProject scriptProject = DLTKCore.create(project);
 				return super.getChildren(scriptProject);
 			}
+		} else if (parentElement instanceof IScriptFolder) {
+			/// return customize(super.getChildren(parentElement), null);
 		} else if (parentElement instanceof IScriptModel) {
 			return filterResourceProjects(((IScriptModel) parentElement).getWorkspace().getRoot().getProjects());
 		} else if (parentElement instanceof IFile) {
@@ -139,31 +155,27 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 	 *            the proposed children
 	 */
 	private void customize(Object[] phpElements, Set<Object> proposedChildren) {
-		List<?> elementList = Arrays.asList(phpElements);
-		for (Iterator<?> iter = proposedChildren.iterator(); iter.hasNext();) {
-			Object element = iter.next();
-			IResource resource = null;
-			if (element instanceof IResource) {
-				resource = (IResource) element;
-			} else if (element instanceof IAdaptable) {
-				resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
-			}
-			if (resource != null) {
-				int i = elementList.indexOf(resource);
-				if (i >= 0) {
-					phpElements[i] = null;
-				}
-			}
-		}
+		proposedChildren.clear();
+
 		for (int i = 0; i < phpElements.length; i++) {
 			Object element = phpElements[i];
-			if (element instanceof IModelElement) {
+			if (element instanceof ISourceModule) {
+				ISourceModule sourceModule = (ISourceModule) element;
+				IResource resource = sourceModule.getResource();
+				if (resource != null) {
+					proposedChildren.add(resource);
+				} else {
+					proposedChildren.add(sourceModule);
+				}
+			} else if (element instanceof IModelElement) {
 				IModelElement cElement = (IModelElement) element;
 				IResource resource = cElement.getResource();
 				if (resource != null) {
 					proposedChildren.remove(resource);
 				}
 				proposedChildren.add(element);
+			} else if (element instanceof ProjectLibraryRoot) {
+				// don't add
 			} else if (element != null) {
 				proposedChildren.add(element);
 			}
@@ -193,20 +205,18 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 
 	@Override
 	public PipelinedShapeModification interceptRemove(PipelinedShapeModification removeModification) {
-		deconvertPHPProjects(removeModification);
-		convertToPHPElements(removeModification.getChildren());
 		return removeModification;
 	}
 
 	@Override
 	public boolean interceptRefresh(PipelinedViewerUpdate refreshSynchronization) {
-		return convertToPHPElements(refreshSynchronization.getRefreshTargets());
+		return false;
 
 	}
 
 	@Override
 	public boolean interceptUpdate(PipelinedViewerUpdate updateSynchronization) {
-		return convertToPHPElements(updateSynchronization.getRefreshTargets());
+		return false;
 	}
 
 	private void deconvertPHPProjects(PipelinedShapeModification modification) {
@@ -254,14 +264,13 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 	 *            refreshed in the viewer.
 	 * @return returns true if the conversion took place
 	 */
-	private boolean convertToPHPElements(Set currentChildren) {
-
+	private boolean convertToPHPElements(Set<Object> currentChildren) {
 		LinkedHashSet<Object> convertedChildren = new LinkedHashSet<Object>();
 		IModelElement newChild;
 		for (Iterator<Object> childrenItr = currentChildren.iterator(); childrenItr.hasNext();) {
 			Object child = childrenItr.next();
-			// only convert IFolders and IFiles
-			if (child instanceof IFile) {
+			// only convert IFolders
+			if (child instanceof IFolder) {
 				if ((newChild = DLTKCore.create((IResource) child)) != null && newChild.exists()) {
 					childrenItr.remove();
 					convertedChildren.add(newChild);
@@ -279,17 +288,26 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 
 	}
 
-	public static final String PDT_EXTENSION_ID = "org.eclipse.php.ui.phpContent"; //$NON-NLS-1$
-
 	@Override
-	public void init(ICommonContentExtensionSite aConfig) {
-		IMemento memento = aConfig.getMemento();
-
-		restoreState(memento);
-		setIsFlatLayout(false);
-		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
-		setProvideMembers(showCUChildren);
+	protected void postRefresh(List<?> toRefreshOld, boolean updateLabels, Collection<Runnable> runnables) {
+		List<Object> toRefresh = new ArrayList<>(toRefreshOld);
+		int size = toRefresh.size();
+		for (int i = 0; i < size; i++) {
+			Object element = toRefresh.get(i);
+			if (element instanceof IScriptProject) {
+				toRefresh.set(i, ((IScriptProject) element).getProject());
+			}
+		}
+		for (Iterator<Object> iter = toRefresh.iterator(); iter.hasNext();) {
+			Object element = iter.next();
+			if (element instanceof IModelElement) {
+				iter.remove();
+				toRefresh.add(((IModelElement) element).getModel().getWorkspace().getRoot());
+				super.postRefresh(toRefresh, updateLabels, runnables);
+				return;
+			}
+		}
+		super.postRefresh(toRefresh, updateLabels, runnables);
 	}
 
 	@Override

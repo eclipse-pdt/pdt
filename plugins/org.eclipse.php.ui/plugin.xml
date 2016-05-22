@@ -2527,15 +2527,16 @@
 					<adapt type="org.eclipse.core.resources.IProject">
 						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
 					</adapt>
-					<instanceof value="org.eclipse.dltk.core.IModelElement" />
-					<instanceof	value="org.eclipse.core.resources.IResource" />
+					<adapt type="org.eclipse.core.resources.IFile">
+							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
+					</adapt>
+					<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
 					<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
 				</or>
 			</triggerPoints>
 			
 			<possibleChildren>
-				<instanceof	value="org.eclipse.dltk.core.IModelElement" />
-				<instanceof value="org.eclipse.core.resources.IFolder"/>
+				<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
 				<instanceof value="org.eclipse.core.resources.IFile"/>
 			</possibleChildren>
 			
@@ -2576,14 +2577,24 @@
 					overrides="org.eclipse.ui.navigator.resources.actions.RefactorActions"> 
 				<enablement>
 					<or>
-						<and>
-							<instanceof value="org.eclipse.core.resources.IProject" />
-							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
-						</and>
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+						</adapt>
 						<adapt type="org.eclipse.core.resources.IFile">
 							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
 						</adapt>
 						<instanceof value="org.eclipse.dltk.core.IModelElement" />
+					</or>
+				</enablement>
+			</actionProvider>
+			
+			<actionProvider
+					class="org.eclipse.php.internal.ui.navigator.PHPNavigatorFileOperationActionProvider"
+					id="org.eclipse.php.ui.navigator.actions.FileOperationActions"> 
+				<enablement>
+					<or>
+						<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
+						<instanceof value="org.eclipse.dltk.core.ISourceModule" />
 					</or>
 				</enablement>
 			</actionProvider>
@@ -2603,14 +2614,13 @@
 					id="org.eclipse.dltk.ui.modelElementorg.eclipse.internal.ui.navigator.ScriptDropAssistanteAlwaysRegardlessOfSuppressedExt">
 					<parentExpression>
 						<or>
-							<and>
-								<instanceof value="org.eclipse.core.resources.IProject" />
-								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
-							</and>
+							<adapt type="org.eclipse.core.resources.IProject">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+							</adapt>
 							<adapt type="org.eclipse.core.resources.IFile">
 								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.phpsource"/>
 							</adapt>
-							<instanceof value="org.eclipse.dltk.core.IModelElement"/>
+							<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
 							<instanceof value="org.eclipse.php.internal.core.includepath.IncludePath"/>
 							<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
 						</or>
@@ -2648,6 +2658,27 @@
         			</or>
 				</enablement>
 			</commonWizard>
+
+			<commonWizard
+				type="new"
+				wizardId="org.eclipse.ui.wizards.new.folder">
+				<enablement>
+					<or>
+						<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
+						<instanceof value="org.eclipse.dltk.core.ISourceModule" />
+					</or>
+				</enablement>
+			</commonWizard>
+			<commonWizard
+				type="new"
+				wizardId="org.eclipse.ui.wizards.new.file">
+				<enablement>
+					<or>
+						<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
+						<instanceof value="org.eclipse.dltk.core.ISourceModule" />
+					</or>
+				</enablement>
+			</commonWizard>	
 		</navigatorContent>
 		
    		<commonFilter
@@ -2743,5 +2774,13 @@
            class="org.eclipse.php.internal.ui.text.correction.CorrectionMarkerResolutionGenerator"
            markerType="org.eclipse.php.core.phpproblemmarker">
       </markerResolutionGenerator>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.ui.modelCompareProvider">
+      <modelCompareProvider
+            class="org.eclipse.php.internal.ui.navigator.PHPNavigatorModelCompareProvider"
+            id="org.eclipse.php.ui.modelCompareProvider"
+            language="org.eclipse.php.core.PHPNature">
+      </modelCompareProvider>
    </extension>
 </plugin>
