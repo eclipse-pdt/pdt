@@ -44,9 +44,7 @@ public class DeleteAction extends SelectionDispatchAction {
 		}
 	}
 
-	/*
-	 * @see SelectionDispatchAction#selectionChanged(IStructuredSelection)
-	 */
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		if (ReorgUtils.containsOnlyProjects(selection.toList())) {
 			setEnabled(createWorkbenchAction(selection).isEnabled());
@@ -64,11 +62,12 @@ public class DeleteAction extends SelectionDispatchAction {
 	}
 
 	private IAction createWorkbenchAction(IStructuredSelection selection) {
-		DeleteResourceAction action = new DeleteResourceAction(getShell());
+		DeleteResourceAction action = new DeleteResourceAction(getSite());
 		action.selectionChanged(selection);
 		return action;
 	}
 
+	@Override
 	public void run(IStructuredSelection selection) {
 		if (ReorgUtils.containsOnlyProjects(selection.toList())) {
 			createWorkbenchAction(selection).run();
@@ -77,8 +76,7 @@ public class DeleteAction extends SelectionDispatchAction {
 		try {
 			startDeleteRefactoring(selection.toArray(), getShell());
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, "", //$NON-NLS-1$
-					""); //$NON-NLS-1$
+			ExceptionHandler.handle(e, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
