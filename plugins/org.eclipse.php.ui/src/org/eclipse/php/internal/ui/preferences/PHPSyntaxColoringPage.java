@@ -41,6 +41,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -72,6 +73,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
@@ -383,6 +385,12 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_);
 		fDocument = StructuredModelManager.getModelManager()
 				.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP);
+
+		RegionParser parser = fDocument.getParser();
+		if (parser instanceof PhpSourceParser) {
+			((PhpSourceParser) parser).setPHPVersion(PHPVersion.getLatestVersion());
+		}
+
 		fDocument.set(getExampleText());
 		viewer.setDocument(fDocument);
 

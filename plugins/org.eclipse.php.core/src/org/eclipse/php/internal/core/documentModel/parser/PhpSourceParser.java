@@ -16,6 +16,7 @@ import java.io.Reader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -29,6 +30,7 @@ public class PhpSourceParser extends XMLSourceParser {
 
 	public static ThreadLocal<IResource> editFile = new ThreadLocal<IResource>();
 	private IProject project;
+	private PHPVersion phpVersion;
 
 	public PhpSourceParser() {
 		super();
@@ -40,6 +42,11 @@ public class PhpSourceParser extends XMLSourceParser {
 		}
 	}
 
+	public void setPHPVersion(PHPVersion phpVersion) {
+		this.phpVersion = phpVersion;
+		fTokenizer = null;
+	}
+
 	/*
 	 * Change the Tokenizer used by the XMLSourceParser to make it PHP aware
 	 */
@@ -47,6 +54,9 @@ public class PhpSourceParser extends XMLSourceParser {
 		if (fTokenizer == null) {
 			PHPTokenizer phpTokenizer = new PHPTokenizer();
 			phpTokenizer.setProject(project);
+			if (phpVersion != null) {
+				phpTokenizer.setPHPVersion(phpVersion);
+			}
 			fTokenizer = phpTokenizer;
 		}
 		return fTokenizer;
@@ -56,7 +66,12 @@ public class PhpSourceParser extends XMLSourceParser {
 		PhpSourceParser newInstance = new PhpSourceParser();
 		PHPTokenizer tokenizer = (PHPTokenizer) getTokenizer().newInstance();
 		tokenizer.setProject(project);
+		if (phpVersion != null) {
+			tokenizer.setPHPVersion(phpVersion);
+			newInstance.setPHPVersion(phpVersion);
+		}
 		newInstance.setTokenizer(tokenizer);
+
 		return newInstance;
 	}
 

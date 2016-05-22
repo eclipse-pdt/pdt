@@ -664,15 +664,31 @@ private final String doBlockTagScan() throws IOException {
 }
 
 private IProject project;
+private PHPVersion forcePHPVersion;
 
 public void setProject(IProject project) {
 	this.project = project;
-	this.phpVersion = ProjectOptions.getPhpVersion(project);
+	if (this.forcePHPVersion != null) {
+		this.phpVersion = this.forcePHPVersion;
+	} else {
+		this.phpVersion = ProjectOptions.getPhpVersion(project);
+	}
+}
+
+public void setPHPVersion(PHPVersion phpVersion) {
+	this.phpVersion = this.forcePHPVersion = phpVersion;
+	if (this.phpVersion == null) {
+		this.phpVersion = ProjectOptions.getPhpVersion(project);
+	}
 }
 
 // NB: this method resets the lexer only partially
 private void reset(java.io.Reader reader, char[] buffer, int[] parameters){
-    this.phpVersion = ProjectOptions.getPhpVersion(project);
+	if (this.forcePHPVersion != null) {
+		this.phpVersion = this.forcePHPVersion;
+	} else {
+	    this.phpVersion = ProjectOptions.getPhpVersion(project);
+	}
 	this.zzReader = reader;
 	this.zzBuffer = buffer;
 	this.zzFinalHighSurrogate = 0;
@@ -844,7 +860,11 @@ public void reset(java.io.Reader in, int newOffset) {
 	if (Debug.debugTokenizer) {
 		System.out.println("resetting tokenizer");//$NON-NLS-1$
 	}
-	phpVersion = ProjectOptions.getPhpVersion(project);
+	if (this.forcePHPVersion != null) {
+		phpVersion = this.forcePHPVersion;
+	} else {
+		phpVersion = ProjectOptions.getPhpVersion(project);
+	}
 	fOffset = newOffset;
 
 	/* the input device */

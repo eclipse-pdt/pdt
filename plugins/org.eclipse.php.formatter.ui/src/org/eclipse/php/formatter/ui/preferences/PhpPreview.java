@@ -19,6 +19,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
@@ -55,6 +57,9 @@ public abstract class PhpPreview {
 		// set the PHP parser
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		fParser = mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser();
+		if (fParser instanceof PhpSourceParser) {
+			((PhpSourceParser) fParser).setPHPVersion(PHPVersion.getLatestVersion());
+		}
 
 		this.codeFormatterPreferences = codeFormatterPreferences;
 
