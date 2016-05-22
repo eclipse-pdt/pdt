@@ -87,6 +87,7 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
@@ -210,23 +211,11 @@ public class ASTView extends ViewPart implements IShowInSource {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#bufferCreated(org.
-		 * eclipse.core.filebuffers.IFileBuffer)
-		 */
 		@Override
 		public void bufferCreated(IFileBuffer buffer) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#bufferDisposed(org.
-		 * eclipse.core.filebuffers.IFileBuffer)
-		 */
 		@Override
 		public void bufferDisposed(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
@@ -234,140 +223,66 @@ public class ASTView extends ViewPart implements IShowInSource {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#
-		 * bufferContentAboutToBeReplaced(org.eclipse.core.filebuffers. IFileBuffer)
-		 */
 		@Override
 		public void bufferContentAboutToBeReplaced(IFileBuffer buffer) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#
-		 * bufferContentReplaced(org.eclipse.core.filebuffers.IFileBuffer)
-		 */
 		@Override
 		public void bufferContentReplaced(IFileBuffer buffer) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#stateChanging(org.
-		 * eclipse.core.filebuffers.IFileBuffer)
-		 */
 		@Override
 		public void stateChanging(IFileBuffer buffer) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#dirtyStateChanged(
-		 * org.eclipse.core.filebuffers.IFileBuffer, boolean)
-		 */
 		@Override
 		public void dirtyStateChanged(IFileBuffer buffer, boolean isDirty) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#
-		 * stateValidationChanged(org.eclipse.core.filebuffers.IFileBuffer, boolean)
-		 */
 		@Override
 		public void stateValidationChanged(IFileBuffer buffer, boolean isStateValidated) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#underlyingFileMoved(
-		 * org.eclipse.core.filebuffers.IFileBuffer, org.eclipse.core.runtime.IPath)
-		 */
 		@Override
 		public void underlyingFileMoved(IFileBuffer buffer, IPath path) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#
-		 * underlyingFileDeleted(org.eclipse.core.filebuffers.IFileBuffer)
-		 */
 		@Override
 		public void underlyingFileDeleted(IFileBuffer buffer) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.filebuffers.IFileBufferListener#stateChangeFailed(
-		 * org.eclipse.core.filebuffers.IFileBuffer)
-		 */
 		@Override
 		public void stateChangeFailed(IFileBuffer buffer) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org .eclipse.jface.text.DocumentEvent)
-		 */
 		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse. jface.text.DocumentEvent)
-		 */
 		@Override
 		public void documentChanged(DocumentEvent event) {
 			fView.handleDocumentChanged(event.getDocument());
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
-		 * org.eclipse.jface.viewers.SelectionChangedEvent)
-		 */
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			fView.handleSelectionChanged(event.getSelection());
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org. eclipse.jface.viewers.DoubleClickEvent)
-		 */
 		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			fView.handleDoubleClick(event);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partHidden(IWorkbenchPartReference partRef) {
 			IWorkbenchPart part = partRef.getPart(false);
@@ -376,11 +291,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partVisible(IWorkbenchPartReference partRef) {
 			IWorkbenchPart part = partRef.getPart(false);
@@ -389,61 +299,31 @@ public class ASTView extends ViewPart implements IShowInSource {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partActivated(IWorkbenchPartReference partRef) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partBroughtToTop(IWorkbenchPartReference partRef) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partClosed(IWorkbenchPartReference partRef) {
 			fView.notifyWorkbenchPartClosed(partRef);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partOpened(IWorkbenchPartReference partRef) {
 			// not interesting
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui. IWorkbenchPartReference)
-		 */
 		@Override
 		public void partInputChanged(IWorkbenchPartReference partRef) {
 			// not interesting
@@ -458,9 +338,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private final static String SETTINGS_SHOW_NON_RELEVANT = "show_non_relevant";//$NON-NLS-1$
 	private final static String SETTINGS_JLS = "jls"; //$NON-NLS-1$
 
-	// XXX: should reference platform constant, see
-	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=54581
-	public static final String LINK_WITH_EDITOR_COMMAND_ID = "org.eclipse.ui.navigate.linkWithEditor"; //$NON-NLS-1$
+	public static final String LINK_WITH_EDITOR_COMMAND_ID = IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR; 
 
 	private SashForm fSash;
 	private TreeViewer fViewer;
@@ -567,11 +445,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite)
-	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.setSite(site);
@@ -779,11 +652,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
-	 */
 	@Override
 	public void dispose() {
 		if (fSuperListener != null) {
@@ -809,11 +677,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		return new Status(IStatus.ERROR, ASTViewPlugin.getPluginId(), IStatus.ERROR, message, th);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets. Composite)
-	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		fSash = new SashForm(parent, SWT.VERTICAL | SWT.SMOOTH);

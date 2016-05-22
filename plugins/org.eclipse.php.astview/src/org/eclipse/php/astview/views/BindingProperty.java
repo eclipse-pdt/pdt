@@ -78,16 +78,10 @@ public class BindingProperty extends ASTAttribute {
 		return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getParent()
-	 */
 	public Object getParent() {
 		return fParent;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getChildren()
-	 */
 	public Object[] getChildren() {
 		if (fValues != null) {
 			return fValues;
@@ -95,23 +89,14 @@ public class BindingProperty extends ASTAttribute {
 		return EMPTY;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getLabel()
-	 */
 	public String getLabel() {
 		return fName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getImage()
-	 */
 	public Image getImage() {
 		return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString() {
 		return getLabel();
 	}
@@ -120,9 +105,6 @@ public class BindingProperty extends ASTAttribute {
 		return fIsRelevant;
 	}
 
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -148,9 +130,6 @@ public class BindingProperty extends ASTAttribute {
 		return true;
 	}
 	
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
 	public int hashCode() {
 		return (fParent != null ? fParent.hashCode() : 0)
 				+ (fName != null ? fName.hashCode() : 0);

@@ -22,28 +22,16 @@ import org.eclipse.php.internal.core.ast.nodes.*;
 
 public class ASTViewContentProvider implements ITreeContentProvider {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 	}
 	
-	/*(non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
 	public void dispose() {
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-	 */
 	public Object[] getElements(Object parent) {
 		return getChildren(parent);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-	 */
 	public Object getParent(Object child) {
 		if (child instanceof ASTNode) {
 			ASTNode node= (ASTNode) child;
@@ -59,9 +47,6 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-	 */
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof ASTAttribute) {
 			return ((ASTAttribute) parent).getChildren();

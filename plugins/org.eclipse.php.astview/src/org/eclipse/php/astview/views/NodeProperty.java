@@ -27,16 +27,10 @@ public class NodeProperty extends ASTAttribute {
 		fProperty= property;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getParent()
-	 */
 	public Object getParent() {
 		return fParent;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getChildren()
-	 */
 	public Object[] getChildren() {
 		Object child= getNode();
 		if (child instanceof List) {
@@ -47,9 +41,6 @@ public class NodeProperty extends ASTAttribute {
 		return EMPTY;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getLabel()
-	 */
 	public String getLabel() {
 		StringBuffer buf= new StringBuffer();
 		buf.append(getPropertyName());
@@ -75,9 +66,6 @@ public class NodeProperty extends ASTAttribute {
 		return buf.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getImage()
-	 */
 	public Image getImage() {
 		return null;
 	}
@@ -117,9 +105,6 @@ public class NodeProperty extends ASTAttribute {
 		return fParent.hashCode() * 31 + fProperty.hashCode();
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString() {
 		return getLabel();
 

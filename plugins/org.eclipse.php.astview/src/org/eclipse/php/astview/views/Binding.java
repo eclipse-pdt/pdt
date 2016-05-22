@@ -36,9 +36,6 @@ public class Binding extends ASTAttribute {
 		fIsRelevant= isRelevant;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getParent()
-	 */
 	public Object getParent() {
 		return fParent;
 	}
@@ -61,9 +58,6 @@ public class Binding extends ASTAttribute {
 		return (typeKinds & kind) != 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getChildren()
-	 */
 	public Object[] getChildren() {
 		
 		if (fBinding != null) {
@@ -274,9 +268,6 @@ public class Binding extends ASTAttribute {
 		return UNKNOWN_TYPE;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getLabel()
-	 */
 	public String getLabel() {
 		StringBuffer buf= new StringBuffer(fLabel);
 		buf.append(": "); //$NON-NLS-1$
@@ -329,23 +320,14 @@ public class Binding extends ASTAttribute {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getImage()
-	 */
 	public Image getImage() {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString() {
 		return getLabel();
 	}
 	
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -371,9 +353,6 @@ public class Binding extends ASTAttribute {
 		return true;
 	}
 	
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
 	public int hashCode() {
 		int result= fParent != null ? fParent.hashCode() : 0;
 		result+= (fBinding != null && fBinding.getKey() != null ? fBinding.getKey().hashCode() : 0);

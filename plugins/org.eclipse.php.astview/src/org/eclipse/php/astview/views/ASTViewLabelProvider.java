@@ -109,9 +109,6 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 //		return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-	 */
 	public Color getForeground(Object element) {
 		if ((element instanceof Error))
 			return fRed;
@@ -146,9 +143,6 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		return fDarkRed; // all extra properties
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-	 */
 	public Color getBackground(Object element) {
 		if (isNotProperlyNested(element)) {
 			return fLightRed;
@@ -200,9 +194,6 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
-	 */
 	public Font getFont(Object element) {
 		if (element instanceof ASTNode) {
 			ASTNode node= (ASTNode) element;

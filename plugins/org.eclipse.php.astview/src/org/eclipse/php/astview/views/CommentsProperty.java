@@ -27,39 +27,24 @@ public class CommentsProperty extends ASTAttribute {
 		fRoot= root;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getParent()
-	 */
 	public Object getParent() {
 		return fRoot;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getChildren()
-	 */
 	public Object[] getChildren() {
 		List commentList= fRoot.comments();
 		return (commentList == null ? EMPTY : commentList.toArray());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getLabel()
-	 */
 	public String getLabel() {
 		List commentList= fRoot.comments();
 		return "> comments (" +  (commentList == null ? 0 : commentList.size()) + ")";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getImage()
-	 */
 	public Image getImage() {
 		return null;
 	}
 
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -69,9 +54,6 @@ public class CommentsProperty extends ASTAttribute {
 		return true;
 	}
 	
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
 	public int hashCode() {
 		return 17;
 	}

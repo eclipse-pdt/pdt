@@ -56,16 +56,10 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		fRoot= root;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getParent()
-	 */
 	public Object getParent() {
 		return fRoot;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getChildren()
-	 */
 	public Object[] getChildren() {
 		AST ast= fRoot.getAST();
 		
@@ -77,23 +71,14 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getLabel()
-	 */
 	public String getLabel() {
 		return "> RESOLVE_WELL_KNOWN_TYPES";  //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.astview.views.ASTAttribute#getImage()
-	 */
 	public Image getImage() {
 		return null;
 	}
 
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -103,9 +88,6 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		return true;
 	}
 	
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
 	public int hashCode() {
 		return 57;
 	}
