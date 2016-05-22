@@ -2172,7 +2172,7 @@ public class PHPModelUtils {
 
 	public static String getFullName(NamespaceName namespaceName) {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (namespaceName.isGlobal()) {
 			sb.append(NamespaceReference.NAMESPACE_SEPARATOR);
 		}

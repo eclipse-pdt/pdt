@@ -52,7 +52,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 	private TagKind currTagKind;
 	private int tagPosition;
 	private String matchedTag;
-	private StringBuffer sBuffer;
+	private StringBuilder sBuffer;
 	private int numOfLines;
 	private List<Scalar> textList;
 
@@ -64,7 +64,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		currTagKind = null;
 		tagPosition = 0;
 		matchedTag = "";
-		sBuffer = new StringBuffer();
+		sBuffer = new StringBuilder();
 		numOfLines = 1;
 		textList = new ArrayList<Scalar>();
 
@@ -116,7 +116,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		currTagKind = firstState;
 		tagPosition = position - _zzPushbackPos;
 		matchedTag = firstState.getValue();
-		sBuffer = new StringBuffer();
+		sBuffer = new StringBuilder();
 		yybegin(ST_IN_TAGS);
 	}
 
@@ -133,7 +133,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		updateStartPos();
 		setTagValue();
 
-		sBuffer = new StringBuffer();
+		sBuffer = new StringBuilder();
 		currTagKind = newTag;
 		tagPosition = position - _zzPushbackPos;
 		matchedTag = newTag.getValue();
@@ -172,7 +172,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		if (oldString != null) {
 			sBuffer.append(oldString);
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(zzBuffer, startPos, zzMarkedPos - startPos);
 		addText(sb.toString());
 		sBuffer.append(sb);
@@ -192,7 +192,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 			longDesc = sBuffer.toString().trim();
 		}
 
-		sBuffer = new StringBuffer();
+		sBuffer = new StringBuilder();
 	}
 
 	private void startLongDescState(boolean withNewLine) {
@@ -217,7 +217,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		}
 	}
 	private void appendLastText() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(zzBuffer, startPos, zzMarkedPos - startPos - 2);
 		addText(sb.toString());
 		sBuffer.append(sb);
