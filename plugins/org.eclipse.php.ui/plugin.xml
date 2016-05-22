@@ -2517,7 +2517,7 @@
 						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
 					</adapt>
 					<instanceof value="org.eclipse.dltk.core.IModelElement" />
-					<instanceof	value="org.eclipse.core.resources.IResource" />
+					<instanceof	value="org.eclipse.core.resources.IFile" />
 					<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
 				</or>
 			</triggerPoints>
@@ -2732,5 +2732,13 @@
            class="org.eclipse.php.internal.ui.text.correction.CorrectionMarkerResolutionGenerator"
            markerType="org.eclipse.php.core.phpproblemmarker">
       </markerResolutionGenerator>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.ui.modelCompareProvider">
+      <modelCompareProvider
+            class="org.eclipse.php.internal.ui.navigator.PHPNavigatorModelCompareProvider"
+            id="org.eclipse.php.ui.modelCompareProvider"
+            language="org.eclipse.php.core.PHPNature">
+      </modelCompareProvider>
    </extension>
 </plugin>
