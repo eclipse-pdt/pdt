@@ -20,12 +20,12 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.navigator.ICommonMenuConstants;
 import org.eclipse.ui.part.Page;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * Action group that adds the copy, cut, paste actions to a view part's context
@@ -46,10 +46,7 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 
 	private SelectionDispatchAction fDeleteAction;
 	private SelectionDispatchAction fCopyAction;
-	// private SelectionDispatchAction fCopyQualifiedNameAction;
 	private SelectionDispatchAction fPasteAction;
-
-	// private SelectionDispatchAction fCutAction;
 
 	/**
 	 * Creates a new <code>CCPActionGroup</code>. The group requires that the
@@ -80,14 +77,14 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 		fClipboard = new Clipboard(site.getShell().getDisplay());
 
 		fPasteAction = new PasteAction(fSite, fClipboard);
-		fPasteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
+		fPasteAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_PASTE);
 
 		fCopyAction = new CopyToClipboardAction(fSite, fClipboard, fPasteAction);
-		fCopyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+		fCopyAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_COPY);
 
 		fDeleteAction = new DeleteAction(fSite);
-		fDeleteAction.setId(IWorkbenchActionDefinitionIds.DELETE);
-		fDeleteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
+		fDeleteAction.setId(IWorkbenchCommandConstants.EDIT_DELETE);
+		fDeleteAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_DELETE);
 
 		fActions = new SelectionDispatchAction[] { fCopyAction, fPasteAction, fDeleteAction };
 		registerActionsAsSelectionChangeListeners();
@@ -120,9 +117,7 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 		return fDeleteAction;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared in ActionGroup
-	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), fDeleteAction);
@@ -130,9 +125,7 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), fPasteAction);
 	}
 
-	/*
-	 * (non-Javadoc) Method declared in ActionGroup
-	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		for (int i = 0; i < fActions.length; i++) {
@@ -141,9 +134,7 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 		}
 	}
 
-	/*
-	 * @see ActionGroup#dispose()
-	 */
+	@Override
 	public void dispose() {
 		super.dispose();
 		if (fClipboard != null) {
