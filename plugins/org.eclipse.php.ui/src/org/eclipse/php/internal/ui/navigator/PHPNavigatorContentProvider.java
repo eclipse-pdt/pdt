@@ -28,6 +28,7 @@ import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.IPipelinedTreeContentProvider;
 import org.eclipse.ui.navigator.PipelinedShapeModification;
 import org.eclipse.ui.navigator.PipelinedViewerUpdate;
+import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
 
 public class PHPNavigatorContentProvider extends PHPExplorerContentProvider implements IPipelinedTreeContentProvider {
 
@@ -139,31 +140,27 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 	 *            the proposed children
 	 */
 	private void customize(Object[] phpElements, Set<Object> proposedChildren) {
-		List<?> elementList = Arrays.asList(phpElements);
-		for (Iterator<?> iter = proposedChildren.iterator(); iter.hasNext();) {
-			Object element = iter.next();
-			IResource resource = null;
-			if (element instanceof IResource) {
-				resource = (IResource) element;
-			} else if (element instanceof IAdaptable) {
-				resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
-			}
-			if (resource != null) {
-				int i = elementList.indexOf(resource);
-				if (i >= 0) {
-					phpElements[i] = null;
-				}
-			}
-		}
+		proposedChildren.clear();
+
 		for (int i = 0; i < phpElements.length; i++) {
 			Object element = phpElements[i];
-			if (element instanceof IModelElement) {
+			if (element instanceof ISourceModule) {
+				ISourceModule sourceModule = (ISourceModule) element;
+				IResource resource = sourceModule.getResource();
+				if (resource != null) {
+					proposedChildren.add(resource);
+				} else {
+					proposedChildren.add(sourceModule);
+				}
+			} else if (element instanceof IModelElement) {
 				IModelElement cElement = (IModelElement) element;
 				IResource resource = cElement.getResource();
 				if (resource != null) {
 					proposedChildren.remove(resource);
 				}
 				proposedChildren.add(element);
+			} else if (element instanceof ProjectLibraryRoot) {
+				// don't add
 			} else if (element != null) {
 				proposedChildren.add(element);
 			}
