@@ -164,6 +164,15 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 				nodeToFullName.put(functionName, fullName);
 			}
 		}
+
+		return true;
+	}
+
+	@Override
+	public boolean visit(FunctionDeclaration functionDeclaration) {
+		if (functionDeclaration.getReturnType() != null) {
+			dealIdentifier(functionDeclaration.getReturnType());
+		}
 		return true;
 	}
 

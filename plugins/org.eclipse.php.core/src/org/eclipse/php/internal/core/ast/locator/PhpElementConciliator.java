@@ -539,7 +539,7 @@ public class PhpElementConciliator {
 		assert locateNode != null;
 		ASTNode parent = null;
 		Identifier targetIdentifier = null;
-
+		boolean isNamespaceName = false;
 		if (locateNode.getType() == ASTNode.FUNCTION_DECLARATION) {
 			parent = ((FunctionDeclaration) locateNode);
 			targetIdentifier = ((FunctionDeclaration) locateNode).getFunctionName();
@@ -547,7 +547,8 @@ public class PhpElementConciliator {
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
 			if (parent != null && parent.getType() == ASTNode.NAMESPACE_NAME) {
-				parent = targetIdentifier.getParent().getParent();
+				parent = parent.getParent();
+				isNamespaceName = true;
 			}
 		} else {
 			return false;
@@ -557,7 +558,8 @@ public class PhpElementConciliator {
 		if (parent == null
 				|| parent.getType() != ASTNode.FUNCTION_DECLARATION && parent.getType() != ASTNode.FUNCTION_NAME
 				|| parent.getParent().getType() == ASTNode.METHOD_DECLARATION
-				|| parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+				|| parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE
+				|| (isNamespaceName && parent.getType() == ASTNode.FUNCTION_DECLARATION)) {
 			return false;
 		}
 
