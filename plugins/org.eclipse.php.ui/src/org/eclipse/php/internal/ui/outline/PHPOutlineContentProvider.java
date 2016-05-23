@@ -114,6 +114,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 		if (parent instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) parent;
+			this.fSourceModule = sourceModule;
 
 			if (isNamespaceSupported(sourceModule)) {
 				// if namespaces are supported, add use statements node:
@@ -540,7 +541,6 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 		public UseStatementsNode(ISourceModule sourceModule) {
 			super((ModelElement) sourceModule, PHPUIMessages.PHPOutlineContentProvider_useStatementsNode, 0, null);
-			fSourceModule = sourceModule;
 		}
 
 		public IModelElement[] getChildren() throws ModelException {
