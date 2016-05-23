@@ -457,8 +457,8 @@ public final class ASTProvider {
 			}
 		}
 
-		final boolean canReturnNull = waitFlag == SharedASTProvider.WAIT_NO
-				|| (waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY && !(isActiveElement && fAST == null));
+		final boolean canReturnNull = (waitFlag == SharedASTProvider.WAIT_NO)
+				|| (waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY && !isActiveElement);
 		boolean isReconciling = false;
 		if (isActiveElement) {
 			synchronized (fReconcileLock) {
