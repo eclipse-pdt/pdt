@@ -172,9 +172,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		if (oldString != null) {
 			sBuffer.append(oldString);
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(zzBuffer, startPos, zzMarkedPos - startPos);
-		addText(sb.toString());
+		String sb = new String(zzBuffer, startPos, zzMarkedPos - startPos);
+		addText(sb);
 		sBuffer.append(sb);
 		updateStartPos();
 	}
@@ -217,9 +216,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		}
 	}
 	private void appendLastText() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(zzBuffer, startPos, zzMarkedPos - startPos - 2);
-		addText(sb.toString());
+		String sb = new String(zzBuffer, startPos, zzMarkedPos - startPos - 2);
+		addText(sb);
 		sBuffer.append(sb);
 		updateStartPos();
 	}
