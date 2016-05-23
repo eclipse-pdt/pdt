@@ -22,6 +22,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -107,29 +108,36 @@ public class ContentAssistTests {
 
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
-		PHPCoreTests.index(project);
-		PHPCoreTests.waitForIndexer();
+
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		PHPCoreTests.removeIndex(project);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
+
+		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		if (testFile != null) {
-			PHPCoreTests.removeIndex(testFile);
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
-					PHPCoreTests.removeIndex(file);
 					file.delete(true, null);
 				}
 			}
@@ -225,12 +233,10 @@ public class ContentAssistTests {
 	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
 		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
 		testFile.create(inputStream, true, null);
-		PHPCoreTests.index(testFile);
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
 			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
-			PHPCoreTests.index(otherFiles[i]);
 		}
 		PHPCoreTests.waitForIndexer();
 	}
