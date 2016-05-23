@@ -48,7 +48,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		return PHPVersion.PHP5_3;
 	}
 
-	private IFile setFileContent(String content) throws CoreException {
+	protected IFile setFileContent(String content) throws CoreException {
 		IFile file = project1.getFile("test1.php");
 		InputStream source = new ByteArrayInputStream(content.getBytes());
 

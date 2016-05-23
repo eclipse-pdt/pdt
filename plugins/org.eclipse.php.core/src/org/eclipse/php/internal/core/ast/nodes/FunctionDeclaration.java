@@ -104,7 +104,7 @@ public class FunctionDeclaration extends Statement {
 		if (body != null) {
 			setBody(body);
 		}
-		this.returnType = returnType;
+		setReturnType(returnType);
 	}
 
 	private FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
@@ -129,6 +129,9 @@ public class FunctionDeclaration extends Statement {
 		for (ASTNode node : this.formalParameters) {
 			node.accept(visitor);
 		}
+		if (returnType != null) {
+			returnType.accept(visitor);
+		}
 		if (body != null) {
 			body.accept(visitor);
 		}
@@ -140,6 +143,9 @@ public class FunctionDeclaration extends Statement {
 		for (ASTNode node : this.formalParameters) {
 			node.traverseTopDown(visitor);
 		}
+		if (returnType != null) {
+			returnType.traverseTopDown(visitor);
+		}
 		if (body != null) {
 			body.traverseTopDown(visitor);
 		}
@@ -149,6 +155,9 @@ public class FunctionDeclaration extends Statement {
 		name.traverseBottomUp(visitor);
 		for (ASTNode node : this.formalParameters) {
 			node.traverseBottomUp(visitor);
+		}
+		if (returnType != null) {
+			returnType.traverseBottomUp(visitor);
 		}
 		if (body != null) {
 			body.traverseBottomUp(visitor);
