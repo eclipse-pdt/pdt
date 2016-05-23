@@ -436,13 +436,19 @@ public final class ASTProvider {
 		boolean isActiveElement;
 		synchronized (this) {
 			isActiveElement = input.equals(fActiveJavaElement);
-			if (isActiveElement && waitFlag == SharedASTProvider.WAIT_NO) {
+			if (isActiveElement
+					&& (waitFlag == SharedASTProvider.WAIT_NO || waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY)) {
 				if (fAST != null) {
 					// XXX: also return fAST directly when isActiveElement is
-					// true, waitFlag != SharedASTProvider.WAIT_NO and fAST is
-					// up-to-date with the corresponding ISourceModule (i.e.
+					// true, waitFlag != SharedASTProvider.WAIT_NO and
+					// waitFlag != SharedASTProvider.WAIT_ACTIVE_ONLY and fAST
+					// is up-to-date with the corresponding ISourceModule (i.e.
 					// there were no changes in the corresponding ISourceModule
 					// since fAST was created).
+					// XXX: we don't guarantee here that fAST is up-to-date
+					// when waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY,
+					// which breaks the "wait for the shared AST of the active
+					// editor" rule.
 					if (DEBUG) {
 						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning cached AST:" //$NON-NLS-1$ //$NON-NLS-2$
 								+ toString(fAST) + " for: " + input.getElementName()); //$NON-NLS-1$
