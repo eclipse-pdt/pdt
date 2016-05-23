@@ -11,18 +11,25 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.search.indexing.AbstractJob;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -143,6 +150,35 @@ public class PHPCoreTests extends Plugin {
 
 	public static void waitForIndexer() {
 		ModelManager.getModelManager().getIndexManager().waitUntilReady();
+	}
+
+	public static void waitForIndexerNoDelay() {
+		final CountDownLatch latch = new CountDownLatch(1);
+		final long tb = System.currentTimeMillis();
+		ModelManager.getModelManager().getIndexManager().request(new AbstractJob() {
+			@Override
+			protected void run() throws CoreException, IOException {
+				latch.countDown();
+			}
+
+			@Override
+			protected String getName() {
+				return "WAIT-UNTIL-READY-JOB-NO-DELAY";
+			}
+		});
+		// Trigger waitUntilReady to notify delay signal
+		(new Job("") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				ModelManager.getModelManager().getIndexManager().waitUntilReady();
+				return Status.OK_STATUS;
+			}
+		}).schedule();
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			// ignore
+		}
 	}
 
 	/**

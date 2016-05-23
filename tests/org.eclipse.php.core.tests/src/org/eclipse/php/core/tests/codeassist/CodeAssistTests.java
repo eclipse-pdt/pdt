@@ -24,11 +24,13 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.PHPCoreTests;
@@ -42,6 +44,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +90,17 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		// disable auto build
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+			ValidationFramework.getDefault().suspendAllValidation(true);
+		}
+
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
+		IScriptProject scriptProject = DLTKCore.create(project);
+		scriptProject.setOption(DLTKCore.BUILDER_ENABLED, DLTKCore.DISABLED);
 		if (project.exists()) {
 			return;
 		}
@@ -100,22 +113,21 @@ public class CodeAssistTests {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 		PHPCoreTests.setProjectPhpVersion(project, version);
-
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
-		}
-		PHPCoreTests.index(project);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		PHPCoreTests.removeIndex(project);
+		IScriptProject scriptProject = DLTKCore.create(project);
+		scriptProject.setOption(DLTKCore.BUILDER_ENABLED, DLTKCore.ENABLED);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 
 		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+			ValidationFramework.getDefault().suspendAllValidation(false);
 		}
 	}
 
@@ -130,14 +142,12 @@ public class CodeAssistTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			PHPCoreTests.removeIndex(testFile);
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
-					PHPCoreTests.removeIndex(file);
 					file.delete(true, null);
 				}
 			}
@@ -167,19 +177,16 @@ public class CodeAssistTests {
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		PHPCoreTests.index(testFile);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = project.getFile(String.format("test%s.php", i));
 			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
 			this.otherFiles.add(i, tmp);
-			PHPCoreTests.index(tmp);
 			i++;
 		}
 
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
 
 		return offset;
 	}
