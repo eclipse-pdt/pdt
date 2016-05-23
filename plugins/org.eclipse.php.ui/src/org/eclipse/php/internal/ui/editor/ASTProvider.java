@@ -436,11 +436,13 @@ public final class ASTProvider {
 		boolean isActiveElement;
 		synchronized (this) {
 			isActiveElement = input.equals(fActiveJavaElement);
-			if (isActiveElement && waitFlag == SharedASTProvider.WAIT_NO) {
+			if (isActiveElement
+					&& (waitFlag == SharedASTProvider.WAIT_NO || waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY)) {
 				if (fAST != null) {
 					// XXX: also return fAST directly when isActiveElement is
-					// true, waitFlag != SharedASTProvider.WAIT_NO and fAST is
-					// up-to-date with the corresponding ISourceModule (i.e.
+					// true, waitFlag != SharedASTProvider.WAIT_NO and
+					// waitFlag != SharedASTProvider.WAIT_ACTIVE_ONLY and fAST
+					// is up-to-date with the corresponding ISourceModule (i.e.
 					// there were no changes in the corresponding ISourceModule
 					// since fAST was created).
 					if (DEBUG) {
