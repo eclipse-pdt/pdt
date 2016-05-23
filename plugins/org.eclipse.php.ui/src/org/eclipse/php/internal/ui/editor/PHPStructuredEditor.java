@@ -2940,7 +2940,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		// TODO: see the method comment, need to be removed once
 		// PHPStructuredEditor#aboutToBeChangedEvent is used
-		if (document.getLength() != astRoot.getEnd() || this.fReconcileSelection) {
+		if (document.getLength() < astRoot.getEnd() || this.fReconcileSelection) {
 			return;
 		}
 
