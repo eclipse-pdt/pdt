@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core;
+package org.eclipse.php.core;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -80,27 +80,6 @@ public enum PHPVersion {
 	 */
 	public static PHPVersion getLatestVersion() {
 		return PHPVersion.PHP7_0;
-	}
-
-	/**
-	 * Translate API PHPVersion to internal PHPVersion
-	 * 
-	 * @since 4.0
-	 * @param phpVersion
-	 * @return
-	 */
-	public static PHPVersion translate(org.eclipse.php.core.PHPVersion phpVersion) {
-		return PHPVersion.valueOf(phpVersion.name());
-	}
-
-	/**
-	 * Transform internal PHPVersion to API version
-	 * 
-	 * @since 4.0
-	 * @return
-	 */
-	public org.eclipse.php.core.PHPVersion toApi() {
-		return org.eclipse.php.core.PHPVersion.valueOf(name());
 	}
 
 }
