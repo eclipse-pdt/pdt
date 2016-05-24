@@ -1260,8 +1260,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	@Override
 	protected void addContextMenuActions(final IMenuManager menu) {
-		super.addContextMenuActions(menu);
-
 		if (getSourceViewer().isEditable()) {
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
