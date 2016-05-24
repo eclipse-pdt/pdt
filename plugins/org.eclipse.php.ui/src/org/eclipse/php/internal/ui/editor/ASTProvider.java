@@ -436,29 +436,26 @@ public final class ASTProvider {
 		boolean isActiveElement;
 		synchronized (this) {
 			isActiveElement = input.equals(fActiveJavaElement);
-			if (isActiveElement && waitFlag == SharedASTProvider.WAIT_NO) {
+			if (isActiveElement) {
 				if (fAST != null) {
-					// XXX: also return fAST directly when isActiveElement is
-					// true, waitFlag != SharedASTProvider.WAIT_NO and fAST is
-					// up-to-date with the corresponding ISourceModule (i.e.
-					// there were no changes in the corresponding ISourceModule
-					// since fAST was created).
 					if (DEBUG) {
 						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning cached AST:" //$NON-NLS-1$ //$NON-NLS-2$
 								+ toString(fAST) + " for: " + input.getElementName()); //$NON-NLS-1$
 					}
 					return fAST;
 				}
-				if (DEBUG) {
-					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning null (WAIT_NO) for: " //$NON-NLS-1$ //$NON-NLS-2$
-							+ input.getElementName());
+				if (waitFlag == SharedASTProvider.WAIT_NO) {
+					if (DEBUG) {
+						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning null (WAIT_NO) for: " //$NON-NLS-1$ //$NON-NLS-2$
+								+ input.getElementName());
+					}
+					return null;
 				}
-				return null;
 			}
 		}
 
-		final boolean canReturnNull = (waitFlag == SharedASTProvider.WAIT_NO)
-				|| (waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY && !isActiveElement);
+		final boolean canReturnNull = waitFlag == SharedASTProvider.WAIT_NO
+				|| (waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY && !(isActiveElement && fAST == null));
 		boolean isReconciling = false;
 		if (isActiveElement) {
 			synchronized (fReconcileLock) {
