@@ -421,7 +421,7 @@ public class ASTUtils {
 		String name = callExpression.getName();
 		if ("define".equalsIgnoreCase(name)) { //$NON-NLS-1$
 			CallArgumentsList args = callExpression.getArgs();
-			if (args != null && args.getChilds() != null) {
+			if (args != null && args.getChilds() != null && !args.getChilds().isEmpty()) {
 				ASTNode argument = (ASTNode) args.getChilds().get(0);
 				if (argument instanceof Scalar) {
 					String constant = ASTUtils.stripQuotes(((Scalar) argument).getValue());
