@@ -1769,7 +1769,7 @@
 	       </action>
 	    </viewerContribution>
 	    
-  		<objectContribution
+		<objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             id="org.eclipse.php.ui.projectSetup">
@@ -1780,8 +1780,19 @@
 				enablesFor="+"
 				id="org.eclipse.php.internal.ui.actions.SetupPHPProjectAction">
 			</action>
-   		</objectContribution>
-
+			<visibility>
+				<not>
+					<or>
+						<objectState 
+							name="projectNature" 
+							value="org.eclipse.php.core.PHPNature"/>
+						<objectState
+							name="open"
+							value="false"/>
+					</or>
+				</not>
+			</visibility>
+		</objectContribution>
 	</extension>
 
 
