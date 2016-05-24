@@ -11,21 +11,11 @@
 package org.eclipse.php.internal.ui.importer;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -33,8 +23,11 @@ import org.eclipse.ui.wizards.datatransfer.ProjectConfigurator;
 
 public class PHPProjectConfigurator implements ProjectConfigurator {
 
+	private static final String COMPOSER_JSON = "composer.json"; //$NON-NLS-1$
+	private static final String VENDOR_DIRECTORY = "vendor"; //$NON-NLS-1$
+
 	private static final Set<String> SEARCHED_FILES = new HashSet<>(
-			Arrays.asList(new String[] { "index.php", "composer.json" })); //$NON-NLS-1$ //$NON-NLS-2$
+			Arrays.asList(new String[] { "index.php", COMPOSER_JSON })); //$NON-NLS-1$
 
 	@Override
 	public Set<File> findConfigurableLocations(File root, IProgressMonitor monitor) {
@@ -61,12 +54,12 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 	}
 
 	@Override
-	public boolean canConfigure(IProject project, Set<IPath> arg1, IProgressMonitor monitor) {
+	public boolean canConfigure(IProject project, Set<IPath> ignoredPaths, IProgressMonitor monitor) {
 		return shouldBeAnEclipseProject(project, monitor);
 	}
 
 	@Override
-	public void configure(IProject project, Set<IPath> arg1, IProgressMonitor arg2) {
+	public void configure(IProject project, Set<IPath> ignoredPaths, IProgressMonitor monitor) {
 		try {
 			if (PHPToolkitUtil.isPhpProject(project)) {
 				return;
@@ -77,13 +70,21 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 				desc.setNatureIds(natureIds);
 				project.setDescription(desc, null);
 			}
-		} catch (CoreException e) {
+
+			if (project.getFile(COMPOSER_JSON).exists()) {
+				IFolder vendorFolder = project.getFolder(VENDOR_DIRECTORY);
+				if (vendorFolder.exists()) {
+					LibraryFolderManager.getInstance().useAsLibraryFolder(new IFolder[] { vendorFolder },
+							SubMonitor.convert(monitor, 1));
+				}
+			}
+		} catch (OperationCanceledException | InterruptedException | CoreException e) {
 			Logger.logException(e);
 		}
 	}
 
 	@Override
-	public boolean shouldBeAnEclipseProject(IContainer container, IProgressMonitor arg1) {
+	public boolean shouldBeAnEclipseProject(IContainer container, IProgressMonitor monitor) {
 		boolean shouldBeProject = false;
 		for (String filename : SEARCHED_FILES) {
 			IFile file = container.getFile(new Path(filename));
@@ -96,7 +97,7 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 	}
 
 	@Override
-	public Set<IFolder> getFoldersToIgnore(IProject arg0, IProgressMonitor arg1) {
+	public Set<IFolder> getFoldersToIgnore(IProject project, IProgressMonitor monitor) {
 		return null;
 	}
 
