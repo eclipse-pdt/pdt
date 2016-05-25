@@ -640,7 +640,7 @@ public class CodeAssistUtils {
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString().trim();
 			if (isKeyword(functionName)) {
-				functionName = null;
+				functionName = "";
 				functionNameStart = functionNameEnd = PHPTextSequenceUtilities.readForwardSpaces(statementText,
 						functionNameEnd);
 			}
