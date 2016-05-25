@@ -2103,7 +2103,7 @@ public class PHPModelUtils {
 		int currChar = offset;
 		int bracketsNum = 1;
 		char inStringMode = 0;
-		while (bracketsNum != 0 && currChar >= 0) {
+		while (bracketsNum != 0 && currChar > 0) {
 			currChar--;
 			// get the current char
 			final char charAt = statementText.charAt(currChar);
