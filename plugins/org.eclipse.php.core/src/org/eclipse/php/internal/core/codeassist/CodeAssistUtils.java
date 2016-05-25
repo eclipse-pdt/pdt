@@ -643,6 +643,8 @@ public class CodeAssistUtils {
 				functionName = null;
 				functionNameStart = functionNameEnd = PHPTextSequenceUtilities.readForwardSpaces(statementText,
 						functionNameEnd);
+			} else if (functionName.length() == 0) {
+				return EMPTY_TYPES;
 			}
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
