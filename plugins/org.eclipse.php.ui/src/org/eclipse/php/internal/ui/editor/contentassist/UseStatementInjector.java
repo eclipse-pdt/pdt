@@ -241,8 +241,8 @@ public class UseStatementInjector {
 				}
 				return offset;
 			} else
-			// class members should return offset directly
-			if (modelElement.getElementType() != IModelElement.TYPE && !(modelElement instanceof FakeConstructor)) {
+				// class members should return offset directly
+				if (modelElement.getElementType() != IModelElement.TYPE && !(modelElement instanceof FakeConstructor)) {
 				IModelElement type = modelElement.getAncestor(IModelElement.TYPE);
 				if (type != null && !PHPFlags.isNamespace(((IType) type).getFlags())) {
 					return offset;
@@ -531,7 +531,8 @@ public class UseStatementInjector {
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement,
 							endPosition, true);
-					String elementName = statement.subSequence(startPosition, endPosition).toString();
+					String elementName = startPosition < 0 ? "" //$NON-NLS-1$
+							: statement.subSequence(startPosition, endPosition).toString();
 					if (elementName.length() > 0) {
 						return PHPModelUtils.extractNamespaceName(elementName, sourceModule, offset);
 					}

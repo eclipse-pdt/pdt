@@ -191,29 +191,32 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 						int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement,
 								endPosition, true);
-						String elementName = statement.subSequence(startPosition, endPosition).toString();
-						List<IModelElement> result = new LinkedList<IModelElement>();
-						for (Iterator<IModelElement> iterator = filtered.iterator(); iterator.hasNext();) {
-							IModelElement modelElement = (IModelElement) iterator.next();
-							if (modelElement instanceof AliasField) {
-								AliasField aliasField = (AliasField) modelElement;
-								if (aliasField.getAlias().equals(elementName)) {
-									result.add(aliasField.getField());
-								}
-							} else if (modelElement instanceof IField) {
-								String fieldName = elementName;
-								if (!fieldName.startsWith("$")) { //$NON-NLS-1$
-									fieldName = "$" + fieldName; //$NON-NLS-1$
-								}
-								if (modelElement.getElementName().equals(fieldName)
-										|| modelElement.getElementName().equals(elementName)) {
+						String elementName = startPosition < 0 ? "" //$NON-NLS-1$
+								: statement.subSequence(startPosition, endPosition).toString();
+						if (elementName.length() > 0) {
+							List<IModelElement> result = new LinkedList<IModelElement>();
+							for (Iterator<IModelElement> iterator = filtered.iterator(); iterator.hasNext();) {
+								IModelElement modelElement = (IModelElement) iterator.next();
+								if (modelElement instanceof AliasField) {
+									AliasField aliasField = (AliasField) modelElement;
+									if (aliasField.getAlias().equals(elementName)) {
+										result.add(aliasField.getField());
+									}
+								} else if (modelElement instanceof IField) {
+									String fieldName = elementName;
+									if (!fieldName.startsWith("$")) { //$NON-NLS-1$
+										fieldName = "$" + fieldName; //$NON-NLS-1$
+									}
+									if (modelElement.getElementName().equals(fieldName)
+											|| modelElement.getElementName().equals(elementName)) {
+										result.add(modelElement);
+									}
+								} else if (modelElement.getElementName().equals(elementName)) {
 									result.add(modelElement);
 								}
-							} else if (modelElement.getElementName().equals(elementName)) {
-								result.add(modelElement);
 							}
+							return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 						}
-						return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 					}
 				}
 			}
@@ -229,6 +232,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 			source = sourceModule.getSource();
 			offset = PHPTextSequenceUtilities.readIdentifierStartIndex(source, offset, true);
+			if (offset < 0) {
+				return null;
+			}
 		} catch (IndexOutOfBoundsException ex) {
 			// ISourceModule.getSource() may throw
 			// ArrayIndexOutOfBoundsException and
@@ -554,13 +560,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, endPosition,
 					true);
-			String elementName = statement.subSequence(startPosition, endPosition).toString();
+			String elementName = startPosition < 0 ? "" //$NON-NLS-1$
+					: statement.subSequence(startPosition, endPosition).toString();
 
 			// Determine previous word:
 			int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
 			int prevWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, prevWordEnd,
 					false);
-			String prevWord = statement.subSequence(prevWordStart, prevWordEnd).toString();
+			String prevWord = prevWordStart < 0 ? "" //$NON-NLS-1$
+					: statement.subSequence(prevWordStart, prevWordEnd).toString();
 
 			// Determine next word:
 			ITextRegion nextRegion = tRegion;
@@ -632,7 +640,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				int preListWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, listStartPosition);
 				int preListWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, preListWordEnd,
 						false);
-				String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
+				String preListWord = preListWordStart < 0 ? "" //$NON-NLS-1$
+						: statement.subSequence(preListWordStart, preListWordEnd).toString();
 
 				generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration, preListWord, elementName,
 						offset);
