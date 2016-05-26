@@ -546,7 +546,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																										// whitespace
 		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, prefixEnd, true);
-		return statementText.subSequence(prefixStart, prefixEnd).toString();
+		return prefixStart < 0 ? "" : statementText.subSequence(prefixStart, prefixEnd).toString(); //$NON-NLS-1$
 	}
 
 	/**

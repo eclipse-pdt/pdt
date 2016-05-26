@@ -47,7 +47,8 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 
 		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart - 1);
 		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
-		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
+		String nsName = nsNameStart < 0 ? "" //$NON-NLS-1$
+				: statementText.subSequence(nsNameStart, elementStart).toString();
 		if (!nsName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
@@ -99,7 +100,8 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																										// whitespace
 		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, prefixEnd, true);
-		return statementText.subSequence(prefixStart, prefixEnd).toString();
+		return prefixStart < 0 ? "" //$NON-NLS-1$
+				: statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
 
 	public int getPrefixEnd() throws BadLocationException {

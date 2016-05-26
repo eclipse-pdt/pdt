@@ -418,13 +418,16 @@ public class CodeAssistUtils {
 		// .toString();
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
 				propertyEndPosition, true);
-		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-		FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
-		IEvaluatedType type = PHPClassType.fromTraitName(className, sourceModule, offset);
-		IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
-		if (modelElements != null) {
-			return modelElements;
+		String className = classNameStart < 0 ? "" //$NON-NLS-1$
+				: statementText.subSequence(classNameStart, propertyEndPosition).toString();
+		if (className.length() > 0) {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
+			IEvaluatedType type = PHPClassType.fromTraitName(className, sourceModule, offset);
+			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
+			if (modelElements != null) {
+				return modelElements;
+			}
 		}
 		return EMPTY_TYPES;
 
@@ -551,7 +554,8 @@ public class CodeAssistUtils {
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
 				propertyEndPosition, true);
-		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
+		String className = classNameStart < 0 ? "" //$NON-NLS-1$
+				: statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger && className != null && className.length() != 0) {
 			final String comparable = PHPVersion.PHP5_4.isLessThan(phpVersion) ? className.toLowerCase() : className;
 			if ("self".equals(comparable) //$NON-NLS-1$
@@ -605,7 +609,8 @@ public class CodeAssistUtils {
 						int end = statementText.toString().lastIndexOf('[');
 						int classNameStart1 = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion,
 								statementText, end, true);
-						className = statementText.subSequence(classNameStart1, end).toString();
+						className = classNameStart1 < 0 ? "" //$NON-NLS-1$
+								: statementText.subSequence(classNameStart1, end).toString();
 						// if its object call calc the object type.
 						if (className.length() > 0 && className.charAt(0) == '$') {
 							int statementStart = statementText.getOriginalOffset(classNameStart);
@@ -638,7 +643,8 @@ public class CodeAssistUtils {
 			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
 					functionNameEnd, false);
 
-			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString().trim();
+			String functionName = functionNameStart < 0 ? "" //$NON-NLS-1$
+					: statementText.subSequence(functionNameStart, functionNameEnd).toString().trim();
 			if (isKeyword(functionName)) {
 				functionName = "";
 				functionNameStart = functionNameEnd = PHPTextSequenceUtilities.readForwardSpaces(statementText,
