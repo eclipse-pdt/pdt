@@ -24,13 +24,16 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
@@ -40,8 +43,11 @@ import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
+import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +93,15 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		// disable auto build
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
+
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
+
 		if (project.exists()) {
 			return;
 		}
@@ -95,27 +109,29 @@ public class CodeAssistTests {
 		project.create(null);
 		project.open(null);
 
+		IScriptProject scriptProject = DLTKCore.create(project);
+		scriptProject.setOption(DLTKCore.BUILDER_ENABLED, DLTKCore.DISABLED);
+
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 		PHPCoreTests.setProjectPhpVersion(project, version);
-
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
-		}
-		PHPCoreTests.index(project);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		PHPCoreTests.removeIndex(project);
+		IScriptProject scriptProject = DLTKCore.create(project);
+		scriptProject.setOption(DLTKCore.BUILDER_ENABLED, DLTKCore.ENABLED);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 
 		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+			// ValidationFramework.getDefault().suspendAllValidation(false);
 		}
 	}
 
@@ -130,14 +146,12 @@ public class CodeAssistTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			PHPCoreTests.removeIndex(testFile);
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
-					PHPCoreTests.removeIndex(file);
 					file.delete(true, null);
 				}
 			}
@@ -167,19 +181,16 @@ public class CodeAssistTests {
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		PHPCoreTests.index(testFile);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = project.getFile(String.format("test%s.php", i));
 			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
 			this.otherFiles.add(i, tmp);
-			PHPCoreTests.index(tmp);
 			i++;
 		}
 
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
 
 		return offset;
 	}
@@ -197,9 +208,74 @@ public class CodeAssistTests {
 		return getProposals(getSourceModule(), offset);
 	}
 
-	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+	private static abstract class TestCompletionRequestor extends CompletionRequestor
+			implements IPHPCompletionRequestor {
+
+		private IStructuredDocument document;
+		private int offset;
+
+		public TestCompletionRequestor(IStructuredDocument document, int offset) {
+			this.document = document;
+			this.offset = offset;
+		}
+
+		@Override
+		public IDocument getDocument() {
+			// TODO Auto-generated method stub
+			return document;
+		}
+
+		@Override
+		public boolean isExplicit() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+
+		@Override
+		public int getOffset() {
+			// TODO Auto-generated method stub
+			return offset;
+		}
+
+		@Override
+		public void setOffset(int offset) {
+			this.offset = offset;
+		}
+
+		@Override
+		public boolean filter(int flag) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void addFlag(int flag) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	public CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
+
+		// IStructuredDocument document = null;
+		// try {
+		// document = StructuredModelManager.getModelManager()
+		// .createStructuredDocumentFor((IFile) sourceModule.getResource());
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (CoreException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// document.set(text);
+		// IStructuredDocument document = new
+		// JobSafeStructuredDocument(PHPSourceParserFactory.createParser(version));
+		document.set(new String(sourceModule.getSourceAsCharArray()));
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
-		sourceModule.codeComplete(offset, new CompletionRequestor() {
+		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
