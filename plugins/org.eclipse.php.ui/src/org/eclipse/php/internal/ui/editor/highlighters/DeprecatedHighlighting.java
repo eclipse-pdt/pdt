@@ -80,6 +80,12 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(StaticConstantAccess staticConstantAccess) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494440
+			// An object can't be resolved if it's a variable,
+			// for example $myObject::MY_CONST
+			if (staticConstantAccess.getClassName() instanceof Variable) {
+				return super.visit(staticConstantAccess);
+			}
 			ITypeBinding type = staticConstantAccess.getClassName().resolveTypeBinding();
 
 			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
@@ -104,6 +110,12 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(StaticFieldAccess staticFieldAccess) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494440
+			// An object can't be resolved if it's a variable,
+			// for example $myObject::$myField
+			if (staticFieldAccess.getClassName() instanceof Variable) {
+				return super.visit(staticFieldAccess);
+			}
 			ITypeBinding type = staticFieldAccess.getClassName().resolveTypeBinding();
 
 			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
@@ -133,8 +145,8 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			IField field = ModelUtils.getField(fieldAccess);
 			if (field != null && ModelUtils.isDeprecated(field)) {
 				highlight(fieldAccess.getMember());
-			} else if (field != null && field.getParent() instanceof IType
-					&& ModelUtils.isDeprecated(field.getParent())) {
+			} else
+				if (field != null && field.getParent() instanceof IType && ModelUtils.isDeprecated(field.getParent())) {
 				highlight(fieldAccess.getMember());
 			}
 			return true;
@@ -156,6 +168,12 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(FunctionInvocation funcInv) {
 			if ((funcInv.getParent() instanceof StaticMethodInvocation)) {
 				StaticMethodInvocation methodInvocation = (StaticMethodInvocation) funcInv.getParent();
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494440
+				// An object can't be resolved if it's a variable,
+				// for example $myObject::myMethod()
+				if (methodInvocation.getClassName() instanceof Variable) {
+					return true;
+				}
 				ITypeBinding type = methodInvocation.getClassName().resolveTypeBinding();
 
 				if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
