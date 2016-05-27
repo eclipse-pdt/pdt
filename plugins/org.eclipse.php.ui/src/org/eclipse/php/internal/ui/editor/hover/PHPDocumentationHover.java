@@ -44,6 +44,7 @@ import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.internal.ui.util.OpenBrowserUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.php.ui.PHPElementLabels;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -321,7 +322,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			| ScriptElementLabels.M_PRE_RETURNTYPE | ScriptElementLabels.M_PARAMETER_TYPES
 			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_EXCEPTIONS
 			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE | ScriptElementLabels.M_PRE_TYPE_PARAMETERS
-			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED;
+			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED
+			| ScriptElementLabels.M_APP_RETURNTYPE;
 	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~ScriptElementLabels.F_FULLY_QUALIFIED
 			| ScriptElementLabels.F_POST_QUALIFIED;
 
@@ -819,7 +821,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 
 	private static StringBuffer getInfoText(IModelElement member) {
 		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
-		String label = ScriptElementLabels.getDefault().getElementLabel(member, flags);
+		String label = PHPElementLabels.getDefault().getElementLabel(member, flags);
 		return new StringBuffer(label);
 	}
 }
