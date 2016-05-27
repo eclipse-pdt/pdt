@@ -16,7 +16,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 public class ContentTypeIdForPHP {
 	/**
 	 * The value of the contenttype id field must match what is specified in
-	 * plugin.xml file. Note: this value is intentially set with default
+	 * plugin.xml file. Note: this value is intentionally set with default
 	 * protected method so it will not be inlined.
 	 */
 	public final static String ContentTypeID_PHP = getConstantString();

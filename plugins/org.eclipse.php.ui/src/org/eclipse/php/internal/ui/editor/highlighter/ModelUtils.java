@@ -34,6 +34,12 @@ import org.eclipse.php.internal.ui.Logger;
 public abstract class ModelUtils {
 
 	static public IField getField(FieldAccess fieldAccess) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494440
+		// A field dispatcher can't be resolved if it's a variable,
+		// for example $myObject->myField
+		if (fieldAccess.getDispatcher() instanceof Variable) {
+			return null;
+		}
 		ITypeBinding type = fieldAccess.getDispatcher().resolveTypeBinding();
 		String fieldName = getFieldName(fieldAccess.getMember());
 		if (type != null && fieldName != null) {
@@ -58,6 +64,12 @@ public abstract class ModelUtils {
 	}
 
 	static public IMethod getMethod(MethodInvocation methodInvocation) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494440
+		// A method dispatcher can't be resolved if it's a variable,
+		// for example $myObject->myMethod()
+		if (methodInvocation.getDispatcher() instanceof Variable) {
+			return null;
+		}
 		ITypeBinding type = methodInvocation.getDispatcher().resolveTypeBinding();
 		String methodName = getFunctionName(methodInvocation.getMethod().getFunctionName());
 		if (type != null && methodName != null) {
@@ -81,6 +93,12 @@ public abstract class ModelUtils {
 	}
 
 	static public IMethod getMethod(StaticMethodInvocation methodInvocation) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494440
+		// A class can't be resolved if it's a variable,
+		// for example $myObject::myMethod()
+		if (methodInvocation.getClassName() instanceof Variable) {
+			return null;
+		}
 		ITypeBinding type = methodInvocation.getClassName().resolveTypeBinding();
 		String methodName = getFunctionName(methodInvocation.getMethod().getFunctionName());
 		if (type != null && methodName != null) {

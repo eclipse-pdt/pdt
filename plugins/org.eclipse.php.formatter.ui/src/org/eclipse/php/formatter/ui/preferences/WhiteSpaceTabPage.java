@@ -165,7 +165,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		private void setPreviewText() {
-			String previewText = ""; // $NON-NLS-§$
+			String previewText = ""; // $NON-NLS-1$
 			if (fLastSelected != null) {
 				previewText = "<?php\n"; //$NON-NLS-1$
 				List<String> snippets = fLastSelected.getSnippets();
