@@ -55,7 +55,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			| ScriptElementLabels.M_PRE_RETURNTYPE | ScriptElementLabels.M_PARAMETER_TYPES
 			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_EXCEPTIONS
 			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE | ScriptElementLabels.M_PRE_TYPE_PARAMETERS
-			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED;
+			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED
+			| ScriptElementLabels.M_APP_RETURNTYPE;
 
 	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~ScriptElementLabels.F_FULLY_QUALIFIED
 			| ScriptElementLabels.F_POST_QUALIFIED;
@@ -121,6 +122,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			StringBuilder buf = new StringBuilder(DL_START);
 			buf.append(builtinDoc);
 			buf.append(DL_END);
+
 			return new StringReader(buf.toString());
 		}
 		return null;
@@ -161,6 +163,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		StringBuffer buf = new StringBuffer();
 		PHPDocumentationHover.addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2);
+
 		return buf.toString();
 	}
 
