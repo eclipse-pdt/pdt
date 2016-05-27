@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -232,7 +232,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		try {
 			return bindingUtil.getType(offset, length);
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 	}
@@ -269,7 +271,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		try {
 			return bindingUtil.getModelElement(offset, length, filter, getModelAccessCache());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 	}
@@ -413,7 +417,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = this.bindingUtil.getModelElement(fieldDeclaration.getStart(), fieldDeclaration.getLength(),
 					getModelAccessCache());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 
@@ -470,7 +476,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		try {
 			modelElements = sourceModule.codeSelect(expression.getStart(), expression.getLength());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 
@@ -572,7 +580,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			Identifier functionName = function.getFunctionName();
 			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -599,7 +609,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			FunctionName functionName = function.getFunctionName();
 			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -626,7 +638,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			FunctionName functionName = method.getMethod().getFunctionName();
 			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -653,7 +667,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			FunctionName functionName = method.getMethod().getFunctionName();
 			modelElements = sourceModule.codeSelect(functionName.getStart(), functionName.getLength());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -681,7 +697,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = this.bindingUtil.getModelElement(type.getName().getStart(), type.getName().getLength(),
 					getModelAccessCache());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 
@@ -736,7 +754,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		try {
 			modelElements = bindingUtil.getFieldByPosition(variable.getStart(), variable.getLength());
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
