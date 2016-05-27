@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
+import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
@@ -45,8 +46,8 @@ import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 /**
  * PHP Explorer view part to display the projects, contained files and
- * referenced folders/libraries. The view displays those in a
- * "file-system oriented" manner, and not in a "model oriented" manner.
+ * referenced folders/libraries. The view displays those in a "file-system
+ * oriented" manner, and not in a "model oriented" manner.
  * 
  * @author apeled, ncohen
  * 
@@ -57,10 +58,11 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		private static final int INCLUDE_PATH_CONTAINER = 59;
 
 		public int category(Object element) {
-			if (element instanceof IncludePathContainer)
+			if (element instanceof IncludePathContainer) {
 				return INCLUDE_PATH_CONTAINER;
-			else
+			} else {
 				return super.category(element);
+			}
 		}
 
 		public int compare(Viewer viewer, Object e1, Object e2) {
@@ -82,9 +84,16 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			if (e2 instanceof ISourceModule) {
 				c2 = ((ISourceModule) e2).getResource();
 			}
+
+			if (e1 instanceof IProjectFragment && e2 instanceof IProjectFragment) {
+				c1 = ((IProjectFragment) e1).getResource();
+				c2 = ((IProjectFragment) e2).getResource();
+			}
+
 			if (c1 != null && c2 != null) {
 				return super.compare(viewer, c1, c2);
 			}
+
 			return super.compare(viewer, e1, e2);
 		}
 	}
@@ -163,8 +172,8 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	}
 
 	/**
-	 * Overriding DTLK original setComerator, and setting
-	 * "includePathContainer - aware" comparators
+	 * Overriding DTLK original setComerator, and setting "includePathContainer
+	 * - aware" comparators
 	 */
 	@Override
 	protected void setComparator() {
