@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.php.internal.ui.actions.PHPFileOperationActionGroup;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
@@ -45,10 +46,9 @@ public class PHPNavigatorFileOperationActionProvider extends CommonActionProvide
 		// we only initialize the group when in a view part
 		// (required for the constructor)
 		if (workbenchSite != null) {
-			if (workbenchSite.getPart() != null && workbenchSite.getPart() instanceof IViewPart) {
-				IViewPart viewPart = (IViewPart) workbenchSite.getPart();
-
-				fFileOperationGroup = new PHPFileOperationActionGroup(viewPart);
+			IWorkbenchPart viewPart = workbenchSite.getPart();
+			if (viewPart instanceof IViewPart) {
+				fFileOperationGroup = new PHPFileOperationActionGroup((IViewPart) viewPart);
 			}
 		}
 	}
