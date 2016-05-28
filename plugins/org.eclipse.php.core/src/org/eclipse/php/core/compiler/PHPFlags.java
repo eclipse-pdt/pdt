@@ -122,4 +122,11 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isAnonymous(int flags) {
 		return (flags & AccAnonymous) != 0;
 	}
+
+	/**
+	 * @since 4.0
+	 */
+	public static boolean isVariadic(int flags) {
+		return (flags & AccVariadic) != 0;
+	}
 }

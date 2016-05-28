@@ -14,6 +14,7 @@ package org.eclipse.php.ui;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 public class PHPElementLabels extends ScriptElementLabels {
 	private final String MIXED_RETURN_TYPE = "mixed"; //$NON-NLS-1$
@@ -147,21 +148,31 @@ public class PHPElementLabels extends ScriptElementLabels {
 				final boolean bTypes = getFlag(flags, M_PARAMETER_TYPES);
 				final boolean bInitializers = getFlag(flags, M_PARAMETER_INITIALIZERS);
 				final IParameter[] params = method.getParameters();
+				final boolean isVariadic = PHPFlags.isVariadic(method.getFlags());
 				for (int i = 0, nParams = params.length; i < nParams; i++) {
 					if (i > 0) {
 						buf.append(COMMA_STRING);
 					}
+					boolean isLast = i + 1 == nParams;
 					if (bTypes) {
 						if (params[i].getType() != null) {
 							buf.append(params[i].getType());
 							if (bNames) {
 								buf.append(' ');
+							} else if (isLast && isVariadic) {
+								buf.append(ELLIPSIS_STRING);
 							}
 						} else if (!bNames) {
+							if (isLast && isVariadic) {
+								buf.append(ELLIPSIS_STRING);
+							}
 							buf.append(params[i].getName());
 						}
 					}
 					if (bNames) {
+						if (isLast && isVariadic) {
+							buf.append(ELLIPSIS_STRING);
+						}
 						buf.append(params[i].getName());
 					}
 					if (bInitializers && params[i].getDefaultValue() != null) {
