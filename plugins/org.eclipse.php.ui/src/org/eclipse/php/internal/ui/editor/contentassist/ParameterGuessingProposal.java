@@ -24,6 +24,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -70,8 +71,16 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	private IRegion fSelectedRegion; // initialized by apply()
 	private IPositionUpdater fUpdater;
 
+	@Deprecated
 	public ParameterGuessingProposal(CompletionProposal proposal, IScriptProject jproject, ISourceModule cu,
 			String methodName, String[] paramTypes, int start, int length, String displayName,
+			String completionProposal, boolean fillBestGuess, Object extraInfo, IDocument document) {
+		this(proposal, jproject, cu, methodName, paramTypes, start, length, new StyledString(displayName),
+				completionProposal, fillBestGuess, extraInfo, document);
+	}
+
+	public ParameterGuessingProposal(CompletionProposal proposal, IScriptProject jproject, ISourceModule cu,
+			String methodName, String[] paramTypes, int start, int length, StyledString displayName,
 			String completionProposal, boolean fillBestGuess, Object extraInfo, IDocument document) {
 		super(jproject, cu, methodName, paramTypes, start, length, displayName, completionProposal);
 		this.fProposal = proposal;

@@ -26,6 +26,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -43,13 +44,25 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	 */
 	private IInformationControlCreator fCreator;
 
+	@Deprecated
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
 	}
 
+	@Deprecated
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance, boolean indoc) {
+		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
+	}
+
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
+			StyledString displayString, int relevance) {
+		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, false);
+	}
+
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
+			StyledString displayString, int relevance, boolean indoc) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 

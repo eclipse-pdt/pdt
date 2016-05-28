@@ -11,11 +11,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
+import org.eclipse.dltk.ui.text.completion.ICompletionProposalLabelProviderExtension;
+import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
@@ -23,50 +28,26 @@ import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
 
-public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider {
+public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider
+		implements ICompletionProposalLabelProviderExtension {
 	private static final PHPModelLabelProvider fLabelProvider = new PHPModelLabelProvider();
 
 	private static final String ENCLOSING_TYPE_SEPARATOR = String.valueOf(NamespaceReference.NAMESPACE_SEPARATOR);
 
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
-		StringBuffer nameBuffer = new StringBuffer();
-		boolean isAlias = methodProposal.getModelElement() instanceof AliasMethod;
-
-		// method name
-		if (isAlias) {
-			AliasMethod aliasMethod = (AliasMethod) methodProposal.getModelElement();
-			nameBuffer.append(aliasMethod.getAlias());
-		} else {
-			nameBuffer.append(methodProposal.getName());
-		}
-
-		// parameters
-		nameBuffer.append('(');
-		appendParameterList(nameBuffer, methodProposal);
-		nameBuffer.append(')');
-
-		if (isAlias) {
-			return nameBuffer.toString();
-		}
-
-		IMethod method = (IMethod) methodProposal.getModelElement();
-		nameBuffer.append(" - "); //$NON-NLS-1$
-
-		IModelElement parent = method.getParent();
-		if (parent instanceof IType) {
-			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); // $NON-NLS-1$
-		} else {
-			nameBuffer.append(parent.getElementName());
-		}
-
-		return nameBuffer.toString();
+		return createStyledMethodProposalLabel(methodProposal).toString();
 	}
 
 	protected String createOverrideMethodProposalLabel(CompletionProposal methodProposal) {
-		StringBuffer nameBuffer = new StringBuffer();
+		return createStyledOverrideMethodProposalLabel(methodProposal).toString();
+	}
+
+	protected StyledString createStyledOverrideMethodProposalLabel(CompletionProposal methodProposal) {
+		StyledString nameBuffer = new StyledString();
 		IMethod method = (IMethod) methodProposal.getModelElement();
 
 		if (method instanceof FakeConstructor) {
@@ -75,7 +56,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 				AliasType aliasType = (AliasType) type;
 				nameBuffer.append(aliasType.getAlias());
 				nameBuffer.append("()"); //$NON-NLS-1$
-				return nameBuffer.toString();
+				return nameBuffer;
 			}
 		}
 		boolean isAlias = method instanceof AliasMethod;
@@ -89,50 +70,66 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 
 		// parameters
 		nameBuffer.append('(');
-		appendParameterList(nameBuffer, methodProposal);
+		appendStyledParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); // $NON-NLS-1$
 
+		appendMethodType(nameBuffer, methodProposal);
 		if (isAlias) {
-			return nameBuffer.toString();
+			return nameBuffer;
 		}
 
-		nameBuffer.append(" - "); //$NON-NLS-1$
+		nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); // $NON-NLS-1$
+			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER); // $NON-NLS-1$
 		} else {
-			nameBuffer.append(parent.getElementName());
+			nameBuffer.append(parent.getElementName(), StyledString.QUALIFIER_STYLER);
 		}
 
-		return nameBuffer.toString();
+		return nameBuffer;
+	}
+
+	protected void appendMethodType(StyledString nameBuffer, CompletionProposal methodProposal) {
+		if (showMethodReturnType()) {
+			IMethod method = (IMethod) methodProposal.getModelElement();
+			if (method instanceof AliasMethod) {
+				method = (IMethod) ((AliasMethod) method).getMethod();
+			}
+			if (method == null) {
+				return;
+			}
+			try {
+				if (method.isConstructor()) {
+					return;
+				}
+				nameBuffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
+				String type;
+				type = method.getType();
+
+				if (type == null) {
+					if ((method.getFlags() & IPHPModifiers.AccReturn) != 0) {
+						type = "mixed"; //$NON-NLS-1$
+					} else {
+						type = "void"; //$NON-NLS-1$
+					}
+				}
+				nameBuffer.append(type, StyledString.DECORATIONS_STYLER);
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+
+	}
+
+	private boolean showMethodReturnType() {
+		return PHPUiPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE);
 	}
 
 	public String createTypeProposalLabel(CompletionProposal typeProposal) {
-		StringBuffer nameBuffer = new StringBuffer();
-
-		IType type = (IType) typeProposal.getModelElement();
-		if (type instanceof AliasType) {
-			AliasType aliasType = (AliasType) type;
-			nameBuffer.append(aliasType.getAlias());
-			return nameBuffer.toString();
-		}
-		nameBuffer.append(typeProposal.getName());
-
-		boolean isNamespace = false;
-		try {
-			isNamespace = PHPFlags.isNamespace(type.getFlags());
-		} catch (ModelException e) {
-			Logger.logException(e);
-		}
-		if (type.getParent() != null && !isNamespace) {
-			nameBuffer.append(" - "); //$NON-NLS-1$
-			IModelElement parent = type.getParent();
-			nameBuffer.append(parent.getElementName());
-		}
-
-		return nameBuffer.toString();
+		return createStyledTypeProposalLabel(typeProposal).toString();
 	}
 
 	protected String createLabelWithTypeAndDeclaration(CompletionProposal proposal) {
@@ -179,26 +176,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 	}
 
 	public String createFieldProposalLabel(CompletionProposal proposal) {
-		if (proposal.getModelElement() instanceof AliasField) {
-			AliasField aliasField = (AliasField) proposal.getModelElement();
-			return aliasField.getAlias();
-		}
-		IModelElement element = proposal.getModelElement();
-		if (element != null && element.getElementType() == IModelElement.FIELD) {
-			final IField field = (IField) element;
-			try {
-				String type = field.getType();
-				if (type != null) {
-					StringBuilder sb = new StringBuilder(proposal.getName());
-					sb.append(getReturnTypeSeparator());
-					sb.append(type);
-					return sb.toString();
-				}
-			} catch (ModelException e) {
-				// ignore
-			}
-		}
-		return proposal.getName();
+		return createStyledFieldProposalLabel(proposal).toString();
 	}
 
 	@Override
@@ -219,5 +197,198 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 			return imageDescriptor;
 		}
 		return super.createMethodImageDescriptor(proposal);
+	}
+
+	@Override
+	public StyledString createStyledFieldProposalLabel(CompletionProposal proposal) {
+		StyledString buffer = new StyledString();
+		if (proposal.getModelElement() instanceof AliasField) {
+			AliasField aliasField = (AliasField) proposal.getModelElement();
+			buffer.append(aliasField.getAlias());
+			return buffer;
+		}
+		IModelElement element = proposal.getModelElement();
+		if (element != null && element.getElementType() == IModelElement.FIELD) {
+			final IField field = (IField) element;
+			try {
+				String type = field.getType();
+				if (type != null) {
+					buffer.append(proposal.getName());
+
+					buffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
+					buffer.append(type, StyledString.DECORATIONS_STYLER);
+
+					return buffer;
+				}
+			} catch (ModelException e) {
+				// ignore
+			}
+		}
+		buffer.append(proposal.getName());
+
+		return buffer;
+	}
+
+	@Override
+	public StyledString createStyledLabel(CompletionProposal proposal) {
+		switch (proposal.getKind()) {
+		case CompletionProposal.METHOD_NAME_REFERENCE:
+		case CompletionProposal.METHOD_REF:
+		case CompletionProposal.POTENTIAL_METHOD_DECLARATION:
+			return createStyledMethodProposalLabel(proposal);
+		case CompletionProposal.METHOD_DECLARATION:
+			return createStyledOverrideMethodProposalLabel(proposal);
+		case CompletionProposal.TYPE_REF:
+			return createStyledTypeProposalLabel(proposal);
+		case CompletionProposal.FIELD_REF:
+			return createStyledFieldProposalLabel(proposal);
+		case CompletionProposal.LOCAL_VARIABLE_REF:
+		case CompletionProposal.VARIABLE_DECLARATION:
+			return createStyledSimpleLabelWithType(proposal);
+		case CompletionProposal.KEYWORD:
+			return createStyledKeywordLabel(proposal);
+		case CompletionProposal.PACKAGE_REF:
+		case CompletionProposal.LABEL_REF:
+			return createStyledSimpleLabel(proposal);
+		default:
+			Assert.isTrue(false);
+			return null;
+		}
+	}
+
+	protected StyledString createStyledMethodProposalLabel(CompletionProposal methodProposal) {
+		StyledString nameBuffer = new StyledString();
+		boolean isAlias = methodProposal.getModelElement() instanceof AliasMethod;
+
+		// method name
+		if (isAlias) {
+			AliasMethod aliasMethod = (AliasMethod) methodProposal.getModelElement();
+			nameBuffer.append(aliasMethod.getAlias());
+		} else {
+			nameBuffer.append(methodProposal.getName());
+		}
+
+		// parameters
+		nameBuffer.append('(');
+		appendStyledParameterList(nameBuffer, methodProposal);
+		nameBuffer.append(')');
+
+		appendMethodType(nameBuffer, methodProposal);
+		if (isAlias) {
+			return nameBuffer;
+		}
+
+		IMethod method = (IMethod) methodProposal.getModelElement();
+		nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+
+		IModelElement parent = method.getParent();
+		if (parent instanceof IType) {
+			IType type = (IType) parent;
+			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER); // $NON-NLS-1$
+		} else {
+			nameBuffer.append(parent.getElementName(), StyledString.QUALIFIER_STYLER);
+		}
+
+		return nameBuffer;
+	}
+
+	protected StyledString appendStyledParameterList(StyledString buffer, CompletionProposal methodProposal) {
+		String[] parameterNames = methodProposal.findParameterNames(null);
+		String[] parameterTypes = null;
+		if (parameterNames != null) {
+			final Integer paramLimit = (Integer) methodProposal
+					.getAttribute(ScriptCompletionProposalCollector.ATTR_PARAM_LIMIT);
+			if (paramLimit != null) {
+				for (int i = 0; i < parameterNames.length; i++) {
+					if (i >= paramLimit.intValue()) {
+						break;
+					}
+					if (i > 0) {
+						buffer.append(',');
+						buffer.append(' ');
+					}
+					buffer.append(parameterNames[i]);
+				}
+				return buffer;
+			}
+		}
+		return appendStyledParameterSignature(buffer, parameterTypes, parameterNames);
+	}
+
+	protected StyledString appendStyledParameterSignature(StyledString buffer, String[] parameterTypes,
+			String[] parameterNames) {
+		if (parameterNames != null) {
+			for (int i = 0; i < parameterNames.length; i++) {
+				if (i > 0) {
+					buffer.append(',');
+					buffer.append(' ');
+				}
+				buffer.append(parameterNames[i]);
+			}
+		}
+		return buffer;
+	}
+
+	@Override
+	public String createLabel(CompletionProposal proposal) {
+		return createStyledLabel(proposal).toString();
+	}
+
+	@Override
+	public StyledString createStyledKeywordLabel(CompletionProposal proposal) {
+		return new StyledString(proposal.getName());
+	}
+
+	@Override
+	public StyledString createStyledSimpleLabel(CompletionProposal proposal) {
+		return new StyledString(proposal.getName());
+	}
+
+	@Override
+	public StyledString createStyledTypeProposalLabel(CompletionProposal typeProposal) {
+		StyledString nameBuffer = new StyledString();
+
+		IType type = (IType) typeProposal.getModelElement();
+		if (type instanceof AliasType) {
+			AliasType aliasType = (AliasType) type;
+			nameBuffer.append(aliasType.getAlias());
+			return nameBuffer;
+		}
+		nameBuffer.append(typeProposal.getName());
+
+		boolean isNamespace = false;
+		try {
+			isNamespace = PHPFlags.isNamespace(type.getFlags());
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		if (type.getParent() != null && !isNamespace) {
+			nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+			IModelElement parent = type.getParent();
+			nameBuffer.append(parent.getElementName(), StyledString.QUALIFIER_STYLER);
+		}
+
+		return nameBuffer;
+	}
+
+	@Override
+	public StyledString createStyledSimpleLabelWithType(CompletionProposal proposal) {
+		StyledString buffer = new StyledString(proposal.getName());
+
+		IModelElement element = proposal.getModelElement();
+		if (element != null && element.getElementType() == IModelElement.LOCAL_VARIABLE && element.exists()) {
+			final ILocalVariable var = (ILocalVariable) element;
+			String type = var.getType();
+			if (type != null) {
+				buffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
+				buffer.append(type, StyledString.QUALIFIER_STYLER);
+			}
+		}
+		return buffer;
+	}
+
+	@Override
+	protected String createSimpleLabelWithType(CompletionProposal proposal) {
+		return createStyledSimpleLabelWithType(proposal).toString();
 	}
 }

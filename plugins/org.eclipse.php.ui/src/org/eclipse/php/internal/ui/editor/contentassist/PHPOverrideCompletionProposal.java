@@ -23,6 +23,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -37,9 +38,16 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 	 */
 	private IInformationControlCreator fCreator;
 
+	@Deprecated
 	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName,
 			String[] paramTypes, int start, int length, String displayName, String completionProposal) {
 		super(jproject, cu, methodName, paramTypes, start, length, displayName, completionProposal);
+	}
+
+	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName,
+			String[] paramTypes, int start, int length, StyledString displayName, String completionProposal) {
+		super(jproject, cu, methodName, paramTypes, start, length, displayName.toString(), completionProposal);
+		setStyledDisplayString(displayName);
 	}
 
 	public void apply(IDocument document, char trigger, int offset) {

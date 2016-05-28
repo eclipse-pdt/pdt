@@ -18,6 +18,7 @@ import org.eclipse.dltk.ui.text.completion.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.*;
@@ -48,17 +49,17 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	protected ScriptCompletionProposal createOverrideCompletionProposal(IScriptProject scriptProject,
 			ISourceModule compilationUnit, String name, String[] paramTypes, int start, int length, String label,
 			String string) {
-		return new PHPOverrideCompletionProposal(scriptProject, compilationUnit, name, paramTypes, start, length, label,
-				string);
+		return new PHPOverrideCompletionProposal(scriptProject, compilationUnit, name, paramTypes, start, length,
+				new StyledString(label), string);
 	}
 
 	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length,
-			Image image, String displayString, int i) {
+			Image image, StyledString displayString, int i) {
 		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i);
 	}
 
 	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length,
-			Image image, String displayString, int i, boolean isInDoc) {
+			Image image, StyledString displayString, int i, boolean isInDoc) {
 		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i, isInDoc);
 	}
 
@@ -159,11 +160,11 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 		int start = proposal.getReplaceStart();
 		int length = getLength(proposal);
-		String label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
-				.createOverrideMethodProposalLabel(proposal);
+		StyledString label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createStyledOverrideMethodProposalLabel(proposal);
 
-		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
-				.createMethodProposalLabel(proposal);
+		StyledString displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createStyledMethodProposalLabel(proposal);
 
 		ScriptCompletionProposal scriptProposal = null;
 		if (ProposalExtraInfo.isNotInsertUse(proposal.getExtraInfo())) {
@@ -200,7 +201,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	}
 
 	private ScriptCompletionProposal createParameterGuessingProposal(CompletionProposal proposal, String name,
-			String[] paramTypes, int start, int length, String label, String string, Object extraInfo) {
+			String[] paramTypes, int start, int length, StyledString label, String string, Object extraInfo) {
 		return new ParameterGuessingProposal(proposal, getSourceModule().getScriptProject(), getSourceModule(), name,
 				paramTypes, start, length, label, string, false, extraInfo, document);
 	}
@@ -212,8 +213,8 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		Image image = getImage(
 				((PHPCompletionProposalLabelProvider) getLabelProvider()).createTypeImageDescriptor(typeProposal));
 
-		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
-				.createTypeProposalLabel(typeProposal);
+		StyledString displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createStyledTypeProposalLabel(typeProposal);
 
 		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, image,
 				displayString, 0) {
@@ -305,8 +306,8 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		String completion = String.valueOf(proposal.getCompletion());
 		int start = proposal.getReplaceStart();
 		int length = getLength(proposal);
-		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
-				.createFieldProposalLabel(proposal);
+		StyledString displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createStyledFieldProposalLabel(proposal);
 		Image image = getImage(
 				((PHPCompletionProposalLabelProvider) getLabelProvider()).createFieldImageDescriptor(proposal));
 

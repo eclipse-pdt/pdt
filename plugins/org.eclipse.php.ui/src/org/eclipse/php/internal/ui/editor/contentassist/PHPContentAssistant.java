@@ -40,6 +40,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 	private ITextViewer fViewer;
 
 	public PHPContentAssistant() {
+		enableColoredLabels(true);
 	}
 
 	protected AutoAssistListener createAutoAssistListener() {
