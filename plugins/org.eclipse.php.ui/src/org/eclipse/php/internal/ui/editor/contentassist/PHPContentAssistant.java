@@ -160,7 +160,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 					activation = (char[]) evaluatePrivateMemberMethod("fContentAssistSubjectControlAdapter", //$NON-NLS-1$
 							"getCompletionProposalAutoActivationCharacters", //$NON-NLS-1$
 							new Class[] { ContentAssistant.class, int.class },
-							new Object[] { PHPContentAssistant.class.getSuperclass(), pos });
+							new Object[] { PHPContentAssistant.super, pos });
 					activated = contains(activation, e.character);
 				} else
 				// just '>' or just '-' will not trigger proposal pop-up
