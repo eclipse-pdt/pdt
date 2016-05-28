@@ -226,14 +226,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		Collection<FormalParameter> arguments = lambdaMethod.getArguments();
 		StringBuilder metadata = new StringBuilder();
 		String[] parameters;
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.modifiers = Modifiers.AccPublic;
 		if (arguments != null) {
 			parameters = new String[arguments.size()];
 			Iterator<FormalParameter> i = arguments.iterator();
 			int indx = 0;
 			while (i.hasNext()) {
-				Argument arg = (Argument) i.next();
+				FormalParameter arg = i.next();
 				metadata.append(arg.getName());
 				parameters[indx] = arg.getName();
+				if (arg.isVariadic()) {
+					mi.modifiers |= IPHPModifiers.AccVariadic;
+				}
 				indx++;
 				if (i.hasNext()) {
 					metadata.append(","); //$NON-NLS-1$
@@ -248,10 +253,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(lambdaMethod);
 		}
 
-		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.parameterNames = parameters;
 		mi.name = PHPCoreConstants.ANONYMOUS;
-		mi.modifiers = Modifiers.AccPublic;
+
 		if (lambdaMethod.isStatic()) {
 			mi.modifiers |= Modifiers.AccStatic;
 		}
@@ -406,6 +410,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		String[] parameter = new String[args.size()];
 		String[] initializers = new String[args.size()];
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.modifiers = method.getModifiers();
 		for (int a = 0; a < args.size(); a++) {
 			Argument arg = (Argument) args.get(a);
 			parameter[a] = arg.getName();
@@ -417,12 +423,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					initializers[a] = DEFAULT_VALUE;
 				}
 			}
+			if (arg instanceof FormalParameter && ((FormalParameter) arg).isVariadic()) {
+				mi.modifiers |= IPHPModifiers.AccVariadic;
+			}
 		}
 
-		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.parameterNames = parameter;
 		mi.name = method.getName();
-		mi.modifiers = method.getModifiers();
 		mi.nameSourceStart = method.getNameStart();
 		mi.nameSourceEnd = method.getNameEnd() - 1;
 		mi.declarationStart = method.sourceStart();

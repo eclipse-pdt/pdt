@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.ICompletionProposalLabelProviderExtension;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
@@ -294,6 +295,19 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 
 	protected StyledString appendStyledParameterList(StyledString buffer, CompletionProposal methodProposal) {
 		String[] parameterNames = methodProposal.findParameterNames(null);
+		IMethod method = (IMethod) methodProposal.getModelElement();
+		if (method instanceof AliasMethod) {
+			method = (IMethod) ((AliasMethod) method).getMethod();
+		}
+		boolean isVariadic = false;
+		try {
+			if (method != null && PHPFlags.isVariadic(method.getFlags())) {
+				isVariadic = true;
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+
 		String[] parameterTypes = null;
 		if (parameterNames != null) {
 			final Integer paramLimit = (Integer) methodProposal
@@ -307,21 +321,27 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 						buffer.append(',');
 						buffer.append(' ');
 					}
+					if (isVariadic && i + 1 == parameterNames.length) {
+						buffer.append(ScriptElementLabels.ELLIPSIS_STRING); // $NON-NLS-1$
+					}
 					buffer.append(parameterNames[i]);
 				}
 				return buffer;
 			}
 		}
-		return appendStyledParameterSignature(buffer, parameterTypes, parameterNames);
+		return appendStyledParameterSignature(buffer, parameterTypes, parameterNames, isVariadic);
 	}
 
 	protected StyledString appendStyledParameterSignature(StyledString buffer, String[] parameterTypes,
-			String[] parameterNames) {
+			String[] parameterNames, boolean isVariadic) {
 		if (parameterNames != null) {
 			for (int i = 0; i < parameterNames.length; i++) {
 				if (i > 0) {
 					buffer.append(',');
 					buffer.append(' ');
+				}
+				if (isVariadic && i + 1 == parameterNames.length) {
+					buffer.append(ScriptElementLabels.ELLIPSIS_STRING);
 				}
 				buffer.append(parameterNames[i]);
 			}
