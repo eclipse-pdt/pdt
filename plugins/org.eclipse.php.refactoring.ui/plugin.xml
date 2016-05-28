@@ -35,6 +35,24 @@
             sequence="M3+M2+M" />      
                   
     </extension>
+    <extension point="org.eclipse.ui.menus">
+	    <menuContribution
+           locationURI="popup:org.eclipse.php.ui.edit.text.refactor.quickMenu?after=reorgGroup">
+			<separator
+                name="extractGroup">
+          	</separator>
+			<command
+	              commandId="org.eclipse.php.refactoring.ui.commands.extractVariable"
+	              label="%action.label"
+	              style="push">
+	        </command>
+	        <command
+	              commandId="org.eclipse.php.refactoring.ui.commands.extractMethod"
+	              label="%action.label.0"
+	              style="push">
+	        </command>
+		</menuContribution>
+	</extension>
  
     <extension point="org.eclipse.ui.popupMenus">
         <viewerContribution

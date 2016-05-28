@@ -16,7 +16,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 
-@Deprecated
 public class PHPWordFinder {
 
 	public static IRegion findWord(IDocument document, int offset) {
