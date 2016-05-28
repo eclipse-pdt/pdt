@@ -155,4 +155,18 @@ public class PHPActionConstants {
 	 * @since 3.4
 	 */
 	public static final String TOGGLE_MARK_OCCURRENCES = "org.eclipse.php.ui.actions.toggleMarkOccurrences"; //$NON-NLS-1$
+
+	/**
+	 * Action and menu ID for quickMenu source contribution
+	 * 
+	 * @since 4.0
+	 */
+	public static final String SOURCE_QUICK_MENU = "org.eclipse.php.ui.edit.text.source.quickMenu"; //$NON-NLS-1$
+
+	/**
+	 * Action and menu ID for quickMenu refactor contribution
+	 * 
+	 * @since 4.0
+	 */
+	public static final String REFACTOR_QUICK_MENU = "org.eclipse.php.ui.edit.text.refactor.quickMenu"; //$NON-NLS-1$
 }

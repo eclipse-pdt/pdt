@@ -1008,6 +1008,21 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+           locationURI="popup:org.eclipse.php.ui.edit.text.refactor.quickMenu">
+           <command commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
+				id="org.eclipse.php.ui.refactoring.rename" label="%action.label.3"
+				style="push"
+				>
+			</command>
+	       <command commandId="org.eclipse.php.ui.edit.text.move.element" 
+	       	id="org.eclipse.php.ui.actions.move" label="%action.label.4"
+	       	style="push"
+	       	>
+	       </command>
+	       
+           <separator name="reorgGroup" visible="true"/>
+        </menuContribution>
 		<!-- Contributing Actions/handlers to WST's Editor source menus -->
 		<menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
 			<command commandId="org.eclipse.php.ui.edit.text.add.description"
@@ -1054,7 +1069,71 @@
 				</visibleWhen>
 			</command>
 		</menuContribution>
-		
+		<menuContribution
+	           locationURI="popup:org.eclipse.php.ui.edit.text.source.quickMenu?after=sourceBegin">
+				<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
+					</visibleWhen>
+				</command>
+				<command commandId="org.eclipse.wst.sse.ui.add.block.comment" id="AddBlockComment" style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
+					</visibleWhen>
+				</command>
+				<command commandId="org.eclipse.wst.sse.ui.remove.block.comment" id="RemoveBlockComment" style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
+					</visibleWhen>
+				</command>
+				<separator name="format" visible="true"></separator>
+				<command
+		              commandId="org.eclipse.php.ui.editor.organize.use.statements"
+		              label="%ActionDefinition.organizeUseStatements.name"
+		              style="push">
+		           <visibleWhen
+		                 checkEnabled="false">
+		              <reference
+		                    definitionId="org.eclipse.php.ui.phpContentType.definition">
+		              </reference>
+		           </visibleWhen>
+		        </command>
+				<command
+			           commandId="org.eclipse.wst.sse.ui.cleanup.document"
+			           id="CleanupDocument"
+			           style="push">
+						<visibleWhen checkEnabled="false">
+							<and>
+								<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+								<not><reference definitionId="org.eclipse.wst.sse.ui.hideFormat" /></not>
+							</and>
+						</visibleWhen>
+			    </command>
+				<command 
+					commandId="org.eclipse.wst.sse.ui.format.document" 
+					id="FormatDocument" 
+					mnemonic="%command.format.document.mnemonic" 
+					style="push">
+						<visibleWhen checkEnabled="false">
+							<and>
+								<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+								<not><reference definitionId="org.eclipse.wst.sse.ui.hideFormat" /></not>
+							</and>
+						</visibleWhen>
+				</command>
+				<command 
+					commandId="org.eclipse.wst.sse.ui.format.active.elements" 
+					id="FormatElements" 
+					mnemonic="%command.format.active.elements.mnemonic" 
+					style="push">
+						<visibleWhen checkEnabled="false">
+							<and>
+								<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+								<not><reference definitionId="org.eclipse.wst.sse.ui.hideFormat" /></not>
+							</and>
+						</visibleWhen>
+				</command>
+		</menuContribution>
 		<menuContribution
 	           locationURI="popup:sourcePopupMenuId?after=sourceBegin">
 				<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
@@ -1145,7 +1224,13 @@
             name="%ActionDefinition.sourceQuickMenu.name"
             description="%ActionDefinition.sourceQuickMenu.description"
             categoryId="org.eclipse.php.ui.category.source"
-            id="org.eclipse.dltk.ui.edit.text.java.source.quickMenu">
+            id="org.eclipse.php.ui.edit.text.source.quickMenu">
+      </command>
+      <command
+            name="%ActionDefinition.refactorQuickMenu.name"
+            description="%ActionDefinition.refactorQuickMenu.description"
+            categoryId="org.eclipse.php.ui.category.source"
+            id="org.eclipse.php.ui.edit.text.refactor.quickMenu">
       </command>
 		<command name="%action.addDescription.name" description="%action.addDescription.description"
 			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.add.description" />
@@ -1273,18 +1358,23 @@
 			commandId="org.eclipse.dltk.ui.edit.text.script.show.outline" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<!-- source -->
       <key
-            sequence="M2+M3+S" contextId="org.eclipse.dltk.ui.context.views"
-            commandId="org.eclipse.dltk.ui.edit.text.java.source.quickMenu"
+            sequence="M1+M3+S" contextId="org.eclipse.dltk.ui.context.views"
+            commandId="org.eclipse.php.ui.edit.text.source.quickMenu"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
       <key
-            platform="carbon"
-            sequence="M2+M3+S"
-            commandId=""
+            sequence="M1+M3+S" contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.php.ui.edit.text.source.quickMenu"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
       <key
-            platform="carbon"
-            sequence="COMMAND+ALT+S" contextId="org.eclipse.dltk.ui.context.views"
-            commandId="org.eclipse.dltk.ui.edit.text.java.source.quickMenu"
+            sequence="M1+M3+T" contextId="org.eclipse.dltk.ui.context.views"
+            commandId="org.eclipse.php.ui.edit.text.refactor.quickMenu"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
+      <key
+            sequence="M1+M3+T" contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.php.ui.edit.text.refactor.quickMenu"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
             
 		<key sequence="M1+M2+J" contextId="org.eclipse.php.ui.phpEditorScope"

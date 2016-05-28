@@ -41,10 +41,7 @@ import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStack;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -123,6 +120,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.IStructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -857,9 +855,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled()
-					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
-							|| fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
+					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -1255,6 +1252,24 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			fContextMenuGroup.setContext(context);
 			fContextMenuGroup.fillContextMenu(menu);
 			fContextMenuGroup.setContext(null);
+		}
+	}
+
+	@Override
+	protected void addSourceMenuActions(IMenuManager menu) {
+		super.addSourceMenuActions(menu);
+		IContributionItem find = menu.find(IStructuredTextEditorActionConstants.SOURCE_CONTEXT_MENU_ID);
+		if (find instanceof MenuManager) {
+			((MenuManager) find).setActionDefinitionId(PHPActionConstants.SOURCE_QUICK_MENU);
+		}
+	}
+
+	@Override
+	protected void addRefactorMenuActions(IMenuManager menu) {
+		super.addRefactorMenuActions(menu);
+		IContributionItem find = menu.find(IStructuredTextEditorActionConstants.REFACTOR_CONTEXT_MENU_ID);
+		if (find instanceof MenuManager) {
+			((MenuManager) find).setActionDefinitionId(PHPActionConstants.REFACTOR_QUICK_MENU);
 		}
 	}
 
@@ -1935,6 +1950,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
 			psp.addPostSelectionChangedListener((OpenCallHierarchyAction) action);
 		}
+
+		setAction(PHPActionConstants.SOURCE_QUICK_MENU, new PHPSourceQuickMenuAction(this));
+		setAction(PHPActionConstants.REFACTOR_QUICK_MENU, new PHPRefactorQuickMenuAction(this));
 
 		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, //$NON-NLS-1$
 				PHPStructuredTextViewer.SHOW_HIERARCHY, true);
