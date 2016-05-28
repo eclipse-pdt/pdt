@@ -147,21 +147,31 @@ public class PHPElementLabels extends ScriptElementLabels {
 				final boolean bTypes = getFlag(flags, M_PARAMETER_TYPES);
 				final boolean bInitializers = getFlag(flags, M_PARAMETER_INITIALIZERS);
 				final IParameter[] params = method.getParameters();
+				final boolean isVariadic = (method.getFlags() & IPHPModifiers.AccVariadic) != 0;
 				for (int i = 0, nParams = params.length; i < nParams; i++) {
 					if (i > 0) {
 						buf.append(COMMA_STRING);
 					}
+					boolean isLast = i + 1 == nParams;
 					if (bTypes) {
 						if (params[i].getType() != null) {
 							buf.append(params[i].getType());
 							if (bNames) {
 								buf.append(' ');
+							} else if (isLast && isVariadic) {
+								buf.append("..."); //$NON-NLS-1$
 							}
 						} else if (!bNames) {
+							if (isLast && isVariadic) {
+								buf.append("..."); //$NON-NLS-1$
+							}
 							buf.append(params[i].getName());
 						}
 					}
 					if (bNames) {
+						if (isLast && isVariadic) {
+							buf.append("..."); //$NON-NLS-1$
+						}
 						buf.append(params[i].getName());
 					}
 					if (bInitializers && params[i].getDefaultValue() != null) {

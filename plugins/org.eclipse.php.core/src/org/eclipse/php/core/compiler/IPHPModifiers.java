@@ -43,6 +43,13 @@ public interface IPHPModifiers extends Modifiers {
 	public static final int AccReturn = (1 << Modifiers.USER_MODIFIER + 7);
 
 	/**
+	 * Variadic method
+	 * 
+	 * @since 4.0
+	 */
+	public static final int AccVariadic = (1 << Modifiers.USER_MODIFIER + 8);
+
+	/**
 	 * All access modifiers as one for compiler validation
 	 * 
 	 * @since 4.0
