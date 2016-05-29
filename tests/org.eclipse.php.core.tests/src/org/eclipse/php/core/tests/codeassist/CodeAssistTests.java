@@ -42,6 +42,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,6 +93,10 @@ public class CodeAssistTests {
 			return;
 		}
 
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
+		}
+
 		project.create(null);
 		project.open(null);
 
@@ -99,11 +104,11 @@ public class CodeAssistTests {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+
+		// WTP validator can be disabled during code assist tests
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, version);
 
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
-		}
 		PHPCoreTests.index(project);
 	}
 
