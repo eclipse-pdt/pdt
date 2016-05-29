@@ -86,6 +86,10 @@ public class MarkOccurrenceTests {
 			return;
 		}
 
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
+		}
+
 		project.create(null);
 		project.open(null);
 
@@ -101,6 +105,10 @@ public class MarkOccurrenceTests {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
+
+		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
+		}
 	}
 
 	@Test

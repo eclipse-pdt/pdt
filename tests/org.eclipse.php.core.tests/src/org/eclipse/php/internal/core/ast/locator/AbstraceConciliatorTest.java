@@ -76,7 +76,6 @@ public abstract class AbstraceConciliatorTest {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		PHPCoreTests.waitForIndexer();

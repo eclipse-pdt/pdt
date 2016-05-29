@@ -29,12 +29,13 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.TypeDeclaration;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
-	private IProject project1;
+	private static IProject project1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -44,6 +45,16 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 		project1 = createProject("project1");
 
+	}
+
+	@AfterClass
+	public static void tearDownSuite() throws Exception {
+		if (project1 != null && project1.exists()) {
+			project1.close(null);
+			project1.delete(true, true, null);
+			project1 = null;
+
+		}
 	}
 
 	private IFile setFileContent(String content) throws CoreException {
