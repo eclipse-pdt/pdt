@@ -87,6 +87,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] { "//", "#", EMPTY }; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String COMPLETION_PROPOSAL_SIZE_SECTION = "completion_proposal_size"; //$NON-NLS-1$
+	private static final String QUICK_OUTLINE_SIZE_SECTION = "quick_outline_size"; //$NON-NLS-1$
 
 	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
 	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
@@ -529,7 +530,16 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			IInformationProvider provider = new PHPElementProvider(
 					((PHPStructuredTextViewer) sourceViewer).getTextEditor());
 			presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
-			presenter.setSizeConstraints(50, 20, true, false);
+			presenter.setSizeConstraints(60, 20, true, false);
+
+			IDialogSettings dialogSettings = PHPUiPlugin.getDefault().getDialogSettings();
+			if (dialogSettings != null) {
+				IDialogSettings section = dialogSettings.getSection(QUICK_OUTLINE_SIZE_SECTION);
+				if (section == null) {
+					section = dialogSettings.addNewSection(QUICK_OUTLINE_SIZE_SECTION);
+				}
+				presenter.setRestoreInformationControlBounds(dialogSettings, true, true);
+			}
 		}
 		return presenter;
 	}

@@ -19,12 +19,14 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.text.ScriptOutlineInformationControl;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.dltk.ui.viewsupport.StyledDecoratingModelLabelProvider;
+import org.eclipse.jface.text.IInformationControlExtension3;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.php.ui.OverrideIndicatorLabelDecorator;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IDecoratorManager;
@@ -36,7 +38,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Roy, 2009
  * 
  */
-public class PHPOutlineInformationControl extends ScriptOutlineInformationControl {
+public class PHPOutlineInformationControl extends ScriptOutlineInformationControl
+		implements IInformationControlExtension3 {
 
 	public PHPOutlineInformationControl(Shell parent, int shellStyle, int treeStyle, String commandId) {
 		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin.getDefault().getPreferenceStore());
@@ -90,4 +93,28 @@ public class PHPOutlineInformationControl extends ScriptOutlineInformationContro
 		}
 		return viewer;
 	}
+
+	@Override
+	public boolean restoresSize() {
+		return true;
+	}
+
+	@Override
+	public boolean restoresLocation() {
+		return true;
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		if (!getShell().isVisible()) {
+			return null;
+		}
+		return getShell().getBounds();
+	}
+
+	@Override
+	public Rectangle computeTrim() {
+		return getShell().computeTrim(0, 0, 0, 0);
+	}
+
 }
