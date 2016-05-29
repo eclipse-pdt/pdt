@@ -79,12 +79,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
-	// the switch for creating a demo project is -pd. divide to chars for
-	// performance reasons
-	public static final char CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR = '-';
-	public static final char CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR = 'p';
-	public static final char CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR = 'd';
-
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.ui/debug"); //$NON-NLS-1$
 		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -186,29 +180,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			return;
 		}
 
-		// go over the program args. search backwards since the program
-		// parameters are at the end of the
-		// array
-		for (int i = args.length - 1; i >= 0; i--) {
-			// check if there is a flag for creating a test project
-			// evaluate each char and DONT use "String.equals" for performance
-			// even thought this takes place asynchronously
-			if (args[i].length() == 3 && CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR == (args[i].charAt(0))
-					&& CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR == (args[i].charAt(1))
-					&& CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR == (args[i].charAt(2))) {
-				createTestProject();
-				return;
-			}
-		}
-
 		return;
-	}
-
-	/**
-	 * Create the php demo project and its files
-	 */
-	private void createTestProject() {
-		PhpDemoProject.run();
 	}
 
 	/**
