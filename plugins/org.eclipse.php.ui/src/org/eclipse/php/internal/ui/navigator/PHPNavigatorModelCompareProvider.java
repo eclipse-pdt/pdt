@@ -24,10 +24,22 @@ public class PHPNavigatorModelCompareProvider implements IModelCompareProvider {
 		if (element2 instanceof ProjectLibraryRoot) {
 			return GREATER;
 		}
-		if (element1 instanceof IncludePathContainer || element1 instanceof BuildPathContainer
-				|| element1 instanceof ProjectLibraryRoot) {
+		if (element1 instanceof ProjectLibraryRoot) {
 			return LESS;
 		}
+		if (element2 instanceof BuildPathContainer) {
+			return GREATER;
+		}
+		if (element1 instanceof BuildPathContainer) {
+			return LESS;
+		}
+		if (element2 instanceof IncludePathContainer) {
+			return GREATER;
+		}
+		if (element1 instanceof IncludePathContainer) {
+			return LESS;
+		}
+
 		return null;
 	}
 

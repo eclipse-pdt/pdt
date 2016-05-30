@@ -16,7 +16,6 @@ import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.php.internal.ui.util.NamespaceNode;
 
@@ -32,11 +31,6 @@ public class PHPExplorerElementSorter extends ModelElementSorter {
 	}
 
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		// Put Include Path node to the bottom:
-		if (e1 instanceof IncludePath || e2 instanceof IncludePath) {
-			return -1;
-		}
-
 		if (e1 instanceof NamespaceNode && e2 instanceof NamespaceNode) {
 			return ((NamespaceNode) e1).getElementName().compareTo(((NamespaceNode) e2).getElementName());
 		}
