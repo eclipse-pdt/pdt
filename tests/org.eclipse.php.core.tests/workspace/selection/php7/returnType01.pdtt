@@ -1,0 +1,8 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+function f1(): |Traversable| {
+}
+--EXPECT--
+type(Traversable)

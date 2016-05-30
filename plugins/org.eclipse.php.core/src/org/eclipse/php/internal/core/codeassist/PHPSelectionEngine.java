@@ -194,6 +194,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						String elementName = startPosition < 0 ? "" //$NON-NLS-1$
 								: statement.subSequence(startPosition, endPosition).toString();
 						if (elementName.length() > 0) {
+							elementName = PHPModelUtils.extractElementName(elementName);
 							List<IModelElement> result = new LinkedList<IModelElement>();
 							for (Iterator<IModelElement> iterator = filtered.iterator(); iterator.hasNext();) {
 								IModelElement modelElement = (IModelElement) iterator.next();
