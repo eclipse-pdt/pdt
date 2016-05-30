@@ -1,0 +1,9 @@
+Code-Review+1: Thierry BLIND <thierryblind@msn.com>
+Verified+1: Hudson CI
+Code-Review+2: Michal Niewrzal <michal.n@zend.com>
+Verified+1: Michal Niewrzal <michal.n@zend.com>
+Submitted-by: Michal Niewrzal <michal.n@zend.com>
+Submitted-at: Mon, 30 May 2016 14:25:25 -0400
+Reviewed-on: https://git.eclipse.org/r/73899
+Project: pdt/org.eclipse.pdt
+Branch: refs/heads/master
