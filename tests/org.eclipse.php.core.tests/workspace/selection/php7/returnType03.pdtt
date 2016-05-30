@@ -1,0 +1,11 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+
+namespace Foo\Bar;
+
+function f1(): |Traversable| {
+}
+--EXPECT--
+type(Traversable)
