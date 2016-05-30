@@ -2700,7 +2700,7 @@
 			</actionProvider>
 			
 			<commonSorter
-					class="org.eclipse.dltk.ui.ModelElementSorter"
+					class="org.eclipse.php.internal.ui.explorer.PHPExplorerElementSorter"
 					id="org.eclipse.dltk.ui.modelElementorg.eclipse.internal.ui.navigator.ScriptDropAssistanteAlwaysRegardlessOfSuppressedExt">
 					<parentExpression>
 						<or>
