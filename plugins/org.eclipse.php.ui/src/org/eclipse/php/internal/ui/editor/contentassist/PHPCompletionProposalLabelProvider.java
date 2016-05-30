@@ -102,7 +102,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 				return;
 			}
 			try {
-				if (method.isConstructor()) {
+				if (method.isConstructor() || !method.exists()) {
 					return;
 				}
 				nameBuffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
