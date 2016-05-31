@@ -168,7 +168,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 
 	private IElementStateListener fInternalListener;
 	/** IStructuredModel information of all connected elements */
-	private Map fModelInfoMap = new HashMap();
+	private Map<IEditorInput, ModelInfo> fModelInfoMap = new HashMap<>();
 	private boolean fReuseModelDocument = true;
 
 	private LocalStorageModelProvider() {

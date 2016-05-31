@@ -46,9 +46,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		defaultStrategy = new DefaultIndentationStrategy();
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on IAutoIndentStrategy
-	 */
+	@Override
 	public void customizeDocumentCommand(IDocument d, DocumentCommand c) {
 		// when user typing c.text.length()==1 except enter key,
 		// if user type enter key,we may add some indentation spaces/tabs for
@@ -167,7 +165,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(), indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		try {
 			int lineNumber = newdocument.getNumberOfLines();
 			for (int i = 0; i < lineNumber; i++) {

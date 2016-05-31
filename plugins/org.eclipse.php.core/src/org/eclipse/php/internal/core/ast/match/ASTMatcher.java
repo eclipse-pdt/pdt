@@ -50,13 +50,6 @@ import org.eclipse.php.internal.core.ast.nodes.*;
 public class ASTMatcher {
 
 	/**
-	 * Indicates whether doc tags should be matched.
-	 * 
-	 * @since 3.0
-	 */
-	private boolean matchDocTags;
-
-	/**
 	 * Creates a new AST matcher instance.
 	 * <p>
 	 * For backwards compatibility, the matcher ignores tag elements below doc

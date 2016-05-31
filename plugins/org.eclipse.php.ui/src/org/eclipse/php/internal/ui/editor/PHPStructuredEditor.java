@@ -855,8 +855,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
-					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled()
+					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
+							|| fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -1077,7 +1078,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 *            the container region start offset
 	 * @throws BadLocationException
 	 */
-	private void reparseRegion(IDocument doc, Iterator regionsIt, int offset) throws BadLocationException {
+	private void reparseRegion(IDocument doc, Iterator<?> regionsIt, int offset) throws BadLocationException {
 		while (regionsIt.hasNext()) {
 			ITextRegion region = (ITextRegion) regionsIt.next();
 			if (region instanceof ITextRegionContainer) {

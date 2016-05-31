@@ -12,11 +12,12 @@
 package org.eclipse.php.internal.ui.dialogs.openType.generic.filter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ElementSpecificFilter extends SimpleFilter {
 
 	public Object[] filter(Object[] elements) {
-		ArrayList out = new ArrayList(elements.length);
+		List<Object> out = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; ++i) {
 			Object element = elements[i];
 			if (select(element))

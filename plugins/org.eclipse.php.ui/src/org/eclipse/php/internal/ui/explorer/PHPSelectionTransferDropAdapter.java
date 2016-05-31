@@ -121,14 +121,14 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	}
 
 	public IResource[] getResources(IModelElement[] elements) {
-		List resultArray = new ArrayList();
+		List<IResource> resultArray = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			IResource res = getResource(elements[i]);
 			if (res != null) {
 				resultArray.add(res);
 			}
 		}
-		return (IResource[]) resultArray.toArray(new IResource[resultArray.size()]);
+		return resultArray.toArray(new IResource[resultArray.size()]);
 	}
 
 	public IResource getResource(IModelElement element) {
@@ -138,7 +138,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 			return element.getResource();
 	}
 
-	private List fElements;
+	private List<Object> fElements;
 	private ScriptMoveProcessor fMoveProcessor;
 	private int fCanMoveElements;
 	private ScriptCopyProcessor fCopyProcessor;
@@ -259,17 +259,17 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	}
 
 	private IResource[] getResources(List elements) {
-		List resources = new ArrayList(elements.size());
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+		List<IResource> resources = new ArrayList<>(elements.size());
+		for (Iterator<Object> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IResource) {
-				resources.add(element);
+				resources.add((IResource) element);
 			}
 			if (element instanceof IModelElement) {
 				resources.add(((IModelElement) element).getResource());
 			}
 		}
-		return (IResource[]) resources.toArray(new IResource[resources.size()]);
+		return resources.toArray(new IResource[resources.size()]);
 	}
 
 	private boolean contains(IResource[] resources, Object target) {

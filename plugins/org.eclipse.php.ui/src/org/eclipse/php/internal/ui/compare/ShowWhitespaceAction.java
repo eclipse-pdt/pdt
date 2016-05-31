@@ -22,7 +22,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 public class ShowWhitespaceAction extends TextEditorPropertyAction {
 
-	private Map fPainters;
+	private Map<MergeSourceViewer, WhitespaceCharacterPainter> fPainters;
 	private boolean isWhitespaceShowing;
 
 	public ShowWhitespaceAction(MergeSourceViewer[] viewers) {
@@ -38,9 +38,9 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 		}
 	}
 
-	private synchronized Map getPainters() {
+	private synchronized Map<MergeSourceViewer, WhitespaceCharacterPainter> getPainters() {
 		if (fPainters == null)
-			fPainters = new HashMap();
+			fPainters = new HashMap<>();
 		return fPainters;
 	}
 
@@ -48,7 +48,7 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 		if (isWhitespaceShowing)
 			return;
 		try {
-			Map painters = getPainters();
+			Map<MergeSourceViewer, WhitespaceCharacterPainter> painters = getPainters();
 			MergeSourceViewer[] viewers = getViewers();
 			for (int i = 0; i < viewers.length; i++) {
 				MergeSourceViewer viewer = viewers[i];
@@ -62,8 +62,9 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 	}
 
 	private void hideWhitespace() {
-		Map painters = getPainters();
-		for (Entry entry : (Set<Entry>) painters.entrySet()) {
+		Map<MergeSourceViewer, WhitespaceCharacterPainter> painters = getPainters();
+		for (Entry<MergeSourceViewer, WhitespaceCharacterPainter> entry : (Set<Entry<MergeSourceViewer, WhitespaceCharacterPainter>>) painters
+				.entrySet()) {
 			MergeSourceViewer viewer = (MergeSourceViewer) entry.getKey();
 			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter) entry.getValue();
 			if (painter != null) {

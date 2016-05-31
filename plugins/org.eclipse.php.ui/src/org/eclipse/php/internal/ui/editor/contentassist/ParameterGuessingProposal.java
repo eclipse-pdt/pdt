@@ -450,7 +450,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		setCursorPosition(buffer.length());
 		// show method parameter names:
 		IParameter[] parameters = method.getParameters();
-		List<String> paramList = new ArrayList<String>();
+		List<String> paramList = new ArrayList<>();
 		if (parameters != null) {
 			for (int i = 0; i < parameters.length; i++) {
 				IParameter parameter = parameters[i];
@@ -623,7 +623,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 */
 	public ICompletionProposal[] parameterProposals(String initialValue, String paramName, Position pos,
 			boolean fillBestGuess) throws ModelException {
-		List<String> typeMatches = new ArrayList<String>();
+		List<String> typeMatches = new ArrayList<>();
 		if (initialValue != null) {
 			typeMatches.add(initialValue);
 		}

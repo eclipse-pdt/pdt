@@ -142,7 +142,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 		boolean hasAssistLightbulb = fStore.getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<?> iter = model.getAnnotationIterator();
 		int layer = Integer.MIN_VALUE;
 
 		while (iter.hasNext()) {

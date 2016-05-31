@@ -119,7 +119,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 		if (fInstantiatedTextHovers == null)
 			return null;
 
-		for (Iterator iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
+		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
 			ITextHover hover = (ITextHover) iterator.next();
 
 			if (hover instanceof ITextHoverExtension2) {

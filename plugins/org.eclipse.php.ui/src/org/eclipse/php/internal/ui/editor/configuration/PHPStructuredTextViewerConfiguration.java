@@ -98,7 +98,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private StructuredContentAssistant fContentAssistant;
 	private IQuickAssistAssistant fQuickAssistant;
 	private PHPCompletionProcessor phpCompletionProcessor;
-	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<String, IContentAssistProcessor[]>();
+	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<>();
 	private ReconcilerHighlighter fHighlighter = null;
 	private ILabelProvider fStatusLineLabelProvider;
 
@@ -385,7 +385,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		// Create proxy to prevent throwing of errors in case there's an
 		// exception occurred in hyperlink detector:
-		List<IHyperlinkDetector> detectors = new LinkedList<IHyperlinkDetector>();
+		List<IHyperlinkDetector> detectors = new LinkedList<>();
 		IHyperlinkDetector[] inheritedDetectors = super.getHyperlinkDetectors(sourceViewer);
 		if (inheritedDetectors != null) {
 			for (final IHyperlinkDetector detector : inheritedDetectors) {
@@ -436,7 +436,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		if (contentType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			IAutoEditStrategy[] autoEditStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
-			List<IAutoEditStrategy> strategies = new LinkedList<IAutoEditStrategy>();
+			List<IAutoEditStrategy> strategies = new LinkedList<>();
 			strategies.add(mainAutoEditStrategy);
 			for (IAutoEditStrategy strategy : autoEditStrategies) {
 				if (strategy instanceof org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs
@@ -476,7 +476,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
-		Vector<String> vector = new Vector<String>();
+		Vector<String> vector = new Vector<>();
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
 		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();

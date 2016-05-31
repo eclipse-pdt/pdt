@@ -55,7 +55,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 			"org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$
 
 	private RetargetAction fRetargetShowPHPDoc;
-	private List<RetargetAction> fPartListeners = new ArrayList<RetargetAction>();
+	private List<RetargetAction> fPartListeners = new ArrayList<>();
 	private RetargetTextEditorAction fShowPHPDoc;
 
 	private RetargetTextEditorAction fGotoMatchingBracket;

@@ -15,11 +15,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
-import org.eclipse.php.internal.ui.util.ListContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,7 +43,7 @@ public class SaveFilesDialog extends ListSelectionDialog {
 	SaveFilesResult result;
 
 	public SaveFilesDialog(Shell parent, List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
-		super(parent, dirtyEditors, new ListContentProvider(), new LabelProvider() {
+		super(parent, dirtyEditors, ArrayContentProvider.getInstance(), new LabelProvider() {
 			public Image getImage(Object element) {
 				return ((IEditorPart) element).getTitleImage();
 			}

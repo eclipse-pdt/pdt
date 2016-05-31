@@ -63,7 +63,7 @@ public class SaveFilesHandler {
 	 *         files in the list.
 	 */
 	public static List getDirtyEditors(IProject project) {
-		List result = new ArrayList(0);
+		List<IEditorPart> result = new ArrayList<>(0);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (int i = 0; i < windows.length; i++) {

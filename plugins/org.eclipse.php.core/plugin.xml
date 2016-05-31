@@ -285,8 +285,7 @@
       <indexerParticipant
             class="org.eclipse.php.internal.core.index.PhpIndexerParticipant"
             nature="org.eclipse.php.core.PHPNature"
-            target="org.eclipse.dltk.core.h2.indexer"
-            targetId="org.eclipse.dltk.core.index.sql.indexer">
+            targetId="">
       </indexerParticipant>
    </extension>
 
