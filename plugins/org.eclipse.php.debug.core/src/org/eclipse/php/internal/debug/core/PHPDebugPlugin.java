@@ -206,9 +206,11 @@ public class PHPDebugPlugin extends Plugin {
 	public static String getDebuggerId(String serverName) {
 		if (serverName != null) {
 			Server server = ServersManager.getServer(serverName);
-			String serverDebuggerId = server.getDebuggerId();
-			if (serverDebuggerId != null) {
-				return serverDebuggerId;
+			if (server != null) {
+				String serverDebuggerId = server.getDebuggerId();
+				if (serverDebuggerId != null) {
+					return serverDebuggerId;
+				}
 			}
 		}
 		return PHPDebugPlugin.getCurrentDebuggerId();
