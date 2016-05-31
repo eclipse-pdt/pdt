@@ -21,7 +21,6 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildContext;
@@ -29,7 +28,6 @@ import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
@@ -67,31 +65,34 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 	private static class OrganizeBuildParticipantParticipant implements IBuildParticipant {
 		@Override
 		public void build(IBuildContext context) throws CoreException {
-			IModelElement element = context.getModelElement();
-			if (LibraryFolderManager.getInstance().isInLibraryFolder(element.getResource())) {
+			if (Boolean.TRUE.equals(context.get(ParserBuildParticipantFactory.IN_LIBRARY_FOLDER))) {
 				// skip syntax check for code inside library folders
 				return;
 			}
+
 			final ModuleDeclaration moduleDeclaration = (ModuleDeclaration) context
 					.get(IBuildContext.ATTR_MODULE_DECLARATION);
 
 			if (moduleDeclaration != null) {
-				ASTNode[] excludeNodes;
-				if (moduleDeclaration instanceof PHPModuleDeclaration) {
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=477908
-					// TODO: we could also exclude PHP single-quoted strings and
-					// parts of double-quoted strings and heredocs.
-					excludeNodes = ((PHPModuleDeclaration) moduleDeclaration).getCommentList().toArray(new ASTNode[0]);
-				} else {
-					excludeNodes = new ASTNode[0];
-				}
-
 				// Run the validation visitor:
 				try {
 					UseStatement[] statements = ASTUtils.getUseStatements(moduleDeclaration,
-							context.getContents().length);
+							moduleDeclaration.sourceEnd());
+					if (statements.length != 0) {
+						ASTNode[] excludeNodes;
+						if (moduleDeclaration instanceof PHPModuleDeclaration) {
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=477908
+							// TODO: we could also exclude PHP single-quoted
+							// strings and
+							// parts of double-quoted strings and heredocs.
+							excludeNodes = ((PHPModuleDeclaration) moduleDeclaration).getCommentList()
+									.toArray(new ASTNode[0]);
+						} else {
+							excludeNodes = new ASTNode[0];
+						}
 
-					moduleDeclaration.traverse(new ImportValidationVisitor(context, statements, excludeNodes));
+						moduleDeclaration.traverse(new ImportValidationVisitor(context, statements, excludeNodes));
+					}
 				} catch (Exception e) {
 				}
 			}
@@ -102,14 +103,14 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 		private IBuildContext context;
 		private IDocument doc;
 		private UseStatement[] statements;
-		private ASTNode[] excludeNodes;
+		private List<Position> excludePositions;
 		private NamespaceDeclaration currentNamespace;
 
 		public ImportValidationVisitor(IBuildContext context, UseStatement[] statements, ASTNode[] excludeNodes) {
 			this.context = context;
 			this.statements = statements;
-			this.excludeNodes = excludeNodes;
-			doc = new Document(new String(context.getContents()));
+			this.doc = new Document(new String(context.getContents()));
+			this.excludePositions = DocumentUtils.getExcludeSortedAndFilteredPositions(excludeNodes);
 		}
 
 		public boolean visit(NamespaceDeclaration n) throws Exception {
@@ -122,8 +123,6 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 			if (this.statements.length == 0) {
 				return super.visit(s);
 			}
-
-			List<Position> excludePositions = DocumentUtils.getExcludeSortedAndFilteredPositions(excludeNodes);
 
 			String total;
 			if (this.currentNamespace != null && this.currentNamespace.isBracketed()) {

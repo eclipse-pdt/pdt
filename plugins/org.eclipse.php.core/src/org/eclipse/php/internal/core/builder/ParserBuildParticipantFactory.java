@@ -20,8 +20,11 @@ import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
@@ -30,6 +33,8 @@ import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 
 public class ParserBuildParticipantFactory extends AbstractBuildParticipantType implements IExecutableExtension {
+
+	protected static final String IN_LIBRARY_FOLDER = "IN_LIBRARY_FOLDER";
 
 	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
@@ -61,6 +66,7 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType 
 			IModelElement element = context.getModelElement();
 			if (LibraryFolderManager.getInstance().isInLibraryFolder(element.getResource())) {
 				// skip syntax check for code inside library folders
+				context.set(IN_LIBRARY_FOLDER, Boolean.TRUE);
 				return;
 			}
 
