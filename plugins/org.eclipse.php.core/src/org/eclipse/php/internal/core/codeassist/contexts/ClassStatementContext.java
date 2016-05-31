@@ -45,7 +45,7 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 			}
 			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
 				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset, true);
-				isAssignment = scanner.scanBackward(offset, ((IType) enclosingElement).getSourceRange().getOffset(),
+				isAssignment = scanner.scanBackward(offset - 1, ((IType) enclosingElement).getSourceRange().getOffset(),
 						'=') > -1;
 				return true;
 			}
