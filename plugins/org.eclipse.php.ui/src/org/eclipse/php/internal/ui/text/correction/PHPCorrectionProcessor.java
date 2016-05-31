@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
@@ -63,7 +60,7 @@ public class PHPCorrectionProcessor
 			boolean testMarkerTypes) {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPUiPlugin.ID,
 				contributionId);
-		ArrayList res = new ArrayList(elements.length);
+		List<ContributedProcessorDescriptor> res = new ArrayList<>(elements.length);
 
 		for (int i = 0; i < elements.length; i++) {
 			ContributedProcessorDescriptor desc = new ContributedProcessorDescriptor(elements[i], testMarkerTypes);
@@ -74,7 +71,7 @@ public class PHPCorrectionProcessor
 				PHPUiPlugin.log(status);
 			}
 		}
-		return (ContributedProcessorDescriptor[]) res.toArray(new ContributedProcessorDescriptor[res.size()]);
+		return res.toArray(new ContributedProcessorDescriptor[res.size()]);
 	}
 
 	static ContributedProcessorDescriptor[] getCorrectionProcessors() {
@@ -238,10 +235,10 @@ public class PHPCorrectionProcessor
 
 			fErrorMessage = null;
 			if (model != null && annotations != null) {
-				ArrayList proposals = new ArrayList(10);
+				ArrayList<ICompletionProposal> proposals = new ArrayList<>(10);
 				IStatus status = collectProposals(context, model, annotations, true, !fAssistant.isUpdatedOffset(),
 						proposals);
-				res = (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
+				res = proposals.toArray(new ICompletionProposal[proposals.size()]);
 				if (!status.isOK()) {
 					fErrorMessage = status.getMessage();
 					PHPUiPlugin.log(status);
@@ -261,7 +258,7 @@ public class PHPCorrectionProcessor
 
 	public static IStatus collectProposals(IInvocationContext context, IAnnotationModel model, Annotation[] annotations,
 			boolean addQuickFixes, boolean addQuickAssists, Collection proposals) {
-		ArrayList problems = new ArrayList();
+		List<ProblemLocation> problems = new ArrayList<>();
 
 		// collect problem locations and corrections from marker annotations
 		for (int i = 0; i < annotations.length; i++) {
@@ -502,19 +499,19 @@ public class PHPCorrectionProcessor
 			ContributedProcessorDescriptor processor) {
 		// implementation tries to avoid creating a new array
 		boolean allHandled = true;
-		ArrayList res = null;
+		List<IProblemLocation> res = null;
 		for (int i = 0; i < locations.length; i++) {
 			IProblemLocation curr = locations[i];
 			if (processor.canHandleMarkerType(curr.getMarkerType())) {
 				if (!allHandled) { // first handled problem
 					if (res == null) {
-						res = new ArrayList(locations.length - i);
+						res = new ArrayList<>(locations.length - i);
 					}
 					res.add(curr);
 				}
 			} else if (allHandled) {
 				if (i > 0) { // first non handled problem
-					res = new ArrayList(locations.length - i);
+					res = new ArrayList<>(locations.length - i);
 					for (int k = 0; k < i; k++) {
 						res.add(locations[k]);
 					}

@@ -24,7 +24,7 @@ public class IndentationExtensionRegistry {
 
 	private static IndentationExtensionRegistry instance;
 
-	private SortedMap<Integer, IIndentationStrategyExtension1> extensions = new TreeMap<Integer, IIndentationStrategyExtension1>();
+	private SortedMap<Integer, IIndentationStrategyExtension1> extensions = new TreeMap<>();
 	private static final String EXTENSION_ID = "org.eclipse.php.core.indentationStrategy";
 
 	private IndentationExtensionRegistry() {

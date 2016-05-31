@@ -52,7 +52,7 @@ public class PhpTemplateVariables {
 			}
 
 			String[] knownVars = requestor.getVariables();
-			Set knownVarsSet = new HashSet(Arrays.asList(knownVars));
+			Set<String> knownVarsSet = new HashSet<>(Arrays.asList(knownVars));
 
 			return findUnusedName(knownVarsSet);
 		}
@@ -84,7 +84,7 @@ public class PhpTemplateVariables {
 			}
 
 			String[] knownVars = requestor.getVariables();
-			Set knownVarsSet = new HashSet(Arrays.asList(knownVars));
+			Set<String> knownVarsSet = new HashSet<>(Arrays.asList(knownVars));
 
 			List params = variable.getVariableType().getParams();
 			if (params.size() == 0) {
@@ -293,7 +293,7 @@ public class PhpTemplateVariables {
 			}
 
 			String[] knownVars = requestor.getVariables();
-			Set knownVarsSet = new HashSet(Arrays.asList(knownVars));
+			Set<String> knownVarsSet = new HashSet<>(Arrays.asList(knownVars));
 
 			String result = "$" + findUnusedName("index", knownVarsSet); //$NON-NLS-1$ //$NON-NLS-2$
 			variable.setValue(result);
@@ -314,7 +314,7 @@ public class PhpTemplateVariables {
 	 * knownNames set: i, j, j2, k, k2, ..., z, z2, a, a2, ..., h, h2, i1, i2,
 	 * i3, ..., i2147483647
 	 */
-	private static String findUnusedName(Set knownNames) {
+	private static String findUnusedName(Set<String> knownNames) {
 		int base = 'i' - 'a';
 		int counter = -1;
 		int maxCounter = 2;
@@ -339,7 +339,7 @@ public class PhpTemplateVariables {
 		return proposal;
 	}
 
-	private static String findUnusedName(String prefix, Set knownNames) {
+	private static String findUnusedName(String prefix, Set<String> knownNames) {
 		int counter = 1;
 
 		String proposal = prefix;

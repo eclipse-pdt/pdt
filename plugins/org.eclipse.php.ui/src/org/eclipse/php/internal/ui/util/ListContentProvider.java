@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * A specialized content provider to show a list of editor parts.
  */
+@Deprecated
 public class ListContentProvider implements IStructuredContentProvider {
 	List fContents;
 

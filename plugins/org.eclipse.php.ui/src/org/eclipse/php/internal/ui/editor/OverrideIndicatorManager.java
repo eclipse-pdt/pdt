@@ -167,7 +167,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 		if (ast == null || progressMonitor.isCanceled())
 			return;
 
-		final Map<OverrideIndicator, Position> annotationMap = new HashMap<OverrideIndicator, Position>(50);
+		final Map<OverrideIndicator, Position> annotationMap = new HashMap<>(50);
 
 		// don't provide override indicators to external / read only files.
 		if (ast.getSourceModule().isReadOnly()) {

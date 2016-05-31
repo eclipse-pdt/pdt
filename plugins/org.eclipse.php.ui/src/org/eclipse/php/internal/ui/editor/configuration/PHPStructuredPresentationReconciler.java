@@ -23,8 +23,8 @@ import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredTypedRegion;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 
 public class PHPStructuredPresentationReconciler extends StructuredPresentationReconciler {
-	private Map fRepairers;
-	private static final Set<String> fTypeSet = new HashSet<String>();
+	private Map<String, IPresentationRepairer> fRepairers;
+	private static final Set<String> fTypeSet = new HashSet<>();
 
 	static {
 		fTypeSet.add(FormatterUtils.PARTITION_CSS_STYLE);
@@ -111,7 +111,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 					return null;
 				}
 
-				List<StyleRange> fRangeSet = new LinkedList<StyleRange>();
+				List<StyleRange> fRangeSet = new LinkedList<>();
 
 				int jumpto = -1;
 				for (int i = 0; i < partitions.length; i++) {
@@ -208,7 +208,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 					}
 
 				});
-				List<StyleRange> fRanges = new ArrayList<StyleRange>();
+				List<StyleRange> fRanges = new ArrayList<>();
 				StyleRange[] rangeArray = fRangeSet.toArray(new StyleRange[fRangeSet.size()]);
 				StyleRange lastRange = rangeArray[0];
 				fRanges.add(lastRange);
@@ -224,7 +224,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 				}
 				TextPresentation presentation = new TextPresentation(damage, 1000);
 				presentation = new TextPresentation(damage, fRanges.size());
-				for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
+				for (Iterator<StyleRange> iterator = fRanges.iterator(); iterator.hasNext();) {
 					StyleRange styleRange = (StyleRange) iterator.next();
 					if (styleRange.start + styleRange.length <= damage.getOffset()) {
 						continue;
@@ -296,7 +296,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 	}
 
 	private List<ITypedRegion> findDamagedPartitions(ITypedRegion[] partitions, IRegion damage) {
-		List<ITypedRegion> damagedPartitions = new ArrayList<ITypedRegion>();
+		List<ITypedRegion> damagedPartitions = new ArrayList<>();
 		int damageEnd = damage.getOffset() + damage.getLength();
 		for (int i = 0; i < partitions.length; i++) {
 			ITypedRegion p = partitions[i];
@@ -391,7 +391,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 		Assert.isNotNull(contentType);
 
 		if (fRepairers == null)
-			fRepairers = new HashMap();
+			fRepairers = new HashMap<>();
 
 		if (repairer == null)
 			fRepairers.remove(contentType);

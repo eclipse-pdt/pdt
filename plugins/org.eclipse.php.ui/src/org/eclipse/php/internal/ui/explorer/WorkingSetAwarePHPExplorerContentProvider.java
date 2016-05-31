@@ -91,7 +91,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	private Object[] getWorkingSetChildren(IWorkingSet set) {
 		IAdaptable[] elements = fWorkingSetModel.getChildren(set);
 		boolean isKnownWorkingSet = isKnownWorkingSet(set);
-		List result = new ArrayList(elements.length);
+		List<Object> result = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IAdaptable element = elements[i];
 			boolean add = false;
