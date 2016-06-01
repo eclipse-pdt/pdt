@@ -81,6 +81,7 @@ public class CodeAssistTests {
 	protected IFile testFile;
 	protected List<IFile> otherFiles = null;
 	protected PHPVersion version;
+	private Object nmListeners;
 
 	public CodeAssistTests(PHPVersion version, String[] fileNames) {
 		this.version = version;
@@ -91,10 +92,6 @@ public class CodeAssistTests {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
 		if (project.exists()) {
 			return;
-		}
-
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		}
 
 		project.create(null);
@@ -118,14 +115,11 @@ public class CodeAssistTests {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
-
-		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
-		}
 	}
 
 	@Test
 	public void assist(String fileName) throws Exception {
+		System.out.println("--> Test for: " + fileName);
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
 		CompletionProposal[] proposals = getProposals(pdttFile);
@@ -182,9 +176,10 @@ public class CodeAssistTests {
 			PHPCoreTests.index(tmp);
 			i++;
 		}
-
+		long tb = System.currentTimeMillis();
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
+		long ta = System.currentTimeMillis();
+		System.out.println(Thread.currentThread().getName() + " - Finished waiting for indexer: " + (ta - tb) + " ms");
 
 		return offset;
 	}
@@ -297,7 +292,9 @@ public class CodeAssistTests {
 					}
 				}
 			}
+			System.out.println(errorBuf.toString());
 			fail(errorBuf.toString());
 		}
 	}
+
 }

@@ -23,8 +23,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -184,6 +186,7 @@ public class PHPCoreTests extends Plugin {
 	 * @param resource
 	 */
 	public static void index(IResource resource) {
+		System.out.println(Thread.currentThread().getName() + " - Adding resource to the index: " + resource.getName());
 		if (resource.getType() == IResource.PROJECT) {
 			ProjectIndexerManager.indexProject((IProject) resource);
 		} else if (resource.getType() == IResource.FILE) {
@@ -200,9 +203,17 @@ public class PHPCoreTests extends Plugin {
 	 * @param resource
 	 */
 	public static void removeIndex(IResource resource) {
+		System.out.println(
+				Thread.currentThread().getName() + " - Removing resource from the index: " + resource.getName());
 		if (resource.getType() == IResource.PROJECT) {
 			ProjectIndexerManager.removeProject(resource.getFullPath());
 		} else if (resource.getType() == IResource.FILE) {
+			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom((IFile) resource);
+			try {
+				sourceModule.delete(false, null);
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 			ProjectIndexerManager.removeSourceModule(DLTKCore.create(resource.getProject()),
 					resource.getProjectRelativePath().toString());
 		}

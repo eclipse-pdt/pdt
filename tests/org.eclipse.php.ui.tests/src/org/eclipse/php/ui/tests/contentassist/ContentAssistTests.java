@@ -48,6 +48,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +63,7 @@ public class ContentAssistTests {
 	protected IFile[] otherFiles = new IFile[0];
 	protected PHPVersion phpVersion;
 	protected PHPStructuredEditor fEditor;
+	private Object nmListeners;
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -101,6 +103,9 @@ public class ContentAssistTests {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+
+		// WTP validator can be disabled during code assist tests
+		ValidationFramework.getDefault().suspendValidation(project, true);
 
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
@@ -250,4 +255,5 @@ public class ContentAssistTests {
 			assertTrue("Unable to open php editor", false);
 		}
 	}
+
 }
