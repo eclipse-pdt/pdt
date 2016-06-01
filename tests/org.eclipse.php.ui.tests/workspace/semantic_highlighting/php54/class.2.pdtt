@@ -1,0 +1,26 @@
+--TEST--
+Bug 495053 - Interface after "implements" is not highlighted
+--FILE--
+<?php
+class A extends DateTime {
+}
+interface MyInterface extends Iterator {
+}
+abstract class B extends A implements Iterator, MyInterface {
+}
+function foo(MyInterface $param) {
+	new MyInterface ();
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
+highlight(A)
+highlight(DateTime)
+highlight(MyInterface)
+highlight(Iterator)
+highlight(B)
+highlight(A)
+highlight(Iterator)
+highlight(MyInterface)
+highlight(MyInterface)
+highlight(MyInterface)
