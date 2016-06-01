@@ -14,8 +14,10 @@ function test(int $bar){ return false; }
 org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
 highlight(Test)
 highlight(Bar)
+highlight(IBar)
 highlight(Foo)
 highlight(Bar)
+highlight(IBar)
 highlight(Foo)
 highlight(Bar)
 highlight(Foo)
