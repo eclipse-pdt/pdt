@@ -23,6 +23,19 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 	protected class ClassApply extends AbstractSemanticApply {
 
 		@Override
+		public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+			highlight(interfaceDeclaration.getName());
+			for (Identifier identifier : interfaceDeclaration.interfaces()) {
+				if (identifier instanceof NamespaceName) {
+					highlightNamespaceType((NamespaceName) identifier);
+				} else {
+					highlight(identifier);
+				}
+			}
+			return true;
+		}
+
+		@Override
 		public boolean visit(ClassDeclaration clazz) {
 			highlight(clazz.getName());
 			Expression superClass = clazz.getSuperClass();
@@ -30,6 +43,13 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlightNamespaceType((NamespaceName) superClass);
 			} else if (superClass != null) {
 				highlight(superClass);
+			}
+			for (Identifier identifier : clazz.interfaces()) {
+				if (identifier instanceof NamespaceName) {
+					highlightNamespaceType((NamespaceName) identifier);
+				} else {
+					highlight(identifier);
+				}
 			}
 			return true;
 		}
@@ -42,6 +62,13 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlightNamespaceType((NamespaceName) superClass);
 			} else if (superClass != null) {
 				highlight(superClass);
+			}
+			for (Identifier identifier : trait.interfaces()) {
+				if (identifier instanceof NamespaceName) {
+					highlightNamespaceType((NamespaceName) identifier);
+				} else {
+					highlight(identifier);
+				}
 			}
 			return true;
 		}
