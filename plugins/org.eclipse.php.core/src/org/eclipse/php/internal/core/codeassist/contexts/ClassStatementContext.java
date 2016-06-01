@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,8 +44,12 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 				enclosingElement = enclosingElement.getParent();
 			}
 			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
+				if (offset > 0) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495022
+					offset--;
+				}
 				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset, true);
-				isAssignment = scanner.scanBackward(offset - 1, ((IType) enclosingElement).getSourceRange().getOffset(),
+				isAssignment = scanner.scanBackward(offset, ((IType) enclosingElement).getSourceRange().getOffset(),
 						'=') > -1;
 				return true;
 			}
