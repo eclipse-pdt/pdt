@@ -16,9 +16,13 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.core.internal.events.NotificationManager;
+import org.eclipse.core.internal.events.ResourceChangeListenerList;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -62,6 +66,7 @@ public class ContentAssistTests {
 	protected IFile[] otherFiles = new IFile[0];
 	protected PHPVersion phpVersion;
 	protected PHPStructuredEditor fEditor;
+	private Object nmListeners;
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -89,6 +94,9 @@ public class ContentAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		// Shutdown notification manager completely
+		disableNotificationManager();
+
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		if (project.exists()) {
 			return;
@@ -117,6 +125,8 @@ public class ContentAssistTests {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
+
+		enableNotificationManager();
 	}
 
 	@After
@@ -250,4 +260,22 @@ public class ContentAssistTests {
 			assertTrue("Unable to open php editor", false);
 		}
 	}
+
+	private void disableNotificationManager() throws NoSuchFieldException, IllegalAccessException {
+		NotificationManager nm = ((Workspace) ResourcesPlugin.getWorkspace()).getNotificationManager();
+		Class aClass = NotificationManager.class;
+		Field field = aClass.getDeclaredField("listeners");
+		field.setAccessible(true);
+		nmListeners = field.get(nm);
+		field.set(nm, new ResourceChangeListenerList());
+	}
+
+	private void enableNotificationManager() throws NoSuchFieldException, IllegalAccessException {
+		NotificationManager nm = ((Workspace) ResourcesPlugin.getWorkspace()).getNotificationManager();
+		Class aClass = NotificationManager.class;
+		Field field = aClass.getDeclaredField("listeners");
+		field.setAccessible(true);
+		field.set(nm, nmListeners);
+	}
+
 }
