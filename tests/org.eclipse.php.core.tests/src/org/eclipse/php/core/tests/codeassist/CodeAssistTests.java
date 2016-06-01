@@ -21,10 +21,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
@@ -42,7 +44,6 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,13 +89,12 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		// Shutdown notification manager completely
+		((Workspace) ResourcesPlugin.getWorkspace()).getNotificationManager().shutdown(new NullProgressMonitor());
+
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
 		if (project.exists()) {
 			return;
-		}
-
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		}
 
 		project.create(null);
@@ -105,8 +105,6 @@ public class CodeAssistTests {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 
-		// WTP validator can be disabled during code assist tests
-		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, version);
 
 		PHPCoreTests.index(project);
@@ -119,9 +117,7 @@ public class CodeAssistTests {
 		project.delete(true, true, null);
 		project = null;
 
-		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
-		}
+		((Workspace) ResourcesPlugin.getWorkspace()).getNotificationManager().startup(new NullProgressMonitor());
 	}
 
 	@Test
@@ -184,7 +180,6 @@ public class CodeAssistTests {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
 
 		return offset;
 	}
