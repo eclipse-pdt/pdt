@@ -15,12 +15,16 @@ package org.eclipse.php.core.tests.codeassist;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.internal.events.NotificationManager;
+import org.eclipse.core.internal.events.ResourceChangeListenerList;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -42,7 +46,6 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,6 +84,7 @@ public class CodeAssistTests {
 	protected IFile testFile;
 	protected List<IFile> otherFiles = null;
 	protected PHPVersion version;
+	private Object nmListeners;
 
 	public CodeAssistTests(PHPVersion version, String[] fileNames) {
 		this.version = version;
@@ -88,13 +92,12 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		// Shutdown notification manager completely
+		disableNotificationManager();
+
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
 		if (project.exists()) {
 			return;
-		}
-
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		}
 
 		project.create(null);
@@ -105,8 +108,6 @@ public class CodeAssistTests {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 
-		// WTP validator can be disabled during code assist tests
-		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, version);
 
 		PHPCoreTests.index(project);
@@ -119,9 +120,7 @@ public class CodeAssistTests {
 		project.delete(true, true, null);
 		project = null;
 
-		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
-		}
+		enableNotificationManager();
 	}
 
 	@Test
@@ -184,7 +183,6 @@ public class CodeAssistTests {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
 
 		return offset;
 	}
@@ -299,5 +297,22 @@ public class CodeAssistTests {
 			}
 			fail(errorBuf.toString());
 		}
+	}
+
+	private void disableNotificationManager() throws NoSuchFieldException, IllegalAccessException {
+		NotificationManager nm = ((Workspace) ResourcesPlugin.getWorkspace()).getNotificationManager();
+		Class aClass = NotificationManager.class;
+		Field field = aClass.getDeclaredField("listeners");
+		field.setAccessible(true);
+		nmListeners = field.get(nm);
+		field.set(nm, new ResourceChangeListenerList());
+	}
+
+	private void enableNotificationManager() throws NoSuchFieldException, IllegalAccessException {
+		NotificationManager nm = ((Workspace) ResourcesPlugin.getWorkspace()).getNotificationManager();
+		Class aClass = NotificationManager.class;
+		Field field = aClass.getDeclaredField("listeners");
+		field.setAccessible(true);
+		field.set(nm, nmListeners);
 	}
 }
