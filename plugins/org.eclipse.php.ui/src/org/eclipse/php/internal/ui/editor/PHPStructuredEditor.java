@@ -138,7 +138,6 @@ import com.ibm.icu.text.BreakIterator;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 	private static final String FORMATTER_PLUGIN_ID = "org.eclipse.php.formatter.core"; //$NON-NLS-1$
 
 	private IContentOutlinePage fPHPOutlinePage;
@@ -855,8 +854,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
-					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled()
+					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
+							|| fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -1278,10 +1278,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (getSourceViewer().isEditable()) {
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
-			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION);
-			if (action != null)
-				menu.appendToGroup(openGroup, action);
-			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
+
+			IAction action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
 			action = getAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
@@ -1920,11 +1918,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		action = new GotoMatchingBracketAction(this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
-
-		action = new OpenFunctionsManualAction(resourceBundle, this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_PHP_MANUAL); // $NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, action);
-		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true);
 
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); // $NON-NLS-1$

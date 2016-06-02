@@ -1191,6 +1191,14 @@
            </visibleWhen>
         </command>
      </menuContribution>
+     <menuContribution
+           allPopups="false"
+           locationURI="popup:org.eclipse.php.core.phpsource.source.EditorContext?before=org.eclipse.php.ui.edit.text.open.editor">
+        <command
+              commandId="org.eclipse.php.ui.edit.text.php.searchInManual"
+              style="push">
+        </command>
+     </menuContribution>
 	</extension>
 
 
@@ -1341,6 +1349,11 @@
             categoryId="org.eclipse.php.ui.category.source"
             id="org.eclipse.php.internal.ui.assignToLocal.assist">
       </command>
+      <command
+            defaultHandler="org.eclipse.php.internal.ui.actions.SearchInManualHandler"
+            id="org.eclipse.php.ui.edit.text.php.searchInManual"
+            name="Search In PHP Manual">
+      </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -1451,7 +1464,7 @@
 			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.text.php.open.manual"
+		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.text.php.searchInManual"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
 			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"

@@ -211,12 +211,6 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	public static final String OPEN_CALL_HIERARCHY = "org.eclipse.php.ui.edit.text.php.open.call.hierarchy"; //$NON-NLS-1$
 
 	/**
-	 * Action definition ID of the navigate -> open type hierarchy action (value
-	 * <code>"org.eclipse.php.ui.edit.text.php.open.call.hierarchy"</code>).
-	 */
-	public static final String OPEN_PHP_MANUAL = "org.eclipse.php.ui.edit.text.php.open.manual"; //$NON-NLS-1$
-
-	/**
 	 * Action definition ID of the edit -> select enclosing action (value
 	 * <code>"org.eclipse.pdt.ui.edit.text.select.enclosing"</code>).
 	 */

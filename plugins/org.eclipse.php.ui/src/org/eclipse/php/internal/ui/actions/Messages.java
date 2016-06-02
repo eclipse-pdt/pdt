@@ -10,6 +10,8 @@ public class Messages extends NLS {
 	public static String PHPRefactorActionGroup_3;
 	public static String ReorgMoveAction_0;
 	public static String ReorgMoveAction_1;
+	public static String SearchInManualHandler_EmptySelectionWarning;
+	public static String SearchInManualHandler_WarningTitle;
 	public static String SelectionHandler_0;
 	public static String DeleteAction_0;
 	public static String GenerateIncludePathActionGroup_0;
