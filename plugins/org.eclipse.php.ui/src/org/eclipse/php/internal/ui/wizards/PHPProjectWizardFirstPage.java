@@ -106,7 +106,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		initializeDialogUnits(parent);
 		final Composite composite = new Composite(parent, SWT.NULL);
 		composite.setFont(parent.getFont());
-		composite.setLayout(initGridLayout(new GridLayout(1, false), false));
+		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		// create UI elements
 		fNameGroup = new NameGroup(composite, fInitialName, getShell());
@@ -365,7 +365,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fGroup.setFont(composite.getFont());
 
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
+			fGroup.setLayout(new GridLayout(numColumns, false));
 			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle);
 
 			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
@@ -422,7 +422,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
+			fGroup.setLayout(new GridLayout(numColumns, false));
 			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title);
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
@@ -518,13 +518,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		public PHPVersionConfigurationBlock fConfigurationBlock;
 
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
-		private Link fPreferenceLink;
 
 		public VersionGroup(Composite composite, PHPVersion minimumVersion) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			group.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
+			group.setLayout(new GridLayout(numColumns, false));
 			group.setText(PHPUIMessages.VersionGroup_OptionBlock_Title);
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
 			fDefaultValues.setDialogFieldListener(this);
@@ -546,15 +545,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fConfigurationBlock.setMinimumVersion(minimumVersion);
 			fConfigurationBlock.createContents(group);
 			fConfigurationBlock.setEnabled(false);
-			// fPreferenceLink = new Link(fGroup, SWT.NONE);
-			// fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
-			// //fPreferenceLink.setLayoutData(new GridData(GridData.END,
-			// GridData.END, false, false));
-			// fPreferenceLink.setLayoutData(new GridData(SWT.END,
-			// SWT.BEGINNING, true, false));
-			// fPreferenceLink.addSelectionListener(this);
-			// fPreferenceLink.setEnabled(true);
-
 		}
 
 		protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener,
