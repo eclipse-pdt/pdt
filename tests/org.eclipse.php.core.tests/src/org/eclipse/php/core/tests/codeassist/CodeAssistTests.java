@@ -15,22 +15,29 @@ package org.eclipse.php.core.tests.codeassist;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.search.indexing.AbstractJob;
+import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
@@ -38,17 +45,80 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
+import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@SuppressWarnings("all")
 @RunWith(PDTTList.class)
 public class CodeAssistTests {
+
+	private static abstract class TestCompletionRequestor extends CompletionRequestor
+			implements IPHPCompletionRequestor {
+
+		private IStructuredDocument document;
+		private int offset;
+
+		public TestCompletionRequestor(IStructuredDocument document, int offset) {
+			this.document = document;
+			this.offset = offset;
+		}
+
+		@Override
+		public IDocument getDocument() {
+			return document;
+		}
+
+		@Override
+		public boolean isExplicit() {
+			return true;
+		}
+
+		@Override
+		public int getOffset() {
+			return offset;
+		}
+
+		@Override
+		public void setOffset(int offset) {
+			this.offset = offset;
+		}
+
+		@Override
+		public boolean filter(int flag) {
+			return false;
+		}
+
+		@Override
+		public void addFlag(int flag) {
+			// ignore
+		}
+
+	}
+
+	private class WaitForIndexerThread extends Thread {
+
+		public WaitForIndexerThread() {
+			super("Wait-For-Indexer-Thread");
+		}
+
+		@Override
+		public void run() {
+			PHPCoreTests.waitForIndexer();
+		}
+
+	}
+
+	private Semaphore semaphore = new Semaphore(0);
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -79,6 +149,7 @@ public class CodeAssistTests {
 
 	protected IProject project;
 	protected IFile testFile;
+	protected String testFileName;
 	protected List<IFile> otherFiles = null;
 	protected PHPVersion version;
 
@@ -88,44 +159,41 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
 		if (project.exists()) {
 			return;
 		}
-
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
-		}
-
 		project.create(null);
 		project.open(null);
-
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-
 		// WTP validator can be disabled during code assist tests
 		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, version);
-
-		PHPCoreTests.index(project);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		PHPCoreTests.removeIndex(project);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
-
 		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
 		}
 	}
 
 	@Test
 	public void assist(String fileName) throws Exception {
+		this.testFileName = fileName;
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
 		CompletionProposal[] proposals = getProposals(pdttFile);
@@ -135,18 +203,45 @@ public class CodeAssistTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			PHPCoreTests.removeIndex(testFile);
 			testFile.delete(true, null);
 			testFile = null;
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
-					PHPCoreTests.removeIndex(file);
 					file.delete(true, null);
 				}
 			}
 			otherFiles = null;
+		}
+	}
+
+	protected void waitForIndexerNoDelay() {
+		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
+		final Thread waitForIndexerThread = new WaitForIndexerThread();
+		AbstractJob noDelayRequest = new AbstractJob() {
+			@Override
+			protected void run() throws CoreException, IOException {
+				// Interrupt if wait until ready job is sleeping
+				waitForIndexerThread.interrupt();
+				// Indexer finished as we are here, release semaphore
+				waitForIndexerSemaphore.release();
+			}
+			@Override
+			protected String getName() {
+				return "WAIT-UNTIL-READY-NO-DELAY-JOB";
+			}
+		};
+		ModelManager.getModelManager().getIndexManager().request(noDelayRequest);
+		/*
+		 * Start "Wait Until Ready" job to notify JobManager#delaySignal (will
+		 * cause awaiting jobs to run immediately).
+		 */
+		waitForIndexerThread.start();
+		try {
+			waitForIndexerSemaphore.acquire();
+		} catch (InterruptedException e) {
+			Logger.logException(e);
 		}
 	}
 
@@ -167,25 +262,20 @@ public class CodeAssistTests {
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
-
-		// replace the offset character
+		// Replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		PHPCoreTests.index(testFile);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = project.getFile(String.format("test%s.php", i));
 			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
 			this.otherFiles.add(i, tmp);
-			PHPCoreTests.index(tmp);
 			i++;
 		}
-
-		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
-
+		// Wait for indexer without delay
+		waitForIndexerNoDelay();
 		return offset;
 	}
 
@@ -193,18 +283,21 @@ public class CodeAssistTests {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public CompletionProposal[] getProposals(PdttFile pdttFile) throws Exception {
+	protected CompletionProposal[] getProposals(PdttFile pdttFile) throws Exception {
 		int offset = createFile(pdttFile);
 		return getProposals(offset);
 	}
 
-	public CompletionProposal[] getProposals(int offset) throws ModelException {
+	protected CompletionProposal[] getProposals(int offset) throws ModelException {
 		return getProposals(getSourceModule(), offset);
 	}
 
-	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+	protected static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
+		String content = new String(sourceModule.getSourceAsCharArray());
+		document.set(content);
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
-		sourceModule.codeComplete(offset, new CompletionRequestor() {
+		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
@@ -212,12 +305,8 @@ public class CodeAssistTests {
 		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
-	private static String getCursor(PdttFile pdttFile) {
-		Map<String, String> config = pdttFile.getConfig();
-		return config.get("cursor");
-	}
-
-	public static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {
+	protected static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile)
+			throws Exception {
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
 
 		boolean proposalsEqual = true;
@@ -299,5 +388,10 @@ public class CodeAssistTests {
 			}
 			fail(errorBuf.toString());
 		}
+	}
+
+	private static String getCursor(PdttFile pdttFile) {
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("cursor");
 	}
 }
