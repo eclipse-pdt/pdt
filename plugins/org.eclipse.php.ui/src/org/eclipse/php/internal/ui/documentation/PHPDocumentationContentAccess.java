@@ -629,7 +629,7 @@ public class PHPDocumentationContentAccess {
 			fBuf.append("Type"); //$NON-NLS-1$
 			fBuf.append("</dt>"); //$NON-NLS-1$
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			fBuf.append("&nbsp"); //$NON-NLS-1$
+			fBuf.append("&nbsp;"); //$NON-NLS-1$
 			fBuf.append(magicField.type);
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 			fBuf.append(BLOCK_TAG_END);
@@ -645,7 +645,7 @@ public class PHPDocumentationContentAccess {
 				fBuf.append("</dt>"); //$NON-NLS-1$
 				for (int i = 0; i < magicMethod.parameterNames.length; i++) {
 					fBuf.append(BlOCK_TAG_ENTRY_START);
-					fBuf.append("&nbsp"); //$NON-NLS-1$
+					fBuf.append("&nbsp;"); //$NON-NLS-1$
 					String parameterName = magicMethod.parameterNames[i];
 					String parameterType = magicMethod.parameterTypes[i];
 					if (parameterType != null) {
@@ -666,7 +666,7 @@ public class PHPDocumentationContentAccess {
 				fBuf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 				fBuf.append("</dt>"); //$NON-NLS-1$
 				fBuf.append(BlOCK_TAG_ENTRY_START);
-				fBuf.append("&nbsp"); //$NON-NLS-1$
+				fBuf.append("&nbsp;"); //$NON-NLS-1$
 				fBuf.append(magicMethod.returnType);
 				fBuf.append(BlOCK_TAG_ENTRY_END);
 			}
@@ -1193,9 +1193,9 @@ public class PHPDocumentationContentAccess {
 				// having variable name matching the field description
 				if (fMethod == null && tag.getVariableReference() != null
 						&& !(tag.getVariableReference().getName().equals(fMember.getElementName()) ||
-								// also handle const fields (never prefixed by
-								// '$')
-				tag.getVariableReference().getName().equals('$' + fMember.getElementName()))) {
+						// also handle const fields (never prefixed by
+						// '$')
+								tag.getVariableReference().getName().equals('$' + fMember.getElementName()))) {
 					continue;
 				}
 				handleBlockTagTitle("Type"); //$NON-NLS-1$
@@ -1464,7 +1464,7 @@ public class PHPDocumentationContentAccess {
 	// PHPDoc tooltips are not sized according to their contents
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=320709
 	private void doWorkAround() {
-		fBuf.append("&nbsp"); //$NON-NLS-1$
+		fBuf.append("&nbsp;"); //$NON-NLS-1$
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -773,7 +773,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			int imageLeft, int imageTop, String label, int labelLeft, int labelTop, boolean isFirstElement) {
 
 		// workaround to make the window wide enough
-		label = label + "&nbsp"; //$NON-NLS-1$
+		label = label + "&nbsp;"; //$NON-NLS-1$
 		if (imageName != null) {
 			StringBuffer imageStyle = new StringBuffer("position: absolute; "); //$NON-NLS-1$
 			imageStyle.append("width: ").append(imageWidth).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
