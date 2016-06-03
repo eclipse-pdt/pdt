@@ -15,16 +15,22 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.dltk.core.search.indexing.AbstractJob;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
@@ -33,6 +39,7 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -48,6 +55,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +64,19 @@ import org.osgi.framework.Bundle;
 @SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class ContentAssistTests {
+
+	private class WaitForIndexerThread extends Thread {
+
+		public WaitForIndexerThread() {
+			super("Wait-For-Indexer-Thread");
+		}
+
+		@Override
+		public void run() {
+			ModelManager.getModelManager().getIndexManager().waitUntilReady();
+		}
+
+	}
 
 	protected IProject project;
 	protected IFile testFile;
@@ -89,57 +110,39 @@ public class ContentAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		if (project.exists()) {
 			return;
 		}
-
 		project.create(null);
 		project.open(null);
-
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
-
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		// WTP validator can be disabled during code assist tests
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
-		PHPCoreTests.index(project);
-		PHPCoreTests.waitForIndexer();
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		PHPCoreTests.removeIndex(project);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		if (testFile != null) {
-			PHPCoreTests.removeIndex(testFile);
-			testFile.delete(true, null);
-			testFile = null;
+		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
 		}
-		if (otherFiles != null) {
-			for (IFile file : otherFiles) {
-				if (file != null) {
-					PHPCoreTests.removeIndex(file);
-					file.delete(true, null);
-				}
-			}
-			otherFiles = null;
-		}
-	}
-
-	private static String getCursor(PdttFile pdttFile) {
-		Map<String, String> config = pdttFile.getConfig();
-		return config.get("cursor");
 	}
 
 	@Test
@@ -181,6 +184,27 @@ public class ContentAssistTests {
 		if (err[0] != null) {
 			throw err[0];
 		}
+	}
+
+	@After
+	public void after() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
+		}
+		if (otherFiles != null) {
+			for (IFile file : otherFiles) {
+				if (file != null) {
+					file.delete(true, null);
+				}
+			}
+			otherFiles = null;
+		}
+	}
+
+	private static String getCursor(PdttFile pdttFile) {
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("cursor");
 	}
 
 	protected InputStream[] prepareOtherStreams(PdttFile file) {
@@ -225,14 +249,13 @@ public class ContentAssistTests {
 	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
 		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
 		testFile.create(inputStream, true, null);
-		PHPCoreTests.index(testFile);
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
 			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
-			PHPCoreTests.index(otherFiles[i]);
 		}
-		PHPCoreTests.waitForIndexer();
+		// Wait for indexer without delay
+		waitForIndexerNoDelay();
 	}
 
 	protected void openEditor() throws Exception {
@@ -250,4 +273,35 @@ public class ContentAssistTests {
 			assertTrue("Unable to open php editor", false);
 		}
 	}
+
+	protected void waitForIndexerNoDelay() {
+		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
+		final Thread waitForIndexerThread = new WaitForIndexerThread();
+		AbstractJob noDelayRequest = new AbstractJob() {
+			@Override
+			protected void run() throws CoreException, IOException {
+				// Interrupt if wait until ready job is sleeping
+				waitForIndexerThread.interrupt();
+				// Indexer finished as we are here, release semaphore
+				waitForIndexerSemaphore.release();
+			}
+
+			@Override
+			protected String getName() {
+				return "WAIT-UNTIL-READY-NO-DELAY-JOB";
+			}
+		};
+		ModelManager.getModelManager().getIndexManager().request(noDelayRequest);
+		/*
+		 * Start "Wait Until Ready" job to notify JobManager#delaySignal (will
+		 * cause awaiting jobs to run immediately).
+		 */
+		waitForIndexerThread.start();
+		try {
+			waitForIndexerSemaphore.acquire();
+		} catch (InterruptedException e) {
+			Logger.logException(e);
+		}
+	}
+
 }
