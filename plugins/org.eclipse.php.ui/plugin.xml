@@ -1974,12 +1974,18 @@
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
-			class="org.eclipse.dltk.internal.ui.navigator.TreeHierarchyLayoutProblemsDecorator" id="org.eclipse.php.ui.problemsDecorator"
+			class="org.eclipse.php.ui.PHPElementProblemsLabelDecorator" id="org.eclipse.php.ui.problemsDecorator"
 			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
 			state="true">
 			<enablement>
-				<objectClass name="org.eclipse.core.resources.IResource">
-				</objectClass>
+				<or>
+					<objectClass name="org.eclipse.core.resources.IResource">
+					</objectClass>
+					<objectClass name="org.eclipse.dltk.core.IModelElement">
+					</objectClass>
+					<objectClass name="org.eclipse.php.internal.core.includepath.IncludePath">
+					</objectClass>
+				</or>
 			</enablement>
 		</decorator>
 		<decorator
@@ -1989,12 +1995,12 @@
 			state="true"
 			class="org.eclipse.php.ui.OverrideIndicatorLabelDecorator"
 			id="org.eclipse.php.ui.override.decorator">
-		<enablement>
-			<objectClass
-				name="org.eclipse.dltk.core.IMethod">
-			</objectClass>
-		</enablement>
-	</decorator>
+			<enablement>
+				<objectClass
+					name="org.eclipse.dltk.core.IMethod">
+				</objectClass>
+			</enablement>
+		</decorator>
 		<decorator
 			label="%PHPLanguageLibraryDecorator.label"
 			state="true"
@@ -2008,29 +2014,7 @@
 		</enablement>
 		</decorator>
 	</extension>
-	
-	<extension point="org.eclipse.ui.decorators">
-		<decorator adaptable="true"
-			class="org.eclipse.dltk.internal.ui.navigator.TreeHierarchyLayoutProblemsDecorator" id="org.eclipse.php.ui.problemsDecoratorForIModelElement"
-			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
-			state="true">
-			<enablement>
-				<objectClass name="org.eclipse.dltk.core.IModelElement">
-				</objectClass>
-			</enablement>
-		</decorator>
-	</extension>
-	<extension point="org.eclipse.ui.decorators">
-		<decorator adaptable="true"
-			class="org.eclipse.php.ui.PHPIncludePathProblemsLabelDecorator" id="org.eclipse.php.ui.includepath.problemsDecorator"
-			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
-			state="true">
-			<enablement>
-				<objectClass name="org.eclipse.php.internal.core.includepath.IncludePath">
-				</objectClass>
-			</enablement>
-		</decorator>
-	</extension>
+
 	<extension point="org.eclipse.ui.ide.markerSupport">
 		<markerTypeCategory name="%PhpProblemFilterCategory.name">
 			<markerTypeReference id="org.eclipse.php.core.phpproblemmarker" />

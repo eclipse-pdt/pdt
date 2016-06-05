@@ -17,6 +17,10 @@ import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.phar.wizard.PharUIUtil;
 
+/**
+ * No longer used since PDT 4.1
+ */
+@Deprecated
 public class PHPIncludePathProblemsLabelDecorator extends ProblemsLabelDecorator {
 	@Override
 	protected int computeAdornmentFlags(Object obj) {
