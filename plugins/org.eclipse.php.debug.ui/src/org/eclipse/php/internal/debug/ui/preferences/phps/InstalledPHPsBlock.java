@@ -16,7 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +28,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
@@ -44,11 +48,12 @@ import org.eclipse.php.internal.debug.ui.wizards.PHPExeEditDialog;
 import org.eclipse.php.internal.debug.ui.wizards.PHPExeWizard;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -162,6 +167,9 @@ public class InstalledPHPsBlock {
 	 * The main list control
 	 */
 	private TableViewer fPHPExeList;
+
+	private TableColumnLayout fPHPExeLayout;
+
 	/**
 	 * VMs being displayed
 	 */
@@ -183,9 +191,9 @@ public class InstalledPHPsBlock {
 	private int fSortColumn = 0;
 
 	// column weights
-	private float fWeight1 = 3 / 8F;
-	private float fWeight2 = 2 / 8F;
-	private float fWeight3 = 3 / 8F;
+	private int fWeight1 = 3;
+	private int fWeight2 = 2;
+	private int fWeight3 = 3;
 
 	public InstalledPHPsBlock() {
 	}
@@ -222,43 +230,6 @@ public class InstalledPHPsBlock {
 	}
 
 	/**
-	 * Correctly resizes the table so no phantom columns appear
-	 */
-	protected void configureTableResizing(final Composite parent, final Composite buttons, final Table table,
-			final TableColumn column1, final TableColumn column2, final TableColumn column3) {
-		parent.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				resizeTable(parent, buttons, table, column1, column2, column3);
-			}
-		});
-		table.addListener(SWT.Paint, new Listener() {
-			public void handleEvent(final Event event) {
-				table.removeListener(SWT.Paint, this);
-				resizeTable(parent, buttons, table, column1, column2, column3);
-			}
-		});
-		column1.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (column1.getWidth() > 0 && !fResizingTable)
-					fWeight1 = getColumnWeight(0);
-			}
-		});
-		column2.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (column2.getWidth() > 0 && !fResizingTable)
-					fWeight2 = getColumnWeight(1);
-			}
-		});
-
-		column3.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (column3.getWidth() > 0 && !fResizingTable)
-					fWeight3 = getColumnWeight(2);
-			}
-		});
-	}
-
-	/**
 	 * Creates this block's control in the given control.
 	 * 
 	 * @param ancestor
@@ -287,10 +258,16 @@ public class InstalledPHPsBlock {
 		tableLabel.setLayoutData(data);
 		tableLabel.setFont(font);
 
-		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
-
+		Composite tableComposite = new Composite(parent, SWT.NONE);
 		data = new GridData(GridData.FILL_BOTH);
-		table.setLayoutData(data);
+		tableComposite.setLayoutData(data);
+		tableComposite.setFont(font);
+		fPHPExeLayout = new TableColumnLayout();
+		tableComposite.setLayout(fPHPExeLayout);
+
+		fPHPExeList = new TableViewer(tableComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+
+		final Table table = fPHPExeList.getTable();
 		table.setFont(font);
 
 		table.setHeaderVisible(true);
@@ -306,6 +283,7 @@ public class InstalledPHPsBlock {
 				sortByName();
 			}
 		});
+		fPHPExeLayout.setColumnData(column1, new ColumnWeightData(fWeight1));
 
 		final TableColumn column2 = new TableColumn(table, SWT.NULL);
 		column2.setText(PHPDebugUIMessages.InstalledPHPsBlock_17);
@@ -314,6 +292,7 @@ public class InstalledPHPsBlock {
 				sortByDebugger();
 			}
 		});
+		fPHPExeLayout.setColumnData(column2, new ColumnWeightData(fWeight2));
 
 		final TableColumn column3 = new TableColumn(table, SWT.NULL);
 		column3.setText(PHPDebugUIMessages.InstalledPHPsBlock_1);
@@ -323,7 +302,8 @@ public class InstalledPHPsBlock {
 			}
 		});
 
-		fPHPExeList = new CheckboxTableViewer(table);
+		fPHPExeLayout.setColumnData(column3, new ColumnWeightData(fWeight3));
+
 		fPHPExeList.setLabelProvider(new PHPExeLabelProvider());
 		fPHPExeList.setContentProvider(new PHPsContentProvider());
 		fPHPExeList.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -408,8 +388,6 @@ public class InstalledPHPsBlock {
 			}
 		});
 
-		configureTableResizing(parent, buttons, table, column1, column2, column3);
-
 		fillWithWorkspacePHPs();
 		// by default, sort by the debugger type
 		sortByDebugger();
@@ -457,13 +435,14 @@ public class InstalledPHPsBlock {
 		setPHPs(items);
 	}
 
-	private float getColumnWeight(final int col) {
+	private int getColumnWeight(final int col) {
 		final Table table = fPHPExeList.getTable();
 		final int tableWidth = table.getSize().x;
 		final int columnWidth = table.getColumn(col).getWidth();
-		if (tableWidth > columnWidth)
-			return (float) columnWidth / tableWidth;
-		return 1 / 3F;
+		if (tableWidth > columnWidth) {
+			return (int) ((float) columnWidth / (float) tableWidth * 100);
+		}
+		return 1;
 	}
 
 	/**
@@ -536,50 +515,6 @@ public class InstalledPHPsBlock {
 		fSelectionListeners.remove(listener);
 	}
 
-	private void resizeTable(final Composite parent, final Composite buttons, final Table table,
-			final TableColumn column1, final TableColumn column2, final TableColumn column3) {
-		fResizingTable = true;
-		int parentWidth = -1;
-		int parentHeight = -1;
-		if (parent.isVisible()) {
-			final Rectangle area = parent.getClientArea();
-			parentWidth = area.width;
-			parentHeight = area.height;
-		} else {
-			final Point parentSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			parentWidth = parentSize.x;
-			parentHeight = parentSize.y;
-		}
-		final Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		int width = parentWidth - 2 * table.getBorderWidth();
-		if (preferredSize.y > parentHeight) {
-			// Subtract the scrollbar width from the total column width
-			// if a vertical scrollbar will be required
-			final Point vBarSize = table.getVerticalBar().getSize();
-			width -= vBarSize.x;
-		}
-		width -= buttons.getSize().x;
-		final Point oldSize = table.getSize();
-		if (oldSize.x > width) {
-			// table is getting smaller so make the columns
-			// smaller first and then resize the table to
-			// match the client area width
-			column1.setWidth(Math.round(width * fWeight1));
-			column2.setWidth(Math.round(width * fWeight2));
-			column3.setWidth(Math.round(width * fWeight3));
-			table.setSize(width, parentHeight);
-		} else {
-			// table is getting bigger so make the table
-			// bigger first and then make the columns wider
-			// to match the client area width
-			table.setSize(width, parentHeight);
-			column1.setWidth(Math.round(width * fWeight1));
-			column2.setWidth(Math.round(width * fWeight2));
-			column3.setWidth(Math.round(width * fWeight3));
-		}
-		fResizingTable = false;
-	}
-
 	/**
 	 * Restore table settings from the given dialog store using the given key.
 	 * 
@@ -592,6 +527,11 @@ public class InstalledPHPsBlock {
 		fWeight1 = restoreColumnWeight(settings, qualifier, 0);
 		fWeight2 = restoreColumnWeight(settings, qualifier, 1);
 		fWeight3 = restoreColumnWeight(settings, qualifier, 2);
+
+		fPHPExeLayout.setColumnData(fPHPExeList.getTable().getColumn(0), new ColumnWeightData(fWeight1));
+		fPHPExeLayout.setColumnData(fPHPExeList.getTable().getColumn(1), new ColumnWeightData(fWeight2));
+		fPHPExeLayout.setColumnData(fPHPExeList.getTable().getColumn(2), new ColumnWeightData(fWeight3));
+
 		fPHPExeList.getTable().layout(true);
 		try {
 			fSortColumn = settings.getInt(qualifier + ".sortColumn"); //$NON-NLS-1$
@@ -612,18 +552,24 @@ public class InstalledPHPsBlock {
 			sortByType();
 			break;
 		}
+
 	}
 
-	private float restoreColumnWeight(final IDialogSettings settings, final String qualifier, final int col) {
+	private int restoreColumnWeight(final IDialogSettings settings, final String qualifier, final int col) {
 		try {
-			return settings.getFloat(qualifier + ".column" + col); //$NON-NLS-1$
-		} catch (final NumberFormatException e) {
-			switch (col) {
-			case 1:
-				return 2 / 8F;
-			default:
-				return 3 / 8F;
+			int res = settings.getInt(qualifier + ".column" + col); //$NON-NLS-1$
+			if (res > 0) {
+				return res;
 			}
+		} catch (final NumberFormatException e) {
+		}
+		switch (col) {
+		case 0:
+			return fWeight1;
+		case 1:
+			return fWeight2;
+		default:
+			return fWeight3;
 		}
 
 	}
@@ -638,9 +584,9 @@ public class InstalledPHPsBlock {
 	 *            key qualifier
 	 */
 	public void saveColumnSettings(final IDialogSettings settings, final String qualifier) {
-		for (int i = 0; i < 3; i++)
-			// persist the first 2 column weights
+		for (int i = 0; i < 3; i++) {
 			settings.put(qualifier + ".column" + i, getColumnWeight(i)); //$NON-NLS-1$
+		}
 		settings.put(qualifier + ".sortColumn", fSortColumn); //$NON-NLS-1$
 	}
 

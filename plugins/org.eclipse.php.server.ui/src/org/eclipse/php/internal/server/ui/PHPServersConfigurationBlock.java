@@ -25,7 +25,6 @@ import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
-import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.StatusUtil;
 import org.eclipse.php.internal.ui.util.TableSorter;
@@ -42,7 +41,6 @@ import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -104,28 +102,22 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 
 		PixelConverter conv = new PixelConverter(parent);
 
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
-		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
+		Composite composite = new Composite(parent, SWT.FILL);
 		composite.setLayout(layout);
-		scrolledCompositeImpl.setContent(composite);
-
-		scrolledCompositeImpl.setLayout(layout);
-		scrolledCompositeImpl.setFont(parent.getFont());
+		composite.setFont(parent.getFont());
 
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.widthHint = conv.convertWidthInCharsToPixels(50);
+
 		Control listControl = fServersList.getListControl(composite);
 		listControl.setLayoutData(data);
 
 		Control buttonsControl = fServersList.getButtonBox(composite);
 		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
 
-		addFiller(composite);
+		// addFiller(composite);
 
-		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		scrolledCompositeImpl.setMinSize(size.x, size.y);
-
-		return scrolledCompositeImpl;
+		return composite;
 	}
 
 	private void addFiller(Composite composite) {

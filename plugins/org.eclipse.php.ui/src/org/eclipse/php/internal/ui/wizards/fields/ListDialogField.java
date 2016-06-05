@@ -17,10 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.SWTUtil;
-import org.eclipse.php.internal.ui.util.TableLayoutComposite;
 import org.eclipse.php.internal.ui.util.TableSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -325,8 +325,10 @@ public class ListDialogField<E> extends DialogField {
 				fTableControl = tableControl;
 				tableControl.setLayout(new TableLayout());
 			} else {
-				TableLayoutComposite composite = new TableLayoutComposite(parent, SWT.NONE);
+				Composite composite = new Composite(parent, SWT.NONE);
+				TableColumnLayout layout = new TableColumnLayout();
 				composite.setFont(parent.getFont());
+				composite.setLayout(layout);
 				fTableControl = composite;
 
 				fTable = createTableViewer(composite);
@@ -336,12 +338,12 @@ public class ListDialogField<E> extends DialogField {
 				tableControl.setLinesVisible(fTableColumns.drawLines);
 				ColumnLayoutData[] columns = fTableColumns.columns;
 				for (int i = 0; i < columns.length; i++) {
-					composite.addColumnData(columns[i]);
 					TableColumn column = new TableColumn(tableControl, SWT.NONE);
 					// tableLayout.addColumnData(columns[i]);
 					if (fTableColumns.headers != null) {
 						column.setText(fTableColumns.headers[i]);
 					}
+					layout.setColumnData(column, columns[i]);
 				}
 			}
 
