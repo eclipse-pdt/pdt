@@ -14,12 +14,17 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ui.text.completion.IScriptContentAssistExtension;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
@@ -36,11 +41,26 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 	private static final int DEFAULT_AUTO_ACTIVATION_DELAY = 200;
 	private static final int TOOLTIP_HIDE_DELAY = 4000;
 	private int fAutoActivationDelay = DEFAULT_AUTO_ACTIVATION_DELAY;
+	private IPreferenceChangeListener fPreferenceChangeListener;
+
+	private class PreferenceListener implements IPreferenceChangeListener {
+
+		@Override
+		public void preferenceChange(PreferenceChangeEvent event) {
+			if (PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX.equals(event.getKey())) {
+				enablePrefixCompletion(
+						event.getNode().getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX, true));
+			}
+		}
+	}
 
 	private ITextViewer fViewer;
 
 	public PHPContentAssistant() {
 		enableColoredLabels(true);
+
+		enablePrefixCompletion(InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID)
+				.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX, true));
 	}
 
 	protected AutoAssistListener createAutoAssistListener() {
@@ -50,10 +70,18 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 	public void install(ITextViewer textViewer) {
 		super.install(textViewer);
 		fViewer = textViewer;
+		if (fPreferenceChangeListener == null) {
+			fPreferenceChangeListener = new PreferenceListener();
+			InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID).addPreferenceChangeListener(fPreferenceChangeListener);
+		}
 	}
 
 	public void uninstall() {
 		super.uninstall();
+		if (fPreferenceChangeListener != null) {
+			InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID).removePreferenceChangeListener(fPreferenceChangeListener);
+			fPreferenceChangeListener = null;
+		}
 		fViewer = null;
 	}
 
