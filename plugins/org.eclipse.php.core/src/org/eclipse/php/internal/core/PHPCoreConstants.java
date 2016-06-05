@@ -211,6 +211,11 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES = "contentAssistShowVariablesFromReferencedFiles"; //$NON-NLS-1$
 
 	/**
+	 * @since 4.1
+	 */
+	public final static String CODEASSIST_AUTOINSERT_COMMON_PREFIX = "contentAssistAutoInsertCommonPrefix"; //$NON-NLS-1$
+
+	/**
 	 * PHP Task Marker
 	 */
 	public static final String PHP_MARKER_TYPE = "org.eclipse.php.core.phpTaskMarker"; //$NON-NLS-1$

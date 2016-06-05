@@ -57,6 +57,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true);
