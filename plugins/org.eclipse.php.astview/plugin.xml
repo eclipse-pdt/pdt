@@ -42,18 +42,6 @@
         commandId="org.eclipse.php.astview.views.ASTView"
         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
   </key>
-  <key
-        platform="carbon"
-        sequence="M2+M3+Q A"
-        commandId=""
-        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-  </key>
-  <key
-        platform="carbon"
-        sequence="M1+M3+Q A"
-        commandId="org.eclipse.php.astview.views.ASTView"
-        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-  </key>
   </extension>
   
   
