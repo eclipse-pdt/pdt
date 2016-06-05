@@ -37,6 +37,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button completionInsertRadioButton;
 	protected Button completionOverrideRadioButton;
 	protected Button insertSingleproposalsCheckBox;
+	protected Button autoInsertCommonPrefixCheckbox;
 	protected Button showVariableFromOtherFilesCheckBox;
 	protected Button showVariableFromReferencedFilesCheckBox;
 	protected Button insertFullyQualifiedNameForNamespaceCheckBox;
@@ -69,6 +70,10 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		insertSingleproposalsCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_insertSignleProposals, PHPCoreConstants.CODEASSIST_AUTOINSERT,
 				0);
+		autoInsertCommonPrefixCheckbox = addCheckBox(composite,
+				PHPUIMessages.CodeAssistPreferencePage_insertCommonPrefix,
+				PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX, 0);
+
 		showVariableFromOtherFilesCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromOtherFiles,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
