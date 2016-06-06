@@ -118,10 +118,11 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 				}
 				nameBuffer.append(type, StyledString.DECORATIONS_STYLER);
 			} catch (ModelException e) {
-				Logger.logException(e);
+				if (!e.isDoesNotExist()) {
+					Logger.logException(e);
+				}
 			}
 		}
-
 	}
 
 	private boolean showMethodReturnType() {
