@@ -5,8 +5,8 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.TextPresentation;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.wst.sse.ui.internal.Logger;
 
 public class PresentationCollector extends AbstractCollection {
 	private final TextPresentation fPresentation;

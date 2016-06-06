@@ -36,6 +36,10 @@ import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 import com.ibm.icu.text.MessageFormat;
 
+/**
+ * Will be removed in future release
+ */
+@Deprecated
 public class RefreshAction extends SelectionDispatchAction {
 
 	/**

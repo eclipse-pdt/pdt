@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.ui.editor.SourceModuleDocumentProvider.SourceMo
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.IAnnotationPresentation;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -28,7 +29,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
-import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointConstants;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
