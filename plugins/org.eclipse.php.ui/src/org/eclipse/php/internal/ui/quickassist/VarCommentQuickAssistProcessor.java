@@ -188,6 +188,15 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 			switch (selectedNode.getType()) {
 			case ASTNode.VARIABLE:
 				if (((Variable) selectedNode).isDollared()) {
+					if (selectedNode.getParent() != null) {
+						ASTNode parent = selectedNode.getParent();
+						if (parent.getType() == ASTNode.SINGLE_FIELD_DECLARATION
+								|| parent.getType() == ASTNode.FORMAL_PARAMETER) {
+							state = FINISH;
+							break;
+						}
+					}
+
 					// variable found!
 					state = FINISH;
 					variableNode = selectedNode;
