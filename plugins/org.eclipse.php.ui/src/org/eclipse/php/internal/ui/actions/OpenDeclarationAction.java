@@ -16,10 +16,10 @@ import java.util.ResourceBundle;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.wst.xml.core.internal.Logger;
 
 public class OpenDeclarationAction extends PHPEditorResolvingAction implements IUpdate {
 

@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
 import org.eclipse.dltk.internal.ui.browsing.LogicalPackage;
@@ -66,7 +65,6 @@ import org.eclipse.ui.texteditor.IUpdate;
 public class OpenTypeHierarchyAction extends SelectionDispatchAction implements IUpdate {
 
 	private PHPStructuredEditor fEditor;
-	private IModelElement lastSelectedElement;
 
 	/**
 	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires
@@ -157,7 +155,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
 					selection.getLength(), sourceModule);
 			if (element == null) {
-				lastSelectedElement = null;
 				return false;
 			}
 			switch (element.getElementType()) {
@@ -165,11 +162,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			case IModelElement.FIELD:
 			case IModelElement.METHOD:
 			case IModelElement.SOURCE_MODULE:
-				lastSelectedElement = element;
 				return true;
 			}
 		}
-		lastSelectedElement = null;
 		return false;
 	}
 
@@ -216,10 +211,10 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			if (!ActionUtil.isProcessable(getShell(), element))
 				return;
 
-			List result = new ArrayList(1);
+			List<IModelElement> result = new ArrayList<>(1);
 			IStatus status = compileCandidates(result, element);
 			if (status.isOK()) {
-				run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
+				run(result.toArray(new IModelElement[result.size()]));
 			} else {
 				ErrorDialog.openError(getShell(), getDialogTitle(), "", //$NON-NLS-1$
 						status);
@@ -328,7 +323,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		return null;
 	}
 
-	private static IStatus compileCandidates(List result, IModelElement elem) {
+	private static IStatus compileCandidates(List<IModelElement> result, IModelElement elem) {
 		IStatus ok = new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
 		try {
 			switch (elem.getElementType()) {
@@ -367,7 +362,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			// result.add(((IClassFile)elem).getType());
 			// return ok;
 			case IModelElement.SOURCE_MODULE:
-				AbstractSourceModule cu = (AbstractSourceModule) elem;
+				ISourceModule cu = (ISourceModule) elem;
 				IType[] types = cu.getTypes();
 				if (types.length > 0) {
 					result.addAll(Arrays.asList(types));

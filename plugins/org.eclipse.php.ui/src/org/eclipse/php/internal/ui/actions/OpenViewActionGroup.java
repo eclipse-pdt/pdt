@@ -28,7 +28,6 @@ import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.part.Page;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 public class OpenViewActionGroup extends ActionGroup {
 
@@ -92,7 +91,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	private void createSiteActions(IWorkbenchSite site) {
 
 		fOpenPropertiesDialog = new PropertyDialogAction(site, site.getSelectionProvider());
-		fOpenPropertiesDialog.setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
+		fOpenPropertiesDialog.setActionDefinitionId(IWorkbenchCommandConstants.FILE_PROPERTIES);
 
 		fOpenTypeHierarchy = new OpenTypeHierarchyAction(site);
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);

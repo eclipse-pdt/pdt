@@ -25,7 +25,7 @@ import org.eclipse.ui.actions.ActionGroup;
 
 public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSetActionGroup {
 
-	private List fContributions = new ArrayList();
+	private List<IContributionItem> fContributions = new ArrayList<>();
 	private ConfigureWorkingSetAction fConfigureWorkingSetAction;
 	private WorkingSetModel fWorkingSetModel;
 	private final IWorkbenchPartSite fSite;
@@ -57,7 +57,7 @@ public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSe
 	}
 
 	public void cleanViewMenu(IMenuManager menuManager) {
-		for (Iterator iter = fContributions.iterator(); iter.hasNext();) {
+		for (Iterator<IContributionItem> iter = fContributions.iterator(); iter.hasNext();) {
 			menuManager.remove((IContributionItem) iter.next());
 		}
 		fContributions.clear();

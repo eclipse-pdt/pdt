@@ -78,9 +78,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
+	@Override
 	public void selectionChanged(final ITextSelection selection) {
 
 		IJobManager jobManager = Job.getJobManager();
@@ -107,9 +105,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		if (selection instanceof ITextSelection) {
 			selectionChanged((ITextSelection) selection);
@@ -160,9 +156,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
+	@Override
 	public void run(ITextSelection selection) {
 		ISourceModule input = SelectionConverter.getInput(fEditor);
 		if (!ActionUtil.isProcessable(getShell(), input))
@@ -172,7 +166,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			IModelElement[] elements = SelectionConverter.codeResolveOrInputForked(fEditor);
 			if (elements == null)
 				return;
-			List candidates = new ArrayList(elements.length);
+			List<IModelElement> candidates = new ArrayList<>(elements.length);
 			for (int i = 0; i < elements.length; i++) {
 				IModelElement[] resolvedElements = CallHierarchyUI.getCandidates(elements[i]);
 				if (resolvedElements != null)
@@ -220,9 +214,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
+	@Override
 	public void run(IStructuredSelection selection) {
 		if (selection instanceof ITextSelection) {
 			run((ITextSelection) selection);
@@ -239,7 +231,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			IModelElement element = (IModelElement) input;
 			if (!ActionUtil.isProcessable(getShell(), element))
 				return;
-			List result = new ArrayList(1);
+			List<IModelElement> result = new ArrayList<>(1);
 			IStatus status = compileCandidates(result, element);
 			if (status.isOK()) {
 				run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
@@ -289,7 +281,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		CallHierarchyUI.open(elements, getSite().getWorkbenchWindow(), getCallHierarchyID());
 	}
 
-	private static IStatus compileCandidates(List result, IModelElement elem) {
+	private static IStatus compileCandidates(List<IModelElement> result, IModelElement elem) {
 		IStatus ok = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
 		switch (elem.getElementType()) {
 		case IModelElement.METHOD:

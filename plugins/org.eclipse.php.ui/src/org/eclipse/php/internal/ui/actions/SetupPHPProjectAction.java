@@ -23,11 +23,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
 /**
  * Not API

@@ -174,7 +174,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 
 	private Object[] getClosedProjects() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		List result = new ArrayList(5);
+		List<IProject> result = new ArrayList<>(5);
 		for (int i = 0; i < projects.length; i++) {
 			IProject project = projects[i];
 			if (!project.isOpen())
