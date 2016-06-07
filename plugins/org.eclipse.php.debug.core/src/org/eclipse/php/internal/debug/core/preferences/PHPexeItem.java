@@ -393,7 +393,7 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 			return;
 		}
 		if ((oldValue == null && newValue != null) || (oldValue != null && newValue == null)
-				|| (!oldValue.equals(newValue))) {
+				|| (oldValue != null && !oldValue.equals(newValue))) {
 			fireEvent(key, oldValue, newValue);
 		}
 	}

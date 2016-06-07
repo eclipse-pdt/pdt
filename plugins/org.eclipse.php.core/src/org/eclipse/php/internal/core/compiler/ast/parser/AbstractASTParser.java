@@ -305,7 +305,7 @@ abstract public class AbstractASTParser extends lr_parser {
 			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleStaticModifiersError);
 		}
 
-		return flags |= newFlag;
+		return flags | newFlag;
 	}
 
 	protected int appendMethodModifier(int start, int end, int flags, int newFlag) {

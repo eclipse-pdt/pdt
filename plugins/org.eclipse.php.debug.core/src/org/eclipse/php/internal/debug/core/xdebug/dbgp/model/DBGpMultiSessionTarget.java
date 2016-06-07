@@ -37,7 +37,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 
 	// used to identify this debug target with the associated
 	// script being debugged.
-	private String sessionID;
+	private String sessionID; // XXX: never set
 
 	private String ideKey;
 

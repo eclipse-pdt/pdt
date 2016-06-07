@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 IBM Corporation and others.
+ * Copyright (c) 2014, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,21 +100,18 @@ public class PHPEvaluationUtils {
 			type = m.replaceAll(""); //$NON-NLS-1$
 		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
 			arrayType.addType(getArrayType(type.substring(0, type.length() - 2), currentNamespace, offset));
-			type = type.replaceAll(BRACKETS, ""); //$NON-NLS-1$
+			type = type.replaceAll(Pattern.quote(BRACKETS), ""); //$NON-NLS-1$
 		}
 		String[] typeNames = type.split(","); //$NON-NLS-1$
 		for (String name : typeNames) {
 			if (!"".equals(name)) { //$NON-NLS-1$
 				int nsSeparatorIndex = name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-				if (currentNamespace != null) {
-					// check if the first part is an
-					// alias,then get the full name
+				if (currentNamespace != null && nsSeparatorIndex > 0) {
+					// check if the first part is an alias, then get the full
+					// name
 					ModuleDeclaration moduleDeclaration = SourceParserUtil
 							.getModuleDeclaration(currentNamespace.getSourceModule());
-					String prefix = name;
-					if (nsSeparatorIndex != -1) {
-						name.substring(0, name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-					}
+					final String prefix = name.substring(0, nsSeparatorIndex);
 					final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 							currentNamespace, true);
 					if (result.containsKey(prefix)) {
@@ -123,8 +120,6 @@ public class PHPEvaluationUtils {
 						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 							name = NamespaceReference.NAMESPACE_SEPARATOR + name;
 						}
-					} else {
-
 					}
 				}
 				arrayType.addType(getEvaluatedType(name, currentNamespace));
