@@ -1849,6 +1849,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 	@Override
 	public void initialize(boolean isReinit) {
-		initialize(false);
+		assert isReinit == false;
+		initialize();
 	}
 }

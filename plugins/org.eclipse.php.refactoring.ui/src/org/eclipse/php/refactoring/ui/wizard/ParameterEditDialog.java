@@ -34,7 +34,7 @@ public class ParameterEditDialog extends StatusDialog {
 
 	private final boolean fEditDefault;
 	private final StubTypeContext fContext;
-	private Text fType;
+	private Text fType; // XXX: never set
 	private Text fName;
 	private Text fDefaultValue;
 

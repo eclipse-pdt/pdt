@@ -140,11 +140,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 			}
 
 			ContentProposalAdapter adapter = new ContentProposalAdapter(control, contentAdapter,
-					getContentProposalProvider(), keyStroke, autoActivationCharacters) {
-				public void closeProposalPopup() {
-					closeProposalPopup();
-				}
-			};
+					getContentProposalProvider(), keyStroke, autoActivationCharacters);
 			adapter.setAutoActivationDelay(autoActivationDelay);
 			adapter.setPropagateKeys(propagate);
 			adapter.setFilterStyle(getContentAssistFilterStyle());

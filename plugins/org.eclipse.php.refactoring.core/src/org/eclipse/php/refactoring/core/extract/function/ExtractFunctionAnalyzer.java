@@ -293,7 +293,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 			}
 		}
 
-		if (nodes.length == 0) {
+		if (nodes == null || nodes.length == 0) {
 			status.addFatalError(PhpRefactoringCoreMessages
 					.getString("ExtractFunctionAnalyzer.3")); //$NON-NLS-1$
 		}

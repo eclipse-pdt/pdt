@@ -114,7 +114,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (preferenceScopes[0] instanceof ProjectScope && isProjectSpecific) {
 			IEclipsePreferences node = preferenceScopes[0].getNode(getPreferenceNodeQualifier());
 			if (node != null && project != null) {
-				if (getBasePathValue(project) == null || getBasePathValue(project) == "") { //$NON-NLS-1$
+				if (getBasePathValue(project) == null || getBasePathValue(project).equals("")) { //$NON-NLS-1$
 					setBasePathValue(project, project.getName());
 				}
 				String projectServerName = ServersManager.getDefaultServer(project).getName();
