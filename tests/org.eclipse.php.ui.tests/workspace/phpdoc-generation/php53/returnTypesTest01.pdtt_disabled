@@ -1,0 +1,49 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+
+namespace Boo {
+
+	use Boo as MyAlias;
+
+	class MyClass3 {
+		/**
+		 *
+		 * @return MyAlias\MyClass1[]|MyAlias\MyClass2[]
+		 */
+		function foo1() {
+			return $a;
+		}
+		
+		/**|
+		function foo2() {
+			return $this->foo1 ();
+		}
+	}
+}
+--EXPECT--
+<?php
+
+namespace Boo {
+
+	use Boo as MyAlias;
+
+	class MyClass3 {
+		/**
+		 *
+		 * @return MyAlias\MyClass1[]|MyAlias\MyClass2[]
+		 */
+		function foo1() {
+			return $a;
+		}
+		
+		/**
+		 *
+		 * @return \Boo\MyClass1[]|\Boo\MyClass2[]
+		 */
+		function foo2() {
+			return $this->foo1 ();
+		}
+	}
+}

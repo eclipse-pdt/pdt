@@ -35,8 +35,13 @@ public class CodeDataMatch {
 		this.elementType = elementType;
 	}
 
-	public int hashcode() {
-		return elementName.hashCode() + elementType;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((elementName == null) ? 0 : elementName.hashCode());
+		result = prime * result + elementType;
+		return result;
 	}
 
 	public boolean equals(Object o) {

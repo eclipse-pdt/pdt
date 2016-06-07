@@ -674,13 +674,13 @@ public static void initDbContants() {
 	if (DB_LOCATION == null) {
 		DB_LOCATION = PerformanceTestPlugin.getDBLocation();
 		if (DB_LOCATION == null) {
-			new RuntimeException("Cannot connect to the DB without a location!");
+			throw new RuntimeException("Cannot connect to the DB without a location!");
 		}
 	}
 	if (DB_NAME == null) {
 		DB_NAME = PerformanceTestPlugin.getDBName();
 		if (DB_NAME == null) {
-			new RuntimeException("Cannot connect to the DB without a name!");
+			throw new RuntimeException("Cannot connect to the DB without a name!");
 		}
 	}
 	if (DB_VERSION == null) {

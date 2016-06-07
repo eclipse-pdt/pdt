@@ -254,7 +254,6 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	private boolean isTypeParameterIntroducer(String identifier) {
 		return identifier.length() > 0 && (Character.isUpperCase(identifier.charAt(0)) || identifier.startsWith("final") //$NON-NLS-1$
 				|| identifier.startsWith("public") //$NON-NLS-1$
-				|| identifier.startsWith("public") //$NON-NLS-1$
 				|| identifier.startsWith("protected") //$NON-NLS-1$
 				|| identifier.startsWith("private")); //$NON-NLS-1$
 	}
