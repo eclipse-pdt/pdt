@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
@@ -19,7 +20,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
@@ -53,7 +53,7 @@ public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
 		for (IType ns : concreteContext.getNamespaces()) {
 			try {
 				for (IMethod method : ns.getMethods()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
+					if (StringUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
 						reporter.reportMethod(method, suffix, replaceRange);
 					}
 				}

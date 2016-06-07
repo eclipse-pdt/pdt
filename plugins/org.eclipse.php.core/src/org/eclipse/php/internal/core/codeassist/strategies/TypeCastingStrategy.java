@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -31,9 +32,9 @@ public class TypeCastingStrategy extends AbstractCompletionStrategy {
 		ICompletionContext context = getContext();
 		ISourceRange range = getReplacementRange(context);
 		TypeCastingContext typeCastingContext = (TypeCastingContext) context;
-		String prefix = typeCastingContext.getPrefix().toLowerCase();
+		String prefix = typeCastingContext.getPrefix();
 		for (String cast : TYPE_CASTS) {
-			if (cast.startsWith(prefix)) {
+			if (StringUtils.startsWithIgnoreCase(cast, prefix)) {
 				reporter.reportKeyword(cast, "", range); //$NON-NLS-1$
 			}
 		}

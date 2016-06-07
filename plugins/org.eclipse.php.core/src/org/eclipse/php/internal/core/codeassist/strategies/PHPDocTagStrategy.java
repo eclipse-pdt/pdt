@@ -11,12 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
@@ -50,7 +50,7 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
 		for (TagKind nextTag : TagKind.values()) {
 			String nextTagName = nextTag.getName();
-			if (CodeAssistUtils.startsWithIgnoreCase(nextTagName, tagName)) {
+			if (StringUtils.startsWithIgnoreCase(nextTagName, tagName)) {
 				if (!requestor.isContextInformationMode() || nextTagName.length() == tagName.length()) {
 
 					// Tags are reported like keywords:
