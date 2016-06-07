@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -79,11 +80,11 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 
 		public GotoStatementVisitor(ASTNode node, String prefix) {
 			this.node = node;
-			this.prefix = prefix.toLowerCase();
+			this.prefix = prefix;
 		}
 
 		public boolean visit(GotoLabel s) throws Exception {
-			if (s.getLabel().toLowerCase().startsWith(prefix)) {
+			if (StringUtils.startsWithIgnoreCase(s.getLabel(), prefix)) {
 				getoLabels.add(s.getLabel());
 			}
 			return false;

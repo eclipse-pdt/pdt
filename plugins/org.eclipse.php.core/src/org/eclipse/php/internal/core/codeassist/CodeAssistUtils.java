@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -70,8 +71,12 @@ public class CodeAssistUtils {
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
 
+	/**
+	 * @deprecated use
+	 *             org.apache.commons.lang3.StringUtils.startsWithIgnoreCase()
+	 */
 	public static boolean startsWithIgnoreCase(String word, String prefix) {
-		return word.toLowerCase().startsWith(prefix.toLowerCase());
+		return StringUtils.startsWithIgnoreCase(word, prefix);
 	}
 
 	/**
