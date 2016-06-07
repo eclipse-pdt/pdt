@@ -11,8 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
+
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
@@ -42,7 +45,6 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.*;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.NamespaceName;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
@@ -898,8 +900,8 @@ public class PHPModelUtils {
 									VariableReference varReference = (VariableReference) e;
 									String varName = varReference.getName();
 									if (!processedVars.contains(varName)
-											&& (exactName && varName.equalsIgnoreCase(prefix) || !exactName
-													&& varName.toLowerCase().startsWith(prefix.toLowerCase()))) {
+											&& (exactName && varName.equalsIgnoreCase(prefix)
+													|| !exactName && startsWithIgnoreCase(varName, prefix))) {
 										elements.add(new FakeField((ModelElement) method, varName, e.sourceStart(),
 												e.sourceEnd() - e.sourceStart()));
 										processedVars.add(varName);
@@ -925,7 +927,7 @@ public class PHPModelUtils {
 			if (child.getElementType() == IModelElement.FIELD) {
 				String elementName = child.getElementName();
 				if (exactName && elementName.equalsIgnoreCase(prefix)
-						|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 
 					IField field = (IField) child;
 					if (!isSameFileExisting(elements, field)) {
@@ -992,7 +994,7 @@ public class PHPModelUtils {
 			for (IField field : sourceModuleFields) {
 				String elementName = field.getElementName();
 				if (exactName && elementName.equalsIgnoreCase(prefix)
-						|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 					elements.add(field);
 				}
 			}
@@ -1400,7 +1402,7 @@ public class PHPModelUtils {
 					elementName = elementName.substring(1);
 				}
 				if (exactName && elementName.equalsIgnoreCase(prefix)
-						|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 					result.add(field);
 				}
 			}
@@ -1411,7 +1413,7 @@ public class PHPModelUtils {
 					elementName = elementName.substring(1);
 				}
 				if (exactName && elementName.equalsIgnoreCase(prefix)
-						|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 					result.add(field);
 				}
 			}
@@ -1634,7 +1636,7 @@ public class PHPModelUtils {
 				String elementName = method.getElementName();
 				nameSet.add(elementName);
 				if (exactName && elementName.equalsIgnoreCase(prefix)
-						|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 					result.add(method);
 				}
 			}
@@ -1642,7 +1644,7 @@ public class PHPModelUtils {
 			for (IMethod method : methods) {
 				String elementName = method.getElementName();
 				if (exactName && elementName.equalsIgnoreCase(prefix)
-						|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 					result.add(method);
 				}
 			}
@@ -1837,7 +1839,7 @@ public class PHPModelUtils {
 			}
 			String elementName = t.getElementName();
 			if (exactName && elementName.equalsIgnoreCase(prefix)
-					|| !exactName && elementName.toLowerCase().startsWith(prefix.toLowerCase())) {
+					|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
 				result.add(t);
 			}
 		}
@@ -2032,7 +2034,7 @@ public class PHPModelUtils {
 						for (UsePart usePart : useStatement.getParts()) {
 							if (usePart.getAlias() != null && usePart.getAlias().getName() != null) {
 								String name = usePart.getAlias().getName();
-								if (CodeAssistUtils.startsWithIgnoreCase(name, prefix)) {
+								if (StringUtils.startsWithIgnoreCase(name, prefix)) {
 									result.put(name, usePart);
 								}
 							} else {

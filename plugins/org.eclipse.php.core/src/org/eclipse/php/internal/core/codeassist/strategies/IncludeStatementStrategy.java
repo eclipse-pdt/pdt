@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -26,7 +27,6 @@ import org.eclipse.dltk.internal.core.ScriptFolder;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.IncludeStatementContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -323,7 +323,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		if (lastPrefixSegment == null) {
 			lastPrefixSegment = ""; //$NON-NLS-1$
 		}
-		if (CodeAssistUtils.startsWithIgnoreCase(lastCurrentSegment, lastPrefixSegment)) {
+		if (StringUtils.startsWithIgnoreCase(lastCurrentSegment, lastPrefixSegment)) {
 			return true;
 		}
 

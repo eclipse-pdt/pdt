@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.language.keywords;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -160,7 +161,7 @@ public class PHPKeywords {
 		}
 		for (KeywordData data : keywordData) {
 			if (data.name.startsWith(prefix)
-					|| (data.ignoreCase && data.name.toLowerCase().startsWith(prefix.toLowerCase()))) {
+					|| (data.ignoreCase && StringUtils.startsWithIgnoreCase(data.name, prefix))) {
 				result.add(data);
 			}
 		}
@@ -180,7 +181,7 @@ public class PHPKeywords {
 		}
 		for (KeywordData data : keywordData) {
 			if (data.name.startsWith(prefix)
-					|| (data.ignoreCase && data.name.toLowerCase().startsWith(prefix.toLowerCase()))) {
+					|| (data.ignoreCase && StringUtils.startsWithIgnoreCase(data.name, prefix))) {
 				result.add(data.name);
 			}
 		}

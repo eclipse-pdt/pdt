@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -24,7 +25,6 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.MethodNameContext;
@@ -99,7 +99,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		functions.add("__destruct"); //$NON-NLS-1$
 
 		for (String function : functions) {
-			if (CodeAssistUtils.startsWithIgnoreCase(function, prefix)) {
+			if (StringUtils.startsWithIgnoreCase(function, prefix)) {
 				if (!requestor.isContextInformationMode() || function.length() == prefix.length()) {
 					FakeMethod fakeMethod = new FakeMethod((ModelElement) declaringClass, function);
 					if (function.equals("__construct")) { //$NON-NLS-1$

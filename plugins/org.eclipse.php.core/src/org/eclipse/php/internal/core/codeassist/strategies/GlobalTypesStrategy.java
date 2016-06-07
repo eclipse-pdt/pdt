@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -303,7 +304,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		String prefix = context.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(context);
 
-		if (CodeAssistUtils.startsWithIgnoreCase("self", prefix)) { //$NON-NLS-1$
+		if (StringUtils.startsWithIgnoreCase("self", prefix)) { //$NON-NLS-1$
 			if (!context.getCompletionRequestor().isContextInformationMode() || prefix.length() == 4) { // "self".length()
 
 				String suffix = getSuffix(context);
