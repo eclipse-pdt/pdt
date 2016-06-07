@@ -100,7 +100,7 @@ public class PHPEvaluationUtils {
 			type = m.replaceAll(""); //$NON-NLS-1$
 		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
 			arrayType.addType(getArrayType(type.substring(0, type.length() - 2), currentNamespace, offset));
-			type = type.replaceAll(BRACKETS, ""); //$NON-NLS-1$
+			type = type.replaceAll(Pattern.quote(BRACKETS), ""); //$NON-NLS-1$
 		}
 		String[] typeNames = type.split(","); //$NON-NLS-1$
 		for (String name : typeNames) {
@@ -113,7 +113,7 @@ public class PHPEvaluationUtils {
 							.getModuleDeclaration(currentNamespace.getSourceModule());
 					String prefix = name;
 					if (nsSeparatorIndex != -1) {
-						name.substring(0, name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+						prefix = name.substring(0, nsSeparatorIndex);
 					}
 					final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 							currentNamespace, true);
@@ -123,8 +123,6 @@ public class PHPEvaluationUtils {
 						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 							name = NamespaceReference.NAMESPACE_SEPARATOR + name;
 						}
-					} else {
-
 					}
 				}
 				arrayType.addType(getEvaluatedType(name, currentNamespace));

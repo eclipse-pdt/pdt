@@ -116,7 +116,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
 			action = new RenameResourceAction(getShell());
 			action.selectionChanged(selection);
-		} else if (selection != null) {
+		} else {
 			action = new MoveResourceAction(getShell());
 			action.selectionChanged(selection);
 
