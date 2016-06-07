@@ -11,11 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassDeclarationKeywordContext;
@@ -50,11 +50,10 @@ public class ClassDeclarationKeywordsStrategy extends AbstractCompletionStrategy
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 		String prefix = concreteContext.getPrefix();
 		String statementText = concreteContext.getStatementText().toString();
-		if (CodeAssistUtils.startsWithIgnoreCase(EXTENDS, prefix) && statementText.indexOf(EXTENDS_WITH_BLANK) < 0) {
+		if (StringUtils.startsWithIgnoreCase(EXTENDS, prefix) && statementText.indexOf(EXTENDS_WITH_BLANK) < 0) {
 			reporter.reportKeyword(EXTENDS, getSuffix(concreteContext), replaceRange);
 		}
-		if (CodeAssistUtils.startsWithIgnoreCase(IMPLEMENTS, prefix)
-				&& statementText.indexOf(IMPLEMENTS_WITH_BLANK) < 0) {
+		if (StringUtils.startsWithIgnoreCase(IMPLEMENTS, prefix) && statementText.indexOf(IMPLEMENTS_WITH_BLANK) < 0) {
 			reporter.reportKeyword(IMPLEMENTS, getSuffix(concreteContext), replaceRange);
 		}
 	}

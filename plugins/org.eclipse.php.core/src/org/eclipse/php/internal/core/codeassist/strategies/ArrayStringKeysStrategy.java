@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceRange;
@@ -125,7 +126,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
 					if (!scalar.getValue().equals(key) && key.length() > 0
-							&& key.toLowerCase().startsWith(prefix.toLowerCase())) {
+							&& StringUtils.startsWithIgnoreCase(key, prefix)) {
 						names.add(key);
 					}
 				}
@@ -142,7 +143,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
 					if (!scalar.getValue().equals(key) && key.length() > 0
-							&& key.toLowerCase().startsWith(prefix.toLowerCase())) {
+							&& StringUtils.startsWithIgnoreCase(key, prefix)) {
 						names.add(key);
 					}
 				}
@@ -156,7 +157,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
 					if (!scalar.getValue().equals(key) && key.length() > 0
-							&& key.toLowerCase().startsWith(prefix.toLowerCase())) {
+							&& StringUtils.startsWithIgnoreCase(key, prefix)) {
 						names.add(key);
 					}
 				}

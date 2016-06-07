@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
@@ -59,7 +60,7 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 		FileContext fileContext = new FileContext(sourceModule, moduleDeclaration, offset);
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		for (String useType : useTypes) {
-			if (useType.trim().toLowerCase().startsWith(prefix.toLowerCase())) {
+			if (StringUtils.startsWithIgnoreCase(useType.trim(), prefix)) {
 
 				IEvaluatedType type = PHPClassType.fromTraitName(useType, sourceModule, offset);
 				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, fileContext, offset);

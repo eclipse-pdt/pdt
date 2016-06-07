@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  com.ibm.icu;bundle-version="4.0.1",
  org.eclipse.php.core.parser,
  org.eclipse.wst.common.project.facet.core,
- org.eclipse.ltk.core.refactoring
+ org.eclipse.ltk.core.refactoring,
+ org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.core.codeassist,
  org.eclipse.php.core.compiler,
