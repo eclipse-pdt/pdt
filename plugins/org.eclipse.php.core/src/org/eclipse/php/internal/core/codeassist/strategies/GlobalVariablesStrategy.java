@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
@@ -151,7 +152,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 	protected IDLTKSearchScope createSearchScope() {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
 			return SearchEngine.createSearchScope(sourceModule);
 		}

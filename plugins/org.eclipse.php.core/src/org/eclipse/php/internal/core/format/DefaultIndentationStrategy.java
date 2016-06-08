@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -176,7 +177,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				while (lastNonEmptyLineIndex >= 0) {
 					IRegion lineInfo = document.getLineInformation(lastNonEmptyLineIndex);
 					String content = document.get(lineInfo.getOffset(), lineInfo.getLength());
-					if (content.trim().length() > 0) {
+					if (StringUtils.isNotBlank(content)) {
 						break;
 					}
 					lastNonEmptyLineIndex--;

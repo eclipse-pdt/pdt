@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.php.internal.ui.Logger;
@@ -86,7 +87,7 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy im
 
 	protected static boolean isBlanks(IStructuredDocument document, int startOffset, int endOffset)
 			throws BadLocationException {
-		return document.get(startOffset, endOffset - startOffset).trim().length() == 0;
+		return StringUtils.isBlank(document.get(startOffset, endOffset - startOffset));
 	}
 
 }

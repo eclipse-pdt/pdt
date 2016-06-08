@@ -68,7 +68,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				return;
 			}
 		}
-		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
 		boolean isUseContext = context instanceof UseNameContext && !((UseNameContext) context).isUseTrait();
