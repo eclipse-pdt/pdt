@@ -1373,7 +1373,7 @@
             commandId="org.eclipse.php.ui.edit.text.refactor.quickMenu"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
             
-		<key sequence="M1+M2+J" contextId="org.eclipse.php.ui.phpEditorScope"
+		<key sequence="M2+M3+J" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
 		<key sequence="CTRL+." commandId="org.eclipse.php.ui.edit.text.add.objectoperator" 
