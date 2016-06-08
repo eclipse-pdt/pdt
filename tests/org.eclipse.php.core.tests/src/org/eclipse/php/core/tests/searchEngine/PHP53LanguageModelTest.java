@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,7 +48,8 @@ public class PHP53LanguageModelTest {
 
 		project.create(null);
 		project.open(null);
-
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
@@ -59,7 +61,6 @@ public class PHP53LanguageModelTest {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	@AfterClass

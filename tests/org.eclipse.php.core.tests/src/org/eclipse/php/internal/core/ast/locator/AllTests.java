@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.locator;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -20,5 +23,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ PhpElementConciliatorTest.class, PhpElementConciliatorV5_3Test.class,
 		PhpElementConciliatorV5_4Test.class, PhpElementConciliatorV5_5Test.class, PhpElementConciliatorV5_6Test.class })
 public class AllTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 }

@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -88,7 +89,9 @@ import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
 
@@ -98,6 +101,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author shalom
  */
 public class ASTRewriteTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@RunWith(org.junit.runners.Suite.class)
 	@SuiteClasses({ ASTRewriteTests.class, ASTRewriteTestsPHP54.Suite.class, ASTRewriteTestsPHP55.Suite.class,

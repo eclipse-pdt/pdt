@@ -34,18 +34,25 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
 public class ModelStructureTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -75,7 +82,8 @@ public class ModelStructureTests {
 
 		project.create(null);
 		project.open(null);
-
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
@@ -127,7 +135,6 @@ public class ModelStructureTests {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}

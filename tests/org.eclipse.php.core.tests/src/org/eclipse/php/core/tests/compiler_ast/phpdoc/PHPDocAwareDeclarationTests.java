@@ -25,18 +25,24 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
 /**
  * These tests used for checking association between declaration AST node and
  * PHPDoc block assigned to it.
  */
 public class PHPDocAwareDeclarationTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Test
 	public void testVar() throws Exception {

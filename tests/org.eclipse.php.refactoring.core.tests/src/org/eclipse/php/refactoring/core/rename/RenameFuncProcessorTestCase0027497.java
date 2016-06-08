@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -36,8 +39,6 @@ public class RenameFuncProcessorTestCase0027497 extends AbstractRenameRefactorin
 
 	@Before
 	public void setUp() throws Exception {
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1");
 
@@ -68,7 +69,6 @@ public class RenameFuncProcessorTestCase0027497 extends AbstractRenameRefactorin
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	@After
