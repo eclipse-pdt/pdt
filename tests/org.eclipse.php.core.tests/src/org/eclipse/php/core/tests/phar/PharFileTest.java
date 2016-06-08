@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.phar.PharConstants;
 import org.eclipse.php.internal.core.phar.PharEntry;
 import org.eclipse.php.internal.core.phar.PharFile;
@@ -27,7 +28,9 @@ import org.eclipse.php.internal.core.phar.PharPackage;
 import org.eclipse.php.internal.core.phar.Stub;
 import org.eclipse.php.internal.core.phar.digest.Digest;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -41,6 +44,9 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class PharFileTest {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	private static final String PHAR_PHARS_FOLDER = "/workspace/phar";
 	protected static final String[] TESTS = new String[] { PHAR_PHARS_FOLDER };

@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
+import java.io.IOException;
+import java.util.concurrent.Semaphore;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -23,6 +26,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.search.indexing.AbstractJob;
+import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -34,6 +39,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("restriction")
 public class PHPCoreTests extends Plugin {
 
 	// The plug-in ID
@@ -41,6 +47,60 @@ public class PHPCoreTests extends Plugin {
 
 	// The shared instance
 	private static PHPCoreTests plugin;
+
+	private static final class NoWaitSignalThread extends Thread {
+
+		public NoWaitSignalThread() {
+			super("No-Wait-Signal-Thread");
+		}
+
+		@Override
+		public void run() {
+			ModelManager.getModelManager().getIndexManager().waitUntilReady();
+		}
+
+	}
+
+	private static final class NoDelayRequest extends AbstractJob {
+
+		private final Thread noWaitSignalThread;
+		private final Semaphore waitForIndexerSemaphore;
+		private final IndexManager indexManager;
+
+		private NoDelayRequest(Thread noWaitSignalThread, Semaphore waitForIndexerSemaphore) {
+			this.waitForIndexerSemaphore = waitForIndexerSemaphore;
+			this.noWaitSignalThread = noWaitSignalThread;
+			this.indexManager = ModelManager.getModelManager().getIndexManager();
+		}
+
+		@Override
+		protected void run() throws CoreException, IOException {
+			/*
+			 * Check if there were some new index requests added to the queue in
+			 * the meantime, if so go back to the end of the queue.
+			 */
+			if (indexManager.awaitingJobsCount() > 1) {
+				noWaitSignalThread.interrupt();
+				NoWaitSignalThread noWaitSignalThread = new NoWaitSignalThread();
+				// Go back to the end of the queue
+				indexManager.request(new NoDelayRequest(noWaitSignalThread, waitForIndexerSemaphore));
+				noWaitSignalThread.start();
+				return;
+			}
+			// Interrupt "wait for indexer" thread (no sleeping dude...).
+			noWaitSignalThread.interrupt();
+			/*
+			 * Requests queue is empty, we can assume that indexer has finished
+			 * so release semaphore to move on with processing.
+			 */
+			waitForIndexerSemaphore.release();
+		}
+
+		@Override
+		protected String getName() {
+			return "WAIT-UNTIL-READY-NO-DELAY-JOB";
+		}
+	}
 
 	/**
 	 * The constructor
@@ -141,12 +201,18 @@ public class PHPCoreTests extends Plugin {
 		return null;
 	}
 
-	public static void waitForIndexer() {
-		ModelManager.getModelManager().getIndexManager().waitUntilReady();
+	public static synchronized void waitForIndexer() {
+		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
+		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
+		final Thread noWaitSignalThread = new NoWaitSignalThread();
+		indexManager.request(new NoDelayRequest(noWaitSignalThread, waitForIndexerSemaphore));
+		noWaitSignalThread.start();
+		// Wait for indexer requests to be finished
+		waitForIndexerSemaphore.acquireUninterruptibly();
 	}
 
 	/**
-	 * Wait for autobuild notification to occur, that is for the autbuild to
+	 * Wait for auto-build notification to occur, that is for the auto-build to
 	 * finish.
 	 */
 	public static void waitForAutoBuild() {
@@ -173,7 +239,6 @@ public class PHPCoreTests extends Plugin {
 	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != ProjectOptions.getPhpVersion(project)) {
 			ProjectOptions.setPhpVersion(phpVersion, project);
-			waitForAutoBuild();
 			waitForIndexer();
 		}
 	}

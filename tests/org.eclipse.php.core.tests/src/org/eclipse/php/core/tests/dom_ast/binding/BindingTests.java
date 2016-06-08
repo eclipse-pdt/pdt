@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Assignment;
@@ -57,11 +58,17 @@ import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
 public class BindingTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	protected IProject project;
 	private IFile testFile;
@@ -76,7 +83,8 @@ public class BindingTests {
 
 			project.create(null);
 			project.open(null);
-
+			// Disable WTP validation to skip unnecessary clashes
+			ValidationFramework.getDefault().suspendValidation(project, true);
 			// configure nature
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
@@ -112,7 +120,6 @@ public class BindingTests {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
 		ISourceModule sourceModule = null;

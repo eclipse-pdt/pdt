@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.searchEngine;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -19,5 +22,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ PHP5LanguageModelTest.class, PHP53LanguageModelTest.class, SearchFieldTests.class })
 public class AllTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 }

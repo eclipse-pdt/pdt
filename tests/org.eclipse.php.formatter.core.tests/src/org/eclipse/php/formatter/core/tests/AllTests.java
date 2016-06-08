@@ -11,14 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.formatter.core.tests;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 @RunWith(Suite.class)
 @SuiteClasses({ FormatterTests.class, FormatterAutoEditTests.class, FormatterLinuxAutoEditTests.class })
 public class AllTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
+
 }

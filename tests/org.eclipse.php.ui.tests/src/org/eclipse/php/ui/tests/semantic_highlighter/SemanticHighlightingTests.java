@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
@@ -34,6 +35,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -59,13 +61,18 @@ import org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class SemanticHighlightingTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	protected IProject project;
 	protected IFile testFile;
@@ -110,6 +117,11 @@ public class SemanticHighlightingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("SemanticHighlighting_" + phpVersion);
 		if (project.exists()) {
 			return;
@@ -130,6 +142,11 @@ public class SemanticHighlightingTests {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
+		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
+			workspaceDescription.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
+		}
 	}
 
 	@After

@@ -28,6 +28,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,7 +46,8 @@ public class PHP5LanguageModelTest {
 
 		project.create(null);
 		project.open(null);
-
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
@@ -55,7 +57,6 @@ public class PHP5LanguageModelTest {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	@AfterClass

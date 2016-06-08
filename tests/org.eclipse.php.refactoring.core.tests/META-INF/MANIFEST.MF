@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.dltk.debug,
- org.eclipse.php.debug.core
+ org.eclipse.php.debug.core,
+ org.eclipse.wst.validation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

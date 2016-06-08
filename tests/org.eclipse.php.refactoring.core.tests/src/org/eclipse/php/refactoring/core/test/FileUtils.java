@@ -19,12 +19,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
@@ -48,7 +45,7 @@ public class FileUtils {
 		BufferedReader input = null;
 		try {
 			// FileReader always assumes default encoding is OK!
-			input = new BufferedReader(new InputStreamReader(file.getContents()));
+			input = new BufferedReader(new InputStreamReader(file.getContents(true)));
 			String line = null;
 
 			while ((line = input.readLine()) != null) {
@@ -78,51 +75,38 @@ public class FileUtils {
 
 	static public IProject createProject(String name) {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		if (project.exists()) {
-			return project;
-		}
 		try {
-			project.create(null);
-
-			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+			if (!project.exists()) {
+				project.create(null);
+				project.open(null);
+				IProjectDescription desc = project.getDescription();
+				desc.setNatureIds(new String[] { PHPNature.ID });
+				project.setDescription(desc, null);
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		return project;
 	}
 
 	static public IProject createProject(String name, PHPVersion version) {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		if (project.exists()) {
-			return project;
-		}
 		try {
-			project.create(null);
-
-			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-
-			ProjectOptions.setPhpVersion(version, project);
-
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+			if (!project.exists()) {
+				project.create(null);
+				project.open(null);
+				IProjectDescription desc = project.getDescription();
+				desc.setNatureIds(new String[] { PHPNature.ID });
+				project.setDescription(desc, null);
+				ProjectOptions.setPhpVersion(version, project);
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		return project;
 	}
 

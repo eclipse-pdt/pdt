@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -37,6 +39,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,8 +50,6 @@ public class PHPMoveProcessorTestCase1 {
 	@Before
 	public void setUp() throws Exception {
 		System.setProperty("disableStartupRunner", "true");
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("TestProject11");
 
@@ -93,7 +94,12 @@ public class PHPMoveProcessorTestCase1 {
 		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		project1.delete(IResource.FORCE, new NullProgressMonitor());
+		project2.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 
 	@Test
@@ -110,7 +116,8 @@ public class PHPMoveProcessorTestCase1 {
 		try {
 			Change change = processor.createChange(new NullProgressMonitor());
 			change.perform(new NullProgressMonitor());
-			PHPCoreTests.waitForAutoBuild();
+
+			PHPCoreTests.waitForIndexer();
 
 			assertTrue(project2.getFolder("src").exists());
 

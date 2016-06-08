@@ -34,15 +34,19 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
 /**
  * Description: This class tests {@link PHPStructuredTextPartitioner} Each
@@ -52,6 +56,9 @@ import org.junit.Test;
  * @author Alon Peled
  */
 public class PHPPartitionerTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	private static final String PROJECT_NAME = "partitioner";
 
@@ -161,7 +168,8 @@ public class PHPPartitionerTests {
 
 		project.create(null);
 		project.open(null);
-
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
