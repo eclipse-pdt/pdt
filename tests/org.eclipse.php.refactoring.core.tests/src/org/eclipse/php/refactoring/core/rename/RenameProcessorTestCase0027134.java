@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -33,51 +34,9 @@ import org.junit.Test;
 public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTest {
 	private IProject project1;
 
-	// private IFile file1;
-	//
-	// private IFile file2;
-
 	@Before
 	public void setUp() throws Exception {
-		// System.setProperty("disableStartupRunner", "true");
-		// PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
-		//
-		// project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
-		//
-		// IFolder folder = project1.getFolder("src");
-		//
-		// if (!folder.exists()) {
-		// folder.create(true, true, new NullProgressMonitor());
-		// }
-		//
-		// file1 = folder.getFile("test1.php");
-		//
-		// InputStream source = new ByteArrayInputStream(
-		// "<?php class MyClass{} ?>"
-		// .getBytes());
-		//
-		// if (!file1.exists()) {
-		// file1.create(source, true, new NullProgressMonitor());
-		// } else {
-		// file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		// }
-		//
-		// file2 = folder.getFile("test2.php");
-		//
-		// source = new ByteArrayInputStream(
-		// "<?php class SecondClass extends MyClass{} ?>"
-		// .getBytes());
-		//
-		// if (!file2.exists()) {
-		// file2.create(source, true, new NullProgressMonitor());
-		// } else {
-		// file2.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		// }
-		//
-		//
-		// PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
+		// nothing to be done here
 	}
 
 	@After
@@ -89,8 +48,6 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 	public void testRename1() throws Exception {
 
 		System.setProperty("disableStartupRunner", "true");
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
 
@@ -122,7 +79,6 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		Program program = createProgram(file1);
 
@@ -156,8 +112,6 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 	public void testRename2() throws Exception {
 
 		System.setProperty("disableStartupRunner", "true");
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
 
@@ -188,7 +142,6 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		Program program = createProgram(file2);
 
 		assertNotNull(program);
