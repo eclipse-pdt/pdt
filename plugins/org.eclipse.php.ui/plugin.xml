@@ -1523,12 +1523,6 @@
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.php.internal.ui.assignToLocal.assist"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-
-    <scheme
-          description="%scheme.description"
-          id="org.eclipse.php.ui.keybindings.scheme"
-          name="%scheme.name"
-          parentId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page class="org.eclipse.php.internal.ui.preferences.PHPBasePreferencePage"
