@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -18,6 +18,7 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,8 +38,6 @@ public class PHPMoveFileTestCase0031305 {
 
 	@Before
 	public void setUp() throws Exception {
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1");
 
@@ -54,8 +53,8 @@ public class PHPMoveFileTestCase0031305 {
 		}
 
 		project2 = FileUtils.createProject("project2");
+
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	@Test

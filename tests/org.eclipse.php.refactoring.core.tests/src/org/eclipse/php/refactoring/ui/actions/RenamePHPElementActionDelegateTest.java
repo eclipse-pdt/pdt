@@ -13,10 +13,6 @@ package org.eclipse.php.refactoring.ui.actions;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -27,8 +23,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathAttribute;
-import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -47,14 +41,14 @@ import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
+import junit.framework.TestCase;
+
 public class RenamePHPElementActionDelegateTest extends TestCase {
 
 	private IProject project1;
 
 	@Override
 	protected void setUp() throws Exception {
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1");
 
@@ -86,43 +80,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		IPath fPath = new Path("/project1/src");
-		IPath[] inclusionPattern = new IPath[0];
-		IPath[] exclusionPattern = new IPath[0];
-		IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern,
-				new IBuildpathAttribute[0]);
-
-		fPath = new Path("/project1");
-		inclusionPattern = new IPath[0];
-		exclusionPattern = new IPath[1];
-		exclusionPattern[0] = new Path("src/");
-		IBuildpathEntry sourceEntry1 = DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern,
-				new IBuildpathAttribute[0]);
-
-		final IScriptProject scriptProject = DLTKCore.create(project1.getProject());
-
-		final List<IBuildpathEntry> entriesList = new ArrayList<IBuildpathEntry>();
-		IBuildpathEntry[] entries;
-		try {
-			entries = scriptProject.getRawBuildpath();
-
-			entries = FileUtils.removeEntryFromBuildPath(entries, project1.getFullPath());
-
-			entriesList.addAll(Arrays.asList(entries));
-
-			entriesList.add(sourceEntry);
-			entriesList.add(sourceEntry1);
-		} catch (ModelException e) {
-			e.printStackTrace();
-		}
-
-		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList.size()];
-
-		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
-		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
-
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	public void testGetSourceOffsetAndGetNode() {

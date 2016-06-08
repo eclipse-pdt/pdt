@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
@@ -29,7 +30,9 @@ import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
 /**
  * Tests {@link ASTMatcher}
@@ -37,6 +40,9 @@ import org.junit.Test;
  * @author Eden K., 2008
  */
 public class ASTMatcherTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	public void performMatching(String matchingStr, String notMatchingStr) throws Exception {
 

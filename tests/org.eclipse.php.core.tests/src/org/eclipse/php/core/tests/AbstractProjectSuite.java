@@ -19,8 +19,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -45,7 +43,10 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.osgi.framework.Bundle;
+
+import junit.framework.TestSuite;
 
 public abstract class AbstractProjectSuite extends TestSuite {
 
@@ -269,6 +270,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 			}
 		};
 		getWorkspace().run(create, null);
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		return project;
 	}
 

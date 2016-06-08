@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.wst.validation.ValidationFramework;
 
 public abstract class AbstraceConciliatorTest {
 
@@ -69,6 +70,8 @@ public abstract class AbstraceConciliatorTest {
 			project.create(null);
 
 			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
+			// Disable WTP validation to skip unnecessary clashes
+			ValidationFramework.getDefault().suspendValidation(project, true);
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
@@ -79,7 +82,6 @@ public abstract class AbstraceConciliatorTest {
 			e.printStackTrace();
 		}
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		return project;
 	}
 
@@ -105,7 +107,6 @@ public abstract class AbstraceConciliatorTest {
 			e.printStackTrace();
 		}
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		return project;
 	}
 

@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.refactoring.core.test.RefactoringTestsSupport;
 import org.eclipse.php.refactoring.core.test.TestProject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -26,8 +30,12 @@ public class AllTests {
 
 	private static TestProject project;
 
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
+
 	@BeforeClass
 	public static void setUpSuite() {
+		RefactoringTestsSupport.setUp();
 		project = new TestProject("RefactoringMove");
 		System.setProperty("disableStartupRunner", "true");
 	}
@@ -38,6 +46,6 @@ public class AllTests {
 			project.delete();
 		} catch (Exception e) {
 		}
-		// System.setProperty("disableStartupRunner",null);
+		RefactoringTestsSupport.tearDown();
 	}
 }
