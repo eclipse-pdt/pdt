@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -47,14 +45,14 @@ import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
+import junit.framework.TestCase;
+
 public class RenamePHPElementActionDelegateTest extends TestCase {
 
 	private IProject project1;
 
 	@Override
 	protected void setUp() throws Exception {
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1");
 
@@ -122,7 +120,6 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	public void testGetSourceOffsetAndGetNode() {

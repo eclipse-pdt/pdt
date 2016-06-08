@@ -49,6 +49,7 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,7 +93,8 @@ public class MarkOccurrenceTests {
 
 		project.create(null);
 		project.open(null);
-
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
