@@ -41,7 +41,6 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 	public void setUp() throws Exception {
 		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = createProject("project1");
 
@@ -68,7 +67,6 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		return file;
 	}
 

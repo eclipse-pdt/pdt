@@ -17,16 +17,22 @@ import java.io.InputStreamReader;
 
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
 public class PHPDocParserTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
 	public static final String[] TEST_DIRS = { "/workspace/phpdoc_parser" };

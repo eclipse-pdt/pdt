@@ -10,10 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.actions;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.php.refactoring.ui.actions");

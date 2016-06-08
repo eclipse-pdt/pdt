@@ -63,7 +63,6 @@ public abstract class AbstractRefactoringTest {
 	}
 
 	protected void initFiles(String[] fileNames) throws Exception {
-		project = getProject();
 		for (final String fileName : fileNames) {
 			final PdttFileExt pdttFile = new PdttFileExt(getBundle(), fileName);
 			for (FileInfo testFile : pdttFile.getTestFiles()) {
@@ -73,7 +72,6 @@ public abstract class AbstractRefactoringTest {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	private String getContents(PdttFileExt pdttFile, FileInfo testFile) {
@@ -131,6 +129,7 @@ public abstract class AbstractRefactoringTest {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+		PHPCoreTests.waitForIndexer();
 	}
 
 	protected void checkInitCondition(RefactoringProcessor processor) {
@@ -181,7 +180,6 @@ public abstract class AbstractRefactoringTest {
 
 	protected void checkTestResult(PdttFileExt pdttFile) {
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		List<FileInfo> files = pdttFile.getExpectedFiles();
 		for (FileInfo expFile : files) {
 			IFile file = project.findFile(expFile.getName());
