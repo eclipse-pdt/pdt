@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -191,7 +192,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 			if (wordsToSkip <= 0) {
 				result.add(text);
 			} else {
-				if (text.trim().length() == 0) {
+				if (StringUtils.isBlank(text)) {
 					continue;
 				}
 				List<String> commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(text.trim()));

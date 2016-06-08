@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.CaseDefaultIndentationStrategy;
@@ -72,7 +73,7 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 		IRegion lineInfo = document.getLineInformation(lineNumber);
 		int lineOffset = lineInfo.getOffset();
 		String lineStart = document.get(lineOffset, startOffset - lineOffset);
-		if (lineStart.trim().length() == 0) {
+		if (StringUtils.isBlank(lineStart)) {
 			// making sure that the work "case"/"dafault" is the first word in
 			// the line
 			buffer.setLength(0);

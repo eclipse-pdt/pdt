@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -184,13 +185,14 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 					fLastProject);
 			String indentationWrappedLineSize = preferencesSupport
 					.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE, null, fLastProject);
-			if (indentationWrappedLineSize == null || indentationWrappedLineSize.trim().length() == 0) {
+
+			if (indentationWrappedLineSize == null || StringUtils.isBlank(indentationWrappedLineSize)) {
 				indentationWrappedLineSize = PHPCoreConstants.DEFAULT_INDENTATION_WRAPPED_LINE_SIZE;
 			}
 
 			String indentationArrayInitSize = preferencesSupport
 					.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE, null, fLastProject);
-			if (indentationArrayInitSize == null || indentationArrayInitSize.trim().length() == 0) {
+			if (indentationArrayInitSize == null || StringUtils.isBlank(indentationArrayInitSize)) {
 				indentationArrayInitSize = PHPCoreConstants.DEFAULT_INDENTATION_ARRAY_INIT_SIZE;
 			}
 

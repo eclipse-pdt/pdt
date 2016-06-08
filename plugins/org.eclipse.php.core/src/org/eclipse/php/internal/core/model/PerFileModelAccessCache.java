@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.model;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -185,7 +186,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			// if the namespace is not blank, append it to the key.
 			final StringBuilder key = new StringBuilder();
-			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
+
+			if (namespaceName != null && StringUtils.isNotBlank(namespaceName)) {
 				String nameSpace = namespaceName;
 				if (namespaceName.startsWith("\\") //$NON-NLS-1$
 						|| namespaceName.startsWith("/")) { //$NON-NLS-1$
@@ -278,7 +280,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			// if the namespace is not blank, append it to the key.
 			final StringBuilder key = new StringBuilder();
-			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
+			if (namespaceName != null && StringUtils.isNotBlank(namespaceName)) {
 				String nameSpace = namespaceName;
 				if (namespaceName.startsWith("\\") //$NON-NLS-1$
 						|| namespaceName.startsWith("/")) { //$NON-NLS-1$

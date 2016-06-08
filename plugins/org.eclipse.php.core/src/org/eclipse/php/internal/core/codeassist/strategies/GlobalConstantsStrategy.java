@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -60,8 +61,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
-
-		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
 

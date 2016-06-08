@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -152,7 +153,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 		for (PHPDocTag tag : docBlock.getTags(TagKind.METHOD)) {
 			final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(methodName, tag);
 			for (String typeName : typeNames) {
-				if (typeName.trim().isEmpty()) {
+				if (StringUtils.isBlank(typeName)) {
 					continue;
 				}
 				IEvaluatedType evaluatedType = PHPEvaluationUtils.extractArrayType(typeName, currentNamespace,

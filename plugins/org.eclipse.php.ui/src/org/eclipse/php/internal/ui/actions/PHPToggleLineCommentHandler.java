@@ -3,6 +3,7 @@ package org.eclipse.php.internal.ui.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -181,7 +182,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			}
 			// }
 
-			isComment = !phpStrat && string.trim().length() == 0
+			isComment = !phpStrat && StringUtils.isBlank(string)
 					|| (string.length() >= OPEN_COMMENT.length() && string.startsWith(OPEN_COMMENT))
 					|| (string.length() >= SINGLE_LINE_COMMENT.length() && string.startsWith(SINGLE_LINE_COMMENT));
 		} catch (BadLocationException e) {
