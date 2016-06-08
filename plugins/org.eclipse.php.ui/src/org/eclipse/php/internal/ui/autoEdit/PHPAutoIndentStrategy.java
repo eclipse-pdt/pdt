@@ -15,6 +15,7 @@ package org.eclipse.php.internal.ui.autoEdit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -90,7 +91,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				defaultStrategy.placeMatchingBlanksForStructuredDocument((IStructuredDocument) document, helpBuffer,
 						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
-				if (document.get(region.getOffset(), region.getLength()).trim().length() == 0) {// blank
+				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {// blank
 																								// line
 					if (command.offset != region.getOffset()) {
 						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
@@ -124,7 +125,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		int lines = tempdocument.getNumberOfLines();
 		// starting empty lines of pasted code.
 		int startingEmptyLines = 0;
-		StringBuffer tempsb = new StringBuffer();
+		StringBuilder tempsb = new StringBuilder();
 		try {
 			for (int i = 0; i < lines; i++) {
 				IRegion region = tempdocument.getLineInformation(i);
@@ -133,7 +134,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				}
 				String currentLine = tempdocument.get(region.getOffset(), region.getLength());
 				if (tempsb.length() == 0) {
-					if (currentLine.trim().length() == 0) {
+					if (StringUtils.isBlank(currentLine)) {
 						startingEmptyLines++;
 					} else {
 						tempsb.append(currentLine.trim());

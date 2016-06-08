@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -52,7 +53,7 @@ public class PharPath {
 	}
 
 	public boolean isPhar() {
-		return (folder == null || folder.trim().length() == 0) && (file == null || file.trim().length() == 0);
+		return (folder == null || StringUtils.isBlank(folder)) && (file == null || StringUtils.isBlank(file));
 	}
 
 	public static PharPath getPharPath(IPath path) {

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
@@ -364,7 +365,7 @@ public class DefaultCommentMapper {
 					resetTo(end + 1, previousStart);
 					this.scanner.next_token();
 					String token = this.scanner.yytext();
-					if (token != null && token.trim().length() > 0) {
+					if (token != null && StringUtils.isNotBlank(token)) {
 						// stop search on condition 3)
 						// if first comment fails, then there's no extended
 						// position in fact
@@ -492,7 +493,7 @@ public class DefaultCommentMapper {
 					resetTo(previousEnd, commentStart);
 					this.scanner.next_token();
 					String token = this.scanner.yytext();
-					if (token != null && token.trim().length() > 0) {
+					if (token != null && StringUtils.isNotBlank(token)) {
 						// stop search on condition 2)
 						// if first index fails, then there's no extended
 						// position in fact...

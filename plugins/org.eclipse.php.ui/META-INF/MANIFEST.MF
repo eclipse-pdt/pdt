@@ -45,7 +45,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.wst.common.project.facet.ui,
  org.apache.commons.lang,
- org.eclipse.text
+ org.eclipse.text,
+ org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatter.ui,org.eclipse.php.refactoring.ui",
  org.eclipse.php.internal.ui.actions;x-internal:=true,

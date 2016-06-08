@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
@@ -320,7 +321,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			return;
 		}
 
-		if (name.getText().trim().length() == 0) {
+		if (StringUtils.isBlank(name.getText())) {
 			okButton.setEnabled(false);
 			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK,
 					PHPUIMessages.NewPHPManualSiteDialog_siteNotSpecified, null));

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.filebuffers.LocationKind;
@@ -647,7 +648,7 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 
 				if (l > layer && p != null && p.overlapsWith(hoverRegion.getOffset(), hoverRegion.getLength())) {
 					String msg = getMessageFromAnnotation(a);
-					if (msg != null && msg.trim().length() > 0) {
+					if (msg != null && StringUtils.isNotBlank(msg)) {
 						layer = l;
 						annotation = a;
 						position = p;

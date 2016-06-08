@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.ast.rewrite;
 import java.io.IOException;
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -256,7 +257,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	final void doTextInsert(int offset, String insertString, TextEditGroup editGroup) {
-		if (isInsertUseStatement && insertString.trim().length() > 0) {
+		if (isInsertUseStatement && StringUtils.isNotBlank(insertString)) {
 			insertString = insertString.replaceAll("\r", "").replaceAll("\n", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					""); //$NON-NLS-1$
 		}

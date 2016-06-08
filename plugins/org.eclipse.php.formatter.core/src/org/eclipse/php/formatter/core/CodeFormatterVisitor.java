@@ -14,6 +14,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -1299,7 +1300,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						initCommentWords();
 						StringBuilder sb = new StringBuilder();
 						for (String w : commentWords) {
-							if (w.trim().length() == 0) {
+							if (StringUtils.isBlank(w)) {
 								continue;
 							}
 							sb.append(w).append(" "); //$NON-NLS-1$
@@ -1571,7 +1572,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] texts) {
 		int end = texts.length;
 		for (int i = texts.length - 1; i >= 0; i--) {
-			if (texts[i].getValue().trim().length() == 0) {
+			if (StringUtils.isBlank(texts[i].getValue())) {
 				if (end > 0) {
 					end--;
 				}
@@ -1584,7 +1585,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		int start = 0;
 		for (int i = 0; i < texts.length; i++) {
-			if (texts[i].getValue().trim().length() == 0) {
+			if (StringUtils.isBlank(texts[i].getValue())) {
 				if (start < texts.length - 1) {
 					start++;
 				}
@@ -1601,7 +1602,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private String[] getNonblankWords(String[] words) {
 		int length = words.length;
 		for (int i = words.length - 1; i >= 0; i--) {
-			if (words[i].trim().length() == 0) {
+			if (StringUtils.isBlank(words[i])) {
 				length--;
 			} else {
 				break;
@@ -1633,7 +1634,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private void formatCommentBlockWords(int indentLength, String blanks) {
 		initCommentWords();
 		for (String word : commentWords) {
-			if (word.trim().length() == 0) {
+			if (StringUtils.isBlank(word)) {
 				continue;
 			}
 			indertWordToCommentBlock(word, indentLength, blanks);
@@ -1741,7 +1742,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 
 		for (String word : words) {
-			if (word.trim().length() == 0) {
+			if (StringUtils.isBlank(word)) {
 				continue;
 			}
 			indertWordToComment(phpDocTag, tagLength, word, insertSpace);

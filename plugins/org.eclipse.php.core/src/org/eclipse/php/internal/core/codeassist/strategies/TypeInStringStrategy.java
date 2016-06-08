@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
@@ -60,7 +61,7 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 				return;
 			}
 		}
-		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
 		ISourceRange replacementRange = getReplacementRange(abstractContext);

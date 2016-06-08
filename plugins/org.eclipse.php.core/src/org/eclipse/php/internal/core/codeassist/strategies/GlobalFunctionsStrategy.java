@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -52,7 +53,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 
 		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext.getPreviousWord()
 				: abstractContext.getPrefix();
-		if (prefix.trim().isEmpty() || prefix.startsWith("$")) { //$NON-NLS-1$
+		if (StringUtils.isBlank(prefix) || prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 

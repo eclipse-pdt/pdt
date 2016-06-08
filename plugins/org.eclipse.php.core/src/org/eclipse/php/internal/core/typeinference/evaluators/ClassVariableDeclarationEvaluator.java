@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -211,7 +212,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ || tagKind == TagKind.PROPERTY_WRITE) {
 				final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(variableName, tag);
 				for (String typeName : typeNames) {
-					if (typeName.trim().isEmpty()) {
+					if (StringUtils.isBlank(typeName)) {
 						continue;
 					}
 					IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);

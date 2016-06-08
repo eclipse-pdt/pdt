@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
@@ -232,7 +233,7 @@ public class PHPEvaluationUtils {
 		List<IEvaluatedType> res = new LinkedList<IEvaluatedType>();
 		for (String typeName : typeNames) {
 			List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
-			if (typeName.trim().isEmpty()) {
+			if (StringUtils.isBlank(typeName)) {
 				continue;
 			}
 			IEvaluatedType evaluatedType = PHPEvaluationUtils.extractArrayType(typeName, currentNamespace, offset);
