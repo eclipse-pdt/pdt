@@ -14,8 +14,8 @@ package org.eclipse.php.internal.core.index;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.SourceRange;
@@ -30,13 +30,10 @@ import org.eclipse.php.internal.core.model.IncludeField;
 
 public class PhpElementResolver implements IElementResolver {
 
-	private static final String SPLIT_STR = ";"; //$NON-NLS-1$
-	private static final Pattern SPLIT_METADATA = Pattern.compile(SPLIT_STR);
-	private static final Pattern SEPARATOR_PATTERN = Pattern.compile(","); //$NON-NLS-1$
+	private static final char SPLIT_CHAR = ';';
+	private static final char SEPARATOR_CHAR = ',';
 	private static final char RETURN_TYPE_CHAR = ':';
-	private static final Pattern RETURN_TYPE_PATTERN = Pattern.compile(":"); //$NON-NLS-1$
 	private static final String[] EMPTY = new String[0];
-	private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
 	public IModelElement resolve(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
 			String elementName, String metadata, String doc, String qualifier, String parent,
@@ -46,7 +43,7 @@ public class PhpElementResolver implements IElementResolver {
 		String metadataToDecode = null;
 
 		if (metadata != null) {
-			String[] split = SPLIT_METADATA.split(metadata);
+			String[] split = StringUtils.split(metadata, SPLIT_CHAR);
 			if (split.length >= 1) {
 				try {
 					occurrenceCount = Integer.parseInt(split[0]);
@@ -81,7 +78,7 @@ public class PhpElementResolver implements IElementResolver {
 		switch (elementType) {
 		case IModelElement.PACKAGE_DECLARATION:
 			if (metadataToDecode != null) {
-				superClassNames = SEPARATOR_PATTERN.split(metadataToDecode);
+				superClassNames = StringUtils.split(metadataToDecode, SEPARATOR_CHAR);
 			}
 			// a namespace cannot have a nested namespace otherwise
 			// occurrenceCount will be applied to both!
@@ -91,7 +88,7 @@ public class PhpElementResolver implements IElementResolver {
 
 		case IModelElement.TYPE:
 			if (metadataToDecode != null) {
-				superClassNames = SEPARATOR_PATTERN.split(metadataToDecode);
+				superClassNames = StringUtils.split(metadataToDecode, SEPARATOR_CHAR);
 			}
 			return new IndexType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
 					superClassNames, doc, 1);
@@ -107,14 +104,14 @@ public class PhpElementResolver implements IElementResolver {
 					returnType = metadataToDecode.substring(0, metadataToDecode.length() - 1);
 					metadataToDecode = null;
 				} else {
-					String[] decoded = RETURN_TYPE_PATTERN.split(metadataToDecode);
+					String[] decoded = StringUtils.split(metadataToDecode, RETURN_TYPE_CHAR);
 					if (decoded.length == 2) {
 						metadataToDecode = decoded[1];
 						returnType = decoded[0];
 					}
 				}
 				if (metadataToDecode != null) {
-					parameters = SEPARATOR_PATTERN.split(metadataToDecode);
+					parameters = StringUtils.split(metadataToDecode, SEPARATOR_CHAR);
 				}
 			}
 			return new IndexMethod(parentElement, elementName, returnType, flags, offset, length, nameOffset,
