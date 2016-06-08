@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -18,6 +19,8 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,6 +31,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,8 +58,6 @@ public class PHPMoveProcessorRunConfigTestCase2 {
 	@Before
 	public void setUp() throws Exception {
 		System.setProperty("disableStartupRunner", "true");
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("TestProject1");
 
@@ -90,7 +92,11 @@ public class PHPMoveProcessorRunConfigTestCase2 {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 
 	@Test
@@ -115,7 +121,6 @@ public class PHPMoveProcessorRunConfigTestCase2 {
 			fail(e.getMessage());
 		}
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		try {
 			config = DebugPlugin.getDefault().getLaunchManager().getLaunchConfiguration(configFile);
 

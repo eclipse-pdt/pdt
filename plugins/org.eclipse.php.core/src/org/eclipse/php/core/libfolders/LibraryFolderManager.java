@@ -52,6 +52,11 @@ public class LibraryFolderManager {
 	private Collection<ILibraryFolderChangeListener> listeners;
 
 	/**
+	 * Only for test purposes.
+	 */
+	private static final String DISABLE_PROPERTY = "org.eclipse.php.disablePHPLibraryFolderAutoDetect";
+
+	/**
 	 * Private constructor to initialize the library folder manager.
 	 * 
 	 * <p>
@@ -66,7 +71,9 @@ public class LibraryFolderManager {
 	 */
 	private LibraryFolderManager() {
 		listeners = Collections.synchronizedSet(new HashSet<ILibraryFolderChangeListener>());
-
+		if (System.getProperty(DISABLE_PROPERTY, null) != null) {
+			return;
+		}
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new AutoDetectLibraryFolderListener(),
 				IResourceChangeEvent.POST_CHANGE);
 	}

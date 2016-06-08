@@ -52,6 +52,7 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
@@ -115,7 +116,9 @@ public class FormatterTests {
 
 		project.create(null);
 		project.open(null);
-
+		
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
@@ -134,7 +137,6 @@ public class FormatterTests {
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		profileManager.clearAllSettings(scopeContext);
 		profileManager.commitChanges(scopeContext);

@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.ast.nodes.Program;
@@ -36,8 +37,6 @@ public class ProgramDocumentChangeTest extends AbstractRenameRefactoringTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1");
 
@@ -59,7 +58,6 @@ public class ProgramDocumentChangeTest extends AbstractRenameRefactoringTest {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 	}
 
 	@After

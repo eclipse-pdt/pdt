@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,4 +22,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({ PHP5ErrorReportingTests.class, PHP53ErrorReportingTests.class, PHP54ErrorReportingTests.class,
 		PHP55ErrorReportingTests.class, PHP56ErrorReportingTests.class, PHP7ErrorReportingTests.class })
 public class ErrorReportingTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
+
 }

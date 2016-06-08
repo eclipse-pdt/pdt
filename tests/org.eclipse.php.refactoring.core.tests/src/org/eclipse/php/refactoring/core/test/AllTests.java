@@ -14,9 +14,6 @@ package org.eclipse.php.refactoring.core.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ org.eclipse.php.refactoring.core.rename.AllTests.class,
 		org.eclipse.php.refactoring.core.move.AllTests.class,

@@ -13,10 +13,16 @@ package org.eclipse.php.core.tests.text;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
 public class PHPTextSequenceUtilitiesTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Test
 	public void emptyArgumentList() {

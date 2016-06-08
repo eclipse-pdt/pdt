@@ -15,31 +15,28 @@ package org.eclipse.php.core.tests.codeassist;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.search.indexing.AbstractJob;
-import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -55,12 +52,17 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 
 @SuppressWarnings("all")
 @RunWith(PDTTList.class)
 public class CodeAssistTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	private static abstract class TestCompletionRequestor extends CompletionRequestor
 			implements IPHPCompletionRequestor {
@@ -101,19 +103,6 @@ public class CodeAssistTests {
 		@Override
 		public void addFlag(int flag) {
 			// ignore
-		}
-
-	}
-
-	private class WaitForIndexerThread extends Thread {
-
-		public WaitForIndexerThread() {
-			super("Wait-For-Indexer-Thread");
-		}
-
-		@Override
-		public void run() {
-			ModelManager.getModelManager().getIndexManager().waitUntilReady();
 		}
 
 	}
@@ -167,12 +156,12 @@ public class CodeAssistTests {
 		}
 		project.create(null);
 		project.open(null);
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-		// WTP validator can be disabled during code assist tests
-		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, version);
 	}
 
@@ -212,35 +201,6 @@ public class CodeAssistTests {
 		}
 	}
 
-	protected void waitForIndexerNoDelay() {
-		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
-		final Thread waitForIndexerThread = new WaitForIndexerThread();
-		AbstractJob noDelayRequest = new AbstractJob() {
-			@Override
-			protected void run() throws CoreException, IOException {
-				// Interrupt if wait until ready job is sleeping
-				waitForIndexerThread.interrupt();
-				// Indexer finished as we are here, release semaphore
-				waitForIndexerSemaphore.release();
-			}
-			@Override
-			protected String getName() {
-				return "WAIT-UNTIL-READY-NO-DELAY-JOB";
-			}
-		};
-		ModelManager.getModelManager().getIndexManager().request(noDelayRequest);
-		/*
-		 * Start "Wait Until Ready" job to notify JobManager#delaySignal (will
-		 * cause awaiting jobs to run immediately).
-		 */
-		waitForIndexerThread.start();
-		try {
-			waitForIndexerSemaphore.acquire();
-		} catch (InterruptedException e) {
-			Logger.logException(e);
-		}
-	}
-
 	/**
 	 * Creates test file with the specified content and calculates the offset at
 	 * OFFSET_CHAR. Offset character itself is stripped off.
@@ -270,8 +230,7 @@ public class CodeAssistTests {
 			this.otherFiles.add(i, tmp);
 			i++;
 		}
-		// Wait for indexer without delay
-		waitForIndexerNoDelay();
+		PHPCoreTests.waitForIndexer();
 		return offset;
 	}
 
@@ -296,6 +255,10 @@ public class CodeAssistTests {
 		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
+			}
+			@Override
+			public void completionFailure(IProblem problem) {
+				Logger.log(Logger.ERROR, problem.getMessage());
 			}
 		});
 		return proposals.toArray(new CompletionProposal[proposals.size()]);

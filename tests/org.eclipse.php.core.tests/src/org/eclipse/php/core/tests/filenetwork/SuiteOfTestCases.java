@@ -190,7 +190,6 @@ public abstract class SuiteOfTestCases extends TestCase {
 		if (parentSuite == null) {
 			parentSuite = new Suite(getClass().getName());
 			initializedSuites.put(getClass().getName(), parentSuite);
-			System.out.println("setUpSuite() in " + getClass().getName());
 			// TODO (alex) tearDownSuite() not executed
 			final AtomicBoolean errors = new AtomicBoolean();
 			final TestListener listener = new TestListener() {
