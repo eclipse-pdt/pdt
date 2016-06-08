@@ -55,7 +55,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.internal.core.util.Util.Comparer;
 import org.eclipse.osgi.util.NLS;
@@ -880,10 +879,6 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		// problemRequestor).initialize(source.toCharArray());
 		workingCopy.makeConsistent(null/* no progress monitor */);
 		return workingCopy;
-	}
-
-	public static void waitUntilIndexesReady() {
-		ModelManager.getModelManager().getIndexManager().waitUntilReady();
 	}
 
 	public static void storeFile(File dest, URL url) throws IOException {

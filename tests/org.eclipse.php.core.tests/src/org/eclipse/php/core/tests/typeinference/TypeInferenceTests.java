@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -87,7 +88,8 @@ public class TypeInferenceTests {
 
 		project.create(null);
 		project.open(null);
-
+		// Disable WTP validation to skip unnecessary clashes
+		ValidationFramework.getDefault().suspendValidation(project, true);
 		// configure nature
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
@@ -166,7 +168,6 @@ public class TypeInferenceTests {
 		try {
 			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 			PHPCoreTests.waitForIndexer();
-			PHPCoreTests.waitForAutoBuild();
 
 			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 			ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);

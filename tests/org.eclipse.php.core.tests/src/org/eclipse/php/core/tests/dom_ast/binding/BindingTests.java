@@ -57,6 +57,7 @@ import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +77,8 @@ public class BindingTests {
 
 			project.create(null);
 			project.open(null);
-
+			// Disable WTP validation to skip unnecessary clashes
+			ValidationFramework.getDefault().suspendValidation(project, true);
 			// configure nature
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
@@ -112,7 +114,6 @@ public class BindingTests {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
 		ISourceModule sourceModule = null;
