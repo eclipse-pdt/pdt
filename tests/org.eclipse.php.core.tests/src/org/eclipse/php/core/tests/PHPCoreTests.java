@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
+import java.io.IOException;
+import java.util.concurrent.Semaphore;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -23,8 +26,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.search.indexing.AbstractJob;
+import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -34,6 +40,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("restriction")
 public class PHPCoreTests extends Plugin {
 
 	// The plug-in ID
@@ -41,6 +48,22 @@ public class PHPCoreTests extends Plugin {
 
 	// The shared instance
 	private static PHPCoreTests plugin;
+
+	private static final class WaitForIndexerThread extends Thread {
+
+		private IndexManager indexManager;
+
+		public WaitForIndexerThread(IndexManager indexManager) {
+			super("Wait-For-Indexer-Thread");
+			this.indexManager = indexManager;
+		}
+
+		@Override
+		public void run() {
+			indexManager.waitUntilReady();
+		}
+
+	}
 
 	/**
 	 * The constructor
@@ -142,11 +165,50 @@ public class PHPCoreTests extends Plugin {
 	}
 
 	public static void waitForIndexer() {
-		ModelManager.getModelManager().getIndexManager().waitUntilReady();
+		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
+		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
+		final Thread waitForIndexerThread = new WaitForIndexerThread(indexManager);
+		AbstractJob noDelayRequest = new AbstractJob() {
+			@Override
+			protected void run() throws CoreException, IOException {
+				/*
+				 * Check if there were some new index requests added to the
+				 * queue in the meantime, if so go back to the end of the queue.
+				 */
+				if (indexManager.awaitingJobsCount() > 1) {
+					// Go back to the end of the queue
+					indexManager.request(this);
+					return;
+				}
+				// Interrupt "wait for indexer" thread (no sleeping dude...).
+				waitForIndexerThread.interrupt();
+				/*
+				 * Requests queue is empty, we can assume that indexer has
+				 * finished so release semaphore to move on with processing.
+				 */
+				waitForIndexerSemaphore.release();
+			}
+
+			@Override
+			protected String getName() {
+				return "WAIT-UNTIL-READY-NO-DELAY-JOB";
+			}
+		};
+		indexManager.request(noDelayRequest);
+		/*
+		 * Start "wait for indexer" thread to notify JobManager#delaySignal
+		 * (will cause awaiting jobs to run immediately).
+		 */
+		waitForIndexerThread.start();
+		try {
+			waitForIndexerSemaphore.acquire();
+		} catch (InterruptedException e) {
+			Logger.logException(e);
+		}
 	}
 
 	/**
-	 * Wait for autobuild notification to occur, that is for the autbuild to
+	 * Wait for auto-build notification to occur, that is for the auto-build to
 	 * finish.
 	 */
 	public static void waitForAutoBuild() {
@@ -173,7 +235,6 @@ public class PHPCoreTests extends Plugin {
 	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != ProjectOptions.getPhpVersion(project)) {
 			ProjectOptions.setPhpVersion(phpVersion, project);
-			waitForAutoBuild();
 			waitForIndexer();
 		}
 	}

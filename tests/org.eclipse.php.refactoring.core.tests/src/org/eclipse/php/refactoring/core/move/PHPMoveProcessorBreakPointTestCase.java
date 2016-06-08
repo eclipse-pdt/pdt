@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,6 +37,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,8 +47,6 @@ public class PHPMoveProcessorBreakPointTestCase {
 	@Before
 	public void setUp() throws Exception {
 		System.setProperty("disableStartupRunner", "true");
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("TestProject1");
 
@@ -87,7 +89,11 @@ public class PHPMoveProcessorBreakPointTestCase {
 		}
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 
 	@Test
@@ -113,7 +119,7 @@ public class PHPMoveProcessorBreakPointTestCase {
 		}
 
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e1) {
 		}
 

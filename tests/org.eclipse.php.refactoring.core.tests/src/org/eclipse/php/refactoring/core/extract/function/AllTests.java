@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.function;
 
+import org.eclipse.php.refactoring.core.test.RefactoringTestsSupport;
 import org.eclipse.php.refactoring.core.test.TestProject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -24,6 +25,7 @@ public class AllTests {
 
 	@BeforeClass
 	public static void setUpSuite() {
+		RefactoringTestsSupport.setUp();
 		project = new TestProject("RefactoringExtractFunc");
 		System.setProperty("disableStartupRunner", "true");
 	}
@@ -34,6 +36,6 @@ public class AllTests {
 			project.delete();
 		} catch (Exception e) {
 		}
-		// System.setProperty("disableStartupRunner",null);
+		RefactoringTestsSupport.tearDown();
 	}
 }

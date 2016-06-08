@@ -15,22 +15,17 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.dltk.core.search.indexing.AbstractJob;
-import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
@@ -39,7 +34,6 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -64,19 +58,6 @@ import org.osgi.framework.Bundle;
 @SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class ContentAssistTests {
-
-	private class WaitForIndexerThread extends Thread {
-
-		public WaitForIndexerThread() {
-			super("Wait-For-Indexer-Thread");
-		}
-
-		@Override
-		public void run() {
-			ModelManager.getModelManager().getIndexManager().waitUntilReady();
-		}
-
-	}
 
 	protected IProject project;
 	protected IFile testFile;
@@ -128,7 +109,7 @@ public class ContentAssistTests {
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
-		// WTP validator can be disabled during code assist tests
+		// Disable WTP validation to skip unnecessary clashes
 		ValidationFramework.getDefault().suspendValidation(project, true);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
@@ -254,8 +235,7 @@ public class ContentAssistTests {
 			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
 		}
-		// Wait for indexer without delay
-		waitForIndexerNoDelay();
+		PHPCoreTests.waitForIndexer();
 	}
 
 	protected void openEditor() throws Exception {
@@ -271,36 +251,6 @@ public class ContentAssistTests {
 			fEditor = (PHPStructuredEditor) part;
 		} else {
 			assertTrue("Unable to open php editor", false);
-		}
-	}
-
-	protected void waitForIndexerNoDelay() {
-		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
-		final Thread waitForIndexerThread = new WaitForIndexerThread();
-		AbstractJob noDelayRequest = new AbstractJob() {
-			@Override
-			protected void run() throws CoreException, IOException {
-				// Interrupt if wait until ready job is sleeping
-				waitForIndexerThread.interrupt();
-				// Indexer finished as we are here, release semaphore
-				waitForIndexerSemaphore.release();
-			}
-
-			@Override
-			protected String getName() {
-				return "WAIT-UNTIL-READY-NO-DELAY-JOB";
-			}
-		};
-		ModelManager.getModelManager().getIndexManager().request(noDelayRequest);
-		/*
-		 * Start "Wait Until Ready" job to notify JobManager#delaySignal (will
-		 * cause awaiting jobs to run immediately).
-		 */
-		waitForIndexerThread.start();
-		try {
-			waitForIndexerSemaphore.acquire();
-		} catch (InterruptedException e) {
-			Logger.logException(e);
 		}
 	}
 

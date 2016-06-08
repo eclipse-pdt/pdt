@@ -17,8 +17,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -40,23 +38,15 @@ public class TestProject {
 
 	private void createProject(String name) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		if (project.exists()) {
-			return;
-		}
-
 		try {
-			project.create(null);
-			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
+			if (!project.exists()) {
+				project.create(null);
+				project.open(null);
+				IProjectDescription desc = project.getDescription();
+				desc.setNatureIds(new String[] { PHPNature.ID });
+				project.setDescription(desc, null);
+			}
 			PHPCoreTests.waitForIndexer();
-			PHPCoreTests.waitForAutoBuild();
-
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

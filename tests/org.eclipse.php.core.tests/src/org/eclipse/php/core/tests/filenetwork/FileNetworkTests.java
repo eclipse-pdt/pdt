@@ -17,8 +17,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import junit.framework.Test;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IMethod;
@@ -30,6 +28,8 @@ import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+
+import junit.framework.Test;
 
 public class FileNetworkTests extends AbstractModelTests {
 
