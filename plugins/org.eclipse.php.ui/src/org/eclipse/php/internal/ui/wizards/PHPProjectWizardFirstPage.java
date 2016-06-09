@@ -39,6 +39,7 @@ import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -51,6 +52,7 @@ import org.eclipse.php.internal.ui.preferences.*;
 import org.eclipse.php.internal.ui.workingset.IWorkingSetIds;
 import org.eclipse.php.ui.util.PHPProjectUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -105,7 +107,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	public void createControl(Composite parent) {
 
 		initializeDialogUnits(parent);
-		final Composite composite = new Composite(parent, SWT.NULL);
+		ScrolledComposite sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
+
+		final Composite composite = new Composite(sc, SWT.NULL);
 		composite.setFont(parent.getFont());
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
@@ -126,6 +131,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		createWorkingSetGroup(composite, ((PHPProjectCreationWizard) getWizard()).getSelection(),
 				new String[] { IWorkingSetIds.PHP_ID, IWorkingSetIds.RESOURCE_ID, IWorkingSetIds.TASK_ID });
+
+		sc.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		sc.setContent(composite);
+		sc.setExpandHorizontal(true);
+		sc.setExpandVertical(true);
 
 		fDetectGroup = new DetectGroup(composite, fPHPLocationGroup, fNameGroup);
 
