@@ -18,7 +18,7 @@ import org.eclipse.debug.core.IStreamListener;
 import org.eclipse.debug.core.model.IFlushableStreamMonitor;
 
 public class DebugConsoleMonitor implements IFlushableStreamMonitor {
-	private StringBuffer fContents = new StringBuffer();
+	private StringBuilder fContents = new StringBuilder();
 	private Vector fListeners = new Vector(1);
 	private boolean fBuffered = true;
 

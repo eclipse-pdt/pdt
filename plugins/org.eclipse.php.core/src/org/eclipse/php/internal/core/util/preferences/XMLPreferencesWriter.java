@@ -29,13 +29,13 @@ public class XMLPreferencesWriter {
 	public static final char DELIMITER = (char) 5;
 
 	public static String getEscaped(String s) {
-		StringBuffer result = new StringBuffer(s.length() + 10);
+		StringBuilder result = new StringBuilder(s.length() + 10);
 		for (int i = 0; i < s.length(); ++i)
 			appendEscapedChar(result, s.charAt(i));
 		return result.toString();
 	}
 
-	protected static void appendEscapedChar(StringBuffer buffer, char c) {
+	protected static void appendEscapedChar(StringBuilder buffer, char c) {
 		String replacement = getReplacement(c);
 		if (replacement != null) {
 			buffer.append('&');
@@ -66,7 +66,7 @@ public class XMLPreferencesWriter {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static void write(StringBuffer sb, Map<String, Object> map) {
+	protected static void write(StringBuilder sb, Map<String, Object> map) {
 		for (Entry<?, ?> entry : map.entrySet()) {
 			String key = (String) entry.getKey();
 			sb.append("<"); //$NON-NLS-1$
@@ -101,7 +101,7 @@ public class XMLPreferencesWriter {
 	 */
 	public static void write(IEclipsePreferences pluginPreferences, String prefsKey,
 			List<IXMLPreferencesStorable> objects) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		appendDelimitedString(sb, objects.toArray(new IXMLPreferencesStorable[objects.size()]));
 		pluginPreferences.put(prefsKey, sb.toString());
 		try {
@@ -122,7 +122,7 @@ public class XMLPreferencesWriter {
 	 *            The IXMLPreferencesStorable to store.
 	 */
 	public static void write(IEclipsePreferences pluginPreferences, String prefsKey, IXMLPreferencesStorable object) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		write(sb, object.storeToMap());
 		pluginPreferences.put(prefsKey, sb.toString());
 		try {
@@ -133,7 +133,7 @@ public class XMLPreferencesWriter {
 	}
 
 	// Append the elements one by one into the given StringBuffer.
-	protected static void appendDelimitedString(StringBuffer buffer, IXMLPreferencesStorable[] elements) {
+	protected static void appendDelimitedString(StringBuilder buffer, IXMLPreferencesStorable[] elements) {
 		if (elements != null) {
 			for (int i = 0; i < elements.length; ++i) {
 				write(buffer, elements[i].storeToMap());
@@ -145,7 +145,7 @@ public class XMLPreferencesWriter {
 	}
 
 	public static String storableElementsToString(IXMLPreferencesStorable[] elements) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		appendDelimitedString(sb, elements);
 		return sb.toString();
 	}

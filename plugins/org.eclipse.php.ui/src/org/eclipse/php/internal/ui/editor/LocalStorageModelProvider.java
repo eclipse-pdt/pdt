@@ -87,7 +87,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 
 				int originalLengthToReplace = innerdocument.getLength();
 
-				StringBuffer stringBuffer = new StringBuffer();
+				StringBuilder stringBuffer = new StringBuilder();
 				int bufferSize = 2048;
 				char[] buffer = new char[bufferSize];
 				int nRead = 0;
@@ -330,7 +330,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 						// innerdocument.startSequentialRewrite(true);
 						// innerdocument.replaceText(this, 0,
 						// innerdocument.getLength(), "");
-						StringBuffer stringBuffer = new StringBuffer();
+						StringBuilder stringBuffer = new StringBuilder();
 						int bufferSize = 2048;
 						char[] buffer = new char[bufferSize];
 						int nRead = 0;

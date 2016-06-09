@@ -139,7 +139,7 @@ public class ResultVisitor extends TextSearchRequestor {
 	// @see org.eclipse.search.internal.ui.text.FileSearchQuery
 	// added due to changes in eclipse 3.4 API with the addition of LineElement
 	private static String getContents(TextSearchMatchAccess matchRequestor, int start, int end) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = start; i < end; i++) {
 			char ch = matchRequestor.getFileContentChar(i);
 			if (Character.isWhitespace(ch) || Character.isISOControl(ch)) {

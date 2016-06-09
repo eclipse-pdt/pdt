@@ -368,7 +368,7 @@ public class PHPSourceViewerInformationControl
 		}
 
 		// Add open and close PHP tags in order to enable PHP parser on content:
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("<?"); //$NON-NLS-1$
 		buf.append(content);
 		buf.append("?>"); //$NON-NLS-1$

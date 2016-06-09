@@ -27,7 +27,7 @@ public class StringUtils {
 	}
 
 	public static String implodeStrings(Iterable<String> strings, String glue) {
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder stringBuffer = new StringBuilder();
 		for (Iterator<String> i = strings.iterator(); i.hasNext();) {
 			String varClassName = i.next();
 			stringBuffer.append(varClassName);

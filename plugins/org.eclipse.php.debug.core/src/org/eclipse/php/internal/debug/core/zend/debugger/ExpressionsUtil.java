@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.PHP_VIRTUAL_CLASS;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_OBJECT_MEMBER;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.MOD_STATIC;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
+
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 
@@ -121,17 +124,15 @@ public class ExpressionsUtil {
 		if (staticMembers.length == 0)
 			return null;
 		Expression classStaticContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
-		ExpressionValue classStaticContextValue = new ExpressionValue(PHP_VIRTUAL_CLASS, className,
-				"Class of: " //$NON-NLS-1$
-						+ className,
-				staticMembers, staticMembers.length);
+		ExpressionValue classStaticContextValue = new ExpressionValue(PHP_VIRTUAL_CLASS, className, "Class of: " //$NON-NLS-1$
+				+ className, staticMembers, staticMembers.length);
 		classStaticContext.setValue(classStaticContextValue);
 		return classStaticContext;
 	}
 
 	private static int[] fetchStaticMembersVisibility(String className, Expression[] members,
 			ExpressionsManager expressionsManager) {
-		StringBuffer tuple = new StringBuffer();
+		StringBuilder tuple = new StringBuilder();
 		for (int i = 0; i < members.length; i++) {
 			tuple.append(MessageFormat.format(FetchStaticsVisibilityExpression.TUPLE_ELEMENT, className,
 					members[i].getLastName()));

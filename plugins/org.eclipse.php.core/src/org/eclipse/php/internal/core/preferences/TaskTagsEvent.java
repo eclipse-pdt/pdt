@@ -81,7 +81,7 @@ public class TaskTagsEvent extends EventObject {
 	}
 
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("[TaskTagsEvent: project = ");//$NON-NLS-1$
 		buffer.append(getProject());
 		buffer.append(", TaskTags = {");//$NON-NLS-1$

@@ -66,7 +66,7 @@ public class CodeFormatterPreview extends PhpPreview {
 	}
 
 	private String applyChanges(String content, List<?> changes) {
-		StringBuffer result = new StringBuffer(content);
+		StringBuilder result = new StringBuilder(content);
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			ReplaceEdit replace = (ReplaceEdit) changes.get(i);
 			result = result.replace(replace.getOffset(), replace.getExclusiveEnd(), replace.getText());

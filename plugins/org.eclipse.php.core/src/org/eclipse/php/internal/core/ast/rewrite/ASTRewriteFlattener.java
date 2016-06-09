@@ -28,12 +28,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		return flattener.getResult();
 	}
 
-	protected StringBuffer result;
+	protected StringBuilder result;
 	private RewriteEventStore store;
 
 	public ASTRewriteFlattener(RewriteEventStore store) {
 		this.store = store;
-		this.result = new StringBuffer();
+		this.result = new StringBuilder();
 	}
 
 	/**

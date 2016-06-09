@@ -109,7 +109,7 @@ public class BindingLabelProvider extends LabelProvider {
 		return DLTKPluginImages.DESC_FIELD_DEFAULT;
 	}
 
-	private static void getFieldLabel(IVariableBinding binding, long flags, StringBuffer buffer) {
+	private static void getFieldLabel(IVariableBinding binding, long flags, StringBuilder buffer) {
 		if (((flags & ScriptElementLabels.F_PRE_TYPE_SIGNATURE) != 0)/*
 																		 * &&
 																		 * !binding.
@@ -150,7 +150,7 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 	}
 
-	private static void getLocalVariableLabel(IVariableBinding binding, long flags, StringBuffer buffer) {
+	private static void getLocalVariableLabel(IVariableBinding binding, long flags, StringBuilder buffer) {
 		if (((flags & ScriptElementLabels.F_PRE_TYPE_SIGNATURE) != 0)) {
 			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 			buffer.append(' ');
@@ -212,13 +212,13 @@ public class BindingLabelProvider extends LabelProvider {
 		return DLTKPluginImages.DESC_METHOD_DEFAULT;
 	}
 
-	private static void appendDimensions(int dim, StringBuffer buffer) {
+	private static void appendDimensions(int dim, StringBuilder buffer) {
 		for (int i = 0; i < dim; i++) {
 			buffer.append('[').append(']');
 		}
 	}
 
-	private static void getMethodLabel(IFunctionBinding binding, long flags, StringBuffer buffer) {
+	private static void getMethodLabel(IFunctionBinding binding, long flags, StringBuilder buffer) {
 		// return type
 		// if ((flags & ScriptElementLabels.M_PRE_TYPE_PARAMETERS) != 0) {
 		// if (binding.isGenericMethod()) {
@@ -353,7 +353,7 @@ public class BindingLabelProvider extends LabelProvider {
 		return null;
 	}
 
-	private static void getTypeLabel(ITypeBinding binding, long flags, StringBuffer buffer) {
+	private static void getTypeLabel(ITypeBinding binding, long flags, StringBuilder buffer) {
 		// if ((flags & ScriptElementLabels.T_FULLY_QUALIFIED) != 0) {
 		// final IPackageBinding pack= binding.getPackage();
 		// if (pack != null && !pack.isUnnamed()) {
@@ -471,7 +471,7 @@ public class BindingLabelProvider extends LabelProvider {
 	// }
 	// }
 
-	private static void getTypeParametersLabel(ITypeBinding[] typeParameters, StringBuffer buffer) {
+	private static void getTypeParametersLabel(ITypeBinding[] typeParameters, StringBuilder buffer) {
 		if (typeParameters.length > 0) {
 			buffer.append('<');
 			for (int index = 0; index < typeParameters.length; index++) {
@@ -495,7 +495,7 @@ public class BindingLabelProvider extends LabelProvider {
 	 * @return the label of the binding
 	 */
 	public static String getBindingLabel(IBinding binding, long flags) {
-		StringBuffer buffer = new StringBuffer(60);
+		StringBuilder buffer = new StringBuilder(60);
 		if (binding instanceof ITypeBinding) {
 			getTypeLabel(((ITypeBinding) binding), flags, buffer);
 		} else if (binding instanceof IMethodBinding) {

@@ -1098,7 +1098,7 @@ public class PHPLaunchUtilities {
 	 * @return
 	 */
 	public static String generateQuery(ILaunch launch, IDebugParametersInitializer debugParametersInitializer) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 
 		Hashtable<String, String> parameters = debugParametersInitializer.getDebugParameters(launch);
 		Enumeration<String> e = parameters.keys();

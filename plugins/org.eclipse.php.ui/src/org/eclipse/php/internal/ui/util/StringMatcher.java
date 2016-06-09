@@ -272,7 +272,7 @@ public class StringMatcher {
 		Vector temp = new Vector();
 
 		int pos = 0;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		while (pos < fLength) {
 			char c = fPattern.charAt(pos++);
 			switch (c) {

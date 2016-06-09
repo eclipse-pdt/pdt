@@ -76,7 +76,7 @@ public class DBGpLogger {
 
 	public static void logException(String info, Object obj, Throwable exc) {
 		ILog theLog = PHPDebugPlugin.getDefault().getLog();
-		StringBuffer msg = new StringBuffer();
+		StringBuilder msg = new StringBuilder();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
 			msg.append(" : "); //$NON-NLS-1$

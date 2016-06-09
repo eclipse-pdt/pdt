@@ -80,7 +80,7 @@ public class CodeTemplateContext extends TemplateContext {
 				return code;
 			}
 
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (int i = 0; i < nLines; i++) {
 				if (i != 0) {
 					buf.append(lineDelim);

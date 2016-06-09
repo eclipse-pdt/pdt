@@ -252,7 +252,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		}
 
 		// Replace the content of the document
-		StringBuffer buffer = new StringBuffer(document.get());
+		StringBuilder buffer = new StringBuilder(document.get());
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			ReplaceEdit replace = (ReplaceEdit) changes.get(i);
 			buffer.replace(replace.getOffset(), replace.getExclusiveEnd(), replace.getText());

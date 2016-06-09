@@ -302,8 +302,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 
 	protected final void updateModel(DialogField field) {
 		if (field == fTodoTasksList) {
-			StringBuffer tags = new StringBuffer();
-			StringBuffer prios = new StringBuffer();
+			StringBuilder tags = new StringBuilder();
+			StringBuilder prios = new StringBuilder();
 			List list = fTodoTasksList.getElements();
 			for (int i = 0; i < list.size(); i++) {
 				if (i > 0) {
