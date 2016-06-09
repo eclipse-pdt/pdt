@@ -865,7 +865,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			int newLines = this.separatorLines == -1 ? getNewLines(nodeIndex) : this.separatorLines;
 
 			String lineDelim = getLineDelimiter();
-			StringBuffer buf = new StringBuffer(lineDelim);
+			StringBuilder buf = new StringBuilder(lineDelim);
 			for (int i = 0; i < newLines; i++) {
 				buf.append(lineDelim);
 			}
@@ -945,7 +945,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 		RewriteEvent[] events = event.getChildren();
 		ParagraphListRewriter listRewriter = new ParagraphListRewriter(insertIndent, separator);
-		StringBuffer leadString = new StringBuffer();
+		StringBuilder leadString = new StringBuilder();
 		if (isAllOfKind(events, RewriteEvent.INSERTED)) {
 			for (int i = 0; i < lead; i++) {
 				leadString.append(getLineDelimiter());

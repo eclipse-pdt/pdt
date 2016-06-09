@@ -15,8 +15,8 @@ public class DebugOutput {
 
 	private static final String CONTENT_TYPE_HEADER = "Content-Type:"; //$NON-NLS-1$
 
-	private StringBuffer fOutput = new StringBuffer();
-	private StringBuffer fHeader = new StringBuffer();
+	private StringBuilder fOutput = new StringBuilder();
+	private StringBuilder fHeader = new StringBuilder();
 	private int fUpdateCount = 0;
 	private String contentType;
 

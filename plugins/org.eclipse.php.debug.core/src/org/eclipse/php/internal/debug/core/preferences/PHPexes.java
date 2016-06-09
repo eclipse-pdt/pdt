@@ -621,7 +621,7 @@ public class PHPexes {
 									"PHP executable " //$NON-NLS-1$
 											+ location + " not found neither in plugin " //$NON-NLS-1$
 											+ pluginId + " nor in fragments attached to it", //$NON-NLS-1$
-							null));
+									null));
 			}
 		}
 	}
@@ -692,13 +692,13 @@ public class PHPexes {
 	public void save() {
 		IEclipsePreferences prefs = PHPDebugPlugin.getInstancePreferences();
 		final PHPexeItem[] phpItems = getEditableItems();
-		final StringBuffer locationsString = new StringBuffer();
-		final StringBuffer inisString = new StringBuffer();
-		final StringBuffer namesString = new StringBuffer();
-		final StringBuffer uniqueIdsString = new StringBuffer();
-		final StringBuffer debuggersString = new StringBuffer();
-		final StringBuffer defaultItemForPHPVersionString = new StringBuffer();
-		final StringBuffer loadIniDefaultString = new StringBuffer();
+		final StringBuilder locationsString = new StringBuilder();
+		final StringBuilder inisString = new StringBuilder();
+		final StringBuilder namesString = new StringBuilder();
+		final StringBuilder uniqueIdsString = new StringBuilder();
+		final StringBuilder debuggersString = new StringBuilder();
+		final StringBuilder defaultItemForPHPVersionString = new StringBuilder();
+		final StringBuilder loadIniDefaultString = new StringBuilder();
 		for (int i = 0; i < phpItems.length; i++) {
 			final PHPexeItem item = phpItems[i];
 			if (i > 0) {

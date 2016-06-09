@@ -92,7 +92,7 @@ public class NodeRewriteEvent extends RewriteEvent {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		switch (getChangeKind()) {
 		case INSERTED:
 			buf.append(" [inserted: "); //$NON-NLS-1$

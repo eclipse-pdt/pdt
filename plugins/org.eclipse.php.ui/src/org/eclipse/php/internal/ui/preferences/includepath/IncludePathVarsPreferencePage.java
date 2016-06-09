@@ -126,15 +126,11 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	 * @return
 	 */
 	private String getCurrentSettings() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		String[] names = {};
 		for (int i = 0; i < names.length; i++) {
 			String curr = names[i];
 			buf.append(curr).append('\0');
-			IPath val = null;
-			if (val != null) {
-				buf.append(val.toString());
-			}
 			buf.append('\0');
 		}
 		return buf.toString();

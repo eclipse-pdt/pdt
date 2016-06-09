@@ -327,7 +327,7 @@ public class Util {
 	 *         separator between each part
 	 */
 	public static final String concatWith(String[] array, char separator) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = array.length; i < length; i++) {
 			buffer.append(array[i]);
 			if (i < length - 1)
@@ -390,7 +390,7 @@ public class Util {
 			return name;
 		if (name == null || name.length() == 0)
 			return concatWith(array, separator);
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = array.length; i < length; i++) {
 			buffer.append(array[i]);
 			buffer.append(separator);
@@ -955,7 +955,7 @@ public class Util {
 	 * Put all the arguments in one String.
 	 */
 	public static String getProblemArgumentsForMarker(String[] arguments) {
-		StringBuffer args = new StringBuffer(10);
+		StringBuilder args = new StringBuilder(10);
 
 		args.append(arguments.length);
 		args.append(':');
@@ -2079,7 +2079,7 @@ public class Util {
 	 * Converts a char[][] to String, where segments are separated by '.'.
 	 */
 	public static String toString(char[][] c) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0, max = c.length; i < max; ++i) {
 			if (i != 0)
 				sb.append('.');
@@ -2095,7 +2095,7 @@ public class Util {
 	public static String toString(char[][] c, char[] d) {
 		if (c == null)
 			return new String(d);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0, max = c.length; i < max; ++i) {
 			sb.append(c[i]);
 			sb.append('.');
@@ -2116,7 +2116,7 @@ public class Util {
 		return result;
 	}
 
-	private static void appendArrayTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact) {
+	private static void appendArrayTypeSignature(char[] string, int start, StringBuilder buffer, boolean compact) {
 		int length = string.length;
 		// need a minimum 2 char
 		if (start >= length - 1) {
@@ -2144,7 +2144,7 @@ public class Util {
 		}
 	}
 
-	private static void appendClassTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact) {
+	private static void appendClassTypeSignature(char[] string, int start, StringBuilder buffer, boolean compact) {
 		char c = string[start];
 		if (c != Signature.C_RESOLVED) {
 			return;
@@ -2182,7 +2182,7 @@ public class Util {
 		}
 	}
 
-	static void appendTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact) {
+	static void appendTypeSignature(char[] string, int start, StringBuilder buffer, boolean compact) {
 		char c = string[start];
 		switch (c) {
 		case Signature.C_ARRAY:
@@ -2233,7 +2233,7 @@ public class Util {
 			return ""; //$NON-NLS-1$
 		}
 
-		StringBuffer buffer = new StringBuffer(methodSignature.length + 10);
+		StringBuilder buffer = new StringBuilder(methodSignature.length + 10);
 
 		// decode declaring class name
 		// it can be either an array signature or a type signature
@@ -2948,7 +2948,7 @@ public class Util {
 			throw new IllegalArgumentException();
 		}
 
-		StringBuffer buffer = new StringBuffer(methodSignature.length + 10);
+		StringBuilder buffer = new StringBuilder(methodSignature.length + 10);
 
 		// selector
 		if (methodName != null) {
@@ -2975,7 +2975,7 @@ public class Util {
 		return result;
 	}
 
-	private static int appendTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer, boolean isVarArgs) {
+	private static int appendTypeSignatureForAnchor(char[] string, int start, StringBuilder buffer, boolean isVarArgs) {
 		// need a minimum 1 char
 		if (start >= string.length) {
 			throw new IllegalArgumentException();
@@ -3053,7 +3053,7 @@ public class Util {
 		}
 	}
 
-	private static int appendTypeArgumentSignatureForAnchor(char[] string, int start, StringBuffer buffer) {
+	private static int appendTypeArgumentSignatureForAnchor(char[] string, int start, StringBuilder buffer) {
 		// need a minimum 1 char
 		if (start >= string.length) {
 			throw new IllegalArgumentException();
@@ -3071,7 +3071,7 @@ public class Util {
 		}
 	}
 
-	private static int appendCaptureTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer) {
+	private static int appendCaptureTypeSignatureForAnchor(char[] string, int start, StringBuilder buffer) {
 		// need a minimum 2 char
 		if (start >= string.length - 1) {
 			throw new IllegalArgumentException();
@@ -3083,7 +3083,7 @@ public class Util {
 		return appendTypeArgumentSignatureForAnchor(string, start + 1, buffer);
 	}
 
-	private static int appendArrayTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer,
+	private static int appendArrayTypeSignatureForAnchor(char[] string, int start, StringBuilder buffer,
 			boolean isVarArgs) {
 		int length = string.length;
 		// need a minimum 2 char
@@ -3119,7 +3119,7 @@ public class Util {
 		return e;
 	}
 
-	private static int appendClassTypeSignatureForAnchor(char[] string, int start, StringBuffer buffer) {
+	private static int appendClassTypeSignatureForAnchor(char[] string, int start, StringBuilder buffer) {
 		// need a minimum 3 chars "Lx;"
 		if (start >= string.length - 2) {
 			throw new IllegalArgumentException();

@@ -614,7 +614,7 @@ public class DBGpSession {
 	}
 
 	public String toString() {
-		StringBuffer strBuf = new StringBuffer(getIdeKey());
+		StringBuilder strBuf = new StringBuilder(getIdeKey());
 		if (getSessionId() != null) {
 			strBuf.append(" - Session:"); //$NON-NLS-1$
 			strBuf.append(getSessionId());

@@ -56,7 +56,7 @@ public class FileUtils {
 	 *            is a file which already exists and can be read.
 	 */
 	static public String getContents(File file) throws IOException {
-		StringBuffer contents = new StringBuffer();
+		StringBuilder contents = new StringBuilder();
 
 		BufferedReader input = null;
 		try {

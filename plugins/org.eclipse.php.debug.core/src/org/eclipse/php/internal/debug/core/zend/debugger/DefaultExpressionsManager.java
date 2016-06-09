@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
+import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.PHP_OBJECT;
+import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.PHP_VIRTUAL_CLASS;
+
 import java.util.*;
 
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
@@ -162,7 +164,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 
 	private static String buildKey(String[] name) {
 		// 5 as the average size of variable name
-		StringBuffer buffer = new StringBuffer(name.length * 5);
+		StringBuilder buffer = new StringBuilder(name.length * 5);
 		for (int i = 0; i < name.length; i++) {
 			buffer.append(name[i]);
 			buffer.append(' ');

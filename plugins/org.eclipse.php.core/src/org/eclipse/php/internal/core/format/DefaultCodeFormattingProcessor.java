@@ -41,7 +41,7 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 				if ("false".equalsIgnoreCase(useTabs)) { //$NON-NLS-1$
 					String sizeValue = (String) options.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 					if (sizeValue != null) {
-						StringBuffer sb = new StringBuffer();
+						StringBuilder sb = new StringBuilder();
 						int size = Integer.parseInt(sizeValue);
 						for (int i = 0; i < size; i++) {
 							sb.append(' ');
@@ -49,7 +49,7 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 						indentation = sb.toString();
 					}
 				}
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				for (int i = 0; i < indentationUnits; i++) {
 					sb.append(indentation);
 				}

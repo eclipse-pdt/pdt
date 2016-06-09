@@ -143,7 +143,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 			// fixed bug 195274
 			// get the extensions from content type
 			final String[] fileExtensions = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-			StringBuffer buffer = new StringBuffer(PHPUIMessages.PHPFileCreationWizardPage_17);
+			StringBuilder buffer = new StringBuilder(PHPUIMessages.PHPFileCreationWizardPage_17);
 			buffer.append(fileExtensions[0]);
 			for (String extension : fileExtensions) {
 				buffer.append(", ").append(extension); //$NON-NLS-1$

@@ -392,7 +392,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	public static String convertToString(String[] patterns, String separator) {
 		int length = patterns.length;
-		StringBuffer strBuf = new StringBuffer();
+		StringBuilder strBuf = new StringBuilder();
 		if (length > 0)
 			strBuf.append(escapeSeparator(patterns[0], separator));
 		else
@@ -408,7 +408,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private static String escapeSeparator(String pattern, String separator) {
 		int length = pattern.length();
-		StringBuffer buf = new StringBuffer(length);
+		StringBuilder buf = new StringBuilder(length);
 		for (int i = 0; i < length; i++) {
 			char ch = pattern.charAt(i);
 			if (separator.equals(String.valueOf(ch)))

@@ -290,7 +290,7 @@ public class PHPPluginImages {
 		if (fgIconBaseURL == null)
 			throw new MalformedURLException();
 
-		StringBuffer buffer = new StringBuffer(prefix);
+		StringBuilder buffer = new StringBuilder(prefix);
 		buffer.append('/');
 		buffer.append(name);
 		return new URL(fgIconBaseURL, buffer.toString());
@@ -308,7 +308,7 @@ public class PHPPluginImages {
 		if (fgIconBaseURL == null)
 			throw new MalformedURLException();
 
-		StringBuffer buffer = new StringBuffer(prefix);
+		StringBuilder buffer = new StringBuilder(prefix);
 		buffer.append('/');
 		buffer.append(name);
 		return new URL(fgIconBaseURL, buffer.toString());

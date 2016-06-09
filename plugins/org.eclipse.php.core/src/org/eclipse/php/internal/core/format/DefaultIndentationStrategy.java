@@ -272,7 +272,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			boolean enterKeyPressed, StringBuffer result, String blanks, String commandText,
 			IndentationObject indentationObject) {
 		// LineState lineState = new LineState();
-		// StringBuffer sb = new StringBuffer();
 		try {
 			IRegion region = document.getLineInformationOfOffset(offset);
 			String content = document.get(offset, region.getOffset() + region.getLength() - offset);
@@ -298,7 +297,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 						String newblanks = FormatterUtils.getLineBlanks(document,
 								document.getLineInformationOfOffset(peer));
-						StringBuffer newBuffer = new StringBuffer(newblanks);
+						StringBuilder newBuffer = new StringBuilder(newblanks);
 						// IRegion region = document
 						// .getLineInformationOfOffset(offset);
 

@@ -296,7 +296,7 @@ public final class TextSequenceUtilities {
 
 		@Override
 		public String toString() {
-			StringBuffer buffer = new StringBuffer(length());
+			StringBuilder buffer = new StringBuilder(length());
 			for (int i = 0; i < indexes.length; i += 2) {
 				buffer.append(segment.array, segment.offset + indexes[i], indexes[i + 1]);
 			}

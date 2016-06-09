@@ -145,7 +145,7 @@ public class ProblemLocation implements IProblemLocation {
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append(Messages.ProblemLocation_0).append(DefaultProblemIdentifier.encode(fIdentifier)).append('\n');
 		buf.append('[').append(fOffset).append(", ").append(fLength).append(']') //$NON-NLS-1$
 				.append('\n');

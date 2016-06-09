@@ -36,7 +36,7 @@ public class XMLLabelProvider extends JFaceNodeLabelProvider {
 	boolean fShowAttributes = false;
 
 	public String getText(Object o) {
-		StringBuffer text = new StringBuffer(super.getText(o));
+		StringBuilder text = new StringBuilder(super.getText(o));
 		if (o instanceof Node) {
 			Node node = (Node) o;
 			if ((node.getNodeType() == Node.ELEMENT_NODE) && fShowAttributes) {

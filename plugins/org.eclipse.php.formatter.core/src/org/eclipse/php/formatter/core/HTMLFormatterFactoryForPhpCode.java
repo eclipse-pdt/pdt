@@ -98,7 +98,7 @@ class HTMLFormatterFactoryForPhpCode {
 			}
 			int indentationWidth = service.getInt(HTMLCorePlugin.ID, HTMLCorePreferenceNames.INDENTATION_SIZE, 0, null);
 
-			StringBuffer indent = new StringBuffer();
+			StringBuilder indent = new StringBuilder();
 			for (int i = 0; i < indentationWidth; i++) {
 				indent.append(indentChar);
 			}

@@ -80,7 +80,7 @@ public class DBGpSessionHandler {
 
 	public String generateSessionId() {
 		long currentTime = System.currentTimeMillis();
-		StringBuffer id = new StringBuffer(Long.toString(currentTime));
+		StringBuilder id = new StringBuilder(Long.toString(currentTime));
 		synchronized (sessionCountMonitor) {
 			sessionCount++;
 			id.append(sessionCount);

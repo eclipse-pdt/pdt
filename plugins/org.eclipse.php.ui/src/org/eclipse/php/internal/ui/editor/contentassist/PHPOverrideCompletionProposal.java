@@ -129,7 +129,7 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 			try {
 				parameters = method.getParameters();
 				if (parameters != null) {
-					StringBuffer sb = new StringBuffer();
+					StringBuilder sb = new StringBuilder();
 					for (int i = 0; i < parameters.length; i++) {
 						IParameter parameter = parameters[i];
 						if (parameter.getType() != null) {

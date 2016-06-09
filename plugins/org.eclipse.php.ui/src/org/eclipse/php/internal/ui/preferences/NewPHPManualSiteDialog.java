@@ -395,7 +395,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	}
 
 	private String detectCHMLanguageSuffix(String chmFile) {
-		StringBuffer suffix = new StringBuffer("::/"); //$NON-NLS-1$
+		StringBuilder suffix = new StringBuilder("::/"); //$NON-NLS-1$
 		char[] buf = new char[8192];
 		try {
 			FileReader r = new FileReader(chmFile);

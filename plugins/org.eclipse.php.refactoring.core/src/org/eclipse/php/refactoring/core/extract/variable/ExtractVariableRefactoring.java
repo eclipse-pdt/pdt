@@ -907,7 +907,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		IRegion region = document.getLineInformationOfOffset(offset);
 		String lineContent = document.get(region.getOffset(), region.getLength());
 
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 
 		for (int index = 0; index < lineContent.length(); index++) {
 			if (!Character.isWhitespace(lineContent.charAt(index))) {

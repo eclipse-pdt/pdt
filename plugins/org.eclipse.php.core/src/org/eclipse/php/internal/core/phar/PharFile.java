@@ -335,7 +335,7 @@ public class PharFile {
 	}
 
 	public static String getString(byte[] subBytes) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < subBytes.length; i++) {
 			sb.append((char) subBytes[i]);
 		}

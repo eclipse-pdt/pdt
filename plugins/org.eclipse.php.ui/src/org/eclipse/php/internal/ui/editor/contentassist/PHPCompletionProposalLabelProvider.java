@@ -134,7 +134,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 	}
 
 	protected String createLabelWithTypeAndDeclaration(CompletionProposal proposal) {
-		StringBuffer nameBuffer = new StringBuffer();
+		StringBuilder nameBuffer = new StringBuilder();
 
 		nameBuffer.append(proposal.getName());
 		IField field = (IField) proposal.getModelElement();

@@ -161,7 +161,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			}
 		}
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		PHPDocumentationHover.addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2);
 
 		return buf.toString();

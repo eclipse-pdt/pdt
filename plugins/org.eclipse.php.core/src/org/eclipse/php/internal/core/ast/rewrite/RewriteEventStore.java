@@ -89,7 +89,7 @@ public final class RewriteEventStore {
 		}
 
 		public String toString() {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append(this.parent).append(" - "); //$NON-NLS-1$
 			buf.append(this.childProperty.getId()).append(": "); //$NON-NLS-1$
 			buf.append(this.event).append('\n');
@@ -128,7 +128,7 @@ public final class RewriteEventStore {
 		}
 
 		public String toString() {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			if (this.isMove) {
 				buf.append("move source: "); //$NON-NLS-1$
 			} else {
@@ -201,7 +201,7 @@ public final class RewriteEventStore {
 		}
 
 		public String toString() {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			if (this.first != this.last) {
 				buf.append("range "); //$NON-NLS-1$
 			}
@@ -884,7 +884,7 @@ public final class RewriteEventStore {
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (Iterator iter = this.eventLookup.values().iterator(); iter.hasNext();) {
 			List events = (List) iter.next();
 			for (int i = 0; i < events.size(); i++) {
