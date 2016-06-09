@@ -106,7 +106,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 		String read(Reader rd) {
 
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			char[] readBuffer = new char[2048];
 
 			try {
@@ -130,7 +130,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			if (current == -1)
 				return text;
 
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			while (current > -1) {
 				buffer.append(text.substring(previous, current));
 				buffer.append(s);
@@ -191,7 +191,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		Reader textReader = new StringReader(text);
 		GC gc = new GC(display);
 		try {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 
 			StructuredTextLineBreakingReader reader = new StructuredTextLineBreakingReader(textReader, gc,
 					getHoverWidth(display));

@@ -372,7 +372,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	}
 
 	public void performOk() {
-		StringBuffer sitesBuffer = new StringBuffer();
+		StringBuilder sitesBuffer = new StringBuilder();
 		List<PHPManualConfig> elements = fPHPManualButtonsList.getElements();
 		if (elements != null && elements.size() > 0) {
 			for (PHPManualConfig config : elements) {

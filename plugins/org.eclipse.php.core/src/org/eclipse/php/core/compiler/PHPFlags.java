@@ -85,7 +85,7 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	}
 
 	public static String toString(int mod) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		if ((mod & AccPublic) != 0) {
 			sb.append("public "); //$NON-NLS-1$

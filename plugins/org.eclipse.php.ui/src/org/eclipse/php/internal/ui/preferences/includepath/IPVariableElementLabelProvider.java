@@ -64,7 +64,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 			IPVariableElement curr = (IPVariableElement) element;
 			String name = curr.getName();
 			IPath path = curr.getPath();
-			StringBuffer buf = new StringBuffer(name);
+			StringBuilder buf = new StringBuilder(name);
 			if (curr.isReserved()) {
 				buf.append(' ');
 				buf.append(PHPUIMessages.CPVariableElementLabelProvider_reserved);

@@ -370,8 +370,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	}
 
 	public void performOk() {
-		StringBuffer buf = new StringBuffer();
-		StringBuffer maskBuf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
+		StringBuilder maskBuf = new StringBuilder();
 		for (int i = 0; i < fHoverConfigs.length; i++) {
 			buf.append(getContributedHovers()[i].getId());
 			buf.append(PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);

@@ -299,7 +299,7 @@ public class StubUtility {
 
 	private static String getSeeTag(String declaringClassQualifiedName, String methodName,
 			String[] parameterTypesQualifiedNames) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("@see "); //$NON-NLS-1$
 		buf.append(declaringClassQualifiedName);
 		buf.append("::"); //$NON-NLS-1$
@@ -669,7 +669,7 @@ public class StubUtility {
 		}
 		String lineStart = textBuffer.get(region.getOffset(), offset - region.getOffset());
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < fieldNames.length; i++) {
 			if (buf.length() > 0) {
 				buf.append(lineDelimiter).append(lineStart);
@@ -699,7 +699,7 @@ public class StubUtility {
 		}
 		String lineStart = textBuffer.get(region.getOffset(), offset - region.getOffset());
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if (null != typeParameterNames) {
 			for (int i = 0; i < typeParameterNames.length; i++) {
 				if (buf.length() > 0) {

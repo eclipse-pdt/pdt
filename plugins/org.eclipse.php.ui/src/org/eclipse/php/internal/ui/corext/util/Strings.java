@@ -183,7 +183,7 @@ public class Strings {
 	}
 
 	public static String removeNewLine(String message) {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		int current = 0;
 		int index = message.indexOf('\n', 0);
 		while (index != -1) {
@@ -620,7 +620,7 @@ public class Strings {
 				lines[i] = source.substring(offset, offset + region.getLength());
 			}
 			Strings.trimIndentation(lines, tabWidth, indentWidth, considerFirstLine);
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			int last = size - 1;
 			for (int i = 0; i < size; i++) {
 				result.append(lines[i]);
@@ -645,7 +645,7 @@ public class Strings {
 	 * @return the concatenated lines
 	 */
 	public static String concatenate(String[] lines, String delimiter) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < lines.length; i++) {
 			if (i > 0)
 				buffer.append(delimiter);

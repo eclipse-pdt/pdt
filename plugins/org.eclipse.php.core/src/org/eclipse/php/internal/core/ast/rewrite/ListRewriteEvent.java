@@ -209,7 +209,7 @@ public class ListRewriteEvent extends RewriteEvent {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append(" [list change\n\t"); //$NON-NLS-1$
 
 		RewriteEvent[] events = getChildren();

@@ -547,7 +547,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 
 	private static String getInfoText(IModelElement element, String constantValue, boolean allowImage,
 			boolean isFirstElement) {
-		StringBuffer label = getInfoText(element);
+		StringBuilder label = getInfoText(element);
 		if (element.getElementType() == IModelElement.FIELD) {
 			if (constantValue != null) {
 				label.append(' ');
@@ -565,7 +565,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			}
 		}
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2, isFirstElement);
 		return buf.toString();
 	}
@@ -741,7 +741,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			BufferedReader reader = null;
 			try {
 				reader = new BufferedReader(new InputStreamReader(styleSheetURL.openStream()));
-				StringBuffer buffer = new StringBuffer(1500);
+				StringBuilder buffer = new StringBuilder(1500);
 				String line = reader.readLine();
 				while (line != null) {
 					buffer.append(line);
@@ -763,19 +763,19 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		return null;
 	}
 
-	public static void addImageAndLabel(StringBuffer buf, String imageName, int imageWidth, int imageHeight,
+	public static void addImageAndLabel(StringBuilder buf, String imageName, int imageWidth, int imageHeight,
 			int imageLeft, int imageTop, String label, int labelLeft, int labelTop) {
 		addImageAndLabel(buf, imageName, imageWidth, imageHeight, imageLeft, imageTop, label, labelLeft, labelTop,
 				true);
 	}
 
-	private static void addImageAndLabel(StringBuffer buf, String imageName, int imageWidth, int imageHeight,
+	private static void addImageAndLabel(StringBuilder buf, String imageName, int imageWidth, int imageHeight,
 			int imageLeft, int imageTop, String label, int labelLeft, int labelTop, boolean isFirstElement) {
 
 		// workaround to make the window wide enough
 		label = label + "&nbsp;"; //$NON-NLS-1$
 		if (imageName != null) {
-			StringBuffer imageStyle = new StringBuffer("position: absolute; "); //$NON-NLS-1$
+			StringBuilder imageStyle = new StringBuilder("position: absolute; "); //$NON-NLS-1$
 			imageStyle.append("width: ").append(imageWidth).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			imageStyle.append("height: ").append(imageHeight).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			if (isFirstElement) {
@@ -819,9 +819,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		// curr, true, true);
 	}
 
-	private static StringBuffer getInfoText(IModelElement member) {
+	private static StringBuilder getInfoText(IModelElement member) {
 		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
 		String label = PHPElementLabels.getDefault().getElementLabel(member, flags);
-		return new StringBuffer(label);
+		return new StringBuilder(label);
 	}
 }

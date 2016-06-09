@@ -70,7 +70,7 @@ public class PharUtil {
 	}
 
 	public static String getVersion(byte[] subBytes) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(subBytes[0] >> 4 & 0xf);
 		sb.append(subBytes[0] & 15);
 		sb.append(subBytes[1] >> 4 & 0xf);

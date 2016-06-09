@@ -126,7 +126,7 @@ public class PHPManual {
 			}
 		}
 		if (path != null) {
-			StringBuffer url = new StringBuffer();
+			StringBuilder url = new StringBuilder();
 			url.append(site.getUrl());
 			if (!site.getUrl().endsWith("/")) { //$NON-NLS-1$
 				url.append("/"); //$NON-NLS-1$
@@ -188,7 +188,7 @@ public class PHPManual {
 	}
 
 	private String buildPathForClass(String className) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("class."); //$NON-NLS-1$
 		if (className != null) {
 			buf.append(className);
@@ -228,7 +228,7 @@ public class PHPManual {
 	}
 
 	protected String buildPathForMethod(String className, String methodName) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("function."); //$NON-NLS-1$
 		if (className != null) {
 			buf.append(className);

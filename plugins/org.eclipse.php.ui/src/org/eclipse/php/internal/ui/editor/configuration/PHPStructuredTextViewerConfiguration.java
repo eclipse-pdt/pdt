@@ -158,7 +158,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 					if (element == null)
 						return null;
 
-					StringBuffer s = new StringBuffer();
+					StringBuilder s = new StringBuilder();
 					Node node = (Node) element;
 					while (node != null) {
 						if (node.getNodeType() != Node.DOCUMENT_NODE) {
@@ -484,7 +484,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		int indentationSize = formatterCommonPrferences.getIndentationSize(sourceViewer.getDocument());
 
 		for (int i = 0; i <= indentationSize; i++) {
-			StringBuffer prefix = new StringBuffer();
+			StringBuilder prefix = new StringBuilder();
 			boolean appendTab = false;
 
 			for (int j = 0; j + i < indentationSize; j++)

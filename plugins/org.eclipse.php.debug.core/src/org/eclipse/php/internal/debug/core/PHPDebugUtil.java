@@ -188,7 +188,7 @@ public final class PHPDebugUtil {
 		if (hostsArray.length == 1) {
 			return hostsArray[0];
 		} else if (hostsArray.length > 1) {
-			StringBuffer stringBuffer = new StringBuffer();
+			StringBuilder stringBuffer = new StringBuilder();
 			stringBuffer.append(hostsArray[0]);
 			for (int i = 1; i < hostsArray.length; i++) {
 				stringBuffer.append(", " + hostsArray[i]); //$NON-NLS-1$

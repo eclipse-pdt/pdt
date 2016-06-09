@@ -62,7 +62,7 @@ public class Bindings {
 			Assert.isTrue(variableBinding.getName().equals("length"));//$NON-NLS-1$
 			return ARRAY_LENGTH_FIELD_BINDING_STRING;
 		}
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append(variableBinding.getDeclaringClass().getName());
 		result.append(':');
 		result.append(variableBinding.getName());
@@ -70,7 +70,7 @@ public class Bindings {
 	}
 
 	private static String asString(IMethodBinding method) {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append(method.getDeclaringClass().getName());
 		result.append(':');
 		result.append(method.getName());

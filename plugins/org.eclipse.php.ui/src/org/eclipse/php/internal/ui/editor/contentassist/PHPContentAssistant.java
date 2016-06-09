@@ -168,7 +168,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 									.getViewerConfiguration();
 							IContentAssistProcessor[] processors = viewerConfiguration.getProcessorMap().get(type);
 							if (processors != null) {
-								StringBuffer sb = new StringBuffer();
+								StringBuilder sb = new StringBuilder();
 								for (int i = 0; i < processors.length; i++) {
 									sb.append(computeAllAutoActivationTriggers(processors[i]));
 								}
@@ -235,7 +235,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 				return ""; //$NON-NLS-1$
 			}
 
-			StringBuffer buf = new StringBuffer(5);
+			StringBuilder buf = new StringBuilder(5);
 			char[] triggers = processor.getCompletionProposalAutoActivationCharacters();
 			if (triggers != null) {
 				buf.append(triggers);

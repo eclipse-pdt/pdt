@@ -129,7 +129,7 @@ public class BroadcastConnection {
 		public String getString() {
 			try {
 				Iterator<String> keys = properties.keySet().iterator();
-				StringBuffer sb = new StringBuffer("{"); //$NON-NLS-1$
+				StringBuilder sb = new StringBuilder("{"); //$NON-NLS-1$
 				while (keys.hasNext()) {
 					if (sb.length() > 1) {
 						sb.append(',');
@@ -154,7 +154,7 @@ public class BroadcastConnection {
 			char c = 0;
 			int i;
 			int len = string.length();
-			StringBuffer sb = new StringBuffer(len + 4);
+			StringBuilder sb = new StringBuilder(len + 4);
 			String t;
 			sb.append('\'');
 			for (i = 0; i < len; i += 1) {

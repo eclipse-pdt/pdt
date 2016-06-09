@@ -52,7 +52,7 @@ public class PHPStubCompletionProposal extends PHPCompletionProposal implements 
 		if (lines.length > 1) {
 			final String delimeter = TextUtilities.getDefaultLineDelimiter(document);
 			final String indent = calculateIndent(document, offset);
-			final StringBuffer buffer = new StringBuffer(lines[0]);
+			final StringBuilder buffer = new StringBuilder(lines[0]);
 
 			// Except first line
 			for (int i = 1; i < lines.length; i++) {

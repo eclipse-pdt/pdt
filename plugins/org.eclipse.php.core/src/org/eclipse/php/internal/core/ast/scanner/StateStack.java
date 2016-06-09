@@ -113,7 +113,7 @@ public class StateStack implements Cloneable {
 	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer(50);
+		StringBuilder sb = new StringBuilder(50);
 		for (int i = 0; i <= lastIn; i++) {
 			sb.append(" stack[" + i + "]= " + stack[i]); //$NON-NLS-1$ //$NON-NLS-2$
 		}

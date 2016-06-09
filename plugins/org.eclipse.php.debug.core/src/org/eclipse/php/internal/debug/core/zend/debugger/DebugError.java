@@ -185,7 +185,7 @@ public class DebugError implements Cloneable {
 	}
 
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(getCodeName());
 		if (lineNumber >= 0) {
 			buffer.append(": "); //$NON-NLS-1$

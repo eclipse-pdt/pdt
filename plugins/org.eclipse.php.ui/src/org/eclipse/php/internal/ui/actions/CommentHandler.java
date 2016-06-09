@@ -142,7 +142,7 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 	}
 
 	protected void commentMultiLine(IDocument document, int selectionStartLine, int selectionEndLine) {
-		StringBuffer sb = new StringBuffer(SINGLE_LINE_COMMENT);
+		StringBuilder sb = new StringBuilder(SINGLE_LINE_COMMENT);
 		try {
 			for (int i = selectionStartLine; i < selectionEndLine; i++) {
 				if (document.getLineLength(i) > 0) {
@@ -161,7 +161,7 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 	}
 
 	protected void uncommentMultiLine(IDocument document, int selectionStartLine, int selectionEndLine) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		try {
 			for (int i = selectionStartLine; i < selectionEndLine; i++) {
 				if (document.getLineLength(i) > 0) {

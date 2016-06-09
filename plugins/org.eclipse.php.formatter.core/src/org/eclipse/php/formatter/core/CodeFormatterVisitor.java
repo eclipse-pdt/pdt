@@ -113,7 +113,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private boolean isBinaryExpressionExtraIndentation = false;
 
 	// append chars to buffer through insertSpace or appendToBuffer
-	private StringBuffer replaceBuffer = new StringBuffer();
+	private StringBuilder replaceBuffer = new StringBuilder();
 	private List<Symbol> tokens = new ArrayList<Symbol>();
 
 	/**
@@ -1297,7 +1297,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						String word = lines.get(0).trim();
 						commentWords.add(word);
 						initCommentWords();
-						StringBuffer sb = new StringBuffer();
+						StringBuilder sb = new StringBuilder();
 						for (String w : commentWords) {
 							if (w.trim().length() == 0) {
 								continue;
@@ -1482,7 +1482,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	private String getIndent() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < indentationLevel * preferences.indentationSize; i++) {
 			sb.append(preferences.indentationChar);
@@ -1524,7 +1524,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// indentStringForComment = FormatterUtils.getLineBlanks(document,
 		// startRegion);
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int lastIndentationLevel = indentationLevel;
 		if (endWithNewLineIndent) {
 			if (indentationLevelList.size() >= 2) {
@@ -1751,7 +1751,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private String getTagReference(PHPDocTag phpDocTag) {
 		SimpleReference[] reference = phpDocTag.getAllReferencesWithOrigOrder().toArray(new SimpleReference[0]);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < reference.length; i++) {
 			if (i > 0 && reference[i - 1] instanceof TypeReference && reference[i] instanceof TypeReference) {
 				sb.append(Constants.TYPE_SEPERATOR_CHAR).append(reference[i].getName());
@@ -3328,7 +3328,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		isInsideFun = true;
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(getDocumentString(functionDeclaration.getStart(), functionDeclaration.getStart() + 8));// append
 																												// 'function'
 
@@ -4070,7 +4070,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		String originalModifier = getDocumentString(classMethodDeclaration.getStart(),
 				classMethodDeclaration.getFunction().getStart()).trim();
 		StringTokenizer tokenizer = new StringTokenizer(originalModifier);
-		StringBuffer strBuffer = new StringBuffer();
+		StringBuilder strBuffer = new StringBuilder();
 		while (tokenizer.hasMoreTokens()) {
 			strBuffer.append(tokenizer.nextToken() + " "); //$NON-NLS-1$
 		}
@@ -4814,7 +4814,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (lambdaFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
 		}
@@ -4942,7 +4942,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return ""; //$NON-NLS-1$
 		}
 
-		StringBuffer buffer = new StringBuffer(tabs * preferences.indentationSize);
+		StringBuilder buffer = new StringBuilder(tabs * preferences.indentationSize);
 		for (int i = 0; i < tabs * preferences.indentationSize; i++) {
 			buffer.append(preferences.indentationChar);
 		}

@@ -444,7 +444,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 *             if parameter guessing failed
 	 */
 	private String computeGuessingCompletion(String prefix) throws ModelException {
-		StringBuffer buffer = new StringBuffer(prefix);
+		StringBuilder buffer = new StringBuilder(prefix);
 		appendMethodNameReplacement(buffer);
 
 		setCursorPosition(buffer.length());
@@ -500,7 +500,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 *            the string buffer
 	 * @since 3.4
 	 */
-	protected void appendMethodNameReplacement(StringBuffer buffer) {
+	protected void appendMethodNameReplacement(StringBuilder buffer) {
 		if (alias != null) {
 			buffer.append(alias);
 			buffer.append(LPAREN);

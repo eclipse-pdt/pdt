@@ -116,7 +116,7 @@ public class FormatterUtils {
 		return getPartitionType(document, offset, false);
 	}
 
-	private static StringBuffer helpBuffer = new StringBuffer(50);
+	private static StringBuilder helpBuffer = new StringBuilder(50);
 
 	/**
 	 * Return the blanks at the start of the line.

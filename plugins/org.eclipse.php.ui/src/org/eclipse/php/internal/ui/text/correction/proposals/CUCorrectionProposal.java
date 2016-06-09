@@ -147,7 +147,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 	public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
 
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 
 		try {
 			final TextChange change = getTextChange();
@@ -219,7 +219,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 	private final int surroundLines = 1;
 
-	private void appendContent(IDocument text, int startOffset, int endOffset, StringBuffer buf,
+	private void appendContent(IDocument text, int startOffset, int endOffset, StringBuilder buf,
 			boolean surroundLinesOnly) {
 		try {
 			int startLine = text.getLineOfOffset(startOffset);
