@@ -836,7 +836,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		private final OccurrenceLocation[] fLocations;
 
 		public OccurrencesFinderJob(IDocument document, OccurrenceLocation[] locations, ISelection selection) {
-			super("mark occrrences job name"); // TODO should //$NON-NLS-1$
+			super("mark occurrences job name"); // TODO should //$NON-NLS-1$
 												// externals
 			fDocument = document;
 			fSelection = selection;

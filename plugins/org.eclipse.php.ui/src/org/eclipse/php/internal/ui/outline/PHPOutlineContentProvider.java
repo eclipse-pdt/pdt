@@ -149,7 +149,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 						}
 					}
 				} catch (ModelException e) {
-					PHPUiPlugin.log(e);
+					if (!e.isDoesNotExist()) {
+						PHPUiPlugin.log(e);
+					}
 				}
 				return false;
 			}
