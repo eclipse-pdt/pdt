@@ -141,17 +141,15 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			IModelElement me = (IModelElement) parent;
 			if (me.getElementType() == IModelElement.FIELD) {
 				IField field = (IField) me;
-				if (field.exists()) {
-					try {
-						for (IModelElement child : field.getChildren()) {
-							if (child.getElementType() == IModelElement.METHOD
-									|| child.getElementType() == IModelElement.TYPE) {
-								return true;
-							}
+				try {
+					for (IModelElement child : field.getChildren()) {
+						if (child.getElementType() == IModelElement.METHOD
+								|| child.getElementType() == IModelElement.TYPE) {
+							return true;
 						}
-					} catch (ModelException e) {
-						PHPUiPlugin.log(e);
 					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
 				}
 				return false;
 			}

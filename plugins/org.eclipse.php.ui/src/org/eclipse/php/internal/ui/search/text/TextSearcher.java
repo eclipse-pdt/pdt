@@ -98,12 +98,12 @@ public class TextSearcher {
 	}
 
 	/**
-	 * Search for occurences
+	 * Search for occurrences
 	 * 
 	 * @param monitor
 	 */
 	public void search(IProgressMonitor monitor) {
-		assert !done;
+		assert!done;
 
 		engine.search(scope, visitor, searchPattern, monitor);
 		done = true;
