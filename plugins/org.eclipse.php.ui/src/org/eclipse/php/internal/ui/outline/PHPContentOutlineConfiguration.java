@@ -16,7 +16,6 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.internal.ui.filters.FilterMessages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.ProblemsLabelDecorator;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -24,11 +23,10 @@ import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -44,16 +42,13 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.OverrideIndicatorLabelDecorator;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineFilterProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
@@ -64,6 +59,9 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
 
 	private static final String OUTLINE_PAGE = "org.eclipse.php.ui.OutlinePage"; //$NON-NLS-1$
+	private static final String OUTLINE_SHOW_ATTRIBUTE_ID = "outline-show-attribute"; //$NON-NLS-1$
+	private final static String OUTLINE_MODE = "OUTLINE_MODE"; //$NON-NLS-1$
+	private static final IContributionItem[] NO_CONTRIBUTION = new IContributionItem[0];
 	public static final int MODE_PHP = 1;
 	public static final int MODE_HTML = 2;
 
@@ -122,21 +120,24 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 		final IContributionItem showHTMLItem = new ActionContributionItem(changeOutlineModeActionHTML);
 
-		// Custom filter group
-		fCustomFiltersActionGroup = new CustomFiltersActionGroup(OUTLINE_PAGE, viewer);
-
-		final IContributionItem filtersItem = new FilterActionGroupContributionItem(fCustomFiltersActionGroup);
-
 		items = super.createMenuContributions(viewer);
 
-		if (items == null)
-			items = new IContributionItem[] { showPHPItem, showHTMLItem, filtersItem };
-		else {
+		if (items == null) {
+			items = new IContributionItem[] { showPHPItem, showHTMLItem };
+		} else {
 			final IContributionItem[] combinedItems = new IContributionItem[items.length + 3];
-			System.arraycopy(items, 0, combinedItems, 0, items.length);
-			combinedItems[items.length] = showPHPItem;
-			combinedItems[items.length + 1] = showHTMLItem;
-			combinedItems[items.length + 2] = filtersItem;
+			combinedItems[0] = showPHPItem;
+			combinedItems[1] = showHTMLItem;
+			combinedItems[2] = new Separator(OUTLINE_MODE);
+
+			for (int i = 0; i < items.length; i++) {
+				if (OUTLINE_SHOW_ATTRIBUTE_ID.equals(items[i].getId())) {
+					items[i] = new ModeBasedContributionItem(MODE_HTML, items[i]);
+					break;
+				}
+			}
+
+			System.arraycopy(items, 0, combinedItems, 3, items.length);
 			items = combinedItems;
 		}
 		if (changeOutlineModeActionHTML.isChecked() && sortAction != null) {
@@ -418,63 +419,53 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		}
 	}
 
-	/**
-	 * Menu contribution item which shows and lets check and uncheck filters.
-	 * 
-	 * 
-	 */
-	class FilterActionGroupContributionItem extends ContributionItem {
+	@Override
+	public ContentOutlineFilterProcessor getOutlineFilterProcessor(TreeViewer viewer) {
+		if (getMode() == MODE_PHP) {
+			return new PHPOutlineFilterProcessor(getPreferenceStore(), getOutlineFilterTarget(), viewer);
+		}
+		return super.getOutlineFilterProcessor(viewer);
+	}
 
-		// private boolean fState;
-		private CustomFiltersActionGroup fActionGroup;
-
-		/**
-		 * Constructor for FilterActionMenuContributionItem.
-		 * 
-		 * @param actionGroup
-		 *            the action group
-		 * @param filterId
-		 *            the id of the filter
-		 * @param filterName
-		 *            the name of the filter
-		 * @param state
-		 *            the initial state of the filter
-		 * @param itemNumber
-		 *            the menu item index
-		 */
-		public FilterActionGroupContributionItem(CustomFiltersActionGroup actionGroup) {
-			super("filters"); //$NON-NLS-1$
-			fActionGroup = actionGroup;
-			// fState= state;
+	private class PHPOutlineFilterProcessor extends ContentOutlineFilterProcessor {
+		// Custom filter group
+		public PHPOutlineFilterProcessor(IPreferenceStore store, String ownerId, StructuredViewer viewer) {
+			super(store, ownerId, viewer);
+			if (fCustomFiltersActionGroup == null) {
+				fCustomFiltersActionGroup = new CustomFiltersActionGroup(OUTLINE_PAGE, viewer);
+			}
 		}
 
-		/*
-		 * Overrides method from ContributionItem.
-		 */
-
-		public void fill(Menu menu, int index) {
-			new MenuItem(menu, SWT.SEPARATOR, index);
-
-			MenuItem mi = new MenuItem(menu, SWT.CHECK, index + 1);
-
-			mi.setText(FilterMessages.OpenCustomFiltersDialogAction_text);
-			// XXX connect to ContributionItem.dispose()
-			mi.setImage(JFaceResources.getResources().createImageWithDefault(DLTKPluginImages.DESC_ELCL_FILTER));
-
-			mi.setEnabled(getMode() == MODE_PHP);
-			mi.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					fActionGroup.new ShowFilterDialogAction().run();
-				}
-			});
-
+		@Override
+		public void openDialog() {
+			fCustomFiltersActionGroup.new ShowFilterDialogAction().run();
 		}
 
-		/*
-		 * @see org.eclipse.jface.action.IContributionItem#isDynamic()
-		 */
-		public boolean isDynamic() {
-			return true;
+	}
+
+	private class ModeBasedContributionItem extends CompoundContributionItem {
+
+		private final int fMode;
+		private IContributionItem fWrappedContribution;
+
+		public ModeBasedContributionItem(int mode, IContributionItem wrappedContribution) {
+			super(wrappedContribution.getId());
+			fMode = mode;
+			fWrappedContribution = wrappedContribution;
+		}
+
+		@Override
+		protected IContributionItem[] getContributionItems() {
+			if (getMode() == fMode) {
+				return new IContributionItem[] { fWrappedContribution };
+			}
+			return NO_CONTRIBUTION;
+		}
+
+		@Override
+		public void dispose() {
+			super.dispose();
+			fWrappedContribution.dispose();
 		}
 	}
 }
