@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -246,15 +249,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					trueFlag, falseFlag, scope, null);
 
 			result.addAll(Arrays.asList(types));
-
-			Arrays.sort(namespaces, new Comparator<IType>() {
-
-				@Override
-				public int compare(IType o1, IType o2) {
-					return o1.getElementName().compareToIgnoreCase(o2.getElementName());
-				}
-			});
-			addFilteredNamespaces(namespaces, result);
+			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 		}
 		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
 				scope, null);
@@ -274,21 +269,10 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			}
 		} else {
 			result.addAll(Arrays.asList(types));
-
-			addFilteredNamespaces(namespaces, result);
+			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 		}
 
 		return result.toArray(new IType[result.size()]);
-	}
-
-	private void addFilteredNamespaces(IType[] namespaces, List<IType> result) {
-		Set<String> names = new HashSet<String>();
-		for (IType namespace : namespaces) {
-			if (!names.contains(namespace.getElementName())) {
-				result.add(namespace);
-				names.add(namespace.getElementName());
-			}
-		}
 	}
 
 	/**
