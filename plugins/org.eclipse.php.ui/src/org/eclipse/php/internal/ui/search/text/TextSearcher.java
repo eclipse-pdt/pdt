@@ -98,7 +98,7 @@ public class TextSearcher {
 	}
 
 	/**
-	 * Search for occurences
+	 * Search for occurrences
 	 * 
 	 * @param monitor
 	 */

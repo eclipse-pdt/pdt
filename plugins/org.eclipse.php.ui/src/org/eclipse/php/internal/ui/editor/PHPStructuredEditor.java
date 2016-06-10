@@ -2882,7 +2882,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	protected void updateOccurrenceAnnotations(ITextSelection selection, Program astRoot) {
-		updateOccurencesAnnotationsRunJob(selection, astRoot);
+		updateOccurrencesAnnotationsRunJob(selection, astRoot);
 	}
 
 	/**
@@ -2906,13 +2906,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (!fMarkOccurrenceAnnotations)
 			return;
 
-		String updatingOccurencesJobName = "Updating occurence annotations"; //$NON-NLS-1$
+		String updatingOccurrencesJobName = "Updating occurrence annotations"; //$NON-NLS-1$
 
 		IJobManager jobManager = Job.getJobManager();
-		if (jobManager.find(updatingOccurencesJobName).length > 0) {
-			jobManager.cancel(updatingOccurencesJobName);
+		if (jobManager.find(updatingOccurrencesJobName).length > 0) {
+			jobManager.cancel(updatingOccurrencesJobName);
 		}
-		Job job = new Job(updatingOccurencesJobName) {
+		Job job = new Job(updatingOccurrencesJobName) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -2926,7 +2926,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					Logger.logException(e);
 				}
 				if (!monitor.isCanceled() && astRoot != null) {
-					updateOccurencesAnnotationsRunJob(selection, astRoot);
+					updateOccurrencesAnnotationsRunJob(selection, astRoot);
 				}
 				return Status.OK_STATUS;
 			}
@@ -2942,7 +2942,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	}
 
-	private void updateOccurencesAnnotationsRunJob(ITextSelection selection, Program astRoot) {
+	private void updateOccurrencesAnnotationsRunJob(ITextSelection selection, Program astRoot) {
 		if (astRoot == null || selection == null)
 			return;
 
