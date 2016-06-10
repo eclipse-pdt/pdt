@@ -120,7 +120,7 @@ public class MarkOccurrenceTests {
 	}
 
 	@Test
-	public void occurences(String fileName) throws Exception {
+	public void occurrences(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
 		pdttFile.applyPreferences();
 

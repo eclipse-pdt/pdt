@@ -594,7 +594,11 @@ public class CodeGeneration {
 		Program program = null;
 
 		// XXX: do not call SharedASTProvider.getAST() due bug 466694 and
-		// until bug 438661 will be fixed
+		// until bug 438661 will be fixed. Even without those bugs, it's still
+		// better to force new AST generation using generateProgram(method,
+		// null), because the cached AST (retrieved using ASTProvider and
+		// WAIT_YES) could still be outdated when there was previously an
+		// ASTError above the method we're handling here!
 		// try {
 		// program = SharedASTProvider.getAST(method.getSourceModule(),
 		// SharedASTProvider.WAIT_YES, new NullProgressMonitor());
@@ -607,6 +611,12 @@ public class CodeGeneration {
 				return null;
 			}
 		}
+
+		// XXX: bindings can also be out-of-sync with current AST when DLTK's
+		// document indexing is still running. It's a rare case here but ideally
+		// we should always wait until end of indexing (sadly it could
+		// momentarily freeze the UI):
+		// ModelManager.getModelManager().getIndexManager().waitUntilReady();
 
 		ASTNode elementAt = null;
 		try {

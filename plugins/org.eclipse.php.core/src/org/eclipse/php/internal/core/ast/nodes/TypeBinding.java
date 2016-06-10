@@ -715,7 +715,7 @@ public class TypeBinding implements ITypeBinding {
 	 * declaring block relative to its parent, the key of its method</li>
 	 * <li>local types - the name of the type, the index of the declaring block
 	 * relative to its parent, the key of its method</li>
-	 * <li>anonymous types - the occurence count of the anonymous type relative
+	 * <li>anonymous types - the occurrence count of the anonymous type relative
 	 * to its declaring type, the key of its declaring type</li>
 	 * <li>enum types - treated like classes</li>
 	 * <li>annotation types - treated like interfaces</li>

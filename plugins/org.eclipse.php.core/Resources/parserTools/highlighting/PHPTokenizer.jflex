@@ -266,7 +266,7 @@ public final void beginBlockMarkerScan(String newTagName, String blockcontext) {
  * Method doScan.
  * 
  * Returns a context region for all of the text from the current position upto the end of input or
- * to right *before* the first occurence of searchString
+ * to right *before* the first occurrence of searchString
  * 
  * @param searchString - target string to search for ex.: "-->", "</tagname"
  * @param requireTailSeparator - whether the target must be immediately followed by whitespace or '>'
