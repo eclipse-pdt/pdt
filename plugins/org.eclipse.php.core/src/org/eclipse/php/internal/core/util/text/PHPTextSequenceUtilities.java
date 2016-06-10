@@ -177,11 +177,32 @@ public class PHPTextSequenceUtilities {
 		return new Region(textSequence.getOriginalOffset(0), textSequence.length());
 	}
 
+	/**
+	 * 
+	 * @param textSequence
+	 * @param comments
+	 *            comments must be reverse ordered (i.e. from latest to first in
+	 *            document)
+	 * @return
+	 */
 	private static TextSequence removeComments(TextSequence textSequence, List<IRegion> comments) {
 		int seqStart = textSequence.getOriginalOffset(0);
 		for (IRegion commentStartRegion : comments) {
+			int textSequenceLength = textSequence.length();
+			if (textSequenceLength == 0) {
+				break;
+			}
 			int start = commentStartRegion.getOffset() - seqStart;
-			int end = Math.min(start + commentStartRegion.getLength(), textSequence.length());
+			int end = start + commentStartRegion.getLength();
+			if (end <= 0) {
+				// no need to handle remaining comments
+				break;
+			}
+			if (start >= textSequenceLength) {
+				continue;
+			}
+			start = Math.max(0, start);
+			end = Math.min(textSequenceLength, end);
 			textSequence = textSequence.cutTextSequence(start, end);
 		}
 		return textSequence;

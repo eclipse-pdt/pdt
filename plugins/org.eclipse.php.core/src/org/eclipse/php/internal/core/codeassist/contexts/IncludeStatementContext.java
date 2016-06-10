@@ -42,7 +42,7 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 
 	private final boolean isIncludeStatement(TextSequence statementText, String variant) {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=333165
-		if (statementText.length() < variant.length() + 1) {
+		if (statementText.length() <= variant.length()) {
 			return false;
 		}
 		final int length = variant.length();
@@ -69,6 +69,9 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		}
 		TextSequence statementText = getStatementText();
 		int prefixEnd = statementText.length();
+		if (prefixEnd <= this.variantLength) {
+			return super.getPrefix();
+		}
 		final TextSequence cutTextSequence = statementText.cutTextSequence(0, this.variantLength);
 		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(cutTextSequence, 0, new char[] { '\'', '"' });
 		int i = this.variantLength + prefixStart + 1;
