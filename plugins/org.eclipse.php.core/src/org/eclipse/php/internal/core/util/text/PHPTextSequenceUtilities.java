@@ -180,8 +180,17 @@ public class PHPTextSequenceUtilities {
 	private static TextSequence removeComments(TextSequence textSequence, List<IRegion> comments) {
 		int seqStart = textSequence.getOriginalOffset(0);
 		for (IRegion commentStartRegion : comments) {
+			int textSequenceLength = textSequence.length();
+			if (textSequenceLength == 0) {
+				break;
+			}
 			int start = commentStartRegion.getOffset() - seqStart;
-			int end = Math.min(start + commentStartRegion.getLength(), textSequence.length());
+			int end = start + commentStartRegion.getLength();
+			if (end <= 0 || start >= textSequenceLength) {
+				continue;
+			}
+			start = Math.max(0, start);
+			end = Math.min(textSequenceLength, end);
 			textSequence = textSequence.cutTextSequence(start, end);
 		}
 		return textSequence;
