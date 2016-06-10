@@ -1,0 +1,13 @@
+--TEST--
+Should complete namespace;
+--FILE--
+<?php
+$var ="Foo\|";
+--FILE0--
+<?php
+namespace Foo\Bar;
+--FILE1--
+<?php
+namespace Foo\Bar;
+--EXPECT--
+type(Foo\Bar)
