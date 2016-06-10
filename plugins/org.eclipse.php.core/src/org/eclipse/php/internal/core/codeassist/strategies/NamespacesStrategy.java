@@ -11,16 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
@@ -54,14 +52,7 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 
 		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
 				falseFlag, scope, null);
-		List<IType> result = new ArrayList<IType>();
-		Set<String> names = new HashSet<String>();
-		for (IType namespace : namespaces) {
-			if (!names.contains(namespace.getElementName())) {
-				result.add(namespace);
-				names.add(namespace.getElementName());
-			}
-		}
+		List<IType> result = CodeAssistUtils.removeDuplicatedElements(namespaces);
 		return result.toArray(new IType[0]);
 	}
 }

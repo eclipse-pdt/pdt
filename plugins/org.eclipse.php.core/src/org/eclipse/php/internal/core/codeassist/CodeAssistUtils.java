@@ -769,4 +769,24 @@ public class CodeAssistUtils {
 		}
 		return false;
 	}
+
+	/**
+	 * Removes elements based on element name.
+	 * 
+	 * 
+	 * @param elements
+	 *            array of IModelElement's
+	 * @return list of elements without duplicates
+	 */
+	public static <T extends IModelElement> List<T> removeDuplicatedElements(T[] elements) {
+		List<T> result = new ArrayList<T>();
+		Set<String> names = new HashSet<String>();
+		for (T element : elements) {
+			if (!names.contains(element.getElementName())) {
+				result.add(element);
+				names.add(element.getElementName());
+			}
+		}
+		return result;
+	}
 }
