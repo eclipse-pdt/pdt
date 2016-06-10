@@ -594,7 +594,11 @@ public class CodeGeneration {
 		Program program = null;
 
 		// XXX: do not call SharedASTProvider.getAST() due bug 466694 and
-		// until bug 438661 will be fixed
+		// until bug 438661 will be fixed. Even without those bugs, it's still
+		// better to force generation of a new AST using generateProgram(method,
+		// null), because retrieved AST could still be outdated (using WAIT_YES)
+		// when there was previously an ASTError above the method we're
+		// handling!
 		// try {
 		// program = SharedASTProvider.getAST(method.getSourceModule(),
 		// SharedASTProvider.WAIT_YES, new NullProgressMonitor());
@@ -607,6 +611,11 @@ public class CodeGeneration {
 				return null;
 			}
 		}
+
+		// XXX: bindings can also be out-of-sync with current AST when DLTK's
+		// document indexing is still running. It's a rare case here but ideally
+		// we should always wait until indexing end:
+		// ModelManager.getModelManager().getIndexManager().waitUntilReady();
 
 		ASTNode elementAt = null;
 		try {
@@ -1135,7 +1144,7 @@ public class CodeGeneration {
 	 */
 	public static String getSetterComment(IScriptProject sp, String declaringTypeName, String methodName,
 			String fieldName, String fieldType, String paramName, String bareFieldName, String lineDelimiter)
-			throws CoreException {
+					throws CoreException {
 		return StubUtility.getSetterComment(sp, declaringTypeName, methodName, fieldName, fieldType, paramName,
 				bareFieldName, lineDelimiter);
 	}

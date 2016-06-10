@@ -131,7 +131,7 @@ public class RenameGlobalVariable extends AbstractRename {
 	}
 
 	/**
-	 * Rename $GLOBALS['variableName'] occurences
+	 * Rename $GLOBALS['variableName'] occurrences
 	 */
 	public boolean visit(ArrayAccess arrayAccess) {
 		// check the case of $GLOBALS['var']
