@@ -69,10 +69,10 @@ public class SystemTimePerformanceMeter extends InternalPerformanceMeter {
 	public void commit() {
 		Assert.isTrue(fStartTime.size() == fStopTime.size());
 		System.out.println("Scenario: " + getScenarioName()); //$NON-NLS-1$
-		int maxOccurenceLength= String.valueOf(fStartTime.size()).length();
+		int maxOccurrenceLength= String.valueOf(fStartTime.size()).length();
 		for (int i= 0; i < fStartTime.size(); i++) {
-			String occurence= String.valueOf(i + 1);
-			System.out.println("Occurence " + replicate(" ", maxOccurenceLength - occurence.length()) + occurence + ": " + (((Long) fStopTime.get(i)).longValue() - ((Long) fStartTime.get(i)).longValue())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			String occurrence= String.valueOf(i + 1);
+			System.out.println("Occurrence " + replicate(" ", maxOccurrenceLength - occurrence.length()) + occurrence + ": " + (((Long) fStopTime.get(i)).longValue() - ((Long) fStartTime.get(i)).longValue())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 	
