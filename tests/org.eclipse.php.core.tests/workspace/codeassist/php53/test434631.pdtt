@@ -1,0 +1,16 @@
+--TEST--
+Test object cloning / reassign
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+class Foo {
+    public function bar() {}
+}
+$v = new Foo();
+$v = clone $v;
+$v->|
+
+?>
+--EXPECT--
+method(bar)
