@@ -196,10 +196,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		}
 
-		declarations.pop();
-
 		// resolve more type member declarations
 		resolveMagicMembers(type);
+
+		declarations.pop();
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(type);

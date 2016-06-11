@@ -1,0 +1,25 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+function testBar3() {
+    
+}
+/**
+ * @method string testBar1()
+ */
+class Foo {
+	public function test() {
+		testB|
+	}
+	
+	public function testBar2 () {
+    	
+	}
+}
+
+
+--EXPECT--
+method(testBar3)

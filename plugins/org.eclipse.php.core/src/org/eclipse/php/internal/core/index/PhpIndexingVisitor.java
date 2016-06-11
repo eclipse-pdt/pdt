@@ -249,6 +249,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				}
 			}
 
+			// resolve more type member declarations
+			resolveMagicMembers(type);
+
 			fCurrentNamespace = null; // there are no nested namespaces
 			fCurrentQualifier = null;
 			fLastUseParts.clear();
@@ -256,12 +259,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				return visitGeneral(type);
 			}
 		} else {
+			// resolve more type member declarations
+			resolveMagicMembers(type);
+
 			fCurrentParent = null;
 		}
 		declarations.pop();
-
-		// resolve more type member declarations
-		resolveMagicMembers(type);
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.endvisit(type);
