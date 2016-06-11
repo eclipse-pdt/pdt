@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.ui.phar.wizard;
 
 import org.eclipse.core.resources.IContainer;
@@ -34,7 +45,7 @@ public class ContainerFilter extends ViewerFilter {
 			int type = ((IModelElement) element).getElementType();
 			isContainer = type == IModelElement.PROJECT_FRAGMENT || type == IModelElement.SCRIPT_FOLDER
 					|| type == IModelElement.SCRIPT_PROJECT
-					/* || type == IModelElement.SOURCE_MODULE */;
+			/* || type == IModelElement.SOURCE_MODULE */;
 		}
 
 		if (parent instanceof Model) {
