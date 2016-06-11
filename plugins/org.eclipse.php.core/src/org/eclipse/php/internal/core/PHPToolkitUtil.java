@@ -1,5 +1,3 @@
-package org.eclipse.php.internal.core;
-
 /*******************************************************************************
  * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -11,6 +9,7 @@ package org.eclipse.php.internal.core;
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
+package org.eclipse.php.internal.core;
 
 import java.io.File;
 import java.io.IOException;
