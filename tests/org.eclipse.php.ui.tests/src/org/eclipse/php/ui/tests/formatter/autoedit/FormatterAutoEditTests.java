@@ -208,8 +208,8 @@ public class FormatterAutoEditTests {
 					try {
 						IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
 
-						if (pdttFile.getOther() != null) {
-							cmd.text = pdttFile.getOther();
+						if (pdttFile.getOther() != null && !pdttFile.getOther().isEmpty()) {
+							cmd.text = pdttFile.getOther().substring(0, pdttFile.getOther().length() - 1);
 							if (cmd.text != null && cmd.text.trim().length() == 1) {
 								// support single (non-blank) character
 								// insertion

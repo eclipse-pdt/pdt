@@ -91,15 +91,13 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				defaultStrategy.placeMatchingBlanksForStructuredDocument((IStructuredDocument) document, helpBuffer,
 						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
-				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {// blank
-																								// line
+
+				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {
 					if (command.offset != region.getOffset()) {
 						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
 						// adjust the offset
 						command.offset = region.getOffset();
 					}
-				} else {
-					return;
 				}
 			}
 		} catch (BadLocationException e) {
@@ -166,7 +164,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 		} catch (BadLocationException e) {
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < startingEmptyLines; i++) {
 			String lineDelimiter = null;
 			try {
@@ -180,7 +178,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		for (int i = 0; i < list.size(); i++) {
 			if (!formatter.getIgnoreLines().contains(i + 1)) {
-				sb.append(helpBuffer.toString());
+				sb.append(helpBuffer);
 			}
 			sb.append(list.get(i));
 			if (i == list.size() - 1) {
