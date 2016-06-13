@@ -120,6 +120,10 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 		final IContributionItem showHTMLItem = new ActionContributionItem(changeOutlineModeActionHTML);
 
+		if (fCustomFiltersActionGroup == null) {
+			fCustomFiltersActionGroup = new CustomFiltersActionGroup(OUTLINE_PAGE, viewer);
+		}
+
 		items = super.createMenuContributions(viewer);
 
 		if (items == null) {
@@ -183,6 +187,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		// }
 		if (fCustomFiltersActionGroup != null) {
 			fCustomFiltersActionGroup.dispose();
+			fCustomFiltersActionGroup = null;
 		}
 
 		if (changeOutlineModeActionHTML != null && propertyChangeListener != null) {
@@ -431,9 +436,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		// Custom filter group
 		public PHPOutlineFilterProcessor(IPreferenceStore store, String ownerId, StructuredViewer viewer) {
 			super(store, ownerId, viewer);
-			if (fCustomFiltersActionGroup == null) {
-				fCustomFiltersActionGroup = new CustomFiltersActionGroup(OUTLINE_PAGE, viewer);
-			}
 		}
 
 		@Override
