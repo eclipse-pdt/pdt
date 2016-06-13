@@ -21,7 +21,7 @@ class ZendTest
 }
 ?>
 --OTHER--
-	public function newsPageAfterPaste ()
+			public function newsPageAfterPaste ()
 	{
 		$query = "
             SELECT T.*
@@ -32,7 +32,7 @@ class ZendTest
                 AND Enabled = 1
             )
             ORDER BY Hierarchy_Structure ASC";
-		return $query;
+				return $query;
 	}
 --EXPECT--
 <?php
@@ -64,6 +64,5 @@ class ZendTest
             ORDER BY Hierarchy_Structure ASC";
 		return $query;
 	}
-	
 }
 ?>
