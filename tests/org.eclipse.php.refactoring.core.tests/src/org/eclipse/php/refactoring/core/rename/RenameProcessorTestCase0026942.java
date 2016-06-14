@@ -14,19 +14,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.FileUtils;
@@ -41,27 +38,12 @@ public class RenameProcessorTestCase0026942 extends AbstractRenameRefactoringTes
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("project1");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		file = TestUtils.createFile(folder, "test1.php",
+				"<?php class Visitor{ public function isAllowed ($pPermissionCode){return true;}} class NonVisitor{public function isAllowed ($pPermissionCode){return false;}} class EditPage{private $isAllowed = false;public function __construct (){$lVisitor = new Visitor();$this->isAllowed = $lVisitor->isAllowed('EDIT_PAGE');}}class ViewPage{private $isAllowed = false;public function __construct (){$lVisitor = new NonVisitor();$this->isAllowed = $lVisitor->isAllowed('VIEW_PAGE');}}?>");
 
-		project1 = FileUtils.createProject("project1");
-
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("test1.php");
-
-		InputStream source = new ByteArrayInputStream(
-				"<?php class Visitor{ public function isAllowed ($pPermissionCode){return true;}} class NonVisitor{public function isAllowed ($pPermissionCode){return false;}} class EditPage{private $isAllowed = false;public function __construct (){$lVisitor = new Visitor();$this->isAllowed = $lVisitor->isAllowed('EDIT_PAGE');}}class ViewPage{private $isAllowed = false;public function __construct (){$lVisitor = new NonVisitor();$this->isAllowed = $lVisitor->isAllowed('VIEW_PAGE');}}?>"
-						.getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@Test

@@ -21,13 +21,12 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
@@ -37,7 +36,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
@@ -50,7 +48,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -97,39 +94,20 @@ public class ContentAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
-			workspaceDescription.setAutoBuilding(false);
-			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
-		}
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
-		if (project.exists()) {
-			return;
-		}
-		project.create(null);
-		project.open(null);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
+		ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
-		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
-			workspaceDescription.setAutoBuilding(true);
-			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
-		}
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
@@ -176,13 +154,12 @@ public class ContentAssistTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			TestUtils.deleteFile(testFile);
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
-					file.delete(true, null);
+					TestUtils.deleteFile(file);
 				}
 			}
 			otherFiles = null;
@@ -241,7 +218,7 @@ public class ContentAssistTests {
 			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
 		}
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	protected void openEditor() throws Exception {
@@ -252,7 +229,7 @@ public class ContentAssistTests {
 		 * This should take care of testing init, createPartControl,
 		 * beginBackgroundOperation, endBackgroundOperation methods
 		 */
-		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor", true);
+		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor", false);
 		if (part instanceof PHPStructuredEditor) {
 			fEditor = (PHPStructuredEditor) part;
 		} else {

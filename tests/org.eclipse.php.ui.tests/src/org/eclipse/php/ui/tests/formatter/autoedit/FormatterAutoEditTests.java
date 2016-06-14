@@ -12,17 +12,12 @@
  *******************************************************************************/
 package org.eclipse.php.ui.tests.formatter.autoedit;
 
-import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuffer;
@@ -34,7 +29,8 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
@@ -43,7 +39,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -98,19 +93,8 @@ public class FormatterAutoEditTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("FormatterTests" + phpVersion.name());
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("FormatterTests" + phpVersion.name());
 		WorkingCopyOwner.setPrimaryBufferProvider(new WorkingCopyOwner() {
 			public IBuffer createBuffer(ISourceModule workingCopy) {
 				ISourceModule original = workingCopy.getPrimary();
@@ -123,23 +107,20 @@ public class FormatterAutoEditTests {
 				return DocumentAdapter.NULL;
 			}
 		});
-
-		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
 
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			TestUtils.deleteFile(testFile);
 		}
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Context
@@ -285,12 +266,10 @@ public class FormatterAutoEditTests {
 			cmd.length = lastOffset - (firstOffset + cursor.length());
 		}
 
-		testFile = project.getFile("test" + (++count) + ".php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		testFile.touch(new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		PHPCoreTests.waitForIndexer();
+		testFile = TestUtils.createFile(project, "test" + (++count) + ".php", data);
+		project.getFile("test" + (++count) + ".php");
+		// Wait for indexer...
+		TestUtils.waitForIndexer();
 
 		return cmd;
 	}

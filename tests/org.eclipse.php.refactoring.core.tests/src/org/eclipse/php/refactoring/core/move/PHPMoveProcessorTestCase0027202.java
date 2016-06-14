@@ -12,21 +12,15 @@ package org.eclipse.php.refactoring.core.move;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.eclipse.php.core.tests.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,43 +31,16 @@ public class PHPMoveProcessorTestCase0027202 {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
 
-		project1 = FileUtils.createProject("project1");
+		project1 = TestUtils.createProject("project1");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		TestUtils.createFile(folder, "test1.php", "<?php class TestRenameClass{}?>");
 
-		IFolder folder = project1.getFolder("src");
+		project2 = TestUtils.createProject("project2");
+		folder = TestUtils.createFolder(project2, "src");
+		TestUtils.createFile(project2, "test2.php", "<?php include('src/test1.php'); ?>");
 
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		IFile file = folder.getFile("test1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		project2 = FileUtils.createProject("project2");
-
-		folder = project2.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		file = project2.getFile("test2.php");
-		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@After

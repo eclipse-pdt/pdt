@@ -13,26 +13,30 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class RenameProcessorTestCaseZSTD_1006 extends AbstractRenameRefactoringTest {
 	private IProject project1;
+
+	@Before
+	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("project1");
+		TestUtils.setProjectPhpVersion(project1, PHPVersion.PHP5_3);
+	}
 
 	@After
 	public void tearDown() throws Exception {
@@ -42,39 +46,14 @@ public class RenameProcessorTestCaseZSTD_1006 extends AbstractRenameRefactoringT
 	@Test
 	public void testRename1() throws Exception {
 
-		System.setProperty("disableStartupRunner", "true");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		IFile file1 = TestUtils.createFile(folder, "testzstd_1006_1.php",
+				"<?php class MyClass{} $a=new MyClass();?>");
 
-		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
+		IFile file2 = TestUtils.createFile(folder, "testzstd_1006_2.php",
+				"<?php include 'testzstd_1006_1.php'; class NewClass{protected function foo(){$a = new MyClass();}}?>");
 
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		IFile file1 = folder.getFile("testzstd_1006_1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class MyClass{} $a=new MyClass();?>".getBytes());
-
-		if (!file1.exists()) {
-			file1.create(source, true, new NullProgressMonitor());
-		} else {
-			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		IFile file2 = folder.getFile("testzstd_1006_2.php");
-
-		source = new ByteArrayInputStream(
-				"<?php include 'testzstd_1006_1.php'; class NewClass{protected function foo(){$a = new MyClass();}}?>"
-						.getBytes());
-
-		if (!file2.exists()) {
-			file2.create(source, true, new NullProgressMonitor());
-		} else {
-			file2.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 
 		Program program = createProgram(file2);
 

@@ -14,9 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -29,8 +27,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
-import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -45,30 +43,17 @@ public class ExtractVariableRefactoringTest27457 extends AbstractRefactoringTest
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("TestProject1");
 
-		System.setProperty("disableStartupRunner", "true");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		file = TestUtils.createFile(folder, "ExtractVariableRefactoringTest27457.php",
+				"<?php function foo(){} foo();?>");
 
-		project1 = FileUtils.createProject("TestProject1");
-
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("ExtractVariableRefactoringTest27457.php");
-
-		InputStream source = new ByteArrayInputStream("<?php function foo(){} foo();?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
+		TestUtils.waitForIndexer();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDownListSuite() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 

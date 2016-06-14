@@ -4408,10 +4408,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			appendToBuffer(FROM);
 			insertSpace();
 		}
-		handleChars(lastPosition, yieldExpression.getExpression().getStart());
-		yieldExpression.getExpression().accept(this);
-		lastPosition = yieldExpression.getExpression().getEnd();
-
+		Expression expression = yieldExpression.getExpression();
+		if (expression != null) {
+			handleChars(lastPosition, expression.getStart());
+			expression.accept(this);
+			lastPosition = expression.getEnd();
+		}
 		return false;
 	}
 

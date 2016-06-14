@@ -31,14 +31,14 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.MethodDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
-import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
 import junit.framework.TestCase;
@@ -50,37 +50,15 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 
-		project1 = FileUtils.createProject("project1");
+		TestUtils.disableColliders(ColliderType.ALL);
 
-		IFolder folder = project1.getFolder("src");
+		project1 = TestUtils.createProject("project1");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		folder = TestUtils.createFolder(project1, "src2");
+		folder = TestUtils.createFolder(project1, "src/src1");
+		TestUtils.createFile(folder, "test1.php", "<?php class TestRenameClass{}?>");
 
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		folder = project1.getFolder("src2");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		folder = project1.getFolder("src/src1");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		IFile file = folder.getFile("test1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	public void testGetSourceOffsetAndGetNode() {
@@ -383,6 +361,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 }

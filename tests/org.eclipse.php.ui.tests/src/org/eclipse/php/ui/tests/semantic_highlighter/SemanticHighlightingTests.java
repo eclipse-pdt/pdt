@@ -14,7 +14,6 @@ package org.eclipse.php.ui.tests.semantic_highlighter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,16 +23,12 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceDescription;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.Position;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
@@ -43,7 +38,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.ConstantHighlighting;
@@ -117,48 +111,26 @@ public class SemanticHighlightingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
-			workspaceDescription.setAutoBuilding(false);
-			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
-		}
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("SemanticHighlighting_" + phpVersion);
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("SemanticHighlighting_" + phpVersion);
+		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
-		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			IWorkspaceDescription workspaceDescription = ResourcesPlugin.getWorkspace().getDescription();
-			workspaceDescription.setAutoBuilding(true);
-			ResourcesPlugin.getWorkspace().setDescription(workspaceDescription);
-		}
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			TestUtils.deleteFile(testFile);
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
 				if (file != null) {
-					file.delete(true, null);
+					TestUtils.deleteFile(file);
 				}
 			}
 			otherFiles = null;
@@ -215,22 +187,17 @@ public class SemanticHighlightingTests {
 	}
 
 	protected void createFile(PdttFile pdttFile) throws Exception {
-		testFile = project.getFile("test.php");
-		testFile.create(new ByteArrayInputStream(pdttFile.getFile().getBytes()), true, null);
-
+		testFile = TestUtils.createFile(project, "test.php", new String(pdttFile.getFile().getBytes()));
 		String[] otherFiles = pdttFile.getOtherFiles();
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
-			IFile tmp = project.getFile(String.format("test%s.php", i));
-			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
+			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
 			this.otherFiles.add(i, tmp);
 			i++;
 		}
-
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		PHPCoreTests.waitForIndexer();
+		// Wait for indexer...
+		TestUtils.waitForIndexer();
 	}
 
 	protected ISourceModule getSourceModule() {

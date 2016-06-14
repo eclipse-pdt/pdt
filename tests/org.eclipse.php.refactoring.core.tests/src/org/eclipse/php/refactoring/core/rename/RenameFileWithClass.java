@@ -14,16 +14,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
@@ -38,30 +35,12 @@ public class RenameFileWithClass extends AbstractRenameRefactoringTest {
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("project1");
+		file = TestUtils.createFile(project1, "RenameFileWithClass1.php", "<?php class RenameFileWithClass1{}?>");
+		file1 = TestUtils.createFile(project1, "RenameFileWithClass2.php",
+				"<?php include 'RenameFileWithClass1.php'; ?>");
 
-		project1 = FileUtils.createProject("project1");
-
-		file = project1.getFile("RenameFileWithClass1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class RenameFileWithClass1{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		file1 = project1.getFile("RenameFileWithClass2.php");
-
-		source = new ByteArrayInputStream("<?php include 'RenameFileWithClass1.php'; ?>".getBytes());
-
-		if (!file1.exists()) {
-			file1.create(source, true, new NullProgressMonitor());
-		} else {
-			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@Test
