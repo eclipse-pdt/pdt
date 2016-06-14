@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -34,16 +33,18 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -153,34 +154,28 @@ public class PHPPartitionerTests {
 		}
 	}
 
+	@BeforeClass
+	public static void setUpSuite() {
+		TestUtils.disableColliders(ColliderType.ALL);
+	}
+
+	@AfterClass
+	public static void tearDownSuite() {
+		TestUtils.enableColliders(ColliderType.ALL);
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		// copy files in project from source workspace to target workspace
 		final File sourceWorkspacePath = getSourceWorkspacePath();
 		final File targetWorkspacePath = getWorkspaceRoot().getLocation().toFile();
-
 		copyDirectory(new File(sourceWorkspacePath, PROJECT_NAME), new File(targetWorkspacePath, PROJECT_NAME));
-
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
+		project = TestUtils.createProject(PROJECT_NAME);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		TestUtils.deleteProject(project);
 	}
 
 	/**

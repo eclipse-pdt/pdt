@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
@@ -67,7 +67,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 					ProgramParser test = new ProgramParser(phpVersion.getAlias() + " - /" + fileName) {
 
 						protected void setUp() throws Exception {
-							PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+							TestUtils.setProjectPhpVersion(project, phpVersion);
 							pdttFile.applyPreferences();
 						}
 
@@ -118,7 +118,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_ONE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 		perfMonitor.execute("PerformanceTests.testProgramParser" + "_" + fileName, new Operation() {
 			public void run() throws Exception {
 				Util.createProgramFromSource(testFile);

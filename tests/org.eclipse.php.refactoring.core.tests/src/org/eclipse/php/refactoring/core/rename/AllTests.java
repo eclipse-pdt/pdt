@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.refactoring.core.test.RefactoringTestsSupport;
 import org.eclipse.php.refactoring.core.test.TestProject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,9 +43,8 @@ public class AllTests {
 
 	@BeforeClass
 	public static void setUpSuite() {
-		RefactoringTestsSupport.setUp();
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = new TestProject("Refactoring");
-		System.setProperty("disableStartupRunner", "true");
 	}
 
 	@AfterClass
@@ -53,6 +53,6 @@ public class AllTests {
 			project.delete();
 		} catch (Exception e) {
 		}
-		RefactoringTestsSupport.tearDown();
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 }

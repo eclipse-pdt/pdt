@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
@@ -476,7 +476,7 @@ public class NodeDeletionTests {
 		rewrite(program, document);
 
 		String actual = document.get();
-		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected, actual);
+		String diff = TestUtils.compareContentsIgnoreWhitespace(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

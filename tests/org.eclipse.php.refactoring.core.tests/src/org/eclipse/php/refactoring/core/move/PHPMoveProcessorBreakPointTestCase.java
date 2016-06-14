@@ -15,8 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,9 +37,9 @@ import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
-import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Test;
 
@@ -60,19 +58,10 @@ public class PHPMoveProcessorBreakPointTestCase {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 
-				System.setProperty("disableStartupRunner", "true");
-				project1 = FileUtils.createProject("TestProject1");
-				IFolder folder = project1.getFolder("src");
-				if (!folder.exists()) {
-					folder.create(true, true, new NullProgressMonitor());
-				}
-				IFile file = folder.getFile("RunBreakPoint.php");
-				InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-				if (!file.exists()) {
-					file.create(source, true, new NullProgressMonitor());
-				} else {
-					file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-				}
+				project1 = TestUtils.createProject("TestProject1");
+				IFolder folder = TestUtils.createFolder(project1, "src");
+				IFile file = TestUtils.createFile(folder, "RunBreakPoint.php", "<?php class TestRenameClass{}?>");
+				folder.getFile("RunBreakPoint.php");
 				Map<String, String> attributes = new HashMap<String, String>();
 				attributes.put(IMarker.LOCATION, file.getFullPath().toString());
 				attributes.put("org.eclipse.wst.sse.ui.extensions.breakpoint.path", file.getFullPath().toString());

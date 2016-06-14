@@ -25,8 +25,8 @@
 				<configuration>
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
-					<useUIThread>false</useUIThread>
-					<argLine>-Dorg.eclipse.php.disablePHPLibraryFolderAutoDetect=true -Dh2.syncMethod=force -Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
+					<useUIThread>true</useUIThread>
+					<argLine>-Dh2.syncMethod=force -Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>

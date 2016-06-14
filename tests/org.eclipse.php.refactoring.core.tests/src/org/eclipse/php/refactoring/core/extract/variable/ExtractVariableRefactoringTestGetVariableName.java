@@ -15,9 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -26,8 +24,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
-import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.After;
@@ -41,31 +39,17 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("TestProject1");
 
-		System.setProperty("disableStartupRunner", "true");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		file = TestUtils.createFile(folder, "ExtractVariableRefactoringTestGetVariableName.php",
+				"<?php function foo(){} foo(); $a = 1; $b=1.1; $c=true;$d=\"ab\"; $e = __LINE__;?>");
 
-		project1 = FileUtils.createProject("TestProject1");
-
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("ExtractVariableRefactoringTestGetVariableName.php");
-
-		InputStream source = new ByteArrayInputStream(
-				"<?php function foo(){} foo(); $a = 1; $b=1.1; $c=true;$d=\"ab\"; $e = __LINE__;?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
+		TestUtils.waitForIndexer();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDownListSuite() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 

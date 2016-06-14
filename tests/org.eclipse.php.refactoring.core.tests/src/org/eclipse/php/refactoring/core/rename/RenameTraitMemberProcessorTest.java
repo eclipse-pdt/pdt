@@ -13,7 +13,7 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -31,9 +31,9 @@ public class RenameTraitMemberProcessorTest extends RenameClassMemberProcessorTe
 
 	@PDTTList.BeforeList
 	@Override
-	public void setUpSuite() throws Exception {
-		super.setUpSuite();
-		PHPCoreTests.setProjectPhpVersion(project.getProject(), PHPVersion.PHP5_4);
+	public void setUpListSuite() throws Exception {
+		super.setUpListSuite();
+		TestUtils.setProjectPhpVersion(project.getProject(), PHPVersion.PHP5_4);
 	}
 
 	@PDTTList.Parameters

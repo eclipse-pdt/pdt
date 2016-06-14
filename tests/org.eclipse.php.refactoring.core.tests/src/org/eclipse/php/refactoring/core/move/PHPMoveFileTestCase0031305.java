@@ -12,20 +12,16 @@ package org.eclipse.php.refactoring.core.move;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.eclipse.php.core.tests.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,23 +34,15 @@ public class PHPMoveFileTestCase0031305 {
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("project1");
 
-		project1 = FileUtils.createProject("project1");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		file = TestUtils.createFile(folder, "PHPMoveFileTestCase0031305.php",
+				"<?php $phpbb_root_path = './'; include($phpbb_root_path . 'common' );?>");
 
-		file = project1.getFile("PHPMoveFileTestCase0031305.php");
+		project2 = TestUtils.createProject("project2");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php $phpbb_root_path = './'; include($phpbb_root_path . 'common' );?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		project2 = FileUtils.createProject("project2");
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@Test

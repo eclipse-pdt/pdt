@@ -22,9 +22,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
@@ -35,7 +33,8 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
@@ -43,10 +42,8 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -87,29 +84,17 @@ public class TypeInferenceTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("TypeInferenceTests_" + version.toString());
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-		PHPCoreTests.setProjectPhpVersion(project, version);
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("TypeInferenceTests_" + version.toString());
+		TestUtils.setProjectPhpVersion(project, version);
 
 		typeInferenceEngine = new PHPTypeInferencer();
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 		typeInferenceEngine = null;
 	}
 
@@ -173,7 +158,7 @@ public class TypeInferenceTests {
 
 		try {
 			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-			PHPCoreTests.waitForIndexer();
+			TestUtils.waitForIndexer();
 
 			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 			ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);

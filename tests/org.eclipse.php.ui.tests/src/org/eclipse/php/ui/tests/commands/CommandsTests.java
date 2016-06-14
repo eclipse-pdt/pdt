@@ -25,16 +25,15 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
@@ -44,7 +43,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
@@ -99,41 +97,28 @@ public class CommandsTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
-		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			TestUtils.deleteFile(testFile);
 		}
 		if (otherFiles != null) {
 			for (IFile f : otherFiles) {
-				f.delete(true, null);
+				TestUtils.deleteFile(f);
 			}
 			otherFiles = null;
 		}
@@ -192,7 +177,7 @@ public class CommandsTests {
 				testFile.delete(true, false, null);
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 				project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-				PHPCoreTests.waitForIndexer();
+				TestUtils.waitForIndexer();
 			} catch (CoreException e) {
 			}
 
@@ -232,8 +217,6 @@ public class CommandsTests {
 	}
 
 	protected ISourceRange createFile(String data, String fileName, InputStream[] other) throws Exception {
-		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
-
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
 			throw new IllegalArgumentException("Selection characters are not set");
@@ -247,16 +230,16 @@ public class CommandsTests {
 		}
 		data = data.substring(0, right) + data.substring(right + 1);
 
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+		testFile = TestUtils.createFile(project,
+				new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment(), data);
+
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
 			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
 		}
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		PHPCoreTests.waitForIndexer();
+		// Wait for indexer...
+		TestUtils.waitForIndexer();
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 		IEditorInput input = new FileEditorInput(testFile);
