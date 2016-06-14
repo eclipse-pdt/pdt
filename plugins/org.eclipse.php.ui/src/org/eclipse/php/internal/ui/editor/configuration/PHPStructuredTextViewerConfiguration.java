@@ -307,7 +307,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		// changed by wtp
 		IPreferencesService preferencesService = Platform.getPreferencesService();
 		int fAutoActivationDelay = preferencesService.getInt(PHPCorePlugin.ID,
-				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200, null);
+				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 0, null);
 
 		fContentAssistant.setAutoActivationDelay(fAutoActivationDelay);
 	}
