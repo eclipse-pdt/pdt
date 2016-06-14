@@ -13,17 +13,14 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
@@ -38,27 +35,15 @@ public class RenameProcessorTestCase0026972 extends AbstractRenameRefactoringTes
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
 
-		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
+		project1 = TestUtils.createProject("project1");
+		TestUtils.setProjectPhpVersion(project1, PHPVersion.PHP5_3);
 
-		IFolder folder = project1.getFolder("src");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		file = TestUtils.createFile(folder, "test.php",
+				"<?php class test {} $a = new test(); $b = new test();$c = new test(); ?>");
 
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("test11.php");
-
-		InputStream source = new ByteArrayInputStream(
-				"<?php class test {} $a = new test(); $b = new test();$c = new test(); ?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@After

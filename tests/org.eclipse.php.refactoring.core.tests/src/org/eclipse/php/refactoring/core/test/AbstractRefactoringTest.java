@@ -33,13 +33,15 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractRefactoringTest {
@@ -56,10 +58,21 @@ public abstract class AbstractRefactoringTest {
 		this.fileNames = fileNames;
 	}
 
+	@BeforeClass
+	public static void setUpSuite() {
+		TestUtils.disableColliders(ColliderType.ALL);
+	}
+
 	@PDTTList.BeforeList
-	public void setUpSuite() throws Exception {
+	public void setUpListSuite() throws Exception {
 		project = getProject();
 		initFiles(fileNames);
+	}
+
+	@PDTTList.AfterList
+	public void tearDownListSuite() throws Exception {
+		project.delete();
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	protected void initFiles(String[] fileNames) throws Exception {
@@ -71,7 +84,7 @@ public abstract class AbstractRefactoringTest {
 			filesMap.put(fileName, pdttFile);
 		}
 
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	private String getContents(PdttFileExt pdttFile, FileInfo testFile) {
@@ -88,11 +101,6 @@ public abstract class AbstractRefactoringTest {
 
 	protected TestProject getProject() {
 		return new TestProject("Refactoring");
-	}
-
-	@PDTTList.AfterList
-	public void tearDown() throws Exception {
-		project.delete();
 	}
 
 	protected Program createProgram(IFile file) throws Exception {
@@ -129,7 +137,7 @@ public abstract class AbstractRefactoringTest {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	protected void checkInitCondition(RefactoringProcessor processor) {
@@ -179,7 +187,7 @@ public abstract class AbstractRefactoringTest {
 	}
 
 	protected void checkTestResult(PdttFileExt pdttFile) {
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 		List<FileInfo> files = pdttFile.getExpectedFiles();
 		for (FileInfo expFile : files) {
 			IFile file = project.findFile(expFile.getName());

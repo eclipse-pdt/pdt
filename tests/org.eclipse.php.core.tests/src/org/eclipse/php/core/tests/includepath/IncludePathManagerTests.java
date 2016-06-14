@@ -15,25 +15,28 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -45,29 +48,26 @@ public class IncludePathManagerTests {
 
 	protected IProject project;
 
+	@BeforeClass
+	public static void setUpSuite() {
+		TestUtils.disableColliders(ColliderType.ALL);
+	}
+
+	@AfterClass
+	public static void tearDownSuite() {
+		TestUtils.enableColliders(ColliderType.ALL);
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		// Initialize include path manager:
 		IncludePathManager.getInstance();
-
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
+		project = TestUtils.createProject("IncludePathManagerTests");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		project.delete(true, null);
+		TestUtils.deleteProject(project);
 	}
 
 	@Test
@@ -97,8 +97,9 @@ public class IncludePathManagerTests {
 	// path:
 	@Test
 	public void includePathGetAfterBPChange2() throws Exception {
-		String libraryPath = Platform.OS_WIN32.equals(Platform.getOS()) ? "C:\\Projects\\MyLibrary"
-				: "/var/www/MyLibrary";
+		File extLibrary = new File(new File(ResourcesPlugin.getWorkspace().getRoot().getLocationURI()), "MyLibrary");
+		extLibrary.mkdir();
+		String libraryPath = extLibrary.getAbsolutePath();
 
 		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(
@@ -113,6 +114,7 @@ public class IncludePathManagerTests {
 		assertEquals(
 				EnvironmentPathUtils.getLocalPath(((IBuildpathEntry) includePath[0].getEntry()).getPath()).toOSString(),
 				libraryPath);
+		extLibrary.delete();
 	}
 
 	// This test checks how include path changes are saved:

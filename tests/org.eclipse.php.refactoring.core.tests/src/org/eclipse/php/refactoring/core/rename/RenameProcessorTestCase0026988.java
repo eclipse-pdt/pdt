@@ -12,17 +12,13 @@ package org.eclipse.php.refactoring.core.rename;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
@@ -31,7 +27,7 @@ import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -43,35 +39,12 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = TestUtils.createProject("project1");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		TestUtils.createFile(folder, "test1.php", "<?php class TestRenameClass{}?>");
 
-		project1 = FileUtils.createProject("project1");
-
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		IFile file = folder.getFile("test1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		project2 = FileUtils.createProject("project2");
-
-		file = project2.getFile("test2.php");
-
-		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
+		project2 = TestUtils.createProject("project2");
+		TestUtils.createFile(project2, "test2.php", "<?php include('src/test1.php'); ?>");
 
 		IAccessRule[] accesRules = new IAccessRule[0];
 
@@ -96,7 +69,7 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
 		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@Test

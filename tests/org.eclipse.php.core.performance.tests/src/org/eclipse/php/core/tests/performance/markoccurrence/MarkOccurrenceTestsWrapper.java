@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
@@ -82,7 +82,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 					MarkOccurrenceTests test = new MarkOccurrenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
 						protected void setUp() throws Exception {
-							PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+							TestUtils.setProjectPhpVersion(project, phpVersion);
 							pdttFile.applyPreferences();
 						}
 
@@ -160,7 +160,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_ONE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 		Program astRoot = Util.createProgramFromSource(testFile);
 		ASTNode selectedNode = NodeFinder.perform(astRoot, offset, 0);
 		if (selectedNode != null && (selectedNode instanceof Identifier || (isScalarButNotInString(selectedNode)))) {

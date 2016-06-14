@@ -24,7 +24,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.core.SourceRange;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
@@ -143,7 +143,7 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_ONE, null);
 
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 
 		return new SourceRange(left, right - left);
 	}

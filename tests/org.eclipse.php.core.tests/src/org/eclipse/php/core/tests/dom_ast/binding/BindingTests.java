@@ -21,16 +21,13 @@ import java.io.InputStreamReader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
@@ -56,11 +53,10 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -70,26 +66,25 @@ public class BindingTests {
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
-	protected IProject project;
+	protected static IProject project;
 	private IFile testFile;
 
-	@Before
-	public void setUp() throws Exception {
-		if (project == null) {
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject("BindingTests");
-			if (project.exists()) {
-				return;
-			}
+	@BeforeClass
+	public static void setUpSuite() {
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("BindingTests");
+	}
 
-			project.create(null);
-			project.open(null);
-			// Disable WTP validation to skip unnecessary clashes
-			ValidationFramework.getDefault().suspendValidation(project, true);
-			// configure nature
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-		}
+	@AfterClass
+	public static void tearDownSuite() {
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		TestUtils.deleteFile(testFile);
+		testFile = null;
 	}
 
 	/**
@@ -109,18 +104,11 @@ public class BindingTests {
 	}
 
 	protected Program createAndParse(String code) throws Exception {
-		testFile = project.getFile("test.php");
-		ByteArrayInputStream source = new ByteArrayInputStream(code.getBytes());
-		if (testFile.exists()) {
-			testFile.setContents(source, true, false, null);
-		} else {
-			testFile.create(source, true, null);
+		if (testFile == null) {
+			testFile = TestUtils.createFile(project, "test.php", code);
+			// Wait for indexer...
+			TestUtils.waitForIndexer();
 		}
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.waitForIndexer();
-
 		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
@@ -162,12 +150,6 @@ public class BindingTests {
 	 */
 	protected ITypeBinding getTypeBinding(String content) throws CoreException, Exception {
 		return getTypeBinding(content, 0);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		// testFile.delete(true, new NullProgressMonitor());
-		project.delete(true, null);
 	}
 
 	@Test

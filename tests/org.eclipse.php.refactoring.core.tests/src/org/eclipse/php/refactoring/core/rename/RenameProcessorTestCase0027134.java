@@ -13,16 +13,14 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
@@ -36,7 +34,8 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 
 	@Before
 	public void setUp() throws Exception {
-		// nothing to be done here
+		project1 = TestUtils.createProject("project1");
+		TestUtils.setProjectPhpVersion(project1, PHPVersion.PHP5_3);
 	}
 
 	@After
@@ -47,38 +46,13 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 	@Test
 	public void testRename1() throws Exception {
 
-		System.setProperty("disableStartupRunner", "true");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		IFile file1 = TestUtils.createFile(folder, "test0027134_1.php", "<?php class MyClass{} ?>");
 
-		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
+		IFile file2 = TestUtils.createFile(folder, "test0027134_2.php",
+				"<?php include 'test0027134_1.php'; class SecondClass extends MyClass{} ?>");
 
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		IFile file1 = folder.getFile("test0027134_1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class MyClass{} ?>".getBytes());
-
-		if (!file1.exists()) {
-			file1.create(source, true, new NullProgressMonitor());
-		} else {
-			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		IFile file2 = folder.getFile("test0027134_2.php");
-
-		source = new ByteArrayInputStream(
-				"<?php include 'test0027134_1.php'; class SecondClass extends MyClass{} ?>".getBytes());
-
-		if (!file2.exists()) {
-			file2.create(source, true, new NullProgressMonitor());
-		} else {
-			file2.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 
 		Program program = createProgram(file1);
 
@@ -111,37 +85,13 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 	@Test
 	public void testRename2() throws Exception {
 
-		System.setProperty("disableStartupRunner", "true");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		IFile file1 = TestUtils.createFile(folder, "test100271341.php", "<?php class MyClass{} ?>");
 
-		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
+		IFile file2 = TestUtils.createFile(folder, "test00271342.php",
+				"<?php class SecondClass extends MyClass{} ?>");
 
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-
-		IFile file1 = folder.getFile("test100271341.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class MyClass{} ?>".getBytes());
-
-		if (!file1.exists()) {
-			file1.create(source, true, new NullProgressMonitor());
-		} else {
-			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		IFile file2 = folder.getFile("test00271342.php");
-
-		source = new ByteArrayInputStream("<?php class SecondClass extends MyClass{} ?>".getBytes());
-
-		if (!file2.exists()) {
-			file2.create(source, true, new NullProgressMonitor());
-		} else {
-			file2.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 		Program program = createProgram(file2);
 
 		assertNotNull(program);

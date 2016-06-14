@@ -26,7 +26,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.filenetwork.AbstractModelTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
 import org.eclipse.php.core.tests.performance.ast.locator.PhpElementConciliatorTestWrapper;
@@ -38,7 +38,6 @@ import org.eclipse.php.core.tests.performance.typeinference.TypeInferenceTestsWr
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 import junit.extensions.TestSetup;
 import junit.framework.Assert;
@@ -90,7 +89,7 @@ public class ProjectSuite extends AbstractModelTests {
 				IProjectDescription desc = project.getDescription();
 				desc.setNatureIds(new String[] { PHPNature.ID });
 				project.setDescription(desc, null);
-				ProjectOptions.setPhpVersion((PHPVersion) map.get(PHP_VERSION), project.getProject());
+				TestUtils.setProjectPhpVersion(project, (PHPVersion) map.get(PHP_VERSION));
 				IFolder testFolder = project.getFolder("pdttest");
 				testFolder.create(true, true, null);
 
@@ -164,7 +163,7 @@ public class ProjectSuite extends AbstractModelTests {
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testBuildProject", new Operation() {
 				public void run() throws Exception {
 					project.refreshLocal(IResource.DEPTH_INFINITE, null);
-					PHPCoreTests.waitForIndexer();
+					TestUtils.waitForIndexer();
 				}
 			}, 1, 10);
 		}

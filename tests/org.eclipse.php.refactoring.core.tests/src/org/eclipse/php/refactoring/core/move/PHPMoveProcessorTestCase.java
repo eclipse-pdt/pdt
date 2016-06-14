@@ -13,9 +13,7 @@ package org.eclipse.php.refactoring.core.move;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +34,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -48,36 +46,13 @@ public class PHPMoveProcessorTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
 
-		project1 = FileUtils.createProject("TestProject1");
+		project1 = TestUtils.createProject("TestProject1");
+		IFolder folder = TestUtils.createFolder(project1, "src");
+		TestUtils.createFile(folder, "test1.php", "<?php class TestRenameClass{}?>");
 
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		IFile file = folder.getFile("test1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		project2 = FileUtils.createProject("TestProject2");
-
-		file = project2.getFile("test2.php");
-
-		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
+		project2 = TestUtils.createProject("TestProject2");
+		TestUtils.createFile(project2, "test2.php", "<?php include('src/test1.php'); ?>");
 
 		IAccessRule[] accesRules = new IAccessRule[0];
 
@@ -102,7 +77,7 @@ public class PHPMoveProcessorTestCase {
 		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
 		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 	}
 
 	@After
@@ -133,7 +108,7 @@ public class PHPMoveProcessorTestCase {
 			fail(e.getMessage());
 		}
 
-		PHPCoreTests.waitForIndexer();
+		TestUtils.waitForIndexer();
 
 		IFile file = project2.getFile("test2.php");
 

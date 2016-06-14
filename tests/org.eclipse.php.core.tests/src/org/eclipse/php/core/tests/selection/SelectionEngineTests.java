@@ -14,22 +14,19 @@ package org.eclipse.php.core.tests.selection;
 
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
@@ -38,8 +35,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -80,28 +75,15 @@ public class SelectionEngineTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + version.toString());
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-		PHPCoreTests.setProjectPhpVersion(project, version);
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("AutoSelectionEngine_" + version.toString());
+		TestUtils.setProjectPhpVersion(project, version);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
@@ -157,8 +139,7 @@ public class SelectionEngineTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			TestUtils.deleteFile(testFile);
 		}
 	}
 
@@ -185,13 +166,10 @@ public class SelectionEngineTests {
 		}
 		data = data.substring(0, right) + data.substring(right + 1);
 
-		testFile = project.getFile("test.php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		testFile = TestUtils.createFile(project, "test.php", data);
 
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
+		TestUtils.waitForIndexer();
 
 		return new SourceRange(left, right - left);
 	}
