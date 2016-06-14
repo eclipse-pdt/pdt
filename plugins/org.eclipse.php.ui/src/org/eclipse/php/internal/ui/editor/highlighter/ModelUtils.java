@@ -37,7 +37,7 @@ public abstract class ModelUtils {
 		ITypeBinding type = fieldAccess.getDispatcher().resolveTypeBinding();
 		String fieldName = getFieldName(fieldAccess.getMember());
 		if (type != null && fieldName != null) {
-			return getField(fieldName.toLowerCase(), type);
+			return getField(fieldName, type);
 		}
 		return null;
 	}
@@ -45,7 +45,7 @@ public abstract class ModelUtils {
 	static private IField getField(String fieldName, ITypeBinding type) {
 		IVariableBinding[] fields = type.getDeclaredFields();
 		for (IVariableBinding field : fields) {
-			if (field.getName().substring(1).toLowerCase().equals(fieldName)) {
+			if (field.getName().substring(1).equalsIgnoreCase(fieldName)) {
 				return (IField) field.getPHPElement();
 			}
 		}
@@ -61,7 +61,7 @@ public abstract class ModelUtils {
 		ITypeBinding type = methodInvocation.getDispatcher().resolveTypeBinding();
 		String methodName = getFunctionName(methodInvocation.getMethod().getFunctionName());
 		if (type != null && methodName != null) {
-			return getMethod(methodName.toLowerCase(), type);
+			return getMethod(methodName, type);
 		}
 		return null;
 	}
@@ -69,7 +69,7 @@ public abstract class ModelUtils {
 	static private IMethod getMethod(String methodName, ITypeBinding type) {
 		IMethodBinding[] methods = type.getDeclaredMethods();
 		for (IMethodBinding method : methods) {
-			if (method.getName().toLowerCase().equals(methodName)) {
+			if (method.getName().equalsIgnoreCase(methodName)) {
 				return (IMethod) method.getPHPElement();
 			}
 		}
@@ -86,7 +86,7 @@ public abstract class ModelUtils {
 		if (type != null && methodName != null) {
 			IMethodBinding[] methods = type.getDeclaredMethods();
 			for (IMethodBinding method : methods) {
-				if (method.getName().toLowerCase().equals(methodName.toLowerCase())) {
+				if (method.getName().equalsIgnoreCase(methodName)) {
 					return (IMethod) method.getPHPElement();
 				}
 			}
@@ -105,7 +105,7 @@ public abstract class ModelUtils {
 		if (type != null && methodName != null) {
 			IMethodBinding[] methods = type.getDeclaredMethods();
 			for (IMethodBinding method : methods) {
-				if (method.getName().toLowerCase().equals(methodName.toLowerCase())) {
+				if (method.getName().equalsIgnoreCase(methodName)) {
 					return (IMethod) method.getPHPElement();
 				}
 			}
@@ -147,8 +147,7 @@ public abstract class ModelUtils {
 				}
 			}
 		} catch (ModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		return elements;
 	}

@@ -148,7 +148,6 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			if (globalFunctionsCache == null) {
 				globalFunctionsCache = Collections.synchronizedMap(new HashMap<String, Collection<IMethod>>());
 
-				functionName = functionName.toLowerCase();
 				if (!globalFunctionsCache.containsKey(functionName)) {
 					IScriptProject scriptProject = sourceModule.getScriptProject();
 					IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
