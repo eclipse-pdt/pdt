@@ -1,0 +1,14 @@
+--TEST--
+Bug 496045 - "self" is highlighted as type if inside new instance statement
+--FILE--
+<?php
+class A {
+	function foo() {
+		new self ();
+		self::call ();
+	}
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
+highlight(A)

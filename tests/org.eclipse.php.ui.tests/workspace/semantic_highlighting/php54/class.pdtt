@@ -40,8 +40,8 @@ class Aliased_Talker {
 ?>
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
-highlight(\DateTime)
-highlight(\DateTime)
+highlight(DateTime)
+highlight(DateTime)
 highlight(A)
 highlight(B)
 highlight(Talker)
