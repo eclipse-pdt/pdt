@@ -27,6 +27,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -147,22 +148,15 @@ public class ContentAssistTests {
 		final Exception[] err = new Exception[1];
 		createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
 
+		final String[] result = new String[1];
 		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
 					openEditor();
-					String result = executeAutoInsert(offset);
+					result[0] = executeAutoInsert(offset);
 					closeEditor();
-					if (!pdttFile.getExpected().trim().equals(result.trim())) {
-						StringBuilder errorBuf = new StringBuilder();
-						errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-						errorBuf.append(pdttFile.getExpected());
-						errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-						errorBuf.append(result);
-						fail(errorBuf.toString());
-					}
 				} catch (Exception e) {
 					err[0] = e;
 				}
@@ -171,6 +165,8 @@ public class ContentAssistTests {
 		if (err[0] != null) {
 			throw err[0];
 		}
+
+		PDTTUtils.assertContents(pdttFile.getExpected(), result[0]);
 	}
 
 	@After

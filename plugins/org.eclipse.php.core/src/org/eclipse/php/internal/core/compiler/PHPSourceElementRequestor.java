@@ -464,6 +464,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (!Flags.isPrivate(mi.modifiers) && !Flags.isProtected(mi.modifiers) && !Flags.isPublic(mi.modifiers)) {
 			mi.modifiers |= Modifiers.AccPublic;
 		}
+		if (hasInheritdocTag(methodDeclaration)) {
+			mi.modifiers |= IPHPModifiers.AccInheritdoc;
+		}
 
 		mi.parameterTypes = processParameterTypes(methodDeclaration);
 		mi.returnType = processReturnType(methodDeclaration);
@@ -486,6 +489,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				Logger.logException(e);
 			}
 		}
+	}
+
+	private boolean hasInheritdocTag(MethodDeclaration methodDeclaration) {
+		PHPMethodDeclaration phpMethodDeclaration = (PHPMethodDeclaration) methodDeclaration;
+		PHPDocBlock docBlock = phpMethodDeclaration.getPHPDoc();
+		if (docBlock == null) {
+			return false;
+		}
+		return docBlock.getTags(TagKind.INHERITDOC).length != 0;
 	}
 
 	private String[] processParameterTypes(MethodDeclaration methodDeclaration) {

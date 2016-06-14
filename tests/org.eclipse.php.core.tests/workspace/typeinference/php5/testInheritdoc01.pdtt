@@ -1,0 +1,33 @@
+--TEST--
+Test PHP Doc
+--FILE--
+<?php
+
+abstract class AbstractTest {
+
+	/**
+	 *
+	 * @return DateTime
+	 */
+	function function_name() {
+	}
+}
+
+class Test extends AbstractTest {
+	
+	/**
+	 *
+	 * {@inheritdoc}
+	 *
+	 */
+	function function_name() {
+	}
+}
+
+$var = new Test ();
+$aaa = $var->function_name();
+testInheritdoc01($aaa);
+
+?>
+--EXPECT--
+DateTime

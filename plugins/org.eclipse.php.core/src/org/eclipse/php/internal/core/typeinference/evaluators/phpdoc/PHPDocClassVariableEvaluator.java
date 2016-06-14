@@ -11,16 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
+import org.eclipse.php.internal.core.Constants;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -41,6 +42,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		PHPDocClassVariableGoal typedGoal = (PHPDocClassVariableGoal) goal;
 		TypeContext context = (TypeContext) typedGoal.getContext();
@@ -49,7 +51,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 		IModelAccessCache cache = context.getCache();
 		IType[] types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context, offset, cache);
-		Map<PHPDocBlock, IField> docs = new HashMap<PHPDocBlock, IField>();
+
 		// remove array index from field name
 		if (variableName.endsWith("]")) { //$NON-NLS-1$
 			int index = variableName.indexOf("["); //$NON-NLS-1$
@@ -57,62 +59,52 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 				variableName = variableName.substring(0, index);
 			}
 		}
-		if (types != null) {
-			for (IType type : types) {
-				try {
-					// we look in whole hiearchy
-					ITypeHierarchy superHierarchy;
-					if (cache != null) {
-						superHierarchy = cache.getSuperTypeHierarchy(type, null);
-					} else {
-						superHierarchy = type.newSupertypeHierarchy(null);
-					}
-					IType[] superTypes = superHierarchy.getAllTypes();
-					for (IType superType : superTypes) {
-						IField[] typeField = PHPModelUtils.getTypeField(superType, variableName, true);
-						if (typeField.length > 0) {
-							PHPDocBlock docBlock = PHPModelUtils.getDocBlock(typeField[0]);
-							if (docBlock != null) {
-								docs.put(docBlock, typeField[0]);
-							}
-						}
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-			}
+		if (types == null) {
+			return IGoal.NO_GOALS;
 		}
 
-		for (Entry<PHPDocBlock, IField> entry : docs.entrySet()) {
-			PHPDocBlock doc = entry.getKey();
-			IField typeField = entry.getValue();
-			IType currentNamespace = PHPModelUtils.getCurrentNamespace(typeField);
-
-			IModelElement space = currentNamespace != null ? currentNamespace : typeField.getSourceModule();
-
-			for (PHPDocTag tag : doc.getTags(TagKind.VAR)) {
-				// do it like for
-				// PHPDocumentationContentAccess#handleBlockTags(List tags):
-				// variable name can be optional, but if present keep only
-				// the good ones
-				if (tag.getVariableReference() != null && !tag.getVariableReference().getName().equals(variableName)) {
-					continue;
+		for (IType type : types) {
+			try {
+				// we look in whole hiearchy
+				ITypeHierarchy superHierarchy;
+				if (cache != null) {
+					superHierarchy = cache.getSuperTypeHierarchy(type, null);
+				} else {
+					superHierarchy = type.newSupertypeHierarchy(null);
 				}
-
-				evaluated.addAll(Arrays.asList(PHPEvaluationUtils.evaluatePHPDocType(tag.getTypeReferences(), space,
-						tag.sourceStart(), null)));
+				IType[] superTypes = superHierarchy.getAllTypes();
+				for (IType superType : superTypes) {
+					IField[] typeField = PHPModelUtils.getTypeField(superType, variableName, true);
+					if (typeField.length > 0 && typeField[0].exists()) {
+						addFieldType(typeField[0]);
+					}
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
 			}
 		}
 
 		return IGoal.NO_GOALS;
 	}
 
+	private void addFieldType(IField typeField) throws ModelException {
+		String fieldType = typeField.getType();
+		if (fieldType == null) {
+			return;
+		}
+		String[] typeNames = StringUtils.split(fieldType, Constants.TYPE_SEPERATOR_CHAR);
+		IType currentNamespace = PHPModelUtils.getCurrentNamespace(typeField);
+		IModelElement space = currentNamespace != null ? currentNamespace : typeField.getSourceModule();
+		evaluated.addAll(Arrays.asList(
+				PHPEvaluationUtils.evaluatePHPDocType(typeNames, space, typeField.getSourceRange().getOffset(), null)));
+	}
+
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);
