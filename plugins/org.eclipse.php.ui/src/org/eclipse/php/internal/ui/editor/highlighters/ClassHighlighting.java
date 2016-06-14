@@ -76,20 +76,24 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(ClassInstanceCreation clazz) {
 			Expression name = clazz.getClassName().getName();
-			if (name instanceof Identifier) {
+			if (name instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) name, true);
+			} else if (name instanceof Identifier) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
+				if ("self".equalsIgnoreCase(((Identifier) name).getName())) { //$NON-NLS-1$
+					return true;
+				}
 				highlight(name);
-			} else if (name instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) name);
 			}
 			return true;
 		}
 
 		public boolean visit(InstanceOfExpression instanceOfExpression) {
 			Expression name = instanceOfExpression.getClassName().getName();
-			if (name instanceof Identifier) {
-				highlight(name);
-			} else if (name instanceof NamespaceName) {
+			if (name instanceof NamespaceName) {
 				highlightNamespaceType((NamespaceName) name);
+			} else if (name instanceof Identifier) {
+				highlight(name);
 			}
 			return true;
 		}
@@ -152,9 +156,15 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		private void highlightNamespaceType(NamespaceName name) {
+			highlightNamespaceType(name, false);
+		}
+
+		private void highlightNamespaceType(NamespaceName name, boolean excludeSelf) {
 			List<Identifier> segments = name.segments();
 			Identifier segment = segments.get(segments.size() - 1);
-			if (!(segments.size() == 1 && PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel()))) {
+			if (!(segments.size() == 1 && !name.isGlobal()
+					&& (PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
+							|| (excludeSelf && "self".equalsIgnoreCase(segment.getName()))))) { //$NON-NLS-1$
 				highlight(segment);
 			}
 		}
