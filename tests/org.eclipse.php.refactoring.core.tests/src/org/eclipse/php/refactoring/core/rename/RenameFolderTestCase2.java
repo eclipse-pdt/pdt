@@ -13,17 +13,14 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -36,35 +33,13 @@ public class RenameFolderTestCase2 extends AbstractRenameRefactoringTest {
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = PHPTestsUtil.createProject("project1");
+		IFolder folder = PHPTestsUtil.createFolder(project1, "src");
+		file = PHPTestsUtil.createFile(folder, "RenameFolderTestCase21.php", "<?php class TestRenameClass{}?>");
+		file = PHPTestsUtil.createFile(project1, "RenameFolderTestCase22.php",
+				"<?php include './src/RenameFolderTestCase21.php'; ?>");
 
-		project1 = FileUtils.createProject("project1");
-
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("RenameFolderTestCase21.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		file = project1.getFile("RenameFolderTestCase22.php");
-
-		source = new ByteArrayInputStream("<?php include './src/RenameFolderTestCase21.php'; ?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@Test

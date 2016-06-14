@@ -156,11 +156,13 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 	 * @return project from document
 	 */
 	private final static IProject getProject(DOMModelForPHP doModelForPHP) {
-		final String id = doModelForPHP.getId();
-		if (id != null) {
-			final IFile file = getFile(id);
-			if (file != null) {
-				return file.getProject();
+		if (doModelForPHP != null) {
+			final String id = doModelForPHP.getId();
+			if (id != null) {
+				final IFile file = getFile(id);
+				if (file != null) {
+					return file.getProject();
+				}
 			}
 		}
 		return null;

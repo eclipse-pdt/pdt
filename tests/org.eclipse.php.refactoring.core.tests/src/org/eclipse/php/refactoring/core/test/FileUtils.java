@@ -17,19 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class FileUtils {
 	/**
@@ -73,42 +66,44 @@ public class FileUtils {
 
 	}
 
-	static public IProject createProject(String name) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		try {
-			if (!project.exists()) {
-				project.create(null);
-				project.open(null);
-				IProjectDescription desc = project.getDescription();
-				desc.setNatureIds(new String[] { PHPNature.ID });
-				project.setDescription(desc, null);
-			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		PHPCoreTests.waitForIndexer();
-		return project;
-	}
-
-	static public IProject createProject(String name, PHPVersion version) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		try {
-			if (!project.exists()) {
-				project.create(null);
-				project.open(null);
-				IProjectDescription desc = project.getDescription();
-				desc.setNatureIds(new String[] { PHPNature.ID });
-				project.setDescription(desc, null);
-				ProjectOptions.setPhpVersion(version, project);
-			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		PHPCoreTests.waitForIndexer();
-		return project;
-	}
+	// static public IProject createProject(String name) {
+	// IProject project =
+	// ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+	// try {
+	// if (!project.exists()) {
+	// project.create(null);
+	// project.open(null);
+	// IProjectDescription desc = project.getDescription();
+	// desc.setNatureIds(new String[] { PHPNature.ID });
+	// project.setDescription(desc, null);
+	// }
+	// } catch (CoreException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// PHPTestsUtil.waitForIndexer();
+	// return project;
+	// }
+	//
+	// static public IProject createProject(String name, PHPVersion version) {
+	// IProject project =
+	// ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+	// try {
+	// if (!project.exists()) {
+	// project.create(null);
+	// project.open(null);
+	// IProjectDescription desc = project.getDescription();
+	// desc.setNatureIds(new String[] { PHPNature.ID });
+	// project.setDescription(desc, null);
+	// ProjectOptions.setPhpVersion(version, project);
+	// }
+	// } catch (CoreException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// PHPTestsUtil.waitForIndexer();
+	// return project;
+	// }
 
 	public static boolean isInBuildpath(IPath resourcePath, IScriptProject project, int entryKind) {
 		boolean result = false;

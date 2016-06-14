@@ -27,7 +27,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
@@ -138,7 +138,7 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_ONE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 
 		return offset;
 	}

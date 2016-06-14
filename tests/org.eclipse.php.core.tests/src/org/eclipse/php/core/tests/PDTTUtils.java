@@ -59,7 +59,7 @@ public class PDTTUtils {
 	}
 
 	public static void assertContents(String expected, String actual) {
-		String diff = PHPCoreTests.compareContents(expected, actual);
+		String diff = PHPTestsUtil.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

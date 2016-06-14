@@ -58,6 +58,8 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.internal.core.util.Util.Comparer;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractModelTests extends SuiteOfTestCases {
@@ -298,10 +300,14 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	public void setUpSuite() throws Exception {
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
 		super.setUpSuite();
+	}
 
-		// ensure autobuilding is turned off
-		WorkspaceAutoBuild.disable();
+	@Override
+	public void tearDownSuite() throws Exception {
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
+		super.tearDownSuite();
 	}
 
 	protected ISourceModule getSourceModule(String path) {
@@ -800,13 +806,6 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	 */
 	public IScriptModel getScriptModel() {
 		return DLTKCore.create(getWorkspaceRoot());
-	}
-
-	/**
-	 * Wait for autobuild notification to occur
-	 */
-	public static void waitForAutoBuild() {
-		WorkspaceAutoBuild.waitFor();
 	}
 
 	public void ensureCorrectPositioning(IParent container, IModelElement sibling, IModelElement positioned)

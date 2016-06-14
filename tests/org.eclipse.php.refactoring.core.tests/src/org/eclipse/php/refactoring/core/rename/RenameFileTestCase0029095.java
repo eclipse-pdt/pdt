@@ -14,16 +14,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
@@ -38,32 +35,12 @@ public class RenameFileTestCase0029095 extends AbstractRenameRefactoringTest {
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = PHPTestsUtil.createProject("project1");
+		file = PHPTestsUtil.createFile(project1, "RenameFile0029095.php", "<?php class TestRenameClass{}?>");
+		file1 = PHPTestsUtil.createFile(project1, "RenameFile0029095_2.php",
+				"<?php include 'RenameFile0029095.php'; echo 'RenameFile0029095.php test rename RenameFile0029095.php';?>");
 
-		project1 = FileUtils.createProject("project1");
-
-		file = project1.getFile("RenameFile0029095.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		file1 = project1.getFile("RenameFile00290952.php");
-
-		source = new ByteArrayInputStream(
-				"<?php include 'RenameFile0029095.php'; echo 'RenameFile0029095.php test rename RenameFile0029095.php';?>"
-						.getBytes());
-
-		if (!file1.exists()) {
-			file1.create(source, true, new NullProgressMonitor());
-		} else {
-			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@Test

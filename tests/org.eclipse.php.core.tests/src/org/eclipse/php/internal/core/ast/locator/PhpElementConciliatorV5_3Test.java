@@ -14,63 +14,21 @@ package org.eclipse.php.internal.core.ast.locator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.junit.Before;
 import org.junit.Test;
 
-public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
+public class PhpElementConciliatorV5_3Test extends AbstractConciliatorTest {
 
-	private IProject project1;
-
-	@Before
-	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
-		PHPCoreTests.waitForIndexer();
-
-		project1 = createProject("project53", getPHPVersion());
-
-	}
-
-	protected PHPVersion getPHPVersion() {
-		return PHPVersion.PHP5_3;
-	}
-
-	protected IFile setFileContent(String content) throws CoreException {
-		IFile file = project1.getFile("test1.php");
-		InputStream source = new ByteArrayInputStream(content.getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
-		return file;
+	static {
+		phpVersion = PHPVersion.PHP5_3;
 	}
 
 	@Test
 	public void concileClassName() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; class TestRenameClass{} new TestRenameClass(); ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; class TestRenameClass{} new TestRenameClass(); ?>");
 
 		Program program = createProgram(file);
 
@@ -93,15 +51,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileClassName1() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<?php namespace my\name; class TestRenameClass{} class TestExtendedClass extends TestRenameClass{}?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<?php namespace my\name; class TestRenameClass{} class TestExtendedClass extends TestRenameClass{}?>");
 
 		Program program = createProgram(file);
 
@@ -117,15 +68,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileClassName2() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<?php namespace my\name; class A{function foo(){}} $a = new A();$a->foo(); my\\name\\A::foo();?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<?php namespace my\name; class A{function foo(){}} $a = new A();$a->foo(); my\\name\\A::foo();?>");
 
 		Program program = createProgram(file);
 
@@ -147,15 +91,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileInterface() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);}?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);}?>");
 
 		Program program = createProgram(file);
 
@@ -179,15 +115,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileInterface1() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);} class Template implements iTemplate{  public function setVariable($name, $var){}}?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);} class Template implements iTemplate{  public function setVariable($name, $var){}}?>");
 
 		Program program = createProgram(file);
 
@@ -211,14 +140,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileProgram() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; class TestRenameClass{}?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; class TestRenameClass{}?>");
 
 		Program program = createProgram(file);
 
@@ -229,14 +151,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileGlobalVar() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; $a = 1;  function test(){  global $a; echo $a;} ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; $a = 1;  function test(){  global $a; echo $a;} ?>");
 
 		Program program = createProgram(file);
 
@@ -266,14 +181,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileGlobalVar1() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
 
 		Program program = createProgram(file);
 
@@ -288,14 +196,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileFunc() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
 
 		Program program = createProgram(file);
 
@@ -318,14 +219,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileFunc1() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; function a($n){return ($n * $n);}echo a(5);?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; function a($n){return ($n * $n);}echo a(5);?>");
 
 		Program program = createProgram(file);
 
@@ -341,16 +235,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileMethod1() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
 
 		Program program = createProgram(file);
 
@@ -366,16 +252,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileMethod2() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';}}$strFN2 = new foo(); $strFN2->bar()?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';}}$strFN2 = new foo(); $strFN2->bar()?>");
 
 		Program program = createProgram(file);
 
@@ -391,16 +269,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileMethod3() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
 
 		Program program = createProgram(file);
 
@@ -416,16 +286,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileMethod4() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
 
 		Program program = createProgram(file);
 
@@ -441,15 +303,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileField1() {
-		IFile file = null;
-		try {
-			file = setFileContent("<? namespace my\name;class foo {var $f; public function f(){$this->$f;}}?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<? namespace my\name;class foo {var $f; public function f(){$this->$f;}}?>");
 
 		Program program = createProgram(file);
 
@@ -472,16 +326,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileField2() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<? namespace my\name;class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<? namespace my\name;class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
 
 		Program program = createProgram(file);
 
@@ -497,16 +343,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileStaticField1() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<? namespace my\name;class foo {public static $my_static = 'foo';} echo Foo::$my_static; echo $foo->my_static?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent(
+				"<? namespace my\name;class foo {public static $my_static = 'foo';} echo Foo::$my_static; echo $foo->my_static?>");
 
 		Program program = createProgram(file);
 
@@ -535,15 +373,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void localVar() {
-		IFile file = null;
-		try {
-			file = setFileContent("<? namespace my\name; $x = 4; function assignx () {$x = 0; echo $x;} ?>");
-
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<? namespace my\name; $x = 4; function assignx () {$x = 0; echo $x;} ?>");
 
 		Program program = createProgram(file);
 
@@ -566,15 +396,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileConstant() {
-		IFile file = null;
-		try {
-			file = setFileContent(
-					"<?php namespace my\name; define('CONSTANT', 'Hello world.'); echo CONSTANT; echo Constant; ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; define('CONSTANT', 'Hello world.'); echo CONSTANT; echo Constant; ?>");
 
 		Program program = createProgram(file);
 
@@ -609,14 +431,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileConstant1() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; define ('TEST', 1234); ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; define ('TEST', 1234); ?>");
 
 		Program program = createProgram(file);
 
@@ -632,14 +447,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileConstant2() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace my\name; define ('TEST', 1234); ?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace my\name; define ('TEST', 1234); ?>");
 
 		Program program = createProgram(file);
 
@@ -655,14 +463,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	@Test
 	public void concileConstant3() {
-		IFile file = null;
-		try {
-			file = setFileContent("<?php namespace NS;define(\"CONSTANT\", \"Hello world.\"); echo \\NS\\CONSTANT;?>");
-		} catch (CoreException e) {
-			fail(e.getMessage());
-		}
-
-		assertNotNull(file);
+		setFileContent("<?php namespace NS;define(\"CONSTANT\", \"Hello world.\"); echo \\NS\\CONSTANT;?>");
 
 		Program program = createProgram(file);
 

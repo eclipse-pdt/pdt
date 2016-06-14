@@ -13,10 +13,7 @@
 package org.eclipse.php.core.tests.searchEngine;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
@@ -25,10 +22,9 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,31 +35,16 @@ public class PHP5LanguageModelTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("PHPLanguageModelTests");
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
+		project = PHPTestsUtil.createProject("PHPLanguageModelTests");
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		PHPTestsUtil.deleteProject(project);
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
 	}
 
 	@Test

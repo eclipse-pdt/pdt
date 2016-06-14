@@ -17,9 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
@@ -27,13 +25,16 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -45,29 +46,26 @@ public class IncludePathManagerTests {
 
 	protected IProject project;
 
+	@BeforeClass
+	public static void setUpSuite() {
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
+	}
+
+	@AfterClass
+	public static void tearDownSuite() {
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		// Initialize include path manager:
 		IncludePathManager.getInstance();
-
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
+		project = PHPTestsUtil.createProject("IncludePathManagerTests");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		project.delete(true, null);
+		PHPTestsUtil.deleteProject(project);
 	}
 
 	@Test

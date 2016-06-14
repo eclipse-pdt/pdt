@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.variable;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,13 +20,12 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileInfo;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
 import org.eclipse.php.refactoring.core.test.TestProject;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.Test;
@@ -86,7 +87,7 @@ public class ExtractVariableRefactoringTest extends AbstractRefactoringTest {
 
 			String content = structuredDocument.get();
 
-			String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expFile.getContents(), content);
+			String diff = PHPTestsUtil.compareContentsIgnoreWhitespace(expFile.getContents(), content);
 			if (diff != null) {
 				fail(diff);
 			}

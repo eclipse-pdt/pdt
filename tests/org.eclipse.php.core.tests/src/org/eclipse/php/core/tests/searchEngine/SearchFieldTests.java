@@ -13,7 +13,6 @@ package org.eclipse.php.core.tests.searchEngine;
 
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,8 +20,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -36,14 +33,14 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,34 +69,22 @@ public class SearchFieldTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + phpVersion.toString());
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
-		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
+		project = PHPTestsUtil.createProject("AutoSelectionEngine_" + phpVersion.toString());
+		ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + phpVersion.toString());
+		PHPTestsUtil.setProjectPhpVersion(project, phpVersion);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		PHPTestsUtil.deleteProject(project);
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
 	}
 
 	@After
 	public void afterTest() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			PHPTestsUtil.deleteFile(testFile);
 		}
 	}
 
@@ -136,14 +121,9 @@ public class SearchFieldTests {
 	 * @throws Exception
 	 */
 	protected void createFile(String data) throws Exception {
-
-		testFile = project.getFile("test.php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
+		testFile = PHPTestsUtil.createFile(project, "test.php", data);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	protected ISourceModule getSourceModule() {

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.AST;
@@ -2000,7 +2000,7 @@ public class ASTRewriteTests {
 
 	protected final void checkResult(String expected) {
 		String actual = document.get();
-		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected, actual);
+		String diff = PHPTestsUtil.compareContentsIgnoreWhitespace(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

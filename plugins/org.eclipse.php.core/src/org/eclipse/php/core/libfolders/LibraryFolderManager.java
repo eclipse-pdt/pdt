@@ -51,10 +51,7 @@ public class LibraryFolderManager {
 	 */
 	private Collection<ILibraryFolderChangeListener> listeners;
 
-	/**
-	 * Only for test purposes.
-	 */
-	private static final String DISABLE_PROPERTY = "org.eclipse.php.disablePHPLibraryFolderAutoDetect";
+	private AutoDetectLibraryFolderListener listener;
 
 	/**
 	 * Private constructor to initialize the library folder manager.
@@ -70,12 +67,9 @@ public class LibraryFolderManager {
 	 * </p>
 	 */
 	private LibraryFolderManager() {
+		listener = new AutoDetectLibraryFolderListener();
 		listeners = Collections.synchronizedSet(new HashSet<ILibraryFolderChangeListener>());
-		if (System.getProperty(DISABLE_PROPERTY, null) != null) {
-			return;
-		}
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(new AutoDetectLibraryFolderListener(),
-				IResourceChangeEvent.POST_CHANGE);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
 	}
 
 	/**
@@ -83,7 +77,7 @@ public class LibraryFolderManager {
 	 * 
 	 * @return an instance of <code>LibraryFolderManager</code>.
 	 */
-	public static LibraryFolderManager getInstance() {
+	public static synchronized LibraryFolderManager getInstance() {
 		if (instance == null) {
 			instance = new LibraryFolderManager();
 		}
@@ -459,6 +453,29 @@ public class LibraryFolderManager {
 		collectAllSubfolders((IFolder) folder, result);
 
 		return result.toArray(new IFolder[result.size()]);
+	}
+
+	/**
+	 * WARNING: This method should not be used by the clients.
+	 * 
+	 * Enables/disables detection for given project.
+	 * 
+	 * @param project
+	 * @param suspend
+	 */
+	public void suspendDetection(IProject project, boolean suspend) {
+		listener.suspendDetection(project, suspend);
+	}
+
+	/**
+	 * WARNING: This method should not be used by the clients.
+	 * 
+	 * Enables/disables whole detection.
+	 * 
+	 * @param suspend
+	 */
+	public void suspendAllDetection(boolean suspend) {
+		listener.suspendAllDetection(suspend);
 	}
 
 	/**
