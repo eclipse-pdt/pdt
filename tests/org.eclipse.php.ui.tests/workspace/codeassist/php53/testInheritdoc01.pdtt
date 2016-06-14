@@ -1,0 +1,40 @@
+--TEST--
+Tests CA
+--FILE--
+<?php
+class Test extends AbstractTest {
+
+	/**
+	 *
+	 * {@inheritdoc}
+	 *
+	 */
+	function function_name() {
+	}
+}
+$var = new Test ();
+$var->function_name()->ad| 
+--FILE0--
+<?php
+abstract class AbstractTest {
+	/**
+	 *
+	 * @return DateTime
+	 */
+	function function_name() {
+	}
+}
+--EXPECT--
+<?php
+class Test extends AbstractTest {
+
+	/**
+	 *
+	 * {@inheritdoc}
+	 *
+	 */
+	function function_name() {
+	}
+}
+$var = new Test ();
+$var->function_name()->add($interval) 

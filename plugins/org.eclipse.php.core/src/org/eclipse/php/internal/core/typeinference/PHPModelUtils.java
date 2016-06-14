@@ -71,14 +71,19 @@ public class PHPModelUtils {
 	 * @return concatenated type names
 	 */
 	public static String appendTypeReferenceNames(List<TypeReference> references) {
+		if (references.isEmpty()) {
+			return ""; //$NON-NLS-1$
+		}
+		if (references.size() == 1) {
+			return references.get(0).getName();
+		}
+
 		StringBuilder sb = new StringBuilder();
-		boolean firstTime = true;
-		for (TypeReference reference : references) {
-			if (!firstTime) {
-				sb.append(Constants.TYPE_SEPERATOR_CHAR);
-			}
-			sb.append(PHPModelUtils.extractElementName(reference.getName()));
-			firstTime = false;
+		sb.append(references.get(0).getName());
+		for (int i = 1; i < references.size(); i++) {
+			TypeReference reference = references.get(i);
+			sb.append(Constants.TYPE_SEPERATOR_CHAR);
+			sb.append(reference.getName());
 		}
 
 		return sb.toString();

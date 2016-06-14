@@ -50,11 +50,18 @@ public interface IPHPModifiers extends Modifiers {
 	public static final int AccVariadic = (1 << Modifiers.USER_MODIFIER + 8);
 
 	/**
+	 * Method phpDoc contains inheritdoc tag
+	 * 
+	 * @since 4.1
+	 */
+	public static final int AccInheritdoc = (1 << Modifiers.USER_MODIFIER + 9);
+
+	/**
 	 * All access modifiers as one for compiler validation
 	 * 
 	 * @since 4.0
 	 */
 	public static final int AccessMask = AccPublic | AccPrivate | AccProtected;
 
-	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 9;
+	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 10;
 }

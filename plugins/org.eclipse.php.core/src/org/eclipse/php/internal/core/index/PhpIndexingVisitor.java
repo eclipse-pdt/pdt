@@ -321,6 +321,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (!Flags.isPrivate(modifiers) && !Flags.isProtected(modifiers) && !Flags.isPublic(modifiers)) {
 			modifiers |= Modifiers.AccPublic;
 		}
+		if (doc != null && doc.getTags(TagKind.INHERITDOC).length != 0) {
+			modifiers |= IPHPModifiers.AccInheritdoc;
+		}
 
 		modifiers = markAsDeprecated(modifiers, method);
 
