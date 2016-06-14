@@ -301,7 +301,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 						if (result instanceof Scalar) {
 							Scalar scalar = (Scalar) result;
 							if (scalar.getScalarType() == Scalar.TYPE_STRING
-									&& scalar.getValue().toLowerCase().equals(NULL)) {
+									&& scalar.getValue().equalsIgnoreCase(NULL)) {
 								result = null;
 							}
 						}
@@ -362,8 +362,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			if ("self".equals(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
 				return true;
 			} else if (PHPVersion.PHP5_4.isLessThan(ProjectOptions.getPhpVersion(sourceModule))
-					&& "self".equals(((TypeReference) dispatcher).getName() //$NON-NLS-1$
-							.toLowerCase())) {
+					&& "self".equalsIgnoreCase(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
 				return true;
 			}
 

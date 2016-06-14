@@ -90,7 +90,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			if (type != null && fieldName != null) {
 				IVariableBinding[] fields = type.getDeclaredFields();
 				for (IVariableBinding field : fields) {
-					if (field.getName().toLowerCase().equals(fieldName.toLowerCase())) {
+					if (field.getName().equalsIgnoreCase(fieldName)) {
 						if (ModelUtils.isDeprecated(field.getPHPElement())) {
 							highlight(staticConstantAccess.getConstant());
 						}
@@ -118,7 +118,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			if (type != null && fieldName != null) {
 				IVariableBinding[] fields = type.getDeclaredFields();
 				for (IVariableBinding field : fields) {
-					if (field.getName().substring(1).toLowerCase().equals(fieldName.toLowerCase())) {
+					if (field.getName().substring(1).equalsIgnoreCase(fieldName)) {
 						if (ModelUtils.isDeprecated(field.getPHPElement())) {
 							highlight(staticFieldAccess.getField());
 						}
