@@ -13,17 +13,14 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
@@ -38,28 +35,14 @@ public class RenameProcessorTestCase0029408 extends AbstractRenameRefactoringTes
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
+		project1 = PHPTestsUtil.createProject("project1");
+		PHPTestsUtil.setProjectPhpVersion(project1, PHPVersion.PHP5_3);
 
-		project1 = FileUtils.createProject("project1", PHPVersion.PHP5_3);
+		IFolder folder = PHPTestsUtil.createFolder(project1, "src");
+		file = PHPTestsUtil.createFile(folder, "test00294081.php",
+				"<?php class MyClass{const constant = 'constant value';function showCons1tant() {echo self::constant;}}$class = new MyClass ();$class->showConstant ();echo $class::constant;?>");
 
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("test00294081.php");
-
-		InputStream source = new ByteArrayInputStream(
-				"<?php class MyClass{const constant = 'constant value';function showCons1tant() {echo self::constant;}}$class = new MyClass ();$class->showConstant ();echo $class::constant;?>"
-						.getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@After

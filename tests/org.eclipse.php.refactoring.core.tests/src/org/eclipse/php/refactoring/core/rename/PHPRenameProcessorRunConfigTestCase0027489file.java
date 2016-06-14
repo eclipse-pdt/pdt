@@ -13,14 +13,10 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -30,9 +26,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,40 +54,19 @@ public class PHPRenameProcessorRunConfigTestCase0027489file extends AbstractRena
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
+		project1 = PHPTestsUtil.createProject("TestProject1");
+		IFolder folder = PHPTestsUtil.createFolder(project1, "source");
+		IFile file = PHPTestsUtil.createFile(folder, "RenameRunConfigTest0027489file.php",
+				"<?php class TestRenameClass{}?>");
 
-		project1 = FileUtils.createProject("TestProject1");
-
-		IFolder folder = project1.getFolder("source");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		IFile file = folder.getFile("RenameRunConfigTest0027489file.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		source = new ByteArrayInputStream(configFileCont.getBytes());
-
-		configFile = project1.getFile("TestConfig0027489file.launch");
-		if (!configFile.exists()) {
-			configFile.create(source, IFile.FORCE, new NullProgressMonitor());
-		} else {
-			configFile.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
+		configFile = PHPTestsUtil.createFile(project1, "TestConfig0027489file.launch", configFileCont);
 
 		config = DebugPlugin.getDefault().getLaunchManager().getLaunchConfiguration(configFile);
 		ILaunchConfigurationWorkingCopy workingCopy = config.getWorkingCopy();
 		workingCopy.setAttribute("ATTR_FILE_FULL_PATH", file.getLocation().toString());
 		workingCopy.doSave();
 
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@Test

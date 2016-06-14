@@ -13,7 +13,6 @@ package org.eclipse.php.formatter.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,10 +22,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -35,7 +30,8 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
@@ -48,11 +44,9 @@ import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.formatter.ui.preferences.ProfileStore;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
@@ -112,17 +106,8 @@ public class FormatterTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("FormatterTests_" + suiteCounter++);
-
-		project.create(null);
-		project.open(null);
-		
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
+		project = PHPTestsUtil.createProject("FormatterTests_" + suiteCounter++);
 
 		for (String fileName : fileNames) {
 			PdttFile pdttFile = new PdttFile(getContext(), fileName);
@@ -131,12 +116,8 @@ public class FormatterTests {
 			pdttFiles.put(fileName, pdttFile);
 		}
 
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
-
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.setProjectPhpVersion(project, phpVersion);
+		PHPTestsUtil.waitForIndexer();
 
 		profileManager.clearAllSettings(scopeContext);
 		profileManager.commitChanges(scopeContext);
@@ -182,9 +163,8 @@ public class FormatterTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		setDefaultFormatter(scopeContext, profileManager);
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		PHPTestsUtil.deleteProject(project);
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
@@ -223,8 +203,6 @@ public class FormatterTests {
 	}
 
 	protected IFile createFile(String data) throws Exception {
-		IFile testFile = project.getFile("test" + (++count) + ".php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		return testFile;
+		return PHPTestsUtil.createFile(project, "test" + (++count) + ".php", data);
 	}
 }

@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
-import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,19 +19,17 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.Test;
 
 abstract public class AbstractErrorReportingTests {
@@ -69,46 +66,29 @@ abstract public class AbstractErrorReportingTests {
 	}
 
 	protected IFile createFile(String data) throws Exception {
-		IFile testFile = project.getFile("test" + (++count) + ".php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		return testFile;
+		return PHPTestsUtil.createFile(project, "test" + (++count) + ".php", data);
 	}
 
 	@AfterList
 	public void tearDown() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		PHPTestsUtil.deleteProject(project);
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
 	}
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(getPHPVersion() + "ErrorReportingTests");
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
+		project = PHPTestsUtil.createProject("ErrorReportingTests");
+		ResourcesPlugin.getWorkspace().getRoot().getProject(getPHPVersion() + "ErrorReportingTests");
 		for (final String fileName : fileNames) {
 			PdttFile pdttFile = new PdttFile(fileName);
 			pdttFiles.put(fileName, pdttFile);
 			files.put(fileName, createFile(pdttFile.getFile().trim()));
 		}
-
-		PHPCoreTests.setProjectPhpVersion(project, getPHPVersion());
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		PHPTestsUtil.setProjectPhpVersion(project, getPHPVersion());
+		// Perform full build to trigger errors check
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	abstract protected PHPVersion getPHPVersion();

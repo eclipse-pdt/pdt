@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -63,7 +64,7 @@ public class FileNetworkTests extends AbstractModelTests {
 	protected void setUp() throws Exception {
 		if (SCRIPT_PROJECT == null) {
 			SCRIPT_PROJECT = setUpScriptProject(PROJECT);
-			PHPCoreTests.waitForIndexer();
+			PHPTestsUtil.waitForIndexer();
 		}
 		super.setUp();
 	}
@@ -102,7 +103,7 @@ public class FileNetworkTests extends AbstractModelTests {
 		expected = sortLines(expected);
 		actual = sortLines(actual);
 
-		String diff = PHPCoreTests.compareContents(expected, actual);
+		String diff = PHPTestsUtil.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

@@ -14,9 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -27,8 +25,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
-import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.After;
@@ -42,28 +40,17 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 	@Before
 	public void setUp() throws Exception {
+		project1 = PHPTestsUtil.createProject("TestProject1");
 
-		System.setProperty("disableStartupRunner", "true");
+		IFolder folder = PHPTestsUtil.createFolder(project1, "src");
+		file = PHPTestsUtil.createFile(folder, "ExtractVariableRefactoringTest2.php",
+				"<?php $a = 4; $c = $a; $a = 5; $b = $a; ?>");
 
-		project1 = FileUtils.createProject("TestProject1");
-
-		IFolder folder = project1.getFolder("src");
-
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		file = folder.getFile("ExtractVariableRefactoringTest2.php");
-
-		InputStream source = new ByteArrayInputStream("<?php $a = 4; $c = $a; $a = 5; $b = $a; ?>".getBytes());
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDownListSuite() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 

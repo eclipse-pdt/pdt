@@ -14,13 +14,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -37,8 +34,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,26 +45,13 @@ public class PHPMoveProcessorTestCase1 {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner", "true");
 
-		project1 = FileUtils.createProject("TestProject11");
+		project1 = PHPTestsUtil.createProject("TestProject11");
 
-		IFolder folder = project1.getFolder("src");
+		IFolder folder = PHPTestsUtil.createFolder(project1, "src");
+		PHPTestsUtil.createFile(folder, "test1.php", "<?php class TestRenameClass{}?>");
 
-		if (!folder.exists()) {
-			folder.create(true, true, new NullProgressMonitor());
-		}
-		IFile file = folder.getFile("test1.php");
-
-		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
-
-		if (!file.exists()) {
-			file.create(source, true, new NullProgressMonitor());
-		} else {
-			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-		}
-
-		project2 = FileUtils.createProject("TestProject21");
+		project2 = PHPTestsUtil.createProject("TestProject21");
 
 		IAccessRule[] accesRules = new IAccessRule[0];
 
@@ -93,7 +76,7 @@ public class PHPMoveProcessorTestCase1 {
 		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
 		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
-		PHPCoreTests.waitForIndexer();
+		PHPTestsUtil.waitForIndexer();
 	}
 
 	@After
@@ -117,7 +100,7 @@ public class PHPMoveProcessorTestCase1 {
 			Change change = processor.createChange(new NullProgressMonitor());
 			change.perform(new NullProgressMonitor());
 
-			PHPCoreTests.waitForIndexer();
+			PHPTestsUtil.waitForIndexer();
 
 			assertTrue(project2.getFolder("src").exists());
 

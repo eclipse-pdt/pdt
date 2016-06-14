@@ -16,14 +16,12 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 
 public class TestProject {
 	IProject project;
@@ -38,18 +36,10 @@ public class TestProject {
 
 	private void createProject(String name) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		try {
-			if (!project.exists()) {
-				project.create(null);
-				project.open(null);
-				IProjectDescription desc = project.getDescription();
-				desc.setNatureIds(new String[] { PHPNature.ID });
-				project.setDescription(desc, null);
-			}
-			PHPCoreTests.waitForIndexer();
-		} catch (CoreException e) {
-			e.printStackTrace();
+		if (!project.exists()) {
+			project = PHPTestsUtil.createProject(name);
 		}
+		PHPTestsUtil.waitForIndexer();
 
 	}
 

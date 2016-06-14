@@ -13,6 +13,7 @@ package org.eclipse.php.core.tests.performance;
 
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
 import org.osgi.framework.Bundle;
 
 import junit.framework.TestCase;
@@ -50,7 +51,7 @@ abstract public class AbstractPDTTTest extends TestCase {
 	}
 
 	protected void assertContents(String expected, String actual) {
-		String diff = PHPCoreTests.compareContents(expected, actual);
+		String diff = PHPTestsUtil.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

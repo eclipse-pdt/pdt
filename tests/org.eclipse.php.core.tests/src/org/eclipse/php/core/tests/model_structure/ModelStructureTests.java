@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.model_structure;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
@@ -19,10 +18,8 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
@@ -32,7 +29,8 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.PHPTestsUtil;
+import org.eclipse.php.core.tests.PHPTestsUtil.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
@@ -40,8 +38,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.wst.validation.ValidationFramework;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -75,27 +71,15 @@ public class ModelStructureTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("ModelStructureTests");
-		if (project.exists()) {
-			return;
-		}
-
-		project.create(null);
-		project.open(null);
-		// Disable WTP validation to skip unnecessary clashes
-		ValidationFramework.getDefault().suspendValidation(project, true);
-		// configure nature
-		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		project.setDescription(desc, null);
-		PHPCoreTests.setProjectPhpVersion(project, version);
+		PHPTestsUtil.disableColliders(ColliderType.ALL);
+		project = PHPTestsUtil.createProject("ModelStructureTests");
+		PHPTestsUtil.setProjectPhpVersion(project, version);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
-		project.close(null);
-		project.delete(true, true, null);
-		project = null;
+		PHPTestsUtil.deleteProject(project);
+		PHPTestsUtil.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
@@ -114,8 +98,7 @@ public class ModelStructureTests {
 	@After
 	public void after() throws Exception {
 		if (testFile != null) {
-			testFile.delete(true, null);
-			testFile = null;
+			PHPTestsUtil.deleteFile(testFile);
 		}
 	}
 
@@ -129,13 +112,10 @@ public class ModelStructureTests {
 	 * @throws Exception
 	 */
 	protected ISourceModule createFile(String data) throws Exception {
-		testFile = project.getFile("test.php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+		testFile = PHPTestsUtil.createFile(project, "test.php", data);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.waitForIndexer();
-
+		PHPTestsUtil.waitForIndexer();
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
