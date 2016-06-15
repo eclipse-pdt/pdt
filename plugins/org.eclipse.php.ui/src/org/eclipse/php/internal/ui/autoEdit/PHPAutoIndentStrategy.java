@@ -92,12 +92,28 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
 
-				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {
-					if (command.offset != region.getOffset()) {
-						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
-						// adjust the offset
-						command.offset = region.getOffset();
-					}
+				int indentEnd = findEndOfWhiteSpace(document, region.getOffset(),
+						region.getOffset() + region.getLength());
+				if (indentEnd < command.offset) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495295
+					// there are non-blank characters before cursor position,
+					// we can't apply auto-indenting in this case
+					return;
+				}
+				if (indentEnd == region.getOffset() + region.getLength()
+						&& command.offset + command.length <= region.getOffset() + region.getLength()) {
+					// be cute and remove blanks after cursor position when
+					// cursor line is completely blank and text selection is
+					// exclusively inside this (single) line
+					document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
+					// adjust the length
+					command.length = 0;
+					// adjust the offset
+					command.offset = region.getOffset();
+				} else if (command.offset != region.getOffset()) {
+					document.replace(region.getOffset(), command.offset - region.getOffset(), ""); //$NON-NLS-1$
+					// adjust the offset
+					command.offset = region.getOffset();
 				}
 			}
 		} catch (BadLocationException e) {
