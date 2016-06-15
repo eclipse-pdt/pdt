@@ -92,12 +92,17 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
 
-				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {
-					if (command.offset != region.getOffset()) {
-						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
-						// adjust the offset
-						command.offset = region.getOffset();
-					}
+				if (command.offset == region.getOffset()) {
+					// nothing to do
+				} else if (StringUtils.isBlank(document.get(region.getOffset(), command.offset - region.getOffset()))) {
+					document.replace(region.getOffset(), command.offset - region.getOffset(), ""); //$NON-NLS-1$
+					// adjust the offset
+					command.offset = region.getOffset();
+				} else {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495295
+					// there are non-blank characters before cursor position,
+					// we can't apply auto-indenting in this case
+					return;
 				}
 			}
 		} catch (BadLocationException e) {
