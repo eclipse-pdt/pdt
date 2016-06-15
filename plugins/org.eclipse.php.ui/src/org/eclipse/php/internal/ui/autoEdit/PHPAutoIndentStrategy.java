@@ -81,8 +81,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	 *            - the command being performed
 	 */
 	protected void smartPaste(IDocument document, DocumentCommand command) {
-		if (command.offset == -1 || document.getLength() == 0)
+		if (command.offset == -1 || document.getLength() == 0) {
 			return;
+		}
 		StringBuffer helpBuffer = new StringBuffer();
 		IndentationObject indentationObject = null;
 		try {
@@ -92,12 +93,27 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
 
-				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {
-					if (command.offset != region.getOffset()) {
-						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
-						// adjust the offset
-						command.offset = region.getOffset();
-					}
+				if (command.offset == region.getOffset()) {
+					// nothing to do
+				} else if (StringUtils.isBlank(document.get(region.getOffset(), command.offset - region.getOffset()))) {
+					document.replace(region.getOffset(), command.offset - region.getOffset(), ""); //$NON-NLS-1$
+					// adjust the offset
+					command.offset = region.getOffset();
+				} else {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495295
+					// there are non-blank characters before cursor position,
+					// we can't apply auto-indenting in this case
+					return;
+				}
+
+				// be smart and remove remaining line characters after selection
+				// when those characters are all blank characters
+				int selectionEndOffset = command.offset + command.length;
+				region = document.getLineInformation(document.getLineOfOffset(selectionEndOffset));
+				int lineEndLength = region.getOffset() + region.getLength() - selectionEndOffset;
+				if (lineEndLength > 0 && StringUtils.isBlank(document.get(selectionEndOffset, lineEndLength))) {
+					// adjust the length to include remaining line characters
+					command.length += lineEndLength;
 				}
 			}
 		} catch (BadLocationException e) {

@@ -1,0 +1,32 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+class A {
+	public function foo() {
+		if (true) {
+			if (true) {
+				// some more |...
+				if (true) {
+				}
+			}
+		}
+	}
+}
+?>
+--OTHER--
+comment
+--EXPECT--
+<?php
+class A {
+	public function foo() {
+		if (true) {
+			if (true) {
+				// some more comment...
+				if (true) {
+				}
+			}
+		}
+	}
+}
+?>
