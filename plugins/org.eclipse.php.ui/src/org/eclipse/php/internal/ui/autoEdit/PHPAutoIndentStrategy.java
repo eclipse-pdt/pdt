@@ -92,12 +92,16 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
 
-				if (StringUtils.isBlank(document.get(region.getOffset(), region.getLength()))) {
-					if (command.offset != region.getOffset()) {
-						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
-						// adjust the offset
-						command.offset = region.getOffset();
-					}
+				int indentEnd = findEndOfWhiteSpace(document, region.getOffset(),
+						region.getOffset() + region.getLength());
+				if (indentEnd < command.offset) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495295
+					return;
+				}
+				if (command.offset != region.getOffset()) {
+					document.replace(region.getOffset(), command.offset - region.getOffset(), ""); //$NON-NLS-1$
+					// adjust the offset
+					command.offset = region.getOffset();
 				}
 			}
 		} catch (BadLocationException e) {
