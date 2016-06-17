@@ -135,7 +135,7 @@ public class FormatterAutoEditTests {
 
 	@Test
 	public void formatter(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(fileName);
+		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		final DocumentCommand cmd = createFile(pdttFile.getFile().trim(), cursor);
 		final ISourceModule modelElement = (ISourceModule) DLTKCore.create(testFile);
