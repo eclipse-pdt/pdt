@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,7 +61,12 @@ public class SwitchCase extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
+	@Deprecated
 	public SwitchCase(int start, int end, AST ast, Expression value, Statement[] actions, boolean isDefault) {
+		this(start, end, ast, value, actions == null ? null : Arrays.asList(actions), isDefault);
+	}
+
+	public SwitchCase(int start, int end, AST ast, Expression value, List<Statement> actions, boolean isDefault) {
 		super(start, end, ast);
 
 		if (actions == null) {
@@ -70,15 +76,8 @@ public class SwitchCase extends Statement {
 		if (value != null) {
 			setValue(value);
 		}
-		for (Statement statement : actions) {
-			this.actions.add(statement);
-		}
+		this.actions.addAll(actions);
 		setIsDefault(isDefault);
-	}
-
-	public SwitchCase(int start, int end, AST ast, Expression value, List actions, boolean isDefault) {
-		this(start, end, ast, value,
-				actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
 	}
 
 	public SwitchCase(AST ast) {
@@ -259,11 +258,9 @@ public class SwitchCase extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final boolean isDefault = isDefault();
-		final List actions = ASTNode.copySubtrees(target, actions());
+		final List<Statement> actions = ASTNode.copySubtrees(target, actions());
 		final Expression value = ASTNode.copySubtree(target, getValue());
-
-		final SwitchCase result = new SwitchCase(getStart(), getEnd(), target, value, actions, isDefault);
-		return result;
+		return new SwitchCase(getStart(), getEnd(), target, value, actions, isDefault);
 	}
 
 	@Override

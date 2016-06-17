@@ -54,7 +54,11 @@ public class FunctionInvocation extends VariableBase {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	private FunctionInvocation(int start, int end, AST ast, FunctionName functionName, Expression[] parameters) {
+	public FunctionInvocation(AST ast) {
+		super(ast);
+	}
+
+	public FunctionInvocation(int start, int end, AST ast, FunctionName functionName, List<Expression> parameters) {
 		super(start, end, ast);
 
 		if (functionName == null || parameters == null) {
@@ -62,18 +66,7 @@ public class FunctionInvocation extends VariableBase {
 		}
 
 		setFunctionName(functionName);
-		for (Expression expression : parameters) {
-			this.parameters.add(expression);
-		}
-	}
-
-	public FunctionInvocation(AST ast) {
-		super(ast);
-	}
-
-	public FunctionInvocation(int start, int end, AST ast, FunctionName functionName, List parameters) {
-		this(start, end, ast, functionName,
-				parameters == null ? null : (Expression[]) parameters.toArray(new Expression[parameters.size()]));
+		this.parameters.addAll(parameters);
 	}
 
 	public void accept0(Visitor visitor) {
@@ -197,9 +190,8 @@ public class FunctionInvocation extends VariableBase {
 	@Override
 	ASTNode clone0(AST target) {
 		final FunctionName function = ASTNode.copySubtree(target, getFunctionName());
-		final List params = ASTNode.copySubtrees(target, parameters());
-		final FunctionInvocation result = new FunctionInvocation(getStart(), getEnd(), target, function, params);
-		return result;
+		final List<Expression> params = ASTNode.copySubtrees(target, parameters());
+		return new FunctionInvocation(getStart(), getEnd(), target, function, params);
 	}
 
 	@Override

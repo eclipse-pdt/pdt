@@ -89,7 +89,7 @@ class InternalASTRewrite extends NodeEventHandler {
 			};
 			LineInformation lineInfo = LineInformation.create(document);
 			String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
-			List comments = rootNode.comments();
+			List<Comment> comments = rootNode.comments();
 
 			ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(lexer, document, lineInfo, lineDelim, result,
 					this.eventStore, this.nodeStore, comments, options, xsrComputer);

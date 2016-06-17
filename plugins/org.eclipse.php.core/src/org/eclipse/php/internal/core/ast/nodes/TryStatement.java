@@ -77,7 +77,16 @@ public class TryStatement extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	private TryStatement(int start, int end, AST ast, Block tryStatement, CatchClause[] catchClauses,
+	public TryStatement(int start, int end, AST ast, Block tryStatement, List<CatchClause> catchClauses) {
+		super(start, end, ast);
+		if (tryStatement == null || catchClauses == null) {
+			throw new IllegalArgumentException();
+		}
+		setBody(tryStatement);
+		this.catchClauses.addAll(catchClauses);
+	}
+
+	public TryStatement(int start, int end, AST ast, Block tryStatement, List<CatchClause> catchClauses,
 			FinallyClause finallyClause) {
 		super(start, end, ast);
 
@@ -85,32 +94,8 @@ public class TryStatement extends Statement {
 			throw new IllegalArgumentException();
 		}
 		setBody(tryStatement);
-		for (int i = 0; i < catchClauses.length; i++) {
-			this.catchClauses.add(catchClauses[i]);
-		}
+		this.catchClauses.addAll(catchClauses);
 		setFinallyClause(finallyClause);
-	}
-
-	private TryStatement(int start, int end, AST ast, Block tryStatement, CatchClause[] catchClauses) {
-		super(start, end, ast);
-		if (tryStatement == null || catchClauses == null) {
-			throw new IllegalArgumentException();
-		}
-		setBody(tryStatement);
-		for (int i = 0; i < catchClauses.length; i++) {
-			this.catchClauses.add(catchClauses[i]);
-		}
-	}
-
-	public TryStatement(int start, int end, AST ast, Block tryStatement, List catchClauses) {
-		this(start, end, ast, tryStatement, catchClauses == null ? null
-				: (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]));
-	}
-
-	public TryStatement(int start, int end, AST ast, Block tryStatement, List catchClauses,
-			FinallyClause finallyClause) {
-		this(start, end, ast, tryStatement, catchClauses == null ? null
-				: (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]), finallyClause);
 	}
 
 	public TryStatement(AST ast) {
@@ -260,11 +245,9 @@ public class TryStatement extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		Block body = ASTNode.copySubtree(target, getBody());
-		final List catchs = ASTNode.copySubtrees(target, this.catchClauses);
+		final List<CatchClause> catchs = ASTNode.copySubtrees(target, this.catchClauses);
 		final FinallyClause finallyClause = ASTNode.copySubtree(target, this.finallyClause);
-		final TryStatement result = new TryStatement(this.getStart(), this.getEnd(), target, body, catchs,
-				finallyClause);
-		return result;
+		return new TryStatement(this.getStart(), this.getEnd(), target, body, catchs, finallyClause);
 	}
 
 	@Override

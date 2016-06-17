@@ -50,24 +50,17 @@ public class ListVariable extends VariableBase {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private ListVariable(int start, int end, AST ast, VariableBase[] variables) {
+	public ListVariable(AST ast) {
+		super(ast);
+	}
+
+	public ListVariable(int start, int end, AST ast, List<VariableBase> variables) {
 		super(start, end, ast);
 
 		if (variables == null) {
 			throw new IllegalArgumentException();
 		}
-		for (VariableBase variableBase : variables) {
-			this.variables.add(variableBase);
-		}
-	}
-
-	public ListVariable(AST ast) {
-		super(ast);
-	}
-
-	public ListVariable(int start, int end, AST ast, List variables) {
-		this(start, end, ast,
-				variables == null ? null : (VariableBase[]) variables.toArray(new VariableBase[variables.size()]));
+		this.variables.addAll(variables);
 	}
 
 	public void accept0(Visitor visitor) {
@@ -138,9 +131,8 @@ public class ListVariable extends VariableBase {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List variables = ASTNode.copySubtrees(target, variables());
-		final ListVariable result = new ListVariable(getStart(), getEnd(), target, variables);
-		return result;
+		final List<VariableBase> variables = ASTNode.copySubtrees(target, variables());
+		return new ListVariable(getStart(), getEnd(), target, variables);
 	}
 
 	@Override

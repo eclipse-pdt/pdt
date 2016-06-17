@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,15 +79,13 @@ public class FunctionDeclaration extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName, List<?> formalParameters,
-			Block body, final boolean isReference) {
-		this(start, end, ast, functionName,
-				(FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]), body,
-				isReference);
+	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
+			List<FormalParameter> formalParameters, Block body, final boolean isReference) {
+		this(start, end, ast, functionName, formalParameters, body, isReference, null);
 	}
 
-	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName, List formalParameters, Block body,
-			final boolean isReference, Identifier returnType) {
+	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
+			List<FormalParameter> formalParameters, Block body, final boolean isReference, Identifier returnType) {
 		super(start, end, ast);
 
 		if (functionName == null || formalParameters == null) {
@@ -105,11 +102,6 @@ public class FunctionDeclaration extends Statement {
 			setBody(body);
 		}
 		setReturnType(returnType);
-	}
-
-	private FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
-			FormalParameter[] formalParameters, Block body, final boolean isReference) {
-		this(start, end, ast, functionName, Arrays.asList(formalParameters), body, isReference, null);
 	}
 
 	public FunctionDeclaration(AST ast) {
@@ -389,12 +381,10 @@ public class FunctionDeclaration extends Statement {
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final Identifier function = ASTNode.copySubtree(target, getFunctionName());
-		final List<?> formalParams = ASTNode.copySubtrees(target, formalParameters());
+		final List<FormalParameter> formalParams = ASTNode.copySubtrees(target, formalParameters());
 		final boolean isRef = isReference();
 		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
-		final FunctionDeclaration result = new FunctionDeclaration(getStart(), getEnd(), target, function, formalParams,
-				body, isRef, returnType);
-		return result;
+		return new FunctionDeclaration(getStart(), getEnd(), target, function, formalParams, body, isRef, returnType);
 	}
 
 	@Override

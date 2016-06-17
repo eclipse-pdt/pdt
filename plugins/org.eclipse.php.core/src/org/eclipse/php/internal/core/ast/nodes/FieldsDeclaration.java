@@ -187,10 +187,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List fields = ASTNode.copySubtrees(target, fields());
+		final List<SingleFieldDeclaration> fields = ASTNode.copySubtrees(target, fields());
 		final int modifier = getModifier();
-		final FieldsDeclaration result = new FieldsDeclaration(getStart(), getEnd(), target, modifier, fields);
-		return result;
+		return new FieldsDeclaration(getStart(), getEnd(), target, modifier, fields);
 	}
 
 	@Override

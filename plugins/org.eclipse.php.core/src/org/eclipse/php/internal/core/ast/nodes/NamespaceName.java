@@ -87,9 +87,8 @@ public class NamespaceName extends Identifier {
 		this.current = current;
 	}
 
-	public NamespaceName(int start, int end, AST ast, List segments, boolean global, boolean current) {
-		super(start, end, ast,
-				buildName((Identifier[]) segments.toArray(new Identifier[getSegmentSize(segments)]), global, current));
+	public NamespaceName(int start, int end, AST ast, List<Identifier> segments, boolean global, boolean current) {
+		super(start, end, ast, buildName(segments.toArray(new Identifier[getSegmentSize(segments)]), global, current));
 
 		Iterator<Identifier> it = segments.iterator();
 		while (it.hasNext()) {
@@ -100,7 +99,7 @@ public class NamespaceName extends Identifier {
 		this.current = current;
 	}
 
-	private static int getSegmentSize(List segments) {
+	private static int getSegmentSize(List<Identifier> segments) {
 		if (segments == null) {
 			throw new IllegalArgumentException();
 		}
@@ -224,12 +223,10 @@ public class NamespaceName extends Identifier {
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	protected ASTNode clone0(AST target) {
-		final List segments = ASTNode.copySubtrees(target, segments());
+		final List<Identifier> segments = ASTNode.copySubtrees(target, segments());
 		final boolean global = isGlobal();
 		final boolean current = isCurrent();
-		final NamespaceName result = new NamespaceName(this.getStart(), this.getEnd(), target, segments, global,
-				current);
-		return result;
+		return new NamespaceName(this.getStart(), this.getEnd(), target, segments, global, current);
 	}
 
 	@Override

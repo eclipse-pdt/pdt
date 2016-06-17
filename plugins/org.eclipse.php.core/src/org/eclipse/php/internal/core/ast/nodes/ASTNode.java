@@ -1281,6 +1281,7 @@ public abstract class ASTNode implements Visitable {
 		if (target.apiLevel() != node.getAST().apiLevel()) {
 			throw new UnsupportedOperationException();
 		}
+		@SuppressWarnings("unchecked")
 		T newNode = (T) node.clone(target);
 		return newNode;
 	}
@@ -1302,12 +1303,13 @@ public abstract class ASTNode implements Visitable {
 	 *            the list of nodes to copy (element type: <code>ASTNode</code>)
 	 * @return the list of copied subtrees (element type: <code>ASTNode</code>)
 	 */
-	public static List copySubtrees(AST target, List<? extends ASTNode> nodes) {
-		List result = new ArrayList(nodes.size());
+	@SuppressWarnings("unchecked")
+	public static <T extends ASTNode> List<T> copySubtrees(AST target, List<? extends T> nodes) {
+		List<T> result = new ArrayList<T>(nodes.size());
 		for (Iterator<? extends ASTNode> it = nodes.iterator(); it.hasNext();) {
 			ASTNode oldNode = (ASTNode) it.next();
 			ASTNode newNode = oldNode.clone(target);
-			result.add(newNode);
+			result.add((T) newNode);
 		}
 		return result;
 	}

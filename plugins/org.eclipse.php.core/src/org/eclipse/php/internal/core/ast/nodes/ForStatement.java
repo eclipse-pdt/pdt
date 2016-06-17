@@ -79,34 +79,17 @@ public class ForStatement extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	private ForStatement(int start, int end, AST ast, Expression[] initializations, Expression[] conditions,
-			Expression[] increasements, Statement action) {
+	public ForStatement(int start, int end, AST ast, List<Expression> initializers, List<Expression> conditions,
+			List<Expression> increasements, Statement action) {
 		super(start, end, ast);
 
-		if (initializations == null || conditions == null || increasements == null || action == null) {
+		if (initializers == null || conditions == null || increasements == null || action == null) {
 			throw new IllegalArgumentException();
 		}
-		for (Expression init : initializations) {
-			this.initializers.add(init);
-		}
-		for (Expression cond : conditions) {
-			this.conditions.add(cond);
-		}
-		for (Expression inc : increasements) {
-			this.updaters.add(inc);
-		}
+		this.initializers.addAll(initializers);
+		this.conditions.addAll(conditions);
+		this.updaters.addAll(increasements);
 		setBody(action);
-	}
-
-	public ForStatement(int start, int end, AST ast, List initializations, List conditions, List increasements,
-			Statement action) {
-		this(start, end, ast,
-				initializations == null ? null
-						: (Expression[]) initializations.toArray(new Expression[initializations.size()]),
-				conditions == null ? null : (Expression[]) conditions.toArray(new Expression[conditions.size()]),
-				increasements == null ? null
-						: (Expression[]) increasements.toArray(new Expression[increasements.size()]),
-				action);
 	}
 
 	public ForStatement(AST ast) {
@@ -285,12 +268,11 @@ public class ForStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List inits = ASTNode.copySubtrees(target, initializers());
-		final List conds = ASTNode.copySubtrees(target, conditions());
-		final List updtaters = ASTNode.copySubtrees(target, updaters());
+		final List<Expression> inits = ASTNode.copySubtrees(target, initializers());
+		final List<Expression> conds = ASTNode.copySubtrees(target, conditions());
+		final List<Expression> updtaters = ASTNode.copySubtrees(target, updaters());
 		final Statement body = ASTNode.copySubtree(target, getBody());
-		ForStatement result = new ForStatement(this.getStart(), this.getEnd(), target, inits, conds, updtaters, body);
-		return result;
+		return new ForStatement(this.getStart(), this.getEnd(), target, inits, conds, updtaters, body);
 	}
 
 	@Override

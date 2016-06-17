@@ -50,19 +50,13 @@ public class EchoStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private EchoStatement(int start, int end, AST ast, Expression[] expressions) {
+	public EchoStatement(int start, int end, AST ast, List<Expression> expressions) {
 		super(start, end, ast);
 		if (expressions == null) {
 			throw new IllegalArgumentException();
 		}
 
-		for (Expression expression : expressions) {
-			this.expressions.add(expression);
-		}
-	}
-
-	public EchoStatement(int start, int end, AST ast, List expressions) {
-		this(start, end, ast, (Expression[]) expressions.toArray(new Expression[expressions.size()]));
+		this.expressions.addAll(expressions);
 	}
 
 	public EchoStatement(AST ast) {
@@ -137,9 +131,8 @@ public class EchoStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List expressions = ASTNode.copySubtrees(target, this.expressions());
-		final EchoStatement echoSt = new EchoStatement(this.getStart(), this.getEnd(), target, expressions);
-		return echoSt;
+		final List<Expression> expressions = ASTNode.copySubtrees(target, this.expressions());
+		return new EchoStatement(this.getStart(), this.getEnd(), target, expressions);
 	}
 
 	@Override

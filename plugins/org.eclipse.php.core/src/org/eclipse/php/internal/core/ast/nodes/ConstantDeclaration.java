@@ -71,14 +71,14 @@ public class ConstantDeclaration extends Statement {
 		}
 	}
 
-	public ConstantDeclaration(int start, int end, AST ast, List variablesAndDefaults) {
+	public ConstantDeclaration(int start, int end, AST ast, List<ASTNode[]> variablesAndDefaults) {
 		super(start, end, ast);
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
 		}
 
-		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext();) {
-			ASTNode[] element = (ASTNode[]) iter.next();
+		for (Iterator<ASTNode[]> iter = variablesAndDefaults.iterator(); iter.hasNext();) {
+			ASTNode[] element = iter.next();
 			assert element != null && element.length == 2 && element[0] != null && element[1] != null;
 
 			this.names.add((Identifier) element[0]);
@@ -188,11 +188,9 @@ public class ConstantDeclaration extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List names = ASTNode.copySubtrees(target, this.names());
-		final List initializers = ASTNode.copySubtrees(target, this.initializers());
-		final ConstantDeclaration ccd = new ConstantDeclaration(this.getStart(), this.getEnd(), target, names,
-				initializers);
-		return ccd;
+		final List<Identifier> names = ASTNode.copySubtrees(target, this.names());
+		final List<Expression> initializers = ASTNode.copySubtrees(target, this.initializers());
+		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, names, initializers);
 
 	}
 
