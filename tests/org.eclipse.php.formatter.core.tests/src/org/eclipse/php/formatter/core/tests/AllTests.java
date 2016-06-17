@@ -11,7 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.formatter.core.tests;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.formatter.core.Logger;
+import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
@@ -24,5 +29,15 @@ public class AllTests {
 
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
+
+	@AfterClass
+	public static void tearDown() {
+		// Save workspace to avoid errors after finishing tests.
+		try {
+			ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+	}
 
 }

@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByAliasTests;
@@ -38,6 +41,8 @@ import org.eclipse.php.core.tests.phar.PharFileTest;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.text.PHPTextSequenceUtilitiesTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
+import org.eclipse.php.internal.core.Logger;
+import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -59,5 +64,15 @@ import org.junit.runners.Suite;
 		// test language functions
 		org.eclipse.php.core.tests.searchEngine.AllTests.class, PHPTextSequenceUtilitiesTests.class })
 public final class AllTests {
+
+	@AfterClass
+	public static void tearDown() {
+		// Save workspace to avoid errors after finishing tests.
+		try {
+			ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+	}
 
 }

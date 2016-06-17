@@ -20,3 +20,4 @@ Require-Bundle: org.junit,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.dltk.compiler.problem
+Export-Package: org.eclipse.php.formatter.core.tests

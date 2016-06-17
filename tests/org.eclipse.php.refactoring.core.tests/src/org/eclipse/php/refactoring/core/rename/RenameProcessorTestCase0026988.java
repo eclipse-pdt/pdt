@@ -93,6 +93,8 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 
 	@After
 	public void tearDown() throws Exception {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("project11");
+		TestUtils.deleteProject(project);
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 		project2.delete(IResource.FORCE, new NullProgressMonitor());
 	}
