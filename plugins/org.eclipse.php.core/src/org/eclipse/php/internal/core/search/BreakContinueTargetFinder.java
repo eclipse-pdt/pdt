@@ -75,7 +75,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 		if (expression.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) expression;
 			try {
-				return Integer.parseInt(scalar.getStringValue());
+				return scalar.getScalarType() == Scalar.TYPE_INT ? Integer.parseInt(scalar.getStringValue()) : 0;
 			} catch (NumberFormatException e) {
 				Logger.logException(e);
 			}
