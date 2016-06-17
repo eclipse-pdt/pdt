@@ -43,7 +43,7 @@ public class LanguageModelContainer implements IBuildpathContainer {
 		this.fProject = project;
 	}
 
-	public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
+	public synchronized IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
 		if (buildPathEntries == null) {
 			try {
 				List<IBuildpathEntry> entries = new LinkedList<IBuildpathEntry>();
