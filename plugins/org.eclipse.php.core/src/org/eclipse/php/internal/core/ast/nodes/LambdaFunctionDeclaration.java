@@ -80,18 +80,20 @@ public class LambdaFunctionDeclaration extends Expression {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body,
-			final boolean isReference) {
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
+			List<Expression> lexicalVars, Block body, final boolean isReference) {
 		this(start, end, ast, formalParameters, lexicalVars, body, isReference, false, -1);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body,
-			final boolean isReference, final boolean isStatic, int staticStart) {
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
+			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic,
+			int staticStart) {
 		this(start, end, ast, formalParameters, lexicalVars, body, isReference, isStatic, staticStart, null);
 	}
 
-	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body,
-			final boolean isReference, final boolean isStatic, int staticStart, Identifier returnType) {
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
+			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic,
+			int staticStart, Identifier returnType) {
 		super(start, end, ast);
 
 		if (formalParameters == null) {
@@ -387,13 +389,12 @@ public class LambdaFunctionDeclaration extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final List formalParams = ASTNode.copySubtrees(target, formalParameters());
-		final List lexicalVars = ASTNode.copySubtrees(target, lexicalVariables());
+		final List<FormalParameter> formalParams = ASTNode.copySubtrees(target, formalParameters());
+		final List<Expression> lexicalVars = ASTNode.copySubtrees(target, lexicalVariables());
 		final boolean isRef = isReference();
 		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
-		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(getStart(), getEnd(), target,
-				formalParams, lexicalVars, body, isRef, isStatic(), this.staticStart, returnType);
-		return result;
+		return new LambdaFunctionDeclaration(getStart(), getEnd(), target, formalParams, lexicalVars, body, isRef,
+				isStatic(), this.staticStart, returnType);
 	}
 
 	@Override

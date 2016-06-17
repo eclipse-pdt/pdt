@@ -19,7 +19,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class TraitDeclaration extends ClassDeclaration {
 
 	public TraitDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass,
-			List interfaces, Block body) {
+			List<Identifier> interfaces, Block body) {
 		super(start, end, ast, modifier, className, superClass, interfaces, body);
 	}
 

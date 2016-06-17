@@ -140,10 +140,8 @@ public class BackTickExpression extends Expression {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List expressions = ASTNode.copySubtrees(target, expressions());
-		final BackTickExpression bkExpression = new BackTickExpression(this.getStart(), this.getEnd(), target,
-				expressions);
-		return bkExpression;
+		final List<Expression> expressions = ASTNode.copySubtrees(target, expressions());
+		return new BackTickExpression(this.getStart(), this.getEnd(), target, expressions);
 	}
 
 	@Override

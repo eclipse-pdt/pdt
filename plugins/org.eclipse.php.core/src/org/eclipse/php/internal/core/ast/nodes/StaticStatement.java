@@ -51,24 +51,17 @@ public class StaticStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private StaticStatement(int start, int end, AST ast, Expression[] expressions) {
+	public StaticStatement(AST ast) {
+		super(ast);
+	}
+
+	public StaticStatement(int start, int end, AST ast, List<Expression> expressions) {
 		super(start, end, ast);
 
 		if (expressions == null) {
 			throw new IllegalArgumentException();
 		}
-		for (Expression expression : expressions) {
-			this.expressions.add(expression);
-		}
-	}
-
-	public StaticStatement(AST ast) {
-		super(ast);
-	}
-
-	public StaticStatement(int start, int end, AST ast, List expressions) {
-		this(start, end, ast,
-				expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
+		this.expressions.addAll(expressions);
 	}
 
 	/**
@@ -76,17 +69,17 @@ public class StaticStatement extends Statement {
 	 */
 	public Variable[] getVariables() {
 
-		List vars = new LinkedList();
+		List<Variable> vars = new LinkedList<Variable>();
 		for (Expression node : this.expressions) {
 			if (node instanceof Variable) {
-				vars.add(node);
+				vars.add((Variable) node);
 			} else {
 				assert node instanceof Assignment;
 				Assignment ass = (Assignment) node;
-				vars.add(ass.getLeftHandSide());
+				vars.add((Variable) ass.getLeftHandSide());
 			}
 		}
-		return (Variable[]) vars.toArray(new Variable[vars.size()]);
+		return vars.toArray(new Variable[vars.size()]);
 	}
 
 	public void accept0(Visitor visitor) {
@@ -157,10 +150,8 @@ public class StaticStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List expressions = ASTNode.copySubtrees(target, this.expressions());
-		final StaticStatement staticStatementSt = new StaticStatement(this.getStart(), this.getEnd(), target,
-				expressions);
-		return staticStatementSt;
+		final List<Expression> expressions = ASTNode.copySubtrees(target, this.expressions());
+		return new StaticStatement(this.getStart(), this.getEnd(), target, expressions);
 	}
 
 	@Override

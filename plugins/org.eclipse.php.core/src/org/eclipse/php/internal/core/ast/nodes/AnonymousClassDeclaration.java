@@ -187,7 +187,7 @@ public class AnonymousClassDeclaration extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		final Expression superClass = ASTNode.copySubtree(target, getSuperClass());
-		final List interfaces = ASTNode.copySubtrees(target, getInterfaces());
+		final List<Identifier> interfaces = ASTNode.copySubtrees(target, getInterfaces());
 		final Block body = ASTNode.copySubtree(target, getBody());
 		return new AnonymousClassDeclaration(getStart(), getEnd(), target, superClass, interfaces, body);
 	}

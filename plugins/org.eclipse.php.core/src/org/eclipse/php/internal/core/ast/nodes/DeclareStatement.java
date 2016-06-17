@@ -61,29 +61,16 @@ public class DeclareStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private DeclareStatement(int start, int end, AST ast, Identifier[] directiveNames, Expression[] directiveValues,
-			Statement action) {
+	public DeclareStatement(int start, int end, AST ast, List<Identifier> directiveNames,
+			List<Expression> directiveValues, Statement action) {
 		super(start, end, ast);
 
-		if (directiveNames == null || directiveValues == null || directiveNames.length != directiveValues.length) {
+		if (directiveNames == null || directiveValues == null || directiveNames.size() != directiveValues.size()) {
 			throw new IllegalArgumentException();
 		}
-		for (Identifier identifier : directiveNames) {
-			this.directiveNames.add(identifier);
-		}
-		for (Expression expression : directiveValues) {
-			this.directiveValues.add(expression);
-		}
+		this.directiveNames.addAll(directiveNames);
+		this.directiveValues.addAll(directiveValues);
 		setBody(action);
-	}
-
-	public DeclareStatement(int start, int end, AST ast, List directiveNames, List directiveValues, Statement action) {
-		this(start, end, ast,
-				directiveNames == null ? null
-						: (Identifier[]) directiveNames.toArray(new Identifier[directiveNames.size()]),
-				directiveValues == null ? null
-						: (Expression[]) directiveValues.toArray(new Expression[directiveValues.size()]),
-				action);
 	}
 
 	public DeclareStatement(AST ast) {
@@ -249,13 +236,10 @@ public class DeclareStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List names = ASTNode.copySubtrees(target, this.directiveNames());
-		final List values = ASTNode.copySubtrees(target, this.directiveValues());
+		final List<Identifier> names = ASTNode.copySubtrees(target, this.directiveNames());
+		final List<Expression> values = ASTNode.copySubtrees(target, this.directiveValues());
 		final Statement body = ASTNode.copySubtree(target, getBody());
-
-		final DeclareStatement echoSt = new DeclareStatement(this.getStart(), this.getEnd(), target, names, values,
-				body);
-		return echoSt;
+		return new DeclareStatement(this.getStart(), this.getEnd(), target, names, values, body);
 	}
 
 	@Override

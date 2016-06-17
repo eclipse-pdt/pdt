@@ -92,23 +92,13 @@ public class Program extends ASTNode {
 	 */
 	private int[] lineEndTable = {};
 
-	private Program(int start, int end, AST ast, Statement[] statements, List comments) {
+	public Program(int start, int end, AST ast, List<Statement> statements, List<Comment> commentList) {
 		super(start, end, ast);
-
 		if (statements == null || comments == null) {
 			throw new IllegalArgumentException();
 		}
-
-		for (Statement statement : statements) {
-			this.statements.add(statement);
-		}
-		for (Object comment : comments) {
-			this.comments.add((Comment) comment);
-		}
-	}
-
-	public Program(int start, int end, AST ast, List statements, List commentList) {
-		this(start, end, ast, (Statement[]) statements.toArray(new Statement[statements.size()]), commentList);
+		this.statements.addAll(statements);
+		this.comments.addAll(commentList);
 	}
 
 	public Program(AST ast) {
@@ -624,10 +614,9 @@ public class Program extends ASTNode {
 	}
 
 	ASTNode clone0(AST target) {
-		final List statements = ASTNode.copySubtrees(target, statements());
-		final List comments = ASTNode.copySubtrees(target, comments());
-		final Program result = new Program(this.getStart(), this.getEnd(), target, statements, comments);
-		return result;
+		final List<Statement> statements = ASTNode.copySubtrees(target, statements());
+		final List<Comment> comments = ASTNode.copySubtrees(target, comments());
+		return new Program(this.getStart(), this.getEnd(), target, statements, comments);
 	}
 
 	@Override

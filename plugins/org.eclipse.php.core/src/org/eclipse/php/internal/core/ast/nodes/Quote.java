@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,23 +64,19 @@ public class Quote extends VariableBase {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
+	@Deprecated
 	public Quote(int start, int end, AST ast, Expression[] expressions, int type) {
-		super(start, end, ast);
-
-		for (Expression expression : expressions) {
-			this.expressions.add(expression);
-		}
-		setQuoteType(type);
+		this(start, end, ast, expressions == null ? null : Arrays.asList(expressions), type);
 	}
 
 	public Quote(AST ast) {
 		super(ast);
 	}
 
-	public Quote(int start, int end, AST ast, List expressions, int type) {
-		this(start, end, ast,
-				expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]),
-				type);
+	public Quote(int start, int end, AST ast, List<Expression> expressions, int type) {
+		super(start, end, ast);
+		this.expressions.addAll(expressions);
+		setQuoteType(type);
 	}
 
 	public static String getType(int type) {

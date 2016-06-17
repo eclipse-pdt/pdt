@@ -50,20 +50,14 @@ public class GlobalStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private GlobalStatement(int start, int end, AST ast, Variable[] variables) {
+	public GlobalStatement(int start, int end, AST ast, List<Variable> variables) {
 		super(start, end, ast);
 
 		if (variables == null) {
 			throw new IllegalArgumentException();
 		}
-		for (Variable variable : variables) {
-			this.variables.add(variable);
-		}
-	}
 
-	public GlobalStatement(int start, int end, AST ast, List variables) {
-		this(start, end, ast,
-				variables == null ? null : (Variable[]) variables.toArray(new Variable[variables.size()]));
+		this.variables.addAll(variables);
 	}
 
 	public GlobalStatement(AST ast) {
@@ -132,9 +126,8 @@ public class GlobalStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List variables = ASTNode.copySubtrees(target, variables());
-		GlobalStatement result = new GlobalStatement(this.getStart(), this.getEnd(), target, variables);
-		return result;
+		final List<Variable> variables = ASTNode.copySubtrees(target, variables());
+		return new GlobalStatement(this.getStart(), this.getEnd(), target, variables);
 	}
 
 	@Override

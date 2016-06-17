@@ -61,7 +61,7 @@ public class Block extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private Block(int start, int end, AST ast, Statement[] statements, boolean isCurly) {
+	public Block(int start, int end, AST ast, List<Statement> statements, boolean isCurly) {
 		super(start, end, ast);
 
 		if (statements == null) {
@@ -70,18 +70,10 @@ public class Block extends Statement {
 
 		setIsCurly(isCurly);
 		// set the child nodes' parent
-		for (int i = 0; i < statements.length; i++) {
-			this.statements.add(statements[i]);
-		}
+		this.statements.addAll(statements);
 	}
 
-	public Block(int start, int end, AST ast, List statements, boolean isCurly) {
-		this(start, end, ast,
-				statements == null ? null : (Statement[]) statements.toArray(new Statement[statements.size()]),
-				isCurly);
-	}
-
-	public Block(int start, int end, AST ast, List statements) {
+	public Block(int start, int end, AST ast, List<Statement> statements) {
 		this(start, end, ast, statements, true);
 	}
 
@@ -201,9 +193,8 @@ public class Block extends Statement {
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	ASTNode clone0(AST target) {
-		final List statements = ASTNode.copySubtrees(target, statements());
-		final Block result = new Block(this.getStart(), this.getEnd(), target, statements, this.isCurly());
-		return result;
+		final List<Statement> statements = ASTNode.copySubtrees(target, statements());
+		return new Block(this.getStart(), this.getEnd(), target, statements, this.isCurly());
 	}
 
 	@Override

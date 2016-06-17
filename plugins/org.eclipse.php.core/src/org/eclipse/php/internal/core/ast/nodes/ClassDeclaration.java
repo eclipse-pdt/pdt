@@ -102,9 +102,9 @@ public class ClassDeclaration extends TypeDeclaration {
 	}
 
 	public ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass,
-			List interfaces, Block body) {
+			List<Identifier> interfaces, Block body) {
 		this(start, end, ast, modifier, className, superClass,
-				interfaces == null ? null : (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
+				interfaces == null ? null : interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
 
 	public void accept0(Visitor visitor) {
@@ -288,12 +288,9 @@ public class ClassDeclaration extends TypeDeclaration {
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final Expression superName = ASTNode.copySubtree(target, getSuperClass());
 		final int modifier = getModifier();
-		final List interfaces = ASTNode.copySubtrees(target, interfaces());
+		final List<Identifier> interfaces = ASTNode.copySubtrees(target, interfaces());
 		final Identifier name = ASTNode.copySubtree(target, getName());
-
-		final ClassDeclaration result = new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName,
-				interfaces, body);
-		return result;
+		return new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName, interfaces, body);
 	}
 
 	@Override

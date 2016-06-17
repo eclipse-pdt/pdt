@@ -254,11 +254,9 @@ public class UseStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List parts = ASTNode.copySubtrees(target, parts());
+		final List<UseStatementPart> parts = ASTNode.copySubtrees(target, parts());
 		final NamespaceName namespace = ASTNode.copySubtree(target, getNamespace());
-		final UseStatement result = new UseStatement(getStart(), getEnd(), target, namespace, parts,
-				getStatementType());
-		return result;
+		return new UseStatement(getStart(), getEnd(), target, namespace, parts, getStatementType());
 	}
 
 	@Override

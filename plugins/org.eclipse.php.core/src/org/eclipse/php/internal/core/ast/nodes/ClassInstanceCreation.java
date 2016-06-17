@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,29 +64,16 @@ public class ClassInstanceCreation extends VariableBase {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
+	@Deprecated
 	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams) {
-		super(start, end, ast);
-		if (className == null || ctorParams == null) {
-			throw new IllegalArgumentException();
-		}
-
-		setClassName(className);
-		for (Expression expression : ctorParams) {
-			this.ctorParams.add(expression);
-		}
+		this(start, end, ast, className, ctorParams == null ? null : Arrays.asList(ctorParams));
 	}
 
+	@Deprecated
 	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams,
 			AnonymousClassDeclaration anonymousClassDeclaration) {
-		super(start, end, ast);
-		if (className == null || anonymousClassDeclaration == null || ctorParams == null) {
-			throw new IllegalArgumentException();
-		}
-		setClassName(className);
-		setAnonymousClassDeclaration(anonymousClassDeclaration);
-		for (Expression expression : ctorParams) {
-			this.ctorParams.add(expression);
-		}
+		this(start, end, ast, className, ctorParams == null ? null : Arrays.asList(ctorParams),
+				anonymousClassDeclaration);
 	}
 
 	public ClassInstanceCreation(AST ast) {
@@ -100,16 +88,25 @@ public class ClassInstanceCreation extends VariableBase {
 		visitor.endVisit(this);
 	}
 
-	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List ctorParams) {
-		this(start, end, ast, className,
-				ctorParams == null ? null : (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]));
+	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List<Expression> ctorParams) {
+		super(start, end, ast);
+		if (className == null || ctorParams == null) {
+			throw new IllegalArgumentException();
+		}
+
+		setClassName(className);
+		this.ctorParams.addAll(ctorParams);
 	}
 
-	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List ctorParams,
+	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List<Expression> ctorParams,
 			AnonymousClassDeclaration anonymousClassDeclaration) {
-		this(start, end, ast, className,
-				ctorParams == null ? null : (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]),
-				anonymousClassDeclaration);
+		super(start, end, ast);
+		if (className == null || anonymousClassDeclaration == null || ctorParams == null) {
+			throw new IllegalArgumentException();
+		}
+		setClassName(className);
+		setAnonymousClassDeclaration(anonymousClassDeclaration);
+		this.ctorParams.addAll(ctorParams);
 	}
 
 	public void childrenAccept(Visitor visitor) {
@@ -268,7 +265,7 @@ public class ClassInstanceCreation extends VariableBase {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List params = ASTNode.copySubtrees(target, ctorParams());
+		final List<Expression> params = ASTNode.copySubtrees(target, ctorParams());
 		AnonymousClassDeclaration acd = ASTNode.copySubtree(target, getAnonymousClassDeclaration());
 		final ClassName cn = ASTNode.copySubtree(target, getClassName());
 		return new ClassInstanceCreation(this.getStart(), this.getEnd(), target, cn, params, acd);
@@ -276,7 +273,7 @@ public class ClassInstanceCreation extends VariableBase {
 
 	public ClassInstanceCreation cloneWithNewStart(int offset) {
 		AST target = getAST();
-		final List params = ASTNode.copySubtrees(target, ctorParams());
+		final List<Expression> params = ASTNode.copySubtrees(target, ctorParams());
 		final ClassName cn = ASTNode.copySubtree(target, getClassName());
 		final ClassInstanceCreation result = new ClassInstanceCreation(offset, this.getEnd(), target, cn, params);
 		return result;

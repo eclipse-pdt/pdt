@@ -59,28 +59,18 @@ public class ArrayCreation extends VariableBase {
 		super(ast);
 	}
 
-	private ArrayCreation(int start, int end, AST ast, ArrayElement[] elements, boolean hasArrayKey) {
+	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements) {
+		this(start, end, ast, elements, true);
+	}
+
+	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements, boolean hasArrayKey) {
 		super(start, end, ast);
 
 		if (elements == null) {
 			throw new IllegalArgumentException();
 		}
-
-		for (ArrayElement arrayElement : elements) {
-			this.elements.add(arrayElement);
-		}
+		this.elements.addAll(elements);
 		setHasArrayKey(hasArrayKey);
-	}
-
-	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements) {
-		this(start, end, ast,
-				elements == null ? null : (ArrayElement[]) elements.toArray(new ArrayElement[elements.size()]), true);
-	}
-
-	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements, boolean hasArrayKey) {
-		this(start, end, ast,
-				elements == null ? null : (ArrayElement[]) elements.toArray(new ArrayElement[elements.size()]),
-				hasArrayKey);
 	}
 
 	public boolean isHasArrayKey() {
@@ -178,10 +168,8 @@ public class ArrayCreation extends VariableBase {
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	ASTNode clone0(AST target) {
-		final List<ASTNode> elements = ASTNode.copySubtrees(target, elements());
-		final ArrayCreation result = new ArrayCreation(this.getStart(), this.getEnd(), target,
-				elements.toArray(new ArrayElement[elements.size()]), isHasArrayKey());
-		return result;
+		final List<ArrayElement> elements = ASTNode.copySubtrees(target, elements());
+		return new ArrayCreation(this.getStart(), this.getEnd(), target, elements, isHasArrayKey());
 	}
 
 	@Override
