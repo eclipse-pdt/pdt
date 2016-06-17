@@ -11,6 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.test;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.php.internal.core.Logger;
+import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -22,5 +27,15 @@ import org.junit.runners.Suite;
 		org.eclipse.php.refactoring.ui.actions.AllTests.class,
 		org.eclipse.php.refactoring.core.changes.AllTests.class })
 public class AllTests {
+
+	@AfterClass
+	public static void tearDown() {
+		// Save workspace to avoid errors after finishing tests.
+		try {
+			ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+	}
 
 }

@@ -24,7 +24,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -199,6 +202,7 @@ public class ContentAssistTests {
 		StyledText textWidget = viewer.getTextWidget();
 		textWidget.setCaretOffset(offset);
 		viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+		disposeAssist();
 		return fEditor.getDocument().get();
 	}
 
@@ -230,6 +234,17 @@ public class ContentAssistTests {
 			fEditor = (PHPStructuredEditor) part;
 		} else {
 			assertTrue("Unable to open php editor", false);
+		}
+	}
+    
+	// Will close assist window immediatelly
+	protected void disposeAssist() {
+		ISourceViewer viewer = fEditor.getTextViewer();
+		SourceViewerConfiguration configuration = fEditor.getSourceViwerConfiguration();
+		IContentAssistant contentAssistant = configuration.getContentAssistant(viewer);
+		if (contentAssistant instanceof ContentAssistant) {
+			ContentAssistant assistant = (ContentAssistant) contentAssistant;
+			assistant.uninstall();
 		}
 	}
 
