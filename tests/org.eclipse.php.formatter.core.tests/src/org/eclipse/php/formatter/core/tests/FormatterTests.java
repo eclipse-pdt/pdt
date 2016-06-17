@@ -30,9 +30,9 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PDTTUtils;
+import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -108,6 +108,7 @@ public class FormatterTests {
 	public void setUpSuite() throws Exception {
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("FormatterTests_" + suiteCounter++);
+		TestUtils.setProjectPhpVersion(project, phpVersion);
 
 		for (String fileName : fileNames) {
 			PdttFile pdttFile = new PdttFile(getContext(), fileName);
@@ -116,7 +117,6 @@ public class FormatterTests {
 			pdttFiles.put(fileName, pdttFile);
 		}
 
-		TestUtils.setProjectPhpVersion(project, phpVersion);
 		TestUtils.waitForIndexer();
 
 		profileManager.clearAllSettings(scopeContext);
