@@ -9,6 +9,7 @@
 	<name>PHP Development Tools (PDT)</name>
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
+	
 	<properties>
 		<tycho-version>0.23.0</tycho-version>
 		<antrun-version>1.7</antrun-version>
