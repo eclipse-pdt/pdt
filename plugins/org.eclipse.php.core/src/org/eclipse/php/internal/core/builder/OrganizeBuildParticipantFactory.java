@@ -103,14 +103,14 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 		private IBuildContext context;
 		private IDocument doc;
 		private UseStatement[] statements;
-		private List<Position> excludePositions;
+		private ASTNode[] excludeNodes;
 		private NamespaceDeclaration currentNamespace;
 
 		public ImportValidationVisitor(IBuildContext context, UseStatement[] statements, ASTNode[] excludeNodes) {
 			this.context = context;
 			this.statements = statements;
+			this.excludeNodes = excludeNodes;
 			this.doc = new Document(new String(context.getContents()));
-			this.excludePositions = DocumentUtils.getExcludeSortedAndFilteredPositions(excludeNodes);
 		}
 
 		public boolean visit(NamespaceDeclaration n) throws Exception {
@@ -123,6 +123,8 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 			if (this.statements.length == 0) {
 				return super.visit(s);
 			}
+
+			List<Position> excludePositions = DocumentUtils.getExcludeSortedAndFilteredPositions(excludeNodes);
 
 			String total;
 			if (this.currentNamespace != null && this.currentNamespace.isBracketed()) {
