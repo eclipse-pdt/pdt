@@ -29,6 +29,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.internal.core.CoreMessages;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
@@ -94,6 +95,7 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 						moduleDeclaration.traverse(new ImportValidationVisitor(context, statements, excludeNodes));
 					}
 				} catch (Exception e) {
+					Logger.logException(e);
 				}
 			}
 		}
