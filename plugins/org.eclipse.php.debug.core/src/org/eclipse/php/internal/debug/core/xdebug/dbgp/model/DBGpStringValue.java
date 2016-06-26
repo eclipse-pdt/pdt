@@ -312,10 +312,10 @@ public class DBGpStringValue extends AbstractDBGpValue {
 		}
 		byte[] newBytes;
 		try {
-			newBytes = value.getBytes(((DBGpTarget) getDebugTarget()).getBinaryEncoding());
+			newBytes = fValueString.getBytes(((DBGpTarget) getDebugTarget()).getBinaryEncoding());
 		} catch (UnsupportedEncodingException e) {
 			DBGpLogger.logException("unexpected encoding problem", this, e); //$NON-NLS-1$
-			newBytes = value.getBytes();
+			newBytes = fValueString.getBytes();
 		}
 		fValueBytes = newBytes;
 		fRequiredBytes = newBytes.length;

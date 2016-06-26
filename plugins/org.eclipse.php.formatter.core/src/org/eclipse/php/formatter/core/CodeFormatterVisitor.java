@@ -2943,7 +2943,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			} else if (ifTrue != null && ifFalse == null) {
 				handleChars(ifTrue.getEnd(), colonOffset);
 			}
-		} else {
+		} else if (ifTrue != null) {
 			handleChars(ifTrue.getEnd(), colonOffset);
 		}
 

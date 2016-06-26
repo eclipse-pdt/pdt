@@ -157,9 +157,10 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 		fCheckElements = new ArrayList();
 		if (list != null && list.size() > 0) {
 			fCheckElements.addAll(list);
-		}
-		if (isOkToUse(fTreeControl)) {
-			((ContainerCheckedTreeViewer) fTree).setCheckedElements(list.toArray());
+
+			if (isOkToUse(fTreeControl)) {
+				((ContainerCheckedTreeViewer) fTree).setCheckedElements(list.toArray());
+			}
 		}
 		checkStateChanged();
 	}

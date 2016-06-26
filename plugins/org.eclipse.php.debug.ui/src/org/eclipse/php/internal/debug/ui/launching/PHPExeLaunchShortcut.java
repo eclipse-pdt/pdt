@@ -135,7 +135,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
-		int entries = search == null ? 0 : search.length;
+		if (search == null) {
+			return;
+		}
+		int entries = search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
 				String phpPathString = null;
@@ -266,18 +269,20 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		try {
 			ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager()
 					.getLaunchConfigurations(configType);
+			if (configs != null) {
+				int numConfigs = configs.length;
+				for (int i = 0; i < numConfigs; i++) {
+					String fileName = configs[i].getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+					String exeName = configs[i].getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+							(String) null);
+					String iniPath = configs[i].getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+					PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
 
-			int numConfigs = configs == null ? 0 : configs.length;
-			for (int i = 0; i < numConfigs; i++) {
-				String fileName = configs[i].getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
-				String exeName = configs[i].getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-				String iniPath = configs[i].getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
-
-				if (phpPathString
-						.equals(fileName)/* && defaultEXE.equals(item) */) {
-					config = configs[i];
-					break;
+					if (phpPathString
+							.equals(fileName)/* && defaultEXE.equals(item) */) {
+						config = configs[i];
+						break;
+					}
 				}
 			}
 
@@ -298,7 +303,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 */
 	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString,
 			String phpFileFullLocation, PHPexeItem bestMatchExe, ILaunchConfigurationType configType, IResource res)
-					throws CoreException {
+			throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
 

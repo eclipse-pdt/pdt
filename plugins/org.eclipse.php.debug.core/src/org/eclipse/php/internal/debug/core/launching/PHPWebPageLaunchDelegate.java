@@ -166,7 +166,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 		} catch (Throwable t) {
 		}
-
+		if (proj == null) {
+			return;
+		}
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);

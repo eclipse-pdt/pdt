@@ -569,7 +569,9 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			}
 		}
 		try {
-			debugUINode.flush();
+			if (debugUINode != null) {
+				debugUINode.flush();
+			}
 			prefs.flush();
 		} catch (BackingStoreException e) {
 			Logger.logException(e);

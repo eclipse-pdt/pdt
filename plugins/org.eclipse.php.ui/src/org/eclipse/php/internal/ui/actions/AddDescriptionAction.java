@@ -167,7 +167,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					}
 					comment = createFieldComment((IField) modelElem, lineDelim);
 					break;
-				} else {
+				} else if (modelElem != null) {
 					// If the element is a parameter in the function
 					// declaration,
 					// get the parent element and go to method case.
@@ -391,7 +391,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 				if (phpScriptRegion == null && textRegion != null) {
 					// File's content starts with HTML code
 					offset = 0;
-				} else if (phpScriptRegion != null) {
+				} else if (phpScriptRegion != null && sdRegion != null) {
 					// File's content starts with '<?php' tag
 					textRegion = phpScriptRegion.getPhpToken(0);
 					String lineDelimiter = document.getLineDelimiter(document.getLineOfOffset(textRegion.getStart()));
