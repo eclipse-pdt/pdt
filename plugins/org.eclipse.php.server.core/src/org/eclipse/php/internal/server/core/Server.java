@@ -272,8 +272,10 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 			if (otherName != null) {
 				return false;
 			}
+		} else {
+			return name.equals(otherName);
 		}
-		return name.equals(otherName);
+		return false;
 	}
 
 	/**

@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.ltk.core.refactoring,
  org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.php.core.codeassist,
+Export-Package: org.eclipse.php.core.annotation,
+ org.eclipse.php.core.codeassist,
  org.eclipse.php.core.compiler,
  org.eclipse.php.core.format,
  org.eclipse.php.core.index,
@@ -447,7 +448,7 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.formatter.ui,
    org.eclipse.php.refactoring.core,
    org.eclipse.php.refactoring.ui",
- org.eclipse.php.internal.core.corext.util;
+ org.eclipse.php.internal.core.corext.dom;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
    org.eclipse.php.core.performance.tests,
@@ -464,7 +465,7 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.formatter.ui,
    org.eclipse.php.refactoring.core,
    org.eclipse.php.refactoring.ui",
- org.eclipse.php.internal.core.corext.dom;
+ org.eclipse.php.internal.core.corext.util;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
    org.eclipse.php.core.performance.tests,

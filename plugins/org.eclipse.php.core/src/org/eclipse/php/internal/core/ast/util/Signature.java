@@ -2200,10 +2200,10 @@ public final class Signature {
 	 * @since 2.0
 	 */
 	public static char[][] getSimpleNames(char[] name) {
-		int length = name == null ? 0 : name.length;
-		if (length == 0)
+		if (name == null || name.length == 0)
 			return CharOperation.NO_CHAR_CHAR;
 
+		int length = name.length;
 		int wordCount = 1;
 		countingWords: for (int i = 0; i < length; i++)
 			switch (name[i]) {

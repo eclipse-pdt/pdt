@@ -46,17 +46,16 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 	private FlowInfo fInputFlowInfo;
 	private FlowContext fInputFlowContext;
 	private int fMaxVariableId;
-	private IVariableBinding[] fMethodLocals;
+	// private IVariableBinding[] fMethodLocals;
 	private int fReturnKind;
 	private IFunctionBinding fEnclosingMethodBinding;
 	private boolean fIsLastStatementSelected;
 	private IVariableBinding fReturnValue;
 	private IVariableBinding[] fArguments;
-	private Object fTypeVariables;
+	// private Object fTypeVariables;
 
-	public ExtractFunctionAnalyzer(Program cunit, ISourceModule sourceModule,
-			IDocument document, Selection selection) throws CoreException,
-			IOException {
+	public ExtractFunctionAnalyzer(Program cunit, ISourceModule sourceModule, IDocument document, Selection selection)
+			throws CoreException, IOException {
 		super(cunit, sourceModule, document, selection, false);
 	}
 
@@ -71,8 +70,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 		fReturnKind = UNDEFINED;
 
-		fMaxVariableId = LocalVariableIndex
-				.perform(getEnclosingBodyDeclaration());
+		fMaxVariableId = LocalVariableIndex.perform(getEnclosingBodyDeclaration());
 		if (analyzeSelection(result).hasFatalError())
 			return result;
 
@@ -102,27 +100,23 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 	 * @param astRoot
 	 * @return
 	 */
-	RefactoringStatus checkSelection(RefactoringStatus status,
-			IProgressMonitor pm) {
+	RefactoringStatus checkSelection(RefactoringStatus status, IProgressMonitor pm) {
 
 		try {
-			pm.beginTask("", 8); //$NON-NLS-1$		
+			pm.beginTask("", 8); //$NON-NLS-1$
 
 			ASTNode[] selectedNodes = getSelectedNodes();
 
 			if (selectedNodes == null || selectedNodes.length == 0) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
 			}
 			pm.worked(1);
 
-			ASTNode enclosingBodyNode = getFirstSelectedNode()
-					.getEnclosingBodyNode();
+			ASTNode enclosingBodyNode = getFirstSelectedNode().getEnclosingBodyNode();
 			if (enclosingBodyNode == null)
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
 			pm.worked(1);
 
 			if (scopeHasSyntaxErrors(enclosingBodyNode)) {
@@ -147,13 +141,11 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		fInputFlowContext.setConsiderAccessMode(true);
 		fInputFlowContext.setComputeMode(FlowContext.ARGUMENTS);
 
-		InOutFlowAnalyzer flowAnalyzer = new InOutFlowAnalyzer(
-				fInputFlowContext);
+		InOutFlowAnalyzer flowAnalyzer = new InOutFlowAnalyzer(fInputFlowContext);
 		fInputFlowInfo = flowAnalyzer.perform(getSelectedNodes());
 
 		if (fInputFlowInfo.branches()) {
-			status.addFatalError(PhpRefactoringCoreMessages
-					.getString("ExtractFunctionAnalyzer.0")); //$NON-NLS-1$
+			status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.0")); //$NON-NLS-1$
 			fReturnKind = ERROR;
 			return status;
 		}
@@ -162,8 +154,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		} else if (fInputFlowInfo.isVoidReturn()
 				|| (fInputFlowInfo.isPartialReturn() && isVoidMethod() && isLastStatementSelected())) {
 			fReturnKind = RETURN_STATEMENT_VOID;
-		} else if (fInputFlowInfo.isNoReturn() || fInputFlowInfo.isThrow()
-				|| fInputFlowInfo.isUndefined()) {
+		} else if (fInputFlowInfo.isNoReturn() || fInputFlowInfo.isThrow() || fInputFlowInfo.isUndefined()) {
 			fReturnKind = NO;
 		}
 		//
@@ -188,15 +179,13 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		FlowContext flowContext = new FlowContext(0, fMaxVariableId + 1);
 		flowContext.setConsiderAccessMode(true);
 		flowContext.setComputeMode(FlowContext.RETURN_VALUES);
-		FlowInfo returnInfo = new InOutFlowAnalyzer(flowContext)
-				.perform(getSelectedNodes());
+		FlowInfo returnInfo = new InOutFlowAnalyzer(flowContext).perform(getSelectedNodes());
 		IVariableBinding[] returnValues = returnInfo.get(flowContext,
 				FlowInfo.WRITE | FlowInfo.WRITE_POTENTIAL | FlowInfo.UNKNOWN);
 
 		// Compute a selection that exactly covers the selected nodes
 		IRegion region = getSelectedNodeRange();
-		Selection selection = Selection.createFromStartLength(
-				region.getOffset(), region.getLength());
+		Selection selection = Selection.createFromStartLength(region.getOffset(), region.getLength());
 
 		int counter = 0;
 		flowContext.setComputeMode(FlowContext.ARGUMENTS);
@@ -204,18 +193,14 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		FlowInfo argInfo = null;
 		if (fEnclosingBodyDeclaration instanceof MethodDeclaration) {
 			argInfo = new InputFlowAnalyzer(flowContext, selection, true)
-					.perform(((MethodDeclaration) fEnclosingBodyDeclaration)
-							.getFunction());
+					.perform(((MethodDeclaration) fEnclosingBodyDeclaration).getFunction());
 		} else if (fEnclosingBodyDeclaration instanceof FunctionDeclaration) {
-			argInfo = new InputFlowAnalyzer(flowContext, selection, true)
-					.perform(fEnclosingBodyDeclaration);
+			argInfo = new InputFlowAnalyzer(flowContext, selection, true).perform(fEnclosingBodyDeclaration);
 		} else {
-			argInfo = new InputFlowAnalyzer(flowContext, selection, true)
-					.perform(fEnclosingBodyDeclaration);
+			argInfo = new InputFlowAnalyzer(flowContext, selection, true).perform(fEnclosingBodyDeclaration);
 		}
 
-		IVariableBinding[] reads = argInfo.get(flowContext, FlowInfo.READ
-				| FlowInfo.READ_POTENTIAL | FlowInfo.UNKNOWN);
+		IVariableBinding[] reads = argInfo.get(flowContext, FlowInfo.READ | FlowInfo.READ_POTENTIAL | FlowInfo.UNKNOWN);
 		outer: for (int i = 0; i < returnValues.length && counter <= 1; i++) {
 			IVariableBinding binding = returnValues[i];
 			for (int x = 0; x < reads.length; x++) {
@@ -234,8 +219,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 			break;
 		default:
 			fReturnValue = null;
-			status.addFatalError(PhpRefactoringCoreMessages
-					.getString("ExtractFunctionAnalyzer.1")); //$NON-NLS-1$
+			status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.1")); //$NON-NLS-1$
 			return;
 		}
 		// List callerLocals= new ArrayList(5);
@@ -263,8 +247,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 			return true;
 		ITypeBinding[] binding = fEnclosingMethodBinding.getReturnType();
 		for (ITypeBinding currentBinding : binding) {
-			if (fEnclosingBodyDeclaration.getAST()
-					.resolveWellKnownType("void").equals(currentBinding)) //$NON-NLS-1$
+			if (fEnclosingBodyDeclaration.getAST().resolveWellKnownType("void").equals(currentBinding)) //$NON-NLS-1$
 				return true;
 		}
 		return false;
@@ -278,24 +261,17 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		ASTNode[] nodes = getSelectedNodes();
 		if (nodes != null && nodes.length == 1) {
 			ASTNode node = nodes[0];
-			if (!(node instanceof ExpressionStatement)
-					&& !(node instanceof EchoStatement)
-					&& !(node instanceof InfixExpression)
-					&& !(node instanceof ForStatement)
-					&& !(node instanceof DoStatement)
-					&& !(node instanceof ForEachStatement)
-					&& !(node instanceof IfStatement)
-					&& !(node instanceof SwitchStatement)
-					&& !(node instanceof TryStatement)
-					&& !(node instanceof WhileStatement)) {
-				status.addFatalError(PhpRefactoringCoreMessages
-						.getString("ExtractFunctionAnalyzer.2")); //$NON-NLS-1$
+			if (!(node instanceof ExpressionStatement) && !(node instanceof EchoStatement)
+					&& !(node instanceof InfixExpression) && !(node instanceof ForStatement)
+					&& !(node instanceof DoStatement) && !(node instanceof ForEachStatement)
+					&& !(node instanceof IfStatement) && !(node instanceof SwitchStatement)
+					&& !(node instanceof TryStatement) && !(node instanceof WhileStatement)) {
+				status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.2")); //$NON-NLS-1$
 			}
 		}
 
 		if (nodes == null || nodes.length == 0) {
-			status.addFatalError(PhpRefactoringCoreMessages
-					.getString("ExtractFunctionAnalyzer.3")); //$NON-NLS-1$
+			status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.3")); //$NON-NLS-1$
 		}
 
 	}
@@ -325,29 +301,25 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 	public ASTNode getEnclosingBodyDeclaration() {
 		// Class method case
-		fEnclosingBodyDeclaration = (BodyDeclaration) ASTNodes.getParent(
-				getFirstSelectedNode(), BodyDeclaration.class);
+		fEnclosingBodyDeclaration = (BodyDeclaration) ASTNodes.getParent(getFirstSelectedNode(), BodyDeclaration.class);
 
 		// Global Function case
 		if (fEnclosingBodyDeclaration == null) {
-			fEnclosingBodyDeclaration = (Statement) ASTNodes.getParent(
-					getFirstSelectedNode(), FunctionDeclaration.class);
+			fEnclosingBodyDeclaration = (Statement) ASTNodes.getParent(getFirstSelectedNode(),
+					FunctionDeclaration.class);
 		}
 
 		// Global scope case
 		if (fEnclosingBodyDeclaration == null) {
-			fEnclosingBodyDeclaration = ASTNodes.getParent(
-					getFirstSelectedNode(), Program.class);
+			fEnclosingBodyDeclaration = ASTNodes.getParent(getFirstSelectedNode(), Program.class);
 		}
 
 		return fEnclosingBodyDeclaration;
 	}
 
 	private void computeInput() {
-		int argumentMode = FlowInfo.READ | FlowInfo.READ_POTENTIAL
-				| FlowInfo.WRITE_POTENTIAL | FlowInfo.UNKNOWN;
-		fArguments = removeSelectedDeclarations(fInputFlowInfo.get(
-				fInputFlowContext, argumentMode));
+		int argumentMode = FlowInfo.READ | FlowInfo.READ_POTENTIAL | FlowInfo.WRITE_POTENTIAL | FlowInfo.UNKNOWN;
+		fArguments = removeSelectedDeclarations(fInputFlowInfo.get(fInputFlowContext, argumentMode));
 		// IVariableBinding[] bindings = fInputFlowInfo.get(fInputFlowContext,
 		// FlowInfo.WRITE | FlowInfo.WRITE_POTENTIAL);
 		// fTypeVariables =
@@ -391,27 +363,16 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		} else {
 			Block body = null;
 			if (fEnclosingBodyDeclaration instanceof FunctionDeclaration) {
-				body = ((FunctionDeclaration) fEnclosingBodyDeclaration)
-						.getBody();
+				body = ((FunctionDeclaration) fEnclosingBodyDeclaration).getBody();
 			}
 			if (fEnclosingBodyDeclaration instanceof MethodDeclaration) {
-				body = ((MethodDeclaration) fEnclosingBodyDeclaration)
-						.getFunction().getBody();
+				body = ((MethodDeclaration) fEnclosingBodyDeclaration).getFunction().getBody();
 			}
 
 			if (body != null) {
-				List statements = body.statements();
-				fIsLastStatementSelected = nodes[nodes.length - 1] == statements
-						.get(statements.size() - 1);
-			} else {
-				if (fEnclosingBodyDeclaration instanceof Program) {
-					List statements = body.statements();
-					fIsLastStatementSelected = nodes[nodes.length - 1] == statements
-							.get(statements.size() - 1);
-				}
-
+				List<Statement> statements = body.statements();
+				fIsLastStatementSelected = nodes[nodes.length - 1] == statements.get(statements.size() - 1);
 			}
-
 		}
 	}
 
@@ -429,20 +390,16 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		return fArguments;
 	}
 
-	@SuppressWarnings({ "restriction", "unchecked" })
-	private IVariableBinding[] removeSelectedDeclarations(
-			IVariableBinding[] bindings) {
-		List result = new ArrayList(bindings.length);
+	private IVariableBinding[] removeSelectedDeclarations(IVariableBinding[] bindings) {
+		List<IVariableBinding> result = new ArrayList<IVariableBinding>(bindings.length);
 		Selection selection = getSelection();
 
 		for (int i = 0; i < bindings.length; i++) {
-			if (!selection
-					.covers(((VariableBinding) bindings[i]).getVarialbe()))
+			if (!selection.covers(((VariableBinding) bindings[i]).getVarialbe()))
 				;
 			result.add(bindings[i]);
 		}
-		return (IVariableBinding[]) result.toArray(new IVariableBinding[result
-				.size()]);
+		return result.toArray(new IVariableBinding[result.size()]);
 	}
 
 }

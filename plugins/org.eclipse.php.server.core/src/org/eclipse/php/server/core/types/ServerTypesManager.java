@@ -94,7 +94,9 @@ public class ServerTypesManager {
 			types.put(type.getId(), type);
 		}
 		// Generic type always at the end
-		types.put(genericType.getId(), genericType);
+		if (genericType != null) {
+			types.put(genericType.getId(), genericType);
+		}
 	}
 
 }

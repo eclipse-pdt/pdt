@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -138,8 +139,7 @@ public class PHPTextSequenceUtilities {
 				}
 
 				// remove spaces from start.
-				textSequence = textSequence.subTextSequence(readForwardSpaces(textSequence, 0), textSequence.length());
-				return textSequence;
+				return textSequence.subTextSequence(readForwardSpaces(textSequence, 0), textSequence.length());
 			} catch (BadLocationException e) {
 			}
 		}
@@ -169,6 +169,7 @@ public class PHPTextSequenceUtilities {
 	 * 
 	 * @return text sequence region, cannot be null
 	 */
+	@NonNull
 	public static Region getStatementRegion(int offset, IStructuredDocumentRegion sdRegion,
 			boolean ignoreStartComments) {
 		// temporary workaround to fix

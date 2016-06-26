@@ -262,19 +262,20 @@ public class ASTNodeLabels {
 					buf.append(COMMA_STRING); // $NON-NLS-1$
 					buf.append(" "); //$NON-NLS-1$
 				}
-				if (getFlag(flags, M_PARAMETER_TYPES) && parameters.get(i).getParameterType() != null) {
-					String t = parameters.get(i).getParameterType().toString();
-					if (t == null) {
-						t = ""; //$NON-NLS-1$
-					} else {
-						t += " "; //$NON-NLS-1$
+				if (parameters != null) {
+					if (getFlag(flags, M_PARAMETER_TYPES) && parameters.get(i).getParameterType() != null) {
+						String t = parameters.get(i).getParameterType().toString();
+						if (t == null) {
+							t = ""; //$NON-NLS-1$
+						} else {
+							t += " "; //$NON-NLS-1$
+						}
+						buf.append(t);
 					}
-					buf.append(t);
+					if (getFlag(flags, M_PARAMETER_NAMES)) {
+						buf.append("$" + parameters.get(i).getParameterNameIdentifier().getName()); //$NON-NLS-1$
+					}
 				}
-				if (getFlag(flags, M_PARAMETER_NAMES)) {
-					buf.append("$" + parameters.get(i).getParameterNameIdentifier().getName()); //$NON-NLS-1$
-				}
-
 			}
 			buf.append(')');
 		}

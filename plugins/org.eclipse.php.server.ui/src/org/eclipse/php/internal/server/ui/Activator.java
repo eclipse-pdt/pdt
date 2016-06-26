@@ -64,16 +64,15 @@ public class Activator extends AbstractUIPlugin implements ISelectionListener {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchWindow iww = workbench.getActiveWorkbenchWindow();
-				if (iww == null) {
-					System.out.println();
+				if (iww != null) {
+					ISelectionService iss = iww.getSelectionService();
+
+					ISelection s = iss.getSelection();
+					if (s instanceof IStructuredSelection)
+						currentSelection = ((IStructuredSelection) s);
+
+					iss.addSelectionListener(Activator.this);
 				}
-				ISelectionService iss = iww.getSelectionService();
-
-				ISelection s = iss.getSelection();
-				if (s instanceof IStructuredSelection)
-					currentSelection = ((IStructuredSelection) s);
-
-				iss.addSelectionListener(Activator.this);
 			}
 
 		});

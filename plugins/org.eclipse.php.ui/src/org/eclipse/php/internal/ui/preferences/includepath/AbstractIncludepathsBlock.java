@@ -459,7 +459,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 		}
 		if (nEntriesMissing > 0) {
-			if (nEntriesMissing == 1) {
+			if (nEntriesMissing == 1 && entryMissing != null) {
 				fPathStatus.setWarning(Messages.format(NewWizardMessages.BuildPathsBlock_warning_EntryMissing,
 						entryMissing.getPath().toString()));
 			} else {
@@ -468,7 +468,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			}
 		}
 		if (nEntriesInvalid > 0) {
-			if (nEntriesInvalid == 1) {
+			if (nEntriesInvalid == 1 && entryInvalid != null) {
 				fPathStatus.setError(Messages.format(IncludePathMessages.BuildPathsBlock_warning_EntryInvalid,
 						entryInvalid.getPath().toString()));
 			} else {

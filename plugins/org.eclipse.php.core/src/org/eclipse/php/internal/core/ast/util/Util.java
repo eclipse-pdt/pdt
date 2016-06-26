@@ -16,14 +16,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -31,7 +32,6 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.compiler.CharOperation;
-import org.eclipse.dltk.compiler.util.ScannerHelper;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelStatusConstants;
 import org.eclipse.dltk.core.IScriptProject;
@@ -42,7 +42,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
@@ -468,25 +467,11 @@ public class Util {
 	/**
 	 * Returns true iff str.toLowerCase().endsWith(end.toLowerCase())
 	 * implementation is not creating extra strings.
+	 * 
+	 * @deprecated use org.apache.commons.lang3.StringUtils.endsWithIgnoreCase()
 	 */
 	public final static boolean endsWithIgnoreCase(String str, String end) {
-
-		int strLength = str == null ? 0 : str.length();
-		int endLength = end == null ? 0 : end.length();
-
-		// return false if the string is smaller than the end.
-		if (endLength > strLength)
-			return false;
-
-		// return false if any character of the end are
-		// not the same in lower case.
-		for (int i = 1; i <= endLength; i++) {
-			if (ScannerHelper.toLowerCase(end.charAt(endLength - i)) != ScannerHelper
-					.toLowerCase(str.charAt(strLength - i)))
-				return false;
-		}
-
-		return true;
+		return StringUtils.endsWithIgnoreCase(str, end);
 	}
 
 	/**
@@ -704,22 +689,22 @@ public class Util {
 		return sig.substring(i + 1);
 	}
 
-	private static IFile findFirstClassFile(IFolder folder) {
-		try {
-			IResource[] members = folder.members();
-			for (int i = 0, max = members.length; i < max; i++) {
-				IResource member = members[i];
-				if (member.getType() == IResource.FOLDER) {
-					return findFirstClassFile((IFolder) member);
-				} else if (PHPToolkitUtil.hasPhpExtention(member.getName())) {
-					return (IFile) member;
-				}
-			}
-		} catch (CoreException e) {
-			// ignore
-		}
-		return null;
-	}
+	// private static IFile findFirstClassFile(IFolder folder) {
+	// try {
+	// IResource[] members = folder.members();
+	// for (int i = 0, max = members.length; i < max; i++) {
+	// IResource member = members[i];
+	// if (member.getType() == IResource.FOLDER) {
+	// return findFirstClassFile((IFolder) member);
+	// } else if (PHPToolkitUtil.hasPhpExtention(member.getName())) {
+	// return (IFile) member;
+	// }
+	// }
+	// } catch (CoreException e) {
+	// // ignore
+	// }
+	// return null;
+	// }
 
 	/**
 	 * Finds the first line separator used by the given text.
@@ -784,7 +769,7 @@ public class Util {
 				PHP_LIKE_EXTENSIONS = new char[][] { "php".toCharArray() }; //$NON-NLS-1$
 			else {
 				IContentType javaContentType = Platform.getContentTypeManager().getContentType(PHPNature.ID);
-				HashSet fileExtensions = new HashSet();
+				Set<String> fileExtensions = new HashSet<String>();
 				// content types derived from java content type should be
 				// included
 				// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
@@ -809,7 +794,7 @@ public class Util {
 														// that "java" is
 				// first
 				int index = 1;
-				Iterator iterator = fileExtensions.iterator();
+				Iterator<String> iterator = fileExtensions.iterator();
 				while (iterator.hasNext()) {
 					String fileExtension = (String) iterator.next();
 					if ("php".equals(fileExtension)) //$NON-NLS-1$
@@ -1844,9 +1829,9 @@ public class Util {
 	 *             length
 	 */
 	public static final String[] splitOn(char divider, String string, int start, int end) {
-		int length = string == null ? 0 : string.length();
-		if (length == 0 || start > end)
+		if (string == null || string.length() == 0 || start > end) {
 			return CharOperation.NO_STRINGS;
+		}
 
 		int wordCount = 1;
 		for (int i = start; i < end; i++)
@@ -2291,7 +2276,7 @@ public class Util {
 	 * {"QString;", "[int", "[[Qjava.util.Vector;"}
 	 */
 	public static String[] typeParameterSignatures(MethodDeclaration method) {
-		List args = method.getArguments();
+		List<?> args = method.getArguments();
 		if (args != null) {
 			int length = args.size();
 			String[] signatures = new String[length];

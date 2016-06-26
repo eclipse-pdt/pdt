@@ -208,8 +208,10 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			launch.addDebugTarget(target);
 			monitor.subTask(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_4);
-			target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
-					XDebugPreferenceMgr.createSessionPreferences(), monitor);
+			if (target != null) {
+				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
+						XDebugPreferenceMgr.createSessionPreferences(), monitor);
+			}
 		} else {
 			/*
 			 * launched is not in debug mode, so remove the launch from the

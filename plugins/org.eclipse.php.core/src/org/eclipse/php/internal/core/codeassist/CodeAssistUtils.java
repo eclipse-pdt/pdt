@@ -438,35 +438,39 @@ public class CodeAssistUtils {
 
 	}
 
-	/**
-	 * example:(new class1())->avc2()[1][1]->avc1()
-	 * 
-	 * @param types
-	 * @param method
-	 * @param mask
-	 * @param sourceModule
-	 * @param offset
-	 * @return
-	 */
-	private static IType[] getFunctionArrayReturnType(IType[] types, String method, ISourceModule sourceModule,
-			int offset) {
-		return getFunctionArrayReturnType(types, method, USE_PHPDOC, sourceModule, offset);
-	}
+	// /**
+	// * example:(new class1())->avc2()[1][1]->avc1()
+	// *
+	// * @param types
+	// * @param method
+	// * @param mask
+	// * @param sourceModule
+	// * @param offset
+	// * @return
+	// */
+	// private static IType[] getFunctionArrayReturnType(IType[] types, String
+	// method, ISourceModule sourceModule,
+	// int offset) {
+	// return getFunctionArrayReturnType(types, method, USE_PHPDOC,
+	// sourceModule, offset);
+	// }
 
-	/**
-	 * example:(new class1())->avc2()[1][1]->avc1()
-	 * 
-	 * @param types
-	 * @param method
-	 * @param mask
-	 * @param sourceModule
-	 * @param offset
-	 * @return
-	 */
-	private static IType[] getFunctionArrayReturnType(IType[] types, String method, int mask,
-			ISourceModule sourceModule, int offset) {
-		return getFunctionArrayReturnType(types, method, mask, sourceModule, offset, null);
-	}
+	// /**
+	// * example:(new class1())->avc2()[1][1]->avc1()
+	// *
+	// * @param types
+	// * @param method
+	// * @param mask
+	// * @param sourceModule
+	// * @param offset
+	// * @return
+	// */
+	// private static IType[] getFunctionArrayReturnType(IType[] types, String
+	// method, int mask,
+	// ISourceModule sourceModule, int offset) {
+	// return getFunctionArrayReturnType(types, method, mask, sourceModule,
+	// offset, null);
+	// }
 
 	/**
 	 * example:(new class1())->avc2()[1][1]->avc1()
@@ -594,7 +598,7 @@ public class CodeAssistUtils {
 				}
 			}
 		}
-		if (className.length() == 0) {
+		if (className != null && className.length() == 0) {
 			// this can happen if the first char before the property is ']'
 			String testedVar = statementText.subSequence(0, propertyEndPosition).toString().trim();
 			if (testedVar != null && testedVar.length() != 0) {
@@ -627,7 +631,7 @@ public class CodeAssistUtils {
 			}
 		}
 		// if its object call calc the object type.
-		if (className.length() > 0 && className.charAt(0) == '$') {
+		if (className != null && className.length() > 0 && className.charAt(0) == '$') {
 			int statementStart = statementText.getOriginalOffset(classNameStart);
 			return getVariableType(sourceModule, className, statementStart);
 		}

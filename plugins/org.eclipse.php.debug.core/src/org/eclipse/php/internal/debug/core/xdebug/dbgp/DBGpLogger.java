@@ -94,7 +94,9 @@ public class DBGpLogger {
 		 */
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(bs);
-		exc.printStackTrace(ps);
+		if (exc != null) {
+			exc.printStackTrace(ps);
+		}
 		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID, IStatus.ERROR, msg + "\n" + bs.toString(), null); //$NON-NLS-1$
 		theLog.log(stat);
 	}

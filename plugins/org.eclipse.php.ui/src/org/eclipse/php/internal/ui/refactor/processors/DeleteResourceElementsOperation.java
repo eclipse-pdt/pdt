@@ -132,18 +132,20 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 	 * @see MultiOperation
 	 */
 	protected void verify(IModelElement element) throws ModelException {
-		if (element == null || !element.exists())
+		if (element == null || !element.exists()) {
 			error(IModelStatusConstants.ELEMENT_DOES_NOT_EXIST, element);
-		int type = element.getElementType();
-		if (type <= IModelElement.PROJECT_FRAGMENT || type > IModelElement.SOURCE_MODULE)
-			error(IModelStatusConstants.INVALID_ELEMENT_TYPES, element);
-		else if (type == IModelElement.SCRIPT_FOLDER
-				&& (element instanceof ArchiveProjectFragment || element instanceof ExternalScriptFolder))
-			error(IModelStatusConstants.INVALID_ELEMENT_TYPES, element);
-		IResource resource = element.getResource();
-		if (resource instanceof IFolder) {
-			if (resource.isLinked()) {
-				error(IModelStatusConstants.INVALID_RESOURCE, element);
+		} else {
+			int type = element.getElementType();
+			if (type <= IModelElement.PROJECT_FRAGMENT || type > IModelElement.SOURCE_MODULE)
+				error(IModelStatusConstants.INVALID_ELEMENT_TYPES, element);
+			else if (type == IModelElement.SCRIPT_FOLDER
+					&& (element instanceof ArchiveProjectFragment || element instanceof ExternalScriptFolder))
+				error(IModelStatusConstants.INVALID_ELEMENT_TYPES, element);
+			IResource resource = element.getResource();
+			if (resource instanceof IFolder) {
+				if (resource.isLinked()) {
+					error(IModelStatusConstants.INVALID_RESOURCE, element);
+				}
 			}
 		}
 	}

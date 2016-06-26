@@ -855,9 +855,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled()
-					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
-							|| fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
+					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -3339,7 +3338,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 						length = range.getLength();
 					}
 				}
-				if (offset > -1 && length > 0) {
+				if (offset > -1 && length > 0 && sourceViewer != null) {
 					try {
 						textWidget.setRedraw(false);
 						sourceViewer.revealRange(offset, length);

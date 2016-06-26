@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.util.text;
 
 import javax.swing.text.Segment;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -28,6 +29,7 @@ public final class TextSequenceUtilities {
 		return createTextSequence(source, 0, source.getLength());
 	}
 
+	@NonNull
 	public static TextSequence createTextSequence(IStructuredDocumentRegion source, int startOffset, int length) {
 
 		String s = ""; //$NON-NLS-1$

@@ -1351,9 +1351,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 				((StartResponseHandler) responseHandler).started(success);
 
 			} else if (request instanceof EvalRequest) {
-				((EvalResponseHandler) responseHandler).evaled(((EvalRequest) request).getCommand(),
-						success ? ((EvalResponse) response).getResult() : null, success);
-
+				if (response != null) {
+					((EvalResponseHandler) responseHandler).evaled(((EvalRequest) request).getCommand(),
+							success ? ((EvalResponse) response).getResult() : null, success);
+				}
 			} else if (request instanceof StepIntoRequest) {
 				((StepIntoResponseHandler) responseHandler).stepInto(success);
 
