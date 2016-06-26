@@ -214,7 +214,7 @@ public class PHPModelUtils {
 			}
 		}
 		if (nsIndex != -1) {
-			String namespace = elementName.substring(0, nsIndex);
+			String namespace = elementName == null ? "" : elementName.substring(0, nsIndex); //$NON-NLS-1$
 			if (isGlobal && namespace.length() > 0) {
 				namespace = namespace.substring(1);
 			}

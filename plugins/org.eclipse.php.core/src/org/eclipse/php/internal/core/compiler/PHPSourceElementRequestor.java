@@ -268,15 +268,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		this.fRequestor.enterMethod(mi);
 		this.fInMethod = true;
 
-		for (Argument arg : arguments) {
-			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-			info.name = arg.getName();
-			info.modifiers = Modifiers.AccPublic;
-			info.nameSourceStart = arg.getNameStart();
-			info.nameSourceEnd = arg.getNameEnd() - 1;
-			info.declarationStart = arg.sourceStart();
-			fRequestor.enterField(info);
-			fRequestor.exitField(arg.sourceEnd() - 1);
+		if (arguments != null) {
+			for (Argument arg : arguments) {
+				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+				info.name = arg.getName();
+				info.modifiers = Modifiers.AccPublic;
+				info.nameSourceStart = arg.getNameStart();
+				info.nameSourceEnd = arg.getNameEnd() - 1;
+				info.declarationStart = arg.sourceStart();
+				fRequestor.enterField(info);
+				fRequestor.exitField(arg.sourceEnd() - 1);
+			}
 		}
 
 		return true;

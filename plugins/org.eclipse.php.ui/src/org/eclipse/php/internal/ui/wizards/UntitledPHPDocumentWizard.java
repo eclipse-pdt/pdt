@@ -85,29 +85,31 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 			StructuredTextEditor textEditor = null;
 			if (editor instanceof StructuredTextEditor) {
 				textEditor = (StructuredTextEditor) editor;
-			}
-			// Load the last template name used in New PHP File wizard.
-			String templateName = PHPUiPlugin.getDefault().getPreferenceStore()
-					.getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
-			if (templateName == null || templateName.length() == 0) {
-				return true;
-			}
-			TemplateStore templateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
-			Template template = templateStore.findTemplate(templateName);
-			if (template == null) {
-				return true;
-			}
-			// compile the template and insert the text into the new document
-			CompiledTemplate compiledTemplate = PHPTemplateStore
-					.compileTemplate(PHPUiPlugin.getDefault().getCodeTemplateContextRegistry(), template);
-			IDocumentProvider documentProvider = textEditor.getDocumentProvider();
-			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
-			document.set(compiledTemplate.string);
-			documentProvider.saveDocument(null, textEditor.getEditorInput(), document, true);
-			textEditor.selectAndReveal(compiledTemplate.offset, 0);
 
-			// set document dirty
-			document.replace(0, 0, ""); //$NON-NLS-1$
+				// Load the last template name used in New PHP File wizard.
+				String templateName = PHPUiPlugin.getDefault().getPreferenceStore()
+						.getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
+				if (templateName == null || templateName.length() == 0) {
+					return true;
+				}
+				TemplateStore templateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
+				Template template = templateStore.findTemplate(templateName);
+				if (template == null) {
+					return true;
+				}
+				// compile the template and insert the text into the new
+				// document
+				CompiledTemplate compiledTemplate = PHPTemplateStore
+						.compileTemplate(PHPUiPlugin.getDefault().getCodeTemplateContextRegistry(), template);
+				IDocumentProvider documentProvider = textEditor.getDocumentProvider();
+				IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+				document.set(compiledTemplate.string);
+				documentProvider.saveDocument(null, textEditor.getEditorInput(), document, true);
+				textEditor.selectAndReveal(compiledTemplate.offset, 0);
+
+				// set document dirty
+				document.replace(0, 0, ""); //$NON-NLS-1$
+			}
 		} catch (PartInitException e) {
 			Logger.logException(e);
 			return false;

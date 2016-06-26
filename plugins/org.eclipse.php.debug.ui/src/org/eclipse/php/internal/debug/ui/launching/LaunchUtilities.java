@@ -120,7 +120,9 @@ public class LaunchUtilities {
 			else if (obj instanceof IProject)
 				path = ((IProject) obj).getFullPath();
 
-			text = path.makeRelative().toString();
+			if (path != null) {
+				text = path.makeRelative().toString();
+			}
 		}
 
 		return text;

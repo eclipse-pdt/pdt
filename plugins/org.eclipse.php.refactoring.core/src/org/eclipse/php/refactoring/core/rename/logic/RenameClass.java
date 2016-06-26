@@ -32,17 +32,15 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  */
 public class RenameClass extends AbstractRename {
 
-	private static final String RENAME_CLASS = PhpRefactoringCoreMessages
-			.getString("RenameClassName.0"); //$NON-NLS-1$
+	private static final String RENAME_CLASS = PhpRefactoringCoreMessages.getString("RenameClassName.0"); //$NON-NLS-1$
 	private ASTNode originalDeclaration;
 	private IType[] types;
 
-	public RenameClass(IFile file, ASTNode originalNode, String oldName,
-			String newName, boolean searchTextual, IType[] types) {
+	public RenameClass(IFile file, ASTNode originalNode, String oldName, String newName, boolean searchTextual,
+			IType[] types) {
 		super(file, oldName, newName, searchTextual);
 		if (originalNode != null) {
-			originalDeclaration = RefactoringUtility
-					.getTypeOrClassInstance(originalNode);
+			originalDeclaration = RefactoringUtility.getTypeOrClassInstance(originalNode);
 		}
 		this.types = types;
 	}
@@ -91,10 +89,8 @@ public class RenameClass extends AbstractRename {
 
 			if (identifier instanceof NamespaceName) {
 				NamespaceName namespaceName = (NamespaceName) identifier;
-				if (namespaceName.segments() != null
-						&& namespaceName.segments().size() > 0) {
-					identifier = namespaceName.segments().get(
-							namespaceName.segments().size() - 1);
+				if (namespaceName.segments() != null && namespaceName.segments().size() > 0) {
+					identifier = namespaceName.segments().get(namespaceName.segments().size() - 1);
 				}
 			}
 
@@ -108,34 +104,28 @@ public class RenameClass extends AbstractRename {
 
 		if (originalDeclaration != null) {
 			if (originalDeclaration instanceof TypeDeclaration) {
-				originalType = ((TypeDeclaration) originalDeclaration)
-						.resolveTypeBinding();
+				originalType = ((TypeDeclaration) originalDeclaration).resolveTypeBinding();
 			}
 			if (originalDeclaration instanceof ClassInstanceCreation) {
-				originalType = ((ClassInstanceCreation) originalDeclaration)
-						.resolveTypeBinding();
+				originalType = ((ClassInstanceCreation) originalDeclaration).resolveTypeBinding();
 			}
 		}
 
 		ITypeBinding currType = classDeclaration.resolveTypeBinding();
-		if (originalDeclaration == null
-				|| currType == null
-				|| originalDeclaration.getStart() == classDeclaration
-						.getStart() || originalType.equals(currType)
-				|| originalType.isSubTypeCompatible(currType)) {
+		if (originalDeclaration == null || currType == null
+				|| originalDeclaration.getStart() == classDeclaration.getStart()
+				|| (originalType != null && originalType.equals(currType))
+				|| (originalType != null && originalType.isSubTypeCompatible(currType))) {
 			checkIdentifier(classDeclaration.getName());
 		}
 
-		checkSuper((Identifier) classDeclaration.getSuperClass(),
-				classDeclaration.interfaces());
+		checkSuper((Identifier) classDeclaration.getSuperClass(), classDeclaration.interfaces());
 
 		return true;
 	}
 
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
-		if (originalDeclaration == null
-				|| originalDeclaration.getStart() == interfaceDeclaration
-						.getStart()) {
+		if (originalDeclaration == null || originalDeclaration.getStart() == interfaceDeclaration.getStart()) {
 			checkIdentifier(interfaceDeclaration.getName());
 		}
 		checkSuper(null, interfaceDeclaration.interfaces());
@@ -158,14 +148,10 @@ public class RenameClass extends AbstractRename {
 	 */
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		final ASTNode parent = methodDeclaration.getParent();
-		if (parent.getType() == ASTNode.BLOCK
-				&& parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
-			ClassDeclaration classDeclaration = (ClassDeclaration) parent
-					.getParent();
-			final Identifier functionName = methodDeclaration.getFunction()
-					.getFunctionName();
-			if (checkForNameEquality(classDeclaration.getName())
-					&& checkForNameEquality(functionName)) {
+		if (parent.getType() == ASTNode.BLOCK && parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
+			ClassDeclaration classDeclaration = (ClassDeclaration) parent.getParent();
+			final Identifier functionName = methodDeclaration.getFunction().getFunctionName();
+			if (checkForNameEquality(classDeclaration.getName()) && checkForNameEquality(functionName)) {
 				checkIdentifier(functionName);
 			}
 		}
@@ -190,8 +176,7 @@ public class RenameClass extends AbstractRename {
 				List<TypeReference> matchRefs = new ArrayList<TypeReference>();
 				for (TypeReference ref : tag.getTypeReferences()) {
 					if (ref.getName().equals(oldName)) {
-						IType[] elements = ModelUtils.getTypes(oldName, sm,
-								doc.sourceStart(), currentNamespace);
+						IType[] elements = ModelUtils.getTypes(oldName, sm, doc.sourceStart(), currentNamespace);
 						for (int i = 0; i < elements.length; i++) {
 							for (int j = 0; j < types.length; j++) {
 								if (elements[i].equals(types[j])) {
@@ -219,10 +204,8 @@ public class RenameClass extends AbstractRename {
 		if (superClass != null) {
 			if (superClass instanceof NamespaceName) {
 				NamespaceName namespaceName = (NamespaceName) superClass;
-				if (namespaceName.segments() != null
-						&& namespaceName.segments().size() > 0) {
-					superClass = namespaceName.segments().get(
-							namespaceName.segments().size() - 1);
+				if (namespaceName.segments() != null && namespaceName.segments().size() > 0) {
+					superClass = namespaceName.segments().get(namespaceName.segments().size() - 1);
 				}
 
 			}
@@ -234,10 +217,8 @@ public class RenameClass extends AbstractRename {
 
 				if (identifier instanceof NamespaceName) {
 					NamespaceName namespaceName = (NamespaceName) identifier;
-					if (namespaceName.segments() != null
-							&& namespaceName.segments().size() > 0) {
-						identifier = namespaceName.segments().get(
-								namespaceName.segments().size() - 1);
+					if (namespaceName.segments() != null && namespaceName.segments().size() > 0) {
+						identifier = namespaceName.segments().get(namespaceName.segments().size() - 1);
 					}
 
 				}
@@ -256,8 +237,7 @@ public class RenameClass extends AbstractRename {
 				return;
 			} else {
 				try {
-					IModelElement[] elements = identifier.getProgramRoot()
-							.getSourceModule()
+					IModelElement[] elements = identifier.getProgramRoot().getSourceModule()
 							.codeSelect(identifier.getStart(), 0);
 					for (int i = 0; i < elements.length; i++) {
 						for (int j = 0; j < types.length; j++) {
@@ -267,8 +247,7 @@ public class RenameClass extends AbstractRename {
 									return;
 								}
 							} else if (elements[i] instanceof IMethod) {
-								if (((IMethod) elements[i]).getDeclaringType()
-										.equals(types[j])) {
+								if (((IMethod) elements[i]).getDeclaringType().equals(types[j])) {
 									addChange(identifier);
 									return;
 								}
@@ -283,8 +262,7 @@ public class RenameClass extends AbstractRename {
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {
-		return identifier != null && identifier.getName() != null
-				&& identifier.getName().equals(oldName);
+		return identifier != null && identifier.getName() != null && identifier.getName().equals(oldName);
 	}
 
 	public String getRenameDescription() {

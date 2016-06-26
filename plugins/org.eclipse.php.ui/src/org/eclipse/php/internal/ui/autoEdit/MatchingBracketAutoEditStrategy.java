@@ -146,9 +146,11 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 			int currOffset = offset + 1;
 			// Find the structured document region:
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(currOffset);
+			if (sdRegion == null) {
+				return MATCHING_BRACKET_NOT_NEEDED;
+			}
 
-			ITextRegion tRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(currOffset) : null;
-
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
 			while (currOffset >= 0 && tRegion != null) {
 				int regionStart = sdRegion.getStartOffset(tRegion);
 

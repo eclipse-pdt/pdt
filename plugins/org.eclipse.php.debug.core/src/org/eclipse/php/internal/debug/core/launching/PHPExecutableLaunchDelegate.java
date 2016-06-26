@@ -276,33 +276,36 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				}
 				subMonitor.done();
 			}
-			process.setAttribute(IProcess.ATTR_CMDLINE, fileName);
+			if (process != null) {
+				process.setAttribute(IProcess.ATTR_CMDLINE, fileName);
 
-			if (CommonTab.isLaunchInBackground(configuration)) {
-				// refresh resources after process finishes
-				/*
-				 * if (RefreshTab.getRefreshScope(configuration) != null) {
-				 * BackgroundResourceRefresher refresher = new
-				 * BackgroundResourceRefresher(configuration, process);
-				 * refresher.startBackgroundRefresh(); }
-				 */
-			} else {
-				// wait for process to exit
-				while (!process.isTerminated()) {
-					try {
-						if (monitor.isCanceled()) {
-							process.terminate();
-							break;
+				if (CommonTab.isLaunchInBackground(configuration)) {
+					// refresh resources after process finishes
+					/*
+					 * if (RefreshTab.getRefreshScope(configuration) != null) {
+					 * BackgroundResourceRefresher refresher = new
+					 * BackgroundResourceRefresher(configuration, process);
+					 * refresher.startBackgroundRefresh(); }
+					 */
+				} else {
+					// wait for process to exit
+					while (!process.isTerminated()) {
+						try {
+							if (monitor.isCanceled()) {
+								process.terminate();
+								break;
+							}
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
 						}
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
 					}
-				}
 
-				// refresh resources
-				subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10 of
-																	// 100;
-				RefreshTab.refreshResources(configuration, subMonitor);
+					// refresh resources
+					subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10
+																		// of
+																		// 100;
+					RefreshTab.refreshResources(configuration, subMonitor);
+				}
 			}
 		}
 	}

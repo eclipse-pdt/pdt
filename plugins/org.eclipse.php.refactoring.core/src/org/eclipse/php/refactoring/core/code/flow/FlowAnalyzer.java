@@ -63,8 +63,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		}
 	}
 
-	private HashMap<ASTNode, FlowInfo> fData = new HashMap<ASTNode, FlowInfo>(
-			100);
+	private HashMap<ASTNode, FlowInfo> fData = new HashMap<ASTNode, FlowInfo>(100);
 	/* package */FlowContext fFlowContext = null;
 
 	public FlowAnalyzer(FlowContext context) {
@@ -170,23 +169,20 @@ abstract class FlowAnalyzer extends ApplyAll {
 	// ---- Helpers to process sequential flow infos
 	// -------------------------------------
 
-	protected GenericSequentialFlowInfo processSequential(ASTNode parent,
-			List nodes) {
+	protected GenericSequentialFlowInfo processSequential(ASTNode parent, List<? extends ASTNode> nodes) {
 		GenericSequentialFlowInfo result = createSequential(parent);
 		process(result, nodes);
 		return result;
 	}
 
-	protected GenericSequentialFlowInfo processSequential(ASTNode parent,
-			ASTNode node1) {
+	protected GenericSequentialFlowInfo processSequential(ASTNode parent, ASTNode node1) {
 		GenericSequentialFlowInfo result = createSequential(parent);
 		if (node1 != null)
 			result.merge(getFlowInfo(node1), fFlowContext);
 		return result;
 	}
 
-	protected GenericSequentialFlowInfo processSequential(ASTNode parent,
-			ASTNode node1, ASTNode node2) {
+	protected GenericSequentialFlowInfo processSequential(ASTNode parent, ASTNode node1, ASTNode node2) {
 		GenericSequentialFlowInfo result = createSequential(parent);
 		if (node1 != null)
 			result.merge(getFlowInfo(node1), fFlowContext);
@@ -201,7 +197,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		return result;
 	}
 
-	protected GenericSequentialFlowInfo createSequential(List nodes) {
+	protected GenericSequentialFlowInfo createSequential(List<? extends ASTNode> nodes) {
 		GenericSequentialFlowInfo result = createSequential();
 		process(result, nodes);
 		return result;
@@ -210,11 +206,11 @@ abstract class FlowAnalyzer extends ApplyAll {
 	// ---- Generic merge methods
 	// --------------------------------------------------------
 
-	protected void process(GenericSequentialFlowInfo info, List nodes) {
+	protected void process(GenericSequentialFlowInfo info, List<? extends ASTNode> nodes) {
 		if (nodes == null)
 			return;
-		for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-			info.merge(getFlowInfo((ASTNode) iter.next()), fFlowContext);
+		for (Iterator<? extends ASTNode> iter = nodes.iterator(); iter.hasNext();) {
+			info.merge(getFlowInfo(iter.next()), fFlowContext);
 		}
 	}
 
@@ -223,8 +219,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 			info.merge(getFlowInfo(node), fFlowContext);
 	}
 
-	protected void process(GenericSequentialFlowInfo info, ASTNode node1,
-			ASTNode node2) {
+	protected void process(GenericSequentialFlowInfo info, ASTNode node1, ASTNode node2) {
 		if (node1 != null)
 			info.merge(getFlowInfo(node1), fFlowContext);
 		if (node2 != null)
@@ -257,14 +252,14 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 	protected SwitchData createSwitchData(SwitchStatement node) {
 		SwitchData result = new SwitchData();
-		List statements = node.getBody().statements();
+		List<Statement> statements = node.getBody().statements();
 		if (statements.isEmpty())
 			return result;
 
 		int start = -1, end = -1;
 		GenericSequentialFlowInfo info = null;
 
-		for (Iterator iter = statements.iterator(); iter.hasNext();) {
+		for (Iterator<Statement> iter = statements.iterator(); iter.hasNext();) {
 			Statement statement = (Statement) iter.next();
 			if (statement instanceof SwitchCase) {
 				SwitchCase switchCase = (SwitchCase) statement;
@@ -275,14 +270,13 @@ abstract class FlowAnalyzer extends ApplyAll {
 					info = createSequential();
 					start = statement.getStart();
 				} else {
-					if (info.isReturn() || info.isPartialReturn()
-							|| info.branches()) {
+					if (info.isReturn() || info.isPartialReturn() || info.branches()) {
 						result.add(new Region(start, end - start + 1), info);
 						info = createSequential();
 						start = statement.getStart();
 					}
 				}
-			} else {
+			} else if (info != null) {
 				info.merge(getFlowInfo(statement), fFlowContext);
 			}
 			end = statement.getEnd() - 1;
@@ -324,8 +318,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 			llhs.setWriteAccess(fFlowContext);
 			if (node.getOperator() != Assignment.OP_EQUAL) {
 				GenericSequentialFlowInfo tmp = createSequential();
-				tmp.merge(new LocalFlowInfo(llhs, FlowInfo.READ, fFlowContext),
-						fFlowContext);
+				tmp.merge(new LocalFlowInfo(llhs, FlowInfo.READ, fFlowContext), fFlowContext);
 				tmp.merge(rhs, fFlowContext);
 				rhs = tmp;
 			}
@@ -393,8 +386,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(ClassInstanceCreation node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getClassName());
+		GenericSequentialFlowInfo info = processSequential(node, node.getClassName());
 		process(info, node.ctorParams());
 	}
 
@@ -420,8 +412,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		ConditionalFlowInfo info = createConditional();
 		setFlowInfo(node, info);
 		info.mergeCondition(getFlowInfo(node.getCondition()), fFlowContext);
-		info.merge(getFlowInfo(node.getIfTrue()),
-				getFlowInfo(node.getIfFalse()), fFlowContext);
+		info.merge(getFlowInfo(node.getIfTrue()), getFlowInfo(node.getIfFalse()), fFlowContext);
 	}
 
 	public void endVisit(ContinueStatement node) {
@@ -435,8 +426,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(DeclareStatement node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.directiveNames());
+		GenericSequentialFlowInfo info = processSequential(node, node.directiveNames());
 		process(info, node.directiveValues());
 		process(info, node.getBody());
 	}
@@ -483,8 +473,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(ForEachStatement node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getExpression());
+		GenericSequentialFlowInfo info = processSequential(node, node.getExpression());
 		process(info, node.getKey());
 		process(info, node.getValue());
 		process(info, node.getStatement());
@@ -494,8 +483,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(FormalParameter node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getParameterType());
+		GenericSequentialFlowInfo info = processSequential(node, node.getParameterType());
 		process(info, node.getParameterName());
 		process(info, node.getDefaultValue());
 	}
@@ -505,10 +493,8 @@ abstract class FlowAnalyzer extends ApplyAll {
 			return;
 		ForFlowInfo forInfo = createFor();
 		setFlowInfo(node, forInfo);
-		forInfo.mergeInitializer(createSequential(node.initializers()),
-				fFlowContext);
-		forInfo.mergeCondition(createSequential(node.conditions()),
-				fFlowContext);
+		forInfo.mergeInitializer(createSequential(node.initializers()), fFlowContext);
+		forInfo.mergeCondition(createSequential(node.conditions()), fFlowContext);
 		forInfo.mergeAction(getFlowInfo(node.getBody()), fFlowContext);
 		// Increments are executed after the action.
 		forInfo.mergeIncrement(createSequential(node.updaters()), fFlowContext);
@@ -518,14 +504,12 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(FunctionDeclaration node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.formalParameters());
+		GenericSequentialFlowInfo info = processSequential(node, node.formalParameters());
 		process(info, node.getBody());
 	}
 
 	public void endVisit(FunctionInvocation node) {
-		endVisitFunctionInvocation(node, node.parameters(),
-				getMethodBinding(node));
+		endVisitFunctionInvocation(node, node.parameters(), getMethodBinding(node));
 	}
 
 	public void endVisit(FunctionName node) {
@@ -550,8 +534,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		IfFlowInfo info = createIf();
 		setFlowInfo(node, info);
 		info.mergeCondition(getFlowInfo(node.getCondition()), fFlowContext);
-		info.merge(getFlowInfo(node.getTrueStatement()),
-				getFlowInfo(node.getFalseStatement()), fFlowContext);
+		info.merge(getFlowInfo(node.getTrueStatement()), getFlowInfo(node.getFalseStatement()), fFlowContext);
 	}
 
 	public void endVisit(Include node) {
@@ -587,15 +570,14 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(MethodDeclaration node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node, node
-				.getFunction().formalParameters());
+		GenericSequentialFlowInfo info = processSequential(node, node.getFunction().formalParameters());
 		// process(info, node.parameters());
 		process(info, node.getFunction().getBody());
 	}
 
 	public void endVisit(MethodInvocation node) {
-		endVisitMethodInvocation(node, node.getDispatcher(), node.getMethod()
-				.parameters(), getMethodBinding(node.getMethod()));
+		endVisitMethodInvocation(node, node.getDispatcher(), node.getMethod().parameters(),
+				getMethodBinding(node.getMethod()));
 	}
 
 	public void endVisit(ParenthesisExpression node) {
@@ -662,24 +644,21 @@ abstract class FlowAnalyzer extends ApplyAll {
 	public void endVisit(StaticConstantAccess node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getClassName());
+		GenericSequentialFlowInfo info = processSequential(node, node.getClassName());
 		process(info, node.getConstant());
 	}
 
 	public void endVisit(StaticFieldAccess node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getClassName());
+		GenericSequentialFlowInfo info = processSequential(node, node.getClassName());
 		process(info, node.getField());
 	}
 
 	public void endVisit(StaticMethodInvocation node) {
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getClassName());
+		GenericSequentialFlowInfo info = processSequential(node, node.getClassName());
 		process(info, node.getMethod());
 	}
 
@@ -694,8 +673,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		// endVisitNode(node);
 		if (skipNode(node))
 			return;
-		GenericSequentialFlowInfo info = processSequential(node,
-				node.getValue());
+		GenericSequentialFlowInfo info = processSequential(node, node.getValue());
 		process(info, node.actions());
 	}
 
@@ -708,8 +686,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	protected void endVisit(SwitchStatement node, SwitchData data) {
 		SwitchFlowInfo switchFlowInfo = createSwitch();
 		setFlowInfo(node, switchFlowInfo);
-		switchFlowInfo.mergeTest(getFlowInfo(node.getExpression()),
-				fFlowContext);
+		switchFlowInfo.mergeTest(getFlowInfo(node.getExpression()), fFlowContext);
 		FlowInfo[] cases = data.getInfos();
 		for (int i = 0; i < cases.length; i++)
 			switchFlowInfo.mergeCase(cases[i], fFlowContext);
@@ -750,8 +727,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 		IVariableBinding binding = node.resolveVariableBinding();
 		if (binding != null && !binding.isField()) {
-			setFlowInfo(node, new LocalFlowInfo(binding, FlowInfo.READ,
-					fFlowContext));
+			setFlowInfo(node, new LocalFlowInfo(binding, FlowInfo.READ, fFlowContext));
 		}
 	}
 
@@ -766,14 +742,14 @@ abstract class FlowAnalyzer extends ApplyAll {
 	}
 
 	// TODO - do we need this code? do we need the binding?
-	private void endVisitMethodInvocation(ASTNode node, ASTNode receiver,
-			List arguments, IFunctionBinding binding) {
+	private void endVisitMethodInvocation(ASTNode node, ASTNode receiver, List<Expression> arguments,
+			IFunctionBinding binding) {
 		if (skipNode(node))
 			return;
 		MessageSendFlowInfo info = createMessageSendFlowInfo();
 		setFlowInfo(node, info);
-		for (Iterator iter = arguments.iterator(); iter.hasNext();) {
-			Expression arg = (Expression) iter.next();
+		for (Iterator<Expression> iter = arguments.iterator(); iter.hasNext();) {
+			Expression arg = iter.next();
 			info.mergeArgument(getFlowInfo(arg), fFlowContext);
 		}
 		info.mergeReceiver(getFlowInfo(receiver), fFlowContext);
@@ -781,13 +757,12 @@ abstract class FlowAnalyzer extends ApplyAll {
 	}
 
 	// TODO - do we need this code? do we need the binding?
-	private void endVisitFunctionInvocation(ASTNode node, List arguments,
-			IFunctionBinding binding) {
+	private void endVisitFunctionInvocation(ASTNode node, List<Expression> arguments, IFunctionBinding binding) {
 		if (skipNode(node))
 			return;
 		MessageSendFlowInfo info = createMessageSendFlowInfo();
 		setFlowInfo(node, info);
-		for (Iterator iter = arguments.iterator(); iter.hasNext();) {
+		for (Iterator<Expression> iter = arguments.iterator(); iter.hasNext();) {
 			Expression arg = (Expression) iter.next();
 			info.mergeArgument(getFlowInfo(arg), fFlowContext);
 		}
@@ -806,8 +781,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 			// it here to simplify the code.
 			GenericSequentialFlowInfo result = createSequential(node);
 			result.merge(info, fFlowContext);
-			result.merge(new LocalFlowInfo((LocalFlowInfo) info,
-					FlowInfo.WRITE, fFlowContext), fFlowContext);
+			result.merge(new LocalFlowInfo((LocalFlowInfo) info, FlowInfo.WRITE, fFlowContext), fFlowContext);
 		} else {
 			setFlowInfo(node, info);
 		}
