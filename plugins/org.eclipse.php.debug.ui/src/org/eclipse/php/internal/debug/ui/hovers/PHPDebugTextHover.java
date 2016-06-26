@@ -64,7 +64,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 			region = container.getRegionAtCharacterOffset(offset);
 		}
 		IPhpScriptRegion phpScriptRegion = null;
-		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+		if (region != null && container != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 			phpScriptRegion = (IPhpScriptRegion) region;
 			try {
 				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());

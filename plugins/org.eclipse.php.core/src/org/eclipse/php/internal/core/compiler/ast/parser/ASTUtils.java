@@ -79,26 +79,28 @@ public class ASTUtils {
 		if (foundMatch) {
 			List<TypeReference> typeReferences = new LinkedList<TypeReference>();
 
-			int pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
-			while (pipeIdx >= 0) {
-				String typeName = types.substring(0, pipeIdx);
+			if (types != null) {
+				int pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
+				while (pipeIdx >= 0) {
+					String typeName = types.substring(0, pipeIdx);
+					int typeEnd = typeStart + typeName.length();
+					if (typeName.length() > 0) {
+						typeReferences.add(new TypeReference(typeStart, typeEnd, typeName));
+					}
+					types = types.substring(pipeIdx + 1);
+					typeStart += pipeIdx + 1;
+					pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
+				}
+				String typeName = types;
 				int typeEnd = typeStart + typeName.length();
 				if (typeName.length() > 0) {
 					typeReferences.add(new TypeReference(typeStart, typeEnd, typeName));
 				}
-				types = types.substring(pipeIdx + 1);
-				typeStart += pipeIdx + 1;
-				pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
-			}
-			String typeName = types;
-			int typeEnd = typeStart + typeName.length();
-			if (typeName.length() > 0) {
-				typeReferences.add(new TypeReference(typeStart, typeEnd, typeName));
 			}
 
 			VariableReference varReference = new VariableReference(varStart, varEnd, varName);
 			VarComment varComment = new VarComment(start, end, varReference,
-					(TypeReference[]) typeReferences.toArray(new TypeReference[typeReferences.size()]));
+					typeReferences.toArray(new TypeReference[typeReferences.size()]));
 			return varComment;
 		}
 		return null;

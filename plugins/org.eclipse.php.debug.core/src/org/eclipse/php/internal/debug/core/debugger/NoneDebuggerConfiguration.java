@@ -215,7 +215,9 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				}
 				subMonitor.done();
 			}
-			runtimeProcess.setAttribute(IProcess.ATTR_CMDLINE, fileName);
+			if (runtimeProcess != null) {
+				runtimeProcess.setAttribute(IProcess.ATTR_CMDLINE, fileName);
+			}
 		}
 
 	}
@@ -365,6 +367,9 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				project = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 			} catch (Throwable t) {
 				// ignore
+			}
+			if (project == null) {
+				return;
 			}
 			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 			String projectLocation = project.getFullPath().toString();

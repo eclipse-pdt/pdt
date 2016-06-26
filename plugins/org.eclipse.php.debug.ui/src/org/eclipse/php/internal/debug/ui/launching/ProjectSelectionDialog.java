@@ -41,17 +41,19 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 		this.requiredNatures = requiredNatures;
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (requiredNatures != null && requiredNatures.length > 0) {
-			Vector filteredProjects = new Vector();
-			int numProjects = projects == null ? 0 : projects.length;
-			for (int i = 0; i < numProjects; i++) {
-				try {
-					if (projectHasRequiredNatures(projects[i]))
-						filteredProjects.add(projects[i]);
-				} catch (CoreException ce) {
-					// Project does not exist or is not open, so skip it
+			Vector<IProject> filteredProjects = new Vector<>();
+			if (projects != null) {
+				int numProjects = projects.length;
+				for (int i = 0; i < numProjects; i++) {
+					try {
+						if (projectHasRequiredNatures(projects[i]))
+							filteredProjects.add(projects[i]);
+					} catch (CoreException ce) {
+						// Project does not exist or is not open, so skip it
+					}
 				}
+				setElements(filteredProjects.toArray());
 			}
-			setElements(filteredProjects.toArray());
 		} else {
 			setElements(projects);
 		}

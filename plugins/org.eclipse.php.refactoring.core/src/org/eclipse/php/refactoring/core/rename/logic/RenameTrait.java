@@ -94,7 +94,8 @@ public class RenameTrait extends AbstractRename {
 
 		ITypeBinding currType = classDeclaration.resolveTypeBinding();
 		if (originalDeclaration == null || originalDeclaration.getStart() == classDeclaration.getStart()
-				|| originalType.equals(currType) || originalType.isSubTypeCompatible(currType)) {
+				|| (originalType != null && originalType.equals(currType))
+				|| (originalType != null && originalType.isSubTypeCompatible(currType))) {
 			checkIdentifier(classDeclaration.getName());
 		}
 

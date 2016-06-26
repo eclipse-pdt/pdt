@@ -70,7 +70,10 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
-		int entries = search == null ? 0 : search.length;
+		if (search == null) {
+			return;
+		}
+		int entries = search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
 				String phpPathString = null;
@@ -180,8 +183,10 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		try {
 			ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager()
 					.getLaunchConfigurations(configType);
-
-			int numConfigs = configs == null ? 0 : configs.length;
+			if (configs == null) {
+				return config;
+			}
+			int numConfigs = configs.length;
 			for (int i = 0; i < numConfigs; i++) {
 				String configuredServerName = configs[i].getAttribute(Server.NAME, (String) null);
 				String configuredFileName = configs[i].getAttribute(Server.FILE_NAME, (String) null);
@@ -198,7 +203,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 						showDebugDialog, res);
 			}
 		} catch (CoreException ce) {
-			ce.printStackTrace();
+			Logger.logException(ce);
 		}
 		return config;
 	}

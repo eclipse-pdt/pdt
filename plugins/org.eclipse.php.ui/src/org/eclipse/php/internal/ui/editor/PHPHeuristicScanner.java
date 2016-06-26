@@ -973,14 +973,16 @@ final class PHPHeuristicScanner implements Symbols {
 			if (fDocument instanceof BasicStructuredDocument) {
 				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
 						.getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(position) : null;
-				if (textRegion instanceof IPhpScriptRegion) {
-					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-					textRegion = phpScriptRegion
-							.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+				if (sdRegion != null) {
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(position);
+					if (textRegion instanceof IPhpScriptRegion) {
+						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+						textRegion = phpScriptRegion
+								.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 
-					String partitionType = PHPPartitionTypes.getPartitionType(textRegion.getType());
-					return new TypedRegion(position, 0, partitionType);
+						String partitionType = PHPPartitionTypes.getPartitionType(textRegion.getType());
+						return new TypedRegion(position, 0, partitionType);
+					}
 				}
 			}
 
@@ -1000,12 +1002,14 @@ final class PHPHeuristicScanner implements Symbols {
 			if (fDocument instanceof BasicStructuredDocument) {
 				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
 						.getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(position) : null;
-				if (textRegion instanceof IPhpScriptRegion) {
-					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-					textRegion = phpScriptRegion
-							.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-					return textRegion;
+				if (sdRegion != null) {
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(position);
+					if (textRegion instanceof IPhpScriptRegion) {
+						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+						textRegion = phpScriptRegion
+								.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+						return textRegion;
+					}
 				}
 			}
 

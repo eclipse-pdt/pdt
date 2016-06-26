@@ -98,6 +98,11 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			}
 
 			tRegion = null;
+
+			if (sdRegion == null) {
+				return null;
+			}
+
 			// looking for the previous php block, maybe the '{' is in it
 			// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=201648)
 			while ((sdRegion = sdRegion.getPrevious()) != null) {
