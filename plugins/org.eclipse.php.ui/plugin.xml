@@ -201,7 +201,8 @@
 			org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage,
 			org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage,
 			org.eclipse.php.ui.preferences.PHPEditorHoverPreferencePage,
-			org.eclipse.php.ui.preferences.PHPEditorSaveActionsPreferencePage" target="org.eclipse.php.core.phpsource" />
+			org.eclipse.php.ui.preferences.PHPEditorSaveActionsPreferencePage,
+			org.eclipse.php.ui.preferences.PHPFormatterPreferencePage" target="org.eclipse.php.core.phpsource" />
 		<provisionalConfiguration
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"	
             class="org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor"
