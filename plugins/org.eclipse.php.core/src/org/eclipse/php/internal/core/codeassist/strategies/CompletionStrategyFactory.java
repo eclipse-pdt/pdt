@@ -19,13 +19,11 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.*;
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
@@ -64,8 +62,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				}
 			}
 			factories.add(new CompletionStrategyFactory());
-			instances = (ICompletionStrategyFactory[]) factories
-					.toArray(new ICompletionStrategyFactory[factories.size()]);
+			instances = factories.toArray(new ICompletionStrategyFactory[factories.size()]);
 		}
 		return instances;
 	}
@@ -95,12 +92,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new PHPDocTagStrategy(context) };
 		}
 		if (contextClass == PHPDocVarStartContext.class) {
-			return new ICompletionStrategy[] { new GlobalTypesStrategy(context, 0, Modifiers.AccNameSpace) {
-				@Override
-				protected int getExtraInfo() {
-					return ProposalExtraInfo.TYPE_ONLY;
-				}
-			} };
+			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(context) };
 		}
 		if (contextClass == PHPDocThrowsStartContext.class) {
 			return new ICompletionStrategy[] { new ExceptionClassStrategy(context) };

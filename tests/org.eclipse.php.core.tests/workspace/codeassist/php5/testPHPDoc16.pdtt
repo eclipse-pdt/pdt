@@ -1,11 +1,14 @@
 --TEST--
-Test PHPDoc @return keywords
+Test PHPDoc @var keywords
 --FILE--
 <?php
-/**
- * @return |
- */
-function test(){
+class Test{
+	
+	/**
+	 * 
+	 * @var |
+	 */
+	public $abc;
 }
 --EXPECT--
 keyword(string)
