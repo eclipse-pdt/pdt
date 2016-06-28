@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+      		category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            class="org.eclipse.php.composer.internal.ui.preferences.ComposerPreferencePage"
+            id="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
+            name="Composer">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.php.composer.internal.ui.editors.ComposerJsonEditor"
+            contributorClass="org.eclipse.php.composer.internal.ui.editors.ComposerJsonEditorContributor"
+            filenames="composer.json"
+            default="true"
+            icon="icons/obj16/composer.png"
+            id="org.eclipse.php.composer.internal.ui.editors.ComposerJsonEditor"
+            name="Composer Editor">
+      </editor>
+   </extension>
+   <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.eclipse.php.ui.explorer?after=additions">
+      <menu
+            id="org.eclipse.php.composer.ui.composerMenu"
+            label="Composer"
+            icon="icons/obj16/composer.png">	
+            <command
+               commandId="org.eclipse.php.composer.ui.addSupport"
+               label="Add Composer Support"
+               style="push"
+               icon="icons/obj16/add_composer.png">
+               <visibleWhen
+                  checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                     </adapt>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.php.composer.ui.hasSupport"
+                        value="false">
+                     </test>
+                  </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.php.composer.ui.install"
+               label="Install dependencies"
+               style="push"
+               icon="icons/obj16/install.png">
+               <visibleWhen
+                  checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                     </adapt>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.php.composer.ui.hasSupport"
+                        value="true">
+                     </test>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.php.composer.ui.isInstalled"
+                        value="false">
+                     </test>
+                  </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.php.composer.ui.update"
+               label="Update dependencies"
+               style="push"
+               icon="icons/obj16/update.png">
+               <visibleWhen
+                  checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                     </adapt>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.php.composer.ui.hasSupport"
+                        value="true">
+                     </test>
+                    <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.php.composer.ui.isInstalled"
+                        value="true">
+                     </test>
+                  </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.php.composer.ui.dumpAutoload"
+               label="Dump Autoload"
+               style="push"
+               icon="icons/obj16/dump_autoload.png">
+               <visibleWhen
+                  checkEnabled="false">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                     </adapt>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.php.composer.ui.hasSupport"
+                        value="true">
+                     </test>
+                  </iterate>
+            </visibleWhen>
+         </command>
+      </menu>
+    </menuContribution>
+    <menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
+           <command
+               commandId="org.eclipse.php.composer.ui.InjectAutoload"
+               label="Inject Autoload Statement"
+               style="push">
+           <visibleWhen
+              checkEnabled="false">
+              <iterate
+                    ifEmpty="false"
+                    operator="and">
+                <test
+                       forcePluginActivation="true"
+                       property="org.eclipse.php.composer.ui.hasAutoload"
+                    value="true">
+                 </test>
+              </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+     <menuContribution locationURI="popup:sourcePopupMenuId?before=sourceBegin">
+           <command
+               commandId="org.eclipse.php.composer.ui.InjectAutoload"
+               label="Inject Autoload Statement"
+               style="push">
+           <visibleWhen
+              checkEnabled="false">
+              <iterate
+                    ifEmpty="false"
+                    operator="and">
+                <test
+                       forcePluginActivation="true"
+                       property="org.eclipse.php.composer.ui.hasAutoload"
+                    value="true">
+                 </test>
+              </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+  </extension>
+  <extension point="org.eclipse.ui.commands">
+    <command defaultHandler="org.eclipse.php.composer.internal.ui.commands.InstallHandler"
+      id="org.eclipse.php.composer.ui.install" name="Install Dependencies">
+    </command>
+    <command defaultHandler="org.eclipse.php.composer.internal.ui.commands.UpdateHandler"
+      id="org.eclipse.php.composer.ui.update" name="Update Dependencies">
+    </command>
+    <command defaultHandler="org.eclipse.php.composer.internal.ui.commands.AddSupportHandler"
+      id="org.eclipse.php.composer.ui.addSupport" name="Add Composer Support">
+    </command>
+    <command defaultHandler="org.eclipse.php.composer.internal.ui.commands.DumpAutoloadHandler"
+      id="org.eclipse.php.composer.ui.dumpAutoload" name="Dump Autoload">
+    </command>
+    <command defaultHandler="org.eclipse.php.composer.internal.ui.commands.InjectAutoloadHandler"
+      id="org.eclipse.php.composer.ui.InjectAutoload" name="Inject Autoload Statement">
+    </command>
+  </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.php.composer.internal.ui.commands.ComposerActionTester"
+            id="org.eclipse.php.composer.ui.composerAction"
+            namespace="org.eclipse.php.composer.ui"
+            properties="hasAutoload,isInstalled,hasSupport"
+			type="java.lang.Object">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ltk.core.refactoring.renameParticipants">
+      <renameParticipant
+            class="org.eclipse.php.composer.internal.refactoring.RenameComposerProjectParticipant"
+            id="org.eclipse.php.composer.refactoring.renameComposerProjectParticipant"
+            name="Update composer.json name field">
+		 <enablement>
+          <with variable="element">
+		  	 <instanceof value="org.eclipse.core.resources.IProject"/>
+	  	  </with>
+         </enablement>
+      </renameParticipant>
+   </extension>
+</plugin>
