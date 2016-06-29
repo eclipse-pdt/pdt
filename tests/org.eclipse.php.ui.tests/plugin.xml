@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.php.ui.tests.PHPTestEditor"
+            default="false"
+            id="org.eclipse.php.test.editor"
+            name="PHP Test Editor">
+      </editor>
+   </extension>
+
+</plugin>

@@ -32,10 +32,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -137,7 +138,7 @@ public class CommandsTests {
 				try {
 					ISourceRange range = createFile(pdttFile.getFile(), Long.toString(System.currentTimeMillis()),
 							prepareOtherStreams(pdttFile));
-
+					openEditor();
 					String result = selectAndExecute(getCommandId(pdttFile), range.getOffset(), range.getLength());
 					closeEditor();
 					if (!pdttFile.getExpected().trim().equals(result.trim())) {
@@ -166,6 +167,22 @@ public class CommandsTests {
 		}
 
 		return result;
+	}
+
+	protected void openEditor() throws Exception {
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+		IEditorInput input = new FileEditorInput(testFile);
+		/*
+		 * This should take care of testing init, createPartControl,
+		 * beginBackgroundOperation, endBackgroundOperation methods
+		 */
+		IEditorPart part = page.openEditor(input, PHPTestEditor.ID, false);
+		if (part instanceof PHPStructuredEditor) {
+			fEditor = (PHPStructuredEditor) part;
+		} else {
+			assertTrue("Unable to open php editor", false);
+		}
 	}
 
 	protected void closeEditor() {
@@ -240,19 +257,6 @@ public class CommandsTests {
 		}
 		// Wait for indexer...
 		TestUtils.waitForIndexer();
-		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = workbenchWindow.getActivePage();
-		IEditorInput input = new FileEditorInput(testFile);
-		/*
-		 * This should take care of testing init, createPartControl,
-		 * beginBackgroundOperation, endBackgroundOperation methods
-		 */
-		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor", true);
-		if (part instanceof PHPStructuredEditor) {
-			fEditor = (PHPStructuredEditor) part;
-		} else {
-			assertTrue("Unable to open php editor", false);
-		}
 
 		return new SourceRange(left, right - left);
 	}
