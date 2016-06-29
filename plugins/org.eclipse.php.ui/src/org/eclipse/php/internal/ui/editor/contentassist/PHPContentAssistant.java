@@ -39,7 +39,6 @@ import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 public class PHPContentAssistant extends StructuredContentAssistant implements IScriptContentAssistExtension {
 
 	private static final int DEFAULT_AUTO_ACTIVATION_DELAY = 200;
-	private static final int TOOLTIP_HIDE_DELAY = 4000;
 	private int fAutoActivationDelay = DEFAULT_AUTO_ACTIVATION_DELAY;
 	private IPreferenceChangeListener fPreferenceChangeListener;
 
@@ -58,9 +57,10 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 
 	public PHPContentAssistant() {
 		enableColoredLabels(true);
-
 		enablePrefixCompletion(InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID)
 				.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX, true));
+
+		setSorter(new PHPCompletionProposalSorter());
 	}
 
 	protected AutoAssistListener createAutoAssistListener() {
