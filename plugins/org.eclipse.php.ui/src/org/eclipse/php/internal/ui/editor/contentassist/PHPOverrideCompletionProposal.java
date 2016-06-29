@@ -30,7 +30,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionProposal
 		implements ICompletionProposalExtension4 {
 	/**
