@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.tests.formatter.autoedit;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,21 +31,23 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -72,6 +76,7 @@ public class FormatterAutoEditTests {
 
 	protected PHPVersion phpVersion;
 	protected String[] fileNames;
+	protected PHPStructuredEditor editor;
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -157,7 +162,6 @@ public class FormatterAutoEditTests {
 			}, null);
 
 		final Exception[] err = new Exception[1];
-		final IEditorPart[] part = new IEditorPart[1];
 
 		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(testFile);
 		try {
@@ -167,10 +171,7 @@ public class FormatterAutoEditTests {
 				@Override
 				public void run() {
 					try {
-						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-						IWorkbenchPage page = window.getActivePage();
-						part[0] = page.openEditor(new FileEditorInput(testFile), PHPUiConstants.PHP_EDITOR_ID);
-						part[0].setFocus();
+						openEditor();
 					} catch (Exception e) {
 						err[0] = e;
 					}
@@ -222,25 +223,21 @@ public class FormatterAutoEditTests {
 			if (modelForEdit != null) {
 				modelForEdit.releaseFromEdit();
 			}
-			if (part[0] != null) {
-				Display.getDefault().syncExec(new Runnable() {
+			Display.getDefault().syncExec(new Runnable() {
 
-					@Override
-					public void run() {
-						try {
-							IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-							IWorkbenchPage page = window.getActivePage();
-							page.closeEditor(part[0], false);
-						} catch (Exception e) {
-							err[0] = e;
-						}
+				@Override
+				public void run() {
+					try {
+						closeEditor();
+					} catch (Exception e) {
+						err[0] = e;
 					}
-				});
-				if (err[0] != null) {
-					throw err[0];
 				}
-
+			});
+			if (err[0] != null) {
+				throw err[0];
 			}
+
 		}
 	}
 
@@ -272,6 +269,28 @@ public class FormatterAutoEditTests {
 		TestUtils.waitForIndexer();
 
 		return cmd;
+	}
+
+	protected void openEditor() throws Exception {
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+		IEditorInput input = new FileEditorInput(testFile);
+		/*
+		 * This should take care of testing init, createPartControl,
+		 * beginBackgroundOperation, endBackgroundOperation methods
+		 */
+		IEditorPart part = page.openEditor(input, PHPTestEditor.ID, false);
+		if (part instanceof PHPStructuredEditor) {
+			editor = (PHPStructuredEditor) part;
+		} else {
+			assertTrue("Unable to open php editor", false);
+		}
+	}
+
+	protected void closeEditor() {
+		editor.doSave(null);
+		editor.getSite().getPage().closeEditor(editor, false);
+		editor = null;
 	}
 
 }

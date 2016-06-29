@@ -131,7 +131,7 @@ public class SuperTypeHierarchyCache {
 	 * Get a hierarchy for the given type
 	 */
 	public static ITypeHierarchy getTypeHierarchy(IType type, IProgressMonitor progressMonitor) throws ModelException {
-		if (type == null) {
+		if (type == null || !type.exists()) {
 			return null;
 		}
 		ITypeHierarchy hierarchy = findTypeHierarchyInCache(type);

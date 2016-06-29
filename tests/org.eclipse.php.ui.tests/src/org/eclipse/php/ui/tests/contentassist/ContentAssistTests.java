@@ -24,10 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -42,6 +39,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
@@ -127,7 +125,6 @@ public class ContentAssistTests {
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		final ByteArrayInputStream stream = new ByteArrayInputStream(data.getBytes());
 		final Exception[] err = new Exception[1];
-		createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
 
 		final String[] result = new String[1];
 		Display.getDefault().syncExec(new Runnable() {
@@ -135,6 +132,7 @@ public class ContentAssistTests {
 			@Override
 			public void run() {
 				try {
+					createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
 					openEditor();
 					result[0] = executeAutoInsert(offset);
 					closeEditor();
@@ -180,6 +178,22 @@ public class ContentAssistTests {
 		return result;
 	}
 
+	protected void openEditor() throws Exception {
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+		IEditorInput input = new FileEditorInput(testFile);
+		/*
+		 * This should take care of testing init, createPartControl,
+		 * beginBackgroundOperation, endBackgroundOperation methods
+		 */
+		IEditorPart part = page.openEditor(input, PHPTestEditor.ID, false);
+		if (part instanceof PHPStructuredEditor) {
+			fEditor = (PHPStructuredEditor) part;
+		} else {
+			assertTrue("Unable to open php editor", false);
+		}
+	}
+
 	protected void closeEditor() {
 		fEditor.doSave(null);
 		fEditor.getSite().getPage().closeEditor(fEditor, false);
@@ -202,12 +216,7 @@ public class ContentAssistTests {
 		StyledText textWidget = viewer.getTextWidget();
 		textWidget.setCaretOffset(offset);
 		viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
-		disposeAssist();
 		return fEditor.getDocument().get();
-	}
-
-	protected void createFile(InputStream inputStream, String fileName) throws Exception {
-		createFile(inputStream, fileName, new InputStream[0]);
 	}
 
 	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
@@ -219,33 +228,6 @@ public class ContentAssistTests {
 			otherFiles[i].create(other[i], true, null);
 		}
 		TestUtils.waitForIndexer();
-	}
-
-	protected void openEditor() throws Exception {
-		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = workbenchWindow.getActivePage();
-		IEditorInput input = new FileEditorInput(testFile);
-		/*
-		 * This should take care of testing init, createPartControl,
-		 * beginBackgroundOperation, endBackgroundOperation methods
-		 */
-		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor", false);
-		if (part instanceof PHPStructuredEditor) {
-			fEditor = (PHPStructuredEditor) part;
-		} else {
-			assertTrue("Unable to open php editor", false);
-		}
-	}
-    
-	// Will close assist window immediatelly
-	protected void disposeAssist() {
-		ISourceViewer viewer = fEditor.getTextViewer();
-		SourceViewerConfiguration configuration = fEditor.getSourceViwerConfiguration();
-		IContentAssistant contentAssistant = configuration.getContentAssistant(viewer);
-		if (contentAssistant instanceof ContentAssistant) {
-			ContentAssistant assistant = (ContentAssistant) contentAssistant;
-			assistant.uninstall();
-		}
 	}
 
 }
