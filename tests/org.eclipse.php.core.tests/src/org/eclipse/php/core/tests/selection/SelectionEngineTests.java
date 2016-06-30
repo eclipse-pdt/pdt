@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2014, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,9 @@ package org.eclipse.php.core.tests.selection;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -24,10 +26,11 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceRange;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.core.tests.runner.PDTTList;
@@ -35,6 +38,7 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -66,7 +70,8 @@ public class SelectionEngineTests {
 	};
 
 	protected IProject project;
-	protected IFile testFile;
+	protected IFile testFile = null;
+	protected List<IFile> otherFiles = new ArrayList<IFile>();
 	protected PHPVersion version;
 
 	public SelectionEngineTests(PHPVersion version, String[] fileNames) {
@@ -90,16 +95,18 @@ public class SelectionEngineTests {
 	public void selection(String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 
-		IModelElement[] elements = getSelection(pdttFile.getFile());
+		IModelElement[] elements = getSelection(pdttFile);
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
 
+		boolean addFileAndNamespace = pdttFile.getOtherFiles().length > 0;
 		boolean proposalsEqual = true;
 		if (elements.length == expectedProposals.length) {
 			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
 				boolean found = false;
 				for (IModelElement modelElement : elements) {
 					if (modelElement.getElementType() == expectedProposal.type
-							&& modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
+							&& getProposalName(modelElement, addFileAndNamespace)
+									.equalsIgnoreCase(expectedProposal.name)) {
 						found = true;
 						break;
 					}
@@ -130,7 +137,7 @@ public class SelectionEngineTests {
 					errorBuf.append("type");
 					break;
 				}
-				errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
+				errorBuf.append('(').append(getProposalName(modelElement, addFileAndNamespace)).append(")\n");
 			}
 			fail(errorBuf.toString());
 		}
@@ -140,7 +147,25 @@ public class SelectionEngineTests {
 	public void after() throws Exception {
 		if (testFile != null) {
 			TestUtils.deleteFile(testFile);
+			testFile = null;
 		}
+		for (IFile otherFile : otherFiles) {
+			TestUtils.deleteFile(otherFile);
+		}
+		otherFiles.clear();
+	}
+
+	protected String getProposalName(IModelElement modelElement, boolean addFileAndNamespace) {
+		StringBuilder out = new StringBuilder();
+		if (addFileAndNamespace) {
+			IType namespace = PHPModelUtils.getCurrentNamespace(modelElement);
+			String namespaceName = namespace != null ? namespace.getElementName() : "";
+			out.append(modelElement.getPath().lastSegment()).append('|').append(namespaceName).append('|')
+					.append(modelElement.getElementName());
+		} else {
+			out.append(modelElement.getElementName());
+		}
+		return out.toString();
 	}
 
 	/**
@@ -166,10 +191,7 @@ public class SelectionEngineTests {
 		}
 		data = data.substring(0, right) + data.substring(right + 1);
 
-		testFile = TestUtils.createFile(project, "test.php", data);
-
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		TestUtils.waitForIndexer();
+		testFile = TestUtils.createFile(project, "FILE.php", data);
 
 		return new SourceRange(left, right - left);
 	}
@@ -178,8 +200,15 @@ public class SelectionEngineTests {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	protected IModelElement[] getSelection(String data) throws Exception {
-		ISourceRange range = createFile(data);
+	protected IModelElement[] getSelection(CodeAssistPdttFile pdttFile) throws Exception {
+		ISourceRange range = createFile(pdttFile.getFile());
+		for (int i = 0, len = pdttFile.getOtherFiles().length; i < len; i++) {
+			otherFiles.add(TestUtils.createFile(project, "FILE" + i + ".php", pdttFile.getOtherFile(i)));
+		}
+
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+		TestUtils.waitForIndexer();
+
 		ISourceModule sourceModule = getSourceModule();
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
 		return elements;
