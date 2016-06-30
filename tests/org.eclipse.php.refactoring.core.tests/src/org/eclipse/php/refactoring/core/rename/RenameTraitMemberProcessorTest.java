@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
-public class RenameTraitMemberProcessorTest extends RenameClassMemberProcessorTest {
+public class RenameTraitMemberProcessorTest extends AbstractRenameRefactoringTest {
 
 	public RenameTraitMemberProcessorTest(String[] fileNames) {
 		super(fileNames);
@@ -40,7 +40,7 @@ public class RenameTraitMemberProcessorTest extends RenameClassMemberProcessorTe
 	public static String[] dirs = { "/resources/rename/renameTraitMember/" }; //$NON-NLS-1$
 
 	@Test
-	public void test(String fileName) throws Exception {
+	public void rename(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
