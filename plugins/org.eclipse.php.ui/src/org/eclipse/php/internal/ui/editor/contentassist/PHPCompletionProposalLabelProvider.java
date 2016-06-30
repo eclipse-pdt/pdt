@@ -51,43 +51,23 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		StyledString nameBuffer = new StyledString();
 		IMethod method = (IMethod) methodProposal.getModelElement();
 
-		if (method instanceof FakeConstructor) {
-			IType type = (IType) method.getParent();
-			if (type instanceof AliasType) {
-				AliasType aliasType = (AliasType) type;
-				nameBuffer.append(aliasType.getAlias());
-				nameBuffer.append("()"); //$NON-NLS-1$
-				return nameBuffer;
-			}
-		}
-		boolean isAlias = method instanceof AliasMethod;
-		// method name
-		if (isAlias) {
+		if (method instanceof FakeConstructor && method.getParent() instanceof AliasType) {
+			AliasType aliasType = (AliasType) method.getParent();
+			nameBuffer.append(aliasType.getAlias());
+		} else if (method instanceof AliasMethod) {
 			AliasMethod aliasMethod = (AliasMethod) method;
 			nameBuffer.append(aliasMethod.getAlias());
 		} else {
 			nameBuffer.append(method.getElementName());
 		}
-
 		// parameters
 		nameBuffer.append('(');
 		appendStyledParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); // $NON-NLS-1$
 
 		appendMethodType(nameBuffer, methodProposal);
-		if (isAlias) {
-			return nameBuffer;
-		}
 
-		nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
-
-		IModelElement parent = method.getParent();
-		if (parent instanceof IType) {
-			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER); // $NON-NLS-1$
-		} else {
-			nameBuffer.append(parent.getElementName(), StyledString.QUALIFIER_STYLER);
-		}
+		appendQualifier(nameBuffer, method.getParent());
 
 		return nameBuffer;
 	}
@@ -121,7 +101,28 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 				Logger.logException(e);
 			}
 		}
+	}
 
+	protected void appendFieldType(StyledString nameBuffer, CompletionProposal methodProposal) {
+		IField element = (IField) methodProposal.getModelElement();
+		if (element instanceof AliasField) {
+			element = (IField) ((AliasField) element).getField();
+		}
+		if (element == null) {
+			return;
+		}
+		try {
+			if (!element.exists()) {
+				return;
+			}
+			String type = element.getType();
+			if (type != null) {
+				nameBuffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
+				nameBuffer.append(type, StyledString.DECORATIONS_STYLER);
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
 	}
 
 	private boolean showMethodReturnType() {
@@ -206,26 +207,16 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		if (proposal.getModelElement() instanceof AliasField) {
 			AliasField aliasField = (AliasField) proposal.getModelElement();
 			buffer.append(aliasField.getAlias());
-			return buffer;
+		} else {
+			buffer.append(proposal.getName());
 		}
 		IModelElement element = proposal.getModelElement();
 		if (element != null && element.getElementType() == IModelElement.FIELD) {
-			final IField field = (IField) element;
-			try {
-				String type = field.getType();
-				if (type != null) {
-					buffer.append(proposal.getName());
-
-					buffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
-					buffer.append(type, StyledString.DECORATIONS_STYLER);
-
-					return buffer;
-				}
-			} catch (ModelException e) {
-				// ignore
+			appendFieldType(buffer, proposal);
+			if (!proposal.getName().startsWith("$")) { //$NON-NLS-1$
+				appendQualifier(buffer, element.getParent());
 			}
 		}
-		buffer.append(proposal.getName());
 
 		return buffer;
 	}
@@ -279,16 +270,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 			return nameBuffer;
 		}
 
-		IMethod method = (IMethod) methodProposal.getModelElement();
-		nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
-
-		IModelElement parent = method.getParent();
-		if (parent instanceof IType) {
-			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER); // $NON-NLS-1$
-		} else {
-			nameBuffer.append(parent.getElementName(), StyledString.QUALIFIER_STYLER);
-		}
+		IModelElement method = methodProposal.getModelElement();
+		appendQualifier(nameBuffer, method.getParent());
 
 		return nameBuffer;
 	}
@@ -372,9 +355,9 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		if (type instanceof AliasType) {
 			AliasType aliasType = (AliasType) type;
 			nameBuffer.append(aliasType.getAlias());
-			return nameBuffer;
+		} else {
+			nameBuffer.append(typeProposal.getName());
 		}
-		nameBuffer.append(typeProposal.getName());
 
 		boolean isNamespace = false;
 		try {
@@ -382,10 +365,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		} catch (ModelException e) {
 			Logger.logException(e);
 		}
-		if (type.getParent() != null && !isNamespace) {
-			nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
-			IModelElement parent = type.getParent();
-			nameBuffer.append(parent.getElementName(), StyledString.QUALIFIER_STYLER);
+		if (!isNamespace) {
+			appendQualifier(nameBuffer, typeProposal.getModelElement());
 		}
 
 		return nameBuffer;
@@ -411,4 +392,19 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 	protected String createSimpleLabelWithType(CompletionProposal proposal) {
 		return createStyledSimpleLabelWithType(proposal).toString();
 	}
+
+	protected void appendQualifier(StyledString buffer, IModelElement modelElement) {
+		if (modelElement == null) {
+			return;
+		}
+		buffer.append(" - ", StyledString.QUALIFIER_STYLER); //$NON-NLS-1$
+
+		if (modelElement instanceof IType) {
+			IType type = (IType) modelElement;
+			buffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER); // $NON-NLS-1$
+		} else {
+			buffer.append(modelElement.getElementName(), StyledString.QUALIFIER_STYLER);
+		}
+	}
+
 }
