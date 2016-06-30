@@ -15,6 +15,7 @@ import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
@@ -354,9 +355,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Determine whether given elements represent the same type and name, but
-	 * declared in different files (determine whether file network filtering can
-	 * be used)
+	 * Determine whether given elements represent the same type, name and
+	 * namespace, but declared in different files (determine whether file
+	 * network filtering can be used)
 	 * 
 	 * @param elements
 	 *            Model elements list
@@ -365,16 +366,21 @@ public class PHPModelUtils {
 	private static <T extends IModelElement> boolean canUseFileNetworkFilter(Collection<T> elements) {
 		int elementType = 0;
 		String elementName = null;
+		String namespaceName = null;
 		for (T element : elements) {
 			if (element == null) {
 				continue;
 			}
+			IType namespaceElement = getCurrentNamespace(element);
+			String namespaceNameElement = namespaceElement != null ? namespaceElement.getElementName() : null;
 			if (elementName == null) {
 				elementType = element.getElementType();
 				elementName = element.getElementName();
+				namespaceName = namespaceNameElement;
 				continue;
 			}
-			if (!elementName.equalsIgnoreCase(element.getElementName()) || elementType != element.getElementType()) {
+			if (!elementName.equalsIgnoreCase(element.getElementName()) || elementType != element.getElementType()
+					|| !StringUtils.equalsIgnoreCase(namespaceName, namespaceNameElement)) {
 				return false;
 			}
 		}
@@ -1741,7 +1747,6 @@ public class PHPModelUtils {
 			}
 		}
 
-		List<IType> result = new ArrayList<IType>();
 		Collection<IType> types;
 		if (cache == null) {
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
@@ -1751,14 +1756,7 @@ public class PHPModelUtils {
 			} else {
 				r = PhpModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null);
 			}
-			for (IType type : r) {
-				if (getCurrentNamespace(type) == null) {
-					result.add(type);
-				}
-			}
-			List<IType> tempList = new ArrayList<IType>(result.size());
-			tempList.addAll(result);
-			types = filterElements(sourceModule, tempList, null, monitor);
+			types = Arrays.asList(r);
 		} else {
 			if (isType) {
 				types = cache.getTypes(sourceModule, typeName, null, monitor);
@@ -1769,7 +1767,7 @@ public class PHPModelUtils {
 				return PhpModelAccess.NULL_TYPES;
 			}
 		}
-		result.clear();
+		List<IType> result = new ArrayList<IType>();
 		for (IType type : types) {
 			if (getCurrentNamespace(type) == null) {
 				result.add(type);
