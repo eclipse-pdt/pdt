@@ -23,22 +23,14 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList;
-import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
+import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileInfo;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
-import org.eclipse.php.refactoring.core.test.TestProject;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(PDTTList.class)
-public class ExtractFunctionRefactoringTest extends AbstractRefactoringTest {
-
-	@Override
-	protected TestProject getProject() {
-		return new TestProject("RefactoringExtractFunc");
-	}
+public class ExtractFunctionRefactoringTest extends AbstractPDTTListRefactoringTest {
 
 	@PDTTList.Parameters
 	public static String[] dirs = { "/resources/extractfunc/" }; //$NON-NLS-1$
@@ -48,7 +40,7 @@ public class ExtractFunctionRefactoringTest extends AbstractRefactoringTest {
 	}
 
 	@Test
-	public void test(String fileName) {
+	public void testExtract(String fileName) {
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 

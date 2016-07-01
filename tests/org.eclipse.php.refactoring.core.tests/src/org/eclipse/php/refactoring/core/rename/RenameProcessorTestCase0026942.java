@@ -26,13 +26,14 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCase0026942 extends AbstractRenameRefactoringTest {
+public class RenameProcessorTestCase0026942 extends AbstractRefactoringTest {
 	private IProject project1;
 	private IFile file;
 

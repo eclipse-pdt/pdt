@@ -20,12 +20,13 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCase0026915 extends AbstractRenameRefactoringTest {
+public class RenameProcessorTestCase0026915 extends AbstractRefactoringTest {
 	private IProject project1;
 
 	@Before

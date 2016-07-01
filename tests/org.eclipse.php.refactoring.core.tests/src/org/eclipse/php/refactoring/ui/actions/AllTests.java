@@ -10,24 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.actions;
 
-import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.junit.ClassRule;
-import org.junit.rules.TestWatcher;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ RenamePHPElementActionDelegateTest.class })
 
 public class AllTests {
-
-	@ClassRule
-	public static TestWatcher watcher = new TestSuiteWatcher();
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.php.refactoring.ui.actions");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(RenamePHPElementActionDelegateTest.class);
-		// $JUnit-END$
-		return suite;
-	}
-
 }

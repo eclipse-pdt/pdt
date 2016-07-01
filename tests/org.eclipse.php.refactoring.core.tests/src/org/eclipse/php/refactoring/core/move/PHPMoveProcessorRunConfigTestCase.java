@@ -67,7 +67,7 @@ public class PHPMoveProcessorRunConfigTestCase {
 	}
 
 	@Test
-	public void testMoveing() {
+	public void testMove() {
 		PHPMoveProcessor processor = new PHPMoveProcessor(project1.getProject().getFile("src/RunConfigTest.php"));
 
 		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());

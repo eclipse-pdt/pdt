@@ -53,7 +53,7 @@ public class PHPMoveProcessorBreakPointTestCase {
 	}
 
 	@Test
-	public void testMoveing() {
+	public void testMove() {
 		IWorkspaceRunnable workspaceRunnable = new IWorkspaceRunnable() {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
