@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.ui.tests;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -52,6 +56,12 @@ public class PHPUiTests extends AbstractUIPlugin {
 	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		// Save workspace to avoid errors after finishing tests.
+		try {
+			ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
 		plugin = null;
 		super.stop(context);
 	}

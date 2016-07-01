@@ -12,15 +12,10 @@
  *******************************************************************************/
 package org.eclipse.php.ui.tests;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.ui.tests.commands.CommandsTests;
 import org.eclipse.php.ui.tests.contentassist.ContentAssistTests;
 import org.eclipse.php.ui.tests.formatter.autoedit.FormatterAutoEditTests;
 import org.eclipse.php.ui.tests.semantic_highlighter.SemanticHighlightingTests;
-import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -29,15 +24,4 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ ContentAssistTests.class, FormatterAutoEditTests.class, SemanticHighlightingTests.class,
 		CommandsTests.class })
 public class AllTests {
-
-	@AfterClass
-	public static void tearDown() {
-		// Save workspace to avoid errors after finishing tests.
-		try {
-			ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-	}
-
 }

@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.test;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.php.internal.core.Logger;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -50,6 +54,12 @@ public class Activator extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		// Save workspace to avoid errors after finishing tests.
+		try {
+			ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
 		plugin = null;
 		super.stop(context);
 	}
