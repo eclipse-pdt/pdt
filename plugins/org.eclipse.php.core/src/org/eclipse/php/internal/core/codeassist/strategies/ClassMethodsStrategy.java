@@ -115,9 +115,9 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			for (int i = 0; i < methods.length; i++) {
 				IMethod method = methods[i];
 				if (PHPModelUtils.isConstructor(method) && method.getDeclaringType().equals(type)) {
-					ISourceRange construtorRange = method.getSourceRange();
-					if (concreteContext.getOffset() > construtorRange.getOffset() && concreteContext
-							.getOffset() < construtorRange.getOffset() + construtorRange.getLength()) {
+					ISourceRange constructorRange = method.getSourceRange();
+					if (concreteContext.getOffset() > constructorRange.getOffset() && concreteContext
+							.getOffset() < constructorRange.getOffset() + constructorRange.getLength()) {
 						return true;
 					}
 				}
