@@ -1,0 +1,33 @@
+--TEST--
+Test substring matching
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+org.eclipse.php.core/contentShowSubstringMatches=true
+--FILE--
+<?php
+
+trait MyTrait {
+	public $traitField;
+
+	public function traitMethod(){
+
+	}
+
+	public function traitAbc(){
+
+	}
+}
+
+class MyClass{
+	use MyTrait;
+	function myClassMethod() {
+	}
+
+	function test(){
+		$this->d|
+	}
+}
+--EXPECT--
+field($traitField)
+method(myClassMethod)
+method(traitMethod)

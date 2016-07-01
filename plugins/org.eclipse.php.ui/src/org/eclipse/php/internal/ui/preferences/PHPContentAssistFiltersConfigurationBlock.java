@@ -31,6 +31,7 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 
 	protected Button caseSensitivityCheckBox;
 	protected Button showStrictOptionsCheckBox;
+	protected Button showSubstringMatchesBox;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_filtersSectionLabel);
@@ -39,6 +40,8 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 				PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
 		showStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showStrictOptions,
 				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0);
+		showSubstringMatchesBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showSubstringMatches,
+				PHPCoreConstants.CODEASSIST_SHOW_SUBSTRING_MATCHES, 0);
 	}
 
 	protected IPreferenceStore getPreferenceStore() {

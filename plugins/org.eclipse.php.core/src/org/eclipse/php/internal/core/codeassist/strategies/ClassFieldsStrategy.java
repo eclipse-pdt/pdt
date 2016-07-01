@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
@@ -66,26 +67,41 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
-		List<IField> result = new LinkedList<IField>();
+		boolean showSubstringMatches = showSubstringMatches() && !prefix.isEmpty();
+		String substringPrefix = null;
+		if (showSubstringMatches) {
+			substringPrefix = convertToSubstringPattern(prefix);
+		}
 
+		List<IField> result = new LinkedList<IField>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 				IField[] fields = null;
 
-				if (concreteContext instanceof ClassStaticMemberContext
-						&& concreteContext.getTriggerType() == Trigger.CLASS
-						&& ((ClassStaticMemberContext) concreteContext).isParent()) {
-					List<IField> superTypes = new ArrayList<IField>();
-					for (IType currType : hierarchy.getAllSupertypes(type)) {
-						superTypes.addAll(Arrays.asList(
-								PHPModelUtils.getTypeField(currType, prefix, requestor.isContextInformationMode())));
+				if (showSubstringMatches) {
+					if (concreteContext instanceof ClassStaticMemberContext
+							&& concreteContext.getTriggerType() == Trigger.CLASS
+							&& ((ClassStaticMemberContext) concreteContext).isParent()) {
+						fields = PHPModelUtils.getSuperTypeHierarchyField(type, hierarchy, substringPrefix, null);
+					} else {
+						fields = PHPModelUtils.getTypeHierarchyField(type, hierarchy, substringPrefix, null);
 					}
-
-					fields = superTypes.toArray(new IField[superTypes.size()]);
 				} else {
-					fields = PHPModelUtils.getTypeHierarchyField(type, hierarchy, prefix,
-							requestor.isContextInformationMode(), null);
+					if (concreteContext instanceof ClassStaticMemberContext
+							&& concreteContext.getTriggerType() == Trigger.CLASS
+							&& ((ClassStaticMemberContext) concreteContext).isParent()) {
+						List<IField> superTypes = new ArrayList<IField>();
+						for (IType currType : hierarchy.getAllSupertypes(type)) {
+							superTypes.addAll(Arrays.asList(PHPModelUtils.getTypeField(currType, prefix,
+									requestor.isContextInformationMode())));
+						}
+
+						fields = superTypes.toArray(new IField[superTypes.size()]);
+					} else {
+						fields = PHPModelUtils.getTypeHierarchyField(type, hierarchy, prefix,
+								requestor.isContextInformationMode(), null);
+					}
 				}
 
 				for (IField field : removeOverriddenElements(Arrays.asList(fields))) {
@@ -102,7 +118,8 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		if (concreteContext instanceof ClassStaticMemberContext && concreteContext.getTriggerType() == Trigger.CLASS
 				&& !concreteContext.isInUseTraitStatement()
 				&& PHPVersion.PHP5_4.isLessThan(concreteContext.getPhpVersion())
-				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD.equals(prefix.toLowerCase()))) {
+				&& (StringUtils.startsWithIgnoreCase(CLASS_KEYWORD, prefix)
+						|| CLASS_KEYWORD.equalsIgnoreCase(prefix))) {
 			try {
 				ITextRegion phpToken = concreteContext.getPhpScriptRegion()
 						.getPhpToken(concreteContext.getPHPToken().getStart() - 1);

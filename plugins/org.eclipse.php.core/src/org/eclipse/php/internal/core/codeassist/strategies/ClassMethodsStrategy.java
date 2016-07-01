@@ -75,14 +75,27 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				&& concreteContext.getDocument().getChar(concreteContext.getOffset() - 1) == '(') {
 			exactName = true;
 		}
+
+		boolean showSubstringMatches = showSubstringMatches() && !prefix.isEmpty();
+		String substringPrefix = null;
+		if (showSubstringMatches) {
+			substringPrefix = convertToSubstringPattern(prefix);
+		}
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 
-				IMethod[] methods = isParentCall
-						? PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, null)
-						: PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, prefix, exactName, null);
+				IMethod[] methods = null;
+				if (showSubstringMatches) {
+					methods = isParentCall
+							? PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, substringPrefix, null)
+							: PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, substringPrefix, null);
+				} else {
+					methods = isParentCall
+							? PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, null)
+							: PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, prefix, exactName, null);
+				}
 
 				boolean inConstructor = isInConstructor(type, type.getMethods(), concreteContext);
 				for (IMethod method : removeOverriddenElements(Arrays.asList(methods))) {

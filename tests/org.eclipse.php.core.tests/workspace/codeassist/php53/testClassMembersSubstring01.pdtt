@@ -1,0 +1,15 @@
+--TEST--
+Test substring matching
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+org.eclipse.php.core/contentShowSubstringMatches=true
+--FILE--
+<?php
+
+$var = new DateTime();
+$var->ff|
+?>
+--EXPECT--
+method(createFromFormat)
+method(getOffset)
+method(diff)
