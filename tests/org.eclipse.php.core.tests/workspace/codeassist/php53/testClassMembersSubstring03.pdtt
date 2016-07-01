@@ -1,0 +1,15 @@
+--TEST--
+Test substring matching
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+org.eclipse.php.core/contentShowSubstringMatches=true
+--FILE--
+<?php 
+class MyException extends ErrorException {
+	function test(){
+		$this->sa|
+	}
+}
+--EXPECT--
+field($message)
+method(getMessage)

@@ -92,6 +92,11 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false, null);
 	}
 
+	protected boolean showSubstringMatches() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_SHOW_SUBSTRING_MATCHES, false, null);
+	}
+
 	/**
 	 * Returns whether the specified member is visible in current context
 	 * 
@@ -537,5 +542,18 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			}
 		}
 		return result;
+	}
+
+	protected String convertToSubstringPattern(String prefix) {
+		StringBuilder builder = new StringBuilder("(?i)");
+		if (prefix == null || prefix.isEmpty()) {
+			return ".*";
+		}
+
+		for (char ch : prefix.toCharArray()) {
+			builder.append(".*" + ch);
+		}
+		builder.append(".*");
+		return builder.toString();
 	}
 }

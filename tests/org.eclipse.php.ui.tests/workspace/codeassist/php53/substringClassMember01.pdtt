@@ -1,0 +1,13 @@
+--TEST--
+Test substring CA
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+org.eclipse.php.core/contentShowSubstringMatches=true
+--FILE--
+<?
+$var = new DateTime();
+$var->off|
+--EXPECT--
+<?
+$var = new DateTime();
+$var->getOffset()

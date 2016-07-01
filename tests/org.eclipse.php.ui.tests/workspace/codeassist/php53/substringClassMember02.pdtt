@@ -1,0 +1,11 @@
+--TEST--
+Test substring CA
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+org.eclipse.php.core/contentShowSubstringMatches=true
+--FILE--
+<?
+DateTime::le|
+--EXPECT--
+<?
+DateTime::getLastErrors()
