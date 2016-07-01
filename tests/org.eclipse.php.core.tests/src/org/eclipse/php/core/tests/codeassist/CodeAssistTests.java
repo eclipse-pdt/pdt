@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -30,16 +32,18 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
@@ -143,6 +147,9 @@ public class CodeAssistTests {
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("CodeAssistTests_" + version.toString());
 		TestUtils.setProjectPhpVersion(project, version);
+
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(PHPCorePlugin.ID);
+		node.put(PHPCoreConstants.CODEASSIST_SHOW_SUBSTRING_MATCHES, Boolean.FALSE.toString());
 	}
 
 	@AfterList

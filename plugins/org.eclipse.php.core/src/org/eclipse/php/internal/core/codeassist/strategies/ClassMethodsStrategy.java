@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -75,14 +76,24 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				&& concreteContext.getDocument().getChar(concreteContext.getOffset() - 1) == '(') {
 			exactName = true;
 		}
+
+		if (showSubstringMatches()) {
+			prefix = convertToSubstringPattern(prefix);
+		}
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 
-				IMethod[] methods = isParentCall
-						? PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, null)
-						: PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, prefix, exactName, null);
+				IMethod[] methods = null;
+				if (showSubstringMatches()) {
+					methods = isParentCall ? getSuperTypeHierarchyMethod(type, hierarchy, prefix, null)
+							: getTypeHierarchyMethod(type, hierarchy, prefix, null);
+				} else {
+					methods = isParentCall
+							? PHPModelUtils.getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, null)
+							: PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, prefix, exactName, null);
+				}
 
 				boolean inConstructor = isInConstructor(type, type.getMethods(), concreteContext);
 				for (IMethod method : removeOverriddenElements(Arrays.asList(methods))) {
@@ -108,6 +119,26 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		for (IMethod method : result) {
 			reporter.reportMethod((IMethod) method, suffix, replaceRange);
 		}
+	}
+
+	private IMethod[] getSuperTypeHierarchyMethod(IType type, ITypeHierarchy hierarchy, String pattern,
+			IProgressMonitor monitor) throws CoreException {
+
+		IType[] allSuperclasses = PHPModelUtils.getSuperClasses(type, hierarchy);
+		return PHPModelUtils.getTypesMethod(allSuperclasses, pattern);
+	}
+
+	private IMethod[] getTypeHierarchyMethod(IType type, ITypeHierarchy hierarchy, String pattern,
+			IProgressMonitor monitor) throws CoreException {
+		if (pattern == null) {
+			throw new NullPointerException();
+		}
+		final List<IMethod> methods = new LinkedList<IMethod>();
+		methods.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(type, pattern)));
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+			methods.addAll(Arrays.asList(getSuperTypeHierarchyMethod(type, hierarchy, pattern, monitor)));
+		}
+		return methods.toArray(new IMethod[methods.size()]);
 	}
 
 	private boolean isInConstructor(IType type, IMethod[] methods, ClassMemberContext concreteContext) {

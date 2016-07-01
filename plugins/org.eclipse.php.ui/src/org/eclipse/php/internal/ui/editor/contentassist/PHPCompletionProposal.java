@@ -11,8 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
@@ -36,7 +38,6 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class PHPCompletionProposal extends ScriptCompletionProposal implements IPHPCompletionProposalExtension {
 
 	/**
@@ -85,6 +86,24 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		// result = isPrefix(prefix, sb.toString());
 		// }
 		return result;
+	}
+
+	@Override
+	protected boolean isPrefix(String prefix, String string) {
+		if (prefix == null || string == null || prefix.length() > string.length())
+			return false;
+		return StringUtils.startsWithIgnoreCase(string, prefix)
+				|| isCamelCaseMatching() && CharOperation.camelCaseMatch(prefix.toCharArray(), string.toCharArray())
+				|| matchPatternPrefix(string, prefix);
+	}
+
+	private boolean matchPatternPrefix(String string, String prefix) {
+		StringBuilder builder = new StringBuilder("(?i)");
+		for (char ch : prefix.toCharArray()) {
+			builder.append(".*" + ch);
+		}
+		builder.append(".*");
+		return string.matches(builder.toString());
 	}
 
 	protected boolean isSmartTrigger(char trigger) {

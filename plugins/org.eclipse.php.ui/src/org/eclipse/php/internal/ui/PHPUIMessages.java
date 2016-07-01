@@ -774,6 +774,8 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeTemplateBlock_error_write_message;
 	public static String PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier;
 	public static String CodeAssistPreferencePage_showStrictOptions;
+
+	public static String CodeAssistPreferencePage_showSubstringMatches;
 	public static String Search_Error_phpElementAccess_message;
 	public static String typingPage_autoClose_title;
 	public static String CoreUtility_job_title;

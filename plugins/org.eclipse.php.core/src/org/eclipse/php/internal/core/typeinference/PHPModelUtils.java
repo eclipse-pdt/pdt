@@ -1426,6 +1426,67 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * Finds field in the list of given types
+	 * 
+	 * @param types
+	 *            List of types
+	 * @param pattern
+	 *            name pattern
+	 * @throws ModelException
+	 */
+	public static IField[] getTypesField(IType[] types, String pattern) throws ModelException {
+		List<IField> result = new LinkedList<IField>();
+		for (IType type : types) {
+			result.addAll(Arrays.asList(getTypeField(type, pattern)));
+		}
+		return result.toArray(new IField[result.size()]);
+	}
+
+	/**
+	 * Returns the type field element matched with pattern (e.g. *, ?)
+	 * 
+	 * @param type
+	 *            Type
+	 * @param pattern
+	 *            name pattern
+	 * @throws ModelException
+	 */
+	public static IField[] getTypeField(IType type, String pattern) throws ModelException {
+
+		List<IField> result = new LinkedList<IField>();
+		if (type.exists()) {
+			Set<String> nameSet = new HashSet<String>();
+			IField[] fields = type.getFields();
+			for (IField field : fields) {
+				String elementName = field.getElementName();
+
+				if (elementName.startsWith("$")) { //$NON-NLS-1$
+					nameSet.add(elementName.substring(1));
+				}
+				// if (elementName.startsWith("$") && !prefix.startsWith("$")) {
+				// //$NON-NLS-1$ //$NON-NLS-2$
+				// elementName = elementName.substring(1);
+				// }
+				if (elementName.matches(pattern)) {
+					result.add(field);
+				}
+			}
+			fields = TraitUtils.getTraitFields(type, nameSet);
+			for (IField field : fields) {
+				String elementName = field.getElementName();
+				// if (elementName.startsWith("$") && !prefix.startsWith("$")) {
+				// //$NON-NLS-1$ //$NON-NLS-2$
+				// elementName = elementName.substring(1);
+				// }
+				if (elementName.matches(pattern)) {
+					result.add(field);
+				}
+			}
+		}
+		return result.toArray(new IField[result.size()]);
+	}
+
+	/**
 	 * Finds field by name in the class hierarchy
 	 * 
 	 * @param type
@@ -1619,6 +1680,14 @@ public class PHPModelUtils {
 		return docs.toArray(new PHPDocBlock[docs.size()]);
 	}
 
+	public static IMethod[] getTypesMethod(IType[] types, String pattern) throws ModelException {
+		List<IMethod> result = new LinkedList<IMethod>();
+		for (IType type : types) {
+			result.addAll(Arrays.asList(getTypeMethod(type, pattern)));
+		}
+		return result.toArray(new IMethod[result.size()]);
+	}
+
 	/**
 	 * Returns the type method element by name
 	 * 
@@ -1649,6 +1718,39 @@ public class PHPModelUtils {
 				String elementName = method.getElementName();
 				if (exactName && elementName.equalsIgnoreCase(prefix)
 						|| !exactName && startsWithIgnoreCase(elementName, prefix)) {
+					result.add(method);
+				}
+			}
+		}
+		return result.toArray(new IMethod[result.size()]);
+	}
+
+	/**
+	 * Returns the type method element matched with pattern (e.g. *, ?)
+	 * 
+	 * @param type
+	 *            Type
+	 * @param pattern
+	 *            pattern to match method name
+	 * @return array of matched methods
+	 * @throws ModelException
+	 */
+	public static IMethod[] getTypeMethod(IType type, String pattern) throws ModelException {
+		List<IMethod> result = new LinkedList<IMethod>();
+		if (type.exists()) {
+			Set<String> nameSet = new HashSet<String>();
+			IMethod[] methods = type.getMethods();
+			for (IMethod method : methods) {
+				String elementName = method.getElementName();
+				nameSet.add(elementName);
+				if (elementName.matches(pattern)) {
+					result.add(method);
+				}
+			}
+			methods = TraitUtils.getTraitMethods(type, nameSet);
+			for (IMethod method : methods) {
+				String elementName = method.getElementName();
+				if (elementName.matches(pattern)) {
 					result.add(method);
 				}
 			}

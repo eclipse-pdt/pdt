@@ -15,9 +15,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
@@ -357,7 +359,6 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 * @param modelElement
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	private IMethod getProperMethod(IMethod modelElement) {
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
@@ -406,7 +407,6 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		return isPrefix(prefix, replacementString);
 	}
 
-	@SuppressWarnings("restriction")
 	private void initAlias() {
 		alias = null;
 		if (method instanceof FakeConstructor) {
@@ -651,6 +651,24 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 			return extended;
 		}
 		return ret;
+	}
+
+	@Override
+	protected boolean isPrefix(String prefix, String string) {
+		if (prefix == null || string == null || prefix.length() > string.length())
+			return false;
+		return StringUtils.startsWithIgnoreCase(string, prefix)
+				|| isCamelCaseMatching() && CharOperation.camelCaseMatch(prefix.toCharArray(), string.toCharArray())
+				|| matchPatternPrefix(string, prefix);
+	}
+
+	private boolean matchPatternPrefix(String string, String prefix) {
+		StringBuilder builder = new StringBuilder("(?i)");
+		for (char ch : prefix.toCharArray()) {
+			builder.append(".*" + ch);
+		}
+		builder.append(".*");
+		return string.matches(builder.toString());
 	}
 
 	@Override
