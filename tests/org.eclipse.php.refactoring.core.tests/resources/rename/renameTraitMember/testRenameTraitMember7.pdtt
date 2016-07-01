@@ -1,7 +1,7 @@
 --TEST--
 
 --FILE--
-FILENAME://testRenameTraitMember.php
+FILENAME://testRenameTraitMember7.php
 <?php
 trait RenameTraitMember{
 	public function fun1(){
@@ -36,7 +36,7 @@ $a->c;
 newName:fun11
 updateTextualMatches:false
 --EXPECT--
-FILENAME://testRenameTraitMember.php
+FILENAME://testRenameTraitMember7.php
 <?php
 trait RenameTraitMember{
 	public function fun11(){
