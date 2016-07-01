@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.refactoring.core.test.TestProject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -29,23 +28,17 @@ import org.junit.runners.Suite;
 		PHPMoveProcessorBreakPointTestCase.class, PHPMoveProcessorTest.class })
 public class AllTests {
 
-	private static TestProject project;
-
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@BeforeClass
 	public static void setUpSuite() {
 		TestUtils.disableColliders(ColliderType.ALL);
-		project = new TestProject("RefactoringMove");
 	}
 
 	@AfterClass
 	public static void tearDownSuite() {
-		try {
-			project.delete();
-		} catch (Exception e) {
-		}
 		TestUtils.enableColliders(ColliderType.ALL);
 	}
+
 }

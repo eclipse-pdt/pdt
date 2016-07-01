@@ -24,12 +24,13 @@ import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTest {
+public class RenameProcessorTestCase0027134 extends AbstractRefactoringTest {
 	private IProject project1;
 
 	@Before
@@ -88,8 +89,7 @@ public class RenameProcessorTestCase0027134 extends AbstractRenameRefactoringTes
 		IFolder folder = TestUtils.createFolder(project1, "src");
 		IFile file1 = TestUtils.createFile(folder, "test100271341.php", "<?php class MyClass{} ?>");
 
-		IFile file2 = TestUtils.createFile(folder, "test00271342.php",
-				"<?php class SecondClass extends MyClass{} ?>");
+		IFile file2 = TestUtils.createFile(folder, "test00271342.php", "<?php class SecondClass extends MyClass{} ?>");
 
 		TestUtils.waitForIndexer();
 		Program program = createProgram(file2);

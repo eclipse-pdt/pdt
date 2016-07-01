@@ -16,12 +16,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(PDTTList.class)
-public class RenameClassMemberProcessorTest extends AbstractRenameRefactoringTest {
+public class RenameClassMemberProcessorTest extends AbstractPDTTListRefactoringTest {
 
 	@PDTTList.Parameters
 	public static String[] dirs = { "/resources/rename/renameClassMember/" }; //$NON-NLS-1$
@@ -31,7 +30,7 @@ public class RenameClassMemberProcessorTest extends AbstractRenameRefactoringTes
 	}
 
 	@Test
-	public void rename(String fileName) throws Exception {
+	public void testRename(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 

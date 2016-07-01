@@ -23,12 +23,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.refactoring.core.rename.AbstractRenameRefactoringTest;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ProgramFileChangeTest extends AbstractRenameRefactoringTest {
+public class ProgramFileChangeTest extends AbstractRefactoringTest {
 	private IProject project1;
 	private IFile file;
 

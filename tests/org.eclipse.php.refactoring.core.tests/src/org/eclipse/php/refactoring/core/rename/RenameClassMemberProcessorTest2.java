@@ -23,12 +23,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameClassMemberProcessorTest2 extends AbstractRenameRefactoringTest {
+public class RenameClassMemberProcessorTest2 extends AbstractRefactoringTest {
 
 	private IProject project1;
 	private IFile file;

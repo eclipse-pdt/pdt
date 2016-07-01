@@ -57,7 +57,7 @@ public class ExtractVariableRefactoringTest3 extends AbstractRefactoringTest {
 
 	// Testing extract lefthand side expression.
 	@Test
-	public void testExtract() {
+	public void testExtractVar() {
 
 		IStructuredModel model = null;
 		try {

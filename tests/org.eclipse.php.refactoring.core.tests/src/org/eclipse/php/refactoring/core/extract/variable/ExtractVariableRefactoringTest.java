@@ -22,31 +22,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList;
-import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
+import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileInfo;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
-import org.eclipse.php.refactoring.core.test.TestProject;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(PDTTList.class)
-public class ExtractVariableRefactoringTest extends AbstractRefactoringTest {
+public class ExtractVariableRefactoringTest extends AbstractPDTTListRefactoringTest {
 	public ExtractVariableRefactoringTest(String[] fileNames) {
 		super(fileNames);
-	}
-
-	@Override
-	protected TestProject getProject() {
-		return new TestProject("RefactoringExtractVar");
 	}
 
 	@PDTTList.Parameters
 	public static String[] dirs = { "/resources/extractvar/" }; //$NON-NLS-1$
 
 	@Test
-	public void test(String fileName) throws CoreException {
+	public void testExtractVar(String fileName) throws CoreException {
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 

@@ -50,7 +50,7 @@ public class PHPMoveProcessorTestCase0027202 {
 	}
 
 	@Test
-	public void testMoveing() {
+	public void testMove() {
 		IStructuredSelection selection = new StructuredSelection(project1.getProject().getFolder("/src"));
 		PHPMoveProcessor processor = new PHPMoveProcessor(selection);
 
