@@ -1,25 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2015 Zend Technologies and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Zend Technologies - initial API and implementation
- *******************************************************************************/
 package org.eclipse.php.refactoring.core.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -32,75 +17,30 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
-import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.osgi.framework.Bundle;
 
 public abstract class AbstractRefactoringTest {
 
-	protected String[] fileNames = null;
 	protected static final char OFFSET_CHAR = '|';
-	protected TestProject project;
-	protected Map<String, PdttFileExt> filesMap = new LinkedHashMap<String, PdttFileExt>();
-
-	public AbstractRefactoringTest() {
-	}
-
-	protected AbstractRefactoringTest(String[] fileNames) {
-		this.fileNames = fileNames;
-	}
 
 	@BeforeClass
 	public static void setUpSuite() {
 		TestUtils.disableColliders(ColliderType.ALL);
 	}
 
-	@PDTTList.BeforeList
-	public void setUpListSuite() throws Exception {
-		project = getProject();
-		initFiles(fileNames);
-	}
-
-	@PDTTList.AfterList
-	public void tearDownListSuite() throws Exception {
-		project.delete();
+	@AfterClass
+	public static void tearDownSuite() {
 		TestUtils.enableColliders(ColliderType.ALL);
-	}
-
-	protected void initFiles(String[] fileNames) throws Exception {
-		for (final String fileName : fileNames) {
-			final PdttFileExt pdttFile = new PdttFileExt(getBundle(), fileName);
-			for (FileInfo testFile : pdttFile.getTestFiles()) {
-				project.createFile(testFile.getName(), getContents(pdttFile, testFile));
-			}
-			filesMap.put(fileName, pdttFile);
-		}
-
-		TestUtils.waitForIndexer();
-	}
-
-	private String getContents(PdttFileExt pdttFile, FileInfo testFile) {
-		String data = testFile.getContents();
-		int offset = data.lastIndexOf(OFFSET_CHAR);
-		if (offset < 0) {
-			return data;
-		}
-		pdttFile.getConfig().put("start", String.valueOf(offset));
-		// replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
-		return data;
-	}
-
-	protected TestProject getProject() {
-		return new TestProject("Refactoring");
 	}
 
 	protected Program createProgram(IFile file) throws Exception {
@@ -108,17 +48,6 @@ public abstract class AbstractRefactoringTest {
 		Program program = null;
 		program = ASTUtils.createProgramFromSource(sourceModule);
 		return program;
-	}
-
-	protected IFile createFile(String name, String content) {
-		IFile file = null;
-		try {
-			file = project.createFile(name, content);
-		} catch (CoreException e2) {
-			fail(e2.getMessage());
-		}
-		assertNotNull(file);
-		return file;
 	}
 
 	protected void performChange(RefactoringProcessor processor) {
@@ -186,28 +115,12 @@ public abstract class AbstractRefactoringTest {
 		}
 	}
 
-	protected void checkTestResult(PdttFileExt pdttFile) {
-		TestUtils.waitForIndexer();
-		List<FileInfo> files = pdttFile.getExpectedFiles();
-		for (FileInfo expFile : files) {
-			IFile file = project.findFile(expFile.getName());
-			assertTrue(file.exists());
-			try {
-				PDTTUtils.assertContents(getContents(pdttFile, expFile), FileUtils.getContents(file));
-				// assertEquals(getContents(pdttFile,expFile),
-				// FileUtils.getContents(file));
-			} catch (IOException e) {
-				fail(e.getMessage());
-			}
-		}
+	protected ASTNode locateNode(Program program, int start, int end) {
+		ASTNode locateNode = NodeFinder.perform(program, start, end);
+		return locateNode;
 	}
 
-	@PDTTList.Context
-	public static Bundle getBundle() {
-		return Activator.getDefault().getBundle();
-	}
-
-	public static IStructuredModel createUnManagedStructuredModelFor(IFile file) throws IOException, CoreException {
+	protected IStructuredModel createUnManagedStructuredModelFor(IFile file) throws IOException, CoreException {
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
@@ -221,4 +134,5 @@ public abstract class AbstractRefactoringTest {
 		}
 		return model;
 	}
+
 }

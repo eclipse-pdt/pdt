@@ -58,7 +58,7 @@ public class ExtractVariableRefactoringTest27457 extends AbstractRefactoringTest
 	}
 
 	@Test
-	public void testExtract() {
+	public void testExtractVar() {
 
 		IStructuredModel model = null;
 		try {

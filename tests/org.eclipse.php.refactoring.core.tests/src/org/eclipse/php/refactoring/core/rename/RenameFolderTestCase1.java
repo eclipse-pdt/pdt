@@ -21,12 +21,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameFolderTestCase1 extends AbstractRenameRefactoringTest {
+public class RenameFolderTestCase1 extends AbstractRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
@@ -36,8 +37,7 @@ public class RenameFolderTestCase1 extends AbstractRenameRefactoringTest {
 		project1 = TestUtils.createProject("project1");
 		IFolder folder = TestUtils.createFolder(project1, "src");
 		file = TestUtils.createFile(folder, "RenameFolderTest1.php", "<?php class TestRenameClass{}?>");
-		file = TestUtils.createFile(project1, "RenameFolderTest2.php",
-				"<?php include 'src/RenameFolderTest1.php'; ?>");
+		file = TestUtils.createFile(project1, "RenameFolderTest2.php", "<?php include 'src/RenameFolderTest1.php'; ?>");
 
 		TestUtils.waitForIndexer();
 	}

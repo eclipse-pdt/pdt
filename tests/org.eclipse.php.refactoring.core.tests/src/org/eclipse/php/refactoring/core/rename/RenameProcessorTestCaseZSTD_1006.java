@@ -24,12 +24,13 @@ import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCaseZSTD_1006 extends AbstractRenameRefactoringTest {
+public class RenameProcessorTestCaseZSTD_1006 extends AbstractRefactoringTest {
 	private IProject project1;
 
 	@Before
@@ -47,8 +48,7 @@ public class RenameProcessorTestCaseZSTD_1006 extends AbstractRenameRefactoringT
 	public void testRename1() throws Exception {
 
 		IFolder folder = TestUtils.createFolder(project1, "src");
-		IFile file1 = TestUtils.createFile(folder, "testzstd_1006_1.php",
-				"<?php class MyClass{} $a=new MyClass();?>");
+		IFile file1 = TestUtils.createFile(folder, "testzstd_1006_1.php", "<?php class MyClass{} $a=new MyClass();?>");
 
 		IFile file2 = TestUtils.createFile(folder, "testzstd_1006_2.php",
 				"<?php include 'testzstd_1006_1.php'; class NewClass{protected function foo(){$a = new MyClass();}}?>");
