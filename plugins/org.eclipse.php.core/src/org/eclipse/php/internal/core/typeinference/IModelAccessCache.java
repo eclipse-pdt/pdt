@@ -24,6 +24,13 @@ public interface IModelAccessCache {
 	public <T extends IModelElement> Collection<T> filterModelElements(ISourceModule sourceModule,
 			Collection<T> elements, IProgressMonitor monitor);
 
+	/**
+	 * Filters given set of elements according to a file network, but only if
+	 * all elements represent the same type, name and namespace
+	 */
+	public <T extends IModelElement> Collection<T> filterSameModelElements(ISourceModule sourceModule,
+			Collection<T> elements, IProgressMonitor monitor);
+
 	public abstract ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException;
 
 	/**

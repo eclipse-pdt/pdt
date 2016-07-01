@@ -114,6 +114,23 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	/**
+	 * Filters given set of elements according to a file network, but only if
+	 * all elements represent the same type, name and namespace
+	 * 
+	 * @param sourceModule
+	 *            Current file
+	 * @param elements
+	 *            Elements set
+	 * @param monitor
+	 *            Progress monitor
+	 * @return filtered elements
+	 */
+	public <T extends IModelElement> Collection<T> filterSameModelElements(ISourceModule sourceModule,
+			Collection<T> elements, IProgressMonitor monitor) {
+		return PHPModelUtils.filterElements(sourceModule, elements, this, monitor);
+	}
+
+	/**
 	 * Returns cached result of a function search, or invokes a new search query
 	 * 
 	 * @param sourceModule
@@ -173,6 +190,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Current source module
 	 * @param typeName
 	 *            The name of the type (class, interface or namespace)
+	 * @param namespaceName
+	 *            namespace name
 	 * @param monitor
 	 *            Progress monitor
 	 * @return a collection of types according to a given name, or
@@ -219,7 +238,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			types = allTypesCache.get(searchFor);
 		}
-		return filterModelElements(sourceModule, types, monitor);
+		return filterSameModelElements(sourceModule, types, monitor);
 	}
 
 	/**
@@ -268,6 +287,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Current source module
 	 * @param typeName
 	 *            The name of the trait
+	 * @param namespaceName
+	 *            namespace name
 	 * @param monitor
 	 *            Progress monitor
 	 * @return a collection of traits according to a given name, or
@@ -308,12 +329,12 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
 				allTraitsCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findTraits(namespaceName,
-						typeName, MatchRule.PREFIX, 0, 0, scope, null)));
+						typeName, MatchRule.EXACT, 0, 0, scope, null)));
 			}
 
 			types = allTraitsCache.get(searchFor);
 		}
-		return filterModelElements(sourceModule, types, monitor);
+		return filterSameModelElements(sourceModule, types, monitor);
 	}
 
 	/**
@@ -323,6 +344,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Current source module
 	 * @param name
 	 *            Class name
+	 * @param namespaceName
+	 *            namespace name
 	 * @param monitor
 	 *            Progress monitor
 	 * @return classes collection if found, otherwise <code>null</code>
@@ -350,6 +373,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Current source module
 	 * @param name
 	 *            Interface name
+	 * @param namespaceName
+	 *            namespace name
 	 * @param monitor
 	 *            Progress monitor
 	 * @return interfaces collection if found, otherwise <code>null</code>
@@ -377,6 +402,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Current source module
 	 * @param name
 	 *            Class name
+	 * @param namespaceName
+	 *            namespace name
 	 * @param monitor
 	 *            Progress monitor
 	 * @return classes collection if found, otherwise <code>null</code>
