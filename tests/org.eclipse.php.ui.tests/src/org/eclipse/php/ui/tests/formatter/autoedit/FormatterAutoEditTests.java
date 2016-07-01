@@ -20,13 +20,10 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuffer;
-import org.eclipse.dltk.core.IProblemRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.core.WorkingCopyOwner;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -43,7 +40,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.eclipse.swt.widgets.Display;
@@ -54,7 +50,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -143,102 +138,26 @@ public class FormatterAutoEditTests {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		final DocumentCommand cmd = createFile(pdttFile.getFile().trim(), cursor);
-		final ISourceModule modelElement = (ISourceModule) DLTKCore.create(testFile);
-		if (ScriptModelUtil.isPrimary(modelElement))
-			modelElement.becomeWorkingCopy(new IProblemRequestor() {
-
-				public void acceptProblem(IProblem problem) {
-				}
-
-				public void beginReporting() {
-				}
-
-				public void endReporting() {
-				}
-
-				public boolean isActive() {
-					return false;
-				}
-			}, null);
-
 		final Exception[] err = new Exception[1];
-
-		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(testFile);
-		try {
-			final IDocument document = modelForEdit.getStructuredDocument();
-			Display.getDefault().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						openEditor();
-					} catch (Exception e) {
-						err[0] = e;
-					}
+		final IDocument document = StructuredModelManager.getModelManager().getModelForRead(testFile)
+				.getStructuredDocument();
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					openEditor();
+					format(pdttFile, cmd, document);
+					closeEditor();
+				} catch (Exception e) {
+					err[0] = e;
 				}
-			});
-			if (err[0] != null) {
-				throw err[0];
 			}
-
-			SharedASTProvider.getAST(modelElement, SharedASTProvider.WAIT_YES, null);
-
-			Display.getDefault().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
-
-						if (pdttFile.getOther() != null && !pdttFile.getOther().isEmpty()) {
-							cmd.text = pdttFile.getOther().substring(0, pdttFile.getOther().length() - 1);
-							if (cmd.text != null && cmd.text.trim().length() == 1) {
-								// support single (non-blank) character
-								// insertion
-								cmd.text = cmd.text.trim();
-							}
-						} else {
-							cmd.text = "\n";
-						}
-
-						cmd.doit = true;
-						cmd.shiftsCaret = true;
-						cmd.caretOffset = -1;
-
-						indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
-						document.replace(cmd.offset, cmd.length, cmd.text);
-					} catch (Exception e) {
-						err[0] = e;
-					}
-				}
-			});
-			if (err[0] != null) {
-				throw err[0];
-			}
-
-			PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
-
-			modelForEdit.save();
-		} finally {
-			if (modelForEdit != null) {
-				modelForEdit.releaseFromEdit();
-			}
-			Display.getDefault().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						closeEditor();
-					} catch (Exception e) {
-						err[0] = e;
-					}
-				}
-			});
-			if (err[0] != null) {
-				throw err[0];
-			}
-
+		});
+		if (err[0] != null) {
+			throw err[0];
 		}
+		// Compare contents
+		PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
 	}
 
 	protected DocumentCommand createFile(String data, String cursor) throws Exception {
@@ -247,10 +166,8 @@ public class FormatterAutoEditTests {
 		if (lastOffset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
-
 		final DocumentCommand cmd = new DocumentCommand() {
 		};
-
 		// replace the offset character(s)
 		if (firstOffset == lastOffset) {
 			data = data.substring(0, lastOffset) + data.substring(lastOffset + cursor.length());
@@ -262,12 +179,10 @@ public class FormatterAutoEditTests {
 			cmd.offset = firstOffset;
 			cmd.length = lastOffset - (firstOffset + cursor.length());
 		}
-
 		testFile = TestUtils.createFile(project, "test" + (++count) + ".php", data);
 		project.getFile("test" + (++count) + ".php");
 		// Wait for indexer...
 		TestUtils.waitForIndexer();
-
 		return cmd;
 	}
 
@@ -291,6 +206,26 @@ public class FormatterAutoEditTests {
 		editor.doSave(null);
 		editor.getSite().getPage().closeEditor(editor, false);
 		editor = null;
+	}
+
+	protected void format(final PdttFile pdttFile, final DocumentCommand cmd, final IDocument document)
+			throws BadLocationException {
+		IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
+		if (pdttFile.getOther() != null && !pdttFile.getOther().isEmpty()) {
+			cmd.text = pdttFile.getOther().substring(0, pdttFile.getOther().length() - 1);
+			if (cmd.text != null && cmd.text.trim().length() == 1) {
+				// support single (non-blank) character
+				// insertion
+				cmd.text = cmd.text.trim();
+			}
+		} else {
+			cmd.text = "\n";
+		}
+		cmd.doit = true;
+		cmd.shiftsCaret = true;
+		cmd.caretOffset = -1;
+		indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
+		document.replace(cmd.offset, cmd.length, cmd.text);
 	}
 
 }

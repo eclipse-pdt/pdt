@@ -15,11 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IProblemRequestor;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PDTTUtils;
@@ -30,7 +25,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -60,70 +54,32 @@ public class FormatterAutoEditTests extends FormatterTests {
 	public void formatter(String fileName) throws Exception {
 		IFile file = files.get(fileName);
 		PdttFile pdttFile = pdttFiles.get(fileName);
-		ISourceModule modelElement = (ISourceModule) DLTKCore.create(file);
-		if (ScriptModelUtil.isPrimary(modelElement))
-			modelElement.becomeWorkingCopy(new IProblemRequestor() {
-
-				public void acceptProblem(IProblem problem) {
-				}
-
-				public void beginReporting() {
-				}
-
-				public void endReporting() {
-				}
-
-				public boolean isActive() {
-					return false;
-				}
-			}, null);
-		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
-		try {
-			IDocument document = modelForEdit.getStructuredDocument();
-			String beforeFormat = document.get();
-			String data = document.get();
-			int offset = data.lastIndexOf(OFFSET_CHAR);
-			if (offset == -1) {
-				throw new IllegalArgumentException(data + ",offset character is not set");
-			}
-
-			// replace the offset character
-			data = data.substring(0, offset) + data.substring(offset + 1);
-
-			document.set(data);
-
-			MainAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
-
-			DocumentCommand cmd = new DocumentCommand() {
-
-			};
-
-			cmd.offset = offset;
-			cmd.length = 0;
-			if (pdttFile.getOther() != null) {
-				cmd.text = pdttFile.getOther();
-			} else {
-				cmd.text = "\n";
-			}
-
-			cmd.doit = true;
-			cmd.shiftsCaret = true;
-			cmd.caretOffset = -1;
-
-			indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
-			document.replace(cmd.offset, cmd.length, cmd.text);
-
-			PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
-
-			// change the document text as was before
-			// the formatting
-			document.set(beforeFormat);
-			modelForEdit.save();
-		} finally {
-			if (modelForEdit != null) {
-				modelForEdit.releaseFromEdit();
-			}
+		IDocument document = StructuredModelManager.getModelManager().getModelForRead(file).getStructuredDocument();
+		String data = document.get();
+		int offset = data.lastIndexOf(OFFSET_CHAR);
+		if (offset == -1) {
+			throw new IllegalArgumentException(data + ",offset character is not set");
 		}
+		// replace the offset character
+		data = data.substring(0, offset) + data.substring(offset + 1);
+		document.set(data);
+		MainAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
+		DocumentCommand cmd = new DocumentCommand() {
+		};
+		cmd.offset = offset;
+		cmd.length = 0;
+		if (pdttFile.getOther() != null) {
+			cmd.text = pdttFile.getOther();
+		} else {
+			cmd.text = "\n";
+		}
+		cmd.doit = true;
+		cmd.shiftsCaret = true;
+		cmd.caretOffset = -1;
+		indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
+		document.replace(cmd.offset, cmd.length, cmd.text);
+		// Compare contents
+		PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
 	}
 
 }

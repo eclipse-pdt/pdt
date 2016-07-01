@@ -46,7 +46,6 @@ import org.eclipse.php.formatter.ui.preferences.ProfileStore;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
@@ -109,19 +108,17 @@ public class FormatterTests {
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("FormatterTests_" + suiteCounter++);
 		TestUtils.setProjectPhpVersion(project, phpVersion);
-
+		// Create files to format
 		for (String fileName : fileNames) {
 			PdttFile pdttFile = new PdttFile(getContext(), fileName);
 			IFile file = createFile(pdttFile.getFile().trim());
 			files.put(fileName, file);
 			pdttFiles.put(fileName, pdttFile);
 		}
-
+		// Wait for indexer...
 		TestUtils.waitForIndexer();
-
 		profileManager.clearAllSettings(scopeContext);
 		profileManager.commitChanges(scopeContext);
-
 		if (xmlFile != null) {
 			// apply configuration to the formatter configuration
 			// manager
@@ -134,18 +131,14 @@ public class FormatterTests {
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
-
 			final File file = new File(abcolutXmlFilePath);
 			assertTrue("Formatter Configuration Not Found " + file.toString(), file.exists());
-
 			List<Profile> profiles = null;
 			try {
-
 				profiles = ProfileStore.readProfilesFromFile(file);
 			} catch (CoreException e) {
 				Logger.logException("Error while reading profile configuration xml file", e);
 			}
-
 			// should be only one profile in file
 			if (profiles != null && profiles.size() > 0) {
 				// update formatter configuration profile
@@ -153,10 +146,7 @@ public class FormatterTests {
 				profileManager.addProfile(profile);
 				profileManager.setSelected(profile);
 				profileManager.commitChanges(scopeContext);
-
 			}
-		} else {
-
 		}
 	}
 
@@ -170,28 +160,11 @@ public class FormatterTests {
 	@Test
 	public void formatter(String fileName) throws Exception {
 		IFile file = files.get(fileName);
-
-		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
-		try {
-			IDocument document = modelForEdit.getStructuredDocument();
-			String beforeFormat = document.get();
-
-			PHPFormatProcessorProxy formatter = new PHPFormatProcessorProxy();
-			formatter.formatDocument(document, 0, document.getLength());
-
-			PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(), document.get());
-
-			// change the document text as
-			// was
-			// before
-			// the formatting
-			document.set(beforeFormat);
-			modelForEdit.save();
-		} finally {
-			if (modelForEdit != null) {
-				modelForEdit.releaseFromEdit();
-			}
-		}
+		IDocument document = StructuredModelManager.getModelManager().getModelForRead(file).getStructuredDocument();
+		PHPFormatProcessorProxy formatter = new PHPFormatProcessorProxy();
+		formatter.formatDocument(document, 0, document.getLength());
+		// Compare contents
+		PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(), document.get());
 	}
 
 	private static void setDefaultFormatter(IScopeContext scopeContext, ProfileManager profileManager) {
@@ -205,4 +178,5 @@ public class FormatterTests {
 	protected IFile createFile(String data) throws Exception {
 		return TestUtils.createFile(project, "test" + (++count) + ".php", data);
 	}
+
 }
