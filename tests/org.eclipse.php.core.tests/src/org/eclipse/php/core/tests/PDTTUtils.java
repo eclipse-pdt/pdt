@@ -15,6 +15,7 @@ package org.eclipse.php.core.tests;
 import static org.junit.Assert.fail;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 import org.osgi.framework.Bundle;
 
 public class PDTTUtils {
+
 	public static String[] getPDTTFiles(String testsDirectory) {
 		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault().getBundle());
 	}
@@ -55,6 +57,7 @@ public class PDTTUtils {
 				files.add(path);
 			}
 		}
+		Collections.sort(files);
 		return (String[]) files.toArray(new String[files.size()]);
 	}
 
@@ -64,4 +67,5 @@ public class PDTTUtils {
 			fail(diff);
 		}
 	}
+
 }
