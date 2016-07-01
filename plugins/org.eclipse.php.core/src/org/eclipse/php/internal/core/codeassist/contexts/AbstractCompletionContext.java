@@ -854,12 +854,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * This method get enclosing type elemnt. It completly ignore statements
+	 * This method get enclosing type element. It completely ignore statements
 	 * without {
 	 */
 	protected IModelElement getEnclosingElement() {
 		try {
 			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
+			int offset = this.offset;
 			if (offset >= document.getLength()) {
 				offset = document.getLength() - 1;
 			}
