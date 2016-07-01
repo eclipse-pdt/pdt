@@ -16,7 +16,6 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -35,16 +34,7 @@ public class TestProject {
 	}
 
 	private void createProject(String name) {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		if (!project.exists()) {
-			project = TestUtils.createProject(name);
-		}
-		TestUtils.waitForIndexer();
-
-	}
-
-	public boolean exists() {
-		return project != null && project.exists();
+		project = TestUtils.createProject(name);
 	}
 
 	public IProject getProject() {
@@ -52,8 +42,7 @@ public class TestProject {
 	}
 
 	public void delete() throws Exception {
-		if (project != null && project.exists())
-			project.delete(true, new NullProgressMonitor());
+		TestUtils.deleteProject(project);
 	}
 
 	public IFile createFile(String path, String content) throws CoreException {
@@ -61,47 +50,33 @@ public class TestProject {
 		if (filePath.segmentCount() > 1) {
 			createFolder(filePath.removeLastSegments(1));
 		}
-
-		if (project != null) {
-			InputStream source = new ByteArrayInputStream(content.getBytes());
-			IFile file = project.getFile(path);
-			if (!file.exists()) {
-				file.create(source, true, new NullProgressMonitor());
-			} else {
-				file.setContents(source, IFile.FORCE, new NullProgressMonitor());
-			}
-			return file;
+		InputStream source = new ByteArrayInputStream(content.getBytes());
+		IFile file = project.getFile(path);
+		if (!file.exists()) {
+			file.create(source, true, new NullProgressMonitor());
+		} else {
+			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-		return null;
+		return file;
 	}
 
 	private IFolder createFolder(IPath path) throws CoreException {
-		if (project != null) {
-			IFolder folder = project.getFolder(path);
-			if (!folder.exists()) {
-				folder.create(true, true, new NullProgressMonitor());
-			}
-			return folder;
+		IFolder folder = project.getFolder(path);
+		if (!folder.exists()) {
+			folder.create(true, true, new NullProgressMonitor());
 		}
-		return null;
+		return folder;
 	}
 
 	public IFile findFile(String path) {
-		if (project != null) {
-			return project.getFile(path);
-		}
-		return null;
+		return project.getFile(path);
 	}
 
 	public IFolder createFolder(String path) throws CoreException {
-		if (project != null) {
-			IFolder folder = project.getFolder(path);
-			if (!folder.exists()) {
-				folder.create(true, true, new NullProgressMonitor());
-			}
-			return folder;
+		IFolder folder = project.getFolder(path);
+		if (!folder.exists()) {
+			folder.create(true, true, new NullProgressMonitor());
 		}
-		return null;
-
+		return folder;
 	}
 }

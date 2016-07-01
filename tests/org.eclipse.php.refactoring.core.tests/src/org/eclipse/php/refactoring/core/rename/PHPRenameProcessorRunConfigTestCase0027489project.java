@@ -27,11 +27,12 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PHPRenameProcessorRunConfigTestCase0027489project extends AbstractRenameRefactoringTest {
+public class PHPRenameProcessorRunConfigTestCase0027489project extends AbstractRefactoringTest {
 	private IProject project1;
 
 	private String configFileCont = "<?xml version='1.0' encoding='UTF-8' standalone='no'?> "

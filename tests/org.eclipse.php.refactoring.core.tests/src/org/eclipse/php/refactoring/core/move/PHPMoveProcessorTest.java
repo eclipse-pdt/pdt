@@ -10,35 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
+import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
-import org.eclipse.php.refactoring.core.test.TestProject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(PDTTList.class)
-public class PHPMoveProcessorTest extends AbstractRefactoringTest {
+public class PHPMoveProcessorTest extends AbstractPDTTListRefactoringTest {
 
 	public PHPMoveProcessorTest(String[] fileNames) {
 		super(fileNames);
-	}
-
-	@Override
-	protected TestProject getProject() {
-		return new TestProject("RefactoringMove");
 	}
 
 	@PDTTList.Parameters
 	public static String[] dirs = { "/resources/move/" }; //$NON-NLS-1$
 
 	@Test
-	public void test(String fileName) throws Exception {
+	public void testMove(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 

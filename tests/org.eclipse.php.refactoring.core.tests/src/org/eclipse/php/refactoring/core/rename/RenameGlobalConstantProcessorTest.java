@@ -10,18 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(PDTTList.class)
-public class RenameGlobalConstantProcessorTest extends AbstractRenameRefactoringTest {
+public class RenameGlobalConstantProcessorTest extends AbstractPDTTListRefactoringTest {
 
 	public RenameGlobalConstantProcessorTest(String[] fileNames) {
 		super(fileNames);
@@ -31,7 +30,7 @@ public class RenameGlobalConstantProcessorTest extends AbstractRenameRefactoring
 	public static String[] dirs = { "/resources/rename/renameGblConst/" }; //$NON-NLS-1$
 
 	@Test
-	public void rename(String fileName) throws Exception {
+	public void testRename(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
