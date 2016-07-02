@@ -13,9 +13,12 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.text.completion.AbstractScriptCompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposalSorter;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.ui.Logger;
 
 public class PHPCompletionProposalSorter implements ICompletionProposalSorter {
 
@@ -27,6 +30,18 @@ public class PHPCompletionProposalSorter implements ICompletionProposalSorter {
 
 			IModelElement el1 = cp1.getModelElement();
 			IModelElement el2 = cp2.getModelElement();
+
+			if (el1.getElementType() == IModelElement.TYPE && el2.getElementType() == IModelElement.TYPE) {
+				try {
+					int result = Boolean.compare(PHPFlags.isNamespace(((IType) el1).getFlags()),
+							PHPFlags.isNamespace(((IType) el2).getFlags()));
+					if (result != 0) {
+						return result;
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+			}
 
 			if (el1.getElementName().equals(el2.getElementName())) {
 				String parent1 = getParentQualifier(el1.getParent());

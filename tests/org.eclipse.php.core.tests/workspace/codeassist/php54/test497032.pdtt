@@ -1,0 +1,33 @@
+--TEST--
+Test CA sorting
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php 
+
+namespace Boo\Backend\Block{
+	class X{
+	}
+	interface Y{
+	}
+	trait Z{
+	}
+}
+
+namespace Boo\Backend\Block\A{
+}
+
+namespace Boo\Backend\Block\B{
+}
+
+namespace Boo\Backend\Block\C{
+}
+
+Boo\Backend\Block\|
+--EXPECT--
+type(X)
+type(Y)
+type(Z)
+type(Boo\Backend\Block\A)
+type(Boo\Backend\Block\B)
+type(Boo\Backend\Block\C)
