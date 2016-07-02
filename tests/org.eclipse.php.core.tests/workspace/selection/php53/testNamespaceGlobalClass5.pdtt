@@ -1,0 +1,19 @@
+--TEST--
+Bug 497003 - Hyperlink doesn't work for global type
+NB: PHP core class is choosen here, it's the expected result
+--FILE--
+<?php
+namespace Boo;
+
+class Exception extends |\Exception|
+{
+}
+?>
+--FILE0--
+<?php
+class Exception
+{
+}
+?>
+--EXPECT--
+type(Core.php||Exception)

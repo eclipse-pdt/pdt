@@ -15,6 +15,7 @@ import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
@@ -279,7 +280,7 @@ public class PHPModelUtils {
 		if (elements != null && elements.size() > 1) {
 			List<T> filteredElements = new LinkedList<T>();
 
-			// If some of elements belong to current file return just it:
+			// If some of elements belong to current file just return it:
 			for (T element : elements) {
 				if (sourceModule.equals(element.getOpenable())) {
 					filteredElements.add(element);
@@ -354,9 +355,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Determine whether given elements represent the same type and name, but
-	 * declared in different files (determine whether file network filtering can
-	 * be used)
+	 * Determine whether given elements represent the same type, name and
+	 * namespace, but declared in different files (determine whether file
+	 * network filtering can be used)
 	 * 
 	 * @param elements
 	 *            Model elements list
@@ -365,16 +366,21 @@ public class PHPModelUtils {
 	private static <T extends IModelElement> boolean canUseFileNetworkFilter(Collection<T> elements) {
 		int elementType = 0;
 		String elementName = null;
+		String namespaceName = null;
 		for (T element : elements) {
 			if (element == null) {
 				continue;
 			}
+			IType namespaceElement = getCurrentNamespace(element);
+			String namespaceNameElement = namespaceElement != null ? namespaceElement.getElementName() : null;
 			if (elementName == null) {
 				elementType = element.getElementType();
 				elementName = element.getElementName();
+				namespaceName = namespaceNameElement;
 				continue;
 			}
-			if (!elementName.equalsIgnoreCase(element.getElementName()) || elementType != element.getElementType()) {
+			if (!elementName.equalsIgnoreCase(element.getElementName()) || elementType != element.getElementType()
+					|| !StringUtils.equalsIgnoreCase(namespaceName, namespaceNameElement)) {
 				return false;
 			}
 		}
@@ -1741,25 +1747,25 @@ public class PHPModelUtils {
 			}
 		}
 
-		List<IType> result = new ArrayList<IType>();
 		Collection<IType> types;
 		if (cache == null) {
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-			IType[] r;
 			if (isType) {
-				r = PhpModelAccess.getDefault().findTypes(typeName, MatchRule.EXACT, 0, 0, scope, null);
+				types = Arrays
+						.asList(PhpModelAccess.getDefault().findTypes(typeName, MatchRule.EXACT, 0, 0, scope, null));
 			} else {
-				r = PhpModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null);
+				types = Arrays
+						.asList(PhpModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null));
 			}
-			for (IType type : r) {
-				if (getCurrentNamespace(type) == null) {
-					result.add(type);
-				}
-			}
-			List<IType> tempList = new ArrayList<IType>(result.size());
-			tempList.addAll(result);
-			types = filterElements(sourceModule, tempList, null, monitor);
 		} else {
+			// Cached types will already be filtered by method
+			// PHPModelUtils.filterElements() when cache is an instance of
+			// PerFileModelAccessCache. The filtering is too early here but it's
+			// ok so long it doesn't change the results of bottom
+			// getCurrentNamespace(type) and filterElements(sourceModule,
+			// result, null, monitor) filtering for types without namespace.
+			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=497003 and
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496530
 			if (isType) {
 				types = cache.getTypes(sourceModule, typeName, null, monitor);
 			} else {
@@ -1769,12 +1775,13 @@ public class PHPModelUtils {
 				return PhpModelAccess.NULL_TYPES;
 			}
 		}
-		result.clear();
+		List<IType> result = new ArrayList<IType>();
 		for (IType type : types) {
 			if (getCurrentNamespace(type) == null) {
 				result.add(type);
 			}
 		}
+		types = filterElements(sourceModule, result, null, monitor);
 		return result.toArray(new IType[result.size()]);
 	}
 
