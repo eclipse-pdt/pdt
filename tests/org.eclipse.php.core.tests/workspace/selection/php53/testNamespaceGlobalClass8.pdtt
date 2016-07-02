@@ -1,0 +1,20 @@
+--TEST--
+Bug 497003 - Hyperlink doesn't work for global type
+--FILE--
+<?php
+namespace Boo;
+
+class Bar extends |Bar|
+{
+}
+?>
+--FILE0--
+<?php
+namespace Boo;
+
+class Bar
+{
+}
+?>
+--EXPECT--
+type(FILE.php|Boo|Bar)

@@ -1,0 +1,19 @@
+--TEST--
+Bug 497087 - Hyperlink doesn't work for use statement
+--FILE--
+<?php
+namespace Magento\Usps\Model\Source\Machinable {
+
+	class XTest {
+		public function __construct($a, $b)
+		{
+		}
+	}
+}
+
+namespace abc {
+	use Magento\Usps\Model\Source\Machinable\|XTest|;
+}
+?>
+--EXPECT--
+type(XTest)
