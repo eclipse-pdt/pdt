@@ -859,8 +859,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	protected IModelElement getEnclosingElement() {
 		try {
-			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
 			int offset = this.offset;
+			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
 			if (offset >= document.getLength()) {
 				offset = document.getLength() - 1;
 			}
