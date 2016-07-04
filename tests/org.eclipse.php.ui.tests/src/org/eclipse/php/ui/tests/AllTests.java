@@ -12,10 +12,13 @@
  *******************************************************************************/
 package org.eclipse.php.ui.tests;
 
+import org.eclipse.php.core.tests.TestAllSuiteWatcher;
 import org.eclipse.php.ui.tests.commands.CommandsTests;
 import org.eclipse.php.ui.tests.contentassist.ContentAssistTests;
 import org.eclipse.php.ui.tests.formatter.autoedit.FormatterAutoEditTests;
 import org.eclipse.php.ui.tests.semantic_highlighter.SemanticHighlightingTests;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -24,4 +27,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ ContentAssistTests.class, FormatterAutoEditTests.class, SemanticHighlightingTests.class,
 		CommandsTests.class })
 public class AllTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestAllSuiteWatcher();
+
 }

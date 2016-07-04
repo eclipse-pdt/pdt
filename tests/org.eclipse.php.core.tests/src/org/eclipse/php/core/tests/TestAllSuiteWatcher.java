@@ -16,22 +16,22 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
- * Test watcher to print out currently running test suite name.
+ * Test watcher to print out currently running test group suite name.
  * 
  * @author Bartlomiej Laczkowski
  */
-public class TestSuiteWatcher extends TestWatcher {
+public class TestAllSuiteWatcher extends TestWatcher {
 
-	private static final String SUITE_RUNNING = "[TEST] -> {0}";
-
-	private boolean fReported = false;
+	private static final String SUITE_STARTED = "[TESTS] -> {0}";
 
 	@Override
 	protected void starting(Description description) {
-		if (!fReported) {
-			System.out.println(MessageFormat.format(SUITE_RUNNING, description.getDisplayName()));
-			fReported = true;
-		}
+		System.out.println(MessageFormat.format(SUITE_STARTED, description.getDisplayName()));
+	}
+
+	@Override
+	protected void finished(Description description) {
+		System.out.println();
 	}
 
 }

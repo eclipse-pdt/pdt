@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.formatter.core.tests;
 
-import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestAllSuiteWatcher;
 import org.junit.ClassRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
@@ -23,6 +23,6 @@ import org.junit.runners.Suite.SuiteClasses;
 public class AllTests {
 
 	@ClassRule
-	public static TestWatcher watcher = new TestSuiteWatcher();
+	public static TestWatcher watcher = new TestAllSuiteWatcher();
 
 }

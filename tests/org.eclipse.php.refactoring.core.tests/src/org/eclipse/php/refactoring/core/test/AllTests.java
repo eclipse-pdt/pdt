@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.test;
 
+import org.eclipse.php.core.tests.TestAllSuiteWatcher;
+import org.junit.ClassRule;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -22,4 +25,8 @@ import org.junit.runners.Suite;
 		org.eclipse.php.refactoring.ui.actions.AllTests.class,
 		org.eclipse.php.refactoring.core.changes.AllTests.class })
 public class AllTests {
+
+	@ClassRule
+	public static TestWatcher watcher = new TestAllSuiteWatcher();
+
 }
