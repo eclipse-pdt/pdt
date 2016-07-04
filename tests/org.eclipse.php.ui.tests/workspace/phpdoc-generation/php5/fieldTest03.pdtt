@@ -16,8 +16,8 @@ class foo
 {
   /**
    * 
-   * @var $TMP1 array
-   * @var $TMP2 integer
+   * @var array $TMP1
+   * @var integer $TMP2
    */
   const TMP1 = array(), TMP2 = 5;
 

@@ -16,8 +16,8 @@ class foo
 {
   /**
    * 
-   * @var $_tmp1 array
-   * @var $_tmp2 integer
+   * @var array $_tmp1
+   * @var integer $_tmp2
    */
   private $_tmp1 = array(), $_tmp2 = 5;
 
