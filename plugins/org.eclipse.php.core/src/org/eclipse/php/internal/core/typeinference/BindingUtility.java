@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -555,6 +556,8 @@ public class BindingUtility {
 						sourceModule, sourceModuleDeclaration, context, expr);
 				if (resolvedExpression != null) {
 					evaluated.add(resolvedExpression);
+				} else {
+					evaluated.add(UnknownType.INSTANCE);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {

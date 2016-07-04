@@ -1,0 +1,24 @@
+--TEST--
+Bug 497029 - Function/Method PHPDoc generator ignore @return if unknown
+--FILE--
+<?php
+class Foo {
+  private $el;
+
+  /**|
+  public function bar() {
+    return $this->el->calSomething();
+  }
+}
+--EXPECT--
+<?php
+class Foo {
+  private $el;
+  /**
+   * 
+   * @return unknown
+   */
+  public function bar() {
+    return $this->el->calSomething();
+  }
+}
