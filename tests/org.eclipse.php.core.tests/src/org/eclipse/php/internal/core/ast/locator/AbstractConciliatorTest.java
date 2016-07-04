@@ -66,7 +66,6 @@ public abstract class AbstractConciliatorTest {
 		IProject project = TestUtils.createProject(name);
 		try {
 			TestUtils.setProjectPhpVersion(project, version);
-			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

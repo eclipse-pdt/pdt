@@ -13,7 +13,6 @@
 package org.eclipse.php.core.tests.searchEngine;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
@@ -37,7 +36,6 @@ public class PHP5LanguageModelTest {
 	public static void setUp() throws Exception {
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("PHPLanguageModelTests");
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		TestUtils.waitForIndexer();
 	}
 

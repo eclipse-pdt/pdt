@@ -14,7 +14,6 @@ package org.eclipse.php.core.tests.markoccurrence;
 
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,15 +23,13 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
@@ -152,14 +149,8 @@ public class MarkOccurrenceTests {
 		offset = data.lastIndexOf(OFFSET_CHAR);
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-
-		testFile = project.getFile("test.php");
-		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
+		testFile = TestUtils.createFile(project, "test.php", data);
 		TestUtils.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
 		Program astRoot = createProgramFromSource(testFile);
 		ASTNode selectedNode = NodeFinder.perform(astRoot, offset, 0);
 		OccurrenceLocation[] locations = null;

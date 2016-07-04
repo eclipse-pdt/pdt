@@ -13,7 +13,6 @@
 package org.eclipse.php.core.tests.searchEngine;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
@@ -41,7 +40,6 @@ public class PHP53LanguageModelTest {
 		project = TestUtils.createProject("PHPLanguageModelTests");
 		ResourcesPlugin.getWorkspace().getRoot().getProject();
 		TestUtils.setProjectPhpVersion(project, PHPVersion.PHP5_3);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		TestUtils.waitForIndexer();
 	}
 

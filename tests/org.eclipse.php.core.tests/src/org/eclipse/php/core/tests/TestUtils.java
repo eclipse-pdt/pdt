@@ -197,7 +197,6 @@ public final class TestUtils {
 		IFile file = project.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
-			project.refreshLocal(IProject.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -216,7 +215,6 @@ public final class TestUtils {
 		IFile file = folder.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
-			folder.refreshLocal(IFolder.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

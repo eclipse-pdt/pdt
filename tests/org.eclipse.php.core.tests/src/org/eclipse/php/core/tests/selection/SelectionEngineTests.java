@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -205,10 +204,7 @@ public class SelectionEngineTests {
 		for (int i = 0, len = pdttFile.getOtherFiles().length; i < len; i++) {
 			otherFiles.add(TestUtils.createFile(project, "FILE" + i + ".php", pdttFile.getOtherFile(i)));
 		}
-
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		TestUtils.waitForIndexer();
-
 		ISourceModule sourceModule = getSourceModule();
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
 		return elements;

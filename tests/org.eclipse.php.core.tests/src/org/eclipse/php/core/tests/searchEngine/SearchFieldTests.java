@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
@@ -33,9 +32,9 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
@@ -122,7 +121,6 @@ public class SearchFieldTests {
 	 */
 	protected void createFile(String data) throws Exception {
 		testFile = TestUtils.createFile(project, "test.php", data);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		TestUtils.waitForIndexer();
 	}
 

@@ -25,9 +25,6 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.dltk.core.ISourceRange;
@@ -190,14 +187,7 @@ public class CommandsTests {
 		fEditor.getSite().getPage().closeEditor(fEditor, false);
 		fEditor = null;
 		if (testFile.exists()) {
-			try {
-				testFile.delete(true, false, null);
-				project.refreshLocal(IResource.DEPTH_INFINITE, null);
-				project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-				TestUtils.waitForIndexer();
-			} catch (CoreException e) {
-			}
-
+			TestUtils.deleteFile(testFile);
 		}
 	}
 
