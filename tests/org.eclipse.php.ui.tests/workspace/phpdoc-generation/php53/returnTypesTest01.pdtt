@@ -1,5 +1,7 @@
 --TEST--
 Tests phpDoc generation for function
+--CONFIG--
+cursor: _
 --FILE--
 <?php
 
@@ -16,7 +18,7 @@ namespace Boo {
 			return $a;
 		}
 		
-		/**|
+		/**_
 		function foo2() {
 			return $this->foo1 ();
 		}
@@ -39,7 +41,7 @@ namespace Boo {
 		}
 		
 		/**
-		 *
+		 * 
 		 * @return \Boo\MyClass1[]|\Boo\MyClass2[]
 		 */
 		function foo2() {
