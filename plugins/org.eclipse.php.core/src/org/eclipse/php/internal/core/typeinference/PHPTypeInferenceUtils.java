@@ -85,7 +85,7 @@ public class PHPTypeInferenceUtils {
 		if (context != null) {
 			return inferencer.evaluateType(new ExpressionTypeGoal(context, expression));
 		}
-		return UnknownType.INSTANCE;
+		return null;
 	}
 
 	/**
