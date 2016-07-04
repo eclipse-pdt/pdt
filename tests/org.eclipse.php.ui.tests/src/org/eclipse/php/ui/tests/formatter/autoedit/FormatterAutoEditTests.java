@@ -19,10 +19,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.dltk.core.IBuffer;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
@@ -95,18 +91,6 @@ public class FormatterAutoEditTests {
 	public void setUpSuite() throws Exception {
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("FormatterTests" + phpVersion.name());
-		WorkingCopyOwner.setPrimaryBufferProvider(new WorkingCopyOwner() {
-			public IBuffer createBuffer(ISourceModule workingCopy) {
-				ISourceModule original = workingCopy.getPrimary();
-				IResource resource = original.getResource();
-				if (resource != null) {
-					if (resource instanceof IFile) {
-						return new DocumentAdapter(workingCopy, (IFile) resource);
-					}
-				}
-				return DocumentAdapter.NULL;
-			}
-		});
 		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
 
