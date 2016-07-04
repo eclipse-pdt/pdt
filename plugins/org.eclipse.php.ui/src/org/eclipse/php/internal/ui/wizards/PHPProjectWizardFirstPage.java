@@ -107,7 +107,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	public void createControl(Composite parent) {
 
 		initializeDialogUnits(parent);
-		ScrolledComposite sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+
+		Composite main = new Composite(parent, SWT.NONE);
+		main.setLayout(new GridLayout());
+
+		ScrolledComposite sc = new ScrolledComposite(main, SWT.H_SCROLL | SWT.V_SCROLL);
 		sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
 
 		final Composite composite = new Composite(sc, SWT.NULL);
@@ -152,7 +156,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		fNameGroup.addObserver(fPdtValidator);
 		fPHPLocationGroup.addObserver(fPdtValidator);
 
-		setControl(composite);
+		setControl(main);
 		Dialog.applyDialogFont(composite);
 
 		// set the focus to the project name
