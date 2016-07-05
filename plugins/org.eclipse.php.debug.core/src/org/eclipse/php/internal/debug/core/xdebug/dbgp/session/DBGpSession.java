@@ -216,7 +216,10 @@ public class DBGpSession {
 							+ outputEncoding, this, e);
 					streamStr = new String(streamData);
 				}
-				debugTarget.getOutputBuffer().append(streamStr);
+				// Debug target might be already disconnected
+				if (debugTarget != null) {
+					debugTarget.getOutputBuffer().append(streamStr);
+				}
 			}
 		}
 
@@ -277,7 +280,10 @@ public class DBGpSession {
 									String filename = DBGpUtils
 											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
 									filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
-									debugTarget.breakpointHit(filename, lineno, exception);
+									// Debug target might be already disconnected
+									if (debugTarget != null) {
+										debugTarget.breakpointHit(filename, lineno, exception);
+									}
 								} catch (NumberFormatException nfe) {
 									DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
 											this, nfe);
@@ -286,7 +292,10 @@ public class DBGpSession {
 						}
 					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
 							|| cmd.equals(DBGpCommand.stepOver)) {
-						debugTarget.suspended(DebugEvent.STEP_END);
+						// Debug target might be already disconnected
+						if (debugTarget != null) {
+							debugTarget.suspended(DebugEvent.STEP_END);
+						}
 					} else {
 						/*
 						 * we got another status response, probably due to
