@@ -1,20 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.php.debug.core">
+<schema targetNamespace="org.eclipse.php.debug.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.php.debug.core" id="phpExe" name="PHP exe"/>
       </appInfo>
       <documentation>
-         This extension point allows providing PHP binaries for internal debugging. PHP executable must be 
-configured to work with Zend Debugger, i.e. file &quot;php.ini&quot; must be placed in the same directory where PHP binary resides, and must contain at least the following entry:
+         This extension point allows providing ready-to-use PHP binaries. The binaries may be configured to work with Xdebug or Zend Debugger. The php.ini file must be placed in the same directory where the PHP executable resides, and must contain at least the following entry:
 &lt;p&gt;
-zend_extension=&amp;lt;path to the Zend Debugger extension&amp;gt;
+zend_extension=&amp;lt;path to the Xdebug / Zend Debugger extension&amp;gt;
 &lt;/p&gt;
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="phpExe" minOccurs="1" maxOccurs="unbounded"/>
@@ -60,6 +64,10 @@ This name will appear in the preferences page.
             <annotation>
                <documentation>
                   Path to the PHP executable. The binary itself may be contributed either through the plug-in or through its fragment (which is recommended).
+
+If the location is an absolute path then the PHP executable will be loaded from that path. If the location is a relative path then the PHP executable will be loaded from that path inside the bundle.
+
+String variables like ${eclipse_home} may be used.
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
@@ -110,17 +118,22 @@ This field is optional, and if not given, the php executable will not be assigne
          &lt;p&gt;
 &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.php.internal.debug.core.phpExe&quot;&gt;
-    &lt;phpExe
-        location=&quot;/resources/php4/php&quot;
-        name=&quot;PHP4&quot;
-        version=&quot;4.4.4&quot;
-        debuggerID=&quot;com.zend.php.debug.debugger.zendDebugger&quot;/&gt;
-    &lt;phpExe
-        default=&quot;true&quot;
-        location=&quot;/resources/php5/php&quot;
-        name=&quot;PHP5&quot;
-        version=&quot;5.2.0&quot;
-        debuggerID=&quot;com.zend.php.debug.debugger.zendDebugger&quot;/&gt;
+   &lt;phpExe
+         location=&quot;resources/php4/php&quot;
+         name=&quot;PHP4&quot;
+         version=&quot;4.4.4&quot;
+         debuggerID=&quot;org.eclipse.php.debug.core.zendDebugger&quot;/&gt;
+   &lt;phpExe
+         default=&quot;true&quot;
+         location=&quot;/opt/php5/php&quot;
+         name=&quot;PHP5&quot;
+         version=&quot;5.2.0&quot;
+         debuggerID=&quot;org.eclipse.php.debug.core.xdebugDebugger&quot;/&gt;
+   &lt;phpExe
+         default=&quot;true&quot;
+         location=&quot;${eclipse_home}/php7/php&quot;
+         name=&quot;PHP7&quot;
+         debuggerID=&quot;org.eclipse.php.debug.core.noneDebugger&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;

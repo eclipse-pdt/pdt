@@ -14,6 +14,7 @@ package org.eclipse.php.internal.debug.core.preferences;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -23,6 +24,7 @@ import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -549,79 +551,79 @@ public class PHPexes {
 
 		for (final IConfigurationElement element : elements) {
 			if (PHPEXE_TAG.equals(element.getName())) {
-				final String name = element.getAttribute(NAME_ATTRIBUTE);
-				String location = element.getAttribute(LOCATION_ATTRIBUTE);
-				final String version = element.getAttribute(VERSION_ATTRIBUTE);
-				String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
-				if (debuggerID == null || debuggerID.equals("")) { //$NON-NLS-1$
-					debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
-				}
-				final boolean isDefault = "true".equalsIgnoreCase(element //$NON-NLS-1$
-						.getAttribute(DEFAULT_ATTRIBUTE));
-
-				if (isWindows)
-					location = location + ".exe"; //$NON-NLS-1$
-
-				final String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
-				final String finalDebuggerID = debuggerID;
-				// Filter the executable if needed.
-				boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
-					public String getLocalId() {
-						return finalDebuggerID;
+				try {
+					final String name = element.getAttribute(NAME_ATTRIBUTE);
+					String location = substitudeVariables(element.getAttribute(LOCATION_ATTRIBUTE));
+					final String version = element.getAttribute(VERSION_ATTRIBUTE);
+					String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
+					if (debuggerID == null || debuggerID.equals("")) { //$NON-NLS-1$
+						debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 					}
+					final boolean isDefault = "true".equalsIgnoreCase(element //$NON-NLS-1$
+							.getAttribute(DEFAULT_ATTRIBUTE));
 
-					public String getPluginId() {
-						return PHPDebugPlugin.ID;
-					}
-				});
-				if (filterItem) {
-					continue;
-				}
-				URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), new HashMap());
-				boolean itemFound = false;
-				if (url != null)
-					try {
-						url = FileLocator.resolve(url);
-						final String filename = url.getFile();
-						final File file = new File(filename);
-						if (file.exists()) {
-							final PHPexeItem newItem = new PHPexeItem(name, file, null, debuggerID, false);
-							if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null)
-								continue; // not adding "problematic"
-							// executables
-							if (version != null) {
-								newItem.setVersion(version);
-							}
-							/*
-							 * Override unique ID to be always the same when
-							 * loading item from extension once again (restart)
-							 * 
-							 * TODO - should be done better after improving the
-							 * PHP executables model architecture...
-							 */
-							String uniqueID = "php-extension-exe-" //$NON-NLS-1$
-									+ file.getPath().toString();
-							newItem.setUniqueId(uniqueID);
-							storeItem(newItem);
-							if (isDefault) {
-								String defaultExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
-										.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
-								// Make it a default item if there is no any
-								if (defaultExeName == null || getItem(defaultExeName) == null) {
-									setDefaultItem(newItem);
-								}
-							}
-							itemFound = true;
+					if (isWindows)
+						location = location + ".exe"; //$NON-NLS-1$
+
+					final String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
+					final String finalDebuggerID = debuggerID;
+					// Filter the executable if needed.
+					boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+						public String getLocalId() {
+							return finalDebuggerID;
 						}
-					} catch (final IOException e) {
+
+						public String getPluginId() {
+							return PHPDebugPlugin.ID;
+						}
+					});
+					if (filterItem) {
+						continue;
 					}
-				if (!itemFound)
-					PHPDebugPlugin.getDefault().getLog()
-							.log(new Status(1, PHPDebugPlugin.getID(), 1001,
-									"PHP executable " //$NON-NLS-1$
-											+ location + " not found neither in plugin " //$NON-NLS-1$
-											+ pluginId + " nor in fragments attached to it", //$NON-NLS-1$
-									null));
+
+					boolean itemFound = false;
+
+					File file = getFileFromLocation(location, pluginId);
+					if (file != null && file.exists()) {
+						final PHPexeItem newItem = new PHPexeItem(name, file, null, debuggerID, false);
+						if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null)
+							continue; // not adding "problematic"
+						// executables
+						if (version != null) {
+							newItem.setVersion(version);
+						}
+						/*
+						 * Override unique ID to be always the same when loading
+						 * item from extension once again (restart)
+						 * 
+						 * TODO - should be done better after improving the PHP
+						 * executables model architecture...
+						 */
+						String uniqueID = "php-extension-exe-" //$NON-NLS-1$
+								+ file.getPath().toString();
+						newItem.setUniqueId(uniqueID);
+						storeItem(newItem);
+						if (isDefault) {
+							String defaultExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+									.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
+							// Make it a default item if there is no any
+							if (defaultExeName == null || getItem(defaultExeName) == null) {
+								setDefaultItem(newItem);
+							}
+						}
+						itemFound = true;
+					}
+
+					if (!itemFound) {
+						PHPDebugPlugin.log(new Status(1, PHPDebugPlugin.getID(), 1001,
+								"PHP executable " //$NON-NLS-1$
+										+ location + " not found neither in plugin " //$NON-NLS-1$
+										+ pluginId + " nor in fragments attached to it", //$NON-NLS-1$
+								null));
+					}
+				} catch (CoreException | IOException e) {
+					PHPDebugPlugin.log(e);
+				}
 			}
 		}
 	}
@@ -781,5 +783,23 @@ public class PHPexes {
 		}
 		result = list.toArray(new PHPexeItem[list.size()]);
 		return result;
+	}
+
+	private String substitudeVariables(String expression) throws CoreException {
+		return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(expression, true);
+	}
+
+	private File getFileFromLocation(String location, String pluginId) throws IOException {
+		if (Paths.get(location).isAbsolute()) {
+			return new File(location);
+		} else {
+			URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), null);
+			if (url != null) {
+				url = FileLocator.resolve(url);
+				String filename = url.getFile();
+				return new File(filename);
+			}
+		}
+		return null;
 	}
 }
