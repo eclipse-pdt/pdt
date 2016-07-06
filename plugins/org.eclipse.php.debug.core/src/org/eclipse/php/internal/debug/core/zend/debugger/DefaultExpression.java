@@ -62,7 +62,22 @@ public class DefaultExpression implements Expression {
 		this.name[parentName.length] = name;
 		fullName = parent.getFullName() + representation;
 		setValue(null);
+		setChildFacets(name, facets);
 		addFacets(facets);
+	}
+
+	private void setChildFacets(String name, Facet... facets) {
+		for (Facet facet : facets) {
+			if (facet == KIND_OBJECT_MEMBER) {
+				if (name.startsWith("*::")) { //$NON-NLS-1$
+					addFacets(MOD_PROTECTED);
+				} else if (name.contains("::")) { //$NON-NLS-1$
+					addFacets(MOD_PRIVATE);
+				} else {
+					addFacets(MOD_PUBLIC);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -73,23 +88,6 @@ public class DefaultExpression implements Expression {
 
 	@Override
 	public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
-		for (Facet facet : facets) {
-			if (facet == KIND_OBJECT_MEMBER) {
-				if (endName.startsWith("*::")) { //$NON-NLS-1$
-					Expression expression = new DefaultExpression(this, endName, endRepresentation, facets);
-					expression.addFacets(MOD_PROTECTED);
-					return expression;
-				} else if (endName.contains("::")) { //$NON-NLS-1$
-					Expression expression = new DefaultExpression(this, endName, endRepresentation, facets);
-					expression.addFacets(MOD_PRIVATE);
-					return expression;
-				} else {
-					Expression expression = new DefaultExpression(this, endName, endRepresentation, facets);
-					expression.addFacets(MOD_PUBLIC);
-					return expression;
-				}
-			}
-		}
 		return new DefaultExpression(this, endName, endRepresentation, facets);
 	}
 

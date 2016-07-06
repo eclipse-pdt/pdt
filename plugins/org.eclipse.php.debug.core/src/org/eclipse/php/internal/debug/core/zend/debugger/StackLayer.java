@@ -16,6 +16,8 @@
 
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -186,7 +188,7 @@ public class StackLayer {
 		 * Creates new DefaultStackVariable
 		 */
 		DefaultStackVariable(String name, int stackDepth) {
-			super(name);
+			super(name, KIND_LOCAL);
 			this.stackDepth = stackDepth;
 		}
 
@@ -195,11 +197,17 @@ public class StackLayer {
 		}
 
 		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
-			return new DefaultStackVariable(this, endName, stackDepth, endRepresentation);
+			return new DefaultStackVariable(this, endName, stackDepth, endRepresentation, facets);
 		}
 
 		private DefaultStackVariable(StackVariable parent, String name, int stackDepth, String representation) {
 			super(parent, name, representation);
+			this.stackDepth = stackDepth;
+		}
+
+		public DefaultStackVariable(Expression parent, String name, int stackDepth, String representation,
+				Facet... facets) {
+			super(parent, name, representation, facets);
 			this.stackDepth = stackDepth;
 		}
 
