@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -90,18 +89,16 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					IType declaringType = field.getDeclaringType();
 					if (declaringType != null) {
 						fieldDeclaringTypeSet.put(declaringType, type);
-						ISourceModule sourceModule = declaringType.getSourceModule();
-						ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-						TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration,
-								declaringType);
 
-						if (typeDeclaration != null && field instanceof SourceRefElement) {
+						if (field instanceof SourceRefElement) {
 							ISourceReference sourceRefElement = (ISourceReference) field;
 							ISourceRange sourceRange = sourceRefElement.getSourceRange();
+							ISourceModule sourceModule = declaringType.getSourceModule();
+							ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 
 							ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(sourceModule,
-									typeDeclaration, sourceRange.getOffset(), sourceRange.getLength(), null, type,
-									declaringType);
+									declaringType.getSourceRange(), sourceRange.getOffset(), sourceRange.getLength(),
+									null, type, declaringType);
 							try {
 								moduleDeclaration.traverse(searcher);
 								if (searcher.getResult() != null) {
@@ -138,16 +135,13 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			final IType declaringType, IType realType) throws ModelException {
 		ISourceModule sourceModule = declaringType.getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, declaringType);
-
-		// try to search declarations of type "self::$var =" or
-		// "$this->var ="
+		// try to search declarations of type "self::$var =" or "$this->var ="
 		ClassDeclarationSearcher searcher;
 		if (realType != null) {
-			searcher = new ClassDeclarationSearcher(sourceModule, typeDeclaration, 0, 0, variableName, realType,
-					declaringType);
+			searcher = new ClassDeclarationSearcher(sourceModule, declaringType.getSourceRange(), 0, 0, variableName,
+					realType, declaringType);
 		} else {
-			searcher = new ClassDeclarationSearcher(sourceModule, typeDeclaration, 0, 0, variableName);
+			searcher = new ClassDeclarationSearcher(sourceModule, declaringType.getSourceRange(), 0, 0, variableName);
 		}
 		try {
 			moduleDeclaration.traverse(searcher);
@@ -245,7 +239,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	class ClassDeclarationSearcher extends ContextFinder {
 
 		private static final String NULL = "null"; //$NON-NLS-1$
-		private TypeDeclaration typeDeclaration;
+		private ISourceRange typeDeclarationRange;
 		private ASTNode result;
 		private IContext context;
 		private int offset;
@@ -254,20 +248,20 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		private ISourceModule sourceModule;
 		private Map<ASTNode, IContext> staticDeclarations = new HashMap<ASTNode, IContext>();
 
-		public ClassDeclarationSearcher(ISourceModule sourceModule, TypeDeclaration typeDeclaration, int offset,
+		public ClassDeclarationSearcher(ISourceModule sourceModule, ISourceRange typeDeclarationRange, int offset,
 				int length, String variableName) {
 			super(sourceModule);
-			this.typeDeclaration = typeDeclaration;
+			this.typeDeclarationRange = typeDeclarationRange;
 			this.offset = offset;
 			this.length = length;
 			this.sourceModule = sourceModule;
 			this.variableName = variableName;
 		}
 
-		public ClassDeclarationSearcher(ISourceModule sourceModule, TypeDeclaration typeDeclaration, int offset,
+		public ClassDeclarationSearcher(ISourceModule sourceModule, ISourceRange typeDeclarationRange, int offset,
 				int length, String variableName, IType realType, IType declaringType) {
 			super(sourceModule, realType, declaringType);
-			this.typeDeclaration = typeDeclaration;
+			this.typeDeclarationRange = typeDeclarationRange;
 			this.offset = offset;
 			this.length = length;
 			this.sourceModule = sourceModule;
@@ -292,7 +286,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 
 		public boolean visit(Statement e) throws Exception {
-			if (typeDeclaration.sourceStart() < e.sourceStart() && typeDeclaration.sourceEnd() > e.sourceEnd()) {
+			if (typeDeclarationRange.getOffset() < e.sourceStart()
+					&& (typeDeclarationRange.getOffset() + typeDeclarationRange.getLength()) > e.sourceEnd()) {
 				if (e instanceof PHPFieldDeclaration) {
 					PHPFieldDeclaration phpFieldDecl = (PHPFieldDeclaration) e;
 					if (phpFieldDecl.getDeclarationStart() == offset
@@ -313,7 +308,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 
 		public boolean visit(Expression e) throws Exception {
-			if (typeDeclaration.sourceStart() < e.sourceStart() && typeDeclaration.sourceEnd() > e.sourceEnd()) {
+			if (typeDeclarationRange.getOffset() < e.sourceStart()
+					&& (typeDeclarationRange.getOffset() + typeDeclarationRange.getLength()) > e.sourceEnd()) {
 				if (e instanceof Assignment) {
 					if (e.sourceStart() == offset && e.sourceEnd() - e.sourceStart() == length) {
 						result = ((Assignment) e).getValue();
