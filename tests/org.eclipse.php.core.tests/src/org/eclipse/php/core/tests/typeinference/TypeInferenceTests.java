@@ -15,7 +15,6 @@ package org.eclipse.php.core.tests.typeinference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,6 +42,7 @@ import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -73,9 +73,12 @@ public class TypeInferenceTests {
 				"/workspace/typeinference/php55", "/workspace/typeinference/php56" });
 	};
 
+	private static int counter = 0;
+
 	private PHPTypeInferencer typeInferenceEngine;
 	private IProject project;
 	private PHPVersion version;
+	protected IFile testFile;
 
 	public TypeInferenceTests(PHPVersion version, String[] fileNames) {
 		this.version = version;
@@ -86,7 +89,6 @@ public class TypeInferenceTests {
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("TypeInferenceTests_" + version.toString());
 		TestUtils.setProjectPhpVersion(project, version);
-
 		typeInferenceEngine = new PHPTypeInferencer();
 	}
 
@@ -100,14 +102,18 @@ public class TypeInferenceTests {
 	@Test
 	public void inference(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
+		createFile(pdttFile);
 		final String pruner = getPrunerType(pdttFile);
 		String criteriaFunction = new File(fileName).getName().replaceAll("\\.pdtt", "");
 		String code = pdttFile.getFile();
-
 		IEvaluatedType evaluatedType = findEvaluatedType(code, criteriaFunction, pruner);
-
 		assertNotNull("Can't evaluate type for: " + code, evaluatedType);
 		assertEquals(pdttFile.getExpected().trim(), evaluatedType.getTypeName().trim());
+	}
+
+	@After
+	public void after() throws Exception {
+		TestUtils.deleteFile(testFile);
 	}
 
 	private static String getPrunerType(PdttFile pdttFile) {
@@ -147,42 +153,27 @@ public class TypeInferenceTests {
 		}
 	}
 
-	protected IEvaluatedType findEvaluatedType(String code, String criteriaFunction, String pruner) throws Exception {
-		IFile file = project.getFile("dummy.php");
-		if (file.exists()) {
-			file.setContents(new ByteArrayInputStream(code.getBytes()), true, false, null);
-		} else {
-			file.create(new ByteArrayInputStream(code.getBytes()), true, null);
-		}
-
-		try {
-			TestUtils.waitForIndexer();
-
-			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
-			ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);
-
-			ASTNodeSearcher searcher = new ASTNodeSearcher(sourceModule, criteriaFunction);
-			moduleDecl.traverse(searcher);
-
-			assertNotNull("Method call " + criteriaFunction + "() in code: " + code, searcher.getResult());
-			assertNotNull("Can't find context for " + criteriaFunction + "() in code: " + code, searcher.getContext());
-
-			ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher.getContext(), searcher.getResult());
-
-			if ("phpdocGoals".equals(pruner)) {
-				return typeInferenceEngine.evaluateTypeHeavy(goal, ENGINE_TIMEOUT);
-			}
-			if ("heavyGoals".equals(pruner)) {
-				return typeInferenceEngine.evaluateTypePHPDoc(goal, ENGINE_TIMEOUT);
-			}
-			return typeInferenceEngine.evaluateType(goal, ENGINE_TIMEOUT);
-
-		} finally {
-			try {
-				file.delete(true, null);
-			} catch (Exception e) {
-				// do not handle - may be it's currently in use
-			}
-		}
+	protected void createFile(PdttFile pdttFile) throws Exception {
+		String data = pdttFile.getFile();
+		testFile = TestUtils.createFile(project, "test-" + counter++ + ".php", data);
+		TestUtils.waitForIndexer();
 	}
+
+	protected IEvaluatedType findEvaluatedType(String code, String criteriaFunction, String pruner) throws Exception {
+		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
+		ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);
+		ASTNodeSearcher searcher = new ASTNodeSearcher(sourceModule, criteriaFunction);
+		moduleDecl.traverse(searcher);
+		assertNotNull("Method call " + criteriaFunction + "() in code: " + code, searcher.getResult());
+		assertNotNull("Can't find context for " + criteriaFunction + "() in code: " + code, searcher.getContext());
+		ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher.getContext(), searcher.getResult());
+		if ("phpdocGoals".equals(pruner)) {
+			return typeInferenceEngine.evaluateTypeHeavy(goal, ENGINE_TIMEOUT);
+		}
+		if ("heavyGoals".equals(pruner)) {
+			return typeInferenceEngine.evaluateTypePHPDoc(goal, ENGINE_TIMEOUT);
+		}
+		return typeInferenceEngine.evaluateType(goal, ENGINE_TIMEOUT);
+	}
+
 }
