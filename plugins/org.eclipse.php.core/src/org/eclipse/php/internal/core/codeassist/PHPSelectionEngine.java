@@ -40,9 +40,11 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -265,7 +267,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if (realStart <= offset && realEnd >= end) {
 					// inDocBlock=true;
 					PHPDocTag[] tags = phpDocBlock.getTags();
-					return lookForMatchingTypes(tags, sourceModule, offset, end, cache);
+					return lookForMatchingElements(tags, sourceModule, parsedUnit, offset, end, cache);
 				}
 			}
 		}
@@ -494,25 +496,40 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return null;
 	}
 
-	private IType[] lookForMatchingTypes(PHPDocTag[] tags, ISourceModule sourceModule, int offset, int end,
-			IModelAccessCache cache) throws ModelException {
+	private IModelElement[] lookForMatchingElements(PHPDocTag[] tags, ISourceModule sourceModule,
+			ModuleDeclaration parsedUnit, int offset, int end, IModelAccessCache cache) throws ModelException {
 		if (tags == null) {
 			return null;
 		}
 		for (PHPDocTag phpDocTag : tags) {
 			if (phpDocTag.sourceStart() <= offset && phpDocTag.sourceEnd() >= end) {
-				for (TypeReference typeReference : phpDocTag.getTypeReferences()) {
-					if (typeReference.sourceStart() <= offset && typeReference.sourceEnd() >= end) {
-						String name = typeReference.getName();
-
-						// remove additional end elements like '[]'
-						if (typeReference.sourceEnd() > end) {
-							int startShift = offset - typeReference.sourceStart();
-							name = typeReference.getName().substring(startShift, (end - offset) + startShift);
+				if (phpDocTag.getTagKind() == TagKind.INHERITDOC) {
+					Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(parsedUnit, offset);
+					if (declaration instanceof PHPMethodDeclaration) {
+						PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) declaration;
+						IModelElement element = sourceModule.getElementAt(methodDeclaration.sourceStart());
+						if (element != null) {
+							IType type = (IType) element.getParent();
+							try {
+								return PHPModelUtils.getSuperTypeHierarchyMethod(type, null,
+										methodDeclaration.getName(), true, null);
+							} catch (CoreException e) {
+								Logger.logException(e);
+							}
 						}
+					}
+				} else {
+					for (TypeReference typeReference : phpDocTag.getTypeReferences()) {
+						if (typeReference.sourceStart() <= offset && typeReference.sourceEnd() >= end) {
+							String name = typeReference.getName();
 
-						IType[] types = filterNS(PHPModelUtils.getTypes(name, sourceModule, offset, cache, null));
-						return types;
+							// remove additional end elements like '[]'
+							if (typeReference.sourceEnd() > end) {
+								int startShift = offset - typeReference.sourceStart();
+								name = typeReference.getName().substring(startShift, (end - offset) + startShift);
+							}
+							return filterNS(PHPModelUtils.getTypes(name, sourceModule, offset, cache, null));
+						}
 					}
 				}
 			}
