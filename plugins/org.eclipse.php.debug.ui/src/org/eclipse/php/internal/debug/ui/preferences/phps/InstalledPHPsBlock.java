@@ -16,19 +16,23 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.layout.PixelConverter;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.core.util.VersionUtils;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
@@ -44,11 +48,12 @@ import org.eclipse.php.internal.debug.ui.wizards.PHPExeEditDialog;
 import org.eclipse.php.internal.debug.ui.wizards.PHPExeWizard;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -66,7 +71,6 @@ import org.eclipse.ui.PlatformUI;
  * @author seva, shalom
  * 
  */
-@SuppressWarnings("restriction")
 public class InstalledPHPsBlock {
 
 	/**
@@ -121,6 +125,12 @@ public class InstalledPHPsBlock {
 					}
 					return debuggerName;
 				case 2:
+					String version = phpExe.getVersion();
+					if (version == null) {
+						return ""; //$NON-NLS-1$
+					}
+					return version;
+				case 3:
 					File executable = phpExe.getExecutable();
 					if (executable == null) {
 						return ""; //$NON-NLS-1$
@@ -168,94 +178,10 @@ public class InstalledPHPsBlock {
 	private final List<PHPexeItem> fPHPexes = new ArrayList<PHPexeItem>();
 
 	private Button fRemoveButton;
-
-	// ignore column re-sizing when the table is being resized
-	private boolean fResizingTable = false;
-
 	private Button fSearchButton;
 	private Button fSetDefaultButton;
-	/**
-	 * Selection listeners (checked PHP changes)
-	 */
-	private final ListenerList fSelectionListeners = new ListenerList(ListenerList.IDENTITY);
-
-	// index of column used for sorting
-	private int fSortColumn = 0;
-
-	// column weights
-	private float fWeight1 = 3 / 8F;
-	private float fWeight2 = 2 / 8F;
-	private float fWeight3 = 3 / 8F;
 
 	public InstalledPHPsBlock() {
-	}
-
-	/**
-	 * Bring up a dialog that lets the user create a new VM definition.
-	 */
-	private void addPHPexe() {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		NullProgressMonitor monitor = new NullProgressMonitor();
-		PHPexeItem phpExeItem = null;
-		PHPExeWizard wizard = new PHPExeWizard(PHPexes.getInstance().getAllItems());
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
-		if (dialog.open() == Window.CANCEL) {
-			monitor.setCanceled(true);
-			return;
-		}
-		phpExeItem = (PHPexeItem) wizard.getRootFragment().getWizardModel().getObject(PHPExeWizard.MODEL);
-		fPHPexes.add(phpExeItem);
-		PHPexes.getInstance().addItem(phpExeItem);
-		fPHPExeList.refresh();
-		commitChanges();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener
-	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
-	public void addSelectionChangedListener(final ISelectionChangedListener listener) {
-		fSelectionListeners.add(listener);
-	}
-
-	/**
-	 * Correctly resizes the table so no phantom columns appear
-	 */
-	protected void configureTableResizing(final Composite parent, final Composite buttons, final Table table,
-			final TableColumn column1, final TableColumn column2, final TableColumn column3) {
-		parent.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				resizeTable(parent, buttons, table, column1, column2, column3);
-			}
-		});
-		table.addListener(SWT.Paint, new Listener() {
-			public void handleEvent(final Event event) {
-				table.removeListener(SWT.Paint, this);
-				resizeTable(parent, buttons, table, column1, column2, column3);
-			}
-		});
-		column1.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (column1.getWidth() > 0 && !fResizingTable)
-					fWeight1 = getColumnWeight(0);
-			}
-		});
-		column2.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (column2.getWidth() > 0 && !fResizingTable)
-					fWeight2 = getColumnWeight(1);
-			}
-		});
-
-		column3.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (column3.getWidth() > 0 && !fResizingTable)
-					fWeight3 = getColumnWeight(2);
-			}
-		});
 	}
 
 	/**
@@ -287,41 +213,14 @@ public class InstalledPHPsBlock {
 		tableLabel.setLayoutData(data);
 		tableLabel.setFont(font);
 
-		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
-
+		Composite tableComposite = new Composite(parent, SWT.NONE);
 		data = new GridData(GridData.FILL_BOTH);
-		table.setLayoutData(data);
-		table.setFont(font);
+		tableComposite.setLayoutData(data);
+
+		Table table = new Table(tableComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-
-		final TableLayout tableLayout = new TableLayout();
-		table.setLayout(tableLayout);
-
-		final TableColumn column1 = new TableColumn(table, SWT.NULL);
-		column1.setText(PHPDebugUIMessages.InstalledPHPsBlock_0);
-		column1.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				sortByName();
-			}
-		});
-
-		final TableColumn column2 = new TableColumn(table, SWT.NULL);
-		column2.setText(PHPDebugUIMessages.InstalledPHPsBlock_17);
-		column2.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				sortByDebugger();
-			}
-		});
-
-		final TableColumn column3 = new TableColumn(table, SWT.NULL);
-		column3.setText(PHPDebugUIMessages.InstalledPHPsBlock_1);
-		column3.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				sortByLocation();
-			}
-		});
 
 		fPHPExeList = new CheckboxTableViewer(table);
 		fPHPExeList.setLabelProvider(new PHPExeLabelProvider());
@@ -347,6 +246,51 @@ public class InstalledPHPsBlock {
 					removePHPexes();
 			}
 		});
+
+		final TableColumn column1 = new TableColumn(table, SWT.NULL);
+		column1.setText(PHPDebugUIMessages.InstalledPHPsBlock_0);
+		column1.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				sortByName();
+			}
+		});
+
+		final TableColumn column2 = new TableColumn(table, SWT.NULL);
+		column2.setText(PHPDebugUIMessages.InstalledPHPsBlock_17);
+		column2.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				sortByDebugger();
+			}
+		});
+
+		final TableColumn column3 = new TableColumn(table, SWT.NULL);
+		column3.setText(PHPDebugUIMessages.InstalledPHPsBlock_18);
+		column3.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				sortByVersion();
+			}
+		});
+
+		final TableColumn column4 = new TableColumn(table, SWT.NULL);
+		column4.setText(PHPDebugUIMessages.InstalledPHPsBlock_1);
+		column4.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				sortByLocation();
+			}
+		});
+
+		// Create table column layout
+		TableColumnLayout tableColumnLayout = new TableColumnLayout();
+		PixelConverter pixelConverter = new PixelConverter(font);
+		tableColumnLayout.setColumnData(column1,
+				new ColumnWeightData(20, pixelConverter.convertWidthInCharsToPixels(24)));
+		tableColumnLayout.setColumnData(column2,
+				new ColumnWeightData(15, pixelConverter.convertWidthInCharsToPixels(18)));
+		tableColumnLayout.setColumnData(column3,
+				new ColumnWeightData(10, pixelConverter.convertWidthInCharsToPixels(10)));
+		tableColumnLayout.setColumnData(column4,
+				new ColumnWeightData(35, pixelConverter.convertWidthInCharsToPixels(28)));
+		tableComposite.setLayout(tableColumnLayout);
 
 		final Composite buttons = new Composite(parent, SWT.NULL);
 		buttons.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
@@ -385,10 +329,6 @@ public class InstalledPHPsBlock {
 				PHPexes.getInstance().setDefaultItem(defaultItem);
 				commitChanges();
 				setPHPs(PHPexes.getInstance().getAllItems());
-				// Preferences prefs =
-				// PHPProjectPreferences.getModelPreferences();
-				// prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP,
-				// defaultItem.getName());
 			}
 		});
 
@@ -408,62 +348,10 @@ public class InstalledPHPsBlock {
 			}
 		});
 
-		configureTableResizing(parent, buttons, table, column1, column2, column3);
-
 		fillWithWorkspacePHPs();
-		// by default, sort by the debugger type
-		sortByDebugger();
+		// by default, sort by name
+		sortByName();
 		enableButtons();
-	}
-
-	protected Button createPushButton(final Composite parent, final String label) {
-		return SWTUtil.createPushButton(parent, label, null);
-	}
-
-	private void editPHPexe() {
-		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
-		final PHPexeItem phpExe = (PHPexeItem) selection.getFirstElement();
-		if (phpExe == null) {
-			return;
-		}
-		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExe, PHPexes.getInstance().getAllItems());
-		if (dialog.open() != Window.OK) {
-			return;
-		}
-		fPHPExeList.refresh();
-		commitChanges();
-	}
-
-	private void enableButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
-		Object[] elements = selection.toArray();
-		boolean canRemoveOrEdit = true;
-		for (int i = 0; canRemoveOrEdit && i < elements.length; i++) {
-			PHPexeItem item = (PHPexeItem) elements[i];
-			canRemoveOrEdit &= item.isEditable();
-		}
-		final int selectionCount = selection.size();
-		fRemoveButton.setEnabled(canRemoveOrEdit && selectionCount > 0);
-		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
-		fSetDefaultButton.setEnabled(selectionCount == 1 && selectedItem != null && !selectedItem.isDefault());
-	}
-
-	/**
-	 * Populates the PHP table with existing PHPs defined in the workspace.
-	 */
-	protected void fillWithWorkspacePHPs() {
-		// fill with PHPs
-		final PHPexeItem[] items = PHPexes.getInstance().getAllItems();
-		setPHPs(items);
-	}
-
-	private float getColumnWeight(final int col) {
-		final Table table = fPHPExeList.getTable();
-		final int tableWidth = table.getSize().x;
-		final int columnWidth = table.getColumn(col).getWidth();
-		if (tableWidth > columnWidth)
-			return (float) columnWidth / tableWidth;
-		return 1 / 3F;
 	}
 
 	/**
@@ -484,10 +372,6 @@ public class InstalledPHPsBlock {
 		return fPHPexes.toArray(new PHPexeItem[fPHPexes.size()]);
 	}
 
-	protected Shell getShell() {
-		return getControl().getShell();
-	}
-
 	/**
 	 * @see IAddPHPexeDialogRequestor#isDuplicateName(String)
 	 */
@@ -498,19 +382,6 @@ public class InstalledPHPsBlock {
 				return true;
 		}
 		return false;
-	}
-
-	private void removePHPexes() {
-		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
-		final PHPexeItem[] phpExes = new PHPexeItem[selection.size()];
-		final Iterator<?> iter = selection.iterator();
-		int i = 0;
-		while (iter.hasNext()) {
-			phpExes[i] = (PHPexeItem) iter.next();
-			i++;
-		}
-		removePHPs(phpExes);
-		commitChanges();
 	}
 
 	public void commitChanges() {
@@ -525,123 +396,21 @@ public class InstalledPHPsBlock {
 		fPHPExeList.refresh();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#
-	 * removeSelectionChangedListener
-	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
-	public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
-		fSelectionListeners.remove(listener);
-	}
-
-	private void resizeTable(final Composite parent, final Composite buttons, final Table table,
-			final TableColumn column1, final TableColumn column2, final TableColumn column3) {
-		fResizingTable = true;
-		int parentWidth = -1;
-		int parentHeight = -1;
-		if (parent.isVisible()) {
-			final Rectangle area = parent.getClientArea();
-			parentWidth = area.width;
-			parentHeight = area.height;
-		} else {
-			final Point parentSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			parentWidth = parentSize.x;
-			parentHeight = parentSize.y;
-		}
-		final Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		int width = parentWidth - 2 * table.getBorderWidth();
-		if (preferredSize.y > parentHeight) {
-			// Subtract the scrollbar width from the total column width
-			// if a vertical scrollbar will be required
-			final Point vBarSize = table.getVerticalBar().getSize();
-			width -= vBarSize.x;
-		}
-		width -= buttons.getSize().x;
-		final Point oldSize = table.getSize();
-		if (oldSize.x > width) {
-			// table is getting smaller so make the columns
-			// smaller first and then resize the table to
-			// match the client area width
-			column1.setWidth(Math.round(width * fWeight1));
-			column2.setWidth(Math.round(width * fWeight2));
-			column3.setWidth(Math.round(width * fWeight3));
-			table.setSize(width, parentHeight);
-		} else {
-			// table is getting bigger so make the table
-			// bigger first and then make the columns wider
-			// to match the client area width
-			table.setSize(width, parentHeight);
-			column1.setWidth(Math.round(width * fWeight1));
-			column2.setWidth(Math.round(width * fWeight2));
-			column3.setWidth(Math.round(width * fWeight3));
-		}
-		fResizingTable = false;
+	protected Button createPushButton(final Composite parent, final String label) {
+		return SWTUtil.createPushButton(parent, label, null);
 	}
 
 	/**
-	 * Restore table settings from the given dialog store using the given key.
-	 * 
-	 * @param settings
-	 *            dialog settings store
-	 * @param qualifier
-	 *            key to restore settings from
+	 * Populates the PHP table with existing PHPs defined in the workspace.
 	 */
-	public void restoreColumnSettings(final IDialogSettings settings, final String qualifier) {
-		fWeight1 = restoreColumnWeight(settings, qualifier, 0);
-		fWeight2 = restoreColumnWeight(settings, qualifier, 1);
-		fWeight3 = restoreColumnWeight(settings, qualifier, 2);
-		fPHPExeList.getTable().layout(true);
-		try {
-			fSortColumn = settings.getInt(qualifier + ".sortColumn"); //$NON-NLS-1$
-		} catch (final NumberFormatException e) {
-			fSortColumn = 1;
-		}
-		switch (fSortColumn) {
-		case 1:
-			sortByName();
-			break;
-		case 2:
-			sortByDebugger();
-			break;
-		case 3:
-			sortByLocation();
-			break;
-		case 4:
-			sortByType();
-			break;
-		}
+	protected void fillWithWorkspacePHPs() {
+		// fill with PHPs
+		final PHPexeItem[] items = PHPexes.getInstance().getAllItems();
+		setPHPs(items);
 	}
 
-	private float restoreColumnWeight(final IDialogSettings settings, final String qualifier, final int col) {
-		try {
-			return settings.getFloat(qualifier + ".column" + col); //$NON-NLS-1$
-		} catch (final NumberFormatException e) {
-			switch (col) {
-			case 1:
-				return 2 / 8F;
-			default:
-				return 3 / 8F;
-			}
-		}
-
-	}
-
-	/**
-	 * Persist table settings into the give dialog store, prefixed with the
-	 * given key.
-	 * 
-	 * @param settings
-	 *            dialog store
-	 * @param qualifier
-	 *            key qualifier
-	 */
-	public void saveColumnSettings(final IDialogSettings settings, final String qualifier) {
-		for (int i = 0; i < 3; i++)
-			// persist the first 2 column weights
-			settings.put(qualifier + ".column" + i, getColumnWeight(i)); //$NON-NLS-1$
-		settings.put(qualifier + ".sortColumn", fSortColumn); //$NON-NLS-1$
+	protected Shell getShell() {
+		return getControl().getShell();
 	}
 
 	/**
@@ -804,26 +573,6 @@ public class InstalledPHPsBlock {
 	}
 
 	/**
-	 * Locate a PHP executable file in the PHP location given to this method.
-	 * The location should be a directory. The search is done for php and
-	 * php.exe only.
-	 * 
-	 * @param phpLocation
-	 *            A directory that might hold a PHP executable.
-	 * @return A PHP executable file.
-	 */
-	private static List<File> findPHPExecutable(File phpLocation) {
-		List<File> found = new ArrayList<File>(0);
-		for (String element : PHP_CANDIDATE_BIN) {
-			File phpExecFile = new File(phpLocation, element);
-			if (phpExecFile.exists() && !phpExecFile.isDirectory()) {
-				found.add(phpExecFile);
-			}
-		}
-		return found;
-	}
-
-	/**
 	 * Sets the PHPs to be displayed in this block
 	 * 
 	 * @param phpExes
@@ -843,11 +592,73 @@ public class InstalledPHPsBlock {
 	}
 
 	/**
+	 * Bring up a dialog that lets the user create a new VM definition.
+	 */
+	private void addPHPexe() {
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		NullProgressMonitor monitor = new NullProgressMonitor();
+		PHPexeItem phpExeItem = null;
+		PHPExeWizard wizard = new PHPExeWizard(PHPexes.getInstance().getAllItems());
+		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		if (dialog.open() == Window.CANCEL) {
+			monitor.setCanceled(true);
+			return;
+		}
+		phpExeItem = (PHPexeItem) wizard.getRootFragment().getWizardModel().getObject(PHPExeWizard.MODEL);
+		fPHPexes.add(phpExeItem);
+		PHPexes.getInstance().addItem(phpExeItem);
+		fPHPExeList.refresh();
+		commitChanges();
+	}
+
+	private void editPHPexe() {
+		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
+		final PHPexeItem phpExe = (PHPexeItem) selection.getFirstElement();
+		if (phpExe == null) {
+			return;
+		}
+		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExe, PHPexes.getInstance().getAllItems());
+		if (dialog.open() != Window.OK) {
+			return;
+		}
+		fPHPExeList.refresh();
+		commitChanges();
+	}
+
+	private void enableButtons() {
+		IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
+		Object[] elements = selection.toArray();
+		boolean canRemoveOrEdit = true;
+		for (int i = 0; canRemoveOrEdit && i < elements.length; i++) {
+			PHPexeItem item = (PHPexeItem) elements[i];
+			canRemoveOrEdit &= item.isEditable();
+		}
+		final int selectionCount = selection.size();
+		fRemoveButton.setEnabled(canRemoveOrEdit && selectionCount > 0);
+		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
+		fSetDefaultButton.setEnabled(selectionCount == 1 && selectedItem != null && !selectedItem.isDefault());
+	}
+
+	private void removePHPexes() {
+		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
+		final PHPexeItem[] phpExes = new PHPexeItem[selection.size()];
+		final Iterator<?> iter = selection.iterator();
+		int i = 0;
+		while (iter.hasNext()) {
+			phpExes[i] = (PHPexeItem) iter.next();
+			i++;
+		}
+		removePHPs(phpExes);
+		commitChanges();
+	}
+
+	/**
 	 * Sorts by VM location.
 	 */
 	private void sortByLocation() {
-		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1, final Object e2) {
+		fPHPExeList.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
@@ -856,20 +667,16 @@ public class InstalledPHPsBlock {
 				}
 				return super.compare(viewer, e1, e2);
 			}
-
-			public boolean isSorterProperty(final Object element, final String property) {
-				return true;
-			}
 		});
-		fSortColumn = 2;
 	}
 
 	/**
 	 * Sorts by debugger type.
 	 */
 	private void sortByDebugger() {
-		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1, final Object e2) {
+		fPHPExeList.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
@@ -879,20 +686,16 @@ public class InstalledPHPsBlock {
 				}
 				return super.compare(viewer, e1, e2);
 			}
-
-			public boolean isSorterProperty(final Object element, final String property) {
-				return true;
-			}
 		});
-		fSortColumn = 3;
 	}
 
 	/**
 	 * Sorts by VM name.
 	 */
 	private void sortByName() {
-		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1, final Object e2) {
+		fPHPExeList.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
@@ -900,38 +703,52 @@ public class InstalledPHPsBlock {
 				}
 				return super.compare(viewer, e1, e2);
 			}
-
-			public boolean isSorterProperty(final Object element, final String property) {
-				return true;
-			}
 		});
-		fSortColumn = 1;
 	}
 
 	/**
 	 * Sorts by VM type, and name within type.
 	 */
-	private void sortByType() {
-		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1, final Object e2) {
+	private void sortByVersion() {
+		fPHPExeList.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
-					final String leftType = left.getName();
-					final String rightType = right.getName();
-					final int res = leftType.compareToIgnoreCase(rightType);
-					if (res != 0)
-						return res;
-					return left.getName().compareToIgnoreCase(right.getName());
+					final String leftVersion = left.getVersion();
+					final String rightVersion = right.getVersion();
+					if (VersionUtils.greater(leftVersion, rightVersion, 3)) {
+						return 1;
+					} else if (VersionUtils.equal(leftVersion, rightVersion, 3)) {
+						return 0;
+					} else {
+						return -1;
+					}
 				}
 				return super.compare(viewer, e1, e2);
 			}
-
-			public boolean isSorterProperty(final Object element, final String property) {
-				return true;
-			}
 		});
-		fSortColumn = 3;
+	}
+
+	/**
+	 * Locate a PHP executable file in the PHP location given to this method.
+	 * The location should be a directory. The search is done for php and
+	 * php.exe only.
+	 * 
+	 * @param phpLocation
+	 *            A directory that might hold a PHP executable.
+	 * @return A PHP executable file.
+	 */
+	private static List<File> findPHPExecutable(File phpLocation) {
+		List<File> found = new ArrayList<File>(0);
+		for (String element : PHP_CANDIDATE_BIN) {
+			File phpExecFile = new File(phpLocation, element);
+			if (phpExecFile.exists() && !phpExecFile.isDirectory()) {
+				found.add(phpExecFile);
+			}
+		}
+		return found;
 	}
 
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
@@ -33,7 +34,6 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPsSearchResultDialog extends MessageDialog {
 
 	private class LabelProvider extends BaseLabelProvider implements ITableLabelProvider {
@@ -57,6 +57,8 @@ public class PHPsSearchResultDialog extends MessageDialog {
 				return debugger != null ? debugger : "<none>"; //$NON-NLS-1$
 			}
 			case 2:
+				return ((PHPexeItem) element).getVersion();
+			case 3:
 				return ((PHPexeItem) element).getExecutable().getAbsolutePath();
 			default:
 				break;
@@ -103,7 +105,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		tableCompositeLayout.marginWidth = 0;
 		tableComposite.setLayout(tableCompositeLayout);
 		GridData tcGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		tcGridData.widthHint = 600;
+		tcGridData.widthHint = 560;
 		tableComposite.setLayoutData(tcGridData);
 		// Buttons composite
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
@@ -125,12 +127,16 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		nameColumn.setText(Messages.PHPsSearchResultDialog_Name);
 		TableColumn debuggerColumn = new TableColumn(resultTable, SWT.LEFT);
 		debuggerColumn.setText(Messages.PHPsSearchResultDialog_Debugger_column);
+		TableColumn versionColumn = new TableColumn(resultTable, SWT.LEFT);
+		versionColumn.setText(Messages.PHPsSearchResultDialog_Version_column);
 		TableColumn locationColumn = new TableColumn(resultTable, SWT.LEFT);
 		locationColumn.setText(Messages.PHPsSearchResultDialog_Location);
 		TableColumnLayout clayout = new TableColumnLayout();
-		clayout.setColumnData(nameColumn, new ColumnWeightData(28, true));
-		clayout.setColumnData(debuggerColumn, new ColumnWeightData(22, true));
-		clayout.setColumnData(locationColumn, new ColumnWeightData(50, true));
+		PixelConverter pixelConverter = new PixelConverter(composite.getFont());
+		clayout.setColumnData(nameColumn, new ColumnWeightData(25, pixelConverter.convertWidthInCharsToPixels(25)));
+		clayout.setColumnData(debuggerColumn, new ColumnWeightData(20, pixelConverter.convertWidthInCharsToPixels(12)));
+		clayout.setColumnData(versionColumn, new ColumnWeightData(10, pixelConverter.convertWidthInCharsToPixels(8)));
+		clayout.setColumnData(locationColumn, new ColumnWeightData(25, pixelConverter.convertWidthInCharsToPixels(35)));
 		resultTable.getParent().setLayout(clayout);
 		resultTableViewer.setInput(results);
 		resultTableViewer.setAllChecked(true);

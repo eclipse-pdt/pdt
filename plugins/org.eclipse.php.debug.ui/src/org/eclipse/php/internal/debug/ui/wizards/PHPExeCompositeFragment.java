@@ -36,7 +36,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-@SuppressWarnings("restriction")
 public class PHPExeCompositeFragment extends CompositeFragment implements IPHPExeCompositeFragment {
 
 	private static final String PHP_INI = "php.ini"; //$NON-NLS-1$
@@ -47,6 +46,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 	private Button fLoadDefaultPHPIni;
 	private Label fSapiTypesLabel;
 	private Combo fSapiTypes;
+	private Label fVersionLabel;
 	private String initialName;
 	private boolean isIniFileSet = false;
 
@@ -72,22 +72,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			break;
 		}
 		controlHandler.setTitle(getTitle());
-	}
-
-	public void setExistingItems(PHPexeItem[] existingItems) {
-		this.existingItems = existingItems;
-	}
-
-	public void setData(Object data) {
-		if (data != null && !(data instanceof PHPexeItem)) {
-			throw new IllegalArgumentException(PHPDebugUIMessages.PHPExeCompositeFragment_3);
-		}
-		super.setData(data);
-		init();
-	}
-
-	public PHPexeItem getPHPExeItem() {
-		return (PHPexeItem) super.getData();
 	}
 
 	protected String getPHPexeName() {
@@ -174,9 +158,23 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		fSapiTypes.add(PHPexeItem.SAPI_CLI);
 		fSapiTypes.add(PHPexeItem.SAPI_CGI);
 
+		Label versionLabel = new Label(settingsComposite, SWT.LEFT | SWT.WRAP);
+		versionLabel.setFont(settingsComposite.getFont());
+		versionLabel.setText("Version: ");
+		data = new GridData();
+		data.horizontalSpan = 1;
+		versionLabel.setLayoutData(data);
+
+		fVersionLabel = new Label(settingsComposite, SWT.LEFT | SWT.WRAP);
+		data = new GridData();
+		data.horizontalSpan = 2;
+		data.widthHint = 100;
+		data.grabExcessHorizontalSpace = true;
+		fVersionLabel.setLayoutData(data);
+		fVersionLabel.setText("");
+
 		init();
 		createFieldListeners();
-		fPHPExePath.setFocus();
 		Dialog.applyDialogFont(this);
 	}
 
@@ -206,6 +204,11 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 							fPHPexeName.setTextWithoutUpdate(phpExecInfo.getName());
 						if (phpExecInfo.getSapiType() != null)
 							fSapiTypes.setText(phpExecInfo.getSapiType());
+						if (phpExecInfo.getVersion() != null)
+							fVersionLabel.setText(phpExecInfo.getVersion());
+					} else {
+						fSapiTypes.deselectAll();
+						fVersionLabel.setText(""); //$NON-NLS-1$
 					}
 				}
 				updateItem();
@@ -264,8 +267,22 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			}
 			fSapiTypes.setEnabled(phpExeItem.isEditable());
 			fSapiTypesLabel.setEnabled(phpExeItem.isEditable());
+			fVersionLabel.setText(phpExeItem.getVersion());
 		}
 		updateItem();
+	}
+
+	public void setExistingItems(PHPexeItem[] existingItems) {
+		this.existingItems = existingItems;
+	}
+
+	public void setData(Object data) {
+		if (data != null && !(data instanceof PHPexeItem)) {
+			throw new IllegalArgumentException(PHPDebugUIMessages.PHPExeCompositeFragment_3);
+		}
+		super.setData(data);
+		init();
+		fPHPExePath.getChangeControl(null).setFocus();
 	}
 
 	public void validate() {
@@ -339,6 +356,10 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 	public boolean performOk() {
 		return true;
+	}
+
+	public PHPexeItem getPHPExeItem() {
+		return (PHPexeItem) super.getData();
 	}
 
 	/**
