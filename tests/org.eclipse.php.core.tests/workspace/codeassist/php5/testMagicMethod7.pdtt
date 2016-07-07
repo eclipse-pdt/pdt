@@ -1,0 +1,19 @@
+--TEST--
+Test different versions of Magic Method (first magic method is broken)
+--FILE--
+<?php
+
+$var = new Test();
+$var->getSomething()->mo|
+--FILE0--
+<?php
+
+/**
+ *
+ * @method DateTime getSomething()
+ */
+class Test{
+
+}
+--EXPECT--
+method(modify)
