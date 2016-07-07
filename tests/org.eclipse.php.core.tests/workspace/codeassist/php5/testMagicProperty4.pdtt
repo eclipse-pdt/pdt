@@ -1,0 +1,19 @@
+--TEST--
+Test Magic Property
+--FILE--
+<?php
+
+$var = new Test();
+$var->aaa->mo|
+--FILE0--
+<?php
+
+/**
+ *
+ * @property DateTime $aaa
+ */
+class Test{
+
+}
+--EXPECT--
+method(modify)

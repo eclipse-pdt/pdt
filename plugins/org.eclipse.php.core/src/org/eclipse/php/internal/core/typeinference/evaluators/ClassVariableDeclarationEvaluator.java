@@ -11,10 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -30,12 +32,12 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -43,8 +45,8 @@ import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 
 /**
- * This evaluator finds class field declaration either using : 1. @var hint 2.
- * in method body using field access. 3. magic declaration using the @property,
+ * This evaluator finds class field declaration using method body and field
+ * access.
  * 
  * @property-read, @property-write
  */
@@ -126,8 +128,6 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			}
 		}
 
-		resolveMagicClassVariableDeclaration(types, variableName, cache);
-
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
@@ -161,60 +161,6 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Search for magic variables using the @property tag
-	 * 
-	 * @param types
-	 * @param variableName
-	 * @param cache
-	 */
-	private void resolveMagicClassVariableDeclaration(IType[] types, String variableName, IModelAccessCache cache) {
-		for (IType type : types) {
-			resolveMagicClassVariableDeclaration(variableName, type, cache);
-			try {
-				if (evaluated.isEmpty() && type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
-
-					ITypeHierarchy hierarchy = null;
-					if (cache != null) {
-						hierarchy = cache.getSuperTypeHierarchy(type, null);
-					}
-					IType[] superClasses = PHPModelUtils.getSuperClasses(type, hierarchy);
-
-					for (int i = 0; i < superClasses.length
-					/* && evaluated.isEmpty() */; i++) {
-						IType superClass = superClasses[i];
-						resolveMagicClassVariableDeclaration(variableName, superClass, cache);
-					}
-				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
-		}
-	}
-
-	protected void resolveMagicClassVariableDeclaration(String variableName, IType type, IModelAccessCache cache) {
-		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
-		if (docBlock == null) {
-			return;
-		}
-		for (PHPDocTag tag : docBlock.getTags()) {
-			final TagKind tagKind = tag.getTagKind();
-			if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ || tagKind == TagKind.PROPERTY_WRITE) {
-				final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(variableName, tag);
-				for (String typeName : typeNames) {
-					if (StringUtils.isBlank(typeName)) {
-						continue;
-					}
-					IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);
-					if (resolved == null) {
-						resolved = new PHPClassType(typeName);
-					}
-					evaluated.add(resolved);
-				}
 			}
 		}
 	}

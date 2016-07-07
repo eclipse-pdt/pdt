@@ -11,11 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -27,10 +25,15 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
+import org.eclipse.php.internal.core.compiler.ast.nodes.LambdaFunctionDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.YieldExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.GeneratorClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
@@ -47,7 +50,6 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 
 	public IGoal[] init() {
 		MethodElementReturnTypeGoal goal = (MethodElementReturnTypeGoal) getGoal();
-		String methodName = goal.getMethodName();
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		MethodsAndTypes mat = getMethodsAndTypes();
@@ -129,46 +131,9 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 					}
 				}
 			}
-			resolveMagicMethodDeclaration(method, methodName);
 		}
 
 		return subGoals.toArray(new IGoal[subGoals.size()]);
-	}
-
-	/**
-	 * Resolve magic methods defined by the @method tag
-	 */
-	private void resolveMagicMethodDeclaration(IMethod method, String methodName) {
-		final IModelElement parent = method.getParent();
-		if (parent.getElementType() != IModelElement.TYPE) {
-			return;
-		}
-
-		IType type = (IType) parent;
-		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
-		if (docBlock == null) {
-			return;
-		}
-		IType currentNamespace = PHPModelUtils.getCurrentNamespace(type);
-		for (PHPDocTag tag : docBlock.getTags(TagKind.METHOD)) {
-			final Collection<String> typeNames = PHPEvaluationUtils.getTypeBinding(methodName, tag);
-			for (String typeName : typeNames) {
-				if (StringUtils.isBlank(typeName)) {
-					continue;
-				}
-				IEvaluatedType evaluatedType = PHPEvaluationUtils.extractArrayType(typeName, currentNamespace,
-						tag.sourceStart());
-				if (evaluatedType != null) {
-					evaluated.add(evaluatedType);
-				} else {
-					IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);
-					if (resolved == null) {
-						resolved = new PHPClassType(typeName);
-					}
-					evaluated.add(resolved);
-				}
-			}
-		}
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
