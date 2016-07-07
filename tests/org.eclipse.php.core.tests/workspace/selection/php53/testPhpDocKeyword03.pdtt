@@ -1,0 +1,29 @@
+--TEST--
+Test $this keyword in PhpDoc
+--FILE--
+<?php
+class Test implements MyInterface {
+	
+	/**
+	 *
+	 * {|@inheritdoc|}
+	 *
+	 * @see MyInterface::getSomething()
+	 */
+	function getSomething($param) {
+	}
+}
+--FILE0--
+<?php
+
+interface MyInterface {
+	
+	/**
+	 * 
+	 * @param unknown $param
+	 */
+	function getSomething($param) {
+	}
+}
+--EXPECT--
+method(FILE0.php||getSomething)
