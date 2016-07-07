@@ -26,6 +26,7 @@ public class Messages extends NLS {
 	public static String PHPsSearchResultDialog_Add;
 	public static String PHPsSearchResultDialog_Cancel;
 	public static String PHPsSearchResultDialog_Debugger_column;
+	public static String PHPsSearchResultDialog_Version_column;
 	public static String PHPsSearchResultDialog_Deselect_all;
 	public static String PHPsSearchResultDialog_Location;
 	public static String PHPsSearchResultDialog_Name;

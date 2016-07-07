@@ -14,8 +14,6 @@ package org.eclipse.php.internal.debug.ui.preferences.phps;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -79,9 +77,6 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		data.horizontalSpan = 1;
 		control.setLayoutData(data);
 
-		fPHPBlock.restoreColumnSettings(PHPDebugUIPlugin.getDefault().getDialogSettings(),
-				PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
-
 		initDefaultPHP();
 		applyDialogFont(ancestor);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor, IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);
@@ -92,11 +87,6 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
-
-		// save column widths
-		IDialogSettings settings = PHPDebugUIPlugin.getDefault().getDialogSettings();
-		fPHPBlock.saveColumnSettings(settings, PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
-
 		fPHPBlock.commitChanges();
 		return super.performOk();
 	}
