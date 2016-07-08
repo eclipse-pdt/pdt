@@ -28,6 +28,7 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.IContext;
@@ -396,6 +397,18 @@ public class ASTUtils {
 					return false;
 				}
 				return !found;
+			}
+
+			@Override
+			public boolean visit(Statement s) throws Exception {
+				if (s.getKind() == ASTNodeKinds.FIELD_DECLARATION) {
+					if (!found && s.sourceStart() > offset) {
+						decl[0] = (Declaration) s;
+						found = true;
+						return false;
+					}
+				}
+				return super.visit(s);
 			}
 
 			public boolean visitGeneral(ASTNode n) {

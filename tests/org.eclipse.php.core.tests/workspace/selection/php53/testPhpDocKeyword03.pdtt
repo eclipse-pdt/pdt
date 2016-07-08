@@ -1,5 +1,5 @@
 --TEST--
-Test $this keyword in PhpDoc
+Test @inheritdoc
 --FILE--
 <?php
 class Test implements MyInterface {
