@@ -18,30 +18,17 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 
 public abstract class AbstractRefactoringTest {
 
 	protected static final char OFFSET_CHAR = '|';
-
-	@BeforeClass
-	public static void setUpSuite() {
-		TestUtils.disableColliders(ColliderType.ALL);
-	}
-
-	@AfterClass
-	public static void tearDownSuite() {
-		TestUtils.enableColliders(ColliderType.ALL);
-	}
 
 	protected Program createProgram(IFile file) throws Exception {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);

@@ -33,18 +33,15 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -152,16 +149,6 @@ public class PHPPartitionerTests {
 				in.close();
 			}
 		}
-	}
-
-	@BeforeClass
-	public static void setUpSuite() {
-		TestUtils.disableColliders(ColliderType.ALL);
-	}
-
-	@AfterClass
-	public static void tearDownSuite() {
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Before

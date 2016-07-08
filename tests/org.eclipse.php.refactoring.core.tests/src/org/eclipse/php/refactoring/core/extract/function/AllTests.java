@@ -11,10 +11,6 @@
 package org.eclipse.php.refactoring.core.extract.function;
 
 import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
@@ -27,14 +23,4 @@ public class AllTests {
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
-	@BeforeClass
-	public static void setUpSuite() {
-		TestUtils.disableColliders(ColliderType.ALL);
-	}
-
-	@AfterClass
-	public static void tearDownSuite() {
-		TestUtils.enableColliders(ColliderType.ALL);
-	}
-	
 }

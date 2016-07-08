@@ -34,7 +34,6 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
@@ -68,7 +67,6 @@ public class SearchFieldTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("AutoSelectionEngine_" + phpVersion.toString());
 		ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + phpVersion.toString());
 		TestUtils.setProjectPhpVersion(project, phpVersion);
@@ -77,7 +75,6 @@ public class SearchFieldTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After

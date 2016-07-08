@@ -29,7 +29,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
@@ -82,7 +81,6 @@ public class MarkOccurrenceTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("MarkOccurrenceTests_" + phpVersion.toString());
 		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
@@ -90,7 +88,6 @@ public class MarkOccurrenceTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test

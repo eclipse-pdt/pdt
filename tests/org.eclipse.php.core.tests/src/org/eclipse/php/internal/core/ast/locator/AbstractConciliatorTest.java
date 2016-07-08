@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -40,7 +39,6 @@ public abstract class AbstractConciliatorTest {
 
 	@BeforeClass
 	public static void setUpSuite() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = phpVersion != null ? createProject("projectConciliator", phpVersion)
 				: createProject("projectConciliator");
 	}
@@ -48,7 +46,6 @@ public abstract class AbstractConciliatorTest {
 	@AfterClass
 	public static void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	public static IProject createProject(String name) {

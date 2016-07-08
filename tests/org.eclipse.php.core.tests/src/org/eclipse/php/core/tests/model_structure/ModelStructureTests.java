@@ -30,7 +30,6 @@ import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
@@ -69,7 +68,6 @@ public class ModelStructureTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("ModelStructureTests");
 		TestUtils.setProjectPhpVersion(project, version);
 	}
@@ -77,7 +75,6 @@ public class ModelStructureTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test

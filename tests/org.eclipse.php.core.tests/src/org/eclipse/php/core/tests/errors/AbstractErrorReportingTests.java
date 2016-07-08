@@ -23,9 +23,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.php.core.tests.PDTTUtils;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -72,12 +71,10 @@ abstract public class AbstractErrorReportingTests {
 	@AfterList
 	public void tearDown() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("ErrorReportingTests");
 		ResourcesPlugin.getWorkspace().getRoot().getProject(getPHPVersion() + "ErrorReportingTests");
 		for (final String fileName : fileNames) {
