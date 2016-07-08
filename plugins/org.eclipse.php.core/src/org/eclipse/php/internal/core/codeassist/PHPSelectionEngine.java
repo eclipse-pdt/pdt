@@ -505,14 +505,21 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (phpDocTag.sourceStart() <= offset && phpDocTag.sourceEnd() >= end) {
 				if (phpDocTag.getTagKind() == TagKind.INHERITDOC) {
 					Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(parsedUnit, offset);
-					if (declaration instanceof PHPMethodDeclaration) {
-						PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) declaration;
-						IModelElement element = sourceModule.getElementAt(methodDeclaration.sourceStart());
+					if (declaration != null) {
+						IModelElement element = sourceModule.getElementAt(declaration.sourceStart());
 						if (element != null) {
-							IType type = (IType) element.getParent();
 							try {
-								return PHPModelUtils.getSuperTypeHierarchyMethod(type, null,
-										methodDeclaration.getName(), true, null);
+								if (element.getElementType() == IModelElement.METHOD) {
+									IType type = (IType) element.getParent();
+									return PHPModelUtils.getSuperTypeHierarchyMethod(type, null,
+											element.getElementName(), true, null);
+								} else if (element.getElementType() == IModelElement.FIELD) {
+									IType type = (IType) element.getParent();
+									return PHPModelUtils.getSuperTypeHierarchyField(type, null,
+											element.getElementName(), true, null);
+								} else if (element.getElementType() == IModelElement.TYPE) {
+									return PHPModelUtils.getSuperClasses((IType) element, null);
+								}
 							} catch (CoreException e) {
 								Logger.logException(e);
 							}

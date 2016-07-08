@@ -1,0 +1,19 @@
+--TEST--
+Test @inheritdoc
+--FILE--
+<?php
+/**
+ * 
+ * {|@inheritdoc|}
+ *
+ */
+class Test implements MyInterface {
+
+}
+--FILE0--
+<?php
+
+interface MyInterface {
+}
+--EXPECT--
+type(FILE0.php||MyInterface)

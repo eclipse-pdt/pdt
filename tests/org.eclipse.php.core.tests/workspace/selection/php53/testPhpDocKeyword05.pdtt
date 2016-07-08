@@ -1,0 +1,26 @@
+--TEST--
+Test @inheritdoc
+--FILE--
+<?php
+class Test extends AbstractClass {
+	/**
+	 *
+	 * {|@inheritdoc|}
+	 */
+	public $var;
+}
+--FILE0--
+<?php
+
+
+class AbstractClass {
+
+	/**
+	 * 
+	 * @var string
+	 */
+	public $var;
+	
+}
+--EXPECT--
+field(FILE0.php||$var)
