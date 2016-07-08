@@ -17,6 +17,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
@@ -130,7 +131,11 @@ public class ASTUtils {
 	 * @param position
 	 * @return
 	 */
+	@Nullable
 	public static ASTNode findMinimalNode(ModuleDeclaration unit, int start, int end) {
+		if (unit == null) {
+			return null;
+		}
 
 		class Visitor extends ASTVisitor {
 
