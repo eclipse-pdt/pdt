@@ -32,7 +32,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
@@ -49,8 +48,6 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-
-		TestUtils.disableColliders(ColliderType.ALL);
 
 		project1 = TestUtils.createProject("project1");
 		IFolder folder = TestUtils.createFolder(project1, "src");
@@ -361,7 +358,6 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 }

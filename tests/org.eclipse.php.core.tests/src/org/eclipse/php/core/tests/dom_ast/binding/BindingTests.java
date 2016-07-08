@@ -26,9 +26,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Assignment;
@@ -71,14 +70,12 @@ public class BindingTests {
 
 	@BeforeClass
 	public static void setUpSuite() {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("BindingTests");
 	}
 
 	@AfterClass
 	public static void tearDownSuite() {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After

@@ -58,8 +58,6 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.internal.core.util.Util.Comparer;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractModelTests extends SuiteOfTestCases {
@@ -300,13 +298,11 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	public void setUpSuite() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		super.setUpSuite();
 	}
 
 	@Override
 	public void tearDownSuite() throws Exception {
-		TestUtils.enableColliders(ColliderType.ALL);
 		super.tearDownSuite();
 	}
 

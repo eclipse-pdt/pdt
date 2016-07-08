@@ -14,6 +14,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.Logger;
 import org.osgi.framework.BundleContext;
 
@@ -44,6 +46,7 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		TestUtils.disableColliders(ColliderType.ALL);
 	}
 
 	/*
@@ -60,6 +63,7 @@ public class Activator extends Plugin {
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
+		TestUtils.enableColliders(ColliderType.ALL);
 		plugin = null;
 		super.stop(context);
 	}

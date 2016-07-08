@@ -27,16 +27,13 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -47,16 +44,6 @@ public class IncludePathManagerTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	protected IProject project;
-
-	@BeforeClass
-	public static void setUpSuite() {
-		TestUtils.disableColliders(ColliderType.ALL);
-	}
-
-	@AfterClass
-	public static void tearDownSuite() {
-		TestUtils.enableColliders(ColliderType.ALL);
-	}
 
 	@Before
 	public void setUp() throws Exception {

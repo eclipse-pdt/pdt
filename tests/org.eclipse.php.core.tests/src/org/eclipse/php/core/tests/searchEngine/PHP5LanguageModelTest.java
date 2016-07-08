@@ -22,7 +22,6 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,7 +33,6 @@ public class PHP5LanguageModelTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("PHPLanguageModelTests");
 		TestUtils.waitForIndexer();
 	}
@@ -42,7 +40,6 @@ public class PHP5LanguageModelTest {
 	@AfterClass
 	public static void tearDown() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
