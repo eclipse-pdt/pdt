@@ -132,7 +132,7 @@ public class ASTUtils {
 	 * @return
 	 */
 	@Nullable
-	public static ASTNode findMinimalNode(ModuleDeclaration unit, int start, int end) {
+	public static ASTNode findMinimalNode(@Nullable ModuleDeclaration unit, int start, int end) {
 		if (unit == null) {
 			return null;
 		}
