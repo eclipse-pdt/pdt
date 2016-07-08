@@ -62,6 +62,7 @@ public class PHPexes {
 	private static final String SEPARATOR_FOR_PHPVERSION = "/"; //$NON-NLS-1$
 	private static final String DEFAULT_ATTRIBUTE = "default"; //$NON-NLS-1$
 	private static final String EXTENSION_POINT_NAME = "phpExe"; //$NON-NLS-1$
+	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String DEBUGGER_ID_ATTRIBUTE = "debuggerID"; //$NON-NLS-1$
@@ -552,6 +553,7 @@ public class PHPexes {
 		for (final IConfigurationElement element : elements) {
 			if (PHPEXE_TAG.equals(element.getName())) {
 				try {
+					String id = element.getAttribute(ID_ATTRIBUTE);
 					final String name = element.getAttribute(NAME_ATTRIBUTE);
 					String location = substitudeVariables(element.getAttribute(LOCATION_ATTRIBUTE));
 					final String version = element.getAttribute(VERSION_ATTRIBUTE);
@@ -595,12 +597,8 @@ public class PHPexes {
 						/*
 						 * Override unique ID to be always the same when loading
 						 * item from extension once again (restart)
-						 * 
-						 * TODO - should be done better after improving the PHP
-						 * executables model architecture...
 						 */
-						String uniqueID = "php-extension-exe-" //$NON-NLS-1$
-								+ file.getPath().toString();
+						String uniqueID = (id != null) ? id : "php-extension-exe-" + file.getPath().toString(); //$NON-NLS-1$
 						newItem.setUniqueId(uniqueID);
 						storeItem(newItem);
 						if (isDefault) {

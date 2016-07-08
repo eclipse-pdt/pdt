@@ -52,6 +52,13 @@ zend_extension=&amp;lt;path to the Xdebug / Zend Debugger extension&amp;gt;
 
    <element name="phpExe">
       <complexType>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  Unique ID of the PHP executable.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
