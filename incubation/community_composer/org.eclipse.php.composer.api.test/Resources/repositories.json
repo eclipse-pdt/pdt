@@ -1,0 +1,47 @@
+{
+	"name": "gossi/test",
+	"description": "this is to test the support",
+	"repositories": [
+	    {
+            "type": "composer",
+            "url": "https://packagist.org/packages.json",
+            "options": {
+                "ssl": {
+                    "verify_peer": "true"
+                }
+            }
+        },
+	    {
+	    	"type": "svn",
+	    	"url": "https://svn.github.com",
+	    	"trunk-path": "trunk/",
+            "branches-path": "branches/",
+            "tags-path": "tags/"
+	    },
+	    {
+            "type": "pear",
+            "url": "http://pear2.php.net",
+            "vendor-alias": "foobar"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "smarty/smarty",
+                "version": "3.1.7",
+                "dist": {
+                    "url": "http://www.smarty.net/files/Smarty-3.1.7.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "http://smarty-php.googlecode.com/svn/",
+                    "type": "svn",
+                    "reference": "tags/Smarty_3_1_7/distribution/"
+                }
+            }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Seldaek/monolog"
+        }
+	]
+}

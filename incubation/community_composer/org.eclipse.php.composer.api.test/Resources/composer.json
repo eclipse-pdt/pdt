@@ -1,0 +1,44 @@
+{
+    "name": "gossi/test",
+    "type": "library",
+    "description": "really dump description",
+    "keywords": ["stub", "oop"],
+    "homepage": "http://pdt-extensions.org",
+    "license": ["MIT", "EPL"],
+    "authors": [
+        {
+            "name": "Robert Gruendler",
+            "email": "r.gruendler@gmail.com",
+            "role": "owner"
+        },
+        {
+            "name": "Thomas Gossmann",
+            "homepage": "http://gos.si",
+            "role": "contributor"
+        }
+    ],
+    "minimum-stability": "dev",
+    "target-dir": "test/",
+    
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "2.1.*",
+        "symfony/security-bundle": "2.1.*"
+    },
+    "require-dev": {
+        "twig/twig": "*",
+        "doctrine/doctrine-bundle": "*",
+        "swiftmailer/swiftmailer": "*",
+        "willdurand/propel-typehintable-behavior": "dev-master",
+        "symfony/yaml": "2.1.*",
+        "symfony/validator": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": { "FOS\\UserBundle": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+	"name" : "test/buildpath",
+	"keywords" : [],
+	"require" : {
+		"php" : ">=5.4",
+		"propel/propel1" : "~1",
+		"symfony/console" : "~2",
+		"gossi/ldap" : "dev-master"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"test" : ["src", "test"],
+			"": "nother"
+		}
+	},
+	"config" : {
+		"vendor-dir" : "mordor"
+	}
+}
