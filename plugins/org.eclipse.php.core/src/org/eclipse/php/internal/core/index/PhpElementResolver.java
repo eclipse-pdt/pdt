@@ -254,7 +254,8 @@ public class PhpElementResolver implements IElementResolver {
 						if (PhpIndexingVisitor.NULL_VALUE.equals(defaultValue)) {
 							defaultValue = null;
 						}
-						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue);
+						boolean isReference = values.length == 4 && PhpIndexingVisitor.IS_REFERENCE.equals(values[3]);
+						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue, isReference);
 					}
 				}
 			}
