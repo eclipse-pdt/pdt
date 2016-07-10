@@ -57,7 +57,7 @@ public class FormalParameter extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP5;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(4);
 		properyList.add(PARAMETER_TYPE_PROPERTY);
 		properyList.add(PARAMETER_NAME_PROPERTY);
 		properyList.add(DEFAULT_VALUE_PROPERTY);
@@ -401,8 +401,9 @@ public class FormalParameter extends ASTNode {
 		final Expression type = ASTNode.copySubtree(target, this.getParameterType());
 		final Expression value = ASTNode.copySubtree(target, this.getDefaultValue());
 		final boolean isMandatory = this.isMandatory();
+		final boolean isVariadic = this.isVariadic();
 		final FormalParameter result = new FormalParameter(this.getStart(), this.getEnd(), target, type, name, value,
-				isMandatory);
+				isMandatory, isVariadic);
 		return result;
 	}
 

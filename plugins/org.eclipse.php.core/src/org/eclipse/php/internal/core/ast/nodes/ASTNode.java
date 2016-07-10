@@ -1438,7 +1438,7 @@ public abstract class ASTNode implements Visitable {
 	 * Sets the value of the given boolean-valued property for this node. The
 	 * default implementation of this method throws an exception explaining that
 	 * this node does not have such a property. This method should be extended
-	 * in subclasses that have at leasy one simple property whose value type is
+	 * in subclasses that have at least one simple property whose value type is
 	 * boolean.
 	 * 
 	 * @param property
