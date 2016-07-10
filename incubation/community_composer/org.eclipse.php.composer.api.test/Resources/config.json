@@ -1,0 +1,11 @@
+{
+	"name": "gossi/test",
+	"description": "this is to test the config",
+	"config": {
+		"vendor-dir": "vendor/",
+		"bin-dir": "bin/",
+		"process-timeout": "300",
+		"github-protocols": ["git", "http"],
+		"notify-on-install": "true"
+	}
+}
