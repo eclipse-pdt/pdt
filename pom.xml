@@ -14,6 +14,7 @@
 		<antrun-version>1.7</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs />
+		<test.proxy />
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.exclusions>**/parser/*/CompilerAstParser.java,**/parser/DocumentorLexer.java,**/scanner/*/PhpAstLexer.java,**/scanner/*/PhpAstParser.java,**/scanner/*/ParserConstants.java,**/documentModel/parser/PHPTokenizer.java,**/parser/*/PhpLexer.java,**/*Messages.java,**/parser/*/CompilerParserConstants.java</sonar.exclusions>
@@ -214,6 +215,12 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>foundation-proxy</id>
+			<properties>
+				<test.proxy>-Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -Dhttp.nonProxyHosts=*.eclipse.org -Dhttps.nonProxyHosts=*.eclipse.org -Dftp.proxyHost=proxy.eclipse.org -Dftp.proxyPort=9898 -Dftp.nonProxyHosts=*.eclipse.org</test.proxy>
+			</properties>
+		</profile>
+		<profile>
 			<id>eclipse-next</id>
 			<activation>
 				<property>
@@ -244,6 +251,7 @@
 		<module>plugins</module>
 		<module>tests</module>
 		<module>features</module>
+		<module>incubation/community_composer</module>
 	</modules>
 
 </project>
