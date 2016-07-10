@@ -207,8 +207,10 @@ public class PhpElementResolver implements IElementResolver {
 			Map<String, String> info = decodeDocInfo(doc);
 			if (info != null) {
 				String types = info.get("v"); //$NON-NLS-1$
-				types = types.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
-				return types;
+				if (types != null) {
+					types = types.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
+					return types;
+				}
 			}
 			return null;
 		}
