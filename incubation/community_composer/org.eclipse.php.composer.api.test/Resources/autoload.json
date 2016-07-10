@@ -1,0 +1,14 @@
+{
+    "name": "gossi/test",
+	"description": "this is to test the psr0 autoload",
+    "autoload": {
+        "psr-0": { 
+        	"gossi": "src/gossi",
+        	"Monolog": ["src/", "lib/"],
+        	"UniqueGlobalClass": "",
+        	"": "etc/"
+        },
+        "classmap": ["src/", "lib/", "Something.php"],
+        "files": ["src/MyLibrary/functions.php"]
+    }
+}

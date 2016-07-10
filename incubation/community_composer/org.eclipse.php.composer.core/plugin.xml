@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2012, 2016 PDT Extension Group and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        PDT Extension Group - initial API and implementation
+ -->
+
+<plugin>
+
+
+   <extension
+         id="org.eclipse.php.composer.core.composerNature"
+         name="Composer Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.eclipse.php.composer.core.ComposerNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.eclipse.php.composer.core.builder.buildPathManagementBuilder">
+      </builder>
+      <content-type
+            id="org.eclipse.php.composer.core.composerJson">
+      </content-type>
+   </extension>
+   <extension
+         id="org.eclipse.php.composer.core.builder.buildPathManagementBuilder"
+         name="Composer Build Path Management"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            callOnEmptyDelta="false"
+            hasNature="true">
+         <run
+               class="org.eclipse.php.composer.core.builder.ComposerBuildPathManagementBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.php.composer.core.build.BuildParticipantFactory"
+            id="org.eclipse.php.composer.core.buildParticipant"
+            name="Composer Builder"
+            nature="org.eclipse.php.core.PHPNature">
+      </buildParticipant>
+   </extension>
+
+   <extension
+         point="org.eclipse.dltk.core.buildpathContainerInitializer">
+      <buildpathContainerInitializer
+            class="org.eclipse.php.composer.core.ComposerBuildpathContainerInitializer"
+            id="org.eclipse.php.composer.core.CONTAINER">
+      </buildpathContainerInitializer>
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.facets">
+      <project-facet
+            id="php.composer.component">
+         <label>
+            Composer
+         </label>
+         <description>
+            Adds composer support to your PHP project.
+         </description>
+      </project-facet>
+      <project-facet-version
+            facet="php.composer.component"
+            version="1">
+         <constraint>
+            <and>
+               <requires
+                     facet="php.core.component">
+               </requires>
+            </and>
+         </constraint>
+      </project-facet-version>
+      <action
+            facet="php.composer.component"
+            id="php.composer.component.install"
+            type="install"
+            version="1">
+         <delegate
+               class="org.eclipse.php.composer.core.facet.InstallActionDelegate">
+         </delegate>
+      </action>
+      <action
+            facet="php.composer.component"
+            id="php.composer.component.uninstall"
+            type="uninstall">
+         <delegate
+               class="org.eclipse.php.composer.core.facet.UninstallActionDelegate">
+         </delegate>
+      </action>
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.ui.wizardPages">
+      <wizard-pages
+            action="php.composer.component.install">
+         <page
+               class="org.eclipse.php.composer.core.facet.FacetInstallWizardPage">
+         </page>
+      </wizard-pages>
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.presets">
+      <static-preset
+            extends="default.configuration"
+            id="org.eclipse.php.composer.core.static-preset">
+         <label>
+            Composer
+         </label>
+         <description>
+            Sets up a composer PHP project.
+         </description>
+         <facet
+               id="php.composer.component"
+               version="1">
+         </facet>
+      </static-preset>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.php.composer.core.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.pdtextensions.core.executableLauncher">
+      <environmentFactory
+            class="org.eclipse.php.composer.core.launch.environment.ComposerEnvironmentFactory"
+            id="org.eclipse.php.composer.core.launcherfactory">
+      </environmentFactory>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.wst.json.core.jsonsource"
+            id="composerJson"
+            name="Composer JSON"
+            priority="high">
+      </content-type>
+      <file-association
+            content-type="org.eclipse.php.composer.core.composerJson"
+            file-names="composer.json">
+      </file-association>
+   </extension>
+   <extension
+         point="org.eclipse.wst.json.core.schemaCatalogContributions">
+         <schemaCatalogContribution id="http://schemastore.org/">
+         	<schema name="composer.json"
+         			description="Composer description file"
+         			fileMatch="composer.json,composer.json"
+         			url="http://json.schemastore.org/composer"
+         			uri="schemastore/composer" />
+         </schemaCatalogContribution>
+         
+	</extension>
+
+</plugin>

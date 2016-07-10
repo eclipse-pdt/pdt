@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Composer API Plugin
+Bundle-SymbolicName: org.eclipse.php.composer.api
+Bundle-Version: 4.1.0.qualifier
+Bundle-Vendor: Eclipse PDT
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.apache.commons.logging,
+ org.apache.httpcomponents.httpcore.nio,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore,
+ com.google.gson;bundle-version="2.2.4"
+Export-Package: org.eclipse.php.composer.api,
+ org.eclipse.php.composer.api.collection,
+ org.eclipse.php.composer.api.entities,
+ org.eclipse.php.composer.api.json,
+ org.eclipse.php.composer.api.objects,
+ org.eclipse.php.composer.api.packages,
+ org.eclipse.php.composer.api.repositories
