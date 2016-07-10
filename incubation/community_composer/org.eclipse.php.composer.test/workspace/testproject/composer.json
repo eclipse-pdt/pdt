@@ -1,0 +1,21 @@
+{
+    "name": "pulse00/testproject",
+    "description": "just a test",
+    "require": {
+        "imagine/Imagine": "dev-master",
+        "symfony/yaml": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Gruendler",
+            "email": "r.gruendler@gmail.com"
+        }
+    ],
+    "autoload": {
+    	"psr-0": {
+    		"Foobar\\" : "src/"
+    	}
+    },
+    "minimum-stability": "dev"
+}
