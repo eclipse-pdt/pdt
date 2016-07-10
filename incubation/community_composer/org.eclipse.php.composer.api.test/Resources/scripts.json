@@ -1,0 +1,19 @@
+{
+    "name": "gossi/test",
+	"description": "this is to test the scripts",
+    "scripts": {
+        "pre-install-cmd": "pre\\install::cmd()",
+        "post-install-cmd": [
+        	"post\\install::cmd()",
+        	"phpunit"  
+        ],
+        "pre-update-cmd": "pre\\update::cmd()",
+        "post-update-cmd": "post\\update::cmd()",
+        "pre-package-install": "pre\\package::install()",
+        "post-package-install": "post\\package::install()",
+        "pre-package-update": "pre\\package::update()",
+        "post-package-update": "post\\package::update()",
+        "pre-package-uninstall": "pre\\package::uninstall()",
+        "post-package-uninstall": "post\\package::uninstall()"
+    }
+}

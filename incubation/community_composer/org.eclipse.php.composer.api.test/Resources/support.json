@@ -1,0 +1,12 @@
+{
+	"name": "gossi/test",
+	"description": "this is to test the support",
+	"support": {
+		"email": "test@mail.com",
+		"irc": "irc://freenode.org/pdt",
+		"issues": "https://github.com/pulse00/Composer-Java-Bindings/issues",
+		"forum": "https://groups.google.com/forum/?fromgroups=#!forum/pdt-extensions-platform",
+		"wiki": "https://github.com/pdt-eg/Core-Plugin/wiki",
+		"source": "https://github.com/pulse00/Composer-Java-Bindings"
+	}
+}
