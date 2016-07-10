@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2012, 2016 PDT Extension Group and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        PDT Extension Group - initial API and implementation
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.php.composer.ui.editor.toolbar">
+         <command
+               commandId="org.eclipse.php.composer.ui.command.install"
+               icon="icons/full/obj16/install.gif"
+               label="Install"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:sourceMenuId?before=sourceBegin">
+         <command
+               commandId="org.eclipse.php.composer.ui.command.injectAutoload"
+               label="Inject Composer Autoload-Statement"
+               style="push">
+            <visibleWhen checkEnabled="false">
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+		                  <test
+		                        forcePluginActivation="true"
+		                        property="org.pdtextensions.parentProjectNature"
+		                        value="org.eclipse.php.composer.core.composerNature">
+		                  </test>
+                  </iterate>
+               </with>
+
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:sourcePopupMenuId?after=sourceBegin">
+         <command
+               commandId="org.eclipse.php.composer.ui.command.injectAutoload"
+               label="Inject Composer Autoload-Statement"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <iterate
+                        operator="and">
+                     <test
+                           forcePluginActivation="true"
+                           property="org.pdtextensions.parentProjectNature"
+                           value="org.eclipse.php.composer.core.composerNature">
+                     </test>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="org.eclipse.php.composer.ui.command.addComposerSupport"
+               label="Add Composer Support"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+                  <and>
+	               <with
+	                     variable="selection">
+	                  <iterate
+	                        ifEmpty="false"
+	                        operator="and">
+	                        	<adapt type="org.eclipse.core.resources.IProject">
+		                        	<test
+						                   property="org.eclipse.core.resources.projectNature"
+						                   value="org.eclipse.php.composer.core.composerNature">
+						             </test>
+		                        </adapt>
+	                  </iterate>
+	               </with>
+	               <not>
+		               <with
+		                     variable="selection">
+		                  <iterate
+		                        ifEmpty="false"
+		                        operator="and">
+		                        <adapt type="org.eclipse.core.resources.IProject">
+		                        	<test
+						                   property="org.eclipse.core.resources.projectNature"
+						                   value="org.eclipse.php.composer.core.composerNature">
+						             </test>
+		                        </adapt>
+		                  </iterate>
+		               </with>
+	               </not>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.php.composer.ui.command.removeComposerSupport"
+               label="Remove Composer Support"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+							<test
+								forcePluginActivation="true"
+								property="org.pdtextensions.parentProjectNature"
+								value="org.eclipse.php.composer.core.composerNature">
+							</test>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+        <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="org.eclipse.php.composer.ui.menu.composer"
+               label="Composer"
+               icon="icons/full/obj16/composer.png">
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+	               <with
+	                     variable="activeMenuSelection">
+	                  <iterate
+	                        ifEmpty="false"
+	                        operator="and">
+	                     <adapt
+	                           type="org.eclipse.core.resources.IProject">
+	                        <test
+	                              property="org.eclipse.core.resources.open"
+	                              value="true">
+	                        </test>
+	                     </adapt>
+	                  </iterate>
+	               </with>
+	               <with
+		                     variable="selection">
+		                  <iterate
+		                        ifEmpty="false"
+		                        operator="and">
+	       						<test
+									forcePluginActivation="true"
+									property="org.pdtextensions.parentProjectNature"
+									value="org.eclipse.php.composer.core.composerNature">
+								</test>
+		                  </iterate>
+		               </with>
+	           </and>
+            </visibleWhen>
+            <command
+                  commandId="org.eclipse.php.composer.ui.command.updateBuildpath"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Run `composer.phar install --no-dev`"
+            id="org.eclipse.php.composer.ui.command.install"
+            name="Install Dependencies">
+      </command>
+      <command
+            description="Run `composer.phar install --dev`"
+            id="org.eclipse.php.composer.ui.command.installDev"
+            name="Install Dependencies (dev)">
+      </command>
+      <command
+            description="Run `composer.phar update --dev`"
+            id="org.eclipse.php.composer.ui.command.updateDev"
+            name="Update dependencies (dev)">
+      </command>
+      <command
+            description="Run `composer.phar update --no-dev`"
+            id="org.eclipse.php.composer.ui.command.update"
+            name="Update Dependencies">
+      </command>
+      <command
+            description="Run `composer.phar self-update`"
+            id="org.eclipse.php.composer.ui.command.selfupdate"
+            name="Self-Update Composer">
+      </command>
+      <command
+            id="org.eclipse.php.composer.ui.command.graph"
+            name="Dependency Graph">
+      </command>
+      <command
+            defaultHandler="org.eclipse.php.composer.ui.commands.InjectAutoloadCommand"
+            id="org.eclipse.php.composer.ui.command.injectAutoload"
+            name="Inject Composer Autoload-Statement">
+      </command>
+      <command
+            defaultHandler="org.eclipse.php.composer.ui.handler.AddComposerSupportHandler"
+            id="org.eclipse.php.composer.ui.command.addComposerSupport"
+            name="Add Composer Support">
+      </command>
+      <command
+            defaultHandler="org.eclipse.php.composer.ui.handler.RemoveComposerSupportHandler"
+            id="org.eclipse.php.composer.ui.command.removeComposerSupport"
+            name="Remove Composer Support">
+      </command>
+      <command
+            defaultHandler="org.eclipse.php.composer.ui.commands.UpdateBuildPathCommand"
+            id="org.eclipse.php.composer.ui.command.updateBuildpath"
+            name="Update BuildPath">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
+            id="org.eclipse.php.composer.ui.preferences.composer"
+            name="Composer">
+      </page>
+      <page
+            category="org.eclipse.php.composer.ui.preferences.composer"
+            class="org.eclipse.php.composer.ui.preferences.SaveActionsPreferencePage"
+            id="org.eclipse.php.composer.ui.preferences.composer.saveactions"
+            name="Save Actions">
+      </page>
+   </extension>
+   <!--
+   <extension
+         point="org.eclipse.php.ui.phpTreeContentProviders">
+      <provider labelProvider="org.eclipse.php.composer.ui.explorer.PackageTreeLabelProvider" contentProvider="org.eclipse.php.composer.ui.explorer.PackageTreeContentProvider"
+            >
+      </provider>
+   </extension>
+   -->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.php.composer.ui.editor.composer.ComposerFormEditor"
+            default="true"
+            filenames="composer.json"
+            icon="icons/full/obj16/packd_obj.gif"
+            id="org.eclipse.php.composer.ui.editor.composer.ComposerEditor"
+            name="Composer">
+         <contentTypeBinding
+               contentTypeId="org.eclipse.php.composer.core.composerJson">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
+            id="org.eclipse.php.composer.ui.preferences.project.composer"
+            name="Composer">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <test
+                     property="org.eclipse.core.resources.projectNature"
+                     value="org.eclipse.php.composer.core.composerNature">
+               </test>
+            </adapt>
+        </enabledWhen>
+      </page>
+         
+      <page
+            category="org.eclipse.php.composer.ui.preferences.project.composer"
+            class="org.eclipse.php.composer.ui.preferences.BuildPathManagementPage"
+            id="org.eclipse.php.composer.ui.preferences.project.buildpathManagement"
+            name="Build Path Management">
+	         <enabledWhen>
+	            <adapt
+	                  type="org.eclipse.core.resources.IProject">
+	               <instanceof
+	                     value="org.eclipse.core.resources.IProject">
+	               </instanceof>
+	               <test
+	                     property="org.eclipse.core.resources.projectNature"
+	                     value="org.eclipse.php.composer.core.composerNature">
+	               </test>
+	            </adapt>
+	        </enabledWhen>
+      </page>
+      <page
+            category="org.eclipse.php.composer.ui.preferences.project.composer"
+            class="org.eclipse.php.composer.ui.preferences.SaveActionsPreferencePage"
+            id="org.eclipse.php.composer.ui.preferences.project.saveactions"
+            name="Save Actions">
+	         <enabledWhen>
+	            <adapt
+	                  type="org.eclipse.core.resources.IProject">
+	               <instanceof
+	                     value="org.eclipse.core.resources.IProject">
+	               </instanceof>
+	               <test
+	                     property="org.eclipse.core.resources.projectNature"
+	                     value="org.eclipse.php.composer.core.composerNature">
+	               </test>
+	            </adapt>
+	        </enabledWhen>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.php.project.ui"
+            class="org.eclipse.php.composer.ui.wizard.project.ComposerProjectCreationWizard"
+            finalPerspective="org.eclipse.php.perspective"
+            icon="icons/full/obj16/composer_project.gif"
+            id="org.eclipse.php.composer.ui.projectwizard"
+            name="Empty Composer Project"
+            preferredPerspectives="org.eclipse.php.perspective"
+            project="true">
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+         <description>
+            Creates and initializes a composer project.
+         </description>
+      </wizard>
+      <wizard
+            category="org.eclipse.php.project.ui"
+            class="org.eclipse.php.composer.ui.wizard.project.template.PackageProjectCreationWizard"
+            finalPerspective="org.eclipse.php.perspective"
+            icon="icons/full/obj16/logical_package_obj.gif"
+            id="org.eclipse.php.composer.ui.projectFromPackagewizard"
+            name="Composer Project from existing package"
+            preferredPerspectives="org.eclipse.php.perspective"
+            project="true">
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+         <description>
+            Creates and initializes a composer project.
+         </description>
+      </wizard>
+      <primaryWizard
+            id="org.eclipse.php.composer.ui.projectwizard">
+      </primaryWizard>
+      <primaryWizard
+            id="org.eclipse.php.composer.ui.projectFromPackagewizard">
+      </primaryWizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.php.perspective">
+         <newWizardShortcut
+               id="org.eclipse.php.composer.ui.projectwizard">
+         </newWizardShortcut>
+         <newWizardShortcut
+               id="org.eclipse.php.composer.ui.projectFromPackagewizard">
+         </newWizardShortcut>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="Resources/help/help_contexts.xml">
+      </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <introProductBinding
+            introId="org.eclipse.ui.intro.universal"
+            productId="org.eclipse.platform.ide">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="Resources/intro/composer.xml">
+      </configExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.eclipse.php.ui.PHP"
+            class="org.eclipse.php.composer.ui.wizard.importer.ComposerImportWizard"
+            icon="icons/full/obj16/correction_move.gif"
+            id="org.eclipse.php.composer.ui.importWizard"
+            name="Existing Composer Project">
+      </wizard>
+   </extension>
+   <extension 
+        point="org.eclipse.wst.common.project.facet.ui.images">
+        <image path="icons/full/obj16/composer.png" facet="php.composer.component" />
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.php.composer.ui.preferences.composer.saveactions.PreferenceInitializer">
+      </initializer>
+   </extension>   
+
+</plugin>

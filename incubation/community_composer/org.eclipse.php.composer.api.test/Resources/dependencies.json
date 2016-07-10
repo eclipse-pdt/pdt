@@ -1,0 +1,7 @@
+{
+	"name": "gossi/test",
+	"description": "this is to test the dependencies",
+	"require": {
+		"php": ">=5.3.2"
+	}
+}
