@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<!--
+    Copyright (c) 2012, 2016 PDT Extension Group and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        PDT Extension Group - initial API and implementation
+ -->
+
+<contexts>
+   <context id="help_project_wizard_autoload" title="Specifying your psr-0 autoload settings">
+        <description>This page lets you configure the psr-0 namespace for your project. It will automatically map to the &quot;src&quot; folder in the root of your project.
+
+By providing psr-0 compatible autoloading in your project, the composer plugin will be able to determine the namespaces for your classes automatically.</description>
+        <topic label="Composer Autoloading support" href="http://getcomposer.org/doc/04-schema.md#autoload"/>
+        <topic label="PHP-FIG PSR-0 Standard" href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md"/>
+   </context>
+   <context id="help_project_wizard_basic" title="Basic composer configuration">
+      <description>The values contained in this page will be used to initialize a new composer.json file in the root of your project.
+
+By default, the value from the &quot;Vendor name&quot; will be set as the psr-0 namespace, with the first letter capitalized - this can be customized on the second page of the wizard.
+
+The PHP version selected on this page will be set as a requirement in your composer.json file.
+
+During project creation, a composer.phar will be automatically downloaded from getcomposer.org, and &quot;composer.phar dumpautoload&quot; will be executed to initialize the autoloading of your project.</description>
+   </context>
+   <context id="help_context_wizard_template_firstpage">
+      <description>This Wizard allows you to initialize a new composer project from an existing package using the &quot;create-project&quot; command.
+
+If you want to override the composer.json values from the target package, check the corresponding option on the left.</description>
+      <topic href="http://getcomposer.org/doc/03-cli.md#create-project" label="Learn more about the create-project command"/>
+   </context>
+   <context id="help_context_wizard_template_secondpage" title="Selecting an existing Composer package">
+      <description>Type in the search field on the left to search for packages on packagist.org. Click the &quot;Download&quot; button to select a specific package for installation and choose the desired version from the dropdown to the right.
+
+Use the &quot;Select projects only&quot; check box to show only packages with the package type &quot;project&quot;.
+
+By clicking on the &quot;Favorite&quot; button the selected package will open in a new browser window on packagist.org.</description>
+      <topic href="http://getcomposer.org/doc/04-schema.md#type" label="Learn more about package types"/>
+      <topic href="https://packagist.org/about" label="Learn how to register your package on packagist.org"/>
+   </context>
+   <context id="help_context_wizard_importer" title="Composer Import Wizard">
+      <description>This wizard helps you to setup an existing Composer project in Eclipse. Just select the folder containing your project, and the importer will 
+
+- Create a new eclipse project in your workspace
+- Setup your project with the corresponding builders and facets
+- Configure your buildpath automatically</description>
+   </context>
+</contexts>
