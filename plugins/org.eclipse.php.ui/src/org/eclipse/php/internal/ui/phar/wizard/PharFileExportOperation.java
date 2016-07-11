@@ -428,17 +428,15 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 */
 	protected void execute(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		int count = fJarPackages.length;
-		progressMonitor.beginTask("", count); //$NON-NLS-1$
+		SubMonitor subMonitor = SubMonitor.convert(progressMonitor, count);
 		try {
 			for (int i = 0; i < count; i++) {
-				SubProgressMonitor subProgressMonitor = new SubProgressMonitor(progressMonitor, 1,
-						SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 				fJarPackage = fJarPackages[i];
 				if (fJarPackage != null)
-					singleRun(subProgressMonitor);
+					singleRun(subMonitor.newChild(1));
 			}
 		} finally {
-			progressMonitor.done();
+			subMonitor.done();
 		}
 	}
 

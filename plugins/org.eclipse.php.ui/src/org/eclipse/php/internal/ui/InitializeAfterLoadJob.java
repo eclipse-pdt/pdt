@@ -24,10 +24,10 @@ public class InitializeAfterLoadJob extends UIJob {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask("", 10); //$NON-NLS-1$
+			SubMonitor progressMonitor = SubMonitor.convert(monitor, 10);
 			try {
-				PHPCorePlugin.initializeAfterLoad(new SubProgressMonitor(monitor, 6));
-				PHPUiPlugin.initializeAfterLoad(new SubProgressMonitor(monitor, 4));
+				PHPCorePlugin.initializeAfterLoad(progressMonitor.newChild(6));
+				PHPUiPlugin.initializeAfterLoad(progressMonitor.newChild(4));
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 				return e.getStatus();

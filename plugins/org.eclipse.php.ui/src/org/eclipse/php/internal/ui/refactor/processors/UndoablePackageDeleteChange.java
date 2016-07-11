@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.dltk.internal.corext.refactoring.changes.DynamicValidationStateChange;
 import org.eclipse.dltk.internal.corext.refactoring.changes.UndoDeleteResourceChange;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -33,23 +33,24 @@ public class UndoablePackageDeleteChange extends DynamicValidationStateChange {
 
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		int count = fPackageDeletes.size();
-		pm.beginTask("", count * 3); //$NON-NLS-1$
+		SubMonitor subMonitor = SubMonitor.convert(pm, count * 3);
 		ResourceDescription[] packageDeleteDescriptions = new ResourceDescription[fPackageDeletes.size()];
 		for (int i = 0; i < fPackageDeletes.size(); i++) {
 			IResource resource = (IResource) fPackageDeletes.get(i);
 			packageDeleteDescriptions[i] = ResourceDescription.fromResource(resource);
-			pm.worked(1);
+			subMonitor.worked(1);
 		}
 
-		DynamicValidationStateChange result = (DynamicValidationStateChange) super.perform(
-				new SubProgressMonitor(pm, count));
+		DynamicValidationStateChange result = (DynamicValidationStateChange) super.perform(subMonitor.newChild(count));
 
 		for (int i = 0; i < fPackageDeletes.size(); i++) {
 			IResource resource = (IResource) fPackageDeletes.get(i);
 			ResourceDescription resourceDescription = packageDeleteDescriptions[i];
-			resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
+			resourceDescription.recordStateFromHistory(resource, subMonitor.newChild(1));
 			result.add(new UndoDeleteResourceChange(resourceDescription));
 		}
+		subMonitor.done();
+
 		return result;
 	}
 }

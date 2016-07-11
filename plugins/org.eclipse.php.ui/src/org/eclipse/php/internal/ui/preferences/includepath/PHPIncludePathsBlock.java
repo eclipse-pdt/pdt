@@ -300,7 +300,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 				IResource res = entry.getResource();
 				if (res instanceof IFolder && entry.getLinkTarget() == null && !res.exists()) {
-					CoreUtility.createFolder((IFolder) res, true, true, new SubProgressMonitor(monitor, 1));
+					CoreUtility.createFolder((IFolder) res, true, true, SubMonitor.convert(monitor, 1));
 				} else {
 					monitor.worked(1);
 				}

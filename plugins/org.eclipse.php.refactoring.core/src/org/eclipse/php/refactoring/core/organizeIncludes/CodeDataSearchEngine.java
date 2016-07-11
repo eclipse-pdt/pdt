@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -63,40 +63,35 @@ public class CodeDataSearchEngine {
 	public static final String REGEX_ELEMENT_NAME = "[a-zA-Z_][\\w]*"; //$NON-NLS-1$
 
 	public static final Pattern PATTERN_CLASS_INSTANCE = Pattern
-			.compile(MessageFormat
-					.format("instanceof\\s+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("instanceof\\s+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
 	public static final Pattern PATTERN_CLASS_MEMBER = Pattern
-			.compile(MessageFormat.format(
-					"(\\$?{0})\\s?::", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("(\\$?{0})\\s?::", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
 	public static final Pattern PATTERN_CONSTANT_READ = Pattern
-			.compile(MessageFormat
-					.format("(((new|function|instanceof|class|interface)\\s+|\\$)?{0})(?!\\s*\\()", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("(((new|function|instanceof|class|interface)\\s+|\\$)?{0})(?!\\s*\\()", //$NON-NLS-1$
+					new Object[] { REGEX_ELEMENT_NAME }));
 
-	public static final String REGEX_ELEMENT_CALLBACK_DOUBLE = MessageFormat
-			.format("\"({0})\"", new Object[] { REGEX_ELEMENT_NAME }); //$NON-NLS-1$
+	public static final String REGEX_ELEMENT_CALLBACK_DOUBLE = MessageFormat.format("\"({0})\"", //$NON-NLS-1$
+			new Object[] { REGEX_ELEMENT_NAME });
 
-	public static final String REGEX_ELEMENT_CALLBACK_SINGLE = MessageFormat
-			.format("''({0})''", new Object[] { REGEX_ELEMENT_NAME }); //$NON-NLS-1$
+	public static final String REGEX_ELEMENT_CALLBACK_SINGLE = MessageFormat.format("''({0})''", //$NON-NLS-1$
+			new Object[] { REGEX_ELEMENT_NAME });
 
-	public static final Pattern PATTERN_ELEMENT_CALLBACK_DOUBLE = Pattern
-			.compile(REGEX_ELEMENT_CALLBACK_DOUBLE);
+	public static final Pattern PATTERN_ELEMENT_CALLBACK_DOUBLE = Pattern.compile(REGEX_ELEMENT_CALLBACK_DOUBLE);
 
-	public static final Pattern PATTERN_ELEMENT_CALLBACK_SINGLE = Pattern
-			.compile(REGEX_ELEMENT_CALLBACK_SINGLE);
+	public static final Pattern PATTERN_ELEMENT_CALLBACK_SINGLE = Pattern.compile(REGEX_ELEMENT_CALLBACK_SINGLE);
 
-	public static final Pattern PATTERN_FUNCTION_CALL = Pattern
-			.compile(MessageFormat
-					.format("(((new|function)\\s+|\\$)?{0})\\s*\\(", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+	public static final Pattern PATTERN_FUNCTION_CALL = Pattern.compile(
+			MessageFormat.format("(((new|function)\\s+|\\$)?{0})\\s*\\(", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
 	private static final Pattern PATTERN_CLASS_NEW = Pattern
-			.compile(MessageFormat.format(
-					"new\\s+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("new\\s+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
 	// public static DoubleBucketMap<String, CodeDataMatch, CodeData>
 	// searchCallbacks(DOMModelForPHP model, IProgressMonitor monitor) {
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.0"), 2); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.0"),
+	// 2); //$NON-NLS-1$
 	// BucketMap<String, CodeDataMatch> searchResults = new BucketMap<String,
 	// CodeDataMatch>(new LinkedHashSet<CodeDataMatch>(1));
 	// collectCallbacks(model, searchResults, new SubProgressMonitor(monitor,
@@ -109,7 +104,8 @@ public class CodeDataSearchEngine {
 	// searchClasses(DOMModelForPHP model, IProgressMonitor monitor) {
 	// BucketMap<String, CodeDataMatch> searchResults = new BucketMap<String,
 	// CodeDataMatch>(new LinkedHashSet<CodeDataMatch>(1));
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.1"), 2); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.1"),
+	// 2); //$NON-NLS-1$
 	// collectClasses(model, searchResults, new SubProgressMonitor(monitor, 1));
 	// return validateClasses(model, searchResults, new
 	// SubProgressMonitor(monitor, 1));
@@ -119,7 +115,8 @@ public class CodeDataSearchEngine {
 	// searchConstants(DOMModelForPHP model, IProgressMonitor monitor) {
 	// BucketMap<String, CodeDataMatch> searchResults = new BucketMap<String,
 	// CodeDataMatch>(new LinkedHashSet<CodeDataMatch>(1));
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.2"), 2); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.2"),
+	// 2); //$NON-NLS-1$
 	// collectConstants(model, searchResults, new SubProgressMonitor(monitor,
 	// 1));
 	// return validateConstants(model, searchResults, new
@@ -130,7 +127,8 @@ public class CodeDataSearchEngine {
 	// searchFunctions(DOMModelForPHP model, IProgressMonitor monitor) {
 	// BucketMap<String, CodeDataMatch> searchResults = new BucketMap<String,
 	// CodeDataMatch>(new LinkedHashSet<CodeDataMatch>(1));
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.3"), 2); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.3"),
+	// 2); //$NON-NLS-1$
 	// collectFunctions(model, searchResults, new SubProgressMonitor(monitor,
 	// 1));
 	// return validateFunctions(model, searchResults, new
@@ -141,7 +139,8 @@ public class CodeDataSearchEngine {
 	// searchInterfaces(DOMModelForPHP model, IProgressMonitor monitor) {
 	// BucketMap<String, CodeDataMatch> searchResults = new BucketMap<String,
 	// CodeDataMatch>(new LinkedHashSet<CodeDataMatch>(1));
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.4"), 2); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.4"),
+	// 2); //$NON-NLS-1$
 	// collectInterfaces(model, searchResults, new SubProgressMonitor(monitor,
 	// 1));
 	// return validateInterfaces(model, searchResults, new
@@ -152,28 +151,23 @@ public class CodeDataSearchEngine {
 	// return PHPModifier.isInterface(classData.getModifiers());
 	// }
 
-	private static void collectCallbacks(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectCallbacks(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
+		if (monitor.isCanceled())
+			return;
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.5"), 4); //$NON-NLS-1$
+		Set<String> set = searchElementNames(model, PATTERN_ELEMENT_CALLBACK_DOUBLE, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		Set<String> set = searchElementNames(model,
-				PATTERN_ELEMENT_CALLBACK_DOUBLE, 1, new SubProgressMonitor(
-						monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CALLBACK, true, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CALLBACK, true,
-				new SubProgressMonitor(monitor, 1));
+		set = searchElementNames(model, PATTERN_ELEMENT_CALLBACK_SINGLE, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		set = searchElementNames(model, PATTERN_ELEMENT_CALLBACK_SINGLE, 1,
-				new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
-			return;
-		fillSearchResults(searchResults, set, ELEMENT_CALLBACK, true,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CALLBACK, true, subMonitor.newChild(1));
+		subMonitor.done();
 	}
 
 	/**
@@ -181,19 +175,19 @@ public class CodeDataSearchEngine {
 	 * @param searchResults
 	 * @param monitor
 	 */
-	private static void collectClasses(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectClasses(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
+
+		if (monitor.isCanceled())
+			return;
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.6"), 2); //$NON-NLS-1$
-		if (monitor.isCanceled())
-			return;
-		// collectClassesFromModel(model.getFileData(), searchResults, new
-		// SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
-			return;
-		collectClassesFromText(model, searchResults, new SubProgressMonitor(
-				monitor, 1));
+		// collectClassesFromModel(model.getFileData(), searchResults,
+		// subMonitor.split(1));
+		// if (monitor.isCanceled())
+		// return;
+		collectClassesFromText(model, searchResults, subMonitor.newChild(1));
+		subMonitor.done();
 	}
 
 	/**
@@ -204,7 +198,8 @@ public class CodeDataSearchEngine {
 	// fileData, BucketMap<String, CodeDataMatch> searchResults,
 	// IProgressMonitor monitor) {
 	// PHPFunctionData[] functionDatas = fileData.getFunctions();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.7"), functionDatas.length); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.7"),
+	// functionDatas.length); //$NON-NLS-1$
 	// for (PHPFunctionData functionData : functionDatas) {
 	// PHPFunctionParameter[] parameters = functionData.getParameters();
 	// if (parameters == null)
@@ -228,7 +223,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch> searchResults, IProgressMonitor monitor)
 	// {
 	// PHPClassData[] classDatas = fileData.getClasses();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.8"), classDatas.length + 1); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.8"),
+	// classDatas.length + 1); //$NON-NLS-1$
 	// for (PHPClassData classData : classDatas) {
 	// if (!classIsInterface(classData))
 	// collectExtendedClass(classData, searchResults);
@@ -248,35 +244,29 @@ public class CodeDataSearchEngine {
 	 * @param searchResults
 	 * @param monitor
 	 */
-	private static void collectClassesFromText(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectClassesFromText(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.9"), 6); //$NON-NLS-1$
 		if (monitor.isCanceled())
 			return;
-		Set<String> set = searchElementNames(model, PATTERN_CLASS_NEW, 1,
-				new SubProgressMonitor(monitor, 1));
+		Set<String> set = searchElementNames(model, PATTERN_CLASS_NEW, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CLASS_NEW,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CLASS_NEW, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		set = searchElementNames(model, PATTERN_CLASS_MEMBER, 1,
-				new SubProgressMonitor(monitor, 1));
+		set = searchElementNames(model, PATTERN_CLASS_MEMBER, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CLASS_MEMBER,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CLASS_MEMBER, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		set = searchElementNames(model, PATTERN_CLASS_INSTANCE, 1,
-				new SubProgressMonitor(monitor, 1));
+		set = searchElementNames(model, PATTERN_CLASS_INSTANCE, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CLASS_INSTANCE,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CLASS_INSTANCE, subMonitor.newChild(1));
+		subMonitor.done();
 	}
 
 	/**
@@ -284,19 +274,17 @@ public class CodeDataSearchEngine {
 	 * @param searchResults
 	 * @param monitor
 	 */
-	private static void collectConstants(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectConstants(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.10"), 2); //$NON-NLS-1$
 		if (monitor.isCanceled())
 			return;
-		Set<String> set = searchElementNames(model, PATTERN_CONSTANT_READ, 1,
-				new SubProgressMonitor(monitor, 1));
+		Set<String> set = searchElementNames(model, PATTERN_CONSTANT_READ, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CONSTANT_READ, true,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CONSTANT_READ, true, subMonitor.newChild(1));
+		subMonitor.done();
 	}
 
 	/**
@@ -320,34 +308,31 @@ public class CodeDataSearchEngine {
 	 * @param model
 	 * @param searchResults
 	 */
-	private static void collectFunctions(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectFunctions(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.11"), 2); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (subMonitor.isCanceled())
 			return;
-		Set<String> set = searchElementNames(model, PATTERN_FUNCTION_CALL, 1,
-				new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		Set<String> set = searchElementNames(model, PATTERN_FUNCTION_CALL, 1, subMonitor.newChild(1));
+		if (subMonitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_FUNCTION_CALL,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_FUNCTION_CALL, subMonitor.newChild(1));
+		subMonitor.done();
 	}
 
-	private static void collectInterfaces(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectInterfaces(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
-				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.12"), 2); //$NON-NLS-1$
 		if (monitor.isCanceled())
 			return;
 		// collectInterfacesFromModel(model.getFileData(), searchResults, new
 		// SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
-			return;
-		collectInterfacesFromText(model, searchResults, new SubProgressMonitor(
-				monitor, 1));
+		// if (monitor.isCanceled())
+		// return;
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
+				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.12"), 2); //$NON-NLS-1$
+		collectInterfacesFromText(model, searchResults, subMonitor.newChild(1));
+		subMonitor.done();
 	}
 
 	/**
@@ -372,7 +357,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch> searchResults, IProgressMonitor monitor)
 	// {
 	// PHPClassData[] classDatas = fileData.getClasses();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.13"), classDatas.length + 1); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.13"),
+	// classDatas.length + 1); //$NON-NLS-1$
 	// for (int i = 0; i < classDatas.length; ++i) {
 	// PHPClassData classData = classDatas[i];
 	// if (classIsInterface(classData))
@@ -389,27 +375,24 @@ public class CodeDataSearchEngine {
 	// SubProgressMonitor(monitor, 1));
 	// }
 
-	private static void collectInterfacesFromText(DOMModelForPHP model,
-			BucketMap<String, CodeDataMatch> searchResults,
+	private static void collectInterfacesFromText(DOMModelForPHP model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
-		monitor.beginTask(
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.14"), 4); //$NON-NLS-1$
 		if (monitor.isCanceled())
 			return;
-		Set<String> set = searchElementNames(model, PATTERN_CLASS_MEMBER, 1,
-				new SubProgressMonitor(monitor, 1));
+		Set<String> set = searchElementNames(model, PATTERN_CLASS_MEMBER, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CLASS_MEMBER,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CLASS_MEMBER, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		set = searchElementNames(model, PATTERN_CLASS_INSTANCE, 1,
-				new SubProgressMonitor(monitor, 1));
+		set = searchElementNames(model, PATTERN_CLASS_INSTANCE, 1, subMonitor.newChild(1));
 		if (monitor.isCanceled())
 			return;
-		fillSearchResults(searchResults, set, ELEMENT_CLASS_INSTANCE,
-				new SubProgressMonitor(monitor, 1));
+		fillSearchResults(searchResults, set, ELEMENT_CLASS_INSTANCE, subMonitor.newChild(1));
+
+		subMonitor.done();
 	}
 
 	/**
@@ -436,23 +419,16 @@ public class CodeDataSearchEngine {
 	// }
 	// }
 
-	private static void fillSearchResults(
-			BucketMap<String, CodeDataMatch> searchResults,
-			Collection<String> collection, int elementType,
-			IProgressMonitor monitor) {
-		fillSearchResults(searchResults, collection, elementType, false,
-				monitor);
+	private static void fillSearchResults(BucketMap<String, CodeDataMatch> searchResults, Collection<String> collection,
+			int elementType, IProgressMonitor monitor) {
+		fillSearchResults(searchResults, collection, elementType, false, monitor);
 	}
 
-	private static void fillSearchResults(
-			BucketMap<String, CodeDataMatch> searchResults,
-			Collection<String> collection, int elementType,
-			boolean caseSensitive, IProgressMonitor monitor) {
-		monitor.beginTask(PhpRefactoringCoreMessages
-				.getString("CodeDataSearchEngine.15"), collection.size()); //$NON-NLS-1$
+	private static void fillSearchResults(BucketMap<String, CodeDataMatch> searchResults, Collection<String> collection,
+			int elementType, boolean caseSensitive, IProgressMonitor monitor) {
+		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.15"), collection.size()); //$NON-NLS-1$
 		for (String elementName : collection) {
-			searchResults.add(
-					caseSensitive ? elementName : elementName.toLowerCase(),
+			searchResults.add(caseSensitive ? elementName : elementName.toLowerCase(),
 					new CodeDataMatch(elementName, elementType));
 			if (monitor.isCanceled())
 				return;
@@ -460,16 +436,12 @@ public class CodeDataSearchEngine {
 		}
 	}
 
-	private static String getPartitionType(IStructuredDocument document,
-			int offset) {
-		IStructuredDocumentRegion region = document
-				.getRegionAtCharacterOffset(offset);
-		TextSequence statement = PHPTextSequenceUtilities.getStatement(offset,
-				region, false);
+	private static String getPartitionType(IStructuredDocument document, int offset) {
+		IStructuredDocumentRegion region = document.getRegionAtCharacterOffset(offset);
+		TextSequence statement = PHPTextSequenceUtilities.getStatement(offset, region, false);
 		if (statement.length() == 0)
 			return null;
-		String partitionType = TextSequenceUtilities.getTypeByAbsoluteOffset(
-				statement, offset);
+		String partitionType = TextSequenceUtilities.getTypeByAbsoluteOffset(statement, offset);
 		return partitionType;
 	}
 
@@ -478,11 +450,9 @@ public class CodeDataSearchEngine {
 		return PHPPartitionTypes.isPHPRegularState(partitionType);
 	}
 
-	private static Set<String> searchElementNames(DOMModelForPHP model,
-			Pattern pattern, int elementPatternPosition,
+	private static Set<String> searchElementNames(DOMModelForPHP model, Pattern pattern, int elementPatternPosition,
 			IProgressMonitor monitor) {
-		IStructuredDocument document = ((IStructuredModel) model)
-				.getStructuredDocument();
+		IStructuredDocument document = ((IStructuredModel) model).getStructuredDocument();
 		String documentContents = null;
 		try {
 			documentContents = document.get(0, document.getLength());
@@ -492,8 +462,7 @@ public class CodeDataSearchEngine {
 		Set<String> elements = new HashSet<String>();
 		if (documentContents == null)
 			return elements;
-		monitor.beginTask(
-				PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.16"), 2); //$NON-NLS-1$
+		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.16"), 2); //$NON-NLS-1$
 		Matcher matcher = pattern.matcher(documentContents);
 		while (matcher.find()) {
 			int end = matcher.end();
@@ -512,7 +481,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch>();
 	// BucketMap<String, CodeData> callbackDataResults = new BucketMap<String,
 	// CodeData>();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.18"), searchResults.getKeys().size()); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.18"),
+	// searchResults.getKeys().size()); //$NON-NLS-1$
 	// for (String elementName : searchResults.getKeys()) {
 	// CodeData codeDatas[] = model.getProjectModel().getClass(elementName);
 	// if (codeDatas.length > 0) {
@@ -542,7 +512,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch>();
 	// BucketMap<String, CodeData> classDataResults = new BucketMap<String,
 	// CodeData>();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.19"), searchResults.getKeys().size()); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.19"),
+	// searchResults.getKeys().size()); //$NON-NLS-1$
 	// for (String className : searchResults.getKeys()) {
 	// CodeData classDatas[] = model.getProjectModel().getClass(className);
 	// for (int j = 0; j < classDatas.length; j++)
@@ -567,7 +538,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch>();
 	// BucketMap<String, CodeData> constantDataResults = new BucketMap<String,
 	// CodeData>();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.20"), searchResults.getKeys().size()); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.20"),
+	// searchResults.getKeys().size()); //$NON-NLS-1$
 	// for (String constantName : searchResults.getKeys()) {
 	// CodeData constantDatas[] =
 	// model.getProjectModel().getConstant(constantName);
@@ -593,7 +565,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch>();
 	// BucketMap<String, CodeData> functionDataResults = new BucketMap<String,
 	// CodeData>();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.21"), searchResults.getKeys().size()); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.21"),
+	// searchResults.getKeys().size()); //$NON-NLS-1$
 	// for (String functionName : searchResults.getKeys()) {
 	// CodeData functionDatas[] =
 	// model.getProjectModel().getFunction(functionName);
@@ -617,7 +590,8 @@ public class CodeDataSearchEngine {
 	// BucketMap<String, CodeDataMatch>();
 	// BucketMap<String, CodeData> interfaceCodeDatas = new BucketMap<String,
 	// CodeData>();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.22"), searchResults.getKeys().size()); //$NON-NLS-1$
+	// monitor.beginTask(PhpRefactoringCoreMessages.getString("CodeDataSearchEngine.22"),
+	// searchResults.getKeys().size()); //$NON-NLS-1$
 	// for (String interfaceName : searchResults.getKeys()) {
 	// CodeData interfaceDatas[] =
 	// model.getProjectModel().getClass(interfaceName);

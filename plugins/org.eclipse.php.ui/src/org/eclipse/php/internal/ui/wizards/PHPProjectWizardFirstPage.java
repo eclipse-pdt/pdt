@@ -695,26 +695,22 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	final void doRemoveProject(IProgressMonitor monitor) throws InvocationTargetException {
 		final boolean noProgressMonitor = (fCurrProjectLocation == null); // inside
 		// workspace
-		if (monitor == null || noProgressMonitor) {
-			monitor = new NullProgressMonitor();
-		}
-		monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove, 3);
+		SubMonitor subMonitor = SubMonitor.convert(noProgressMonitor ? null : monitor,
+				NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove, 3);
 		try {
 			try {
 				boolean removeContent = !fKeepContent && getProjectHandle().isSynchronized(IResource.DEPTH_INFINITE);
-				getProjectHandle().delete(removeContent, false, new SubProgressMonitor(monitor, 2));
+				getProjectHandle().delete(removeContent, false, subMonitor.newChild(2));
 
 			} finally {
 				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue()); // fIsAutobuild
-				// must
-				// be
-				// set
+				// must be set
 				fIsAutobuild = null;
 			}
 		} catch (CoreException e) {
 			throw new InvocationTargetException(e);
 		} finally {
-			monitor.done();
+			subMonitor.done();
 			fKeepContent = false;
 		}
 	}
@@ -800,12 +796,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	private void restoreExistingFiles(URI projectLocation, IProgressMonitor monitor) throws CoreException {
 		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1 : 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$
+		SubMonitor subMonitor = SubMonitor.convert(monitor, ticks);
 		try {
 			if (fDotProjectBackup != null) {
 				IFileStore projectFile = EFS.getStore(projectLocation).getChild(FILENAME_PROJECT);
-				projectFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotProjectBackup, projectFile, new SubProgressMonitor(monitor, 1));
+				projectFile.delete(EFS.NONE, subMonitor.newChild(1));
+				copyFile(fDotProjectBackup, projectFile, subMonitor.newChild(1));
 			}
 		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
@@ -815,14 +811,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		try {
 			if (fDotBuildpathBackup != null) {
 				IFileStore buildpathFile = EFS.getStore(projectLocation).getChild(FILENAME_BUILDPATH);
-				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotBuildpathBackup, buildpathFile, new SubProgressMonitor(monitor, 1));
+				buildpathFile.delete(EFS.NONE, subMonitor.newChild(1));
+				copyFile(fDotBuildpathBackup, buildpathFile, subMonitor.newChild(1));
 			}
 		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
 					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath, e);
 			throw new CoreException(status);
 		}
+		subMonitor.done();
 	}
 
 	private File createBackup(IFileStore source, String name) throws CoreException {
@@ -880,13 +877,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		IProject projectHandle = this.getProjectHandle();
 		DLTKCore.create(projectHandle);
 		fCurrProjectLocation = getProjectLocationURI();
-
-		if (monitor == null) {
-			monitor = new NullProgressMonitor();
-		}
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
+				NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize, 70);
 		try {
-			monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize, 70);
-			if (monitor.isCanceled()) {
+			if (subMonitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
 
@@ -904,9 +898,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 			rememberExistingFiles(realLocation);
 
-			createProject(projectHandle, fCurrProjectLocation, new SubProgressMonitor(monitor, 20));
+			createProject(projectHandle, fCurrProjectLocation, subMonitor.newChild(20));
 		} finally {
-			monitor.done();
+			subMonitor.done();
 		}
 	}
 
