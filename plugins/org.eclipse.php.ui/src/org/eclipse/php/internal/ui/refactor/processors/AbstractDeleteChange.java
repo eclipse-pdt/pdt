@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.base.DLTKChange;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -44,14 +44,11 @@ abstract class AbstractDeleteChange extends DLTKChange {
 		ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(),
 				LocationKind.NORMALIZE);
 		if (buffer != null && buffer.isDirty() && buffer.isStateValidated() && buffer.isSynchronized()) {
-			pm.beginTask("", 2); //$NON-NLS-1$
-			buffer.commit(new SubProgressMonitor(pm, 1), false);
-			file.refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(pm, 1));
-			pm.done();
+			SubMonitor subMonitor = SubMonitor.convert(pm, 2);
+			buffer.commit(subMonitor.split(1), false);
+			file.refreshLocal(IResource.DEPTH_ONE, subMonitor.split(1));
 		} else {
-			pm.beginTask("", 1); //$NON-NLS-1$
-			pm.worked(1);
-			pm.done();
+			SubMonitor.convert(pm, 1).worked(1);
 		}
 	}
 }

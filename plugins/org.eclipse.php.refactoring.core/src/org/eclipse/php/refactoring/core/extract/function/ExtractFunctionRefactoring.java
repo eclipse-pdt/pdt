@@ -73,8 +73,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	private boolean fReplaceDuplicates;
 	private boolean fGeneratePHPDoc;
 
-	public ExtractFunctionRefactoring(ISourceModule sourceModule,
-			IDocument document, int offset, int length) {
+	public ExtractFunctionRefactoring(ISourceModule sourceModule, IDocument document, int offset, int length) {
 		this.sourceModule = sourceModule;
 		this.document = document;
 		this.selectionStartOffset = offset;
@@ -110,11 +109,11 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
+		SubMonitor subMonitor = SubMonitor.convert(pm, 8);
 		try {
-			pm.beginTask("", 8); //$NON-NLS-1$
+
 			// check if the file is in sync
-			RefactoringStatus status = validateModifiesFiles(
-					new IResource[] { sourceModule.getResource() },
+			RefactoringStatus status = validateModifiesFiles(new IResource[] { sourceModule.getResource() },
 					getValidationContext());
 			if (status.hasFatalError()) {
 				return status;
@@ -130,13 +129,11 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 			} catch (Exception e) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
-								.getString("ExtractFunctionRefactoring.10")); //$NON-NLS-1$
+						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.10")); //$NON-NLS-1$
 			}
 			status.merge(fAnalyzer.checkInitialConditions());
 
-			status.merge(fAnalyzer.checkSelection(status,
-					new SubProgressMonitor(pm, 3)));
+			status.merge(fAnalyzer.checkSelection(status, subMonitor.split(3)));
 			if (status.hasFatalError())
 				return status;
 
@@ -149,7 +146,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 			return status;
 		} finally {
-			pm.done();
+			subMonitor.done();
 		}
 	}
 
@@ -159,8 +156,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 	public boolean isStaticMethod() {
 		if (this.fAnalyzer.getEnclosingBodyDeclaration() instanceof MethodDeclaration) {
-			return Flags.isStatic(((MethodDeclaration) fAnalyzer
-					.getEnclosingBodyDeclaration()).getModifier());
+			return Flags.isStatic(((MethodDeclaration) fAnalyzer.getEnclosingBodyDeclaration()).getModifier());
 		}
 		return false;
 	}
@@ -171,8 +167,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			start = start.getParent();
 		}
 
-		fDuplicates = SnippetFinder
-				.perform(start, fAnalyzer.getSelectedNodes());
+		fDuplicates = SnippetFinder.perform(start, fAnalyzer.getSelectedNodes());
 		fReplaceDuplicates = fDuplicates.length > 0;
 	}
 
@@ -184,17 +179,15 @@ public class ExtractFunctionRefactoring extends Refactoring {
 				IVariableBinding argument = arguments[i];
 				if (argument == null)
 					continue;
-				ParameterInfo info = new ParameterInfo(argument,
-						argument.getName(), i);
+				ParameterInfo info = new ParameterInfo(argument, argument.getName(), i);
 				fParameterInfos.add(info);
 			}
 		}
 	}
 
 	private AbstractVisitor createVisitor() throws CoreException, IOException {
-		fAnalyzer = new ExtractFunctionAnalyzer(astRoot, sourceModule,
-				document, Selection.createFromStartLength(selectionStartOffset,
-						selectionLength));
+		fAnalyzer = new ExtractFunctionAnalyzer(astRoot, sourceModule, document,
+				Selection.createFromStartLength(selectionStartOffset, selectionLength));
 		return fAnalyzer;
 	}
 
@@ -204,8 +197,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 	// -------- validateEdit checks ----
 
-	public static RefactoringStatus validateModifiesFiles(
-			IResource[] filesToModify, Object context) {
+	public static RefactoringStatus validateModifiesFiles(IResource[] filesToModify, Object context) {
 		RefactoringStatus result = new RefactoringStatus();
 		IStatus status = Resources.checkInSync(filesToModify);
 		if (!status.isOK())
@@ -214,8 +206,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
 			if (!result.hasFatalError()) {
-				result.addFatalError(PhpRefactoringCoreMessages
-						.getString("ExtractFunctionRefactoring.11")); //$NON-NLS-1$
+				result.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.11")); //$NON-NLS-1$
 			}
 		}
 		return result;
@@ -249,32 +240,27 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		if (fAnalyzer.getEnclosingBodyDeclaration().getType() == ASTNode.FUNCTION_DECLARATION
 				|| fAnalyzer.getEnclosingBodyDeclaration().getType() == ASTNode.METHOD_DECLARATION) {
 			if (PhpElementConciliator.functionAlreadyExists(astRoot, name)) {
-				status.addWarning(PhpRefactoringCoreMessages
-						.getString("ExtractFunctionRefactoring.3")); //$NON-NLS-1$
+				status.addWarning(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.3")); //$NON-NLS-1$
 			}
 		}
 		return status;
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages
-					.getString("ExtractFunctionRefactoring"), 1); //$NON-NLS-1$
+			pm.beginTask(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring"), 1); //$NON-NLS-1$
 
 			ASTNode declaration = fAnalyzer.getEnclosingBodyDeclaration();
 			fRewriter = ASTRewrite.create(declaration.getAST());
 
-			rootChange = new CompositeChange(
-					PhpRefactoringCoreMessages
-							.format("ExtractFunctionRefactoring.2", new String[] { fNewFunctionName })); //$NON-NLS-1$
+			rootChange = new CompositeChange(PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.2", //$NON-NLS-1$
+					new String[] { fNewFunctionName }));
 			rootChange.markAsSynthetic();
 
 			MultiTextEdit root = new MultiTextEdit();
-			textFileChange = new ProgramDocumentChange(
-					PhpRefactoringCoreMessages
-							.format("ExtractFunctionRefactoring.2", new String[] { fNewFunctionName }), document, astRoot); //$NON-NLS-1$
+			textFileChange = new ProgramDocumentChange(PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.2", //$NON-NLS-1$
+					new String[] { fNewFunctionName }), document, astRoot);
 			textFileChange.setEdit(root);
 			textFileChange.setTextType("php"); //$NON-NLS-1$
 
@@ -282,17 +268,14 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 			ASTNode[] selectedNodes = fAnalyzer.getSelectedNodes();
 
-			TextEditGroup substituteDesc = new TextEditGroup(
-					PhpRefactoringCoreMessages
-							.format("ExtractFunctionRefactoring.2", new String[] { fNewFunctionName })); //$NON-NLS-1$
+			TextEditGroup substituteDesc = new TextEditGroup(PhpRefactoringCoreMessages
+					.format("ExtractFunctionRefactoring.2", new String[] { fNewFunctionName })); //$NON-NLS-1$
 			textFileChange.addTextEditGroup(substituteDesc);
 
-			String lineDelimiter = Util.getLineSeparator(astRoot
-					.getSourceModule().getSource(), astRoot.getSourceModule()
-					.getScriptProject());
+			String lineDelimiter = Util.getLineSeparator(astRoot.getSourceModule().getSource(),
+					astRoot.getSourceModule().getScriptProject());
 
-			FunctionDeclaration function = createNewFunction(selectedNodes,
-					lineDelimiter, substituteDesc);
+			FunctionDeclaration function = createNewFunction(selectedNodes, lineDelimiter, substituteDesc);
 			MethodDeclaration method = null;
 
 			Comment funcComment = null;
@@ -305,83 +288,67 @@ public class ExtractFunctionRefactoring extends Refactoring {
 				}
 				method.setModifier(flags);
 				if (fGeneratePHPDoc) {
-					IScriptProject sp = fAnalyzer.getEnclosingBodyDeclaration()
-							.getProgramRoot().getSourceModule()
+					IScriptProject sp = fAnalyzer.getEnclosingBodyDeclaration().getProgramRoot().getSourceModule()
 							.getScriptProject();
-					ITypeBinding classDecl = ((MethodDeclaration) fAnalyzer
-							.getEnclosingBodyDeclaration())
+					ITypeBinding classDecl = ((MethodDeclaration) fAnalyzer.getEnclosingBodyDeclaration())
 							.resolveMethodBinding().getDeclaringClass();
-					List<FormalParameter> parameters = method.getFunction()
-							.formalParameters();
+					List<FormalParameter> parameters = method.getFunction().formalParameters();
 					String[] paramNames = new String[parameters.size()];
 					for (int i = 0; i < parameters.size(); i++) {
 						Expression name = parameters.get(i).getParameterName();
 						if (name instanceof Scalar) {
-							paramNames[i] = removeDollar(((Scalar) name)
-									.getStringValue());
+							paramNames[i] = removeDollar(((Scalar) name).getStringValue());
 						}
 						if (name instanceof Identifier) {
 							paramNames[i] = ((Identifier) name).getName();
 						}
 					}
-					String comments = CodeGeneration.getMethodComment(sp,
-							classDecl.getName(), method.getFunction()
-									.getFunctionName().getName(), paramNames,
-							null, null, null, lineDelimiter, null);
+					String comments = CodeGeneration.getMethodComment(sp, classDecl.getName(),
+							method.getFunction().getFunctionName().getName(), paramNames, null, null, null,
+							lineDelimiter, null);
 
-					Comment commentNode = (Comment) fRewriter
-							.createStringPlaceholder(comments, ASTNode.COMMENT);
+					Comment commentNode = (Comment) fRewriter.createStringPlaceholder(comments, ASTNode.COMMENT);
 					commentNode.setCommentType(Comment.TYPE_PHPDOC);
 					method.setComment(commentNode);
 				}
 			} else {
 				if (fGeneratePHPDoc) {
-					IScriptProject sp = fAnalyzer.getEnclosingBodyDeclaration()
-							.getProgramRoot().getSourceModule()
+					IScriptProject sp = fAnalyzer.getEnclosingBodyDeclaration().getProgramRoot().getSourceModule()
 							.getScriptProject();
 
-					List<FormalParameter> parameters = function
-							.formalParameters();
+					List<FormalParameter> parameters = function.formalParameters();
 					String[] paramNames = new String[parameters.size()];
 					for (int i = 0; i < parameters.size(); i++) {
 						Expression name = parameters.get(i).getParameterName();
 						if (name instanceof Scalar) {
-							paramNames[i] = removeDollar(((Scalar) name)
-									.getStringValue());
+							paramNames[i] = removeDollar(((Scalar) name).getStringValue());
 						}
 						if (name instanceof Identifier) {
 							paramNames[i] = ((Identifier) name).getName();
 						}
 					}
 
-					String comments = CodeGeneration.getMethodComment(sp,
-							"", //$NON-NLS-1$
-							function.getFunctionName().getName(), paramNames,
-							null, null, null, lineDelimiter, null);
+					String comments = CodeGeneration.getMethodComment(sp, "", //$NON-NLS-1$
+							function.getFunctionName().getName(), paramNames, null, null, null, lineDelimiter, null);
 					comments = lineDelimiter + comments + lineDelimiter;
 
-					funcComment = (Comment) fRewriter.createStringPlaceholder(
-							comments, ASTNode.COMMENT);
+					funcComment = (Comment) fRewriter.createStringPlaceholder(comments, ASTNode.COMMENT);
 					funcComment.setCommentType(Comment.TYPE_PHPDOC);
 				}
 
 			}
 
 			TextEditGroup insertDesc = new TextEditGroup(
-					PhpRefactoringCoreMessages
-							.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
+					PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
 			textFileChange.addTextEditGroup(insertDesc);
 
-			ChildListPropertyDescriptor desc = (ChildListPropertyDescriptor) declaration
-					.getLocationInParent();
+			ChildListPropertyDescriptor desc = (ChildListPropertyDescriptor) declaration.getLocationInParent();
 
 			ListRewrite container = null;
 			if (declaration instanceof Program) {
-				container = fRewriter.getListRewrite(declaration,
-						Program.STATEMENTS_PROPERTY);
+				container = fRewriter.getListRewrite(declaration, Program.STATEMENTS_PROPERTY);
 			} else {
-				container = fRewriter.getListRewrite(declaration.getParent(),
-						desc);
+				container = fRewriter.getListRewrite(declaration.getParent(), desc);
 			}
 			if (method != null) {
 				container.insertAfter(method, declaration, insertDesc);
@@ -390,8 +357,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 					// This is a work around to add the new function before the
 					// empty statement of the Program.
 
-					List<Statement> statements = ((Program) declaration)
-							.statements();
+					List<Statement> statements = ((Program) declaration).statements();
 					int length = statements.size();
 					// Since the program at least has the select expression and
 					// a empty statement,
@@ -399,35 +365,27 @@ public class ExtractFunctionRefactoring extends Refactoring {
 					// Work ground for now.
 					Statement node = statements.get(length - 1);
 					if (length >= 2 && (node instanceof InLineHtml)) {
-						container.insertBefore(function,
-								(ASTNode) statements.get(length - 2),
-								insertDesc);
+						container.insertBefore(function, (ASTNode) statements.get(length - 2), insertDesc);
 						if (funcComment != null) {
-							container.insertBefore(funcComment, function,
-									insertDesc);
+							container.insertBefore(funcComment, function, insertDesc);
 						}
 					} else if (length > 1 && node instanceof EmptyStatement) {
-						container.insertBefore(function,
-								(ASTNode) statements.get(length - 1),
-								insertDesc);
+						container.insertBefore(function, (ASTNode) statements.get(length - 1), insertDesc);
 						if (funcComment != null) {
-							container.insertBefore(funcComment, function,
-									insertDesc);
+							container.insertBefore(funcComment, function, insertDesc);
 						}
 
 					} else {
 						container.insertLast(function, insertDesc);
 						if (funcComment != null) {
-							container.insertBefore(funcComment, function,
-									insertDesc);
+							container.insertBefore(funcComment, function, insertDesc);
 						}
 					}
 
 				} else {
 					container.insertAfter(function, declaration, insertDesc);
 					if (funcComment != null) {
-						container.insertBefore(funcComment, function,
-								insertDesc);
+						container.insertBefore(funcComment, function, insertDesc);
 					}
 				}
 			}
@@ -451,11 +409,11 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			return;
 		String label = null;
 		if (numberOf == 1)
-			label = PhpRefactoringCoreMessages
-					.format("ExtractFunctionRefactoring.5", new String[] { fNewFunctionName }); //$NON-NLS-1$
+			label = PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.5", //$NON-NLS-1$
+					new String[] { fNewFunctionName });
 		else
-			label = PhpRefactoringCoreMessages
-					.format("ExtractFunctionRefactoring.6", new String[] { fNewFunctionName }); //$NON-NLS-1$
+			label = PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.6", //$NON-NLS-1$
+					new String[] { fNewFunctionName });
 
 		TextEditGroup description = new TextEditGroup(label);
 		textFileChange2.addTextEditGroup(description);
@@ -473,31 +431,26 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		}
 	}
 
-	private FunctionDeclaration createNewFunction(ASTNode[] selectedNodes,
-			String lineSeparator, TextEditGroup substitute) {
+	private FunctionDeclaration createNewFunction(ASTNode[] selectedNodes, String lineSeparator,
+			TextEditGroup substitute) {
 		FunctionDeclaration result = createNewFunctionDeclaration();
 
 		result.setBody(createFunctionBody(selectedNodes, substitute));
 		return result;
 	}
 
-	private Block createFunctionBody(ASTNode[] selectedNodes,
-			TextEditGroup substitute) {
+	private Block createFunctionBody(ASTNode[] selectedNodes, TextEditGroup substitute) {
 		Block result = fAST.newBlock();
-		ListRewrite statements = fRewriter.getListRewrite(result,
-				Block.STATEMENTS_PROPERTY);
+		ListRewrite statements = fRewriter.getListRewrite(result, Block.STATEMENTS_PROPERTY);
 
-		for (Iterator<ParameterInfo> iter = fParameterInfos.iterator(); iter
-				.hasNext();) {
+		for (Iterator<ParameterInfo> iter = fParameterInfos.iterator(); iter.hasNext();) {
 			ParameterInfo parameter = iter.next();
 			if (parameter.isRenamed()) {
 				for (int n = 0; n < selectedNodes.length; n++) {
-					Identifier[] oldNames = LinkedNodeFinder.findByBinding(
-							selectedNodes[n], parameter.getOldBinding());
+					Identifier[] oldNames = LinkedNodeFinder.findByBinding(selectedNodes[n], parameter.getOldBinding());
 					for (int i = 0; i < oldNames.length; i++) {
-						fRewriter.replace(oldNames[i], fAST
-								.newIdentifier(removeDollar(parameter
-										.getNewName())), substitute);
+						fRewriter.replace(oldNames[i], fAST.newIdentifier(removeDollar(parameter.getNewName())),
+								substitute);
 					}
 				}
 			}
@@ -514,27 +467,20 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		if (extractsExpression) {
 			// if we have an expression then only one node is selected.
 			ReturnStatement rs = fAST.newReturnStatement();
-			rs.setExpression((Expression) fRewriter
-					.createMoveTarget(selectedNodes[0]));
+			rs.setExpression((Expression) fRewriter.createMoveTarget(selectedNodes[0]));
 			statements.insertLast(rs, null);
 			fRewriter.replace(selectedNodes[0], replacementNode, substitute);
 		} else {
 			if (selectedNodes.length == 1) {
-				statements.insertLast(
-						fRewriter.createMoveTarget(selectedNodes[0]),
-						substitute);
-				fRewriter
-						.replace(selectedNodes[0], replacementNode, substitute);
+				statements.insertLast(fRewriter.createMoveTarget(selectedNodes[0]), substitute);
+				fRewriter.replace(selectedNodes[0], replacementNode, substitute);
 			} else {
-				ListRewrite source = fRewriter.getListRewrite(selectedNodes[0]
-						.getParent(),
-						(ChildListPropertyDescriptor) selectedNodes[0]
-								.getLocationInParent());
+				ListRewrite source = fRewriter.getListRewrite(selectedNodes[0].getParent(),
+						(ChildListPropertyDescriptor) selectedNodes[0].getLocationInParent());
 
 				ASTNode[] nodes = filterComments(selectedNodes);
 				if (nodes.length > 0) {
-					ASTNode toMove = source.createMoveTarget(nodes[0],
-							selectedNodes[nodes.length - 1], replacementNode,
+					ASTNode toMove = source.createMoveTarget(nodes[0], selectedNodes[nodes.length - 1], replacementNode,
 							substitute);
 					statements.insertLast(toMove, substitute);
 				}
@@ -562,8 +508,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	}
 
 	private String getName(IVariableBinding binding) {
-		for (Iterator<ParameterInfo> iter = fParameterInfos.iterator(); iter
-				.hasNext();) {
+		for (Iterator<ParameterInfo> iter = fParameterInfos.iterator(); iter.hasNext();) {
 			ParameterInfo info = iter.next();
 			if (binding.equals(info.getOldBinding())) {
 				return info.getNewName();
@@ -583,30 +528,24 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			if (isStaticMethod()) {
 				invocation = fAST.newStaticMethodInvocation();
 				FunctionInvocation funcInv = fAST.newFunctionInvocation();
-				funcInv.setFunctionName(fAST.newFunctionName(fAST
-						.newIdentifier(fNewFunctionName)));
+				funcInv.setFunctionName(fAST.newFunctionName(fAST.newIdentifier(fNewFunctionName)));
 				((StaticMethodInvocation) invocation).setMethod(funcInv);
-				((StaticMethodInvocation) invocation).setClassName(fAST
-						.newIdentifier("self")); //$NON-NLS-1$
-				arguments = ((StaticMethodInvocation) invocation).getMethod()
-						.parameters();
+				((StaticMethodInvocation) invocation).setClassName(fAST.newIdentifier("self")); //$NON-NLS-1$
+				arguments = ((StaticMethodInvocation) invocation).getMethod().parameters();
 
 			} else {
 				invocation = fAST.newMethodInvocation();
 				FunctionInvocation funcInv = fAST.newFunctionInvocation();
-				funcInv.setFunctionName(fAST.newFunctionName(fAST
-						.newIdentifier(fNewFunctionName)));
+				funcInv.setFunctionName(fAST.newFunctionName(fAST.newIdentifier(fNewFunctionName)));
 				((MethodInvocation) invocation).setMethod(funcInv);
-				((MethodInvocation) invocation).setDispatcher(fAST
-						.newVariable("this")); //$NON-NLS-1$
-				arguments = ((MethodInvocation) invocation).getMethod()
-						.parameters();
+				((MethodInvocation) invocation).setDispatcher(fAST.newVariable("this")); //$NON-NLS-1$
+				arguments = ((MethodInvocation) invocation).getMethod().parameters();
 			}
 
 		} else {
 			invocation = fAST.newFunctionInvocation();
-			((FunctionInvocation) invocation).setFunctionName(fAST
-					.newFunctionName(fAST.newIdentifier(fNewFunctionName)));
+			((FunctionInvocation) invocation)
+					.setFunctionName(fAST.newFunctionName(fAST.newIdentifier(fNewFunctionName)));
 			arguments = ((FunctionInvocation) invocation).parameters();
 		}
 
@@ -620,8 +559,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		switch (returnKind) {
 		case ExtractFunctionAnalyzer.ACCESS_TO_LOCAL:
 			Assignment assignment = fAST.newAssignment();
-			assignment.setLeftHandSide(fAST.newVariable(removeDollar(fAnalyzer
-					.getReturnValue().getName())));
+			assignment.setLeftHandSide(fAST.newVariable(removeDollar(fAnalyzer.getReturnValue().getName())));
 			assignment.setRightHandSide(invocation);
 			call = assignment;
 			break;
@@ -676,8 +614,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	 */
 	@Override
 	public String getName() {
-		return PhpRefactoringCoreMessages
-				.getString("ExtractFunctionRefactoring.8"); //$NON-NLS-1$
+		return PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.8"); //$NON-NLS-1$
 	}
 
 	// public Change getChange() {

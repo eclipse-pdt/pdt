@@ -23,7 +23,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -90,8 +90,8 @@ public class RefreshAction extends SelectionDispatchAction {
 		final IResource[] resources = getResources(selection);
 		IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask(PHPUIMessages.RefreshAction_progressMessage, resources.length * 2);
-				monitor.subTask(""); //$NON-NLS-1$
+				SubMonitor subMonitor = SubMonitor.convert(monitor, PHPUIMessages.RefreshAction_progressMessage,
+						resources.length * 2);
 				for (int r = 0; r < resources.length; r++) {
 					IResource resource = resources[r];
 					if (resource.getType() == IResource.PROJECT) {
@@ -102,8 +102,9 @@ public class RefreshAction extends SelectionDispatchAction {
 							checkLocationDeleted(projects[p]);
 						}
 					}
-					resource.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 1));
+					resource.refreshLocal(IResource.DEPTH_INFINITE, subMonitor.split(1));
 				}
+				subMonitor.done();
 			}
 		};
 

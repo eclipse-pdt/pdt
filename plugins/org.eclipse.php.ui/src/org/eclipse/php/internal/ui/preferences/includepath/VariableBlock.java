@@ -378,7 +378,7 @@ public class VariableBlock {
 
 			if (fDoBuild) {
 				ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD,
-						new SubProgressMonitor(monitor, 1));
+						SubMonitor.convert(monitor, 1));
 			}
 		}
 	}

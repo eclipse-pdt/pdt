@@ -45,8 +45,7 @@ import org.eclipse.text.edits.MultiTextEdit;
  * 
  * @author Roy, 2007
  */
-public abstract class AbstractRenameProcessor<R extends IResource> extends
-		RenameProcessor implements INameUpdating {
+public abstract class AbstractRenameProcessor<R extends IResource> extends RenameProcessor implements INameUpdating {
 
 	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PhpRefactoringCoreMessages
 			.getString("RenameProcessorBase.internalerror"); //$NON-NLS-1$
@@ -81,10 +80,8 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	 * @param program
 	 * @return the change
 	 */
-	protected TextFileChange acquireChange(final IFile file,
-			final Program program) {
-		ProgramFileChange change = new ProgramFileChange(file.getName(), file,
-				program);
+	protected TextFileChange acquireChange(final IFile file, final Program program) {
+		ProgramFileChange change = new ProgramFileChange(file.getName(), file, program);
 		change.setEdit(new MultiTextEdit());
 		change.setTextType("php"); //$NON-NLS-1$
 		return change;
@@ -99,18 +96,15 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 
 			participantFiles = new HashMap<IFile, Program>();
 
-			if (resource instanceof IFile
-					&& PHPToolkitUtil.isPhpFile((IFile) resource)) {
+			if (resource instanceof IFile && PHPToolkitUtil.isPhpFile((IFile) resource)) {
 
 				IFile file = (IFile) resource;
 
-				ISourceModule sourceModule = DLTKCore
-						.createSourceModuleFrom(file);
+				ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 				IProject project = file.getProject();
 				PHPVersion version = ProjectOptions.getPhpVersion(project);
 
-				ASTParser newParser = ASTParser
-						.newParser(version, sourceModule);
+				ASTParser newParser = ASTParser.newParser(version, sourceModule);
 				Program program = newParser.createAST(null);
 				participantFiles.put(file, program);
 
@@ -125,8 +119,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 		}
 
 		if (hasExternalDependencies) {
-			final String message = PhpRefactoringCoreMessages
-					.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
+			final String message = PhpRefactoringCoreMessages.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
 			return RefactoringStatus.createWarningStatus(message);
 		}
 
@@ -140,8 +133,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 				Node node = it.next();
 				IFile file = (IFile) node.getFile().getResource();
 				try {
-					participantFiles.put(file,
-							RefactoringUtility.getProgramForFile(file));
+					participantFiles.put(file, RefactoringUtility.getProgramForFile(file));
 				} catch (Exception e) {
 				}
 			}
@@ -153,8 +145,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 				Node node = it.next();
 				IFile file = (IFile) node.getFile().getResource();
 				try {
-					participantFiles.put(file,
-							RefactoringUtility.getProgramForFile(file));
+					participantFiles.put(file, RefactoringUtility.getProgramForFile(file));
 				} catch (Exception e) {
 				}
 			}
@@ -163,8 +154,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	}
 
 	protected static int getSearchFlags(boolean includeInterp) {
-		int flags = IDLTKSearchScope.SOURCES
-				| IDLTKSearchScope.APPLICATION_LIBRARIES;
+		int flags = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES;
 		if (includeInterp)
 			flags |= IDLTKSearchScope.SYSTEM_LIBRARIES;
 		return flags;
@@ -173,8 +163,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	protected Collection<Node> getReferencedFiles(Program program) {
 		ISourceModule sourceModule = program.getSourceModule();
 		if (sourceModule != null) {
-			ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
-					sourceModule, null);
+			ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 
 			if (tree != null && tree.getRoot() != null) {
 				return tree.getRoot().getChildren();
@@ -187,8 +176,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	protected Collection<Node> getReferencingFiles(Program program) {
 		ISourceModule sourceModule = program.getSourceModule();
 		if (sourceModule != null) {
-			ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(
-					sourceModule, null);
+			ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(sourceModule, null);
 
 			if (tree != null && tree.getRoot() != null) {
 				return tree.getRoot().getChildren();
@@ -205,18 +193,13 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws CoreException,
-			OperationCanceledException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws CoreException, OperationCanceledException {
 
 		RefactoringStatus result = RefactoringStatus.create(Status.OK_STATUS);
 
-		final SubProgressMonitor subProgressMonitor = new SubProgressMonitor(
-				pm, 100);
-		subProgressMonitor
-				.beginTask(
-						PhpRefactoringCoreMessages
-								.getString("RenameProcessorBase.1"), participantFiles.size()); //$NON-NLS-1$
+		final SubMonitor subProgressMonitor = SubMonitor.convert(pm,
+				PhpRefactoringCoreMessages.getString("RenameProcessorBase.1"), participantFiles.size()); //$NON-NLS-1$
 
 		for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 			final IFile key = entry.getKey();
@@ -237,15 +220,13 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	 * @param program
 	 * @return a factoring status given an AST representation
 	 */
-	public abstract RefactoringStatus getRefactoringStatus(IFile key,
-			Program program);
+	public abstract RefactoringStatus getRefactoringStatus(IFile key, Program program);
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.refactoring.core.rename.INameUpdating#getCurrentElementName
-	 * ()
+	 * @see org.eclipse.php.refactoring.core.rename.INameUpdating#
+	 * getCurrentElementName ()
 	 */
 	public abstract String getCurrentElementName();
 
@@ -267,8 +248,8 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	}
 
 	@Override
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-			SharableParticipants sharedParticipants) throws CoreException {
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants sharedParticipants)
+			throws CoreException {
 		return AbstractRenameProcessor.EMPTY_REFACTORING_PARTICIPANTS;
 	}
 
@@ -279,8 +260,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	 * org.eclipse.php.refactoring.core.rename.INameUpdating#checkNewElementName
 	 * (java.lang.String)
 	 */
-	public RefactoringStatus checkNewElementName(String newName)
-			throws CoreException {
+	public RefactoringStatus checkNewElementName(String newName) throws CoreException {
 		if (!isValidIdentifier(newName)) {
 			return getFatalError(newName);
 		}
@@ -294,8 +274,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	 */
 	public static final boolean isValidIdentifier(String newName) {
 		if (newName == null || newName.length() == 0
-				|| !Character.isLetter(newName.charAt(0))
-				&& newName.charAt(0) != '_') {
+				|| !Character.isLetter(newName.charAt(0)) && newName.charAt(0) != '_') {
 			return false;
 		}
 
@@ -318,8 +297,8 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends
 	 * @return
 	 */
 	protected static final RefactoringStatus getFatalError(String newName) {
-		return RefactoringStatus.createFatalErrorStatus(newName
-				+ AbstractRenameProcessor.IS_NOT_A_VALID_PHP_IDENTIFIER);
+		return RefactoringStatus
+				.createFatalErrorStatus(newName + AbstractRenameProcessor.IS_NOT_A_VALID_PHP_IDENTIFIER);
 	}
 
 	/**

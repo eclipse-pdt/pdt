@@ -142,7 +142,6 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			if (monitor.isCanceled()) {
 				return;
 			}
-			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 10);
 			/*
 			 * Locate the php.ini by using the attribute. If the attribute was
 			 * null, try to locate an php.ini that exists next to the
@@ -205,9 +204,10 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			programName = programName.toLowerCase();
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 			if (process != null) {
-				subMonitor = new SubProgressMonitor(monitor, 90);
-				subMonitor.beginTask(MessageFormat.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_Launching,
-						new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN);
+				IProgressMonitor subMonitor = SubMonitor.convert(monitor,
+						MessageFormat.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_Launching,
+								new Object[] { configuration.getName() }),
+						90);
 				runtimeProcess = DebugPlugin.newProcess(launch, process, phpExe.toOSString(), processAttributes);
 				if (runtimeProcess == null) {
 					process.destroy();

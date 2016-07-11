@@ -130,9 +130,8 @@ public class ExtractVariableRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
+		SubMonitor subMonitor = SubMonitor.convert(pm, 8);
 		try {
-
-			pm.beginTask("", 8); //$NON-NLS-1$
 
 			// check if the file is in sync
 			RefactoringStatus status = RefactoringUtility
@@ -147,7 +146,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.0")); //$NON-NLS-1$
 			}
 
-			status.merge(checkSelection(status, new SubProgressMonitor(pm, 3)));
+			status.merge(checkSelection(status, subMonitor.split(3)));
 
 			if (!status.hasFatalError() && isLiteralNodeSelected())
 				fReplaceAllOccurrences = false;
@@ -155,7 +154,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 			return status;
 
 		} finally {
-			pm.done();
+			subMonitor.done();
 		}
 	}
 

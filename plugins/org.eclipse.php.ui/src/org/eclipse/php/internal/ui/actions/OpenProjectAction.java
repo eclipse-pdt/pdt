@@ -152,12 +152,12 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	private IWorkspaceRunnable createRunnable(final Object[] projects) {
 		return new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask("", projects.length); //$NON-NLS-1$
+				SubMonitor sub = SubMonitor.convert(monitor, projects.length);
 				MultiStatus errorStatus = null;
 				for (int i = 0; i < projects.length; i++) {
 					IProject project = (IProject) projects[i];
 					try {
-						project.open(new SubProgressMonitor(monitor, 1));
+						project.open(sub.split(1));
 					} catch (CoreException e) {
 						if (errorStatus == null)
 							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR,
@@ -165,7 +165,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 						errorStatus.merge(e.getStatus());
 					}
 				}
-				monitor.done();
+				sub.done();
 				if (errorStatus != null)
 					throw new CoreException(errorStatus);
 			}

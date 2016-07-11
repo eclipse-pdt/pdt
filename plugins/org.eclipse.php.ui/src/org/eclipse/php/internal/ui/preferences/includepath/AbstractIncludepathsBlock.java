@@ -497,10 +497,9 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 	// -------- creation -------------------------------
 	public static void createProject(IProject project, URI locationURI, IProgressMonitor monitor) throws CoreException {
-		if (monitor == null) {
-			monitor = new NullProgressMonitor();
-		}
-		monitor.beginTask(NewWizardMessages.BuildPathsBlock_operationdesc_project, 100);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, NewWizardMessages.BuildPathsBlock_operationdesc_project,
+				100);
+
 		// create the project
 		try {
 			if (!project.exists()) {
@@ -510,15 +509,13 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 					locationURI = null;
 				}
 				desc.setLocationURI(locationURI);
-				project.create(desc, new SubProgressMonitor(monitor, 50));
+				project.create(desc, subMonitor.split(50));
 			}
 			if (!project.isOpen()) {
-				project.open(new SubProgressMonitor(monitor, 50));
+				project.open(subMonitor.split(50));
 			}
 		} finally {
-			if (monitor != null) {
-				monitor.done();
-			}
+			monitor.done();
 		}
 	}
 
@@ -554,21 +551,18 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	 * Creates the script project and sets the configured build path and output
 	 * location. If the project already exists only build paths are updated.
 	 */
-	public static void flush(List buildpathEntries, IScriptProject javaProject, IProgressMonitor monitor)
+	public static void flush(List buildpathEntries, IScriptProject phpProject, IProgressMonitor monitor)
 			throws CoreException, OperationCanceledException {
-		if (monitor == null) {
-			monitor = new NullProgressMonitor();
-		}
-		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
-		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
+		SubMonitor subMonitor = SubMonitor.convert(monitor, NewWizardMessages.BuildPathsBlock_operationdesc_Script,
+				buildpathEntries.size() * 4 + 4);
 		try {
-			IProject project = javaProject.getProject();
+			IProject project = phpProject.getProject();
 			IPath projPath = project.getFullPath();
-			monitor.worked(1);
+			subMonitor.worked(1);
 			// IWorkspaceRoot fWorkspaceRoot =
 			// DLTKUIPlugin.getWorkspace().getRoot();
 			// create and set the output path first
-			monitor.worked(1);
+			subMonitor.worked(1);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
@@ -582,16 +576,16 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 				IResource res = entry.getResource();
 				// 1 tick
 				if (res instanceof IFolder && entry.getLinkTarget() == null && !res.exists()) {
-					CoreUtility.createFolder((IFolder) res, true, true, new SubProgressMonitor(monitor, 1));
+					CoreUtility.createFolder((IFolder) res, true, true, subMonitor.split(1));
 				} else {
-					monitor.worked(1);
+					subMonitor.worked(1);
 				}
 				// 3 ticks
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-					monitor.worked(1);
+					subMonitor.worked(1);
 					IPath path = entry.getPath();
 					if (projPath.equals(path)) {
-						monitor.worked(2);
+						subMonitor.worked(2);
 						continue;
 					}
 					if (projPath.isPrefixOf(path)) {
@@ -603,10 +597,10 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 						if (!folder.exists()) {
 							// New source folder needs to be created
 							if (entry.getLinkTarget() == null) {
-								CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 2));
+								CoreUtility.createFolder(folder, true, true, subMonitor.split(2));
 							} else {
 								folder.createLink(entry.getLinkTarget(), IResource.ALLOW_MISSING_LOCAL,
-										new SubProgressMonitor(monitor, 2));
+										subMonitor.split(2));
 							}
 						}
 					} else {
@@ -625,34 +619,33 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 								if (parentPath.segmentCount() > 0) {
 									IFolder parentFolder = project.getFolder(parentPath);
 									if (!parentFolder.exists()) {
-										CoreUtility.createFolder(parentFolder, true, true,
-												new SubProgressMonitor(monitor, 1));
+										CoreUtility.createFolder(parentFolder, true, true, subMonitor.split(1));
 									} else {
-										monitor.worked(1);
+										subMonitor.worked(1);
 									}
 								} else {
-									monitor.worked(1);
+									subMonitor.worked(1);
 								}
-								orginalFolder.move(entry.getPath(), true, true, new SubProgressMonitor(monitor, 1));
+								orginalFolder.move(entry.getPath(), true, true, subMonitor.split(1));
 							}
 						} else {
 							if (!folder.exists() || !entry.getLinkTarget().equals(entry.getOrginalLinkTarget())) {
-								orginalFolder.delete(true, new SubProgressMonitor(monitor, 1));
+								orginalFolder.delete(true, subMonitor.split(1));
 								folder.createLink(entry.getLinkTarget(), IResource.ALLOW_MISSING_LOCAL,
-										new SubProgressMonitor(monitor, 1));
+										subMonitor.split(1));
 							}
 						}
 					}
 				} else {
-					monitor.worked(3);
+					subMonitor.worked(3);
 				}
-				if (monitor.isCanceled()) {
+				if (subMonitor.isCanceled()) {
 					throw new OperationCanceledException();
 				}
 			}
-			javaProject.setRawBuildpath(buildpath, new SubProgressMonitor(monitor, 2));
+			phpProject.setRawBuildpath(buildpath, subMonitor.split(2));
 		} finally {
-			monitor.done();
+			subMonitor.done();
 		}
 	}
 
