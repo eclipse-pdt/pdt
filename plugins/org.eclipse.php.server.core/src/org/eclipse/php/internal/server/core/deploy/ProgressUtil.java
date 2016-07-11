@@ -13,11 +13,12 @@ package org.eclipse.php.internal.server.core.deploy;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * Progress Monitor utility.
  */
+@Deprecated
 public class ProgressUtil {
 	/**
 	 * ProgressUtil constructor comment.
@@ -54,7 +55,7 @@ public class ProgressUtil {
 			return new NullProgressMonitor();
 		if (monitor instanceof NullProgressMonitor)
 			return monitor;
-		return new SubProgressMonitor(monitor, ticks);
+		return SubMonitor.convert(monitor, ticks);
 	}
 
 	/**
@@ -74,6 +75,6 @@ public class ProgressUtil {
 			return new NullProgressMonitor();
 		if (monitor instanceof NullProgressMonitor)
 			return monitor;
-		return new SubProgressMonitor(monitor, ticks, style);
+		return SubMonitor.convert(monitor, ticks).split(ticks, style);
 	}
 }

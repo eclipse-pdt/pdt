@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.changes.UndoDeleteResourceChange;
@@ -84,34 +84,38 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		// explorer
 		// since the primary working copy still exists.
 		if (element instanceof ISourceModule) {
+			SubMonitor subMonitor = SubMonitor.convert(pm, 3);
 			pm.beginTask("", 2); //$NON-NLS-1$
 			ISourceModule unit = (ISourceModule) element;
-			saveCUnitIfNeeded(unit, new SubProgressMonitor(pm, 1));
+			saveCUnitIfNeeded(unit, subMonitor.split(1));
 			// element.delete(false, new SubProgressMonitor(pm, 1));
 
 			IResource resource = unit.getResource();
 			if (resource != null) {
 				ResourceDescription resourceDescription = ResourceDescription.fromResource(resource);
-				element.delete(false, new SubProgressMonitor(pm, 1));
-				resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
+				element.delete(false, subMonitor.split(1));
+				resourceDescription.recordStateFromHistory(resource, subMonitor.split(1));
 				return new UndoDeleteResourceChange(resourceDescription);
 			} else {
-				element.delete(false, pm);
+				element.delete(false, subMonitor.split(3));
 			}
+			subMonitor.done();
 			return null;
 
 			// begin fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835
 		} else if (element instanceof IScriptFolder) {
 			ISourceModule[] units = ((IScriptFolder) element).getSourceModules();
-			pm.beginTask("", units.length + 1); //$NON-NLS-1$
+			SubMonitor subMonitor = SubMonitor.convert(pm, units.length + 1);
 			for (int i = 0; i < units.length; i++) {
-				saveCUnitIfNeeded(units[i], new SubProgressMonitor(pm, 1));
+				saveCUnitIfNeeded(units[i], subMonitor.split(1));
 			}
 			// work around for
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=292651
 			// There's an issue when deleting the IScriptFolder by using
 			// model.delete method.
-			delete(false, new SubProgressMonitor(pm, 1), (IScriptFolder) element);
+			delete(false, subMonitor.split(1), (IScriptFolder) element);
+			subMonitor.done();
+
 			return new NullChange();
 			// end fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835
 		} else {

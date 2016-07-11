@@ -61,6 +61,7 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 			IStatus status = Status.OK_STATUS;
 
 			Object[] elements = fSelection.toArray();
+			SubMonitor subMonitor = SubMonitor.convert(monitor);
 			monitor.beginTask("", elements.length); //$NON-NLS-1$
 			for (int i = 0; i < elements.length; i++) {
 				IResource resource = null;
@@ -69,14 +70,14 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 
 				} else if (elements[i] instanceof IResource) {
 					resource = (IResource) elements[i];
-					monitor.worked(1);
+					subMonitor.worked(1);
 				}
 				if (resource != null) {
-					process(new SubProgressMonitor(monitor, 1), resource);
+					process(subMonitor.split(1), resource);
 				}
-				monitor.worked(1);
+				subMonitor.worked(1);
 			}
-			monitor.done();
+			subMonitor.done();
 
 			if (fErrorStatus.getChildren().length > 0) {
 				status = fErrorStatus;

@@ -1688,16 +1688,16 @@ public class ReorgPolicyFactory {
 		}
 
 		private Change createReferenceUpdatingMoveChange(IProgressMonitor pm) throws ModelException {
-			pm.beginTask("", 2 + (fUpdateQualifiedNames ? 1 : 0)); //$NON-NLS-1$
+			SubMonitor subMonitor = SubMonitor.convert(pm, 2 + (fUpdateQualifiedNames ? 1 : 0));
 			try {
 				CompositeChange composite = new DynamicValidationStateChange(RefactoringCoreMessages.ReorgPolicy_move);
 				composite.markAsSynthetic();
 				// XX workaround for bug 13558
 				// <workaround>
 				if (fChangeManager == null) {
-					fChangeManager = createChangeManager(new SubProgressMonitor(pm, 1), new RefactoringStatus()); // TODO:
-																													// non-CU
-																													// matches
+					fChangeManager = createChangeManager(subMonitor.split(1), new RefactoringStatus()); // TODO:
+																										// non-CU
+																										// matches
 					// silently dropped
 					RefactoringStatus status = Checks.validateModifiesFiles(getAllModifiedFiles(), null);
 					if (status.hasFatalError())
@@ -1708,7 +1708,7 @@ public class ReorgPolicyFactory {
 				composite.merge(new CompositeChange(RefactoringCoreMessages.MoveRefactoring_reorganize_elements,
 						fChangeManager.getAllChanges()));
 
-				Change fileMove = createSimpleMoveChange(new SubProgressMonitor(pm, 1));
+				Change fileMove = createSimpleMoveChange(subMonitor.split(1));
 				if (fileMove instanceof CompositeChange) {
 					composite.merge(((CompositeChange) fileMove));
 				} else {
@@ -1716,7 +1716,7 @@ public class ReorgPolicyFactory {
 				}
 				return composite;
 			} finally {
-				pm.done();
+				subMonitor.done();
 			}
 		}
 
@@ -1809,22 +1809,22 @@ public class ReorgPolicyFactory {
 			IScriptFolder destination = getDestinationAsScriptFolder();
 			if (destination != null) {
 				ISourceModule[] cus = getCus();
-				pm.beginTask("", cus.length); //$NON-NLS-1$
-				pm.subTask(RefactoringCoreMessages.MoveRefactoring_scanning_qualified_names);
+				SubMonitor subMonitor = SubMonitor.convert(pm,
+						RefactoringCoreMessages.MoveRefactoring_scanning_qualified_names, cus.length);
 				for (int i = 0; i < cus.length; i++) {
 					ISourceModule cu = cus[i];
 					IType[] types = cu.getTypes();
-					IProgressMonitor typesMonitor = new SubProgressMonitor(pm, 1);
-					typesMonitor.beginTask("", types.length); //$NON-NLS-1$
+					SubMonitor typesMonitor = SubMonitor.convert(subMonitor.split(1), types.length);
 					for (int j = 0; j < types.length; j++) {
-						handleType(types[j], destination, new SubProgressMonitor(typesMonitor, 1));
-						if (typesMonitor.isCanceled())
+						handleType(types[j], destination, typesMonitor.split(1));
+						if (typesMonitor.isCanceled()) {
 							throw new OperationCanceledException();
+						}
 					}
 					typesMonitor.done();
 				}
+				subMonitor.done();
 			}
-			pm.done();
 		}
 
 		private void handleType(IType type, IScriptFolder destination, IProgressMonitor pm) {
@@ -1839,21 +1839,22 @@ public class ReorgPolicyFactory {
 
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
+			SubMonitor subMonitor = SubMonitor.convert(pm, fUpdateQualifiedNames ? 7 : 3);
 			try {
-				pm.beginTask("", fUpdateQualifiedNames ? 7 : 3); //$NON-NLS-1$
 				RefactoringStatus result = new RefactoringStatus();
 				confirmMovingReadOnly(reorgQueries);
-				fChangeManager = createChangeManager(new SubProgressMonitor(pm, 2), result);
-				if (fUpdateQualifiedNames)
-					computeQualifiedNameMatches(new SubProgressMonitor(pm, 4));
-				result.merge(super.checkFinalConditions(new SubProgressMonitor(pm, 1), context, reorgQueries));
+				fChangeManager = createChangeManager(subMonitor.split(2), result);
+				if (fUpdateQualifiedNames) {
+					computeQualifiedNameMatches(subMonitor.split(4));
+				}
+				result.merge(super.checkFinalConditions(subMonitor.split(1), context, reorgQueries));
 				return result;
 			} catch (ModelException e) {
 				throw e;
 			} catch (CoreException e) {
 				throw new ModelException(e);
 			} finally {
-				pm.done();
+				subMonitor.done();
 			}
 		}
 
