@@ -170,6 +170,9 @@ public class PHPElementLabels extends ScriptElementLabels {
 						}
 					}
 					if (bNames) {
+						if (params[i].isReference()) {
+							buf.append(REFERENCE_STRING);
+						}
 						if (isLast && isVariadic) {
 							buf.append(ELLIPSIS_STRING);
 						}
