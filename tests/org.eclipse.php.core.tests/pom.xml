@@ -26,7 +26,7 @@
 					<testClass>org.eclipse.php.core.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
-					<argLine>-Dh2.syncMethod=force ${tycho.testArgLine}</argLine>
+					<argLine>-Dh2.syncMethod=force ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
