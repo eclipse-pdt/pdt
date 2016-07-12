@@ -1,0 +1,15 @@
+--TEST--
+Bug 298943 - Vars in outline view
+--FILE--
+<?php
+$sessvar["feld1"] = "bla";
+$sessvar['feld2'] = "hallowelt";
+$test = "test";
+$bla = "Test2";
+$bla = "Test3";
+?>
+--EXPECT--
+FILE: test.php
+	VARIABLE: $sessvar
+	VARIABLE: $test
+	VARIABLE: $bla

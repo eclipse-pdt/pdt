@@ -1,0 +1,45 @@
+--TEST--
+Bug 298943 - Vars in outline view
+--FILE--
+<?php
+namespace A {
+	$sessvar["feld1"] = "bla";
+	$sessvar['feld2'] = "hallowelt";
+	$test = "test";
+	$bla = "Test2";
+	$bla = "Test3";
+	class MyClass {
+		function foo() {
+			global $sessvar3;
+			global $test3;
+			global $bla3;
+
+			$sessvar2["feld1"] = "bla";
+			$sessvar2['feld2'] = "hallowelt";
+			$test2 = "test";
+			$bla2 = "Test2";
+			$bla2 = "Test3";
+
+			$sessvar3["feld1"] = "bla";
+			$sessvar3['feld2'] = "hallowelt";
+			$test3 = "test";
+			$bla3 = "Test2";
+			$bla3 = "Test3";
+		}
+	}
+}
+?>
+--EXPECT--
+FILE: test.php
+	NAMESPACE: A
+		CLASS: MyClass
+			METHOD: foo
+				VARIABLE: $sessvar2
+				VARIABLE: $test2
+				VARIABLE: $bla2
+	VARIABLE: $sessvar
+	VARIABLE: $test
+	VARIABLE: $bla
+	VARIABLE: $sessvar3
+	VARIABLE: $test3
+	VARIABLE: $bla3
