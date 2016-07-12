@@ -87,9 +87,16 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	/**
 	 * This stack contains a set per method, where each set contains all global
-	 * variables names delcared through 'global' keyword inside this method.
+	 * variable names declared through 'global' keyword inside this method.
 	 */
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
+
+	/**
+	 * This set contains all variable names having global scope. NB: this set
+	 * has nothing to do with stack "methodGlobalVars" which only stores
+	 * variable names declared through 'global' keyword.
+	 */
+	protected Set<String> globalScopeVars = new HashSet<String>();
 
 	/**
 	 * Extensions indexing visitor extensions
@@ -793,16 +800,20 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 									'$' + var.getName(), metadata.toString(), null, fCurrentQualifier, fCurrentParent));
 				}
 			}
-		} else if (left instanceof VariableReference && !(left instanceof ArrayVariableReference)) {
+		} else if (left instanceof VariableReference) {
 			int modifiers = Modifiers.AccPublic | Modifiers.AccGlobal;
+			String variableName = ((VariableReference) left).getName();
 			if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration
-					&& !methodGlobalVars.peek().contains(((VariableReference) left).getName())) {
+					&& !methodGlobalVars.peek().contains(variableName)) {
 				return visitGeneral(assignment);
 			}
 			int offset = left.sourceStart();
 			int length = left.sourceEnd() - offset;
-			modifyDeclaration(assignment, new DeclarationInfo(IModelElement.FIELD, modifiers, offset, length, offset,
-					length, ((VariableReference) left).getName(), null, null, null, null));
+			if (!globalScopeVars.contains(variableName)) {
+				globalScopeVars.add(variableName);
+				modifyDeclaration(assignment, new DeclarationInfo(IModelElement.FIELD, modifiers, offset, length,
+						offset, length, ((VariableReference) left).getName(), null, null, null, null));
+			}
 		}
 		return visitGeneral(assignment);
 	}
@@ -929,6 +940,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		}
 
 		fLastUseParts.clear();
+		globalScopeVars.clear();
 		endvisitGeneral(declaration);
 		return true;
 	}

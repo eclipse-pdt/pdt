@@ -953,7 +953,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					fNodes.push(assignment);
 				}
 			}
-		} else if (left instanceof VariableReference && !(left instanceof ArrayVariableReference)) {
+		} else if (left instanceof VariableReference) {
 			if (!declarations.empty()) {
 				ASTNode parentDeclaration = declarations.peek();
 				if (parentDeclaration instanceof MethodDeclaration
@@ -978,12 +978,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			info.declarationStart = assignment.sourceStart();
 
 			fInfoStack.push(info);
-			if (assignment.getOperatorType() == Assignment.OP_EQUAL) {
-				fRequestor.enterField(info);
-			} else {
-				ISourceElementRequestor sourceElementRequestor = (ISourceElementRequestor) fRequestor;
-				sourceElementRequestor.enterFieldCheckDuplicates(info);
-			}
+			ISourceElementRequestor sourceElementRequestor = (ISourceElementRequestor) fRequestor;
+			sourceElementRequestor.enterFieldCheckDuplicates(info);
 			fNodes.push(assignment);
 		}
 		return true;
