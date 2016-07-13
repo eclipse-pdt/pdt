@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.Constants;
+import org.eclipse.php.internal.core.typeinference.evaluators.FormalParameterEvaluator;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
@@ -127,6 +128,8 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 			return Mapping.mapValues.get(value);
 		}
 	}
+
+	private static final String ELLIPSIS_DOLLAR = FormalParameterEvaluator.ELLIPSIS + "$"; //$NON-NLS-1$
 
 	private final TagKind tagKind;
 	private final String matchedTag;
@@ -329,7 +332,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 					String firstWord = value.substring(firstWordStart, firstWordEnd);
 					String secondWord = value.substring(secondWordStart, secondWordEnd);
-					if (firstWord.charAt(0) == '$' || firstWord.startsWith("...$")) { //$NON-NLS-1$
+					if (firstWord.charAt(0) == '$' || firstWord.startsWith(ELLIPSIS_DOLLAR)) {
 						variableReference = new VariableReference(valueStart + firstWordStart,
 								valueStart + firstWordEnd, firstWord);
 						singleTypeReference = new TypeReference(valueStart + secondWordStart,

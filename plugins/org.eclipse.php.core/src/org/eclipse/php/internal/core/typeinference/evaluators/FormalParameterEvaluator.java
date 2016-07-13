@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 
-	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
+	public static final String ELLIPSIS = "..."; //$NON-NLS-1$
 
 	private IEvaluatedType result;
 
