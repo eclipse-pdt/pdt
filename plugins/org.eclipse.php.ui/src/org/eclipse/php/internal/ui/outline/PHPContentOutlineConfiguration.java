@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
@@ -33,8 +32,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SortAction;
@@ -55,7 +52,6 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 /**
  * Configuration holder for the PHP outline at the WST outline
  */
-@SuppressWarnings("restriction")
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
 
 	private static final String OUTLINE_PAGE = "org.eclipse.php.ui.OutlinePage"; //$NON-NLS-1$
@@ -354,9 +350,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	class UseStatementAwareImageProvider extends ScriptElementImageProvider {
 
 		public ImageDescriptor getBaseImageDescriptor(IModelElement element, int renderFlags) {
-			if (element instanceof UseStatementElement) {
-				return DLTKPluginImages.DESC_OBJS_IMPDECL;
-			}
 			if (element instanceof UseStatementsNode) {
 				return DLTKPluginImages.DESC_OBJS_IMPCONT;
 			}
@@ -411,13 +404,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 				IModelElement me = (IModelElement) element;
 				if (me.getElementType() == IModelElement.FIELD) {
 					return me.getElementName();
-				}
-			}
-			if (element instanceof UseStatementElement) {
-				SimpleReference alias = ((UseStatementElement) element).getUsePart().getAlias();
-				if (alias != null) {
-					return NLS.bind(PHPUIMessages.PHPContentOutlineConfiguration_3, super.getText(element),
-							alias.getName());
 				}
 			}
 			return super.getText(element);

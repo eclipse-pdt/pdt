@@ -48,6 +48,9 @@ public class SortAction extends Action {
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IImportContainer || e2 instanceof IImportContainer) {
 				try {
+					if (e1 == null || e2 == null) {
+						return 0;
+					}
 					ISourceRange sr1 = ((ISourceReference) e1).getSourceRange();
 					ISourceRange sr2 = ((ISourceReference) e2).getSourceRange();
 					if (sr1 == null || sr2 == null)

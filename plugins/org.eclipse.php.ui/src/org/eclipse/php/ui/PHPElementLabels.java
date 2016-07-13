@@ -185,4 +185,14 @@ public class PHPElementLabels extends ScriptElementLabels {
 			buf.append(ELLIPSIS_STRING);
 		}
 	}
+
+	@Override
+	protected void getImportDeclarationLabel(IModelElement element, long flags, StringBuffer buf) {
+		super.getImportDeclarationLabel(element, flags, buf);
+		IImportDeclaration declaration = (IImportDeclaration) element;
+		if (declaration.getAlias() != null) {
+			buf.append(" as "); //$NON-NLS-1$
+			buf.append(declaration.getAlias());
+		}
+	}
 }

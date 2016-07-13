@@ -1030,6 +1030,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				info.name = PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getFullyQualifiedName(),
 						part.getNamespace().getFullyQualifiedName());
 			}
+			if (part.getAlias() != null) {
+				info.alias = part.getAlias().getName();
+			}
+			info.type = part.getStatementType();
 			info.sourceStart = part.getNamespace().sourceStart();
 			info.sourceEnd = part.getNamespace().sourceEnd();
 			fRequestor.acceptImport(info);
