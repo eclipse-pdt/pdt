@@ -19,22 +19,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.model.ImportDeclarationVisitor;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeType;
-import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.core.util.OutlineFilter;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -234,7 +231,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					fUseStatements = getUseStatements();
+					fUseStatements = getUseStatements(fSourceModule);
 
 					IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (activeWorkbenchWindow != null) {
@@ -245,10 +242,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 								IModelElement base = ((PHPStructuredEditor) activeEditor).getModelElement();
 
 								if (isNamespaceSupported(base)) {
-									ModuleDeclaration moduleDeclaration = SourceParserUtil
-											.getModuleDeclaration((ISourceModule) base);
-									UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration,
-											moduleDeclaration.sourceEnd());
+									IModelElement[] useStatements = getUseStatements((ISourceModule) base);
 									useStatementsCountNew = useStatements.length;
 								}
 							}
@@ -547,7 +541,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 		public IModelElement[] getChildren() throws ModelException {
 			if (fUseStatements == null)
-				fUseStatements = getUseStatements();
+				fUseStatements = getUseStatements(fSourceModule);
 			return fUseStatements;
 		}
 
@@ -566,26 +560,29 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 	}
 
-	private IModelElement[] getUseStatements() {
+	private IModelElement[] getUseStatements(ISourceModule sourceModule) {
 		// when rename a php file,we should return a empty array for the old
 		// sourceModule,or execute SourceParserUtil.getModuleDeclaration()
 		// will cache wrong ModuleDeclaration for the non-exist
 		// sourceModule,so when we rename the php file back to its original
 		// name will get the wrong ModuleDeclaration
-		if (null == fSourceModule || !fSourceModule.exists()) {
+		if (null == sourceModule || !sourceModule.exists()) {
 			return new IModelElement[0];
 		}
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(fSourceModule);
-		if (moduleDeclaration == null)
-			return new IModelElement[0];
-		UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
-		List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
-		for (UseStatement useStatement : useStatements) {
-			for (UsePart usePart : useStatement.getParts()) {
-				elements.add(new UseStatementElement((ModelElement) fSourceModule, usePart));
-			}
+
+		final List<IModelElement> elements = new LinkedList<IModelElement>();
+		try {
+			sourceModule.accept(new ImportDeclarationVisitor() {
+
+				@Override
+				public void visitImport(IImportDeclaration importDeclaration) {
+					elements.add(importDeclaration);
+				}
+			});
+		} catch (ModelException e) {
+			Logger.logException(e);
 		}
-		return (UseStatementElement[]) elements.toArray(new UseStatementElement[elements.size()]);
+		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
 }
