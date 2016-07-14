@@ -788,9 +788,17 @@ public class PHPDocumentationContentAccess {
 					if (parameterNames.size() > parameters.indexOf(tag))
 						parameterNames.set(parameters.indexOf(tag), null);
 				} else {
-					int paramIndex = parameterNames.indexOf(tag.getVariableReference().getName());
+					String name = tag.getVariableReference().getName();
+					int paramIndex = parameterNames.indexOf(name);
 					if (paramIndex != -1) {
 						parameterNames.set(paramIndex, null);
+					} else if (name != null) {
+						// if user forgot to prefix the variadic parameter name
+						// by "...", manually prefix it by "..." and try again
+						paramIndex = parameterNames.indexOf(ScriptElementLabels.ELLIPSIS_STRING + name);
+						if (paramIndex != -1) {
+							parameterNames.set(paramIndex, null);
+						}
 					}
 				}
 			} else if (TagKind.RETURN == tag.getTagKind()) {
@@ -948,7 +956,15 @@ public class PHPDocumentationContentAccess {
 	private List<String> initParameterNames() {
 		if (fMethod != null) {
 			try {
-				return new ArrayList<String>(Arrays.asList(fMethod.getParameterNames()));
+				List<String> list = new ArrayList<String>(Arrays.asList(fMethod.getParameterNames()));
+				if (PHPFlags.isVariadic(fMethod.getFlags()) && !list.isEmpty()) {
+					int lastIndex = list.size() - 1;
+					String name = list.get(lastIndex);
+					if (name != null) {
+						list.set(lastIndex, ScriptElementLabels.ELLIPSIS_STRING + name);
+					}
+				}
+				return list;
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}

@@ -20,11 +20,10 @@ import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
@@ -777,7 +776,7 @@ public class CodeGeneration {
 		} else {
 			for (int i = 0; i < formalParameters.size(); i++) {
 				if (formalParameters.get(i).isVariadic()) {
-					paramNames[i] = PhpTokenNames.getName(ParserConstants.T_ELLIPSIS) + paramNames[i];
+					paramNames[i] = ScriptElementLabels.ELLIPSIS_STRING + paramNames[i];
 				}
 			}
 		}
