@@ -350,16 +350,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					if (attr != null) {
 						handled = true;
 						// if this region's attr is the same as previous one,
-						// then
-						// just adjust the previous style range
+						// then just adjust the previous style range
 						// instead of creating a new instance of one
 						// note: to use 'equals' in this case is important,
-						// since
-						// sometimes
-						// different instances of attributes are associated with
-						// a
-						// region, even the
-						// the attribute has the same values.
+						// since sometimes different instances of attributes are
+						// associated with a region, even attribute has the same
+						// values.
 						// TODO: this needs to be improved to handle readonly
 						// regions correctly
 						if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))
@@ -370,9 +366,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 									partitionLength);
 							holdResults.add(styleRange);
 							// technically speaking, we don't need to update
-							// previousAttr
-							// in the other case, because the other case is when
-							// it hasn't changed
+							// previousAttr in the other case, because the other
+							// case is when it hasn't changed
 							previousAttr = attr;
 						}
 						previousEndOffset = blockedRegion.getEndOffset(region);
@@ -421,17 +416,14 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						if (attr != null) {
 							handled = true;
 							// if this region's attr is the same as previous
-							// one,
-							// then just adjust the previous style range
+							// one, then just adjust the previous style range
 							// instead of creating a new instance of one
 							// note: to use 'equals' in this case is important,
-							// since sometimes
-							// different instances of attributes are associated
-							// with a region, even the
-							// the attribute has the same values.
+							// since sometimes different instances of attributes
+							// are associated with a region, even the attribute
+							// has the same values.
 							// TODO: this needs to be improved to handle
-							// readonly
-							// regions correctly
+							// readonly regions correctly
 							if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))
 									&& styleRange.start + styleRange.length == region.getStart()
 									&& previousEndOffset + 1 == structuredDocumentRegion.getStartOffset(region)) {
@@ -442,9 +434,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 
 								holdResults.add(styleRange);
 								// technically speaking, we don't need to update
-								// previousAttr
-								// in the other case, because the other case is
-								// when it hasn't changed
+								// previousAttr in the other case, because the
+								// other case is when it hasn't changed
 								previousAttr = attr;
 							}
 							previousEndOffset = structuredDocumentRegion.getEndOffset(region);
@@ -517,7 +508,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					continue;
 				}
 				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null
-						&& prevElement.getLength() == prevElement.getLength()) {
+						&& prevElement.getStart() + prevElement.getLength() == element.getStart()) {
 					// extends the prev styleRange with the current element
 					// length
 					styleRange.length += element.getLength();
@@ -529,7 +520,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					// create new styleRange
 					int styleStart = regionStart + element.getStart();
 					int styleLength = element.getLength();
-					if (styleStart + styleLength < partitionStartOffset) { // if
+					int blankStart = regionStart + element.getTextEnd();
+					int blankLength = element.getEnd() - element.getTextEnd();
+					assert styleStart + styleLength == blankStart + blankLength;
+					if (styleStart + styleLength <= partitionStartOffset) { // if
 						// the
 						// range
 						// ends
@@ -542,8 +536,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						// ignoring
 						// it
 						continue;
-					}
-					if (styleStart < partitionStartOffset) { // if the region
+					} else if (styleStart < partitionStartOffset) { // if the
+																	// region
 						// starts before
 						// the requested
 						// starting
@@ -553,11 +547,30 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						// position
 						styleLength -= (partitionStartOffset - styleStart);
 						styleStart = partitionStartOffset;
-					}
-					if (styleStart > partitionStartOffset + partitionLength) {
+						if (blankStart < partitionStartOffset) {
+							blankLength -= partitionStartOffset - blankStart;
+						}
+					} else if (styleStart >= partitionStartOffset + partitionLength) { // if
+						// the
+						// range
+						// starts
+						// after
+						// the
+						// requested
+						// partition
+						// -
+						// ignoring
+						// it
+						continue;
+					} else if (styleStart + styleLength > partitionStartOffset + partitionLength) {
 						// if the region ends after the requested end position -
 						// making it shorter
-						styleLength -= styleStart - (partitionStartOffset + partitionLength);
+						styleLength -= styleStart + styleLength - (partitionStartOffset + partitionLength);
+						if (blankStart < partitionStartOffset + partitionLength) {
+							blankLength = partitionStartOffset + partitionLength - blankStart;
+						} else {
+							blankLength = 0;
+						}
 					}
 					if (attr.getBackground() != null && element.getTextEnd() != element.getEnd()) {// in
 						// case
@@ -574,8 +587,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						// the
 						// whitespaces
 						// applying style to the region w/o the whitespace
-						styleRange = new StyleRange(styleStart, styleLength - (element.getEnd() - element.getTextEnd()),
-								attr.getForeground(), attr.getBackground(), attr.getStyle());
+						styleRange = new StyleRange(styleStart, styleLength - blankLength, attr.getForeground(),
+								attr.getBackground(), attr.getStyle());
 						if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 							styleRange.underline = true;
 							styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -585,12 +598,15 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 							styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
 						}
 						holdResults.add(styleRange);
-						// applying style to the whitespace (important for the
-						// refresh of the specific range
-						styleRange = new StyleRange(regionStart + element.getTextEnd(),
-								element.getEnd() - element.getTextEnd(), attr.getForeground(), null, attr.getStyle());
-						holdResults.add(styleRange);
-						previousAttr = null;
+						previousAttr = attr;
+						if (blankLength > 0) {
+							// applying style to the whitespace (important for
+							// the refresh of the specific range
+							styleRange = new StyleRange(styleStart + styleLength - blankLength, blankLength,
+									attr.getForeground(), null, attr.getStyle());
+							holdResults.add(styleRange);
+							previousAttr = null;
+						}
 					} else {
 						styleRange = new StyleRange(styleStart, styleLength, attr.getForeground(), attr.getBackground(),
 								attr.getStyle());
@@ -604,9 +620,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						}
 						holdResults.add(styleRange);
 						// technically speaking, we don't need to update
-						// previousAttr
-						// in the other case, because the other case is when
-						// it hasn't changed
+						// previousAttr in the other case, because the other
+						// case is when it hasn't changed
 						previousAttr = attr;
 					}
 				}
@@ -695,37 +710,36 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					|| PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR.equals(prefKey)) {
 				addTextAttribute(prefKey);
-			} else
-				if (PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NORMAL_COLOR).equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_VARIABLE_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_STRING_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_COMMENT_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NUMBER_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_HEREDOC_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_TASK_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants
-								.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
-								.equals(prefKey)
-						|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
-								.equals(prefKey)) {
+			} else if (PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NORMAL_COLOR)
+					.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_VARIABLE_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_STRING_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_COMMENT_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NUMBER_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_HEREDOC_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_TASK_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
+							.equals(prefKey)) {
 				boolean enabled = getColorPreferences().getBoolean(prefKey);
 				prefKey = prefKey.split("\\.")[1]; //$NON-NLS-1$
 				if (enabled) {
