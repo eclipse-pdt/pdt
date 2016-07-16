@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 
-	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
+	public static final String ELLIPSIS = "..."; //$NON-NLS-1$
 
 	private IEvaluatedType result;
 
@@ -69,6 +69,12 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 					result = new PHPClassType(namespace, typeName);
 				} else {
 					result = new PHPClassType(typeName);
+				}
+				if (parameter.isVariadic()) {
+					// a variadic parameter is an array of a single type
+					MultiTypeType multiType = new MultiTypeType();
+					multiType.addType(result);
+					result = multiType;
 				}
 			} else {
 				result = PHPClassType.fromSimpleReference(type);
