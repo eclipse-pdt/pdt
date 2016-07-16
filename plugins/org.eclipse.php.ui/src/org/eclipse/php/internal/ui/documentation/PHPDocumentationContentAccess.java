@@ -948,7 +948,15 @@ public class PHPDocumentationContentAccess {
 	private List<String> initParameterNames() {
 		if (fMethod != null) {
 			try {
-				return new ArrayList<String>(Arrays.asList(fMethod.getParameterNames()));
+				List<String> list = new ArrayList<String>(Arrays.asList(fMethod.getParameterNames()));
+				if (PHPFlags.isVariadic(fMethod.getFlags()) && !list.isEmpty()) {
+					int lastIndex = list.size() - 1;
+					String name = list.get(lastIndex);
+					if (name != null) {
+						list.set(lastIndex, ScriptElementLabels.ELLIPSIS_STRING + name);
+					}
+				}
+				return list;
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}

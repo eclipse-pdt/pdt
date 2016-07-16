@@ -1,0 +1,22 @@
+--TEST--
+No bug - handle correctly variadic parameters in tooltip description and PHPDoc return tag
+--FILE--
+<?php
+/**|
+function foo($a, $b, A ...$c)
+{
+    return $c;
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param unknown $a
+ * @param unknown $b
+ * @param A ...$c
+ * @return A[]
+ */
+function foo($a, $b, A ...$c)
+{
+    return $c;
+}
