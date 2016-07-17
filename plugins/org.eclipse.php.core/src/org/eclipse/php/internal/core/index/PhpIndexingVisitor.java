@@ -64,6 +64,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
+	public static final String ZERO_VALUE = "0"; //$NON-NLS-1$
+	public static final String REFERENCE_VALUE = String.valueOf(Modifiers.AccReference);
 	public static final char QUALIFIER_SEPERATOR = ';';
 	public static final char RETURN_TYPE_SEPERATOR = ':';
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
@@ -382,6 +384,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					}
 				}
 				metadata.append(defaultValue);
+				metadata.append(PARAMETER_SEPERATOR);
+				if (arg instanceof FormalParameterByReference) {
+					metadata.append(REFERENCE_VALUE);
+				} else {
+					metadata.append(ZERO_VALUE);
+				}
 				if (i.hasNext()) {
 					metadata.append(","); //$NON-NLS-1$
 				}

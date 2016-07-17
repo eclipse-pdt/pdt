@@ -256,7 +256,14 @@ public class PhpElementResolver implements IElementResolver {
 						if (PhpIndexingVisitor.NULL_VALUE.equals(defaultValue)) {
 							defaultValue = null;
 						}
-						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue);
+						int modifiers = 0;
+						try {
+							modifiers = Integer.parseInt(values[3]);
+						} catch (NumberFormatException e) {
+							// should never happen
+							Logger.logException(e);
+						}
+						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue, modifiers);
 					}
 				}
 			}

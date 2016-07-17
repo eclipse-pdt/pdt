@@ -32,6 +32,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
+import org.eclipse.php.ui.PHPElementLabels;
 
 public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider
 		implements ICompletionProposalLabelProviderExtension {
@@ -279,6 +280,12 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 	protected StyledString appendStyledParameterList(StyledString buffer, CompletionProposal methodProposal) {
 		String[] parameterNames = methodProposal.findParameterNames(null);
 		IMethod method = (IMethod) methodProposal.getModelElement();
+		IParameter[] parameters = null;
+		try {
+			parameters = method.getParameters();
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
 		if (method instanceof AliasMethod) {
 			method = (IMethod) ((AliasMethod) method).getMethod();
 		}
@@ -303,6 +310,9 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 					if (i > 0) {
 						buffer.append(',');
 						buffer.append(' ');
+					}
+					if (parameters != null && i < parameters.length && PHPFlags.isReference(parameters[i].getFlags())) {
+						buffer.append(PHPElementLabels.REFERENCE_STRING);
 					}
 					if (isVariadic && i + 1 == parameterNames.length) {
 						buffer.append(ScriptElementLabels.ELLIPSIS_STRING); // $NON-NLS-1$
