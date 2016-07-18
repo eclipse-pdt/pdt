@@ -37,7 +37,7 @@ new class($var) extends SuperClass01 implements Interface01, Interface02 {
 					<Interfaces>
 					<Body>
 						<Block start='79' length='84' isCurly='true'>
-							<ConstantDeclaration start='82' length='15'>
+							<ConstantDeclaration start='82' length='15' modifier=''>
 								<VariableName>
 									<Identifier start='88' length='4' name='TEST'/>
 								</VariableName>

@@ -11,7 +11,7 @@ class foo {
 --EXPECT--
 <Program start='0' length='169'>
 	<Statements>
-		<ConstantDeclaration start='6' length='24'>
+		<ConstantDeclaration start='6' length='24' modifier=''>
 			<VariableName>
 				<Identifier start='12' length='7' name='MYCONST'/>
 			</VariableName>
@@ -33,7 +33,7 @@ class foo {
 			<Interfaces>
 			</Interfaces>
 			<Block start='41' length='128' isCurly='true'>
-				<ConstantDeclaration start='44' length='35'>
+				<ConstantDeclaration start='44' length='35' modifier=''>
 					<VariableName>
 						<Identifier start='50' length='4' name='item'/>
 					</VariableName>
@@ -54,7 +54,7 @@ class foo {
 						</InfixExpression>
 					</InitialValue>
 				</ConstantDeclaration>
-				<ConstantDeclaration start='81' length='45'>
+				<ConstantDeclaration start='81' length='45' modifier=''>
 					<VariableName>
 						<Identifier start='87' length='5' name='item2'/>
 					</VariableName>
@@ -84,7 +84,7 @@ class foo {
 						</InfixExpression>
 					</InitialValue>
 				</ConstantDeclaration>
-				<ConstantDeclaration start='128' length='39'>
+				<ConstantDeclaration start='128' length='39' modifier=''>
 					<VariableName>
 						<Identifier start='134' length='5' name='item3'/>
 					</VariableName>

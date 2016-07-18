@@ -38,6 +38,9 @@ public class PhpLexerFactory {
 		if (phpVersion == PHPVersion.PHP7_0) {
 			return new org.eclipse.php.internal.core.documentModel.parser.php7.PhpLexer(reader);
 		}
+		if (phpVersion == PHPVersion.PHP7_1) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php71.PhpLexer(reader);
+		}
 		if (phpVersion == null) {
 			throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
 		} else {

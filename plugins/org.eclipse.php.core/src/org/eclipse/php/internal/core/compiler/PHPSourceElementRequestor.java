@@ -913,7 +913,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean visit(ConstantDeclaration declaration) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-		info.modifiers = Modifiers.AccConstant | Modifiers.AccPublic | Modifiers.AccFinal;
+		int accessModifier = declaration.getModifiers() == 0 ? Modifiers.AccPublic : declaration.getModifiers();
+		info.modifiers = Modifiers.AccConstant | Modifiers.AccFinal | accessModifier;
 		ConstantReference constantName = declaration.getConstantName();
 		info.name = ASTUtils.stripQuotes(constantName.getName());
 		info.nameSourceEnd = constantName.sourceEnd() - 1;

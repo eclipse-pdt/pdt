@@ -14,7 +14,7 @@ Test Interface Declaration With Declarations
 				<Identifier start='48' length='10' name='Interface2'/>
 			</Interfaces>
 			<Block start='59' length='58' isCurly='true'>
-				<ConstantDeclaration start='61' length='22'>
+				<ConstantDeclaration start='61' length='22' modifier=''>
 					<VariableName>
 						<Identifier start='67' length='11' name='MY_CONSTANT'/>
 					</VariableName>

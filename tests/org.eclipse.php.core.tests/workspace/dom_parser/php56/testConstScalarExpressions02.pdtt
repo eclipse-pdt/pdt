@@ -14,7 +14,7 @@ Test power operator
 			<Interfaces>
 			</Interfaces>
 			<Block start='16' length='23' isCurly='true'>
-				<ConstantDeclaration start='18' length='19'>
+				<ConstantDeclaration start='18' length='19' modifier=''>
 					<VariableName>
 						<Identifier start='24' length='3' name='TMP'/>
 					</VariableName>
