@@ -1,0 +1,85 @@
+--TEST--
+Test class constant visibility
+--FILE--
+<?php
+ 
+class Token {
+		// Constants default to public
+		const PUBLIC_CONST = 0;
+ 
+        // Constants then also can have a defined visibility
+        private const PRIVATE_CONST = 0;
+        protected const PROTECTED_CONST = 0;
+        public const PUBLIC_CONST_TWO = 0;
+ 
+        //Constants can only have one visibility declaration list
+        private const FOO = 1, BAR = 2;
+}
+--EXPECT--
+<Program start='0' length='382'>
+	<Statements>
+		<ClassDeclaration start='8' length='374' modifier=''>
+			<ClassName>
+				<Identifier start='14' length='5' name='Token'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='20' length='362' isCurly='true'>
+				<ConstantDeclaration start='57' length='23' modifier=''>
+					<VariableName>
+						<Identifier start='63' length='12' name='PUBLIC_CONST'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='78' length='1' type='int' value='0'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='160' length='24' modifier='private'>
+					<VariableName>
+						<Identifier start='166' length='13' name='PRIVATE_CONST'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='182' length='1' type='int' value='0'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='203' length='26' modifier='protected'>
+					<VariableName>
+						<Identifier start='209' length='15' name='PROTECTED_CONST'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='227' length='1' type='int' value='0'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='245' length='27' modifier='public'>
+					<VariableName>
+						<Identifier start='251' length='16' name='PUBLIC_CONST_TWO'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='270' length='1' type='int' value='0'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='357' length='23' modifier='private'>
+					<VariableName>
+						<Identifier start='363' length='3' name='FOO'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='369' length='1' type='int' value='1'/>
+					</InitialValue>
+					<VariableName>
+						<Identifier start='372' length='3' name='BAR'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='378' length='1' type='int' value='2'/>
+					</InitialValue>
+				</ConstantDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+		<Comment start='24' length='31' commentType='singleLine'/>
+		<Comment start='91' length='53' commentType='singleLine'/>
+		<Comment start='283' length='58' commentType='singleLine'/>
+	</Comments>
+</Program>
+

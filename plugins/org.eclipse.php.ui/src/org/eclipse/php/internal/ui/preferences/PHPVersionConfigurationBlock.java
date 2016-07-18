@@ -36,14 +36,14 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 
-	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP7_0.getAlias(), PHPVersion.PHP5_6.getAlias(),
-			PHPVersion.PHP5_5.getAlias(), PHPVersion.PHP5_4.getAlias(), PHPVersion.PHP5_3.getAlias(),
-			PHPVersion.PHP5.getAlias() };
+	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP7_1.getAlias(), PHPVersion.PHP7_0.getAlias(),
+			PHPVersion.PHP5_6.getAlias(), PHPVersion.PHP5_5.getAlias(), PHPVersion.PHP5_4.getAlias(),
+			PHPVersion.PHP5_3.getAlias(), PHPVersion.PHP5.getAlias() };
 
-	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.PHPCreationDataModelProvider_6,
-			PHPUIMessages.PHPCreationDataModelProvider_5, PHPUIMessages.PHPCreationDataModelProvider_4,
-			PHPUIMessages.PHPCreationDataModelProvider_3, PHPUIMessages.PHPCreationDataModelProvider_2,
-			PHPUIMessages.PHPCreationDataModelProvider_1 };
+	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.PHPCreationDataModelProvider_7,
+			PHPUIMessages.PHPCreationDataModelProvider_6, PHPUIMessages.PHPCreationDataModelProvider_5,
+			PHPUIMessages.PHPCreationDataModelProvider_4, PHPUIMessages.PHPCreationDataModelProvider_3,
+			PHPUIMessages.PHPCreationDataModelProvider_2, PHPUIMessages.PHPCreationDataModelProvider_1 };
 
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);

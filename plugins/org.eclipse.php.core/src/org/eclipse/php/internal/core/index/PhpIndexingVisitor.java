@@ -764,7 +764,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	}
 
 	public boolean visit(ConstantDeclaration declaration) throws Exception {
-		int modifiers = Modifiers.AccConstant | Modifiers.AccPublic | Modifiers.AccFinal;
+		int accessModifier = declaration.getModifiers() == 0 ? Modifiers.AccPublic : declaration.getModifiers();
+		int modifiers = Modifiers.AccConstant | Modifiers.AccFinal | accessModifier;
 		if (fCurrentParent != null) {
 			modifiers = modifiers | PHPCoreConstants.AccClassField;
 		}
