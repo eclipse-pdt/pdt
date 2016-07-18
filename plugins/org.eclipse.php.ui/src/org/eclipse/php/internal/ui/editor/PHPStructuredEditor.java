@@ -493,7 +493,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			final StyledText styledText = textViewer.getTextWidget();
 			final IDocument document = textViewer.getDocument();
 
-			if (document == null)
+			if (styledText == null || document == null)
 				return -1;
 
 			try {
@@ -855,8 +855,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
-					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled()
+					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
+							|| fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -1007,7 +1008,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				try {
 					// get the structured document and go over its regions
 					// in case of PhpScriptRegion reparse the region text
-					IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+					IDocumentProvider documentProvider = getDocumentProvider();
+					IDocument doc = documentProvider != null ? documentProvider.getDocument(getEditorInput()) : null;
 					if (doc instanceof IStructuredDocument) {
 						IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc)
 								.getStructuredDocumentRegions();
@@ -1417,6 +1419,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 
 			ISourceViewer fSourceViewer = getSourceViewer();
+			if (fSourceViewer == null)
+				return;
 			StyledText st = fSourceViewer.getTextWidget();
 			if (st == null || st.isDisposed())
 				return;
@@ -1532,9 +1536,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 
 			ISourceViewer fSourceViewer = getSourceViewer();
+			if (fSourceViewer == null)
+				return;
 			StyledText st = fSourceViewer.getTextWidget();
 			if (st == null || st.isDisposed())
 				return;
+
 			int caretOffset = st.getCaretOffset();
 			int lineNumber = st.getLineAtOffset(caretOffset);
 			int lineOffset = st.getOffsetAtLine(lineNumber);
@@ -1710,6 +1717,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		@Override
 		protected void setCaretPosition(final int position) {
 			final ISourceViewer viewer = getSourceViewer();
+			if (viewer == null)
+				return;
 
 			final StyledText text = viewer.getTextWidget();
 			if (text != null && !text.isDisposed()) {
@@ -1853,6 +1862,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		@Override
 		protected void setCaretPosition(final int position) {
 			final ISourceViewer viewer = getSourceViewer();
+			if (viewer == null)
+				return;
 
 			final StyledText text = viewer.getTextWidget();
 			if (text != null && !text.isDisposed()) {
@@ -2029,6 +2040,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	public void gotoMatchingBracket() {
 
 		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer == null)
+			return;
 		IDocument document = sourceViewer.getDocument();
 		if (document == null)
 			return;
@@ -2151,6 +2164,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private void installProjectionSupport() {
 		projectionSupportInstalled = true;
 		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
+		if (projectionViewer == null)
+			return;
 
 		fProjectionModelUpdater = new PHPFoldingStructureProviderProxy();
 		if (fProjectionModelUpdater != null)
@@ -2298,6 +2313,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
+		if (projectionViewer == null)
+			return;
 
 		fProjectionModelUpdater = new PHPFoldingStructureProviderProxy();
 		if (fProjectionModelUpdater != null) {
@@ -2662,10 +2679,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (getProject() != null) {
 			fFormatterProfileListener = new IPreferencesPropagatorListener() {
 				public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-					StyledText textWidget = getSourceViewer().getTextWidget();
-					int tabWidth = getSourceViewerConfiguration().getTabWidth(getSourceViewer());
-					if (textWidget.getTabs() != tabWidth) {
-						textWidget.setTabs(tabWidth);
+					SourceViewerConfiguration config = getSourceViewerConfiguration();
+					ISourceViewer sourceViewer = getSourceViewer();
+					if (config != null && sourceViewer != null) {
+						StyledText textWidget = sourceViewer.getTextWidget();
+						int tabWidth = config.getTabWidth(sourceViewer);
+						if (textWidget != null && textWidget.getTabs() != tabWidth) {
+							textWidget.setTabs(tabWidth);
+						}
 					}
 				}
 
@@ -3546,6 +3567,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			return;
 
 		final StyledText st = viewer.getTextWidget();
+		if (st == null)
+			return;
 
 		// Install drag source
 		final ISelectionProvider selectionProvider = viewer.getSelectionProvider();
@@ -3739,12 +3762,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			return;
 
 		StyledText st = viewer.getTextWidget();
-		dndService.removeMergedDropTarget(st);
+		if (st != null) {
+			dndService.removeMergedDropTarget(st);
 
-		DragSource dragSource = (DragSource) st.getData(DND.DRAG_SOURCE_KEY);
-		if (dragSource != null) {
-			dragSource.dispose();
-			st.setData(DND.DRAG_SOURCE_KEY, null);
+			DragSource dragSource = (DragSource) st.getData(DND.DRAG_SOURCE_KEY);
+			if (dragSource != null) {
+				dragSource.dispose();
+				st.setData(DND.DRAG_SOURCE_KEY, null);
+			}
 		}
 
 		fIsTextDragAndDropInstalled = false;
