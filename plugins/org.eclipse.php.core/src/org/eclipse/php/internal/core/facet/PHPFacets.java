@@ -109,6 +109,9 @@ public class PHPFacets {
 				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7.equals(version.getVersionString())) {
 					return PHPVersion.PHP7_0;
 				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7_1.equals(version.getVersionString())) {
+					return PHPVersion.PHP7_1;
+				}
 			}
 		} catch (CoreException ex) {
 			// silently ignore
@@ -138,8 +141,10 @@ public class PHPFacets {
 		case PHP5_6:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_5_6);
 		case PHP7_0:
-		default:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7);
+		case PHP7_1:
+		default:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_1);
 		}
 	}
 

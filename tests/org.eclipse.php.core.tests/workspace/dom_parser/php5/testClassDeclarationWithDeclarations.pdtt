@@ -17,7 +17,7 @@ Test Class Declaration With Declarations
 				<Identifier start='68' length='10' name='Interface2'/>
 			</Interfaces>
 			<Block start='79' length='138' isCurly='true'>
-				<ConstantDeclaration start='81' length='22'>
+				<ConstantDeclaration start='81' length='22' modifier=''>
 					<VariableName>
 						<Identifier start='87' length='11' name='MY_CONSTANT'/>
 					</VariableName>

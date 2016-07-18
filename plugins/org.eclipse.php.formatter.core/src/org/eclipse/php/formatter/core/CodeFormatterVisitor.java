@@ -349,6 +349,17 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// for
 			// reset
 			// operation
+		} else if (PHPVersion.PHP7_1.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php71.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php71.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP7_1, false, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php71.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);
@@ -2692,9 +2703,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		boolean isFirst = true;
+
+		// handle modifier
+		String modifier = classConstantDeclaration.getModifierString();
+		appendToBuffer(modifier);
+		if (modifier != null && !modifier.isEmpty()) {
+			insertSpace();
+		}
+		appendToBuffer("const"); //$NON-NLS-1$
 		insertSpace();
-		int lastPosition = classConstantDeclaration.getStart() + 5;
-		lineWidth += 5;
+		int lastPosition = classConstantDeclaration.getStart();
 		List<Identifier> names = classConstantDeclaration.names();
 
 		Identifier[] variableNames = new Identifier[names.size()];
@@ -4995,7 +5013,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private boolean isPhpRegionOnSingleLine(int start, int length) throws BadLocationException {
 		assert length >= 0;
-		int endTagLength = "?>".length();
+		int endTagLength = "?>".length(); //$NON-NLS-1$
 		if (length < endTagLength || document.getLineOfOffset(start) != document.getLineOfOffset(start + length - 1)) {
 			return false;
 		}

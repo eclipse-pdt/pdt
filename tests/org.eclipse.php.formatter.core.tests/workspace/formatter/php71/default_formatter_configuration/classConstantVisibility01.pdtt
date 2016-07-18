@@ -1,0 +1,32 @@
+--TEST--
+Test class constant visibility
+--FILE--
+<?php
+
+class Token {
+	// Constants default to public
+	const 		   PUBLIC_CONST = 0;
+
+	// Constants then also can have a defined visibility
+					private const PRIVATE_CONST = 0;
+protected const PROTECTED_CONST = 0;
+	public 			const PUBLIC_CONST_TWO = 0;
+
+	//Constants can only have one visibility declaration list
+	private 
+	const FOO     = 1, 		BAR = 2;
+}
+--EXPECT--
+<?php
+class Token {
+	// Constants default to public
+	const PUBLIC_CONST = 0;
+	
+	// Constants then also can have a defined visibility
+	private const PRIVATE_CONST = 0;
+	protected const PROTECTED_CONST = 0;
+	public const PUBLIC_CONST_TWO = 0;
+	
+	// Constants can only have one visibility declaration list
+	private const FOO = 1, BAR = 2;
+}

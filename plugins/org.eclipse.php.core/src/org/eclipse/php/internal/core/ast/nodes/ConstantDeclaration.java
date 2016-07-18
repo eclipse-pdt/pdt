@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * const MY_CONST = 5, YOUR_CONSTANT = 8;
  * </pre>
  */
-public class ConstantDeclaration extends Statement {
+public class ConstantDeclaration extends BodyDeclaration {
 
 	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<Identifier>(NAMES_PROPERTY);
 	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(INITIALIZERS_PROPERTY);
@@ -42,6 +42,8 @@ public class ConstantDeclaration extends Statement {
 	public static final ChildListPropertyDescriptor INITIALIZERS_PROPERTY = new ChildListPropertyDescriptor(
 			ConstantDeclaration.class, "initializers", Expression.class, //$NON-NLS-1$
 			CYCLE_RISK);
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
+			FieldsDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -50,14 +52,20 @@ public class ConstantDeclaration extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(NAMES_PROPERTY);
 		properyList.add(INITIALIZERS_PROPERTY);
+		properyList.add(MODIFIER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
 	public ConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
-		super(start, end, ast);
+		this(start, end, ast, 0, names, initializers);
+	}
+
+	public ConstantDeclaration(int start, int end, AST ast, int modifier, List<Identifier> names,
+			List<Expression> initializers) {
+		super(start, end, ast, modifier);
 
 		if (names == null || initializers == null || names.size() != initializers.size()) {
 			throw new IllegalArgumentException();
@@ -72,7 +80,11 @@ public class ConstantDeclaration extends Statement {
 	}
 
 	public ConstantDeclaration(int start, int end, AST ast, List<ASTNode[]> variablesAndDefaults) {
-		super(start, end, ast);
+		this(start, end, ast, 0, variablesAndDefaults);
+	}
+
+	public ConstantDeclaration(int start, int end, AST ast, int modifier, List<ASTNode[]> variablesAndDefaults) {
+		super(start, end, ast, modifier);
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
 		}
@@ -130,6 +142,7 @@ public class ConstantDeclaration extends Statement {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ConstantDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
+		buffer.append(" modifier='").append(getModifierString()).append('\''); //$NON-NLS-1$
 		buffer.append(">\n"); //$NON-NLS-1$
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
@@ -190,12 +203,17 @@ public class ConstantDeclaration extends Statement {
 	ASTNode clone0(AST target) {
 		final List<Identifier> names = ASTNode.copySubtrees(target, this.names());
 		final List<Expression> initializers = ASTNode.copySubtrees(target, this.initializers());
-		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, names, initializers);
+		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, this.getModifier(), names, initializers);
 
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	@Override
+	public SimplePropertyDescriptor getModifierProperty() {
+		return MODIFIER_PROPERTY;
 	}
 }

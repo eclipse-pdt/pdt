@@ -35,6 +35,11 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 
 	public ConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end,
 			PHPDocBlock phpDoc) {
+		this(constant, initializer, 0, start, end, phpDoc);
+	}
+
+	public ConstantDeclaration(ConstantReference constant, Expression initializer, int modifiers, int start, int end,
+			PHPDocBlock phpDoc) {
 		super(start, end);
 
 		assert constant != null;
@@ -44,6 +49,7 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 		this.initializer = initializer;
 		this.phpDoc = phpDoc;
 
+		setModifiers(modifiers);
 		setName(constant.getName());
 	}
 
