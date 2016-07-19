@@ -153,9 +153,15 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 			throws CoreException {
 		PHPexeItem item = PHPLaunchUtilities.getPHPExe(configuration);
 		if (item != null) {
+			String debuggerId;
+			// 'Run' mode should be always launched without debugger
+			if (mode.equals(ILaunchManager.RUN_MODE)) {
+				debuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+			} else {
+				debuggerId = item.getDebuggerID();
+			}
 			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 			wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item.getExecutable().toString());
-			String debuggerId = item.getDebuggerID();
 			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
 			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
 			wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
@@ -179,7 +185,13 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 		if (server != null) {
-			String debuggerId = server.getDebuggerId();
+			String debuggerId;
+			// 'Run' mode should be always launched without debugger
+			if (mode.equals(ILaunchManager.RUN_MODE)) {
+				debuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+			} else {
+				debuggerId = server.getDebuggerId();
+			}
 			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
 			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
 			wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
