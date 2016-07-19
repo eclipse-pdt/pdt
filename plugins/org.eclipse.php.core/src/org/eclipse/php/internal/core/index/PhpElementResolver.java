@@ -247,16 +247,23 @@ public class PhpElementResolver implements IElementResolver {
 						if (PhpIndexingVisitor.NULL_VALUE.equals(type)) {
 							type = null;
 						}
-						if (type != null) {
-							type = type.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
-						}
 						String param = values[1];
 
-						String defaultValue = values[2];
+						String defaultValue = values[2].replace("&p", PhpIndexingVisitor.PARAMETER_SEPERATOR)
+								.replace("&a", "&");
 						if (PhpIndexingVisitor.NULL_VALUE.equals(defaultValue)) {
 							defaultValue = null;
 						}
-						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue);
+						int modifiers = 0;
+						if (values.length == 4) {
+							try {
+								modifiers = Integer.parseInt(values[3]);
+							} catch (NumberFormatException e) {
+								// should never happen
+								Logger.logException(e);
+							}
+						}
+						this.parameters[i] = new MethodParameterInfo(param, type, defaultValue, modifiers);
 					}
 				}
 			}
