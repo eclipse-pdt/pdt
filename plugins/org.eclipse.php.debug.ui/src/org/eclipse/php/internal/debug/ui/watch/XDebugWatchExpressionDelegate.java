@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.w3c.dom.Node;
@@ -83,26 +83,12 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		private boolean hasErrors = false;
 		private IValue evalResult;
 
-		public IValue getValue() {
-			return evalResult;
-		}
-
-		public void evaluate() {
-			// Logger.debug("getValue() for: " + expressionText);
+		void evaluate() {
 			String testExp = expressionText.trim();
 			Node result = null;
-
-			// disable this performance enhancement as it requires
-			// better determination of whether we have a variable
-			// or an expression.
-			/*
-			 * if (testExp.startsWith("$") && testExp.substring(1).indexOf(" ")
-			 * == -1) { result = debugTarget.getProperty(testExp, stackLevel,
-			 * 0); } else { result = debugTarget.eval(testExp); }
-			 */
 			result = debugTarget.eval(testExp);
 			if (result != null) {
-				IVariable tempVar = new DBGpVariable(debugTarget, result, 0);
+				IVariable tempVar = new DBGpEvalVariable(debugTarget, testExp, result, 0);
 				evalResult = null;
 				try {
 					evalResult = tempVar.getValue();
@@ -115,6 +101,10 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			} else {
 				hasErrors = true;
 			}
+		}
+
+		public IValue getValue() {
+			return evalResult;
 		}
 
 		public boolean hasErrors() {

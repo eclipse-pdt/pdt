@@ -53,8 +53,17 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	 */
 	@Override
 	protected IVariable createVariable(Node descriptor) {
-		return new DBGpVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
-				Facet.KIND_OBJECT_MEMBER);
+		switch (getOwner().getKind()) {
+		case EVAL: {
+			DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
+					getOwner().getStackLevel(), Facet.KIND_OBJECT_MEMBER);
+			variable.fFullName = getOwner().getFullName() + "->" + variable.fName;
+			return variable;
+		}
+		default:
+			return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
+					Facet.KIND_OBJECT_MEMBER);
+		}
 	}
 
 	/*

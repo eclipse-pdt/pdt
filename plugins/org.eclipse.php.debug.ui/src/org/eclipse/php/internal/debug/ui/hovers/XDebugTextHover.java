@@ -23,9 +23,10 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
@@ -90,18 +91,18 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 	/**
 	 * Returns the variable value.
 	 * 
-	 * @param variable
+	 * @param expression
 	 *            The variable name
 	 * @return
 	 */
-	protected String getValueByEval(DBGpTarget debugTarget, String variable) {
+	protected String getValueByEval(DBGpTarget debugTarget, String expression) {
 		String value = null;
-		Node resp = debugTarget.eval(variable); // note this is a synchronous
-												// call
+		Node resp = debugTarget.eval(expression); // note this is a synchronous
+													// call
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpVariable(debugTarget, resp, -1);
+		IVariable tempVar = new DBGpEvalVariable(debugTarget, expression, resp, -1);
 
 		IValue val = null;
 
@@ -134,7 +135,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpVariable(debugTarget, resp, -1);
+		IVariable tempVar = new DBGpStackVariable(debugTarget, resp, -1);
 
 		IValue val = null;
 
