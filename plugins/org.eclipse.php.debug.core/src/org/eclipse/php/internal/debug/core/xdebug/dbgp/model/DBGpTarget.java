@@ -1422,7 +1422,7 @@ public class DBGpTarget extends DBGpElement
 				Node property = properties.item(i);
 				if (shouldSkip(property))
 					continue;
-				variables.add(new DBGpVariable(this, property, Integer.valueOf(reportedLevel)));
+				variables.add(new DBGpStackVariable(this, property, Integer.valueOf(reportedLevel)));
 			}
 		}
 		return variables.toArray(new DBGpVariable[variables.size()]);
@@ -1568,6 +1568,30 @@ public class DBGpTarget extends DBGpElement
 		synchronized (sessionMutex) {
 			if (session != null && session.isActive()) {
 				DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, args);
+				if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+					response = resp.getParentNode().getFirstChild();
+				}
+			}
+		}
+		return response;
+	}
+
+	/**
+	 * Perform an eval request with result page number.
+	 * 
+	 * @param toEval
+	 * @param page
+	 * @return
+	 */
+	public Node eval(String toEval, int page) {
+		// XDebug expects all data to be base64 encoded.
+		// Convert to session encoding bytes 1st before converting to Base64
+		String encoded = Base64.encode(getSessionEncodingBytes(toEval));
+		String args = " -- " + encoded; //$NON-NLS-1$
+		Node response = null;
+		synchronized (sessionMutex) {
+			if (session != null && session.isActive()) {
+				DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, "-p " + String.valueOf(page) + args);
 				if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 					response = resp.getParentNode().getFirstChild();
 				}

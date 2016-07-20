@@ -31,11 +31,16 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 
 /**
- * 
+ * Abstract DBGp variable implementation.
  * 
  * @author Bartlomiej Laczkowski
  */
-public class DBGpVariable extends DBGpElement implements IVariable, IVariableFacet, IPHPDataType {
+public abstract class DBGpVariable extends DBGpElement implements IVariable, IVariableFacet, IPHPDataType {
+
+	public enum Kind {
+
+		STACK, EVAL;
+	}
 
 	protected final int fStackLevel;
 	protected final Set<Facet> fFacets = new HashSet<Facet>();
@@ -207,6 +212,10 @@ public class DBGpVariable extends DBGpElement implements IVariable, IVariableFac
 	public boolean hasValueChanged() throws DebugException {
 		return fHasValueChanged;
 	}
+
+	protected abstract Kind getKind();
+
+	protected abstract Node getNode(int page);
 
 	protected int getStackLevel() {
 		return fStackLevel;

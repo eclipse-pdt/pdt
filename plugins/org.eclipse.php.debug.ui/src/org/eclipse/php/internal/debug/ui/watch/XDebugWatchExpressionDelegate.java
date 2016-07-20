@@ -17,14 +17,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable.Kind;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.w3c.dom.Node;
 
 /**
- * 
+ * XDebug watch expression delegate.
  */
 public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 
@@ -83,26 +85,33 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		private boolean hasErrors = false;
 		private IValue evalResult;
 
-		public IValue getValue() {
-			return evalResult;
-		}
-
-		public void evaluate() {
-			// Logger.debug("getValue() for: " + expressionText);
-			String testExp = expressionText.trim();
+		void evaluate() {
+			String watchExpression = expressionText.trim();
 			Node result = null;
-
-			// disable this performance enhancement as it requires
-			// better determination of whether we have a variable
-			// or an expression.
-			/*
-			 * if (testExp.startsWith("$") && testExp.substring(1).indexOf(" ")
-			 * == -1) { result = debugTarget.getProperty(testExp, stackLevel,
-			 * 0); } else { result = debugTarget.eval(testExp); }
-			 */
-			result = debugTarget.eval(testExp);
+			Kind exprKind = Kind.EVAL;
+			if (watchExpression.startsWith("$")) { //$NON-NLS-1$
+				exprKind = Kind.STACK;
+			}
+			switch (exprKind) {
+			case STACK: {
+				result = debugTarget.getProperty(watchExpression, String.valueOf(0), 0);
+				break;
+			}
+			default:
+				result = debugTarget.eval(watchExpression);
+				break;
+			}
 			if (result != null) {
-				IVariable tempVar = new DBGpVariable(debugTarget, result, 0);
+				IVariable tempVar;
+				switch (exprKind) {
+				case STACK: {
+					tempVar = new DBGpStackVariable(debugTarget, result, 0);
+					break;
+				}
+				default:
+					tempVar = new DBGpEvalVariable(debugTarget, watchExpression, result, 0);
+					break;
+				}
 				evalResult = null;
 				try {
 					evalResult = tempVar.getValue();
@@ -115,6 +124,10 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			} else {
 				hasErrors = true;
 			}
+		}
+
+		public IValue getValue() {
+			return evalResult;
 		}
 
 		public boolean hasErrors() {
