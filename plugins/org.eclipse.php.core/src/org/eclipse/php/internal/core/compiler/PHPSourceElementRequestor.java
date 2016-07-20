@@ -412,7 +412,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		String[] parameter = new String[args.size()];
 		String[] initializers = new String[args.size()];
-		int[] flags = new int[args.size()];
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.modifiers = method.getModifiers();
 		for (int a = 0; a < args.size(); a++) {
@@ -426,9 +425,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					initializers[a] = DEFAULT_VALUE;
 				}
 			}
-			if (arg instanceof FormalParameterByReference) {
-				flags[a] = IPHPModifiers.AccReference;
-			}
 			if (arg instanceof FormalParameter && ((FormalParameter) arg).isVariadic()) {
 				mi.modifiers |= IPHPModifiers.AccVariadic;
 			}
@@ -440,7 +436,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		mi.nameSourceEnd = method.getNameEnd() - 1;
 		mi.declarationStart = method.sourceStart();
 		mi.parameterInitializers = initializers;
-		mi.parameterFlags = flags;
 
 		modifyMethodInfo(method, mi);
 

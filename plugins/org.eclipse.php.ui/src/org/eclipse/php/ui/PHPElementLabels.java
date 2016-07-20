@@ -20,11 +20,6 @@ public class PHPElementLabels extends ScriptElementLabels {
 	private final String MIXED_RETURN_TYPE = "mixed"; //$NON-NLS-1$
 	private final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
 
-	/**
-	 * User-readable string for reference ("&").
-	 */
-	public final static String REFERENCE_STRING = "&"; //$NON-NLS-1$
-
 	protected void getTypeLabel(IType type, long flags, StringBuffer buf) {
 		if (getFlag(flags, T_FULLY_QUALIFIED | T_CONTAINER_QUALIFIED)) {
 			IModelElement elem = type.getParent();
@@ -164,18 +159,10 @@ public class PHPElementLabels extends ScriptElementLabels {
 							buf.append(params[i].getType());
 							if (bNames) {
 								buf.append(' ');
-							} else {
-								if (PHPFlags.isReference(params[i].getFlags())) {
-									buf.append(REFERENCE_STRING);
-								}
-								if (isLast && isVariadic) {
-									buf.append(ELLIPSIS_STRING);
-								}
+							} else if (isLast && isVariadic) {
+								buf.append(ELLIPSIS_STRING);
 							}
 						} else if (!bNames) {
-							if (PHPFlags.isReference(params[i].getFlags())) {
-								buf.append(REFERENCE_STRING);
-							}
 							if (isLast && isVariadic) {
 								buf.append(ELLIPSIS_STRING);
 							}
@@ -183,9 +170,6 @@ public class PHPElementLabels extends ScriptElementLabels {
 						}
 					}
 					if (bNames) {
-						if (PHPFlags.isReference(params[i].getFlags())) {
-							buf.append(REFERENCE_STRING);
-						}
 						if (isLast && isVariadic) {
 							buf.append(ELLIPSIS_STRING);
 						}

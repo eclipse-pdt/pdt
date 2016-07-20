@@ -133,13 +133,6 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	/**
 	 * @since 4.1
 	 */
-	public static boolean isReference(int flags) {
-		return (flags & AccReference) != 0;
-	}
-
-	/**
-	 * @since 4.1
-	 */
 	public static boolean isInheritdoc(int flags) {
 		return (flags & AccInheritdoc) != 0;
 	}
