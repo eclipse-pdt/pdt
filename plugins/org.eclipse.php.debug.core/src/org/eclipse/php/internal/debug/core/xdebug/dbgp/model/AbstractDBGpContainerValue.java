@@ -43,10 +43,12 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		public synchronized IVariable[] getVariables() throws DebugException {
 			// Should be synchronized and lazy
 			if (fPartitionVariables == null) {
-				DBGpTarget target = (DBGpTarget) getDebugTarget();
-				Node property = target.getProperty(getOwner().getFullName(), String.valueOf(getOwner().getStackLevel()),
-						fPage);
-				NodeList childProperties = property.getChildNodes();
+				Node node = getOwner().getNode(fPage);
+				// Might be null in case of resolving some 'eval' expressions
+				if (node == null) {
+					return new IVariable[] { new DBGpUninitVariable(getDebugTarget()) };
+				}
+				NodeList childProperties = node.getChildNodes();
 				int childrenReceived = childProperties.getLength();
 				fPartitionVariables = new IVariable[childrenReceived];
 				if (childrenReceived > 0) {

@@ -53,8 +53,13 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	 */
 	@Override
 	protected IVariable createVariable(Node descriptor) {
-		return new DBGpVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
-				Facet.KIND_OBJECT_MEMBER);
+		switch (getOwner().getKind()) {
+		case EVAL: {
+			return createEvalVariable(descriptor);
+		}
+		default:
+			return createStackVariable(descriptor);
+		}
 	}
 
 	/*
@@ -92,6 +97,18 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	@Override
 	protected boolean verifyValue(String expression) {
 		return false;
+	}
+
+	protected IVariable createStackVariable(Node descriptor) {
+		return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
+				Facet.KIND_OBJECT_MEMBER);
+	}
+
+	protected IVariable createEvalVariable(Node descriptor) {
+		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
+				getOwner().getStackLevel(), Facet.KIND_OBJECT_MEMBER);
+		variable.fFullName = getOwner().getFullName() + "->" + variable.fName; //$NON-NLS-1$
+		return variable;
 	}
 
 }

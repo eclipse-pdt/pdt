@@ -43,8 +43,13 @@ public class DBGpArrayValue extends AbstractDBGpContainerValue {
 	 */
 	@Override
 	protected IVariable createVariable(Node descriptor) {
-		return new DBGpVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
-				Facet.KIND_ARRAY_MEMBER);
+		switch (getOwner().getKind()) {
+		case EVAL: {
+			return createEvalVariable(descriptor);
+		}
+		default:
+			return createStackVariable(descriptor);
+		}
 	}
 
 	/*
@@ -83,6 +88,22 @@ public class DBGpArrayValue extends AbstractDBGpContainerValue {
 	@Override
 	protected boolean verifyValue(String expression) {
 		return false;
+	}
+
+	protected IVariable createStackVariable(Node descriptor) {
+		return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
+				Facet.KIND_ARRAY_MEMBER);
+	}
+
+	protected IVariable createEvalVariable(Node descriptor) {
+		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
+				getOwner().getStackLevel(), Facet.KIND_ARRAY_MEMBER);
+		String arrayKey = variable.fName.substring(1, variable.fName.length() - 1);
+		if (!arrayKey.matches("\\d+")) { //$NON-NLS-1$
+			arrayKey = '\'' + arrayKey + '\'';
+		}
+		variable.fFullName = getOwner().getFullName() + '[' + arrayKey + ']';
+		return variable;
 	}
 
 }
