@@ -64,6 +64,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
+	public static final String REFERENCE_VALUE = String.valueOf(Modifiers.AccReference);
 	public static final char QUALIFIER_SEPERATOR = ';';
 	public static final char RETURN_TYPE_SEPERATOR = ':';
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
@@ -376,12 +377,18 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				if (arg.getInitialization() != null) {
 					if (arg.getInitialization() instanceof Literal) {
 						Literal scalar = (Literal) arg.getInitialization();
-						defaultValue = scalar.getValue();
+						// we need to encode all pipe characters inside string
+						// literals
+						defaultValue = scalar.getValue().replace("&", "&a").replace(PARAMETER_SEPERATOR, "&p");
 					} else {
 						defaultValue = DEFAULT_VALUE;
 					}
 				}
 				metadata.append(defaultValue);
+				if (arg instanceof FormalParameterByReference) {
+					metadata.append(PARAMETER_SEPERATOR);
+					metadata.append(REFERENCE_VALUE);
+				}
 				if (i.hasNext()) {
 					metadata.append(","); //$NON-NLS-1$
 				}
