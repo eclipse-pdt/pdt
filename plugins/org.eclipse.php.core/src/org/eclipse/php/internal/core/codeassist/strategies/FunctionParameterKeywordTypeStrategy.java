@@ -14,11 +14,11 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.FunctionParameterTypeContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
@@ -32,7 +32,6 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 
-	private static final String CALLABLE = "callable"; //$NON-NLS-1$
 	public static final String[] KEYWORDS = { "self", "parent" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
@@ -50,6 +49,7 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		FunctionParameterTypeContext context = (FunctionParameterTypeContext) getContext();
 		String prefix = context.getPrefix();
@@ -59,7 +59,8 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			try {
 				int flags = context.getEnclosingType().getFlags();
 				if (!PHPFlags.isNamespace(flags)) {
-					String pref = PHPVersion.PHP5_4.isLessThan(context.getPhpVersion()) ? prefix.toLowerCase() : prefix;
+					String pref = PHPVersion.PHP5_4.isLessThan(context.getPhpVersion().toApi()) ? prefix.toLowerCase()
+							: prefix;
 
 					for (String keyword : KEYWORDS) {
 						if (keyword.startsWith(pref)) {
@@ -72,22 +73,14 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			}
 		}
 
-		PHPVersion phpVersion = context.getPhpVersion();
-		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
-			if (CALLABLE.startsWith(prefix)) {
-				reporter.reportKeyword(CALLABLE, suffix, replaceRange);
+		PHPVersion phpVersion = context.getPhpVersion().toApi();
+		for (SimpleProposal proposal : SimpleProposal.BASIC_TYPES) {
+			if (proposal.isValid(prefix, phpVersion)) {
+				reporter.reportKeyword(proposal.getProposal(), suffix, replaceRange);
 			}
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
-	 * filterKeyword
-	 * (org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData)
-	 */
 	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
 		return true;

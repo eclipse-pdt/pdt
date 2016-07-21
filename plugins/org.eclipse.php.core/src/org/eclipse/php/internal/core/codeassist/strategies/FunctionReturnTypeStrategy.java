@@ -11,8 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -23,16 +28,12 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
  */
 public class FunctionReturnTypeStrategy extends GlobalTypesStrategy {
 
-	private static final String[] TYPES = new String[] { "string", //$NON-NLS-1$
-			"int", //$NON-NLS-1$
-			"float", //$NON-NLS-1$
-			"bool", //$NON-NLS-1$
-			"array", //$NON-NLS-1$
-			"callable", //$NON-NLS-1$
-			"self", //$NON-NLS-1$
-			"parent", //$NON-NLS-1$
-			"Closure" //$NON-NLS-1$
-	};
+	private static final List<SimpleProposal> TYPES = new ArrayList<SimpleProposal>(
+			Arrays.asList(SimpleProposal.BASIC_TYPES));
+
+	static {
+		TYPES.add(new SimpleProposal("void", PHPVersion.PHP7_1)); //$NON-NLS-1$
+	}
 
 	public FunctionReturnTypeStrategy(ICompletionContext context) {
 		super(context);
@@ -44,18 +45,21 @@ public class FunctionReturnTypeStrategy extends GlobalTypesStrategy {
 		String prefix = context.getPrefix();
 		String suffix = ""; //$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(context);
-		for (String type : TYPES) {
-			if (type.startsWith(prefix)) {
-				reporter.reportKeyword(type, suffix, replaceRange);
+		PHPVersion phpVersion = context.getPhpVersion().toApi();
+		for (SimpleProposal proposal : TYPES) {
+			if (proposal.isValid(prefix, phpVersion)) {
+				reporter.reportKeyword(proposal.getProposal(), suffix, replaceRange);
 			}
 		}
 		super.apply(reporter);
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
