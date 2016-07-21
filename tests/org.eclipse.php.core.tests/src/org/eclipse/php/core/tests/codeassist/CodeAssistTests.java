@@ -124,6 +124,10 @@ public class CodeAssistTests {
 				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
 						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
 						"/workspace/codeassist/php7" });
+		TESTS.put(PHPVersion.PHP7_1,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7", "/workspace/codeassist/php71" });
 	};
 
 	protected static final String DEFAULT_CURSOR = "|";
