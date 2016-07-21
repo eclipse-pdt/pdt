@@ -108,7 +108,7 @@ public class PhpTokenContainer implements Cloneable {
 		// ITextRegion
 
 		ITextRegion token = phpTokens.isEmpty() ? null : getToken(offset);
-		if (token != null) {
+		if (token != null && token.getEnd() <= offset + length) {
 			result.add(token);
 		}
 
