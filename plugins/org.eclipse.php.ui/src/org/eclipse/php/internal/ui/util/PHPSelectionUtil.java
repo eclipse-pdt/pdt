@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -40,7 +41,9 @@ public class PHPSelectionUtil {
 				return null;
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 			return null;
 		}
 		IModelElement element = null;
@@ -56,7 +59,9 @@ public class PHPSelectionUtil {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 		}
 		if (element != null) {
 			return element;
@@ -69,7 +74,9 @@ public class PHPSelectionUtil {
 				element = sourceModule.getElementAt(offset);
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
 		}
 		return element;
 	}
