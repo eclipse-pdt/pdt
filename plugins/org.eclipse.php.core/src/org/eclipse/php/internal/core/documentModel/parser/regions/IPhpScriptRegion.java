@@ -25,12 +25,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 public interface IPhpScriptRegion extends ITextRegion {
 
 	/**
-	 * Returns an array of php tokens that lay inside the interval [from, from +
-	 * length]
+	 * Returns an array of php tokens that intersects with the interval [from,
+	 * from + length]
 	 * 
 	 * @param from
 	 * @param min
 	 * @throws BadLocationException
+	 *             when "from" is an invalid offset or when "length" is < 0
 	 */
 	public abstract ITextRegion[] getPhpTokens(int from, int length) throws BadLocationException;
 
