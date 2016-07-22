@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,15 @@ public class CompletionCompanion {
 	 * Cache for calculated super type hierarchy
 	 */
 	private Map<IType, ITypeHierarchy> superHierarchyCache = new HashMap<IType, ITypeHierarchy>();
+
+	private static class FakeTypeHierarchy extends TypeHierarchy {
+		public FakeTypeHierarchy() {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494388
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498339
+			// We must initialize the internal properties
+			initialize(1);
+		}
+	}
 
 	public CompletionCompanion() {
 		// TODO Auto-generated constructor stub
@@ -109,7 +118,7 @@ public class CompletionCompanion {
 	 */
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
 		if (!type.getScriptProject().getProject().isAccessible()) {
-			return new TypeHierarchy();
+			return new FakeTypeHierarchy();
 		}
 		if (!superHierarchyCache.containsKey(type)) {
 			superHierarchyCache.put(type, type.newSupertypeHierarchy(monitor));
