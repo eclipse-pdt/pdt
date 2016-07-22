@@ -103,7 +103,9 @@ public class PhpTokenContainer implements Cloneable {
 	}
 
 	public synchronized ITextRegion[] getTokens(final int offset, final int length) throws BadLocationException {
-		assert length >= 0;
+		if (length < 0) {
+			throw new BadLocationException("length " + length + " cannot be < 0"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of
 		// ITextRegion
 
@@ -114,6 +116,7 @@ public class PhpTokenContainer implements Cloneable {
 
 		while (tokensIterator.hasNext() && token != null && token.getEnd() <= offset + length) {
 			token = tokensIterator.next();
+			assert token != null;
 			result.add(token);
 		}
 

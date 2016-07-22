@@ -18,7 +18,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -171,8 +170,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * Returns the attribute for simple php regions (open /close) not
-	 * PHP_CONTENT regions
+	 * Returns the attribute for simple php regions (open/close) not PHP_CONTENT
+	 * regions
 	 * 
 	 * @param region
 	 * @return the text attribute
@@ -191,7 +190,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			}
 		}
 
-		// return the defalt attributes if there is not highlight color for the
+		// return the default attributes if there is not highlight color for the
 		// region
 		if (result == null) {
 			result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
@@ -310,27 +309,28 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * @param region
-	 * @param start
-	 * @param length
+	 * @param blockedRegion
+	 * @param partitionStartOffset
+	 * @param partitionLength
 	 * @param holdResults
 	 * @return
 	 */
 	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength,
 			Collection<StyleRange> holdResults) {
 		boolean handled = false;
-		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
+		final int partitionEndOffset = partitionStartOffset + partitionLength;
 		ITextRegion region = null;
 		ITextRegionList regions = blockedRegion.getRegions();
 		int nRegions = regions.size();
 		StyleRange styleRange = null;
 		TextAttribute previousAttr = null;
+		TextAttribute attr = null;
 		int previousEndOffset = -1;
+
 		for (int i = 0; i < nRegions; i++) {
 			region = regions.get(i);
-			TextAttribute attr = null;
 			final int startOffset = blockedRegion.getStartOffset(region);
-			if (startOffset > partitionEndOffset)
+			if (startOffset >= partitionEndOffset)
 				break;
 			if (blockedRegion.getEndOffset(region) <= partitionStartOffset)
 				continue;
@@ -338,12 +338,16 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			if (region instanceof ITextRegionCollection) {
 				handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength,
 						holdResults);
+				previousAttr = null;
+				styleRange = null;
 				previousEndOffset = -1;
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 					handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset,
 							partitionStartOffset, partitionLength);
+					previousAttr = null;
+					styleRange = null;
 					previousEndOffset = -1;
 				} else {
 					attr = getAttributeFor(region);
@@ -358,21 +362,25 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						// the same values.
 						// TODO: this needs to be improved to handle readonly
 						// regions correctly
-						if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))
-								&& previousEndOffset + 1 == blockedRegion.getStartOffset(region)) {
+						if (styleRange != null && previousAttr != null && previousAttr.equals(attr)
+								&& previousEndOffset == startOffset) {
+							// extends the prev styleRange with the current
+							// region length
 							styleRange.length += region.getLength();
+							if (styleRange.start + styleRange.length > partitionEndOffset) {
+								styleRange.length -= styleRange.start + styleRange.length - partitionEndOffset;
+							}
 						} else {
 							styleRange = createStyleRange(blockedRegion, region, attr, partitionStartOffset,
 									partitionLength);
 							holdResults.add(styleRange);
-							// technically speaking, we don't need to update
-							// previousAttr in the other case, because the other
-							// case is when it hasn't changed
-							previousAttr = attr;
 						}
+						previousAttr = attr;
 						previousEndOffset = blockedRegion.getEndOffset(region);
 					} else {
 						previousAttr = null;
+						styleRange = null;
+						previousEndOffset = -1;
 					}
 				}
 			}
@@ -383,19 +391,21 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset,
 			int partitionLength, Collection<StyleRange> holdResults) {
 		boolean handled = false;
-		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
-		while (structuredDocumentRegion != null && structuredDocumentRegion.getStartOffset() <= partitionEndOffset) {
+		final int partitionEndOffset = partitionStartOffset + partitionLength;
+
+		while (structuredDocumentRegion != null && structuredDocumentRegion.getStartOffset() < partitionEndOffset) {
 			ITextRegion region = null;
 			ITextRegionList regions = structuredDocumentRegion.getRegions();
 			int nRegions = regions.size();
 			StyleRange styleRange = null;
+			TextAttribute previousAttr = null;
+			TextAttribute attr = null;
 			int previousEndOffset = -1;
+
 			for (int i = 0; i < nRegions; i++) {
 				region = regions.get(i);
-				TextAttribute attr = null;
-				TextAttribute previousAttr = null;
 				final int startOffset = structuredDocumentRegion.getStartOffset(region);
-				if (startOffset > partitionEndOffset)
+				if (startOffset >= partitionEndOffset)
 					break;
 				if (structuredDocumentRegion.getEndOffset(region) <= partitionStartOffset)
 					continue;
@@ -403,12 +413,16 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				if (region instanceof ITextRegionCollection) {
 					handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength,
 							holdResults);
+					previousAttr = null;
+					styleRange = null;
 					previousEndOffset = -1;
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 						handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset,
 								partitionStartOffset, partitionLength);
+						previousAttr = null;
+						styleRange = null;
 						previousEndOffset = -1;
 					} else {
 
@@ -424,26 +438,27 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 							// attribute has the same values.
 							// TODO: this needs to be improved to handle
 							// readonly regions correctly
-							if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))
-									&& styleRange.start + styleRange.length == region.getStart()
-									&& previousEndOffset + 1 == structuredDocumentRegion.getStartOffset(region)) {
+							if (styleRange != null && previousAttr != null && previousAttr.equals(attr)
+									&& previousEndOffset == startOffset) {
+								// extends the prev styleRange with the current
+								// region length
 								styleRange.length += region.getLength();
+								if (styleRange.start + styleRange.length > partitionEndOffset) {
+									styleRange.length -= styleRange.start + styleRange.length - partitionEndOffset;
+								}
 							} else {
 								styleRange = createStyleRange(structuredDocumentRegion, region, attr,
 										partitionStartOffset, partitionLength);
-
 								holdResults.add(styleRange);
-								// technically speaking, we don't need to update
-								// previousAttr in the other case, because the
-								// other case is when it hasn't changed
-								previousAttr = attr;
 							}
+							previousAttr = attr;
 							previousEndOffset = structuredDocumentRegion.getEndOffset(region);
 						} else {
 							previousAttr = null;
+							styleRange = null;
+							previousEndOffset = -1;
 						}
 					}
-
 				}
 
 				if (Debug.syntaxHighlighting) {
@@ -458,14 +473,15 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * Prepares php regions to the line highliter
+	 * Prepares php regions for the line highlighter
 	 * 
 	 * @param holdResults
 	 *            - results
 	 * @param region
 	 *            - php region
-	 * @param partitionLength
+	 * @param regionStart
 	 * @param partitionStartOffset
+	 * @param partitionLength
 	 */
 	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPhpScriptRegion region, int regionStart,
 			int partitionStartOffset, int partitionLength) {
@@ -478,42 +494,42 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		ITextRegion[] phpTokens = null;
 		try {
 
-			int from;
-			int length;
-			if (partitionStartOffset < regionStart) {
-				from = 0;
-				length = partitionLength - (regionStart - partitionStartOffset);
-			} else {
-				from = partitionStartOffset - regionStart;
-				length = partitionLength;
-			}
-
 			if (!region.isFullReparsed() && (regionStart == partitionStartOffset)) {
 				phpTokens = region.getUpdatedPhpTokens();
-				from = region.getUpdatedTokensStart();
+				int from = region.getUpdatedTokensStart();
 				partitionStartOffset = from + regionStart;
 				partitionLength = region.getUpdatedTokensLength();
-
 			} else {
-				phpTokens = region.getPhpTokens(from, Math.min(length, region.getLength()));
+				// compute interval intersection between region and partition
+				int from = Math.max(0, partitionStartOffset - regionStart);
+				int length = Math.min(regionStart + region.getLength(), partitionStartOffset + partitionLength)
+						- Math.max(regionStart, partitionStartOffset);
+				if (length == 0) {
+					// empty region and partition intersection, there's nothing
+					// to do (happens when partitionLength is = 0)
+					return true;
+				}
+				// if length < 0 (i.e. when partitionLength < 0), we'll throw a
+				// BadLocationException
+				phpTokens = region.getPhpTokens(from, length);
 			}
 
 			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
 				attr = getAttributeFor(element);
-				// Check that the elements are different - otherwise the
+				// Check that the elements are different, otherwise the
 				// coloring is not valid
 				if (prevElement == element) {
 					continue;
 				}
-				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null
+				if (styleRange != null && previousAttr != null && previousAttr.equals(attr) && prevElement != null
 						&& prevElement.getStart() + prevElement.getLength() == element.getStart()) {
 					// extends the prev styleRange with the current element
 					// length
 					styleRange.length += element.getLength();
 					if (styleRange.start + styleRange.length > partitionStartOffset + partitionLength) {
-						styleRange.length -= (styleRange.start + styleRange.length)
+						styleRange.length -= styleRange.start + styleRange.length
 								- (partitionStartOffset + partitionLength);
 					}
 				} else {
@@ -523,47 +539,25 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					int blankStart = regionStart + element.getTextEnd();
 					int blankLength = element.getEnd() - element.getTextEnd();
 					assert styleStart + styleLength == blankStart + blankLength;
-					if (styleStart + styleLength <= partitionStartOffset) { // if
-						// the
-						// range
-						// ends
-						// before
-						// the
-						// requested
-						// starting
-						// position
-						// -
-						// ignoring
-						// it
+					if (styleStart >= partitionStartOffset + partitionLength) {
+						// if the range starts after the requested partition,
+						// stop now
+						break;
+					} else if (styleStart + styleLength <= partitionStartOffset) {
+						// if the range ends before the requested
+						// starting position, ignore it
 						continue;
-					} else if (styleStart < partitionStartOffset) { // if the
-																	// region
-						// starts before
-						// the requested
-						// starting
-						// position -
-						// adjusting the
-						// style start
+					} else if (styleStart < partitionStartOffset) {
+						// if the region starts before the requested
+						// starting position, adjust the style start
 						// position
 						styleLength -= (partitionStartOffset - styleStart);
 						styleStart = partitionStartOffset;
 						if (blankStart < partitionStartOffset) {
 							blankLength -= partitionStartOffset - blankStart;
 						}
-					} else if (styleStart >= partitionStartOffset + partitionLength) { // if
-						// the
-						// range
-						// starts
-						// after
-						// the
-						// requested
-						// partition
-						// -
-						// ignoring
-						// it
-						continue;
 					} else if (styleStart + styleLength > partitionStartOffset + partitionLength) {
-						// if the region ends after the requested end position -
+						// if the region ends after the requested end position,
 						// making it shorter
 						styleLength -= styleStart + styleLength - (partitionStartOffset + partitionLength);
 						if (blankStart < partitionStartOffset + partitionLength) {
@@ -572,21 +566,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 							blankLength = 0;
 						}
 					}
-					if (attr.getBackground() != null && element.getTextEnd() != element.getEnd()) {// in
-						// case
-						// of
-						// background
-						// color
-						// make
-						// sure
-						// the
-						// highlighting
-						// will
-						// not
-						// paint
-						// the
-						// whitespaces
-						// applying style to the region w/o the whitespace
+					if (attr.getBackground() != null && element.getTextEnd() != element.getEnd()) {
+						// in case of background color make sure the
+						// highlighting will not paint the whitespaces
 						styleRange = new StyleRange(styleStart, styleLength - blankLength, attr.getForeground(),
 								attr.getBackground(), attr.getStyle());
 						if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
@@ -600,7 +582,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						holdResults.add(styleRange);
 						previousAttr = attr;
 						if (blankLength > 0) {
-							// applying style to the whitespace (important for
+							// apply style to the whitespace (important for
 							// the refresh of the specific range
 							styleRange = new StyleRange(styleStart + styleLength - blankLength, blankLength,
 									attr.getForeground(), null, attr.getStyle());
@@ -619,9 +601,6 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 							styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
 						}
 						holdResults.add(styleRange);
-						// technically speaking, we don't need to update
-						// previousAttr in the other case, because the other
-						// case is when it hasn't changed
 						previousAttr = attr;
 					}
 				}
@@ -674,22 +653,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		return PreferenceConstants.getPreferenceStore();
 	}
 
-	private class PropertyChangeListener implements IPropertyChangeListener {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org
-		 * .eclipse.jface.util.PropertyChangeEvent)
-		 */
-		public void propertyChange(PropertyChangeEvent event) {
-			// have to do it this way so others can override the method
-			handlePropertyChange(event);
-		}
-	}
-
 	/*
-	 * Handle changes to the preferences
+	 * Handle preference changes
 	 */
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		if (event != null) {
