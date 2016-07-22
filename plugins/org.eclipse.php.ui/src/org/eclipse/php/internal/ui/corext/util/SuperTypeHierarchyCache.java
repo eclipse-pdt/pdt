@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ITypeHierarchyChangedListener;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 
 /**
@@ -132,7 +133,7 @@ public class SuperTypeHierarchyCache {
 	 */
 	public static ITypeHierarchy getTypeHierarchy(IType type, IProgressMonitor progressMonitor) throws ModelException {
 		if (type == null || !type.exists()) {
-			return null;
+			return new TypeHierarchy();
 		}
 		ITypeHierarchy hierarchy = findTypeHierarchyInCache(type);
 		if (hierarchy == null) {
