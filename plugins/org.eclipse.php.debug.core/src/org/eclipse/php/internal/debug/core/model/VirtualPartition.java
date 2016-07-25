@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.model;
 
-import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_PARTITION;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
@@ -25,31 +25,14 @@ import org.eclipse.debug.core.model.IVariable;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class VirtualPartition implements IVariable, IVariableFacet {
-
-	/**
-	 * Partition variables provider.
-	 */
-	public interface IVariableProvider {
-
-		/**
-		 * Returns a set of variables for corresponding partition.
-		 * 
-		 * @return set of variables for corresponding partition
-		 * @throws DebugException
-		 */
-		IVariable[] getVariables() throws DebugException;
-
-	}
+public class VirtualPartition implements IVirtualPartition {
 
 	private final class Value implements IValue {
 
 		private final IDebugElement debugElement;
-		private final IVariableProvider variableProvider;
 
-		private Value(IDebugElement debugElement, IVariableProvider variableProvider) {
+		private Value(IDebugElement debugElement) {
 			this.debugElement = debugElement;
-			this.variableProvider = variableProvider;
 		}
 
 		@Override
@@ -67,6 +50,7 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 			return debugElement.getLaunch();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 			return debugElement.getAdapter(adapter);
@@ -99,6 +83,7 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 
 	}
 
+	private IVariableProvider variableProvider;
 	private IValue value;
 	private int startIndex;
 	private int endIndex;
@@ -112,7 +97,8 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 	 * @param end
 	 */
 	public VirtualPartition(IDebugElement element, IVariableProvider variableProvider, int start, int end) {
-		this.value = new Value(element, variableProvider);
+		this.value = new Value(element);
+		this.variableProvider = variableProvider;
 		this.startIndex = start;
 		this.endIndex = end;
 	}
@@ -132,6 +118,7 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 		return value.getLaunch();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
@@ -193,6 +180,11 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 	@Override
 	public void addFacets(Facet... facet) {
 		// forbidden
+	}
+
+	@Override
+	public void setProvider(IVariableProvider variableProvider) {
+		this.variableProvider = variableProvider;
 	}
 
 }
