@@ -58,16 +58,18 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	private static final String DOLOR = "$"; //$NON-NLS-1$
-	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
+	public static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
 	public static final String REFERENCE_VALUE = String.valueOf(Modifiers.AccReference);
 	public static final char QUALIFIER_SEPERATOR = ';';
 	public static final char RETURN_TYPE_SEPERATOR = ':';
-	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
+	public static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
+	public static final String EMPTY_ARRAY_VALUE = "[]"; //$NON-NLS-1$
+	public static final String ARRAY_VALUE = "[...]"; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
@@ -379,7 +381,14 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						Literal scalar = (Literal) arg.getInitialization();
 						// we need to encode all pipe characters inside string
 						// literals
-						defaultValue = scalar.getValue().replace("&", "&a").replace(PARAMETER_SEPERATOR, "&p");
+						defaultValue = scalar.getValue().replace("&", "&a").replace(PARAMETER_SEPERATOR, "&p"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					} else if (arg.getInitialization() instanceof ArrayCreation) {
+						ArrayCreation arrayCreation = (ArrayCreation) arg.getInitialization();
+						if (arrayCreation.getElements().isEmpty()) {
+							defaultValue = EMPTY_ARRAY_VALUE;
+						} else {
+							defaultValue = ARRAY_VALUE;
+						}
 					} else {
 						defaultValue = DEFAULT_VALUE;
 					}

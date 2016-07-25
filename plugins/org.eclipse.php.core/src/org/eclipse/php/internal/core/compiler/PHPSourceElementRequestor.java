@@ -47,6 +47,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.index.PhpIndexingVisitor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
@@ -58,10 +59,8 @@ import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
  */
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
-	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	private static final String VOID_RETURN_TYPE = MagicMemberUtil.VOID_RETURN_TYPE;
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace"; //$NON-NLS-1$
-	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	private static final String ANONYMOUS_CLASS_TEMPLATE = "new %s() {...}"; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -422,8 +421,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				if (arg.getInitialization() instanceof Literal) {
 					Literal scalar = (Literal) arg.getInitialization();
 					initializers[a] = scalar.getValue();
+				} else if (arg.getInitialization() instanceof ArrayCreation) {
+					ArrayCreation arrayCreation = (ArrayCreation) arg.getInitialization();
+					if (arrayCreation.getElements().isEmpty()) {
+						initializers[a] = PhpIndexingVisitor.EMPTY_ARRAY_VALUE;
+					} else {
+						initializers[a] = PhpIndexingVisitor.ARRAY_VALUE;
+					}
 				} else {
-					initializers[a] = DEFAULT_VALUE;
+					initializers[a] = PhpIndexingVisitor.DEFAULT_VALUE;
 				}
 			}
 			if (arg instanceof FormalParameterByReference) {
@@ -462,8 +468,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		declarations.push(methodDeclaration);
 
-		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME) || (parentDeclaration instanceof ClassDeclaration
-				&& mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
+		mi.isConstructor = mi.name.equalsIgnoreCase(PhpIndexingVisitor.CONSTRUCTOR_NAME)
+				|| (parentDeclaration instanceof ClassDeclaration
+						&& mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
 
 		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;

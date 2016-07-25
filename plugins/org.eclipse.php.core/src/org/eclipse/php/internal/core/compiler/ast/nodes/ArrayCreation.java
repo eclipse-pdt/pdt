@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * <pre>
  * array(1,2,3,), array('Dodo'=>'Golo','Dafna'=>'Dodidu') array($a, $b=>foo(),
- * 1=>$myClass->getFirst()) array($a, $b=>foo(), 1=>$myClass->getFirst())[0]
+ * 1=>$myClass->getFirst()), array($a, $b=>foo(), 1=>$myClass->getFirst())[0]
  */
 public class ArrayCreation extends Expression implements Dereferencable {
 
