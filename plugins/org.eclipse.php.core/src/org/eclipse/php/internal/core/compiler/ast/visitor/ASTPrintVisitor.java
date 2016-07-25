@@ -983,6 +983,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(FullyQualifiedReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getFullyQualifiedName()); //$NON-NLS-1$
+		if (s.isNullable()) {
+			parameters.put("nullable", Boolean.toString(s.isNullable())); //$NON-NLS-1$
+		}
 		xmlWriter.startTag("FullyQualifiedReference", parameters); //$NON-NLS-1$
 		return true;
 	}

@@ -143,4 +143,11 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isInheritdoc(int flags) {
 		return (flags & AccInheritdoc) != 0;
 	}
+
+	/**
+	 * @since 4.1
+	 */
+	public static boolean isNullable(int flags) {
+		return (flags & AccNullable) != 0;
+	}
 }

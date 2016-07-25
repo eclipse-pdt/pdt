@@ -3270,6 +3270,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		// handle type
 		if (formalParameter.getParameterType() != null) {
+			handleChars(formalParameter.getStart(), formalParameter.getParameterType().getStart());
 			formalParameter.getParameterType().accept(this);
 			lastPosition = formalParameter.getParameterType().getEnd();
 			insertSpace();
@@ -4741,6 +4742,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public boolean visit(NamespaceName namespaceName) {
+		if (namespaceName.isNullable()) {
+			appendToBuffer(QUESTION_MARK);
+		}
 		if (namespaceName.isGlobal()) {
 			appendToBuffer("\\"); //$NON-NLS-1$
 		}

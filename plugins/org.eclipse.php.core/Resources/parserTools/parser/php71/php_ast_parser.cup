@@ -1699,19 +1699,9 @@ optional_class_type ::=
 	RESULT = null;
 :}
 
-| fully_qualified_class_name:className
+| type_expr:type_expr
 {:
-	RESULT = className;
-:}
-
-| T_ARRAY:array
-{:
-	RESULT = new Identifier(arrayleft, arrayright, parser.ast, "array");
-:}
-
-| T_CALLABLE:callable
-{:
-	RESULT = new Identifier(callableleft, callableright, parser.ast, "callable");
+	RESULT = type_expr;
 :}
 ;
 
@@ -1760,6 +1750,7 @@ type:type
 :}
 | T_QUESTION_MARK type:type
 {:
+	type.setNullable(true);
 	RESULT = type;
 :}
 ;

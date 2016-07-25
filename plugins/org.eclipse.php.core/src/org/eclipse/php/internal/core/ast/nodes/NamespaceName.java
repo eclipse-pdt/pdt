@@ -64,11 +64,12 @@ public class NamespaceName extends Identifier {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(5);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(GLOBAL_PROPERTY);
 		properyList.add(CURRENT_PROPERTY);
+		properyList.add(NULLABLE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
@@ -150,6 +151,9 @@ public class NamespaceName extends Identifier {
 		appendInterval(buffer);
 		buffer.append(" global='").append(global).append('\''); //$NON-NLS-1$
 		buffer.append(" current='").append(current).append('\''); //$NON-NLS-1$
+		if (isNullable()) {
+			buffer.append(" nullable='").append(isNullable()).append('\''); //$NON-NLS-1$
+		}
 		buffer.append(">\n"); //$NON-NLS-1$
 		for (ASTNode node : this.segments) {
 			node.toString(buffer, TAB + tab);
