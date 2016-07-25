@@ -12,14 +12,17 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IPHPDataType;
+import org.eclipse.php.internal.debug.core.model.IVirtualPartition;
+import org.eclipse.php.internal.debug.core.model.IVirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.VirtualPartition;
-import org.eclipse.php.internal.debug.core.model.VirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
@@ -34,7 +37,8 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	protected ExpressionValue fExpressionValue;
 	protected IVariable[] fCurrentVariables = null;
 	protected IVariable[] fPreviousVariables = null;
-	protected IVariable[] fPartitions = new IVariable[] {};
+	protected Map<String, IVirtualPartition> fCurrentPartitions = new LinkedHashMap<>();
+	protected Map<String, IVirtualPartition> fPreviousPartitions = new LinkedHashMap<>();
 
 	public PHPValue(PHPDebugTarget target, Expression expression) {
 		super(target);
@@ -111,7 +115,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 		if (!hasPartitions()) {
 			return fCurrentVariables;
 		}
-		return fPartitions;
+		return fCurrentPartitions.values().toArray(new IVariable[fCurrentPartitions.size()]);
 	}
 
 	public String getValue() throws DebugException {
@@ -134,7 +138,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 *         variables, <code>false</code> otherwise
 	 */
 	protected boolean hasPartitions() {
-		return fPartitions.length > 0;
+		return fCurrentPartitions.size() > 0;
 	}
 
 	protected void update(Expression expression) {
@@ -199,7 +203,8 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	private void createPartitions() {
 		int numChild = fCurrentVariables.length;
 		int partitions = (int) Math.ceil(numChild / (double) 100);
-		fPartitions = new IVariable[partitions];
+		fPreviousPartitions = fCurrentPartitions;
+		fCurrentPartitions = new LinkedHashMap<>();
 		for (int i = 0; i < partitions; i++) {
 			int startIndex = i * ARRAY_PARTITION_BOUNDARY;
 			int endIndex = (i + 1) * ARRAY_PARTITION_BOUNDARY - 1;
@@ -207,13 +212,20 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 				endIndex = numChild - 1;
 			}
 			final IVariable[] vars = Arrays.copyOfRange(fCurrentVariables, startIndex, endIndex + 1);
-			IVariable var = new VirtualPartition(this, new IVariableProvider() {
+			IVariableProvider variableProvider = new IVariableProvider() {
 				@Override
 				public IVariable[] getVariables() throws DebugException {
 					return vars;
 				}
-			}, startIndex, endIndex);
-			fPartitions[i] = var;
+			};
+			String partitionId = String.valueOf(startIndex) + '-' + String.valueOf(endIndex);
+			IVirtualPartition partition = fPreviousPartitions.get(partitionId);
+			if (partition != null) {
+				partition.setProvider(variableProvider);
+				fCurrentPartitions.put(partitionId, partition);
+			} else {
+				fCurrentPartitions.put(partitionId, new VirtualPartition(this, variableProvider, startIndex, endIndex));
+			}
 		}
 	}
 

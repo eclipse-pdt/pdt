@@ -11,11 +11,14 @@
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.model.IVirtualPartition;
+import org.eclipse.php.internal.debug.core.model.IVirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.model.VirtualPartition;
-import org.eclipse.php.internal.debug.core.model.VirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -76,7 +79,8 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 
 	protected IVariable[] fCurrentVariables = null;
 	protected IVariable[] fPreviousVariables = null;
-	protected IVariable[] fPartitions = new IVariable[] {};
+	protected Map<String, IVirtualPartition> fCurrentPartitions = new LinkedHashMap<>();
+	protected Map<String, IVirtualPartition> fPreviousPartitions = new LinkedHashMap<>();
 
 	/**
 	 * Creates new DBGp container value.
@@ -103,7 +107,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		if (!hasPages()) {
 			return fCurrentVariables;
 		}
-		return fPartitions;
+		return fCurrentPartitions.values().toArray(new IVariable[fCurrentPartitions.size()]);
 	}
 
 	protected abstract IVariable createVariable(Node descriptor);
@@ -121,7 +125,6 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		// Reset state
 		fPreviousVariables = fCurrentVariables;
 		fCurrentVariables = null;
-		fPartitions = new IVariable[] {};
 		// Check if has any child elements
 		String childCountNumber = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
 		int childCount = 0;
@@ -143,7 +146,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	 *         <code>false</code> otherwise
 	 */
 	protected boolean hasPages() {
-		return fPartitions.length > 0;
+		return fCurrentPartitions.size() > 0;
 	}
 
 	/**
@@ -167,7 +170,8 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	 */
 	protected void fetchVariables() {
 		fCurrentVariables = new IVariable[] {};
-		fPartitions = new IVariable[] {};
+		fPreviousPartitions = fCurrentPartitions;
+		fCurrentPartitions = new LinkedHashMap<>();
 		String childCountString = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
 		int childCount = 0;
 		if (childCountString != null && childCountString.trim().length() != 0) {
@@ -219,15 +223,21 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		} else {
 			// Create multiple pages
 			int subCount = (int) Math.ceil((double) childCount / (double) pageSize);
-			fPartitions = new IVariable[subCount];
 			for (int i = 0; i < subCount; i++) {
 				int startIndex = i * pageSize;
 				int endIndex = (i + 1) * pageSize - 1;
 				if (endIndex > childCount) {
 					endIndex = childCount - 1;
 				}
-				IVariable page = new VirtualPartition(this, new DBGpPage(i), startIndex, endIndex);
-				fPartitions[i] = page;
+				String partitionId = String.valueOf(startIndex) + '-' + String.valueOf(endIndex);
+				IVirtualPartition partition = fPreviousPartitions.get(partitionId);
+				if (partition != null) {
+					partition.setProvider(new DBGpPage(i));
+					fCurrentPartitions.put(partitionId, partition);
+				} else {
+					fCurrentPartitions.put(partitionId,
+							new VirtualPartition(this, new DBGpPage(i), startIndex, endIndex));
+				}
 			}
 		}
 	}
