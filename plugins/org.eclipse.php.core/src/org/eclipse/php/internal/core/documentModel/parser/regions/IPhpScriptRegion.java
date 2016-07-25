@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -33,9 +34,9 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @throws BadLocationException
 	 *             when "from" is an invalid offset or when "length" is < 0
 	 */
-	public abstract ITextRegion[] getPhpTokens(int from, int length) throws BadLocationException;
+	public abstract @NonNull ITextRegion[] getPhpTokens(int from, int length) throws BadLocationException;
 
-	public abstract ITextRegion[] getUpdatedPhpTokens() throws BadLocationException;
+	public abstract @NonNull ITextRegion[] getUpdatedPhpTokens() throws BadLocationException;
 
 	public int getUpdatedTokensStart();
 
@@ -49,7 +50,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return region (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract ITextRegion getPhpToken(int offset) throws BadLocationException;
+	public abstract @NonNull ITextRegion getPhpToken(int offset) throws BadLocationException;
 
 	/**
 	 * returns the php partition type of the token that lay in the given offset
@@ -65,7 +66,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @param offset
 	 * @throws BadLocationException
 	 */
-	public abstract String getPartition(int offset) throws BadLocationException;
+	public abstract @NonNull String getPartition(int offset) throws BadLocationException;
 
 	/**
 	 * returns the php token type of the token that lays in the given offset
@@ -75,7 +76,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return php token type (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract String getPhpTokenType(int offset) throws BadLocationException;
+	public abstract @NonNull String getPhpTokenType(int offset) throws BadLocationException;
 
 	/**
 	 * Returns true if the given offset is in line comment

@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -43,19 +44,22 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
+	private static final ITextRegion[] EMPTY_REGION = new ITextRegion[0];
 	private PhpTokenContainer tokensContainer = new PhpTokenContainer();
 	private IProject project;
 	private int updatedTokensStart = -1;
+	private int updatedTokensEnd = -1;
 
 	public int getUpdatedTokensStart() {
+		if (updatedTokensStart == -1) {
+			return 0;
+		}
 		return updatedTokensStart;
 	}
 
 	public int getUpdatedTokensLength() {
 		return updatedTokensEnd - updatedTokensStart;
 	}
-
-	private int updatedTokensEnd = -1;
 
 	private int ST_PHP_LINE_COMMENT = -1;
 	private int ST_PHP_IN_SCRIPTING = -1;
@@ -82,7 +86,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#getPhpTokenType(int)
 	 */
-	public final String getPhpTokenType(int offset) throws BadLocationException {
+	public final @NonNull String getPhpTokenType(int offset) throws BadLocationException {
 		final ITextRegion tokenForOffset = getPhpToken(offset);
 		return tokenForOffset.getType();
 	}
@@ -90,14 +94,14 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#getPhpToken(int)
 	 */
-	public final ITextRegion getPhpToken(int offset) throws BadLocationException {
+	public final @NonNull ITextRegion getPhpToken(int offset) throws BadLocationException {
 		return tokensContainer.getToken(offset);
 	}
 
 	/**
 	 * @see IPhpScriptRegion#getPhpTokens(int, int)
 	 */
-	public final ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
+	public final @NonNull ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
 		return tokensContainer.getTokens(offset, length);
 	}
 
@@ -105,9 +109,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @throws BadLocationException
 	 * @see IPhpScriptRegion#getUpdatedPhpTokens(int, int)
 	 */
-	public ITextRegion[] getUpdatedPhpTokens() throws BadLocationException {
+	public @NonNull ITextRegion[] getUpdatedPhpTokens() throws BadLocationException {
 		if (updatedTokensStart == -1) {
-			return null;
+			return EMPTY_REGION;
 		}
 		return tokensContainer.getTokens(updatedTokensStart, updatedTokensEnd - updatedTokensStart);
 	}
@@ -115,7 +119,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#getPartition(int)
 	 */
-	public String getPartition(int offset) throws BadLocationException {
+	public @NonNull String getPartition(int offset) throws BadLocationException {
 		return tokensContainer.getPartitionType(offset);
 	}
 
@@ -146,6 +150,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			int requestStart, int lengthToReplace) {
 		isFullReparsed = true;
 		updatedTokensStart = -1;
+		updatedTokensEnd = -1;
 		try {
 			final int offset = requestStart - flatnode.getStartOffset() - getStart();
 
