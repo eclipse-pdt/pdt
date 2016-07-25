@@ -500,11 +500,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		assert region.getType() == PHPRegionContext.PHP_CONTENT;
 		assert region.getLength() > 0 && regionStart >= 0 && partitionStartOffset >= 0 && partitionLength > 0;
 
+		ITextRegion[] phpTokens;
 		StyleRange styleRange = null;
-		TextAttribute attr;
 		TextAttribute previousAttr = null;
+		TextAttribute attr = null;
+		ITextRegion prevElement = null;
 
-		ITextRegion[] phpTokens = null;
 		try {
 
 			if (!region.isFullReparsed() && (regionStart == partitionStartOffset)) {
@@ -512,7 +513,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				int from = region.getUpdatedTokensStart();
 				partitionStartOffset = from + regionStart;
 				partitionLength = region.getUpdatedTokensLength();
-				assert from >= 0 && partitionStartOffset >= 0 && partitionLength > 0;
+				assert (phpTokens.length > 0 && partitionStartOffset >= 0 && partitionLength > 0)
+						|| (phpTokens.length == 0 && partitionStartOffset >= 0 && partitionLength == 0);
 			} else {
 				// compute interval intersection between region and partition
 				int from = Math.max(0, partitionStartOffset - regionStart);
@@ -529,7 +531,6 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				phpTokens = region.getPhpTokens(from, length);
 			}
 
-			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
 				attr = getAttributeFor(element);

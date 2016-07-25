@@ -43,19 +43,22 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
+	private static final ITextRegion[] EMPTY_REGION = new ITextRegion[0];
 	private PhpTokenContainer tokensContainer = new PhpTokenContainer();
 	private IProject project;
 	private int updatedTokensStart = -1;
+	private int updatedTokensEnd = -1;
 
 	public int getUpdatedTokensStart() {
+		if (updatedTokensStart == -1) {
+			return 0;
+		}
 		return updatedTokensStart;
 	}
 
 	public int getUpdatedTokensLength() {
 		return updatedTokensEnd - updatedTokensStart;
 	}
-
-	private int updatedTokensEnd = -1;
 
 	private int ST_PHP_LINE_COMMENT = -1;
 	private int ST_PHP_IN_SCRIPTING = -1;
@@ -107,7 +110,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	public ITextRegion[] getUpdatedPhpTokens() throws BadLocationException {
 		if (updatedTokensStart == -1) {
-			return null;
+			return EMPTY_REGION;
 		}
 		return tokensContainer.getTokens(updatedTokensStart, updatedTokensEnd - updatedTokensStart);
 	}
@@ -146,6 +149,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			int requestStart, int lengthToReplace) {
 		isFullReparsed = true;
 		updatedTokensStart = -1;
+		updatedTokensEnd = -1;
 		try {
 			final int offset = requestStart - flatnode.getStartOffset() - getStart();
 
