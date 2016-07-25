@@ -1531,7 +1531,7 @@ optional_class_type ::=
 
 | T_ARRAY:array
 {:
-	TypeReference reference = new TypeReference(arrayleft, arrayright, "array");
+	TypeReference reference = new FullyQualifiedReference(arrayleft, arrayright, "array", null);
 	RESULT = reference;
 :}
 ;

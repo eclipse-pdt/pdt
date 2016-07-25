@@ -1,0 +1,27 @@
+--TEST--
+Test nullable type
+--FILE--
+<?php
+class FooBar {
+function test(?\Foo\Bar $param) : ?int{
+}
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="65">
+	<ClassDeclaration start="6" end="64" modifiers="" name="FooBar">
+		<PHPMethodDeclaration start="21" end="62" modifiers="public" name="test">
+			<ReturnType>
+				<FullyQualifiedReference start="56" end="59" name="int" nullable="true">
+				</FullyQualifiedReference>
+			</ReturnType>
+			<FormalParameter start="35" end="41" modifiers="" isMandatory="true">
+				<FullyQualifiedReference start="36" end="44" name="\Foo\Bar" nullable="true">
+					<NamespaceReference start="36" end="40" name="\Foo" global="true" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<VariableReference start="45" end="51" name="$param">
+				</VariableReference>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+</ModuleDeclaration>

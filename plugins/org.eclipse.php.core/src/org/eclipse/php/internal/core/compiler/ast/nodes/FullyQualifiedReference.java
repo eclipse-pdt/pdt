@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 public class FullyQualifiedReference extends TypeReference {
 
 	private NamespaceReference namespace;
+	private boolean nullable;
 
 	@Deprecated
 	public FullyQualifiedReference(DLTKToken token) {
@@ -60,6 +61,14 @@ public class FullyQualifiedReference extends TypeReference {
 	 */
 	public void setNamespace(NamespaceReference namespace) {
 		this.namespace = namespace;
+	}
+
+	public boolean isNullable() {
+		return nullable;
+	}
+
+	public void setNullable(boolean nullable) {
+		this.nullable = nullable;
 	}
 
 	/**

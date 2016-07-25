@@ -3400,6 +3400,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			appendToBuffer(COLON);
 			insertSpace();
 			handleChars(lastPosition, functionDeclaration.getReturnType().getStart());
+			if (functionDeclaration.getReturnType().isNullable()) {
+				appendToBuffer(QUESTION_MARK);
+			}
 			functionDeclaration.getReturnType().accept(this);
 
 			lastPosition = functionDeclaration.getReturnType().getEnd();

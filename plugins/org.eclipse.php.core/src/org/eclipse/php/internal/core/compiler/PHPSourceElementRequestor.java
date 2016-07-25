@@ -429,8 +429,16 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			if (arg instanceof FormalParameterByReference) {
 				flags[a] = IPHPModifiers.AccReference;
 			}
-			if (arg instanceof FormalParameter && ((FormalParameter) arg).isVariadic()) {
-				mi.modifiers |= IPHPModifiers.AccVariadic;
+			if (arg instanceof FormalParameter) {
+				FormalParameter fp = (FormalParameter) arg;
+				if (fp.isVariadic()) {
+					mi.modifiers |= IPHPModifiers.AccVariadic;
+				}
+				if (fp.getParameterType() instanceof FullyQualifiedReference) {
+					if (((FullyQualifiedReference) fp.getParameterType()).isNullable()) {
+						flags[a] |= IPHPModifiers.AccNullable;
+					}
+				}
 			}
 		}
 
@@ -476,7 +484,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 
 		mi.parameterTypes = processParameterTypes(methodDeclaration);
-		mi.returnType = processReturnType(methodDeclaration);
+		modifyReturnTypeInfo(methodDeclaration, mi);
 
 		// modify method info if needed by extensions
 		for (PHPSourceElementRequestorExtension extension : extensions) {
@@ -530,20 +538,24 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return parameterType;
 	}
 
-	private String processReturnType(MethodDeclaration methodDeclaration) {
+	private void modifyReturnTypeInfo(MethodDeclaration methodDeclaration, ISourceElementRequestor.MethodInfo mi) {
 		PHPMethodDeclaration phpMethodDeclaration = (PHPMethodDeclaration) methodDeclaration;
 		PHPDocBlock docBlock = phpMethodDeclaration.getPHPDoc();
-		if (phpMethodDeclaration.getReturnType() != null) {
-			return phpMethodDeclaration.getReturnType().getName();
+		TypeReference returnType = phpMethodDeclaration.getReturnType();
+		if (returnType != null) {
+			mi.returnType = returnType.getName();
+			if (returnType instanceof FullyQualifiedReference) {
+				if (((FullyQualifiedReference) returnType).isNullable()) {
+					mi.modifiers |= IPHPModifiers.AccNullable;
+				}
+			}
 		} else if (docBlock != null) {
 			for (PHPDocTag tag : docBlock.getTags(TagKind.RETURN)) {
 				if (tag.getTypeReferences().size() > 0) {
-					return PHPModelUtils.appendTypeReferenceNames(tag.getTypeReferences());
+					mi.returnType = PHPModelUtils.appendTypeReferenceNames(tag.getTypeReferences());
 				}
 			}
 		}
-
-		return null;
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
