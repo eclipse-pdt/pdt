@@ -102,7 +102,9 @@ public class DBGpUtils {
 			if (resp.getErrorCode() == DBGpResponse.ERROR_OK
 					|| resp.getErrorCode() == DBGpResponse.ERROR_CANT_GET_PROPERTY) {
 				return true;
-			} else {
+			}
+			// log it if it is not a problem with performing eval
+			else if (resp.getErrorCode() != DBGpResponse.ERROR_CANT_PERFORM_EVAL) {
 				DBGpLogger.logError("DBGp Response Error: " + resp.getCommand() //$NON-NLS-1$
 						+ ":=" + resp.getErrorCode() + " msg:" //$NON-NLS-1$ //$NON-NLS-2$
 						+ resp.getErrorMessage(), caller, null);

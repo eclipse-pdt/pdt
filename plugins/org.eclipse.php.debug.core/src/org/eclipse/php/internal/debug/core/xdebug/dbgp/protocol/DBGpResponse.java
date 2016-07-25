@@ -136,6 +136,7 @@ public class DBGpResponse {
 	 * "an internal exception in the debugger" }, { 999, "unknown error" },
 	 */
 	public static final int ERROR_OK = 0;
+	public static final int ERROR_CANT_PERFORM_EVAL = 206;
 	public static final int ERROR_CANT_GET_PROPERTY = 300;
 
 	// own internal error codes
