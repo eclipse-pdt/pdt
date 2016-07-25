@@ -12,14 +12,14 @@ function foo(): \Test\Exception {
 <ModuleDeclaration start="0" end="97">
 	<PHPMethodDeclaration start="6" end="31" modifiers="" name="foo">
 		<ReturnType>
-			<TypeReference start="22" end="27" name="array">
-			</TypeReference>
+			<FullyQualifiedReference start="22" end="27" name="array">
+			</FullyQualifiedReference>
 		</ReturnType>
 	</PHPMethodDeclaration>
 	<PHPMethodDeclaration start="32" end="60" modifiers="" name="foo">
 		<ReturnType>
-			<TypeReference start="48" end="56" name="callable">
-			</TypeReference>
+			<FullyQualifiedReference start="48" end="56" name="callable">
+			</FullyQualifiedReference>
 		</ReturnType>
 	</PHPMethodDeclaration>
 	<PHPMethodDeclaration start="61" end="96" modifiers="" name="foo">

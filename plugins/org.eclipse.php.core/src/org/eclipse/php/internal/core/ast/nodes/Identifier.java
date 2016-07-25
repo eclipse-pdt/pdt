@@ -33,12 +33,16 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class Identifier extends VariableBase {
 
 	private String name;
+	private boolean nullable;
 
 	/**
 	 * The "identifier" structural property of this node type.
 	 */
 	public static final SimplePropertyDescriptor NAME_PROPERTY = new SimplePropertyDescriptor(Identifier.class, "name", //$NON-NLS-1$
 			String.class, MANDATORY);
+	public static final SimplePropertyDescriptor NULLABLE_PROPERTY = new SimplePropertyDescriptor(Identifier.class,
+			"nullable", //$NON-NLS-1$
+			Boolean.class, MANDATORY);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -47,8 +51,9 @@ public class Identifier extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(2);
 		list.add(NAME_PROPERTY);
+		list.add(NULLABLE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
 
@@ -87,7 +92,11 @@ public class Identifier extends VariableBase {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Identifier"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" name='").append(name).append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" name='").append(name); //$NON-NLS-1$
+		if (isNullable()) {
+			buffer.append(" nullable='").append(nullable); //$NON-NLS-1$
+		}
+		buffer.append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -105,7 +114,7 @@ public class Identifier extends VariableBase {
 		if (getClass() != obj.getClass())
 			return false;
 		final Identifier other = (Identifier) obj;
-		return this.name == other.name;
+		return this.name == other.name && this.nullable == other.nullable;
 	}
 
 	public int getType() {
@@ -114,6 +123,10 @@ public class Identifier extends VariableBase {
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isNullable() {
+		return nullable;
 	}
 
 	/*
@@ -127,6 +140,7 @@ public class Identifier extends VariableBase {
 	@Override
 	protected ASTNode clone0(AST target) {
 		Identifier result = new Identifier(this.getStart(), this.getEnd(), target, this.getName());
+		result.setNullable(this.isNullable());
 		return result;
 	}
 
@@ -151,6 +165,19 @@ public class Identifier extends VariableBase {
 		return super.internalGetSetObjectProperty(property, get, value);
 	}
 
+	@Override
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+		if (property == NULLABLE_PROPERTY) {
+			if (get) {
+				return isNullable();
+			} else {
+				setNullable((boolean) value);
+				return false;
+			}
+		}
+		return super.internalGetSetBooleanProperty(property, get, value);
+	}
+
 	public final void setName(String value) {
 		if (value == null/* || value.length() == 0 */) {
 			throw new IllegalArgumentException();
@@ -159,6 +186,12 @@ public class Identifier extends VariableBase {
 		preValueChange(NAME_PROPERTY);
 		this.name = value;
 		postValueChange(NAME_PROPERTY);
+	}
+
+	public final void setNullable(boolean value) {
+		preValueChange(NULLABLE_PROPERTY);
+		this.nullable = value;
+		postValueChange(NULLABLE_PROPERTY);
 	}
 
 	/**

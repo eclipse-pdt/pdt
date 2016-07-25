@@ -1,0 +1,59 @@
+--TEST--
+Test nullable type
+--FILE--
+<?php
+class FooBar {
+function test(?\Foo\Bar $param) : ?int{
+}
+}
+--EXPECT--
+<Program start='0' length='64'>
+	<Statements>
+		<ClassDeclaration start='6' length='58' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='6' name='FooBar'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='19' length='45' isCurly='true'>
+				<MethodDeclaration start='21' length='41' modifier='public'>
+					<FunctionDeclaration start='21' length='41' isReference='false'>
+						<FunctionName>
+							<Identifier start='30' length='4' name='test'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='35' length='16' isMandatory='false'>
+								<Type>
+									<NamespaceName start='36' length='8' global='true' current='false' nullable='true'>
+										<Identifier start='37' length='3' name='Foo'/>
+										<Identifier start='41' length='3' name='Bar'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='45' length='6' isDollared='true'>
+										<Identifier start='46' length='5' name='param'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<ReturnType>
+							<NamespaceName start='56' length='3' global='false' current='false' nullable='true'>
+								<Identifier start='56' length='3' name='int'/>
+							</NamespaceName>
+						</ReturnType>
+						<FunctionBody>
+							<Block start='59' length='3' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -57,11 +57,18 @@ public interface IPHPModifiers extends Modifiers {
 	public static final int AccInheritdoc = (1 << Modifiers.USER_MODIFIER + 9);
 
 	/**
+	 * Indicates nullable parameter/return type
+	 * 
+	 * @since 4.1
+	 */
+	public static final int AccNullable = (1 << Modifiers.USER_MODIFIER + 10);
+
+	/**
 	 * All access modifiers as one for compiler validation
 	 * 
 	 * @since 4.0
 	 */
 	public static final int AccessMask = AccPublic | AccPrivate | AccProtected;
 
-	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 10;
+	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 11;
 }

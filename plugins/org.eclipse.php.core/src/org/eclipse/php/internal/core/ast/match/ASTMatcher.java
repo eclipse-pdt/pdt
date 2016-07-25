@@ -588,7 +588,7 @@ public class ASTMatcher {
 		}
 		Identifier o = (Identifier) other;
 
-		return safeEquals(node.getName(), o.getName());
+		return safeEquals(node.getName(), o.getName()) && safeEquals(node.isNullable(), o.isNullable());
 	}
 
 	public boolean match(IfStatement node, Object other) {

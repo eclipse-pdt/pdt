@@ -1,0 +1,19 @@
+--TEST--
+Test nullable types
+--FILE--
+<?php
+interface Fooable {
+	function 		foo():			 ?    Fooable;
+}
+
+interface LooseFoo extends Fooable {
+	function foo(		? Fooable 		$f);
+}
+--EXPECT--
+<?php
+interface Fooable {
+	function foo(): ?Fooable;
+}
+interface LooseFoo extends Fooable {
+	function foo(?Fooable $f);
+}
