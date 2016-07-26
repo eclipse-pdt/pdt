@@ -27,6 +27,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
@@ -75,7 +76,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
 							if (variable != null) {
 								variable = variable.trim();
-								variable = "<B>" + variable + " = </B>" + getPropertyValue(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
+								variable = "<B>" + variable + " = </B>" + getByProperty(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						} catch (BadLocationException e) {
 							Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
@@ -88,6 +89,10 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		return null;
 	}
 
+	public IHoverMessageDecorator getMessageDecorator() {
+		return null;
+	}
+
 	/**
 	 * Returns the variable value.
 	 * 
@@ -95,17 +100,14 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 	 *            The variable name
 	 * @return
 	 */
-	protected String getValueByEval(DBGpTarget debugTarget, String expression) {
+	protected String getByEval(DBGpTarget debugTarget, String expression) {
 		String value = null;
-		Node resp = debugTarget.eval(expression); // note this is a synchronous
-													// call
+		Node resp = debugTarget.eval(expression);
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
 		IVariable tempVar = new DBGpEvalVariable(debugTarget, expression, resp, -1);
-
 		IValue val = null;
-
 		try {
 			val = tempVar.getValue();
 			if (val != null) {
@@ -113,32 +115,32 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 			}
 		} catch (DebugException e) {
 		}
-
 		if (value != null && value.length() == 0) {
 			value = PHPDebugUIMessages.XDebugHover_empty;
 			return value;
 		}
-
 		if (value != null) {
 			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			// value = value.replaceAll("\n", "<br>");
 		}
-
 		return value;
 	}
 
-	protected String getPropertyValue(DBGpStackFrame context, String variable) {
+	protected String getByProperty(DBGpStackFrame context, String variable) {
 		String value = null;
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
-		Node resp = debugTarget.getProperty(variable, context.getStackLevel(), 0);
+		String stackLevel = context.getStackLevel();
+		Node resp = debugTarget.getProperty(variable, stackLevel, 0);
+		if (resp == null || DBGpResponse.REASON_ERROR.equals(resp.getNodeName())) {
+			// Check if it is not super global property
+			stackLevel = "-1"; //$NON-NLS-1$
+			resp = debugTarget.getProperty(variable, stackLevel, 0);
+		}
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpStackVariable(debugTarget, resp, -1);
-
+		IVariable tempVar = new DBGpStackVariable(debugTarget, resp, Integer.valueOf(stackLevel));
 		IValue val = null;
-
 		try {
 			val = tempVar.getValue();
 			if (val != null) {
@@ -146,21 +148,15 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 			}
 		} catch (DebugException e) {
 		}
-
 		if (value != null && value.length() == 0) {
 			value = PHPDebugUIMessages.XDebugHover_empty;
 			return value;
 		}
-
 		if (value != null) {
 			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			// value = value.replaceAll("\n", "<br>");
 		}
 		return value;
 	}
 
-	public IHoverMessageDecorator getMessageDecorator() {
-		return null;
-	}
 }
