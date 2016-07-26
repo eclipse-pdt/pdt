@@ -1,0 +1,20 @@
+--TEST--
+Test multiple catch statements
+--FILE--
+<?php
+try {
+	// Some code...
+} 		catch (ExceptionType1 			|        ExceptionType2|ExceptionType3                   $e) {
+	// Code to handle the exception
+} catch ( 			\Exception $e ) {
+	// ...
+}
+--EXPECT--
+<?php
+try {
+	// Some code...
+} catch ( ExceptionType1 | ExceptionType2 | ExceptionType3 $e ) {
+	// Code to handle the exception
+} catch ( \Exception $e ) {
+	// ...
+}

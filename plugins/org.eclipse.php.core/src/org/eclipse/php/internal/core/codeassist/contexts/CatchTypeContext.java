@@ -50,17 +50,9 @@ public class CatchTypeContext extends CatchContext {
 			return false;
 		}
 
-		startPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, startPosition + 1); // +
-																										// 1
-																										// for
-																										// the
-																										// '('
-		int endPosition = PHPTextSequenceUtilities.readIdentifierEndIndex(getPhpVersion(), statementText, startPosition,
-				false);
-		// String className = statementText.subSequence(startPosition,
-		// endPosition).toString();
-
-		if (endPosition != statementText.length()) {
+		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, statementText.length() - 1,
+				true);
+		if (statementText.charAt(startPosition) == '$') {
 			return false;
 		}
 		return true;

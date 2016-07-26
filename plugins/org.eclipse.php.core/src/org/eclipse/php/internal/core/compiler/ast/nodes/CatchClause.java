@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -31,7 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class CatchClause extends Statement {
 
-	private final TypeReference className;
+	private final List<TypeReference> classNames;
 	private final VariableReference variable;
 	private final Block statement;
 
@@ -39,7 +42,17 @@ public class CatchClause extends Statement {
 		super(start, end);
 
 		assert className != null && variable != null && statement != null;
-		this.className = className;
+		this.classNames = Collections.singletonList(className);
+		this.variable = variable;
+		this.statement = statement;
+	}
+
+	public CatchClause(int start, int end, List<TypeReference> classNames, VariableReference variable,
+			Block statement) {
+		super(start, end);
+
+		assert classNames != null && !classNames.isEmpty() && variable != null && statement != null;
+		this.classNames = classNames;
 		this.variable = variable;
 		this.statement = statement;
 	}
@@ -47,7 +60,9 @@ public class CatchClause extends Statement {
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
-			className.traverse(visitor);
+			for (TypeReference typeReference : classNames) {
+				typeReference.traverse(visitor);
+			}
 			variable.traverse(visitor);
 			statement.traverse(visitor);
 		}
@@ -58,8 +73,13 @@ public class CatchClause extends Statement {
 		return ASTNodeKinds.CATCH_CLAUSE;
 	}
 
+	@Deprecated
 	public TypeReference getClassName() {
-		return className;
+		return classNames.get(0);
+	}
+
+	public List<TypeReference> getClassNames() {
+		return classNames;
 	}
 
 	public Block getStatement() {

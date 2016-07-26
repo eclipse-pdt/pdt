@@ -2676,12 +2676,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertSpace();
 		}
 		lineWidth += 5;
-		handleChars(catchClause.getStart() + 5, catchClause.getClassName().getStart());
+		handleChars(catchClause.getStart() + 5, catchClause.getClassNames().get(0).getStart());
 
-		// handle the catch identifier
-		catchClause.getClassName().accept(this);
+		// handle the catch identifiers
+		catchClause.getClassNames().get(0).accept(this);
+		for (int i = 1; i < catchClause.getClassNames().size(); i++) {
+			handleChars(catchClause.getClassNames().get(i - 1).getEnd(), catchClause.getClassNames().get(i).getStart());
+			insertSpace();
+			appendToBuffer('|');
+			insertSpace();
+			catchClause.getClassNames().get(i).accept(this);
+		}
+
 		insertSpace();
-		handleChars(catchClause.getClassName().getEnd(), catchClause.getVariable().getStart());
+		handleChars(catchClause.getClassNames().get(catchClause.getClassNames().size() - 1).getEnd(),
+				catchClause.getVariable().getStart());
 		catchClause.getVariable().accept(this);
 
 		// set the catch closing parn spaces

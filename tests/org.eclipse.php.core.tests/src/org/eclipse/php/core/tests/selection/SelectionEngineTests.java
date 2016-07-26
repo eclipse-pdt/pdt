@@ -27,6 +27,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceRange;
+import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
@@ -49,7 +50,7 @@ public class SelectionEngineTests {
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
-	protected static final char SELECTION_CHAR = '|';
+	protected static final String SELECTION_CHAR = "|";
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 
@@ -65,6 +66,10 @@ public class SelectionEngineTests {
 		TESTS.put(PHPVersion.PHP7_0,
 				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
 						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7" });
+		TESTS.put(PHPVersion.PHP7_1,
+				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
+						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
+						"/workspace/selection/php71" });
 	};
 
 	protected IProject project;
@@ -173,15 +178,17 @@ public class SelectionEngineTests {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected ISourceRange createFile(String data) throws Exception {
-		int left = data.indexOf(SELECTION_CHAR);
+	protected ISourceRange createFile(PdttFile pdttFile) throws Exception {
+		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : SELECTION_CHAR;
+		String data = pdttFile.getFile();
+		int left = data.indexOf(cursor);
 		if (left == -1) {
 			throw new IllegalArgumentException("Selection characters are not set");
 		}
 		// replace the left character
 		data = data.substring(0, left) + data.substring(left + 1);
 
-		int right = data.indexOf(SELECTION_CHAR);
+		int right = data.indexOf(cursor);
 		if (right == -1) {
 			throw new IllegalArgumentException("Selection is not closed");
 		}
@@ -197,7 +204,7 @@ public class SelectionEngineTests {
 	}
 
 	protected IModelElement[] getSelection(CodeAssistPdttFile pdttFile) throws Exception {
-		ISourceRange range = createFile(pdttFile.getFile());
+		ISourceRange range = createFile(pdttFile);
 		for (int i = 0, len = pdttFile.getOtherFiles().length; i < len; i++) {
 			otherFiles.add(TestUtils.createFile(project, "FILE" + i + ".php", pdttFile.getOtherFile(i)));
 		}
@@ -206,4 +213,10 @@ public class SelectionEngineTests {
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
 		return elements;
 	}
+
+	private static String getCursor(PdttFile pdttFile) {
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("cursor");
+	}
+
 }
