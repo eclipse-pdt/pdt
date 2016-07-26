@@ -1,19 +1,11 @@
 --TEST--
-Test formal parameter simple types
+Test formal parameter simple type
 --PREFERENCES--
 org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?php
 class FooBar {}
-function test(| $param){
+function test(boo| $param){
 }
 --EXPECT--
-keyword(self)
-keyword(array)
-keyword(callable)
 keyword(bool)
-keyword(float)
-keyword(int)
-keyword(string)
-keyword(parent)
-keyword(Closure)

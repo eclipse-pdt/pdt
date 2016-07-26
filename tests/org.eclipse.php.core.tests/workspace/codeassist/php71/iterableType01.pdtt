@@ -1,0 +1,11 @@
+--TEST--
+Test iterable type
+--FILE--
+<?php
+function foo(iterab| $iterable) {
+    foreach ($iterable as $value) {
+        // ...
+    }
+}
+--EXPECT--
+keyword(iterable)
