@@ -257,8 +257,8 @@ public class PhpElementResolver implements IElementResolver {
 							defaultValue = null;
 						}
 						if (defaultValue != null) {
-							defaultValue = defaultValue.replace("&p", PhpIndexingVisitor.PARAMETER_SEPERATOR)
-									.replace("&a", "&");
+							defaultValue = defaultValue.replace("&p", PhpIndexingVisitor.PARAMETER_SEPERATOR) //$NON-NLS-1$
+									.replace("&a", "&"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						int modifiers = 0;
 						if (values.length == 4) {
