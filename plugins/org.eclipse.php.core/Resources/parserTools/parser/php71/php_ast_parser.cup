@@ -312,6 +312,7 @@ non terminal VariableBase callable_expr;
 non terminal VariableBase dereferencable_scalar;
 non terminal List catches_list;
 non terminal List non_empty_catches_list;
+non terminal List catch_name_list;
 non terminal CatchClause catch_clause;
 non terminal FunctionDeclaration unticked_function_declaration_statement;
 non terminal Statement unticked_class_declaration_statement;
@@ -1168,12 +1169,26 @@ catch_clause:catch_statement
 ;
 
 catch_clause ::=
-T_CATCH:catch_word T_OPEN_PARENTHESE fully_qualified_class_name:className T_VARIABLE:var T_CLOSE_PARENTHESE
+T_CATCH:catch_word T_OPEN_PARENTHESE catch_name_list:catch_name_list T_VARIABLE:var T_CLOSE_PARENTHESE
  T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd
 {:
-	RESULT = new CatchClause(catch_wordleft, catchBlockEndright, parser.ast, className,
+	RESULT = new CatchClause(catch_wordleft, catchBlockEndright, parser.ast, catch_name_list,
 		new Variable(varleft, varright, parser.ast, var),
 		new Block(catchBlockStartleft, catchBlockEndright, parser.ast, catchList));
+:}
+;
+
+catch_name_list ::=
+name:name
+{:
+	List list = new LinkedList();
+	list.add(name);
+	RESULT = list;
+:}
+| catch_name_list:list T_OR name:name
+{:
+	list.add(name);
+	RESULT = list;
 :}
 ;
 

@@ -1,0 +1,60 @@
+--TEST--
+Test multiple catch
+--FILE--
+<?php
+try {
+	// Some code...
+} catch ( \DateTime | \Foo\Exception | ExceptionType3 $e ) {
+	// Some code...
+} catch ( \Exception $e ) {
+	// ...
+}
+--EXPECT--
+<Program start='0' length='144'>
+	<Statements>
+		<TryStatement start='6' length='138'>
+			<Block start='10' length='20' isCurly='true'>
+			</Block>
+			<CatchClause start='31' length='77'>
+				<ClassName>
+					<NamespaceName start='39' length='9' global='true' current='false'>
+						<Identifier start='40' length='8' name='DateTime'/>
+					</NamespaceName>
+				</ClassName>
+				<ClassName>
+					<NamespaceName start='51' length='14' global='true' current='false'>
+						<Identifier start='52' length='3' name='Foo'/>
+						<Identifier start='56' length='9' name='Exception'/>
+					</NamespaceName>
+				</ClassName>
+				<ClassName>
+					<NamespaceName start='68' length='14' global='false' current='false'>
+						<Identifier start='68' length='14' name='ExceptionType3'/>
+					</NamespaceName>
+				</ClassName>
+				<Variable start='83' length='2' isDollared='true'>
+					<Identifier start='84' length='1' name='e'/>
+				</Variable>
+				<Block start='88' length='20' isCurly='true'>
+				</Block>
+			</CatchClause>
+			<CatchClause start='109' length='35'>
+				<ClassName>
+					<NamespaceName start='117' length='10' global='true' current='false'>
+						<Identifier start='118' length='9' name='Exception'/>
+					</NamespaceName>
+				</ClassName>
+				<Variable start='128' length='2' isDollared='true'>
+					<Identifier start='129' length='1' name='e'/>
+				</Variable>
+				<Block start='133' length='11' isCurly='true'>
+				</Block>
+			</CatchClause>
+		</TryStatement>
+	</Statements>
+	<Comments>
+		<Comment start='13' length='16' commentType='singleLine'/>
+		<Comment start='91' length='16' commentType='singleLine'/>
+		<Comment start='136' length='7' commentType='singleLine'/>
+	</Comments>
+</Program>

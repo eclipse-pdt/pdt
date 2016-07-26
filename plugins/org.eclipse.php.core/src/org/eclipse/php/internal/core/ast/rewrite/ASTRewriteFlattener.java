@@ -263,7 +263,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(CatchClause catchClause) {
 		result.append("catch ("); //$NON-NLS-1$
-		catchClause.getClassName().accept(this);
+		catchClause.getClassNames().get(0).accept(this);
+		for (int i = 1; i < catchClause.getClassNames().size(); i++) {
+			result.append(" | "); //$NON-NLS-1$
+			Expression className = catchClause.getClassNames().get(0);
+			className.accept(this);
+		}
 		result.append(" "); //$NON-NLS-1$
 		catchClause.getVariable().accept(this);
 		result.append(") "); //$NON-NLS-1$

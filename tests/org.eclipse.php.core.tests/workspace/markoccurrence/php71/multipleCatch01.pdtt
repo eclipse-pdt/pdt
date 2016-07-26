@@ -1,0 +1,14 @@
+--TEST--
+Test multiple catch
+--FILE--
+<?php
+class MyTest {
+	function function_name(%ExceptionType2% $param) {
+		new %ExceptionType2%();
+		try {
+		} catch (ExceptionType1 | Exception | %ExceptionType2%| $e) {
+		} catch (\Exception $e) {
+		}
+	}
+}
+--EXPECT--
