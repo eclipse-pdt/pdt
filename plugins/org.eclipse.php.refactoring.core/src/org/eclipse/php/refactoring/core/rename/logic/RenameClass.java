@@ -134,7 +134,9 @@ public class RenameClass extends AbstractRename {
 	}
 
 	public boolean visit(CatchClause catchStatement) {
-		checkIdentifier((Identifier) catchStatement.getClassName());
+		for (Expression className : catchStatement.getClassNames()) {
+			checkIdentifier((Identifier) className);
+		}
 		return true;
 	}
 

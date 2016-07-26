@@ -1,0 +1,22 @@
+--TEST--
+Test function return type
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+
+try {
+	// Some code...
+} catch (Exception |runt_| ErrorException $e) {
+	// Code to handle the exception
+}
+--EXPECT--
+<?php
+
+try {
+	// Some code...
+} catch (Exception |RuntimeException| ErrorException $e) {
+	// Code to handle the exception
+}

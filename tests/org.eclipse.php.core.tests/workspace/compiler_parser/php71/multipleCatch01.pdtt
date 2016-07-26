@@ -1,0 +1,38 @@
+--TEST--
+Test multiple catch
+--FILE--
+<?php
+try {
+	// Some code...
+} catch ( \DateTime | \Foo\Exception | ExceptionType3 $e ) {
+	// Some code...
+} catch ( \Exception $e ) {
+	// ...
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="145">
+	<TryStatement start="6" end="144">
+		<CatchClause start="31" end="108">
+			<FullyQualifiedReference start="39" end="48" name="\DateTime">
+				<NamespaceReference start="39" end="40" name="\" global="true" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<FullyQualifiedReference start="51" end="65" name="\Foo\Exception">
+				<NamespaceReference start="51" end="55" name="\Foo" global="true" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<FullyQualifiedReference start="68" end="82" name="ExceptionType3">
+			</FullyQualifiedReference>
+			<VariableReference start="83" end="85" name="$e">
+			</VariableReference>
+		</CatchClause>
+		<CatchClause start="109" end="144">
+			<FullyQualifiedReference start="117" end="127" name="\Exception">
+				<NamespaceReference start="117" end="118" name="\" global="true" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<VariableReference start="128" end="130" name="$e">
+			</VariableReference>
+		</CatchClause>
+	</TryStatement>
+</ModuleDeclaration>

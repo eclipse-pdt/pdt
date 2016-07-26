@@ -31,15 +31,16 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class CatchClause extends Statement {
 
-	private Expression className;
+	private final ASTNode.NodeList<Expression> classNames = new ASTNode.NodeList<Expression>(CLASS_NAMES_PROPERTY);
 	private Variable variable;
 	private Block body;
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
-			"className", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor CLASS_NAMES_PROPERTY = new ChildListPropertyDescriptor(
+			CatchClause.class, "classNames", //$NON-NLS-1$
+			Expression.class, CYCLE_RISK);
 	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
 			"variable", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
@@ -53,7 +54,7 @@ public class CatchClause extends Statement {
 
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
-		properyList.add(CLASS_NAME_PROPERTY);
+		properyList.add(CLASS_NAMES_PROPERTY);
 		properyList.add(VARIABLE_PROPERTY);
 		properyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -69,11 +70,31 @@ public class CatchClause extends Statement {
 			throw new IllegalArgumentException();
 		}
 
-		this.className = className;
+		this.classNames.add(className);
 		this.variable = variable;
 		this.body = statement;
 
-		className.setParent(this, CLASS_NAME_PROPERTY);
+		variable.setParent(this, VARIABLE_PROPERTY);
+		statement.setParent(this, BODY_PROPERTY);
+	}
+
+	public CatchClause(int start, int end, AST ast, List<Expression> classNames, Variable variable, Block statement) {
+		super(start, end, ast);
+
+		if (variable == null || statement == null || classNames == null || classNames.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+
+		for (Expression className : classNames) {
+			if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
+				throw new IllegalArgumentException();
+			}
+		}
+
+		this.classNames.addAll(classNames);
+		this.variable = variable;
+		this.body = statement;
+
 		variable.setParent(this, VARIABLE_PROPERTY);
 		statement.setParent(this, BODY_PROPERTY);
 	}
@@ -91,20 +112,26 @@ public class CatchClause extends Statement {
 	}
 
 	public void childrenAccept(Visitor visitor) {
-		className.accept(visitor);
+		for (Expression className : classNames) {
+			className.accept(visitor);
+		}
 		variable.accept(visitor);
 		body.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		className.traverseTopDown(visitor);
+		for (Expression className : classNames) {
+			className.traverseTopDown(visitor);
+		}
 		variable.traverseTopDown(visitor);
 		body.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		className.traverseBottomUp(visitor);
+		for (Expression className : classNames) {
+			className.traverseBottomUp(visitor);
+		}
 		variable.traverseBottomUp(visitor);
 		body.traverseBottomUp(visitor);
 		accept(visitor);
@@ -114,10 +141,12 @@ public class CatchClause extends Statement {
 		buffer.append(tab).append("<CatchClause"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		buffer.append(TAB).append(tab).append("<ClassName>\n"); //$NON-NLS-1$
-		className.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n"); //$NON-NLS-1$
-		buffer.append(TAB).append(tab).append("</ClassName>\n"); //$NON-NLS-1$
+		for (Expression className : classNames) {
+			buffer.append(TAB).append(tab).append("<ClassName>\n"); //$NON-NLS-1$
+			className.toString(buffer, TAB + TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(TAB).append(tab).append("</ClassName>\n"); //$NON-NLS-1$
+		}
 		variable.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		body.toString(buffer, TAB + tab);
@@ -134,8 +163,13 @@ public class CatchClause extends Statement {
 	 * 
 	 * @return the exception variable declaration node
 	 */
+	@Deprecated
 	public Expression getClassName() {
-		return this.className;
+		return this.classNames.get(0);
+	}
+
+	public List<Expression> getClassNames() {
+		return classNames;
 	}
 
 	/**
@@ -155,10 +189,7 @@ public class CatchClause extends Statement {
 		if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
 			throw new IllegalArgumentException();
 		}
-		ASTNode oldChild = this.className;
-		preReplaceChild(oldChild, className, CLASS_NAME_PROPERTY);
-		this.className = className;
-		postReplaceChild(oldChild, className, CLASS_NAME_PROPERTY);
+		this.classNames.add(className);
 	}
 
 	/**
@@ -236,10 +267,10 @@ public class CatchClause extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final Expression className = ASTNode.copySubtree(target, getClassName());
+		final List<Expression> classNames = ASTNode.copySubtrees(target, getClassNames());
 		final Variable variable = ASTNode.copySubtree(target, getVariable());
 
-		CatchClause result = new CatchClause(this.getStart(), this.getEnd(), target, className, variable, body);
+		CatchClause result = new CatchClause(this.getStart(), this.getEnd(), target, classNames, variable, body);
 		return result;
 	}
 
@@ -248,18 +279,16 @@ public class CatchClause extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	/*
-	 * (omit javadoc for this method) Method declared on ASTNode.
-	 */
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
-		if (property == CLASS_NAME_PROPERTY) {
-			if (get) {
-				return getClassName();
-			} else {
-				setClassName((Expression) child);
-				return null;
-			}
+	@Override
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == CLASS_NAMES_PROPERTY) {
+			return getClassNames();
 		}
+		return super.internalGetChildListProperty(property);
+	}
+
+	@Override
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == VARIABLE_PROPERTY) {
 			if (get) {
 				return getVariable();

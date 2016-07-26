@@ -289,6 +289,7 @@ non terminal Expression dereferencable_scalar;
 non terminal List catches_list;
 non terminal List non_empty_catches_list;
 non terminal CatchClause catch_clause;
+non terminal List<TypeReference> catch_name_list;
 non terminal PHPMethodDeclaration unticked_function_declaration_statement;
 non terminal Statement unticked_class_declaration_statement;
 non terminal CompilerAstParser.ModifierDocPair class_entry_type;
@@ -1350,12 +1351,26 @@ catch_clause:catch_statement
 ;
 
 catch_clause ::=
-T_CATCH:catch_word T_OPEN_PARENTHESE fully_qualified_class_name:className T_VARIABLE:var T_CLOSE_PARENTHESE
+T_CATCH:catch_word T_OPEN_PARENTHESE catch_name_list:catch_name_list T_VARIABLE:var T_CLOSE_PARENTHESE
  T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd
 {:
 	Block catchBlock = new Block(catchBlockStartleft, catchBlockEndright, catchList);
 	VariableReference variable = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	RESULT = new CatchClause(catch_wordleft, catchBlockEndright, className, variable, catchBlock);
+	RESULT = new CatchClause(catch_wordleft, catchBlockEndright, catch_name_list, variable, catchBlock);
+:}
+;
+
+catch_name_list ::=
+name:name
+{:
+	List list = new LinkedList<TypeReference>();
+	list.add(name);
+	RESULT = list;
+:}
+| catch_name_list:list T_OR name:name
+{:
+	list.add(name);
+	RESULT = list;
 :}
 ;
 
