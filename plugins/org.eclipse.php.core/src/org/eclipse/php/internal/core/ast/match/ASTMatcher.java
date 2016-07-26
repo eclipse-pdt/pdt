@@ -346,7 +346,7 @@ public class ASTMatcher {
 		}
 		CatchClause o = (CatchClause) other;
 
-		return (safeSubtreeMatch(node.getClassName(), o.getClassName())
+		return (safeSubtreeListMatch(node.getClassNames(), o.getClassNames())
 				&& safeSubtreeMatch(node.getVariable(), o.getVariable())
 				&& safeSubtreeMatch(node.getBody(), o.getBody()));
 	}

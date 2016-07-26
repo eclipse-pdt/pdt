@@ -136,9 +136,11 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(CatchClause catchStatement) {
-		Expression className = catchStatement.getClassName();
-		if (className instanceof Identifier) {
-			dealIdentifier((Identifier) className);
+		List<Expression> classNames = catchStatement.getClassNames();
+		for (Expression className : classNames) {
+			if (className instanceof Identifier) {
+				dealIdentifier((Identifier) className);
+			}
 		}
 		return true;
 	}

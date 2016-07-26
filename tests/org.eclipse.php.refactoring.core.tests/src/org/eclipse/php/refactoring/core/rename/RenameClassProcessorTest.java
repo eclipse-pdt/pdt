@@ -23,7 +23,7 @@ import org.junit.Test;
 public class RenameClassProcessorTest extends AbstractPDTTListRefactoringTest {
 
 	@PDTTList.Parameters
-	public static String[] dirs = { "/resources/rename/renameClass/" }; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/rename/RenameClass/" }; //$NON-NLS-1$
 
 	public RenameClassProcessorTest(String[] fileNames) {
 		super(fileNames);

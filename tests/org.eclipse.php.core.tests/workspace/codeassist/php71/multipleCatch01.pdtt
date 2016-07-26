@@ -1,0 +1,25 @@
+--TEST--
+Test multiple catch
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+class MyException extends Exception {
+	public function getMyException() {
+	}
+}
+class MyException2 extends Exception {
+	public function getMyException2() {
+	}
+}
+
+try {
+	// Some code...
+} catch ( Exception | MyException | MyException2 $e ) {
+	$e->getmy_
+} catch ( \Exception $e ) {
+	// ...
+}
+--EXPECT--
+method(getMyException)
+method(getMyException2)

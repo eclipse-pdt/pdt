@@ -1,0 +1,13 @@
+--TEST--
+Bug internal class in multiple catch
+--FILE--
+<?php
+
+try {
+	// Some code...
+} catch (ExceptionType1 | Exception $e) {
+	// Code to handle the exception
+}
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting:
+highlight(Exception)
