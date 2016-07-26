@@ -97,7 +97,7 @@ public class DBGpArrayValue extends AbstractDBGpContainerValue {
 
 	protected IVariable createEvalVariable(Node descriptor) {
 		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
-				getOwner().getStackLevel(), Facet.KIND_ARRAY_MEMBER);
+				Facet.KIND_ARRAY_MEMBER);
 		String arrayKey = variable.fName.substring(1, variable.fName.length() - 1);
 		if (!arrayKey.matches("\\d+")) { //$NON-NLS-1$
 			arrayKey = '\'' + arrayKey + '\'';

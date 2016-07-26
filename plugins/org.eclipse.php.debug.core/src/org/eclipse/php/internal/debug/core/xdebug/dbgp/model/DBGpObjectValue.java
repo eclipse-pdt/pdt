@@ -106,7 +106,7 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 
 	protected IVariable createEvalVariable(Node descriptor) {
 		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
-				getOwner().getStackLevel(), Facet.KIND_OBJECT_MEMBER);
+				Facet.KIND_OBJECT_MEMBER);
 		variable.fFullName = getOwner().getFullName() + "->" + variable.fName; //$NON-NLS-1$
 		return variable;
 	}

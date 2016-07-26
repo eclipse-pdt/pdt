@@ -106,7 +106,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpEvalVariable(debugTarget, expression, resp, -1);
+		IVariable tempVar = new DBGpEvalVariable(debugTarget, expression, resp);
 		IValue val = null;
 		try {
 			val = tempVar.getValue();

@@ -196,8 +196,17 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 			// Check if descriptor is already filled up
 			if (childCount != childrenReceived) {
 				DBGpTarget target = (DBGpTarget) getDebugTarget();
-				fDescriptor = target.getProperty(getOwner().getFullName(), String.valueOf(getOwner().getStackLevel()),
-						0);
+				switch (getOwner().getKind()) {
+				case EVAL: {
+					fDescriptor = target.eval(getOwner().getFullName(), 0);
+					break;
+				}
+				default: {
+					fDescriptor = target.getProperty(getOwner().getFullName(),
+							String.valueOf(getOwner().getStackLevel()), 0);
+					break;
+				}
+				}
 				// Might be null for watch expression variables
 				if (fDescriptor == null) {
 					fCurrentVariables = new IVariable[] {};

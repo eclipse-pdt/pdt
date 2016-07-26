@@ -17,10 +17,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackVariable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable.Kind;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.w3c.dom.Node;
@@ -33,6 +37,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 	private String expressionText;
 	private IWatchExpressionListener watchListener;
 	private DBGpTarget debugTarget;
+	private DBGpStackFrame stackFrame;
 	private Job evalJob;
 
 	/**
@@ -43,8 +48,9 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		expressionText = expression;
 		watchListener = listener;
 		IDebugTarget target = context.getDebugTarget();
-		if (target instanceof DBGpTarget) {
+		if (target instanceof DBGpTarget && context instanceof DBGpStackFrame) {
 			debugTarget = (DBGpTarget) target;
+			stackFrame = (DBGpStackFrame) context;
 			if (!debugTarget.isSuspended()) {
 				// can't evaluate unless suspended
 				watchListener.watchEvaluationFinished(null);
@@ -88,13 +94,22 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		void evaluate() {
 			String watchExpression = expressionText.trim();
 			Node result = null;
+			String stackLevel = stackFrame.getStackLevel();
 			Kind exprKind = Kind.EVAL;
-			if (watchExpression.startsWith("$")) { //$NON-NLS-1$
-				exprKind = Kind.STACK;
+			if (watchExpression.startsWith("$")) {//$NON-NLS-1$
+				ISourceRange enclosingIdentifier = PHPTextSequenceUtilities.getEnclosingIdentifier(watchExpression, 0);
+				if (enclosingIdentifier != null && enclosingIdentifier.getLength() == watchExpression.length() + 1) {
+					exprKind = Kind.STACK;
+				}
 			}
 			switch (exprKind) {
 			case STACK: {
-				result = debugTarget.getProperty(watchExpression, String.valueOf(0), 0);
+				result = debugTarget.getProperty(watchExpression, stackLevel, 0);
+				if (result == null || DBGpResponse.REASON_ERROR.equals(result.getNodeName())) {
+					// Check if it is not super global property
+					stackLevel = "-1"; //$NON-NLS-1$
+					result = debugTarget.getProperty(watchExpression, stackLevel, 0);
+				}
 				break;
 			}
 			default:
@@ -105,11 +120,11 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 				IVariable tempVar;
 				switch (exprKind) {
 				case STACK: {
-					tempVar = new DBGpStackVariable(debugTarget, result, 0);
+					tempVar = new DBGpStackVariable(debugTarget, result, Integer.valueOf(stackLevel));
 					break;
 				}
 				default:
-					tempVar = new DBGpEvalVariable(debugTarget, watchExpression, result, 0);
+					tempVar = new DBGpEvalVariable(debugTarget, watchExpression, result);
 					break;
 				}
 				evalResult = null;

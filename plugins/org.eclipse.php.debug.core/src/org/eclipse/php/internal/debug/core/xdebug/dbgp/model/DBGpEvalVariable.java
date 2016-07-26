@@ -14,8 +14,8 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.w3c.dom.Node;
 
 /**
- * DBGp variable for handling results of resolving expression
- * with the use of XdDebug 'eval' call.
+ * DBGp variable for handling results of resolving expression with the use of
+ * XdDebug 'eval' call.
  * 
  * @author Bartlomiej Laczkowski
  */
@@ -27,11 +27,10 @@ public class DBGpEvalVariable extends DBGpVariable {
 	 * @param target
 	 * @param expression
 	 * @param descriptor
-	 * @param stackLevel
 	 * @param facets
 	 */
-	public DBGpEvalVariable(IDebugTarget target, String expression, Node descriptor, int stackLevel, Facet... facets) {
-		super(target, descriptor, stackLevel, facets);
+	public DBGpEvalVariable(IDebugTarget target, String expression, Node descriptor, Facet... facets) {
+		super(target, descriptor, -1, facets);
 		fName = expression;
 		fFullName = expression;
 	}
@@ -41,11 +40,10 @@ public class DBGpEvalVariable extends DBGpVariable {
 	 * 
 	 * @param target
 	 * @param descriptor
-	 * @param stackLevel
 	 * @param facets
 	 */
-	public DBGpEvalVariable(IDebugTarget target, Node descriptor, int stackLevel, Facet... facets) {
-		super(target, descriptor, stackLevel, facets);
+	public DBGpEvalVariable(IDebugTarget target, Node descriptor, Facet... facets) {
+		super(target, descriptor, -1, facets);
 	}
 
 	@Override
