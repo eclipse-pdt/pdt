@@ -49,14 +49,6 @@ public class ContextManager {
 				remoteFile);
 	}
 
-	private void copyVariablesFromPreviousFrames(IStackFrame[] frames) {
-		if (fFrames != null) {
-			for (int i = frames.length - 1, c = fFrames.length - 1; i > 0 && c >= 0; --i, --c) {
-				((PHPStackFrame) frames[i]).setStackVariables(((PHPStackFrame) fFrames[c]).getStackVariables());
-			}
-		}
-	}
-
 	public IStackFrame[] getStackFrames() throws DebugException {
 		fFramesInitLock.acquire();
 		try {
@@ -79,7 +71,6 @@ public class ContextManager {
 				}
 				PHPThread thread = (PHPThread) threads[0];
 				IStackFrame[] newFrames = applyDebugFilters(createNewFrames(layers, thread));
-				copyVariablesFromPreviousFrames(newFrames);
 				fFrames = newFrames;
 			} else {
 				// Connection was probably dumped
