@@ -177,7 +177,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 					tokenStart = tokensContainer.getToken(tokenStart.getStart() - 1);
 				}
 
-				// move sure, region to re-parse doesn't end with unknown token
+				// make sure, region to re-parse doesn't end with unknown token
 				while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
 						&& (tokensContainer.getLastToken() != tokenEnd)) {
 					tokenEnd = tokensContainer.getToken(tokenEnd.getEnd());
@@ -200,10 +200,6 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 				int newTokenOffset = tokenStart.getStart();
 
-				if (isHereDoc(tokenStart)) {
-					return null;
-				}
-
 				// get start and end states
 				final LexerState startState = tokensContainer.getState(newTokenOffset);
 				final LexerState endState = tokensContainer.getState(tokenEnd.getEnd());
@@ -212,6 +208,16 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				final AbstractPhpLexer phpLexer = getPhpLexer(
 						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
 						startState);
+
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498525
+				// Fully re-parse when we're in a heredoc/nowdoc section.
+				// NB: it's much easier and safer to use the lexer state to
+				// determine if we're in a heredoc/nowdoc section,
+				// using PHPRegionTypes makes us depend on how each PHP
+				// lexer version analyzes the heredoc/nowdoc content.
+				if (phpLexer.isHeredocState(startState.getTopState())) {
+					return null;
+				}
 
 				Object state = startState;
 				try {
@@ -241,7 +247,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 					return null;
 				}
 
-				// if the two streams end with the same lexer sate -
+				// if the two streams end with the same lexer state -
 				// 1. replace the regions
 				// 2. adjust next regions start location
 				// 3. update state changes
@@ -328,31 +334,6 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			this.ST_PHP_IN_SCRIPTING = sRegion.ST_PHP_IN_SCRIPTING;
 			this.isFullReparsed = sRegion.isFullReparsed;
 		}
-	}
-
-	private synchronized final boolean isHereDoc(final ITextRegion tokenStart) {
-		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
-			try {
-				final ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
-				return token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2;
-			} catch (BadLocationException e) {
-				// never happens
-				assert false;
-			}
-		} else if (tokenStart.getType() == PHPRegionTypes.PHP_LABEL) {
-			try {
-				ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
-				if (token != null) {
-					token = tokensContainer.getToken(token.getStart() - 1);
-					return token != null && (token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2);
-				}
-
-			} catch (BadLocationException e) {
-				// never happens
-				assert false;
-			}
-		}
-		return false;
 	}
 
 	private boolean startQuoted(final String text) {
