@@ -56,7 +56,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public abstract int yystate();
 
-	protected abstract boolean isHeredocState(int state);
+	public abstract boolean isHeredocState(int state);
 
 	public abstract int[] getParamenters();
 

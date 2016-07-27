@@ -61,7 +61,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     	initialize(parameters[6]);
     }
 
-    protected boolean isHeredocState(int state){
+    public boolean isHeredocState(int state){
     	    	return state == ST_PHP_HEREDOC || state == ST_PHP_START_HEREDOC || state == ST_PHP_END_HEREDOC;
     }
 
