@@ -57,14 +57,13 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
-	private static final String DOLOR = "$"; //$NON-NLS-1$
+	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
-	public static final String REFERENCE_VALUE = String.valueOf(Modifiers.AccReference);
 	public static final char QUALIFIER_SEPERATOR = ';';
 	public static final char RETURN_TYPE_SEPERATOR = ':';
 	public static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
@@ -345,6 +344,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			if (returnType != null) {
 				metadata.append(returnType.getName());
 				modifiers |= IPHPModifiers.AccReturn;
+
+				if (returnType instanceof FullyQualifiedReference) {
+					if (((FullyQualifiedReference) returnType).isNullable()) {
+						modifiers |= IPHPModifiers.AccNullable;
+					}
+				}
 			}
 		}
 		metadata.append(RETURN_TYPE_SEPERATOR);
@@ -394,10 +399,25 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					}
 				}
 				metadata.append(defaultValue);
-				if (arg instanceof FormalParameterByReference) {
-					metadata.append(PARAMETER_SEPERATOR);
-					metadata.append(REFERENCE_VALUE);
+				int paramModifiers = 0;
+
+				if (arg instanceof FormalParameter) {
+					FormalParameter fp = (FormalParameter) arg;
+					if (fp.getParameterType() instanceof FullyQualifiedReference) {
+						if (((FullyQualifiedReference) fp.getParameterType()).isNullable()) {
+							paramModifiers |= IPHPModifiers.AccNullable;
+						}
+					}
 				}
+				if (arg instanceof FormalParameterByReference) {
+					paramModifiers |= IPHPModifiers.AccReference;
+				}
+
+				if (paramModifiers != 0) {
+					metadata.append(PARAMETER_SEPERATOR);
+					metadata.append(String.valueOf(paramModifiers));
+				}
+
 				if (i.hasNext()) {
 					metadata.append(","); //$NON-NLS-1$
 				}
@@ -982,8 +1002,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			SimpleReference simpleReference = (SimpleReference) access.getField();
 
 			String name = simpleReference.getName();
-			if (!name.startsWith(DOLOR)) {
-				name = DOLOR + name;
+			if (!name.startsWith(DOLLAR)) {
+				name = DOLLAR + name;
 			}
 			modifyReference(access, new ReferenceInfo(IModelElement.FIELD, simpleReference.sourceStart(),
 					simpleReference.sourceEnd() - simpleReference.sourceStart(), name, null, null));

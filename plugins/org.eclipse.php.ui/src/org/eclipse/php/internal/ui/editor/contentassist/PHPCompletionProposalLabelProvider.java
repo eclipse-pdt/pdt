@@ -87,9 +87,10 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 					return;
 				}
 				nameBuffer.append(getReturnTypeSeparator(), StyledString.DECORATIONS_STYLER);
-				String type;
-				type = method.getType();
-
+				if (PHPFlags.isNullable(method.getFlags())) {
+					nameBuffer.append("?", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				}
+				String type = method.getType();
 				if (type == null) {
 					if ((method.getFlags() & IPHPModifiers.AccReturn) != 0) {
 						type = "mixed"; //$NON-NLS-1$
