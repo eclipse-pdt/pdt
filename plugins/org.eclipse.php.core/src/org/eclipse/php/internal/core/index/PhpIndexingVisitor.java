@@ -345,6 +345,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			if (returnType != null) {
 				metadata.append(returnType.getName());
 				modifiers |= IPHPModifiers.AccReturn;
+
+				if (returnType instanceof FullyQualifiedReference) {
+					if (((FullyQualifiedReference) returnType).isNullable()) {
+						modifiers |= IPHPModifiers.AccNullable;
+					}
+				}
 			}
 		}
 		metadata.append(RETURN_TYPE_SEPERATOR);
@@ -394,10 +400,25 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					}
 				}
 				metadata.append(defaultValue);
-				if (arg instanceof FormalParameterByReference) {
-					metadata.append(PARAMETER_SEPERATOR);
-					metadata.append(REFERENCE_VALUE);
+				int paramModifiers = 0;
+
+				if (arg instanceof FormalParameter) {
+					FormalParameter fp = (FormalParameter) arg;
+					if (fp.getParameterType() instanceof FullyQualifiedReference) {
+						if (((FullyQualifiedReference) fp.getParameterType()).isNullable()) {
+							paramModifiers |= IPHPModifiers.AccNullable;
+						}
+					}
 				}
+				if (arg instanceof FormalParameterByReference) {
+					paramModifiers |= IPHPModifiers.AccReference;
+				}
+
+				if (paramModifiers != 0) {
+					metadata.append(PARAMETER_SEPERATOR);
+					metadata.append(String.valueOf(paramModifiers));
+				}
+
 				if (i.hasNext()) {
 					metadata.append(","); //$NON-NLS-1$
 				}

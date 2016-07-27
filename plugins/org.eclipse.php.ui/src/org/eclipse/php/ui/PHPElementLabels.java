@@ -15,10 +15,12 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 public class PHPElementLabels extends ScriptElementLabels {
 	private final String MIXED_RETURN_TYPE = "mixed"; //$NON-NLS-1$
 	private final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
+	private final String QUESTION_MARK = "?"; //$NON-NLS-1$
 
 	/**
 	 * User-readable string for reference ("&").
@@ -130,6 +132,9 @@ public class PHPElementLabels extends ScriptElementLabels {
 					}
 				}
 				buf.append(ScriptElementLabels.DECL_STRING);
+				if (PHPFlags.isNullable(method.getFlags())) {
+					buf.append(QUESTION_MARK);
+				}
 				buf.append(type);
 			}
 
@@ -142,7 +147,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 				}
 			}
 		} catch (ModelException e) {
-			e.printStackTrace();
+			PHPUiPlugin.log(e);
 		}
 	}
 
@@ -161,6 +166,9 @@ public class PHPElementLabels extends ScriptElementLabels {
 					boolean isLast = i + 1 == nParams;
 					if (bTypes) {
 						if (params[i].getType() != null) {
+							if (PHPFlags.isNullable(params[i].getFlags())) {
+								buf.append(QUESTION_MARK);
+							}
 							buf.append(params[i].getType());
 							if (bNames) {
 								buf.append(' ');
