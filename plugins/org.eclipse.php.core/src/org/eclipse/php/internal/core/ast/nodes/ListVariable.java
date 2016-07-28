@@ -30,13 +30,13 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ListVariable extends VariableBase {
 
-	private final ASTNode.NodeList<VariableBase> variables = new ASTNode.NodeList<VariableBase>(VARIABLES_PROPERTY);
+	private final ASTNode.NodeList<Expression> variables = new ASTNode.NodeList<Expression>(VARIABLES_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
 	 */
 	public static final ChildListPropertyDescriptor VARIABLES_PROPERTY = new ChildListPropertyDescriptor(
-			ListVariable.class, "variables", VariableBase.class, CYCLE_RISK); //$NON-NLS-1$
+			ListVariable.class, "variables", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -54,7 +54,7 @@ public class ListVariable extends VariableBase {
 		super(ast);
 	}
 
-	public ListVariable(int start, int end, AST ast, List<VariableBase> variables) {
+	public ListVariable(int start, int end, AST ast, List<Expression> variables) {
 		super(start, end, ast);
 
 		if (variables == null) {
@@ -109,7 +109,7 @@ public class ListVariable extends VariableBase {
 	/**
 	 * @return the list of variables
 	 */
-	public List<VariableBase> variables() {
+	public List<Expression> variables() {
 		return variables;
 	}
 
@@ -131,7 +131,7 @@ public class ListVariable extends VariableBase {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final List<VariableBase> variables = ASTNode.copySubtrees(target, variables());
+		final List<Expression> variables = ASTNode.copySubtrees(target, variables());
 		return new ListVariable(getStart(), getEnd(), target, variables);
 	}
 

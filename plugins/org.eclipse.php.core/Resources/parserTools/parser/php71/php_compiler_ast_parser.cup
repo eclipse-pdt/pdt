@@ -208,7 +208,6 @@ non terminal Statement unticked_statement;
 non terminal PHPCallArgumentsList unset_variables;
 non terminal Expression unset_variable;
 non terminal Expression use_filename;
-non terminal Expression foreach_key;
 non terminal Expression foreach_variable;
 non terminal Statement for_statement;
 non terminal Statement foreach_statement;
@@ -252,8 +251,8 @@ non terminal Expression variable_class_name;
 non terminal Expression optional_expr;
 non terminal Expression member_name;
 non terminal Expression property_name;
-non terminal List assignment_list;
-non terminal Expression assignment_list_element;
+non terminal Expression possible_array_pair;
+non terminal Expression array_pair;
 non terminal List array_pair_list;
 non terminal List non_empty_array_pair_list;
 non terminal List encaps_list;
@@ -331,9 +330,6 @@ non terminal AnonymousClassDeclaration anonymous_class;
 //php5.5
 non terminal FinallyClause finally_clause;
 non terminal FinallyClause non_empty_finally_clause;
-non terminal ListVariable list_variable;
-non terminal Expression foreach_expr;
-non terminal Expression foreach_value;
 
 non terminal YieldExpression yield_expr;
 
@@ -1270,14 +1266,14 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 	RESULT = new ExpressionStatement(startleft, endright, functionInvocation);
 :}
 
-| T_FOREACH:token T_OPEN_PARENTHESE foreach_expr:expr T_AS foreach_value:var T_CLOSE_PARENTHESE foreach_statement:statement
+| T_FOREACH:token T_OPEN_PARENTHESE expr:expr T_AS foreach_variable:var T_CLOSE_PARENTHESE foreach_statement:statement
 {:
 	RESULT = new ForEachStatement(tokenleft, statementright, expr, var, statement);
 :}
 
-| T_FOREACH:token T_OPEN_PARENTHESE foreach_expr:expr T_AS foreach_key:key foreach_value:var T_CLOSE_PARENTHESE foreach_statement:statement
+| T_FOREACH:token T_OPEN_PARENTHESE expr:expr T_AS foreach_variable:key T_DOUBLE_ARROW foreach_variable:value T_CLOSE_PARENTHESE foreach_statement:statement
 {:
-	RESULT = new ForEachStatement(tokenleft, statementright, expr, key, var, statement);
+	RESULT = new ForEachStatement(tokenleft, statementright, expr, key, value, statement);
 :}
 
 | T_DECLARE:start T_OPEN_PARENTHESE const_list:lists T_CLOSE_PARENTHESE declare_statement:statement
@@ -1677,36 +1673,6 @@ fully_qualified_class_name:className
 :}
 ;
 
-foreach_expr ::=
-variable:expr
-{:
-	RESULT = expr;
-:}
-| expr_without_variable:expr
-{:
-	RESULT = expr;
-:}
-;
-
-foreach_key ::=
-foreach_variable:var T_DOUBLE_ARROW
-{:
-	RESULT = var;
-:}
-;
-
-foreach_value ::=
-foreach_variable:var
-{:
-	RESULT = var;
-:}
-
-| list_variable:var
-{:
-	RESULT = var;
-:}
-;
-
 foreach_variable ::=
 variable:var
 {:
@@ -1717,12 +1683,10 @@ variable:var
 {:
 	RESULT = new ReferenceExpression (startleft, varright, var);
 :}
-;
 
-list_variable ::=
-T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:end
+| T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 {:
-	RESULT = new ListVariable(startleft, endright, varList);
+	RESULT = new ListVariable(startleft, endright, list);
 :}
 ;
 
@@ -2716,9 +2680,10 @@ T_NEW:start class_name_reference:className ctor_arguments:ctor
 ;
 
 expr_without_variable ::=
-list_variable:vars T_EQUAL expr:expr
+T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQUAL expr:expr
 {:
-	RESULT = new Assignment(varsleft, exprright, vars, Assignment.OP_EQUAL, expr);
+	ListVariable listVariable = new ListVariable(startleft, endright, list);
+	RESULT = new Assignment(startleft, exprright, listVariable, Assignment.OP_EQUAL, expr);
 :}
 
 | variable:var T_EQUAL expr:expr
@@ -3511,6 +3476,7 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 {:
 	RESULT = new ArrayCreation(startleft, endright, list);
 :}
+
 | T_CONSTANT_ENCAPSED_STRING:scalar
 {: 
 	RESULT = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
@@ -3682,120 +3648,75 @@ string_st:varName
 :}
 ;
 
-
-assignment_list ::=
-assignment_list:listElements T_COMMA assignment_list_element:element
+array_pair_list ::=
+non_empty_array_pair_list:list
 {:
-	if (element != null) {
-		listElements.add(element);
-	}
-	RESULT = listElements;
-:}
-
-| assignment_list_element:var
-{:
-	List listElements = new LinkedList();
-	if (var != null) {
-		listElements.add(var);
-	}
-	RESULT = listElements;
-	;
+	RESULT = list;
 :}
 ;
 
-assignment_list_element ::=
-variable:var
-{:
-	RESULT = var;
-:}
-
-| list_variable:vars
-{:
-	RESULT = vars;
-:}
-
-| /* empty */
+possible_array_pair ::=
+/* empty */
 {:
 	RESULT = null;
 :}
-;
 
-array_pair_list ::=
-/* empty */
+| array_pair:pair
 {:
-	List list = new LinkedList();
-	RESULT = list;
-:}
-
-| non_empty_array_pair_list:list possible_comma
-{:
-	RESULT = list;
+	RESULT = pair;
 :}
 ;
 
 non_empty_array_pair_list ::=
-non_empty_array_pair_list:list T_COMMA expr:key T_DOUBLE_ARROW expr:value
-{:
-	ArrayElement element = new ArrayElement(keyleft, valueright, key, value);
-	list.add(element);
-	RESULT = list;
-:}
-
-| non_empty_array_pair_list:list T_COMMA expr:expr
-{:
-	ArrayElement element = new ArrayElement(exprleft, exprright, expr);
-	list.add(element);
-	RESULT = list;
-:}
-
-| expr:key T_DOUBLE_ARROW expr:value
+possible_array_pair:pair
 {:
 	List list = new LinkedList();
-	ArrayElement element = new ArrayElement(keyleft, valueright, key, value);
-	list.add(element);
+	if (pair != null) { 
+		list.add(pair);
+	}
 	RESULT = list;
+:}
+
+| non_empty_array_pair_list:list T_COMMA possible_array_pair:pair
+{:
+	if (pair != null) { 
+		list.add(pair);
+	}
+	RESULT = list;
+:}
+;
+
+array_pair ::=
+expr:key T_DOUBLE_ARROW expr:value
+{:
+	RESULT =  new ArrayElement(keyleft, valueright, key, value);
 :}
 
 | expr:expr
 {:
-	List list = new LinkedList();
-	ArrayElement element = new ArrayElement(exprleft, exprright, expr);
-	list.add(element);
-	RESULT = list;
-:}
-
-| non_empty_array_pair_list:list T_COMMA expr:key T_DOUBLE_ARROW T_REFERENCE:start variable:var
-{:
-	ReferenceExpression value = new ReferenceExpression(startleft, varright, var);
-	ArrayElement element = new ArrayElement(keyleft, varright, key, value);
-	list.add(element);
-	RESULT = list;
-:}
-
-| non_empty_array_pair_list:list T_COMMA T_REFERENCE:start variable:var
-{:
-	ReferenceExpression ref = new ReferenceExpression(startleft, varright, var);
-	ArrayElement element = new ArrayElement(startleft, varright, ref);
-	list.add(element);
-	RESULT = list;
+	RESULT = expr;
 :}
 
 | expr:key T_DOUBLE_ARROW T_REFERENCE:start variable:var
 {:
-	List list = new LinkedList();
 	ReferenceExpression value = new ReferenceExpression(startleft, varright, var);
-	ArrayElement element = new ArrayElement(keyleft, varright, key, value);
-	list.add(element);
-	RESULT = list;
+	RESULT = new ArrayElement(keyleft, varright, key, value);
 :}
 
 | T_REFERENCE:start variable:var
 {:
-	List list = new LinkedList();
-	ReferenceExpression ref = new ReferenceExpression(startleft, varright, var);
-	ArrayElement element = new ArrayElement(startleft, varright, ref);
-	list.add(element);
-	RESULT = list;
+	RESULT = new ReferenceExpression(startleft, varright, var);
+:}
+
+| expr:key T_DOUBLE_ARROW T_LIST:s T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:e
+{:
+	ListVariable value = new ListVariable(sleft, eright, list);
+	RESULT = new ArrayElement(keyleft, eright, key, value);
+:}
+
+| T_LIST:s T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:e
+{:
+	RESULT = new ListVariable(sleft, eright, list);
 :}
 ;
 

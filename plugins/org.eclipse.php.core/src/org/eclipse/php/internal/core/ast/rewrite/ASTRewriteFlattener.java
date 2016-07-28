@@ -782,7 +782,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ListVariable listVariable) {
 		result.append("list("); //$NON-NLS-1$
-		Iterator<VariableBase> variables = listVariable.variables().iterator();
+		Iterator<Expression> variables = listVariable.variables().iterator();
 		if (variables.hasNext()) {
 			variables.next().accept(this);
 			while (variables.hasNext()) {
