@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
@@ -27,7 +26,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst() *
  */
-public class ArrayElement extends ASTNode {
+public class ArrayElement extends Expression {
 
 	private final Expression key;
 	private final Expression value;

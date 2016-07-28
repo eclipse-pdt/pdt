@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * <pre>
  * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst() *
  */
-public class ArrayElement extends ASTNode {
+public class ArrayElement extends Expression {
 
 	private Expression key;
 	private Expression value;

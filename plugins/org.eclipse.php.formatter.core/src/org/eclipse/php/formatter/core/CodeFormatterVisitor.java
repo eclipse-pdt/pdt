@@ -4065,8 +4065,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lastPosition = listVariable.getStart() + 4;
 		lineWidth += 4;
-		List<VariableBase> variables = listVariable.variables();
-		VariableBase[] variablesArray = variables.toArray(new VariableBase[variables.size()]);
+		List<Expression> variables = listVariable.variables();
+		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
 		lastPosition = handleCommaList(variablesArray, lastPosition, this.preferences.insert_space_before_comma_in_list,
 				this.preferences.insert_space_after_comma_in_list, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 

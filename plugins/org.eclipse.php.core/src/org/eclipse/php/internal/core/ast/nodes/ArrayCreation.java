@@ -69,7 +69,14 @@ public class ArrayCreation extends VariableBase {
 		if (elements == null) {
 			throw new IllegalArgumentException();
 		}
-		this.elements.addAll(elements);
+		for (Expression expression : elements) {
+			if (expression instanceof ArrayElement) {
+				this.elements.add((ArrayElement) expression);
+			} else {
+				this.elements.add(new ArrayElement(expression.getStart(), expression.getEnd(), ast, expression));
+			}
+		}
+
 		setHasArrayKey(hasArrayKey);
 	}
 

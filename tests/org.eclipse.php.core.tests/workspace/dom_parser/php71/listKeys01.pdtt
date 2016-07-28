@@ -1,0 +1,254 @@
+--TEST--
+Test list keys
+--FILE--
+<?php
+list(1 => $oneBit, 2 => $twoBit, 3 => $threeBit) = $powersOfTwo;
+
+list(
+	CURLOPT_GET => $isGet,
+	CURLOPT_POST => $isPost,
+	CURLOPT_URL => $url
+) = $curl;
+
+list(list("x" => $x1, "y" => $y1), list("x" => $x2, "y" => $y2)) = $points;
+
+list("first" => list($x1, $y1), "second" => list($x2, $y2)) = $points;
+
+foreach ($points as list("x" => $x, "y" => $y)) {
+	echo "Point at ($x, $y)", PHP_EOL;
+}
+--EXPECT--
+<Program start='0' length='397'>
+	<Statements>
+		<ExpressionStatement start='6' length='64'>
+			<Assignment start='6' length='63' operator='='>
+				<List start='6' length='48'>
+					<ArrayElement start='11' length='12'>
+						<Key>
+							<Scalar start='11' length='1' type='int' value='1'/>
+						</Key>
+						<Value>
+							<Variable start='16' length='7' isDollared='true'>
+								<Identifier start='17' length='6' name='oneBit'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='25' length='12'>
+						<Key>
+							<Scalar start='25' length='1' type='int' value='2'/>
+						</Key>
+						<Value>
+							<Variable start='30' length='7' isDollared='true'>
+								<Identifier start='31' length='6' name='twoBit'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='39' length='14'>
+						<Key>
+							<Scalar start='39' length='1' type='int' value='3'/>
+						</Key>
+						<Value>
+							<Variable start='44' length='9' isDollared='true'>
+								<Identifier start='45' length='8' name='threeBit'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</List>
+				<Value>
+					<Variable start='57' length='12' isDollared='true'>
+						<Identifier start='58' length='11' name='powersOfTwo'/>
+					</Variable>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='72' length='87'>
+			<Assignment start='72' length='86' operator='='>
+				<List start='72' length='78'>
+					<ArrayElement start='79' length='21'>
+						<Key>
+							<Scalar start='79' length='11' type='string' value='CURLOPT_GET'/>
+						</Key>
+						<Value>
+							<Variable start='94' length='6' isDollared='true'>
+								<Identifier start='95' length='5' name='isGet'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='103' length='23'>
+						<Key>
+							<Scalar start='103' length='12' type='string' value='CURLOPT_POST'/>
+						</Key>
+						<Value>
+							<Variable start='119' length='7' isDollared='true'>
+								<Identifier start='120' length='6' name='isPost'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='129' length='19'>
+						<Key>
+							<Scalar start='129' length='11' type='string' value='CURLOPT_URL'/>
+						</Key>
+						<Value>
+							<Variable start='144' length='4' isDollared='true'>
+								<Identifier start='145' length='3' name='url'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</List>
+				<Value>
+					<Variable start='153' length='5' isDollared='true'>
+						<Identifier start='154' length='4' name='curl'/>
+					</Variable>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='161' length='75'>
+			<Assignment start='161' length='74' operator='='>
+				<List start='161' length='64'>
+					<List start='166' length='28'>
+						<ArrayElement start='171' length='10'>
+							<Key>
+								<Scalar start='171' length='3' type='string' value='"x"'/>
+							</Key>
+							<Value>
+								<Variable start='178' length='3' isDollared='true'>
+									<Identifier start='179' length='2' name='x1'/>
+								</Variable>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='183' length='10'>
+							<Key>
+								<Scalar start='183' length='3' type='string' value='"y"'/>
+							</Key>
+							<Value>
+								<Variable start='190' length='3' isDollared='true'>
+									<Identifier start='191' length='2' name='y1'/>
+								</Variable>
+							</Value>
+						</ArrayElement>
+					</List>
+					<List start='196' length='28'>
+						<ArrayElement start='201' length='10'>
+							<Key>
+								<Scalar start='201' length='3' type='string' value='"x"'/>
+							</Key>
+							<Value>
+								<Variable start='208' length='3' isDollared='true'>
+									<Identifier start='209' length='2' name='x2'/>
+								</Variable>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='213' length='10'>
+							<Key>
+								<Scalar start='213' length='3' type='string' value='"y"'/>
+							</Key>
+							<Value>
+								<Variable start='220' length='3' isDollared='true'>
+									<Identifier start='221' length='2' name='y2'/>
+								</Variable>
+							</Value>
+						</ArrayElement>
+					</List>
+				</List>
+				<Value>
+					<Variable start='228' length='7' isDollared='true'>
+						<Identifier start='229' length='6' name='points'/>
+					</Variable>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='238' length='70'>
+			<Assignment start='238' length='69' operator='='>
+				<List start='238' length='59'>
+					<ArrayElement start='243' length='25'>
+						<Key>
+							<Scalar start='243' length='7' type='string' value='"first"'/>
+						</Key>
+						<Value>
+							<List start='254' length='14'>
+								<Variable start='259' length='3' isDollared='true'>
+									<Identifier start='260' length='2' name='x1'/>
+								</Variable>
+								<Variable start='264' length='3' isDollared='true'>
+									<Identifier start='265' length='2' name='y1'/>
+								</Variable>
+							</List>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='270' length='26'>
+						<Key>
+							<Scalar start='270' length='8' type='string' value='"second"'/>
+						</Key>
+						<Value>
+							<List start='282' length='14'>
+								<Variable start='287' length='3' isDollared='true'>
+									<Identifier start='288' length='2' name='x2'/>
+								</Variable>
+								<Variable start='292' length='3' isDollared='true'>
+									<Identifier start='293' length='2' name='y2'/>
+								</Variable>
+							</List>
+						</Value>
+					</ArrayElement>
+				</List>
+				<Value>
+					<Variable start='300' length='7' isDollared='true'>
+						<Identifier start='301' length='6' name='points'/>
+					</Variable>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ForEachStatement start='310' length='87'>
+			<Expression>
+				<Variable start='319' length='7' isDollared='true'>
+					<Identifier start='320' length='6' name='points'/>
+				</Variable>
+			</Expression>
+			<Key>
+			</Key>
+			<Value>
+				<List start='330' length='26'>
+					<ArrayElement start='335' length='9'>
+						<Key>
+							<Scalar start='335' length='3' type='string' value='"x"'/>
+						</Key>
+						<Value>
+							<Variable start='342' length='2' isDollared='true'>
+								<Identifier start='343' length='1' name='x'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='346' length='9'>
+						<Key>
+							<Scalar start='346' length='3' type='string' value='"y"'/>
+						</Key>
+						<Value>
+							<Variable start='353' length='2' isDollared='true'>
+								<Identifier start='354' length='1' name='y'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</List>
+			</Value>
+			<Block start='358' length='39' isCurly='true'>
+				<EchoStatement start='361' length='34'>
+					<Quote start='366' length='19' type='quote'>
+						<Scalar start='367' length='10' type='string' value='Point at ('/>
+						<Variable start='377' length='2' isDollared='true'>
+							<Identifier start='378' length='1' name='x'/>
+						</Variable>
+						<Scalar start='379' length='2' type='string' value=', '/>
+						<Variable start='381' length='2' isDollared='true'>
+							<Identifier start='382' length='1' name='y'/>
+						</Variable>
+						<Scalar start='383' length='1' type='string' value=')'/>
+					</Quote>
+					<Scalar start='387' length='7' type='string' value='PHP_EOL'/>
+				</EchoStatement>
+			</Block>
+		</ForEachStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
+

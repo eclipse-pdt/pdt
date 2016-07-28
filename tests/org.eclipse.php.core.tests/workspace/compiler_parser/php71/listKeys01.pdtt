@@ -1,0 +1,172 @@
+--TEST--
+Test list keys
+--FILE--
+<?php
+list(1 => $oneBit, 2 => $twoBit, 3 => $threeBit) = $powersOfTwo;
+
+list(
+	CURLOPT_GET => $isGet,
+	CURLOPT_POST => $isPost,
+	CURLOPT_URL => $url
+) = $curl;
+
+list(list("x" => $x1, "y" => $y1), list("x" => $x2, "y" => $y2)) = $points;
+
+list("first" => list($x1, $y1), "second" => list($x2, $y2)) = $points;
+
+foreach ($points as list("x" => $x, "y" => $y)) {
+	echo "Point at ($x, $y)", PHP_EOL;
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="398">
+	<ExpressionStatement start="6" end="70">
+		<Assignment start="6" end="69" operator="=">
+			<ListVariable start="6" end="54">
+				<ArrayElement start="11" end="23">
+					<Scalar start="11" end="12" type="int" value="1">
+					</Scalar>
+					<VariableReference start="16" end="23" name="$oneBit">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="25" end="37">
+					<Scalar start="25" end="26" type="int" value="2">
+					</Scalar>
+					<VariableReference start="30" end="37" name="$twoBit">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="39" end="53">
+					<Scalar start="39" end="40" type="int" value="3">
+					</Scalar>
+					<VariableReference start="44" end="53" name="$threeBit">
+					</VariableReference>
+				</ArrayElement>
+			</ListVariable>
+			<VariableReference start="57" end="69" name="$powersOfTwo">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="72" end="159">
+		<Assignment start="72" end="158" operator="=">
+			<ListVariable start="72" end="150">
+				<ArrayElement start="79" end="100">
+					<Scalar start="79" end="90" type="string" value="CURLOPT_GET">
+					</Scalar>
+					<VariableReference start="94" end="100" name="$isGet">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="103" end="126">
+					<Scalar start="103" end="115" type="string" value="CURLOPT_POST">
+					</Scalar>
+					<VariableReference start="119" end="126" name="$isPost">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="129" end="148">
+					<Scalar start="129" end="140" type="string" value="CURLOPT_URL">
+					</Scalar>
+					<VariableReference start="144" end="148" name="$url">
+					</VariableReference>
+				</ArrayElement>
+			</ListVariable>
+			<VariableReference start="153" end="158" name="$curl">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="161" end="236">
+		<Assignment start="161" end="235" operator="=">
+			<ListVariable start="161" end="225">
+				<ListVariable start="166" end="194">
+					<ArrayElement start="171" end="181">
+						<Scalar start="171" end="174" type="string" value="&quot;x&quot;">
+						</Scalar>
+						<VariableReference start="178" end="181" name="$x1">
+						</VariableReference>
+					</ArrayElement>
+					<ArrayElement start="183" end="193">
+						<Scalar start="183" end="186" type="string" value="&quot;y&quot;">
+						</Scalar>
+						<VariableReference start="190" end="193" name="$y1">
+						</VariableReference>
+					</ArrayElement>
+				</ListVariable>
+				<ListVariable start="196" end="224">
+					<ArrayElement start="201" end="211">
+						<Scalar start="201" end="204" type="string" value="&quot;x&quot;">
+						</Scalar>
+						<VariableReference start="208" end="211" name="$x2">
+						</VariableReference>
+					</ArrayElement>
+					<ArrayElement start="213" end="223">
+						<Scalar start="213" end="216" type="string" value="&quot;y&quot;">
+						</Scalar>
+						<VariableReference start="220" end="223" name="$y2">
+						</VariableReference>
+					</ArrayElement>
+				</ListVariable>
+			</ListVariable>
+			<VariableReference start="228" end="235" name="$points">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="238" end="308">
+		<Assignment start="238" end="307" operator="=">
+			<ListVariable start="238" end="297">
+				<ArrayElement start="243" end="268">
+					<Scalar start="243" end="250" type="string" value="&quot;first&quot;">
+					</Scalar>
+					<ListVariable start="254" end="268">
+						<VariableReference start="259" end="262" name="$x1">
+						</VariableReference>
+						<VariableReference start="264" end="267" name="$y1">
+						</VariableReference>
+					</ListVariable>
+				</ArrayElement>
+				<ArrayElement start="270" end="296">
+					<Scalar start="270" end="278" type="string" value="&quot;second&quot;">
+					</Scalar>
+					<ListVariable start="282" end="296">
+						<VariableReference start="287" end="290" name="$x2">
+						</VariableReference>
+						<VariableReference start="292" end="295" name="$y2">
+						</VariableReference>
+					</ListVariable>
+				</ArrayElement>
+			</ListVariable>
+			<VariableReference start="300" end="307" name="$points">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ForEachStatement start="310" end="397">
+		<VariableReference start="319" end="326" name="$points">
+		</VariableReference>
+		<ListVariable start="330" end="356">
+			<ArrayElement start="335" end="344">
+				<Scalar start="335" end="338" type="string" value="&quot;x&quot;">
+				</Scalar>
+				<VariableReference start="342" end="344" name="$x">
+				</VariableReference>
+			</ArrayElement>
+			<ArrayElement start="346" end="355">
+				<Scalar start="346" end="349" type="string" value="&quot;y&quot;">
+				</Scalar>
+				<VariableReference start="353" end="355" name="$y">
+				</VariableReference>
+			</ArrayElement>
+		</ListVariable>
+		<EchoStatement start="361" end="395">
+			<Quote start="366" end="385" type="quote">
+				<Scalar start="367" end="377" type="string" value="Point at (">
+				</Scalar>
+				<VariableReference start="377" end="379" name="$x">
+				</VariableReference>
+				<Scalar start="379" end="381" type="string" value=", ">
+				</Scalar>
+				<VariableReference start="381" end="383" name="$y">
+				</VariableReference>
+				<Scalar start="383" end="384" type="string" value=")">
+				</Scalar>
+			</Quote>
+			<Scalar start="387" end="394" type="string" value="PHP_EOL">
+			</Scalar>
+		</EchoStatement>
+	</ForEachStatement>
+</ModuleDeclaration>

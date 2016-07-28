@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,7 +38,14 @@ public class ArrayCreation extends Expression implements Dereferencable {
 		super(start, end);
 
 		assert elements != null;
-		this.elements = elements;
+		this.elements = new ArrayList<>();
+		for (Expression el : elements) {
+			if (el instanceof ArrayElement) {
+				this.elements.add((ArrayElement) el);
+			} else {
+				this.elements.add(new ArrayElement(el.start(), el.end(), el));
+			}
+		}
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {

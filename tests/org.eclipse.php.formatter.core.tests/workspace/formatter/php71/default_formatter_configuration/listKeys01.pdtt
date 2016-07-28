@@ -1,0 +1,32 @@
+--TEST--
+Test list keys
+--FILE--
+<?php
+list(1 => $oneBit, 2 => $twoBit, 3 => $threeBit) = $powersOfTwo;
+
+list(
+	CURLOPT_GET => $isGet,
+	CURLOPT_POST => $isPost,
+	CURLOPT_URL => $url
+) = $curl;
+
+list(list("x" => $x1, "y"=>$y1), list(	"x" => $x2, "y" => $y2)) = $points;
+
+list("first" => list($x1, $y1), "second" => list(    $x2,     $y2)) = $points;
+
+foreach (	$points as list("x" =>$x, "y" => $y)) {
+	echo "Point at ($x, $y)", PHP_EOL;
+}
+--EXPECT--
+<?php
+list ( 1 => $oneBit, 2 => $twoBit, 3 => $threeBit ) = $powersOfTwo;
+
+list ( CURLOPT_GET => $isGet, CURLOPT_POST => $isPost, CURLOPT_URL => $url ) = $curl;
+
+list ( list ( "x" => $x1, "y" => $y1 ), list ( "x" => $x2, "y" => $y2 ) ) = $points;
+
+list ( "first" => list ( $x1, $y1 ), "second" => list ( $x2, $y2 ) ) = $points;
+
+foreach ( $points as list ( "x" => $x, "y" => $y ) ) {
+	echo "Point at ($x, $y)", PHP_EOL;
+}
