@@ -130,7 +130,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 			return false;
 		final ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		// TODO need to support heredoc also
-		if (tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE)
+		if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE)
 			return false;
 
 		final char firstChar = document.getChar(sdRegion.getStartOffset() + tRegion.getStart());

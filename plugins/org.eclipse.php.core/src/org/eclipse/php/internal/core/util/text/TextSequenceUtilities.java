@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.util.text;
 import javax.swing.text.Segment;
 
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -25,12 +26,12 @@ public final class TextSequenceUtilities {
 	private TextSequenceUtilities() {
 	}
 
-	public static TextSequence createTextSequence(IStructuredDocumentRegion source) {
+	public static @NonNull TextSequence createTextSequence(@NonNull IStructuredDocumentRegion source) {
 		return createTextSequence(source, 0, source.getLength());
 	}
 
-	@NonNull
-	public static TextSequence createTextSequence(IStructuredDocumentRegion source, int startOffset, int length) {
+	public static @NonNull TextSequence createTextSequence(@NonNull IStructuredDocumentRegion source, int startOffset,
+			int length) {
 
 		String s = ""; //$NON-NLS-1$
 		try {
@@ -41,7 +42,7 @@ public final class TextSequenceUtilities {
 		return new SimpleTextSequence(source, segment, 0, segment.count, startOffset);
 	}
 
-	public static String getType(TextSequence textSequence, int index) {
+	public static @Nullable String getType(@NonNull TextSequence textSequence, int index) {
 		int sourceOffset = textSequence.getOriginalOffset(index);
 		return getTypeByAbsoluteOffset(textSequence, sourceOffset);
 	}
@@ -51,7 +52,7 @@ public final class TextSequenceUtilities {
 	 * @param sourceOffset
 	 * @return
 	 */
-	public static String getTypeByAbsoluteOffset(TextSequence textSequence, int sourceOffset) {
+	public static @Nullable String getTypeByAbsoluteOffset(@NonNull TextSequence textSequence, int sourceOffset) {
 		IStructuredDocumentRegion source = textSequence.getSource();
 		if (source.getEndOffset() == sourceOffset && source.getEndOffset() > 0) {
 			sourceOffset--;
@@ -80,13 +81,14 @@ public final class TextSequenceUtilities {
 
 		int segmentOriginalStart;
 
-		protected AbstractTextSequence(IStructuredDocumentRegion source, Segment segment, int segmentOriginalStart) {
+		protected AbstractTextSequence(@NonNull IStructuredDocumentRegion source, @NonNull Segment segment,
+				int segmentOriginalStart) {
 			this.source = source;
 			this.segment = segment;
 			this.segmentOriginalStart = segmentOriginalStart;
 		}
 
-		public IStructuredDocumentRegion getSource() {
+		public @NonNull IStructuredDocumentRegion getSource() {
 			return source;
 		}
 
@@ -110,7 +112,7 @@ public final class TextSequenceUtilities {
 
 		private final int length;
 
-		SimpleTextSequence(IStructuredDocumentRegion source, Segment segment, int offset, int length,
+		SimpleTextSequence(@NonNull IStructuredDocumentRegion source, @NonNull Segment segment, int offset, int length,
 				int segmentOriginalStart) {
 			super(source, segment, segmentOriginalStart);
 			this.offset = offset;
@@ -130,11 +132,11 @@ public final class TextSequenceUtilities {
 			return length;
 		}
 
-		public TextSequence subTextSequence(int start, int end) {
+		public @NonNull TextSequence subTextSequence(int start, int end) {
 			return new SimpleTextSequence(source, segment, offset + start, end - start, segmentOriginalStart);
 		}
 
-		public TextSequence cutTextSequence(int start, int end) {
+		public @NonNull TextSequence cutTextSequence(int start, int end) {
 			if (start == 0) {
 				return subTextSequence(end, length);
 			}
@@ -161,8 +163,8 @@ public final class TextSequenceUtilities {
 
 		private int length = -1;
 
-		CompositeTextSequence(IStructuredDocumentRegion source, Segment segment, int[] indexes,
-				int segmentOriginalStart) {
+		CompositeTextSequence(@NonNull IStructuredDocumentRegion source, @NonNull Segment segment,
+				@NonNull int[] indexes, int segmentOriginalStart) {
 			super(source, segment, segmentOriginalStart);
 			this.indexes = indexes;
 		}
@@ -203,7 +205,7 @@ public final class TextSequenceUtilities {
 			return rv;
 		}
 
-		public TextSequence subTextSequence(int start, int end) {
+		public @NonNull TextSequence subTextSequence(int start, int end) {
 			if (start == 0 && end == length()) {
 				return this;
 			}
@@ -250,7 +252,7 @@ public final class TextSequenceUtilities {
 			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
 		}
 
-		public TextSequence cutTextSequence(int start, int end) {
+		public @NonNull TextSequence cutTextSequence(int start, int end) {
 			int startPart = 0;
 			int endPart = 0;
 			int startPartLength = 0;

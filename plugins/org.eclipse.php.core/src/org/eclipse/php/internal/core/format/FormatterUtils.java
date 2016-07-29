@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -33,7 +34,7 @@ public class FormatterUtils {
 	public static final String PARTITION_CSS_STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
 	public static final String PARTITION_JS_SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
 
-	public static String getRegionType(IStructuredDocument document, int offset) {
+	public static @Nullable String getRegionType(IStructuredDocument document, int offset) {
 		try {
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 			if (sdRegion == null) {
@@ -73,7 +74,8 @@ public class FormatterUtils {
 		return null;
 	}
 
-	public static String getPartitionType(IStructuredDocument document, int offset, boolean perferOpenPartitions) {
+	public static @Nullable String getPartitionType(IStructuredDocument document, int offset,
+			boolean preferOpenPartitions) {
 		try {
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 			if (sdRegion == null) {
@@ -107,12 +109,12 @@ public class FormatterUtils {
 			}
 		} catch (final BadLocationException e) {
 		}
-		partitioner.connect(document);
 
-		return partitioner.getContentType(offset, perferOpenPartitions);
+		partitioner.connect(document);
+		return partitioner.getContentType(offset, preferOpenPartitions);
 	}
 
-	public static String getPartitionType(IStructuredDocument document, int offset) {
+	public static @Nullable String getPartitionType(IStructuredDocument document, int offset) {
 		return getPartitionType(document, offset, false);
 	}
 
