@@ -38,15 +38,20 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 		}
 		String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset);
 
-		if (partitionType.equals(PHPPartitionTypes.PHP_DOC)
-				|| partitionType.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) {
+		if (partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 			// case of multi line comment or php doc
 			docBlockAutoEditStrategy.customizeDocumentCommand(document, command);
-		} else if (partitionType.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
-			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+		} else if (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
+			int previousPartitionPos = command.offset - 1;
+			if (previousPartitionPos >= 0 && FormatterUtils.getPartitionType((IStructuredDocument) document,
+					previousPartitionPos) != PHPPartitionTypes.PHP_QUOTED_STRING) {
+				// only indent when we're before the beginning of a quoted
+				// string
+				indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+			}
 			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
-		} else if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)
-				|| partitionType.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+		} else if (partitionType == PHPPartitionTypes.PHP_DEFAULT
+				|| partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) {
 			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
 			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
