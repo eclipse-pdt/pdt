@@ -396,6 +396,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 
 	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset,
 			int partitionLength, Collection<StyleRange> holdResults) {
+		if (structuredDocumentRegion == null) {
+			return false;
+		}
+
 		assert structuredDocumentRegion.getLength() > 0 && partitionStartOffset >= 0 && partitionLength >= 0;
 
 		if (partitionLength == 0) {
