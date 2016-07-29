@@ -113,8 +113,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 					IStructuredDocumentRegion regionAtCharacterOffset = sDoc
 							.getRegionAtCharacterOffset(selectionOffset);
 					int docRegionOffset = regionAtCharacterOffset.getStart();
-					ITextRegion textRegion = sDoc.getRegionAtCharacterOffset(selectionOffset)
-							.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = regionAtCharacterOffset.getRegionAtCharacterOffset(selectionOffset);
 
 					Stack<TextLocation> phpCommentLocationStack = new Stack<TextLocation>(); // stack
 																								// of

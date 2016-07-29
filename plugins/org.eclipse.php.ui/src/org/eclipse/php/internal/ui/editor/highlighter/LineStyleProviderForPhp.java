@@ -317,7 +317,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	 */
 	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength,
 			Collection<StyleRange> holdResults) {
-		assert blockedRegion.getLength() > 0 && partitionStartOffset >= 0 && partitionLength >= 0;
+		if (blockedRegion == null) {
+			return false;
+		}
+
+		assert blockedRegion.getLength() > 0 && partitionStartOffset >= 0 && partitionLength >= 0
+				&& holdResults != null;
 
 		if (partitionLength == 0) {
 			return true;
@@ -396,7 +401,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 
 	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset,
 			int partitionLength, Collection<StyleRange> holdResults) {
-		assert structuredDocumentRegion.getLength() > 0 && partitionStartOffset >= 0 && partitionLength >= 0;
+		if (structuredDocumentRegion == null) {
+			return false;
+		}
+
+		assert structuredDocumentRegion.getLength() > 0 && partitionStartOffset >= 0 && partitionLength >= 0
+				&& holdResults != null;
 
 		if (partitionLength == 0) {
 			return true;
@@ -497,8 +507,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	 */
 	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPhpScriptRegion region, int regionStart,
 			int partitionStartOffset, int partitionLength) {
-		assert region.getType() == PHPRegionContext.PHP_CONTENT;
-		assert region.getLength() > 0 && regionStart >= 0 && partitionStartOffset >= 0 && partitionLength > 0;
+		assert holdResults != null && region != null && region.getType() == PHPRegionContext.PHP_CONTENT
+				&& region.getLength() > 0 && regionStart >= 0 && partitionStartOffset >= 0 && partitionLength > 0;
 
 		ITextRegion[] phpTokens;
 		StyleRange styleRange = null;

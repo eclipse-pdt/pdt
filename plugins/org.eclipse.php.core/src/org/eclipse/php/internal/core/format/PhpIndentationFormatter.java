@@ -129,7 +129,7 @@ public class PhpIndentationFormatter {
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion lastTokenInLine = null;
-			int regionStart = sdRegion.getStartOffset(firstTokenInLine);
+			int regionStart = firstTokenInLine != null ? sdRegion.getStartOffset(firstTokenInLine) : 0;
 			if (firstTokenInLine instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) firstTokenInLine;
 				firstTokenInLine = container.getRegionAtCharacterOffset(formattedLineStart);
