@@ -177,9 +177,6 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		}
 
 		if (TypingPreferences.closeCurlyBracket && prevChar == '{') {
-			if (currentState != PHPPartitionTypes.PHP_DEFAULT)
-				if (document.getLength() == offset)
-					currentState = FormatterUtils.getPartitionType(document, offset - 1);
 			if (currentState == PHPPartitionTypes.PHP_DEFAULT)
 				return pairCurlyBracketAutoEditStrategy;
 

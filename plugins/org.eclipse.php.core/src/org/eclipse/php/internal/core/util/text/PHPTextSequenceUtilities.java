@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -71,7 +72,8 @@ public class PHPTextSequenceUtilities {
 	 * 
 	 * @return text sequence of the statement, cannot be null
 	 */
-	public static TextSequence getStatement(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
+	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
+			boolean removeComments) {
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
@@ -169,8 +171,7 @@ public class PHPTextSequenceUtilities {
 	 * 
 	 * @return text sequence region, cannot be null
 	 */
-	@NonNull
-	public static Region getStatementRegion(int offset, IStructuredDocumentRegion sdRegion,
+	public static @NonNull Region getStatementRegion(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean ignoreStartComments) {
 		// temporary workaround to fix
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=472197
@@ -186,7 +187,7 @@ public class PHPTextSequenceUtilities {
 	 *            document)
 	 * @return
 	 */
-	private static TextSequence removeComments(TextSequence textSequence, List<IRegion> comments) {
+	private static @NonNull TextSequence removeComments(@NonNull TextSequence textSequence, List<IRegion> comments) {
 		int seqStart = textSequence.getOriginalOffset(0);
 		for (IRegion commentStartRegion : comments) {
 			int textSequenceLength = textSequence.length();
@@ -209,7 +210,7 @@ public class PHPTextSequenceUtilities {
 		return textSequence;
 	}
 
-	public static int getMethodEndIndex(CharSequence textSequence, int offset) {
+	public static int getMethodEndIndex(@NonNull CharSequence textSequence, int offset) {
 		int length = textSequence.length();
 		while (offset < length && Character.isWhitespace(textSequence.charAt(offset))) {
 			++offset;
@@ -232,7 +233,7 @@ public class PHPTextSequenceUtilities {
 	 * Checks if we are inside function declaration statement. If yes the start
 	 * offset of the function, otherwise returns -1.
 	 */
-	public static int isInFunctionDeclaration(TextSequence textSequence) {
+	public static int isInFunctionDeclaration(@NonNull TextSequence textSequence) {
 		Matcher matcher = FUNCTION_PATTERN.matcher(textSequence);
 		// search for the 'function' word.
 		while (matcher.find()) {
@@ -273,7 +274,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int isInClassDeclaration(TextSequence textSequence) {
+	public static int isInClassDeclaration(@NonNull TextSequence textSequence) {
 		Matcher matcher = CLASS_PATTERN.matcher(textSequence);
 		// search for the 'class' or 'interface words.
 		while (matcher.find()) {
@@ -308,7 +309,8 @@ public class PHPTextSequenceUtilities {
 	/**
 	 * @return start index (can be < 0)
 	 */
-	public static int readNamespaceStartIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
+	public static int readNamespaceStartIndex(@NonNull CharSequence textSequence, int startPosition,
+			boolean includeDollar) {
 		boolean onBackslash = false;
 		boolean onWhitespace = false;
 		int oldStartPosition = startPosition;
@@ -348,7 +350,8 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 
-	public static int readNamespaceEndIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
+	public static int readNamespaceEndIndex(@NonNull CharSequence textSequence, int startPosition,
+			boolean includeDollar) {
 		boolean onBackslash = false;
 		boolean onWhitespace = false;
 
@@ -386,7 +389,8 @@ public class PHPTextSequenceUtilities {
 	/**
 	 * @return start index (can be < 0)
 	 */
-	public static int readIdentifierStartIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
+	public static int readIdentifierStartIndex(@NonNull CharSequence textSequence, int startPosition,
+			boolean includeDolar) {
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -400,7 +404,8 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 
-	public static int readIdentifierEndIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
+	public static int readIdentifierEndIndex(@NonNull CharSequence textSequence, int startPosition,
+			boolean includeDolar) {
 		int length = textSequence.length();
 		if (includeDolar && startPosition < length && textSequence.charAt(startPosition) == '$') {
 			startPosition++;
@@ -418,16 +423,16 @@ public class PHPTextSequenceUtilities {
 	/**
 	 * @return start index (can be < 0)
 	 */
-	public static int readIdentifierStartIndex(PHPVersion phpVersion, CharSequence textSequence, int startPosition,
-			boolean includeDollar) {
+	public static int readIdentifierStartIndex(@NonNull PHPVersion phpVersion, @NonNull CharSequence textSequence,
+			int startPosition, boolean includeDollar) {
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
 			return PHPTextSequenceUtilities.readIdentifierStartIndex(textSequence, startPosition, includeDollar);
 		}
 		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence, startPosition, includeDollar);
 	}
 
-	public static int readIdentifierEndIndex(PHPVersion phpVersion, CharSequence textSequence, int startPosition,
-			boolean includeDollar) {
+	public static int readIdentifierEndIndex(@NonNull PHPVersion phpVersion, @NonNull CharSequence textSequence,
+			int startPosition, boolean includeDollar) {
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
 			return PHPTextSequenceUtilities.readIdentifierEndIndex(textSequence, startPosition, includeDollar);
 		}
@@ -441,7 +446,7 @@ public class PHPTextSequenceUtilities {
 	 * @param pos
 	 * @return
 	 */
-	public static ISourceRange getEnclosingIdentifier(CharSequence textSequence, int pos) {
+	public static @Nullable ISourceRange getEnclosingIdentifier(@NonNull CharSequence textSequence, int pos) {
 		if (pos < 0 || pos >= textSequence.length())
 			return null;
 
@@ -454,7 +459,7 @@ public class PHPTextSequenceUtilities {
 		return new SourceRange(start, end - start + 1);
 	}
 
-	public static int readBackwardSpaces(CharSequence textSequence, int startPosition) {
+	public static int readBackwardSpaces(@NonNull CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv > 0; rv--) {
 			if (!Character.isWhitespace(textSequence.charAt(rv - 1))) {
@@ -464,7 +469,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardSpaces(IDocument document, int startPosition, int endPosition)
+	public static int readForwardSpaces(@NonNull IDocument document, int startPosition, int endPosition)
 			throws BadLocationException {
 		int rv = startPosition;
 		for (; rv < endPosition; rv++) {
@@ -475,7 +480,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardSpaces(CharSequence textSequence, int startPosition) {
+	public static int readForwardSpaces(@NonNull CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			if (!Character.isWhitespace(textSequence.charAt(rv))) {
@@ -485,7 +490,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardUntilSpaces(CharSequence textSequence, int startPosition) {
+	public static int readForwardUntilSpaces(@NonNull CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			if (Character.isWhitespace(textSequence.charAt(rv))) {
@@ -506,7 +511,8 @@ public class PHPTextSequenceUtilities {
 	 * @param delims
 	 *            - The array of delimiters
 	 */
-	public static int readForwardUntilDelim(CharSequence textSequence, int startPosition, char[] delims) {
+	public static int readForwardUntilDelim(@NonNull CharSequence textSequence, int startPosition,
+			@NonNull char[] delims) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			char c = textSequence.charAt(rv);
@@ -517,7 +523,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	private static boolean isDelimiter(char c, char[] delims) {
+	private static boolean isDelimiter(char c, @NonNull char[] delims) {
 		for (char curr : delims) {
 			if (curr == c) {
 				return true;
@@ -530,7 +536,7 @@ public class PHPTextSequenceUtilities {
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static int getPrivousTriggerIndex(CharSequence textSequence, int startPosition) {
+	public static int getPrivousTriggerIndex(@NonNull CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		int bracketsNum = 0;
 		char inStringMode = 0;
@@ -607,7 +613,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int readIdentifierListStartIndex(CharSequence textSequence, int endPosition) {
+	public static int readIdentifierListStartIndex(@NonNull CharSequence textSequence, int endPosition) {
 		int startPosition = endPosition;
 		int listStartPosition = startPosition;
 		boolean beforeWhitespace = false;
@@ -647,14 +653,19 @@ public class PHPTextSequenceUtilities {
 	 * @param textSequence
 	 * @return
 	 */
-	public static String[] getArgNames(PHPVersion phpVersion, CharSequence textSequence) {
+	public static @NonNull String[] getArgNames(@Nullable PHPVersion phpVersion, @Nullable CharSequence textSequence) {
 		List<String> args = new ArrayList<String>();
 		if (textSequence != null && textSequence.length() > 2) {
 			if (textSequence.charAt(textSequence.length() - 1) == ')') {
 				textSequence = textSequence.subSequence(0, textSequence.length() - 1);
 			}
-			if (textSequence.charAt(0) == '(') {
+			if (textSequence != null && textSequence.charAt(0) == '(') {
 				textSequence = textSequence.subSequence(1, textSequence.length());
+			}
+			if (textSequence == null) {
+				// should never happen (but makes @Nullable CharSequence
+				// textSequence happy)
+				return args.toArray(new String[args.size()]);
 			}
 			if (phpVersion == null) {
 				phpVersion = PHPVersion.getLatestVersion();
@@ -701,7 +712,7 @@ public class PHPTextSequenceUtilities {
 		return args.toArray(new String[args.size()]);
 	}
 
-	public static String suggestObjectOperator(CharSequence statement) {
+	public static @Nullable String suggestObjectOperator(@NonNull CharSequence statement) {
 		String insert = null;
 		statement = statement.toString().trim();
 		int statementPosition = statement.length() - 1;

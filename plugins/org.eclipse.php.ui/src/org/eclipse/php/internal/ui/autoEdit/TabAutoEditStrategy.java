@@ -56,7 +56,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			// and let JavaAutoIndentStrategy do all the job...
 			String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
 					true);
-			if (FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)
+			if (partitionType == null || FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)
 					|| IHTMLPartitions.HTML_DEFAULT.equals(partitionType)
 					|| IHTMLPartitions.SCRIPT.equals(partitionType)) {
 				return;

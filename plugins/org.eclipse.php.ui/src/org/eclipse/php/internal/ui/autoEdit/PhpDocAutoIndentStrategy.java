@@ -136,7 +136,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) d,
 											c.offset);
 									String commentBlockBody;
-									if (partitionType.equals(PHPPartitionTypes.PHP_DOC)) {
+									if (partitionType == PHPPartitionTypes.PHP_DOC) {
 										commentBlockBody = createScriptdocTags(d, c, indentation, lineDelimiter, unit);
 									} else {// Multiline comment
 										commentBlockBody = PHP_COMMENT_BLOCK_MID;
