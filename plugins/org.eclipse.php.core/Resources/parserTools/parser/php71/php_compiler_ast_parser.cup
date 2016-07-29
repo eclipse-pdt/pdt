@@ -1688,6 +1688,11 @@ variable:var
 {:
 	RESULT = new ListVariable(startleft, endright, list);
 :}
+
+| T_OPEN_RECT:start array_pair_list:list T_CLOSE_RECT:end
+{:
+	RESULT = new ArrayCreation(startleft, endright, list);
+:} 
 ;
 
 for_statement ::=
@@ -2684,6 +2689,12 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 {:
 	ListVariable listVariable = new ListVariable(startleft, endright, list);
 	RESULT = new Assignment(startleft, exprright, listVariable, Assignment.OP_EQUAL, expr);
+:}
+
+| T_OPEN_RECT:start array_pair_list:list T_CLOSE_RECT:end T_EQUAL expr:expr
+{:
+	ArrayCreation arrayCreation = new ArrayCreation(startleft, endright, list);
+	RESULT =  new Assignment(startleft, exprright, arrayCreation, Assignment.OP_EQUAL, expr);
 :}
 
 | variable:var T_EQUAL expr:expr

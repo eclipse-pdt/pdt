@@ -1,0 +1,318 @@
+--TEST--
+Test short list syntax
+--FILE--
+<?php
+
+[$a, $b, $c] = $array;
+
+["a" => $a, "b" => $b, "c" => $c] = $array;
+
+[$a, $b, $c] = [1, 2, 3];
+
+foreach ($points as ["x" => $x, "y" => $y]) {
+	var_dump ( $x, $y );
+}
+
+[[$a, $b], [$c, $d]] = [[1, 2], [3, 4]];
+--EXPECT--
+<Program start='0' length='214'>
+	<Statements>
+		<ExpressionStatement start='7' length='22'>
+			<Assignment start='7' length='21' operator='='>
+				<ArrayCreation start='7' length='12'>
+					<ArrayElement start='8' length='2'>
+						<Key>
+						</Key>
+						<Value>
+							<Variable start='8' length='2' isDollared='true'>
+								<Identifier start='9' length='1' name='a'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='12' length='2'>
+						<Key>
+						</Key>
+						<Value>
+							<Variable start='12' length='2' isDollared='true'>
+								<Identifier start='13' length='1' name='b'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='16' length='2'>
+						<Key>
+						</Key>
+						<Value>
+							<Variable start='16' length='2' isDollared='true'>
+								<Identifier start='17' length='1' name='c'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<Value>
+					<Variable start='22' length='6' isDollared='true'>
+						<Identifier start='23' length='5' name='array'/>
+					</Variable>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='31' length='43'>
+			<Assignment start='31' length='42' operator='='>
+				<ArrayCreation start='31' length='33'>
+					<ArrayElement start='32' length='9'>
+						<Key>
+							<Scalar start='32' length='3' type='string' value='"a"'/>
+						</Key>
+						<Value>
+							<Variable start='39' length='2' isDollared='true'>
+								<Identifier start='40' length='1' name='a'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='43' length='9'>
+						<Key>
+							<Scalar start='43' length='3' type='string' value='"b"'/>
+						</Key>
+						<Value>
+							<Variable start='50' length='2' isDollared='true'>
+								<Identifier start='51' length='1' name='b'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='54' length='9'>
+						<Key>
+							<Scalar start='54' length='3' type='string' value='"c"'/>
+						</Key>
+						<Value>
+							<Variable start='61' length='2' isDollared='true'>
+								<Identifier start='62' length='1' name='c'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<Value>
+					<Variable start='67' length='6' isDollared='true'>
+						<Identifier start='68' length='5' name='array'/>
+					</Variable>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='76' length='25'>
+			<Assignment start='76' length='24' operator='='>
+				<ArrayCreation start='76' length='12'>
+					<ArrayElement start='77' length='2'>
+						<Key>
+						</Key>
+						<Value>
+							<Variable start='77' length='2' isDollared='true'>
+								<Identifier start='78' length='1' name='a'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='81' length='2'>
+						<Key>
+						</Key>
+						<Value>
+							<Variable start='81' length='2' isDollared='true'>
+								<Identifier start='82' length='1' name='b'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='85' length='2'>
+						<Key>
+						</Key>
+						<Value>
+							<Variable start='85' length='2' isDollared='true'>
+								<Identifier start='86' length='1' name='c'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<Value>
+					<ArrayCreation start='91' length='9'>
+						<ArrayElement start='92' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='92' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='95' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='95' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='98' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='98' length='1' type='int' value='3'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ForEachStatement start='103' length='69'>
+			<Expression>
+				<Variable start='112' length='7' isDollared='true'>
+					<Identifier start='113' length='6' name='points'/>
+				</Variable>
+			</Expression>
+			<Key>
+			</Key>
+			<Value>
+				<ArrayCreation start='123' length='22'>
+					<ArrayElement start='124' length='9'>
+						<Key>
+							<Scalar start='124' length='3' type='string' value='"x"'/>
+						</Key>
+						<Value>
+							<Variable start='131' length='2' isDollared='true'>
+								<Identifier start='132' length='1' name='x'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='135' length='9'>
+						<Key>
+							<Scalar start='135' length='3' type='string' value='"y"'/>
+						</Key>
+						<Value>
+							<Variable start='142' length='2' isDollared='true'>
+								<Identifier start='143' length='1' name='y'/>
+							</Variable>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+			</Value>
+			<Block start='147' length='25' isCurly='true'>
+				<ExpressionStatement start='150' length='20'>
+					<FunctionInvocation start='150' length='19'>
+						<FunctionName start='150' length='8'>
+							<NamespaceName start='150' length='8' global='false' current='false'>
+								<Identifier start='150' length='8' name='var_dump'/>
+							</NamespaceName>
+						</FunctionName>
+						<Parameters>
+							<Variable start='161' length='2' isDollared='true'>
+								<Identifier start='162' length='1' name='x'/>
+							</Variable>
+							<Variable start='165' length='2' isDollared='true'>
+								<Identifier start='166' length='1' name='y'/>
+							</Variable>
+						</Parameters>
+					</FunctionInvocation>
+				</ExpressionStatement>
+			</Block>
+		</ForEachStatement>
+		<ExpressionStatement start='174' length='40'>
+			<Assignment start='174' length='39' operator='='>
+				<ArrayCreation start='174' length='20'>
+					<ArrayElement start='175' length='8'>
+						<Key>
+						</Key>
+						<Value>
+							<ArrayCreation start='175' length='8'>
+								<ArrayElement start='176' length='2'>
+									<Key>
+									</Key>
+									<Value>
+										<Variable start='176' length='2' isDollared='true'>
+											<Identifier start='177' length='1' name='a'/>
+										</Variable>
+									</Value>
+								</ArrayElement>
+								<ArrayElement start='180' length='2'>
+									<Key>
+									</Key>
+									<Value>
+										<Variable start='180' length='2' isDollared='true'>
+											<Identifier start='181' length='1' name='b'/>
+										</Variable>
+									</Value>
+								</ArrayElement>
+							</ArrayCreation>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='185' length='8'>
+						<Key>
+						</Key>
+						<Value>
+							<ArrayCreation start='185' length='8'>
+								<ArrayElement start='186' length='2'>
+									<Key>
+									</Key>
+									<Value>
+										<Variable start='186' length='2' isDollared='true'>
+											<Identifier start='187' length='1' name='c'/>
+										</Variable>
+									</Value>
+								</ArrayElement>
+								<ArrayElement start='190' length='2'>
+									<Key>
+									</Key>
+									<Value>
+										<Variable start='190' length='2' isDollared='true'>
+											<Identifier start='191' length='1' name='d'/>
+										</Variable>
+									</Value>
+								</ArrayElement>
+							</ArrayCreation>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<Value>
+					<ArrayCreation start='197' length='16'>
+						<ArrayElement start='198' length='6'>
+							<Key>
+							</Key>
+							<Value>
+								<ArrayCreation start='198' length='6'>
+									<ArrayElement start='199' length='1'>
+										<Key>
+										</Key>
+										<Value>
+											<Scalar start='199' length='1' type='int' value='1'/>
+										</Value>
+									</ArrayElement>
+									<ArrayElement start='202' length='1'>
+										<Key>
+										</Key>
+										<Value>
+											<Scalar start='202' length='1' type='int' value='2'/>
+										</Value>
+									</ArrayElement>
+								</ArrayCreation>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='206' length='6'>
+							<Key>
+							</Key>
+							<Value>
+								<ArrayCreation start='206' length='6'>
+									<ArrayElement start='207' length='1'>
+										<Key>
+										</Key>
+										<Value>
+											<Scalar start='207' length='1' type='int' value='3'/>
+										</Value>
+									</ArrayElement>
+									<ArrayElement start='210' length='1'>
+										<Key>
+										</Key>
+										<Value>
+											<Scalar start='210' length='1' type='int' value='4'/>
+										</Value>
+									</ArrayElement>
+								</ArrayCreation>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,183 @@
+--TEST--
+Test short list syntax
+--FILE--
+<?php
+
+[$a, $b, $c] = $array;
+
+["a" => $a, "b" => $b, "c" => $c] = $array;
+
+[$a, $b, $c] = [1, 2, 3];
+
+foreach ($points as ["x" => $x, "y" => $y]) {
+	var_dump ( $x, $y );
+}
+
+[[$a, $b], [$c, $d]] = [[1, 2], [3, 4]];
+--EXPECT--
+<ModuleDeclaration start="0" end="215">
+	<ExpressionStatement start="7" end="29">
+		<Assignment start="7" end="28" operator="=">
+			<ArrayCreation start="7" end="19">
+				<ArrayElement start="8" end="10">
+					<VariableReference start="8" end="10" name="$a">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="12" end="14">
+					<VariableReference start="12" end="14" name="$b">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="16" end="18">
+					<VariableReference start="16" end="18" name="$c">
+					</VariableReference>
+				</ArrayElement>
+			</ArrayCreation>
+			<VariableReference start="22" end="28" name="$array">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="31" end="74">
+		<Assignment start="31" end="73" operator="=">
+			<ArrayCreation start="31" end="64">
+				<ArrayElement start="32" end="41">
+					<Scalar start="32" end="35" type="string" value="&quot;a&quot;">
+					</Scalar>
+					<VariableReference start="39" end="41" name="$a">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="43" end="52">
+					<Scalar start="43" end="46" type="string" value="&quot;b&quot;">
+					</Scalar>
+					<VariableReference start="50" end="52" name="$b">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="54" end="63">
+					<Scalar start="54" end="57" type="string" value="&quot;c&quot;">
+					</Scalar>
+					<VariableReference start="61" end="63" name="$c">
+					</VariableReference>
+				</ArrayElement>
+			</ArrayCreation>
+			<VariableReference start="67" end="73" name="$array">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="76" end="101">
+		<Assignment start="76" end="100" operator="=">
+			<ArrayCreation start="76" end="88">
+				<ArrayElement start="77" end="79">
+					<VariableReference start="77" end="79" name="$a">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="81" end="83">
+					<VariableReference start="81" end="83" name="$b">
+					</VariableReference>
+				</ArrayElement>
+				<ArrayElement start="85" end="87">
+					<VariableReference start="85" end="87" name="$c">
+					</VariableReference>
+				</ArrayElement>
+			</ArrayCreation>
+			<ArrayCreation start="91" end="100">
+				<ArrayElement start="92" end="93">
+					<Scalar start="92" end="93" type="int" value="1">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="95" end="96">
+					<Scalar start="95" end="96" type="int" value="2">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="98" end="99">
+					<Scalar start="98" end="99" type="int" value="3">
+					</Scalar>
+				</ArrayElement>
+			</ArrayCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ForEachStatement start="103" end="172">
+		<VariableReference start="112" end="119" name="$points">
+		</VariableReference>
+		<ArrayCreation start="123" end="145">
+			<ArrayElement start="124" end="133">
+				<Scalar start="124" end="127" type="string" value="&quot;x&quot;">
+				</Scalar>
+				<VariableReference start="131" end="133" name="$x">
+				</VariableReference>
+			</ArrayElement>
+			<ArrayElement start="135" end="144">
+				<Scalar start="135" end="138" type="string" value="&quot;y&quot;">
+				</Scalar>
+				<VariableReference start="142" end="144" name="$y">
+				</VariableReference>
+			</ArrayElement>
+		</ArrayCreation>
+		<ExpressionStatement start="150" end="170">
+			<PHPCallExpression start="150" end="169">
+				<FullyQualifiedReference start="150" end="158" name="var_dump">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="160" end="168">
+					<VariableReference start="161" end="163" name="$x">
+					</VariableReference>
+					<VariableReference start="165" end="167" name="$y">
+					</VariableReference>
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</ExpressionStatement>
+	</ForEachStatement>
+	<ExpressionStatement start="174" end="214">
+		<Assignment start="174" end="213" operator="=">
+			<ArrayCreation start="174" end="194">
+				<ArrayElement start="175" end="183">
+					<ArrayCreation start="175" end="183">
+						<ArrayElement start="176" end="178">
+							<VariableReference start="176" end="178" name="$a">
+							</VariableReference>
+						</ArrayElement>
+						<ArrayElement start="180" end="182">
+							<VariableReference start="180" end="182" name="$b">
+							</VariableReference>
+						</ArrayElement>
+					</ArrayCreation>
+				</ArrayElement>
+				<ArrayElement start="185" end="193">
+					<ArrayCreation start="185" end="193">
+						<ArrayElement start="186" end="188">
+							<VariableReference start="186" end="188" name="$c">
+							</VariableReference>
+						</ArrayElement>
+						<ArrayElement start="190" end="192">
+							<VariableReference start="190" end="192" name="$d">
+							</VariableReference>
+						</ArrayElement>
+					</ArrayCreation>
+				</ArrayElement>
+			</ArrayCreation>
+			<ArrayCreation start="197" end="213">
+				<ArrayElement start="198" end="204">
+					<ArrayCreation start="198" end="204">
+						<ArrayElement start="199" end="200">
+							<Scalar start="199" end="200" type="int" value="1">
+							</Scalar>
+						</ArrayElement>
+						<ArrayElement start="202" end="203">
+							<Scalar start="202" end="203" type="int" value="2">
+							</Scalar>
+						</ArrayElement>
+					</ArrayCreation>
+				</ArrayElement>
+				<ArrayElement start="206" end="212">
+					<ArrayCreation start="206" end="212">
+						<ArrayElement start="207" end="208">
+							<Scalar start="207" end="208" type="int" value="3">
+							</Scalar>
+						</ArrayElement>
+						<ArrayElement start="210" end="211">
+							<Scalar start="210" end="211" type="int" value="4">
+							</Scalar>
+						</ArrayElement>
+					</ArrayCreation>
+				</ArrayElement>
+			</ArrayCreation>
+		</Assignment>
+	</ExpressionStatement>
+</ModuleDeclaration>
