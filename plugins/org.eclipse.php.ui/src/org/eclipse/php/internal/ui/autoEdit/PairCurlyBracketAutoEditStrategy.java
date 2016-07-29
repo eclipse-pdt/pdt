@@ -231,7 +231,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 
 			// deal with PHP block within HTML tags
 			if (!(firstRegion instanceof ContextRegion)) { // meaning
-															// "not-PHP-Resgion"
+															// "not-PHP-Region"
 				ITextRegion regionAtCharacterOffset = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 				if (regionAtCharacterOffset instanceof ContextRegionContainer) {
 					ContextRegionContainer phpContext = (ContextRegionContainer) regionAtCharacterOffset;

@@ -56,6 +56,10 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		// in 'case default' indentation case we move one char back to avoid
 		// the first 'case' or 'default' region
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		if (tRegion == null) {
+			return;
+		}
+
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
 		// in case of container we have the extract the PhpScriptRegion

@@ -404,8 +404,8 @@ public class IndentationBaseDetector {
 	}
 
 	private boolean isMultilineType(final String state) {
-		return state.equals(PHPPartitionTypes.PHP_QUOTED_STRING)
-				|| state.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || state.equals(PHPPartitionTypes.PHP_DOC);
+		return (state == PHPPartitionTypes.PHP_QUOTED_STRING) || (state == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
+				|| (state == PHPPartitionTypes.PHP_DOC);
 	}
 
 }
