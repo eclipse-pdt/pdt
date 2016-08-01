@@ -1,0 +1,18 @@
+--TEST--
+Test class const visibility
+--FILE--
+<?php
+
+class Token {
+
+	private const BOO1 = 44;
+	protected const BOO2 = 44;
+	
+	function function_name() {
+		self::B|
+	}
+}
+
+--EXPECT--
+field(BOO1)
+field(BOO2)

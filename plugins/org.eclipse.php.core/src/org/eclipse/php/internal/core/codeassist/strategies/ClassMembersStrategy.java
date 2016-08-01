@@ -126,7 +126,30 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		int flags = member.getFlags();
 		if (PHPFlags.isConstant(member.getFlags())) {
 			if (context.getTriggerType() == Trigger.CLASS) {
-				return false; // 17:1-4
+				if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
+						&& !isTraitMember(context.getPhpVersion(), type, member))) {
+					if (isParent(context)) { // is Parent
+						return true; // 1:1
+					} else if (isSelfKeyword(context)) {
+						return false;// 1:2
+					} else if (isStaticAccessFromInsideClass(context)) {
+						return false;// 1:3
+					} else if (isStaticAccessFromOutsideClass(context)) {
+						return true;// 1:4
+					}
+				} else if (PHPFlags.isProtected(flags)) {
+					if (isParent(context)) { // is Parent
+						return false; // 2:1
+					} else if (isSelfKeyword(context)) {
+						return false;// 2:2
+					} else if (isStaticAccessFromInsideClass(context)) {
+						return false;// 2:3
+					} else if (isStaticAccessFromOutsideClass(context)) {
+						return true;// 2:4
+					}
+				} else if (PHPFlags.isPublic(flags)) {
+					return false;
+				}
 			} else if (context.getTriggerType() == Trigger.OBJECT) {
 				return true;// 17:5-7
 			}
