@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.ast.nodes.ArrayAccess;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
@@ -106,6 +107,11 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 
 		rewrite();
 		checkResult("<?php class Test { public function test($tmp) {} }\n ?>");
+	}
+
+	@Ignore
+	public void refernceInstanciation() throws Exception {
+		// no longer valid for PHP7+
 	}
 
 }

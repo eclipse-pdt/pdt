@@ -1,0 +1,10 @@
+--TEST--
+Test unfinished try statement error reporting
+--FILE--
+<?php
+class a {
+}
+
+$a = & new a ();
+--EXPECT--
+[line=5, start=26, end=29] syntax error, unexpected 'new'

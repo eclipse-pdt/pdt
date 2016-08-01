@@ -2260,13 +2260,6 @@ T_LIST:s T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = new Assignment(varleft, refvarright, parser.ast, var, Assignment.OP_EQUAL, new Reference(reftokenleft, refvarright, parser.ast, refvar));
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken T_NEW:s class_name_reference:className ctor_arguments:ctor
-{:
-	RESULT = new Assignment(varleft, ctorright, parser.ast, var, Assignment.OP_EQUAL,
-		new Reference(reftokenleft, ctorright, parser.ast,
-			new ClassInstanceCreation(sleft, ctorright, parser.ast, className, ctor)));
-:}
-
 | T_CLONE:s expr:expr
 {:
 	RESULT = new CloneExpression(sleft, exprright, parser.ast, expr);

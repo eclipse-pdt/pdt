@@ -12,19 +12,24 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
-import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.junit.ClassRule;
-import org.junit.rules.TestWatcher;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ PHP5ErrorReportingTests.class, PHP53ErrorReportingTests.class, PHP54ErrorReportingTests.class,
-		PHP55ErrorReportingTests.class, PHP56ErrorReportingTests.class, PHP7ErrorReportingTests.class,
-		PHP71ErrorReportingTests.class })
-public class ErrorReportingTests {
+@RunWith(PDTTList.class)
+public class PHP71ErrorReportingTests extends AbstractErrorReportingTests {
 
-	@ClassRule
-	public static TestWatcher watcher = new TestSuiteWatcher();
+	@Parameters
+	public static final String[] TEST_DIRS = { "/workspace/errors/php54", "/workspace/errors/php55",
+			"/workspace/errors/php56", "/workspace/errors/php7", "/workspace/errors/php71" };
 
+	public PHP71ErrorReportingTests(String[] fileNames) {
+		super(fileNames);
+	}
+
+	@Override
+	protected PHPVersion getPHPVersion() {
+		return PHPVersion.PHP7_1;
+	}
 }
