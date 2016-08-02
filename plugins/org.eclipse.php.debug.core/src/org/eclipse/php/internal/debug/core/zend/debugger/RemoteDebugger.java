@@ -106,6 +106,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	private int previousSuspendCount;
 	private String cachedCWD;
 	private PHPstack cachedStack;
+	private String phpVersion;
 
 	/**
 	 * Creates new RemoteDebugSession
@@ -757,6 +758,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 
+		detectPHPVersion();
+
 		try {
 			debugHandler.getDebugTarget().installDeferredBreakpoints();
 		} catch (CoreException ce) {
@@ -784,6 +787,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!detectProtocolID()) {
 			return false;
 		}
+
+		detectPHPVersion();
 
 		StartRequest request = new StartRequest();
 		try {
@@ -879,6 +884,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 		// user is using an incompatible version of debugger:
 		getDebugHandler().wrongDebugServer();
 		return false;
+	}
+
+	/**
+	 * Detects PHP version that debug session is running on.
+	 */
+	protected void detectPHPVersion() {
+		phpVersion = eval("phpversion()"); //$NON-NLS-1$
 	}
 
 	public static void warnOlderDebugVersion() {
@@ -1313,6 +1325,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		resolvedIncludePaths.put(project.getName(), includePaths);
 		return includePaths;
+	}
+
+	@Override
+	public String getPHPVersion() {
+		return phpVersion;
 	}
 
 	// ---------------------------------------------------------------------------

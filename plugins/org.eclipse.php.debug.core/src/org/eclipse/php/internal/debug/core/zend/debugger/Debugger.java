@@ -225,6 +225,11 @@ public interface Debugger {
 	 */
 	public boolean isActive();
 
+	/**
+	 * Returns PHP version that debug session is running on.
+	 */
+	public String getPHPVersion();
+
 	// ---------------------------------------------------------------------------
 
 	// Interface for started response handler.
