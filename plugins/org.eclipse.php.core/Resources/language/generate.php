@@ -157,39 +157,50 @@ function make_funckey_from_ref ($ref) {
  */
 function parse_phpdoc_functions ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/reference/*/*/*.xml")
+		glob ("{$phpdocDir}/reference/*/*/*.xml"),
+		glob ("{$phpdocDir}/language/*/*.xml"),
+		glob ("{$phpdocDir}/language/predefined/*/*.xml")
   );
   $functionsDoc = array();
 	foreach ($xml_files as $xml_file) {
 		$xml = load_xml ($xml_file);
 
 		if (preg_match ('@<refentry.*?xml:id=["\'](.*?)["\'].*?>.*?<refname>(.*?)</refname>.*?<refpurpose>(.*?)</refpurpose>@s', $xml, $match)) {
-
-			$refname = make_funckey_from_str ($match[2]);
+			$pathInfo = pathinfo ( $xml_file );
+			$typeName = array_pop ( explode ( '/', $pathInfo ['dirname'] ) );
+			if ($typeName === "functions") {
+				$refname = make_funckey_from_str ( $match [2] );
+			} else {
+				// workaround for handling interfaces refname, interfaces contains also refname for subclasses 
+				$refname = $typeName . "::" . array_pop ( explode ( '::', make_funckey_from_str ( $match [2] ) ) );
+			}
+			
 			$functionsDoc[$refname]['id'] = $match[1];
-			$functionsDoc[$refname]['quickref'] = trim($match[3]);
+			$functionsDoc[$refname]['quickref'] = xml_to_phpdoc( trim ( $match [3] ) );
 
 			if (preg_match ('@<refsect1\s+role=["\']description["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$description = $match[1];
 				$function_alias = null;
 				$parameters = null;
-				$has_object_style = false;
-				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
-					$functionsDoc[$refname]['classname'] = trim($match[2]);
-					$functionsDoc[$refname]['returntype'] = trim($match[3]);
-					$functionsDoc[$refname]['methodname'] = trim($match[4]);
-					$parameters = $match[5];
-					$description = $match[1].$match[6];
-					$has_object_style = true;
+				$has_object_style = preg_match ("@<methodsynopsis role=\"oop\">@s", $description);
+				if (preg_match ( '@<methodsynopsis.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match )) {
+					$functionsDoc [$refname] ['returntype'] = trim ( $match [1] );
+					$parameters = $match [3];
 				}
-				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<constructorsynopsis>.*?<methodname>(.*?)</methodname>(.*?)</constructorsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
-					$functionsDoc[$refname]['classname'] = trim($match[2]);
-					$functionsDoc[$refname]['methodname'] = trim($match[3]);
-					$parameters = $match[4];
-					$description = $match[1].$match[5];
-					$has_object_style = true;
+				
+				if (preg_match_all ( '@<para>(.*?)</para>@s', $description, $match )) {
+					$functionsDoc [$refname] ['returndoc'] = xml_to_phpdoc ( $match [1] [sizeof ( $match [1] ) - 1] );
 				}
-				if (preg_match ('@<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match)) {
+// 				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<constructorsynopsis>.*?<methodname>(.*?)</methodname>(.*?)</constructorsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
+// 					$functionsDoc[$refname]['classname'] = trim($match[2]);
+// 					$functionsDoc[$refname]['methodname'] = trim($match[3]);
+// 					$parameters = $match[4];
+// 					$description = $match[1].$match[5];
+// 					$has_object_style = true;
+// 					echo "\tXXXXXXXXXXx". "\n";
+// 				}
+
+				if (preg_match ('@<methodsynopsis .*?>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match)) {
 					if ($has_object_style) {
 						$function_alias = trim($match[2]);
 					} else {
@@ -210,7 +221,7 @@ function parse_phpdoc_functions ($phpdocDir) {
 					}
 				}
 				if ($parameters) {
-					if (preg_match_all ('@<methodparam\s*(.*?)>.*?<type>(.*?)</type>.*?<parameter\s*(.*?)>(.*?)</parameter>.*?</methodparam>@s', $parameters, $match)) {
+					if (preg_match_all ('@<methodparam\s*(.*?)>.*?<type>(.*?)</type>.*?<parameter\s*(.*?)>(.*?)</parameter>(.*?)</methodparam>@s', $parameters, $match)) {
 						for ($i = 0; $i < count($match[0]); ++$i) {
 							$parameter = array (
 								'type' => trim($match[2][$i]),
@@ -222,7 +233,11 @@ function parse_phpdoc_functions ($phpdocDir) {
 							if (preg_match ('@role=[\'"]reference[\'"]@', $match[3][$i])) {
 								$parameter['isreference'] = true;
 							}
+// 							if (preg_match('@<initializer>(.*?)</initializer>@s', $match[5][$i], $valueMatch)){
+// 								$parameter['defaultvalue'] = $valueMatch[1];
+// 							}
 							$functionsDoc[$refname]['parameters'][] = $parameter;
+
 						}
 					}
 				}
@@ -240,7 +255,7 @@ function parse_phpdoc_functions ($phpdocDir) {
                     }
                 }
 			}
-			if (preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
+			if (empty($functionsDoc[$refname]['returndoc']) && preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$returnvalues = $match[1];
 				if (preg_match ('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match)) {
 					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
@@ -823,7 +838,11 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
-					print " * @param {$parameter['type']} {$parameter['name']}";
+					$name = $parameter ['name'];
+					if ($name [0] != '$') {
+						$name = '$' . $name;
+					}
+					print " * @param {$parameter['type']} {$name}";
 					if (@$parameter['isoptional']) {
 						print " [optional]";
 					}
@@ -983,7 +1002,8 @@ function load_entities()
     $result['true'] = 'true';
     $result['return.void'] = '';
     $result['return.success'] = 'Returns true on success or false on failure';
-
+    $result['null'] = 'NULL';
+    $result['Alias'] = 'Alias';
 
     $names = array();
     foreach (array_keys($result) as $v) {
