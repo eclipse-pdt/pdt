@@ -70,7 +70,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	}
 
 	public Expression[] getCurrentVariables(int depth) {
-		Expression contextExpression = new CurrentContextExpression();
+		Expression contextExpression = CurrentContextExpression.build(debugger);
 		byte[] value = getExpressionValue(contextExpression, depth);
 		ExpressionValue variableValue = expressionValueDeserializer.deserializer(contextExpression, value);
 		Expression[] variables = variableValue.getOriChildren();
@@ -115,7 +115,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		byte[] value = getExpressionValue(expression, depth);
 		ExpressionValue expressionValue = expressionValueDeserializer.deserializer(expression, value);
 		// Workaround for fetching static members for objects
-		if (expressionValue.getDataType() == PHP_OBJECT) {
+		if (expressionValue.getDataType() == PHP_OBJECT && CurrentContextExpression.supportsStaticContext(debugger)) {
 			Expression[] expressionStaticNodes = ExpressionsUtil.fetchStaticMembers((String) expressionValue.getValue(),
 					this);
 			List<Expression> allNodes = new ArrayList<Expression>();
