@@ -1069,7 +1069,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	/**
 	 * iterate over regions in case of PhpScriptRegion reparse the region. in
-	 * case of region contaioner iterate over the container regions.
+	 * case of region container iterate over the container regions.
 	 * 
 	 * @param doc
 	 *            structured document
@@ -2278,6 +2278,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				PhpSourceParser.editFile.set(resource);
 
 				super.doSetInput(input);
+
+				PhpSourceParser.editFile.set(null);
 
 				initPHPVersionsListener();
 

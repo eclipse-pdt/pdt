@@ -17,6 +17,7 @@ import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -67,10 +68,15 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
 
-	public PhpScriptRegion(String newContext, int startOffset, IProject project, AbstractPhpLexer phpLexer) {
+	public PhpScriptRegion(String newContext, int startOffset, @Nullable IProject project,
+			@NonNull AbstractPhpLexer phpLexer) {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
+		// must be done by the caller when phpLexer is newly created or when it
+		// was used on a different project:
+		// phpLexer.setPatterns(project);
+		// phpLexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 
 		try {
 			// we use reflection here since we don't know the constant value of
@@ -360,7 +366,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * 
 	 * @param newText
 	 */
-	public void completeReparse(AbstractPhpLexer lexer) {
+	private void completeReparse(@NonNull AbstractPhpLexer lexer) {
 		setPhpTokens(lexer);
 	}
 
