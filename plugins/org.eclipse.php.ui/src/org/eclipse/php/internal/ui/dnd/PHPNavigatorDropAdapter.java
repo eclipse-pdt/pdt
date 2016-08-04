@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -36,7 +37,6 @@ import org.eclipse.ui.actions.MoveFilesAndFoldersOperation;
 import org.eclipse.ui.actions.ReadOnlyStateChecker;
 import org.eclipse.ui.internal.views.navigator.ResourceNavigatorMessages;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 /**
@@ -115,7 +115,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IResource[] getSelectedResources() {
 		ArrayList selectedResources = new ArrayList();
 
-		ISelection selection = LocalSelectionTransfer.getInstance().getSelection();
+		ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
 			for (Iterator i = ssel.iterator(); i.hasNext();) {
@@ -207,7 +207,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		IStatus status = null;
 		IResource[] resources = null;
 		TransferData currentTransfer = getCurrentTransfer();
-		if (LocalSelectionTransfer.getInstance().isSupportedType(currentTransfer)) {
+		if (LocalSelectionTransfer.getTransfer().isSupportedType(currentTransfer)) {
 			resources = getSelectedResources();
 		} else if (ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
 			resources = (IResource[]) data;
@@ -284,7 +284,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		fReorgMoveAction.setSources(sources);
 		fReorgMoveAction.setTarget(target);
 
-		ISelection selection = LocalSelectionTransfer.getInstance().getSelection();
+		ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			// fReorgMoveAction.setSelection((StructuredSelection) selection);
 			fReorgMoveAction.runDrop((IStructuredSelection) selection);
@@ -310,7 +310,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		}
 		String message = null;
 		// drag within Eclipse?
-		if (LocalSelectionTransfer.getInstance().isSupportedType(transferType)) {
+		if (LocalSelectionTransfer.getTransfer().isSupportedType(transferType)) {
 			IResource[] selectedResources = getSelectedResources();
 
 			if (selectedResources.length == 0) {

@@ -160,7 +160,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		LayoutUtil.setHorizontalGrabbing(fLibrariesList.getTreeControl(null));
 		int buttonBarWidth = converter.convertWidthInCharsToPixels(24);
 		fLibrariesList.setButtonsMinWidth(buttonBarWidth);
-		fLibrariesList.getTreeViewer().setSorter(new BPListElementSorter());
+		fLibrariesList.getTreeViewer().setComparator(new BPListElementSorter());
 		fSWTControl = composite;
 		return composite;
 	}

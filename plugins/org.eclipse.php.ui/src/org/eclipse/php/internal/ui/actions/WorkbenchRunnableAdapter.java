@@ -75,7 +75,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadL
 	 */
 	public void threadChange(Thread thread) {
 		if (fTransfer)
-			Platform.getJobManager().transferRule(fRule, thread);
+			Job.getJobManager().transferRule(fRule, thread);
 	}
 
 	/*

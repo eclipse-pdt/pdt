@@ -56,6 +56,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -2228,7 +2229,7 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 		else
 			action = new FindReplaceAction(getResourceBundle(), "Editor.FindReplace.", viewer.getControl().getShell(), //$NON-NLS-1$
 					getFindReplaceTarget());
-		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.FIND_REPLACE);
+		action.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE);
 		viewer.addAction(MergeSourceViewer.FIND_ID, action);
 	}
 

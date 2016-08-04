@@ -261,7 +261,7 @@ public class TreeListDialogField extends DialogField {
 			fTree.expandToLevel(fTreeExpandLevel);
 
 			if (fViewerSorter != null) {
-				fTree.setSorter(fViewerSorter);
+				fTree.setComparator(fViewerSorter);
 			}
 
 			fTreeControl.setEnabled(isEnabled());
