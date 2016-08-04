@@ -28,7 +28,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class PhpSourceParser extends XMLSourceParser {
 
 	public static ThreadLocal<IResource> editFile = new ThreadLocal<IResource>();
-	private IProject project;
+	private IProject project = null;
 
 	public PhpSourceParser() {
 		super();
