@@ -33,6 +33,7 @@ import org.eclipse.dltk.internal.ui.scriptview.ScriptMessages;
 import org.eclipse.dltk.internal.ui.scriptview.SelectionTransferDropAdapter;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -45,7 +46,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapter {
 
@@ -151,7 +151,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	// ---------------------------------------
 
 	public Transfer getTransfer() {
-		return LocalSelectionTransfer.getInstance();
+		return LocalSelectionTransfer.getTransfer();
 	}
 
 	public boolean isEnabled(DropTargetEvent event) {
@@ -295,7 +295,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	protected void initializeSelection() {
 		if (fElements != null)
 			return;
-		ISelection s = LocalSelectionTransfer.getInstance().getSelection();
+		ISelection s = LocalSelectionTransfer.getTransfer().getSelection();
 		if (!(s instanceof IStructuredSelection)) {
 			fSelection = StructuredSelection.EMPTY;
 			fElements = Collections.EMPTY_LIST;

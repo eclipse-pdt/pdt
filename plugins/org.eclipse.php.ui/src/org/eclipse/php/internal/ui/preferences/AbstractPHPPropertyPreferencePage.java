@@ -43,7 +43,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.ResourceSorter;
+import org.eclipse.ui.views.navigator.ResourceComparator;
 
 public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage implements IWorkbenchPreferencePage {
 	/*
@@ -236,7 +236,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 
 			protected Control createDialogArea(Composite container) {
 				Control area = super.createDialogArea(container);
-				getTableViewer().setSorter(new ResourceSorter(ResourceSorter.NAME));
+				getTableViewer().setComparator(new ResourceComparator(ResourceComparator.NAME));
 				return area;
 			}
 		};

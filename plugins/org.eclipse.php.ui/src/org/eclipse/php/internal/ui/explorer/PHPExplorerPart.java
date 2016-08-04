@@ -22,6 +22,7 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.ui.actions.ConfigureWorkingSetAction;
@@ -36,7 +37,6 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 /**
@@ -155,7 +155,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	private void initDragAndDrop() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
 
-		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), FileTransfer.getInstance(),
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance(),
 				PluginTransfer.getInstance() };
 
 		TreeViewer viewer = getTreeViewer();

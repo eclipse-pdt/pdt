@@ -22,7 +22,7 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 	IViewPart part;
 
 	public PHPRefactorActionGroup(IViewPart part) {
-		super(part);
+		super(part, null);
 		this.part = part;
 		IPHPActionDelegator renamePHPElement = PHPActionDelegatorRegistry
 				.getActionDelegator("org.eclipse.php.ui.actions.RenameElement"); //$NON-NLS-1$

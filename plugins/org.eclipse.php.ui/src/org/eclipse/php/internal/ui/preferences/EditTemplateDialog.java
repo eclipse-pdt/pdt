@@ -11,8 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.expressions.Expression;
 import org.eclipse.dltk.ui.IContextMenuConstants;
@@ -43,12 +46,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.ActiveShellExpression;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 //import org.eclipse.jdt.ui.IContextMenuConstants;
 //import org.eclipse.jdt.ui.PreferenceConstants;
@@ -479,13 +482,13 @@ public class EditTemplateDialog extends StatusDialog {
 		TextViewerAction action = new TextViewerAction(fPatternEditor, ITextOperationTarget.UNDO);
 		action.setText(PreferencesMessages.EditTemplateDialog_undo);
 		fGlobalActions.put(ITextEditorActionConstants.UNDO, action);
-		handlerActivations.add(handlerService.activateHandler(IWorkbenchActionDefinitionIds.UNDO,
+		handlerActivations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_UNDO,
 				new ActionHandler(action), expression));
 
 		action = new TextViewerAction(fPatternEditor, ITextOperationTarget.REDO);
 		action.setText(PreferencesMessages.EditTemplateDialog_redo);
 		fGlobalActions.put(ITextEditorActionConstants.REDO, action);
-		handlerActivations.add(handlerService.activateHandler(IWorkbenchActionDefinitionIds.REDO,
+		handlerActivations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_REDO,
 				new ActionHandler(action), expression));
 
 		action = new TextViewerAction(fPatternEditor, ITextOperationTarget.CUT);

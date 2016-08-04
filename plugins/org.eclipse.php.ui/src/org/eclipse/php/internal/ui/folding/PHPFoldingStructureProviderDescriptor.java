@@ -48,14 +48,14 @@ public final class PHPFoldingStructureProviderDescriptor {
 	 */
 	PHPFoldingStructureProviderDescriptor(IConfigurationElement element) {
 		fElement = element;
-		fId = element.getAttributeAsIs(ID);
+		fId = element.getAttribute(ID);
 		Assert.isLegal(fId != null);
 
 		fName = element.getAttribute(NAME);
 		if (fName == null)
 			fName = fId;
 
-		if (element.getAttributeAsIs(PREFERENCES_CLASS) == null)
+		if (element.getAttribute(PREFERENCES_CLASS) == null)
 			fHasPreferences = false;
 		else
 			fHasPreferences = true;

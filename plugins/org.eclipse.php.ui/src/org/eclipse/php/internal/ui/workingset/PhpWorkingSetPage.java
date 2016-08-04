@@ -22,7 +22,7 @@ import org.eclipse.dltk.internal.ui.actions.SelectionConverter;
 import org.eclipse.dltk.internal.ui.util.SWTUtil;
 import org.eclipse.dltk.ui.*;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
-import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
+import org.eclipse.dltk.ui.viewsupport.StyledDecoratingModelLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
@@ -113,8 +113,8 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS,
 				DLTKUIPlugin.getDefault().getPreferenceStore());
 
-		fTree.setLabelProvider(new DecoratingModelLabelProvider(fScriptElementLabelProvider));
-		fTree.setSorter(new ModelElementSorter());
+		fTree.setLabelProvider(new StyledDecoratingModelLabelProvider(fScriptElementLabelProvider));
+		fTree.setComparator(new ModelElementSorter());
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add empty inner package filter support here..."); //$NON-NLS-1$
 		}

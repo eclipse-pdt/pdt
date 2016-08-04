@@ -440,7 +440,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 
 			result.addFilter(new Filter());
 			result.setLabelProvider(new GrayedCheckedModelLabelProvider());
-			result.setSorter(new GrayedCheckModelElementSorter());
+			result.setComparator(new GrayedCheckModelElementSorter());
 			result.setContentProvider(new GrayedCheckedModelContentProvider());
 
 			result.setInput(fModel);

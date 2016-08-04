@@ -78,7 +78,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		fViewer = createViewer(parent);
 		fViewer.setUseHashlookup(true);
 		// sort entries alphabetically
-		fViewer.setSorter(new PHPFunctionsSorter());
+		fViewer.setComparator(new PHPFunctionsSorter());
 		setProviders();
 
 		// filter out children for methods
