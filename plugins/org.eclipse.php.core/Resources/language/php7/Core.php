@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.7.0.0-dev
+// Start of Core v.7.0.8
 
 class stdClass  {
 }
@@ -18,7 +18,7 @@ class stdClass  {
  * scripts. Either IteratorAggregate or
  * Iterator must be used instead.
  * When implementing an interface which extends Traversable, make sure to
- * list IteratorAggregate or 
+ * list IteratorAggregate or
  * Iterator before its name in the implements
  * clause.</p>
  * @link http://www.php.net/manual/en/class.traversable.php
@@ -32,6 +32,12 @@ interface Traversable  {
  */
 interface IteratorAggregate extends Traversable {
 
+	/**
+	 * Retrieve an external iterator
+	 * @link http://www.php.net/manual/en/iteratoraggregate.getiterator.php
+	 * @return Traversable An instance of an object implementing Iterator or
+	 * Traversable
+	 */
 	abstract public function getIterator () {}
 
 }
@@ -43,14 +49,40 @@ interface IteratorAggregate extends Traversable {
  */
 interface Iterator extends Traversable {
 
+	/**
+	 * Return the current element
+	 * @link http://www.php.net/manual/en/iterator.current.php
+	 * @return mixed Can return any type.
+	 */
 	abstract public function current () {}
 
+	/**
+	 * Move forward to next element
+	 * @link http://www.php.net/manual/en/iterator.next.php
+	 * @return void Any returned value is ignored.
+	 */
 	abstract public function next () {}
 
+	/**
+	 * Return the key of the current element
+	 * @link http://www.php.net/manual/en/iterator.key.php
+	 * @return scalar scalar on success, or null on failure.
+	 */
 	abstract public function key () {}
 
+	/**
+	 * Checks if current position is valid
+	 * @link http://www.php.net/manual/en/iterator.valid.php
+	 * @return boolean The return value will be casted to boolean and then evaluated.
+	 * Returns true on success or false on failure
+	 */
 	abstract public function valid () {}
 
+	/**
+	 * Rewind the Iterator to the first element
+	 * @link http://www.php.net/manual/en/iterator.rewind.php
+	 * @return void Any returned value is ignored.
+	 */
 	abstract public function rewind () {}
 
 }
@@ -62,23 +94,48 @@ interface Iterator extends Traversable {
 interface ArrayAccess  {
 
 	/**
-	 * @param $offset
+	 * Whether an offset exists
+	 * @link http://www.php.net/manual/en/arrayaccess.offsetexists.php
+	 * @param mixed $offset <p>
+	 * An offset to check for.
+	 * </p>
+	 * @return boolean true on success or false on failure
+	 * </p>
+	 * <p>
+	 * The return value will be casted to boolean if non-boolean was returned.
 	 */
 	abstract public function offsetExists ($offset) {}
 
 	/**
-	 * @param $offset
+	 * Offset to retrieve
+	 * @link http://www.php.net/manual/en/arrayaccess.offsetget.php
+	 * @param mixed $offset <p>
+	 * The offset to retrieve.
+	 * </p>
+	 * @return mixed Can return all value types.
 	 */
 	abstract public function offsetGet ($offset) {}
 
 	/**
-	 * @param $offset
-	 * @param $value
+	 * Assign a value to the specified offset
+	 * @link http://www.php.net/manual/en/arrayaccess.offsetset.php
+	 * @param mixed $offset <p>
+	 * The offset to assign the value to.
+	 * </p>
+	 * @param mixed $value <p>
+	 * The value to set.
+	 * </p>
+	 * @return void 
 	 */
 	abstract public function offsetSet ($offset, $value) {}
 
 	/**
-	 * @param $offset
+	 * Unset an offset
+	 * @link http://www.php.net/manual/en/arrayaccess.offsetunset.php
+	 * @param mixed $offset <p>
+	 * The offset to unset.
+	 * </p>
+	 * @return void 
 	 */
 	abstract public function offsetUnset ($offset) {}
 
@@ -94,14 +151,29 @@ interface ArrayAccess  {
  * unserialized the class is known and the appropriate unserialize() method is called as
  * a constructor instead of calling __construct(). If you need to execute the standard
  * constructor you may do so in the method.</p>
+ * <p>Note, that when an old instance of a class that implements this interface
+ * now, which had been serialized before the class implemeted the interface, is
+ * unserialized, __wakeup() is called
+ * instead of the serialize method, what might be useful for migration
+ * purposes.</p>
  * @link http://www.php.net/manual/en/class.serializable.php
  */
 interface Serializable  {
 
+	/**
+	 * String representation of object
+	 * @link http://www.php.net/manual/en/serializable.serialize.php
+	 * @return string the string representation of the object or null
+	 */
 	abstract public function serialize () {}
 
 	/**
-	 * @param $serialized
+	 * Constructs the object
+	 * @link http://www.php.net/manual/en/serializable.unserialize.php
+	 * @param string $serialized <p>
+	 * The string representation of the object.
+	 * </p>
+	 * @return void The return value from this method is ignored.
 	 */
 	abstract public function unserialize ($serialized) {}
 
@@ -118,20 +190,65 @@ interface Serializable  {
  */
 interface Throwable  {
 
+	/**
+	 * Gets the message
+	 * @link http://www.php.net/manual/en/throwable.getmessage.php
+	 * @return string the message associated with the thrown object.
+	 */
 	abstract public function getMessage () {}
 
+	/**
+	 * Gets the exception code
+	 * @link http://www.php.net/manual/en/throwable.getcode.php
+	 * @return int the exception code as integer in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
 	abstract public function getCode () {}
 
+	/**
+	 * Gets the file in which the exception occurred
+	 * @link http://www.php.net/manual/en/throwable.getfile.php
+	 * @return string the name of the file from which the object was thrown.
+	 */
 	abstract public function getFile () {}
 
+	/**
+	 * Gets the line on which the object was instantiated
+	 * @link http://www.php.net/manual/en/throwable.getline.php
+	 * @return int the line number where the thrown object was instantiated.
+	 */
 	abstract public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/throwable.gettrace.php
+	 * @return array the stack trace as an array in the same format as
+	 * debug_backtrace.
+	 */
 	abstract public function getTrace () {}
 
+	/**
+	 * Returns the previous Throwable
+	 * @link http://www.php.net/manual/en/throwable.getprevious.php
+	 * @return Throwable the previous Throwable if available, or
+	 * null otherwise.
+	 */
 	abstract public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/throwable.gettraceasstring.php
+	 * @return string the stack trace as a string.
+	 */
 	abstract public function getTraceAsString () {}
 
+	/**
+	 * Gets a string representation of the thrown object
+	 * @link http://www.php.net/manual/en/throwable.tostring.php
+	 * @return string the string representation of the thrown object.
+	 */
 	abstract public function __toString () {}
 
 }
@@ -154,31 +271,89 @@ class Exception implements Throwable {
 	private $previous;
 
 
+	/**
+	 * Clone the exception
+	 * @link http://www.php.net/manual/en/exception.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] <p>
+	 * The Exception message to throw.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The Exception code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous exception used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string the Exception message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return mixed the exception code as integer in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the exception occurred
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string the filename in which the exception was created.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the exception occurred
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int the line number where the exception was created.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array the Exception stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Exception
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Exception the previous Exception if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string the string representation of the exception.
+	 */
 	public function __toString () {}
 
 }
@@ -196,42 +371,115 @@ class ErrorException extends Exception implements Throwable {
 
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $severity [optional]
-	 * @param $filename [optional]
-	 * @param $lineno [optional]
-	 * @param $previous [optional]
+	 * Constructs the exception
+	 * @link http://www.php.net/manual/en/errorexception.construct.php
+	 * @param string $message [optional] <p>
+	 * The Exception message to throw.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The Exception code.
+	 * </p>
+	 * @param int $severity [optional] <p>
+	 * The severity level of the exception.
+	 * </p>
+	 * <p>
+	 * While the severity can be any integer value, it is intended that the
+	 * error constants be used.
+	 * </p>
+	 * @param string $filename [optional] <p>
+	 * The filename where the exception is thrown.
+	 * </p>
+	 * @param int $lineno [optional] <p>
+	 * The line number where the exception is thrown.
+	 * </p>
+	 * @param Exception $previous [optional] <p>
+	 * The previous exception used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $severity = null, $filename = null, $lineno = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $severity = E_ERROR, $filename = __FILE__, $lineno = __LINE__, Exception $previous = null) {}
 
+	/**
+	 * Gets the exception severity
+	 * @link http://www.php.net/manual/en/errorexception.getseverity.php
+	 * @return int the severity level of the exception.
+	 */
 	final public function getSeverity () {}
 
+	/**
+	 * Clone the exception
+	 * @link http://www.php.net/manual/en/exception.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string the Exception message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return mixed the exception code as integer in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the exception occurred
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string the filename in which the exception was created.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the exception occurred
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int the line number where the exception was created.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array the Exception stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Exception
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Exception the previous Exception if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string the string representation of the exception.
+	 */
 	public function __toString () {}
 
 }
 
 /**
  * Error is the base class for all
- * internal PHP error exceptions.
+ * internal PHP errors.
  * @link http://www.php.net/manual/en/class.error.php
  */
 class Error implements Throwable {
@@ -244,31 +492,86 @@ class Error implements Throwable {
 	private $previous;
 
 
+	/**
+	 * Clone the error
+	 * @link http://www.php.net/manual/en/error.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] <p>
+	 * The error message.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The error code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous throwable used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string the error message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return mixed the error code as integer
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string the filename in which the error occurred.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int the line number where the error occurred.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array the stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string the stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string the string representation of the error.
+	 */
 	public function __toString () {}
 
 }
@@ -286,38 +589,98 @@ class ParseError extends Error implements Throwable {
 	protected $line;
 
 
+	/**
+	 * Clone the error
+	 * @link http://www.php.net/manual/en/error.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] <p>
+	 * The error message.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The error code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous throwable used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string the error message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return mixed the error code as integer
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string the filename in which the error occurred.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int the line number where the error occurred.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array the stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string the stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string the string representation of the error.
+	 */
 	public function __toString () {}
 
 }
 
 /**
- * TypeError is thrown when strict
- * typing is enabled and an invalid argument is given to a function.
+ * There are three scenarios where a
+ * TypeError may be thrown. The
+ * first is where the argument type being passed to a function does not match
+ * its corresponding declared parameter type. The second is where a value
+ * being returned from a function does not match the declared function return
+ * type. The third is where an invalid number of arguments are passed to a
+ * built-in PHP function (strict mode only).
  * @link http://www.php.net/manual/en/class.typeerror.php
  */
 class TypeError extends Error implements Throwable {
@@ -327,31 +690,86 @@ class TypeError extends Error implements Throwable {
 	protected $line;
 
 
+	/**
+	 * Clone the error
+	 * @link http://www.php.net/manual/en/error.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] <p>
+	 * The error message.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The error code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous throwable used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string the error message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return mixed the error code as integer
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string the filename in which the error occurred.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int the line number where the error occurred.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array the stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string the stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string the string representation of the error.
+	 */
 	public function __toString () {}
 
 }
@@ -371,31 +789,86 @@ class ArithmeticError extends Error implements Throwable {
 	protected $line;
 
 
+	/**
+	 * Clone the error
+	 * @link http://www.php.net/manual/en/error.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] <p>
+	 * The error message.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The error code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous throwable used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string the error message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return mixed the error code as integer
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string the filename in which the error occurred.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int the line number where the error occurred.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array the stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string the stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string the string representation of the error.
+	 */
 	public function __toString () {}
 
 }
@@ -412,31 +885,86 @@ class DivisionByZeroError extends ArithmeticError implements Throwable {
 	protected $line;
 
 
+	/**
+	 * Clone the error
+	 * @link http://www.php.net/manual/en/error.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] <p>
+	 * The error message.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The error code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous throwable used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string the error message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return mixed the error code as integer
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string the filename in which the error occurred.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int the line number where the error occurred.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array the stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string the stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string the string representation of the error.
+	 */
 	public function __toString () {}
 
 }
@@ -456,32 +984,62 @@ class DivisionByZeroError extends ArithmeticError implements Throwable {
  */
 final class Closure  {
 
+	/**
+	 * Constructor that disallows instantiation
+	 * @link http://www.php.net/manual/en/closure.construct.php
+	 */
 	private function __construct () {}
 
 	/**
-	 * @param $closure
-	 * @param $newthis
-	 * @param $newscope [optional]
+	 * Duplicates a closure with a specific bound object and class scope
+	 * @link http://www.php.net/manual/en/closure.bind.php
+	 * @param Closure $closure <p>
+	 * The anonymous functions to bind.
+	 * </p>
+	 * @param object $newthis <p>
+	 * The object to which the given anonymous function should be bound, or
+	 * null for the closure to be unbound.
+	 * </p>
+	 * @param mixed $newscope [optional] <p>
+	 * The class scope to which associate the closure is to be associated, or
+	 * 'static' to keep the current one. If an object is given, the type of the
+	 * object will be used instead. This determines the visibility of protected
+	 * and private methods of the bound object.
+	 * It is not allowed to pass (an object of) an internal class as this parameter.
+	 * </p>
+	 * @return Closure a new Closure object or false on failure
 	 */
-	public static function bind ($closure, $newthis, $newscope = null) {}
+	public static function bind (Closure $closure, $newthis, $newscope = "static") {}
 
 	/**
-	 * @param $newthis
-	 * @param $newscope [optional]
+	 * Duplicates the closure with a new bound object and class scope
+	 * @link http://www.php.net/manual/en/closure.bindto.php
+	 * @param object $newthis <p>
+	 * The object to which the given anonymous function should be bound, or
+	 * null for the closure to be unbound. 
+	 * </p>
+	 * @param mixed $newscope [optional] <p>
+	 * The class scope to which associate the closure is to be associated, or
+	 * 'static' to keep the current one. If an object is given, the type of the
+	 * object will be used instead. This determines the visibility of protected
+	 * and private methods of the bound object.
+	 * </p>
+	 * @return Closure the newly created Closure object
+	 * or false on failure
 	 */
-	public function bindTo ($newthis, $newscope = null) {}
+	public function bindTo ($newthis, $newscope = "static") {}
 
 	/**
-	 * @param $newthis
-	 * @param $parameters [optional]
+	 * Binds and calls the closure
+	 * @link http://www.php.net/manual/en/closure.call.php
+	 * @param object $newthis <p>
+	 * The object to bind the closure to for the duration of the
+	 * call.
+	 * </p>
+	 * @param mixed $_ [optional] 
+	 * @return mixed the return value of the closure.
 	 */
-	public function call ($newthis, $parameters = null) {}
-
-	/**
-	 * @param mixed $args [optional]
-	 * @return mixed
-	 */
-	public function __invoke(...$args) { }
+	public function call ($newthis, $_ = null) {}
 
 }
 
@@ -493,28 +1051,74 @@ final class Closure  {
  */
 final class Generator implements Iterator, Traversable {
 
+	/**
+	 * Rewind the iterator
+	 * @link http://www.php.net/manual/en/generator.rewind.php
+	 * @return void 
+	 */
 	public function rewind () {}
 
+	/**
+	 * Check if the iterator has been closed
+	 * @link http://www.php.net/manual/en/generator.valid.php
+	 * @return bool false if the iterator has been closed. Otherwise returns true.
+	 */
 	public function valid () {}
 
+	/**
+	 * Get the yielded value
+	 * @link http://www.php.net/manual/en/generator.current.php
+	 * @return mixed the yielded value.
+	 */
 	public function current () {}
 
+	/**
+	 * Get the yielded key
+	 * @link http://www.php.net/manual/en/generator.key.php
+	 * @return mixed the yielded key.
+	 */
 	public function key () {}
 
+	/**
+	 * Resume execution of the generator
+	 * @link http://www.php.net/manual/en/generator.next.php
+	 * @return void 
+	 */
 	public function next () {}
 
 	/**
-	 * @param $value
+	 * Send a value to the generator
+	 * @link http://www.php.net/manual/en/generator.send.php
+	 * @param mixed $value <p>
+	 * Value to send into the generator. This value will be the return value of the
+	 * yield expression the generator is currently at.
+	 * </p>
+	 * @return mixed the yielded value.
 	 */
 	public function send ($value) {}
 
 	/**
-	 * @param $exception
+	 * Throw an exception into the generator
+	 * @link http://www.php.net/manual/en/generator.throw.php
+	 * @param Exception $exception <p>
+	 * Exception to throw into the generator.
+	 * </p>
+	 * @return mixed the yielded value.
 	 */
-	public function throw ($exception) {}
+	public function throw (Exception $exception) {}
 
+	/**
+	 * Get the return value of a generator
+	 * @link http://www.php.net/manual/en/generator.getreturn.php
+	 * @return mixed the generator's return value once it has finished executing.
+	 */
 	public function getReturn () {}
 
+	/**
+	 * Serialize callback
+	 * @link http://www.php.net/manual/en/generator.wakeup.php
+	 * @return void 
+	 */
 	public function __wakeup () {}
 
 }
@@ -526,31 +1130,89 @@ class ClosedGeneratorException extends Exception implements Throwable {
 	protected $line;
 
 
+	/**
+	 * Clone the exception
+	 * @link http://www.php.net/manual/en/exception.clone.php
+	 * @return void 
+	 */
 	final private function __clone () {}
 
 	/**
-	 * @param $message [optional]
-	 * @param $code [optional]
-	 * @param $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] <p>
+	 * The Exception message to throw.
+	 * </p>
+	 * @param int $code [optional] <p>
+	 * The Exception code.
+	 * </p>
+	 * @param Throwable $previous [optional] <p>
+	 * The previous exception used for the exception chaining.
+	 * </p>
+	 * @return string 
 	 */
-	public function __construct ($message = null, $code = null, $previous = null) {}
+	public function __construct ($message = "", $code = null, $previous = null) {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string the Exception message as a string.
+	 */
 	final public function getMessage () {}
 
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return mixed the exception code as integer in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
 	final public function getCode () {}
 
+	/**
+	 * Gets the file in which the exception occurred
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string the filename in which the exception was created.
+	 */
 	final public function getFile () {}
 
+	/**
+	 * Gets the line in which the exception occurred
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int the line number where the exception was created.
+	 */
 	final public function getLine () {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array the Exception stack trace as an array.
+	 */
 	final public function getTrace () {}
 
+	/**
+	 * Returns previous Exception
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Exception the previous Exception if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious () {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString () {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string the string representation of the exception.
+	 */
 	public function __toString () {}
 
 }
@@ -721,7 +1383,7 @@ function error_reporting ($level = null) {}
  * The value of the constant. In PHP 5, value must
  * be a scalar value (integer,
  * float, string, boolean, or
- * &null;). In PHP 7, array values are also accepted.
+ * null). In PHP 7, array values are also accepted.
  * </p>
  * <p>
  * While it is possible to define resource constants, it is
@@ -738,7 +1400,7 @@ function error_reporting ($level = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function define ($name, $value, $case_insensitive = null) {}
+function define ($name, $value, $case_insensitive = false) {}
 
 /**
  * Checks whether a given named constant exists
@@ -817,7 +1479,7 @@ function method_exists ($object, $method_name) {}
  * The name of the property
  * </p>
  * @return bool true if the property exists, false if it doesn't exist or
- * &null; in case of an error.
+ * null in case of an error.
  */
 function property_exists ($class, $property) {}
 
@@ -833,7 +1495,7 @@ function property_exists ($class, $property) {}
  * @return bool true if class_name is a defined class,
  * false otherwise.
  */
-function class_exists ($class_name, $autoload = null) {}
+function class_exists ($class_name, $autoload = true) {}
 
 /**
  * Checks if the interface has been defined
@@ -847,7 +1509,7 @@ function class_exists ($class_name, $autoload = null) {}
  * @return bool true if the interface given by 
  * interface_name has been defined, false otherwise.
  */
-function interface_exists ($interface_name, $autoload = null) {}
+function interface_exists ($interface_name, $autoload = true) {}
 
 /**
  * Checks if the trait exists
@@ -858,7 +1520,7 @@ function interface_exists ($interface_name, $autoload = null) {}
  * @param bool $autoload [optional] <p>
  * Whether to autoload if not already loaded.
  * </p>
- * @return bool true if trait exists, false if not, &null; in case of an error.
+ * @return bool true if trait exists, false if not, null in case of an error.
  */
 function trait_exists ($traitname, $autoload = null) {}
 
@@ -891,7 +1553,7 @@ function function_exists ($function_name) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function class_alias ($original, $alias, $autoload = null) {}
+function class_alias ($original, $alias, $autoload = true) {}
 
 /**
  * Returns an array with the names of included or required files
@@ -909,14 +1571,10 @@ function class_alias ($original, $alias, $autoload = null) {}
  */
 function get_included_files () {}
 
-/**
- * &Alias; <function>get_included_files</function>
- * @link http://www.php.net/manual/en/function.get-required-files.php
- */
 function get_required_files () {}
 
 /**
- * Checks if the object has this class as one of its parents
+ * Checks if the object has this class as one of its parents or implements it.
  * @link http://www.php.net/manual/en/function.is-subclass-of.php
  * @param mixed $object <p>
  * A class name or an object instance. No error is generated if the class does not exist.
@@ -932,7 +1590,7 @@ function get_required_files () {}
  * belongs to a class which is a subclass of
  * class_name, false otherwise.
  */
-function is_subclass_of ($object, $class_name, $allow_string = null) {}
+function is_subclass_of ($object, $class_name, $allow_string = true) {}
 
 /**
  * Checks if the object is of this class or has this class as one of its parents
@@ -950,7 +1608,7 @@ function is_subclass_of ($object, $class_name, $allow_string = null) {}
  * @return bool true if the object is of this class or has this class as one of
  * its parents, false otherwise.
  */
-function is_a ($object, $class_name, $allow_string = null) {}
+function is_a ($object, $class_name, $allow_string = false) {}
 
 /**
  * Get the default properties of the class
@@ -974,7 +1632,7 @@ function get_class_vars ($class_name) {}
  * </p>
  * @return array an associative array of defined object accessible non-static properties 
  * for the specified object in scope. If a property has
- * not been assigned a value, it will be returned with a &null; value.
+ * not been assigned a value, it will be returned with a null value.
  */
 function get_object_vars ($object) {}
 
@@ -985,7 +1643,7 @@ function get_object_vars ($object) {}
  * The class name or an object instance
  * </p>
  * @return array an array of method names defined for the class specified by
- * class_name. In case of an error, it returns &null;.
+ * class_name. In case of an error, it returns null.
  */
 function get_class_methods ($class_name) {}
 
@@ -1004,11 +1662,9 @@ function get_class_methods ($class_name) {}
  * @return bool This function returns false if wrong error_type is
  * specified, true otherwise.
  */
-function trigger_error ($error_msg, $error_type = null) {}
+function trigger_error ($error_msg, $error_type = E_USER_NOTICE) {}
 
 /**
- * Alias of <function>trigger_error</function>
- * @link http://www.php.net/manual/en/function.user-error.php
  * @param $message
  * @param $error_type [optional]
  */
@@ -1019,7 +1675,7 @@ function user_error ($message, $error_type = null) {}
  * @link http://www.php.net/manual/en/function.set-error-handler.php
  * @param callable $error_handler <p>
  * A callback with the following signature.
- * &null; may be passed instead, to reset this handler to its default state.
+ * null may be passed instead, to reset this handler to its default state.
  * Instead of a function name, an array containing an object reference 
  * and a method name can also be supplied.
  * </p>
@@ -1041,12 +1697,12 @@ function user_error ($message, $error_type = null) {}
  * regardless to the setting of the error_reporting setting.
  * </p>
  * @return mixed a string containing the previously defined error handler (if any). If
- * the built-in error handler is used &null; is returned. &null; is also returned
+ * the built-in error handler is used null is returned. null is also returned
  * in case of an error such as an invalid callback. If the previous error handler
  * was a class method, this function will return an indexed array with the class
  * and the method name.
  */
-function set_error_handler ($error_handler, $error_types = null) {}
+function set_error_handler ($error_handler, $error_types = E_ALL | E_STRICT) {}
 
 /**
  * Restores the previous error handler function
@@ -1062,22 +1718,32 @@ function restore_error_handler () {}
  * Name of the function to be called when an uncaught exception occurs.
  * This handler function
  * needs to accept one parameter, which will be the exception object that
- * was thrown. This is the handler signature:
+ * was thrown. This is the handler signature before PHP 7:
  * </p>
  * <p>
  * voidhandler
  * Exceptionex
  * </p>
  * <p>
- * &null; may be passed instead, to reset this handler to its default state.
+ * Since PHP 7, most errors are reported by throwing Error
+ * exceptions, which will be caught by the handler as well. Both Error
+ * and Exception implements the Throwable interface.
+ * This is the handler signature since PHP 7:
+ * </p>
+ * <p>
+ * voidhandler
+ * Throwableex
+ * </p>
+ * <p>
+ * null may be passed instead, to reset this handler to its default state.
  * </p>
  * <p>
  * Note that providing an explicit Exception type
  * hint for the ex parameter in your callback will
  * cause issues with the changed exception hierarchy in PHP 7.
  * </p>
- * @return callable the name of the previously defined exception handler, or &null; on error. If
- * no previous handler was defined, &null; is also returned.
+ * @return callable the name of the previously defined exception handler, or null on error. If
+ * no previous handler was defined, null is also returned.
  */
 function set_exception_handler ($exception_handler) {}
 
@@ -1107,7 +1773,7 @@ function get_declared_classes () {}
  * Returns an array of all declared traits
  * @link http://www.php.net/manual/en/function.get-declared-traits.php
  * @return array an array with names of all declared traits in values.
- * Returns &null; in case of a failure.
+ * Returns null in case of a failure.
  */
 function get_declared_traits () {}
 
@@ -1168,7 +1834,23 @@ function create_function ($args, $code) {}
 function get_resource_type ($handle) {}
 
 /**
- * @param $type [optional]
+ * Returns active resources
+ * @link http://www.php.net/manual/en/function.get-resources.php
+ * @param string $type [optional] <p>
+ * If defined, this will cause get_resources to only
+ * return resources of the given type.
+ * A list of resource types is available.
+ * </p>
+ * <p>
+ * If the string Unknown is provided as
+ * the type, then only resources that are of an unknown type will be
+ * returned.
+ * </p>
+ * <p>
+ * If omitted, all resources will be returned.
+ * </p>
+ * @return array an array of currently active resources, indexed by
+ * resource number.
  */
 function get_resources ($type = null) {}
 
@@ -1181,7 +1863,7 @@ function get_resources ($type = null) {}
  * </p>
  * @return array an indexed array of all the modules names.
  */
-function get_loaded_extensions ($zend_extensions = null) {}
+function get_loaded_extensions ($zend_extensions = false) {}
 
 /**
  * Find out whether an extension is loaded
@@ -1260,7 +1942,7 @@ function get_extension_funcs ($module_name) {}
  * @return array an array of constant name => constant value array, optionally
  * groupped by extension name registering the constant.
  */
-function get_defined_constants ($categorize = null) {}
+function get_defined_constants ($categorize = false) {}
 
 /**
  * Generates a backtrace
@@ -1358,7 +2040,7 @@ function get_defined_constants ($categorize = null) {}
  * </tr>
  * </table>
  */
-function debug_backtrace ($options = null, $limit = null) {}
+function debug_backtrace ($options = DEBUG_BACKTRACE_PROVIDE_OBJECT, $limit = null) {}
 
 /**
  * Prints a backtrace
@@ -1384,6 +2066,11 @@ function debug_backtrace ($options = null, $limit = null) {}
  */
 function debug_print_backtrace ($options = null, $limit = null) {}
 
+/**
+ * Reclaims memory used by the Zend Engine memory manager
+ * @link http://www.php.net/manual/en/function.gc-mem-caches.php
+ * @return int the number of bytes freed.
+ */
 function gc_mem_caches () {}
 
 /**
@@ -1414,21 +2101,129 @@ function gc_enable () {}
  */
 function gc_disable () {}
 
+
+/**
+ * Fatal run-time errors. These indicate errors that can not be
+ * recovered from, such as a memory allocation problem.
+ * Execution of the script is halted.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_ERROR', 1);
+
+/**
+ * Catchable fatal error. It indicates that a probably dangerous error
+ * occurred, but did not leave the Engine in an unstable state. If the error
+ * is not caught by a user defined handle (see also
+ * set_error_handler), the application aborts as it
+ * was an E_ERROR.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_RECOVERABLE_ERROR', 4096);
+
+/**
+ * Run-time warnings (non-fatal errors). Execution of the script is not
+ * halted.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_WARNING', 2);
+
+/**
+ * Compile-time parse errors. Parse errors should only be generated by
+ * the parser.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_PARSE', 4);
+
+/**
+ * Run-time notices. Indicate that the script encountered something that
+ * could indicate an error, but could also happen in the normal course of
+ * running a script.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_NOTICE', 8);
+
+/**
+ * Enable to have PHP suggest changes
+ * to your code which will ensure the best interoperability
+ * and forward compatibility of your code.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_STRICT', 2048);
+
+/**
+ * Run-time notices. Enable this to receive warnings about code
+ * that will not work in future versions.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_DEPRECATED', 8192);
+
+/**
+ * Fatal errors that occur during PHP's initial startup. This is like an
+ * E_ERROR, except it is generated by the core of PHP.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_CORE_ERROR', 16);
+
+/**
+ * Warnings (non-fatal errors) that occur during PHP's initial startup.
+ * This is like an E_WARNING, except it is generated
+ * by the core of PHP.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_CORE_WARNING', 32);
+
+/**
+ * Fatal compile-time errors. This is like an E_ERROR,
+ * except it is generated by the Zend Scripting Engine.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_COMPILE_ERROR', 64);
+
+/**
+ * Compile-time warnings (non-fatal errors). This is like an
+ * E_WARNING, except it is generated by the Zend
+ * Scripting Engine.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_COMPILE_WARNING', 128);
+
+/**
+ * User-generated error message. This is like an
+ * E_ERROR, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_ERROR', 256);
+
+/**
+ * User-generated warning message. This is like an
+ * E_WARNING, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_WARNING', 512);
+
+/**
+ * User-generated notice message. This is like an
+ * E_NOTICE, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_NOTICE', 1024);
+
+/**
+ * User-generated warning message. This is like an
+ * E_DEPRECATED, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_DEPRECATED', 16384);
+
+/**
+ * All errors and warnings, as supported, except of level
+ * E_STRICT prior to PHP 5.4.0.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_ALL', 32767);
 define ('DEBUG_BACKTRACE_PROVIDE_OBJECT', 1);
 define ('DEBUG_BACKTRACE_IGNORE_ARGS', 2);
@@ -1437,46 +2232,162 @@ define ('FALSE', false);
 define ('ZEND_THREAD_SAFE', false);
 define ('ZEND_DEBUG_BUILD', false);
 define ('NULL', null);
-define ('PHP_VERSION', "7.0.0-dev");
+define ('PHP_VERSION', "7.0.8");
 define ('PHP_MAJOR_VERSION', 7);
 define ('PHP_MINOR_VERSION', 0);
-define ('PHP_RELEASE_VERSION', 0);
-define ('PHP_EXTRA_VERSION', "-dev");
-define ('PHP_VERSION_ID', 70000);
+define ('PHP_RELEASE_VERSION', 8);
+define ('PHP_EXTRA_VERSION', "");
+define ('PHP_VERSION_ID', 70008);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
 define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
-define ('DEFAULT_INCLUDE_PATH', ".:");
-define ('PEAR_INSTALL_DIR', "");
-define ('PEAR_EXTENSION_DIR', "/usr/local/php7/lib/php/extensions/no-debug-non-zts-20141001");
-define ('PHP_EXTENSION_DIR', "/usr/local/php7/lib/php/extensions/no-debug-non-zts-20141001");
-define ('PHP_PREFIX', "/usr/local/php7");
-define ('PHP_BINDIR', "/usr/local/php7/bin");
-define ('PHP_MANDIR', "/usr/local/php7/php/man");
-define ('PHP_LIBDIR', "/usr/local/php7/lib/php");
-define ('PHP_DATADIR', "/usr/local/php7/share/php");
-define ('PHP_SYSCONFDIR', "/usr/local/php7/etc");
-define ('PHP_LOCALSTATEDIR', "/usr/local/php7/var");
-define ('PHP_CONFIG_FILE_PATH', "/usr/local/php7/etc");
-define ('PHP_CONFIG_FILE_SCAN_DIR', "/usr/local/php7/etc/conf.d");
+define ('DEFAULT_INCLUDE_PATH', ".:/local_build/jenkins/jobs/php-linux/workspace/php/lib/php");
+define ('PEAR_INSTALL_DIR', "/local_build/jenkins/jobs/php-linux/workspace/php/lib/php");
+define ('PEAR_EXTENSION_DIR', "/local_build/jenkins/jobs/php-linux/workspace/php/lib/php/extensions/no-debug-non-zts-20151012");
+define ('PHP_EXTENSION_DIR', "/local_build/jenkins/jobs/php-linux/workspace/php/lib/php/extensions/no-debug-non-zts-20151012");
+define ('PHP_PREFIX', "/local_build/jenkins/jobs/php-linux/workspace/php");
+define ('PHP_BINDIR', "/local_build/jenkins/jobs/php-linux/workspace/php/bin");
+define ('PHP_MANDIR', "/local_build/jenkins/jobs/php-linux/workspace/php/php/man");
+define ('PHP_LIBDIR', "/local_build/jenkins/jobs/php-linux/workspace/php/lib/php");
+define ('PHP_DATADIR', "/local_build/jenkins/jobs/php-linux/workspace/php/share/php");
+define ('PHP_SYSCONFDIR', "/local_build/jenkins/jobs/php-linux/workspace/php/etc");
+define ('PHP_LOCALSTATEDIR', "/local_build/jenkins/jobs/php-linux/workspace/php/var");
+define ('PHP_CONFIG_FILE_PATH', "/local_build/jenkins/jobs/php-linux/workspace/php/lib");
+define ('PHP_CONFIG_FILE_SCAN_DIR', "");
 define ('PHP_SHLIB_SUFFIX', "so");
 define ('PHP_EOL', "\n");
 define ('PHP_MAXPATHLEN', 4096);
 define ('PHP_INT_MAX', 9223372036854775807);
 define ('PHP_INT_MIN', -9223372036854775808);
 define ('PHP_INT_SIZE', 8);
-define ('PHP_BINARY', "/usr/local/php7/bin/php");
+define ('PHP_BINARY', "/mnt/hdd200/tmp/ZendStudio/php/php");
+
+/**
+ * <p>
+ * Indicates that output buffering has begun.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_START', 1);
+
+/**
+ * <p>
+ * Indicates that the output buffer is being flushed, and had data to output.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_WRITE', 0);
+
+/**
+ * <p>
+ * Indicates that the buffer has been flushed.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_FLUSH', 4);
+
+/**
+ * <p>
+ * Indicates that the output buffer has been cleaned.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_CLEAN', 2);
+
+/**
+ * <p>
+ * Indicates that this is the final output buffering operation.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_FINAL', 8);
+
+/**
+ * <p>
+ * Indicates that the buffer has been flushed, but output buffering will
+ * continue.
+ * </p>
+ * <p>
+ * As of PHP 5.4, this is an alias for
+ * PHP_OUTPUT_HANDLER_WRITE.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_CONT', 0);
+
+/**
+ * <p>
+ * Indicates that output buffering has ended.
+ * </p>
+ * <p>
+ * As of PHP 5.4, this is an alias for
+ * PHP_OUTPUT_HANDLER_FINAL.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_END', 8);
+
+/**
+ * <p>
+ * Controls whether an output buffer created by
+ * ob_start can be cleaned.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_CLEANABLE', 16);
+
+/**
+ * <p>
+ * Controls whether an output buffer created by
+ * ob_start can be flushed.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_FLUSHABLE', 32);
+
+/**
+ * <p>
+ * Controls whether an output buffer created by
+ * ob_start can be removed before the end of the script.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_REMOVABLE', 64);
+
+/**
+ * <p>
+ * The default set of output buffer flags; currently equivalent to
+ * PHP_OUTPUT_HANDLER_CLEANABLE |
+ * PHP_OUTPUT_HANDLER_FLUSHABLE |
+ * PHP_OUTPUT_HANDLER_REMOVABLE.
+ * </p>
+ * <p>
+ * Available since PHP 5.4.
+ * </p>
+ * @link http://www.php.net/manual/en/outcontrol.constants.php
+ */
 define ('PHP_OUTPUT_HANDLER_STDFLAGS', 112);
 define ('PHP_OUTPUT_HANDLER_STARTED', 4096);
 define ('PHP_OUTPUT_HANDLER_DISABLED', 8192);
@@ -1488,8 +2399,9 @@ define ('UPLOAD_ERR_NO_FILE', 4);
 define ('UPLOAD_ERR_NO_TMP_DIR', 6);
 define ('UPLOAD_ERR_CANT_WRITE', 7);
 define ('UPLOAD_ERR_EXTENSION', 8);
+define ('DEBUGGER_VERSION', "9.0.0");
 define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.7.0.0-dev
+// End of Core v.7.0.8

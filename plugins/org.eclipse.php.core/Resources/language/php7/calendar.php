@@ -1,6 +1,6 @@
 <?php
 
-// Start of calendar v.7.0.0-dev
+// Start of calendar v.7.0.8
 
 /**
  * Converts Julian Day Count to Gregorian date
@@ -71,7 +71,7 @@ function juliantojd ($month, $day, $year) {}
  * </p>
  * @return string The jewish date as a string in the form "month/day/year"
  */
-function jdtojewish ($juliandaycount, $hebrew = null, $fl = null) {}
+function jdtojewish ($juliandaycount, $hebrew = false, $fl = null) {}
 
 /**
  * Converts a date in the Jewish Calendar to Julian Day Count
@@ -148,7 +148,7 @@ function frenchtojd ($month, $day, $year) {}
  * </table>
  * @return mixed The gregorian weekday as either an integer or string.
  */
-function jddayofweek ($julianday, $mode = null) {}
+function jddayofweek ($julianday, $mode = CAL_DOW_DAYNO) {}
 
 /**
  * Returns a month name
@@ -168,7 +168,7 @@ function jdmonthname ($julianday, $mode) {}
  * </p>
  * @return int The easter date as a unix timestamp.
  */
-function easter_date ($year = null) {}
+function easter_date ($year = date("Y")) {}
 
 /**
  * Get number of days after March 21 on which Easter falls for a given year
@@ -186,7 +186,7 @@ function easter_date ($year = null) {}
  * @return int The number of days after March 21st that the Easter Sunday
  * is in the given year.
  */
-function easter_days ($year = null, $method = null) {}
+function easter_days ($year = date("Y"), $method = CAL_EASTER_DEFAULT) {}
 
 /**
  * Convert Unix timestamp to Julian Day
@@ -196,7 +196,7 @@ function easter_days ($year = null, $method = null) {}
  * </p>
  * @return int A julian day number as integer.
  */
-function unixtojd ($timestamp = null) {}
+function unixtojd ($timestamp = time()) {}
 
 /**
  * Convert Julian Day to Unix timestamp
@@ -274,7 +274,7 @@ function cal_days_in_month ($calendar, $month, $year) {}
  * </p>
  * @return array 
  */
-function cal_info ($calendar = null) {}
+function cal_info ($calendar = -1) {}
 
 define ('CAL_GREGORIAN', 0);
 define ('CAL_JULIAN', 1);
@@ -298,4 +298,4 @@ define ('CAL_JEWISH_ADD_ALAFIM_GERESH', 2);
 define ('CAL_JEWISH_ADD_ALAFIM', 4);
 define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
-// End of calendar v.7.0.0-dev
+// End of calendar v.7.0.8

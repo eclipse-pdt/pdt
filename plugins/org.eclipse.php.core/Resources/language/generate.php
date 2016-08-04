@@ -157,104 +157,101 @@ function make_funckey_from_ref ($ref) {
  */
 function parse_phpdoc_functions ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/reference/*/*/*.xml")
+		glob ("{$phpdocDir}/reference/*/*/*.xml"),
+		glob ("{$phpdocDir}/language/*/*.xml"),
+		glob ("{$phpdocDir}/language/predefined/*/*.xml")
   );
   $functionsDoc = array();
 	foreach ($xml_files as $xml_file) {
+		echo "Loading: " . $xml_file . "\n";
 		$xml = load_xml ($xml_file);
 
 		if (preg_match ('@<refentry.*?xml:id=["\'](.*?)["\'].*?>.*?<refname>(.*?)</refname>.*?<refpurpose>(.*?)</refpurpose>@s', $xml, $match)) {
-
-			$refname = make_funckey_from_str ($match[2]);
-			$functionsDoc[$refname]['id'] = $match[1];
-			$functionsDoc[$refname]['quickref'] = trim($match[3]);
+			$id = $match[1];
+			$quickref = xml_to_phpdoc( trim ( $match [3] ) );
 
 			if (preg_match ('@<refsect1\s+role=["\']description["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$description = $match[1];
 				$function_alias = null;
 				$parameters = null;
-				$has_object_style = false;
-				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
-					$functionsDoc[$refname]['classname'] = trim($match[2]);
-					$functionsDoc[$refname]['returntype'] = trim($match[3]);
-					$functionsDoc[$refname]['methodname'] = trim($match[4]);
-					$parameters = $match[5];
-					$description = $match[1].$match[6];
-					$has_object_style = true;
-				}
-				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<constructorsynopsis>.*?<methodname>(.*?)</methodname>(.*?)</constructorsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
-					$functionsDoc[$refname]['classname'] = trim($match[2]);
-					$functionsDoc[$refname]['methodname'] = trim($match[3]);
-					$parameters = $match[4];
-					$description = $match[1].$match[5];
-					$has_object_style = true;
-				}
-				if (preg_match ('@<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match)) {
-					if ($has_object_style) {
-						$function_alias = trim($match[2]);
-					} else {
-						//For return type of simplexml_load_string and simplexml_load_file.
-						if(preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match1)){
-							$returnvalues = $match1[1];
-							if(preg_match ('@<type>object</type> of class <type>(.*?)</type>@s', $returnvalues, $match1)){
-								$functionsDoc[$refname]['returntype'] = trim($match1[1]);
-							}else{
-								$functionsDoc[$refname]['returntype'] = trim($match[1]);
-							}
-						}
-						else{
-							$functionsDoc[$refname]['returntype'] = trim($match[1]);
-						}
-						$functionsDoc[$refname]['methodname'] = trim($match[2]);
-						$parameters = $match[3];
-					}
-				}
-				if ($parameters) {
-					if (preg_match_all ('@<methodparam\s*(.*?)>.*?<type>(.*?)</type>.*?<parameter\s*(.*?)>(.*?)</parameter>.*?</methodparam>@s', $parameters, $match)) {
-						for ($i = 0; $i < count($match[0]); ++$i) {
-							$parameter = array (
-								'type' => trim($match[2][$i]),
-								'name' => clean_php_identifier(trim($match[4][$i])),
-							);
-							if (preg_match ('@choice=[\'"]opt[\'"]@', $match[1][$i])) {
-								$parameter['isoptional'] = true;
-							}
-							if (preg_match ('@role=[\'"]reference[\'"]@', $match[3][$i])) {
-								$parameter['isreference'] = true;
-							}
-							$functionsDoc[$refname]['parameters'][] = $parameter;
-						}
-					}
-				}
-			}
-			if (preg_match ('@<refsect1\s+role=["\']parameters["\']>(.*?)</refsect1>@s', $xml, $match)) {
-				$parameters = $match[1];
-                if (preg_match_all('@<varlistentry\s*.*?>.*?<parameter>(.*?)</parameter>.*?<listitem\s*.*?>(.*?)</listitem>.*?</varlistentry>@s', $parameters, $match)) {
-                    for ($i = 0; $i < count($match[0]); $i++) {
-                        for ($j = 0; $j < count(@$functionsDoc[$refname]['parameters']); $j++) {
-                            if ($match[1][$i] == $functionsDoc[$refname]['parameters'][$j]['name']) {
-                                $functionsDoc[$refname]['parameters'][$j]['paramdoc'] = xml_to_phpdoc ($match[2][$i]);
-                                break;
+				$refname = null;
+				$returnDoc = null;
+				
+// 				if (preg_match_all('@<para>(.*?)</para>@s', $description, $match1)) {
+//                     $quickref .= "\n";
+                    
+//                     for ($i = 0; $i < count($match1[0]); ++ $i) {
+//                         $quickref .= "\n" . xml_to_phpdoc($match1[1][$i]);
+//                     }
+//                 }
+				
+				if (preg_match_all('@<(?:methodsynopsis|constructorsynopsis).*?>(.*?)</(?:methodsynopsis|constructorsynopsis)>@s', $description, $match)) {
+                    for ($index = 0; $index < count($match[0]); ++ $index) {
+                        if (preg_match('@<methodname>(.*?)</methodname>@s', $match[1][$index], $methodName)) {
+                            $refname = make_funckey_from_str($methodName[1]);
+                            $functionsDoc[$refname]['methodname'] = trim($refname);
+                        } else {
+                            continue;
+                        }
+                        $functionsDoc[$refname]['id'] = $id;
+                        $functionsDoc[$refname]['quickref'] = $quickref;
+                        if (preg_match('@<type>(.*?)</type>@s', $match[1][$index], $type)) {
+                            $functionsDoc[$refname]['returntype'] = $type[1];
+                        }
+                        
+                        if (preg_match_all('@(<methodparam.*?>.*?</methodparam>)@s', $match[1][$index], $p)) {
+                            for ($i = 0; $i < count($p[0]); ++ $i) {
+                                $parameters .= $p[1][$i];
                             }
+                        }
+                        if ($parameters) {
+                            if (preg_match_all('@<methodparam\s*(.*?)>.*?<type>(.*?)</type>.*?<parameter\s*(.*?)>(.*?)</parameter>(.*?)</methodparam>@s', $parameters, $match1)) {
+                                for ($i = 0; $i < count($match1[0]); ++ $i) {
+                                    $parameter = array(
+                                        'type' => trim($match1[2][$i]),
+                                        'name' => clean_php_identifier(trim($match1[4][$i]))
+                                    );
+                                    if (preg_match('@choice=[\'"]opt[\'"]@', $match1[1][$i])) {
+                                        $parameter['isoptional'] = true;
+                                    }
+                                    if (preg_match('@role=[\'"]reference[\'"]@', $match1[3][$i])) {
+                                        $parameter['isreference'] = true;
+                                    }
+                                    if (preg_match('@<initializer>(.*?)</initializer>@s', $match1[5][$i], $valueMatch)) {
+                                        $parameter['defaultvalue'] = $valueMatch[1];
+                                    }
+                                    $functionsDoc[$refname]['parameters'][] = $parameter;
+                                }
+                            }
+                        }
+                        
+                        if (preg_match('@<refsect1\s+role=["\']parameters["\']>(.*?)</refsect1>@s', $xml, $match1)) {
+                            $parameters = $match1[1];
+                            if (preg_match_all('@<varlistentry\s*.*?>.*?<parameter>(.*?)</parameter>.*?<listitem\s*.*?>(.*?)</listitem>.*?</varlistentry>@s', $parameters, $match1)) {
+                                for ($i = 0; $i < count($match1[0]); $i ++) {
+                                    for ($j = 0; $j < count(@$functionsDoc[$refname]['parameters']); $j ++) {
+                                        if ($match1[1][$i] == $functionsDoc[$refname]['parameters'][$j]['name']) {
+                                            $functionsDoc[$refname]['parameters'][$j]['paramdoc'] = xml_to_phpdoc($match1[2][$i]);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (preg_match('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match1)) {
+                            $returnvalues = $match1[1];
+                            if (preg_match('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match1)) {
+                                $functionsDoc[$refname]['returndoc'] = xml_to_phpdoc($match1[2]);
+                            }
+                        }
+                        
+                        if (preg_match('@&warn\.deprecated.func-(.*?);@s', $xml, $match1)) {
+                            $deprecatedSince = $match1[1];
+                            $functionsDoc[$refname]['deprecated'] = 'Since ' . str_replace('-', '.', $deprecatedSince);
                         }
                     }
                 }
-			}
-			if (preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
-				$returnvalues = $match[1];
-				if (preg_match ('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match)) {
-					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
-				}
-			}
-
-			if (preg_match ('@&warn\.deprecated.func-(.*?);@s', $xml, $match)) {
-				$deprecatedSince = $match[1];
-				$functionsDoc[$refname]['deprecated'] = 'Since ' . str_replace('-', '.',$deprecatedSince);
-			}
-
-			// Create information for function alias
-			if ($function_alias) {
-				$functionsDoc[$function_alias] = $functionsDoc[$refname];
 			}
 		}
 	}
@@ -622,9 +619,9 @@ function print_parameters ($parameters) {
 			if (@$parameter['isoptional']) {
 				if (@$parameter['defaultvalue']) {
 					$value = $parameter['defaultvalue'];
-					if (!is_numeric ($value)) {
-						$value = "'{$value}'";
-					}
+// 					if (!is_numeric ($value)) {
+// 						$value = "'{$value}'";
+// 					}
 					print " = {$value}";
 				} else {
 					print " = null";
@@ -812,8 +809,11 @@ function print_doccomment ($ref, $tabs = 0) {
 			print_tabs ($tabs);
 			print "/**\n";
 			if ($desc) {
-				print_tabs ($tabs);
-				print " * {$desc}\n";
+			    $lines = explode( "\n", $desc );
+			    foreach ($lines as $line){
+			        print_tabs ($tabs);
+			        print " * {$line}\n";
+			    }
 			}
 			if (@$functionsDoc[$funckey]['id']) {
 				print_tabs ($tabs);
@@ -823,7 +823,11 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
-					print " * @param {$parameter['type']} {$parameter['name']}";
+					$name = $parameter ['name'];
+					if ($name [0] != '$') {
+						$name = '$' . $name;
+					}
+					print " * @param {$parameter['type']} {$name}";
 					if (@$parameter['isoptional']) {
 						print " [optional]";
 					}
@@ -983,7 +987,8 @@ function load_entities()
     $result['true'] = 'true';
     $result['return.void'] = '';
     $result['return.success'] = 'Returns true on success or false on failure';
-
+    $result['null'] = 'null';
+    $result['Alias'] = 'Alias';
 
     $names = array();
     foreach (array_keys($result) as $v) {
