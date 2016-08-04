@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
@@ -425,22 +426,23 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
  * it originally written to support ?> or %> close tags to php
  * The two strings must be on the same length
  *
- * @param isAsp - whether the asp %> close is premited
  * @param context - the context of the scanned region if non-zero length
  * @param exitState - the state to go to if the region was of non-zero length
  * @param abortState - the state to go to if the searchString was found immediately
  * @return String - the context found: the desired context on a non-zero length match, the abortContext on immediate success
  * @throws IOException
  */
-private ITextRegion bufferedTextRegion = null;
-private final String doScanEndPhp(boolean isAsp, String searchContext, int exitState, int immediateFallbackState) throws IOException {
+private PhpScriptRegion bufferedTextRegion = null;
+private final String doScanEndPhp(String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	yypushback(1); // begin with the last char
 	
 	final AbstractPhpLexer phpLexer = getPhpLexer(); 
-	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
+	PhpScriptRegion region = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
 	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParamenters());
+
+	bufferedTextRegion = region;
 	
 	yybegin(exitState);
 	return searchContext;
@@ -665,14 +667,22 @@ private final String doBlockTagScan() throws IOException {
 
 private IProject project;
 
-public void setProject(IProject project) {
+/**
+ * this method is only intended to be called at creation of a new
+ * PHPTokenizer (and before first scan) to avoid problems with
+ * bufferedTextRegion and other cached informations depending on project
+ * properties and settings
+ */
+public void setProject(@Nullable IProject project) {
 	this.project = project;
 	this.phpVersion = ProjectOptions.getPhpVersion(project);
+	this.bufferedTextRegion = null;
 }
 
 // NB: this method resets the lexer only partially
 private void reset(java.io.Reader reader, char[] buffer, int[] parameters){
     this.phpVersion = ProjectOptions.getPhpVersion(project);
+	this.bufferedTextRegion = null;
 	this.zzReader = reader;
 	this.zzBuffer = buffer;
 	this.zzFinalHighSurrogate = 0;
@@ -681,7 +691,7 @@ private void reset(java.io.Reader reader, char[] buffer, int[] parameters){
 	this.zzCurrentPos = parameters[2];
 	this.zzStartRead = parameters[3];
 	this.zzEndRead = parameters[4];
-	this.yyline = parameters[5];  
+	this.yyline = parameters[5];
 	this.yychar = this.zzStartRead - this._zzPushbackPos;
 }
 
@@ -844,7 +854,8 @@ public void reset(java.io.Reader in, int newOffset) {
 	if (Debug.debugTokenizer) {
 		System.out.println("resetting tokenizer");//$NON-NLS-1$
 	}
-	phpVersion = ProjectOptions.getPhpVersion(project);
+	this.phpVersion = ProjectOptions.getPhpVersion(project);
+	this.bufferedTextRegion = null;
 	fOffset = newOffset;
 
 	/* the input device */
@@ -2060,7 +2071,7 @@ PHP_ASP_END=%>
 	
 }
 <ST_PHP_CONTENT> .|\n|\r {
-	return doScanEndPhp(ProjectOptions.isSupportingAspTags(project), PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
+	return doScanEndPhp(PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
 }
 
 . {
