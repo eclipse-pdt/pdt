@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -34,6 +35,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.ui.IDebugServerConnectionTest;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
@@ -116,8 +118,11 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 						addTimeOutsMessage(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest.1"))); //$NON-NLS-1$
 			} catch (FileNotFoundException fnfe) {
 				// dummy.php was not found
+				String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+						PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", null);
 				showCustomErrorDialog(NLS.bind(
-						PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_theURLCouldNotBeFound"), fURL)); //$NON-NLS-1$
+						PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_theURLCouldNotBeFound"), fURL, //$NON-NLS-1$
+						dummyFile));
 				return;
 			} catch (SocketTimeoutException ste) {
 				// Timeout occurred when trying to connect to debugger owner
@@ -180,7 +185,10 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 			InputStream inputStream = null;
 			try {
 				// Check base URL (http://HOST_NAME) and dummy file existence
-				final URL checkURL = new URL(fURL + "/dummy.php"); //$NON-NLS-1$
+				String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+						PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", //$NON-NLS-1$
+						null);
+				final URL checkURL = new URL(fURL + '/' + dummyFile); // $NON-NLS-1$
 				URLConnection connection = checkURL.openConnection();
 				connection.setConnectTimeout(5000);
 				connection.setReadTimeout(DEFAULT_TIMEOUT);
