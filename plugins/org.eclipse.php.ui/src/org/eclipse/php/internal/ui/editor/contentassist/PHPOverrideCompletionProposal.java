@@ -24,6 +24,7 @@ import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -131,7 +132,11 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 					StringBuilder sb = new StringBuilder();
 					for (int i = 0; i < parameters.length; i++) {
 						IParameter parameter = parameters[i];
+
 						if (parameter.getType() != null) {
+							if (PHPFlags.isNullable(parameter.getFlags())) {
+								sb.append('?');
+							}
 							sb.append(parameter.getType()).append(" "); //$NON-NLS-1$
 						}
 						sb.append(parameter.getName());
