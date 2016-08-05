@@ -170,7 +170,6 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	private class SelectionState {
 		private List<Category> fElements = new ArrayList<Category>();
 
-		@SuppressWarnings("unchecked")
 		public void refreshState(IStructuredSelection selection) {
 			fElements.clear();
 			Iterator<Category> iterator = selection.iterator();

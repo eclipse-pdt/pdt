@@ -23,7 +23,6 @@ import org.osgi.service.prefs.BackingStoreException;
  * XML preferences writer for writing XML structures into the prefernces store.
  * This class works in combination with IXMLPreferencesStorable.
  */
-@SuppressWarnings("deprecation")
 public class XMLPreferencesWriter {
 
 	public static final char DELIMITER = (char) 5;

@@ -80,7 +80,6 @@ public class DeleteAction extends SelectionDispatchAction {
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	public void startDeleteRefactoring(final Object[] elements, final Shell shell) throws CoreException {
 		final DeleteRefactoring refactoring = new DeleteRefactoring(new ScriptDeleteProcessor(elements));
 		DeleteUserInterfaceManager.getDefault().getStarter(refactoring).activate(refactoring, shell, false);

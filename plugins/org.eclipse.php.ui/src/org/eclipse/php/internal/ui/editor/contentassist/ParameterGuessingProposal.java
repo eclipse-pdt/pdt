@@ -357,7 +357,6 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 * @param modelElement
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	private IMethod getProperMethod(IMethod modelElement) {
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
@@ -406,7 +405,6 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		return isPrefix(prefix, replacementString);
 	}
 
-	@SuppressWarnings("restriction")
 	private void initAlias() {
 		alias = null;
 		if (method instanceof FakeConstructor) {

@@ -179,7 +179,6 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 	private static IProblemLocation findProblemLocation(IEditorInput input, IMarker marker) {
 		IAnnotationModel model = DLTKUIPlugin.getDocumentProvider().getAnnotationModel(input);
 		if (model != null) { // open in editor
-			@SuppressWarnings("unchecked")
 			Iterator<Annotation> iter = model.getAnnotationIterator();
 			while (iter.hasNext()) {
 				Annotation curr = iter.next();

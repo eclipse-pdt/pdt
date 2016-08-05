@@ -26,7 +26,6 @@ import org.eclipse.swt.graphics.Image;
  * @author nir.c
  * 
  */
-@SuppressWarnings("restriction")
 public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 
 	public ProjectOutlineLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {

@@ -18,7 +18,7 @@ import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
 
 public abstract class CodeCompletionRequestor extends CompletionRequestor implements CompletionRequestorExtension {
 	List<CompletionProposal> proposals;
-	Comparator sorter;
+	Comparator<CompletionProposal> sorter;
 
 	public CodeCompletionRequestor() {
 		proposals = new ArrayList<CompletionProposal>();
@@ -26,7 +26,7 @@ public abstract class CodeCompletionRequestor extends CompletionRequestor implem
 		setIgnored(CompletionProposal.KEYWORD, true);
 	}
 
-	protected Comparator getSorter() {
+	protected Comparator<CompletionProposal> getSorter() {
 		return new Comparator<CompletionProposal>() {
 
 			public int compare(CompletionProposal o1, CompletionProposal o2) {
@@ -50,7 +50,7 @@ public abstract class CodeCompletionRequestor extends CompletionRequestor implem
 		Collections.sort(proposals, sorter);
 		Set<String> nameSet = new HashSet<String>();
 		List<String> nameList = new ArrayList<String>();
-		for (Iterator iterator = proposals.iterator(); iterator.hasNext();) {
+		for (Iterator<CompletionProposal> iterator = proposals.iterator(); iterator.hasNext();) {
 			CompletionProposal proposal = (CompletionProposal) iterator.next();
 			if (!nameSet.contains(proposal.getName())) {
 				nameSet.add(proposal.getName());

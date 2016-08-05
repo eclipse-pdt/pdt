@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-@SuppressWarnings("restriction")
 public class CustomFiltersDialog extends SelectionDialog {
 
 	private static final String SEPARATOR = ","; //$NON-NLS-1$

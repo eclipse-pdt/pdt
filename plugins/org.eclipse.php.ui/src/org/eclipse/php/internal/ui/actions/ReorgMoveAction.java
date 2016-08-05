@@ -36,7 +36,6 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
-@SuppressWarnings("restriction")
 public class ReorgMoveAction extends AbstractMoveDelegator {
 
 	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$

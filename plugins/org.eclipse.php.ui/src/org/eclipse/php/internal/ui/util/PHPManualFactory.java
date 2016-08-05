@@ -55,7 +55,7 @@ public class PHPManualFactory {
 			}
 
 			if (manual == null) {
-				List configs = new ArrayList();
+				List<PHPManualConfig> configs = new ArrayList<>();
 				PHPManualConfigurationBlock.initFromPreferences(PreferenceConstants.getPreferenceStore(), configs);
 				if (configs.size() > 0) {
 					PHPManualConfig defaultConfig = PHPManualConfigurationBlock

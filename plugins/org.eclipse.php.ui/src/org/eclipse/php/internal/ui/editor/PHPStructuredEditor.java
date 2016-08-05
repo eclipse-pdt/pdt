@@ -855,9 +855,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled()
-					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
-							|| fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
+					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -2341,7 +2340,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
-	@SuppressWarnings("restriction")
 	public Object getAdapter(Class required) {
 
 		if (required == IFoldingStructureProviderExtension.class && fProjectionModelUpdater != null) {

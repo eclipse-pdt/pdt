@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SimpleFilter implements IFilter {
 
-	private ArrayList filterChangeListeners = new ArrayList();
+	private List<IFilterChangeListener> filterChangeListeners = new ArrayList<>();
 
 	public Object[] filter(Object[] elements) {
 		return elements;

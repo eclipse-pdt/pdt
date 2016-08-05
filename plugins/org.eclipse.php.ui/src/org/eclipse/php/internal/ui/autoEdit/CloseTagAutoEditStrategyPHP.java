@@ -39,7 +39,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  */
 public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (!TypingPreferences.addPhpCloseTag && !TypingPreferences.addPhpForPhpStartTags) {

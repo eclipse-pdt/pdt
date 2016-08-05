@@ -226,7 +226,6 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 * @param projects
 	 * @throws CoreException
 	 */
-	@SuppressWarnings("restriction")
 	public static void cleanup(IProgressMonitor monitor) throws CoreException {
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		Set<IPath> inUse = new HashSet<IPath>();
