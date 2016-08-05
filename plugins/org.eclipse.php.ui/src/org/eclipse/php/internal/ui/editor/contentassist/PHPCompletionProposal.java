@@ -36,7 +36,6 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class PHPCompletionProposal extends ScriptCompletionProposal implements IPHPCompletionProposalExtension {
 
 	/**

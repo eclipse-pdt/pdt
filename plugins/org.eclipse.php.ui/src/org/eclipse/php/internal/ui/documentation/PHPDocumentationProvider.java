@@ -40,7 +40,6 @@ import org.eclipse.php.ui.PHPElementLabels;
 import org.eclipse.swt.graphics.FontData;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 	protected static final String DL_END = "</dl>"; //$NON-NLS-1$

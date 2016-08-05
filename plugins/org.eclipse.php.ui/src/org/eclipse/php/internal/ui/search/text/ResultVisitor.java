@@ -21,6 +21,7 @@ import org.eclipse.search.core.text.TextSearchMatchAccess;
 import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.internal.ui.text.FileMatch;
 import org.eclipse.search.internal.ui.text.LineElement;
+import org.eclipse.search.ui.text.Match;
 
 /**
  * Description: This is a visitor on the text results
@@ -28,10 +29,10 @@ import org.eclipse.search.internal.ui.text.LineElement;
  * @author Roy, 2007
  */
 public class ResultVisitor extends TextSearchRequestor {
-	private final List fResult = new LinkedList();
+	private final List<Match> fResult = new LinkedList<>();
 	private final boolean fIsFileSearchOnly;
 	private final boolean fSearchInBinaries;
-	private final List fCachedMatches = new ArrayList();
+	private final List<Match> fCachedMatches = new ArrayList<>();
 
 	public ResultVisitor(boolean isFileSearchOnly, boolean searchInBinaries) {
 		fIsFileSearchOnly = isFileSearchOnly;

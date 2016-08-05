@@ -65,7 +65,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-@SuppressWarnings("restriction")
 public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private static final String OPEN_BRACE = "("; //$NON-NLS-1$

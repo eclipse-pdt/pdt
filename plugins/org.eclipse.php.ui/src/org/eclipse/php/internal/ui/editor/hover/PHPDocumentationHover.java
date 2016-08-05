@@ -59,7 +59,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		implements IPHPTextHover, IInformationProviderExtension2 {
 

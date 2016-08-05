@@ -56,7 +56,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		 * {@inheritDoc}
 		 */
 		public Object[] getChildren(Object element) {
-			List result = new ArrayList();
+			List<Object> result = new ArrayList<>();
 			// all keys with value element
 			Set keys = fNonExistingFolders.keySet();
 			for (Iterator iter = keys.iterator(); iter.hasNext();) {

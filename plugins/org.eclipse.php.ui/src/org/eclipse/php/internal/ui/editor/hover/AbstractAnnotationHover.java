@@ -60,7 +60,6 @@ import com.ibm.icu.text.MessageFormat;
  * Abstract super class for annotation hovers.
  * 
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHover implements ITextHoverExtension2 {
 
 	/**

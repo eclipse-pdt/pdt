@@ -43,7 +43,6 @@ import org.eclipse.ui.actions.ActionGroup;
  * 
  * 
  */
-@SuppressWarnings("restriction")
 public class CustomFiltersActionGroup extends ActionGroup {
 
 	private static final String TAG_DUMMY_TO_TEST_EXISTENCE = "TAG_DUMMY_TO_TEST_EXISTENCE"; //$NON-NLS-1$

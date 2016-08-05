@@ -56,7 +56,6 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 		// make sure the actual update in the PHP Explorer is executed in the UI
 		// thread
 		Display.getDefault().asyncExec(new Runnable() {
-			@SuppressWarnings("restriction")
 			public void run() {
 				PHPExplorerPart phpExplorer = getPhpExplorer();
 				if (phpExplorer != null) {

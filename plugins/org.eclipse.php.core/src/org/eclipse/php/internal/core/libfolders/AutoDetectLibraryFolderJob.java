@@ -91,7 +91,6 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	 * @return <code>true</code> if the "disable" preference is available, and
 	 *         <code>false</code> otherwise.
 	 */
-	@SuppressWarnings("restriction")
 	private boolean hasDisabledPreference(IProject project) {
 		PreferencesWrapper prefs = PreferencesWrapper.getPreferences(project, null);
 		return prefs.get(PrefConstants.disabled, null) != null;

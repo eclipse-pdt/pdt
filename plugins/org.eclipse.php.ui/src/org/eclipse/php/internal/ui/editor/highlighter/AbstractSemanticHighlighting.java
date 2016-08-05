@@ -31,7 +31,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
 
-@SuppressWarnings("restriction")
 public abstract class AbstractSemanticHighlighting
 		implements ISemanticHighlighting, ISemanticHighlightingExtension2, Comparable<AbstractSemanticHighlighting> {
 
@@ -114,7 +113,7 @@ public abstract class AbstractSemanticHighlighting
 	protected Program getProgram(final IStructuredDocumentRegion region) {// region.getParentDocument().get()
 		sourceModule = null;
 		// resolve current sourceModule
-		Enumeration openBuffers = BufferManager.getDefaultBufferManager().getOpenBuffers();
+		Enumeration<?> openBuffers = BufferManager.getDefaultBufferManager().getOpenBuffers();
 		while (openBuffers.hasMoreElements()) {
 			Object nextElement = openBuffers.nextElement();
 			if (nextElement instanceof DocumentAdapter) {

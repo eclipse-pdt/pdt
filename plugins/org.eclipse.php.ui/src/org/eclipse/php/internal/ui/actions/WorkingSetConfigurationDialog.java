@@ -41,7 +41,6 @@ import org.eclipse.ui.dialogs.IWorkingSetEditWizard;
 import org.eclipse.ui.dialogs.IWorkingSetNewWizard;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-@SuppressWarnings("restriction")
 public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	private static class WorkingSetLabelProvider extends LabelProvider {

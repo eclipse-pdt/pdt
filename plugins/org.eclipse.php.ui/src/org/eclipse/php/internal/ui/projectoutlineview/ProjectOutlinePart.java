@@ -43,7 +43,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * @author Roy, 2008
  * @version 2.0 (by NirC, 2008)
  */
-@SuppressWarnings("restriction")
 public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListener {
 
 	@Override

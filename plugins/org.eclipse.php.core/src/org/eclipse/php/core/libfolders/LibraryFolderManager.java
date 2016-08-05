@@ -354,7 +354,6 @@ public class LibraryFolderManager {
 	 * @return <code>true</code> if the folder is a explicitly disabled, and
 	 *         <code>false</code> otherwise
 	 */
-	@SuppressWarnings("restriction")
 	public boolean isExplicitlyDisabled(IFolder folder) {
 		if (folder == null)
 			return false;

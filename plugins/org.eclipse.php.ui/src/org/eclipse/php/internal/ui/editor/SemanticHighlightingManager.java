@@ -21,7 +21,6 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 
-@SuppressWarnings("restriction")
 public class SemanticHighlightingManager {
 
 	private static SemanticHighlightingManager instance;
