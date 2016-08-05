@@ -264,7 +264,7 @@ public final class PHPExeUtil {
 				configFile = null;
 			}
 		} catch (IOException e) {
-			throw new PHPExeException(MessageFormat.format("Invalid PHP executable: {0}.", exePath)); //$NON-NLS-1$
+			throw new PHPExeException(MessageFormat.format("Invalid PHP executable: {0}.", exePath), e); //$NON-NLS-1$
 		}
 		phpInfo = new PHPExeInfo(name, version, sapiType, executableFile, configFile);
 		phpInfos.put(executableFile, phpInfo);
