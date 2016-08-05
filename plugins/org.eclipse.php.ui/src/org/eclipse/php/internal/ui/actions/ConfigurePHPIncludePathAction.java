@@ -55,9 +55,10 @@ public class ConfigurePHPIncludePathAction extends Action implements ISelectionC
 			// TODO retrieve the page id via project nature
 			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(getShell(), fProject, null, null, null);
 			// search for the language specific page
-			final List elements = dialog.getPreferenceManager().getElements(PreferenceManager.PRE_ORDER);
-			for (Iterator i = elements.iterator(); i.hasNext();) {
-				final IPreferenceNode node = (IPreferenceNode) i.next();
+			final List<IPreferenceNode> elements = dialog.getPreferenceManager()
+					.getElements(PreferenceManager.PRE_ORDER);
+			for (Iterator<IPreferenceNode> i = elements.iterator(); i.hasNext();) {
+				final IPreferenceNode node = i.next();
 				final String nodeId = node.getId();
 				if (nodeId.endsWith("IncludepathProperties")) { //$NON-NLS-1$
 					// recreate dialog and select page found

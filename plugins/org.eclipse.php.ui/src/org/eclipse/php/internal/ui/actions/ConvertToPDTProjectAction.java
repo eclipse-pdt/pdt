@@ -45,8 +45,8 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 	}
 
 	private IProject[] getProjectsFromSelection(IStructuredSelection selection) {
-		List phpEclipseProjects = new LinkedList();
-		Iterator i = selection.iterator();
+		List<IProject> phpEclipseProjects = new LinkedList<>();
+		Iterator<?> i = selection.iterator();
 		while (i.hasNext()) {
 			Object element = i.next();
 			if (element instanceof IProject) {
@@ -59,7 +59,7 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 				}
 			}
 		}
-		return (IProject[]) phpEclipseProjects.toArray(new IProject[phpEclipseProjects.size()]);
+		return phpEclipseProjects.toArray(new IProject[phpEclipseProjects.size()]);
 	}
 
 	public void run(IStructuredSelection selection) {
@@ -74,7 +74,7 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 						IProjectDescription projectDescription = project.getDescription();
 
 						// Configure builders:
-						List newBuildSpec = new LinkedList();
+						List<ICommand> newBuildSpec = new LinkedList<>();
 						ICommand[] buildSpec = projectDescription.getBuildSpec();
 						for (int c = 0; c < buildSpec.length; ++c) {
 							if (!buildSpec[c].getBuilderName().equals(PHPECLIPSE_BUILDER)) {
@@ -92,7 +92,7 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 								.setBuildSpec((ICommand[]) newBuildSpec.toArray(new ICommand[newBuildSpec.size()]));
 
 						// Configure natures:
-						List newNatures = new LinkedList();
+						List<String> newNatures = new LinkedList<>();
 						String[] natures = projectDescription.getNatureIds();
 						for (int c = 0; c < natures.length; ++c) {
 							if (!natures[c].equals(PHPECLIPSE_NATURE)) {

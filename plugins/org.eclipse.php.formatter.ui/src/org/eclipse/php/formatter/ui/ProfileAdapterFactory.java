@@ -22,10 +22,11 @@ import org.eclipse.php.formatter.ui.preferences.ProfileManager;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.formatter.ui.preferences.ProfileStore;
 
-@SuppressWarnings("rawtypes")
 public class ProfileAdapterFactory implements IAdapterFactory {
 
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adaptableObject instanceof IScopeContext) {
 			IScopeContext currContext = (IScopeContext) adaptableObject;
 			IScopeContext instanceScope = InstanceScope.INSTANCE;
@@ -46,12 +47,12 @@ public class ProfileAdapterFactory implements IAdapterFactory {
 			if (profiles == null)
 				profiles = new ArrayList<Profile>();
 
-			return new ProfileManager(profiles, currContext);
+			return (T) (new ProfileManager(profiles, currContext));
 		}
 		return null;
 	}
 
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -37,7 +37,6 @@ import org.eclipse.swt.graphics.Image;
  * @author apeled, nirc
  * 
  */
-@SuppressWarnings("restriction")
 public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {

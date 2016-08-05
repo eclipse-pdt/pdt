@@ -35,8 +35,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
  * 
  * @author Dawid Pakula
  */
-
-@SuppressWarnings("restriction")
 public class AddObjectOperator extends AbstractHandler implements IHandler {
 
 	public AddObjectOperator() {

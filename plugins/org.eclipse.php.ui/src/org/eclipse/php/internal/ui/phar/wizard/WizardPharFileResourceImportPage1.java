@@ -40,7 +40,6 @@ import org.eclipse.ui.model.AdaptableList;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 
-@SuppressWarnings("restriction")
 public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceImportPage1 implements Listener {
 
 	ILeveledImportStructureProvider structureProvider;

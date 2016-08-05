@@ -19,7 +19,6 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Collapse all nodes.
  */
-@SuppressWarnings("restriction")
 public class CollapseAllAction extends Action {
 
 	private ScriptExplorerPart fPackageExplorer;

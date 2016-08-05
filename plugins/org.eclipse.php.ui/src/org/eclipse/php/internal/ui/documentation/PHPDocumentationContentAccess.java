@@ -48,7 +48,7 @@ import org.eclipse.text.edits.ReplaceEdit;
  * 
  * @since 3.4
  */
-@SuppressWarnings({ "restriction", "unchecked", "rawtypes" })
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class PHPDocumentationContentAccess {
 
 	private static final Pattern INLINE_LINK_PATTERN = Pattern.compile("\\{@link[\\s]+[^\\}]*\\}"); //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class PHPDocumentationContentAccess {
 		 * @param currType
 		 *            the current type
 		 * @return
-		 * 		<ul>
+		 *         <ul>
 		 *         <li>{@link #STOP_BRANCH} to indicate that no Javadoc has been
 		 *         found and visiting super types should stop here</li>
 		 *         <li>{@link #CONTINUE} to indicate that no Javadoc has been
