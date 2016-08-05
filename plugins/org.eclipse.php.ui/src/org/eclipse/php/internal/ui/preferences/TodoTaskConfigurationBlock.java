@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,6 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -27,6 +25,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.preferences.util.Key;
+import org.eclipse.php.internal.ui.util.DocumentModelUtils;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.wizards.fields.*;
@@ -282,6 +281,10 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	}
 
 	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
+		if (!areSettingsEnabled()) {
+			return;
+		}
+
 		if (changedKey != null) {
 			if (PREF_TASK_TAGS.equals(changedKey)) {
 				fTaskTagsStatus = validateTaskTags();
@@ -387,12 +390,13 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	}
 
 	@Override
-	protected void prepareForBuild() {
-		try {
-			fManager.applyChanges();
-		} catch (BackingStoreException e) {
-			PHPUiPlugin.log(e);
-			return;
+	protected void prepareChanges(boolean doBuild) {
+		if (true) {
+			try {
+				fManager.applyChanges();
+			} catch (BackingStoreException e) {
+				PHPUiPlugin.log(e);
+			}
 		}
 		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.getEditorReferences();
@@ -401,20 +405,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 			IEditorPart editor = editorReference.getEditor(false);
 			if (editor instanceof PHPStructuredEditor) {
 				PHPStructuredEditor phpEditor = (PHPStructuredEditor) editor;
-				boolean isDirty = phpEditor.isDirty();
 				if (phpEditor.getTextViewer() instanceof PHPStructuredTextViewer) {
-					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) phpEditor.getTextViewer();
-					IDocumentAdapter documentAdapter = textViewer.getDocumentAdapter();
-					IDocument document = phpEditor.getDocument();
-					String content = document.get();
-					if (documentAdapter != null) {
-						documentAdapter.replaceTextRange(0, content.length(), ""); //$NON-NLS-1$
-						documentAdapter.replaceTextRange(0, 0, content);
-					}
-
-				}
-				if (!isDirty) {
-					phpEditor.doSave(null);
+					DocumentModelUtils.reparseAndReconcileDocument((PHPStructuredTextViewer) phpEditor.getTextViewer());
 				}
 			}
 		}

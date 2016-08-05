@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.io.Reader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -272,5 +273,20 @@ public class PhpSourceParser extends XMLSourceParser {
 
 	public void reset(Reader reader, int position) {
 		super.reset(reader, position);
+	}
+
+	public @Nullable IProject getProject() {
+		return project;
+	}
+
+	public void setProject(@Nullable IProject project) {
+		// Reset tokenizer if project changed (as tokenizer properties&settings
+		// can depend on a specific project; see PHPTokenizer and
+		// PhpScriptRegion). This way is more easy and safe than to propagate
+		// the new project value on already-used tokenizers...
+		if (this.project != project) {
+			fTokenizer = null;
+		}
+		this.project = project;
 	}
 }
