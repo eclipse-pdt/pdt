@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,7 +67,6 @@ import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.preferences.*;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
@@ -89,6 +88,7 @@ import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.text.PHPWordIterator;
+import org.eclipse.php.internal.ui.util.DocumentModelUtils;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
@@ -116,9 +116,6 @@ import org.eclipse.ui.editors.text.IFoldingCommandIds;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.IStructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -428,7 +425,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * The editor selection changed listener.
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
-	private IPreferencesPropagatorListener fPhpVersionListener;
+	private IPreferencesPropagatorListener fPhpVersionAndTodoTasksListener;
 	private IPreferencesPropagatorListener fFormatterProfileListener;
 	private IPreferenceChangeListener fPreferencesListener;
 
@@ -999,30 +996,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	private void initPHPVersionsListener() {
-		if (fPhpVersionListener != null) {
+		if (fPhpVersionAndTodoTasksListener != null) {
 			return;
 		}
 
-		fPhpVersionListener = new IPreferencesPropagatorListener() {
+		fPhpVersionAndTodoTasksListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-				try {
-					// get the structured document and go over its regions
-					// in case of PhpScriptRegion reparse the region text
+				// get the structured document and go over its regions
+				// in case of PhpScriptRegion reparse the region text
+				if (getTextViewer() instanceof PHPStructuredTextViewer) {
+					DocumentModelUtils.reparseAndReconcileDocument((PHPStructuredTextViewer) getTextViewer());
+				} else {
 					IDocumentProvider documentProvider = getDocumentProvider();
 					IDocument doc = documentProvider != null ? documentProvider.getDocument(getEditorInput()) : null;
-					if (doc instanceof IStructuredDocument) {
-						IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc)
-								.getStructuredDocumentRegions();
-						for (IStructuredDocumentRegion element : sdRegions) {
-							Iterator regionsIt = element.getRegions().iterator();
-							reparseRegion(doc, regionsIt, element.getStartOffset());
-						}
-						PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
-						if (textViewer != null) {
-							textViewer.reconcile();
-						}
-					}
-				} catch (BadLocationException e) {
+					DocumentModelUtils.reparseDocument(doc);
 				}
 			}
 
@@ -1035,7 +1022,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		};
 
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(fPhpVersionListener);
+		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(fPhpVersionAndTodoTasksListener);
 
 		fPreferencesListener = new IPreferenceChangeListener() {
 
@@ -1065,38 +1052,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		};
 
 		InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID).addPreferenceChangeListener(fPreferencesListener);
-	}
-
-	/**
-	 * iterate over regions in case of PhpScriptRegion reparse the region. in
-	 * case of region container iterate over the container regions.
-	 * 
-	 * @param doc
-	 *            structured document
-	 * @param regionsIt
-	 *            regions iterator
-	 * @param offset
-	 *            the container region start offset
-	 * @throws BadLocationException
-	 */
-	private void reparseRegion(IDocument doc, Iterator<?> regionsIt, int offset) throws BadLocationException {
-		while (regionsIt.hasNext()) {
-			ITextRegion region = (ITextRegion) regionsIt.next();
-			if (region instanceof ITextRegionContainer) {
-				reparseRegion(doc, ((ITextRegionContainer) region).getRegions().iterator(), offset + region.getStart());
-			}
-			if (region instanceof IPhpScriptRegion) {
-				final IPhpScriptRegion phpRegion = (IPhpScriptRegion) region;
-				try {
-					phpRegion.completeReparse(doc, offset + region.getStart(), region.getLength());
-				} catch (Error e) {
-					// catch Error from PhpLexer.zzScanError
-					// without doing this,the editor will behavior unnormal
-					PHPUiPlugin.log(e);
-				}
-
-			}
-		}
 	}
 
 	/** Cursor dependent actions. */
@@ -1182,9 +1137,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			fInformationPresenter.dispose();
 			fInformationPresenter = null;
 		}
-		if (fPhpVersionListener != null) {
-			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(fPhpVersionListener);
-			fPhpVersionListener = null;
+		if (fPhpVersionAndTodoTasksListener != null) {
+			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(fPhpVersionAndTodoTasksListener);
+			fPhpVersionAndTodoTasksListener = null;
 		}
 		if (fFormatterProfileListener != null) {
 			// workaround for bug 409116
@@ -2263,7 +2218,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			if (getRefactorableFileEditorInput() != null
 					&& ((RefactorableFileEditorInput) getRefactorableFileEditorInput()).isRefactor()) {
 				getRefactorableFileEditorInput().setRefactor(false);
-				getDocumentProvider().disconnect(getRefactorableFileEditorInput());
+				if (getDocumentProvider() != null) {
+					getDocumentProvider().disconnect(getRefactorableFileEditorInput());
+				}
 				getRefactorableFileEditorInput().setFile(fileInput.getFile());
 				input = getRefactorableFileEditorInput();
 			} else {

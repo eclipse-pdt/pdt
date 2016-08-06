@@ -302,7 +302,15 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int)
 	 */
-	public void completeReparse(IDocument doc, int start, int length) {
+	public synchronized void completeReparse(IDocument doc, int start, int length) {
+		completeReparse(doc, start, length, project);
+	}
+
+	/**
+	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int, IProject)
+	 */
+	public synchronized void completeReparse(IDocument doc, int start, int length, @Nullable IProject project) {
+		this.project = project;
 		// bug fix for 225118 we need to refresh the constants since this
 		// function is being called
 		// after the project's PHP version was changed.
