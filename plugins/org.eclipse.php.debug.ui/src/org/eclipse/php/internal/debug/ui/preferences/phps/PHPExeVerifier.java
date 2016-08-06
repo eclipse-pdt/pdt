@@ -27,6 +27,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.wizards.PHPExeEditDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -164,12 +165,13 @@ public class PHPExeVerifier extends Job {
 				return;
 			boolean valid = true;
 			try {
-				String version = PHPExeUtil.exec(exeLocation.getAbsolutePath(), "-v"); //$NON-NLS-1$
+				String version = PHPExeUtil.fetchVersion(exeLocation);
 				if (version == null || version.isEmpty()) {
 					valid = false;
 				}
 			} catch (IOException e) {
 				valid = false;
+				Logger.logException("Failed to verify PHP executable: ", e);
 			}
 			if (!valid) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
