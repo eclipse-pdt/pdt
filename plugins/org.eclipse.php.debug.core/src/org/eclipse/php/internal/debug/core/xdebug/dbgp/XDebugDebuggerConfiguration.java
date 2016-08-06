@@ -12,13 +12,11 @@
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.XDebugExeLaunchConfigurationDelegate;
 import org.eclipse.php.internal.debug.core.launching.XDebugWebLaunchConfigurationDelegate;
@@ -110,39 +108,11 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 */
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
-		try {
-			PHPexes.changePermissions(executable);
-			if (isInstalled(item, EXTENSION_MODULE_ID)) {
-				String output = null;
-				File iniFile = item.getINILocation();
-				if (iniFile != null) {
-					output = PHPExeUtil.exec(executable.getAbsolutePath(), "-c", iniFile.getAbsolutePath(), "--ri", //$NON-NLS-1$ //$NON-NLS-2$
-							EXTENSION_MODULE_ID);
-				} else {
-					output = PHPExeUtil.exec(executable.getAbsolutePath(), "--ri", EXTENSION_MODULE_ID); //$NON-NLS-1$
-				}
-				if (output != null) {
-					String[] properties = output.split("\n"); //$NON-NLS-1$
-					for (String property : properties) {
-						String[] columns = property.split("=>"); //$NON-NLS-1$
-						if (columns.length == 3
-								&& (EXTENSION_MODULE_ID + '.' + REMOTE_ENABLE).equals(columns[0].trim())) {
-							String value = columns[1].trim();
-							if (!"on".equalsIgnoreCase(value)) { //$NON-NLS-1$
-								return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
-										PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotEnabledError);
-							}
-						}
-					}
-				}
-			} else {
-				return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
-						PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotInstalledError);
-			}
-		} catch (IOException e) {
-			PHPDebugPlugin.log(e);
-		}
-		return Status.OK_STATUS;
+		PHPexes.changePermissions(executable);
+		if (isInstalled(item, EXTENSION_MODULE_ID))
+			return Status.OK_STATUS;
+		return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
+				PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotInstalledError);
 	}
 
 }
