@@ -175,7 +175,6 @@ public class PHPexes {
 		original.setName(copy.getName());
 		original.setExecutable(copy.getExecutable());
 		original.setINILocation(copy.getINILocation());
-		original.setDetectedINILocation(copy.getDetectedINILocation());
 		original.setDebuggerID(copy.getDebuggerID());
 		original.setSapiType(copy.getSapiType());
 		original.setLoadDefaultINI(copy.isLoadDefaultINI());
