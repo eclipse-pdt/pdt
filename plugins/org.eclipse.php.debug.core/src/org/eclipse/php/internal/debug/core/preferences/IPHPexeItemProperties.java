@@ -38,11 +38,6 @@ public interface IPHPexeItemProperties {
 	public static final String PROP_INI_LOCATION = "ini-location"; //$NON-NLS-1$
 
 	/**
-	 * 'Auto-detected INI file location' property key.
-	 */
-	public static final String PROP_INI_DETECTED_LOCATION = "ini-detected-location"; //$NON-NLS-1$
-
-	/**
 	 * 'Use system default INI' property key.
 	 */
 	public static final String PROP_USE_DEFAULT_INI = "use-default-ini"; //$NON-NLS-1$
