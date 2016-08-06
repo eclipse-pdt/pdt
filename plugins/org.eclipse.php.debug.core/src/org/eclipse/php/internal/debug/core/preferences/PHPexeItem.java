@@ -60,7 +60,7 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 	 */
 	private List<PHPVersion> defaultForPHPVersionList = new ArrayList<PHPVersion>();
 	private final Map<String, Object> properties;
-	private final ListenerList listeners = new ListenerList();
+	private final ListenerList<IPHPexeItemListener> listeners = new ListenerList<IPHPexeItemListener>();
 	private final EventNotifier notifier;
 
 	/**
@@ -178,15 +178,6 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 	}
 
 	/**
-	 * Returns the detected configuration file path.
-	 * 
-	 * @return The detected configuration file location.
-	 */
-	public File getDetectedINILocation() {
-		return (File) properties.get(PROP_INI_DETECTED_LOCATION);
-	}
-
-	/**
 	 * Returns the debugger ID set for this item.
 	 * 
 	 * @return The debugger ID.
@@ -221,15 +212,6 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 	 */
 	public void setDebuggerID(String debuggerID) {
 		setProperty(PROP_DEBUGGER_ID, debuggerID);
-	}
-
-	/**
-	 * Set detected INI file location.
-	 * 
-	 * @param location
-	 */
-	public void setDetectedINILocation(File location) {
-		setProperty(PROP_INI_DETECTED_LOCATION, location);
 	}
 
 	/**
@@ -338,7 +320,6 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 		copy.setSapiType(getSapiType());
 		copy.setName(getName());
 		copy.setINILocation(getINILocation());
-		copy.setDetectedINILocation(getDetectedINILocation());
 		copy.setVersion(getVersion());
 		copy.setLoadDefaultINI(isLoadDefaultINI());
 		copy.setDebuggerID(getDebuggerID());
@@ -381,8 +362,6 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 			setName(phpInfo.getName());
 		if (getSapiType() == null)
 			setSapiType(phpInfo.getSapiType());
-		if (getDetectedINILocation() == null)
-			setDetectedINILocation(phpInfo.getSystemINIFile());
 		if (getVersion() == null)
 			setVersion(phpInfo.getVersion());
 	}
