@@ -84,10 +84,13 @@ public class TaskTagsEvent extends EventObject {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("[TaskTagsEvent: project = ");//$NON-NLS-1$
 		buffer.append(getProject());
-		buffer.append(", TaskTags = {");//$NON-NLS-1$
+		buffer.append(", TaskTags");//$NON-NLS-1$
 		if (tags == null) {
-			buffer.append("null}");//$NON-NLS-1$
+			buffer.append(" = {null}");//$NON-NLS-1$
 		} else {
+			buffer.append("[");//$NON-NLS-1$
+			buffer.append(tags.length);
+			buffer.append("] = {");//$NON-NLS-1$
 			for (int i = 0; i < tags.length; i++) {
 				buffer.append(tags[i]);
 				if (i + 1 < tags.length) {

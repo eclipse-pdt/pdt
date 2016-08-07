@@ -271,7 +271,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		if (project != null) {
 			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 		} else {
-			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
+			todos = TaskPatternsProvider.getInstance().getPatternsForWorkspace();
 		}
 	}
 

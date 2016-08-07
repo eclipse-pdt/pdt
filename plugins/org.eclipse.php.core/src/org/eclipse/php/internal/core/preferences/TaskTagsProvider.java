@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.preferences;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -33,8 +30,9 @@ public class TaskTagsProvider {
 
 	private static TaskTagsProvider instance;
 
-	private HashMap projectToTaskTagListener;
-	private HashMap projectToPropagatorListeners;
+	private HashMap<IProject, ITaskTagsListener> projectToTaskTagListener;
+	private HashSet<ITaskTagsListener> taskTagListener;
+	private HashMap<IProject, IPreferencesPropagatorListener[]> projectToPropagatorListeners;
 	private boolean isInstalled;
 	private PreferencesSupport preferencesSupport;
 	private PreferencesPropagator preferencesPropagator;
@@ -93,6 +91,9 @@ public class TaskTagsProvider {
 	 *         project uses the workspace defined tags.
 	 */
 	public TaskTag[] getProjectTaskTags(IProject project) {
+		if (project == null) {
+			return null;
+		}
 		String priorities = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_PRIORITIES,
 				null, project);
 		String projectTags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null,
@@ -115,6 +116,9 @@ public class TaskTagsProvider {
 	 *         otherwise.
 	 */
 	public boolean getProjectTagsCaseSensitive(IProject project) {
+		if (project == null) {
+			return isWorkspaceTagsCaseSensitive();
+		}
 		String caseSensitive = preferencesSupport
 				.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE, null, project);
 		if (caseSensitive == null) {
@@ -132,8 +136,27 @@ public class TaskTagsProvider {
 	 *            A related project.
 	 */
 	public void addTaskTagsListener(ITaskTagsListener listener, IProject project) {
+		if (listener == null || project == null) {
+			return;
+		}
 		projectToTaskTagListener.put(project, listener);
 		installPropagatorListeners(project);
+	}
+
+	/**
+	 * Adds a TaskTagsListener that will be notified each time task tags (for a
+	 * registered project) are modified. This also means that listeners added
+	 * using this method need at least one project registered using
+	 * addTaskTagsListener(listener, project) to get any notifications.
+	 * 
+	 * @param listener
+	 *            A TaskTagsListener.
+	 */
+	public void addTaskTagsListener(ITaskTagsListener listener) {
+		if (listener == null) {
+			return;
+		}
+		taskTagListener.add(listener);
 	}
 
 	/**
@@ -145,8 +168,24 @@ public class TaskTagsProvider {
 	 *            A related project.
 	 */
 	public void removeTaskTagsListener(ITaskTagsListener listener, IProject project) {
+		if (listener == null || project == null) {
+			return;
+		}
 		projectToTaskTagListener.remove(project);
 		uninstallPropagatorListeners(project);
+	}
+
+	/**
+	 * Removes a TaskTagsListener added using addTaskTagsListener(listener).
+	 * 
+	 * @param listener
+	 *            A TaskTagsListener.
+	 */
+	public void removeTaskTagsListener(ITaskTagsListener listener) {
+		if (listener == null) {
+			return;
+		}
+		taskTagListener.remove(listener);
 	}
 
 	// Install propagator listeners for the given project.
@@ -181,8 +220,9 @@ public class TaskTagsProvider {
 			return;
 		}
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID);
-		projectToTaskTagListener = new HashMap();
-		projectToPropagatorListeners = new HashMap();
+		projectToTaskTagListener = new HashMap<IProject, ITaskTagsListener>();
+		taskTagListener = new HashSet<ITaskTagsListener>();
+		projectToPropagatorListeners = new HashMap<IProject, IPreferencesPropagatorListener[]>();
 		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER);
 		isInstalled = true;
 	}
@@ -195,7 +235,7 @@ public class TaskTagsProvider {
 			return;
 		}
 		// Uninstall the propagator listeners
-		Set keys = projectToPropagatorListeners.keySet();
+		Set<IProject> keys = projectToPropagatorListeners.keySet();
 		IProject[] projects = new IProject[keys.size()];
 		keys.toArray(projects);
 		for (IProject element : projects) {
@@ -205,6 +245,7 @@ public class TaskTagsProvider {
 		preferencesSupport = null;
 		preferencesPropagator = null;
 		projectToTaskTagListener = null;
+		taskTagListener = null;
 		projectToPropagatorListeners = null;
 		isInstalled = false;
 	}
@@ -216,6 +257,9 @@ public class TaskTagsProvider {
 		for (ITaskTagsListener element : allListeners) {
 			element.taskTagsChanged(event);
 		}
+		for (ITaskTagsListener element : taskTagListener) {
+			element.taskTagsChanged(event);
+		}
 	}
 
 	// Notify a taskTagsChanged to all the listeners.
@@ -223,6 +267,9 @@ public class TaskTagsProvider {
 		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener.size()];
 		projectToTaskTagListener.values().toArray(allListeners);
 		for (ITaskTagsListener element : allListeners) {
+			element.taskPrioritiesChanged(event);
+		}
+		for (ITaskTagsListener element : taskTagListener) {
 			element.taskPrioritiesChanged(event);
 		}
 	}
@@ -234,6 +281,9 @@ public class TaskTagsProvider {
 		for (ITaskTagsListener element : allListeners) {
 			element.taskCaseChanged(event);
 		}
+		for (ITaskTagsListener element : taskTagListener) {
+			element.taskCaseChanged(event);
+		}
 	}
 
 	/*
@@ -243,10 +293,10 @@ public class TaskTagsProvider {
 	 * 
 	 * @param priorities
 	 */
-	private TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
+	private static TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
 		String[] tags = StringUtils.unpack(tagString);
 		String[] priorities = StringUtils.unpack(priorityString);
-		List list = new ArrayList();
+		List<Integer> list = new ArrayList<Integer>();
 
 		for (String element : priorities) {
 			Integer number = null;
