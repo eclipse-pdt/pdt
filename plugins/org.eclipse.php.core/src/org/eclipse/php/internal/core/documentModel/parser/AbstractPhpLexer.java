@@ -13,18 +13,12 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.text.Segment;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -236,12 +230,14 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 				yylex = yylex();
 			}
 			bufferedTokens = new LinkedList<ITextRegion>();
-			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, 0, length, buffer.toString());
-			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
+			bufferedTokens.add(new ContextRegion(PHPRegionTypes.PHPDOC_COMMENT, 0, length, length));
+			if (yylex != null) {
+				bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
+			}
 			yylex = removeFromBuffer();
 		} else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
 			bufferedTokens = new LinkedList<ITextRegion>();
-			checkForTodo(bufferedTokens, yylex, 0, yylength(), yytext());
+			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
 			yylex = removeFromBuffer();
 		}
 
@@ -263,120 +259,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public int getLength() {
 		return bufferedTokens == null ? yylength() : bufferedLength;
-	}
-
-	private Pattern[] todos;
-
-	public void setPatterns(IProject project) {
-		if (project != null) {
-			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
-		} else {
-			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
-		}
-	}
-
-	/**
-	 * @param bufferedTokens2
-	 * @param token
-	 * @param commentStart
-	 * @param commentLength
-	 * @param comment
-	 * @return a list of todo ITextRegion
-	 */
-	private void checkForTodo(List<ITextRegion> result, String token, int commentStart, int commentLength,
-			String comment) {
-		ArrayList<Matcher> matchers = createMatcherList(comment);
-		int startPosition = 0;
-
-		Matcher matcher = getMinimalMatcher(matchers, startPosition);
-		ITextRegion tRegion = null;
-		while (matcher != null) {
-			int startIndex = matcher.start();
-			int endIndex = matcher.end();
-			if (startIndex != startPosition) {
-				tRegion = new ContextRegion(token, commentStart + startPosition, startIndex - startPosition,
-						startIndex - startPosition);
-				result.add(tRegion);
-			}
-			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO, commentStart + startIndex, endIndex - startIndex,
-					endIndex - startIndex);
-			result.add(tRegion);
-			startPosition = endIndex;
-			matcher = getMinimalMatcher(matchers, startPosition);
-		}
-		final int length = commentLength - startPosition;
-		if (length != 0) {
-			result.add(new ContextRegion(token, commentStart + startPosition, length, length));
-		}
-
-		// String[] words = comment.split("\\W+");
-		// int startPosition = 0;
-		// for (int i = 0; i < words.length; i++) {
-		// String word = words[i];
-		// ArrayList<Matcher> matchers = createMatcherList(word);
-		//
-		// Matcher matcher = getMinimalMatcher(matchers, 0);
-		// ITextRegion tRegion = null;
-		// int index = comment.indexOf(word, startPosition);
-		// if (matcher != null) {
-		// int startIndex = matcher.start();
-		// int endIndex = matcher.end();
-		// if (endIndex - startIndex == word.length()) {
-		//
-		// if (index - startPosition > 0) {
-		// tRegion = new ContextRegion(token, commentStart
-		// + startPosition, index - startPosition, index
-		// - startPosition);
-		// result.add(tRegion);
-		// startPosition = index;
-		// }
-		// tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
-		// commentStart + index, endIndex - startIndex,
-		// endIndex - startIndex);
-		// result.add(tRegion);
-		// startPosition += endIndex;
-		// } else {
-		// final int length = word.length() - startPosition;
-		// result.add(new ContextRegion(token, commentStart
-		// + startPosition, length, length));
-		// }
-		// } else {
-		// final int length = word.length() + index - startPosition;
-		// result.add(new ContextRegion(token, commentStart
-		// + startPosition, length, length));
-		// startPosition += length;
-		// }
-		// }
-		// if (words.length == 0) {
-		// result.add(new ContextRegion(token, commentStart, commentLength,
-		// commentLength));
-		// }
-	}
-
-	private ArrayList<Matcher> createMatcherList(String content) {
-		ArrayList<Matcher> list = new ArrayList<Matcher>(todos.length);
-		for (int i = 0; i < todos.length; i++) {
-			list.add(i, todos[i].matcher(content));
-		}
-		return list;
-	}
-
-	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers, int startPosition) {
-		Matcher minimal = null;
-		int size = matchers.size();
-		for (int i = 0; i < size;) {
-			Matcher tmp = (Matcher) matchers.get(i);
-			if (tmp.find(startPosition)) {
-				if (minimal == null || tmp.start() < minimal.start()) {
-					minimal = tmp;
-				}
-				i++;
-			} else {
-				matchers.remove(i);
-				size--;
-			}
-		}
-		return minimal;
 	}
 
 	private static class BasicLexerState implements LexerState {

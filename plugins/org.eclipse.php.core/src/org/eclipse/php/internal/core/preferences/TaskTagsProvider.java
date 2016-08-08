@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
@@ -33,8 +34,8 @@ public class TaskTagsProvider {
 
 	private static TaskTagsProvider instance;
 
-	private HashMap projectToTaskTagListener;
-	private HashMap projectToPropagatorListeners;
+	private HashMap<IProject, ITaskTagsListener> projectToTaskTagListener;
+	private HashMap<IProject, IPreferencesPropagatorListener[]> projectToPropagatorListeners;
 	private boolean isInstalled;
 	private PreferencesSupport preferencesSupport;
 	private PreferencesPropagator preferencesPropagator;
@@ -93,6 +94,9 @@ public class TaskTagsProvider {
 	 *         project uses the workspace defined tags.
 	 */
 	public TaskTag[] getProjectTaskTags(IProject project) {
+		if (project == null) {
+			return null;
+		}
 		String priorities = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_PRIORITIES,
 				null, project);
 		String projectTags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null,
@@ -115,6 +119,9 @@ public class TaskTagsProvider {
 	 *         otherwise.
 	 */
 	public boolean getProjectTagsCaseSensitive(IProject project) {
+		if (project == null) {
+			return isWorkspaceTagsCaseSensitive();
+		}
 		String caseSensitive = preferencesSupport
 				.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE, null, project);
 		if (caseSensitive == null) {
@@ -132,6 +139,9 @@ public class TaskTagsProvider {
 	 *            A related project.
 	 */
 	public void addTaskTagsListener(ITaskTagsListener listener, IProject project) {
+		if (listener == null || project == null) {
+			return;
+		}
 		projectToTaskTagListener.put(project, listener);
 		installPropagatorListeners(project);
 	}
@@ -145,6 +155,9 @@ public class TaskTagsProvider {
 	 *            A related project.
 	 */
 	public void removeTaskTagsListener(ITaskTagsListener listener, IProject project) {
+		if (listener == null || project == null) {
+			return;
+		}
 		projectToTaskTagListener.remove(project);
 		uninstallPropagatorListeners(project);
 	}
@@ -181,8 +194,8 @@ public class TaskTagsProvider {
 			return;
 		}
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID);
-		projectToTaskTagListener = new HashMap();
-		projectToPropagatorListeners = new HashMap();
+		projectToTaskTagListener = new HashMap<IProject, ITaskTagsListener>();
+		projectToPropagatorListeners = new HashMap<IProject, IPreferencesPropagatorListener[]>();
 		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER);
 		isInstalled = true;
 	}
@@ -195,7 +208,7 @@ public class TaskTagsProvider {
 			return;
 		}
 		// Uninstall the propagator listeners
-		Set keys = projectToPropagatorListeners.keySet();
+		Set<IProject> keys = projectToPropagatorListeners.keySet();
 		IProject[] projects = new IProject[keys.size()];
 		keys.toArray(projects);
 		for (IProject element : projects) {
@@ -243,10 +256,10 @@ public class TaskTagsProvider {
 	 * 
 	 * @param priorities
 	 */
-	private TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
+	private static TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
 		String[] tags = StringUtils.unpack(tagString);
 		String[] priorities = StringUtils.unpack(priorityString);
-		List list = new ArrayList();
+		List<Integer> list = new ArrayList<Integer>();
 
 		for (String element : priorities) {
 			Integer number = null;
@@ -278,11 +291,11 @@ public class TaskTagsProvider {
 
 		private IProject project;
 
-		public AbstractTasksListener(IProject project) {
+		public AbstractTasksListener(@Nullable IProject project) {
 			this.project = project;
 		}
 
-		public IProject getProject() {
+		public @Nullable IProject getProject() {
 			return project;
 		}
 	}
@@ -290,7 +303,7 @@ public class TaskTagsProvider {
 	// Listen to task-tags strings changes
 	private class InnerTaskTagsListener extends AbstractTasksListener {
 
-		public InnerTaskTagsListener(IProject project) {
+		public InnerTaskTagsListener(@Nullable IProject project) {
 			super(project);
 		}
 
@@ -320,7 +333,7 @@ public class TaskTagsProvider {
 	// Listen to task-tags priorities changes
 	private class InnerTaskPrioritiesListener extends AbstractTasksListener {
 
-		public InnerTaskPrioritiesListener(IProject project) {
+		public InnerTaskPrioritiesListener(@Nullable IProject project) {
 			super(project);
 		}
 
@@ -348,7 +361,7 @@ public class TaskTagsProvider {
 	// Listen to task-tags case sensitivity changes
 	private class InnerTaskCaseListener extends AbstractTasksListener {
 
-		public InnerTaskCaseListener(IProject project) {
+		public InnerTaskCaseListener(@Nullable IProject project) {
 			super(project);
 		}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,11 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.core.validation;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -23,8 +28,10 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -47,6 +54,77 @@ import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 public class PHPTodoTaskValidator extends AbstractValidator {
 
 	protected TaskTag[] taskTags = null;
+
+	private Pattern[] todos = new Pattern[0];
+
+	public void setPatterns(IProject project) {
+		if (project != null) {
+			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
+		} else {
+			todos = TaskPatternsProvider.getInstance().getPatternsForWorkspace();
+		}
+	}
+
+	/**
+	 * @param result
+	 * @param token
+	 * @param commentStart
+	 * @param commentLength
+	 * @param comment
+	 * @return a list of todo ITextRegion
+	 */
+	private void checkForTodo(List<ITextRegion> result, String token, int commentStart, int commentLength,
+			String comment) {
+		ArrayList<Matcher> matchers = createMatcherList(comment);
+		int startPosition = 0;
+
+		Matcher matcher = getMinimalMatcher(matchers, startPosition);
+		ITextRegion tRegion = null;
+		while (matcher != null) {
+			int startIndex = matcher.start();
+			int endIndex = matcher.end();
+			if (startIndex != startPosition) {
+				tRegion = new ContextRegion(token, commentStart + startPosition, startIndex - startPosition,
+						startIndex - startPosition);
+				result.add(tRegion);
+			}
+			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO, commentStart + startIndex, endIndex - startIndex,
+					endIndex - startIndex);
+			result.add(tRegion);
+			startPosition = endIndex;
+			matcher = getMinimalMatcher(matchers, startPosition);
+		}
+		final int length = commentLength - startPosition;
+		if (length != 0) {
+			result.add(new ContextRegion(token, commentStart + startPosition, length, length));
+		}
+	}
+
+	private ArrayList<Matcher> createMatcherList(String content) {
+		ArrayList<Matcher> list = new ArrayList<Matcher>(todos.length);
+		for (int i = 0; i < todos.length; i++) {
+			list.add(i, todos[i].matcher(content));
+		}
+		return list;
+	}
+
+	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers, int startPosition) {
+		Matcher minimal = null;
+		int size = matchers.size();
+		for (int i = 0; i < size;) {
+			Matcher tmp = (Matcher) matchers.get(i);
+			if (tmp.find(startPosition)) {
+				if (minimal == null || tmp.start() < minimal.start()) {
+					minimal = tmp;
+				}
+				i++;
+			} else {
+				matchers.remove(i);
+				size--;
+			}
+		}
+		return minimal;
+	}
 
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		// process only PHP files
