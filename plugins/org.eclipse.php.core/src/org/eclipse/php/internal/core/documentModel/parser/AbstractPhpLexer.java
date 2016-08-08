@@ -271,7 +271,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		if (project != null) {
 			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 		} else {
-			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
+			todos = TaskPatternsProvider.getInstance().getPatternsForWorkspace();
 		}
 	}
 
@@ -362,6 +362,13 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers, int startPosition) {
+		if (false) {
+			// XXX: when project is undetermined we don't know if it means that
+			// workspace preferences changed or if we couldn't retrieve the
+			// project where current file belongs
+			return null;
+		}
+
 		Matcher minimal = null;
 		int size = matchers.size();
 		for (int i = 0; i < size;) {
