@@ -23,7 +23,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.performance.AbstractPDTTTest;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
