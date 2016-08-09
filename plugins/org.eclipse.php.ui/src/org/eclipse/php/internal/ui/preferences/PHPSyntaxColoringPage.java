@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -207,8 +207,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				fText.setStyleRange(element);
 			}
 
-			for (Iterator iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
-					.iterator(); iterator.hasNext();) {
+			for (Iterator<String> iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings()
+					.keySet().iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
 
 				HighlightingStyle highlightingStyle = highlightingStyleMap.get(type);
@@ -1198,10 +1198,26 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 						return DeprecatedHighlighting.class.getName();
 					}
 				});
+				highlightings.add(new TodoTaskHighlighting() {
+					@Override
+					protected Program getProgram(IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return TodoTaskHighlighting.class.getName();
+					}
+				});
 
 				Collections.sort(highlightings);
 
-				for (Iterator iterator = highlightings.iterator(); iterator.hasNext();) {
+				for (Iterator<AbstractSemanticHighlighting> iterator = highlightings.iterator(); iterator.hasNext();) {
 					AbstractSemanticHighlighting abstractSemanticHighlighting = (AbstractSemanticHighlighting) iterator
 							.next();
 					Position[] positions = abstractSemanticHighlighting.consumes(program);
@@ -1244,7 +1260,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			styles.add(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR);
 			styles.add(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 			styles.add(PreferenceConstants.EDITOR_PHPDOC_COLOR);
-			styles.add(PreferenceConstants.EDITOR_TASK_COLOR);
+			// styles.add(PreferenceConstants.EDITOR_TASK_COLOR);
 
 			styles.addAll(SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet());
 
@@ -1360,7 +1376,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR,
 				PHPUIMessages.ColorPage_PHPDOCComment);
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_PHPDOC_COLOR, PHPUIMessages.ColorPage_Phpdoc);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_TASK_COLOR, PHPUIMessages.ColorPage_TaskTag);
+		// fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_TASK_COLOR,
+		// PHPUIMessages.ColorPage_TaskTag);
 	}
 
 	@Override
@@ -1422,7 +1439,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private void initHighlightingStyles() {
 		highlightingStyleMap = new HashMap<String, PHPSyntaxColoringPage.HighlightingStyle>();
-		for (Iterator iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
+		for (Iterator<String> iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
 				.iterator(); iterator.hasNext();) {
 			String type = (String) iterator.next();
 			ISemanticHighlighting highlighting = SemanticHighlightingManager.getInstance().getSemanticHighlightings()

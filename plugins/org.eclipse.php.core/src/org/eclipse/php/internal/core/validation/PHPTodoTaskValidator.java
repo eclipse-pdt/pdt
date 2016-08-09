@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,12 @@ package org.eclipse.php.internal.core.validation;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
@@ -32,8 +30,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.validation.AbstractValidator;
-import org.eclipse.wst.validation.ValidationResult;
-import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 
@@ -47,19 +43,6 @@ import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 public class PHPTodoTaskValidator extends AbstractValidator {
 
 	protected TaskTag[] taskTags = null;
-
-	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
-		// process only PHP files
-		if (resource.getType() != IResource.FILE || !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
-			return null;
-		}
-
-		ValidationResult result = new ValidationResult();
-		IReporter reporter = result.getReporter(monitor);
-		validateFile(reporter, (IFile) resource, kind);
-
-		return result;
-	}
 
 	/**
 	 * Search for tasks in the validated file and create a marker for each task

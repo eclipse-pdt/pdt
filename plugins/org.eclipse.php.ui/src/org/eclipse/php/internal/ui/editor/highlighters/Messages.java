@@ -28,6 +28,7 @@ public class Messages extends NLS {
 	public static String StaticFieldHighlighting_0;
 	public static String StaticMethodHighlighting_0;
 	public static String SuperGlobalHighlighting_0;
+	public static String TodoTaskHighlighting_0;
 
 	static {
 		// initialize resource bundle
