@@ -27,7 +27,7 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("as", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("break", EMPTY_SUFFIX, 0)); //$NON-NLS-1$
 		list.add(new KeywordData("case", WHITESPACE_COLON_SUFFIX, 2)); //$NON-NLS-1$
-		list.add(new KeywordData("class", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
+		list.add(new KeywordData("class", WHITESPACE_SUFFIX, 1, PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("const", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY));
 		list.add(new KeywordData("continue", EMPTY_SUFFIX, 0)); //$NON-NLS-1$
@@ -47,7 +47,7 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("endwhile", SEMICOLON_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("eval", PARENTESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("exit", PARENTESES_SUFFIX, 1)); //$NON-NLS-1$
-		list.add(new KeywordData("extends", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
+		list.add(new KeywordData("extends", WHITESPACE_SUFFIX, 1, PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("false", EMPTY_SUFFIX, 0)); //$NON-NLS-1$
 		list.add(new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$
 		list.add(new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$
@@ -56,8 +56,8 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("global", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$
 		list.add(new KeywordData("include_once", //$NON-NLS-1$
-				WS_QUOTES_SEMICOLON_SUFFIX, 2));
-		list.add(new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2)); //$NON-NLS-1$
+				WS_QUOTES_SEMICOLON_SUFFIX, 2, PHPKeywords.GLOBAL));
+		list.add(new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2, PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("isset", PARENTESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("list", PARENTESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("new", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("print", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("require_once", //$NON-NLS-1$
 				WS_QUOTES_SEMICOLON_SUFFIX, 2));
-		list.add(new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2)); //$NON-NLS-1$
+		list.add(new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2, PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("return", WHITESPACE_SUFFIX, 1, PHPKeywords.METHOD_BODY | PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("static", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
