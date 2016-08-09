@@ -661,6 +661,7 @@ public final class PHPUIMessages extends NLS {
 	public static String SearchLabelProvider_exact_and_potential_plural;
 	public static String PHPOutlinePage_mode_php;
 	public static String VariableCreationDialog_error_whitespace;
+	@Deprecated
 	public static String ColorPage_TaskTag;
 	public static String IncludePathsBlock_includepath_uncheckall_button;
 	public static String PHPStructuredEditor_0;

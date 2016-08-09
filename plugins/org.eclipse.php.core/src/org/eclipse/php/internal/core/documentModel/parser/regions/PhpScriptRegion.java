@@ -75,7 +75,6 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		this.project = project;
 		// must be done by the caller when phpLexer is newly created or when it
 		// was used on a different project:
-		// phpLexer.setPatterns(project);
 		// phpLexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 
 		try {
@@ -302,7 +301,15 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int)
 	 */
-	public void completeReparse(IDocument doc, int start, int length) {
+	public synchronized void completeReparse(IDocument doc, int start, int length) {
+		completeReparse(doc, start, length, project);
+	}
+
+	/**
+	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int, IProject)
+	 */
+	public synchronized void completeReparse(IDocument doc, int start, int length, @Nullable IProject project) {
+		this.project = project;
 		// bug fix for 225118 we need to refresh the constants since this
 		// function is being called
 		// after the project's PHP version was changed.
@@ -379,7 +386,6 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
 		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream, phpVersion);
 		lexer.initialize(ST_PHP_IN_SCRIPTING);
-		lexer.setPatterns(project);
 
 		// set the wanted state
 		if (startState != null) {

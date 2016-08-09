@@ -156,9 +156,11 @@ public class PhpTokenContainer implements Cloneable {
 	 */
 	public synchronized String getPartitionType(int offset) throws BadLocationException {
 		ITextRegion token = getToken(offset);
-		while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType()) && token.getStart() - 1 >= 0) {
-			token = getToken(token.getStart() - 1);
-		}
+		// while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType()) &&
+		// token.getStart() - 1 >= 0) {
+		// token = getToken(token.getStart() - 1);
+		// assert token != null;
+		// }
 		assert token != null;
 		final String type = token.getType();
 		final String partitionType = PHPPartitionTypes.getPartitionType(type);
@@ -304,7 +306,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param lexerState
 	 */
 	public synchronized void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
-		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
+		assert(phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		if (phpTokens.size() > 0) {
 			ContextRegion lastContextRegion = (ContextRegion) phpTokens.get(phpTokens.size() - 1);
@@ -372,7 +374,7 @@ public class PhpTokenContainer implements Cloneable {
 	 */
 	public synchronized void adjustWhitespace(String yylex, int start, int yylengthLength, int yylength,
 			Object lexerState) {
-		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
+		assert(phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		// if state was change - we add a new token and add state
 		if (lexerStateChanges.size() != 0 && getLastChange().state.equals(lexerState)) {
