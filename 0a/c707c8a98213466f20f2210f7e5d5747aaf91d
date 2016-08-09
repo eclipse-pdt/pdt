@@ -1,0 +1,7 @@
+Verified+1: Hudson CI
+Code-Review+2: Bartlomiej Laczkowski <bartlomiej.l@zend.com>
+Submitted-by: Bartlomiej Laczkowski <bartlomiej.l@zend.com>
+Submitted-at: Tue, 09 Aug 2016 09:01:50 -0400
+Reviewed-on: https://git.eclipse.org/r/78688
+Project: pdt/org.eclipse.pdt
+Branch: refs/heads/master
