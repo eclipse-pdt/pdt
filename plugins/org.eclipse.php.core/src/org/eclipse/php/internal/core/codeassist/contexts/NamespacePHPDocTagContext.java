@@ -44,7 +44,7 @@ public abstract class NamespacePHPDocTagContext extends NamespacePHPDocContext {
 		if (project != null) {
 			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 		} else {
-			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
+			todos = TaskPatternsProvider.getInstance().getPatternsForWorkspace();
 		}
 	}
 
