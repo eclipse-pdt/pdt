@@ -164,6 +164,13 @@
 			nature="org.eclipse.php.core.PHPNature">
 			<requires id="org.eclipse.php.core.buildParticipant.parser" />
 		</buildParticipant>
+		<buildParticipant
+			class="org.eclipse.php.internal.core.builder.TodoTaskBuildParticipantFactory"
+			id="org.eclipse.php.core.buildParticipant.findTaskTags"
+			name="%organizeBuildParticipant.name"
+			nature="org.eclipse.php.core.PHPNature">
+			<requires id="org.eclipse.php.core.buildParticipant.parser" />
+		</buildParticipant>
 	</extension>
 
 	<extension

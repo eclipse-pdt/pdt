@@ -38,7 +38,7 @@ public class SWTUtil {
 
 	/**
 	 * Returns the standard display to be used. The method first checks, if the
-	 * thread calling this method has an associated disaply. If so, this display
+	 * thread calling this method has an associated display. If so, this display
 	 * is returned. Otherwise the method returns the default display.
 	 */
 	public static Display getStandardDisplay() {

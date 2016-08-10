@@ -244,6 +244,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
+	@Deprecated
 	public static final String EDITOR_TASK_COLOR = "editorColorTask"; //$NON-NLS-1$
 
 	/**
@@ -253,6 +254,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
+	@Deprecated
 	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | | true"; //$NON-NLS-1$
 
 	/**
@@ -1125,7 +1127,7 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_LINE_COMMENT_COLOR, EDITOR_LINE_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COMMENT_COLOR, EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
-		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
+		// store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
 
 		store.setDefault(EDITOR_KEYWORD_PRIVATE_COLOR, EDITOR_KEYWORD_PRIVATE_DEFAULT_COLOR);
 		store.setDefault(EDITOR_KEYWORD_PROTECTED_COLOR, EDITOR_KEYWORD_PROTECTED_DEFAULT_COLOR);
@@ -1143,7 +1145,7 @@ public class PreferenceConstants {
 		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COLOR), true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
+		// store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
 
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PUBLIC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PRIVATE_COLOR), true);
