@@ -130,7 +130,7 @@ public abstract class AbstractSemanticHighlighting
 		Program program = null;
 		if (sourceModule != null) {
 			try {
-				// Wait active_only. Sometimes highliters are called without
+				// Wait active_only. Sometimes highlighters are called without
 				// reconciling
 				program = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_YES, null);
 			} catch (ModelException e) {

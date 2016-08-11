@@ -23,6 +23,7 @@ public class PHPDocBlock extends Comment {
 	private String longDescription;
 	private PHPDocTag[] tags;
 	private List<Scalar> texts;
+	private List<Scalar> taskTags;
 
 	public PHPDocBlock(int start, int end, String shortDescription, String longDescription, PHPDocTag[] tags) {
 		this(start, end, shortDescription, longDescription, tags, null);
@@ -65,6 +66,23 @@ public class PHPDocBlock extends Comment {
 
 	public List<Scalar> getTexts() {
 		return texts;
+	}
+
+	/**
+	 * @return list of todo task tags set by TaskTagBuildParticipantFactory or
+	 *         null
+	 */
+	public List<Scalar> getTaskTags() {
+		return taskTags;
+	}
+
+	/**
+	 * Todo Task tags will be set (if any) by TaskTagBuildParticipantFactory
+	 * 
+	 * @param taskTags
+	 */
+	public void setTaskTags(List<Scalar> taskTags) {
+		this.taskTags = taskTags;
 	}
 
 	public PHPDocTag[] getTags(TagKind kind) {

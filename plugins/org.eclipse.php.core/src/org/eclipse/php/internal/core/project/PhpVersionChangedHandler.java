@@ -29,7 +29,7 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
 
-	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
+	private static final PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 
 	private PhpVersionChangedHandler() {
 		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER);
@@ -61,7 +61,7 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			if (event.getNewValue() == null) {
 				// We take the workspace settings since there was a move from
-				// project-specific to workspace setings.
+				// project-specific to workspace settings.
 				String newValue = PreferencesSupport.getWorkspacePreferencesValue(PHPCorePlugin.ID,
 						(String) event.getKey());
 				if (newValue == null || newValue.equals(event.getOldValue())) {
