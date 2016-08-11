@@ -21,7 +21,6 @@ IEclipsePreferences#org-eclipse-php-ui {
         'editorColorPHPDocComment=#626262 | null | false | false | false | false'
         'editorColorPhpdoc=#9a8c7c | null | true | false | false | false'
         'editorColorString=#17C6A3 | null | null | true | null | null'
-        'editorColorTask=#9a8c7c | null | true | false | false | false'
         'editorColorVariable=#FFBF26 | null | null | null | null | null'
         'editorColorKeywordPublic=#66cc66 | null | true | false | false | false'
         'editorColorKeywordProtected=#fccd76 | null | true | false | false | false'
@@ -47,4 +46,6 @@ IEclipsePreferences#org-eclipse-php-ui {
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticFieldHighlighting.color=#8DDAF8'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting.color=#1eb540'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting.color=#FFBF26'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.TodoTaskHighlighting.bold=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.TodoTaskHighlighting.color=#9a8c7c'
 }

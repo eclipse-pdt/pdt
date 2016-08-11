@@ -464,7 +464,6 @@ private AbstractPhpLexer getPhpLexer() {
 		Logger.logException(e);
 	}
 	lexer.reset(zzReader, zzBuffer, currentParameters);
-	lexer.setPatterns(project);
 
 	lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 	return lexer;

@@ -25,10 +25,10 @@ import org.eclipse.ui.part.FileEditorInputFactory;
 public class RefactorableFileEditorInput
 		implements IFileEditorInput, IPathEditorInput, IURIEditorInput, IPersistableElement {
 	private boolean isRefactor = false;
-	private FileEditorInput innerEidtorInput;
+	private FileEditorInput innerEditorInput;
 
 	public RefactorableFileEditorInput(IFile file) {
-		this.innerEidtorInput = new FileEditorInput(file);
+		this.innerEditorInput = new FileEditorInput(file);
 	}
 
 	/*
@@ -44,7 +44,7 @@ public class RefactorableFileEditorInput
 	 * @see org.eclipse.ui.IPathEditorInput#getPath()
 	 */
 	public IPath getPath() {
-		return innerEidtorInput.getPath();
+		return innerEditorInput.getPath();
 	}
 
 	/*
@@ -53,21 +53,21 @@ public class RefactorableFileEditorInput
 	 * @see org.eclipse.ui.IURIEditorInput#getURI()
 	 */
 	public URI getURI() {
-		return innerEidtorInput.getURI();
+		return innerEditorInput.getURI();
 	}
 
 	/*
 	 * (non-Javadoc) Method declared on Object.
 	 */
 	public int hashCode() {
-		return innerEidtorInput.hashCode();
+		return innerEditorInput.hashCode();
 	}
 
 	/*
 	 * (non-Javadoc) Method declared on IPersistableElement.
 	 */
 	public void saveState(IMemento memento) {
-		FileEditorInputFactory.saveState(memento, innerEidtorInput);
+		FileEditorInputFactory.saveState(memento, innerEditorInput);
 	}
 
 	/*
@@ -76,11 +76,11 @@ public class RefactorableFileEditorInput
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return innerEidtorInput.toString(); // $NON-NLS-1$ //$NON-NLS-2$
+		return innerEditorInput.toString(); // $NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void setFile(IFile file) {
-		this.innerEidtorInput = new FileEditorInput(file);
+		this.innerEditorInput = new FileEditorInput(file);
 	}
 
 	public boolean isRefactor() {
@@ -99,42 +99,42 @@ public class RefactorableFileEditorInput
 		if (!(obj instanceof IFileEditorInput)) {
 			return false;
 		}
-		return innerEidtorInput.equals(obj);
+		return innerEditorInput.equals(obj);
 	}
 
 	public IFile getFile() {
-		return innerEidtorInput.getFile();
+		return innerEditorInput.getFile();
 	}
 
 	public IStorage getStorage() throws CoreException {
-		return innerEidtorInput.getStorage();
+		return innerEditorInput.getStorage();
 	}
 
 	public boolean exists() {
-		return innerEidtorInput.exists();
+		return innerEditorInput.exists();
 	}
 
 	public ImageDescriptor getImageDescriptor() {
-		return innerEidtorInput.getImageDescriptor();
+		return innerEditorInput.getImageDescriptor();
 	}
 
 	public String getName() {
-		return innerEidtorInput.getName();
+		return innerEditorInput.getName();
 	}
 
 	public IPersistableElement getPersistable() {
 		// if the file has been deleted,return null will make this EidtorInput
 		// be removed from NavigationHistory
-		if (!innerEidtorInput.getFile().exists())
+		if (!innerEditorInput.getFile().exists())
 			return null;
-		return innerEidtorInput.getPersistable();
+		return innerEditorInput.getPersistable();
 	}
 
 	public String getToolTipText() {
-		return innerEidtorInput.getToolTipText();
+		return innerEditorInput.getToolTipText();
 	}
 
 	public Object getAdapter(Class adapter) {
-		return innerEidtorInput.getAdapter(adapter);
+		return innerEditorInput.getAdapter(adapter);
 	}
 }
