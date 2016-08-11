@@ -156,9 +156,11 @@ public class PhpTokenContainer implements Cloneable {
 	 */
 	public synchronized String getPartitionType(int offset) throws BadLocationException {
 		ITextRegion token = getToken(offset);
-		while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType()) && token.getStart() - 1 >= 0) {
-			token = getToken(token.getStart() - 1);
-		}
+		// while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType()) &&
+		// token.getStart() - 1 >= 0) {
+		// token = getToken(token.getStart() - 1);
+		// assert token != null;
+		// }
 		assert token != null;
 		final String type = token.getType();
 		final String partitionType = PHPPartitionTypes.getPartitionType(type);

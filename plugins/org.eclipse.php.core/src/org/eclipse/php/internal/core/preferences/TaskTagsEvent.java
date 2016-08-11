@@ -14,6 +14,8 @@ package org.eclipse.php.internal.core.preferences;
 import java.util.EventObject;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 
 /**
@@ -43,7 +45,8 @@ public class TaskTagsEvent extends EventObject {
 	 * @param isCaseSensitive
 	 *            Indicate that the tags should be compiled as case-sensitive.
 	 */
-	public TaskTagsEvent(TaskTagsProvider provider, IProject project, TaskTag[] tags, boolean isCaseSensitive) {
+	public TaskTagsEvent(@NonNull TaskTagsProvider provider, @Nullable IProject project, @NonNull TaskTag[] tags,
+			boolean isCaseSensitive) {
 		super(provider);
 		this.project = project;
 		this.tags = tags;
@@ -57,7 +60,7 @@ public class TaskTagsEvent extends EventObject {
 	 * 
 	 * @return The effected IProject, or null if the effect is on the workspace.
 	 */
-	public IProject getProject() {
+	public @Nullable IProject getProject() {
 		return project;
 	}
 
@@ -66,7 +69,7 @@ public class TaskTagsEvent extends EventObject {
 	 * 
 	 * @return
 	 */
-	public TaskTag[] getTaskTags() {
+	public @NonNull TaskTag[] getTaskTags() {
 		return tags;
 	}
 
@@ -83,19 +86,29 @@ public class TaskTagsEvent extends EventObject {
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("[TaskTagsEvent: project = ");//$NON-NLS-1$
-		buffer.append(getProject());
-		buffer.append(", TaskTags = {");//$NON-NLS-1$
-		if (tags == null) {
-			buffer.append("null}");//$NON-NLS-1$
+		if (project == null) {
+			buffer.append("null");//$NON-NLS-1$
 		} else {
-			for (int i = 0; i < tags.length; i++) {
-				buffer.append(tags[i]);
-				if (i + 1 < tags.length) {
-					buffer.append(", ");//$NON-NLS-1$
-				}
-			}
-			buffer.append('}');
+			buffer.append('"');
+			buffer.append(project);
+			buffer.append('"');
 		}
+		buffer.append(", TaskTags[");//$NON-NLS-1$
+		buffer.append(tags.length);
+		buffer.append("] = {");//$NON-NLS-1$
+		for (int i = 0; i < tags.length; i++) {
+			if (tags[i] == null) {
+				buffer.append("null");//$NON-NLS-1$
+			} else {
+				buffer.append('"');
+				buffer.append(tags[i]);
+				buffer.append('"');
+			}
+			if (i + 1 < tags.length) {
+				buffer.append(", ");//$NON-NLS-1$
+			}
+		}
+		buffer.append('}');
 		buffer.append(", Case-Sensitive = ");//$NON-NLS-1$
 		buffer.append(isCaseSensitive());
 		buffer.append(']');
