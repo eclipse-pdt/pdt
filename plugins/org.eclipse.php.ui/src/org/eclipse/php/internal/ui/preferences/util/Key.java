@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.osgi.service.prefs.BackingStoreException;
 
-public final class Key {
+public class Key {
 
 	private String fQualifier;
 	private String fKey;
