@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.utils.CorePrinter;
@@ -33,6 +35,7 @@ public class Comment extends ASTNode {
 	public final static int TYPE_PHPDOC = 2;
 
 	private final int commentType;
+	private List<Scalar> taskTags;
 
 	public Comment(int start, int end, int type) {
 		super(start, end);
@@ -60,6 +63,23 @@ public class Comment extends ASTNode {
 
 	public int getCommentType() {
 		return commentType;
+	}
+
+	/**
+	 * @return list of todo task tags set by TaskTagBuildParticipantFactory or
+	 *         null
+	 */
+	public List<Scalar> getTaskTags() {
+		return taskTags;
+	}
+
+	/**
+	 * Todo Task tags will be set (if any) by TaskTagBuildParticipantFactory
+	 * 
+	 * @param taskTags
+	 */
+	public void setTaskTags(List<Scalar> taskTags) {
+		this.taskTags = taskTags;
 	}
 
 	/**

@@ -90,6 +90,12 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * editor model
 	 */
 	public StructuredDocumentEvent reparse() {
+		// NB: ValBuilderJob calls reparse() on all PHP files but
+		// uses model returned by
+		// StructuredModelManager.getModelManager().getModelForRead((IFile)
+		// resource) that didn't keep file project informations, so
+		// in this case we'll end with ((PhpSourceParser)
+		// fStructuredDocument.getParser()).getProject() having null value.
 		final StructuredDocumentEvent documentEvent = super.reparse();
 		return documentEvent;
 	}

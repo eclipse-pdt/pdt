@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
@@ -110,6 +111,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			public void closed() {
 				PhpVersionChangedHandler.getInstance()
 						.removePhpVersionChangedListener(project2PhpVerListener.remove(project));
+				TaskPatternsProvider.unregisterProject(project);
 			}
 		});
 	}
