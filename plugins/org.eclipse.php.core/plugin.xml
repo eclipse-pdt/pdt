@@ -164,6 +164,13 @@
 			nature="org.eclipse.php.core.PHPNature">
 			<requires id="org.eclipse.php.core.buildParticipant.parser" />
 		</buildParticipant>
+		<buildParticipant
+			class="org.eclipse.php.internal.core.builder.TaskTagBuildParticipantFactory"
+			id="org.eclipse.php.core.buildParticipant.findTaskTags"
+			name="%organizeBuildParticipant.name"
+			nature="org.eclipse.php.core.PHPNature">
+			<requires id="org.eclipse.php.core.buildParticipant.parser" />
+		</buildParticipant>
 	</extension>
 
 	<extension
@@ -257,6 +264,7 @@
 			type="org.eclipse.core.resources.taskmarker" />
 	</extension>
 
+<!--
 	<extension
 		id="org.eclipse.php.core.PHPTaskValidator"
 		name="PHPTaskValidator"
@@ -278,6 +286,7 @@
 				id="org.eclipse.wst.sse.core.structuredModelGroup" />
 		</validator>
 	</extension>
+-->
 
 	<!-- DLTK SQL-based index -->
 	<extension
