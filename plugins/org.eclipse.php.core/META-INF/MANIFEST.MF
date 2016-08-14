@@ -224,6 +224,7 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.refactoring.core,
    org.eclipse.php.refactoring.ui,
    org.eclipse.php.astview",
+ org.eclipse.php.internal.core.builder,
  org.eclipse.php.internal.core.buildpath;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
