@@ -132,7 +132,7 @@ public class TaskTagsProvider {
 	}
 
 	/**
-	 * Adds a TaskTagsListener.
+	 * Sets a TaskTagsListener to a related project.
 	 * 
 	 * @param listener
 	 *            A TaskTagsListener.
@@ -148,15 +148,13 @@ public class TaskTagsProvider {
 	}
 
 	/**
-	 * Removes a TaskTagsListener.
+	 * Removes the TaskTagsListener attached to a related project.
 	 * 
-	 * @param listener
-	 *            A TaskTagsListener.
 	 * @param project
 	 *            A related project.
 	 */
-	public void removeTaskTagsListener(ITaskTagsListener listener, IProject project) {
-		if (listener == null || project == null) {
+	public void removeTaskTagsListener(IProject project) {
+		if (project == null) {
 			return;
 		}
 		projectToTaskTagListener.remove(project);
