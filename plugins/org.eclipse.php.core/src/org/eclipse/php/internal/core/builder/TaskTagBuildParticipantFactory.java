@@ -60,7 +60,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		return null;
 	}
 
-	private String natureId = null;
+	protected String natureId = null;
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
