@@ -66,6 +66,7 @@ public interface PHPCoreConstants {
 
 	public static final String FORMATTER_USE_TABS = PLUGIN_ID + ".phpForamtterUseTabs"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_SIZE = PLUGIN_ID + ".phpForamtterIndentationSize"; //$NON-NLS-1$
+	// XXX: correct all misspelled "Foramtter" constants
 	public static final String FORMATTER_TAB_SIZE = PLUGIN_ID + ".phpForamtterTabSize"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_WRAPPED_LINE_SIZE = PLUGIN_ID
 			+ ".phpForamtterIndentationWrappedLineSize"; //$NON-NLS-1$

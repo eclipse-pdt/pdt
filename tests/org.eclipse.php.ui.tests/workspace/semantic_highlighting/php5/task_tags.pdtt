@@ -1,0 +1,27 @@
+--TEST--
+Bug 498877 - Custom task tags are not recognized
+Use custom task tags defined for workspace
+--PREFERENCES--
+org.eclipse.php.core/org.eclipse.php.core.taskTags=MYTODO,MYFIXME,MYXXX,@mytodo
+org.eclipse.php.core/org.eclipse.php.core.taskPriorities=NORMAL,HIGH,NORMAL,NORMAL
+org.eclipse.php.core/org.eclipse.php.core.taskCaseSensitive=enabled
+--FILE--
+<?php
+/**
+ * MYTODO don't forget this @mytodo don't forget this
+ * MYFIXME don't forget this MYXXX don't forget this
+ * MYXXX don't forget this MYFIXME don't forget this
+ * @mytodo don't forget this MYTODO don't forget this
+ */
+$a = 0;
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting:
+highlight(MYTODO)
+highlight(@mytodo)
+highlight(MYFIXME)
+highlight(MYXXX)
+highlight(MYXXX)
+highlight(MYFIXME)
+highlight(@mytodo)
+highlight(MYTODO)
