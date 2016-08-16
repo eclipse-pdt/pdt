@@ -107,12 +107,9 @@ public class TaskPatternsProvider {
 			if (!instance.isInitialized || project == null) {
 				return;
 			}
-			ITaskTagsListener listener = instance.projectToListener.get(project);
-			if (listener != null) {
-				instance.provider.removeTaskTagsListener(listener, project);
-				instance.projectsPatterns.remove(project);
-				instance.projectToListener.remove(project);
-			}
+			instance.provider.removeTaskTagsListener(project);
+			instance.projectsPatterns.remove(project);
+			instance.projectToListener.remove(project);
 		}
 	}
 

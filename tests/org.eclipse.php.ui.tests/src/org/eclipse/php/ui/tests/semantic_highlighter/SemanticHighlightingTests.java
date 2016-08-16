@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2014, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,18 +14,32 @@ package org.eclipse.php.ui.tests.semantic_highlighter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
+import org.eclipse.dltk.compiler.problem.IProblemFactory;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
+import org.eclipse.dltk.core.builder.IBuildState;
+import org.eclipse.dltk.internal.core.builder.SourceModuleBuildContext;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -35,8 +49,14 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.builder.TaskTagBuildParticipantFactory;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.ConstantHighlighting;
@@ -51,6 +71,7 @@ import org.eclipse.php.internal.ui.editor.highlighters.ParameterVariableHighligh
 import org.eclipse.php.internal.ui.editor.highlighters.StaticFieldHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting;
+import org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.junit.After;
@@ -103,6 +124,7 @@ public class SemanticHighlightingTests {
 		highlighters.put("static_field", new StaticFieldHighlighting());
 		highlighters.put("static_method", new StaticMethodHighlighting());
 		highlighters.put("super_global", new SuperGlobalHighlighting());
+		highlighters.put("task_tags", new TaskTagHighlighting());
 	}
 
 	public SemanticHighlightingTests(PHPVersion version, String[] fileNames) {
@@ -117,7 +139,9 @@ public class SemanticHighlightingTests {
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
+		TaskPatternsProvider.unregisterProject(project);
 		TestUtils.deleteProject(project);
+		setDefaultTaskTagPreferences();
 	}
 
 	@After
@@ -135,9 +159,66 @@ public class SemanticHighlightingTests {
 		}
 	}
 
+	private void setDefaultTaskTagPreferences() throws CoreException {
+		String preferences = PHPCorePlugin.ID + '/' + PHPCoreConstants.TASK_TAGS + '='
+				+ PHPCoreConstants.DEFAULT_TASK_TAGS + "\n";
+		preferences += PHPCorePlugin.ID + '/' + PHPCoreConstants.TASK_PRIORITIES + '='
+				+ PHPCoreConstants.DEFAULT_TASK_PRIORITIES + "\n";
+		preferences += PHPCorePlugin.ID + '/' + PHPCoreConstants.TASK_CASE_SENSITIVE + '=' + PHPCoreConstants.ENABLED
+				+ "\n";
+		Platform.getPreferencesService().importPreferences(new ByteArrayInputStream(preferences.getBytes()));
+	}
+
+	private void build(ISourceModule module) throws CoreException {
+		TaskTagBuildParticipantFactory factory = new TaskTagBuildParticipantFactory() {
+			@Override
+			public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+					throws CoreException {
+				natureId = PHPNature.ID;
+			}
+		};
+		factory.setInitializationData(null, null, null);
+		IBuildParticipant buildParticipant = factory.createBuildParticipant(module.getScriptProject());
+		IProblemFactory problemFactory = new DefaultProblemFactory();
+		IBuildState buildState = new IBuildState() {
+			@Override
+			public void recordStructuralChange(IPath path) {
+			}
+
+			@Override
+			public void recordImportProblem(IPath path) {
+			}
+
+			@Override
+			public void recordDependency(IPath path, IPath dependency, int flags) {
+			}
+
+			@Override
+			public void recordDependency(IPath path, IPath dependency) {
+			}
+
+			@Override
+			public Set<IPath> getStructuralChanges() {
+				return null;
+			}
+		};
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module, null);
+		if (moduleDeclaration instanceof PHPModuleDeclaration) {
+			SourceModuleBuildContext context = new SourceModuleBuildContext(problemFactory, module,
+					IBuildContext.FULL_BUILD, buildState);
+			context.set(IBuildContext.ATTR_MODULE_DECLARATION, moduleDeclaration);
+			buildParticipant.build(context);
+		}
+	}
+
 	@Test
 	public void highlighter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
+		// reset all task tag preferences before applying any specific ones
+		// (to avoid using task tag preferences defined by other PdttFiles)
+		setDefaultTaskTagPreferences();
+		pdttFile.applyPreferences();
+
 		String result = "";
 		createFile(pdttFile);
 		ISourceModule module = getSourceModule();
@@ -150,6 +231,9 @@ public class SemanticHighlightingTests {
 		}
 		AbstractSemanticHighlighting highlighter = highlighters.get(index);
 		assertNotNull(highlighter);
+
+		build(module);
+
 		Program program = getProgram(module);
 		Position[] positions = highlighter.consumes(program);
 		assertNoDuplicates(highlighter.getDisplayName(), positions);

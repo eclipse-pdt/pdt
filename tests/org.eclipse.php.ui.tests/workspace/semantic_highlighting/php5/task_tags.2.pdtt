@@ -1,0 +1,23 @@
+--TEST--
+Bug 498877 - Custom task tags are not recognized
+Use default task tags defined for workspace
+--FILE--
+<?php
+/**
+ * TODO don't forget this @todo don't forget this
+ * FIXME don't forget this XXX don't forget this
+ * XXX don't forget this FIXME don't forget this
+ * @todo don't forget this TODO don't forget this
+ */
+$a = 0;
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting:
+highlight(TODO)
+highlight(@todo)
+highlight(FIXME)
+highlight(XXX)
+highlight(XXX)
+highlight(FIXME)
+highlight(@todo)
+highlight(TODO)
