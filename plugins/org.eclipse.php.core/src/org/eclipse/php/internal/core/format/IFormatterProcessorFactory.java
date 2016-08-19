@@ -14,7 +14,6 @@
  */
 package org.eclipse.php.internal.core.format;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -40,8 +39,4 @@ public interface IFormatterProcessorFactory {
 	 */
 	public ICodeFormattingProcessor getCodeFormattingProcessor(IDocument document, PHPVersion phpVersion,
 			boolean useShortTags, IRegion region) throws Exception;
-
-	public void setDefaultProject(IProject project);
-
-	public void setIsPasting(boolean isPasting);
 }

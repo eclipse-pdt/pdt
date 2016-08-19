@@ -32,7 +32,7 @@
  <extension-point id="libraryButtonHandlers" name="Library Button Handlers" schema="schema/libraryButtonHandlers.exsd"/>
 	
 	
-	<!--PHP formatter processoer registration, for PHP Content:-->
+	<!--PHP formatter processor registration, for PHP Content:-->
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
 		<processor
 			class="org.eclipse.php.ui.format.PHPFormatProcessorProxy"
@@ -422,6 +422,12 @@
 	</extension>
 
 	<!--Property Pages:-->
+	<extension point="org.eclipse.dltk.ui.saveParticipants">
+	   <saveParticipant
+	         class="org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant"
+	         nature="org.eclipse.php.core.PHPNature">
+	   </saveParticipant>
+	</extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page name="%phpPageName"
             class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
@@ -453,7 +459,7 @@
             </enabledWhen>
             <filter name="nature" value="org.eclipse.php.core.PHPNature" />
         </page>
-		<!-- PHP default verions and ASP tags option-->
+		<!-- PHP default versions and ASP tags option-->
 		<page
 			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 			category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
