@@ -35,12 +35,12 @@ import org.eclipse.dltk.ui.wizards.CapabilityConfigurationPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -451,8 +451,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		}
 		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
 		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
-		ProjectOptions.setSupportingAspTags(useASPTags, getProject());
-		ProjectOptions.setPhpVersion(phpVersion, getProject());
+		ProjectOptions.setSupportingASPTags(useASPTags, getProject());
+		ProjectOptions.setPHPVersion(phpVersion, getProject());
 	}
 
 	/**

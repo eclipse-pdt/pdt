@@ -35,10 +35,6 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 		setTitle(PHPUIMessages.PHPInterpreterPreferencePage_title);
 	}
 
-	/*
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
-	 * widgets .Composite)
-	 */
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fConfigurationBlock = new PHPVersionConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
@@ -49,52 +45,22 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
-	 * createPreferenceContent(org.eclipse.swt.widgets.Composite)
-	 */
 	protected Control createPreferenceContent(Composite composite) {
 		return fConfigurationBlock.createContents(composite);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
-	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
-	 */
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return fConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
-	 * getPreferencePageID()
-	 */
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
-	 * getPropertyPageID()
-	 */
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
-	 * enableProjectSpecificSettings(boolean)
-	 */
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);

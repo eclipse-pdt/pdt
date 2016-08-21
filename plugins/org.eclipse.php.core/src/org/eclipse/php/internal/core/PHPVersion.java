@@ -104,4 +104,15 @@ public enum PHPVersion {
 		return org.eclipse.php.core.PHPVersion.valueOf(name());
 	}
 
+	/**
+	 * Tranform API PHPVersion to internal form
+	 * 
+	 * @since 4.1
+	 * @param api
+	 * @return
+	 */
+	public static PHPVersion fromApi(org.eclipse.php.core.PHPVersion api) {
+		return PHPVersion.valueOf(api.name());
+	}
+
 }

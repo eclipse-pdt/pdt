@@ -30,6 +30,7 @@
 	<extension-point id="quickAssistProcessors" name="%quickAssistProcessorExtensionPoint" schema="schema/quickAssistProcessors.exsd"/>
 	<extension-point id="phpProjectWizard" name="%extension-point.name.13" schema="schema/phpNewProjectWizard.exsd" />
  <extension-point id="libraryButtonHandlers" name="Library Button Handlers" schema="schema/libraryButtonHandlers.exsd"/>
+ <extension-point id="phpVersionInfo" name="Information About PHP" schema="schema/phpVersionInfo.exsd"/>
 	
 	
 	<!--PHP formatter processoer registration, for PHP Content:-->
@@ -2854,5 +2855,60 @@
             id="org.eclipse.php.ui.modelCompareProvider"
             language="org.eclipse.php.core.PHPNature">
       </modelCompareProvider>
+   </extension>
+   <extension
+         point="org.eclipse.php.ui.phpVersionInfo">
+       <phpVersion
+            name="5.1 / 5.2"
+            version="php5">
+            <feature name="interface constructors"></feature>
+            <feature name="PDO"></feature>
+            <feature name="ZIP"></feature>
+            <feature name="JSON"></feature>
+       </phpVersion>
+       <phpVersion
+            name="5.3"
+            version="php5.3">
+            <feature name="closures"></feature>
+            <feature name="late static bindings"></feature>
+            <feature name="namespaces"></feature>
+       </phpVersion>
+       <phpVersion
+            name="5.4"
+            version="php5.4">
+            <feature name="traits"></feature>
+            <feature name="short array"></feature>
+            <feature name="array dereference"></feature>
+       </phpVersion>
+       <phpVersion
+            name="5.5"
+            version="php5.5">
+            <feature name="generators"></feature>
+            <feature name="finally"></feature>
+            <feature name="opcache"></feature>
+       </phpVersion>
+       <phpVersion
+             name="5.6"
+             version="php5.6">
+             <feature name="constant scalar expressions"></feature>
+             <feature name="variadic functions"></feature>
+             <feature name="argument unpacking"></feature>
+             <feature name="use function/constant"></feature>
+       </phpVersion>
+       <phpVersion
+             name="7.0"
+             version="php7.0">
+             <feature name="uniform variable syntax"></feature>
+             <feature name="scalar type hint"></feature>
+             <feature name="return types"></feature>
+             <feature name="anonymous class"></feature>
+       </phpVersion>  
+       <phpVersion
+             name="7.1 - EXPERIMENTAL"
+             version="php7.1">
+             <feature name="void return type"></feature>
+             <feature name="class constant visibility"></feature>
+             <feature name="nullable types"></feature>
+       </phpVersion>              
    </extension>
 </plugin>

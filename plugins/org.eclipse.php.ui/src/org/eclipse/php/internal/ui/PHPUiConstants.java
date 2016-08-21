@@ -22,4 +22,32 @@ public interface PHPUiConstants {
 	public static final String RSE_TEMP_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature"; //$NON-NLS-1$
 	public static final String RSE_TEMP_PROJECT_NAME = "RemoteSystemsTempFiles"; //$NON-NLS-1$
 
+	/**
+	 * phpVersion info
+	 * 
+	 * @since 4.1
+	 */
+	public static final String PHP_VERSION_INFO_EXTPOINT_ID = PHPUiPlugin.ID + ".phpVersionInfo"; //$NON-NLS-1$
+
+	/**
+	 * phpVersion info
+	 * 
+	 * @since 4.1
+	 */
+	public static final String PHP_VERSION_INFO_ATTR_NAME = "name"; //$NON-NLS-1$
+
+	/**
+	 * phpVersion info
+	 * 
+	 * @since 4.1
+	 */
+	public static final String PHP_VERSION_INFO_ATTR_VERSION = "version"; //$NON-NLS-1$
+
+	/**
+	 * phpVersion info
+	 * 
+	 * @since 4.1
+	 */
+	public static final String PHP_VERSION_INFO_FEATURE_NAME = "feature"; //$NON-NLS-1$
+
 }

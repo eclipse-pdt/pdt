@@ -12,13 +12,17 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.ValuedCombo;
@@ -36,18 +40,10 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 
-	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP7_1.getAlias(), PHPVersion.PHP7_0.getAlias(),
-			PHPVersion.PHP5_6.getAlias(), PHPVersion.PHP5_5.getAlias(), PHPVersion.PHP5_4.getAlias(),
-			PHPVersion.PHP5_3.getAlias(), PHPVersion.PHP5.getAlias() };
-
-	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.PHPCreationDataModelProvider_7,
-			PHPUIMessages.PHPCreationDataModelProvider_6, PHPUIMessages.PHPCreationDataModelProvider_5,
-			PHPUIMessages.PHPCreationDataModelProvider_4, PHPUIMessages.PHPCreationDataModelProvider_3,
-			PHPUIMessages.PHPCreationDataModelProvider_2, PHPUIMessages.PHPCreationDataModelProvider_1 };
-
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);
 	private static final Key PREF_SHORT_TAGS = getPHPCoreKey(Keys.EDITOR_USE_SHORT_TAGS);
+	private static HashMap<String, String> phpVersionNames;
 	private IStatus fTaskTagsStatus;
 	protected ValuedCombo versionCombo;
 	protected Button useShortTagsButton;
@@ -123,17 +119,6 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 
-		// layout.marginHeight = Dialog.convertVerticalDLUsToPixels(fontMetrics,
-		// IDialogConstants.VERTICAL_MARGIN);
-		// layout.marginWidth =
-		// Dialog.convertHorizontalDLUsToPixels(fontMetrics,
-		// IDialogConstants.HORIZONTAL_MARGIN);
-		// layout.verticalSpacing =
-		// Dialog.convertVerticalDLUsToPixels(fontMetrics,
-		// IDialogConstants.VERTICAL_SPACING);
-		// layout.horizontalSpacing =
-		// Dialog.convertHorizontalDLUsToPixels(fontMetrics,
-		// IDialogConstants.HORIZONTAL_SPACING);
 		composite.setLayout(layout);
 
 		nameLabel = new Label(composite, SWT.NONE);
@@ -185,25 +170,59 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 
 	private List<Entry> prepareVersionEntryList() {
 		ArrayList<Entry> entryList = new ArrayList<Entry>();
-		for (int i = 0; i < PHP_VERSION_DESCRIPTIONS.length; i++) {
-			if (minimumVersion != null && PHPVersion.byAlias(PHP_VERSION_VALUES[i]).isLessThan(minimumVersion)) {
+		initPHPVersionNames();
+		for (PHPVersion version : PHPVersion.supportedVersions()) {
+			if (minimumVersion != null && version.isLessThan(minimumVersion)) {
 				continue;
 			}
-			String description = PHP_VERSION_DESCRIPTIONS[i];
-			String value = PHP_VERSION_VALUES[i];
-			Entry entry = new ValuedCombo.Entry(value, description);
+			String description = version.getAlias();
+			if (phpVersionNames.containsKey(version.getAlias())) {
+				description = phpVersionNames.get(version.getAlias());
+			}
+			Entry entry = new ValuedCombo.Entry(version.getAlias(), description);
 			entryList.add(entry);
 		}
 		return entryList;
 	}
 
+	private static void initPHPVersionNames() {
+		if (phpVersionNames == null) {
+			IConfigurationElement[] configurationElementsFor = Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(PHPUiConstants.PHP_VERSION_INFO_EXTPOINT_ID);
+			phpVersionNames = new HashMap<String, String>();
+			for (IConfigurationElement verInfo : configurationElementsFor) {
+				StringBuilder sb = new StringBuilder(verInfo.getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_NAME));
+				IConfigurationElement[] list = verInfo.getChildren(PHPUiConstants.PHP_VERSION_INFO_FEATURE_NAME);
+				if (list.length > 0) {
+					sb.append(" ("); //$NON-NLS-1$
+					int length = 0;
+					for (int f = 0; list.length > f; f++) {
+						if (length > 30) {
+							break;
+						}
+						if (f > 0) {
+							sb.append(", ");
+							length += 2;
+						}
+						String feature = list[f].getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_NAME);
+						sb.append(feature);
+						length += feature.length();
+					}
+
+					sb.append(",...)"); //$NON-NLS-1$
+				}
+
+				phpVersionNames.put(verInfo.getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_VERSION), sb.toString());
+			}
+		}
+	}
+
 	private void setPhpVersionValue(String value) {
-		String[] values = PHP_VERSION_VALUES;
-		for (int i = 0; i < values.length; i++) {
-			if (values[i].equals(value)) {
-				versionCombo.setText(PHP_VERSION_DESCRIPTIONS[i]);
-				setValue(PREF_PHP_VERSION, values[i]);
+		for (PHPVersion version : PHPVersion.supportedVersions()) {
+			if (version.getAlias().equals(value)) {
+				setValue(PREF_PHP_VERSION, version.getAlias());
 				validateSettings(PREF_PHP_VERSION, null, null);
+				versionCombo.selectValue(value);
 				return;
 			}
 		}
@@ -226,12 +245,6 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		// return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
-	 * updateControls()
-	 */
 	protected void updateControls() {
 		unpackPHPVersion();
 		if (!hideShortTags) {
@@ -260,6 +273,10 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	// Accessed from the PHP project Wizard
 	public PHPVersion getPHPVersionValue() {
 		return PHPVersion.byAlias(getValue(PREF_PHP_VERSION));
+	}
+
+	private org.eclipse.php.internal.core.PHPVersion getOldPHPVersionValue() {
+		return org.eclipse.php.internal.core.PHPVersion.fromApi(getPHPVersionValue());
 	}
 
 	// Accessed from the PHP project Wizard

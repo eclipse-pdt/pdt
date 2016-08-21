@@ -557,7 +557,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				public void statusChanged(IStatus status) {
 				}
 			}, (IProject) null, null);
-			fConfigurationBlock.setMinimumVersion(minimumVersion);
+			fConfigurationBlock.setMinimumVersion(minimumVersion.toApi());
 			fConfigurationBlock.createContents(group);
 			fConfigurationBlock.setEnabled(false);
 		}
@@ -949,7 +949,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	public PHPVersion getPHPVersionValue() {
 		if (fVersionGroup != null) {
-			return fVersionGroup.fConfigurationBlock.getPHPVersionValue();
+			return PHPVersion.fromApi(fVersionGroup.fConfigurationBlock.getPHPVersionValue());
 		}
 		return null;
 	}

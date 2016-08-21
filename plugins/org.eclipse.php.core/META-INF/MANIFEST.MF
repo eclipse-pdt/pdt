@@ -21,12 +21,14 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.apache.commons.lang3,
  org.eclipse.dltk.annotations;resolution:=optional
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.php.core.codeassist,
+Export-Package: org.eclipse.php.core,
+ org.eclipse.php.core.codeassist,
  org.eclipse.php.core.compiler,
  org.eclipse.php.core.format,
  org.eclipse.php.core.index,
  org.eclipse.php.core.language,
  org.eclipse.php.core.libfolders,
+ org.eclipse.php.core.project,
  org.eclipse.php.internal.core;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
