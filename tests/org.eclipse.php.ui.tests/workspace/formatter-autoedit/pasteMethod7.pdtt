@@ -1,0 +1,19 @@
+--TEST--
+Tests formatting pasted method.
+Bug 499818 - [regression] Add autoedit strategy to reduce indentation when "case" is written
+--FILE--
+<?php
+switch($something) {
+    case 1:
+        defaul|
+}
+?>
+--OTHER--
+t
+--EXPECT--
+<?php
+switch($something) {
+    case 1:
+    default
+}
+?>
