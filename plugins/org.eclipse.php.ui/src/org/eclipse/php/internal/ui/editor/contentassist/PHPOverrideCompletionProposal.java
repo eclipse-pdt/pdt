@@ -134,7 +134,8 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 						IParameter parameter = parameters[i];
 
 						if (parameter.getType() != null) {
-							if (PHPFlags.isNullable(parameter.getFlags())) {
+							if (parameter instanceof IParameter2
+									&& PHPFlags.isNullable(((IParameter2) parameter).getFlags())) {
 								sb.append('?');
 							}
 							sb.append(parameter.getType()).append(" "); //$NON-NLS-1$

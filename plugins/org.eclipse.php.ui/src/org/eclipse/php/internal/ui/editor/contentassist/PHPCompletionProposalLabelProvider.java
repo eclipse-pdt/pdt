@@ -309,7 +309,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 						buffer.append(',');
 						buffer.append(' ');
 					}
-					if (parameters != null && i < parameters.length && PHPFlags.isReference(parameters[i].getFlags())) {
+					if (parameters != null && i < parameters.length && parameters[i] instanceof IParameter2
+							&& PHPFlags.isReference(((IParameter2) parameters[i]).getFlags())) {
 						buffer.append(PHPElementLabels.REFERENCE_STRING);
 					}
 					if (isVariadic && i + 1 == parameterNames.length) {
@@ -331,7 +332,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 					buffer.append(',');
 					buffer.append(' ');
 				}
-				if (parameters != null && i < parameters.length && PHPFlags.isReference(parameters[i].getFlags())) {
+				if (parameters != null && i < parameters.length && parameters[i] instanceof IParameter2
+						&& PHPFlags.isReference(((IParameter2) parameters[i]).getFlags())) {
 					buffer.append(PHPElementLabels.REFERENCE_STRING);
 				}
 				if (isVariadic && i + 1 == parameterNames.length) {

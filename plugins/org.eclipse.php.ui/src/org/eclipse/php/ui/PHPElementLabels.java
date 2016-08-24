@@ -166,14 +166,16 @@ public class PHPElementLabels extends ScriptElementLabels {
 					boolean isLast = i + 1 == nParams;
 					if (bTypes) {
 						if (params[i].getType() != null) {
-							if (PHPFlags.isNullable(params[i].getFlags())) {
+							if (params[i] instanceof IParameter2
+									&& PHPFlags.isNullable(((IParameter2) params[i]).getFlags())) {
 								buf.append(QUESTION_MARK);
 							}
 							buf.append(params[i].getType());
 							if (bNames) {
 								buf.append(' ');
 							} else {
-								if (PHPFlags.isReference(params[i].getFlags())) {
+								if (params[i] instanceof IParameter2
+										&& PHPFlags.isReference(((IParameter2) params[i]).getFlags())) {
 									buf.append(REFERENCE_STRING);
 								}
 								if (isLast && isVariadic) {
@@ -181,7 +183,8 @@ public class PHPElementLabels extends ScriptElementLabels {
 								}
 							}
 						} else if (!bNames) {
-							if (PHPFlags.isReference(params[i].getFlags())) {
+							if (params[i] instanceof IParameter2
+									&& PHPFlags.isReference(((IParameter2) params[i]).getFlags())) {
 								buf.append(REFERENCE_STRING);
 							}
 							if (isLast && isVariadic) {
@@ -191,7 +194,8 @@ public class PHPElementLabels extends ScriptElementLabels {
 						}
 					}
 					if (bNames) {
-						if (PHPFlags.isReference(params[i].getFlags())) {
+						if (params[i] instanceof IParameter2
+								&& PHPFlags.isReference(((IParameter2) params[i]).getFlags())) {
 							buf.append(REFERENCE_STRING);
 						}
 						if (isLast && isVariadic) {
