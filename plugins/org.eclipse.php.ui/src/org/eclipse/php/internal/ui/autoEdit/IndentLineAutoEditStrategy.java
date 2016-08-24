@@ -226,11 +226,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 					IEditorPart editor = page.getActiveEditor();
 					if (editor instanceof PHPStructuredEditor) {
 						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
-						if (phpStructuredEditor.getTextViewer() != null && phpStructuredEditor != null
+						if (phpStructuredEditor.getTextViewer() != null
 								&& phpStructuredEditor.getDocument() == document) {
-							if (phpStructuredEditor != null && phpStructuredEditor.getTextViewer() != null) {
-								sourceModules[0] = (ISourceModule) phpStructuredEditor.getModelElement();
-							}
+							sourceModules[0] = (ISourceModule) phpStructuredEditor.getModelElement();
 						}
 					}
 				}

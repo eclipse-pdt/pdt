@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,10 @@
 package org.eclipse.php.internal.ui.autoEdit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.CaseDefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -24,9 +27,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * @author guy.g
  * 
  */
-public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy implements IAutoEditStrategy {
+public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy implements IAppliedAutoEditStrategy {
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+		applied = false;
 		if (command.text == null) {
 			return;
 		}
@@ -59,6 +63,11 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 	}
 
 	private StringBuffer buffer = new StringBuffer();
+	private boolean applied = false;
+
+	public boolean wasApplied() {
+		return applied;
+	}
 
 	private void autoIdentCaseDefault(IStructuredDocument document, DocumentCommand command, String addedWord)
 			throws BadLocationException {
@@ -74,7 +83,7 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 		int lineOffset = lineInfo.getOffset();
 		String lineStart = document.get(lineOffset, startOffset - lineOffset);
 		if (StringUtils.isBlank(lineStart)) {
-			// making sure that the work "case"/"dafault" is the first word in
+			// making sure that the work "case"/"default" is the first word in
 			// the line
 			buffer.setLength(0);
 			placeMatchingBlanks(document, buffer, lineNumber, startOffset);
@@ -85,6 +94,7 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 				command.offset = lineOffset;
 				command.text = bufferString + addedWord;
 			}
+			applied = true;
 		}
 	}
 
