@@ -28,7 +28,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
 	private static IAutoEditStrategy matchingBracketAutoEditStrategy = new MatchingBracketAutoEditStrategy();
 	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
-	private static IAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
+	private static IAppliedAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PhpDocAutoIndentStrategy();
 	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
 
@@ -47,6 +47,11 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 		} else if (partitionType == PHPPartitionTypes.PHP_DEFAULT
 				|| partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) {
 			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
+			if (caseDefaultAutoEditStrategy.wasApplied()) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=499818
+				// "case"/"default" was found and indented, we stop here
+				return;
+			}
 			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyCloseAutoEditStrategy.customizeDocumentCommand(document, command);
