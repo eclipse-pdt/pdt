@@ -228,9 +228,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
 						if (phpStructuredEditor.getTextViewer() != null && phpStructuredEditor != null
 								&& phpStructuredEditor.getDocument() == document) {
-							if (phpStructuredEditor != null && phpStructuredEditor.getTextViewer() != null) {
-								sourceModules[0] = (ISourceModule) phpStructuredEditor.getModelElement();
-							}
+							sourceModules[0] = (ISourceModule) phpStructuredEditor.getModelElement();
 						}
 					}
 				}
