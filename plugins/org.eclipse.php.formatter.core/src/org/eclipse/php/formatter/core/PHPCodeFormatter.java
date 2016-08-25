@@ -236,22 +236,27 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 
 	private void replaceAll(IDocument document, List<ReplaceEdit> changes, DOMModelForPHP domModelForPHP)
 			throws BadLocationException {
-		// Collect the markers before the content of the document is replaced.
-		IFile file = null;
-		IMarker[] allMarkers = null;
-		if (domModelForPHP != null) {
-			file = getFile(domModelForPHP.getId());
-			try {
-				if (file != null) {
-					// collect and then delete
-					allMarkers = file.findMarkers(null, true, IResource.DEPTH_INFINITE);
-				} else {
-					return; // no need to save breakpoints when no file was
-					// detected
-				}
-			} catch (CoreException e) {
-			}
-		}
+		/*
+		 * Disabled because of
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=500292
+		 */
+		// // Collect the markers before the content of the document is
+		// replaced.
+		// IFile file = null;
+		// IMarker[] allMarkers = null;
+		// if (domModelForPHP != null) {
+		// file = getFile(domModelForPHP.getId());
+		// try {
+		// if (file != null) {
+		// // collect and then delete
+		// allMarkers = file.findMarkers(null, true, IResource.DEPTH_INFINITE);
+		// } else {
+		// return; // no need to save breakpoints when no file was
+		// // detected
+		// }
+		// } catch (CoreException e) {
+		// }
+		// }
 
 		// Replace the content of the document
 		StringBuilder buffer = new StringBuilder(document.get());
@@ -261,16 +266,21 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		}
 		document.set(buffer.toString());
 
-		try {
-			if (file != null) {
-				reinsertMarkers(allMarkers, file);
-			}
-		} catch (CoreException e) {
-		}
+		/*
+		 * Disabled because of
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=500292
+		 */
+		// try {
+		// if (file != null) {
+		// reinsertMarkers(allMarkers, file);
+		// }
+		// } catch (CoreException e) {
+		// }
 	}
 
 	// Return the markers
 	// TODO - This is buggy since the lines might be different now.
+	@Deprecated
 	private void reinsertMarkers(IMarker[] allMarkers, IFile file) throws CoreException {
 		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		if (allMarkers != null) {
