@@ -21,6 +21,8 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
+import org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant;
+import org.eclipse.php.internal.ui.editor.saveparticipant.RemoveTrailingWhitespacesSaveParticipant;
 import org.eclipse.php.internal.ui.folding.IStructuredTextFoldingProvider;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
@@ -1209,6 +1211,10 @@ public class PreferenceConstants {
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_ALL, true);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, false);
 		store.setDefault(FORMAT_ON_SAVE, false);
+		store.setDefault(CodeFormatSaveParticipant.EDITOR_SAVE_PARTICIPANT_PREFIX + CodeFormatSaveParticipant.ID, true);
+		store.setDefault(
+				CodeFormatSaveParticipant.EDITOR_SAVE_PARTICIPANT_PREFIX + RemoveTrailingWhitespacesSaveParticipant.ID,
+				true);
 
 		// default php outline mode
 		store.setDefault(PREF_OUTLINEMODE, PHPContentOutlineConfiguration.MODE_PHP);

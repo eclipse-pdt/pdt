@@ -14,6 +14,7 @@
  */
 package org.eclipse.php.internal.core.format;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
 
@@ -33,7 +34,7 @@ public interface ICodeFormattingProcessor {
 	 * @return A {@link MultiTextEdit} that holds all the text edits that were
 	 *         aggregated during the code formatter visitor's processing.
 	 */
-	public MultiTextEdit getTextEdits();
+	public @NonNull MultiTextEdit getTextEdits();
 
 	/**
 	 * Returns a string that represents the indentation
@@ -41,6 +42,6 @@ public interface ICodeFormattingProcessor {
 	 * @param indentationUnits
 	 * @return
 	 */
-	public String createIndentationString(int indentationUnits);
+	public @NonNull String createIndentationString(int indentationUnits);
 
 }
