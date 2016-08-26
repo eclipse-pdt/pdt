@@ -285,7 +285,7 @@ import org.eclipse.text.edits.*;
 
 	private ICodeFormattingProcessor createCodeFormatter(Map<?, ?> options, IRegion region, IDocument document)
 			throws Exception {
-		if (getContentFomatter() != null) {
+		if (getContentFormatter() != null) {
 			return contentFormatter.getCodeFormattingProcessor(document, phpVersion, useShortTags, region);
 		}
 		return new DefaultCodeFormattingProcessor(options);
@@ -295,7 +295,7 @@ import org.eclipse.text.edits.*;
 	 * Returns an instance of IFormatterProcessorFactory extracted from the
 	 * extension point of the 'phpFormatterProcessor'
 	 */
-	private static IFormatterProcessorFactory getContentFomatter() {
+	private static IFormatterProcessorFactory getContentFormatter() {
 		if (contentFormatter != null) {
 			return contentFormatter;
 		}

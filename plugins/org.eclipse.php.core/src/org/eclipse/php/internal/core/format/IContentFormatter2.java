@@ -15,6 +15,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.PHPVersion;
 
+@Deprecated
 public interface IContentFormatter2 {
 	void format(IDocument document, IRegion region, PHPVersion phpVersion);
 }
