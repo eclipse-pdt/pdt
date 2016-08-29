@@ -78,6 +78,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public static final boolean isDebugMode;
 
 	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
+	public static final String FORMATTER_PROCESSOR_ID = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
+	public static final String FORMATTER_PROCESSOR = "processor"; //$NON-NLS-1$
 
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.ui/debug"); //$NON-NLS-1$
@@ -529,19 +531,19 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the current active formatter
+	 * Returns the current active formatter. In case of a PHP formatter it
+	 * should also implement IFormatterProcessorFactory.
 	 * 
 	 * @return
 	 */
 	public IContentFormatter getActiveFormatter() {
 		if (fActiveFormatter == null) {
-			String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
-					.getConfigurationElementsFor(formatterExtensionName);
+					.getConfigurationElementsFor(FORMATTER_PROCESSOR_ID);
 			for (int i = 0; i < elements.length; i++) {
 				IConfigurationElement element = elements[i];
-				if (element.getName().equals("processor")) { //$NON-NLS-1$
-					ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
+				if (FORMATTER_PROCESSOR.equals(element.getName())) {
+					ElementCreationProxy ecProxy = new ElementCreationProxy(element, FORMATTER_PROCESSOR_ID);
 					fActiveFormatter = (IContentFormatter) ecProxy.getObject();
 				}
 			}

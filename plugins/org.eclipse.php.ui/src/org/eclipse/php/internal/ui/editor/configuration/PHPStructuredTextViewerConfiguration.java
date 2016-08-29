@@ -83,7 +83,6 @@ import org.w3c.dom.Node;
 
 public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerConfigurationHTML {
 
-	private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] { "//", "#", EMPTY }; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String COMPLETION_PROPOSAL_SIZE_SECTION = "completion_proposal_size"; //$NON-NLS-1$
@@ -415,11 +414,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		IContentFormatter usedFormatter = null;
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(FORMATTER_PROCESSOR_EXT);
+				.getConfigurationElementsFor(PHPUiPlugin.FORMATTER_PROCESSOR_ID);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("processor")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, FORMATTER_PROCESSOR_EXT);
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, PHPUiPlugin.FORMATTER_PROCESSOR_ID);
 				usedFormatter = (IContentFormatter) ecProxy.getObject();
 			}
 		}
