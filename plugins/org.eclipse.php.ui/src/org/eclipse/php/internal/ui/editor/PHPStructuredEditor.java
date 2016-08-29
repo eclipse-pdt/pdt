@@ -15,12 +15,6 @@ import java.io.IOException;
 import java.text.CharacterIterator;
 import java.util.*;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.IFileBufferStatusCodes;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.manipulation.MultiTextEditWithProgress;
-import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperation;
-import org.eclipse.core.internal.filebuffers.Progress;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
@@ -68,7 +62,10 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.preferences.*;
+import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
+import org.eclipse.php.internal.core.preferences.PreferencePropagatorFactory;
+import org.eclipse.php.internal.core.preferences.PreferencesPropagator;
+import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
@@ -106,7 +103,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
@@ -290,10 +286,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * Fix for outline synchronization while reconcile
 	 */
 	protected volatile boolean fReconcileSelection = false;
-
-	private boolean saveActionsEnabled = false;
-	private boolean saveActionsIgnoreEmptyLines = false;
-	private boolean formatOnSaveEnabled = false;
 
 	/**
 	 * The override and implements indicator manager for this editor.
@@ -3337,135 +3329,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		} else if (moveCursor) {
 			resetHighlightRange();
 			markInNavigationHistory();
-		}
-	}
-
-	/*
-	 * Gets the preferences set for this editor in the Save Actions section
-	 */
-	public void updateSaveActionsState(IProject project) {
-		PreferencesSupport prefSupport = new PreferencesSupport(PHPUiPlugin.ID);
-		String doCleanupPref = prefSupport.getPreferencesValue(PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES,
-				null, project);
-		String ignoreEmptyPref = prefSupport.getPreferencesValue(
-				PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, null, project);
-		String formatOnSavePref = prefSupport.getPreferencesValue(PreferenceConstants.FORMAT_ON_SAVE, null, project);
-
-		saveActionsEnabled = Boolean.parseBoolean(doCleanupPref);
-		saveActionsIgnoreEmptyLines = Boolean.parseBoolean(ignoreEmptyPref);
-		formatOnSaveEnabled = Boolean.parseBoolean(formatOnSavePref);
-	}
-
-	/*
-	 * Added the handling of Save Actions (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#doSave(org.eclipse.core.
-	 * runtime .IProgressMonitor)
-	 */
-	@Override
-	public void doSave(IProgressMonitor progressMonitor) {
-		if (getDocument() instanceof IStructuredDocument) {
-			CommandStack commandStack = ((IStructuredDocument) getDocument()).getUndoManager().getCommandStack();
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=322529
-			((IStructuredDocument) getDocument()).getUndoManager().forceEndOfPendingCommand(null,
-					getViewer().getSelectedRange().x, getViewer().getSelectedRange().y);
-			if (commandStack instanceof BasicCommandStack) {
-				((BasicCommandStack) commandStack).saveIsDone();
-			}
-		}
-		IScriptProject project = getProject();
-		if (project != null) {
-			updateSaveActionsState(project.getProject());
-		}
-
-		if (formatOnSaveEnabled) {
-			if (getTextViewer() instanceof PHPStructuredTextViewer) {
-				PHPStructuredTextViewer viewer = (PHPStructuredTextViewer) getTextViewer();
-				if (viewer.canDoOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT_ON_SAVE)) {
-					viewer.doOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT_ON_SAVE);
-				}
-			}
-		}
-
-		if (saveActionsEnabled && getTextViewer() != null && getTextViewer().isEditable()) {
-			RemoveTrailingWhitespaceOperation op = new ExtendedRemoveTrailingWhitespaceOperation(
-					saveActionsIgnoreEmptyLines);
-			try {
-				op.run(FileBuffers.getTextFileBufferManager().getTextFileBuffer(getDocument()), progressMonitor);
-			} catch (OperationCanceledException e) {
-				Logger.logException(e);
-			} catch (CoreException e) {
-				Logger.logException(e);
-			}
-		}
-
-		super.doSave(progressMonitor);
-	}
-
-	/*
-	 * Operation used for removing whitepsaces from line ends
-	 */
-	class ExtendedRemoveTrailingWhitespaceOperation extends RemoveTrailingWhitespaceOperation {
-
-		// skip empty lines when removing whitespaces
-		private boolean fIgnoreEmptyLines;
-
-		public ExtendedRemoveTrailingWhitespaceOperation(boolean ignoreEmptyLines) {
-			super();
-			fIgnoreEmptyLines = ignoreEmptyLines;
-		}
-
-		/*
-		 * Same as in parent, with the addition of the ability to ignore empty
-		 * lines - depending on the value of fIgnoreEmptyLines
-		 */
-		@Override
-		protected MultiTextEditWithProgress computeTextEdit(ITextFileBuffer fileBuffer,
-				IProgressMonitor progressMonitor) throws CoreException {
-			IDocument document = fileBuffer.getDocument();
-			int lineCount = document.getNumberOfLines();
-
-			progressMonitor = Progress.getMonitor(progressMonitor);
-			progressMonitor.beginTask(PHPUIMessages.RemoveTrailingWhitespaceOperation_task_generatingChanges,
-					lineCount);
-			try {
-
-				MultiTextEditWithProgress multiEdit = new MultiTextEditWithProgress(
-						PHPUIMessages.RemoveTrailingWhitespaceOperation_task_applyingChanges);
-
-				for (int i = 0; i < lineCount; i++) {
-					if (progressMonitor.isCanceled()) {
-						throw new OperationCanceledException();
-					}
-					IRegion region = document.getLineInformation(i);
-					if (region.getLength() == 0) {
-						continue;
-					}
-					int lineStart = region.getOffset();
-					int lineExclusiveEnd = lineStart + region.getLength();
-					int j = lineExclusiveEnd - 1;
-					while (j >= lineStart && Character.isWhitespace(document.getChar(j))) {
-						--j;
-					}
-					++j;
-					// A flag for skipping empty lines, if required
-					if (fIgnoreEmptyLines && j == lineStart) {
-						continue;
-					}
-					if (j < lineExclusiveEnd) {
-						multiEdit.addChild(new DeleteEdit(j, lineExclusiveEnd - j));
-					}
-					progressMonitor.worked(1);
-				}
-
-				return multiEdit.getChildrenSize() <= 0 ? null : multiEdit;
-
-			} catch (BadLocationException x) {
-				throw new CoreException(
-						new Status(IStatus.ERROR, PHPUiPlugin.ID, IFileBufferStatusCodes.CONTENT_CHANGE_FAILED, "", x)); //$NON-NLS-1$
-			} finally {
-				progressMonitor.done();
-			}
 		}
 	}
 
