@@ -104,6 +104,10 @@ public abstract class ContentMergeViewer extends ContentViewer
 
 		public void layout(Composite composite, boolean force) {
 
+			IMergeViewerContentProvider content = getMergeContentProvider();
+			if (content == null) {
+				return;
+			}
 			// determine some derived sizes
 			int headerHeight = fLeftLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y;
 			Rectangle r = composite.getClientArea();

@@ -170,9 +170,11 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		private void createMarker(IFile file, String taskStr, int lineNumber, int priority, int offset, int charEnd)
 				throws CoreException {
 			IMarker marker = file.createMarker(PHPCoreConstants.PHP_MARKER_TYPE);
+			if (!marker.exists()) {
+				return;
+			}
 
 			marker.setAttribute(IMarker.TASK, true);
-
 			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber + 1);
 			marker.setAttribute(IMarker.CHAR_START, offset);
 			marker.setAttribute(IMarker.CHAR_END, charEnd);

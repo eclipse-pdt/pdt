@@ -23,6 +23,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
@@ -37,22 +38,19 @@ import org.w3c.dom.Node;
  */
 public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 
-	private static final String FORMATTER_POINT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-	private static final String FORMATTER_PROCESSOR = "processor"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 
-	private static final String PHP_FORMATTER_PROCESSORS_POINT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-
 	private static IConfigurationElement phpFormatterElement;
-	private static String phpFormatterClassName;
+	// private static String phpFormatterClassName;
 	private static IContentFormatter phpFormatter;
 
 	static {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(FORMATTER_POINT);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(PHPUiPlugin.FORMATTER_PROCESSOR_ID);
 		for (IConfigurationElement element : elements) {
 			String name = element.getName();
-			if (FORMATTER_PROCESSOR.equals(name)) {
-				phpFormatterClassName = element.getAttribute(CLASS_ATTR);
+			if (PHPUiPlugin.FORMATTER_PROCESSOR.equals(name)) {
+				// phpFormatterClassName = element.getAttribute(CLASS_ATTR);
 				phpFormatterElement = element;
 			}
 		}

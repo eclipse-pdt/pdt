@@ -16,6 +16,7 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.jface.text.*;
@@ -155,7 +156,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
 			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
-			throws Exception {
+					throws Exception {
 		this.phpVersion = phpVersion;
 		this.useShortTags = useShortTags;
 		this.document = document;
@@ -1520,7 +1521,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void initCommentIndentVariables(int offset, int startLine,
 			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
-			throws BadLocationException {
+					throws BadLocationException {
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
@@ -4963,10 +4964,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.eclipse.php.internal.core.format.ICodeFormattingProcessor#
+	 * @see org.eclipse.php.internal.core.format.ICodeFormattingProcessor#
 	 * createIndentationString(int)
 	 */
-	public String createIndentationString(int indentationUnits) {
+	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -4989,7 +4990,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @see org.eclipse.php.internal.core.format.ICodeFormattingProcessor#
 	 * getTextEdits ()
 	 */
-	public MultiTextEdit getTextEdits() {
+	public @NonNull MultiTextEdit getTextEdits() {
 		List<ReplaceEdit> allChanges = getChanges();
 		MultiTextEdit rootEdit = new MultiTextEdit();
 		for (ReplaceEdit edit : allChanges) {
