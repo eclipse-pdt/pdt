@@ -713,7 +713,6 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPFileCreationWizardPage_10;
 	public static String InitializeAfterLoadJob_starter_job_name;
 	public static String PHPWorkingSetPage_warning_nameWhitespace;
-	public static String RemoveTrailingWhitespaceOperation_task_generatingChanges;
 	public static String PHPManualConfigurationBlock_fileExtension;
 	public static String OpenProjectAction_dialog_title;
 	public static String Search_FindImplementorsAction_tooltip;
@@ -809,7 +808,6 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPElementProperties_name;
 	public static String PHPEditorHoverConfigurationBlock_modifierColumnTitle;
 	public static String PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter;
-	public static String RemoveTrailingWhitespaceOperation_task_applyingChanges;
 	public static String UntitledPHPEditor_deleteFailed;
 	public static String StructuredTextFoldingProviderPHP_1;
 	public static String StructuredTextFoldingProviderPHP_0;
