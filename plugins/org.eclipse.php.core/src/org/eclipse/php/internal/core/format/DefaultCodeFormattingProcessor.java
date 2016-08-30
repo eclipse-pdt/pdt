@@ -16,6 +16,7 @@ package org.eclipse.php.internal.core.format;
 
 import java.util.Map;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -33,7 +34,7 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 		this.options = options;
 	}
 
-	public String createIndentationString(int indentationUnits) {
+	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits > 0) {
 			String useTabs = (String) options.get(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTabs != null) {
@@ -60,7 +61,7 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 		return ""; //$NON-NLS-1$
 	}
 
-	public MultiTextEdit getTextEdits() {
+	public @NonNull MultiTextEdit getTextEdits() {
 		return new MultiTextEdit();
 	}
 

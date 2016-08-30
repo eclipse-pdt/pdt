@@ -91,11 +91,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 */
 	public static final int SHOW_HIERARCHY = 53;
 
-	/**
-	 * Text operation code for requesting the document formatting on save.
-	 */
-	public static final int FORMAT_DOCUMENT_ON_SAVE = 54;
-
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 
 	private SourceViewerConfiguration fViewerConfiguration;
@@ -163,7 +158,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		int topLine = getTextWidget().getTopIndex();
 
 		switch (operation) {
-		case FORMAT_DOCUMENT_ON_SAVE:
 		case FORMAT_DOCUMENT:
 			try {
 				setRedraw(false);
@@ -174,7 +168,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=486540
 				// format the whole document on save, not the active text
 				// selection
-				if (operation != FORMAT_DOCUMENT_ON_SAVE && selectionLength != 0) {
+				if (selectionLength != 0) {
 					region = new Region(cursorPosition, selectionLength);
 				} else {
 					region = new Region(0, getDocument().getLength());
@@ -352,9 +346,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 		if (operation == SHOW_OUTLINE) {
 			return fOutlinePresenter != null;
-		}
-		if (operation == FORMAT_DOCUMENT_ON_SAVE) {
-			return super.canDoOperation(FORMAT_DOCUMENT);
 		}
 		return super.canDoOperation(operation);
 	}
