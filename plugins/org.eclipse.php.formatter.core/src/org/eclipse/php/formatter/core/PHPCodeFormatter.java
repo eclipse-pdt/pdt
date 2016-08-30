@@ -102,7 +102,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
-				IProject project = this.project;
+				IProject project = null;
 				if (doModelForPHP != null) {
 					project = getProject(doModelForPHP);
 				}
@@ -192,28 +192,10 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 	private ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document,
 			PHPVersion phpVersion, boolean useShortTags, IRegion region) throws Exception {
 		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(project);
-		int oldCommentLength = fCodeFormatterPreferences.comment_line_length;
-		boolean forceSplit = fCodeFormatterPreferences.line_wrap_expressions_in_array_init_force_split;
-		boolean insertSpaceAfterComma = fCodeFormatterPreferences.insert_space_after_list_comma_in_array;
-		boolean insertNewLineBeforeCloseArray = fCodeFormatterPreferences.new_line_before_close_array_parenthesis_array;
-		int lineWrapPolicy = fCodeFormatterPreferences.line_wrap_expressions_in_array_init_line_wrap_policy;
-		if (isPasting) {
-			fCodeFormatterPreferences.comment_line_length = 400;
-			fCodeFormatterPreferences.line_wrap_expressions_in_array_init_force_split = true;
-			fCodeFormatterPreferences.line_wrap_expressions_in_array_init_line_wrap_policy = CodeFormatterVisitor.WRAP_ALL_ELEMENTS;
-			fCodeFormatterPreferences.insert_space_after_list_comma_in_array = false;
-			fCodeFormatterPreferences.new_line_before_close_array_parenthesis_array = true;
-		}
+
 		ICodeFormattingProcessor codeFormattingProcessor = new CodeFormatterVisitor(document, fCodeFormatterPreferences,
 				PHPModelUtils.getLineSeparator(project), phpVersion, useShortTags, region);
 
-		if (isPasting) {
-			fCodeFormatterPreferences.comment_line_length = oldCommentLength;
-			fCodeFormatterPreferences.line_wrap_expressions_in_array_init_force_split = forceSplit;
-			fCodeFormatterPreferences.line_wrap_expressions_in_array_init_line_wrap_policy = lineWrapPolicy;
-			fCodeFormatterPreferences.insert_space_after_list_comma_in_array = insertSpaceAfterComma;
-			fCodeFormatterPreferences.new_line_before_close_array_parenthesis_array = insertNewLineBeforeCloseArray;
-		}
 		return codeFormattingProcessor;
 	}
 
@@ -236,22 +218,27 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 
 	private void replaceAll(IDocument document, List<ReplaceEdit> changes, DOMModelForPHP domModelForPHP)
 			throws BadLocationException {
-		// Collect the markers before the content of the document is replaced.
-		IFile file = null;
-		IMarker[] allMarkers = null;
-		if (domModelForPHP != null) {
-			file = getFile(domModelForPHP.getId());
-			try {
-				if (file != null) {
-					// collect and then delete
-					allMarkers = file.findMarkers(null, true, IResource.DEPTH_INFINITE);
-				} else {
-					return; // no need to save breakpoints when no file was
-					// detected
-				}
-			} catch (CoreException e) {
-			}
-		}
+		/*
+		 * Disabled because of
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=500292
+		 */
+		// // Collect the markers before the content of the document is
+		// replaced.
+		// IFile file = null;
+		// IMarker[] allMarkers = null;
+		// if (domModelForPHP != null) {
+		// file = getFile(domModelForPHP.getId());
+		// try {
+		// if (file != null) {
+		// // collect and then delete
+		// allMarkers = file.findMarkers(null, true, IResource.DEPTH_INFINITE);
+		// } else {
+		// return; // no need to save breakpoints when no file was
+		// // detected
+		// }
+		// } catch (CoreException e) {
+		// }
+		// }
 
 		// Replace the content of the document
 		StringBuilder buffer = new StringBuilder(document.get());
@@ -261,16 +248,21 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		}
 		document.set(buffer.toString());
 
-		try {
-			if (file != null) {
-				reinsertMarkers(allMarkers, file);
-			}
-		} catch (CoreException e) {
-		}
+		/*
+		 * Disabled because of
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=500292
+		 */
+		// try {
+		// if (file != null) {
+		// reinsertMarkers(allMarkers, file);
+		// }
+		// } catch (CoreException e) {
+		// }
 	}
 
 	// Return the markers
 	// TODO - This is buggy since the lines might be different now.
+	@Deprecated
 	private void reinsertMarkers(IMarker[] allMarkers, IFile file) throws CoreException {
 		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		if (allMarkers != null) {
@@ -297,17 +289,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		return null;
 	}
 
-	private IProject project;
-	private boolean isPasting = false;
-
-	public void setDefaultProject(IProject project) {
-		this.project = project;
-	}
-
-	public void setIsPasting(boolean isPasting) {
-		this.isPasting = isPasting;
-	}
-
+	@Deprecated
 	public void format(IDocument document, IRegion region, PHPVersion version) {
 		// TODO Auto-generated method stub
 
@@ -319,7 +301,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
-				IProject project = this.project;
+				IProject project = null;
 				if (doModelForPHP != null) {
 					project = getProject(doModelForPHP);
 				}

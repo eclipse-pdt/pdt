@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.php.core.parser,
  org.eclipse.dltk.core,
  org.eclipse.wst.html.core,
  org.eclipse.debug.core,
- org.apache.commons.lang3
+ org.apache.commons.lang3,
+ org.eclipse.dltk.annotations;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
