@@ -377,7 +377,11 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 			Logger.logException(e);
 		}
 		if (!isNamespace) {
-			appendQualifier(nameBuffer, typeProposal.getModelElement());
+			appendQualifier(nameBuffer, type);
+			if (type.getParent() != null) {
+				nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+				nameBuffer.append(type.getParent().getElementName(), StyledString.QUALIFIER_STYLER);
+			}
 		}
 
 		return nameBuffer;
