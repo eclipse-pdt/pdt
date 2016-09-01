@@ -87,8 +87,10 @@ public class Logger {
 	protected static void _trace(String category, String message,
 			Throwable exception) {
 		// debug TODO: remove the next line
-		exception.printStackTrace();
-		
+		if (exception != null) {
+			exception.printStackTrace();
+		}
+
 		if (isTracing(category)) {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
 			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK,

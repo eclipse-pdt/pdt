@@ -79,12 +79,12 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 				Person author = (Person)obj;
 				
 				StyledString styledString = new StyledString(author.getName());
-				
-				if (author.getEmail() != null && author.getEmail().trim() != "" && !author.getEmail().trim().equals("")) {
+
+				if (author.getEmail() != null && !author.getEmail().trim().equals("")) {
 					styledString.append(" <" + author.getEmail().trim() + ">", StyledString.COUNTER_STYLER);
 				}
-				
-				if (author.getHomepage() != null && author.getHomepage().trim() != "" && !author.getHomepage().trim().equals("")) {
+
+				if (author.getHomepage() != null && !author.getHomepage().trim().equals("")) {
 					styledString.append(" - " + author.getHomepage().trim(), StyledString.DECORATIONS_STYLER);
 				}
 				

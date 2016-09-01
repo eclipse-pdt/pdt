@@ -34,8 +34,8 @@ public class DependencyController extends PackageController {
 			VersionedPackage vpkg = (VersionedPackage)pkg;
 
 			super.updateText(pkg, styledString);
-			
-			if (vpkg.getVersion() != null && vpkg.getVersion().trim() != "" && !vpkg.getVersion().trim().isEmpty()) {
+
+			if (vpkg.getVersion() != null && !vpkg.getVersion().trim().isEmpty()) {
 				styledString.append(" : " + vpkg.getVersion().trim(), StyledString.QUALIFIER_STYLER);
 			}
 		}

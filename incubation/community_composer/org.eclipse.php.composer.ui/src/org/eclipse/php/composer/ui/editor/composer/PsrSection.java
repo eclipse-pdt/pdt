@@ -218,8 +218,10 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 		if (element instanceof Namespace) {
 			psr.remove((Namespace) element);
 		} else if (element instanceof String) {
-			Namespace namespace = (Namespace)((PsrController)psrViewer.getContentProvider()).getParent(element);
-			namespace.remove((String)element);
+			Namespace namespace = (Namespace) ((PsrController) psrViewer.getContentProvider()).getParent(element);
+			if (namespace != null) {
+				namespace.remove((String) element);
+			}
 		}
 	}
 

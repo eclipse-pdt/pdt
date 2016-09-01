@@ -38,7 +38,7 @@ public class ScriptsController  extends StyledCellLabelProvider implements ITree
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		viewer = (TreeViewer)viewer;
+		this.viewer = (TreeViewer) viewer;
 		scripts = (Scripts)newInput;
 	}
 	

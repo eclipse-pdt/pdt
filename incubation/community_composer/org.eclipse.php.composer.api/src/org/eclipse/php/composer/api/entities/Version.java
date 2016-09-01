@@ -333,7 +333,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 * @return the version
 	 */
 	public String toString() {
-		if (version == "" || version == null) {
+		if ("".equals(version) || version == null) {
 			version = build();
 		}
 		return version;
@@ -518,11 +518,11 @@ public class Version extends Entity implements Comparable<Version> {
 	}
 
 	public int compareTo(Version anotherVersion) {
-		if (toString() == "dev-master") {
+		if ("dev-master".equals(toString())) {
 			return -1;
 		}
 
-		if (anotherVersion.toString() == "dev-master") {
+		if ("dev-master".equals(anotherVersion.toString())) {
 			return 1;
 		}
 
