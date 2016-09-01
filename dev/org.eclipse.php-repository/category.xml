@@ -6,6 +6,9 @@
    <feature url="features/org.eclipse.php.mylyn_4.1.0.qualifier.jar" id="org.eclipse.php.mylyn" version="4.1.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
+   <feature url="features/org.eclipse.php.composer_4.1.0.qualifier.jar" id="org.eclipse.php.composer" version="4.1.0.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
    <feature url="features/org.eclipse.php.test_4.1.0.qualifier.jar" id="org.eclipse.php.test" version="4.1.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
