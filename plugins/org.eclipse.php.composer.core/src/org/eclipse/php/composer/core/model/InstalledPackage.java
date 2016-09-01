@@ -82,15 +82,14 @@ public class InstalledPackage extends ComposerPackage
 
     }
 
-    public boolean isLocalVersionAvailable()
-    {
+	public boolean isLocalVersionAvailable() {
 
-        if (getLocalFile() != null && !getLocalFile().exists()) {
-            return false;
-        }
+		if (getLocalFile() == null || !getLocalFile().exists()) {
+			return false;
+		}
 
-        return getLocalFile().list().length > 0;
-    }
+		return getLocalFile().list() != null && getLocalFile().list().length > 0;
+	}
 
     public static List<InstalledPackage> deserialize(InputStream input)
             throws IOException

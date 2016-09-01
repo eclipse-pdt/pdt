@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.composer.api;
 
-import org.eclipse.php.composer.api.entities.Version;
 import org.eclipse.php.composer.api.objects.Autoload;
 import org.eclipse.php.composer.api.objects.Distribution;
 import org.eclipse.php.composer.api.objects.Source;
@@ -20,7 +19,6 @@ public abstract class DistributedPackage extends VersionedPackage {
 	protected Autoload autoload = new Autoload();
 	protected Distribution dist = new Distribution();
 	protected Source source = new Source();
-	protected transient Version detailedVersion = null;
 
 	/**
 	 * Returns the <code>type</code> property.

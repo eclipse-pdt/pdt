@@ -287,7 +287,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 
 	protected ISharedImages getSharedImages() {
 		if (sharedImages == null) {
-			getSite().getPage().getWorkbenchWindow().getWorkbench().getSharedImages();
+			sharedImages = getSite().getPage().getWorkbenchWindow().getWorkbench().getSharedImages();
 		}
 
 		return sharedImages;
