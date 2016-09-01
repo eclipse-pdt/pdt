@@ -14,16 +14,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.eclipse.php</groupId>
-		<artifactId>org.eclipse.php.composer.parent</artifactId>
-		<version>4.1.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+        <artifactId>plugins</artifactId>
+        <groupId>org.eclipse.php</groupId>
+        <version>4.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
 	<artifactId>org.eclipse.php.composer.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
-	<properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 </project>

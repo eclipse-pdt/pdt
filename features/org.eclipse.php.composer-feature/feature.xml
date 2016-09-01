@@ -11,10 +11,10 @@
  -->
 
 <feature
-      id="org.eclipse.php.composer.feature"
-      label="Composer"
+      id="org.eclipse.php.composer"
+      label="%featureName"
       version="4.1.0.qualifier"
-      provider-name="Eclipse PDT"
+      provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
 
@@ -36,18 +36,11 @@
 
    <requires>
       <import feature="org.eclipse.php" />
+      <import feature="org.eclipse.wst.json_ui.feature" />
    </requires>
 
    <plugin
          id="org.eclipse.php.composer.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-
-   <plugin
-         id="org.apache.commons.httpclient"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -69,13 +62,6 @@
 
    <plugin
          id="org.eclipse.php.composer.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpcore.nio"
          download-size="0"
          install-size="0"
          version="0.0.0"

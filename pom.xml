@@ -189,6 +189,17 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
 		</repository>
+		<repository>
+			<id>orbit</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
+		</repository>
+		<repository>
+			<!-- XXX: Drop since Neon.2 -->
+			<id>wtp-neon</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/webtools/repository/neon/</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -251,7 +262,6 @@
 		<module>plugins</module>
 		<module>tests</module>
 		<module>features</module>
-		<module>incubation/community_composer</module>
 	</modules>
 
 </project>
