@@ -104,6 +104,9 @@
 		<module>org.eclipse.php.server.ui</module>
 		<module>org.eclipse.php.ui</module>
 		<module>org.eclipse.php.astview</module>
+		<module>org.eclipse.php.composer.api</module>
+		<module>org.eclipse.php.composer.core</module>
+		<module>org.eclipse.php.composer.ui</module>
 	</modules>
 	
 </project>

@@ -1,0 +1,45 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Composer Eclipse Plugin
+Bundle-SymbolicName: org.eclipse.php.composer.core;singleton:=true
+Bundle-Version: 4.1.0.qualifier
+Bundle-Activator: org.eclipse.php.composer.core.ComposerPlugin
+Bundle-Vendor: Eclipse PDT
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ org.eclipse.dltk.core,
+ org.eclipse.php.core,
+ org.eclipse.php.debug.core,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.wst.common.project.facet.ui,
+ org.eclipse.ui.ide,
+ org.apache.commons.httpclient,
+ org.apache.commons.exec,
+ org.apache.commons.logging,
+ org.eclipse.php.composer.api,
+ org.eclipse.wst.validation,
+ org.eclipse.wst.json.core,
+ org.apache.httpcomponents.httpcore,
+ org.eclipse.e4.core.di.annotations
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: 
+ org.eclipse.php.composer.core,
+ org.eclipse.php.composer.core.build,
+ org.eclipse.php.composer.core.builder,
+ org.eclipse.php.composer.core.buildpath,
+ org.eclipse.php.composer.core.facet,
+ org.eclipse.php.composer.core.launch,
+ org.eclipse.php.composer.core.launch.environment,
+ org.eclipse.php.composer.core.launch.execution,
+ org.eclipse.php.composer.core.log,
+ org.eclipse.php.composer.core.model,
+ org.eclipse.php.composer.core.preferences,
+ org.eclipse.php.composer.core.resources,
+ org.eclipse.php.composer.core.util,
+ org.eclipse.php.composer.core.validation,
+ org.eclipse.php.composer.core.visitor,
+ org.eclipse.php.composer.internal.core.resources
+
+
