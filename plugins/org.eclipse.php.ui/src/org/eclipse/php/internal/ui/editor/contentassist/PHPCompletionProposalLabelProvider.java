@@ -370,18 +370,10 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 			nameBuffer.append(typeProposal.getName());
 		}
 
-		boolean isNamespace = false;
-		try {
-			isNamespace = PHPFlags.isNamespace(type.getFlags());
-		} catch (ModelException e) {
-			Logger.logException(e);
-		}
-		if (!isNamespace) {
-			appendQualifier(nameBuffer, type);
-			if (type.getParent() != null) {
-				nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
-				nameBuffer.append(type.getParent().getElementName(), StyledString.QUALIFIER_STYLER);
-			}
+		appendQualifier(nameBuffer, type);
+		if (type != null && type.getParent() != null) {
+			nameBuffer.append(" - ", StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
+			nameBuffer.append(type.getParent().getElementName(), StyledString.QUALIFIER_STYLER);
 		}
 
 		return nameBuffer;
