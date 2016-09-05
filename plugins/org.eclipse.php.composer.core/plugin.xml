@@ -12,6 +12,7 @@
  -->
 
 <plugin>
+   <extension-point id="executableLauncher" name="executableLauncher" schema="schema/executableLauncher.exsd"/>
 
 
    <extension
@@ -132,7 +133,7 @@
       </initializer>
    </extension>
    <extension
-         point="org.pdtextensions.core.executableLauncher">
+         point="org.eclipse.php.composer.core.executableLauncher">
       <environmentFactory
             class="org.eclipse.php.composer.core.launch.environment.ComposerEnvironmentFactory"
             id="org.eclipse.php.composer.core.launcherfactory">

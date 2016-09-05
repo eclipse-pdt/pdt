@@ -28,9 +28,7 @@ import org.eclipse.php.composer.core.log.Logger;
  * @Inject the {@link ScriptLauncherManager} into your service to retrieve a
  *         {@link ScriptLauncherInterface} for executing PHP scripts.
  * 
- *         See FixerEnvironmentFactory in the semanticanalysis plugin for an
- *         example implementation.
- *
+ *         See composer exmaple implementation
  */
 @Creatable
 public class ScriptLauncherManager implements ScriptLauncherInterface {
@@ -66,13 +64,6 @@ public class ScriptLauncherManager implements ScriptLauncherInterface {
 		return factories.get(factoryId).getEnvironment(project);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.pdtextensions.core.launch.ScriptLauncherInterface#getLauncher(java.
-	 * lang.String, org.eclipse.core.resources.IProject)
-	 */
 	@Override
 	public ScriptLauncher getLauncher(String factoryId, IProject project)
 			throws ScriptNotFoundException, ExecutableNotFoundException {
@@ -84,12 +75,6 @@ public class ScriptLauncherManager implements ScriptLauncherInterface {
 		return new ScriptLauncher(env, project);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.pdtextensions.core.launch.ScriptLauncherInterface#resetEnvironment()
-	 */
 	@Override
 	public void resetEnvironment() {
 		// TODO: ?
