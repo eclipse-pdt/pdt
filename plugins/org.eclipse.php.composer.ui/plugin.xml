@@ -37,11 +37,10 @@
                   <iterate
                         ifEmpty="false"
                         operator="and">
-		                  <test
-		                        forcePluginActivation="true"
-		                        property="org.pdtextensions.parentProjectNature"
-		                        value="org.eclipse.php.composer.core.composerNature">
-		                  </test>
+                        <adapt
+                           type="org.eclipse.core.resources.IProject">
+                           <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.composer.core.composerNature" />
+                        </adapt>
                   </iterate>
                </with>
 
@@ -61,11 +60,10 @@
                      variable="selection">
                   <iterate
                         operator="and">
-                     <test
-                           forcePluginActivation="true"
-                           property="org.pdtextensions.parentProjectNature"
-                           value="org.eclipse.php.composer.core.composerNature">
-                     </test>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                           <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.composer.core.composerNature" />
+                     </adapt>
                   </iterate>
                </with>
             </visibleWhen>
@@ -123,11 +121,10 @@
                   <iterate
                         ifEmpty="false"
                         operator="and">
-							<test
-								forcePluginActivation="true"
-								property="org.pdtextensions.parentProjectNature"
-								value="org.eclipse.php.composer.core.composerNature">
-							</test>
+                        <adapt
+                           type="org.eclipse.core.resources.IProject">
+                           <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.composer.core.composerNature" />
+                        </adapt>
                   </iterate>
                </with>
             </visibleWhen>
@@ -161,11 +158,10 @@
 		                  <iterate
 		                        ifEmpty="false"
 		                        operator="and">
-	       						<test
-									forcePluginActivation="true"
-									property="org.pdtextensions.parentProjectNature"
-									value="org.eclipse.php.composer.core.composerNature">
-								</test>
+	       						<adapt
+                                   type="org.eclipse.core.resources.IProject">
+                                   <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.composer.core.composerNature" />
+                              </adapt>
 		                  </iterate>
 		               </with>
 	           </and>
