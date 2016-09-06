@@ -21,9 +21,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-@SuppressWarnings("restriction")
 public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
-	
+
 	public static final String PREF_ID = "org.eclipse.php.composer.ui.preferences.ComposerSaveActionsPreferencePage";
 	public static final String PROP_ID = "org.eclipse.php.composer.ui.propertyPages.ComposerSaveActionsPreferencePage";
 
@@ -40,7 +39,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	public void createControl(Composite parent) {
 
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		
+
 		configurationBlock = new SaveActionsConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
 		super.createControl(parent);
 	}
@@ -53,16 +52,13 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	public IPreferenceStore getPreferenceStore() {
 		return ComposerPlugin.getDefault().getPreferenceStore();
 	}
-	
-	protected void enableProjectSpecificSettings(
-			boolean useProjectSpecificSettings) {
+
+	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (configurationBlock != null) {
-			configurationBlock
-					.useProjectSpecificSettings(useProjectSpecificSettings);
+			configurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
-	
 
 	@Override
 	protected void performDefaults() {
@@ -79,17 +75,18 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 		}
 		return super.performOk();
 	}
-	
+
 	@Override
 	public void performHelp() {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic");
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic");
 	}
-	
+
 	@Override
 	protected Control createPreferenceContent(Composite composite) {
 		return configurationBlock.createContents(composite);
 	}
-	
+
 	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return configurationBlock.hasProjectSpecificOptions(project);
@@ -104,7 +101,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
-	
+
 	public void dispose() {
 		if (configurationBlock != null) {
 			configurationBlock.dispose();

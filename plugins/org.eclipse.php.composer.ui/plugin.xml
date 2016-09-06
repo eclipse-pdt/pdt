@@ -406,11 +406,5 @@
         point="org.eclipse.wst.common.project.facet.ui.images">
         <image path="icons/full/obj16/composer.png" facet="php.composer.component" />
    </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.eclipse.php.composer.ui.preferences.composer.saveactions.PreferenceInitializer">
-      </initializer>
-   </extension>   
 
 </plugin>

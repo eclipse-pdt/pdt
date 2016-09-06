@@ -20,15 +20,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-@SuppressWarnings("restriction")
 public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock {
 
-	private static final Key buildpathKey = new Key(ComposerPlugin.ID, ComposerPreferenceConstants.SAVEACTION_BUILDPATH); 
+	private static final Key buildpathKey = new Key(ComposerPlugin.ID,
+			ComposerPreferenceConstants.SAVEACTION_BUILDPATH);
 	private static final Key updateKey = new Key(ComposerPlugin.ID, ComposerPreferenceConstants.SAVEACTION_UPDATE);
-	
-	public SaveActionsConfigurationBlock(IStatusChangeListener context,
-			IProject project, IWorkbenchPreferenceContainer container) {
-		
+
+	public SaveActionsConfigurationBlock(IStatusChangeListener context, IProject project,
+			IWorkbenchPreferenceContainer container) {
+
 		super(context, project, getKeys(), container);
 	}
 
@@ -38,12 +38,13 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		
-		addCheckBox(parent, "Update Buildpath", buildpathKey, new String[] {"True", "False"}, 0);
-		addCheckBox(parent, "Run Composer Update", updateKey, new String[] {"True", "False"}, 0);
-		
+
+		addCheckBox(parent, "Update Buildpath", buildpathKey, new String[] { "True", "False" }, 0);
+		addCheckBox(parent, "Run Composer Update", updateKey, new String[] { "True", "False" }, 0);
+
 		return parent;
 	}
+
 	@Override
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		return null;

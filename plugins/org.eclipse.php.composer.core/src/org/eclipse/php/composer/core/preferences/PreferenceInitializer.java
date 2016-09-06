@@ -20,6 +20,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore prefs = ComposerPlugin.getDefault().getPreferenceStore();
+		prefs.setDefault(ComposerPreferenceConstants.PHP_EXECUTABLE, ""); //$NON-NLS-1$
 		prefs.setDefault(ComposerPreferenceConstants.USE_PROJECT_PHAR, true);
+		prefs.setDefault(ComposerPreferenceConstants.COMPOSER_PHAR, ""); //$NON-NLS-1$
+		prefs.setDefault(ComposerPreferenceConstants.SAVEACTION_BUILDPATH, false);
+		prefs.setDefault(ComposerPreferenceConstants.SAVEACTION_UPDATE, false);
 	}
 }
