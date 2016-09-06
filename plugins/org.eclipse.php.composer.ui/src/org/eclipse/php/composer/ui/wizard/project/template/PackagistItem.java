@@ -11,12 +11,8 @@
 package org.eclipse.php.composer.ui.wizard.project.template;
 
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.eclipse.equinox.internal.p2.ui.discovery.wizards.AbstractDiscoveryItem;
@@ -138,13 +134,9 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 		JsonValue downloads = item.get("downloads");
 		JsonValue favorites = item.get("favers");
 		if (downloads != null && favorites != null) {
-			Number number = downloads.getAsNumber();
-			DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(new Locale("en_US"));
-			DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
-			symbols.setGroupingSeparator(' ');
-			downloadButton.setText(formatter.format(number));
+			downloadButton.setText(downloads.getAsString());
 			downloadButton.setImage(ComposerUIPluginImages.DOWNLOAD.createImage());
-			favorButton.setText("" + favorites.getAsNumber());
+			favorButton.setText(favorites.getAsString());
 		}
 
 		versionCombo = new Combo(this, SWT.READ_ONLY);
