@@ -11,16 +11,19 @@
 package org.eclipse.php.composer.ui.wizard.project.template;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.composer.ui.converter.String2KeywordsConverter;
 import org.eclipse.php.composer.ui.wizard.LocationGroup;
 import org.eclipse.php.composer.ui.wizard.project.BasicSettingsGroup;
 import org.eclipse.php.composer.ui.wizard.project.ComposerProjectWizardFirstPage;
-import org.eclipse.php.composer.ui.wizard.project.VersionGroup;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
+import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage.VersionGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,26 +35,23 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.php.composer.api.ComposerPackage;
-
 /**
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
-@SuppressWarnings("restriction")
 public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPage implements IShellProvider {
 
 	private Validator projectTemplateValidator;
-	
+
 	private Button overrideComposer;
 	private boolean doesOverride = false;
-	
+
 	public PackageProjectWizardFirstPage() {
 		super();
 		setPageComplete(false);
 		setTitle("Basic Composer Configuration");
 		setDescription("Create a new project from existing package");
 	}
-	
+
 	@Override
 	public void createControl(Composite parent) {
 
@@ -65,7 +65,7 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 		nameGroup = new NameGroup(composite, initialName, getShell());
 		nameGroup.addObserver(this);
 		PHPLocationGroup = new LocationGroup(composite, nameGroup, getShell());
-		
+
 		overrideComposer = new Button(composite, SWT.CHECK);
 		overrideComposer.setText("Override composer.json from target package");
 		overrideComposer.addSelectionListener(new SelectionAdapter() {
@@ -75,12 +75,12 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 				settingsGroup.setEnabled(overrideComposer.getSelection());
 			}
 		});
-		
+
 		final Group group = new Group(composite, SWT.None);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setLayout(new GridLayout(3, false));
 		group.setText("");
-		
+
 		settingsGroup = new BasicSettingsGroup(group, getShell());
 		settingsGroup.setEnabled(false);
 		settingsGroup.addObserver(this);
@@ -90,7 +90,13 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 		data.setSettings(getDialogSettings());
 		data.setObserver(PHPLocationGroup);
 
-		versionGroup = new VersionGroup(this, composite);
+		versionGroup = new VersionGroup(this, composite, PHPVersion.PHP5_3) {
+			@Override
+			public IEnvironment getEnvironment() {
+				return PackageProjectWizardFirstPage.this.getEnvironment();
+			}
+
+		};
 		nameGroup.addObserver(PHPLocationGroup);
 
 		// initialize all elements
@@ -101,24 +107,24 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 		PHPLocationGroup.addObserver(projectTemplateValidator);
 
 		Dialog.applyDialogFont(composite);
-		
+
 		setControl(composite);
 		composerPackage = new ComposerPackage();
 		keywordConverter = new String2KeywordsConverter(composerPackage);
 		setHelpContext(composite);
 	}
-	
+
 	@Override
 	public void performFinish(final IProgressMonitor monitor) {
-		
 
 	}
-	
+
 	@Override
 	protected void setHelpContext(Control container) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_firstpage");
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(container,
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_firstpage");
 	}
-	
+
 	public boolean doesOverrideComposer() {
 		return doesOverride;
 	}

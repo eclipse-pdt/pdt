@@ -26,11 +26,11 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.ui.converter.String2KeywordsConverter;
 import org.eclipse.php.composer.ui.wizard.project.BasicSettingsGroup;
-import org.eclipse.php.composer.ui.wizard.project.VersionGroup;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.IPHPProjectCreateWizardPage;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
+import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage.VersionGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,12 +43,11 @@ import org.eclipse.swt.widgets.Control;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 abstract public class AbstractWizardFirstPage extends WizardPage implements IPHPProjectCreateWizardPage, Observer {
 
 	public NameGroup nameGroup;
 	public LocationGroup PHPLocationGroup;
-	public AbstractVersionGroup versionGroup;
+	public VersionGroup versionGroup;
 
 	protected String initialName;
 	protected Composite composite;
@@ -84,7 +83,13 @@ abstract public class AbstractWizardFirstPage extends WizardPage implements IPHP
 		data.setSettings(getDialogSettings());
 		data.setObserver(PHPLocationGroup);
 
-		versionGroup = new VersionGroup(this, composite);
+		versionGroup = new VersionGroup(this, composite, PHPVersion.PHP5_3) {
+			@Override
+			public IEnvironment getEnvironment() {
+				return AbstractWizardFirstPage.this.getEnvironment();
+			}
+
+		};
 		detectGroup = new DetectGroup(composite, PHPLocationGroup, nameGroup);
 
 		nameGroup.addObserver(PHPLocationGroup);
