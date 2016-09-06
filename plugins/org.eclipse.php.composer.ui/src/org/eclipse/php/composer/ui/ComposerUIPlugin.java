@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.composer.ui;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.ComposerPreferenceConstants;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.preferences.PHPExecutableChangeListener;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -31,6 +34,8 @@ public class ComposerUIPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static ComposerUIPlugin plugin;
 
+	private IPreferenceStore corePreferenceStore;
+
 	private IEclipseContext eclipseContext;
 
 	/**
@@ -38,6 +43,14 @@ public class ComposerUIPlugin extends AbstractUIPlugin {
 	 */
 	public ComposerUIPlugin() {
 
+	}
+
+	public IPreferenceStore getCorePreferenceStore() {
+		if (corePreferenceStore == null) {
+			corePreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, ComposerPlugin.ID);
+		}
+
+		return corePreferenceStore;
 	}
 
 	/*

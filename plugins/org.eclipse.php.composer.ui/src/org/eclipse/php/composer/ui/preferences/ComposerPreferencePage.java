@@ -12,7 +12,6 @@ package org.eclipse.php.composer.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.composer.ui.preferences.launcher.LauncherConfigurationBlock;
 import org.eclipse.php.composer.ui.preferences.launcher.LauncherKeyBag;
@@ -33,7 +32,7 @@ public class ComposerPreferencePage extends PropertyAndPreferencePage {
 	public ComposerPreferencePage() {
 		setTitle("Composer");
 		setDescription(null);
-		setPreferenceStore(ComposerPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(ComposerUIPlugin.getDefault().getCorePreferenceStore());
 
 	}
 
@@ -53,7 +52,7 @@ public class ComposerPreferencePage extends PropertyAndPreferencePage {
 
 	@Override
 	public IPreferenceStore getPreferenceStore() {
-		return ComposerPlugin.getDefault().getPreferenceStore();
+		return ComposerUIPlugin.getDefault().getCorePreferenceStore();
 	}
 
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {

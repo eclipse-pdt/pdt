@@ -20,7 +20,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -32,7 +31,6 @@ import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.ComposerPreferenceConstants;
 import org.eclipse.php.composer.core.buildpath.BuildPathManager;
 import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.php.composer.core.preferences.PreferencesSupport;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.php.composer.internal.core.resources.ComposerProject;
 import org.eclipse.php.composer.ui.actions.*;
@@ -40,6 +38,7 @@ import org.eclipse.php.composer.ui.editor.ComposerFormPage;
 import org.eclipse.php.composer.ui.job.ComposerJob;
 import org.eclipse.php.composer.ui.job.UpdateDevJob;
 import org.eclipse.php.composer.ui.job.UpdateJob;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.*;
 import org.eclipse.ui.forms.IManagedForm;
@@ -359,13 +358,12 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 			saving = false;
 
 			// save actions
-			IPreferenceStore store = ComposerPlugin.getDefault().getPreferenceStore();
-			PreferencesSupport prefSupport = new PreferencesSupport(ComposerPlugin.ID, store);
+			PreferencesSupport prefSupport = new PreferencesSupport(ComposerPlugin.ID);
 
-			Boolean buildpath = prefSupport.getBooleanPreferencesValue(ComposerPreferenceConstants.SAVEACTION_BUILDPATH,
-					false, project);
-			Boolean update = prefSupport.getBooleanPreferencesValue(ComposerPreferenceConstants.SAVEACTION_UPDATE,
-					false, project);
+			Boolean buildpath = prefSupport.getProjectSpecificBooleanPreferencesValue(
+					ComposerPreferenceConstants.SAVEACTION_BUILDPATH, false, project);
+			Boolean update = prefSupport.getProjectSpecificBooleanPreferencesValue(
+					ComposerPreferenceConstants.SAVEACTION_UPDATE, false, project);
 
 			update = update && (newDepSinceLastSave || newDevDepSinceLastSave);
 

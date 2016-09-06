@@ -39,7 +39,6 @@ import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.VersionedPackage;
 import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.api.packages.PharDownloader;
-import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.ComposerPluginConstants;
 import org.eclipse.php.composer.core.ComposerPreferenceConstants;
 import org.eclipse.php.composer.core.launch.ExecutableNotFoundException;
@@ -146,7 +145,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 
 	protected void installComposer(IProgressMonitor monitor) throws CoreException {
 		// only download composer.phar when config is set to use project phar
-		IPreferenceStore prefs = ComposerPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore prefs = ComposerUIPlugin.getDefault().getCorePreferenceStore();
 		if (prefs.getBoolean(ComposerPreferenceConstants.USE_PROJECT_PHAR)) {
 			downloader = new PharDownloader();
 			InputStream resource = downloader.download();

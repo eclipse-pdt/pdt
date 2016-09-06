@@ -12,7 +12,6 @@ package org.eclipse.php.composer.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.swt.widgets.Composite;
@@ -31,7 +30,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	public SaveActionsPreferencePage() {
 		setTitle("Save Actions");
 		setDescription(null);
-		setPreferenceStore(ComposerPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(ComposerUIPlugin.getDefault().getCorePreferenceStore());
 
 	}
 
@@ -50,7 +49,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 
 	@Override
 	public IPreferenceStore getPreferenceStore() {
-		return ComposerPlugin.getDefault().getPreferenceStore();
+		return ComposerUIPlugin.getDefault().getCorePreferenceStore();
 	}
 
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {

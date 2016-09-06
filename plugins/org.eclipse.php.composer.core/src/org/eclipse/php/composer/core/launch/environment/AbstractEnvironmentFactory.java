@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.composer.core.launch.ExecutableNotFoundException;
 import org.eclipse.php.composer.core.launch.LaunchUtil;
 
@@ -61,7 +60,7 @@ public abstract class AbstractEnvironmentFactory implements EnvironmentFactory {
 	 * 
 	 * @return
 	 */
-	protected abstract IPreferenceStore getPreferenceStore();
+	protected abstract String getPreferenceQualifier();
 
 	/**
 	 * Get the Plugin ID of the plugin using the launcher.
