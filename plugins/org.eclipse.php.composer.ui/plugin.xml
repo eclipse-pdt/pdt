@@ -406,5 +406,12 @@
         point="org.eclipse.wst.common.project.facet.ui.images">
         <image path="icons/full/obj16/composer.png" facet="php.composer.component" />
    </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <file-association
+            content-type="org.eclipse.wst.json.core.jsonsource"
+            file-names="composer.lock">
+      </file-association>
+   </extension>
 
 </plugin>
