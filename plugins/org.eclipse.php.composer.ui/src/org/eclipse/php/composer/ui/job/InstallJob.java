@@ -23,6 +23,6 @@ public class InstallJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		launcher.launch("install", "--no-dev");
+		launcher.launch("install", new String[] { "--no-dev", "--no-progress", "--no-ansi" });
 	}
 }

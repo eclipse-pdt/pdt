@@ -23,6 +23,6 @@ public class UpdateJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		launcher.launch("update", "--no-dev");
+		launcher.launch("update", new String[] { "--no-dev", "--no-progress", "--no-ansi" });
 	}
 }
