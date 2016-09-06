@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-@SuppressWarnings("restriction")
 public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlock implements IDialogFieldListener {
 
 	protected final Key phpExecutable;
@@ -120,8 +119,6 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 
 		// php
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.minimumHeight = 75;
-		gd.heightHint = 75;
 		Group sourceFolderGroup = new Group(result, SWT.NONE);
 		sourceFolderGroup.setLayout(new GridLayout(3, false));
 		sourceFolderGroup.setLayoutData(gd);
@@ -142,7 +139,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 
 		Link helpLink = new Link(sourceFolderGroup, SWT.WRAP);
 		helpLink.setLayoutData(gridData);
-		helpLink.setText("See <a>phptherightway.com</a> if you need help installing the PHP cli.");
+		helpLink.setText("See <a>phptherightway.com</a> if you need help installing the PHP CLI.");
 		helpLink.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
@@ -178,9 +175,6 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 	protected void createScriptGroup(Composite result) {
 
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.minimumHeight = 60;
-		gd.heightHint = 60;
-
 		scriptGroup = new Group(result, SWT.NONE);
 		scriptGroup.setLayout(new GridLayout(3, false));
 		scriptGroup.setLayoutData(gd);

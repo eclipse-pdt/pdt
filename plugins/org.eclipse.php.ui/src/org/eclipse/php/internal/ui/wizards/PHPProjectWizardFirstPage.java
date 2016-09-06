@@ -15,7 +15,6 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -129,7 +128,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(data,
 				PHPProjectWizardFirstPage.class.getName());
 
-		fVersionGroup = new VersionGroup(composite, PHPVersion.PHP5);
+		fVersionGroup = new VersionGroup(this, composite, PHPVersion.PHP5) {
+			@Override
+			public IEnvironment getEnvironment() {
+				return PHPProjectWizardFirstPage.this.getEnvironment();
+			}
+		};
 		fLayoutGroup = new LayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 
@@ -515,8 +519,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 			String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
 
-			Map data = null;
-			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, null).open();
 		}
 	}
 
@@ -525,8 +528,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * field is changed, regardless of whether the change originates from the
 	 * user or has been invoked programmatically.
 	 */
-	public class VersionGroup extends Observable
+	public abstract static class VersionGroup extends Observable
 			implements Observer, IStringButtonAdapter, IDialogFieldListener, SelectionListener {
+		private WizardPage page;
 		public final SelectionButtonDialogField fDefaultValues;
 		protected final SelectionButtonDialogField fCustomValues;
 
@@ -534,7 +538,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
 
-		public VersionGroup(Composite composite, PHPVersion minimumVersion) {
+		public VersionGroup(WizardPage page, Composite composite, PHPVersion minimumVersion) {
+			this.page = page;
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -588,7 +593,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			IEnvironment environment = getEnvironment();
 			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
 			if (environmentUI != null) {
-				String selectedDirectory = environmentUI.selectFolder(getShell());
+				String selectedDirectory = environmentUI.selectFolder(page.getShell());
 
 				if (selectedDirectory != null) {
 					// fLocation.setText(selectedDirectory);
@@ -596,6 +601,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				}
 			}
 		}
+
+		public abstract IEnvironment getEnvironment();
 
 		public void dialogFieldChanged(DialogField field) {
 			if (field == fDefaultValues) {
@@ -613,8 +620,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 			String prefID = PHPInterpreterPreferencePage.PREF_ID;
-			Map data = null;
-			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(page.getShell(), prefID, new String[] { prefID }, null).open();
 			if (!fCustomValues.isSelected()) {
 				fConfigurationBlock.performRevert();
 			}

@@ -23,7 +23,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-@SuppressWarnings("restriction")
 public class ComposerPreferencePage extends PropertyAndPreferencePage {
 
 	public static final String PREF_ID = "org.eclipse.php.composer.ui.preferences.ComposerPreferencePage";
