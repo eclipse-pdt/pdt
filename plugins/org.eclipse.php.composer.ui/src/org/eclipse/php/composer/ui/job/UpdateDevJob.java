@@ -34,11 +34,11 @@ public class UpdateDevJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-
+		String[] options = new String[] { "--dev", "--no-progress", "--no-ansi" };
 		if (packages == null) {
-			launcher.launch("update", "--dev");
+			launcher.launch("update", options);
 		} else {
-			launcher.launch("update", (String[]) ArrayUtils.addAll(new String[] { "--dev" }, packages));
+			launcher.launch("update", ArrayUtils.addAll(options, packages));
 		}
 	}
 }
