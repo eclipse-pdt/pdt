@@ -101,15 +101,6 @@
       </action>
    </extension>
    <extension
-         point="org.eclipse.wst.common.project.facet.ui.wizardPages">
-      <wizard-pages
-            action="php.composer.component.install">
-         <page
-               class="org.eclipse.php.composer.core.facet.FacetInstallWizardPage">
-         </page>
-      </wizard-pages>
-   </extension>
-   <extension
          point="org.eclipse.wst.common.project.facet.core.presets">
       <static-preset
             extends="default.configuration"

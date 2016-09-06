@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.launch.environment;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.ComposerPreferenceConstants;
 
 public class ComposerEnvironmentFactory extends AbstractEnvironmentFactory {
 
 	public static final String FACTORY_ID = "org.eclipse.php.composer.core.launcherfactory";
-
-	@Override
-	protected IPreferenceStore getPreferenceStore() {
-		return ComposerPlugin.getDefault().getPreferenceStore();
-	}
 
 	@Override
 	protected String getPluginId() {
@@ -46,5 +40,10 @@ public class ComposerEnvironmentFactory extends AbstractEnvironmentFactory {
 	@Override
 	protected String getScriptKey() {
 		return ComposerPreferenceConstants.COMPOSER_PHAR;
+	}
+
+	@Override
+	protected String getPreferenceQualifier() {
+		return ComposerPlugin.ID;
 	}
 }

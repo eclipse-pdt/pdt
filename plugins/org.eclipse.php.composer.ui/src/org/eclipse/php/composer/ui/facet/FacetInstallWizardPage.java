@@ -8,7 +8,7 @@
  * Contributors:
  *     PDT Extension Group - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.composer.core.facet;
+package org.eclipse.php.composer.ui.facet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

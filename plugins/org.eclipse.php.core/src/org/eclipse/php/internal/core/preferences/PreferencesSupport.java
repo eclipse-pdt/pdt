@@ -53,16 +53,43 @@ public class PreferencesSupport {
 	 */
 	public String getProjectSpecificPreferencesValue(String key, String def, IProject project) {
 		assert project != null;
+		IEclipsePreferences node = getPreferences(project);
+		if (node != null) {
+			return node.get(key, def);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the project-specific value, or null if there is no node for the
+	 * project scope.
+	 * 
+	 * @param key
+	 *            The preferences key
+	 * @param def
+	 *            The default value to return.
+	 * @param project
+	 *            The IProject
+	 * @return The project-specific value for the given key.
+	 */
+	public boolean getProjectSpecificBooleanPreferencesValue(String key, boolean def, IProject project) {
+		assert project != null;
+
+		IEclipsePreferences node = getPreferences(project);
+		if (node != null) {
+			return node.getBoolean(key, def);
+		}
+		return def;
+	}
+
+	private IEclipsePreferences getPreferences(IProject project) {
+		assert project != null;
 		ProjectScope scope = projectToScope.get(project);
 		if (scope == null) {
 			scope = new ProjectScope(project);
 			projectToScope.put(project, scope);
 		}
-		IEclipsePreferences node = scope.getNode(nodeQualifier);
-		if (node != null) {
-			return node.get(key, def);
-		}
-		return null;
+		return scope.getNode(nodeQualifier);
 	}
 
 	/**

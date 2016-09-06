@@ -11,7 +11,8 @@
 package org.eclipse.php.composer.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.ComposerPreferenceConstants;
 
@@ -19,11 +20,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
-		IPreferenceStore prefs = ComposerPlugin.getDefault().getPreferenceStore();
-		prefs.setDefault(ComposerPreferenceConstants.PHP_EXECUTABLE, ""); //$NON-NLS-1$
-		prefs.setDefault(ComposerPreferenceConstants.USE_PROJECT_PHAR, true);
-		prefs.setDefault(ComposerPreferenceConstants.COMPOSER_PHAR, ""); //$NON-NLS-1$
-		prefs.setDefault(ComposerPreferenceConstants.SAVEACTION_BUILDPATH, false);
-		prefs.setDefault(ComposerPreferenceConstants.SAVEACTION_UPDATE, false);
+		IEclipsePreferences scope = DefaultScope.INSTANCE.getNode(ComposerPlugin.ID);
+		scope.put(ComposerPreferenceConstants.PHP_EXECUTABLE, ""); //$NON-NLS-1$
+		scope.putBoolean(ComposerPreferenceConstants.USE_PROJECT_PHAR, true);
+		scope.put(ComposerPreferenceConstants.COMPOSER_PHAR, ""); //$NON-NLS-1$
+		scope.putBoolean(ComposerPreferenceConstants.SAVEACTION_BUILDPATH, false);
+		scope.putBoolean(ComposerPreferenceConstants.SAVEACTION_UPDATE, false);
 	}
 }

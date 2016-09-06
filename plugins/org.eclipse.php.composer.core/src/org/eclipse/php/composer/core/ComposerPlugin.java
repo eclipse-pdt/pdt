@@ -13,16 +13,16 @@ package org.eclipse.php.composer.core;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.php.composer.internal.core.resources.ComposerProject;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-public class ComposerPlugin extends AbstractUIPlugin {
+public class ComposerPlugin extends Plugin {
 
 	private static ComposerPlugin plugin;
 
@@ -81,7 +81,8 @@ public class ComposerPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean isBuildpathContainerEnabled() {
-		return getPreferenceStore().getBoolean(ComposerPluginConstants.PREF_BUILDPATH_ENABLE);
+		return Platform.getPreferencesService().getBoolean(ComposerPlugin.ID,
+				ComposerPluginConstants.PREF_BUILDPATH_ENABLE, true, null);
 	}
 
 	public IComposerProject getComposerProject(IScriptProject project) {

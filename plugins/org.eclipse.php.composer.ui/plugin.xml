@@ -414,4 +414,13 @@
       </file-association>
    </extension>
 
+   	<extension
+         point="org.eclipse.wst.common.project.facet.ui.wizardPages">
+      <wizard-pages
+            action="php.composer.component.install">
+         <page
+               class="org.eclipse.php.composer.ui.facet.FacetInstallWizardPage">
+         </page>
+      </wizard-pages>
+   </extension>
 </plugin>

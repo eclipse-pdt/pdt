@@ -31,7 +31,6 @@ import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.service.prefs.BackingStoreException;
 
 public class PackageManager {
@@ -218,7 +217,7 @@ public class PackageManager {
 				packagePaths.add(new PackagePath(entry, project));
 			}
 		} catch (ModelException e) {
-			StatusManager.getManager().handle(e.getStatus());
+			Logger.logException(e.getStatus().getMessage(), e);
 		}
 
 		return packagePaths.toArray(new PackagePath[packagePaths.size()]);
