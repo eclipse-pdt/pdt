@@ -9,7 +9,6 @@
     Contributors:
         PDT Extension Group - initial API and implementation
  -->
-
 <feature
       id="org.eclipse.php.composer"
       label="%featureName"
@@ -34,9 +33,12 @@
       <discovery label="Eclipse PDT Website" url="http://eclipse.org/pdt/"/>
    </url>
 
+   <includes
+         id="org.eclipse.php"
+         version="0.0.0"/>
+
    <requires>
-      <import feature="org.eclipse.php" />
-      <import feature="org.eclipse.wst.json_ui.feature" />
+      <import feature="org.eclipse.wst.json_ui.feature"/>
    </requires>
 
    <plugin
