@@ -39,6 +39,10 @@
          version="0.0.0"/>
 
    <includes
+         id="org.eclipse.php.composer"
+         version="0.0.0"/>
+
+   <includes
          id="org.eclipse.php.source"
          version="0.0.0"/>
 
