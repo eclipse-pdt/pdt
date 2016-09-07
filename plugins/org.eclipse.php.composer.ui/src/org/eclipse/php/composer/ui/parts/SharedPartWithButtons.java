@@ -53,10 +53,12 @@ public abstract class SharedPartWithButtons extends SharedPart {
 	}
 
 	/**
-	 * Set the specified button's visibility.
-	 * Fix for defect 190717.
-	 * @param index The index of the button to be changed
-	 * @param visible true if the button is to be shown, false if hidden
+	 * Set the specified button's visibility. Fix for defect 190717.
+	 * 
+	 * @param index
+	 *            The index of the button to be changed
+	 * @param visible
+	 *            true if the button is to be shown, false if hidden
 	 */
 	public void setButtonVisible(int index, boolean visible) {
 		if (fButtons != null && index >= 0 && fButtons.length > index) {

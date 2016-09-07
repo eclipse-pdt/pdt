@@ -24,29 +24,29 @@ public class License extends AbstractJsonArray<String> {
 
 	public License() {
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();
 		if (obj instanceof LinkedList) {
-			for (Object license : (LinkedList)obj) {
-				add((String)license);
+			for (Object license : (LinkedList) obj) {
+				add((String) license);
 			}
 		} else {
-			add((String)obj);
+			add((String) obj);
 		}
-		
+
 	}
-	
+
 	@Override
 	protected Object buildJson() {
 		if (size() == 1) {
-			return (String)get(0);
+			return (String) get(0);
 		}
-		
+
 		return super.buildJson();
 	}
-	
+
 	/**
 	 * Adds a license.
 	 * 

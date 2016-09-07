@@ -47,10 +47,10 @@ import org.eclipse.php.composer.api.objects.Namespace;
 public class PsrDialog extends Dialog {
 
 	private Text namespaceControl;
-	
+
 	private Namespace namespace;
 	private IProject project;
-	
+
 	private TableViewer pathViewer;
 
 	public PsrDialog(Shell parentShell, Namespace namespace, IProject project) {
@@ -63,40 +63,38 @@ public class PsrDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Edit Namespace");
 		getShell().setImage(ComposerUIPluginImages.EVENT.createImage());
-		
+
 		Composite contents = new Composite(parent, SWT.NONE);
 		contents.setLayout(new GridLayout(3, false));
 		GridData gd_contents = new GridData();
 		gd_contents.widthHint = 350;
 		contents.setLayoutData(gd_contents);
-		
-		
+
 		Label lblEvent = new Label(contents, SWT.NONE);
 		GridData gd_lblEvent = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblEvent.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblEvent.setLayoutData(gd_lblEvent);
 		lblEvent.setText("Namespace");
-		
+
 		namespaceControl = new Text(contents, SWT.BORDER);
 		GridData gd_eventControl = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		gd_eventControl.widthHint = ComposerUIPluginConstants.DIALOG_CONTROL_WIDTH;
 		namespaceControl.setLayoutData(gd_eventControl);
-		
+
 		if (namespace.getNamespace() != null) {
 			namespaceControl.setText(namespace.getNamespace());
 		}
-		
+
 		namespaceControl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				namespace.setNamespace(namespaceControl.getText());
 			}
 		});
-		
-		
+
 		Label lblHandler = new Label(contents, SWT.NONE);
 		lblHandler.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		lblHandler.setText("Paths");
-		
+
 		PathController controller = new PathController();
 		pathViewer = new TableViewer(contents, SWT.BORDER | SWT.FULL_SELECTION);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -105,15 +103,15 @@ public class PsrDialog extends Dialog {
 		pathViewer.setContentProvider(controller);
 		pathViewer.setLabelProvider(controller);
 		pathViewer.setInput(namespace.getPaths());
-		
+
 		Composite buttons = new Composite(contents, SWT.NONE);
 		buttons.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		buttons.setLayout(new GridLayout(1, false));
-		
+
 		WidgetHelper.trimComposite(buttons, 0);
 		WidgetHelper.setMargin(buttons, -3, -3);
 		WidgetHelper.setSpacing(buttons, -4, 0);
-		
+
 		Button btnEdit = new Button(buttons, SWT.NONE);
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -122,35 +120,31 @@ public class PsrDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				List<IFolder> folders = new ArrayList<IFolder>();
 				for (Object path : namespace.getPaths()) {
-					IResource resource = project.findMember((String)path);
+					IResource resource = project.findMember((String) path);
 					if (resource != null && resource instanceof IFolder) {
 						folders.add((IFolder) resource);
 					}
 				}
-				CheckedTreeSelectionDialog dialog = ResourceDialog.createMulti(
-						pathViewer.getTable().getShell(), 
-						"Namespace Paths", 
-						"Select folders:", 
-						new Class[] {IFolder.class}, 
-						project, folders);
+				CheckedTreeSelectionDialog dialog = ResourceDialog.createMulti(pathViewer.getTable().getShell(),
+						"Namespace Paths", "Select folders:", new Class[] { IFolder.class }, project, folders);
 
 				if (dialog.open() == Dialog.OK) {
 					namespace.clear();
 					for (Object result : dialog.getResult()) {
 						if (result instanceof IFolder) {
-							namespace.add(((IFolder)result).getProjectRelativePath().toString());
+							namespace.add(((IFolder) result).getProjectRelativePath().toString());
 						}
 					}
 				}
 			}
 		});
-		
+
 		Button btnRemove = new Button(buttons, SWT.NONE);
 		btnRemove.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemove.setText("Remove");
-		
+
 		btnRemove.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ISelection selection = pathViewer.getSelection();
@@ -158,7 +152,7 @@ public class PsrDialog extends Dialog {
 					return;
 				}
 				StructuredSelection s = (StructuredSelection) selection;
-				for (Object o : s.toArray() ) {
+				for (Object o : s.toArray()) {
 					try {
 						String item = (String) o;
 						pathViewer.remove(item);
@@ -169,7 +163,7 @@ public class PsrDialog extends Dialog {
 				}
 			}
 		});
-		
+
 		namespace.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
 				if (e.getPropertyName().contains("#")) {
@@ -177,8 +171,8 @@ public class PsrDialog extends Dialog {
 				}
 			}
 		});
-		
-		return contents;		
+
+		return contents;
 	}
 
 	public Namespace getNamespace() {

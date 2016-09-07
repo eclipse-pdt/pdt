@@ -25,24 +25,23 @@ import org.eclipse.zest.core.viewers.IGraphEntityContentProvider;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.ComposerPackages;
 
-public class GraphController extends LabelProvider implements
-		IStructuredContentProvider, IGraphEntityContentProvider,
-		IEntityStyleProvider {
-	
+public class GraphController extends LabelProvider
+		implements IStructuredContentProvider, IGraphEntityContentProvider, IEntityStyleProvider {
+
 	private Color LIGHT_BLUE = new Color(Display.getDefault(), 216, 228, 248);
 	private Color DARK_BLUE = new Color(Display.getDefault(), 1, 70, 122);
 	private Color LIGHT_GREY = new Color(null, 192, 192, 192);
 	private Color GREEN = new Color(Display.getDefault(), 166, 222, 168);
-	
+
 	private ComposerPackages packages;
 	private IComposerProject composerProject;
-	
+
 	private String filterText;
 
 	public GraphController(IComposerProject project) {
 		composerProject = project;
 	}
-	
+
 	public void setComposerProject(IComposerProject project) {
 		composerProject = project;
 	}
@@ -55,7 +54,7 @@ public class GraphController extends LabelProvider implements
 
 		ComposerPackages connections = new ComposerPackages();
 		ComposerPackage pkg = (ComposerPackage) entity;
-		
+
 		for (ComposerPackage target : packages) {
 			if (pkg.getRequire().has(target) || pkg.getRequireDev().has(target)) {
 				connections.add(target);
@@ -77,7 +76,6 @@ public class GraphController extends LabelProvider implements
 		return packages.toArray();
 	}
 
-	
 	@Override
 	public String getText(Object element) {
 		if (element instanceof ComposerPackage) {
@@ -113,19 +111,19 @@ public class GraphController extends LabelProvider implements
 
 	@Override
 	public Color getBackgroundColour(Object entity) {
-		
+
 		if (entity instanceof ComposerPackage) {
 			ComposerPackage pkg = (ComposerPackage) entity;
-			
+
 			if (filterText != null && filterText.length() > 0 && pkg.getName().contains(filterText)) {
 				return GREEN;
 			}
-			
+
 			if (composerProject.getComposerPackage().getRequireDev().has((ComposerPackage) entity)) {
 				return ColorConstants.lightGray;
 			}
 		}
-		
+
 		return LIGHT_BLUE;
 	}
 

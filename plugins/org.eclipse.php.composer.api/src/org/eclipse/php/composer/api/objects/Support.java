@@ -26,16 +26,17 @@ public class Support extends JsonObject implements Cloneable {
 	public String getEmail() {
 		return getAsString("email");
 	}
-	
+
 	/**
 	 * Sets the email.
 	 * 
-	 * @param email the email to set
+	 * @param email
+	 *            the email to set
 	 */
 	public void setEmail(String email) {
 		set("email", email);
 	}
-	
+
 	/**
 	 * Returns the issues.
 	 * 
@@ -44,16 +45,17 @@ public class Support extends JsonObject implements Cloneable {
 	public String getIssues() {
 		return getAsString("issues");
 	}
-	
+
 	/**
 	 * Sets the issues.
 	 * 
-	 * @param issues the issues to set
+	 * @param issues
+	 *            the issues to set
 	 */
 	public void setIssues(String issues) {
 		set("issues", issues);
 	}
-	
+
 	/**
 	 * Returns the forum.
 	 * 
@@ -62,16 +64,17 @@ public class Support extends JsonObject implements Cloneable {
 	public String getForum() {
 		return getAsString("forum");
 	}
-	
+
 	/**
 	 * Sets the forum.
 	 * 
-	 * @param forum the forum to set
+	 * @param forum
+	 *            the forum to set
 	 */
 	public void setForum(String forum) {
 		set("forum", forum);
 	}
-	
+
 	/**
 	 * Returns the wiki.
 	 * 
@@ -80,16 +83,17 @@ public class Support extends JsonObject implements Cloneable {
 	public String getWiki() {
 		return getAsString("wiki");
 	}
-	
+
 	/**
 	 * Sets the wiki.
 	 * 
-	 * @param wiki the wiki to set
+	 * @param wiki
+	 *            the wiki to set
 	 */
 	public void setWiki(String wiki) {
 		set("wiki", wiki);
 	}
-	
+
 	/**
 	 * Returns the irc.
 	 * 
@@ -98,16 +102,17 @@ public class Support extends JsonObject implements Cloneable {
 	public String getIrc() {
 		return getAsString("irc");
 	}
-	
+
 	/**
 	 * Sets the irc.
 	 * 
-	 * @param irc the irc to set
+	 * @param irc
+	 *            the irc to set
 	 */
 	public void setIrc(String irc) {
 		set("irc", irc);
 	}
-	
+
 	/**
 	 * Returns the source.
 	 * 
@@ -116,18 +121,20 @@ public class Support extends JsonObject implements Cloneable {
 	public String getSource() {
 		return getAsString("source");
 	}
-	
+
 	/**
 	 * Sets the source.
 	 * 
-	 * @param source the source to set
+	 * @param source
+	 *            the source to set
 	 */
 	public void setSource(String source) {
 		set("source", source);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public Support clone() {

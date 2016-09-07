@@ -32,55 +32,50 @@ import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.api.ComposerPackage;
 
 /**
- * Represents a package inside installed(_dev).json. This class is used to handle
- * the BuildpathContainerEntry of the experimental feature which copies installed
- * packages to a temporary to increase indexing performance by sharing the index
- * of the same package/version combination over several projects.
+ * Represents a package inside installed(_dev).json. This class is used to
+ * handle the BuildpathContainerEntry of the experimental feature which copies
+ * installed packages to a temporary to increase indexing performance by sharing
+ * the index of the same package/version combination over several projects.
  * 
  * This is deprecated and will be refactored to extend the Java-Bindings API
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
 @Deprecated
-public class InstalledPackage extends ComposerPackage
-{
-    private IPath path;
-    private File localFile;
-    
-    public String name;
-    public String version;
-    public String version_normalized;
-    public String project;
-    public boolean isDev;
-    public Map<String, String> require;
-    public Map<String, String> requireDev;
-    public Map<String, String> suggest;
-    public String targetDir;
-    
-    
-    public IPath getPath()
-    {
-        if (path == null) {
-            path = new Path(name);
-        }
-        return path;
-    }
+public class InstalledPackage extends ComposerPackage {
+	private IPath path;
+	private File localFile;
 
-    public File getLocalFile()
-    {
-        if (localFile == null) {
-            IPath location = ComposerPlugin.getDefault().getStateLocation();
-            IPath localPath = location.append("packages").append(getPath())
-                    .append(version);
-            localFile = localPath.toFile();
-            
-            Logger.debug("Retrieving local filepath for " + name + ":");
-            Logger.debug(localFile.getAbsolutePath());
-        }
+	public String name;
+	public String version;
+	public String version_normalized;
+	public String project;
+	public boolean isDev;
+	public Map<String, String> require;
+	public Map<String, String> requireDev;
+	public Map<String, String> suggest;
+	public String targetDir;
 
-        return localFile;
+	public IPath getPath() {
+		if (path == null) {
+			path = new Path(name);
+		}
+		return path;
+	}
 
-    }
+	public File getLocalFile() {
+		if (localFile == null) {
+			IPath location = ComposerPlugin.getDefault().getStateLocation();
+			IPath localPath = location.append("packages").append(getPath()).append(version);
+			localFile = localPath.toFile();
+
+			Logger.debug("Retrieving local filepath for " + name + ":");
+			Logger.debug(localFile.getAbsolutePath());
+		}
+
+		return localFile;
+
+	}
 
 	public boolean isLocalVersionAvailable() {
 
@@ -91,50 +86,38 @@ public class InstalledPackage extends ComposerPackage
 		return getLocalFile().list() != null && getLocalFile().list().length > 0;
 	}
 
-    public static List<InstalledPackage> deserialize(InputStream input)
-            throws IOException
-    {
-    	List<InstalledPackage> pkgs = new ArrayList<InstalledPackage>();
-        return pkgs;
-    }
+	public static List<InstalledPackage> deserialize(InputStream input) throws IOException {
+		List<InstalledPackage> pkgs = new ArrayList<InstalledPackage>();
+		return pkgs;
+	}
 
-    public static List<InstalledPackage> deserialize(String propertyValue)
-            throws IOException
-    {
-        return deserialize(new ByteArrayInputStream(propertyValue.getBytes()));
-    }
+	public static List<InstalledPackage> deserialize(String propertyValue) throws IOException {
+		return deserialize(new ByteArrayInputStream(propertyValue.getBytes()));
+	}
 
-    public IBuildpathEntry getBuildpathEntry()
-    {
-        IPath libPath = Path.fromOSString(getLocalFile().getAbsolutePath())
-                .makeAbsolute();
+	public IBuildpathEntry getBuildpathEntry() {
+		IPath libPath = Path.fromOSString(getLocalFile().getAbsolutePath()).makeAbsolute();
 
-        IPath fullPath = EnvironmentPathUtils.getFullPath(
-                EnvironmentManager.getLocalEnvironment(), libPath);
+		IPath fullPath = EnvironmentPathUtils.getFullPath(EnvironmentManager.getLocalEnvironment(), libPath);
 
-        IPath[] excludes = new IPath[]{new Path(".git/")/*
-                                                         * , new Path("docs/"),
-                                                         * new Path("tests/")
-                                                         */};
-        return DLTKCore
-                .newLibraryEntry(fullPath, new IAccessRule[0],
-                        new IBuildpathAttribute[0], new IPath[0], excludes,
-                        false, true);
-    }
+		IPath[] excludes = new IPath[] {
+				new Path(".git/")/*
+									 * , new Path("docs/"), new Path("tests/")
+									 */ };
+		return DLTKCore.newLibraryEntry(fullPath, new IAccessRule[0], new IBuildpathAttribute[0], new IPath[0],
+				excludes, false, true);
+	}
 
-    public boolean isRequiredBy(InstalledPackage dependency)
-    {
-        return dependency.requires(this);
+	public boolean isRequiredBy(InstalledPackage dependency) {
+		return dependency.requires(this);
 
-    }
+	}
 
-    public boolean requires(InstalledPackage dependency)
-    {
-        return require != null && require.containsKey(dependency.name);
-    }
-    
-    public String getFullName()
-    {
-        return String.format("%s (%s)", name, version);
-    }
+	public boolean requires(InstalledPackage dependency) {
+		return require != null && require.containsKey(dependency.name);
+	}
+
+	public String getFullName() {
+		return String.format("%s (%s)", name, version);
+	}
 }

@@ -31,14 +31,17 @@ public class Validator extends AbstractValidator {
 
 	@Override
 	protected void beginValidation() throws ValidationException {
-		
+
 		IPath fileLocation = firstPage.PHPLocationGroup.getLocation();
 		if (fileLocation.toPortableString().length() > 0) {
 			final IFileHandle directory = environment.getFile(fileLocation);
 			IPath futurepath = directory.getPath().append(firstPage.nameGroup.getName());
 			File futureFile = futurepath.toFile();
-			if ((futureFile.exists() && futureFile.isFile()) || (futureFile.exists() && futureFile.isDirectory() && futureFile.list().length > 0)) {
-				throw new ValidationException("The target directory is not empty. Unable to run \"create-project\" with a target directory containing files.", Severity.ERROR);
+			if ((futureFile.exists() && futureFile.isFile())
+					|| (futureFile.exists() && futureFile.isDirectory() && futureFile.list().length > 0)) {
+				throw new ValidationException(
+						"The target directory is not empty. Unable to run \"create-project\" with a target directory containing files.",
+						Severity.ERROR);
 			}
 		}
 	}

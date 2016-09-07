@@ -40,118 +40,101 @@ import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserve
  *
  */
 @SuppressWarnings("restriction")
-public class ComposerBuildpathContainerInitializer extends
-        BuildpathContainerInitializer
-{
-    
-    public static final String CONTAINER = ComposerPlugin.ID + ".CONTAINER"; //$NON-NLS-1$
-    
-    private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
+public class ComposerBuildpathContainerInitializer extends BuildpathContainerInitializer {
 
-    @Override
-    public void initialize(IPath containerPath, IScriptProject scriptProject)
-            throws CoreException
-    {
-        if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER) && ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
-            try {
-                if (isPHPProject(scriptProject)) {
-                    DLTKCore
-                            .setBuildpathContainer(
-                                    containerPath,
-                                    new IScriptProject[] { scriptProject },
-                                    new IBuildpathContainer[] { new ComposerBuildpathContainer(containerPath, scriptProject) },
-                                    null);
-                    initializeListener(containerPath, scriptProject);
-                }
-            } catch (Exception e) {
-                Logger.logException(e);
-            }
-        }
-    }
-    
-    private void initializeListener(final IPath containerPath,
-            final IScriptProject scriptProject) {
-        final IProject project = scriptProject.getProject();
-        if (project2PhpVerListener.containsKey(project)) {
-            return;
-        }
-        IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
-            public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-                try {
-                    // Re-initialize when PHP version changes
-                    initialize(containerPath, scriptProject);
-                } catch (CoreException e) {
-                    Logger.logException(e);
-                }
-            }
+	public static final String CONTAINER = ComposerPlugin.ID + ".CONTAINER"; //$NON-NLS-1$
 
-            public IProject getProject() {
-                return project;
-            }
-        };
+	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
 
-        project2PhpVerListener.put(project, versionChangeListener);
-        PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(
-                versionChangeListener);
+	@Override
+	public void initialize(IPath containerPath, IScriptProject scriptProject) throws CoreException {
+		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER)
+				&& ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
+			try {
+				if (isPHPProject(scriptProject)) {
+					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { scriptProject },
+							new IBuildpathContainer[] { new ComposerBuildpathContainer(containerPath, scriptProject) },
+							null);
+					initializeListener(containerPath, scriptProject);
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+		}
+	}
 
-        ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(
-                project, new IProjectClosedObserver() {
-                    public void closed() {
-                        PhpVersionChangedHandler.getInstance()
-                                .removePhpVersionChangedListener(
-                                        project2PhpVerListener.remove(project));
-                    }
-                });
-    }    
-    
-    private static boolean isPHPProject(IScriptProject project) {
-        String nature = getNatureFromProject(project);
-        return PHPNature.ID.equals(nature);
-    }
-    
-    private static String getNatureFromProject(IScriptProject project) {
-        IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
-                .getLanguageToolkit(project);
-        if (languageToolkit != null) {
-            return languageToolkit.getNatureId();
-        }
-        return null;
-    }
-    
-    public void requestBuildpathContainerUpdate(IPath containerPath,
-            IScriptProject project, IBuildpathContainer containerSuggestion)
-    {
-        
-        if (isComposerContainer(containerPath)) {
-            String name = containerPath.segment(1);
-            if (containerSuggestion != null) {
-                
-                PackageManager manager = ModelAccess.getInstance().getPackageManager();
-                
-                if (manager.getPackage(name) == null) {
-                    return;
-                }
-                
-                manager.setPackage(
-                                name,
-                                containerSuggestion.getBuildpathEntries(),
-                                containerSuggestion.getKind() == IBuildpathContainer.K_SYSTEM);
-            } else {
-                ModelAccess.getInstance().getPackageManager().removePackage(name);
-            }
-        }        
+	private void initializeListener(final IPath containerPath, final IScriptProject scriptProject) {
+		final IProject project = scriptProject.getProject();
+		if (project2PhpVerListener.containsKey(project)) {
+			return;
+		}
+		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
+			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+				try {
+					// Re-initialize when PHP version changes
+					initialize(containerPath, scriptProject);
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
 
-    }
+			public IProject getProject() {
+				return project;
+			}
+		};
 
-    private boolean isComposerContainer(IPath path)
-    {
-        return path != null && CONTAINER.equals(path.segment(0));        
-    }
+		project2PhpVerListener.put(project, versionChangeListener);
+		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(versionChangeListener);
 
-    @Override
-    public boolean canUpdateBuildpathContainer(IPath containerPath,
-            IScriptProject project)
-    {
-        return isComposerContainer(containerPath);
-    }
+		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
+			public void closed() {
+				PhpVersionChangedHandler.getInstance()
+						.removePhpVersionChangedListener(project2PhpVerListener.remove(project));
+			}
+		});
+	}
+
+	private static boolean isPHPProject(IScriptProject project) {
+		String nature = getNatureFromProject(project);
+		return PHPNature.ID.equals(nature);
+	}
+
+	private static String getNatureFromProject(IScriptProject project) {
+		IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
+		if (languageToolkit != null) {
+			return languageToolkit.getNatureId();
+		}
+		return null;
+	}
+
+	public void requestBuildpathContainerUpdate(IPath containerPath, IScriptProject project,
+			IBuildpathContainer containerSuggestion) {
+
+		if (isComposerContainer(containerPath)) {
+			String name = containerPath.segment(1);
+			if (containerSuggestion != null) {
+
+				PackageManager manager = ModelAccess.getInstance().getPackageManager();
+
+				if (manager.getPackage(name) == null) {
+					return;
+				}
+
+				manager.setPackage(name, containerSuggestion.getBuildpathEntries(),
+						containerSuggestion.getKind() == IBuildpathContainer.K_SYSTEM);
+			} else {
+				ModelAccess.getInstance().getPackageManager().removePackage(name);
+			}
+		}
+
+	}
+
+	private boolean isComposerContainer(IPath path) {
+		return path != null && CONTAINER.equals(path.segment(0));
+	}
+
+	@Override
+	public boolean canUpdateBuildpathContainer(IPath containerPath, IScriptProject project) {
+		return isComposerContainer(containerPath);
+	}
 }

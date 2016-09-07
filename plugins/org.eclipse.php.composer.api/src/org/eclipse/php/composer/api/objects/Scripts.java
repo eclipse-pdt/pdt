@@ -31,89 +31,105 @@ public class Scripts extends JsonObject {
 	protected void doParse(Object obj) {
 		if (obj instanceof LinkedHashMap) {
 
-			LinkedHashMap json = (LinkedHashMap)obj;
+			LinkedHashMap json = (LinkedHashMap) obj;
 
 			for (String event : getEvents()) {
 				parseScripts(json, event);
 			}
 		}
 	}
-	
+
 	public static String[] getEvents() {
-		return new String[] {
-				"pre-install-cmd", "post-install-cmd", 
-				"pre-update-cmd", "post-update-cmd",
-				"pre-package-install", "post-package-install", 
-				"pre-package-update", "post-package-update", 
-				"pre-package-uninstall", "post-package-uninstall"};
+		return new String[] { "pre-install-cmd", "post-install-cmd", "pre-update-cmd", "post-update-cmd",
+				"pre-package-install", "post-package-install", "pre-package-update", "post-package-update",
+				"pre-package-uninstall", "post-package-uninstall" };
 	}
-	
+
 	@Override
 	protected List<String> getOwnProperties() {
 		List<String> list = new ArrayList<String>(Arrays.asList(getEvents()));
 		list.addAll(super.getOwnProperties());
 		return list;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private void parseScripts(LinkedHashMap json, String property) {
 		if (json.containsKey(property)) {
 			JsonArray values;
 			Object value = json.get(property);
-			
+
 			if (value instanceof LinkedList) {
 				values = new JsonArray(value);
 			} else {
 				values = new JsonArray();
 				values.add(value);
 			}
-			
+
 			set(property, values);
 			json.remove(property);
 		}
 	}
-	
-	
+
 	/**
-	 * Gets scripts that will occur before the 
-	 * <pre>install</pre> command is executed.
+	 * Gets scripts that will occur before the
+	 * 
+	 * <pre>
+	 * install
+	 * </pre>
+	 * 
+	 * command is executed.
 	 * 
 	 * @return the scripts
 	 */
 	public JsonArray getPreInstallCmd() {
 		return getAsArray("pre-install-cmd");
 	}
-	
+
 	/**
-	 * Gets scripts that will occur after the 
-	 * <pre>install</pre> command is executed.
+	 * Gets scripts that will occur after the
+	 * 
+	 * <pre>
+	 * install
+	 * </pre>
+	 * 
+	 * command is executed.
 	 * 
 	 * @return the scripts
 	 */
 	public JsonArray getPostInstallCmd() {
 		return getAsArray("post-install-cmd");
 	}
-	
+
 	/**
-	 * Gets scripts that will occur before the 
-	 * <pre>update</pre> command is executed.
+	 * Gets scripts that will occur before the
+	 * 
+	 * <pre>
+	 * update
+	 * </pre>
+	 * 
+	 * command is executed.
 	 * 
 	 * @return the scripts
 	 */
 	public JsonArray getPreUpdateCmd() {
 		return getAsArray("pre-update-cmd");
 	}
-	
+
 	/**
-	 * Gets scripts that will occur after the 
-	 * <pre>update</pre> command is executed.
+	 * Gets scripts that will occur after the
+	 * 
+	 * <pre>
+	 * update
+	 * </pre>
+	 * 
+	 * command is executed.
 	 * 
 	 * @return the scripts
 	 */
 	public JsonArray getPostUpdateCmd() {
 		return getAsArray("post-update-cmd");
 	}
-	
+
 	/**
 	 * Gets scripts that will occur before a package is installed.
 	 * 
@@ -122,7 +138,7 @@ public class Scripts extends JsonObject {
 	public JsonArray getPrePackageInstall() {
 		return getAsArray("pre-package-install");
 	}
-	
+
 	/**
 	 * Gets scripts that will occur after a package is installed.
 	 * 
@@ -131,7 +147,7 @@ public class Scripts extends JsonObject {
 	public JsonArray getPostPackageInstall() {
 		return getAsArray("post-package-install");
 	}
-	
+
 	/**
 	 * Gets scripts that will occur before a package is updateed.
 	 * 
@@ -140,7 +156,7 @@ public class Scripts extends JsonObject {
 	public JsonArray getPrePackageUpdate() {
 		return getAsArray("pre-package-update");
 	}
-	
+
 	/**
 	 * Gets scripts that will occur after a package is updateed.
 	 * 
@@ -149,7 +165,7 @@ public class Scripts extends JsonObject {
 	public JsonArray getPostPackageUpdate() {
 		return getAsArray("post-package-update");
 	}
-	
+
 	/**
 	 * Gets scripts that will occur before a package is uninstalled.
 	 * 
@@ -158,7 +174,7 @@ public class Scripts extends JsonObject {
 	public JsonArray getPrePackageUninstall() {
 		return getAsArray("pre-package-uninstall");
 	}
-	
+
 	/**
 	 * Gets scripts that will occur after a package is uninstalled.
 	 * 

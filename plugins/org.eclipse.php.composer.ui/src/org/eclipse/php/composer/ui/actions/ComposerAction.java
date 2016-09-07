@@ -26,7 +26,7 @@ abstract public class ComposerAction extends Action {
 	protected Command command;
 	protected IProject project;
 	protected IWorkbenchPartSite site;
-	
+
 	public ComposerAction(IProject project, IWorkbenchPartSite site, String commandId) {
 		this.project = project;
 		this.site = site;
@@ -42,13 +42,13 @@ abstract public class ComposerAction extends Action {
 			return null;
 		}
 	}
-	
+
 	protected void ensureSaved() {
 		ComposerFormEditor editor = null;
 		IEditorPart part = site.getPage().getActiveEditor();
-		
+
 		if (part instanceof ComposerFormEditor) {
-			editor = (ComposerFormEditor)part;
+			editor = (ComposerFormEditor) part;
 		}
 
 		if (editor != null && editor.isDirty()) {

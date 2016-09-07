@@ -17,7 +17,7 @@ import org.eclipse.php.composer.api.ComposerPackage;
 public abstract class ComposerConverter extends Converter {
 
 	protected ComposerPackage composerPackage;
-	
+
 	public ComposerConverter(Object fromType, Object toType) {
 		super(fromType, toType);
 	}
@@ -30,12 +30,13 @@ public abstract class ComposerConverter extends Converter {
 	}
 
 	/**
-	 * @param composerPackage the composerPackage to set
+	 * @param composerPackage
+	 *            the composerPackage to set
 	 */
 	public void setComposerPackage(ComposerPackage composerPackage) {
 		this.composerPackage = composerPackage;
 		composerPackageUpdated();
 	}
-	
+
 	protected abstract void composerPackageUpdated();
 }

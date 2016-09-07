@@ -50,11 +50,11 @@ import org.eclipse.php.composer.api.objects.Person;
 public class AuthorSection extends TableSection implements PropertyChangeListener {
 
 	private TableViewer authorViewer;
-	
+
 	private IAction addAction;
 	private IAction editAction;
 	private IAction removeAction;
-	
+
 	private static final int ADD_INDEX = 0;
 	private static final int EDIT_INDEX = 1;
 	private static final int REMOVE_INDEX = 2;
@@ -65,44 +65,43 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		private Image authorImage = ComposerUIPluginImages.PERSON.createImage();
 
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			authors = (Persons)newInput;
+			authors = (Persons) newInput;
 		}
 
 		public Object[] getElements(Object inputElement) {
 			return authors.toArray();
 		}
-		
+
 		public void update(ViewerCell cell) {
 			Object obj = cell.getElement();
-			
+
 			if (obj instanceof Person) {
-				Person author = (Person)obj;
-				
+				Person author = (Person) obj;
+
 				StyledString styledString = new StyledString(author.getName());
-				
+
 				if (author.getEmail() != null && !author.getEmail().trim().equals("")) {
 					styledString.append(" <" + author.getEmail().trim() + ">", StyledString.COUNTER_STYLER);
 				}
-				
+
 				if (author.getHomepage() != null && !author.getHomepage().trim().equals("")) {
 					styledString.append(" - " + author.getHomepage().trim(), StyledString.DECORATIONS_STYLER);
 				}
-				
+
 				cell.setText(styledString.toString());
 				cell.setStyleRanges(styledString.getStyleRanges());
-				
+
 				cell.setImage(authorImage);
-				
+
 				super.update(cell);
 			}
 		}
 	}
-	
+
 	public AuthorSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[]{"Add...", "Edit...", "Remove"});
-//		createClient(getSection(), page.getManagedForm().getToolkit());
+		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
+		// createClient(getSection(), page.getManagedForm().getToolkit());
 	}
-	
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
@@ -117,7 +116,7 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		authorViewer = tablePart.getTableViewer();
 		authorViewer.setContentProvider(authorController);
 		authorViewer.setLabelProvider(authorController);
-		
+
 		toolkit.paintBordersFor(container);
 		section.setClient(container);
 		section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
@@ -125,36 +124,36 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		authorViewer.setInput(composerPackage.getAuthors());
 		composerPackage.addPropertyChangeListener(this);
 		updateButtons();
-		
+
 		makeActions();
 		updateMenu();
 	}
-	
+
 	protected boolean createCount() {
 		return true;
 	}
-	
+
 	private void updateButtons() {
 		ISelection selection = authorViewer.getSelection();
-		
+
 		TablePart tablePart = getTablePart();
 		tablePart.setButtonEnabled(ADD_INDEX, enabled);
 		tablePart.setButtonEnabled(EDIT_INDEX, !selection.isEmpty() && enabled);
 		tablePart.setButtonEnabled(REMOVE_INDEX, !selection.isEmpty() && enabled);
 	}
-	
+
 	private void updateMenu() {
-		IStructuredSelection selection = (IStructuredSelection)authorViewer.getSelection();
-		
+		IStructuredSelection selection = (IStructuredSelection) authorViewer.getSelection();
+
 		editAction.setEnabled(selection.size() > 0);
 		removeAction.setEnabled(selection.size() > 0);
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		updateButtons();
-		
+
 		refresh();
 		authorViewer.getTable().setEnabled(enabled);
 	}
@@ -167,42 +166,42 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().startsWith("authors")) {
-//			refresh();
+			// refresh();
 		}
 	}
-	
+
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
 	}
-	
+
 	private void makeActions() {
 		addAction = new Action("Add...") {
 			public void run() {
 				handleAdd();
 			}
 		};
-		
+
 		editAction = new Action("Edit...") {
 			public void run() {
 				handleEdit();
 			}
 		};
-		
+
 		removeAction = new Action("Remove") {
 			public void run() {
 				handleRemove();
 			}
 		};
 	}
-	
+
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(addAction);
 		manager.add(editAction);
 		manager.add(removeAction);
 	}
-	
+
 	private void handleAdd() {
 		PersonDialog diag = new PersonDialog(authorViewer.getTable().getShell(), new Person());
 		if (diag.open() == Dialog.OK) {
@@ -210,9 +209,9 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 			refresh();
 		}
 	}
-	
+
 	private void handleEdit() {
-		Person author = (Person)((StructuredSelection)authorViewer.getSelection()).getFirstElement();
+		Person author = (Person) ((StructuredSelection) authorViewer.getSelection()).getFirstElement();
 		PersonDialog diag = new PersonDialog(authorViewer.getTable().getShell(), author.clone());
 		if (diag.open() == Dialog.OK) {
 			author.setName(diag.getPerson().getName());
@@ -221,47 +220,43 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 			author.setRole(diag.getPerson().getRole());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void handleRemove() {
-		StructuredSelection selection = ((StructuredSelection)authorViewer.getSelection());
+		StructuredSelection selection = ((StructuredSelection) authorViewer.getSelection());
 		Iterator<Object> it = selection.iterator();
 		String[] names = new String[selection.size()];
 		List<Person> persons = new ArrayList<Person>();
 
 		for (int i = 0; it.hasNext(); i++) {
-			Person person = (Person)it.next();
+			Person person = (Person) it.next();
 			persons.add(person);
 			names[i] = person.getName();
 		}
 
-		MessageDialog diag = new MessageDialog(
-				authorViewer.getTable().getShell(), 
-				"Remove Author" + (selection.size() > 1 ? "s" : ""), 
-				null, 
-				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", 
-				MessageDialog.WARNING,
-				new String[] {"Yes", "No"},
-				0);
-		
+		MessageDialog diag = new MessageDialog(authorViewer.getTable().getShell(),
+				"Remove Author" + (selection.size() > 1 ? "s" : ""), null,
+				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", MessageDialog.WARNING,
+				new String[] { "Yes", "No" }, 0);
+
 		if (diag.open() == Dialog.OK) {
 			for (Person person : persons) {
 				composerPackage.getAuthors().remove(person);
 			}
 		}
 	}
-	
+
 	@Override
 	protected void buttonSelected(int index) {
 		switch (index) {
 		case ADD_INDEX:
 			handleAdd();
 			break;
-			
+
 		case EDIT_INDEX:
 			handleEdit();
 			break;
-			
+
 		case REMOVE_INDEX:
 			handleRemove();
 			break;

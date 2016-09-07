@@ -23,31 +23,32 @@ import org.eclipse.php.composer.api.json.ParseException;
 /**
  * A collection to manage multiple composer packages.
  * 
- * Can be parsed from e.g. composer/installed.json or composer/installed_dev.json file
+ * Can be parsed from e.g. composer/installed.json or
+ * composer/installed_dev.json file
  * 
  * @author Thomas Gossmann <gos.si>
  */
 public class ComposerPackages extends AbstractJsonArray<ComposerPackage> {
-	
+
 	public ComposerPackages() {
 	}
-	
+
 	public ComposerPackages(Object json) {
 		fromJson(json);
 	}
-	
+
 	public ComposerPackages(String json) throws ParseException {
 		fromJson(json);
 	}
-	
+
 	public ComposerPackages(File file) throws IOException, ParseException {
 		fromJson(file);
 	}
-	
+
 	public ComposerPackages(Reader reader) throws IOException, ParseException {
 		fromJson(reader);
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();
@@ -62,19 +63,19 @@ public class ComposerPackages extends AbstractJsonArray<ComposerPackage> {
 			}
 		}
 	}
-	
+
 	public void addAll(ComposerPackages packages) {
 		for (ComposerPackage pkg : packages) {
 			add(pkg);
 		}
 	}
-	
+
 	public void removeAll(ComposerPackages packages) {
 		for (ComposerPackage pkg : packages) {
 			remove(pkg);
 		}
 	}
-	
+
 	public boolean has(String name) {
 		for (ComposerPackage pkg : values) {
 			if (pkg.getName().equals(name)) {

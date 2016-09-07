@@ -33,22 +33,21 @@ public class ComboFormEntry {
 	private Label label;
 	private ComboPart combo;
 	private boolean ignoreNotify = false;
-	
+
 	private ArrayList<IComboFormEntryListener> listeners = new ArrayList<IComboFormEntryListener>();
-	
+
 	public ComboFormEntry(Composite parent, FormToolkit toolkit, String labelText) {
 		this(parent, toolkit, labelText, SWT.FLAT);
 	}
-	
+
 	public ComboFormEntry(Composite parent, FormToolkit toolkit, String labelText, int style) {
 		createControl(parent, toolkit, labelText, style);
 	}
-	
 
 	public Label getLabel() {
 		return label;
 	}
-	
+
 	public ComboPart getComboPart() {
 		return combo;
 	}
@@ -56,21 +55,21 @@ public class ComboFormEntry {
 	public String getValue() {
 		return combo.getSelection();
 	}
-	
+
 	public void setValue(String value) {
 		combo.setText(value);
 	}
-	
+
 	public void setValue(String value, boolean ignoreNotify) {
 		this.ignoreNotify = ignoreNotify;
 		setValue(value);
 		this.ignoreNotify = false;
 	}
-	
+
 	public void setEditable(boolean editable) {
 		combo.setEnabled(editable);
 	}
-	
+
 	/**
 	 * Attaches the listener for the entry.
 	 * 
@@ -79,7 +78,6 @@ public class ComboFormEntry {
 	public void addComboFormEntryListener(IComboFormEntryListener listener) {
 		listeners.add(listener);
 	}
-	
 
 	/**
 	 * Detaches the listener for the entry.
@@ -95,45 +93,46 @@ public class ComboFormEntry {
 			label = toolkit.createLabel(parent, labelText);
 			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		}
-		
+
 		combo = new ComboPart();
 		combo.createControl(parent, toolkit, style);
-		
+
 		addListener();
 		fillIntoGrid(parent);
 	}
-	
+
 	private void addListener() {
 		combo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (ignoreNotify) 
+				if (ignoreNotify)
 					return;
-				
+
 				for (IComboFormEntryListener listener : listeners) {
 					listener.textValueChanged(ComboFormEntry.this);
 				}
 			}
 		});
-		
+
 		combo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				if (ignoreNotify) 
+				if (ignoreNotify)
 					return;
-				
+
 				for (IComboFormEntryListener listener : listeners) {
 					listener.selectionChanged(ComboFormEntry.this);
 				}
 			}
-			
-			public void widgetDefaultSelected(SelectionEvent e) {}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
 		});
 	}
-	
+
 	private void fillIntoGrid(Composite parent) {
 		Layout layout = parent.getLayout();
 		if (layout instanceof GridLayout) {
 			int span = ((GridLayout) layout).numColumns;
-			
+
 			GridData gd;
 			if (label != null) {
 				gd = new GridData(GridData.VERTICAL_ALIGN_CENTER);

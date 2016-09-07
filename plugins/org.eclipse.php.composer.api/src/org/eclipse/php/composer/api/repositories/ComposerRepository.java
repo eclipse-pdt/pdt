@@ -28,15 +28,15 @@ public class ComposerRepository extends Repository implements Cloneable {
 
 	private Map<String, Versions> packages;
 	private JsonObject options = new JsonObject();
-	
+
 	public ComposerRepository() {
 		super("composer");
 		listen();
 	}
-	
+
 	@Override
 	protected List<String> getOwnProperties() {
-		String[] props = new String[]{"options"};
+		String[] props = new String[] { "options" };
 		List<String> list = new ArrayList<String>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
@@ -48,7 +48,7 @@ public class ComposerRepository extends Repository implements Cloneable {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the options entity
 	 * 
@@ -57,9 +57,10 @@ public class ComposerRepository extends Repository implements Cloneable {
 	public JsonObject getOptions() {
 		return options;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public ComposerRepository clone() {

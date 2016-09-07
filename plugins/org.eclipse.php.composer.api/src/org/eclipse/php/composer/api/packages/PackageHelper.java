@@ -20,14 +20,14 @@ import org.eclipse.php.composer.api.json.ParseException;
 import org.eclipse.php.composer.api.repositories.PackageRepository;
 
 class PackageHelper {
-	
+
 	static RepositoryPackage getPackage(InputStream resource) throws Exception {
 		InputStreamReader reader = new InputStreamReader(resource);
 
 		PackageRepository repo = new PackageRepository(reader);
 		return repo.getPackage();
 	}
-	
+
 	static SearchResult getSearchResult(InputStream resource) {
 		InputStreamReader reader = new InputStreamReader(resource);
 
@@ -39,7 +39,7 @@ class PackageHelper {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		return new SearchResult(new Object());
 	}
 }

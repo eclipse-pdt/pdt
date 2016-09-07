@@ -57,7 +57,8 @@ public class MissingExecutableDialog extends ErrorDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					PreferenceDialog preferenceDialog = PreferencesUtil.createPreferenceDialogOn(shell, PHPsPreferencePage.ID, new String[] {}, null);
+					PreferenceDialog preferenceDialog = PreferencesUtil.createPreferenceDialogOn(shell,
+							PHPsPreferencePage.ID, new String[] {}, null);
 					preferenceDialog.open();
 					MissingExecutableDialog.this.close();
 				} catch (Exception e2) {
@@ -65,7 +66,8 @@ public class MissingExecutableDialog extends ErrorDialog {
 				}
 			}
 		});
-		link.setText("You need to <a>configure a PHP executable</a> in your preferences in order \nfor the Composer plugin to be able to run composer.");
+		link.setText(
+				"You need to <a>configure a PHP executable</a> in your preferences in order \nfor the Composer plugin to be able to run composer.");
 		link.setToolTipText("Open the PHP preference page to configure the available PHP executables");
 		Dialog.applyDialogFont(link);
 

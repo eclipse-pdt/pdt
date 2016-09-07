@@ -26,8 +26,8 @@ public class License2StringConverter extends Converter {
 		if (fromObject == null) {
 			return "";
 		}
-		License licenses = (License)fromObject;
-		return StringUtils.join((String[])licenses.toArray(new String[]{}), ", ");
+		License licenses = (License) fromObject;
+		return StringUtils.join((String[]) licenses.toArray(new String[] {}), ", ");
 	}
 
 }

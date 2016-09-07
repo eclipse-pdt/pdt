@@ -12,14 +12,13 @@ package org.eclipse.php.composer.api.packages;
 
 import org.eclipse.php.composer.api.ComposerConstants;
 
-
 public class AsyncPharDownloader extends AsyncDownloadClient {
 
 	public AsyncPharDownloader() {
 		super();
 		downloader.setUrl(ComposerConstants.PHAR_URL);
 	}
-	
+
 	public void addDownloadListener(DownloadListenerInterface listener) {
 		downloader.addDownloadListener(listener);
 	}

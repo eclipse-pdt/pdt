@@ -37,23 +37,23 @@ public class ComposerJobFailureDialog extends ErrorDialog {
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Composer problem", message, status,
 				IStatus.ERROR | IStatus.OK);
 	}
-	
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite main = (Composite) super.createDialogArea(parent);
 
-			Composite space = new Composite(main, SWT.NONE);
-			GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-			gridData.heightHint = 1;
-			gridData.widthHint = 1;
-			space.setLayoutData(gridData);
-			
-			Link link = createShowErrorLogLink(main);
-			link.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		
+		Composite space = new Composite(main, SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false);
+		gridData.heightHint = 1;
+		gridData.widthHint = 1;
+		space.setLayoutData(gridData);
+
+		Link link = createShowErrorLogLink(main);
+		link.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+
 		return main;
-	}	
-	
+	}
+
 	protected Control createMessageArea(Composite composite) {
 		// create composite
 		// create image
@@ -62,28 +62,22 @@ public class ComposerJobFailureDialog extends ErrorDialog {
 			imageLabel = new Label(composite, SWT.NULL);
 			image.setBackground(imageLabel.getBackground());
 			imageLabel.setImage(image);
-			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
-					.applyTo(imageLabel);
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
 		}
 		// create message
 		if (message != null) {
 			messageLabel = new Label(composite, getMessageLabelStyle());
 			messageLabel.setText("Composer exited with an error");
-			GridDataFactory
-					.fillDefaults()
-					.align(SWT.FILL, SWT.BEGINNING)
-					.grab(true, false)
-					.hint(
-							convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
-							SWT.DEFAULT).applyTo(messageLabel);
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false)
+					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
+					.applyTo(messageLabel);
 		}
 		return composite;
 	}
-	
-	
+
 	private Link createShowErrorLogLink(Composite parent) {
 		Link link = new Link(parent, SWT.NONE);
-		link.addSelectionListener(new SelectionAdapter(){
+		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
@@ -97,5 +91,5 @@ public class ComposerJobFailureDialog extends ErrorDialog {
 		link.setToolTipText(WorkbenchMessages.ErrorLogUtil_ShowErrorLogTooltip);
 		Dialog.applyDialogFont(link);
 		return link;
-	}	
+	}
 }

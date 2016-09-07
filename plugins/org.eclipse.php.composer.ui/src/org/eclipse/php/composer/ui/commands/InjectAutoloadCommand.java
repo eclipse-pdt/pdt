@@ -38,8 +38,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.php.composer.api.ComposerConstants;
 
 /**
- * Injects the statement "require_once __DIR__ '../../<vendor-dir>/autoload.php'" into
- * the current cursor position with the correct path to the autoload.php file.
+ * Injects the statement "require_once __DIR__
+ * '../../<vendor-dir>/autoload.php'" into the current cursor position with the
+ * correct path to the autoload.php file.
  * 
  */
 public class InjectAutoloadCommand extends AbstractHandler {
@@ -65,7 +66,7 @@ public class InjectAutoloadCommand extends AbstractHandler {
 		IComposerProject composerProject = getComposerProject(project);
 		String vendorDir = composerProject.getVendorDir();
 		String vendor = vendorDir != null ? vendorDir : ComposerConstants.VENDOR_DIR_DEFAULT;
-		
+
 		IFile autoload = project.getFile(vendor + "/autoload.php");
 		if (autoload == null || autoload.exists() == false) {
 			return null;
@@ -73,17 +74,17 @@ public class InjectAutoloadCommand extends AbstractHandler {
 
 		IPath autoloadPath = autoload.getFullPath();
 		IPath relativeTo = autoloadPath.makeRelativeTo(filePath);
-		
+
 		if (relativeTo == null || relativeTo.segmentCount() <= 1) {
 			return null;
 		}
-		
+
 		relativeTo = relativeTo.removeFirstSegments(1);
 		insertText("require_once __DIR__ . '/" + relativeTo.toString() + "';");
 
 		return null;
 	}
-	
+
 	protected IComposerProject getComposerProject(IProject project) {
 		IComposerProject composerProject = null;
 		composerProject = ComposerPlugin.getDefault().getComposerProject(project);
@@ -91,12 +92,10 @@ public class InjectAutoloadCommand extends AbstractHandler {
 	}
 
 	protected IScriptProject getProject() {
-		IEditorPart editorPart = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
 		if (editorPart != null) {
-			IFileEditorInput input = (IFileEditorInput) editorPart
-					.getEditorInput();
+			IFileEditorInput input = (IFileEditorInput) editorPart.getEditorInput();
 			IFile file = input.getFile();
 			IProject activeProject = file.getProject();
 			return DLTKCore.create(activeProject);
@@ -124,8 +123,7 @@ public class InjectAutoloadCommand extends AbstractHandler {
 	}
 
 	protected void insertText(String text) {
-		IEditorPart editor = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
 		if (editor instanceof MultiPageEditorPart) {
 			MultiPageEditorPart multiEditor = (MultiPageEditorPart) editor;

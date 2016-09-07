@@ -45,8 +45,7 @@ public class Logger {
 	 *            exception thrown
 	 */
 	protected static void _log(int level, String message, Throwable exception) {
-		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG
-				|| level == ERROR_DEBUG) {
+		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG || level == ERROR_DEBUG) {
 			if (!isDebugging())
 				return;
 		}
@@ -66,8 +65,7 @@ public class Logger {
 			severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
-		Status statusObj = new Status(severity, PLUGIN_ID, severity, message,
-				exception);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)
 			Platform.getLog(bundle).log(statusObj);
@@ -84,8 +82,7 @@ public class Logger {
 	 *            category of the message, to be compared with
 	 *            /debug/tracefilter
 	 */
-	protected static void _trace(String category, String message,
-			Throwable exception) {
+	protected static void _trace(String category, String message, Throwable exception) {
 		// debug TODO: remove the next line
 		if (exception != null) {
 			exception.printStackTrace();
@@ -93,8 +90,7 @@ public class Logger {
 
 		if (isTracing(category)) {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
-			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK,
-					message, exception);
+			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
 			Bundle bundle = Platform.getBundle(PLUGIN_ID);
 			if (bundle != null)
 				Platform.getLog(bundle).log(statusObj);
@@ -118,17 +114,17 @@ public class Logger {
 		if (!isDebugging())
 			return false;
 
-		String traceFilter = Platform.getDebugOption(PLUGIN_ID
-				+ TRACEFILTER_LOCATION);
+		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			return true;
-//			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
-//			while (tokenizer.hasMoreTokens()) {
-//				String cat = tokenizer.nextToken().trim();
-//				if (category.equals(cat)) {
-//					return true;
-//				}
-//			}
+			// StringTokenizer tokenizer = new StringTokenizer(traceFilter,
+			// ","); //$NON-NLS-1$
+			// while (tokenizer.hasMoreTokens()) {
+			// String cat = tokenizer.nextToken().trim();
+			// if (category.equals(cat)) {
+			// return true;
+			// }
+			// }
 		}
 		return false;
 	}
@@ -136,7 +132,7 @@ public class Logger {
 	public static void debug(String message) {
 		_log(INFO_DEBUG, message, null);
 	}
-	
+
 	public static void log(int level, String message) {
 		_log(level, message, null);
 	}
@@ -147,17 +143,16 @@ public class Logger {
 
 	public static void logException(String message, Throwable exception) {
 		_trace("ERROR", message, exception);
-		//_log(ERROR, message, exception);
+		// _log(ERROR, message, exception);
 	}
 
 	public static void logException(Throwable exception) {
-		
+
 		_trace("Error", exception.getMessage(), exception);
-		//_log(ERROR, exception.getMessage(), exception);
+		// _log(ERROR, exception.getMessage(), exception);
 	}
 
-	public static void traceException(String category, String message,
-			Throwable exception) {
+	public static void traceException(String category, String message, Throwable exception) {
 		_trace(category, message, exception);
 	}
 
@@ -170,14 +165,14 @@ public class Logger {
 	}
 
 	public static void debugMSG(String msg) {
-//		if (PEXCorePlugin.debug())
-			System.out.println(msg);
+		// if (PEXCorePlugin.debug())
+		System.out.println(msg);
 	}
 
 	public static void debugMSG(Class<? extends ASTNode> class1) {
 
 		debugMSG(class1.toString());
-		
-	}	
+
+	}
 
 }

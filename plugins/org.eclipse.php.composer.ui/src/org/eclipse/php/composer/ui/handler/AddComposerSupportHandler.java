@@ -27,20 +27,19 @@ public class AddComposerSupportHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event)
-				.getActivePage().getSelection();
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		if (selection instanceof IStructuredSelection) {
-			Object item = ((IStructuredSelection)selection).getFirstElement();
+			Object item = ((IStructuredSelection) selection).getFirstElement();
 
 			if (item instanceof IAdaptable) {
-				IAdaptable adaptable = (IAdaptable)item;
-				IProject project = ((IResource)adaptable.getAdapter(IResource.class)).getProject();
-				
+				IAdaptable adaptable = (IAdaptable) item;
+				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
+
 				FacetManager.installFacets(project, ProjectOptions.getDefaultPhpVersion(), null);
 			}
 		}
-		
+
 		return null;
 	}
 

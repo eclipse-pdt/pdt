@@ -22,19 +22,19 @@ public class DependencyController extends PackageController {
 	private Dependencies deps;
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		deps = (Dependencies)newInput;
+		deps = (Dependencies) newInput;
 	}
 
 	public Object[] getElements(Object inputElement) {
 		return deps.toArray();
 	}
-	
+
 	public void updateText(MinimalPackage pkg, StyledString styledString) {
 		if (pkg instanceof VersionedPackage) {
-			VersionedPackage vpkg = (VersionedPackage)pkg;
+			VersionedPackage vpkg = (VersionedPackage) pkg;
 
 			super.updateText(pkg, styledString);
-			
+
 			if (vpkg.getVersion() != null && !vpkg.getVersion().trim().isEmpty()) {
 				styledString.append(" : " + vpkg.getVersion().trim(), StyledString.QUALIFIER_STYLER);
 			}

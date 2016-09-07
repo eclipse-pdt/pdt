@@ -30,10 +30,10 @@ public class RepositoryFactory {
 		} else if (type.equalsIgnoreCase("pear")) {
 			return new PearRepository();
 		}
-		
+
 		return null;
 	}
-	
+
 	public static Type getType(String type) {
 		if (type.equalsIgnoreCase("composer")) {
 			return ComposerRepository.class;
@@ -50,7 +50,7 @@ public class RepositoryFactory {
 		} else if (type.equalsIgnoreCase("pear")) {
 			return PearRepository.class;
 		}
-		
+
 		return null;
 	}
 }

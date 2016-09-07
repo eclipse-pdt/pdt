@@ -13,8 +13,8 @@ package org.eclipse.php.composer.api.objects;
 import org.eclipse.php.composer.api.json.ParseException;
 
 /**
- * Represents a person entry in a composer package that is used in authors 
- * and maintainers
+ * Represents a person entry in a composer package that is used in authors and
+ * maintainers
  * 
  * @see http://getcomposer.org/doc/04-schema.md#authors
  * @author Thomas Gossmann <gos.si>
@@ -29,12 +29,12 @@ public class Person extends JsonObject implements Cloneable {
 		super();
 		listen();
 	}
-	
+
 	public Person(Object json) {
 		this();
 		fromJson(json);
 	}
-	
+
 	public Person(String json) throws ParseException {
 		this();
 		fromJson(json);
@@ -61,7 +61,8 @@ public class Person extends JsonObject implements Cloneable {
 	/**
 	 * Sets the person's name
 	 * 
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		set("name", name);
@@ -79,7 +80,8 @@ public class Person extends JsonObject implements Cloneable {
 	/**
 	 * Sets the person's email
 	 * 
-	 * @param email the email to set
+	 * @param email
+	 *            the email to set
 	 */
 	public void setEmail(String email) {
 		set("email", email);
@@ -97,7 +99,8 @@ public class Person extends JsonObject implements Cloneable {
 	/**
 	 * Sets the person's homepage
 	 * 
-	 * @param homepage the homepage to set
+	 * @param homepage
+	 *            the homepage to set
 	 */
 	public void setHomepage(String homepage) {
 		set("homepage", homepage);
@@ -115,15 +118,17 @@ public class Person extends JsonObject implements Cloneable {
 	/**
 	 * Sets the person's role
 	 * 
-	 * @param role the role to set
+	 * @param role
+	 *            the role to set
 	 * @return this
 	 */
 	public void setRole(String role) {
 		set("role", role);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public Person clone() {
@@ -136,30 +141,30 @@ public class Person extends JsonObject implements Cloneable {
 	public boolean equals(Object obj) {
 		if (obj instanceof Person) {
 			Person person = (Person) obj;
-			
+
 			if (person == this) {
 				return true;
 			}
-			
+
 			String p1, p2;
-			String props[] = new String[]{"name", "email", "homepage", "role"};
-			
+			String props[] = new String[] { "name", "email", "homepage", "role" };
+
 			boolean equal = true;
-			
+
 			for (String prop : props) {
 				p1 = getAsString(prop);
 				p2 = person.getAsString(prop);
 				if (p1 != null && p2 != null) {
-					equal = equal && p1.equals(p2); 
+					equal = equal && p1.equals(p2);
 				} else {
 					equal = equal && (p1 == null && p2 == null);
 				}
 			}
-			
+
 			return equal;
 		}
-		
+
 		return false;
 	}
-	
+
 }

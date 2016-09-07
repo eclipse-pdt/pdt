@@ -19,13 +19,13 @@ import org.eclipse.php.composer.ui.wizard.AbstractWizardSecondPage;
 public class ComposerProjectCreationWizard extends AbstractComposerWizard {
 
 	public static final String SELECTED_PROJECT = "SelectedProject";
-	
+
 	public ComposerProjectCreationWizard() {
 		setDefaultPageImageDescriptor(ComposerUIPluginImages.CREATE_PROJECT);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Composer Project");
 	}
-	
+
 	@Override
 	protected AbstractWizardFirstPage getFirstPage() {
 		return new ComposerProjectWizardFirstPage();

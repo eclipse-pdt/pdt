@@ -23,20 +23,20 @@ class PackageFilterItem {
 	protected MinimalPackage item;
 	protected String[] versions;
 	protected String selectedVersion = null;
-	
+
 	public PackageFilterItem(MinimalPackage pkg) {
 		isChecked = false;
 		item = pkg;
 	}
-	
+
 	public MinimalPackage getPackage() {
 		return item;
 	}
-	
+
 	public boolean isChecked() {
 		return isChecked;
 	}
-	
+
 	public void setChecked(boolean checked) {
 		isChecked = checked;
 	}
@@ -44,7 +44,7 @@ class PackageFilterItem {
 	public void setVersions(String[] versionInput) {
 		versions = versionInput;
 	}
-	
+
 	public String[] getVersions() {
 		return versions;
 	}
@@ -52,7 +52,7 @@ class PackageFilterItem {
 	public void setSelectedVersion(String text) {
 		selectedVersion = text;
 	}
-	
+
 	public String getSelectedVersion() {
 		return selectedVersion;
 	}

@@ -27,10 +27,9 @@ import org.eclipse.php.composer.api.entities.Version;
 import java.util.Set;
 import java.util.TreeMap;
 
-
 /**
- * Represents a version property in a composer package or version collection
- * in a composer repository or packagist package.
+ * Represents a version property in a composer package or version collection in
+ * a composer repository or packagist package.
  * 
  * @see http://getcomposer.org/doc/04-schema.md#version
  * @see http://getcomposer.org/doc/05-repositories.md#packages
@@ -44,24 +43,25 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 
 	public Versions() {
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void doParse(Object obj) {
 		clear();
 		if (obj instanceof LinkedHashMap) {
-			for (Entry<String, Object> entry : ((Map<String, Object>)obj).entrySet()) {
+			for (Entry<String, Object> entry : ((Map<String, Object>) obj).entrySet()) {
 				ComposerPackage pkg = new ComposerPackage(entry.getValue());
 				set(entry.getKey(), pkg);
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the most recent version
+	 * 
 	 * @return
 	 */
 	public String getDefaultVersion() {
-		return (String)properties.entrySet().iterator().next().getKey();
+		return (String) properties.entrySet().iterator().next().getKey();
 	}
 
 	public Set<String> toSet() {
@@ -75,7 +75,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 	private void compileDetailedVersions() {
 		if (detailedVersions == null) {
 			detailedVersions = new HashMap<String, Version>();
-			
+
 			for (String version : toArray()) {
 				compileDetailedVersion(version);
 			}
@@ -85,7 +85,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 	private void compileDetailedVersion(String version) {
 		Version v = new Version(version);
 		detailedVersions.put(version, v);
-		
+
 		// hierarchy
 		if (v.getStability() == ComposerConstants.STABLE) {
 			String major = v.getMajor();
@@ -93,9 +93,9 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 				if (!majors.containsKey(major)) {
 					majors.put(major, new ArrayList<String>());
 				}
-				
+
 				List<String> majorList = majors.get(major);
-				
+
 				String minor = v.getMinor();
 				if (minor != null && !majorList.contains(minor)) {
 					majors.get(major).add(minor);
@@ -105,59 +105,59 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 			}
 		}
 	}
-	
+
 	private void prepareDetailedVersions() {
 		if (detailedVersions == null) {
 			compileDetailedVersions();
 		}
 	}
-	
+
 	public List<Version> getDetailedVersions() {
 		prepareDetailedVersions();
-		
+
 		List<Version> all = new ArrayList<Version>();
 		all.addAll(detailedVersions.values());
-		
+
 		return all;
 	}
-	
+
 	public String[] getMajors() {
 		prepareDetailedVersions();
-		
-		return majors.keySet().toArray(new String[]{});
+
+		return majors.keySet().toArray(new String[] {});
 	}
-	
+
 	public String getRecentMajor() {
 		prepareDetailedVersions();
-		
+
 		if (majors.size() > 0) {
 			return majors.firstKey();
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Returns all minor versions for the given major version or null
-	 * if major version does not exist.
+	 * Returns all minor versions for the given major version or null if major
+	 * version does not exist.
 	 * 
 	 * @param major
 	 * @return
 	 */
 	public String[] getMinors(String major) {
 		prepareDetailedVersions();
-		
+
 		if (majors.containsKey(major)) {
-			return majors.get(major).toArray(new String[]{});
+			return majors.get(major).toArray(new String[] {});
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Returns the recent minor version for the given major version or null
-	 * if neither major version or no minor version exists.
-	 *  
+	 * Returns the recent minor version for the given major version or null if
+	 * neither major version or no minor version exists.
+	 * 
 	 * @param major
 	 * @return
 	 */
@@ -166,41 +166,40 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 			return null;
 		}
 		prepareDetailedVersions();
-		
+
 		if (majors.containsKey(major) && majors.get(major).size() > 0) {
 			return majors.get(major).get(0);
-		} 
-		
+		}
+
 		return null;
 	}
-	
-	
+
 	public void set(String version, ComposerPackage composerPackage) {
 		if (detailedVersions != null) {
 			compileDetailedVersion(version);
 		}
-		
+
 		super.set(version, composerPackage);
 	}
-	
+
 	public void remove(String version) {
 		if (detailedVersions != null) {
 			Version v = getDetailedVersion(version);
 			detailedVersions.remove(version);
-			
+
 			// remove hierarchy
 			if (v.getStability() == ComposerConstants.STABLE) {
 				String major = v.getMajor();
 				if (major != null) {
 					if (majors.containsKey(major)) {
 						List<String> majorList = majors.get(major);
-						
+
 						String minor = v.getMinor();
 						if (minor != null && majorList.contains(minor)) {
 							majorList.remove(minor);
 							Collections.sort(majorList);
 						}
-						
+
 						if (majorList.size() == 0) {
 							majors.remove(major);
 						}
@@ -208,13 +207,13 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 				}
 			}
 		}
-		
+
 		super.remove(version);
 	}
-	
+
 	/**
-	 * Returns the detailed version for a given string version or null
-	 * if the version doesn't exist in this version collection
+	 * Returns the detailed version for a given string version or null if the
+	 * version doesn't exist in this version collection
 	 * 
 	 * @param version
 	 * @return
@@ -225,7 +224,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 		if (detailedVersions.containsKey(version)) {
 			return detailedVersions.get(version);
 		}
-		
+
 		return null;
 	}
 }

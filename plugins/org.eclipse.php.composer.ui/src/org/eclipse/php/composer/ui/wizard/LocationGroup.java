@@ -45,12 +45,13 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Based on {@link LocationGroup}
+ * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
 public class LocationGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener {
-	
+
 	protected SelectionButtonDialogField fWorkspaceRadio;
 	protected SelectionButtonDialogField fExternalRadio;
 	protected StringButtonDialogField fLocation;
@@ -72,9 +73,9 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 
 		createContents(composite, nameGroup, shell);
 	}
-	
+
 	protected void createContents(Composite composite, NameGroup nameGroup, Shell shell) {
-		
+
 		final int numColumns = 3;
 		final Group group = new Group(composite, SWT.None);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -83,7 +84,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		fWorkspaceRadio = new SelectionButtonDialogField(SWT.RADIO);
 		fWorkspaceRadio.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_workspace_desc);
 		fWorkspaceRadio.doFillIntoGrid(group, numColumns);
-		
+
 		createExternalLocation(group, numColumns);
 
 		environments = EnvironmentManager.getEnvironments();
@@ -100,25 +101,25 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		fWorkspaceRadio.setSelection(true);
 		createLocalServersGroup(group, numColumns);
 	}
-	
+
 	protected void createExternalLocation(Group group, int numColumns) {
 
 		fExternalRadio = new SelectionButtonDialogField(SWT.RADIO);
 		fExternalRadio.setDialogFieldListener(this);
 		fExternalRadio.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_external_desc);
 		fExternalRadio.setSelection(false);
-		
+
 		fLocation = new StringButtonDialogField(this);
 		fLocation.setDialogFieldListener(this);
 		fLocation.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
 		fLocation.setButtonLabel(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_browseButton_desc);
-		
+
 		fPreviousExternalLocation = ""; //$NON-NLS-1$
 		fExternalRadio.doFillIntoGrid(group, numColumns);
 		fLocation.doFillIntoGrid(group, numColumns);
 		LayoutUtil.setHorizontalGrabbing(fLocation.getTextControl(null));
 		fExternalRadio.attachDialogFields(new DialogField[] { fLocation });
-		
+
 	}
 
 	public boolean isExistingLocation() {
@@ -145,17 +146,18 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 				}
 			}
 		}
-		
+
 		if (docRoots.size() > 0) {
 			fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fLocalServerRadio.setDialogFieldListener(this);
-			fLocalServerRadio.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel); //$NON-NLS-1$
+			fLocalServerRadio.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel); // $NON-NLS-1$
 			fLocalServerRadio.setSelection(false);
 			fLocalServerRadio.doFillIntoGrid(group, numColumns);
 			fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
-			fSeverLocationList.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
+			fSeverLocationList
+					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
 			fSeverLocationList.doFillIntoGrid(group, numColumns);
-			
+
 			fSeverLocationList.setEnabled(false);
 			docRootArray = new String[docRoots.size()];
 			docRoots.toArray(docRootArray);
@@ -220,7 +222,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 	protected String[] getDocItems(String[] docRootArray) {
 		String[] items = new String[docRootArray.length];
 		for (int i = 0; i < docRootArray.length; i++) {
-			items[i] = docRootArray[i] + File.separator + fNameGroup.getName(); //$NON-NLS-1$
+			items[i] = docRootArray[i] + File.separator + fNameGroup.getName(); // $NON-NLS-1$
 		}
 		return items;
 	}
@@ -241,8 +243,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 
 	public IEnvironment getEnvironment() {
 		if (fWorkspaceRadio.isSelected()) {
-			return EnvironmentManager
-					.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
+			return EnvironmentManager.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
 		}
 		// return environments[fEnvironment.getSelectionIndex()];
 		return environments[localEnv];
@@ -250,15 +251,13 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 
 	public void changeControlPressed(DialogField field) {
 		IEnvironment environment = getEnvironment();
-		IEnvironmentUI environmentUI = (IEnvironmentUI) environment
-				.getAdapter(IEnvironmentUI.class);
+		IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
 		if (environmentUI != null) {
 			String selectedDirectory = environmentUI.selectFolder(shell);
 
 			if (selectedDirectory != null) {
 				fLocation.setText(selectedDirectory);
-				DLTKUIPlugin.getDefault().getDialogSettings()
-						.put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
+				DLTKUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
 			}
 		}
 	}

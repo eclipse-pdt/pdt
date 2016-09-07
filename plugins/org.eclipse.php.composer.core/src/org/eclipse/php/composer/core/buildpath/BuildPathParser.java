@@ -130,11 +130,12 @@ public class BuildPathParser {
 				path = "";
 			}
 
-//			if (!path.isEmpty()) {
-//				path = project.getProject().getFullPath().toString() + "/" + path;
-//			} else {
-//				path = project.getProject().getFullPath().toString();
-//			}
+			// if (!path.isEmpty()) {
+			// path = project.getProject().getFullPath().toString() + "/" +
+			// path;
+			// } else {
+			// path = project.getProject().getFullPath().toString();
+			// }
 
 			if (path.startsWith("/")) {
 				path = path.substring(1);

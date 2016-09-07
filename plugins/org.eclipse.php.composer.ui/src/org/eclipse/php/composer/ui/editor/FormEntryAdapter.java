@@ -32,26 +32,41 @@ public class FormEntryAdapter implements IFormEntryListener {
 		ITextSelection selection = new TextSelection(1, 1);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textDirty(org.eclipse.pde.internal.ui.newparts.FormEntry)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textDirty(org.
+	 * eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
 	public void textDirty(FormEntry entry) {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textValueChanged(org.eclipse.pde.internal.ui.newparts.FormEntry)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textValueChanged(
+	 * org.eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
 	public void textValueChanged(FormEntry entry) {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.pde.internal.ui.newparts.IFormEntryListener#browseButtonSelected(org.eclipse.pde.internal.ui.newparts.FormEntry)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.pde.internal.ui.newparts.IFormEntryListener#
+	 * browseButtonSelected(org.eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
 	public void browseButtonSelected(FormEntry entry) {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.events.HyperlinkListener#linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.forms.events.HyperlinkListener#linkEntered(org.eclipse.ui.
+	 * forms.events.HyperlinkEvent)
 	 */
 	public void linkEntered(HyperlinkEvent e) {
 		if (actionBars == null)
@@ -60,8 +75,12 @@ public class FormEntryAdapter implements IFormEntryListener {
 		mng.setMessage(e.getLabel());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.events.HyperlinkListener#linkExited(org.eclipse.ui.forms.events.HyperlinkEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.forms.events.HyperlinkListener#linkExited(org.eclipse.ui.
+	 * forms.events.HyperlinkEvent)
 	 */
 	public void linkExited(HyperlinkEvent e) {
 		if (actionBars == null)
@@ -70,8 +89,12 @@ public class FormEntryAdapter implements IFormEntryListener {
 		mng.setMessage(null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.forms.events.HyperlinkListener#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.forms.events.HyperlinkListener#linkActivated(org.eclipse.
+	 * ui.forms.events.HyperlinkEvent)
 	 */
 	public void linkActivated(HyperlinkEvent e) {
 	}

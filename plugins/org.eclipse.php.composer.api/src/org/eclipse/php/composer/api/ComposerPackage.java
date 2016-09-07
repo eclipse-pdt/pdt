@@ -43,46 +43,45 @@ public class ComposerPackage extends DistributedPackage {
 	private Dependencies requireDev = new Dependencies();
 
 	private Repositories repositories = new Repositories();
-	
+
 	private Support support = new Support();
 	private License license = new License();
-	
+
 	private Persons authors = new Persons();
-	
+
 	private Extra extra = new Extra();
 	private Config config = new Config();
-	
+
 	private Scripts scripts = new Scripts();
-	
 
 	public ComposerPackage() {
 		super();
 		listen();
 	}
-	
+
 	public ComposerPackage(Object json) {
 		this();
 		fromJson(json);
 	}
-	
+
 	public ComposerPackage(String json) throws ParseException {
 		this();
 		fromJson(json);
 	}
-	
+
 	public ComposerPackage(File file) throws IOException, ParseException {
 		this();
 		fromJson(file);
 	}
-	
+
 	public ComposerPackage(Reader reader) throws IOException, ParseException {
 		this();
 		fromJson(reader);
 	}
-	
+
 	@Override
 	protected List<String> getOwnProperties() {
-		String[] props = new String[]{"keywords", "bin"};
+		String[] props = new String[] { "keywords", "bin" };
 		List<String> list = new ArrayList<String>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
@@ -100,7 +99,8 @@ public class ComposerPackage extends DistributedPackage {
 	/**
 	 * Sets the homepage
 	 * 
-	 * @param homepage the homepage to set
+	 * @param homepage
+	 *            the homepage to set
 	 */
 	public void setHomepage(String homepage) {
 		set("homepage", homepage);
@@ -117,6 +117,7 @@ public class ComposerPackage extends DistributedPackage {
 
 	/**
 	 * Returns the require-dev dependencies
+	 * 
 	 * @return
 	 */
 	public Dependencies getRequireDev() {
@@ -131,16 +132,17 @@ public class ComposerPackage extends DistributedPackage {
 	public String getTargetDir() {
 		return getAsString("target-dir");
 	}
-	
+
 	/**
 	 * Sets the target-dir
 	 * 
-	 * @param targetDir the target-dir to set
+	 * @param targetDir
+	 *            the target-dir to set
 	 */
 	public void setTargetDir(String targetDir) {
 		set("target-dir", targetDir);
 	}
-	
+
 	/**
 	 * Returns the normalized version
 	 * 
@@ -160,7 +162,7 @@ public class ComposerPackage extends DistributedPackage {
 	}
 
 	/**
-	 * Returns the keywords 
+	 * Returns the keywords
 	 *
 	 * @return the keywords
 	 */
@@ -181,17 +183,17 @@ public class ComposerPackage extends DistributedPackage {
 			return stabi;
 		}
 	}
-	
 
 	/**
 	 * Sets the minimum-stability property
 	 * 
-	 * @param minimumStability the minimum-stability to set
+	 * @param minimumStability
+	 *            the minimum-stability to set
 	 */
 	public void setMinimumStability(String minimumStability) {
 		set("minimum-stability", minimumStability);
 	}
-	
+
 	/**
 	 * Returns the authors
 	 * 
@@ -225,7 +227,7 @@ public class ComposerPackage extends DistributedPackage {
 	public Extra getExtra() {
 		return extra;
 	}
-	
+
 	/**
 	 * Returns the config entity
 	 * 
@@ -234,7 +236,7 @@ public class ComposerPackage extends DistributedPackage {
 	public Config getConfig() {
 		return config;
 	}
-	
+
 	/**
 	 * Returns the scripts entity
 	 * 
@@ -252,7 +254,7 @@ public class ComposerPackage extends DistributedPackage {
 	public JsonArray getBin() {
 		return getAsArray("bin");
 	}
-	
+
 	public String toString() {
 		return getName();
 	}

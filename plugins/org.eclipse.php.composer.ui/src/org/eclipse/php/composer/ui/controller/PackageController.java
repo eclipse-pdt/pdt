@@ -26,7 +26,8 @@ import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.php.composer.api.MinimalPackage;
 
-public class PackageController extends StyledCellLabelProvider implements IStructuredContentProvider, ICheckStateProvider, ICheckStateListener {
+public class PackageController extends StyledCellLabelProvider
+		implements IStructuredContentProvider, ICheckStateProvider, ICheckStateListener {
 
 	private List<MinimalPackage> packages;
 	private List<String> checked = new ArrayList<String>();
@@ -39,17 +40,17 @@ public class PackageController extends StyledCellLabelProvider implements IStruc
 			pkgListeners.add(listener);
 		}
 	}
-	
+
 	public void removePackageCheckStateChangedListener(IPackageCheckStateChangedListener listener) {
 		pkgListeners.remove(listener);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput == null) {
 			packages = null;
 		} else {
-			packages = (List<MinimalPackage>)newInput;
+			packages = (List<MinimalPackage>) newInput;
 		}
 	}
 
@@ -60,15 +61,15 @@ public class PackageController extends StyledCellLabelProvider implements IStruc
 			return null;
 		}
 	}
-	
+
 	public void addPackages(List<MinimalPackage> packages) {
 		this.packages.addAll(packages);
 	}
-	
+
 	public Image getImage(Object element) {
 		return PackageController.getPackageImage(element);
 	}
-	
+
 	public static Image getPackageImage(Object element) {
 		String name = PackageController.getPackageName(element);
 		if (!name.contains("/") && (name.equals("php") || name.startsWith("ext-"))) {
@@ -81,78 +82,81 @@ public class PackageController extends StyledCellLabelProvider implements IStruc
 		return getName(element);
 	}
 
-
 	@Override
 	public void checkStateChanged(CheckStateChangedEvent event) {
-		setChecked(((MinimalPackage)event.getElement()).getName(), event.getChecked());
+		setChecked(((MinimalPackage) event.getElement()).getName(), event.getChecked());
 	}
-	
+
 	public List<String> getCheckedPackages() {
 		return checked;
 	}
-	
+
 	public int getCheckedPackagesCount() {
 		return checked.size();
 	}
-	
+
 	public void clear() {
 		checked.clear();
 	}
-	
+
 	public void setChecked(String name, boolean checked) {
 		if (checked && !this.checked.contains(name)) {
 			this.checked.add(name);
 		}
-		
+
 		if (!checked) {
 			this.checked.remove(name);
 		}
-		
+
 		for (IPackageCheckStateChangedListener listener : pkgListeners) {
 			listener.packageCheckStateChanged(name, checked);
 		}
 	}
-	
+
 	private String getName(Object element) {
 		return PackageController.getPackageName(element);
 	}
-	
+
 	public static String getPackageName(Object element) {
 		String name = null;
 		if (element instanceof MinimalPackage) {
-			name = ((MinimalPackage)element).getName();
+			name = ((MinimalPackage) element).getName();
 		} else if (element instanceof String) {
-			name = (String)element;
+			name = (String) element;
 		}
 		return name;
 	}
-	
+
 	public void update(ViewerCell cell) {
 		Object obj = cell.getElement();
-		
+
 		if (obj instanceof MinimalPackage) {
-			MinimalPackage pkg = (MinimalPackage)obj;
-			
+			MinimalPackage pkg = (MinimalPackage) obj;
+
 			StyledString styledString = new StyledString();
-			
-//			if (author.getEmail() != null && author.getEmail().trim() != "" && !author.getEmail().trim().equals("")) {
-//				styledString.append(" <" + author.getEmail().trim() + ">", StyledString.COUNTER_STYLER);
-//			}
-//			
-//			if (author.getHomepage() != null && author.getHomepage().trim() != "" && !author.getHomepage().trim().equals("")) {
-//				styledString.append(" - " + author.getHomepage().trim(), StyledString.DECORATIONS_STYLER);
-//			}
+
+			// if (author.getEmail() != null && author.getEmail().trim() != ""
+			// && !author.getEmail().trim().equals("")) {
+			// styledString.append(" <" + author.getEmail().trim() + ">",
+			// StyledString.COUNTER_STYLER);
+			// }
+			//
+			// if (author.getHomepage() != null && author.getHomepage().trim()
+			// != "" && !author.getHomepage().trim().equals("")) {
+			// styledString.append(" - " + author.getHomepage().trim(),
+			// StyledString.DECORATIONS_STYLER);
+			// }
 			updateText(pkg, styledString);
-			
+
 			cell.setText(styledString.toString());
 			cell.setStyleRanges(styledString.getStyleRanges());
-			
+
 			cell.setImage(getImage(pkg));
-			
+
 			super.update(cell);
 		}
 	}
-	
+
 	protected void updateText(MinimalPackage pkg, StyledString styledString) {
 		styledString.append(getName(pkg));
 	}

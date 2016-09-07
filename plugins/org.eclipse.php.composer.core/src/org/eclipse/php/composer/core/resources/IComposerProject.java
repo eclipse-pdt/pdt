@@ -18,34 +18,34 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.ComposerPackages;
 
-
 public interface IComposerProject {
 
 	public String getVendorDir();
-	
+
 	/**
 	 * Returns the absolute path to the vendor directory
 	 * 
 	 * @return
 	 */
 	public IPath getVendorPath();
-	
+
 	public IFile getComposerJson();
 
 	public ComposerPackage getComposerPackage();
-	
+
 	public IProject getProject();
-	
+
 	public IScriptProject getScriptProject();
-	
+
 	public ComposerPackages getInstalledPackages();
-	
+
 	public boolean isValidComposerJson();
-	
+
 	public String getNamespace(IPath path);
-	
+
 	/**
-	 * Returns the full, absolute path of this resource relative to the workspace.
+	 * Returns the full, absolute path of this resource relative to the
+	 * workspace.
 	 * 
 	 * @return the path
 	 */

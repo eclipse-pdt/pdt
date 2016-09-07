@@ -21,7 +21,7 @@ public class SelfUpdateAction extends ComposerAction {
 	public SelfUpdateAction(IProject project, IWorkbenchPartSite site) {
 		super(project, site, "org.eclipse.php.composer.ui.command.selfupdate");
 	}
-	
+
 	@Override
 	public void run() {
 		SelfUpdateJob job = new SelfUpdateJob(project);
@@ -33,5 +33,5 @@ public class SelfUpdateAction extends ComposerAction {
 	public ImageDescriptor getImageDescriptor() {
 		return ComposerUIPluginImages.SELFUPDATE;
 	}
-	
+
 }

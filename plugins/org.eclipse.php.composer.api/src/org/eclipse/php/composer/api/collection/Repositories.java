@@ -24,17 +24,17 @@ import org.eclipse.php.composer.api.repositories.RepositoryFactory;
  * @author Thomas Gossmann <gos.si>
  */
 public class Repositories extends AbstractJsonArray<Repository> {
-	
+
 	public Repositories() {
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();
 		if (obj instanceof LinkedList) {
 			for (Object repo : (LinkedList) obj) {
-				if (repo instanceof LinkedHashMap && ((LinkedHashMap)repo).containsKey("type")) {
-					String type = (String)((LinkedHashMap)repo).get("type");
+				if (repo instanceof LinkedHashMap && ((LinkedHashMap) repo).containsKey("type")) {
+					String type = (String) ((LinkedHashMap) repo).get("type");
 					Repository r = RepositoryFactory.create(type);
 					r.fromJson(repo);
 					add(r);

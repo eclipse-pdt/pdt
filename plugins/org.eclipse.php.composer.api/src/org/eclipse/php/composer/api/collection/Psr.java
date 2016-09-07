@@ -36,58 +36,59 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		}
 	};
-	
+
 	public Psr() {
 	}
-	
+
 	public Psr(String json) throws ParseException {
 		fromJson(json);
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void doParse(Object obj) {
 		clear();
 		if (obj instanceof LinkedHashMap) {
 			LinkedHashMap json = (LinkedHashMap) obj;
-			
-			for (Entry<String, Object> entry : ((Map<String, Object>)json).entrySet()) {
+
+			for (Entry<String, Object> entry : ((Map<String, Object>) json).entrySet()) {
 				Namespace nmspc = new Namespace();
 				nmspc.setNamespace(entry.getKey());
-				
+
 				if (entry.getValue() instanceof LinkedList) {
-					for (Object path : (LinkedList)entry.getValue()) {
-						nmspc.add((String)path);
+					for (Object path : (LinkedList) entry.getValue()) {
+						nmspc.add((String) path);
 					}
 				} else {
-					nmspc.add((String)entry.getValue());
+					nmspc.add((String) entry.getValue());
 				}
 				add(nmspc);
 			}
 		}
 	}
-	
+
 	@Override
 	protected Object buildJson() {
 		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
 		for (Namespace nmspc : this) {
 			Object value = "";
-			
+
 			if (nmspc.size() > 1) {
 				value = getJsonValue(nmspc.getPaths());
 			} else if (nmspc.size() == 1) {
 				value = nmspc.getFirst();
 			}
-			
+
 			out.put(nmspc.getNamespace(), value);
 		}
 
 		return out;
 	}
-	
+
 	/**
 	 * Adds a new dependency.
 	 * 
-	 * @param dependency the new dependency
+	 * @param dependency
+	 *            the new dependency
 	 * @return this
 	 */
 	public void add(Namespace namespace) {
@@ -102,37 +103,38 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 	/**
 	 * Removes a dependency.
 	 * 
-	 * @param dependency the dependency to remove
+	 * @param dependency
+	 *            the dependency to remove
 	 */
 	public void remove(Namespace namespace) {
 		namespace.removePropertyChangeListener(listener);
 		super.remove(namespace.getNamespace());
 	}
-	
+
 	public Collection<Namespace> getNamespaces() {
 		return properties.values();
 	}
 
 	public Iterator<Namespace> iterator() {
-		return (Iterator<Namespace>)properties.values().iterator(); 
+		return (Iterator<Namespace>) properties.values().iterator();
 	}
-	
+
 	public Namespace getFirst() {
 		if (properties.values().iterator().hasNext()) {
 			return properties.values().iterator().next();
 		}
-		
+
 		return null;
 	}
-	
+
 	public int size() {
 		return properties.keySet().size();
 	}
-	
+
 	public boolean has(String namespace) {
 		return properties.containsKey(namespace);
 	}
-	
+
 	public boolean has(Namespace namespace) {
 		return has(namespace.getNamespace());
 	}
@@ -143,14 +145,15 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Returns the namespace for a given path or null if the path isn't found
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the related namespace
 	 */
 	public Namespace getNamespaceForPath(String path) {
@@ -159,7 +162,7 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 				return nmspc;
 			}
 		}
-		
+
 		return null;
 	}
 }

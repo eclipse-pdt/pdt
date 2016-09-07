@@ -29,14 +29,14 @@ import org.eclipse.php.composer.api.objects.Support;
 public class SupportSection extends ComposerSection {
 
 	Support support;
-	
+
 	private FormEntry emailEntry;
 	private FormEntry issuesEntry;
 	private FormEntry forumEntry;
 	private FormEntry wikiEntry;
 	private FormEntry ircEntry;
 	private FormEntry sourceEntry;
-	
+
 	public SupportSection(ComposerFormPage page, Composite parent) {
 		super(page, parent, Section.DESCRIPTION);
 		support = composerPackage.getSupport();
@@ -48,11 +48,11 @@ public class SupportSection extends ComposerSection {
 		section.setText("Support");
 		section.setDescription("Provide support options to your end-users.");
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		
+
 		Composite client = toolkit.createComposite(section);
 		client.setLayout(FormLayoutFactory.createSectionClientTableWrapLayout(false, 2));
 		section.setClient(client);
-		
+
 		createEmailEntry(client, toolkit);
 		createIssuesEntry(client, toolkit);
 		createForumEntry(client, toolkit);
@@ -60,11 +60,11 @@ public class SupportSection extends ComposerSection {
 		createIrcEntry(client, toolkit);
 		createSourceEntry(client, toolkit);
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		
+
 		emailEntry.setEnabled(enabled);
 		issuesEntry.setEnabled(enabled);
 		forumEntry.setEnabled(enabled);
@@ -76,7 +76,7 @@ public class SupportSection extends ComposerSection {
 	private void createEmailEntry(Composite client, FormToolkit toolkit) {
 		emailEntry = new FormEntry(client, toolkit, "Email", null, false);
 		emailEntry.setValue(support.getEmail(), true);
-		
+
 		emailEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				support.setEmail(entry.getValue());
@@ -92,7 +92,7 @@ public class SupportSection extends ComposerSection {
 	private void createIssuesEntry(Composite client, FormToolkit toolkit) {
 		issuesEntry = new WeblinkFormEntry(client, toolkit, "Issues");
 		issuesEntry.setValue(support.getIssues());
-		
+
 		issuesEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				support.setIssues(entry.getValue());
@@ -104,11 +104,11 @@ public class SupportSection extends ComposerSection {
 			}
 		});
 	}
-	
+
 	private void createForumEntry(Composite client, FormToolkit toolkit) {
 		forumEntry = new WeblinkFormEntry(client, toolkit, "Forum");
 		forumEntry.setValue(support.getForum());
-		
+
 		forumEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				support.setForum(entry.getValue());
@@ -120,11 +120,11 @@ public class SupportSection extends ComposerSection {
 			}
 		});
 	}
-	
+
 	private void createWikiEntry(Composite client, FormToolkit toolkit) {
 		wikiEntry = new WeblinkFormEntry(client, toolkit, "Wiki");
 		wikiEntry.setValue(support.getWiki());
-		
+
 		wikiEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				support.setWiki(entry.getValue());
@@ -136,11 +136,11 @@ public class SupportSection extends ComposerSection {
 			}
 		});
 	}
-	
+
 	private void createIrcEntry(Composite client, FormToolkit toolkit) {
 		ircEntry = new WeblinkFormEntry(client, toolkit, "Irc");
 		ircEntry.setValue(support.getIrc());
-		
+
 		ircEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				support.setIrc(entry.getValue());
@@ -152,11 +152,11 @@ public class SupportSection extends ComposerSection {
 			}
 		});
 	}
-	
+
 	private void createSourceEntry(Composite client, FormToolkit toolkit) {
 		sourceEntry = new WeblinkFormEntry(client, toolkit, "Source");
 		sourceEntry.setValue(support.getSource());
-		
+
 		sourceEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				support.setSource(entry.getValue());

@@ -15,9 +15,10 @@ public class PearRepository extends Repository implements Cloneable {
 	public PearRepository() {
 		super("pear");
 	}
-	
+
 	/**
 	 * Returns the vendor-alias
+	 * 
 	 * @return the vendor-alias
 	 */
 	public String getVendorAlias() {
@@ -27,14 +28,16 @@ public class PearRepository extends Repository implements Cloneable {
 	/**
 	 * Sets the vendor-alias
 	 * 
-	 * @param vendorAlias the vendor-alias to set
+	 * @param vendorAlias
+	 *            the vendor-alias to set
 	 */
 	public void setVendorAlias(String vendorAlias) {
 		set("vendor-alias", vendorAlias);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public PearRepository clone() {

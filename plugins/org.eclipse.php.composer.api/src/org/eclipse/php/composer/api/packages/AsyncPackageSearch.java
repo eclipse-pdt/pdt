@@ -22,23 +22,23 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class AsyncPackageSearch extends AsyncDownloadClient {
-	
+
 	private int pageLimit = 3;
 	protected List<PackageSearchListenerInterface> listeners = new ArrayList<PackageSearchListenerInterface>();
 	private Map<String, Integer> counters = new HashMap<String, Integer>();
 	private Map<String, Boolean> aborts = new HashMap<String, Boolean>();
 	private Log log = LogFactory.getLog(AsyncPackageSearch.class);
-	
+
 	public AsyncPackageSearch() {
 		super();
 		init();
 	}
-	
+
 	public AsyncPackageSearch(String baseUrl) {
 		super(baseUrl, true);
 		init();
 	}
-	
+
 	private void init() {
 		downloader.addDownloadListener(new DownloadListenerAdapater() {
 			private String getQuery(String url) {
@@ -47,10 +47,10 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 				} catch (UnsupportedEncodingException e) {
 					log.error(e);
 				}
-				
+
 				return null;
 			}
-			
+
 			public void dataReceived(InputStream content, String url) {
 				try {
 					// parse query from url
@@ -59,19 +59,18 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 					if (isAborted(query)) {
 						return;
 					}
-					
+
 					SearchResult result = PackageHelper.getSearchResult(content);
-				
+
 					int counter = getCounter(query);
-				
+
 					if (result != null && result.results != null) {
 						for (PackageSearchListenerInterface listener : listeners) {
 							listener.packagesFound(result.results, query, result);
 						}
 					}
-					
-					if (result != null && result.next != null 
-							&& result.next.length() > 0 && counter < pageLimit) {
+
+					if (result != null && result.next != null && result.next.length() > 0 && counter < pageLimit) {
 						downloader.setUrl(result.next);
 						downloader.download();
 						counters.put(query, counter + 1);
@@ -82,7 +81,7 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 					}
 				}
 			}
-			
+
 			public void aborted(String url) {
 				aborts.put(getQuery(url), true);
 				for (PackageSearchListenerInterface listener : listeners) {
@@ -91,32 +90,32 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 			}
 		});
 	}
-	
+
 	public void addPackageSearchListener(PackageSearchListenerInterface listener) {
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
 	}
-	
+
 	public void removePackageSearchListener(PackageSearchListenerInterface listener) {
 		listeners.remove(listener);
 	}
-	
+
 	private int getCounter(String query) {
 		if (!counters.containsKey(query)) {
 			counters.put(query, 1);
 		}
 		return counters.get(query);
 	}
-	
+
 	private boolean isAborted(String query) {
 		if (!aborts.containsKey(query)) {
 			aborts.put(query, false);
 		}
-		
+
 		return aborts.get(query);
 	}
-	
+
 	public int search(String query) {
 		// reset counter + abort state
 		counters.put(query, 1);
@@ -134,7 +133,8 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 	}
 
 	/**
-	 * @param pageLimit the pageLimit to set
+	 * @param pageLimit
+	 *            the pageLimit to set
 	 */
 	public void setPageLimit(int pageLimit) {
 		this.pageLimit = pageLimit;

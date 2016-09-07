@@ -34,22 +34,21 @@ public class BooleanFormEntry {
 	private Label label;
 	private Button checkbox;
 	private boolean ignoreNotify = false;
-	
+
 	private ArrayList<IBooleanFormEntryListener> listeners = new ArrayList<IBooleanFormEntryListener>();
-	
+
 	public BooleanFormEntry(Composite parent, FormToolkit toolkit, String labelText) {
 		this(parent, toolkit, labelText, SWT.FLAT);
 	}
-	
+
 	public BooleanFormEntry(Composite parent, FormToolkit toolkit, String labelText, int style) {
 		createControl(parent, toolkit, labelText, style);
 	}
-	
 
 	public Label getLabel() {
 		return label;
 	}
-	
+
 	public Button getCheckbox() {
 		return checkbox;
 	}
@@ -57,27 +56,27 @@ public class BooleanFormEntry {
 	public boolean getValue() {
 		return checkbox.getSelection();
 	}
-	
+
 	public void setValue(boolean value) {
 		checkbox.setSelection(value);
 	}
-	
+
 	public void setValue(boolean value, boolean ignoreNotify) {
 		this.ignoreNotify = ignoreNotify;
 		setValue(value);
 		this.ignoreNotify = false;
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		
+
 		checkbox.setEnabled(enabled);
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	/**
 	 * Attaches the listener for the entry.
 	 * 
@@ -86,7 +85,6 @@ public class BooleanFormEntry {
 	public void addBooleanFormEntryListener(IBooleanFormEntryListener listener) {
 		listeners.add(listener);
 	}
-	
 
 	/**
 	 * Detaches the listener for the entry.
@@ -102,33 +100,34 @@ public class BooleanFormEntry {
 			label = toolkit.createLabel(parent, labelText);
 			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		}
-		
+
 		checkbox = WidgetFactory.createButton(toolkit, parent, style | SWT.CHECK);
-		
+
 		addListener();
 		fillIntoGrid(parent);
 	}
-	
+
 	private void addListener() {
 		checkbox.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				if (ignoreNotify) 
+				if (ignoreNotify)
 					return;
-				
+
 				for (IBooleanFormEntryListener listener : listeners) {
 					listener.selectionChanged(BooleanFormEntry.this);
 				}
 			}
-			
-			public void widgetDefaultSelected(SelectionEvent e) {}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
 		});
 	}
-	
+
 	private void fillIntoGrid(Composite parent) {
 		Layout layout = parent.getLayout();
 		if (layout instanceof GridLayout) {
 			int span = ((GridLayout) layout).numColumns;
-			
+
 			GridData gd;
 			if (label != null) {
 				gd = new GridData(GridData.VERTICAL_ALIGN_CENTER);

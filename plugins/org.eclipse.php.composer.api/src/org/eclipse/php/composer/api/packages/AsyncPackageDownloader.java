@@ -17,33 +17,33 @@ import java.util.List;
 import org.eclipse.php.composer.api.RepositoryPackage;
 
 public class AsyncPackageDownloader extends AsyncDownloadClient {
-	
+
 	private List<PackageListenerInterface> pkgListeners = new ArrayList<PackageListenerInterface>();
-	
+
 	public AsyncPackageDownloader(String baseUrl) {
 		super(baseUrl);
 	}
-	
+
 	public void addPackageListener(PackageListenerInterface listener) {
 		if (!pkgListeners.contains(listener)) {
 			pkgListeners.add(listener);
 		}
 	}
-	
+
 	public void removePackageListener(PackageListenerInterface listener) {
 		pkgListeners.remove(listener);
 	}
-	
+
 	protected void notifyPackageListener(Object obj) {
 		for (PackageListenerInterface listener : pkgListeners) {
 			if (obj instanceof RepositoryPackage) {
-				listener.packageLoaded((RepositoryPackage)obj);
+				listener.packageLoaded((RepositoryPackage) obj);
 			} else if (obj instanceof Exception) {
 				listener.errorOccured((Exception) obj);
 			}
 		}
 	}
-	
+
 	public int loadPackage(String packageName) {
 		downloader.setUrl(createUrl(packageName));
 		if (downloadListener == null) {
@@ -56,7 +56,7 @@ public class AsyncPackageDownloader extends AsyncDownloadClient {
 						notifyPackageListener(e);
 					}
 				}
-				
+
 				@Override
 				public void errorOccured(Exception e) {
 					notifyPackageListener(e);
@@ -64,7 +64,7 @@ public class AsyncPackageDownloader extends AsyncDownloadClient {
 			};
 			downloader.addDownloadListener(downloadListener);
 		}
-		
+
 		return downloader.download();
 	}
 }

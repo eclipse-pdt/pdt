@@ -24,18 +24,18 @@ public class WeblinkFormEntry extends FormEntry {
 
 	public WeblinkFormEntry(Composite parent, FormToolkit toolkit, String labelText) {
 		super(parent, toolkit, labelText, null, true);
-		
+
 		addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				try {
-					Hyperlink link = (Hyperlink)entry.getLabel();
+					Hyperlink link = (Hyperlink) entry.getLabel();
 					URL url = new URL(entry.getValue());
 					link.setHref(url);
 				} catch (MalformedURLException e) {
-//					e.printStackTrace();
+					// e.printStackTrace();
 				}
 			}
-			
+
 			public void linkActivated(HyperlinkEvent e) {
 				if (e.getHref() != null && e.getHref().toString() != null) {
 					Program.launch(e.getHref().toString());

@@ -32,7 +32,7 @@ public class ComposerFailureMessageRunner implements Runnable {
 			monitor.done();
 		}
 
-//		ScriptLauncher.resetEnvironment();
+		// ScriptLauncher.resetEnvironment();
 		String message = "Launching composer failed. See the .metadata/.log file in your workspace for details.";
 		if (response != null && response.length() > 0) {
 			message = response.trim();

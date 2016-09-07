@@ -33,7 +33,7 @@ public class DependencyDialog extends Dialog {
 	private VersionedPackage dependency;
 	private Text name;
 	private Text version;
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 * @param parentShell
@@ -57,19 +57,19 @@ public class DependencyDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Edit Dependency");
-		
+
 		Composite contents = new Composite(parent, SWT.NONE);
 		contents.setLayout(new GridLayout(2, false));
 		GridData gd_contents = new GridData();
 		gd_contents.widthHint = 350;
 		contents.setLayoutData(gd_contents);
-		
+
 		Label lblName = new Label(contents, SWT.NONE);
 		GridData gd_lblName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblName.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblName.setLayoutData(gd_lblName);
 		lblName.setText("Name");
-		
+
 		name = new Text(contents, SWT.BORDER);
 		GridData gd_name = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_name.widthHint = ComposerUIPluginConstants.DIALOG_CONTROL_WIDTH;
@@ -78,11 +78,11 @@ public class DependencyDialog extends Dialog {
 		if (dependency.getName() != null) {
 			name.setText(dependency.getName());
 		}
-		
+
 		Label lblVersion = new Label(contents, SWT.NONE);
 		lblVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblVersion.setText("Version");
-		
+
 		version = new Text(contents, SWT.BORDER);
 		version.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		if (dependency.getVersion() != null) {
@@ -93,9 +93,9 @@ public class DependencyDialog extends Dialog {
 				dependency.setVersion(version.getText());
 			}
 		});
-		
+
 		new VersionSuggestion(dependency.getName(), parent, version, null, new WidgetFactory(null));
-		
+
 		return contents;
 	}
 }

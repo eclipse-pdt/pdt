@@ -42,6 +42,7 @@ public abstract class Repository extends MinimalPackage implements Cloneable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public Repository clone() {

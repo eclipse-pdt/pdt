@@ -15,17 +15,16 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.php.composer.ui.editor.composer.DependencyGraphPage;
 
 public class ToggleDevAction extends Action {
-	
+
 	public static final String ID = "composer.dpg.toggle";
-	
+
 	private boolean showDev;
 	private DependencyGraphPage graphPage;
-	
 
 	public ToggleDevAction(DependencyGraphPage graphPage) {
 		super("Toggle dev packages");
 		this.graphPage = graphPage;
-		
+
 		setDescription("Toggle dev packages");
 		setToolTipText("Toggle dev packages");
 		setId(ID);

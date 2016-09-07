@@ -31,7 +31,7 @@ public class ConfigSection extends ComposerSection {
 	protected FormEntry vendorDirEntry;
 	protected FormEntry binDirEntry;
 	protected BooleanFormEntry notifyOnInstallEntry;
-	
+
 	public ConfigSection(ComposerFormPage page, Composite parent) {
 		super(page, parent, Section.DESCRIPTION);
 		createClient(getSection(), page.getManagedForm().getToolkit());
@@ -41,23 +41,23 @@ public class ConfigSection extends ComposerSection {
 	protected void createClient(Section section, FormToolkit toolkit) {
 		section.setText("Config");
 		section.setDescription("Configure your package.");
-//		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		// section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		Composite client = toolkit.createComposite(section);
 		client.setLayout(FormLayoutFactory.createSectionClientTableWrapLayout(false, 2));
 		section.setClient(client);
-		
+
 		createProcessTimeoutEntry(client, toolkit);
 		createVendorDirEntry(client, toolkit);
 		createBinDirEntry(client, toolkit);
 		createNotifyOnInstallEntry(client, toolkit);
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		
+
 		processTimeoutEntry.setEnabled(enabled);
 		vendorDirEntry.setEnabled(enabled);
 		binDirEntry.setEnabled(enabled);
@@ -70,13 +70,13 @@ public class ConfigSection extends ComposerSection {
 		if (processTimeout != null) {
 			processTimeoutEntry.setValue("" + processTimeout, true);
 		}
-		
+
 		processTimeoutEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
-					composerPackage.getConfig().remove("process-timeout");	
+					composerPackage.getConfig().remove("process-timeout");
 				} else {
-					composerPackage.getConfig().set("process-timeout", Integer.valueOf(entry.getValue()));	
+					composerPackage.getConfig().set("process-timeout", Integer.valueOf(entry.getValue()));
 				}
 			}
 		});
@@ -91,22 +91,22 @@ public class ConfigSection extends ComposerSection {
 			}
 		});
 	}
-	
+
 	private void createVendorDirEntry(Composite client, FormToolkit toolkit) {
 		vendorDirEntry = new FormEntry(client, toolkit, "vendor-dir", null, false);
 		String vendorDir = composerPackage.getConfig().getVendorDir();
 		if (vendorDir != null) {
 			vendorDirEntry.setValue(vendorDir, true);
 		}
-		
+
 		vendorDirEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
-					composerPackage.getConfig().remove("vendor-dir");	
+					composerPackage.getConfig().remove("vendor-dir");
 				} else {
 					composerPackage.getConfig().set("vendor-dir", entry.getValue());
 				}
-				
+
 			}
 		});
 		composerPackage.getConfig().addPropertyChangeListener("vendor-dir", new PropertyChangeListener() {
@@ -120,14 +120,14 @@ public class ConfigSection extends ComposerSection {
 			}
 		});
 	}
-	
+
 	private void createBinDirEntry(Composite client, FormToolkit toolkit) {
 		binDirEntry = new FormEntry(client, toolkit, "bin-dir", null, false);
 		String binDir = composerPackage.getConfig().getBinDir();
 		if (binDir != null) {
 			binDirEntry.setValue(binDir, true);
 		}
-		
+
 		binDirEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
@@ -152,7 +152,7 @@ public class ConfigSection extends ComposerSection {
 	private void createNotifyOnInstallEntry(Composite client, FormToolkit toolkit) {
 		notifyOnInstallEntry = new BooleanFormEntry(client, toolkit, "notify-on-install");
 		notifyOnInstallEntry.setValue(composerPackage.getConfig().getNotifyOnInstall());
-		
+
 		notifyOnInstallEntry.addBooleanFormEntryListener(new IBooleanFormEntryListener() {
 			public void selectionChanged(BooleanFormEntry entry) {
 				if (entry.getValue()) {

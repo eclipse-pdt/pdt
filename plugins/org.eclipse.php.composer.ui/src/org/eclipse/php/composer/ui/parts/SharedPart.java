@@ -56,4 +56,3 @@ public abstract class SharedPart {
 		return label;
 	}
 }
-

@@ -20,6 +20,7 @@ public class TreePart extends StructuredViewerPart {
 
 	/**
 	 * Constructor for TablePart.
+	 * 
 	 * @param buttonLabels
 	 */
 	public TreePart(String[] buttonLabels) {
@@ -27,7 +28,8 @@ public class TreePart extends StructuredViewerPart {
 	}
 
 	/*
-	 * @see StructuredViewerPart#createStructuredViewer(Composite, FormWidgetFactory)
+	 * @see StructuredViewerPart#createStructuredViewer(Composite,
+	 * FormWidgetFactory)
 	 */
 	protected StructuredViewer createStructuredViewer(Composite parent, int style, FormToolkit toolkit) {
 		style |= SWT.H_SCROLL | SWT.V_SCROLL;

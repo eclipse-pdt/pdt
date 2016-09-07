@@ -42,48 +42,48 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 	protected AbstractWizardSecondPage secondPage;
 	protected AbstractWizardSecondPage lastPage;
 	protected IConfigurationElement config;
-	
+
 	@Override
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
 		this.config = config;
 	}
 
 	public void addPages() {
 		super.addPages();
-		
+
 		firstPage = getFirstPage();
 		addPage(firstPage);
 
 		secondPage = getSecondPage();
 		addPage(secondPage);
-		
+
 		lastPage = secondPage;
 	}
 
 	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		
+
 		if (firstPage != null) {
 			firstPage.performFinish(monitor);
 		}
-		
+
 		if (secondPage != null) {
 			secondPage.performFinish(monitor);
 		}
 	}
 
-
 	@Override
 	public IModelElement getCreatedElement() {
-		return DLTKCore.create(firstPage.getProjectHandle());		
+		return DLTKCore.create(firstPage.getProjectHandle());
 	}
-	
+
 	@Override
 	public boolean performFinish() {
-		
+
 		boolean res = super.performFinish();
 		if (res) {
-			
+
 			BasicNewProjectResourceWizard.updatePerspective(config);
 			selectAndReveal(lastPage.getScriptProject().getProject());
 			IProject project = lastPage.getScriptProject().getProject();
@@ -91,10 +91,10 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 			if (version == null) {
 				version = ProjectOptions.getDefaultPhpVersion();
 			}
-			
+
 			FacetManager.installFacets(project, version, null);
 			IFile json = project.getFile("composer.json");
-			
+
 			if (json != null) {
 				try {
 					IEditorInput editorInput = new FileEditorInput(json);
@@ -106,10 +106,10 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 				}
 			}
 		}
-		
+
 		return res;
 	}
-	
+
 	@Override
 	public boolean performCancel() {
 		secondPage.cancel();
@@ -117,7 +117,7 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 	}
 
 	protected abstract AbstractWizardFirstPage getFirstPage();
-	
+
 	protected abstract AbstractWizardSecondPage getSecondPage();
 
 }

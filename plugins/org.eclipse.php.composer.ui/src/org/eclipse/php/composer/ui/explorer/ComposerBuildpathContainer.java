@@ -31,7 +31,6 @@ public class ComposerBuildpathContainer extends BuildPathContainer {
 
 	@Override
 	public IAdaptable[] getChildren() {
-		return ModelAccess.getInstance().getPackageManager()
-				.getPackagePaths(iScriptProject);
+		return ModelAccess.getInstance().getPackageManager().getPackagePaths(iScriptProject);
 	}
 }

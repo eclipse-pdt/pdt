@@ -26,44 +26,44 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import org.eclipse.php.composer.api.objects.Scripts;
 
-public class ScriptsController  extends StyledCellLabelProvider implements ITreeContentProvider {
+public class ScriptsController extends StyledCellLabelProvider implements ITreeContentProvider {
 
 	private Scripts scripts;
 	private Image eventImage = ComposerUIPluginImages.EVENT.createImage();
 	private Image scriptImage = ComposerUIPluginImages.SCRIPT.createImage();
-	
+
 	private TreeViewer viewer;
-	
+
 	public ScriptsController() {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TreeViewer) viewer;
-		scripts = (Scripts)newInput;
+		scripts = (Scripts) newInput;
 	}
-	
+
 	public String getText(Object element) {
 		return element.toString();
 	}
-	
+
 	public void update(ViewerCell cell) {
 		Object obj = cell.getElement();
 		String text = getText(obj);
-		
+
 		StyledString styledString = new StyledString(text);
-		
+
 		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
 			int count = scripts.getAsArray(text).size();
 			styledString.append(" (" + count + ")", StyledString.COUNTER_STYLER);
-			
+
 			cell.setImage(eventImage);
 		} else {
-			cell.setImage(scriptImage); 
+			cell.setImage(scriptImage);
 		}
-		
+
 		cell.setText(styledString.toString());
 		cell.setStyleRanges(styledString.getStyleRanges());
-		
+
 		super.update(cell);
 	}
 
@@ -71,19 +71,19 @@ public class ScriptsController  extends StyledCellLabelProvider implements ITree
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
-	
+
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Scripts) {
 			Scripts scripts = (Scripts) parentElement;
 			List<String> children = new ArrayList<String>();
-			
+
 			for (String event : Scripts.getEvents()) {
 				if (scripts.has(event)) {
 					children.add(event);
 				}
 			}
-			
+
 			return children.toArray();
 		} else {
 			String text = parentElement.toString();
@@ -91,8 +91,8 @@ public class ScriptsController  extends StyledCellLabelProvider implements ITree
 				return scripts.getAsArray(text).toArray();
 			}
 		}
-		
-		return new Object[]{};
+
+		return new Object[] {};
 	}
 
 	@Override
@@ -106,17 +106,17 @@ public class ScriptsController  extends StyledCellLabelProvider implements ITree
 				}
 			}
 		}
-		
+
 		if (item != null) {
 			TreeItem parent = item.getParentItem();
 			if (parent == null) {
 				return scripts;
 			}
-			
+
 			if (parent.getData() != null) {
 				return parent.getData();
 			}
-			
+
 		}
 		return null;
 	}

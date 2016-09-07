@@ -22,12 +22,12 @@ public class PathController extends LabelProvider implements IStructuredContentP
 
 	private UniqueJsonArray paths;
 	protected Image pathImage = ComposerUIPluginImages.PACKAGE_FOLDER.createImage();
-	
+
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		paths = (UniqueJsonArray)newInput;
+		paths = (UniqueJsonArray) newInput;
 	}
-	
+
 	@Override
 	public Image getImage(Object element) {
 		return pathImage;

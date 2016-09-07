@@ -34,7 +34,7 @@ public class PersonDialog extends Dialog {
 	private Text email;
 	private Text homepage;
 	private Text role;
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -47,7 +47,7 @@ public class PersonDialog extends Dialog {
 		super(parentShell);
 		this.person = author;
 	}
-	
+
 	public Person getPerson() {
 		return person;
 	}
@@ -56,16 +56,16 @@ public class PersonDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Person");
 		getShell().setImage(ComposerUIPluginImages.PERSON.createImage());
-		
+
 		Composite contents = new Composite(parent, SWT.NONE);
 		contents.setLayout(new GridLayout(2, false));
-		
+
 		Label lblName = new Label(contents, SWT.NONE);
 		GridData gd_lblName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblName.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblName.setLayoutData(gd_lblName);
 		lblName.setText("Name");
-		
+
 		name = new Text(contents, SWT.BORDER);
 		GridData gd_name = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_name.widthHint = ComposerUIPluginConstants.DIALOG_CONTROL_WIDTH;
@@ -78,11 +78,11 @@ public class PersonDialog extends Dialog {
 				person.setName(name.getText());
 			}
 		});
-		
+
 		Label lblEmail = new Label(contents, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText("Email");
-		
+
 		email = new Text(contents, SWT.BORDER);
 		email.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		if (person.getEmail() != null) {
@@ -93,11 +93,11 @@ public class PersonDialog extends Dialog {
 				person.setEmail(email.getText());
 			}
 		});
-		
+
 		Label lblHomepage = new Label(contents, SWT.NONE);
 		lblHomepage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblHomepage.setText("Homepage");
-		
+
 		homepage = new Text(contents, SWT.BORDER);
 		homepage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		if (person.getHomepage() != null) {
@@ -108,11 +108,11 @@ public class PersonDialog extends Dialog {
 				person.setHomepage(homepage.getText());
 			}
 		});
-		
+
 		Label lblRole = new Label(contents, SWT.NONE);
 		lblRole.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblRole.setText("Role");
-		
+
 		role = new Text(contents, SWT.BORDER);
 		role.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		if (person.getRole() != null) {
@@ -123,8 +123,7 @@ public class PersonDialog extends Dialog {
 				person.setRole(role.getText());
 			}
 		});
-		
-		
+
 		return contents;
 	}
 }

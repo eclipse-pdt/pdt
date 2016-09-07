@@ -50,7 +50,6 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 	private IStructuredSelection selection;
 	private WizardResourceImportPage mainPage;
 
-
 	public ComposerImportWizard() {
 		// TODO Auto-generated constructor stub
 	}
@@ -61,25 +60,23 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 
 		this.workbench = workbench;
 		this.selection = currentSelection;
-		
+
 		List selectedResources = IDE.computeSelectedResources(currentSelection);
 		if (!selectedResources.isEmpty()) {
 			this.selection = new StructuredSelection(selectedResources);
 		}
 
 		setWindowTitle(DataTransferMessages.DataTransfer_importTitle);
-		setDefaultPageImageDescriptor(ComposerUIPluginImages.IMPORT_PROJECT);//$NON-NLS-1$
+		setDefaultPageImageDescriptor(ComposerUIPluginImages.IMPORT_PROJECT);// $NON-NLS-1$
 		setNeedsProgressMonitor(true);
-		
+
 	}
-	
+
 	public void addPages() {
 		super.addPages();
-		mainPage = new WizardResourceImportPage(workbench, selection,
-				getFileImportMask());
+		mainPage = new WizardResourceImportPage(workbench, selection, getFileImportMask());
 		addPage(mainPage);
 	}
-	
 
 	@Override
 	public boolean performFinish() {
@@ -91,48 +88,48 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 				String projectName = mainPage.getProjectName();
 				IProject project = root.getProject(mainPage.getProjectName());
 				monitor.beginTask("Importing composer project", 5);
-				
+
 				try {
-					
+
 					IPath locationPath = new Path(mainPage.getSourcePath());
 					IProjectDescription description = null;
-					
+
 					if (locationPath.append(".project").toFile().exists()) {
 						ProjectDescriptionReader reader = new ProjectDescriptionReader(project);
 						description = reader.read(locationPath.append(".project"));
 					} else {
 						description = workspace.newProjectDescription(projectName);
 					}
-					
+
 					// If it is under the root use the default location
 					if (Platform.getLocation().isPrefixOf(locationPath)) {
 						description.setLocation(null);
 					} else {
 						description.setLocation(locationPath);
 					}
-					
+
 					monitor.worked(1);
 					project.create(description, monitor);
 					project.open(monitor);
 					monitor.worked(1);
-					
+
 					if (!project.hasNature(PHPNature.ID)) {
 						ResourceUtil.addNature(project, monitor, PHPNature.ID);
 					}
-					
+
 					if (!project.hasNature(ComposerNature.NATURE_ID)) {
 						ResourceUtil.addNature(project, monitor, ComposerNature.NATURE_ID);
 					}
-					
+
 					ProjectFacetsManager.create(project);
-					
+
 					FacetManager.installFacets(project, PHPVersion.PHP5_4, monitor);
-					
+
 					monitor.worked(1);
-					
+
 					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 					monitor.worked(2);
-					
+
 				} catch (CoreException e) {
 					Logger.logException(e);
 				} catch (IOException e) {
@@ -142,7 +139,7 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 				}
 			}
 		};
-		
+
 		try {
 			getContainer().run(false, true, op);
 		} catch (Exception e) {
@@ -151,7 +148,7 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 		}
 		return true;
 	}
-	
+
 	protected String[] getFileImportMask() {
 		return null;
 	}

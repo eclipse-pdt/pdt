@@ -16,9 +16,11 @@ import org.eclipse.php.composer.ui.parts.IComboFormEntryListener;
 public class ComboFormEntryAdapter implements IComboFormEntryListener {
 
 	@Override
-	public void textValueChanged(ComboFormEntry entry) {}
+	public void textValueChanged(ComboFormEntry entry) {
+	}
 
 	@Override
-	public void selectionChanged(ComboFormEntry entry) {}
+	public void selectionChanged(ComboFormEntry entry) {
+	}
 
 }

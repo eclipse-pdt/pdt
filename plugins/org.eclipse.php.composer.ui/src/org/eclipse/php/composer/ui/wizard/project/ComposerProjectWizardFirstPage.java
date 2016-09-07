@@ -63,6 +63,7 @@ public class ComposerProjectWizardFirstPage extends AbstractWizardFirstPage {
 
 	@Override
 	protected void setHelpContext(Control container) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic");
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(container,
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic");
 	}
 }

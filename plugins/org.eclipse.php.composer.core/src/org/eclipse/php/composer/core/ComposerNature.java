@@ -43,8 +43,7 @@ public class ComposerNature implements IProjectNature {
 		commands.add(buildCommand);
 		commands.addAll(Arrays.asList(description.getBuildSpec()));
 
-		description
-				.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
+		description.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
 		project.setDescription(description, null);
 	}
 
@@ -59,8 +58,7 @@ public class ComposerNature implements IProjectNature {
 			commands.addAll(Arrays.asList(description.getBuildSpec()));
 			commands.remove(index);
 
-			description.setBuildSpec(commands.toArray(new ICommand[commands
-					.size()]));
+			description.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
 			project.setDescription(description, null);
 		}
 	}
@@ -74,19 +72,16 @@ public class ComposerNature implements IProjectNature {
 			int i = 0;
 			for (ICommand cmd : project.getDescription().getBuildSpec()) {
 				// activated builder
-				if (ComposerBuildPathManagementBuilder.ID.equals(cmd
-						.getBuilderName())) {
+				if (ComposerBuildPathManagementBuilder.ID.equals(cmd.getBuilderName())) {
 					return i;
 				}
 
 				// deactivated builder
-				if ("org.eclipse.ui.externaltools.ExternalToolBuilder"
-						.equals(cmd.getBuilderName())) {
+				if ("org.eclipse.ui.externaltools.ExternalToolBuilder".equals(cmd.getBuilderName())) {
 					Map<String, String> args = cmd.getArguments();
 					if (args.containsKey("LaunchConfigHandle")) {
 						String launch = args.get("LaunchConfigHandle");
-						if (launch
-								.contains(ComposerBuildPathManagementBuilder.ID)) {
+						if (launch.contains(ComposerBuildPathManagementBuilder.ID)) {
 							return i;
 						}
 					}

@@ -14,18 +14,18 @@ import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.License;
 
 public class String2LicenseConverter extends String2ListConverter {
-	
+
 	private License license;
-	
+
 	public String2LicenseConverter() {
 		super(String.class, License.class);
 	}
-	
+
 	public String2LicenseConverter(ComposerPackage composerPackage) {
 		this();
 		setComposerPackage(composerPackage);
 	}
-	
+
 	@Override
 	protected void composerPackageUpdated() {
 		license = composerPackage.getLicense();
@@ -33,7 +33,7 @@ public class String2LicenseConverter extends String2ListConverter {
 
 	@Override
 	protected String[] start() {
-		return license.toArray(new String[]{});
+		return license.toArray(new String[] {});
 	}
 
 	@Override
@@ -55,6 +55,5 @@ public class String2LicenseConverter extends String2ListConverter {
 	protected void remove(String value) {
 		license.remove(value);
 	}
-
 
 }

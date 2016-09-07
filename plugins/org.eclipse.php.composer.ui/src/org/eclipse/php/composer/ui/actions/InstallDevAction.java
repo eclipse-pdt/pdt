@@ -21,11 +21,11 @@ public class InstallDevAction extends ComposerAction {
 	public InstallDevAction(IProject project, IWorkbenchPartSite site) {
 		super(project, site, "org.eclipse.php.composer.ui.command.installDev");
 	}
-	
+
 	@Override
 	public void run() {
 		ensureSaved();
-		
+
 		InstallDevJob job = new InstallDevJob(project);
 		job.setUser(true);
 		job.schedule();
@@ -35,5 +35,5 @@ public class InstallDevAction extends ComposerAction {
 	public ImageDescriptor getImageDescriptor() {
 		return ComposerUIPluginImages.INSTALL_DEV;
 	}
-	
+
 }

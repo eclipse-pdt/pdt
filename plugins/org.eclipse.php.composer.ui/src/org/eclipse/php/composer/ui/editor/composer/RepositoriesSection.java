@@ -57,11 +57,11 @@ import org.eclipse.php.composer.api.repositories.SubversionRepository;
 public class RepositoriesSection extends TableSection implements PropertyChangeListener {
 
 	private TableViewer repositoryViewer;
-	
+
 	private IAction addAction;
 	private IAction editAction;
 	private IAction removeAction;
-	
+
 	private static final int ADD_INDEX = 0;
 	private static final int EDIT_INDEX = 1;
 	private static final int REMOVE_INDEX = 2;
@@ -70,7 +70,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 
 		private Repositories repositories;
 		private Map<String, Image> images = new HashMap<String, Image>();
-		private Map<String, ImageDescriptor> descriptors = new HashMap<String, ImageDescriptor> () {
+		private Map<String, ImageDescriptor> descriptors = new HashMap<String, ImageDescriptor>() {
 			private static final long serialVersionUID = -2019489473873127982L;
 
 			{
@@ -85,47 +85,47 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		};
 
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			repositories = (Repositories)newInput;
+			repositories = (Repositories) newInput;
 		}
 
 		public Object[] getElements(Object inputElement) {
 			return repositories.toArray();
 		}
-		
+
 		@Override
 		public String getText(Object element) {
 			if (element instanceof Repository) {
-				Repository repo = (Repository)element;
+				Repository repo = (Repository) element;
 				String name;
-				
+
 				// name
 				if (repo.has("name")) {
 					name = repo.getAsString("name");
 				} else {
 					name = repo.getUrl();
 				}
-				
+
 				return name;
 			}
 
 			return super.getText(element);
 		}
-		
+
 		private Image createImage(String type) {
 			if (descriptors.containsKey(type)) {
 				return descriptors.get(type).createImage();
 			}
-			
+
 			return null;
 		}
-		
+
 		private Image getRepoImage(String type) {
 			if (!images.containsKey(type)) {
 				images.put(type, createImage(type));
 			}
 			return images.get(type);
 		}
-		
+
 		@Override
 		public Image getImage(Object element) {
 			if (element instanceof GitRepository) {
@@ -143,16 +143,15 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 			} else if (element instanceof Repository) {
 				return getRepoImage("generic");
 			}
-			
+
 			return null;
 		}
 	}
-	
+
 	public RepositoriesSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[]{"Add...", "Edit...", "Remove"});
+		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
 		createClient(getSection(), page.getManagedForm().getToolkit());
 	}
-	
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
@@ -167,7 +166,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		repositoryViewer = tablePart.getTableViewer();
 		repositoryViewer.setContentProvider(repositoriesController);
 		repositoryViewer.setLabelProvider(repositoriesController);
-		
+
 		toolkit.paintBordersFor(container);
 		section.setClient(container);
 		section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
@@ -175,36 +174,36 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		repositoryViewer.setInput(composerPackage.getRepositories());
 		composerPackage.addPropertyChangeListener(this);
 		updateButtons();
-		
+
 		makeActions();
 		updateMenu();
 	}
-	
+
 	protected boolean createCount() {
 		return true;
 	}
-	
+
 	private void updateButtons() {
 		ISelection selection = repositoryViewer.getSelection();
-		
+
 		TablePart tablePart = getTablePart();
 		tablePart.setButtonEnabled(ADD_INDEX, enabled);
 		tablePart.setButtonEnabled(EDIT_INDEX, !selection.isEmpty() && enabled);
 		tablePart.setButtonEnabled(REMOVE_INDEX, !selection.isEmpty() && enabled);
 	}
-	
+
 	private void updateMenu() {
-		IStructuredSelection selection = (IStructuredSelection)repositoryViewer.getSelection();
-		
+		IStructuredSelection selection = (IStructuredSelection) repositoryViewer.getSelection();
+
 		editAction.setEnabled(selection.size() > 0);
 		removeAction.setEnabled(selection.size() > 0);
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		updateButtons();
-		
+
 		refresh();
 		repositoryViewer.getTable().setEnabled(enabled);
 	}
@@ -220,48 +219,48 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 			refresh();
 		}
 	}
-	
+
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
 	}
-	
+
 	private void makeActions() {
 		addAction = new Action("Add...") {
 			public void run() {
 				handleAdd();
 			}
 		};
-		
+
 		editAction = new Action("Edit...") {
 			public void run() {
 				handleEdit();
 			}
 		};
-		
+
 		removeAction = new Action("Remove") {
 			public void run() {
 				handleRemove();
 			}
 		};
 	}
-	
+
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(addAction);
 		manager.add(editAction);
 		manager.add(removeAction);
 	}
-	
+
 	private void handleAdd() {
 		RepositoryDialog diag = new RepositoryDialog(repositoryViewer.getTable().getShell());
 		if (diag.open() == Dialog.OK) {
 			composerPackage.getRepositories().add(diag.getRepository());
 		}
 	}
-	
+
 	private void handleEdit() {
-		Repository repo = (Repository)((StructuredSelection)repositoryViewer.getSelection()).getFirstElement();
+		Repository repo = (Repository) ((StructuredSelection) repositoryViewer.getSelection()).getFirstElement();
 		RepositoryDialog diag = new RepositoryDialog(repositoryViewer.getTable().getShell(), repo.clone());
 		if (diag.open() == Dialog.OK) {
 			Repository newRepo = diag.getRepository();
@@ -269,47 +268,43 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 			repo.setUrl(newRepo.getUrl());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void handleRemove() {
-		StructuredSelection selection = ((StructuredSelection)repositoryViewer.getSelection());
+		StructuredSelection selection = ((StructuredSelection) repositoryViewer.getSelection());
 		Iterator<Object> it = selection.iterator();
 		String[] names = new String[selection.size()];
 		List<Repository> repos = new ArrayList<Repository>();
 
 		for (int i = 0; it.hasNext(); i++) {
-			Repository repo = (Repository)it.next();
+			Repository repo = (Repository) it.next();
 			repos.add(repo);
 			names[i] = repo.getName();
 		}
-		
-		MessageDialog diag = new MessageDialog(
-				repositoryViewer.getTable().getShell(), 
-				"Remove Repositor" + (selection.size() > 1 ? "ies" : "y"), 
-				null, 
-				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", 
-				MessageDialog.WARNING,
-				new String[] {"Yes", "No"},
-				0);
-		
+
+		MessageDialog diag = new MessageDialog(repositoryViewer.getTable().getShell(),
+				"Remove Repositor" + (selection.size() > 1 ? "ies" : "y"), null,
+				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", MessageDialog.WARNING,
+				new String[] { "Yes", "No" }, 0);
+
 		if (diag.open() == Dialog.OK) {
 			for (Repository repo : repos) {
 				composerPackage.getRepositories().remove(repo);
 			}
 		}
 	}
-	
+
 	@Override
 	protected void buttonSelected(int index) {
 		switch (index) {
 		case ADD_INDEX:
 			handleAdd();
 			break;
-			
+
 		case EDIT_INDEX:
 			handleEdit();
 			break;
-			
+
 		case REMOVE_INDEX:
 			handleRemove();
 			break;

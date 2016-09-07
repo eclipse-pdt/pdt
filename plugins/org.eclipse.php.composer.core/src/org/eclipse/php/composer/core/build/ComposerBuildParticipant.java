@@ -20,21 +20,19 @@ import org.eclipse.php.composer.core.ComposerPluginConstants;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.visitor.AutoloadVisitor;
 
-public class ComposerBuildParticipant implements IBuildParticipant
-{
-    @Override
-    public void build(IBuildContext context) throws CoreException
-    {
-        if (ComposerPluginConstants.AUTOLOAD_NAMESPACES.equals(context.getSourceModule().getElementName()) == false) {
-            return;
-        }
-        
-        try {
-            ISourceModule sourceModule = context.getSourceModule();     
-            ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-            moduleDeclaration.traverse(new AutoloadVisitor(context.getSourceModule()));
-        } catch (Exception e) {
-            Logger.logException(e);
-        }        
-    }
+public class ComposerBuildParticipant implements IBuildParticipant {
+	@Override
+	public void build(IBuildContext context) throws CoreException {
+		if (ComposerPluginConstants.AUTOLOAD_NAMESPACES.equals(context.getSourceModule().getElementName()) == false) {
+			return;
+		}
+
+		try {
+			ISourceModule sourceModule = context.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			moduleDeclaration.traverse(new AutoloadVisitor(context.getSourceModule()));
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+	}
 }

@@ -34,10 +34,10 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 /**
- * The helper class for creating entry fields with label and text. Optionally,
- * a button can be added after the text. The attached listener reacts to all
- * the events. Entering new text makes the entry 'dirty', but only when 'commit'
- * is called is 'valueChanged' method called (and only if 'dirty' flag is set).
+ * The helper class for creating entry fields with label and text. Optionally, a
+ * button can be added after the text. The attached listener reacts to all the
+ * events. Entering new text makes the entry 'dirty', but only when 'commit' is
+ * called is 'valueChanged' method called (and only if 'dirty' flag is set).
  * This allows delayed commit.
  */
 public class FormEntry {
@@ -52,15 +52,15 @@ public class FormEntry {
 
 	/**
 	 * The default constructor. Call 'createControl' to make it.
-	 *  
+	 * 
 	 */
 	public FormEntry(Composite parent, FormToolkit toolkit, String labelText) {
 		this(parent, toolkit, labelText, null, false);
 	}
-	
+
 	/**
 	 * The default constructor. Call 'createControl' to make it.
-	 *  
+	 * 
 	 */
 	public FormEntry(Composite parent, FormToolkit toolkit, String labelText, int style) {
 		createControl(parent, toolkit, labelText, style, null, false, 0, 0);
@@ -79,7 +79,8 @@ public class FormEntry {
 		this(parent, toolkit, labelText, browseText, linkLabel, 0);
 	}
 
-	public FormEntry(Composite parent, FormToolkit toolkit, String labelText, String browseText, boolean linkLabel, int indent) {
+	public FormEntry(Composite parent, FormToolkit toolkit, String labelText, String browseText, boolean linkLabel,
+			int indent) {
 		createControl(parent, toolkit, labelText, SWT.SINGLE, browseText, linkLabel, indent, 0);
 	}
 
@@ -97,7 +98,8 @@ public class FormEntry {
 	 * @param browseText
 	 * @param linkLabel
 	 */
-	private void createControl(Composite parent, FormToolkit toolkit, String labelText, int style, String browseText, boolean linkLabel, int indent, int tcolspan) {
+	private void createControl(Composite parent, FormToolkit toolkit, String labelText, int style, String browseText,
+			boolean linkLabel, int indent, int tcolspan) {
 		if (linkLabel) {
 			Hyperlink link = toolkit.createHyperlink(parent, labelText, SWT.NULL);
 			label = link;
@@ -133,7 +135,7 @@ public class FormEntry {
 		if (browse != null)
 			browse.setEnabled(enabled);
 	}
-	
+
 	public void setEditable(boolean editable) {
 		text.setEditable(editable);
 		if (label instanceof Hyperlink)
@@ -210,7 +212,6 @@ public class FormEntry {
 		}
 		listeners.add(listener);
 	}
-	
 
 	/**
 	 * Detaches the listener for the entry.
@@ -237,7 +238,7 @@ public class FormEntry {
 		text.addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent e) {
 				text.selectAll();
-				
+
 				for (IFormEntryListener listener : listeners) {
 					listener.focusGained(FormEntry.this);
 				}
@@ -279,7 +280,7 @@ public class FormEntry {
 		if (text != null && !text.isDisposed()) {
 			return text.getText().trim();
 		}
-		
+
 		return null;
 	}
 
@@ -321,9 +322,9 @@ public class FormEntry {
 	}
 
 	/**
-	 * If GridData was used, set the width hint.  If TableWrapData was used
-	 * set the max width.  If no layout data was specified, this method does
-	 * nothing.
+	 * If GridData was used, set the width hint. If TableWrapData was used set
+	 * the max width. If no layout data was specified, this method does nothing.
+	 * 
 	 * @param width
 	 */
 	public void setTextWidthHint(int width) {

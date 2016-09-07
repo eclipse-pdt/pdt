@@ -25,24 +25,22 @@ import org.eclipse.php.composer.api.objects.Namespace;
 
 public class PsrController extends StyledCellLabelProvider implements ITreeContentProvider {
 
-	
-
 	private Psr psr0;
 	private Image namespaceImage = ComposerUIPluginImages.NAMESPACE.createImage();
 	private Image pathImage = ComposerUIPluginImages.PACKAGE_FOLDER.createImage();
-	
+
 	private TreeViewer viewer;
 
 	public PsrController(TreeViewer viewer) {
 		this.viewer = viewer;
 	}
-	
+
 	public String getText(Object element) {
-		
+
 		if (element instanceof Namespace) {
-			return ((Namespace)element).getNamespace();
+			return ((Namespace) element).getNamespace();
 		}
-		
+
 		return element.toString();
 	}
 

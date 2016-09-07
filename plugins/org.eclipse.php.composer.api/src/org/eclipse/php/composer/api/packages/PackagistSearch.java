@@ -13,7 +13,7 @@ package org.eclipse.php.composer.api.packages;
 import org.eclipse.php.composer.api.ComposerConstants;
 
 public class PackagistSearch extends PackageSearch {
-	
+
 	public PackagistSearch() {
 		super(ComposerConstants.SEARCH_URL);
 	}

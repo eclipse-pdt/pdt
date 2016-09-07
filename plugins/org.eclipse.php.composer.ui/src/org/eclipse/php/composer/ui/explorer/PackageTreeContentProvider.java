@@ -68,11 +68,9 @@ public class PackageTreeContentProvider extends ScriptExplorerContentProvider {
 			return children;
 		} else if (parentElement instanceof IScriptProject) {
 			try {
-				IProject project = ((IScriptProject) parentElement)
-						.getProject();
+				IProject project = ((IScriptProject) parentElement).getProject();
 				if (project.hasNature(ComposerNature.NATURE_ID)) {
-					return new Object[] { new ComposerBuildpathContainer(
-							(IScriptProject) parentElement) };
+					return new Object[] { new ComposerBuildpathContainer((IScriptProject) parentElement) };
 				}
 			} catch (Exception e) {
 				Logger.logException(e);

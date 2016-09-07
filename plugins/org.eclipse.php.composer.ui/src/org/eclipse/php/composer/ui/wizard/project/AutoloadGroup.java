@@ -27,16 +27,16 @@ public class AutoloadGroup extends Observable implements IDialogFieldListener {
 
 	private Shell shell;
 	private StringDialogField namespaceField;
-	
+
 	public AutoloadGroup(Composite composite, Shell shell) {
-		
+
 		this.shell = shell;
-		
+
 		final Composite nameComposite = new Composite(composite, SWT.NONE);
 		nameComposite.setFont(composite.getFont());
 		nameComposite.setLayout(new GridLayout(2, false));
 		nameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		// text field for project vendor name
 		namespaceField = new StringDialogField();
 		namespaceField.setLabelText("Namespace");
@@ -45,12 +45,12 @@ public class AutoloadGroup extends Observable implements IDialogFieldListener {
 		LayoutUtil.setHorizontalGrabbing(namespaceField.getTextControl(null));
 
 	}
-	
+
 	protected void fireEvent() {
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	@Override
 	public void dialogFieldChanged(DialogField field) {
 		fireEvent();

@@ -29,8 +29,8 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 @SuppressWarnings("restriction")
 public class InstallActionDelegate implements IDelegate {
 	@Override
-	public void execute(IProject project, IProjectFacetVersion version,
-			Object object, IProgressMonitor progress) throws CoreException {
+	public void execute(IProject project, IProjectFacetVersion version, Object object, IProgressMonitor progress)
+			throws CoreException {
 		if (!project.hasNature(PHPNature.ID)) {
 			return;
 		}
@@ -45,19 +45,20 @@ public class InstallActionDelegate implements IDelegate {
 		// maybe comment out this one:
 		// create composer buildpath entry
 
-//		if (ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
-//			IScriptProject scriptProject = DLTKCore.create(project);
-//			IBuildpathContainer composerContainer = new ComposerBuildpathContainer(
-//					new Path(ComposerBuildpathContainerInitializer.CONTAINER),
-//					scriptProject);
-//			List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
-//			entries.add(DLTKCore.newContainerEntry(composerContainer.getPath()));
-//
-//			// add the composer buildpathentry to the project
-//			BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
-//
-//			BuildpathUtil.setupVendorBuildpath(scriptProject, progress);
-//
-//		}
+		// if (ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
+		// IScriptProject scriptProject = DLTKCore.create(project);
+		// IBuildpathContainer composerContainer = new
+		// ComposerBuildpathContainer(
+		// new Path(ComposerBuildpathContainerInitializer.CONTAINER),
+		// scriptProject);
+		// List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
+		// entries.add(DLTKCore.newContainerEntry(composerContainer.getPath()));
+		//
+		// // add the composer buildpathentry to the project
+		// BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
+		//
+		// BuildpathUtil.setupVendorBuildpath(scriptProject, progress);
+		//
+		// }
 	}
 }

@@ -16,7 +16,7 @@ public class ParseException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 4252451904249471375L;
-	
+
 	public static final int ERROR_UNEXPECTED_MALFORMED = 0;
 	public static final int ERROR_UNEXPECTED_IO = 2;
 	public static final int ERROR_UNEXPECTED_EXCEPTION = 4;

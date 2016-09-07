@@ -34,20 +34,20 @@ import org.eclipse.swt.widgets.Link;
 
 /**
  * Based on {@link org.eclipse.php.internal.ui.wizards.DetectGroup}
+ * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
 public class DetectGroup extends Observable implements Observer, SelectionListener {
-	
+
 	private final Link fHintText;
 	private Label fIcon;
 	private boolean fDetect;
 	private LocationGroup fPHPLocationGroup;
 	private NameGroup fGroupName;
 
-	public DetectGroup(Composite parent, LocationGroup locationGroup,
-			NameGroup nameGroup) {
+	public DetectGroup(Composite parent, LocationGroup locationGroup, NameGroup nameGroup) {
 		this.fPHPLocationGroup = locationGroup;
 		this.fGroupName = nameGroup;
 
@@ -68,8 +68,7 @@ public class DetectGroup extends Observable implements Observer, SelectionListen
 		gridData = new GridData(GridData.FILL, SWT.FILL, true, true);
 		gridData.widthHint = 500;
 		fHintText.setLayoutData(gridData);
-		fHintText
-				.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
+		fHintText.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
 		fHintText.setVisible(false);
 	}
 
@@ -78,8 +77,7 @@ public class DetectGroup extends Observable implements Observer, SelectionListen
 			return false;
 		}
 		final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
-		return workspace.validateName(name, IResource.PROJECT).isOK()
-				&& workspace.getRoot().findMember(name) == null;
+		return workspace.validateName(name, IResource.PROJECT).isOK() && workspace.getRoot().findMember(name) == null;
 	}
 
 	public void update(Observable o, Object arg) {
@@ -90,18 +88,15 @@ public class DetectGroup extends Observable implements Observer, SelectionListen
 				if (!isValidProjectName(fGroupName.getName())) {
 					fDetect = false;
 				} else {
-					IEnvironment environment = fPHPLocationGroup
-							.getEnvironment();
-					final IFileHandle directory = environment.getFile(location
-							.append(fGroupName.getName()));
+					IEnvironment environment = fPHPLocationGroup.getEnvironment();
+					final IFileHandle directory = environment.getFile(location.append(fGroupName.getName()));
 					fDetect = directory.isDirectory();
 				}
 			} else {
 				IEnvironment environment = fPHPLocationGroup.getEnvironment();
 				if (location.toPortableString().length() > 0) {
 					final IFileHandle directory = environment.getFile(location);
-					fDetect = directory.isDirectory()
-							&& directory.getPath().toFile().exists();
+					fDetect = directory.isDirectory() && directory.getPath().toFile().exists();
 				}
 			}
 			if (oldDetectState != fDetect) {

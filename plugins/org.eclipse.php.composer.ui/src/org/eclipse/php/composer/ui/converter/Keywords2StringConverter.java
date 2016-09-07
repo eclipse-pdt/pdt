@@ -26,8 +26,8 @@ public class Keywords2StringConverter extends Converter {
 		if (fromObject == null) {
 			return "";
 		}
-		JsonArray keywords = (JsonArray)fromObject;
-		return StringUtils.join((String[])keywords.toArray(new String[]{}), ", ");
+		JsonArray keywords = (JsonArray) fromObject;
+		return StringUtils.join((String[]) keywords.toArray(new String[] {}), ", ");
 	}
 
 }

@@ -15,29 +15,25 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.common.project.facet.ui.AbstractFacetWizardPage;
 
-public class FacetInstallWizardPage extends AbstractFacetWizardPage
-{
-    public FacetInstallWizardPage()
-    {
-        super("Configure composer");
-        
-        setTitle("Composer configuration");
-        setDescription("Configure your composer project");
-    }
+public class FacetInstallWizardPage extends AbstractFacetWizardPage {
+	public FacetInstallWizardPage() {
+		super("Configure composer");
 
-    @Override
-    public void setConfig(Object config)
-    {
-        
-    }
+		setTitle("Composer configuration");
+		setDescription("Configure your composer project");
+	}
 
-    @Override
-    public void createControl(Composite parent)
-    {
-        Composite container = new Composite(parent, SWT.NONE);
-        Label label = new Label(container, SWT.NONE);
-        label.setText("Composer test");
-        
-        setControl(container);
-    }
+	@Override
+	public void setConfig(Object config) {
+
+	}
+
+	@Override
+	public void createControl(Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
+		Label label = new Label(container, SWT.NONE);
+		label.setText("Composer test");
+
+		setControl(container);
+	}
 }

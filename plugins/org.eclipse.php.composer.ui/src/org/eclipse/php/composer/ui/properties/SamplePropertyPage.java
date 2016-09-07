@@ -43,7 +43,7 @@ public class SamplePropertyPage extends PropertyPage {
 	private void addFirstSection(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 
-		//Label for path field
+		// Label for path field
 		Label pathLabel = new Label(composite, SWT.NONE);
 		pathLabel.setText(PATH_TITLE);
 
@@ -75,9 +75,7 @@ public class SamplePropertyPage extends PropertyPage {
 
 		// Populate owner text field
 		try {
-			String owner =
-				((IResource) getElement()).getPersistentProperty(
-					new QualifiedName("", OWNER_PROPERTY));
+			String owner = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", OWNER_PROPERTY));
 			ownerText.setText((owner != null) ? owner : DEFAULT_OWNER);
 		} catch (CoreException e) {
 			ownerText.setText(DEFAULT_OWNER);
@@ -120,13 +118,12 @@ public class SamplePropertyPage extends PropertyPage {
 		// Populate the owner text field with the default value
 		ownerText.setText(DEFAULT_OWNER);
 	}
-	
+
 	public boolean performOk() {
 		// store the value in the owner text field
 		try {
-			((IResource) getElement()).setPersistentProperty(
-				new QualifiedName("", OWNER_PROPERTY),
-				ownerText.getText());
+			((IResource) getElement()).setPersistentProperty(new QualifiedName("", OWNER_PROPERTY),
+					ownerText.getText());
 		} catch (CoreException e) {
 			return false;
 		}

@@ -17,16 +17,15 @@ import org.eclipse.php.composer.ui.job.UpdateJob;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 public class UpdateAction extends ComposerAction {
-	
+
 	public UpdateAction(IProject project, IWorkbenchPartSite site) {
 		super(project, site, "org.eclipse.php.composer.ui.command.update");
 	}
-	
-	
+
 	@Override
 	public void run() {
 		ensureSaved();
-		
+
 		UpdateJob job = new UpdateJob(project);
 		job.setUser(true);
 		job.schedule();

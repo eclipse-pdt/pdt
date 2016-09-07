@@ -27,11 +27,12 @@ public class Distribution extends Storage {
 	public String getShaSum() {
 		return getAsString("shasum");
 	}
-	
+
 	/**
 	 * Sets the <code>shasum</code> property.
 	 * 
-	 * @param type the new <code>shasum</code> value
+	 * @param type
+	 *            the new <code>shasum</code> value
 	 */
 	public void setShaSum(String shaSum) {
 		set("shasum", shaSum);

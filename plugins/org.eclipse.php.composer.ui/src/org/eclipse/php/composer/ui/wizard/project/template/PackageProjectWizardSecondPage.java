@@ -39,7 +39,8 @@ import org.eclipse.php.composer.api.ComposerPackage;
  *
  */
 @SuppressWarnings("restriction")
-public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage implements IShellProvider, PackageFilterChangedListener {
+public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
+		implements IShellProvider, PackageFilterChangedListener {
 
 	private PackageFilterViewer filter;
 
@@ -47,17 +48,16 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage imp
 		super(mainPage, title);
 		setPageComplete(false);
 	}
-	
-	
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		
+
 		if (filter.getSelectedPackage() == null || filter.getSelectedPackage().getSelectedVersion() == null) {
 			setPageComplete(false);
 		}
 	}
-	
+
 	@Override
 	public void createControl(Composite parent) {
 		filter = new PackageFilterViewer();
@@ -83,25 +83,26 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage imp
 	protected String getPageDescription() {
 		return "Search for a package to be used as the startingpoint for your new Composer project.";
 	}
-	
+
 	@Override
 	protected void beforeFinish(IProgressMonitor monitor) throws Exception {
 
 		PackageFilterItem filterItem = filter.getSelectedPackage();
 		final CountDownLatch latch = new CountDownLatch(1);
-		
+
 		monitor.beginTask("Initializing composer project", 2);
 		monitor.worked(1);
-		
+
 		File file = new File(firstPage.getLocationURI());
 		IPath location = new Path(file.toString());
-		
+
 		// let the create-project command handle folder creation
 		if (firstPage.isInLocalServer()) {
 			location = location.removeLastSegments(1);
 		}
-		
-		CreateProjectJob projectJob = new CreateProjectJob(location, firstPage.nameGroup.getName(), filterItem.getPackage().getName(), filterItem.getSelectedVersion());
+
+		CreateProjectJob projectJob = new CreateProjectJob(location, firstPage.nameGroup.getName(),
+				filterItem.getPackage().getName(), filterItem.getSelectedVersion());
 		projectJob.setJobListener(new JobListener() {
 			@Override
 			public void jobStarted() {
@@ -119,10 +120,10 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage imp
 				latch.countDown();
 			}
 		});
-		
+
 		projectJob.schedule();
-		
-		// we need to wait until the first page has started the 
+
+		// we need to wait until the first page has started the
 		// create-project composer command and the command actually
 		// wrote something to disk, otherwise the command will fail
 		//
@@ -132,9 +133,9 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage imp
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
-			
+
 		}
-		
+
 		monitor.worked(1);
 	}
 
@@ -157,22 +158,21 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage imp
 			monitor.worked(1);
 		}
 	}
-	
-	
+
 	@Override
 	public void filterChanged(PackageFilterItem item) {
-		
+
 		if (item != null && item.getSelectedVersion() != null) {
 			setPageComplete(true);
 			return;
 		}
-		
+
 		setPageComplete(false);
 	}
 
-
 	@Override
 	protected void setHelpContext(Control control) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_secondpage");
-	}	
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_secondpage");
+	}
 }

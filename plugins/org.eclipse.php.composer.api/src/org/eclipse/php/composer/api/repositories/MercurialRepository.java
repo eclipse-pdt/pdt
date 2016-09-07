@@ -15,9 +15,10 @@ public class MercurialRepository extends VcsRepository implements Cloneable {
 	public MercurialRepository() {
 		super("hg");
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public MercurialRepository clone() {

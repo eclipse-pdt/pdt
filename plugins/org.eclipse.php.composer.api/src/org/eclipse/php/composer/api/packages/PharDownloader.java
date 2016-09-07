@@ -20,7 +20,7 @@ public class PharDownloader extends DownloadClient {
 		super();
 		downloader.setUrl(ComposerConstants.PHAR_URL);
 	}
-	
+
 	public InputStream download() {
 		return downloader.download();
 	}

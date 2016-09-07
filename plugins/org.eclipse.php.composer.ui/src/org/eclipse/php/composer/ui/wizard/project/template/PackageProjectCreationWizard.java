@@ -22,12 +22,13 @@ import org.eclipse.php.composer.ui.wizard.AbstractWizardSecondPage;
 public class PackageProjectCreationWizard extends AbstractComposerWizard {
 
 	public PackageProjectCreationWizard() {
-		
+
 		setDefaultPageImageDescriptor(ComposerUIPluginImages.CREATE_PROJECT_FROM_PACKAGE);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Composer Project from existing package");
-		
+
 	}
+
 	@Override
 	protected AbstractWizardFirstPage getFirstPage() {
 		return new PackageProjectWizardFirstPage();

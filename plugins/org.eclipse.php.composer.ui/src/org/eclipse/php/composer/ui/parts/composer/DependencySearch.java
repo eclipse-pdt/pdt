@@ -34,37 +34,37 @@ public class DependencySearch extends PackageSearch {
 
 	protected List<DependencySelectionFinishedListener> dependencyListeners = new ArrayList<DependencySelectionFinishedListener>();
 	private boolean collapsing = false;
-	
-	public DependencySearch (Composite parent, ComposerPackage composerPackage, FormToolkit toolkit, String buttonText) {
+
+	public DependencySearch(Composite parent, ComposerPackage composerPackage, FormToolkit toolkit, String buttonText) {
 		super(parent, composerPackage, toolkit, buttonText);
 	}
-	
-	public DependencySearch (Composite parent, ComposerPackage composerPackage, FormToolkit toolkit) {
+
+	public DependencySearch(Composite parent, ComposerPackage composerPackage, FormToolkit toolkit) {
 		super(parent, composerPackage, toolkit);
 	}
-	
-	public DependencySearch (Composite parent, ComposerPackage composerPackage, String buttonText) {
+
+	public DependencySearch(Composite parent, ComposerPackage composerPackage, String buttonText) {
 		super(parent, composerPackage, buttonText);
 	}
-	
+
 	public DependencySearch(Composite parent, ComposerPackage composerPackage) {
 		super(parent, composerPackage);
 	}
-	
+
 	public void addDependencySelectionFinishedListener(DependencySelectionFinishedListener listener) {
 		if (!dependencyListeners.contains(listener)) {
 			dependencyListeners.add(listener);
 		}
 	}
-	
+
 	public void removeDependencySelectionFinishedListener(DependencySelectionFinishedListener listener) {
 		dependencyListeners.remove(listener);
 	}
- 
+
 	@Override
 	protected void create(Composite parent, FormToolkit toolkit, String buttonText) {
 		super.create(parent, toolkit, buttonText);
-		
+
 		if (addButton != null) {
 			addButton.removeSelectionListener(addButtonListener);
 			addButton.addSelectionListener(new SelectionAdapter() {
@@ -74,7 +74,7 @@ public class DependencySearch extends PackageSearch {
 			});
 		}
 	}
-	
+
 	protected void notifyDependencySelectionFinishedListener() {
 		Dependencies deps = getDependencies();
 		for (DependencySelectionFinishedListener listener : dependencyListeners) {
@@ -82,12 +82,12 @@ public class DependencySearch extends PackageSearch {
 		}
 		clear();
 	}
-	
+
 	public Dependencies getDependencies() {
 		Dependencies deps = new Dependencies();
 		for (PackageSearchPart psp : packageControls.values()) {
-			VersionedPackage pkg = ((DependencySearchPart)psp).getPackage();
-			
+			VersionedPackage pkg = ((DependencySearchPart) psp).getPackage();
+
 			if (!pkg.getVersion().isEmpty()) {
 				deps.add(pkg);
 			}
@@ -95,56 +95,54 @@ public class DependencySearch extends PackageSearch {
 		return deps;
 	}
 
-	
 	@Override
 	protected DependencySearchPart createPackagePart(Composite parent, String name) {
 		DependencySearchPart dsp = new DependencySearchPart(parent, composerPackage, toolkit, name);
 		dsp.addToggleListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				if (!collapsing) {
-					Twistie toggle = (Twistie)e.getSource();
-					DependencySearchPart dsp = (DependencySearchPart)toggle.getData();
+					Twistie toggle = (Twistie) e.getSource();
+					DependencySearchPart dsp = (DependencySearchPart) toggle.getData();
 					setExpanded(dsp, toggle.isExpanded());
 				}
 			}
 		});
 		dsp.getVersionControl().addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent e) {
-				Text version = (Text)e.getSource();
-				DependencySearchPart dsp = (DependencySearchPart)version.getData();
+				Text version = (Text) e.getSource();
+				DependencySearchPart dsp = (DependencySearchPart) version.getData();
 				setExpanded(dsp, true);
 			}
 		});
-		
+
 		dsp.getVersionControl().addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				boolean canFinish = true;
 				for (PackageSearchPart psp : packageControls.values()) {
-					canFinish = canFinish 
-							&& !((DependencySearchPart)psp).getVersionControl().getText().isEmpty();
+					canFinish = canFinish && !((DependencySearchPart) psp).getVersionControl().getText().isEmpty();
 				}
 
 				addButton.setEnabled(canFinish && enabled);
 			}
 		});
-		
+
 		return dsp;
 	}
 
 	private void setExpanded(DependencySearchPart dsp, boolean expanded) {
-		
+
 		// if it goes expanded
 		// collapse all dsp's first
 		if (expanded) {
 			collapsing = true;
 			for (PackageSearchPart psp : packageControls.values()) {
-				((DependencySearchPart)psp).setExpanded(false);
+				((DependencySearchPart) psp).setExpanded(false);
 			}
 			collapsing = false;
 		}
-		
+
 		dsp.setExpanded(expanded);
-		
+
 		// update layout
 		getBody().layout(true, true);
 	}

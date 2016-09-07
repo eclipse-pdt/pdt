@@ -56,32 +56,31 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 	private IComposerProject composerProject;
 	private IProject project;
 	private SearchControl searchControl;
-	
+
 	private IToolBarManager manager;
-	
-	
+
 	public DependencyGraphPage(ComposerFormEditor editor, String id, String title) {
 		super(editor, id, title);
 		this.editor = editor;
 	}
-	
+
 	@Override
 	public void setActive(boolean active) {
 		super.setActive(active);
 		if (active) {
 			editor.getHeaderForm().getForm().setText("Dependency Graph");
 		}
-		
+
 		active = active && editor.isValidJson();
-		
+
 		// set toolbar contributions visible
 		manager.find(ToggleDevAction.ID).setVisible(active);
 		manager.find(SEPARATOR_ID).setVisible(active);
 		searchControl.setVisible(active);
 		manager.update(true);
-		
+
 		viewer.getControl().setEnabled(active);
-		
+
 		if (active) {
 			update();
 		}
@@ -95,13 +94,13 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 			Logger.logException(e);
 		}
 	}
-	
+
 	private void createGraph(IManagedForm managedForm) throws IOException {
-		
+
 		ScrolledForm form = managedForm.getForm();
 		Composite body = form.getBody();
 		body.setLayout(new FillLayout());
-		
+
 		project = getComposerEditor().getProject();
 		composerProject = ComposerPlugin.getDefault().getComposerProject(project);
 		graphController = new GraphController(composerProject);
@@ -117,36 +116,35 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 		ViewerFilter[] filters = new ViewerFilter[1];
 		filters[0] = filter;
 		viewer.setFilters(filters);
-		
+
 		update();
 	}
-	
+
 	@Override
 	public void contributeToToolbar(IToolBarManager manager, IManagedForm headerForm) {
 		this.manager = manager;
 		searchControl = new SearchControl(SEARCH_ID, headerForm);
 		searchControl.setVisible(false);
 		searchControl.addModifyListener(this);
-		
+
 		manager.add(searchControl);
 		manager.add(new ToggleDevAction(this));
 		manager.find(ToggleDevAction.ID).setVisible(false);
-		
+
 		Separator graphSeparator = new Separator();
 		graphSeparator.setId(SEPARATOR_ID);
 		graphSeparator.setVisible(false);
 		manager.add(graphSeparator);
 	}
-	
+
 	private LayoutAlgorithm setLayout() {
 		LayoutAlgorithm layout;
-		layout = new CompositeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING, 
-				new	LayoutAlgorithm[] {
-					new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), 
-					new HorizontalShift(LayoutStyles.NO_LAYOUT_NODE_RESIZING) });
+		layout = new CompositeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING,
+				new LayoutAlgorithm[] { new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING),
+						new HorizontalShift(LayoutStyles.NO_LAYOUT_NODE_RESIZING) });
 		return layout;
 	}
-	
+
 	private class DevFilter extends ViewerFilter {
 		protected boolean showDev = true;
 
@@ -157,7 +155,7 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 			}
 
 			if (element instanceof ComposerPackage) {
-				return !composerProject.getComposerPackage().getRequireDev().has((ComposerPackage)element);
+				return !composerProject.getComposerPackage().getRequireDev().has((ComposerPackage) element);
 			}
 
 			return true;
@@ -167,19 +165,16 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 			showDev = false;
 		}
 	}
-	
+
 	protected void update() {
-		if (composerProject != null 
-				&& viewer != null 
-				&& !viewer.getControl().isDisposed()
-				&& editor.isValidJson()) {
+		if (composerProject != null && viewer != null && !viewer.getControl().isDisposed() && editor.isValidJson()) {
 			ComposerPackages packages = composerProject.getInstalledPackages();
 			packages.add(composerProject.getComposerPackage());
 			viewer.setInput(packages);
 			applyFilter(true);
 		}
 	}
-	
+
 	public void applyFilter(boolean showDev) {
 		DevFilter filter = new DevFilter();
 
@@ -196,12 +191,12 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 	@Override
 	public void modifyText(ModifyEvent e) {
 		long start = System.nanoTime();
-		
+
 		graphController.setFilterText(searchControl.getText());
 		viewer.refresh();
-		
+
 		double elapsed = (System.nanoTime() - start) * 1.0e-9;
-		
+
 		System.err.println("refresh inaaa " + elapsed);
 	}
 }

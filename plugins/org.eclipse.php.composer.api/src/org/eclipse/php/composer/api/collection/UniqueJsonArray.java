@@ -21,19 +21,19 @@ public class UniqueJsonArray extends AbstractUniqueJsonArray<Object> {
 
 	public UniqueJsonArray() {
 	}
-	
+
 	public UniqueJsonArray(Object json) {
 		fromJson(json);
 	}
-	
+
 	public UniqueJsonArray(String json) throws ParseException {
 		fromJson(json);
 	}
-	
+
 	public UniqueJsonArray(File file) throws IOException, ParseException {
 		fromJson(file);
 	}
-	
+
 	public UniqueJsonArray(Reader reader) throws IOException, ParseException {
 		fromJson(reader);
 	}

@@ -41,17 +41,17 @@ import org.eclipse.php.composer.api.objects.Scripts;
 public class ScriptsSection extends TreeSection implements PropertyChangeListener {
 
 	private TreeViewer scriptsViewer;
-	
+
 	private IAction addAction;
 	private IAction editAction;
 	private IAction removeAction;
-	
+
 	private static final int ADD_INDEX = 0;
 	private static final int EDIT_INDEX = 1;
 	private static final int REMOVE_INDEX = 2;
-	
+
 	public ScriptsSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[]{"Add...", "Edit...", "Remove"});
+		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
 		createClient(getSection(), page.getManagedForm().getToolkit());
 	}
 
@@ -71,7 +71,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		scriptsViewer = treePart.getTreeViewer();
 		scriptsViewer.setContentProvider(scriptsController);
 		scriptsViewer.setLabelProvider(scriptsController);
-		
+
 		toolkit.paintBordersFor(container);
 		section.setClient(container);
 		section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
@@ -79,36 +79,36 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		scriptsViewer.setInput(composerPackage.getScripts());
 		composerPackage.addPropertyChangeListener(this);
 		updateButtons();
-		
+
 		makeActions();
 		updateMenu();
 	}
-	
+
 	protected boolean createCount() {
 		return true;
 	}
-	
+
 	private void updateButtons() {
 		ISelection selection = scriptsViewer.getSelection();
-		
+
 		TreePart treePart = getTreePart();
 		treePart.setButtonEnabled(ADD_INDEX, enabled);
 		treePart.setButtonEnabled(EDIT_INDEX, !selection.isEmpty() && enabled);
 		treePart.setButtonEnabled(REMOVE_INDEX, !selection.isEmpty() && enabled);
 	}
-	
+
 	private void updateMenu() {
-		IStructuredSelection selection = (IStructuredSelection)scriptsViewer.getSelection();
-		
+		IStructuredSelection selection = (IStructuredSelection) scriptsViewer.getSelection();
+
 		editAction.setEnabled(selection.size() > 0);
 		removeAction.setEnabled(selection.size() > 0);
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		updateButtons();
-		
+
 		refresh();
 		scriptsViewer.getTree().setEnabled(enabled);
 	}
@@ -120,16 +120,16 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName().startsWith("scripts")) { 
+		if (e.getPropertyName().startsWith("scripts")) {
 			refresh();
 		}
 	}
-	
+
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
 	}
-	
+
 	private void makeActions() {
 		addAction = new Action("Add...") {
 			@Override
@@ -137,14 +137,14 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 				handleAdd();
 			}
 		};
-		
+
 		editAction = new Action("Edit...") {
 			@Override
 			public void run() {
 				handleEdit();
 			}
 		};
-		
+
 		removeAction = new Action("Remove") {
 			@Override
 			public void run() {
@@ -152,38 +152,38 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 			}
 		};
 	}
-	
+
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(addAction);
 		manager.add(editAction);
 		manager.add(removeAction);
 	}
-	
+
 	private void handleAdd() {
 		ScriptDialog diag = new ScriptDialog(scriptsViewer.getTree().getShell());
-		
+
 		if (!scriptsViewer.getSelection().isEmpty()) {
-			Object element = ((StructuredSelection)scriptsViewer.getSelection()).getFirstElement();
-			ScriptsController controller = (ScriptsController)scriptsViewer.getLabelProvider();
+			Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
+			ScriptsController controller = (ScriptsController) scriptsViewer.getLabelProvider();
 			String text = controller.getText(element);
 			if (Arrays.asList(Scripts.getEvents()).contains(text)) {
 				diag.setEvent(text);
 			}
 		}
-		
+
 		if (diag.open() == Dialog.OK) {
 			composerPackage.getScripts().getAsArray(diag.getEvent()).add(diag.getHandler());
 			refresh();
 		}
 	}
-	
+
 	private void handleEdit() {
-		Object element = ((StructuredSelection)scriptsViewer.getSelection()).getFirstElement();
-		ScriptsController controller = (ScriptsController)scriptsViewer.getLabelProvider();
+		Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
+		ScriptsController controller = (ScriptsController) scriptsViewer.getLabelProvider();
 		String text = controller.getText(element);
 		ScriptDialog diag = new ScriptDialog(scriptsViewer.getTree().getShell());
-		
+
 		// edit event
 		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
 			diag.setEvent(text);
@@ -191,13 +191,12 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 			if (diag.open() == Dialog.OK) {
 				String event = diag.getEvent();
 				if (!event.equalsIgnoreCase(text)) {
-					composerPackage.getScripts().set(event, 
-							composerPackage.getScripts().getAsArray(text));
+					composerPackage.getScripts().set(event, composerPackage.getScripts().getAsArray(text));
 					composerPackage.getScripts().remove(text);
 				}
 			}
-		} 
-		
+		}
+
 		// edit handler
 		else {
 			String event = controller.getText(controller.getParent(element));
@@ -213,59 +212,49 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 			}
 		}
 	}
-	
+
 	private void handleRemove() {
-		Object element = ((StructuredSelection)scriptsViewer.getSelection()).getFirstElement();
-		ScriptsController controller = (ScriptsController)scriptsViewer.getLabelProvider();
+		Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
+		ScriptsController controller = (ScriptsController) scriptsViewer.getLabelProvider();
 		String text = controller.getText(element);
-		
+
 		// remove event
 		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
-			MessageDialog diag = new MessageDialog(
-				scriptsViewer.getTree().getShell(), 
-				"Remove Event", 
-				null, 
-				"Do you really wan't to remove " + text + "?", 
-				MessageDialog.WARNING,
-				new String[] {"Yes", "No"},
-				0);
+			MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
+					"Do you really wan't to remove " + text + "?", MessageDialog.WARNING, new String[] { "Yes", "No" },
+					0);
 
 			if (diag.open() == Dialog.OK) {
 				composerPackage.getScripts().remove(text);
 			}
-		} 
-		
+		}
+
 		// remove handler
 		else {
 			String event = controller.getText(controller.getParent(element));
-			
-			MessageDialog diag = new MessageDialog(
-					scriptsViewer.getTree().getShell(), 
-					"Remove Event", 
-					null, 
-					"Do you really wan't to remove " + text + " in " + event + "?", 
-					MessageDialog.WARNING,
-					new String[] {"Yes", "No"},
-					0);
-			
+
+			MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
+					"Do you really wan't to remove " + text + " in " + event + "?", MessageDialog.WARNING,
+					new String[] { "Yes", "No" }, 0);
+
 			if (diag.open() == Dialog.OK) {
 				JsonArray events = composerPackage.getScripts().getAsArray(event);
 				events.remove(text);
 			}
 		}
 	}
-	
+
 	@Override
 	protected void buttonSelected(int index) {
 		switch (index) {
 		case ADD_INDEX:
 			handleAdd();
 			break;
-			
+
 		case EDIT_INDEX:
 			handleEdit();
 			break;
-			
+
 		case REMOVE_INDEX:
 			handleRemove();
 			break;

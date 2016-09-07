@@ -29,16 +29,17 @@ public class Config extends JsonObject {
 	public String getVendorDir() {
 		return getAsString("vendor-dir");
 	}
-	
+
 	/**
 	 * Sets the <code>vendor-bin</code> property.
 	 * 
-	 * @param vendorDir the new <code>vendor-bin</code> value
+	 * @param vendorDir
+	 *            the new <code>vendor-bin</code> value
 	 */
 	public void setVendorDir(String vendorDir) {
 		set("vendor-dir", vendorDir);
 	}
-	
+
 	/**
 	 * Returns the <code>bin-dir</code> property.
 	 * 
@@ -47,16 +48,17 @@ public class Config extends JsonObject {
 	public String getBinDir() {
 		return getAsString("bin-dir");
 	}
-	
+
 	/**
 	 * Sets the <code>bin-dir</code> property.
 	 * 
-	 * @param binDir the new <code>bin-dir</code> value
+	 * @param binDir
+	 *            the new <code>bin-dir</code> value
 	 */
 	public void setBinDir(String binDir) {
 		set("bin-dir", binDir);
 	}
-	
+
 	/**
 	 * Returns the <code>process-timeout</code> property.
 	 * 
@@ -65,19 +67,20 @@ public class Config extends JsonObject {
 	public Integer getProcessTimeout() {
 		return getAsInteger("process-timeout");
 	}
-	
+
 	/**
 	 * Sets the <code>process-timeout</code> property.
 	 * 
-	 * @param processTimeout the new <code>process-timeout</code> value
+	 * @param processTimeout
+	 *            the new <code>process-timeout</code> value
 	 */
 	public void setProcessTimeout(int processTimeout) {
 		set("process-timeout", processTimeout);
 	}
-	
+
 	/**
 	 * Returns the <code>github-protocols</code> property. If this property
-	 * isn't present in the json, the default value 
+	 * isn't present in the json, the default value
 	 * <code>["git", "https", "http"]</code> is returned.
 	 * 
 	 * @return the <code>github-protocols</code> property
@@ -92,20 +95,20 @@ public class Config extends JsonObject {
 		}
 		return protocols;
 	}
-	
+
 	/**
 	 * Sets the <code>github-protocols</code> property.
 	 * 
-	 * @param githubProtocols the new <code>github-protocols</code> value
+	 * @param githubProtocols
+	 *            the new <code>github-protocols</code> value
 	 */
 	public void setGithubProtocols(JsonArray githubProtocols) {
 		set("github-protocols", githubProtocols);
 	}
-	
+
 	/**
-	 * Sets the <code>notify-on-install</code> property. If this property
-	 * isn't present in the json, the default value <code>true</code>
-	 * is returned. 
+	 * Sets the <code>notify-on-install</code> property. If this property isn't
+	 * present in the json, the default value <code>true</code> is returned.
 	 * 
 	 * @return the <code>notify-on-install</code> property
 	 */
@@ -116,11 +119,12 @@ public class Config extends JsonObject {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Set the <code>notify-on-install</code> property.
 	 * 
-	 * @param notifyOnInstall the new <code>notify-on-install</code> value
+	 * @param notifyOnInstall
+	 *            the new <code>notify-on-install</code> value
 	 */
 	public void setNotifyOnInstall(boolean notifyOnInstall) {
 		set("notify-on-install", notifyOnInstall);

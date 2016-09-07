@@ -35,7 +35,7 @@ public class SearchControl extends ControlContribution {
 	private final IManagedForm managedForm;
 
 	Text searchText;
-	
+
 	private List<ModifyListener> modifyListeners = new ArrayList<ModifyListener>();
 
 	public SearchControl(String id, IManagedForm managedForm) {
@@ -47,8 +47,7 @@ public class SearchControl extends ControlContribution {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		return os != null && os.startsWith("Mac"); //$NON-NLS-1$
 	}
-	
-	
+
 	public String getText() {
 		return searchText.getText().trim();
 	}
@@ -99,7 +98,7 @@ public class SearchControl extends ControlContribution {
 		searchText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				clearToolItem.setEnabled(searchText.getText().length() > 0);
-				for (ModifyListener listener : modifyListeners) {	
+				for (ModifyListener listener : modifyListeners) {
 					listener.modifyText(e);
 				}
 			}
@@ -109,7 +108,7 @@ public class SearchControl extends ControlContribution {
 
 		return composite;
 	}
-	
+
 	public void addModifyListener(ModifyListener listener) {
 		if (!modifyListeners.contains(listener)) {
 			modifyListeners.add(listener);

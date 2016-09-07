@@ -20,84 +20,74 @@ import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.objects.Autoload;
 
-public class EclipsePHPPackage implements
-        NamespaceResolverInterface, InstallableItem
-{
-    private final ComposerPackage phpPackage;
+public class EclipsePHPPackage implements NamespaceResolverInterface, InstallableItem {
+	private final ComposerPackage phpPackage;
 
-    private IPath path;
-    
-    public EclipsePHPPackage(ComposerPackage phpPackage) {
-        
-        Assert.isNotNull(phpPackage);
-        this.phpPackage = phpPackage;
-    }
+	private IPath path;
 
-    @Override
-    public IPath resolve(IResource resource)
-    {
-        Autoload autoload = phpPackage.getAutoload();
-        
-        if (autoload == null || autoload.getPsr0() == null || autoload.getPsr0().getFirst() == null) {
-            Logger.debug("Unable to resolve namespace without autoload information " + phpPackage.getName());
-            return null;
-        }
-         
-        String targetDir = phpPackage.getTargetDir();
-        IPath ns = null;
-        IPath path = resource.getFullPath();
-        IPath composerPath = getPath();
-        
-        
-        IPath psr0Path = composerPath.append(autoload.getPsr0().getFirst().getNamespace());
-        int segments = psr0Path.segmentCount();
-         
-        if (path.matchingFirstSegments(psr0Path) == segments) {
-             
-            if (targetDir != null && targetDir.length() > 0) {
-                Path target = new Path(targetDir);
-                ns = target.append(path.removeFirstSegments(psr0Path.segmentCount()));    
-            } else {
-                ns = path.removeFirstSegments(psr0Path.segmentCount());
-            }
-             
-        }
+	public EclipsePHPPackage(ComposerPackage phpPackage) {
 
-        return ns;        
-    }
+		Assert.isNotNull(phpPackage);
+		this.phpPackage = phpPackage;
+	}
 
-    @Override
-    public String getName()
-    {
-        return phpPackage.getName();
-    }
+	@Override
+	public IPath resolve(IResource resource) {
+		Autoload autoload = phpPackage.getAutoload();
 
-    @Override
-    public String getDescription()
-    {
-        return phpPackage.getDescription();
-    }
+		if (autoload == null || autoload.getPsr0() == null || autoload.getPsr0().getFirst() == null) {
+			Logger.debug("Unable to resolve namespace without autoload information " + phpPackage.getName());
+			return null;
+		}
 
-    @Override
-    public String getUrl()
-    {
-        return phpPackage.getHomepage();
-    }
+		String targetDir = phpPackage.getTargetDir();
+		IPath ns = null;
+		IPath path = resource.getFullPath();
+		IPath composerPath = getPath();
 
-    public void setFullPath(String fullPath)
-    {
-        path = new Path(fullPath);
-    }
+		IPath psr0Path = composerPath.append(autoload.getPsr0().getFirst().getNamespace());
+		int segments = psr0Path.segmentCount();
 
-    public IPath getPath()
-    {
-        return path;
-    }
+		if (path.matchingFirstSegments(psr0Path) == segments) {
 
-    public ComposerPackage getPhpPackage()
-    {
-        return phpPackage;
-    }
+			if (targetDir != null && targetDir.length() > 0) {
+				Path target = new Path(targetDir);
+				ns = target.append(path.removeFirstSegments(psr0Path.segmentCount()));
+			} else {
+				ns = path.removeFirstSegments(psr0Path.segmentCount());
+			}
+
+		}
+
+		return ns;
+	}
+
+	@Override
+	public String getName() {
+		return phpPackage.getName();
+	}
+
+	@Override
+	public String getDescription() {
+		return phpPackage.getDescription();
+	}
+
+	@Override
+	public String getUrl() {
+		return phpPackage.getHomepage();
+	}
+
+	public void setFullPath(String fullPath) {
+		path = new Path(fullPath);
+	}
+
+	public IPath getPath() {
+		return path;
+	}
+
+	public ComposerPackage getPhpPackage() {
+		return phpPackage;
+	}
 
 	@Override
 	public IPath reverseResolve(IProject project, String namespace) {

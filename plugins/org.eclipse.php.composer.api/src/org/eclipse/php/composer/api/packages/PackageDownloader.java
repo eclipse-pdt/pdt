@@ -20,7 +20,7 @@ public class PackageDownloader extends DownloadClient {
 
 	public RepositoryPackage loadPackage(String packageName) throws Exception {
 		downloader.setUrl(createUrl(packageName));
-		
+
 		if (!downloader.getUrl().endsWith(".json")) {
 			downloader.setUrl(downloader.getUrl() + ".json");
 		}

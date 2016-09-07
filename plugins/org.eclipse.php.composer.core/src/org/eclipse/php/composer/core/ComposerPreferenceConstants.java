@@ -18,7 +18,7 @@ public class ComposerPreferenceConstants {
 	public static final String PHP_EXECUTABLE = ComposerPlugin.ID + "php_executable";
 
 	/**
-	 * Path to the composer.phar 
+	 * Path to the composer.phar
 	 */
 	public static final String COMPOSER_PHAR = ComposerPlugin.ID + "composer_phar";
 
@@ -26,7 +26,7 @@ public class ComposerPreferenceConstants {
 	 * Whether a global composer.phar is used or a project-scope composer.phar
 	 */
 	public static final String USE_PROJECT_PHAR = ComposerPlugin.ID + "use_project_phar";
-	
+
 	/**
 	 * Buildpath includes rsp. excludes items either per project or global
 	 */
@@ -36,7 +36,7 @@ public class ComposerPreferenceConstants {
 	 * Shall the buildpath be updated after saving a composer.json
 	 */
 	public static final String SAVEACTION_BUILDPATH = ComposerPlugin.ID + "saveaction.buildpath";
-	
+
 	/**
 	 * Shall `composer.phar update` being run after saving a composer.json
 	 */

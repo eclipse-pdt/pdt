@@ -21,7 +21,7 @@ public class BuildPathExclusionWizard extends EditFilterWizard {
 	public BuildPathExclusionWizard(BPListElement[] existingEntries, BPListElement newEntry) {
 		super(existingEntries, newEntry);
 	}
-	
+
 	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		// avoid actually saving the filters to .buildpath

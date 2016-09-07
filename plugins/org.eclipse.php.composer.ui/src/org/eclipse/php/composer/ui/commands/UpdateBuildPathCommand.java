@@ -28,17 +28,16 @@ public class UpdateBuildPathCommand extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event)
-				.getActivePage().getSelection();
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		if (selection instanceof IStructuredSelection) {
-			Object item = ((IStructuredSelection)selection).getFirstElement();
+			Object item = ((IStructuredSelection) selection).getFirstElement();
 
 			if (item instanceof IAdaptable) {
-				IAdaptable adaptable = (IAdaptable)item;
-				IProject project = ((IResource)adaptable.getAdapter(IResource.class)).getProject();
-				IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project); 
-				
+				IAdaptable adaptable = (IAdaptable) item;
+				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
+				IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project);
+
 				BuildPathManager manager = new BuildPathManager(composerProject);
 				try {
 					manager.update();
@@ -47,7 +46,7 @@ public class UpdateBuildPathCommand extends AbstractHandler {
 				}
 			}
 		}
-		
+
 		return null;
 	}
 

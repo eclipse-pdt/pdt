@@ -29,14 +29,12 @@ import org.eclipse.php.composer.core.resources.IComposerProject;
  * adjusts the buildpath of the project accordingly.
  * 
  */
-public class ComposerBuildPathManagementBuilder extends
-		IncrementalProjectBuilder {
+public class ComposerBuildPathManagementBuilder extends IncrementalProjectBuilder {
 
 	public static final String ID = "org.eclipse.php.composer.core.builder.buildPathManagementBuilder";
 
 	@Override
-	protected IProject[] build(int kind, Map<String, String> args,
-			IProgressMonitor monitor) throws CoreException {
+	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
 
 		IProject project = getProject();
 
@@ -60,7 +58,7 @@ public class ComposerBuildPathManagementBuilder extends
 				if (project.hasNature(ComposerNature.NATURE_ID)) {
 					buildPathManager.update(monitor);
 				}
-				
+
 				return null;
 			}
 
@@ -68,7 +66,7 @@ public class ComposerBuildPathManagementBuilder extends
 
 			for (IResourceDelta affected : delta.getAffectedChildren()) {
 				String path = affected.getProjectRelativePath().toOSString();
-				
+
 				if (path.equals("composer.lock") || path.equals(vendor)) {
 					changed = true;
 				}
@@ -78,7 +76,7 @@ public class ComposerBuildPathManagementBuilder extends
 			if (!changed) {
 				return null;
 			}
-			
+
 			buildPathManager.update(monitor);
 		} catch (Exception e) {
 			Logger.logException(e);

@@ -57,17 +57,18 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	private static final int ADD_INDEX = 0;
 	private static final int EDIT_INDEX = 1;
 	private static final int REMOVE_INDEX = 2;
-	
+
 	protected Psr psr = null;
 
 	public PsrSection(ComposerFormPage page, Composite parent) {
 		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
-		
+
 		psr = getPsr();
 		createClient(getSection(), page.getManagedForm().getToolkit());
 	}
-	
+
 	abstract protected Psr getPsr();
+
 	abstract protected String getPsrName();
 
 	@Override
@@ -118,12 +119,12 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 		editAction.setEnabled(selection.size() > 0);
 		removeAction.setEnabled(selection.size() > 0);
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		updateButtons();
-		
+
 		refresh();
 		psrViewer.getTree().setEnabled(enabled);
 	}
@@ -175,8 +176,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	}
 
 	private void handleAdd() {
-		PsrDialog dialog = new PsrDialog(psrViewer.getTree().getShell(), 
-				new Namespace(), 
+		PsrDialog dialog = new PsrDialog(psrViewer.getTree().getShell(), new Namespace(),
 				getPage().getComposerEditor().getProject());
 
 		if (dialog.open() == Dialog.OK) {
@@ -185,24 +185,23 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	}
 
 	private void handleEdit() {
-		
+
 		Namespace namespace = null;
 		Object element = ((StructuredSelection) psrViewer.getSelection()).getFirstElement();
-		
+
 		// get parent if element is string
 		if (element instanceof String) {
-			element = ((PsrController)psrViewer.getContentProvider()).getParent(element);
+			element = ((PsrController) psrViewer.getContentProvider()).getParent(element);
 		}
-		
+
 		if (element instanceof Namespace) {
 			namespace = ((Namespace) element).clone();
 		}
-				 
+
 		if (namespace != null) {
-			PsrDialog diag = new PsrDialog(psrViewer.getTree().getShell(), 
-					namespace.clone(), 
+			PsrDialog diag = new PsrDialog(psrViewer.getTree().getShell(), namespace.clone(),
 					getPage().getComposerEditor().getProject());
-			
+
 			if (diag.open() == Dialog.OK) {
 				Namespace nmspc = psr.get(namespace.getNamespace());
 				nmspc.clear();
@@ -214,7 +213,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 
 	private void handleRemove() {
 		Object element = ((StructuredSelection) psrViewer.getSelection()).getFirstElement();
-		
+
 		if (element instanceof Namespace) {
 			psr.remove((Namespace) element);
 		} else if (element instanceof String) {
@@ -241,11 +240,11 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 			break;
 		}
 	}
-	
+
 	private class PathDropAdapter extends ViewerDropAdapter {
 
 		private Namespace target;
-		
+
 		public PathDropAdapter(Viewer viewer) {
 			super(viewer);
 		}
@@ -254,7 +253,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 		public boolean performDrop(Object data) {
 			if (data instanceof IResource[]) {
 				IResource[] resources = (IResource[]) data;
-				
+
 				List<IFolder> folders = new ArrayList<IFolder>();
 
 				for (IResource resource : resources) {
@@ -262,24 +261,24 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 						folders.add((IFolder) resource);
 					}
 				}
-				
+
 				for (IFolder folder : folders) {
 					target.add(folder.getProjectRelativePath().toString());
 				}
 				return false;
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean validateDrop(Object target, int operation, TransferData transferType) {
-			
+
 			if (target instanceof Namespace) {
 				this.target = (Namespace) target;
 				return true;
 			}
-			
+
 			return false;
 		}
 	}

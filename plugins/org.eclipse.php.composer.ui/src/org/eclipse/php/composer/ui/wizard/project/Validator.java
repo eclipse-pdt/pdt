@@ -19,7 +19,7 @@ import org.eclipse.php.composer.ui.wizard.ValidationException.Severity;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
 public final class Validator extends AbstractValidator {
-	
+
 	public Validator(AbstractWizardFirstPage composerProjectWizardFirstPage) {
 		super(composerProjectWizardFirstPage);
 	}
@@ -35,6 +35,6 @@ public final class Validator extends AbstractValidator {
 
 	@Override
 	protected void beginValidation() throws ValidationException {
-		
+
 	}
 }

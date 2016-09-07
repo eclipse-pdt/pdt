@@ -60,9 +60,11 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	 *            the property
 	 * @param type
 	 *            the type
-	 * @return <ul>
+	 * @return
+	 *         <ul>
 	 *         <li><code>true</code> property is instance of type</li>
-	 *         <li><code>false</code> property is not an instance of type or it doesn't exist.</li>
+	 *         <li><code>false</code> property is not an instance of type or it
+	 *         doesn't exist.</li>
 	 *         </ul>
 	 */
 	public boolean is(String property, Type type) {
@@ -78,9 +80,11 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	 * @see #getAsArray
 	 * @param property
 	 *            the property
-	 * @return <ul>
+	 * @return
+	 *         <ul>
 	 *         <li><code>true</code> property is an array</li>
-	 *         <li><code>false</code> property is not an array or it doesn't exist.</li>
+	 *         <li><code>false</code> property is not an array or it doesn't
+	 *         exist.</li>
 	 *         </ul>
 	 */
 	public boolean isArray(String property) {
@@ -96,9 +100,11 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	 * @see #getAsObject
 	 * @param property
 	 *            the property
-	 * @return <ul>
+	 * @return
+	 *         <ul>
 	 *         <li><code>true</code> property is an entity</li>
-	 *         <li><code>false</code> property is not an entity or it doesn't exist.</li>
+	 *         <li><code>false</code> property is not an entity or it doesn't
+	 *         exist.</li>
 	 *         </ul>
 	 */
 	public boolean isObject(String property) {
@@ -109,7 +115,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property raw value or <code>null</code> if it has not been set.
+	 * Returns the property raw value or <code>null</code> if it has not been
+	 * set.
 	 * 
 	 * @param property
 	 *            the property
@@ -137,7 +144,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as string or <code>null</code> if it has not been set.
+	 * Returns the property value as string or <code>null</code> if it has not
+	 * been set.
 	 * 
 	 * @param property
 	 *            the property
@@ -151,7 +159,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as boolean or <code>null</code> if it has not been set.
+	 * Returns the property value as boolean or <code>null</code> if it has not
+	 * been set.
 	 * 
 	 * @param property
 	 *            the property
@@ -165,7 +174,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as integer or <code>null</code> if it has not been set.
+	 * Returns the property value as integer or <code>null</code> if it has not
+	 * been set.
 	 * 
 	 * @param property
 	 *            the property
@@ -179,7 +189,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as double or <code>null</code> if it has not been set.
+	 * Returns the property value as double or <code>null</code> if it has not
+	 * been set.
 	 * 
 	 * @param property
 	 *            the property
@@ -218,21 +229,21 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 		super.set(property, new JsonValue(value));
 	}
 
-//	/**
-//	 * Sets a new value for the given property.
-//	 * 
-//	 * @param property
-//	 *            the property
-//	 * @param value
-//	 *            the new value
-//	 */
-//	public void set(String property, JsonValue value) {
-//		if (silentProps.contains(property)) {
-//			properties.put(property, value);
-//		} else {
-//			super.set(property, value);
-//		}
-//	}
+	// /**
+	// * Sets a new value for the given property.
+	// *
+	// * @param property
+	// * the property
+	// * @param value
+	// * the new value
+	// */
+	// public void set(String property, JsonValue value) {
+	// if (silentProps.contains(property)) {
+	// properties.put(property, value);
+	// } else {
+	// super.set(property, value);
+	// }
+	// }
 
 	protected void cloneProperties(JsonObject clone) {
 		for (Entry<String, JsonValue> entry : properties.entrySet()) {

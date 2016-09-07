@@ -17,21 +17,20 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 
-
 public class JsonFormatter {
-	
+
 	public static String format(final Object object) {
 		final JsonVisitor visitor = new JsonVisitor(1, '\t');
 		visitor.visit(object, 0);
 		return JsonFormatter.postProcessing(visitor.toString());
 	}
-	
+
 	private static String postProcessing(String json) {
 		json = json.replace("[\n{", "[{");
 		json = json.replace("},\n{", "}, {");
 		return json;
 	}
-	
+
 	private static class JsonVisitor {
 
 		private Gson gson = new Gson();
@@ -68,7 +67,7 @@ public class JsonFormatter {
 				write("{}", 0);
 			} else {
 				writeln("{", 0);
-				final Iterator<String> keys = ((Set<String>)obj.keySet()).iterator();
+				final Iterator<String> keys = ((Set<String>) obj.keySet()).iterator();
 				while (keys.hasNext()) {
 					final String key = keys.next();
 					write("\"" + escape(key) + "\" : ", indent + 1);
@@ -98,11 +97,11 @@ public class JsonFormatter {
 				} else if (object instanceof Boolean || object instanceof Number) {
 					write(String.valueOf(object), indent);
 				} else {
-				    write(gson.toJson(String.valueOf(object)), indent);
+					write(gson.toJson(String.valueOf(object)), indent);
 				}
 			}
 		}
-		
+
 		private void writeln(final String data, final int indent) {
 			write(data, indent);
 			builder.append('\n');
@@ -114,64 +113,63 @@ public class JsonFormatter {
 			}
 			builder.append(data);
 		}
-		
+
 		@Override
 		public String toString() {
 			return builder.toString();
 		}
-		
-	    private static String escape(String s) {
-	    	if (s == null || s.isEmpty()) {
-	    		return "";
-	    	}
-	    	StringBuffer sb = new StringBuffer();
-	    	
-            for (int i = 0; i < s.length(); i++) {
-                    char ch = s.charAt(i);
-                    switch(ch) {
-                    case '"':
-                            sb.append("\\\"");
-                            break;
-                    case '\\':
-                            sb.append("\\\\");
-                            break;
-                    case '\b':
-                            sb.append("\\b");
-                            break;
-                    case '\f':
-                            sb.append("\\f");
-                            break;
-                    case '\n':
-                            sb.append("\\n");
-                            break;
-                    case '\r':
-                            sb.append("\\r");
-                            break;
-                    case '\t':
-                            sb.append("\\t");
-                            break;
-                    // see https://github.com/pulse00/Composer-Eclipse-Plugin/issues/51
-                    /*
-                    case '/':
-                            sb.append("\\/");
-                            break;
-                    */
-                    default:
-                    		// Reference: http://www.unicode.org/versions/Unicode5.1.0/
-                            if((ch>='\u0000' && ch<='\u001F') || (ch>='\u007F' && ch<='\u009F') || (ch>='\u2000' && ch<='\u20FF')){
-                                    String ss=Integer.toHexString(ch);
-                                    sb.append("\\u");
-                                    for(int k=0;k<4-ss.length();k++){
-                                            sb.append('0');
-                                    }
-                                    sb.append(ss.toUpperCase());
-                            }
-                            else{
-                                    sb.append(ch);
-                            }
-                    }
-            }
-            return sb.toString();
-	    }		
+
+		private static String escape(String s) {
+			if (s == null || s.isEmpty()) {
+				return "";
+			}
+			StringBuffer sb = new StringBuffer();
+
+			for (int i = 0; i < s.length(); i++) {
+				char ch = s.charAt(i);
+				switch (ch) {
+				case '"':
+					sb.append("\\\"");
+					break;
+				case '\\':
+					sb.append("\\\\");
+					break;
+				case '\b':
+					sb.append("\\b");
+					break;
+				case '\f':
+					sb.append("\\f");
+					break;
+				case '\n':
+					sb.append("\\n");
+					break;
+				case '\r':
+					sb.append("\\r");
+					break;
+				case '\t':
+					sb.append("\\t");
+					break;
+				// see
+				// https://github.com/pulse00/Composer-Eclipse-Plugin/issues/51
+				/*
+				 * case '/': sb.append("\\/"); break;
+				 */
+				default:
+					// Reference: http://www.unicode.org/versions/Unicode5.1.0/
+					if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
+							|| (ch >= '\u2000' && ch <= '\u20FF')) {
+						String ss = Integer.toHexString(ch);
+						sb.append("\\u");
+						for (int k = 0; k < 4 - ss.length(); k++) {
+							sb.append('0');
+						}
+						sb.append(ss.toUpperCase());
+					} else {
+						sb.append(ch);
+					}
+				}
+			}
+			return sb.toString();
+		}
 	}
 }

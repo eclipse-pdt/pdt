@@ -12,6 +12,6 @@ package org.eclipse.php.composer.api.packages;
 
 public interface TransferListenerInterface {
 	void errorOccured(Exception e);
-	
+
 	void aborted(String url);
 }

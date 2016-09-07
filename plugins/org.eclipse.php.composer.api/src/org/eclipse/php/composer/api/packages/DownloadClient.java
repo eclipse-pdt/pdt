@@ -13,11 +13,11 @@ package org.eclipse.php.composer.api.packages;
 public class DownloadClient extends AbstractDownloadClient {
 
 	protected Downloader downloader = new Downloader();
-	
+
 	public DownloadClient() {
-		
+
 	}
-	
+
 	public DownloadClient(String baseUrl) {
 		super(baseUrl);
 	}

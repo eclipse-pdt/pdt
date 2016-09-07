@@ -23,15 +23,14 @@ import org.eclipse.php.composer.api.entities.Version;
 public class VersionedPackage extends MinimalPackage {
 
 	protected transient Version detailedVersion = null;
-	
+
 	public Version getDetailedVersion() {
 		if (detailedVersion == null) {
 			detailedVersion = new Version(getVersion());
 		}
 		return detailedVersion;
 	}
-	
-	
+
 	/**
 	 * Returns the version.
 	 * 
@@ -40,18 +39,20 @@ public class VersionedPackage extends MinimalPackage {
 	public String getVersion() {
 		return getAsString("version");
 	}
-	
+
 	/**
 	 * Sets the version.
 	 * 
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
 	public void setVersion(String version) {
 		set("version", version);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	public VersionedPackage clone() {

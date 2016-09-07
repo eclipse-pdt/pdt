@@ -74,7 +74,7 @@ public abstract class TreeSection extends StructuredViewerSection {
 				count.setText("Total: " + Integer.toString(getTreeViewer().getTree().getItemCount()));
 		}
 	}
-	
+
 	/**
 	 * Constructor for TableSection.
 	 * 
@@ -89,7 +89,8 @@ public abstract class TreeSection extends StructuredViewerSection {
 	 * 
 	 * @param formPage
 	 */
-	public TreeSection(ComposerFormPage formPage, Composite parent, int style, boolean titleBar, String[] buttonLabels) {
+	public TreeSection(ComposerFormPage formPage, Composite parent, int style, boolean titleBar,
+			String[] buttonLabels) {
 		super(formPage, parent, style, titleBar, buttonLabels);
 	}
 

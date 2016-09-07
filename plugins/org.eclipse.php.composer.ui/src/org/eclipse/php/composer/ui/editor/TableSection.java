@@ -74,7 +74,7 @@ public abstract class TableSection extends StructuredViewerSection {
 				count.setText("Total: " + Integer.toString(getTableViewer().getTable().getItemCount()));
 		}
 	}
-	
+
 	/**
 	 * Constructor for TableSection.
 	 * 
@@ -89,7 +89,8 @@ public abstract class TableSection extends StructuredViewerSection {
 	 * 
 	 * @param formPage
 	 */
-	public TableSection(ComposerFormPage formPage, Composite parent, int style, boolean titleBar, String[] buttonLabels) {
+	public TableSection(ComposerFormPage formPage, Composite parent, int style, boolean titleBar,
+			String[] buttonLabels) {
 		super(formPage, parent, style, titleBar, buttonLabels);
 	}
 

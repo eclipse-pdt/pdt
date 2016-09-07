@@ -28,11 +28,12 @@ public abstract class DistributedPackage extends VersionedPackage {
 	public String getType() {
 		return getAsString("type");
 	}
-	
+
 	/**
 	 * Sets the <code>type</code> property.
 	 * 
-	 * @param type new <code>type</code> value
+	 * @param type
+	 *            new <code>type</code> value
 	 */
 	public void setType(String type) {
 		set("type", type);
@@ -46,7 +47,7 @@ public abstract class DistributedPackage extends VersionedPackage {
 	public Autoload getAutoload() {
 		return autoload;
 	}
-	
+
 	/**
 	 * Returns the <code>dist</code> entity.
 	 * 
@@ -55,7 +56,7 @@ public abstract class DistributedPackage extends VersionedPackage {
 	public Distribution getDist() {
 		return dist;
 	}
-	
+
 	/**
 	 * Returns the <code>source</code> entity.
 	 * 
@@ -64,5 +65,5 @@ public abstract class DistributedPackage extends VersionedPackage {
 	public Source getSource() {
 		return source;
 	}
-	
+
 }

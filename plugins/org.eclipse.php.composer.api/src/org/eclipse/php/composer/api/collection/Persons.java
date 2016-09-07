@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import org.eclipse.php.composer.api.entities.AbstractJsonArray;
 import org.eclipse.php.composer.api.objects.Person;
 
-
 /**
  * Represents a person collection for authors and maintainers
  * 
@@ -27,27 +26,27 @@ public class Persons extends AbstractJsonArray<Person> implements Iterable<Perso
 
 	public Persons() {
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();
 		if (obj instanceof LinkedList) {
-			for (Object pObj : (LinkedList)obj) {
+			for (Object pObj : (LinkedList) obj) {
 				if (pObj instanceof LinkedHashMap) {
-					LinkedHashMap p = (LinkedHashMap)pObj;
+					LinkedHashMap p = (LinkedHashMap) pObj;
 					Person person = new Person(p);
 					add(person);
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean has(Person value) {
 		if (super.has(value)) {
 			return true;
 		}
-		
+
 		for (Person p : this) {
 			if (p.equals(value)) {
 				return true;
@@ -55,5 +54,5 @@ public class Persons extends AbstractJsonArray<Person> implements Iterable<Perso
 		}
 		return false;
 	}
-	
+
 }

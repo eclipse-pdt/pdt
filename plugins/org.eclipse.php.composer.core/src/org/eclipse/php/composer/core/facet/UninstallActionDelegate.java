@@ -32,8 +32,8 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 @SuppressWarnings("restriction")
 public class UninstallActionDelegate implements IDelegate {
 	@Override
-	public void execute(IProject project, IProjectFacetVersion version,
-			Object object, IProgressMonitor progress) throws CoreException {
+	public void execute(IProject project, IProjectFacetVersion version, Object object, IProgressMonitor progress)
+			throws CoreException {
 		if (!project.hasNature(PHPNature.ID)) {
 			return;
 		}
@@ -41,33 +41,33 @@ public class UninstallActionDelegate implements IDelegate {
 		progress.subTask("Uninstalling composer nature");
 		// remove the composer nature
 		IProjectDescription desc = project.getDescription();
-		ArrayList<String> natures =  new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
+		ArrayList<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
 		int index = natures.indexOf(ComposerNature.NATURE_ID);
 		if (index != -1) {
 			natures.remove(index);
 		}
-		desc.setNatureIds(natures.toArray(new String[]{}));
+		desc.setNatureIds(natures.toArray(new String[] {}));
 		project.setDescription(desc, progress);
 
-		
-		//progress.subTask("Uninstalling composer buildpath");
+		// progress.subTask("Uninstalling composer buildpath");
 
 		// maybe comment out this one:
 		// remove composer buildpath entry
 
 		/*
-		if (ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
-			IBuildpathContainer composerContainer = new ComposerBuildpathContainer(
-					new Path(ComposerBuildpathContainerInitializer.CONTAINER),
-					scriptProject);
-			List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
-			entries.remove(DLTKCore.newContainerEntry(composerContainer.getPath()));
-
-			// remove the composer buildpathentry to the project
-			BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
-
-			BuildpathUtil.setupVendorBuildpath(scriptProject, progress);
-		}
-		*/
+		 * if (ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
+		 * IBuildpathContainer composerContainer = new
+		 * ComposerBuildpathContainer( new
+		 * Path(ComposerBuildpathContainerInitializer.CONTAINER),
+		 * scriptProject); List<IBuildpathEntry> entries = new
+		 * ArrayList<IBuildpathEntry>();
+		 * entries.remove(DLTKCore.newContainerEntry(composerContainer.getPath()
+		 * ));
+		 * 
+		 * // remove the composer buildpathentry to the project
+		 * BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
+		 * 
+		 * BuildpathUtil.setupVendorBuildpath(scriptProject, progress); }
+		 */
 	}
 }
