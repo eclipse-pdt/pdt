@@ -94,9 +94,11 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((evaluatedType == null) ? 0 : evaluatedType.hashCode());
+
 		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
-		result = prime * result + Arrays.hashCode(types);
+		result = prime * result + (this.evaluatedType != null ? this.evaluatedType.hashCode() : 0);
+		result = prime * result + Arrays.hashCode(argNames);
+		result = prime * result + this.offset;
 		return result;
 	}
 
@@ -108,6 +110,14 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractMethodReturnTypeGoal other = (AbstractMethodReturnTypeGoal) obj;
+		if (this.offset != other.offset) {
+			return false;
+		}
+		if (argNames == null) {
+			if (other.argNames != null)
+				return false;
+		} else if (!Arrays.equals(argNames, other.argNames))
+			return false;
 		if (evaluatedType == null) {
 			if (other.evaluatedType != null)
 				return false;
@@ -117,8 +127,6 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 			if (other.methodName != null)
 				return false;
 		} else if (!methodName.equals(other.methodName))
-			return false;
-		if (!Arrays.equals(types, other.types))
 			return false;
 		return true;
 	}

@@ -38,6 +38,7 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((variableName == null) ? 0 : variableName.hashCode());
+		result = prime * result + offset;
 		return result;
 	}
 
@@ -49,6 +50,9 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 		if (getClass() != obj.getClass())
 			return false;
 		PHPDocClassVariableGoal other = (PHPDocClassVariableGoal) obj;
+		if (this.offset != other.offset) {
+			return false;
+		}
 		if (variableName == null) {
 			if (other.variableName != null)
 				return false;
