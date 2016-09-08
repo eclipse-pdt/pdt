@@ -678,13 +678,21 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	@Override
 	protected void firePostSelectionChanged(int offset, int length) {
-		if (fTextEditor instanceof PHPStructuredEditor && !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
-			super.firePostSelectionChanged(offset, length);
-			fPostSelectionOffset = -1;
-			fPostSelectionLength = -1;
-		} else {
-			fPostSelectionOffset = offset;
-			fPostSelectionLength = length;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=500993
+		// This method must be synchronized to avoid using negative
+		// fPostSelectionOffset values (see concurrent access with the
+		// IPhpScriptReconcilingListener attached to PHPStructuredEditor and
+		// defined in the PHPStructuredTextViewer constructor).
+		synchronized (this) {
+			if (fTextEditor instanceof PHPStructuredEditor
+					&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
+				super.firePostSelectionChanged(offset, length);
+				fPostSelectionOffset = -1;
+				fPostSelectionLength = -1;
+			} else {
+				fPostSelectionOffset = offset;
+				fPostSelectionLength = length;
+			}
 		}
 	}
 }
