@@ -158,14 +158,14 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 				matches.add(bp);
 				continue;
 			}
-			/*
-			 * If previous check failed, try to establish if PHP breakpoint file
-			 * location is pointing to the same file as the one that should be
-			 * processed. Symbolic links will also be resolved.
-			 */
-			String bpMarkerFileLocation = bp.getMarker().getResource().getLocation().toOSString();
-			String phpBpFileLocation = ((PHPLineBreakpoint) bp).getRuntimeBreakpoint().getFileName();
 			try {
+				/*
+				 * If previous check failed, try to establish if PHP breakpoint
+				 * file location is pointing to the same file as the one that
+				 * should be processed. Symbolic links will also be resolved.
+				 */
+				String bpMarkerFileLocation = bp.getMarker().getResource().getLocation().toOSString();
+				String phpBpFileLocation = ((PHPLineBreakpoint) bp).getRuntimeBreakpoint().getFileName();
 				if (FileUtils.isSameFile(bpMarkerFileLocation, processFileLocation)
 						|| FileUtils.isSameFile(phpBpFileLocation, processFileLocation)) {
 					/*
@@ -208,9 +208,10 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 					path = EnvironmentPathUtils.getLocalPath(path);
 				}
 				secondaryId = path.toString();
-				if (VirtualPath.isAbsolute(processFileLocation)
-						&& (new VirtualPath(processFileLocation).equals(new VirtualPath(secondaryId)))
-						|| resource != null && secondaryId.equals(resource.getLocation().toString())) {
+				if ((VirtualPath.isAbsolute(processFileLocation)
+						&& new VirtualPath(processFileLocation).equals(new VirtualPath(secondaryId)))
+						|| (resource != null && resource.getLocation() != null
+								&& secondaryId.equals(resource.getLocation().toString()))) {
 					matches.add(bp);
 				}
 			}
