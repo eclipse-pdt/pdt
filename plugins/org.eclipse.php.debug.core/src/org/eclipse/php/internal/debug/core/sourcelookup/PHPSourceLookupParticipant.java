@@ -90,8 +90,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 							 */
 							if (resource.getName().equals(sourceFileName) || resource.isLinked()
 									|| PHPSymbolicLinksCache.INSTANCE.isSymbolicLink(resource)) {
-								String fileLocation = resource.getLocation().toOSString();
-								if (FileUtils.isSameFile(sourceLocation, fileLocation)) {
+								if (resource.getLocation() != null
+										&& FileUtils.isSameFile(sourceLocation, resource.getLocation().toOSString())) {
 									matches.add(resource);
 								}
 							}
