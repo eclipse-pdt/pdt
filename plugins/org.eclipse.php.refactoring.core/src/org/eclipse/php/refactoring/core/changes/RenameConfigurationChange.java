@@ -43,8 +43,7 @@ public class RenameConfigurationChange extends Change {
 	 * @param resName
 	 * @param newName
 	 */
-	public RenameConfigurationChange(IPath source, IPath dest, String resName,
-			String newName) {
+	public RenameConfigurationChange(IPath source, IPath dest, String resName, String newName) {
 
 		fSource = source;
 		fDest = dest;
@@ -53,14 +52,11 @@ public class RenameConfigurationChange extends Change {
 
 		IPath resourcePath = source.append(resName);
 		if (source.segmentCount() < 1) {
-			fResource = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(resName);
+			fResource = ResourcesPlugin.getWorkspace().getRoot().getProject(resName);
 		} else {
-			fResource = ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(resourcePath);
+			fResource = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
 			if (!fResource.exists()) {
-				fResource = ResourcesPlugin.getWorkspace().getRoot()
-						.getFolder(resourcePath);
+				fResource = ResourcesPlugin.getWorkspace().getRoot().getFolder(resourcePath);
 			}
 		}
 
@@ -73,8 +69,7 @@ public class RenameConfigurationChange extends Change {
 
 	@Override
 	public String getName() {
-		return NLS.bind(Messages.RenameConfigurationChange_0,
-				fResource.getName());
+		return NLS.bind(Messages.RenameConfigurationChange_0, fResource.getName());
 	}
 
 	@Override
@@ -83,8 +78,7 @@ public class RenameConfigurationChange extends Change {
 	}
 
 	@Override
-	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -96,11 +90,10 @@ public class RenameConfigurationChange extends Change {
 
 		// Collect launch configurations:
 		fConfigurationChanges = new HashMap<ILaunchConfiguration, Map<String, String>>();
-		ILaunchConfiguration[] launchConfigurations = DebugPlugin.getDefault()
-				.getLaunchManager().getLaunchConfigurations();
+		ILaunchConfiguration[] launchConfigurations = DebugPlugin.getDefault().getLaunchManager()
+				.getLaunchConfigurations();
 		for (ILaunchConfiguration launchConfiguration : launchConfigurations) {
-			Map<String, Object> attributes = launchConfiguration
-					.getAttributes();
+			Map<String, Object> attributes = launchConfiguration.getAttributes();
 			Map<String, String> changes = new HashMap<String, String>();
 			for (Entry<String, Object> attribute : attributes.entrySet()) {
 				Object attributeValue = attribute.getValue();
@@ -116,9 +109,8 @@ public class RenameConfigurationChange extends Change {
 					String newValue;
 					if (fResource instanceof IContainer) {
 						newValue = dest
-								.append(attributeValuePath.removeFirstSegments(attributeValuePath
-										.matchingFirstSegments(fResource
-												.getFullPath())))
+								.append(attributeValuePath.removeFirstSegments(
+										attributeValuePath.matchingFirstSegments(fResource.getFullPath())))
 								.makeAbsolute().toString();
 					} else {
 						newValue = dest.makeAbsolute().toString();
@@ -126,22 +118,18 @@ public class RenameConfigurationChange extends Change {
 
 					changes.put(attributeName, newValue);
 				}
-				if (fResource.getLocation().isPrefixOf(attributeValuePath)) {
+				if (fResource.getLocation() != null && fResource.getLocation().isPrefixOf(attributeValuePath)) {
 					String newValue = null;
 					if (fResource instanceof IContainer) {
 						IPath projectPath = fResource.getFullPath();
-						IPath fileSystemPath = fResource.getLocation()
-								.removeLastSegments(projectPath.segmentCount());
+						IPath fileSystemPath = fResource.getLocation().removeLastSegments(projectPath.segmentCount());
 
-						newValue = fileSystemPath
-								.append(dest)
-								.append(attributeValuePath.removeFirstSegments(attributeValuePath
-										.matchingFirstSegments(fResource
-												.getLocation()))).toString();
+						newValue = fileSystemPath.append(dest).append(attributeValuePath
+								.removeFirstSegments(attributeValuePath.matchingFirstSegments(fResource.getLocation())))
+								.toString();
 					} else {
 						IPath projectPath = fResource.getFullPath();
-						IPath fileSystemPath = fResource.getLocation()
-								.removeLastSegments(projectPath.segmentCount());
+						IPath fileSystemPath = fResource.getLocation().removeLastSegments(projectPath.segmentCount());
 						newValue = fileSystemPath.append(dest).toString();
 					}
 					changes.put(attributeName, newValue);
@@ -151,8 +139,7 @@ public class RenameConfigurationChange extends Change {
 				fConfigurationChanges.put(launchConfiguration, changes);
 			}
 		}
-		for (Entry<ILaunchConfiguration, Map<String, String>> configurationChange : fConfigurationChanges
-				.entrySet()) {
+		for (Entry<ILaunchConfiguration, Map<String, String>> configurationChange : fConfigurationChanges.entrySet()) {
 			ILaunchConfiguration configuration = configurationChange.getKey();
 			ILaunchConfigurationWorkingCopy configurationCopy;
 			if (configuration instanceof ILaunchConfigurationWorkingCopy) {
@@ -160,10 +147,8 @@ public class RenameConfigurationChange extends Change {
 			} else {
 				configurationCopy = configuration.getWorkingCopy();
 			}
-			for (Entry<String, String> change : configurationChange.getValue()
-					.entrySet()) {
-				configurationCopy.setAttribute(change.getKey(),
-						change.getValue());
+			for (Entry<String, String> change : configurationChange.getValue().entrySet()) {
+				configurationCopy.setAttribute(change.getKey(), change.getValue());
 			}
 			configurationCopy.doSave();
 		}
