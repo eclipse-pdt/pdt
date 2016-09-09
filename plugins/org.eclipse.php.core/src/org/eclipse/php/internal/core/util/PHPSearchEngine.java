@@ -121,7 +121,8 @@ public class PHPSearchEngine implements IIncludepathListener {
 			} else if (includePath.getEntry() instanceof IFile) {
 				IFile resource = (IFile) includePath.getEntry();
 				Result result = new ResourceResult(resource);
-				if (exclusiveFiles == null || !exclusiveFiles.contains(resource.getLocation().toOSString())) {
+				if (exclusiveFiles == null || !(resource.getLocation() != null
+						&& exclusiveFiles.contains(resource.getLocation().toOSString()))) {
 					return result;
 				} else {
 					list.add(result);
@@ -131,7 +132,8 @@ public class PHPSearchEngine implements IIncludepathListener {
 				IResource resource = container.findMember(path);
 				if ((resource instanceof IFile)) {
 					Result result = new ResourceResult((IFile) resource);
-					if (exclusiveFiles == null || !exclusiveFiles.contains(resource.getLocation().toOSString())) {
+					if (exclusiveFiles == null || !(resource.getLocation() != null
+							&& exclusiveFiles.contains(resource.getLocation().toOSString()))) {
 						return result;
 					} else {
 						list.add(result);
