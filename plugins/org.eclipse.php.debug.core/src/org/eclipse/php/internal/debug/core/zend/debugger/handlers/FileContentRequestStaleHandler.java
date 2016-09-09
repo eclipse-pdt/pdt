@@ -244,7 +244,7 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 				if (member != null) {
 					IPath location = member.getLocation();
 					if (location != null) {
-						File file = member.getLocation().toFile();
+						File file = location.toFile();
 						content = getBytesFromFile(file);
 					} else if (member.exists()) {
 						// probably RSE

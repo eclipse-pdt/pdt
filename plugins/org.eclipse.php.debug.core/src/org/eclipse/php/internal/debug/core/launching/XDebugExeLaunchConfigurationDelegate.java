@@ -134,11 +134,6 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			return;
 		}
 
-		IPath projectLocation = project.getRawLocation();
-		if (projectLocation == null) {
-			projectLocation = project.getLocation();
-		}
-
 		// resolve the script location, but not relative to anything
 		IPath phpFile = scriptRes.getLocation();
 
