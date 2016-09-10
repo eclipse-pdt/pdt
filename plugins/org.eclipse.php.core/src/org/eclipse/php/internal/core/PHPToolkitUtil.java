@@ -155,6 +155,23 @@ public class PHPToolkitUtil {
 	}
 
 	/**
+	 * Checks weather the given type is in a php project
+	 * 
+	 * @param type
+	 * @return true for php types
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=498526
+	 */
+	public static boolean isPhpType(IType type) {
+		IProject project = type != null && type.getScriptProject() != null ? type.getScriptProject().getProject()
+				: null;
+		try {
+			return isPhpProject(project);
+		} catch (CoreException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Checks weather the given project is a php project
 	 * 
 	 * @param project
