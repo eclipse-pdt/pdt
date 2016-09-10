@@ -159,6 +159,7 @@ public class PHPToolkitUtil {
 	 * 
 	 * @param type
 	 * @return true for php IModelElements
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=498516
 	 */
 	public static boolean isFromPhpProject(IModelElement element) {
 		IProject project = element != null && element.getScriptProject() != null
