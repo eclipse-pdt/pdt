@@ -1302,7 +1302,7 @@ public class PHPModelUtils {
 	 */
 	public static IType[] getSuperClasses(IType type, ITypeHierarchy hierarchy) throws ModelException {
 		if (hierarchy == null) {
-			if (type.getScriptProject() == null || !type.getScriptProject().exists()) {
+			if (!PHPToolkitUtil.isFromPhpProject(type)) {
 				return EMPTY_TYPES;
 			} else {
 				hierarchy = type.newSupertypeHierarchy(null);
