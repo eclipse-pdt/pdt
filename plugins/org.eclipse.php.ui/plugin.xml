@@ -2622,8 +2622,10 @@
 			</triggerPoints>
 			
 			<possibleChildren>
-				<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
-				<instanceof value="org.eclipse.core.resources.IFile"/>
+				<or>
+					<instanceof	value="org.eclipse.core.resources.IResource" />
+					<instanceof value="org.eclipse.dltk.core.IModelElement" />
+				</or>
 			</possibleChildren>
 			
 			<actionProvider 
@@ -2764,7 +2766,19 @@
 						<instanceof value="org.eclipse.dltk.core.ISourceModule" />
 					</or>
 				</enablement>
-			</commonWizard>	
+			</commonWizard>
+			
+			<dropAssistant
+				class="org.eclipse.dltk.internal.ui.navigator.ScriptDropAssistant"
+				id="org.eclipse.php.ui.dropAssistant">
+				<possibleDropTargets>
+					<or>
+							<instanceof value="org.eclipse.core.resources.IResource" />
+							<instanceof value="org.eclipse.dltk.core.IModelElement"/>
+					</or>
+				</possibleDropTargets>
+			</dropAssistant>
+			
 		</navigatorContent>
 		
    		<commonFilter
