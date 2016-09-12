@@ -1400,8 +1400,8 @@
 
 		<!-- refactoring -->
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
-			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
+			contextId="org.eclipse.php.ui.phpEditorScope" platform="cocoa"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+M3+R">
 		</key>
         <key
             sequence="M2+M3+R"
@@ -1415,14 +1415,14 @@
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V">
 		</key>
-		<key platform="carbon" sequence="M2+M3+V" commandId=""
+		<key platform="cocoa" sequence="M2+M3+V" commandId=""
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
-			contextId="org.eclipse.dltk.ui.context.views" platform="carbon"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+V" />
+			contextId="org.eclipse.dltk.ui.context.views" platform="cocoa"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+M3+V" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
-			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+V">
+			contextId="org.eclipse.php.ui.phpEditorScope" platform="cocoa"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+M3+V">
 		</key>
 		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
@@ -1433,9 +1433,9 @@
 		<!-- views -->
 		<key sequence="M2+M3+Q E" commandId="org.eclipse.php.ui.explorer"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key platform="carbon" sequence="M2+M3+Q P" commandId=""
+		<key platform="cocoa" sequence="M2+M3+Q P" commandId=""
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key platform="carbon" sequence="COMMAND+ALT+Q P" commandId="org.eclipse.php.ui.explorer"
+		<key platform="cocoa" sequence="M1+M3+Q P" commandId="org.eclipse.php.ui.explorer"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key
@@ -1497,7 +1497,7 @@
 		<key sequence="M2+M3+O" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key platform="carbon" sequence="COMMAND+ALT+O"
+		<key platform="cocoa" sequence="M1+M3+O"
 			contextId="org.eclipse.php.ui.phpEditorScope" commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
@@ -1526,14 +1526,14 @@
             commandId="org.eclipse.pdt.ui.edit.text.select.enclosing"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
+            platform="cocoa"
             sequence="M2+M3+ARROW_UP"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId=""
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
-            sequence="CTRL+SHIFT+ARROW_UP"
+            platform="cocoa"
+            sequence="M4+M2+ARROW_UP"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.pdt.ui.edit.text.select.enclosing"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
@@ -1544,14 +1544,14 @@
             commandId="org.eclipse.pdt.ui.edit.text.select.next"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
+            platform="cocoa"
             sequence="M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId=""
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
-            sequence="CTRL+SHIFT+ARROW_RIGHT"
+            platform="cocoa"
+            sequence="M4+M2+ARROW_RIGHT"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.pdt.ui.edit.text.select.next"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
@@ -1561,14 +1561,14 @@
             commandId="org.eclipse.pdt.ui.edit.text.select.previous"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
+            platform="cocoa"
             sequence="M2+M3+ARROW_LEFT"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId=""
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
-            sequence="CTRL+SHIFT+ARROW_LEFT"
+            platform="cocoa"
+            sequence="M4+M2+ARROW_LEFT"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.pdt.ui.edit.text.select.previous"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
@@ -1578,14 +1578,14 @@
             commandId="org.eclipse.pdt.ui.edit.text.select.last"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
+            platform="cocoa"
             sequence="M2+M3+ARROW_DOWN"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId=""
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
-            platform="carbon"
-            sequence="CTRL+SHIFT+ARROW_DOWN"
+            platform="cocoa"
+            sequence="M4+M2+ARROW_DOWN"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.pdt.ui.edit.text.select.last"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
