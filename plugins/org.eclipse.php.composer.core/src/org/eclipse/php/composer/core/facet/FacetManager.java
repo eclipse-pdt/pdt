@@ -84,4 +84,18 @@ public class FacetManager {
 		}
 	}
 
+	public static boolean hasComposerFacet(IProject project) {
+		try {
+			IFacetedProject fProj = ProjectFacetsManager.create(project);
+			if (fProj != null) {
+				return fProj.hasProjectFacet(
+						ProjectFacetsManager.getProjectFacet(ComposerFacetConstants.COMPOSER_COMPONENT));
+			}
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+
+		return false;
+	}
+
 }

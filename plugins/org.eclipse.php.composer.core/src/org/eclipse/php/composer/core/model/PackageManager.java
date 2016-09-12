@@ -27,8 +27,8 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.php.composer.core.ComposerBuildpathContainerInitializer;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.ComposerPlugin;
+import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.osgi.service.prefs.BackingStoreException;
@@ -400,7 +400,7 @@ public class PackageManager {
 					throw new InterruptedException();
 				}
 
-				if (!project.hasNature(ComposerNature.NATURE_ID)) {
+				if (!FacetManager.hasComposerFacet(project)) {
 					Logger.debug("Buildpath not running on project without composer nature " + project.getName());
 					return;
 				}

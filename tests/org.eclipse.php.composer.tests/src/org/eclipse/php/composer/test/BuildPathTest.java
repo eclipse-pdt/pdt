@@ -25,7 +25,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.buildpath.BuildPathParser;
 import org.eclipse.php.composer.core.facet.FacetManager;
@@ -67,7 +66,7 @@ public class BuildPathTest extends ComposerModelTests {
 		assertNotNull(file);
 
 		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
-		assertTrue(scriptProject.getProject().hasNature(ComposerNature.NATURE_ID));
+		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
 
 		IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(scriptProject.getProject());
 		BuildPathParser parser = new BuildPathParser(composerProject);

@@ -15,23 +15,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.utils.ResourceUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
@@ -115,10 +105,6 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 
 					if (!project.hasNature(PHPNature.ID)) {
 						ResourceUtil.addNature(project, monitor, PHPNature.ID);
-					}
-
-					if (!project.hasNature(ComposerNature.NATURE_ID)) {
-						ResourceUtil.addNature(project, monitor, ComposerNature.NATURE_ID);
 					}
 
 					ProjectFacetsManager.create(project);

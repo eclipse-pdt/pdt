@@ -18,8 +18,8 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.ComposerPlugin;
+import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.model.PackagePath;
 
@@ -69,7 +69,7 @@ public class PackageTreeContentProvider extends ScriptExplorerContentProvider {
 		} else if (parentElement instanceof IScriptProject) {
 			try {
 				IProject project = ((IScriptProject) parentElement).getProject();
-				if (project.hasNature(ComposerNature.NATURE_ID)) {
+				if (FacetManager.hasComposerFacet(project)) {
 					return new Object[] { new ComposerBuildpathContainer((IScriptProject) parentElement) };
 				}
 			} catch (Exception e) {

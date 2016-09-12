@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -61,7 +60,7 @@ public class ReverseNamespaceResolverTest extends ComposerModelTests {
 		assertNotNull(file);
 
 		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
-		assertTrue(scriptProject.getProject().hasNature(ComposerNature.NATURE_ID));
+		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
 
 		String namespace = "Foobar\\Sub";
 

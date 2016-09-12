@@ -18,9 +18,9 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.buildpath.BuildPathManager;
+import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 
@@ -38,7 +38,7 @@ public class ComposerBuildPathManagementBuilder extends IncrementalProjectBuilde
 
 		IProject project = getProject();
 
-		if (project.hasNature(ComposerNature.NATURE_ID) == false) {
+		if (!FacetManager.hasComposerFacet(project)) {
 			return null;
 		}
 
@@ -55,9 +55,7 @@ public class ComposerBuildPathManagementBuilder extends IncrementalProjectBuilde
 			BuildPathManager buildPathManager = new BuildPathManager(composerProject);
 
 			if (delta == null) {
-				if (project.hasNature(ComposerNature.NATURE_ID)) {
-					buildPathManager.update(monitor);
-				}
+				buildPathManager.update(monitor);
 
 				return null;
 			}

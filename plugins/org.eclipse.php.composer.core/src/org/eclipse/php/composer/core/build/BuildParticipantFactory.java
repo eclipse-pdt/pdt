@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantFactory;
-import org.eclipse.php.composer.core.ComposerNature;
+import org.eclipse.php.composer.core.facet.FacetManager;
 
 /**
  * This BuildParticipant parses the autoload_namespaces.php files to store the
@@ -31,7 +31,7 @@ public class BuildParticipantFactory implements IBuildParticipantFactory {
 		if (!project.getProject().isAccessible()) {
 			return null;
 		}
-		if (project.getProject().hasNature(ComposerNature.NATURE_ID) == false) {
+		if (!FacetManager.hasComposerFacet(project.getProject())) {
 			return null;
 		}
 

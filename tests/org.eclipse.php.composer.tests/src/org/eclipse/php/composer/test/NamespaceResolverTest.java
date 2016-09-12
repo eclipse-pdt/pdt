@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.php.composer.core.ComposerNature;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.resources.IComposerProject;
@@ -64,7 +63,7 @@ public class NamespaceResolverTest extends ComposerModelTests {
 		assertNotNull(composerJson);
 
 		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
-		assertTrue(scriptProject.getProject().hasNature(ComposerNature.NATURE_ID));
+		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
 
 		assertEquals("Foo\\Bar", project.getNamespace(new Path("src/Foo/Bar")));
 		assertEquals("Foo\\Bar\\Baz", project.getNamespace(new Path("src/Foo/Bar/Baz")));

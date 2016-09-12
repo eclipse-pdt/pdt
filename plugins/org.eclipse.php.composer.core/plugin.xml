@@ -14,30 +14,13 @@
 <plugin>
    <extension-point id="executableLauncher" name="executableLauncher" schema="schema/executableLauncher.exsd"/>
 
-
-   <extension
-         id="org.eclipse.php.composer.core.composerNature"
-         name="Composer Project Nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="org.eclipse.php.composer.core.ComposerNature">
-         </run>
-      </runtime>
-      <builder
-            id="org.eclipse.php.composer.core.builder.buildPathManagementBuilder">
-      </builder>
-      <content-type
-            id="org.eclipse.php.composer.core.composerJson">
-      </content-type>
-   </extension>
    <extension
          id="org.eclipse.php.composer.core.builder.buildPathManagementBuilder"
          name="Composer Build Path Management"
          point="org.eclipse.core.resources.builders">
       <builder
             callOnEmptyDelta="false"
-            hasNature="true">
+            hasNature="false">
          <run
                class="org.eclipse.php.composer.core.builder.ComposerBuildPathManagementBuilder">
          </run>

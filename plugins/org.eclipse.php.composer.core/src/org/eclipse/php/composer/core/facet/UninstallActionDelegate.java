@@ -12,12 +12,15 @@ package org.eclipse.php.composer.core.facet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.php.composer.core.ComposerNature;
+import org.eclipse.php.composer.core.builder.ComposerBuildPathManagementBuilder;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -29,7 +32,6 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  * 
  */
-@SuppressWarnings("restriction")
 public class UninstallActionDelegate implements IDelegate {
 	@Override
 	public void execute(IProject project, IProjectFacetVersion version, Object object, IProgressMonitor progress)
@@ -38,36 +40,46 @@ public class UninstallActionDelegate implements IDelegate {
 			return;
 		}
 
-		progress.subTask("Uninstalling composer nature");
 		// remove the composer nature
-		IProjectDescription desc = project.getDescription();
-		ArrayList<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
-		int index = natures.indexOf(ComposerNature.NATURE_ID);
+		int index = getBuilderIndex(project);
 		if (index != -1) {
-			natures.remove(index);
+			progress.subTask("Uninstalling composer builder");
+			final IProjectDescription description = project.getDescription();
+			final List<ICommand> commands = new ArrayList<ICommand>();
+			commands.addAll(Arrays.asList(description.getBuildSpec()));
+			commands.remove(index);
+
+			description.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
+			project.setDescription(description, null);
 		}
-		desc.setNatureIds(natures.toArray(new String[] {}));
-		project.setDescription(desc, progress);
 
-		// progress.subTask("Uninstalling composer buildpath");
+	}
 
-		// maybe comment out this one:
-		// remove composer buildpath entry
+	private int getBuilderIndex(IProject project) {
+		try {
+			int i = 0;
+			for (ICommand cmd : project.getDescription().getBuildSpec()) {
+				// activated builder
+				if (ComposerBuildPathManagementBuilder.ID.equals(cmd.getBuilderName())) {
+					return i;
+				}
 
-		/*
-		 * if (ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
-		 * IBuildpathContainer composerContainer = new
-		 * ComposerBuildpathContainer( new
-		 * Path(ComposerBuildpathContainerInitializer.CONTAINER),
-		 * scriptProject); List<IBuildpathEntry> entries = new
-		 * ArrayList<IBuildpathEntry>();
-		 * entries.remove(DLTKCore.newContainerEntry(composerContainer.getPath()
-		 * ));
-		 * 
-		 * // remove the composer buildpathentry to the project
-		 * BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
-		 * 
-		 * BuildpathUtil.setupVendorBuildpath(scriptProject, progress); }
-		 */
+				// deactivated builder
+				if ("org.eclipse.ui.externaltools.ExternalToolBuilder".equals(cmd.getBuilderName())) {
+					Map<String, String> args = cmd.getArguments();
+					if (args.containsKey("LaunchConfigHandle")) {
+						String launch = args.get("LaunchConfigHandle");
+						if (launch.contains(ComposerBuildPathManagementBuilder.ID)) {
+							return i;
+						}
+					}
+				}
+				i++;
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
+		return -1;
 	}
 }

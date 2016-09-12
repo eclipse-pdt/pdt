@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.facet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.utils.ResourceUtil;
-import org.eclipse.php.composer.core.ComposerNature;
+import org.eclipse.php.composer.core.builder.ComposerBuildPathManagementBuilder;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -26,7 +31,6 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  * 
  */
-@SuppressWarnings("restriction")
 public class InstallActionDelegate implements IDelegate {
 	@Override
 	public void execute(IProject project, IProjectFacetVersion version, Object object, IProgressMonitor progress)
@@ -35,30 +39,17 @@ public class InstallActionDelegate implements IDelegate {
 			return;
 		}
 
-		progress.subTask("Installing composer nature");
-
-		// add the composer nature
-		ResourceUtil.addNature(project, progress, ComposerNature.NATURE_ID);
-
 		progress.subTask("Installing composer buildpath");
 
-		// maybe comment out this one:
-		// create composer buildpath entry
+		IProjectDescription description = project.getDescription();
+		final ICommand buildCommand = description.newCommand();
+		buildCommand.setBuilderName(ComposerBuildPathManagementBuilder.ID);
 
-		// if (ComposerPlugin.getDefault().isBuildpathContainerEnabled()) {
-		// IScriptProject scriptProject = DLTKCore.create(project);
-		// IBuildpathContainer composerContainer = new
-		// ComposerBuildpathContainer(
-		// new Path(ComposerBuildpathContainerInitializer.CONTAINER),
-		// scriptProject);
-		// List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
-		// entries.add(DLTKCore.newContainerEntry(composerContainer.getPath()));
-		//
-		// // add the composer buildpathentry to the project
-		// BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
-		//
-		// BuildpathUtil.setupVendorBuildpath(scriptProject, progress);
-		//
-		// }
+		final List<ICommand> commands = new ArrayList<ICommand>();
+		commands.add(buildCommand);
+		commands.addAll(Arrays.asList(description.getBuildSpec()));
+
+		description.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
+		project.setDescription(description, null);
 	}
 }
