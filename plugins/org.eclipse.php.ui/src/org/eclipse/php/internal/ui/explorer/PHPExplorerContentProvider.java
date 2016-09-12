@@ -43,6 +43,7 @@ import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.GlobalNamespace;
 import org.eclipse.php.internal.core.util.OutlineFilter;
@@ -255,8 +256,14 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		// Add include path node
 		IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
-		IncludePathContainer incPathContainer = new IncludePathContainer(scriptProject, includePaths);
-		returnChildren.add(incPathContainer);
+		try {
+			if (project.hasNature(PHPNature.ID)) {
+				IncludePathContainer incPathContainer = new IncludePathContainer(scriptProject, includePaths);
+				returnChildren.add(incPathContainer);
+			}
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
 
 		// Add the language library
 		try {
