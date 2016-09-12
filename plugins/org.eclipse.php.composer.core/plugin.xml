@@ -137,5 +137,17 @@
          </schemaCatalogContribution>
          
 	</extension>
-
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.validators">
+      <validator
+            class="org.eclipse.php.composer.core.facet.FacetedProjectValidator">
+      </validator>
+   </extension>
+   <extension
+        id="composermarker"
+        name="Composer Problem"
+        point="org.eclipse.core.resources.markers">
+        <persistent value="true" />
+        <super type="org.eclipse.core.resources.problemmarker"/> 
+   </extension>
 </plugin>

@@ -27,6 +27,8 @@ public class ComposerConstants {
 	public final static String VENDOR_DIR_DEFAULT = "vendor";
 	public final static String BIN_DIR_DEFAULT = VENDOR_DIR_DEFAULT + "/bin";
 
+	public final static String PROBLEM_MARKER_TYPE = "org.eclipse.php.composer.core.composermarker";
+
 	/**
 	 * Types taken from: https://github.com/composer/installers
 	 * 
