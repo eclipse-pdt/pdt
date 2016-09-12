@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.0.0-dev
+// Start of mysqli v.7.2.0-dev
 
 final class mysqli_sql_exception extends RuntimeException implements Throwable {
 	protected $message;
@@ -86,8 +86,14 @@ class mysqli  {
 	 * Starts a transaction
 	 * @link http://www.php.net/manual/en/mysqli.begin-transaction.php
 	 * @param int $flags [optional] <p>
+	 * Valid flags are:
+	 * </p>
+	 * <p>
+	 * MYSQLI_TRANS_START_READ_ONLY: 
+	 * Start the transaction as "START TRANSACTION READ ONLY".
 	 * </p>
 	 * @param string $name [optional] <p>
+	 * Savepoint name for the transaction.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -203,6 +209,14 @@ class mysqli  {
 	 */
 	public function get_client_info (mysqli $link) {}
 
+	/**
+	 * Returns statistics about the client connection
+	 * @link http://www.php.net/manual/en/mysqli.get-connection-stats.php
+	 * @param mysqli $link 
+	 * @return array an array with connection stats if success, false otherwise.
+	 */
+	public function get_connection_stats (mysqli $link) {}
+
 	public function get_server_info () {}
 
 	/**
@@ -246,14 +260,48 @@ class mysqli  {
 	public function multi_query (mysqli $link, $query) {}
 
 	/**
-	 * @param $host [optional]
-	 * @param $user [optional]
-	 * @param $password [optional]
-	 * @param $database [optional]
-	 * @param $port [optional]
-	 * @param $socket [optional]
+	 * Open a new connection to the MySQL server
+	 * @link http://www.php.net/manual/en/mysqli.construct.php
+	 * @param string $host [optional] <p>
+	 * Can be either a host name or an IP address. Passing the &null; value
+	 * or the string "localhost" to this parameter, the local host is
+	 * assumed. When possible, pipes will be used instead of the TCP/IP
+	 * protocol.
+	 * </p>
+	 * <p>
+	 * Prepending host by p: opens a persistent connection.
+	 * mysqli_change_user is automatically called on
+	 * connections opened from the connection pool.
+	 * </p>
+	 * @param string $username [optional] <p>
+	 * The MySQL user name.
+	 * </p>
+	 * @param string $passwd [optional] <p>
+	 * If not provided or &null;, the MySQL server will attempt to authenticate
+	 * the user against those user records which have no password only. This
+	 * allows one username to be used with different permissions (depending
+	 * on if a password as provided or not).
+	 * </p>
+	 * @param string $dbname [optional] <p>
+	 * If provided will specify the default database to be used when
+	 * performing queries.
+	 * </p>
+	 * @param int $port [optional] <p>
+	 * Specifies the port number to attempt to connect to the MySQL server.
+	 * </p>
+	 * @param string $socket [optional] <p>
+	 * Specifies the socket or named pipe that should be used.
+	 * </p>
+	 * <p>
+	 * Specifying the socket parameter will not
+	 * explicitly determine the type of connection to be used when
+	 * connecting to the MySQL server. How the connection is made to the
+	 * MySQL database is determined by the host
+	 * parameter.
+	 * </p>
+	 * @return mysqli an object which represents the connection to a MySQL Server.
 	 */
-	public function mysqli ($host = null, $user = null, $password = null, $database = null, $port = null, $socket = null) {}
+	public function __construct ($host = null, $username = null, $passwd = null, $dbname = null, $port = null, $socket = null) {}
 
 	/**
 	 * Check if there are any more query results from a multi query
@@ -315,6 +363,32 @@ class mysqli  {
 	 * RSA public key file used with the SHA-256 based authentication.
 	 * </td>
 	 * </tr>
+	 * <tr valign="top">
+	 * <td>MYSQLI_OPT_NET_CMD_BUFFER_SIZE</td>
+	 * <td>
+	 * The size of the internal command/network buffer. Only valid for
+	 * mysqlnd.
+	 * </td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>MYSQLI_OPT_NET_READ_BUFFER_SIZE</td>
+	 * <td>
+	 * Maximum read chunk size in bytes when reading the body of a MySQL
+	 * command packet. Only valid for mysqlnd.
+	 * </td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>MYSQLI_OPT_INT_AND_FLOAT_NATIVE</td>
+	 * <td>
+	 * Convert integer and float columns back to PHP numbers. Only valid
+	 * for mysqlnd.
+	 * </td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>MYSQLI_OPT_SSL_VERIFY_SERVER_CERT</td>
+	 * <td>
+	 * </td>
+	 * </tr>
 	 * </table>
 	 * </p>
 	 * @param mixed $value <p>
@@ -331,6 +405,30 @@ class mysqli  {
 	 * @return bool true on success or false on failure
 	 */
 	public function ping (mysqli $link) {}
+
+	/**
+	 * Poll connections
+	 * @link http://www.php.net/manual/en/mysqli.poll.php
+	 * @param array $read <p>
+	 * List of connections to check for outstanding results that can be read.
+	 * </p>
+	 * @param array $error <p>
+	 * List of connections on which an error occured, for example, query
+	 * failure or lost connection.
+	 * </p>
+	 * @param array $reject <p>
+	 * List of connections rejected because no asynchronous query
+	 * has been run on for which the function could poll results.
+	 * </p>
+	 * @param int $sec <p>
+	 * Number of seconds to wait, must be non-negative.
+	 * </p>
+	 * @param int $usec [optional] <p>
+	 * Number of microseconds to wait, must be non-negative.
+	 * </p>
+	 * @return int number of ready connections upon success, false otherwise.
+	 */
+	public static function poll (array &$read, array &$error, array &$reject, $sec, $usec = null) {}
 
 	/**
 	 * Prepare an SQL statement for execution
@@ -473,6 +571,13 @@ class mysqli  {
 	 * <td>MYSQLI_CLIENT_SSL</td>
 	 * <td>Use SSL (encryption)</td>
 	 * </tr>
+	 * <tr valign="top">
+	 * <td>MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT</td>
+	 * <td>
+	 * Like MYSQLI_CLIENT_SSL, but disables validation of the provided 
+	 * SSL certificate. This is only for installations using MySQL Native Driver and MySQL 5.6 or later.
+	 * </td>
+	 * </tr>
 	 * </table>
 	 * <p>
 	 * For security reasons the MULTI_STATEMENT flag is
@@ -496,6 +601,14 @@ class mysqli  {
 	 * @return string an escaped string.
 	 */
 	public function real_escape_string ($escapestr) {}
+
+	/**
+	 * Get result from async query
+	 * @link http://www.php.net/manual/en/mysqli.reap-async-query.php
+	 * @param mysqli $link 
+	 * @return mysqli_result mysqli_result in success, false otherwise.
+	 */
+	public function reap_async_query (mysqli $link) {}
 
 	/**
 	 * @param $string_to_escape
@@ -623,6 +736,7 @@ class mysqli  {
 	/**
 	 * Transfers a result set from the last query
 	 * @link http://www.php.net/manual/en/mysqli.store-result.php
+	 * @param mysqli $link 
 	 * @param int $option [optional] <p>
 	 * The option that you want to set. It can be one of the following values:
 	 * <table>
@@ -657,7 +771,7 @@ class mysqli  {
 	 * mysqli_field_count returns a non-zero value, the
 	 * statement should have produced a non-empty result set.
 	 */
-	public function store_result ($option = null) {}
+	public function store_result (mysqli $link, $option = null) {}
 
 	/**
 	 * Returns whether thread safety is given or not
@@ -849,11 +963,16 @@ class mysqli_result implements Traversable {
 	 * </tr>
 	 * <tr valign="top">
 	 * <td>length</td>
-	 * <td>The width of the field, as specified in the table definition.</td>
+	 * <td>
+	 * The width of the field, in bytes, as specified in the table definition. Note that 
+	 * this number (bytes) might differ from your table definition value (characters), depending on
+	 * the character set you use. For example, the character set utf8 has 3 bytes per character, 
+	 * so varchar(10) will return a length of 30 for utf8 (10*3), but return 10 for latin1 (10*1).
+	 * </td>
 	 * </tr>
 	 * <tr valign="top">
 	 * <td>charsetnr</td>
-	 * <td>The character set number for the field.</td>
+	 * <td>The character set number (id) for the field.</td>
 	 * </tr>
 	 * <tr valign="top">
 	 * <td>flags</td>
@@ -937,6 +1056,20 @@ class mysqli_result implements Traversable {
 	 * </table>
 	 */
 	public function fetch_field_direct (mysqli_result $result, $fieldnr) {}
+
+	/**
+	 * Fetches all result rows as an associative array, a numeric array, or both
+	 * @link http://www.php.net/manual/en/mysqli-result.fetch-all.php
+	 * @param mysqli_result $result 
+	 * @param int $resulttype [optional] <p>
+	 * This optional parameter is a constant indicating what type of array
+	 * should be produced from the current row data. The possible values for
+	 * this parameter are the constants MYSQLI_ASSOC,
+	 * MYSQLI_NUM, or MYSQLI_BOTH.
+	 * </p>
+	 * @return mixed an array of associative or numeric arrays holding result rows.
+	 */
+	public function fetch_all (mysqli_result $result, $resulttype = null) {}
 
 	/**
 	 * Fetch a result row as an associative, a numeric array, or both
@@ -1208,6 +1341,20 @@ class mysqli_stmt  {
 	 */
 	public function result_metadata (mysqli_stmt $stmt) {}
 
+	/**
+	 * Check if there are more query results from a multiple query
+	 * @link http://www.php.net/manual/en/mysqli-stmt.more-results.php
+	 * @return bool true if more results exist, otherwise false.
+	 */
+	public function more_results () {}
+
+	/**
+	 * Reads the next result from a multiple query
+	 * @link http://www.php.net/manual/en/mysqli-stmt.next-result.php
+	 * @return bool true on success or false on failure
+	 */
+	public function next_result () {}
+
 	public function num_rows () {}
 
 	/**
@@ -1283,6 +1430,16 @@ class mysqli_stmt  {
 	 * @return bool true on success or false on failure
 	 */
 	public function store_result (mysqli_stmt $stmt) {}
+
+	/**
+	 * Gets a result set from a prepared statement
+	 * @link http://www.php.net/manual/en/mysqli-stmt.get-result.php
+	 * @param mysqli_stmt $stmt 
+	 * @return mysqli_result a resultset for successful SELECT queries, or false for other DML
+	 * queries or on failure. The mysqli_errno function can be
+	 * used to distinguish between the two types of failure.
+	 */
+	public function get_result (mysqli_stmt $stmt) {}
 
 }
 
@@ -1411,6 +1568,11 @@ function mysqli_fetch_lengths ($result) {}
 
 /**
  * @param $result
+ */
+function mysqli_fetch_all ($result) {}
+
+/**
+ * @param $result
  * @param $result_type [optional]
  */
 function mysqli_fetch_array ($result, $result_type = null) {}
@@ -1452,6 +1614,18 @@ function mysqli_field_tell ($result) {}
  * @param $result
  */
 function mysqli_free_result ($result) {}
+
+/**
+ * @param $link
+ */
+function mysqli_get_connection_stats ($link) {}
+
+/**
+ * Returns client per-process statistics
+ * @link http://www.php.net/manual/en/mysqli.get-client-stats.php
+ * @return array an array with client stats if success, false otherwise.
+ */
+function mysqli_get_client_stats () {}
 
 /**
  * @param $link
@@ -1582,6 +1756,15 @@ function mysqli_options ($link, $option, $value) {}
 function mysqli_ping ($link) {}
 
 /**
+ * @param $read
+ * @param $write
+ * @param $error
+ * @param $sec
+ * @param $usec [optional]
+ */
+function mysqli_poll (array &$read = nullarray , &$write = nullarray , &$error = null, $sec, $usec = null) {}
+
+/**
  * @param $link
  * @param $query
  */
@@ -1623,6 +1806,11 @@ function mysqli_real_escape_string ($link, $string_to_escape) {}
  * @param $query
  */
 function mysqli_real_query ($link, $query) {}
+
+/**
+ * @param $link
+ */
+function mysqli_reap_async_query ($link) {}
 
 /**
  * @param $link
@@ -1730,6 +1918,11 @@ function mysqli_stmt_free_result ($stmt) {}
 /**
  * @param $stmt
  */
+function mysqli_stmt_get_result ($stmt) {}
+
+/**
+ * @param $stmt
+ */
 function mysqli_stmt_get_warnings ($stmt) {}
 
 /**
@@ -1741,6 +1934,16 @@ function mysqli_stmt_init ($link) {}
  * @param $stmt
  */
 function mysqli_stmt_insert_id ($stmt) {}
+
+/**
+ * @param $stmt
+ */
+function mysqli_stmt_more_results ($stmt) {}
+
+/**
+ * @param $stmt
+ */
+function mysqli_stmt_next_result ($stmt) {}
 
 /**
  * @param $stmt
@@ -1844,102 +2047,756 @@ function mysqli_escape_string ($link, $query) {}
 
 function mysqli_set_opt () {}
 
+
+/**
+ * <p>
+ * Read options from the named group from my.cnf
+ * or the file specified with MYSQLI_READ_DEFAULT_FILE
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_READ_DEFAULT_GROUP', 5);
+
+/**
+ * <p>
+ * Read options from the named option file instead of from my.cnf
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_READ_DEFAULT_FILE', 4);
+
+/**
+ * <p>
+ * Connect timeout in seconds
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_OPT_CONNECT_TIMEOUT', 0);
+
+/**
+ * <p>
+ * Enables command LOAD LOCAL INFILE
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_OPT_LOCAL_INFILE', 8);
+
+/**
+ * <p>
+ * Command to execute when connecting to MySQL server. Will automatically be re-executed when reconnecting.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_INIT_COMMAND', 3);
+define ('MYSQLI_OPT_NET_CMD_BUFFER_SIZE', 202);
+define ('MYSQLI_OPT_NET_READ_BUFFER_SIZE', 203);
+define ('MYSQLI_OPT_INT_AND_FLOAT_NATIVE', 201);
 define ('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT', 21);
+define ('MYSQLI_SERVER_PUBLIC_KEY', 27);
+
+/**
+ * <p>
+ * Use SSL (encrypted protocol). This option should not be set by application programs; 
+ * it is set internally in the MySQL client library
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CLIENT_SSL', 2048);
+
+/**
+ * <p>
+ * Use compression protocol
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CLIENT_COMPRESS', 32);
+
+/**
+ * <p>
+ * Allow interactive_timeout seconds
+ * (instead of wait_timeout seconds) of inactivity before
+ * closing the connection. The client's session
+ * wait_timeout variable will be set to
+ * the value of the session interactive_timeout variable. 
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CLIENT_INTERACTIVE', 1024);
+
+/**
+ * <p>
+ * Allow spaces after function names. Makes all functions names reserved words. 
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CLIENT_IGNORE_SPACE', 256);
+
+/**
+ * <p>
+ * Don't allow the db_name.tbl_name.col_name syntax.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CLIENT_NO_SCHEMA', 16);
 define ('MYSQLI_CLIENT_FOUND_ROWS', 2);
+define ('MYSQLI_CLIENT_SSL_VERIFY_SERVER_CERT', 1073741824);
+define ('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT', 64);
+define ('MYSQLI_CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS', 4194304);
+define ('MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS', 29);
+
+/**
+ * <p>
+ * For using buffered resultsets
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_STORE_RESULT', 0);
+
+/**
+ * <p>
+ * For using unbuffered resultsets
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_USE_RESULT', 1);
+define ('MYSQLI_ASYNC', 8);
+define ('MYSQLI_STORE_RESULT_COPY_DATA', 16);
+
+/**
+ * <p>
+ * Columns are returned into the array having the fieldname as the array index.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_ASSOC', 1);
+
+/**
+ * <p>
+ * Columns are returned into the array having an enumerated index.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_NUM', 2);
+
+/**
+ * <p>
+ * Columns are returned into the array having both a numerical index and the fieldname as the associative index. 
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_BOTH', 3);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_STMT_ATTR_UPDATE_MAX_LENGTH', 0);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_STMT_ATTR_CURSOR_TYPE', 1);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CURSOR_TYPE_NO_CURSOR', 0);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CURSOR_TYPE_READ_ONLY', 1);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CURSOR_TYPE_FOR_UPDATE', 2);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_CURSOR_TYPE_SCROLLABLE', 4);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_STMT_ATTR_PREFETCH_ROWS', 2);
+
+/**
+ * <p>
+ * Indicates that a field is defined as NOT NULL
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_NOT_NULL_FLAG', 1);
+
+/**
+ * <p>
+ * Field is part of a primary index
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_PRI_KEY_FLAG', 2);
+
+/**
+ * <p>
+ * Field is part of a unique index.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_UNIQUE_KEY_FLAG', 4);
+
+/**
+ * <p>
+ * Field is part of an index.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_MULTIPLE_KEY_FLAG', 8);
+
+/**
+ * <p>
+ * Field is defined as BLOB
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_BLOB_FLAG', 16);
+
+/**
+ * <p>
+ * Field is defined as UNSIGNED
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_UNSIGNED_FLAG', 32);
+
+/**
+ * <p>
+ * Field is defined as ZEROFILL
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_ZEROFILL_FLAG', 64);
+
+/**
+ * <p>
+ * Field is defined as AUTO_INCREMENT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_AUTO_INCREMENT_FLAG', 512);
+
+/**
+ * <p>
+ * Field is defined as TIMESTAMP
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TIMESTAMP_FLAG', 1024);
+
+/**
+ * <p>
+ * Field is defined as SET
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_SET_FLAG', 2048);
+
+/**
+ * <p>
+ * Field is defined as NUMERIC
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_NUM_FLAG', 32768);
+
+/**
+ * <p>
+ * Field is part of an multi-index
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_PART_KEY_FLAG', 16384);
+
+/**
+ * <p>
+ * Field is part of GROUP BY
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_GROUP_FLAG', 32768);
+
+/**
+ * <p>
+ * Field is defined as ENUM. Available since PHP 5.3.0.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_ENUM_FLAG', 256);
+
+/**
+ * <p>
+ * Field is defined as BINARY. Available since PHP 5.3.0.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_BINARY_FLAG', 128);
 define ('MYSQLI_NO_DEFAULT_VALUE_FLAG', 4096);
+define ('MYSQLI_ON_UPDATE_NOW_FLAG', 8192);
+
+/**
+ * <p>
+ * Field is defined as DECIMAL
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_DECIMAL', 0);
+
+/**
+ * <p>
+ * Field is defined as TINYINT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_TINY', 1);
+
+/**
+ * <p>
+ * Field is defined as SMALLINT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_SHORT', 2);
+
+/**
+ * <p>
+ * Field is defined as INT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_LONG', 3);
+
+/**
+ * <p>
+ * Field is defined as FLOAT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_FLOAT', 4);
+
+/**
+ * <p>
+ * Field is defined as DOUBLE
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_DOUBLE', 5);
+
+/**
+ * <p>
+ * Field is defined as DEFAULT NULL
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_NULL', 6);
+
+/**
+ * <p>
+ * Field is defined as TIMESTAMP
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_TIMESTAMP', 7);
+
+/**
+ * <p>
+ * Field is defined as BIGINT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_LONGLONG', 8);
+
+/**
+ * <p>
+ * Field is defined as MEDIUMINT
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_INT24', 9);
+
+/**
+ * <p>
+ * Field is defined as DATE
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_DATE', 10);
+
+/**
+ * <p>
+ * Field is defined as TIME
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_TIME', 11);
+
+/**
+ * <p>
+ * Field is defined as DATETIME
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_DATETIME', 12);
+
+/**
+ * <p>
+ * Field is defined as YEAR
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_YEAR', 13);
+
+/**
+ * <p>
+ * Field is defined as DATE
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_NEWDATE', 14);
+
+/**
+ * <p>
+ * Field is defined as ENUM
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_ENUM', 247);
+
+/**
+ * <p>
+ * Field is defined as SET
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_SET', 248);
+
+/**
+ * <p>
+ * Field is defined as TINYBLOB
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_TINY_BLOB', 249);
+
+/**
+ * <p>
+ * Field is defined as MEDIUMBLOB
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_MEDIUM_BLOB', 250);
+
+/**
+ * <p>
+ * Field is defined as LONGBLOB
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_LONG_BLOB', 251);
+
+/**
+ * <p>
+ * Field is defined as BLOB
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_BLOB', 252);
+
+/**
+ * <p>
+ * Field is defined as VARCHAR
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_VAR_STRING', 253);
+
+/**
+ * <p>
+ * Field is defined as CHAR or BINARY
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_STRING', 254);
+
+/**
+ * <p>
+ * Field is defined as TINYINT.
+ * For CHAR, see MYSQLI_TYPE_STRING
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_CHAR', 1);
+
+/**
+ * <p>
+ * Field is defined as INTERVAL
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_INTERVAL', 247);
+
+/**
+ * <p>
+ * Field is defined as GEOMETRY
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_GEOMETRY', 255);
+define ('MYSQLI_TYPE_JSON', 245);
+
+/**
+ * <p>
+ * Precision math DECIMAL or NUMERIC field (MySQL 5.0.3 and up)
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_NEWDECIMAL', 246);
+
+/**
+ * <p>
+ * Field is defined as BIT (MySQL 5.0.3 and up)
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TYPE_BIT', 16);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_SET_CHARSET_NAME', 7);
 define ('MYSQLI_SET_CHARSET_DIR', 6);
+
+/**
+ * <p>
+ * No more data available for bind variable
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_NO_DATA', 100);
+
+/**
+ * <p>
+ * Data truncation occurred. Available since PHP 5.1.0 and MySQL 5.0.5.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_DATA_TRUNCATED', 101);
+
+/**
+ * <p>
+ * Report if no index or bad index was used in a query.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REPORT_INDEX', 4);
+
+/**
+ * <p>
+ * Report errors from mysqli function calls.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REPORT_ERROR', 1);
+
+/**
+ * <p>
+ * Throw a mysqli_sql_exception for errors instead of warnings.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REPORT_STRICT', 2);
+
+/**
+ * <p>
+ * Set all options on (report all).
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REPORT_ALL', 255);
+
+/**
+ * <p>
+ * Turns reporting off.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REPORT_OFF', 0);
-define ('MYSQLI_DEBUG_TRACE_ENABLED', 0);
+
+/**
+ * <p>
+ * Is set to 1 if mysqli_debug functionality is enabled.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
+define ('MYSQLI_DEBUG_TRACE_ENABLED', 1);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_SERVER_QUERY_NO_GOOD_INDEX_USED', 16);
+
+/**
+ * <p>
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_SERVER_QUERY_NO_INDEX_USED', 32);
 define ('MYSQLI_SERVER_QUERY_WAS_SLOW', 2048);
 define ('MYSQLI_SERVER_PS_OUT_PARAMS', 4096);
+
+/**
+ * <p>
+ * Refreshes the grant tables.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_GRANT', 1);
+
+/**
+ * <p>
+ * Flushes the logs, like executing the
+ * FLUSH LOGS SQL statement.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_LOG', 2);
+
+/**
+ * <p>
+ * Flushes the table cache, like executing the
+ * FLUSH TABLES SQL statement.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_TABLES', 4);
+
+/**
+ * <p>
+ * Flushes the host cache, like executing the
+ * FLUSH HOSTS SQL statement.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_HOSTS', 8);
+
+/**
+ * <p>
+ * Reset the status variables, like executing the
+ * FLUSH STATUS SQL statement.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_STATUS', 16);
+
+/**
+ * <p>
+ * Flushes the thread cache.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_THREADS', 32);
+
+/**
+ * <p>
+ * On a slave replication server: resets the master server information, and 
+ * restarts the slave. Like executing the RESET SLAVE
+ * SQL statement.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_SLAVE', 64);
+
+/**
+ * <p>
+ * On a master replication server: removes the binary log files listed in the
+ * binary log index, and truncates the index file. Like executing the
+ * RESET MASTER SQL statement.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_REFRESH_MASTER', 128);
+define ('MYSQLI_REFRESH_BACKUP_LOG', 2097152);
 define ('MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT', 1);
+
+/**
+ * <p>
+ * Start the transaction as "START TRANSACTION READ WRITE" with
+ * mysqli_begin_transaction.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TRANS_START_READ_WRITE', 2);
+
+/**
+ * <p>
+ * Start the transaction as "START TRANSACTION READ ONLY" with
+ * mysqli_begin_transaction.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TRANS_START_READ_ONLY', 4);
+
+/**
+ * <p>
+ * Appends "AND CHAIN" to mysqli_commit or
+ * mysqli_rollback.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TRANS_COR_AND_CHAIN', 1);
+
+/**
+ * <p>
+ * Appends "AND NO CHAIN" to mysqli_commit or
+ * mysqli_rollback.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TRANS_COR_AND_NO_CHAIN', 2);
+
+/**
+ * <p>
+ * Appends "RELEASE" to mysqli_commit or
+ * mysqli_rollback.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TRANS_COR_RELEASE', 4);
+
+/**
+ * <p>
+ * Appends "NO RELEASE" to mysqli_commit or
+ * mysqli_rollback.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.0.0-dev
+// End of mysqli v.7.2.0-dev

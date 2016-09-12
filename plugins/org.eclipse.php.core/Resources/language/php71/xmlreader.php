@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlreader v.7.0.0-dev
+// Start of xmlreader v.7.2.0-dev
 
 class XMLReader  {
 	const NONE = 0;
@@ -199,7 +199,7 @@ class XMLReader  {
 	public function readInnerXml () {}
 
 	/**
-	 * Retrieve XML from current node, including it self
+	 * Retrieve XML from current node, including itself
 	 * @link http://www.php.net/manual/en/xmlreader.readouterxml.php
 	 * @return string the contents of current node, including itself, as a string. Empty string on failure.
 	 */
@@ -287,4 +287,4 @@ class XMLReader  {
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.7.0.0-dev
+// End of xmlreader v.7.2.0-dev

@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.13.0dev
+// Start of zip v.1.13.4
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -11,6 +11,11 @@ class ZipArchive  {
 	const FL_NODIR = 2;
 	const FL_COMPRESSED = 4;
 	const FL_UNCHANGED = 8;
+	const FL_ENC_GUESS = 0;
+	const FL_ENC_RAW = 64;
+	const FL_ENC_STRICT = 128;
+	const FL_ENC_UTF_8 = 2048;
+	const FL_ENC_CP437 = 4096;
 	const CM_DEFAULT = -1;
 	const CM_STORE = 0;
 	const CM_SHRINK = 1;
@@ -599,9 +604,14 @@ class ZipArchive  {
 	 * Name of the entry.
 	 * </p>
 	 * @param int $comp_method <p>
+	 * The compression method. Either
+	 * ZipArchive::CM_DEFAULT,
+	 * ZipArchive::CM_STORE or
+	 * ZipArchive::CM_DEFLATE.
+	 * </p>
+	 * @param int $comp_flags [optional] <p>
 	 * Compression flags. Currently unused.
 	 * </p>
-	 * @param int $comp_flags [optional] 
 	 * @return bool true on success or false on failure
 	 */
 	public function setCompressionName ($name, $comp_method, $comp_flags = null) {}
@@ -613,9 +623,14 @@ class ZipArchive  {
 	 * Index of the entry.
 	 * </p>
 	 * @param int $comp_method <p>
+	 * The compression method. Either
+	 * ZipArchive::CM_DEFAULT,
+	 * ZipArchive::CM_STORE or
+	 * ZipArchive::CM_DEFLATE.
+	 * </p>
+	 * @param int $comp_flags [optional] <p>
 	 * Compression flags. Currently unused.
 	 * </p>
-	 * @param int $comp_flags [optional] 
 	 * @return bool true on success or false on failure
 	 */
 	public function setCompressionIndex ($index, $comp_method, $comp_flags = null) {}
@@ -752,4 +767,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.13.0dev
+// End of zip v.1.13.4

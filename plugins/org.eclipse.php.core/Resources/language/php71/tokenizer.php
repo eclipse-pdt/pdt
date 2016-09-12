@@ -1,6 +1,6 @@
 <?php
 
-// Start of tokenizer v.7.0.0-dev
+// Start of tokenizer v.7.2.0-dev
 
 /**
  * Split given source into PHP tokens
@@ -8,13 +8,17 @@
  * @param string $source <p>
  * The PHP source to parse.
  * </p>
+ * @param int $flags [optional] <p>
+ * Valid flags:
+ * TOKEN_PARSE - Recognises the ability to use
+ * reserved words in specific contexts.
  * @return array An array of token identifiers. Each individual token identifier is either
  * a single character (i.e.: ;, ., 
  * &gt;, !, etc...),
  * or a three element array containing the token index in element 0, the string
  * content of the original token in element 1 and the line number in element 2.
  */
-function token_get_all ($source) {}
+function token_get_all ($source, $flags = null) {}
 
 /**
  * Get the symbolic name of a given PHP token
@@ -162,4 +166,4 @@ define ('T_ELLIPSIS', 391);
 define ('T_DOUBLE_COLON', 387);
 define ('TOKEN_PARSE', 1);
 
-// End of tokenizer v.7.0.0-dev
+// End of tokenizer v.7.2.0-dev

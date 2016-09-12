@@ -1,6 +1,6 @@
 <?php
 
-// Start of SPL v.7.0.0-dev
+// Start of SPL v.7.2.0-dev
 
 class LogicException extends Exception implements Throwable {
 	protected $message;
@@ -923,7 +923,7 @@ class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements 
 	/**
 	 * Check whether the inner iterator's current element has children
 	 * @link http://www.php.net/manual/en/recursivecallbackfilteriterator.haschildren.php
-	 * @return void true if the current element has children, false otherwise.
+	 * @return bool true if the current element has children, false otherwise.
 	 */
 	public function hasChildren () {}
 
@@ -1246,14 +1246,14 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * Get flags used
 	 * @link http://www.php.net/manual/en/cachingiterator.getflags.php
-	 * @return void Description...
+	 * @return int Description...
 	 */
 	public function getFlags () {}
 
 	/**
 	 * The setFlags purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.setflags.php
-	 * @param bitmask $flags <p>
+	 * @param int $flags <p>
 	 * Bitmask of the flags to set.
 	 * </p>
 	 * @return void 
@@ -1409,14 +1409,14 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * Get flags used
 	 * @link http://www.php.net/manual/en/cachingiterator.getflags.php
-	 * @return void Description...
+	 * @return int Description...
 	 */
 	public function getFlags () {}
 
 	/**
 	 * The setFlags purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.setflags.php
-	 * @param bitmask $flags <p>
+	 * @param int $flags <p>
 	 * Bitmask of the flags to set.
 	 * </p>
 	 * @return void 
@@ -1606,7 +1606,7 @@ class AppendIterator extends IteratorIterator implements OuterIterator, Traversa
 	/**
 	 * Gets the ArrayIterator
 	 * @link http://www.php.net/manual/en/appenditerator.getarrayiterator.php
-	 * @return void an ArrayIterator containing
+	 * @return ArrayIterator an ArrayIterator containing
 	 * the appended iterators.
 	 */
 	public function getArrayIterator () {}
@@ -2073,21 +2073,21 @@ class EmptyIterator implements Iterator, Traversable {
 	/**
 	 * The valid() method
 	 * @link http://www.php.net/manual/en/emptyiterator.valid.php
-	 * @return void false
+	 * @return bool false
 	 */
 	public function valid () {}
 
 	/**
 	 * The key() method
 	 * @link http://www.php.net/manual/en/emptyiterator.key.php
-	 * @return void 
+	 * @return scalar 
 	 */
 	public function key () {}
 
 	/**
 	 * The current() method
 	 * @link http://www.php.net/manual/en/emptyiterator.current.php
-	 * @return void 
+	 * @return mixed 
 	 */
 	public function current () {}
 
@@ -2296,9 +2296,11 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Construct a new array object
 	 * @link http://www.php.net/manual/en/arrayobject.construct.php
-	 * @param $array
+	 * @param $array [optional]
+	 * @param $ar_flags [optional]
+	 * @param $iterator_class [optional]
 	 */
-	public function __construct ($array) {}
+	public function __construct ($array = null, $ar_flags = null, $iterator_class = null) {}
 
 	/**
 	 * Returns whether the requested index exists
@@ -2537,9 +2539,11 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Construct an ArrayIterator
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
-	 * @param $array
+	 * @param $array [optional]
+	 * @param $ar_flags [optional]
+	 * @param $iterator_class [optional]
 	 */
-	public function __construct ($array) {}
+	public function __construct ($array = null, $ar_flags = null, $iterator_class = null) {}
 
 	/**
 	 * Check if offset exists
@@ -2726,7 +2730,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Check whether array contains more entries
 	 * @link http://www.php.net/manual/en/arrayiterator.valid.php
-	 * @return bool 
+	 * @return bool true if the iterator is valid, otherwise false
 	 */
 	public function valid () {}
 
@@ -2764,9 +2768,11 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Construct an ArrayIterator
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
-	 * @param $array
+	 * @param $array [optional]
+	 * @param $ar_flags [optional]
+	 * @param $iterator_class [optional]
 	 */
-	public function __construct ($array) {}
+	public function __construct ($array = null, $ar_flags = null, $iterator_class = null) {}
 
 	/**
 	 * Check if offset exists
@@ -2953,7 +2959,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Check whether array contains more entries
 	 * @link http://www.php.net/manual/en/arrayiterator.valid.php
-	 * @return bool 
+	 * @return bool true if the iterator is valid, otherwise false
 	 */
 	public function valid () {}
 
@@ -3134,7 +3140,7 @@ class SplFileInfo  {
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -3436,7 +3442,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -3765,7 +3771,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -4126,7 +4132,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -4463,7 +4469,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -4626,7 +4632,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	public function fputcsv (array $fields, $delimiter = null, $enclosure = null, $escape = null) {}
 
 	/**
-	 * Set the delimiter and enclosure character for CSV
+	 * Set the delimiter, enclosure and escape character for CSV
 	 * @link http://www.php.net/manual/en/splfileobject.setcsvcontrol.php
 	 * @param string $delimiter [optional] <p>
 	 * The field delimiter (one character only).
@@ -4642,9 +4648,9 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	public function setCsvControl ($delimiter = null, $enclosure = null, $escape = null) {}
 
 	/**
-	 * Get the delimiter and enclosure character for CSV
+	 * Get the delimiter, enclosure and escape character for CSV
 	 * @link http://www.php.net/manual/en/splfileobject.getcsvcontrol.php
-	 * @return array an indexed array containing the delimiter and enclosure character.
+	 * @return array an indexed array containing the delimiter, enclosure and escape character.
 	 */
 	public function getCsvControl () {}
 
@@ -5037,7 +5043,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -5197,7 +5203,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	public function fputcsv (array $fields, $delimiter = null, $enclosure = null, $escape = null) {}
 
 	/**
-	 * Set the delimiter and enclosure character for CSV
+	 * Set the delimiter, enclosure and escape character for CSV
 	 * @link http://www.php.net/manual/en/splfileobject.setcsvcontrol.php
 	 * @param string $delimiter [optional] <p>
 	 * The field delimiter (one character only).
@@ -5213,9 +5219,9 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	public function setCsvControl ($delimiter = null, $enclosure = null, $escape = null) {}
 
 	/**
-	 * Get the delimiter and enclosure character for CSV
+	 * Get the delimiter, enclosure and escape character for CSV
 	 * @link http://www.php.net/manual/en/splfileobject.getcsvcontrol.php
-	 * @return array an indexed array containing the delimiter and enclosure character.
+	 * @return array an indexed array containing the delimiter, enclosure and escape character.
 	 */
 	public function getCsvControl () {}
 
@@ -5608,7 +5614,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -6673,7 +6679,7 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	public function top () {}
 
 	/**
-	 * Extracts a node from top of the heap and sift up.
+	 * Extracts a node from top of the heap and shift up.
 	 * @link http://www.php.net/manual/en/splpriorityqueue.extract.php
 	 * @return mixed The value or priority (or both) of the extracted node, depending on the extract flag.
 	 */
@@ -7139,7 +7145,7 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Gets the flag information
 	 * @link http://www.php.net/manual/en/multipleiterator.getflags.php
-	 * @return void Information about the flags, as an integer.
+	 * @return int Information about the flags, as an integer.
 	 */
 	public function getFlags () {}
 
@@ -7184,14 +7190,14 @@ class MultipleIterator implements Iterator, Traversable {
 	 * @param Iterator $iterator <p>
 	 * The iterator to check.
 	 * </p>
-	 * @return void true on success or false on failure
+	 * @return bool true on success or false on failure
 	 */
 	public function containsIterator ($iterator) {}
 
 	/**
 	 * Gets the number of attached iterator instances
 	 * @link http://www.php.net/manual/en/multipleiterator.countiterators.php
-	 * @return void The number of attached iterator instances (as an integer).
+	 * @return int The number of attached iterator instances (as an integer).
 	 */
 	public function countIterators () {}
 
@@ -7205,7 +7211,7 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Checks the validity of sub iterators
 	 * @link http://www.php.net/manual/en/multipleiterator.valid.php
-	 * @return void true if one or all sub iterators are valid depending on flags,
+	 * @return bool true if one or all sub iterators are valid depending on flags,
 	 * otherwise false
 	 */
 	public function valid () {}
@@ -7392,6 +7398,12 @@ function spl_object_hash ($obj) {}
  * their resource ID, and boolean keys will be converted to
  * integers.
  * </p>
+ * <p>
+ * If this parameter is not set or set to true, duplicate keys will be
+ * overwritten. The last value with a given key will be in the returned
+ * array. Set this paramater to false to get all the values
+ * in any case.
+ * </p>
  * @return array An array containing the elements of the iterator.
  */
 function iterator_to_array ($iterator, $use_keys = null) {}
@@ -7424,4 +7436,4 @@ function iterator_count ($iterator) {}
  */
 function iterator_apply ($iterator, $function, array $args = null) {}
 
-// End of SPL v.7.0.0-dev
+// End of SPL v.7.2.0-dev

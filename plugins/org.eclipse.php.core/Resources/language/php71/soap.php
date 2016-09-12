@@ -1,6 +1,6 @@
 <?php
 
-// Start of soap v.7.0.0-dev
+// Start of soap v.7.2.0-dev
 
 class SoapClient  {
 
@@ -485,9 +485,29 @@ define ('WSDL_CACHE_NONE', 0);
 define ('WSDL_CACHE_DISK', 1);
 define ('WSDL_CACHE_MEMORY', 2);
 define ('WSDL_CACHE_BOTH', 3);
+
+/**
+ * Since PHP 5.5.0.
+ * @link http://www.php.net/manual/en/soap.constants.php
+ */
 define ('SOAP_SSL_METHOD_TLS', 0);
+
+/**
+ * Since PHP 5.5.0.
+ * @link http://www.php.net/manual/en/soap.constants.php
+ */
 define ('SOAP_SSL_METHOD_SSLv2', 1);
+
+/**
+ * Since PHP 5.5.0.
+ * @link http://www.php.net/manual/en/soap.constants.php
+ */
 define ('SOAP_SSL_METHOD_SSLv3', 2);
+
+/**
+ * Since PHP 5.5.0.
+ * @link http://www.php.net/manual/en/soap.constants.php
+ */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.7.0.0-dev
+// End of soap v.7.2.0-dev

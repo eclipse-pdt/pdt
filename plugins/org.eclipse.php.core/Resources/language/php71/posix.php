@@ -1,6 +1,6 @@
 <?php
 
-// Start of posix v.7.0.0-dev
+// Start of posix v.7.2.0-dev
 
 /**
  * Send a signal to a process
@@ -625,9 +625,22 @@ function posix_getpwuid ($uid) {}
 function posix_getrlimit () {}
 
 /**
- * @param $resource
- * @param $softlimit
- * @param $hardlimit
+ * Set system resource limits
+ * @link http://www.php.net/manual/en/function.posix-setrlimit.php
+ * @param int $resource <p>
+ * The
+ * resource limit constant
+ * corresponding to the limit that is being set.
+ * </p>
+ * @param int $softlimit <p>
+ * The soft limit, in whatever unit the resource limit requires, or
+ * POSIX_RLIMIT_INFINITY.
+ * </p>
+ * @param int $hardlimit <p>
+ * The hard limit, in whatever unit the resource limit requires, or
+ * POSIX_RLIMIT_INFINITY.
+ * </p>
+ * @return bool true on success or false on failure
  */
 function posix_setrlimit ($resource, $softlimit, $hardlimit) {}
 
@@ -670,31 +683,187 @@ function posix_strerror ($errno) {}
  */
 function posix_initgroups ($name, $base_group_id) {}
 
+
+/**
+ * Check whether the file exists.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_F_OK', 0);
+
+/**
+ * Check whether the file exists and has execute permissions.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_X_OK', 1);
+
+/**
+ * Check whether the file exists and has write permissions.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_W_OK', 2);
+
+/**
+ * Check whether the file exists and has read permissions.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_R_OK', 4);
+
+/**
+ * Normal file
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFREG', 32768);
+
+/**
+ * Character special file
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFCHR', 8192);
+
+/**
+ * Block special file
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFBLK', 24576);
+
+/**
+ * FIFO (named pipe) special file
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFIFO', 4096);
+
+/**
+ * Socket
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFSOCK', 49152);
+
+/**
+ * The maximum size of the process's address space in bytes. See also PHP's
+ * memory_limit configuration
+ * directive.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_AS', 9);
+
+/**
+ * The maximum size of a core file. If the limit is set to 0, no core file
+ * will be generated.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_CORE', 4);
+
+/**
+ * The maximum amount of CPU time that the process can use, in seconds.
+ * When the soft limit is hit, a SIGXCPU signal will be
+ * sent, which can be caught with pcntl_signal.
+ * Depending on the operating system, additional SIGXCPU
+ * signals may be sent each second until the hard limit is hit, at which
+ * point an uncatchable SIGKILL signal is sent.
+ * See also set_time_limit.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_CPU', 0);
+
+/**
+ * The maximum size of the process's data segment, in bytes. It is
+ * extremely unlikely that this will have any effect on the execution of
+ * PHP unless an extension is in use that calls brk or
+ * sbrk.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_DATA', 2);
+
+/**
+ * The maximum size of files that the process can create, in bytes.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_FSIZE', 1);
+
+/**
+ * The maximum number of locks that the process can create. This is only
+ * supported on extremely old Linux kernels.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_LOCKS', 10);
+
+/**
+ * The maximum number of bytes that can be locked into memory.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_MEMLOCK', 8);
+
+/**
+ * The maximum number of bytes that can be allocated for POSIX message
+ * queues. PHP does not ship with support for POSIX message queues, so this
+ * limit will not have any effect unless you are using an extension that
+ * implements that support.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_MSGQUEUE', 12);
+
+/**
+ * The maximum value to which the process can be
+ * reniced to. The value
+ * that will be used will be 20 - limit, as resource
+ * limit values cannot be negative.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_NICE', 13);
+
+/**
+ * A value one greater than the maximum file descriptor number that can be
+ * opened by this process.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_NOFILE', 7);
+
+/**
+ * The maximum number of processes (and/or threads, on some operating
+ * systems) that can be created for the real user ID of the process.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_NPROC', 6);
+
+/**
+ * The maximum size of the process's resident set, in pages.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_RSS', 5);
+
+/**
+ * The maximum real time priority that can be set via the
+ * sched_setscheduler and
+ * sched_setparam system calls.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_RTPRIO', 14);
+
+/**
+ * The maximum amount of CPU time, in microseconds, that the process can
+ * consume without making a blocking system call if it is using real time
+ * scheduling.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_RTTIME', 15);
+
+/**
+ * The maximum number of signals that can be queued for the real user ID of
+ * the process.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_SIGPENDING', 11);
+
+/**
+ * The maximum size of the process stack, in bytes.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_STACK', 3);
+
+/**
+ * Used to indicate an infinite value for a resource limit.
+ * @link http://www.php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_RLIMIT_INFINITY', -1);
 
-// End of posix v.7.0.0-dev
+// End of posix v.7.2.0-dev

@@ -1,24 +1,24 @@
 <?php
 
-// Start of xsl v.0.1
+// Start of xsl v.7.2.0-dev
 
 class XSLTProcessor  {
 
 	/**
 	 * Import stylesheet
 	 * @link http://www.php.net/manual/en/xsltprocessor.importstylesheet.php
-	 * @param stylesheet object <p>
+	 * @param object $stylesheet <p>
 	 * The imported style sheet as a DOMDocument or
 	 * SimpleXMLElement object.
 	 * </p>
-	 * @return void 
+	 * @return bool true on success or false on failure
 	 */
 	public function importStylesheet ($stylesheet) {}
 
 	/**
 	 * Transform to a DOMDocument
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtodoc.php
-	 * @param doc DOMNode <p>
+	 * @param DOMNode $doc <p>
 	 * The node to be transformed.
 	 * </p>
 	 * @return DOMDocument The resulting DOMDocument or false on error.
@@ -28,10 +28,10 @@ class XSLTProcessor  {
 	/**
 	 * Transform to URI
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtouri.php
-	 * @param doc DOMDocument <p>
+	 * @param DOMDocument $doc <p>
 	 * The document to transform.
 	 * </p>
-	 * @param uri string <p>
+	 * @param string $uri <p>
 	 * The target URI for the transformation.
 	 * </p>
 	 * @return int the number of bytes written or false if an error occurred.
@@ -41,23 +41,24 @@ class XSLTProcessor  {
 	/**
 	 * Transform to XML
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtoxml.php
-	 * @param doc DOMDocument <p>
-	 * The transformed document.
+	 * @param object $doc <p>
+	 * The DOMDocument or SimpleXMLElement object to
+	 * be transformed.
 	 * </p>
 	 * @return string The result of the transformation as a string or false on error.
 	 */
-	public function transformToXml (DOMDocument $doc) {}
+	public function transformToXml ($doc) {}
 
 	/**
 	 * Set value for a parameter
 	 * @link http://www.php.net/manual/en/xsltprocessor.setparameter.php
-	 * @param namespace string <p>
+	 * @param string $namespace <p>
 	 * The namespace URI of the XSLT parameter.
 	 * </p>
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The local name of the XSLT parameter.
 	 * </p>
-	 * @param value string <p>
+	 * @param string $value <p>
 	 * The new value of the XSLT parameter.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -67,10 +68,10 @@ class XSLTProcessor  {
 	/**
 	 * Get value of a parameter
 	 * @link http://www.php.net/manual/en/xsltprocessor.getparameter.php
-	 * @param namespaceURI string <p>
+	 * @param string $namespaceURI <p>
 	 * The namespace URI of the XSLT parameter.
 	 * </p>
-	 * @param localName string <p>
+	 * @param string $localName <p>
 	 * The local name of the XSLT parameter.
 	 * </p>
 	 * @return string The value of the parameter (as a string), or false if it's not set.
@@ -80,10 +81,10 @@ class XSLTProcessor  {
 	/**
 	 * Remove parameter
 	 * @link http://www.php.net/manual/en/xsltprocessor.removeparameter.php
-	 * @param namespaceURI string <p>
+	 * @param string $namespaceURI <p>
 	 * The namespace URI of the XSLT parameter.
 	 * </p>
-	 * @param localName string <p>
+	 * @param string $localName <p>
 	 * The local name of the XSLT parameter.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -100,7 +101,7 @@ class XSLTProcessor  {
 	/**
 	 * Enables the ability to use PHP functions as XSLT functions
 	 * @link http://www.php.net/manual/en/xsltprocessor.registerphpfunctions.php
-	 * @param restrict mixed[optional] <p>
+	 * @param mixed $restrict [optional] <p>
 	 * Use this parameter to only allow certain functions to be called from 
 	 * XSLT.
 	 * </p>
@@ -115,7 +116,7 @@ class XSLTProcessor  {
 	/**
 	 * Sets profiling output file
 	 * @link http://www.php.net/manual/en/xsltprocessor.setprofiling.php
-	 * @param filename string <p>
+	 * @param string $filename <p>
 	 * Path to the file to dump profiling information.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -125,15 +126,28 @@ class XSLTProcessor  {
 	/**
 	 * Set security preferences
 	 * @link http://www.php.net/manual/en/xsltprocessor.setsecurityprefs.php
-	 * @param securityPrefs int 
-	 * @return int 
+	 * @param int $securityPrefs <p>
+	 * The new security preferences. The following constants can be ORed:
+	 * XSL_SECPREF_READ_FILE,
+	 * XSL_SECPREF_WRITE_FILE,
+	 * XSL_SECPREF_CREATE_DIRECTORY,
+	 * XSL_SECPREF_READ_NETWORK,
+	 * XSL_SECPREF_WRITE_NETWORK. Alternatively,
+	 * XSL_SECPREF_NONE or
+	 * XSL_SECPREF_DEFAULT can be passed.
+	 * </p>
+	 * @return int the old security preferences.
 	 */
 	public function setSecurityPrefs ($securityPrefs) {}
 
 	/**
 	 * Get security preferences
 	 * @link http://www.php.net/manual/en/xsltprocessor.getsecurityprefs.php
-	 * @return int 
+	 * @return int A bitmask consisting of XSL_SECPREF_READ_FILE,
+	 * XSL_SECPREF_WRITE_FILE,
+	 * XSL_SECPREF_CREATE_DIRECTORY,
+	 * XSL_SECPREF_READ_NETWORK,
+	 * XSL_SECPREF_WRITE_NETWORK.
 	 */
 	public function getSecurityPrefs () {}
 
@@ -141,36 +155,74 @@ class XSLTProcessor  {
 define ('XSL_CLONE_AUTO', 0);
 define ('XSL_CLONE_NEVER', -1);
 define ('XSL_CLONE_ALWAYS', 1);
+
+/**
+ * Deactivate all security restrictions.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_NONE', 0);
+
+/**
+ * Disallows reading files.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_READ_FILE', 2);
+
+/**
+ * Disallows writing files.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_WRITE_FILE', 4);
+
+/**
+ * Disallows creating directories.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_CREATE_DIRECTORY', 8);
+
+/**
+ * Disallows reading network files.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_READ_NETWORK', 16);
+
+/**
+ * Disallows writing network files.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_WRITE_NETWORK', 32);
+
+/**
+ * Disallows all write access, i.e. a bitmask of
+ * XSL_SECPREF_WRITE_NETWORK |
+ * XSL_SECPREF_CREATE_DIRECTORY |
+ * XSL_SECPREF_WRITE_FILE.
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_SECPREF_DEFAULT', 44);
 
 /**
  * libxslt version like 10117. Available as of PHP 5.1.2.
  * @link http://www.php.net/manual/en/xsl.constants.php
  */
-define ('LIBXSLT_VERSION', 10127);
+define ('LIBXSLT_VERSION', 10128);
 
 /**
  * libxslt version like 1.1.17. Available as of PHP 5.1.2.
  * @link http://www.php.net/manual/en/xsl.constants.php
  */
-define ('LIBXSLT_DOTTED_VERSION', "1.1.27");
+define ('LIBXSLT_DOTTED_VERSION', "1.1.28");
 
 /**
  * libexslt version like 813. Available as of PHP 5.1.2.
  * @link http://www.php.net/manual/en/xsl.constants.php
  */
-define ('LIBEXSLT_VERSION', 816);
+define ('LIBEXSLT_VERSION', 817);
 
 /**
  * libexslt version like 1.1.17. Available as of PHP 5.1.2.
  * @link http://www.php.net/manual/en/xsl.constants.php
  */
-define ('LIBEXSLT_DOTTED_VERSION', "1.1.27");
+define ('LIBEXSLT_DOTTED_VERSION', "1.1.28");
 
-// End of xsl v.0.1
+// End of xsl v.7.2.0-dev

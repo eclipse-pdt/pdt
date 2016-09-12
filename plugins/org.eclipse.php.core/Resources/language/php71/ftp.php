@@ -1,6 +1,6 @@
 <?php
 
-// Start of ftp v.7.0.0-dev
+// Start of ftp v.7.2.0-dev
 
 /**
  * Opens an FTP connection
@@ -22,27 +22,6 @@
  * @return resource a FTP stream on success or false on error.
  */
 function ftp_connect ($host, $port = null, $timeout = null) {}
-
-/**
- * Opens an Secure SSL-FTP connection
- * @link http://www.php.net/manual/en/function.ftp-ssl-connect.php
- * @param string $host <p>
- * The FTP server address. This parameter shouldn't have any trailing 
- * slashes and shouldn't be prefixed with ftp://.
- * </p>
- * @param int $port [optional] <p>
- * This parameter specifies an alternate port to connect to. If it is
- * omitted or set to zero, then the default FTP port, 21, will be used.
- * </p>
- * @param int $timeout [optional] <p>
- * This parameter specifies the timeout for all subsequent network operations.
- * If omitted, the default value is 90 seconds. The timeout can be changed and
- * queried at any time with ftp_set_option and
- * ftp_get_option.
- * </p>
- * @return resource a SSL-FTP stream on success or false on error.
- */
-function ftp_ssl_connect ($host, $port = null, $timeout = null) {}
 
 /**
  * Logs in to an FTP connection
@@ -591,15 +570,79 @@ function ftp_nb_fput ($ftp_stream, $remote_file, $handle, $mode, $startpos = nul
  */
 function ftp_quit ($ftp) {}
 
+
+/**
+ * <p></p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_ASCII', 1);
+
+/**
+ * <p>Alias of FTP_ASCII.</p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_TEXT', 1);
+
+/**
+ * <p></p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_BINARY', 2);
+
+/**
+ * <p>Alias of FTP_BINARY.</p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_IMAGE', 2);
+
+/**
+ * <p>
+ * Automatically determine resume position and start position for GET and PUT requests
+ * (only works if FTP_AUTOSEEK is enabled)
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_AUTORESUME', -1);
+
+/**
+ * <p>
+ * See ftp_set_option for information.
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_TIMEOUT_SEC', 0);
+
+/**
+ * <p>
+ * See ftp_set_option for information.
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_AUTOSEEK', 1);
+define ('FTP_USEPASVADDRESS', 2);
+
+/**
+ * <p>
+ * Asynchronous transfer has failed
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_FAILED', 0);
+
+/**
+ * <p>
+ * Asynchronous transfer has finished
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_FINISHED', 1);
+
+/**
+ * <p>
+ * Asynchronous transfer is still active
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_MOREDATA', 2);
 
-// End of ftp v.7.0.0-dev
+// End of ftp v.7.2.0-dev

@@ -1,6 +1,6 @@
 <?php
 
-// Start of PDO v.7.0.0-dev
+// Start of PDO v.7.2.0-dev
 
 class PDOException extends RuntimeException implements Throwable {
 	protected $message;
@@ -113,19 +113,17 @@ class PDO  {
 	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
 	const MYSQL_ATTR_LOCAL_INFILE = 1001;
 	const MYSQL_ATTR_INIT_COMMAND = 1002;
-	const MYSQL_ATTR_MAX_BUFFER_SIZE = 1005;
-	const MYSQL_ATTR_READ_DEFAULT_FILE = 1003;
-	const MYSQL_ATTR_READ_DEFAULT_GROUP = 1004;
-	const MYSQL_ATTR_COMPRESS = 1006;
-	const MYSQL_ATTR_DIRECT_QUERY = 1007;
-	const MYSQL_ATTR_FOUND_ROWS = 1008;
-	const MYSQL_ATTR_IGNORE_SPACE = 1009;
-	const MYSQL_ATTR_SSL_KEY = 1010;
-	const MYSQL_ATTR_SSL_CERT = 1011;
-	const MYSQL_ATTR_SSL_CA = 1012;
-	const MYSQL_ATTR_SSL_CAPATH = 1013;
-	const MYSQL_ATTR_SSL_CIPHER = 1014;
-	const MYSQL_ATTR_MULTI_STATEMENTS = 1015;
+	const MYSQL_ATTR_COMPRESS = 1003;
+	const MYSQL_ATTR_DIRECT_QUERY = 1004;
+	const MYSQL_ATTR_FOUND_ROWS = 1005;
+	const MYSQL_ATTR_IGNORE_SPACE = 1006;
+	const MYSQL_ATTR_SSL_KEY = 1007;
+	const MYSQL_ATTR_SSL_CERT = 1008;
+	const MYSQL_ATTR_SSL_CA = 1009;
+	const MYSQL_ATTR_SSL_CAPATH = 1010;
+	const MYSQL_ATTR_SSL_CIPHER = 1011;
+	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
+	const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
 
 
 	/**
@@ -663,7 +661,7 @@ class PDOStatement implements Traversable {
 	 * Returns the number of columns in the result set
 	 * @link http://www.php.net/manual/en/pdostatement.columncount.php
 	 * @return int the number of columns in the result set represented by the
-	 * PDOStatement object. If there is no result set,
+	 * PDOStatement object, even if the result set is empty. If there is no result set,
 	 * PDOStatement::columnCount returns 0.
 	 */
 	public function columnCount () {}
@@ -772,4 +770,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.0.0-dev
+// End of PDO v.7.2.0-dev

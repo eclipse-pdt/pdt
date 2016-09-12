@@ -1,6 +1,6 @@
 <?php
 
-// Start of bz2 v.7.0.0-dev
+// Start of bz2 v.7.2.0-dev
 
 /**
  * Opens a bzip2 compressed file
@@ -59,7 +59,7 @@ function bzwrite ($bz, $data, $length = null) {}
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
  * </p>
- * @return int true on success or false on failure
+ * @return bool true on success or false on failure
  */
 function bzflush ($bz) {}
 
@@ -152,4 +152,4 @@ function bzcompress ($source, $blocksize = null, $workfactor = null) {}
  */
 function bzdecompress ($source, $small = null) {}
 
-// End of bz2 v.7.0.0-dev
+// End of bz2 v.7.2.0-dev

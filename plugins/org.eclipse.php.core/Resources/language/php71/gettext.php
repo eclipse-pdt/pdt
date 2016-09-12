@@ -1,6 +1,6 @@
 <?php
 
-// Start of gettext v.7.0.0-dev
+// Start of gettext v.7.2.0-dev
 
 /**
  * Sets the default domain
@@ -76,10 +76,14 @@ function bindtextdomain ($domain, $directory) {}
  * Plural version of gettext
  * @link http://www.php.net/manual/en/function.ngettext.php
  * @param string $msgid1 <p>
+ * The singular message ID.
  * </p>
  * @param string $msgid2 <p>
+ * The plural message ID.
  * </p>
  * @param int $n <p>
+ * The number (e.g. item count) to determine the translation for the
+ * respective grammatical number.
  * </p>
  * @return string correct plural form of message identified by 
  * msgid1 and msgid2
@@ -134,4 +138,4 @@ function dcngettext ($domain, $msgid1, $msgid2, $n, $category) {}
  */
 function bind_textdomain_codeset ($domain, $codeset) {}
 
-// End of gettext v.7.0.0-dev
+// End of gettext v.7.2.0-dev

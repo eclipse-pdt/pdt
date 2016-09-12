@@ -1,6 +1,6 @@
 <?php
 
-// Start of session v.7.0.0-dev
+// Start of session v.7.2.0-dev
 
 interface SessionHandlerInterface  {
 
@@ -10,12 +10,12 @@ interface SessionHandlerInterface  {
 	 * @param string $save_path <p>
 	 * The path where to store/retrieve the session.
 	 * </p>
-	 * @param string $name <p>
+	 * @param string $session_name <p>
 	 * The session name.
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function open ($save_path, $name) {}
+	abstract public function open ($save_path, $session_name) {}
 
 	/**
 	 * Close the session
@@ -241,10 +241,29 @@ function session_save_path ($path = null) {}
 function session_id ($id = null) {}
 
 /**
+ * Create new session id
+ * @link http://www.php.net/manual/en/function.session-create-id.php
+ * @param string $prefix [optional] <p>
+ * If prefix is specified, new session id
+ * is prefixed by prefix. Not all
+ * characters are allowed within the session id. Characters in
+ * the range a-z A-Z 0-9 , (comma) and -
+ * (minus) are allowed.
+ * </p>
+ * @return string session_create_id returns new collision free
+ * session id for the current session. If it is used without active
+ * session, it omits collision check.
+ */
+function session_create_id ($prefix = null) {}
+
+/**
  * Update the current session id with a newly generated one
  * @link http://www.php.net/manual/en/function.session-regenerate-id.php
  * @param bool $delete_old_session [optional] <p>
  * Whether to delete the old associated session file or not.
+ * You should not delete old session if you need to avoid
+ * races caused by deletion or detect/avoid session hijack
+ * attacks.
  * </p>
  * @return bool true on success or false on failure
  */
@@ -270,10 +289,23 @@ function session_encode () {}
 /**
  * Start new or resume existing session
  * @link http://www.php.net/manual/en/function.session-start.php
+ * @param array $options [optional] <p>
+ * If provided, this is an associative array of options that will override
+ * the currently set
+ * session configuration directives.
+ * The keys should not include the session. prefix.
+ * </p>
+ * <p>
+ * In addition to the normal set of configuration directives, a
+ * read_and_close option may also be provided. If set to
+ * true, this will result in the session being closed immediately after
+ * being read, thereby avoiding unnecessary locking if the session data
+ * won't be changed.
+ * </p>
  * @return bool This function returns true if a session was successfully started,
  * otherwise false.
  */
-function session_start () {}
+function session_start (array $options = null) {}
 
 /**
  * Destroys all data registered to a session
@@ -288,6 +320,19 @@ function session_destroy () {}
  * @return void 
  */
 function session_unset () {}
+
+/**
+ * Perform session data garbage collection
+ * @link http://www.php.net/manual/en/function.session-gc.php
+ * @return int session_gc returns number of deleted session
+ * data for success, false for failure.
+ * </p>
+ * <p>
+ * Old save handlers do not return number of deleted session data, but 
+ * only success/failure flag. If this is the case, number of deleted
+ * session data became 1 regardless of actually deleted data.
+ */
+function session_gc () {}
 
 /**
  * Sets user-level session storage functions
@@ -446,8 +491,25 @@ function session_register_shutdown () {}
  */
 function session_commit () {}
 
+
+/**
+ * Since PHP 5.4.0. Return value of session_status if sessions are disabled.
+ * @link http://www.php.net/manual/en/session.constants.php
+ */
 define ('PHP_SESSION_DISABLED', 0);
+
+/**
+ * Since PHP 5.4.0. Return value of session_status if sessions are enabled,
+ * but no session exists.
+ * @link http://www.php.net/manual/en/session.constants.php
+ */
 define ('PHP_SESSION_NONE', 1);
+
+/**
+ * Since PHP 5.4.0. Return value of session_status if sessions are enabled,
+ * and a session exists.
+ * @link http://www.php.net/manual/en/session.constants.php
+ */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.0.0-dev
+// End of session v.7.2.0-dev

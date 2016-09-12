@@ -308,7 +308,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * Extract the contents of a phar archive to a directory
 	 * @link http://www.php.net/manual/en/phar.extractto.php
 	 * @param string $pathto <p>
-	 * Path within an archive to the file to delete.
+	 * Path to extract the given files to
 	 * </p>
 	 * @param string|array $files [optional] <p>
 	 * The name of a file or directory to extract, or an array of files/directories to extract
@@ -1028,7 +1028,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -1798,7 +1798,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 
@@ -2137,7 +2137,7 @@ class PharFileInfo extends SplFileInfo  {
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string the path to the file.
+	 * @return string the path to the file, or false if the file does not exist.
 	 */
 	public function getRealPath () {}
 

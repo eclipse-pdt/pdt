@@ -1,6 +1,6 @@
 <?php
 
-// Start of zlib v.7.0.0-dev
+// Start of zlib v.7.2.0-dev
 
 /**
  * Output a gz-file
@@ -233,7 +233,7 @@ function gzputs ($fp, $str, $length = null) {}
  * You can set this optional parameter to 1, if you
  * want to search for the file in the include_path too.
  * </p>
- * @return array An array containing the file, one line per cell.
+ * @return array An array containing the file, one line per cell, empty lines included, and with newlines still attached.
  */
 function gzfile ($filename, $use_include_path = null) {}
 
@@ -386,28 +386,86 @@ function zlib_decode ($data, $max_decoded_len = null) {}
 function zlib_get_coding_type () {}
 
 /**
- * @param $encoding
- * @param $level [optional]
+ * Initialize an incremental deflate context
+ * @link http://www.php.net/manual/en/function.deflate-init.php
+ * @param int $encoding <p>
+ * One of the ZLIB_ENCODING_* constants.
+ * </p>
+ * @param array $options [optional] <p>
+ * An associative array which may contain the following elements:
+ * level
+ * <p>
+ * The compression level in range -1..9; defaults to -1.
+ * </p>
+ * @return resource a deflate context resource (zlib.deflate) on
+ * success, or false on failure.
  */
-function deflate_init ($encoding, $level = null) {}
+function deflate_init ($encoding, array $options = null) {}
 
 /**
- * @param $resource
- * @param $add
- * @param $flush_behavior [optional]
+ * Incrementally deflate data
+ * @link http://www.php.net/manual/en/function.deflate-add.php
+ * @param resource $context <p>
+ * A context created with deflate_init.
+ * </p>
+ * @param string $data <p>
+ * A chunk of data to compress.
+ * </p>
+ * @param int $flush_mode [optional] <p>
+ * One of ZLIB_BLOCK,
+ * ZLIB_NO_FLUSH,
+ * ZLIB_PARTIAL_FLUSH,
+ * ZLIB_SYNC_FLUSH (default),
+ * ZLIB_FULL_FLUSH, ZLIB_FINISH.
+ * Normally you will want to set ZLIB_NO_FLUSH to
+ * maximize compression, and ZLIB_FINISH to terminate
+ * with the last chunk of data. See the zlib manual for a
+ * detailed description of these constants.
+ * </p>
+ * @return string a chunk of compressed data, or false on failure.
  */
-function deflate_add ($resource, $add, $flush_behavior = null) {}
+function deflate_add ($context, $data, $flush_mode = null) {}
 
 /**
- * @param $encoding
+ * Initialize an incremental inflate context
+ * @link http://www.php.net/manual/en/function.inflate-init.php
+ * @param int $encoding <p>
+ * One of the ZLIB_ENCODING_* constants.
+ * </p>
+ * @param array $options [optional] <p>
+ * An associative array which may contain the following elements:
+ * level
+ * <p>
+ * The compression level in range -1..9; defaults to -1.
+ * </p>
+ * @return resource an inflate context resource (zlib.inflate) on
+ * success, or false on failure.
  */
-function inflate_init ($encoding) {}
+function inflate_init ($encoding, array $options = null) {}
 
 /**
- * @param $resource
- * @param $flush_behavior
+ * Incrementally inflate encoded data
+ * @link http://www.php.net/manual/en/function.inflate-add.php
+ * @param resource $context <p>
+ * A context created with inflate_init.
+ * </p>
+ * @param string $encoded_data <p>
+ * A chunk of compressed data.
+ * </p>
+ * @param int $flush_mode [optional] <p>
+ * One of ZLIB_BLOCK,
+ * ZLIB_NO_FLUSH,
+ * ZLIB_PARTIAL_FLUSH,
+ * ZLIB_SYNC_FLUSH (default),
+ * ZLIB_FULL_FLUSH, ZLIB_FINISH.
+ * Normally you will want to set ZLIB_NO_FLUSH to
+ * maximize compression, and ZLIB_FINISH to terminate
+ * with the last chunk of data. See the zlib manual for a
+ * detailed description of these constants.
+ * </p>
+ * @return string a chunk of uncompressed data, or false on failure.
  */
-function inflate_add ($resource, $flush_behavior) {}
+function inflate_add ($context, $encoded_data, $flush_mode = null) {}
 
 /**
  * ob_start callback function to gzip output buffer
@@ -422,21 +480,91 @@ function ob_gzhandler ($buffer, $mode) {}
 
 define ('FORCE_GZIP', 31);
 define ('FORCE_DEFLATE', 15);
+
+/**
+ * DEFLATE algorithm as per RFC 1951. Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_ENCODING_RAW', -15);
+
+/**
+ * GZIP algorithm as per RFC 1952. Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_ENCODING_GZIP', 31);
+
+/**
+ * ZLIB compression algorithm as per RFC 1950. Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_ENCODING_DEFLATE', 15);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_NO_FLUSH', 0);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_PARTIAL_FLUSH', 1);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_SYNC_FLUSH', 2);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_FULL_FLUSH', 3);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_BLOCK', 5);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_FINISH', 4);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_FILTERED', 1);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_HUFFMAN_ONLY', 2);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_RLE', 3);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_FIXED', 4);
+
+/**
+ * Available as of PHP 7.0.0.
+ * @link http://www.php.net/manual/en/zlib.constants.php
+ */
 define ('ZLIB_DEFAULT_STRATEGY', 0);
 define ('ZLIB_VERSION', "1.2.8");
 define ('ZLIB_VERNUM', 4736);
 
-// End of zlib v.7.0.0-dev
+// End of zlib v.7.2.0-dev

@@ -1,11 +1,11 @@
 <?php
 
-// Start of xmlrpc v.0.51
+// Start of xmlrpc v.7.2.0-dev
 
 /**
  * Generates XML for a PHP value
  * @link http://www.php.net/manual/en/function.xmlrpc-encode.php
- * @param value mixed 
+ * @param mixed $value 
  * @return string 
  */
 function xmlrpc_encode ($value) {}
@@ -13,10 +13,10 @@ function xmlrpc_encode ($value) {}
 /**
  * Decodes XML into native PHP types
  * @link http://www.php.net/manual/en/function.xmlrpc-decode.php
- * @param xml string <p>
+ * @param string $xml <p>
  * XML response returned by XMLRPC method.
  * </p>
- * @param encoding string[optional] <p>
+ * @param string $encoding [optional] <p>
  * Input encoding supported by iconv.
  * </p>
  * @return mixed either an array, or an integer, or a string, or a boolean according
@@ -27,9 +27,9 @@ function xmlrpc_decode ($xml, $encoding = null) {}
 /**
  * Decodes XML into native PHP types
  * @link http://www.php.net/manual/en/function.xmlrpc-decode-request.php
- * @param xml string 
- * @param method string 
- * @param encoding string[optional] 
+ * @param string $xml 
+ * @param string $method 
+ * @param string $encoding [optional] 
  * @return mixed 
  */
 function xmlrpc_decode_request ($xml, &$method, $encoding = null) {}
@@ -37,13 +37,13 @@ function xmlrpc_decode_request ($xml, &$method, $encoding = null) {}
 /**
  * Generates XML for a method request
  * @link http://www.php.net/manual/en/function.xmlrpc-encode-request.php
- * @param method string <p>
+ * @param string $method <p>
  * Name of the method to call.
  * </p>
- * @param params mixed <p>
+ * @param mixed $params <p>
  * Method parameters compatible with method signature.
  * </p>
- * @param output_options array[optional] <p>
+ * @param array $output_options [optional] <p>
  * Array specifying output options may contain (default values are
  * emphasised):
  * <p>output_type: php, xml</p>
@@ -54,7 +54,7 @@ function xmlrpc_encode_request ($method, $params, array $output_options = null) 
 /**
  * Gets xmlrpc type for a PHP value
  * @link http://www.php.net/manual/en/function.xmlrpc-get-type.php
- * @param value mixed <p>
+ * @param mixed $value <p>
  * PHP value
  * </p>
  * @return string the XML-RPC type.
@@ -64,10 +64,10 @@ function xmlrpc_get_type ($value) {}
 /**
  * Sets xmlrpc type, base64 or datetime, for a PHP string value
  * @link http://www.php.net/manual/en/function.xmlrpc-set-type.php
- * @param value string <p>
+ * @param string $value <p>
  * Value to set the type
  * </p>
- * @param type string <p>
+ * @param string $type <p>
  * 'base64' or 'datetime'
  * </p>
  * @return bool true on success or false on failure
@@ -78,7 +78,7 @@ function xmlrpc_set_type (&$value, $type) {}
 /**
  * Determines if an array value represents an XMLRPC fault
  * @link http://www.php.net/manual/en/function.xmlrpc-is-fault.php
- * @param arg array <p>
+ * @param array $arg <p>
  * Array returned by xmlrpc_decode.
  * </p>
  * @return bool true if the argument means fault, false otherwise. Fault
@@ -97,7 +97,7 @@ function xmlrpc_server_create () {}
 /**
  * Destroys server resources
  * @link http://www.php.net/manual/en/function.xmlrpc-server-destroy.php
- * @param server resource 
+ * @param resource $server 
  * @return int 
  */
 function xmlrpc_server_destroy ($server) {}
@@ -105,9 +105,9 @@ function xmlrpc_server_destroy ($server) {}
 /**
  * Register a PHP function to resource method matching method_name
  * @link http://www.php.net/manual/en/function.xmlrpc-server-register-method.php
- * @param server resource 
- * @param method_name string 
- * @param function string 
+ * @param resource $server 
+ * @param string $method_name 
+ * @param string $function 
  * @return bool 
  */
 function xmlrpc_server_register_method ($server, $method_name, $function) {}
@@ -115,10 +115,10 @@ function xmlrpc_server_register_method ($server, $method_name, $function) {}
 /**
  * Parses XML requests and call methods
  * @link http://www.php.net/manual/en/function.xmlrpc-server-call-method.php
- * @param server resource 
- * @param xml string 
- * @param user_data mixed 
- * @param output_options array[optional] 
+ * @param resource $server 
+ * @param string $xml 
+ * @param mixed $user_data 
+ * @param array $output_options [optional] 
  * @return string 
  */
 function xmlrpc_server_call_method ($server, $xml, $user_data, array $output_options = null) {}
@@ -126,7 +126,7 @@ function xmlrpc_server_call_method ($server, $xml, $user_data, array $output_opt
 /**
  * Decodes XML into a list of method descriptions
  * @link http://www.php.net/manual/en/function.xmlrpc-parse-method-descriptions.php
- * @param xml string 
+ * @param string $xml 
  * @return array 
  */
 function xmlrpc_parse_method_descriptions ($xml) {}
@@ -134,8 +134,8 @@ function xmlrpc_parse_method_descriptions ($xml) {}
 /**
  * Adds introspection documentation
  * @link http://www.php.net/manual/en/function.xmlrpc-server-add-introspection-data.php
- * @param server resource 
- * @param desc array 
+ * @param resource $server 
+ * @param array $desc 
  * @return int 
  */
 function xmlrpc_server_add_introspection_data ($server, array $desc) {}
@@ -143,10 +143,10 @@ function xmlrpc_server_add_introspection_data ($server, array $desc) {}
 /**
  * Register a PHP function to generate documentation
  * @link http://www.php.net/manual/en/function.xmlrpc-server-register-introspection-callback.php
- * @param server resource 
- * @param function string 
+ * @param resource $server 
+ * @param string $function 
  * @return bool 
  */
 function xmlrpc_server_register_introspection_callback ($server, $function) {}
 
-// End of xmlrpc v.0.51
+// End of xmlrpc v.7.2.0-dev

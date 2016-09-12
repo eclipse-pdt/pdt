@@ -1,6 +1,6 @@
 <?php
 
-// Start of iconv v.7.0.0-dev
+// Start of iconv v.7.2.0-dev
 
 /**
  * Convert string to requested character encoding
@@ -19,7 +19,7 @@
  * characters. If you append the string //IGNORE,
  * characters that cannot be represented in the target charset are silently
  * discarded. Otherwise, E_NOTICE is generated and the function
- *  will return false.
+ * will return false.
  * </p>
  * @param string $str <p>
  * The string to be converted.
@@ -394,9 +394,29 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
+
+/**
+ * string
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_IMPL', "glibc");
-define ('ICONV_VERSION', 2.21);
+
+/**
+ * string
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
+define ('ICONV_VERSION', 2.23);
+
+/**
+ * integer
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_STRICT', 1);
+
+/**
+ * integer
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
-// End of iconv v.7.0.0-dev
+// End of iconv v.7.2.0-dev

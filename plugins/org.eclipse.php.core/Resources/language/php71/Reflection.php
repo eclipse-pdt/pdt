@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.7.0.0-dev
+// Start of Reflection v.7.2.0-dev
 
 class ReflectionException extends Exception implements Throwable {
 	protected $message;
@@ -257,8 +257,19 @@ class ReflectionFunctionAbstract implements Reflector {
 	 */
 	public function returnsReference () {}
 
+	/**
+	 * Checks if the function has a specified return type
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.hasreturntype.php
+	 * @return bool true if the function is a specified return type, otherwise false.
+	 */
 	public function hasReturnType () {}
 
+	/**
+	 * Gets the specified return type of a function
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getreturntype.php
+	 * @return ReflectionType a ReflectionType object if a return type is
+	 * specified, &null; otherwise.
+	 */
 	public function getReturnType () {}
 
 	/**
@@ -516,8 +527,19 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	 */
 	public function returnsReference () {}
 
+	/**
+	 * Checks if the function has a specified return type
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.hasreturntype.php
+	 * @return bool true if the function is a specified return type, otherwise false.
+	 */
 	public function hasReturnType () {}
 
+	/**
+	 * Gets the specified return type of a function
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getreturntype.php
+	 * @return ReflectionType a ReflectionType object if a return type is
+	 * specified, &null; otherwise.
+	 */
 	public function getReturnType () {}
 
 }
@@ -525,23 +547,85 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 class ReflectionGenerator  {
 
 	/**
+	 * Constructs a ReflectionGenerator object
+	 * @link http://www.php.net/manual/en/reflectiongenerator.construct.php
 	 * @param $generator
 	 */
 	public function __construct ($generator) {}
 
+	/**
+	 * Gets the currently executing line of the generator
+	 * @link http://www.php.net/manual/en/reflectiongenerator.getexecutingline.php
+	 * @return int the line number of the currently executing statement in the generator.
+	 */
 	public function getExecutingLine () {}
 
+	/**
+	 * Gets the file name of the currently executing generator
+	 * @link http://www.php.net/manual/en/reflectiongenerator.getexecutingfile.php
+	 * @return string the full path and file name of the currently executing generator.
+	 */
 	public function getExecutingFile () {}
 
 	/**
-	 * @param $options [optional]
+	 * Gets the trace of the executing generator
+	 * @link http://www.php.net/manual/en/reflectiongenerator.gettrace.php
+	 * @param int $options [optional] <p>
+	 * The value of options can be any of the following
+	 * the following flags.
+	 * </p>
+	 * <p>
+	 * <table>
+	 * Available options
+	 * <tr valign="top">
+	 * <td>Option</td>
+	 * <td>Description</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>
+	 * DEBUG_BACKTRACE_PROVIDE_OBJECT
+	 * </td>
+	 * <td>
+	 * Default.
+	 * </td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>
+	 * DEBUG_BACKTRACE_IGNORE_ARGS
+	 * </td>
+	 * <td>
+	 * Don't include the argument information for functions in the stack
+	 * trace.
+	 * </td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 * @return array the trace of the currently executing generator.
 	 */
 	public function getTrace ($options = null) {}
 
+	/**
+	 * Gets the function name of the generator
+	 * @link http://www.php.net/manual/en/reflectiongenerator.getfunction.php
+	 * @return ReflectionFunctionAbstract a ReflectionFunctionAbstract class. This will
+	 * be ReflectionFunction for functions, or
+	 * ReflectionMethod for methods.
+	 */
 	public function getFunction () {}
 
+	/**
+	 * Gets the <literal>$this</literal> value of the generator
+	 * @link http://www.php.net/manual/en/reflectiongenerator.getthis.php
+	 * @return object the $this value, or &null; if the generator was
+	 * not created in a class context.
+	 */
 	public function getThis () {}
 
+	/**
+	 * Gets the executing <classname>Generator</classname> object
+	 * @link http://www.php.net/manual/en/reflectiongenerator.getexecutinggenerator.php
+	 * @return Generator the currently executing Generator object.
+	 */
 	public function getExecutingGenerator () {}
 
 }
@@ -631,8 +715,19 @@ class ReflectionParameter implements Reflector {
 	 */
 	public function getClass () {}
 
+	/**
+	 * Checks if parameter has a type
+	 * @link http://www.php.net/manual/en/reflectionparameter.hastype.php
+	 * @return bool true if a type is specified, false otherwise.
+	 */
 	public function hasType () {}
 
+	/**
+	 * Gets a parameter's type
+	 * @link http://www.php.net/manual/en/reflectionparameter.gettype.php
+	 * @return ReflectionType a ReflectionType object if a parameter type is
+	 * specified, &null; otherwise.
+	 */
 	public function getType () {}
 
 	/**
@@ -710,6 +805,35 @@ class ReflectionParameter implements Reflector {
 }
 
 class ReflectionType  {
+
+	final private function __clone () {}
+
+	/**
+	 * Checks if null is allowed
+	 * @link http://www.php.net/manual/en/reflectiontype.allowsnull.php
+	 * @return bool true if &null; is allowed, otherwise false
+	 */
+	public function allowsNull () {}
+
+	/**
+	 * Checks if it is a built-in type
+	 * @link http://www.php.net/manual/en/reflectiontype.isbuiltin.php
+	 * @return bool true if it's a built-in type, otherwise false
+	 */
+	public function isBuiltin () {}
+
+	/**
+	 * To string
+	 * @link http://www.php.net/manual/en/reflectiontype.tostring.php
+	 * @return string the type of the parameter.
+	 */
+	public function __toString () {}
+
+}
+
+class ReflectionNamedType extends ReflectionType  {
+
+	public function getName () {}
 
 	final private function __clone () {}
 
@@ -1082,8 +1206,19 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	 */
 	public function returnsReference () {}
 
+	/**
+	 * Checks if the function has a specified return type
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.hasreturntype.php
+	 * @return bool true if the function is a specified return type, otherwise false.
+	 */
 	public function hasReturnType () {}
 
+	/**
+	 * Gets the specified return type of a function
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getreturntype.php
+	 * @return ReflectionType a ReflectionType object if a return type is
+	 * specified, &null; otherwise.
+	 */
 	public function getReturnType () {}
 
 }
@@ -1146,6 +1281,11 @@ class ReflectionClass implements Reflector {
 	 */
 	public function isUserDefined () {}
 
+	/**
+	 * Checks if class is anonymous
+	 * @link http://www.php.net/manual/en/reflectionclass.isanonymous.php
+	 * @return bool true on success or false on failure
+	 */
 	public function isAnonymous () {}
 
 	/**
@@ -1290,6 +1430,8 @@ class ReflectionClass implements Reflector {
 	 */
 	public function getConstants () {}
 
+	public function getReflectionConstants () {}
+
 	/**
 	 * Gets defined constant
 	 * @link http://www.php.net/manual/en/reflectionclass.getconstant.php
@@ -1299,6 +1441,11 @@ class ReflectionClass implements Reflector {
 	 * @return mixed Value of the constant.
 	 */
 	public function getConstant ($name) {}
+
+	/**
+	 * @param $name
+	 */
+	public function getReflectionConstant ($name) {}
 
 	/**
 	 * Gets the interfaces
@@ -1420,7 +1567,7 @@ class ReflectionClass implements Reflector {
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return object A ReflectionClass.
+	 * @return ReflectionClass A ReflectionClass.
 	 */
 	public function getParentClass () {}
 
@@ -1594,6 +1741,11 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 */
 	public function isUserDefined () {}
 
+	/**
+	 * Checks if class is anonymous
+	 * @link http://www.php.net/manual/en/reflectionclass.isanonymous.php
+	 * @return bool true on success or false on failure
+	 */
 	public function isAnonymous () {}
 
 	/**
@@ -1738,6 +1890,8 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 */
 	public function getConstants () {}
 
+	public function getReflectionConstants () {}
+
 	/**
 	 * Gets defined constant
 	 * @link http://www.php.net/manual/en/reflectionclass.getconstant.php
@@ -1747,6 +1901,11 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 * @return mixed Value of the constant.
 	 */
 	public function getConstant ($name) {}
+
+	/**
+	 * @param $name
+	 */
+	public function getReflectionConstant ($name) {}
 
 	/**
 	 * Gets the interfaces
@@ -1868,7 +2027,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return object A ReflectionClass.
+	 * @return ReflectionClass A ReflectionClass.
 	 */
 	public function getParentClass () {}
 
@@ -2116,9 +2275,9 @@ class ReflectionProperty implements Reflector {
 	public function getDeclaringClass () {}
 
 	/**
-	 * Gets doc comment
+	 * Gets the property doc comment
 	 * @link http://www.php.net/manual/en/reflectionproperty.getdoccomment.php
-	 * @return string The doc comment.
+	 * @return string The property doc comment.
 	 */
 	public function getDocComment () {}
 
@@ -2131,6 +2290,46 @@ class ReflectionProperty implements Reflector {
 	 * @return void 
 	 */
 	public function setAccessible ($accessible) {}
+
+}
+
+class ReflectionClassConstant implements Reflector {
+	public $name;
+	public $class;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $class
+	 * @param $name
+	 * @param $return [optional]
+	 */
+	public static function export ($class, $name, $return = null) {}
+
+	/**
+	 * @param $class
+	 * @param $name
+	 */
+	public function __construct ($class, $name) {}
+
+	public function __toString () {}
+
+	public function getName () {}
+
+	public function getValue () {}
+
+	public function isPublic () {}
+
+	public function isPrivate () {}
+
+	public function isProtected () {}
+
+	public function getModifiers () {}
+
+	public function getDeclaringClass () {}
+
+	public function getDocComment () {}
 
 }
 
@@ -2334,4 +2533,4 @@ class ReflectionZendExtension implements Reflector {
 	public function getCopyright () {}
 
 }
-// End of Reflection v.7.0.0-dev
+// End of Reflection v.7.2.0-dev

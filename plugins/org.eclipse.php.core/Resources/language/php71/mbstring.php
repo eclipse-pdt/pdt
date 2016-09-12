@@ -1,6 +1,6 @@
 <?php
 
-// Start of mbstring v.7.0.0-dev
+// Start of mbstring v.7.2.0-dev
 
 /**
  * Perform case folding on a string
@@ -153,7 +153,10 @@ function mb_http_output ($encoding = null) {}
  * UCS2 and UCS4, encoding
  * detection will fail always.
  * </p>
- * @return mixed true on success or false on failure
+ * @return mixed When setting the encoding detection order, true is returned on success or false on failure.
+ * </p>
+ * <p>
+ * When getting the encoding detection order, an ordered array of the encodings is returned.
  */
 function mb_detect_order ($encoding_list = null) {}
 
@@ -536,7 +539,7 @@ function mb_strwidth ($str, $encoding = null) {}
  * </p>
  * @param string $encoding [optional] &mbstring.encoding.parameter;
  * @return string The truncated string. If trimmarker is set,
- * trimmarker is appended to the return value.
+ * trimmarker replaces the last chars to match the width.
  */
 function mb_strimwidth ($str, $start, $width, $trimmarker = null, $encoding = null) {}
 
@@ -727,12 +730,12 @@ function mb_convert_kana ($str, $option = null, $encoding = null) {}
  * @link http://www.php.net/manual/en/function.mb-encode-mimeheader.php
  * @param string $str <p>
  * The string being encoded.
+ * Its encoding should be same as mb_internal_encoding.
  * </p>
  * @param string $charset [optional] <p>
  * charset specifies the name of the character set
  * in which str is represented in. The default value
  * is determined by the current NLS setting (mbstring.language).
- * mb_internal_encoding should be set to same encoding.
  * </p>
  * @param string $transfer_encoding [optional] <p>
  * transfer_encoding specifies the scheme of MIME
@@ -926,6 +929,24 @@ function mb_get_info ($type = null) {}
 function mb_check_encoding ($var = null, $encoding = null) {}
 
 /**
+ * @param $str
+ * @param $encoding [optional]
+ */
+function mb_ord ($str, $encoding = null) {}
+
+/**
+ * @param $cp
+ * @param $encoding [optional]
+ */
+function mb_chr ($cp, $encoding = null) {}
+
+/**
+ * @param $str
+ * @param $encoding [optional]
+ */
+function mb_scrub ($str, $encoding = null) {}
+
+/**
  * Set/Get character encoding for multibyte regex
  * @link http://www.php.net/manual/en/function.mb-regex-encoding.php
  * @param string $encoding [optional] &mbstring.encoding.parameter;
@@ -1035,11 +1056,29 @@ function mb_regex_set_options ($options = null) {}
  * The search string.
  * </p>
  * @param array $regs [optional] <p>
- * Contains a substring of the matched string.
+ * If matches are found for parenthesized substrings of
+ * pattern and the function is called with the
+ * third argument regs, the matches will be stored
+ * in the elements of the array regs.
+ * If no matches are found, regs is set to an empty
+ * array.
  * </p>
- * @return int 
+ * <p>
+ * $regs[1] will contain the substring which starts at
+ * the first left parenthesis; $regs[2] will contain
+ * the substring starting at the second, and so on.
+ * $regs[0] will contain a copy of the complete string
+ * matched.
+ * </p>
+ * @return int the byte length of the matched string if a match for
+ * pattern was found in string,
+ * or false if no matches were found or an error occurred.
+ * </p>
+ * <p>
+ * If the optional parameter regs was not passed or
+ * the length of the matched string is 0, this function returns 1.
  */
-function mb_ereg ($pattern, $string, array $regs = null) {}
+function mb_ereg ($pattern, $string, array &$regs = null) {}
 
 /**
  * Regular expression match ignoring case with multibyte support
@@ -1051,11 +1090,29 @@ function mb_ereg ($pattern, $string, array $regs = null) {}
  * The string being searched.
  * </p>
  * @param array $regs [optional] <p>
- * Contains a substring of the matched string.
+ * If matches are found for parenthesized substrings of
+ * pattern and the function is called with the
+ * third argument regs, the matches will be stored
+ * in the elements of the array regs.
+ * If no matches are found, regs is set to an empty
+ * array.
  * </p>
- * @return int 
+ * <p>
+ * $regs[1] will contain the substring which starts at
+ * the first left parenthesis; $regs[2] will contain
+ * the substring starting at the second, and so on.
+ * $regs[0] will contain a copy of the complete string
+ * matched.
+ * </p>
+ * @return int the byte length of the matched string if a match for
+ * pattern was found in string,
+ * or false if no matches were found or an error occurred.
+ * </p>
+ * <p>
+ * If the optional parameter regs was not passed or
+ * the length of the matched string is 0, this function returns 1.
  */
-function mb_eregi ($pattern, $string, array $regs = null) {}
+function mb_eregi ($pattern, $string, array &$regs = null) {}
 
 /**
  * Replace regular expression with multibyte support
@@ -1346,4 +1403,4 @@ define ('MB_CASE_UPPER', 0);
 define ('MB_CASE_LOWER', 1);
 define ('MB_CASE_TITLE', 2);
 
-// End of mbstring v.7.0.0-dev
+// End of mbstring v.7.2.0-dev

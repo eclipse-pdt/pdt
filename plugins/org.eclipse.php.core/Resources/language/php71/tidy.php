@@ -1,13 +1,13 @@
 <?php
 
-// Start of tidy v.2.0
+// Start of tidy v.7.2.0-dev
 
 class tidy  {
 
 	/**
 	 * Returns the value of the specified configuration option for the tidy document
 	 * @link http://www.php.net/manual/en/tidy.getopt.php
-	 * @param option string <p>
+	 * @param string $option <p>
 	 * You will find a list with each configuration option and their types
 	 * at: &url.tidy.conf;.
 	 * </p>
@@ -26,12 +26,12 @@ class tidy  {
 	/**
 	 * Parse markup in file or URI
 	 * @link http://www.php.net/manual/en/tidy.parsefile.php
-	 * @param filename string <p>
+	 * @param string $filename <p>
 	 * If the filename parameter is given, this function
 	 * will also read that file and initialize the object with the file,
 	 * acting like tidy_parse_file.
 	 * </p>
-	 * @param config mixed[optional] <p>
+	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
 	 * name of the configuration file, otherwise, it is interpreted as the
@@ -41,7 +41,7 @@ class tidy  {
 	 * For an explanation about each option, see
 	 * &url.tidy.conf;.
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
@@ -50,7 +50,7 @@ class tidy  {
 	 * utf16, utf16le, utf16be,
 	 * big5, and shiftjis.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * Search for the file in the include_path.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -60,10 +60,10 @@ class tidy  {
 	/**
 	 * Parse a document stored in a string
 	 * @link http://www.php.net/manual/en/tidy.parsestring.php
-	 * @param input string <p>
+	 * @param string $input <p>
 	 * The data to be parsed.
 	 * </p>
-	 * @param config mixed[optional] <p>
+	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
 	 * name of the configuration file, otherwise, it is interpreted as the
@@ -72,7 +72,7 @@ class tidy  {
 	 * <p>
 	 * For an explanation about each option, visit &url.tidy.conf;.
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
@@ -88,10 +88,10 @@ class tidy  {
 	/**
 	 * Repair a string using an optionally provided configuration file
 	 * @link http://www.php.net/manual/en/tidy.repairstring.php
-	 * @param data string <p>
+	 * @param string $data <p>
 	 * The data to be repaired.
 	 * </p>
-	 * @param config mixed[optional] <p>
+	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
 	 * name of the configuration file, otherwise, it is interpreted as the
@@ -101,7 +101,7 @@ class tidy  {
 	 * Check &url.tidy.conf; for
 	 * an explanation about each option.
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
@@ -117,10 +117,10 @@ class tidy  {
 	/**
 	 * Repair a file and return it as a string
 	 * @link http://www.php.net/manual/en/tidy.repairfile.php
-	 * @param filename string <p>
+	 * @param string $filename <p>
 	 * The file to be repaired.
 	 * </p>
-	 * @param config mixed[optional] <p>
+	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
 	 * name of the configuration file, otherwise, it is interpreted as the
@@ -130,7 +130,7 @@ class tidy  {
 	 * Check http://tidy.sourceforge.net/docs/quickref.html for an
 	 * explanation about each option.
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
@@ -139,7 +139,7 @@ class tidy  {
 	 * utf16, utf16le, utf16be,
 	 * big5, and shiftjis.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * Search for the file in the include_path.
 	 * </p>
 	 * @return string the repaired contents as a string.
@@ -192,7 +192,7 @@ class tidy  {
 	/**
 	 * Returns the documentation for the given option name
 	 * @link http://www.php.net/manual/en/tidy.getoptdoc.php
-	 * @param optname string <p>
+	 * @param string $optname <p>
 	 * The option name
 	 * </p>
 	 * @return string a string if the option exists and has documentation available, or
@@ -333,29 +333,29 @@ final class tidyNode  {
 }
 
 /**
- * @param option
+ * @param $option
  */
 function tidy_getopt ($option) {}
 
 /**
- * @param input
- * @param config_options[optional]
- * @param encoding[optional]
+ * @param $input
+ * @param $config_options [optional]
+ * @param $encoding [optional]
  */
 function tidy_parse_string ($input, $config_options = null, $encoding = null) {}
 
 /**
- * @param file
- * @param config_options[optional]
- * @param encoding[optional]
- * @param use_include_path[optional]
+ * @param $file
+ * @param $config_options [optional]
+ * @param $encoding [optional]
+ * @param $use_include_path [optional]
  */
 function tidy_parse_file ($file, $config_options = null, $encoding = null, $use_include_path = null) {}
 
 /**
  * Return a string representing the parsed tidy markup
  * @link http://www.php.net/manual/en/function.tidy-get-output.php
- * @param object tidy <p>
+ * @param tidy $object <p>
  * The Tidy object.
  * </p>
  * @return string the parsed tidy markup.
@@ -367,17 +367,17 @@ function tidy_get_error_buffer () {}
 function tidy_clean_repair () {}
 
 /**
- * @param data
- * @param config_file[optional]
- * @param encoding[optional]
+ * @param $data
+ * @param $config_file [optional]
+ * @param $encoding [optional]
  */
 function tidy_repair_string ($data, $config_file = null, $encoding = null) {}
 
 /**
- * @param filename
- * @param config_file[optional]
- * @param encoding[optional]
- * @param use_include_path[optional]
+ * @param $filename
+ * @param $config_file [optional]
+ * @param $encoding [optional]
+ * @param $use_include_path [optional]
  */
 function tidy_repair_file ($filename, $config_file = null, $encoding = null, $use_include_path = null) {}
 
@@ -398,7 +398,7 @@ function tidy_is_xml () {}
 /**
  * Returns the Number of Tidy errors encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-error-count.php
- * @param object tidy <p>
+ * @param tidy $object <p>
  * The Tidy object.
  * </p>
  * @return int the number of errors.
@@ -408,7 +408,7 @@ function tidy_error_count (tidy $object) {}
 /**
  * Returns the Number of Tidy warnings encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-warning-count.php
- * @param object tidy <p>
+ * @param tidy $object <p>
  * The Tidy object.
  * </p>
  * @return int the number of warnings.
@@ -418,7 +418,7 @@ function tidy_warning_count (tidy $object) {}
 /**
  * Returns the Number of Tidy accessibility warnings encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-access-count.php
- * @param object tidy <p>
+ * @param tidy $object <p>
  * The Tidy object.
  * </p>
  * @return int the number of warnings.
@@ -428,7 +428,7 @@ function tidy_access_count (tidy $object) {}
 /**
  * Returns the Number of Tidy configuration errors encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-config-count.php
- * @param object tidy <p>
+ * @param tidy $object <p>
  * The Tidy object.
  * </p>
  * @return int the number of errors.
@@ -436,8 +436,8 @@ function tidy_access_count (tidy $object) {}
 function tidy_config_count (tidy $object) {}
 
 /**
- * @param resource
- * @param optname
+ * @param $resource
+ * @param $optname
  */
 function tidy_get_opt_doc ($resource, $optname) {}
 
@@ -448,7 +448,7 @@ function tidy_get_head () {}
 function tidy_get_html () {}
 
 /**
- * @param tidy
+ * @param $tidy
  */
 function tidy_get_body ($tidy) {}
 
@@ -522,60 +522,60 @@ define ('TIDY_TAG_LI', 61);
 define ('TIDY_TAG_LINK', 62);
 define ('TIDY_TAG_LISTING', 63);
 define ('TIDY_TAG_MAP', 64);
-define ('TIDY_TAG_MARQUEE', 65);
-define ('TIDY_TAG_MENU', 66);
-define ('TIDY_TAG_META', 67);
-define ('TIDY_TAG_MULTICOL', 68);
-define ('TIDY_TAG_NOBR', 69);
-define ('TIDY_TAG_NOEMBED', 70);
-define ('TIDY_TAG_NOFRAMES', 71);
-define ('TIDY_TAG_NOLAYER', 72);
-define ('TIDY_TAG_NOSAVE', 73);
-define ('TIDY_TAG_NOSCRIPT', 74);
-define ('TIDY_TAG_OBJECT', 75);
-define ('TIDY_TAG_OL', 76);
-define ('TIDY_TAG_OPTGROUP', 77);
-define ('TIDY_TAG_OPTION', 78);
-define ('TIDY_TAG_P', 79);
-define ('TIDY_TAG_PARAM', 80);
-define ('TIDY_TAG_PLAINTEXT', 81);
-define ('TIDY_TAG_PRE', 82);
-define ('TIDY_TAG_Q', 83);
-define ('TIDY_TAG_RB', 84);
-define ('TIDY_TAG_RBC', 85);
-define ('TIDY_TAG_RP', 86);
-define ('TIDY_TAG_RT', 87);
-define ('TIDY_TAG_RTC', 88);
-define ('TIDY_TAG_RUBY', 89);
-define ('TIDY_TAG_S', 90);
-define ('TIDY_TAG_SAMP', 91);
-define ('TIDY_TAG_SCRIPT', 92);
-define ('TIDY_TAG_SELECT', 93);
-define ('TIDY_TAG_SERVER', 94);
-define ('TIDY_TAG_SERVLET', 95);
-define ('TIDY_TAG_SMALL', 96);
-define ('TIDY_TAG_SPACER', 97);
-define ('TIDY_TAG_SPAN', 98);
-define ('TIDY_TAG_STRIKE', 99);
-define ('TIDY_TAG_STRONG', 100);
-define ('TIDY_TAG_STYLE', 101);
-define ('TIDY_TAG_SUB', 102);
-define ('TIDY_TAG_SUP', 103);
-define ('TIDY_TAG_TABLE', 104);
-define ('TIDY_TAG_TBODY', 105);
-define ('TIDY_TAG_TD', 106);
-define ('TIDY_TAG_TEXTAREA', 107);
-define ('TIDY_TAG_TFOOT', 108);
-define ('TIDY_TAG_TH', 109);
-define ('TIDY_TAG_THEAD', 110);
-define ('TIDY_TAG_TITLE', 111);
-define ('TIDY_TAG_TR', 112);
-define ('TIDY_TAG_TT', 113);
-define ('TIDY_TAG_U', 114);
-define ('TIDY_TAG_UL', 115);
-define ('TIDY_TAG_VAR', 116);
-define ('TIDY_TAG_WBR', 117);
-define ('TIDY_TAG_XMP', 118);
+define ('TIDY_TAG_MARQUEE', 66);
+define ('TIDY_TAG_MENU', 67);
+define ('TIDY_TAG_META', 68);
+define ('TIDY_TAG_MULTICOL', 69);
+define ('TIDY_TAG_NOBR', 70);
+define ('TIDY_TAG_NOEMBED', 71);
+define ('TIDY_TAG_NOFRAMES', 72);
+define ('TIDY_TAG_NOLAYER', 73);
+define ('TIDY_TAG_NOSAVE', 74);
+define ('TIDY_TAG_NOSCRIPT', 75);
+define ('TIDY_TAG_OBJECT', 76);
+define ('TIDY_TAG_OL', 77);
+define ('TIDY_TAG_OPTGROUP', 78);
+define ('TIDY_TAG_OPTION', 79);
+define ('TIDY_TAG_P', 80);
+define ('TIDY_TAG_PARAM', 81);
+define ('TIDY_TAG_PLAINTEXT', 83);
+define ('TIDY_TAG_PRE', 84);
+define ('TIDY_TAG_Q', 85);
+define ('TIDY_TAG_RB', 86);
+define ('TIDY_TAG_RBC', 87);
+define ('TIDY_TAG_RP', 88);
+define ('TIDY_TAG_RT', 89);
+define ('TIDY_TAG_RTC', 90);
+define ('TIDY_TAG_RUBY', 91);
+define ('TIDY_TAG_S', 92);
+define ('TIDY_TAG_SAMP', 93);
+define ('TIDY_TAG_SCRIPT', 94);
+define ('TIDY_TAG_SELECT', 95);
+define ('TIDY_TAG_SERVER', 96);
+define ('TIDY_TAG_SERVLET', 97);
+define ('TIDY_TAG_SMALL', 98);
+define ('TIDY_TAG_SPACER', 99);
+define ('TIDY_TAG_SPAN', 100);
+define ('TIDY_TAG_STRIKE', 101);
+define ('TIDY_TAG_STRONG', 102);
+define ('TIDY_TAG_STYLE', 103);
+define ('TIDY_TAG_SUB', 104);
+define ('TIDY_TAG_SUP', 105);
+define ('TIDY_TAG_TABLE', 107);
+define ('TIDY_TAG_TBODY', 108);
+define ('TIDY_TAG_TD', 109);
+define ('TIDY_TAG_TEXTAREA', 110);
+define ('TIDY_TAG_TFOOT', 111);
+define ('TIDY_TAG_TH', 112);
+define ('TIDY_TAG_THEAD', 113);
+define ('TIDY_TAG_TITLE', 114);
+define ('TIDY_TAG_TR', 115);
+define ('TIDY_TAG_TT', 116);
+define ('TIDY_TAG_U', 117);
+define ('TIDY_TAG_UL', 118);
+define ('TIDY_TAG_VAR', 119);
+define ('TIDY_TAG_WBR', 120);
+define ('TIDY_TAG_XMP', 121);
 
 /**
  * root node
@@ -661,4 +661,4 @@ define ('TIDY_NODETYPE_PHP', 12);
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
-// End of tidy v.2.0
+// End of tidy v.7.2.0-dev

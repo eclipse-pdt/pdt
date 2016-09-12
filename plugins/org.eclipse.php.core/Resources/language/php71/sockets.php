@@ -1,26 +1,26 @@
 <?php
 
-// Start of sockets v.
+// Start of sockets v.7.2.0-dev
 
 /**
  * Runs the select() system call on the given arrays of sockets with a specified timeout
  * @link http://www.php.net/manual/en/function.socket-select.php
- * @param read array <p>
+ * @param array $read <p>
  * The sockets listed in the read array will be
  * watched to see if characters become available for reading (more
  * precisely, to see if a read will not block - in particular, a socket
  * resource is also ready on end-of-file, in which case a
  * socket_read will return a zero length string).
  * </p>
- * @param write array <p>
+ * @param array $write <p>
  * The sockets listed in the write array will be
  * watched to see if a write will not block.
  * </p>
- * @param except array <p>
+ * @param array $except <p>
  * The sockets listed in the except array will be
  * watched for exceptions.
  * </p>
- * @param tv_sec int <p>
+ * @param int $tv_sec <p>
  * The tv_sec and tv_usec
  * together form the timeout parameter. The
  * timeout is an upper bound on the amount of time
@@ -30,7 +30,7 @@
  * for polling. If tv_sec is &null; (no timeout),
  * socket_select can block indefinitely.
  * </p>
- * @param tv_usec int[optional] <p>
+ * @param int $tv_usec [optional] <p>
  * </p>
  * @return int On success socket_select returns the number of
  * socket resources contained in the modified arrays, which may be zero if
@@ -50,7 +50,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
 /**
  * Create a socket (endpoint for communication)
  * @link http://www.php.net/manual/en/function.socket-create.php
- * @param domain int <p>
+ * @param int $domain <p>
  * The domain parameter specifies the protocol
  * family to be used by the socket.
  * </p>
@@ -82,7 +82,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </td>
  * </tr>
  * </table>
- * @param type int <p>
+ * @param int $type <p>
  * The type parameter selects the type of communication
  * to be used by the socket.
  * </p>
@@ -131,7 +131,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </td>
  * </tr>
  * </table>
- * @param protocol int <p>
+ * @param int $protocol <p>
  * The protocol parameter sets the specific
  * protocol within the specified domain to be used
  * when communicating on the returned socket. The proper value can be
@@ -188,10 +188,10 @@ function socket_create ($domain, $type, $protocol) {}
 /**
  * Opens a socket on port to accept connections
  * @link http://www.php.net/manual/en/function.socket-create-listen.php
- * @param port int <p>
+ * @param int $port <p>
  * The port on which to listen on all interfaces.
  * </p>
- * @param backlog int[optional] <p>
+ * @param int $backlog [optional] <p>
  * The backlog parameter defines the maximum length
  * the queue of pending connections may grow to.
  * SOMAXCONN may be passed as
@@ -209,17 +209,17 @@ function socket_create_listen ($port, $backlog = null) {}
 /**
  * Creates a pair of indistinguishable sockets and stores them in an array
  * @link http://www.php.net/manual/en/function.socket-create-pair.php
- * @param domain int <p>
+ * @param int $domain <p>
  * The domain parameter specifies the protocol
  * family to be used by the socket. See socket_create
  * for the full list.
  * </p>
- * @param type int <p>
+ * @param int $type <p>
  * The type parameter selects the type of communication
  * to be used by the socket. See socket_create for the 
  * full list.
  * </p>
- * @param protocol int <p>
+ * @param int $protocol <p>
  * The protocol parameter sets the specific
  * protocol within the specified domain to be used
  * when communicating on the returned socket. The proper value can be retrieved by
@@ -232,7 +232,7 @@ function socket_create_listen ($port, $backlog = null) {}
  * See socket_create for the full list of supported 
  * protocols.
  * </p>
- * @param fd array <p>
+ * @param array $fd <p>
  * Reference to an array in which the two socket resources will be inserted.
  * </p>
  * @return bool true on success or false on failure
@@ -242,7 +242,7 @@ function socket_create_pair ($domain, $type, $protocol, array &$fd) {}
 /**
  * Accepts a connection on a socket
  * @link http://www.php.net/manual/en/function.socket-accept.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create.
  * </p>
  * @return resource a new socket resource on success, or false on error. The actual
@@ -256,7 +256,7 @@ function socket_accept ($socket) {}
 /**
  * Sets nonblocking mode for file descriptor fd
  * @link http://www.php.net/manual/en/function.socket-set-nonblock.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
@@ -267,7 +267,7 @@ function socket_set_nonblock ($socket) {}
 /**
  * Sets blocking mode on a socket resource
  * @link http://www.php.net/manual/en/function.socket-set-block.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
@@ -278,10 +278,10 @@ function socket_set_block ($socket) {}
 /**
  * Listens for a connection on a socket
  * @link http://www.php.net/manual/en/function.socket-listen.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create.
  * </p>
- * @param backlog int[optional] <p>
+ * @param int $backlog [optional] <p>
  * A maximum of backlog incoming connections will be
  * queued for processing. If a connection request arrives with the queue
  * full the client may receive an error with an indication of
@@ -307,7 +307,7 @@ function socket_listen ($socket, $backlog = null) {}
 /**
  * Closes a socket resource
  * @link http://www.php.net/manual/en/function.socket-close.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
@@ -318,12 +318,12 @@ function socket_close ($socket) {}
 /**
  * Write to a socket
  * @link http://www.php.net/manual/en/function.socket-write.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * </p>
- * @param buffer string <p>
+ * @param string $buffer <p>
  * The buffer to be written.
  * </p>
- * @param length int[optional] <p>
+ * @param int $length [optional] <p>
  * The optional parameter length can specify an
  * alternate length of bytes written to the socket. If this length is
  * greater than the buffer length, it is silently truncated to the length
@@ -346,18 +346,18 @@ function socket_write ($socket, $buffer, $length = null) {}
 /**
  * Reads a maximum of length bytes from a socket
  * @link http://www.php.net/manual/en/function.socket-read.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
- * @param length int <p>
+ * @param int $length <p>
  * The maximum number of bytes read is specified by the
  * length parameter. Otherwise you can use
  * &#92;r, &#92;n,
  * or &#92;0 to end reading (depending on the type
  * parameter, see below).
  * </p>
- * @param type int[optional] <p>
+ * @param int $type [optional] <p>
  * Optional type parameter is a named constant:
  * PHP_BINARY_READ (Default) - use the system
  * recv() function. Safe for reading binary data.
@@ -377,11 +377,11 @@ function socket_read ($socket, $length, $type = null) {}
 /**
  * Queries the local side of the given socket which may either result in host/port or in a Unix filesystem path, dependent on its type
  * @link http://www.php.net/manual/en/function.socket-getsockname.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create 
  * or socket_accept.
  * </p>
- * @param addr string <p>
+ * @param string $addr <p>
  * If the given socket is of type AF_INET
  * or AF_INET6, socket_getsockname
  * will return the local IP address in appropriate notation (e.g.
@@ -395,7 +395,7 @@ function socket_read ($socket, $length, $type = null) {}
  * path (e.g. /var/run/daemon.sock) in the
  * address parameter.
  * </p>
- * @param port int[optional] <p>
+ * @param int $port [optional] <p>
  * If provided, this will hold the associated port.
  * </p>
  * @return bool true on success or false on failure socket_getsockname may also return
@@ -408,11 +408,11 @@ function socket_getsockname ($socket, &$addr, &$port = null) {}
 /**
  * Queries the remote side of the given socket which may either result in host/port or in a Unix filesystem path, dependent on its type
  * @link http://www.php.net/manual/en/function.socket-getpeername.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
- * @param address string <p>
+ * @param string $address <p>
  * If the given socket is of type AF_INET or
  * AF_INET6, socket_getpeername
  * will return the peers (remote) IP address in
@@ -427,7 +427,7 @@ function socket_getsockname ($socket, &$addr, &$port = null) {}
  * path (e.g. /var/run/daemon.sock) in the
  * address parameter.
  * </p>
- * @param port int[optional] <p>
+ * @param int $port [optional] <p>
  * If given, this will hold the port associated to
  * address.
  * </p>
@@ -441,9 +441,9 @@ function socket_getpeername ($socket, &$address, &$port = null) {}
 /**
  * Initiates a connection on a socket
  * @link http://www.php.net/manual/en/function.socket-connect.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * </p>
- * @param address string <p>
+ * @param string $address <p>
  * The address parameter is either an IPv4 address
  * in dotted-quad notation (e.g. 127.0.0.1) if 
  * socket is AF_INET, a valid 
@@ -452,7 +452,7 @@ function socket_getpeername ($socket, &$address, &$port = null) {}
  * or the pathname of a Unix domain socket, if the socket family is
  * AF_UNIX.
  * </p>
- * @param port int[optional] <p>
+ * @param int $port [optional] <p>
  * The port parameter is only used and is mandatory
  * when connecting to an AF_INET or an 
  * AF_INET6 socket, and designates
@@ -472,7 +472,7 @@ function socket_connect ($socket, $address, $port = null) {}
 /**
  * Return a string describing a socket error
  * @link http://www.php.net/manual/en/function.socket-strerror.php
- * @param errno int <p>
+ * @param int $errno <p>
  * A valid socket error number, likely produced by 
  * socket_last_error.
  * </p>
@@ -484,10 +484,10 @@ function socket_strerror ($errno) {}
 /**
  * Binds a name to a socket
  * @link http://www.php.net/manual/en/function.socket-bind.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create.
  * </p>
- * @param address string <p>
+ * @param string $address <p>
  * If the socket is of the AF_INET family, the
  * address is an IP in dotted-quad notation
  * (e.g. 127.0.0.1).
@@ -497,7 +497,7 @@ function socket_strerror ($errno) {}
  * address is the path of a
  * Unix-domain socket (e.g. /tmp/my.sock).
  * </p>
- * @param port int[optional] <p>
+ * @param int $port [optional] <p>
  * The port parameter is only used when
  * binding an AF_INET socket, and designates
  * the port on which to listen for connections.
@@ -514,20 +514,20 @@ function socket_bind ($socket, $address, $port = null) {}
 /**
  * Receives data from a connected socket
  * @link http://www.php.net/manual/en/function.socket-recv.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * The socket must be a socket resource previously
  * created by socket_create().
  * </p>
- * @param buf string <p>
+ * @param string $buf <p>
  * The data received will be fetched to the variable specified with
  * buf. If an error occurs, if the
  * connection is reset, or if no data is
  * available, buf will be set to &null;.
  * </p>
- * @param len int <p>
+ * @param int $len <p>
  * Up to len bytes will be fetched from remote host.
  * </p>
- * @param flags int <p>
+ * @param int $flags <p>
  * The value of flags can be any combination of 
  * the following flags, joined with the binary OR (|)
  * operator.
@@ -578,18 +578,18 @@ function socket_recv ($socket, &$buf, $len, $flags) {}
 /**
  * Sends data to a connected socket
  * @link http://www.php.net/manual/en/function.socket-send.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
- * @param buf string <p>
+ * @param string $buf <p>
  * A buffer containing the data that will be sent to the remote host.
  * </p>
- * @param len int <p>
+ * @param int $len <p>
  * The number of bytes that will be sent to the remote host from 
  * buf.
  * </p>
- * @param flags int <p>
+ * @param int $flags <p>
  * The value of flags can be any combination of 
  * the following flags, joined with the binary OR (|)
  * operator.
@@ -630,18 +630,18 @@ function socket_send ($socket, $buf, $len, $flags) {}
 /**
  * Receives data from a socket whether or not it is connection-oriented
  * @link http://www.php.net/manual/en/function.socket-recvfrom.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * The socket must be a socket resource previously
  * created by socket_create().
  * </p>
- * @param buf string <p>
+ * @param string $buf <p>
  * The data received will be fetched to the variable specified with
  * buf.
  * </p>
- * @param len int <p>
+ * @param int $len <p>
  * Up to len bytes will be fetched from remote host.
  * </p>
- * @param flags int <p>
+ * @param int $flags <p>
  * The value of flags can be any combination of 
  * the following flags, joined with the binary OR (|)
  * operator.
@@ -681,13 +681,13 @@ function socket_send ($socket, $buf, $len, $flags) {}
  * </td>
  * </tr>
  * </table>
- * @param name string <p>
+ * @param string $name <p>
  * If the socket is of the type AF_UNIX type,
  * name is the path to the file. Else, for
  * unconnected sockets, name is the IP address of,
  * the remote host, or &null; if the socket is connection-oriented.
  * </p>
- * @param port int[optional] <p>
+ * @param int $port [optional] <p>
  * This argument only applies to AF_INET and
  * AF_INET6 sockets, and specifies the remote port
  * from which the data is received. If the socket is connection-oriented,
@@ -704,17 +704,17 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
 /**
  * Sends a message to a socket, whether it is connected or not
  * @link http://www.php.net/manual/en/function.socket-sendto.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created using socket_create.
  * </p>
- * @param buf string <p>
+ * @param string $buf <p>
  * The sent data will be taken from buffer buf.
  * </p>
- * @param len int <p>
+ * @param int $len <p>
  * len bytes from buf will be
  * sent.
  * </p>
- * @param flags int <p>
+ * @param int $flags <p>
  * The value of flags can be any combination of 
  * the following flags, joined with the binary OR (|)
  * operator.
@@ -748,10 +748,10 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * </tr>
  * </table>
  * </p>
- * @param addr string <p>
+ * @param string $addr <p>
  * IP address of the remote host.
  * </p>
- * @param port int[optional] <p>
+ * @param int $port [optional] <p>
  * port is the remote port number at which the data
  * will be sent.
  * </p>
@@ -763,11 +763,11 @@ function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
 /**
  * Gets socket options for the socket
  * @link http://www.php.net/manual/en/function.socket-get-option.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
- * @param level int <p>
+ * @param int $level <p>
  * The level parameter specifies the protocol
  * level at which the option resides. For example, to retrieve options at
  * the socket level, a level parameter of
@@ -776,7 +776,7 @@ function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
  * specifying the protocol number of that level. Protocol numbers can be
  * found by using the getprotobyname function.
  * </p>
- * @param optname int <table>
+ * @param int $optname <table>
  * Available Socket Options
  * <tr valign="top">
  * <td>Option</td>
@@ -1129,11 +1129,11 @@ function socket_get_option ($socket, $level, $optname) {}
 /**
  * Sets socket options for the socket
  * @link http://www.php.net/manual/en/function.socket-set-option.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create
  * or socket_accept.
  * </p>
- * @param level int <p>
+ * @param int $level <p>
  * The level parameter specifies the protocol
  * level at which the option resides. For example, to retrieve options at
  * the socket level, a level parameter of
@@ -1142,11 +1142,11 @@ function socket_get_option ($socket, $level, $optname) {}
  * Protocol numbers can be found by using the 
  * getprotobyname function.
  * </p>
- * @param optname int <p>
+ * @param int $optname <p>
  * The available socket options are the same as those for the
  * socket_get_option function.
  * </p>
- * @param optval mixed <p>
+ * @param mixed $optval <p>
  * The option value.
  * </p>
  * @return bool true on success or false on failure
@@ -1156,10 +1156,10 @@ function socket_set_option ($socket, $level, $optname, $optval) {}
 /**
  * Shuts down a socket for receiving, sending, or both
  * @link http://www.php.net/manual/en/function.socket-shutdown.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * A valid socket resource created with socket_create.
  * </p>
- * @param how int[optional] <p>
+ * @param int $how [optional] <p>
  * The value of how can be one of the following:
  * <table>
  * possible values for how
@@ -1190,7 +1190,7 @@ function socket_shutdown ($socket, $how = null) {}
 /**
  * Returns the last error on the socket
  * @link http://www.php.net/manual/en/function.socket-last-error.php
- * @param socket resource[optional] <p>
+ * @param resource $socket [optional] <p>
  * A valid socket resource created with socket_create.
  * </p>
  * @return int This function returns a socket error code.
@@ -1200,7 +1200,7 @@ function socket_last_error ($socket = null) {}
 /**
  * Clears the error on the socket or the last error code
  * @link http://www.php.net/manual/en/function.socket-clear-error.php
- * @param socket resource[optional] <p>
+ * @param resource $socket [optional] <p>
  * A valid socket resource created with socket_create.
  * </p>
  * @return void 
@@ -1210,7 +1210,7 @@ function socket_clear_error ($socket = null) {}
 /**
  * Import a stream
  * @link http://www.php.net/manual/en/function.socket-import-stream.php
- * @param stream resource <p>
+ * @param resource $stream <p>
  * The stream resource to import.
  * </p>
  * @return resource false or &null; on failure.
@@ -1218,13 +1218,18 @@ function socket_clear_error ($socket = null) {}
 function socket_import_stream ($stream) {}
 
 /**
+ * @param $socket
+ */
+function socket_export_stream ($socket) {}
+
+/**
  * Send a message
  * @link http://www.php.net/manual/en/function.socket-sendmsg.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * </p>
- * @param message array <p>
+ * @param array $message <p>
  * </p>
- * @param flags int <p>
+ * @param int $flags <p>
  * </p>
  * @return int 
  */
@@ -1233,11 +1238,11 @@ function socket_sendmsg ($socket, array $message, $flags) {}
 /**
  * Read a message
  * @link http://www.php.net/manual/en/function.socket-recvmsg.php
- * @param socket resource <p>
+ * @param resource $socket <p>
  * </p>
- * @param message string <p>
+ * @param string $message <p>
  * </p>
- * @param flags int[optional] <p>
+ * @param int $flags [optional] <p>
  * </p>
  * @return int 
  */
@@ -1246,26 +1251,52 @@ function socket_recvmsg ($socket, $message, $flags = null) {}
 /**
  * Calculate message buffer size
  * @link http://www.php.net/manual/en/function.socket-cmsg-space.php
- * @param level int <p>
+ * @param int $level <p>
  * </p>
- * @param type int <p>
+ * @param int $type <p>
  * </p>
  * @return int 
  */
 function socket_cmsg_space ($level, $type) {}
 
 /**
- * @param socket
- * @param level
- * @param optname
+ * @param $host
+ * @param $service [optional]
+ * @param $hints [optional]
+ */
+function socket_addrinfo_lookup ($host, $service = null, $hints = null) {}
+
+/**
+ * @param $addr
+ */
+function socket_addrinfo_connect ($addr) {}
+
+/**
+ * @param $addr
+ */
+function socket_addrinfo_bind ($addr) {}
+
+/**
+ * @param $addr
+ */
+function socket_addrinfo_explain ($addr) {}
+
+/**
+ * &Alias; <function>socket_get_option</function>
+ * @link http://www.php.net/manual/en/function.socket-getopt.php
+ * @param $socket
+ * @param $level
+ * @param $optname
  */
 function socket_getopt ($socket, $level, $optname) {}
 
 /**
- * @param socket
- * @param level
- * @param optname
- * @param optval
+ * &Alias; <function>socket_set_option</function>
+ * @link http://www.php.net/manual/en/function.socket-setopt.php
+ * @param $socket
+ * @param $level
+ * @param $optname
+ * @param $optval
  */
 function socket_setopt ($socket, $level, $optname, $optval) {}
 
@@ -1305,8 +1336,18 @@ define ('MSG_ERRQUEUE', 8192);
 define ('MSG_NOSIGNAL', 16384);
 define ('MSG_DONTWAIT', 64);
 define ('MSG_MORE', 32768);
+define ('MSG_WAITFORONE', 65536);
+define ('MSG_CMSG_CLOEXEC', 1073741824);
 define ('SO_DEBUG', 1);
 define ('SO_REUSEADDR', 2);
+
+/**
+ * This constant is only available in PHP 5.4.10 or later on platforms that
+ * support the SO_REUSEPORT socket option: this
+ * includes Mac OS X and FreeBSD, but does not include Linux or Windows.
+ * @link http://www.php.net/manual/en/sockets.constants.php
+ */
+define ('SO_REUSEPORT', 15);
 define ('SO_KEEPALIVE', 9);
 define ('SO_DONTROUTE', 5);
 define ('SO_LINGER', 13);
@@ -1344,6 +1385,7 @@ define ('IP_MULTICAST_LOOP', 34);
 define ('IPV6_MULTICAST_IF', 17);
 define ('IPV6_MULTICAST_HOPS', 18);
 define ('IPV6_MULTICAST_LOOP', 19);
+define ('IPV6_V6ONLY', 26);
 
 /**
  * Operation not permitted.
@@ -1945,6 +1987,17 @@ define ('IPPROTO_IPV6', 41);
 define ('SOL_TCP', 6);
 define ('SOL_UDP', 17);
 define ('IPV6_UNICAST_HOPS', 16);
+define ('AI_PASSIVE', 1);
+define ('AI_CANONNAME', 2);
+define ('AI_NUMERICHOST', 4);
+define ('AI_V4MAPPED', 8);
+define ('AI_ALL', 16);
+define ('AI_ADDRCONFIG', 32);
+define ('AI_IDN', 64);
+define ('AI_CANONIDN', 128);
+define ('AI_IDN_ALLOW_UNASSIGNED', 256);
+define ('AI_IDN_USE_STD3_ASCII_RULES', 512);
+define ('AI_NUMERICSERV', 1024);
 define ('IPV6_RECVPKTINFO', 49);
 define ('IPV6_PKTINFO', 50);
 define ('IPV6_RECVHOPLIMIT', 51);
@@ -1955,4 +2008,4 @@ define ('SCM_RIGHTS', 1);
 define ('SCM_CREDENTIALS', 2);
 define ('SO_PASSCRED', 16);
 
-// End of sockets v.
+// End of sockets v.7.2.0-dev
