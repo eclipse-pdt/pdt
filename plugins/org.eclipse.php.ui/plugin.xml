@@ -2788,7 +2788,7 @@
 		        description="%HideEmptyPackages.description"
 		        id="org.eclipse.php.ui.navigator.filters.HideEmptyPackages"/>
   		<commonFilter
-		        activeByDefault="true"
+		        activeByDefault="false"
 		        class="org.eclipse.dltk.internal.ui.filters.EmptyInnerPackageFilter"
 		        name="%HideEmptyInnerPackages.label"
 		        description="%HideEmptyInnerPackages.description"
