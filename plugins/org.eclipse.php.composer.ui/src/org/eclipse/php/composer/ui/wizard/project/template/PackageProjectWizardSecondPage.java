@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.composer.ui.job.CreateProjectJob;
@@ -31,14 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.php.composer.api.ComposerPackage;
-
 /**
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 		implements IShellProvider, PackageFilterChangedListener {
 

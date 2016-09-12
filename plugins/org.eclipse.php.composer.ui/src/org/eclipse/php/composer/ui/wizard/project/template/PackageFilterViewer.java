@@ -143,6 +143,9 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 						getControl().getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
+								if (viewer.getControl().isDisposed()) {
+									return;
+								}
 								contentProvider.add(items);
 								viewer.refresh();
 								searchResultCount.setText("Found " + result.total + " packages.");
@@ -155,7 +158,9 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 			if (showProjectsCheckbox.getSelection()) {
 				search.setFilter("project");
 			}
-			search.search(text);
+			if (!text.trim().isEmpty()) {
+				search.search(text);
+			}
 
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -205,7 +210,9 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 		}
 
 		public void add(List<PackageFilterItem> items) {
-			packages.addAll(items);
+			if (packages != null && items != null) {
+				packages.addAll(items);
+			}
 		}
 
 		public void clear() {
