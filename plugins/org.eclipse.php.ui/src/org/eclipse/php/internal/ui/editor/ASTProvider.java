@@ -554,8 +554,8 @@ public final class ASTProvider {
 				return true;
 			} else if (ValidationFramework.getDefault().getProjectSettings(resource.getProject()).getSuspend()) {
 				return true;
-			} else if (ModelManager.getExternalManager().getExternalFoldersProject()
-					.equals(javaElement.getScriptProject())) {
+			} else if (javaElement.getScriptProject() != null && ModelManager.getExternalManager()
+					.getExternalFoldersProject().equals(javaElement.getScriptProject().getProject())) {
 				return false;
 			}
 			Set<Validator> validators = ValidationFramework.getDefault().getDisabledValidatorsFor(resource);
