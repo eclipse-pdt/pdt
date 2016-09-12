@@ -40,7 +40,7 @@ public class PHPManualFactory {
 		String storedConfigString = PreferenceConstants.getPreferenceStore()
 				.getString(PreferenceConstants.PHP_MANUAL_SITE);
 		PHPManualConfig storedConfig = PHPManualConfigSerializer.fromString(storedConfigString);
-		if (manual == null || !fStoredConfig.equals(storedConfigString)) {
+		if (manual == null || !fStoredConfig.equals(storedConfig)) {
 			manual = null;
 			fStoredConfig = storedConfig;
 
