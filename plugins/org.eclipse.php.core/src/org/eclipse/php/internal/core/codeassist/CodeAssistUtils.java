@@ -329,7 +329,7 @@ public class CodeAssistUtils {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read
 																								// whitespace
 
-		boolean isClassTriger = false;
+		boolean isClassTrigger = false;
 
 		if (endPosition < 2) {
 			return EMPTY_TYPES;
@@ -342,18 +342,18 @@ public class CodeAssistUtils {
 		}
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
-			isClassTriger = true;
+			isClassTrigger = true;
 		} else {
 			return EMPTY_TYPES;
 		}
 
-		int lastObjectOperator = PHPTextSequenceUtilities.getPrivousTriggerIndex(statementText, propertyEndPosition);
+		int lastObjectOperator = PHPTextSequenceUtilities.getPreviousTriggerIndex(statementText, propertyEndPosition);
 		String text = statementText.subSequence(0, propertyEndPosition).toString();
 		if (lastObjectOperator == -1
 				|| (text.indexOf('>') >= 0 && text.indexOf("=>") != text.indexOf('>') - 1 && text.indexOf("->") < 0)) { //$NON-NLS-1$ //$NON-NLS-2$
 			// if there is no "->" or "::" in the left sequence then we need to
 			// calc the object type
-			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset);
+			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTrigger, offset);
 		}
 
 		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText,
@@ -418,7 +418,7 @@ public class CodeAssistUtils {
 		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
 				endPosition - triggerText.length());
 		// int lastObjectOperator = PHPTextSequenceUtilities
-		// .getPrivousTriggerIndex(statementText, propertyEndPosition);
+		// .getPreviousTriggerIndex(statementText, propertyEndPosition);
 		// String text = statementText.subSequence(0, propertyEndPosition)
 		// .toString();
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
