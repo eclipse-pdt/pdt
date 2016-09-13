@@ -80,8 +80,10 @@ public abstract class ContextFinder extends ASTVisitor {
 
 	public boolean visit(TypeDeclaration node) throws Exception {
 		if (node instanceof NamespaceDeclaration) {
-			if (!((NamespaceDeclaration) node).isGlobal()) {
-				FileContext fileContext = (FileContext) contextStack.peek();
+			FileContext fileContext = (FileContext) contextStack.peek();
+			if (((NamespaceDeclaration) node).isGlobal()) {
+				fileContext.setNamespace(null);
+			} else {
 				fileContext.setNamespace(node.getName());
 			}
 		} else {
