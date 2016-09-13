@@ -78,7 +78,8 @@
 			<showInPart id="org.eclipse.php.ui.explorer"/>
 			<showInPart id="org.eclipse.egit.ui.RepositoriesView"/>
 			<showInPart id="org.eclipse.team.ui.GenericHistoryView"/>
-
+			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer"/>
+			
 			<viewShortcut id="org.eclipse.ui.views.ResourceNavigator"/>
 
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation"/>
@@ -2577,26 +2578,16 @@
     
     <extension
        point="org.eclipse.ui.navigator.viewer">
-    <viewer viewerId="org.eclipse.ui.navigator.ProjectExplorer"/>
-    <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-       <includes>
-          <contentExtension pattern="org.eclipse.php.ui.phpContent"/>
-          <contentExtension pattern="org.eclipse.php.ui.navigator.filters.*"/>
-          <contentExtension pattern="org.eclipse.ui.navigator.resourceContent" />
-          <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
-          <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper"/>
-          <contentExtension
-                pattern="org.eclipse.php.ui.navigator.linkHelper">
-          </contentExtension>
-       </includes>
-    </viewerContentBinding>
-    
-    <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-         <includes>
-             <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
-         </includes>
-    </viewerActionBinding>
- </extension>
+	    <viewer viewerId="org.eclipse.ui.navigator.ProjectExplorer"/>
+	    <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+	       <includes>
+	          <contentExtension pattern="org.eclipse.php.ui.phpContent"/>
+	          <contentExtension pattern="org.eclipse.php.ui.navigator.filters.*"/>
+	          <contentExtension pattern="org.eclipse.php.ui.navigator.linkHelper">
+	          </contentExtension>
+	       </includes>
+	    </viewerContentBinding>
+ 	</extension>
  
 <extension point="org.eclipse.ui.navigator.navigatorContent">
 	<navigatorContent
@@ -2630,15 +2621,19 @@
 			</possibleChildren>
 			
 			<actionProvider 
-				class="org.eclipse.dltk.internal.ui.navigator.ScriptExplorerActionProvider"
-				id="org.eclipse.php.ui.navigator.actions.ViewActions">
+				class="org.eclipse.php.internal.ui.navigator.PHPNavigatorActionProvider"
+				id="org.eclipse.php.ui.navigator.actions.ViewActions"
+				overrides="org.eclipse.ui.navigator.resources.actions.EditActions">
 				<enablement>
 					<or>
-						<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
-						</adapt>
-						<instanceof value="org.eclipse.dltk.core.IMember" />
-						<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
+						<and>
+							<instanceof value="org.eclipse.core.resources.IResource" />
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+						</and>
+						<instanceof value="org.eclipse.dltk.core.IModelElement" />
+						<adapt type="java.util.Collection"> 
+							<count value="0" />
+						</adapt>						
 					</or>
 				</enablement>
 			</actionProvider>
@@ -2682,8 +2677,11 @@
 					id="org.eclipse.php.ui.navigator.actions.FileOperationActions"> 
 				<enablement>
 					<or>
-						<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
-						<instanceof value="org.eclipse.dltk.core.ISourceModule" />
+						<and>
+							<instanceof	value="org.eclipse.core.resources.IResource" />
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+						</and>
+						<instanceof value="org.eclipse.dltk.core.IModelElement" />
 					</or>
 				</enablement>
 			</actionProvider>

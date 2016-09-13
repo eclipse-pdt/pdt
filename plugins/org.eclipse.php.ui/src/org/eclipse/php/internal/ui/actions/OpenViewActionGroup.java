@@ -42,6 +42,8 @@ public class OpenViewActionGroup extends ActionGroup {
 
 	private ISelectionProvider fSelectionProvider;
 
+	private boolean fShowOpenPropertiesAction = true;
+
 	/**
 	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
 	 * selection provided by the page's selection provider is of type <code>
@@ -140,10 +142,11 @@ public class OpenViewActionGroup extends ActionGroup {
 		if (!fIsCallHiararchyViewerOwner)
 			appendToGroup(menu, fOpenCallHierarchy);
 		IStructuredSelection selection = getStructuredSelection();
-		if (fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled() && selection != null
-				&& fOpenPropertiesDialog.isApplicableForSelection(selection)) {
+		if (fShowOpenPropertiesAction && fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled()
+				&& selection != null && fOpenPropertiesDialog.isApplicableForSelection(selection)) {
 			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, fOpenPropertiesDialog);
 		}
+
 		MenuManager showInSubMenu = new MenuManager(getShowInMenuLabel());
 		IWorkbenchWindow workbenchWindow = fSite.getWorkbenchWindow();
 		showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN.create(workbenchWindow));
@@ -192,6 +195,10 @@ public class OpenViewActionGroup extends ActionGroup {
 			keyBinding = ""; //$NON-NLS-1$
 
 		return Messages.OpenViewActionGroup_ShowInLabel + '\t' + keyBinding;
+	}
+
+	public void containsOpenPropertiesAction(boolean enable) {
+		fShowOpenPropertiesAction = enable;
 	}
 
 }
