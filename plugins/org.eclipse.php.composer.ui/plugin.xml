@@ -262,6 +262,7 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
+            category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
             class="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
             id="org.eclipse.php.composer.ui.preferences.project.composer"
             name="Composer">
