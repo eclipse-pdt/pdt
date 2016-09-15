@@ -80,7 +80,7 @@
 			<showInPart id="org.eclipse.team.ui.GenericHistoryView"/>
 			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer"/>
 			
-			<viewShortcut id="org.eclipse.ui.views.ResourceNavigator"/>
+			<viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/>
 
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation"/>
 
