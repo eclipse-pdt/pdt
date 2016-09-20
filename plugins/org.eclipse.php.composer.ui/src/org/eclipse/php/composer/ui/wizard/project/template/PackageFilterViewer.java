@@ -77,7 +77,6 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 		viewer.setContentProvider(contentProvider = new PackagistContentProvider());
 
 		searchResultCount = new Label(container, SWT.NONE);
-		searchResultCount.setText("asdfasdf");
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).align(SWT.BEGINNING, SWT.CENTER)
 				.hint(400, SWT.DEFAULT).applyTo(searchResultCount);
 
