@@ -15,12 +15,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.buildpath.BuildPathManager;
+import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -38,12 +39,25 @@ public class UpdateBuildPathCommand extends AbstractHandler {
 				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
 				IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project);
 
-				BuildPathManager manager = new BuildPathManager(composerProject);
-				try {
-					manager.update();
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
+				final BuildPathManager bpManager = new BuildPathManager(composerProject);
+				final String title = "Update BuildPath";
+				Job job = new Job(title) {
+
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						monitor.beginTask(title, IProgressMonitor.UNKNOWN);
+						try {
+							bpManager.update();
+						} catch (CoreException e) {
+							Logger.logException(e);
+						} finally {
+							monitor.done();
+						}
+						return Status.OK_STATUS;
+					}
+				};
+				job.setUser(true);
+				job.schedule();
 			}
 		}
 
