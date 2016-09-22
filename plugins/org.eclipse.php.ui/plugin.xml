@@ -2674,7 +2674,8 @@
 			
 			<actionProvider
 					class="org.eclipse.php.internal.ui.navigator.PHPNavigatorFileOperationActionProvider"
-					id="org.eclipse.php.ui.navigator.actions.FileOperationActions"> 
+					id="org.eclipse.php.ui.navigator.actions.FileOperationActions"
+					overrides="org.eclipse.ui.navigator.resources.actions.EditActions"> 
 				<enablement>
 					<or>
 						<and>
