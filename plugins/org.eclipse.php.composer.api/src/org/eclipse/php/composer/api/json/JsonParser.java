@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.MalformedJsonException;
 
@@ -38,7 +39,14 @@ public class JsonParser {
 	private Object buildTree(JsonElement entity) {
 
 		if (entity.isJsonPrimitive()) {
-			return entity.getAsJsonPrimitive().getAsString();
+			JsonPrimitive p = entity.getAsJsonPrimitive();
+			if (p.isBoolean()) {
+				return p.getAsBoolean();
+			}
+			if (p.isNumber()) {
+				return p.getAsDouble();
+			}
+			return p.getAsString();
 		} else if (entity.isJsonNull()) {
 			return null;
 		} else if (entity.isJsonArray()) {
