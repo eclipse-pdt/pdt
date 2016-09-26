@@ -50,6 +50,13 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset)
 			throws CoreException {
 
+		// check if this is a history file and if it is so - skip adding it
+		Object storage = input.getAdapter(IStorage.class);
+		if (storage instanceof IFileState) {
+			return new Status(IStatus.CANCEL, PHPDebugUIPlugin.getID(),
+					PHPDebugUIMessages.DefaultPHPBreakpointProvider_Breakpoint_cannot_be_installed_on_history_file);
+		}
+
 		// check if there is a valid position to set breakpoint
 		int pos = getValidPosition(document, lineNumber);
 
@@ -94,7 +101,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 				}
 
 			} else if (input instanceof IStorageEditorInput) {
-				IStorage storage = ((IStorageEditorInput) input).getStorage();
+				storage = ((IStorageEditorInput) input).getStorage();
 				if (storage instanceof IModelElement) {
 					IModelElement element = (IModelElement) storage;
 					secondaryId = EnvironmentPathUtils.getFile(element).getFullPath().toPortableString();

@@ -51,6 +51,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String DebugBrowserView_swtBrowserNotAvailable0;
 
 	public static String DefaultPHPBreakpointProvider_0;
+	public static String DefaultPHPBreakpointProvider_Breakpoint_cannot_be_installed_on_history_file;
 	public static String EnableSetCondition_1;
 	public static String EnterCondition_1;
 	public static String ErrorCreatingBreakpoint_1;
