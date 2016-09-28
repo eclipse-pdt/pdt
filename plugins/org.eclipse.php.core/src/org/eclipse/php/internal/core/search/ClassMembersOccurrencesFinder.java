@@ -361,7 +361,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		Identifier constant = classConstantAccess.getConstant();
-		if (classMemberName.equals(constant.getName())) {
+		if (!isMethod && classMemberName.equals(constant.getName())) {
 			if (dispatcherType != null) {
 				if (isDispatcherTypeEquals(constant, isIncludesuper)) {
 					addOccurrence(new OccurrenceLocation(constant.getStart(), constant.getLength(),
@@ -443,8 +443,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 						}
 					}
 				} else {
-					addOccurrence(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node),
-							fDescription));
+					if (id.getParent() instanceof Variable) {
+						addOccurrence(new OccurrenceLocation(id.getParent().getStart(), id.getParent().getLength(),
+								getOccurrenceType(node), fDescription));
+					} else {
+						addOccurrence(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node),
+								fDescription));
+					}
 				}
 			}
 		}
