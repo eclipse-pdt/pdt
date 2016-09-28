@@ -274,13 +274,39 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
+	private static boolean isClassOrInterfaceKeyword(@NonNull TextSequence textSequence, int classStartOffset) {
+		if (classStartOffset == 0) {
+			return true;
+		}
+		int offset = readBackwardSpaces(textSequence, classStartOffset);
+		if (offset == 0) {
+			return true;
+		}
+		if (offset == classStartOffset && Character.isJavaIdentifierStart(textSequence.charAt(offset - 1))) {
+			return false;
+		}
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=501974
+		// With recent PHP versions, keyword "class" can be used as
+		// a class constant name or as a class property name, in those
+		// cases exclude current match.
+		assert OBJECT_OPERATOR.length() == 2 && PAAMAYIM_NEKUDOTAYIM.length() == 2;
+		if (offset < 2) {
+			return true;
+		}
+		String s = textSequence.subSequence(offset - 2, offset).toString();
+		if (OBJECT_OPERATOR.equals(s) || PAAMAYIM_NEKUDOTAYIM.equals(s)) {
+			return false;
+		}
+		return true;
+	}
+
 	public static int isInClassDeclaration(@NonNull TextSequence textSequence) {
 		Matcher matcher = CLASS_PATTERN.matcher(textSequence);
 		// search for the 'class' or 'interface words.
 		while (matcher.find()) {
 			// verify char before start.
 			int startOffset = matcher.start();
-			if (startOffset != 0 && Character.isJavaIdentifierStart(textSequence.charAt(startOffset - 1))) {
+			if (!isClassOrInterfaceKeyword(textSequence, startOffset)) {
 				continue;
 			}
 			// verify state
@@ -390,7 +416,7 @@ public class PHPTextSequenceUtilities {
 	 * @return start index (can be < 0)
 	 */
 	public static int readIdentifierStartIndex(@NonNull CharSequence textSequence, int startPosition,
-			boolean includeDolar) {
+			boolean includeDollar) {
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -398,16 +424,16 @@ public class PHPTextSequenceUtilities {
 			}
 			startPosition--;
 		}
-		if (includeDolar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
+		if (includeDollar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
 			startPosition--;
 		}
 		return startPosition;
 	}
 
 	public static int readIdentifierEndIndex(@NonNull CharSequence textSequence, int startPosition,
-			boolean includeDolar) {
+			boolean includeDollar) {
 		int length = textSequence.length();
-		if (includeDolar && startPosition < length && textSequence.charAt(startPosition) == '$') {
+		if (includeDollar && startPosition < length && textSequence.charAt(startPosition) == '$') {
 			startPosition++;
 		}
 		while (startPosition < length) {
@@ -426,17 +452,17 @@ public class PHPTextSequenceUtilities {
 	public static int readIdentifierStartIndex(@NonNull PHPVersion phpVersion, @NonNull CharSequence textSequence,
 			int startPosition, boolean includeDollar) {
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			return PHPTextSequenceUtilities.readIdentifierStartIndex(textSequence, startPosition, includeDollar);
+			return readIdentifierStartIndex(textSequence, startPosition, includeDollar);
 		}
-		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence, startPosition, includeDollar);
+		return readNamespaceStartIndex(textSequence, startPosition, includeDollar);
 	}
 
 	public static int readIdentifierEndIndex(@NonNull PHPVersion phpVersion, @NonNull CharSequence textSequence,
 			int startPosition, boolean includeDollar) {
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			return PHPTextSequenceUtilities.readIdentifierEndIndex(textSequence, startPosition, includeDollar);
+			return readIdentifierEndIndex(textSequence, startPosition, includeDollar);
 		}
-		return PHPTextSequenceUtilities.readNamespaceEndIndex(textSequence, startPosition, includeDollar);
+		return readNamespaceEndIndex(textSequence, startPosition, includeDollar);
 	}
 
 	/**
@@ -737,7 +763,7 @@ public class PHPTextSequenceUtilities {
 			}
 			insert = String.valueOf(':');
 		} else {
-			statementPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statementPosition);
+			statementPosition = readBackwardSpaces(statement, statementPosition);
 			switch (statement.charAt(statementPosition)) {
 			case '}':
 			case ')':
@@ -748,14 +774,14 @@ public class PHPTextSequenceUtilities {
 			case ':':
 				return null;
 			default:
-				int identStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, statementPosition, true);
+				int identStart = readIdentifierStartIndex(statement, statementPosition, true);
 				if (identStart < 0) {
 					return null;
 				}
 				if (statement.charAt(identStart) == '$' || statement.charAt(identStart) == '}') {
 					insert = OBJECT_OPERATOR;
 				} else {
-					identStart = PHPTextSequenceUtilities.readBackwardSpaces(statement, identStart - 1);
+					identStart = readBackwardSpaces(statement, identStart - 1);
 					if (identStart > 1 && statement.charAt(identStart) == '>'
 							&& statement.charAt(identStart - 1) == '-') {
 						insert = OBJECT_OPERATOR;
