@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -143,6 +144,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 		}
 		possibleNamespaces = PhpModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.PREFIX, 0, 0, scope,
 				null);
+		possibleNamespaces = CodeAssistUtils.removeDuplicatedElements(possibleNamespaces).toArray(new IType[0]);
 	}
 
 	/**
