@@ -1,0 +1,11 @@
+--TEST--
+Bug 501974 - Code assist is empty for second item in short array initializer
+--FILE--
+<?php
+$clazz = [
+    Foo::class => true,
+    DatePeri|
+];
+?>
+--EXPECT--
+type(DatePeriod)
