@@ -151,7 +151,8 @@ public class DocumentUtils {
 	 * Remove all the given use statements from a document. Be warned that the
 	 * "excludePositions" list will be updated to match the content of the
 	 * returned string. It is important that this list is sorted by increasing
-	 * position, or this method won't work correctly.
+	 * position and that the statement positions don't intersect with any of the
+	 * exclude positions, or this method won't work correctly.
 	 */
 	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc,
 			List<Position> excludePositions) {
@@ -162,12 +163,12 @@ public class DocumentUtils {
 	 * Remove all the given use statements from a document. Be warned that the
 	 * "excludePositions" list will be updated to match the content of the
 	 * returned string. It is important that this list is sorted by increasing
-	 * position, or this method won't work correctly.
+	 * position and that the statement positions don't intersect with any of the
+	 * exclude positions, or this method won't work correctly.
 	 */
 	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc, int start, int end,
 			List<Position> excludePositions) {
-		int offset = 0;
-		int lowestStatementStart = Integer.MAX_VALUE;
+		int removedLength = 0;
 		IDocument doc = new Document(old_doc.get());
 
 		for (UseStatement statement : statements) {
@@ -175,29 +176,32 @@ public class DocumentUtils {
 				continue;
 			}
 			int length = statement.sourceEnd() - statement.sourceStart();
-			lowestStatementStart = Math.min(lowestStatementStart, statement.sourceStart());
 
 			try {
-				doc.replace(statement.sourceStart() - offset, length, "");
+				doc.replace(statement.sourceStart() - removedLength, length, "");
 			} catch (BadLocationException e) {
 			}
 
-			offset += length;
-		}
-
-		if (offset > 0) {
 			for (int i = excludePositions.size() - 1; i >= 0; i--) {
 				Position position = excludePositions.get(i);
-				if (position.getOffset() >= lowestStatementStart) {
-					position.setOffset(position.getOffset() - offset);
+				int offset = position.getOffset() + removedLength;
+				if (offset >= statement.sourceEnd()) {
+					position.setOffset(position.getOffset() - length);
+				} else if (offset + position.getLength() > statement.sourceStart()) {
+					// statement positions should never intersect with exclude
+					// positions, so (for safety) remove them from the exclusion
+					// list
+					excludePositions.remove(i);
 				} else {
 					break;
 				}
 			}
+
+			removedLength += length;
 		}
 
 		try {
-			return doc.get(start, end - offset - start);
+			return doc.get(start, end - start - removedLength);
 		} catch (BadLocationException e) {
 			return doc.get();
 		}
@@ -248,7 +252,7 @@ public class DocumentUtils {
 			ModuleDeclaration moduleDeclaration) {
 		Vector<UseStatement> total = new Vector<UseStatement>();
 
-		NamespaceFinder visitor = new DocumentUtils.NamespaceFinder();
+		NamespaceFinder visitor = new NamespaceFinder();
 		try {
 			moduleDeclaration.traverse(visitor);
 		} catch (Exception e1) {
@@ -265,7 +269,7 @@ public class DocumentUtils {
 			String contents;
 			NamespaceDeclaration currentNamespace = visitor.getNamespaceDeclarationFor(statement);
 			if (currentNamespace != null && currentNamespace.isBracketed()) {
-				contents = DocumentUtils.stripUseStatements(statements, doc, currentNamespace.sourceStart(),
+				contents = stripUseStatements(statements, doc, currentNamespace.sourceStart(),
 						currentNamespace.sourceEnd(), excludePositions);
 			} else {
 				contents = stripUseStatements(statements, doc, excludePositions);
@@ -286,8 +290,8 @@ public class DocumentUtils {
 		Collections.sort(total, new Comparator<UseStatement>() {
 			@Override
 			public int compare(UseStatement a, UseStatement b) {
-				String partA = DocumentUtils.createStringFromUseStatement(a).trim().toLowerCase();
-				String partB = DocumentUtils.createStringFromUseStatement(b).trim().toLowerCase();
+				String partA = createStringFromUseStatement(a).trim().toLowerCase();
+				String partB = createStringFromUseStatement(b).trim().toLowerCase();
 				String[] partsA = partA.substring(4, partA.length() - 1).split("\\\\");
 				String[] partsB = partB.substring(4, partB.length() - 1).split("\\\\");
 
@@ -342,8 +346,7 @@ public class DocumentUtils {
 			}
 
 			queue.add(new ReplaceAction(
-					DocumentUtils.filterAndSort(Arrays.copyOfRange(statements, start, last_item + 1), doc,
-							moduleDeclaration),
+					filterAndSort(Arrays.copyOfRange(statements, start, last_item + 1), doc, moduleDeclaration),
 					statements[start].sourceStart(), statements[last_item].sourceEnd(), indent));
 
 			start = last_item + 1; // start at the next one
@@ -354,7 +357,7 @@ public class DocumentUtils {
 			List<UseStatement> sorted = item.statements;
 			int length = item.end - item.start;
 
-			String newNamespaces = DocumentUtils.createStringFromUseStatement(sorted, item.indent);
+			String newNamespaces = createStringFromUseStatement(sorted, item.indent);
 			try {
 				doc.replace(item.start - offset, length, newNamespaces);
 			} catch (BadLocationException e) {
