@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,6 +118,19 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 			return prefix.substring(1);
 		}
 		return prefix;
+	}
+
+	/**
+	 * Returns whether the prefix starts with a '\' or not.
+	 * 
+	 * @throws BadLocationException
+	 */
+	public boolean isGlobal() throws BadLocationException {
+		String prefix = super.getPrefix();
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

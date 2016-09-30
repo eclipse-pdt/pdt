@@ -1,0 +1,13 @@
+--TEST--
+Bug 502699 - Primitive types proposed after global character
+--FILE--
+<?php
+/**
+ * 
+ * @param \b| $param
+ */
+function function_name($param) {
+}
+--EXPECT--
+type(BadFunctionCallException)
+type(BadMethodCallException)
