@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.IVirtualPartition;
 import org.eclipse.php.internal.debug.core.model.IVirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.model.VirtualPartition;
@@ -47,9 +48,8 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 			// Should be synchronized and lazy
 			if (fPartitionVariables == null) {
 				Node node = getOwner().getNode(fPage);
-				// Might be null in case of resolving some 'eval' expressions
-				if (node == null) {
-					return new IVariable[] { new DBGpUninitVariable(getDebugTarget()) };
+				if (canProcess(node)) {
+					return new IVariable[] { new DBGpUnreachableVariable(getDebugTarget()) };
 				}
 				NodeList childProperties = node.getChildNodes();
 				int childrenReceived = childProperties.getLength();
@@ -57,12 +57,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 				if (childrenReceived > 0) {
 					for (int i = 0; i < childrenReceived; i++) {
 						Node childProperty = childProperties.item(i);
-						IVariable child;
-						if (isUninit(childProperty)) {
-							child = new DBGpUninitVariable(getDebugTarget());
-						} else {
-							child = createVariable(childProperty);
-						}
+						IVariable child = createVariable(childProperty);
 						fPartitionVariables[i] = merge(child);
 					}
 				}
@@ -73,6 +68,119 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 				fCurrentVariables = concat;
 			}
 			return fPartitionVariables;
+		}
+
+	}
+
+	/**
+	 * DBGp unreachable variable (is shown if i.e. XDebug max array depth
+	 * parameter is exceeded while unfolding variables).
+	 * 
+	 * @author Bartlomiej Laczkowski
+	 */
+	protected static class DBGpUnreachableVariable extends DBGpElement implements IVariable, IVariableFacet {
+
+		protected class DBGpUnreachableValue extends DBGpElement implements IValue {
+
+			public DBGpUnreachableValue(IDebugTarget target) {
+				super(target);
+			}
+
+			@Override
+			public String getReferenceTypeName() throws DebugException {
+				return null;
+			}
+
+			@Override
+			public String getValueString() throws DebugException {
+				return null;
+			}
+
+			@Override
+			public boolean isAllocated() throws DebugException {
+				return false;
+			}
+
+			@Override
+			public IVariable[] getVariables() throws DebugException {
+				return new IVariable[] {};
+			}
+
+			@Override
+			public boolean hasVariables() throws DebugException {
+				return false;
+			}
+
+		}
+
+		private DBGpUnreachableValue fValue;
+		protected final Set<Facet> fFacets = new HashSet<Facet>();
+
+		/**
+		 * Creates new DBGp uninitialized variable.
+		 * 
+		 * @param target
+		 */
+		public DBGpUnreachableVariable(IDebugTarget target) {
+			super(target);
+			fValue = new DBGpUnreachableValue(target);
+			addFacets(Facet.VIRTUAL_UNINIT);
+		}
+
+		@Override
+		public void setValue(String expression) throws DebugException {
+			// ignore
+		}
+
+		@Override
+		public void setValue(IValue value) throws DebugException {
+			// ignore
+		}
+
+		@Override
+		public boolean supportsValueModification() {
+			return false;
+		}
+
+		@Override
+		public boolean verifyValue(String expression) throws DebugException {
+			return false;
+		}
+
+		@Override
+		public boolean verifyValue(IValue value) throws DebugException {
+			return false;
+		}
+
+		@Override
+		public IValue getValue() throws DebugException {
+			return fValue;
+		}
+
+		@Override
+		public String getName() throws DebugException {
+			return DataType.PHP_UNINITIALIZED.getText();
+		}
+
+		@Override
+		public String getReferenceTypeName() throws DebugException {
+			return null;
+		}
+
+		@Override
+		public boolean hasValueChanged() throws DebugException {
+			return false;
+		}
+
+		@Override
+		public boolean hasFacet(Facet facet) {
+			return fFacets.contains(facet);
+		}
+
+		@Override
+		public void addFacets(Facet... facets) {
+			for (Facet facet : facets)
+				this.fFacets.add(facet);
 		}
 
 	}
@@ -150,18 +258,14 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	}
 
 	/**
-	 * Checks if given property node is an uninitialized element.
+	 * Checks if given property node can be processed.
 	 * 
 	 * @param property
-	 * @return <code>true</code> if given property node is an uninitialized
-	 *         element, <code>false</code> otherwise
+	 * @return <code>true</code> if given property node can be processed,
+	 *         <code>false</code> otherwise
 	 */
-	protected boolean isUninit(Node property) {
-		String type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
-		if (DataType.find(type) == DataType.PHP_UNINITIALIZED) {
-			return true;
-		}
-		return false;
+	protected boolean canProcess(Node property) {
+		return property == null || "error".equalsIgnoreCase(property.getNodeName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -207,9 +311,8 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 					break;
 				}
 				}
-				// Might be null for watch expression variables
-				if (fDescriptor == null) {
-					fCurrentVariables = new IVariable[] {};
+				if (canProcess(fDescriptor)) {
+					fCurrentVariables = new IVariable[] { new DBGpUnreachableVariable(getDebugTarget()) };
 					return;
 				}
 				childProperties = fDescriptor.getChildNodes();
@@ -220,12 +323,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 			if (childrenReceived > 0) {
 				for (int i = 0; i < childrenReceived; i++) {
 					Node childProperty = childProperties.item(i);
-					IVariable child;
-					if (isUninit(childProperty)) {
-						child = new DBGpUninitVariable(getDebugTarget());
-					} else {
-						child = createVariable(childProperty);
-					}
+					IVariable child = createVariable(childProperty);
 					fCurrentVariables[i] = merge(child);
 				}
 			}
