@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.model;
 
+import org.eclipse.php.internal.debug.core.Logger;
+
 /**
  * Interface for variables/values that are responsible for handling the
  * particular PHP data type.
@@ -32,7 +34,10 @@ public interface IPHPDataType {
 		PHP_OBJECT("object"), //$NON-NLS-1$
 		PHP_RESOURCE("resource"), //$NON-NLS-1$
 		PHP_VIRTUAL_CLASS("class"), //$NON-NLS-1$
-		PHP_UNINITIALIZED("<uninitialized>"); //$NON-NLS-1$
+		PHP_UNINITIALIZED("<uninitialized>"), //$NON-NLS-1$
+		UNKNOWN("<?>"); //$NON-NLS-1$
+
+		private static final String[] TYPE_UNINITIALIZED = new String[] { "uninitialised", "uninitialized" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 		private String type;
 
@@ -55,7 +60,13 @@ public interface IPHPDataType {
 				if (t.getText().equalsIgnoreCase(type))
 					return t;
 			}
-			return PHP_UNINITIALIZED;
+			for (String t : TYPE_UNINITIALIZED) {
+				if (t.equalsIgnoreCase(type))
+					return PHP_UNINITIALIZED;
+			}
+			// Log the info if something like this will ever happen...
+			Logger.log(Logger.WARNING, "Unknown PHP data type: " + type);
+			return UNKNOWN;
 		}
 
 	}

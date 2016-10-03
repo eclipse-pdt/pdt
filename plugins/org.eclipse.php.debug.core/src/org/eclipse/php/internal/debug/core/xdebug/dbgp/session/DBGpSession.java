@@ -144,9 +144,8 @@ public class DBGpSession {
 							+ idObj.toString());
 				}
 			}
-			if (savedResponses.containsKey(idObj)) {
+			if (savedResponses.containsKey(idObj) && parsedResponse.getType() == DBGpResponse.RESPONSE) {
 				postAndSignalCaller(idObj, parsedResponse);
-
 			} else {
 				/*
 				 * No one waiting for the response, so we need to check the
@@ -280,7 +279,8 @@ public class DBGpSession {
 									String filename = DBGpUtils
 											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
 									filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
-									// Debug target might be already disconnected
+									// Debug target might be already
+									// disconnected
 									if (debugTarget != null) {
 										debugTarget.breakpointHit(filename, lineno, exception);
 									}
@@ -323,6 +323,7 @@ public class DBGpSession {
 		public boolean contains(ISchedulingRule rule) {
 			return rule == this;
 		}
+
 		@Override
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule == this;
