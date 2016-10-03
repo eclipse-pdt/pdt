@@ -41,10 +41,12 @@ public class DBGpValueBuilder {
 			return new DBGpResourceValue(variable);
 		case PHP_STRING:
 			return new DBGpStringValue(variable);
+		case PHP_UNINITIALIZED:
+			return new DBGpUninitializedValue(variable);
 		default:
 			break;
 		}
-		return null;
+		return new DBGpUnknownValue(variable);
 	}
 
 }
