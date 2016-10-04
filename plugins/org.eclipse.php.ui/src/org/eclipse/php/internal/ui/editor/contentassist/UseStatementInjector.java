@@ -308,7 +308,10 @@ public class UseStatementInjector {
 				if (usePart != null && usePart.getAlias() != null && usePart.getAlias().getName() != null) {
 					typeName = usePart.getAlias().getName();
 				} else {
-					typeName = PHPModelUtils.extractElementName(namespaceName).toLowerCase();
+					String elementName = PHPModelUtils.extractElementName(namespaceName);
+					if (elementName != null) {
+						typeName = elementName.toLowerCase();
+					}
 				}
 			}
 
