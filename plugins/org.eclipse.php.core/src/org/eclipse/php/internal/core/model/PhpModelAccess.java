@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
@@ -29,11 +30,13 @@ public class PhpModelAccess extends ModelAccess {
 	public static final IField[] NULL_FIELDS = new IField[0];
 	private static final PhpModelAccess instance = new PhpModelAccess();
 
+	@NonNull
 	public static PhpModelAccess getDefault() {
 		return instance;
 	}
 
 	@Override
+	@NonNull
 	public IField[] findFields(String name, MatchRule matchRule, int trueFlags, int falseFlags, IDLTKSearchScope scope,
 			IProgressMonitor monitor) {
 		IField[] result = super.findFields(name, matchRule, trueFlags, falseFlags, scope, monitor);
@@ -44,6 +47,7 @@ public class PhpModelAccess extends ModelAccess {
 	}
 
 	@Override
+	@NonNull
 	public IField[] findFields(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		IField[] result = super.findFields(qualifier, name, matchRule, trueFlags, falseFlags, scope, monitor);
@@ -54,6 +58,7 @@ public class PhpModelAccess extends ModelAccess {
 	}
 
 	@Override
+	@NonNull
 	public IMethod[] findMethods(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		IMethod[] result = super.findMethods(name, matchRule, trueFlags, falseFlags, scope, monitor);
@@ -64,6 +69,7 @@ public class PhpModelAccess extends ModelAccess {
 	}
 
 	@Override
+	@NonNull
 	public IMethod[] findMethods(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 
@@ -100,6 +106,7 @@ public class PhpModelAccess extends ModelAccess {
 				falseFlags, scope, result, monitor);
 	}
 
+	@NonNull
 	public IMethod[] findFunctions(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IMethod> result = new LinkedList<IMethod>();
@@ -110,6 +117,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result.toArray(new IMethod[result.size()]);
 	}
 
+	@NonNull
 	public IMethod[] findFunctions(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IMethod> result = new LinkedList<IMethod>();
@@ -121,6 +129,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result.toArray(new IMethod[result.size()]);
 	}
 
+	@NonNull
 	public IField[] findFileFields(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IField> result = new LinkedList<IField>();
@@ -131,6 +140,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result.toArray(new IField[result.size()]);
 	}
 
+	@NonNull
 	public IField[] findFileFields(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IField> result = new LinkedList<IField>();
@@ -143,6 +153,7 @@ public class PhpModelAccess extends ModelAccess {
 	}
 
 	@Override
+	@NonNull
 	public IType[] findTypes(String name, MatchRule matchRule, int trueFlags, int falseFlags, IDLTKSearchScope scope,
 			IProgressMonitor monitor) {
 		IType[] result = super.findTypes(name, matchRule, trueFlags, falseFlags | IPHPModifiers.AccTrait, scope,
@@ -154,6 +165,7 @@ public class PhpModelAccess extends ModelAccess {
 	}
 
 	@Override
+	@NonNull
 	public IType[] findTypes(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		IType[] result = super.findTypes(qualifier, name, matchRule, trueFlags, falseFlags | IPHPModifiers.AccTrait,
@@ -164,6 +176,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result;
 	}
 
+	@NonNull
 	public IType[] findNamespaces(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IType> result = new LinkedList<IType>();
@@ -174,6 +187,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result.toArray(new IType[result.size()]);
 	}
 
+	@NonNull
 	public IType[] findTraits(String name, MatchRule matchRule, int trueFlags, int falseFlags, IDLTKSearchScope scope,
 			IProgressMonitor monitor) {
 		IType[] result = super.findTypes(name, matchRule, trueFlags | IPHPModifiers.AccTrait,
@@ -184,6 +198,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result;
 	}
 
+	@NonNull
 	public IType[] findTraits(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		IType[] result = super.findTypes(qualifier, name, matchRule, trueFlags | IPHPModifiers.AccTrait,
@@ -194,6 +209,7 @@ public class PhpModelAccess extends ModelAccess {
 		return result;
 	}
 
+	@NonNull
 	public IField[] findIncludes(String name, MatchRule matchRule, IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IField> result = new LinkedList<IField>();
 		if (!findElements(IModelElement.IMPORT_DECLARATION, name, matchRule, 0, 0, scope, result, monitor)) {
