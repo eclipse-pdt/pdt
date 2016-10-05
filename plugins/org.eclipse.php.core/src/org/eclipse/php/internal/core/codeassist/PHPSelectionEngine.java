@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -85,7 +86,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final String INSTEADOF = "insteadof"; //$NON-NLS-1$
 	private static final String AS = "as"; //$NON-NLS-1$
-	private static final IModelElement[] EMPTY = {};
+	private static final IType[] EMPTY = {};
 	private PHPVersion phpVersion;
 
 	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
@@ -195,7 +196,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						String elementName = startPosition < 0 ? "" //$NON-NLS-1$
 								: statement.subSequence(startPosition, endPosition).toString();
 						elementName = PHPModelUtils.extractElementName(elementName);
-						if (elementName.length() > 0) {
+						if (elementName != null && elementName.length() > 0) {
 							List<IModelElement> result = new LinkedList<IModelElement>();
 							for (Iterator<IModelElement> iterator = filtered.iterator(); iterator.hasNext();) {
 								IModelElement modelElement = (IModelElement) iterator.next();
@@ -249,11 +250,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 		end = PHPTextSequenceUtilities.readIdentifierEndIndex(source, end, true);
 
-		int methodEnd = PHPTextSequenceUtilities.getMethodEndIndex(source, end);
-		if (methodEnd != -1) {
-			end = methodEnd;
-		}
-
 		ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
 		// boolean inDocBlock=false;
@@ -266,9 +262,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if (realStart <= offset && realEnd >= end) {
 					// inDocBlock=true;
 					PHPDocTag[] tags = phpDocBlock.getTags();
-					return lookForMatchingElements(tags, sourceModule, parsedUnit, offset, end, cache);
+					boolean isMethodOrFunction = PHPTextSequenceUtilities.getMethodEndIndex(source, end, false) != -1;
+					return lookForMatchingElements(tags, sourceModule, parsedUnit, offset, end, isMethodOrFunction,
+							cache);
 				}
 			}
+		}
+		int methodEnd = PHPTextSequenceUtilities.getMethodEndIndex(source, end, true);
+		if (methodEnd != -1) {
+			end = methodEnd;
 		}
 		ASTNode node = ASTUtils.findMinimalNode(parsedUnit, offset, end);
 		if (node == null) {
@@ -358,7 +360,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			String name = ((NamespaceReference) node).getName();
 			IType[] namespace = PHPModelUtils.getNamespaceOf(name + NamespaceReference.NAMESPACE_SEPARATOR,
 					sourceModule, offset, cache, null);
-			return namespace == null ? EMPTY : namespace;
+			return namespace;
 		}
 		// Class/Interface reference:
 		else if (node instanceof TypeReference) {
@@ -496,7 +498,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private IModelElement[] lookForMatchingElements(PHPDocTag[] tags, ISourceModule sourceModule,
-			ModuleDeclaration parsedUnit, int offset, int end, IModelAccessCache cache) throws ModelException {
+			ModuleDeclaration parsedUnit, int offset, int end, boolean isMethodOrFunction, IModelAccessCache cache)
+					throws ModelException {
 		if (tags == null) {
 			return null;
 		}
@@ -527,14 +530,73 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				} else {
 					for (TypeReference typeReference : phpDocTag.getTypeReferences()) {
 						if (typeReference.sourceStart() <= offset && typeReference.sourceEnd() >= end) {
+							boolean isNamespacePart = false;
 							String name = typeReference.getName();
-
-							// remove additional end elements like '[]'
+							// remove additional end elements like '[]' or '()'
 							if (typeReference.sourceEnd() > end) {
-								int startShift = offset - typeReference.sourceStart();
-								name = typeReference.getName().substring(startShift, (end - offset) + startShift);
+								isNamespacePart = name.charAt(
+										end - typeReference.sourceStart()) == NamespaceReference.NAMESPACE_SEPARATOR;
+								name = name.substring(0, end - typeReference.sourceStart());
 							}
-							return filterNS(PHPModelUtils.getTypes(name, sourceModule, offset, cache, null));
+							String[] parts = name.split(Pattern.quote(PAAMAYIM_NEKUDOTAIM), 3);
+							if (parts.length > 1) {
+								if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
+									boolean isVariable = parts[1].charAt(0) == '$';
+									// to determine if it was the part before
+									// "::" that was selected
+									boolean isClassOrNamespacePartSelected = offset <= typeReference.sourceStart()
+											+ parts[0].length();
+									IType[] types = filterNS(
+											PHPModelUtils.getTypes(parts[0], sourceModule, offset, cache, null));
+									if (isClassOrNamespacePartSelected) {
+										// NB : no need to check for namespaces,
+										// we cannot end here with variable
+										// "isNamespacePart" set to true
+										// and variable "name" containing "::"
+										return types;
+									} else {
+										if (isMethodOrFunction && !isVariable) {
+											// class method
+											List<IMethod> methods = new LinkedList<IMethod>();
+											for (IType type : types) {
+												methods.addAll(Arrays
+														.asList(PHPModelUtils.getTypeMethod(type, parts[1], true)));
+											}
+											return methods.toArray(new IMethod[methods.size()]);
+										} else {
+											// class field or class constant
+											List<IField> fields = new LinkedList<IField>();
+											for (IType type : types) {
+												fields.addAll(Arrays
+														.asList(PHPModelUtils.getTypeField(type, parts[1], true)));
+											}
+											return fields.toArray(new IField[fields.size()]);
+										}
+									}
+								}
+							} else if (name.length() > 0) {
+								boolean isVariable = name.charAt(0) == '$';
+								if (isVariable) {
+									return PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+								} else if (isMethodOrFunction) {
+									return PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
+								} else {
+									// it's either a
+									// class/interface/namespace...
+									if (isNamespacePart) {
+										return PHPModelUtils.getNamespaceOf(
+												name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset,
+												cache, null);
+									}
+									IType[] types = filterNS(
+											PHPModelUtils.getTypes(name, sourceModule, offset, cache, null));
+									if (types.length == 0) {
+										// ... or a global constant
+										return PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+									}
+									return types;
+								}
+							}
 						}
 					}
 				}
@@ -545,7 +607,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private IType[] filterNS(IType[] types) throws ModelException {
 		if (types == null) {
-			return types;
+			return EMPTY;
 		} else {
 			Set<? super IType> result = new HashSet<IType>();
 			for (IType type : types) {
@@ -691,7 +753,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
 					try {
 						char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
-						if (charBefore == '\\') {
+						if (charBefore == NamespaceReference.NAMESPACE_SEPARATOR) {
 							return EMPTY;
 						}
 					} catch (BadLocationException e) {

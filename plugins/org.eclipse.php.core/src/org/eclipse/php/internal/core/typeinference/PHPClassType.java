@@ -99,7 +99,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * Returns namespace name part of this type or <code>null</code> if the type
 	 * is not declared under some namespace
 	 * 
-	 * @return
+	 * @return namespace name part or null
 	 */
 	public String getNamespace() {
 		return namespace;
@@ -127,7 +127,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	 *            Source module where the type was referenced
 	 * @param offset
 	 *            Offset in file here the type was referenced
-	 * @return
+	 * @return evaluated type
 	 */
 	public static PHPClassType fromTypeName(String typeName, ISourceModule sourceModule, int offset) {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
@@ -160,7 +160,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * Creates evaluated type from the given IType.
 	 * 
 	 * @param type
-	 * @return
+	 * @return evaluated type
 	 */
 	public static PHPClassType fromIType(IType type) {
 		String elementName = type.getElementName();
@@ -185,7 +185,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * Create evaluated type object from the given name reference.
 	 * 
 	 * @param name
-	 * @return
+	 * @return evaluated type
 	 */
 	public static IEvaluatedType fromSimpleReference(SimpleReference name) {
 		String typeName = name instanceof FullyQualifiedReference
