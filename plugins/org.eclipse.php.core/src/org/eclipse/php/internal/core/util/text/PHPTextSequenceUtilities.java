@@ -210,10 +210,13 @@ public class PHPTextSequenceUtilities {
 		return textSequence;
 	}
 
-	public static int getMethodEndIndex(@NonNull CharSequence textSequence, int offset) {
+	public static int getMethodEndIndex(@NonNull CharSequence textSequence, int offset,
+			boolean allowToStartWithWhitespaces) {
 		int length = textSequence.length();
-		while (offset < length && Character.isWhitespace(textSequence.charAt(offset))) {
-			++offset;
+		if (allowToStartWithWhitespaces) {
+			while (offset < length && Character.isWhitespace(textSequence.charAt(offset))) {
+				++offset;
+			}
 		}
 		if (offset < length && textSequence.charAt(offset) == '(') {
 			++offset;

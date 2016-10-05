@@ -521,7 +521,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * Removes overridden members from the completion list
 	 * 
 	 * @param members
-	 *            Class/Interface memebers in type hierarchy order (from bottom
+	 *            Class/Interface members in type hierarchy order (from bottom
 	 *            to up)
 	 */
 	protected <T extends IMember> Collection<T> removeOverriddenElements(Collection<T> members) {

@@ -1,0 +1,115 @@
+--TEST--
+Bug 497834 - @see isn't hyperlinked
+--FILE--
+<?php
+namespace ABC\XYZ
+{
+
+    class A
+    {
+
+        const A = 5;
+
+        public $A = 5;
+
+        /**
+         *
+         * @see A::A()
+         * @see A::$A
+         * @see A::A
+         * @see A
+         */
+        function method1()
+        {
+        }
+
+        /**
+         *
+         * @see \ABC\XYZ\A::A()
+         * @see \ABC\XYZ\A::$A
+         * @see \ABC\XYZ\A::A
+         * @see \ABC\XYZ\A
+         */
+        function A()
+        {
+        }
+    }
+}
+namespace
+{
+
+    class A
+    {
+
+        const A = 5;
+
+        public $A = 5;
+
+        /**
+         *
+         * @see A::A()
+         * @see A::$A
+         * @see A::A
+         * @see A
+         */
+        function method1()
+        {
+        }
+
+        /**
+         *
+         * @see \ABC\XYZ\A::A()
+         * @see \ABC\XYZ\A::$A
+         * @see \ABC\XYZ\A::A
+         * @see \ABC\XYZ\A
+         */
+        function A()
+        {
+        }
+    }
+
+    /**
+     *
+     * @see A()
+     */
+    function method1()
+    {
+    }
+
+    function A()
+    {
+    }
+
+    $A = 10;
+
+    /**
+     *
+     * @see A::$A
+     */
+    function method2()
+    {
+    }
+
+    define('Z', 10);
+
+    /**
+     *
+     * @see \ABC\XYZ\A::A()
+     * @see \ABC\XYZ\A::$A
+     * @see \ABC\XYZ\A::A
+     * @see \ABC\XYZ\A
+     * @see \A::A()
+     * @see \A::$A
+     * @see \A::|A|
+     * @see \A
+     * @see $A
+     * @see Z
+     */
+    function method3()
+    {
+    }
+}
+?>
+--EXPECT--
+field(A)
+field($A)
