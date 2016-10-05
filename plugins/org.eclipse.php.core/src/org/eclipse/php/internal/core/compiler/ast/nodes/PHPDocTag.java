@@ -14,6 +14,8 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -91,11 +93,13 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		}
 
 		// will never be null
+		@NonNull
 		public String getName() {
 			return name;
 		}
 
 		// will never be null
+		@NonNull
 		public String getValue() {
 			return value;
 		}
@@ -112,18 +116,23 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 		// For backward compatibility with PHPDocTagKinds.
 		// Can be null.
+		@Nullable
 		public static TagKind getTagKind(int tagId) {
 			return Mapping.mapIds.get(tagId);
 		}
 
 		// Search a TagKind by its name.
 		// The search is case-insensitive.
+		// Can be null.
+		@Nullable
 		public static TagKind getTagKindFromName(String name) {
 			return Mapping.mapNames.get(name);
 		}
 
 		// Search a TagKind by its value.
 		// The search is case-insensitive.
+		// Can be null.
+		@Nullable
 		public static TagKind getTagKindFromValue(String value) {
 			return Mapping.mapValues.get(value);
 		}
@@ -157,6 +166,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	/**
 	 * Never null.
 	 */
+	@NonNull
 	public List<Scalar> getTexts() {
 		return texts;
 	}
@@ -164,6 +174,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	/**
 	 * Never null.
 	 */
+	@NonNull
 	public List<String> getDescTexts() {
 		return descTexts;
 	}
@@ -171,6 +182,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	/**
 	 * Never null.
 	 */
+	@NonNull
 	public String getTrimmedDescText() {
 		return trimmedDescText;
 	}
@@ -213,6 +225,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		return result;
 	}
 
+	@NonNull
 	public static List<String> removeEmptyString(List<String> commentWords) {
 		List<String> result = new ArrayList<String>();
 		for (int i = 0; i < commentWords.size(); i++) {
@@ -380,14 +393,17 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	/**
 	 * @return a non-null TagKind element
 	 */
+	@NonNull
 	public TagKind getTagKind() {
 		return tagKind;
 	}
 
+	@NonNull
 	public String getMatchedTag() {
 		return matchedTag;
 	}
 
+	@NonNull
 	public String getValue() {
 		return value;
 	}
@@ -397,6 +413,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return variable reference (if present), null otherwise
 	 */
+	@Nullable
 	public VariableReference getVariableReference() {
 		return variableReference;
 	}
@@ -406,6 +423,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return type reference (not splitted), null otherwise
 	 */
+	@Nullable
 	public TypeReference getSingleTypeReference() {
 		return singleTypeReference;
 	}
@@ -415,6 +433,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return all type references, empty list otherwise
 	 */
+	@NonNull
 	public List<TypeReference> getTypeReferences() {
 		return typeReferences;
 	}
@@ -424,6 +443,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return all references, empty list otherwise
 	 */
+	@NonNull
 	public List<SimpleReference> getAllReferencesWithOrigOrder() {
 		return allReferencesWithOrigOrder;
 	}
