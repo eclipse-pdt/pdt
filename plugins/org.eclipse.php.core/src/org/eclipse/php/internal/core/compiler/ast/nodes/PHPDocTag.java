@@ -14,6 +14,8 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -397,6 +399,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return variable reference (if present), null otherwise
 	 */
+	@Nullable
 	public VariableReference getVariableReference() {
 		return variableReference;
 	}
@@ -406,6 +409,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return type reference (not splitted), null otherwise
 	 */
+	@Nullable
 	public TypeReference getSingleTypeReference() {
 		return singleTypeReference;
 	}
@@ -415,6 +419,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return all type references, empty list otherwise
 	 */
+	@NonNull
 	public List<TypeReference> getTypeReferences() {
 		return typeReferences;
 	}
@@ -424,6 +429,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	 * 
 	 * @return all references, empty list otherwise
 	 */
+	@NonNull
 	public List<SimpleReference> getAllReferencesWithOrigOrder() {
 		return allReferencesWithOrigOrder;
 	}
