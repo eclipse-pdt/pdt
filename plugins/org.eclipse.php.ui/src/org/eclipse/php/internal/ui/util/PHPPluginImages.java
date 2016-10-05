@@ -147,6 +147,7 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_OVR_ABSTRACT = create(T_OVR, "abstract_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_FINAL = create(T_OVR, "final_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_STATIC = create(T_OVR, "static_co.png"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_OVR_PACKAGE = create(T_OVR, "package.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_OBJS_ZIP = createManaged(T_OBJ, IMG_OBJS_ZIP);
 	public static final ImageDescriptor DESC_OBJS_EXTZIP = createManaged(T_OBJ, IMG_OBJS_EXTZIP);

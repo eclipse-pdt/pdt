@@ -2008,16 +2008,30 @@
 			</enablement>
 		</decorator>
 		<decorator
-			label="%PHPLanguageLibraryDecorator.label"
-			state="true"
-			class="org.eclipse.php.ui.PHPLanguageLibraryDecorator"
-			id="org.eclipse.php.ui.languagelibrary.decorator"
-			lightweight="true">
+        class="org.eclipse.php.ui.PHPLanguageLibraryDecorator"
+        id="org.eclipse.php.ui.languagelibrary.decorator"
+        label="%PHPLanguageLibraryDecorator.label"
+        lightweight="true"
+        state="true">
 		<enablement>
 			<objectClass
 				name="org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer">
 			</objectClass>
 		</enablement>
+		</decorator>
+		<decorator
+			class="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelDecorator"
+			id="org.eclipse.php.ui.explorer.decorator"
+			label="PHP Project Explorer Decorator"
+			lightweight="true"
+			state="true">
+			<enablement>
+				<and>
+       <objectClass
+             name="org.eclipse.core.resources.IFolder">
+       </objectClass>
+				</and>
+			</enablement>
 		</decorator>
 	</extension>
 
@@ -2607,23 +2621,22 @@
 					<adapt type="org.eclipse.core.resources.IFile">
 							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
 					</adapt>
-					<instanceof	value="org.eclipse.core.resources.IResource" />
-					<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
-					<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
 				</or>
 			</triggerPoints>
 			
 			<possibleChildren>
 				<or>
-					<instanceof value="org.eclipse.core.resources.IResource" />
+					<instanceof	value="org.eclipse.core.resources.IFolder" />
+					<instanceof	value="org.eclipse.dltk.core.IProjectFragment" />
+					<instanceof value="org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer" />
+					<instanceof value="org.eclipse.php.internal.core.includepath.IncludePath" />
 					<instanceof value="org.eclipse.dltk.core.IModelElement" />
 				</or>
 			</possibleChildren>
 			
 			<actionProvider 
 				class="org.eclipse.php.internal.ui.navigator.PHPNavigatorActionProvider"
-				id="org.eclipse.php.ui.navigator.actions.ViewActions"
-				overrides="org.eclipse.ui.navigator.resources.actions.EditActions">
+				id="org.eclipse.php.ui.navigator.actions.ViewActions">
 				<enablement>
 					<or>
 						<and>
@@ -2664,9 +2677,14 @@
 						<adapt type="org.eclipse.core.resources.IProject">
 							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
 						</adapt>
-						<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
-						</adapt>
+						<and>
+							<instanceof	value="org.eclipse.core.resources.IFile" />
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+						</and>							
+						<and>
+							<instanceof	value="org.eclipse.core.resources.IFolder" />
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+						</and>
 						<instanceof value="org.eclipse.dltk.core.IModelElement" />
 					</or>
 				</enablement>
@@ -2692,7 +2710,10 @@
 				id="org.eclipse.php.ui.navigator.actions.LibraryFolderActions">
 				<enablement>
 					<or>
-						<instanceof value="org.eclipse.dltk.core.IScriptFolder" />
+						<and>
+							<instanceof	value="org.eclipse.core.resources.IFolder" />
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+						</and>
 					</or>
 				</enablement>
 			</actionProvider>

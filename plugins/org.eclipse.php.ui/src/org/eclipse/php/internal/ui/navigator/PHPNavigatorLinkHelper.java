@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.navigator;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
@@ -19,12 +20,18 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.navigator.ILinkHelper;
 
 public class PHPNavigatorLinkHelper implements ILinkHelper {
 
 	@Override
 	public IStructuredSelection findSelection(IEditorInput anInput) {
+		IFile file = ResourceUtil.getFile(anInput);
+		if (file != null) {
+			return new StructuredSelection(file);
+		}
+
 		ISourceModule sourceModule = DLTKUIPlugin.getEditorInputModelElement(anInput);
 		return sourceModule != null ? new StructuredSelection(sourceModule) : StructuredSelection.EMPTY;
 	}
