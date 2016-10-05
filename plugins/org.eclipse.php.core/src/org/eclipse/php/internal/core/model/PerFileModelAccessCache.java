@@ -47,6 +47,17 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	private Map<String, Collection<IType>> allNamespacesCache;
 	private ReferenceTree fileHierarchy;
 
+	private static class FakeTypeHierarchy extends TypeHierarchy {
+		public FakeTypeHierarchy() {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=494388
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498339
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=504013
+			// We must initialize the internal properties to avoid NPEs
+			// when using this class methods.
+			initialize(1);
+		}
+	}
+
 	/**
 	 * Constructs new cache
 	 * 
@@ -66,7 +77,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
 		if (!PHPToolkitUtil.isFromPhpProject(type)) {
-			return new TypeHierarchy();
+			return new FakeTypeHierarchy();
 		}
 		ITypeHierarchy hierarchy = hierarchyCache.get(type);
 		if (hierarchy == null) {
