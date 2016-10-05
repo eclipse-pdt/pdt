@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.IContextMenuConstants;
 import org.eclipse.jface.action.IAction;
@@ -30,8 +31,8 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 
 /**
- * An action group that contributes the "Use As Library Folder" and
- * "Use As Source Folder" actions in the PHP Explorer's context menu.
+ * An action group that contributes the "Use As Library Folder" and "Use As
+ * Source Folder" actions in the PHP Explorer's context menu.
  * 
  * @author Kaloyan Raev
  */
@@ -100,6 +101,10 @@ public class LibraryFolderActionGroup extends CommonActionProvider {
 		// collect all folders from the current selection
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
+
+			if (obj instanceof IFolder) {
+				obj = DLTKCore.create((IFolder) obj);
+			}
 
 			if (!(obj instanceof IModelElement))
 				// the selection contains an object that is not a model element
