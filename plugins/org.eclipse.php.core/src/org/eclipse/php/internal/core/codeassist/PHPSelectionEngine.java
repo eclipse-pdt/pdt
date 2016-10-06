@@ -532,11 +532,17 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (typeReference.sourceStart() <= offset && typeReference.sourceEnd() >= end) {
 							boolean isNamespacePart = false;
 							String name = typeReference.getName();
-							// remove additional end elements like '[]' or '()'
+							// remove additional end elements like ']', '[]' or
+							// '()'
 							if (typeReference.sourceEnd() > end) {
 								isNamespacePart = name.charAt(
 										end - typeReference.sourceStart()) == NamespaceReference.NAMESPACE_SEPARATOR;
 								name = name.substring(0, end - typeReference.sourceStart());
+								// check if we're in an array
+								int idx = name.lastIndexOf('[', offset - typeReference.sourceStart() - 1);
+								if (idx != -1) {
+									name = name.substring(idx + 1);
+								}
 							}
 							String[] parts = name.split(Pattern.quote(PAAMAYIM_NEKUDOTAIM), 3);
 							if (parts.length > 1) {
