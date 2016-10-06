@@ -61,9 +61,13 @@ public class PHPDocumentationContentAccess {
 
 	private static final String PARAM_NAME_START = "<b>"; //$NON-NLS-1$
 	private static final String PARAM_NAME_END = "</b> "; //$NON-NLS-1$
+	private static final String PARAM_RETURN_START = "<b>"; //$NON-NLS-1$
+	private static final String PARAM_RETURN_END = "</b> "; //$NON-NLS-1$
 	private static final int PARAMETER_TYPE_TYPE = 1;
 	private static final int PARAMETER_NAME_TYPE = 2;
 	private static final int PARAMETER_DESCRIPTION_TYPE = 3;
+	private static final int RETURN_TYPE_TYPE = 4;
+	private static final int RETURN_DESCRIPTION_TYPE = 5;
 
 	/**
 	 * Implements the "Algorithm for Inheriting Method Comments" as specified
@@ -667,8 +671,9 @@ public class PHPDocumentationContentAccess {
 				fBuf.append("</dt>"); //$NON-NLS-1$
 				fBuf.append(BlOCK_TAG_ENTRY_START);
 				fBuf.append("&nbsp;"); //$NON-NLS-1$
+				fBuf.append(PARAM_RETURN_START);
 				fBuf.append(magicMethod.returnType);
-				fBuf.append(BlOCK_TAG_ENTRY_END);
+				fBuf.append(PARAM_RETURN_END);
 			}
 			fBuf.append(BLOCK_TAG_END);
 		}
@@ -1169,7 +1174,16 @@ public class PHPDocumentationContentAccess {
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
 		if (tag != null) {
-			handleContentElements(tag);
+			String returnType = getReturnInfo(tag, RETURN_TYPE_TYPE);
+			String description = getReturnInfo(tag, RETURN_DESCRIPTION_TYPE);
+			if (returnType != null) {
+				fBuf.append(PARAM_RETURN_START);
+				fBuf.append(returnType);
+				fBuf.append(PARAM_RETURN_END);
+			}
+			if (description != null) {
+				fBuf.append(description);
+			}
 		} else {
 			fBuf.append(returnDescription);
 		}
@@ -1306,6 +1320,7 @@ public class PHPDocumentationContentAccess {
 		if (tag.getTypeReferences().size() == 0) {
 			fBuf.append(BlOCK_TAG_ENTRY_START);
 			fBuf.append(tag.getValue());
+			doWorkAround();
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 			return;
 		}
@@ -1455,6 +1470,22 @@ public class PHPDocumentationContentAccess {
 			return typeRef.getName();
 		} else if (infoType == PARAMETER_NAME_TYPE) {
 			return variableRef.getName();
+		}
+		return null;
+	}
+
+	private String getReturnInfo(PHPDocTag tag, int infoType) {
+		TypeReference typeRef = tag.getSingleTypeReference();
+		if (infoType == RETURN_DESCRIPTION_TYPE) {
+			String value = tag.getValue();
+			if (typeRef == null) {
+				return value.trim();
+			}
+			int typeRefIndex = value.indexOf(typeRef.getName());
+			int lastRefIndex = typeRefIndex + typeRef.getName().length();
+			return value.substring(lastRefIndex).trim();
+		} else if (infoType == RETURN_TYPE_TYPE && typeRef != null) {
+			return typeRef.getName();
 		}
 		return null;
 	}
