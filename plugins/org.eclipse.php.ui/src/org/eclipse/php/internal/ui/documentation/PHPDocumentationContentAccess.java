@@ -63,6 +63,8 @@ public class PHPDocumentationContentAccess {
 	private static final String PARAM_NAME_END = "</b> "; //$NON-NLS-1$
 	private static final String PARAM_RETURN_START = "<b>"; //$NON-NLS-1$
 	private static final String PARAM_RETURN_END = "</b> "; //$NON-NLS-1$
+	private static final String PARAM_THROWS_START = "<b>"; //$NON-NLS-1$
+	private static final String PARAM_THROWS_END = "</b>"; //$NON-NLS-1$
 	private static final int PARAMETER_TYPE_TYPE = 1;
 	private static final int PARAMETER_NAME_TYPE = 2;
 	private static final int PARAMETER_DESCRIPTION_TYPE = 3;
@@ -1273,7 +1275,9 @@ public class PHPDocumentationContentAccess {
 		List<TypeReference> fragments = tag.getTypeReferences();
 		if (fragments.size() > 0) {
 			String exceptionName = fragments.get(0).getName().trim();
+			fBuf.append(PARAM_THROWS_START);
 			fBuf.append(exceptionName);
+			fBuf.append(PARAM_THROWS_END);
 			String value = tag.getValue().trim();
 			String description = value.substring(exceptionName.length());
 			if (description.length() > 0) {
