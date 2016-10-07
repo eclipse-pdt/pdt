@@ -27,7 +27,7 @@ public class FunctionParameterTypeStrategy extends GlobalTypesStrategy {
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
-		return " "; //$NON-NLS-1$
+		return abstractContext.hasWhitespaceAtCursor() ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected int getExtraInfo() {

@@ -47,6 +47,7 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		ISourceModule sourceModule = concreteContext.getSourceModule();
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
+		boolean withoutWhitespace = concreteContext.hasWhitespaceAtCursor();
 		boolean withoutSemicolon = concreteContext.getNextWord().trim()
 				.equals(IPHPKeywordsInitializer.SEMICOLON_SUFFIX);
 		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject())
@@ -54,7 +55,9 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		for (KeywordData keyword : keywordsList) {
 			if (!filterKeyword(keyword)) {
 				String suffix = keyword.suffix;
-				if (withoutSemicolon && suffix.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
+				if (withoutWhitespace && suffix.endsWith(IPHPKeywordsInitializer.WHITESPACE_SUFFIX)) {
+					suffix = suffix.substring(0, suffix.length() - 1);
+				} else if (withoutSemicolon && suffix.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
 					suffix = suffix.substring(0, suffix.length() - 1);
 				}
 				reporter.reportKeyword(keyword.name, suffix, replaceRange);

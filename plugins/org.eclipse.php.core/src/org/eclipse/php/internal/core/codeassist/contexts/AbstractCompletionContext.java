@@ -377,6 +377,25 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
+	 * Returns whether there is a whitespace character at cursor position where
+	 * code assist was being invoked.<br>
+	 * <b>IMPORTANT</b>: note that while {@link #getNextChar()} and
+	 * {@link #getChar(int offset)} will return ' ' when cursor is at end of
+	 * document, this method will return false when cursor is at end of
+	 * document.
+	 * 
+	 * @return <code>true</code> if there is a whitespace character at cursor
+	 *         position, false otherwise or when cursor is at end of document
+	 */
+	public boolean hasWhitespaceAtCursor() {
+		try {
+			return offset < document.getLength() && Character.isWhitespace(document.getChar(offset));
+		} catch (BadLocationException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Returns completion requestor
 	 * 
 	 * @return completion requestor (see {@link CompletionRequestor})

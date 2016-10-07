@@ -17,7 +17,6 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.language.keywords.IPHPKeywordsInitializer;
 
 public class UseNameStrategy extends GlobalTypesStrategy {
 
@@ -47,8 +46,8 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 	private void reportKeyword(String keyword, ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		if (completionContext.getPrefix() == null || keyword.startsWith(completionContext.getPrefix())) {
-			reporter.reportKeyword(keyword, IPHPKeywordsInitializer.WHITESPACE_SUFFIX,
-					getReplacementRange(completionContext));
+			reporter.reportKeyword(keyword, completionContext.hasWhitespaceAtCursor() ? "" : " " //$NON-NLS-1$ //$NON-NLS-2$
+			, getReplacementRange(completionContext));
 		}
 	}
 

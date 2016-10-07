@@ -49,6 +49,6 @@ public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStra
 	}
 
 	public String getSuffix(AbstractCompletionContext context) {
-		return context.hasWhitespaceBeforeCursor() ? " " : ""; //$NON-NLS-1$ //$NON-NLS-2$
+		return context.hasWhitespaceBeforeCursor() && !context.hasWhitespaceAtCursor() ? " " : ""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
