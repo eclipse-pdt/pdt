@@ -377,6 +377,25 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
+	 * Returns whether there is a space character at offset position or not.<br>
+	 * <b>IMPORTANT</b>: note that while {@link #getNextChar()} and
+	 * {@link #getChar(int offset)} will return a space when cursor is at end of
+	 * document, this method will return false when cursor is at end of
+	 * document.
+	 * 
+	 * @return <code>true</code> if there is a space character at offset
+	 *         position, false otherwise or false when cursor is at end of
+	 *         document
+	 */
+	public boolean hasSpaceAtPosition(int offset) {
+		try {
+			return offset >= 0 && offset < document.getLength() && document.getChar(offset) == ' ';
+		} catch (BadLocationException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Returns completion requestor
 	 * 
 	 * @return completion requestor (see {@link CompletionRequestor})
