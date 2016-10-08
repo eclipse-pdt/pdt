@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ITypeHierarchy;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -22,6 +23,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes keywords that can be shown in a method body
@@ -70,6 +72,29 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 							if (PHPFlags.isClass(superType.getFlags())) {
 								return false;
 							}
+						}
+					}
+				} catch (ModelException e) {
+				}
+				return true;
+			}
+		}
+		if ((keyword.context & PHPKeywords.CLASS_BODY) != 0) {
+			ICompletionContext context = getContext();
+			if (context instanceof GlobalMethodStatementContext) {
+				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;
+				IType type = globalContext.getEnclosingType();
+				IMethod method = globalContext.getEnclosingMethod();
+				try {
+					if (type != null && PHPFlags.isClass(type.getFlags()) && method != null) {
+						ModuleDeclaration rootNode = SourceParserUtil
+								.getModuleDeclaration(globalContext.getSourceModule());
+						ASTNode node = PHPModelUtils.getNodeByElement(rootNode, method);
+						if (node instanceof MethodDeclaration
+								&& globalContext.getOffset() <= ((MethodDeclaration) node).getRef().start()) {
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=504497
+							// keep keyword if it appears before method name
+							return false;
 						}
 					}
 				} catch (ModelException e) {
