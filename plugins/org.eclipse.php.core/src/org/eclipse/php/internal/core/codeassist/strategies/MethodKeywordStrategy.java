@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
@@ -71,6 +72,25 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 								return false;
 							}
 						}
+					}
+				} catch (ModelException e) {
+				}
+				return true;
+			}
+		}
+		if ((keyword.context & PHPKeywords.CLASS_BODY) != 0) {
+			ICompletionContext context = getContext();
+			if (context instanceof GlobalMethodStatementContext) {
+				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;
+				IType type = globalContext.getEnclosingType();
+				IMethod method = globalContext.getEnclosingMethod();
+				try {
+					if (type != null && PHPFlags.isClass(type.getFlags()) && method != null
+							&& method.getNameRange() != null
+							&& globalContext.getOffset() <= method.getNameRange().getOffset()) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=504497
+						// keep keyword if it appears before method name
+						return false;
 					}
 				} catch (ModelException e) {
 				}

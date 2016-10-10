@@ -1,0 +1,16 @@
+--TEST--
+Bug 504497 - Invalid CA in class context
+--FILE--
+<?php
+namespace Composer;
+
+class TokenContainer
+{
+
+    pub|lic static function fromDocument()
+    {
+    }
+}
+?>
+--EXPECT--
+keyword(public)

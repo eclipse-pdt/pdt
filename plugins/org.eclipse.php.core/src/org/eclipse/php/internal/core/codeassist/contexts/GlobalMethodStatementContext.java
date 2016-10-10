@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 /**
  * This context represents state when staying in a method top level statement.
@@ -47,12 +48,22 @@ public class GlobalMethodStatementContext extends AbstractGlobalStatementContext
 		}
 		enclosingElement = enclosingMethod = (IMethod) enclosingElement;
 
-		// find the most outer enclosing type if exists
-		while (enclosingElement != null
-				&& !(enclosingElement instanceof IType && enclosingElement.getParent() instanceof ISourceModule)) {
-			enclosingElement = enclosingElement.getParent();
+		// find the most outer enclosing (non-namespace) type, if exists
+		try {
+			while (enclosingElement != null) {
+				if (enclosingElement instanceof ISourceModule) {
+					break;
+				}
+				if (enclosingElement instanceof IType) {
+					if (PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
+						break;
+					}
+					enclosingType = (IType) enclosingElement;
+				}
+				enclosingElement = enclosingElement.getParent();
+			}
+		} catch (ModelException e) {
 		}
-		enclosingType = (IType) enclosingElement;
 
 		return true;
 	}
