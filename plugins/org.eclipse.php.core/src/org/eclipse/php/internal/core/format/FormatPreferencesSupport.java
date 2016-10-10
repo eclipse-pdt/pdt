@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.preferences.*;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 /**
  * 
@@ -136,14 +136,13 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	private boolean verifyValidity(IDocument document) {
 		if (fLastDocument != document) {
-			DOMModelForPHP editorModel = null;
+			IStructuredModel editorModel = null;
 			try {
-				editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
+				editorModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 
 				// The PHPMergeViewer can be used outside Editor.
 				// E.g. the preview page.
-				// In those cases, the editroModel is null.
+				// In those cases, the editorModel is null.
 				// Do the check and return in null case.
 				if (editorModel == null) {
 					return false;
