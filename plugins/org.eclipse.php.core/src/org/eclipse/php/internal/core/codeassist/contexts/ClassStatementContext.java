@@ -53,6 +53,12 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 						'=') > -1;
 				return true;
 			}
+			if (enclosingElement instanceof IMethod) {
+				IMethod method = (IMethod) enclosingElement;
+				if (method.getNameRange() != null && offset < method.getNameRange().getOffset()) {
+					return true;
+				}
+			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		} catch (BadLocationException e) {
