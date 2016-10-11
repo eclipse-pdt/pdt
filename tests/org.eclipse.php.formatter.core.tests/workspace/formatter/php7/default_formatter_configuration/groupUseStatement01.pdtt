@@ -15,13 +15,13 @@ use const Test\Boo\ {FooX};
 --EXPECT--
 <?php
 use foo\math\ {
-	\Math, 
-	const PI, 
+	\Math,
+	const PI,
 	function sin as TestSin
 };
 
 use Test\Boo\ {
-	Foo, 
+	Foo,
 	FooX as MyAlias
 };
 

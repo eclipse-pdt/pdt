@@ -156,7 +156,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
 			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
-					throws Exception {
+			throws Exception {
 		this.phpVersion = phpVersion;
 		this.useShortTags = useShortTags;
 		this.document = document;
@@ -1521,7 +1521,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void initCommentIndentVariables(int offset, int startLine,
 			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
-					throws BadLocationException {
+			throws BadLocationException {
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
@@ -4793,6 +4793,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lineWrapPolicy = NO_LINE_WRAP;
 		int indentationGap = NO_LINE_WRAP_INDENT;
+		boolean spaceBeforeComma = this.preferences.insert_space_before_comma_in_global;
+		boolean spaceAfterComma = this.preferences.insert_space_after_comma_in_global;
 		boolean forceSplit = false;
 		if (useStatement.getNamespace() != null) {
 			insertSpace();
@@ -4806,12 +4808,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lineWrapPolicy = WRAP_ALL_ELEMENTS;
 			forceSplit = true;
 			indentationGap = 1;
+			spaceBeforeComma = false;
+			spaceAfterComma = false;
 		}
 
 		List<UseStatementPart> parts = useStatement.parts();
-		lastPosition = handleCommaList(parts.toArray(new ASTNode[parts.size()]), lastPosition,
-				this.preferences.insert_space_before_comma_in_global,
-				this.preferences.insert_space_after_comma_in_global, lineWrapPolicy, indentationGap, forceSplit);
+		lastPosition = handleCommaList(parts.toArray(new ASTNode[parts.size()]), lastPosition, spaceBeforeComma,
+				spaceAfterComma, lineWrapPolicy, indentationGap, forceSplit);
 
 		if (useStatement.getNamespace() != null) {
 			insertNewLine();
