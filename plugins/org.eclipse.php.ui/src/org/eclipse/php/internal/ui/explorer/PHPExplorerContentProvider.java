@@ -67,13 +67,17 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		implements IIncludepathListener /* , IResourceChangeListener */, IElementChangedListener {
-	public final static ArrayList<Object> EMPTY_LIST = new ArrayList<Object>();
+
 	StandardJavaScriptElementContentProvider jsContentProvider;
 
 	private static int[] SEARCH_IN = { IModelElement.TYPE, IModelElement.METHOD, IModelElement.FIELD };
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
+		init();
+	}
+
+	protected void init() {
 		IncludePathManager.getInstance().registerIncludepathListener(this);
 		setIsFlatLayout(false);
 		jsContentProvider = new StandardJavaScriptElementContentProvider(true);
@@ -341,20 +345,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return modelElement.getScriptProject().isOnBuildpath(modelElement);
 	}
 
-	/*
-	 * Finds the root info this path is included in. Returns null if not found.
-	 */
-	private boolean isInPath(IPath parentPath, IResource resouce) {
-		IPath path = resouce.getFullPath();
-		while (path != null && path.segmentCount() > 0) {
-			if (path.equals(parentPath)) {
-				return true;
-			}
-			path = path.removeLastSegments(1);
-		}
-		return false;
-	}
-
 	protected boolean supportsNamespaces(IScriptProject project) {
 		PHPVersion version = ProjectOptions.getPhpVersion(project.getProject());
 		return version.isGreaterThan(PHPVersion.PHP5);
@@ -452,18 +442,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return getChildren(((BuildpathEntry) entry).getPath());
 	}
 
-	private static IBuildpathEntry getBuildpathEntry(IScriptProject parent) {
-		IBuildpathEntry[] entries;
-		try {
-			entries = parent.getRawBuildpath();
-			if (entries != null && entries.length > 0) {
-				return entries[0];
-			}
-		} catch (ModelException e) {
-		}
-		return DLTKCore.newContainerEntry(parent.getPath());
-	}
-
 	public class IncludePathContainer extends ProjectFragmentContainer {
 		private IncludePath[] fIncludePath;
 
@@ -529,11 +507,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		resources.add(DLTKCore.create(project));
 
 		postRefresh(resources, true, runnables);
-		try {
-			this.executeRunnables(runnables);
-		} catch (NullPointerException ex) {
-			// workaround for bug 501274
-		}
+		executeRunnables(runnables);
 	}
 
 	@Override

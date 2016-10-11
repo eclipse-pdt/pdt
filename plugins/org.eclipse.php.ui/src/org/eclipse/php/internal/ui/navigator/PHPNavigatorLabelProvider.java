@@ -14,7 +14,12 @@ import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerLabelProvider;
 
 public class PHPNavigatorLabelProvider extends PHPExplorerLabelProvider {
+
 	public PHPNavigatorLabelProvider() {
-		super(new PHPExplorerContentProvider(true), null);
+		super(new PHPExplorerContentProvider(true) {
+			@Override
+			protected void init() {
+			}
+		}, null);
 	}
 }

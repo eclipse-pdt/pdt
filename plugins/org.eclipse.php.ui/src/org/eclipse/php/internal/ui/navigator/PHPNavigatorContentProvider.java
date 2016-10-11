@@ -110,6 +110,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void getPipelinedElements(Object input, Set currentElements) {
 	}
