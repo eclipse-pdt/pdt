@@ -72,6 +72,9 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 			}
 			if ((enclosingElement instanceof IMethod) || (enclosingElement instanceof IType
 					&& !PHPFlags.isNamespace(((IType) enclosingElement).getFlags()))) {
+				if (enclosingElement instanceof IType && isBeforeName(offset, (ISourceReference) enclosingElement)) {
+					return true;
+				}
 				return false;
 			}
 		} catch (ModelException e) {

@@ -1,0 +1,14 @@
+--TEST--
+Should propose 'class'
+--FILE--
+<?php
+namespace Composer;
+
+abstra|ct class Test
+{
+
+    public function test()
+    {}
+}
+--EXPECT--
+keyword(abstract)

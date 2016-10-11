@@ -49,8 +49,7 @@ public class GlobalMethodStatementContext extends AbstractGlobalStatementContext
 		}
 
 		try {
-			if (((IMethod) enclosingElement).getNameRange() != null
-					&& offset < ((IMethod) enclosingElement).getNameRange().getOffset()) {
+			if (isBeforeName(offset, (IMethod) enclosingElement)) {
 				return false;
 			}
 			enclosingMethod = (IMethod) enclosingElement;

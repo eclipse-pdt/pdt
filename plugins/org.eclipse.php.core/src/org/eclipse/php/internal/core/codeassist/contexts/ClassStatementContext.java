@@ -44,6 +44,9 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 				enclosingElement = enclosingElement.getParent();
 			}
 			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
+				if (isBeforeName(offset, (IType) enclosingElement)) {
+					return false;
+				}
 				if (offset > 0) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495022
 					offset--;
@@ -54,8 +57,7 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 				return true;
 			}
 			if (enclosingElement instanceof IMethod) {
-				IMethod method = (IMethod) enclosingElement;
-				if (method.getNameRange() != null && offset < method.getNameRange().getOffset()) {
+				if (isBeforeName(offset, (IMethod) enclosingElement)) {
 					return true;
 				}
 			}
