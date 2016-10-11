@@ -1,0 +1,15 @@
+--TEST--
+Test spaceship operator
+--FILE--
+<?php
+function g2() {
+	return    yield    				
+	from 		g1();
+}
+--EXPECT--
+<?php
+
+function g2()
+{
+    return yield from g1();
+}

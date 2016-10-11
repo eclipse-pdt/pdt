@@ -4805,7 +4805,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			lineWrapPolicy = WRAP_ALL_ELEMENTS;
 			forceSplit = true;
-			indentationGap = this.preferences.indentationSize;
+			indentationGap = 1;
 		}
 
 		List<UseStatementPart> parts = useStatement.parts();
