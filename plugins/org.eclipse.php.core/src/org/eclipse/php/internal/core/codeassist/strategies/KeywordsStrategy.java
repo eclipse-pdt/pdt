@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		ISourceModule sourceModule = concreteContext.getSourceModule();
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
+		boolean whithoutSpace = isInsertMode() && concreteContext.hasSpaceAtPosition(concreteContext.getOffset());
 		boolean withoutSemicolon = concreteContext.getNextWord().trim()
 				.equals(IPHPKeywordsInitializer.SEMICOLON_SUFFIX);
 		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject())
@@ -54,12 +55,21 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		for (KeywordData keyword : keywordsList) {
 			if (!filterKeyword(keyword)) {
 				String suffix = keyword.suffix;
-				if (withoutSemicolon && suffix.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
+				if (whithoutSpace && suffix.endsWith(IPHPKeywordsInitializer.WHITESPACE_SUFFIX)) {
+					suffix = suffix.substring(0, suffix.length() - 1);
+				} else if (withoutSemicolon && suffix.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
 					suffix = suffix.substring(0, suffix.length() - 1);
 				}
 				reporter.reportKeyword(keyword.name, suffix, replaceRange);
 			}
 		}
+	}
+
+	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
+		if (!isInsertMode()) {
+			return getReplacementRangeWithSpaceAtPrefixEnd(context);
+		}
+		return super.getReplacementRange(context);
 	}
 
 	/**

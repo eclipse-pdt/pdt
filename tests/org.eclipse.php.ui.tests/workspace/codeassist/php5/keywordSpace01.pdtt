@@ -1,0 +1,15 @@
+--TEST--
+Test overwrite mode
+Bug 504495 - CA adds additional space after keywords
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+abstr|act class Test {
+}
+?>
+--EXPECT--
+<?php
+abstract class Test {
+}
+?>

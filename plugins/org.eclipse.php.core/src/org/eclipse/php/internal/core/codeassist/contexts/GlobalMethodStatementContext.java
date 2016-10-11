@@ -53,7 +53,7 @@ public class GlobalMethodStatementContext extends AbstractGlobalStatementContext
 					&& offset < ((IMethod) enclosingElement).getNameRange().getOffset()) {
 				return false;
 			}
-			enclosingElement = enclosingMethod = (IMethod) enclosingElement;
+			enclosingMethod = (IMethod) enclosingElement;
 
 			// find the most outer enclosing (non-namespace) type, if exists
 			while (enclosingElement != null) {

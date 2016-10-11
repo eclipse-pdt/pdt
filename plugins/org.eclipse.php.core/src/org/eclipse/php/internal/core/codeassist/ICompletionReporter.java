@@ -130,7 +130,7 @@ public interface ICompletionReporter {
 	 * @param keyword
 	 *            PHP keyword string
 	 * @param suffix
-	 *            Suffix to uppend after completion will be inserted
+	 *            Suffix to append after completion will be inserted
 	 * @param replaceRange
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text

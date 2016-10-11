@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,27 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	 */
 	public ICompletionContext getContext() {
 		return context;
+	}
+
+	public ISourceRange getReplacementRangeWithSpaceAtPrefixEnd(ICompletionContext context)
+			throws BadLocationException {
+
+		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
+
+		int length = completionContext.getPrefix().length();
+
+		int start = completionContext.getOffset() - length;
+		int prefixEnd = completionContext.getPrefixEnd();
+
+		if (start + length < prefixEnd) {
+			length = prefixEnd - start;
+		}
+
+		if (completionContext.hasSpaceAtPosition(start + length)) {
+			return new SourceRange(start, length + 1);
+		}
+
+		return new SourceRange(start, length);
 	}
 
 	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
