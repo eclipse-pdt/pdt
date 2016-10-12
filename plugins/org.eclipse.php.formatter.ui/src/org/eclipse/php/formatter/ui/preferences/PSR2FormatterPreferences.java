@@ -169,6 +169,9 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.blank_line_before_field_declaration = 1;
 		preferences.blank_line_before_method_declaration = 1;
 
+		// control statements
+		preferences.control_statement_keep_else_if_on_same_line = true;
+
 		// comments
 
 		preferences.comment_clear_blank_lines_in_block_comment = false;
