@@ -11,3 +11,6 @@ class foo
 
 --EXPECT--
 keyword(array)
+type(ArrayObject)
+type(ArrayIterator)
+type(ArrayAccess)
