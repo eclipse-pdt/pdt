@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,7 +125,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new FunctionReturnTypeStrategy(context) };
 		}
 		if (contextClass == FunctionParameterValueContext.class) {
-			return new ICompletionStrategy[] { new GlobalConstantsStrategy(context),
+			return new ICompletionStrategy[] { new GlobalConstantsStrategy(context), new GlobalTypesStrategy(context),
 					new MethodParameterKeywordStrategy(context) };
 		}
 		if (contextClass == MethodNameContext.class) {
@@ -144,7 +144,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				}
 			} else if (((ClassStatementContext) context).isAssignment()) {
 				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context),
-						new GlobalConstantsStrategy(context) };
+						new GlobalConstantsStrategy(context), new GlobalTypesStrategy(context) };
 			} else {
 				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context),
 						// new GlobalConstantsStrategy(context),

@@ -1,7 +1,7 @@
 --TEST--
-Test Method Parameter with keywords, shoudl be self or parent only
+Test Method Parameter with keywords, should include self or parent
 --FILE--
 <? class myClass { const BAZ = 'test'; function foo($a = paRE|) {} } ?>
 --EXPECT--
+type(ParentIterator)
 keyword(parent)
-

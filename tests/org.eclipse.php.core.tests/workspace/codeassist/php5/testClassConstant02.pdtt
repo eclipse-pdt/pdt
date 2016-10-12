@@ -1,0 +1,16 @@
+--TEST--
+Bug 498386 - Add support for Class/Constants code assist inside constant expression
+--FILE--
+<?php
+class MyClass {
+	const myConst = 5;
+}
+class Foo {
+	const CS = MyClass::myConst;
+	private $bar = MyClass::my|;
+	public function test($s = MyClass::myConst) {
+	}
+}
+?>
+--EXPECT--
+field(myConst)
