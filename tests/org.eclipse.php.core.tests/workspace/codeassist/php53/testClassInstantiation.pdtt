@@ -1,0 +1,13 @@
+--TEST--
+Bug 505977 - CA doesn't show namespace on class instantiation
+--FILE--
+<?php
+namespace MyNamespace;
+
+class Test
+{
+}
+new \MyN|
+?>
+--EXPECT--
+type(MyNamespace)

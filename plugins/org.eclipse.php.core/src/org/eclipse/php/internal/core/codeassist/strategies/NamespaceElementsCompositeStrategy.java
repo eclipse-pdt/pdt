@@ -53,6 +53,7 @@ public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrate
 		if (isGlobalNamespace) {
 			if (hasNewClassContext) {
 				strategies.add(new ClassInstantiationStrategy(context));
+				strategies.add(new NamespacesStrategy(context));
 			} else if (hasNewExceptionClassContext) {
 				strategies.add(new ExceptionClassInstantiationStrategy(context));
 			} else if (hasInstanceOfContext) {
