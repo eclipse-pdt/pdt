@@ -23,6 +23,7 @@ import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.LayoutActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.GenerateBuildPathActionGroup;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.actions.GenerateActionGroup;
@@ -88,6 +89,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		for (int i = 0; i < groups.length; i++) {
 			if (groups[i] instanceof NewWizardsActionGroup) {
 				filtered.add(new PHPNewWizardsActionGroup(getPart().getSite()));
+			} else if (groups[i] instanceof GenerateBuildPathActionGroup) {
+				// ignore
 			} else if (!(groups[i] instanceof LayoutActionGroup || groups[i] instanceof GenerateActionGroup
 					|| groups[i] instanceof RefactorActionGroup || groups[i] instanceof CCPActionGroup)) {
 				// use pdt's NavigateActionGroup instead of dltk's
@@ -116,7 +119,6 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		}
 		phpRefactorActionGroup = new PHPRefactorActionGroup(getPart());
 		filtered.add(phpRefactorActionGroup);
-		filtered.add(new GenerateIncludePathActionGroup(getPart()));
 		filtered.add(new LibraryFolderActionGroup(getPart()));
 		filtered.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
 		filtered.add(new PHPFileOperationActionGroup(getPart()));

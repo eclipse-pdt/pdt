@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.navigator;
 
-import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.GenerateBuildPathActionGroup;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.php.internal.ui.actions.OpenViewActionGroup;
 import org.eclipse.ui.IActionBars;
@@ -23,7 +22,6 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 public class PHPNavigatorActionProvider extends CommonActionProvider {
 
 	private OpenViewActionGroup fOpenViewGroup;
-	private GenerateBuildPathActionGroup fBuildPathGroup;
 
 	private boolean fInViewPart = false;
 
@@ -31,7 +29,6 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 	public void fillActionBars(IActionBars actionBars) {
 		if (fInViewPart) {
 			fOpenViewGroup.fillActionBars(actionBars);
-			fBuildPathGroup.fillActionBars(actionBars);
 		}
 	}
 
@@ -39,7 +36,6 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 	public void fillContextMenu(IMenuManager menu) {
 		if (fInViewPart) {
 			fOpenViewGroup.fillContextMenu(menu);
-			fBuildPathGroup.fillContextMenu(menu);
 		}
 	}
 
@@ -56,7 +52,6 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 
 				fOpenViewGroup = new OpenViewActionGroup(viewPart);
 				fOpenViewGroup.containsOpenPropertiesAction(false);
-				fBuildPathGroup = new GenerateBuildPathActionGroup(viewPart);
 
 				fInViewPart = true;
 			}
@@ -68,7 +63,6 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 		super.setContext(context);
 		if (fInViewPart) {
 			fOpenViewGroup.setContext(context);
-			fBuildPathGroup.setContext(context);
 		}
 	}
 
@@ -76,7 +70,6 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 	public void dispose() {
 		if (fInViewPart) {
 			fOpenViewGroup.dispose();
-			fBuildPathGroup.dispose();
 		}
 		super.dispose();
 	}

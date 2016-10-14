@@ -46,6 +46,7 @@ import org.eclipse.ui.texteditor.IUpdate;
  * 
  * 
  */
+@Deprecated
 public class GenerateIncludePathActionGroup
 		extends ActionGroup /*
 							 * org.eclipse.dltk .internal.ui. wizards .buildpath
