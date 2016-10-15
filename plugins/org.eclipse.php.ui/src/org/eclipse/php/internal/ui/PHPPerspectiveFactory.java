@@ -66,7 +66,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
 		// Top left: Resource Navigator view and PHP Explorer
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
-		topLeft.addView(ID_EXPLORER);
+		topLeft.addView(IPageLayout.ID_PROJECT_EXPLORER);
 
 		// Bottom: Attributes view, Problem View, Task List, placeholder for
 		// Design View Log

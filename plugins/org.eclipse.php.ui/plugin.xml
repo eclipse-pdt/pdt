@@ -62,6 +62,8 @@
 			<viewShortcut id="org.eclipse.ui.views.ProblemView" />
 			<viewShortcut id="org.eclipse.ui.views.TaskList" />
 			<viewShortcut id="org.eclipse.dltk.ui.TypeHierarchy" />
+			<viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/>
+			<viewShortcut id="org.eclipse.php.ui.explorer"/>
 
 			<!-- Add other Web document wizards shortcuts to the New menu:-->
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard" />
@@ -79,8 +81,6 @@
 			<showInPart id="org.eclipse.egit.ui.RepositoriesView"/>
 			<showInPart id="org.eclipse.team.ui.GenericHistoryView"/>
 			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer"/>
-			
-			<viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/>
 
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation"/>
 
