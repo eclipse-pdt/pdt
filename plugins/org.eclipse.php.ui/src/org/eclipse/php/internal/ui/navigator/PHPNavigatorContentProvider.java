@@ -82,19 +82,6 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 		return super.hasChildren(element);
 	}
 
-	// @Override
-	// public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-	// {
-	// super.inputChanged(viewer, oldInput, findInputElement(newInput));
-	// }
-
-	// private Object findInputElement(Object newInput) {
-	// if (newInput instanceof IWorkspaceRoot) {
-	// return DLTKCore.create((IWorkspaceRoot) newInput);
-	// }
-	// return newInput;
-	// }
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void getPipelinedChildren(Object parent, Set currentChildren) {
@@ -113,6 +100,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void getPipelinedElements(Object input, Set currentElements) {
+		getPipelinedChildren(input, currentElements);
 	}
 
 	@Override
