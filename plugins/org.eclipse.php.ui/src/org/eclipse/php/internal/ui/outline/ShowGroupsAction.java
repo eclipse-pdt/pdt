@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
 @Deprecated
 public class ShowGroupsAction extends Action {
@@ -32,7 +31,6 @@ public class ShowGroupsAction extends Action {
 	public ShowGroupsAction(String label, TreeViewer treeViewer) {
 		super(label, AS_CHECK_BOX);
 		this.treeViewer = treeViewer;
-		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.png"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.ShowGroupsAction_1);
 
 		propertyChangeListener = new IPropertyChangeListener() {
