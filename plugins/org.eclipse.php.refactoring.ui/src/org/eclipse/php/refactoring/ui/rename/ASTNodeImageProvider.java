@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -274,7 +275,7 @@ public class ASTNodeImageProvider {
 		if (typeDeclaration.getType() == ASTNode.INTERFACE_DECLARATION) {
 			return PHPPluginImages.DESC_OBJS_INTERFACE;
 		}
-		return PHPPluginImages.DESC_OBJS_CLASS;
+		return DLTKPluginImages.DESC_OBJS_CLASS;
 	}
 
 }

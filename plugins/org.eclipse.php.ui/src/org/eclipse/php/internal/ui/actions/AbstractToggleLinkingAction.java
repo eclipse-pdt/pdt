@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
 @Deprecated
 public abstract class AbstractToggleLinkingAction extends Action {
@@ -25,7 +24,6 @@ public abstract class AbstractToggleLinkingAction extends Action {
 		super(PHPUIMessages.ToggleLinkingAction_label);
 		setDescription(PHPUIMessages.ToggleLinkingAction_description);
 		setToolTipText(PHPUIMessages.ToggleLinkingAction_tooltip);
-		PHPPluginImages.setLocalImageDescriptors(this, "synced.png"); //$NON-NLS-1$
 		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IPHPHelpContextIds.LINK_EDITOR_ACTION);
 	}
