@@ -413,7 +413,7 @@ top_statement_list:sList top_statement:statement
 	if(statement != null) {
 		if (!(statement instanceof NamespaceDeclaration) && sList.size() > 0) {
 			Statement lastStatement = (Statement) ((LinkedList) sList).getLast();
-			// EmptyStatement length >= 2 means it is "?>" (with eventually a newline),
+			// EmptyStatement length == 2 means it is "?>",
 			// equals to 1 means it is ";"
 			if (!(statement instanceof EmptyStatement && statement.getLength() >= 2) && lastStatement instanceof NamespaceDeclaration && !((NamespaceDeclaration)lastStatement).isBracketed()) {
 				((NamespaceDeclaration)lastStatement).addStatement(statement);

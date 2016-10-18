@@ -15,6 +15,6 @@ Test Variadic Parameter
 			</VariableReference>
 		</FormalParameter>
 	</PHPMethodDeclaration>
-	<EmptyStatement start="44" end="47">
+	<EmptyStatement start="44" end="46">
 	</EmptyStatement>
 </ModuleDeclaration>
