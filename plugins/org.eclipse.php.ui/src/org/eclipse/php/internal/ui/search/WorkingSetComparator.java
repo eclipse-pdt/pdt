@@ -17,6 +17,7 @@ import org.eclipse.ui.IWorkingSet;
 
 import com.ibm.icu.text.Collator;
 
+@Deprecated
 public class WorkingSetComparator implements Comparator {
 
 	private Collator fCollator = Collator.getInstance();

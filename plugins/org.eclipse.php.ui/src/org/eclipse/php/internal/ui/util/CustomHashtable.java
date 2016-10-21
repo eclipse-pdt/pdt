@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 
 import org.eclipse.jface.viewers.IElementComparer;
 
+@Deprecated
 final class CustomHashtable {
 
 	/**

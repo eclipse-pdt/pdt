@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchSite;
 /**
  * Include path removal action
  */
+@Deprecated
 public class RemoveFromIncludepathAction extends Action implements ISelectionChangedListener {
 
 	private List<Object> fSelectedElements;

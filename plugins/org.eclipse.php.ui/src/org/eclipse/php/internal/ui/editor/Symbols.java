@@ -19,6 +19,7 @@ package org.eclipse.php.internal.ui.editor;
  * 
  * @see Eclipse 3.0
  */
+@Deprecated
 interface Symbols {
 	int TokenEOF = -1;
 	int TokenLBRACE = 1;

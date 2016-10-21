@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.util;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IElementComparer;
 
+@Deprecated
 public final class TreePath {
 	private Object[] fSegments;
 	private int fHash;

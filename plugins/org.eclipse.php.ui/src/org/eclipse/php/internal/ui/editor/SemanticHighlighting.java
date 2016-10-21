@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Semantic highlighting
  */
+@Deprecated
 public abstract class SemanticHighlighting {
 
 	/**

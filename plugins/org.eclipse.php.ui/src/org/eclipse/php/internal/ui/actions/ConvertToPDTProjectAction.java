@@ -25,6 +25,7 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IWorkbenchSite;
 
+@Deprecated
 public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 
 	private static final String PHPECLIPSE_NATURE = "net.sourceforge.phpeclipse.phpnature"; //$NON-NLS-1$

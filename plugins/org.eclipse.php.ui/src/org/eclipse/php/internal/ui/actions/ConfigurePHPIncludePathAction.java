@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+@Deprecated
 public class ConfigurePHPIncludePathAction extends Action implements ISelectionChangedListener {
 
 	private final IWorkbenchSite fSite;

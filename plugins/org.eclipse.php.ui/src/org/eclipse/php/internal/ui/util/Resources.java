@@ -30,6 +30,7 @@ import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 
+@Deprecated
 public class Resources {
 
 	private Resources() {

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic.filter;
 
+@Deprecated
 public interface IResultHandler {
 	public void handleResult(Object result);
 }

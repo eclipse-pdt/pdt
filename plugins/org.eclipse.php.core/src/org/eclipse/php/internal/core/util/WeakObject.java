@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference;
  * @author eran
  * @version
  */
+@Deprecated
 public class WeakObject extends WeakReference {
 	/*
 	 * Hashcode of key, stored here since the key may be tossed by the GC

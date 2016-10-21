@@ -31,6 +31,7 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
  * @author Eden K., 2006
  * 
  */
+@Deprecated
 public abstract class WizardPageFactory extends WizardPage {
 
 	protected static String fPageName = "WizardName"; //$NON-NLS-1$

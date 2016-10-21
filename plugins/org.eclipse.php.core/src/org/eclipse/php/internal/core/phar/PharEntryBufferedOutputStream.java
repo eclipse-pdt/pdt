@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.phar;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@Deprecated
 public class PharEntryBufferedOutputStream extends OutputStream {
 
 	protected OutputStream innerStream;

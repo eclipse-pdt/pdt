@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.util;
 /**
  * A base class for all visitors. use the ACyclic Visitor.
  */
+@Deprecated
 public interface Visitor {
 
 }

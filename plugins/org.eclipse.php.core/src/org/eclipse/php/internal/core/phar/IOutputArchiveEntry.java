@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.phar;
 
 import org.eclipse.dltk.core.IArchiveEntry;
 
+@Deprecated
 public interface IOutputArchiveEntry extends IArchiveEntry {
 
 	void setMethod(int deflated);

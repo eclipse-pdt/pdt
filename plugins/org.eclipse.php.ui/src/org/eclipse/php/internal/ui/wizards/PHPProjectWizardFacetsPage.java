@@ -36,6 +36,7 @@ import org.eclipse.wst.common.project.facet.core.util.FilterEvent;
 import org.eclipse.wst.common.project.facet.core.util.IFilter;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 
+@Deprecated
 public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements IPHPProjectCreateWizardPage {
 
 	private PHPProjectWizardFirstPage fFirstPage;

@@ -43,6 +43,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
  * 
  * @since 2.0
  */
+@Deprecated
 public class OpenProjectAction extends SelectionDispatchAction implements IResourceChangeListener {
 
 	private static final int EMPTY_SELECTION = 1;
