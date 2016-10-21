@@ -12,6 +12,7 @@ package org.eclipse.php.composer.core;
 
 import java.util.StringTokenizer;
 
+@Deprecated
 public class PreferenceHelper {
 
 	private static final String DELIMITER = ";";

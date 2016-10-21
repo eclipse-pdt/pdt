@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 
+@Deprecated
 public class PHPIncludePathPage extends DataModelWizardPage
 		implements/* ISimpleWebModuleCreationDataModelProperties, */IStatusChangeListener {
 

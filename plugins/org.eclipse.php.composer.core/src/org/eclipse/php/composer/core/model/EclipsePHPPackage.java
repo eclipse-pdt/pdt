@@ -15,10 +15,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.composer.core.log.Logger;
-
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.objects.Autoload;
+import org.eclipse.php.composer.core.log.Logger;
 
 public class EclipsePHPPackage implements NamespaceResolverInterface, InstallableItem {
 	private final ComposerPackage phpPackage;

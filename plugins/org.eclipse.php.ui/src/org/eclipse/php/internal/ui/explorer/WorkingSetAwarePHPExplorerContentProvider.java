@@ -38,6 +38,7 @@ import org.eclipse.ui.IWorkingSetManager;
  * @author apeled, nirc
  * 
  */
+@Deprecated
 public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerContentProvider
 		implements IMultiElementTreeContentProvider {
 

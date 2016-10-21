@@ -10,16 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions.newprojectwizard;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.IFontProvider;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.LabelProviderChangedEvent;
-import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -28,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
  * @since 3.5
  *
  */
+@Deprecated
 public abstract class DelegatingLabelProviderWithTooltip extends ColumnLabelProvider {
 	/**
 	 * 

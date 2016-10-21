@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
  * @author seva
  * 
  */
+@Deprecated
 public class IncludeStringHack {
 
 	private static final Pattern DOUBLE_DOT_WITH_SLASH = Pattern.compile("\\.{2}([\\/])"); //$NON-NLS-1$

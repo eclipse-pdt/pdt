@@ -47,6 +47,7 @@ import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
  * @author apeled, ncohen
  * 
  */
+@Deprecated
 public class PHPExplorerPart extends ScriptExplorerPart {
 
 	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {

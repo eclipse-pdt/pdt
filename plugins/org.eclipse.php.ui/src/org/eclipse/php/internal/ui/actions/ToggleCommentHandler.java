@@ -35,7 +35,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * 
  * @author NirC, 2008
  */
-
+@Deprecated
 public class ToggleCommentHandler extends CommentHandler implements IHandler {
 	static class LinePosition {
 		public int line;

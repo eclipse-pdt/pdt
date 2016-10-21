@@ -22,6 +22,7 @@ import org.eclipse.php.internal.core.util.WeakObject;
  * @author erez
  * @version
  */
+@Deprecated
 public class WeakCollection implements Collection {
 
 	private Collection refrencedCollection;
