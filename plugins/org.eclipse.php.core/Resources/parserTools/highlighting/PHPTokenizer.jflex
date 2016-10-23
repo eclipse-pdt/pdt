@@ -283,8 +283,6 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 	fIsBlockingEnabled = false;
 	int searchStringLength = searchString.length();
 	int n = 0;
-	char lastCheckChar;
-	int i;
 	boolean same = false;
 	while (stillSearching) {
 		n = 0;
@@ -369,7 +367,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				
 				// safety check for array accesses (zzCurrentPos is the *last* character we can check against)
 				if(zzCurrentPos >= searchStringLength && zzCurrentPos <= zzEndRead) {
-					for(i = 0; i < searchStringLength; i++) {
+					for(int i = 0; i < searchStringLength; i++) {
 						if(same && fIsCaseSensitiveBlocking)
 							same = zzBuffer[i + zzCurrentPos - searchStringLength] == searchString.charAt(i);
 						else if(same && !fIsCaseSensitiveBlocking)
@@ -384,7 +382,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			if (same && requireTailSeparator && zzCurrentPos < zzEndRead) {
 				// Additional check for close tags to ensure that targetString="</script" doesn't match
 				// "</scriptS"
-				lastCheckChar = zzBuffer[zzCurrentPos];
+				char lastCheckChar = zzBuffer[zzCurrentPos];
 				// Succeed on "</script>" and "</script "
 				if(lastCheckChar == '>' || Character.isWhitespace(lastCheckChar))
 					stillSearching = false;
@@ -1387,6 +1385,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 
 //PHP MACROS
 WHITESPACE = [\n\r \t]
+NEWLINE = ("\r"|"\n"|"\r\n")
 //PHP_START = {WHITESPACE}*(<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
 PHP_START = <\?[Pp][Hh][P|p]{WHITESPACE}+
 //PIend = \?>
@@ -1647,7 +1646,7 @@ PHP_ASP_END=%>
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN; 
 	} else {
-		// removeing trailing whitespaces for the php open
+		// removing trailing whitespaces for the php open
 		String phpStart = yytext();
 		int i = phpStart.length() - 1;
 		while (i >= 0
@@ -1834,7 +1833,7 @@ PHP_ASP_END=%>
     return XML_TAG_ATTRIBUTE_VALUE;
 }
 /* the PI's close was found */
-<ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> {PIend} {
+<ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> \?> {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction end");//$NON-NLS-1$
 	fEmbeddedHint = UNDEFINED;
@@ -2064,7 +2063,7 @@ PHP_ASP_END=%>
 	return XML_TAG_OPEN;
 }
 
-<ST_PHP_CONTENT> {PIend} | {PHP_ASP_END} {
+<ST_PHP_CONTENT> {PIend}{NEWLINE}? | {PHP_ASP_END}{NEWLINE}? {
 	yybegin(fStateStack.pop());
 	return PHP_CLOSE;
 	

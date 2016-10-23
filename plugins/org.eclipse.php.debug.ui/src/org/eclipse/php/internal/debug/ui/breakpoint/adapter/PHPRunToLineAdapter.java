@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,6 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpElement;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.DefaultPHPBreakpointProvider;
@@ -169,14 +167,14 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				startOffset = line.getOffset();
 				endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
 
-				String lineText = idoc.get(startOffset, endOffset - startOffset).trim();
+				String lineText = idoc.get(startOffset, endOffset - startOffset).trim().toLowerCase();
 
 				// blank lines or lines with only an open PHP
 				// tags cannot have a breakpoint
 
-				if (lineText.equals("") || lineText.equals("<%") || //$NON-NLS-1$ //$NON-NLS-2$
-						lineText.equals("%>") || lineText.equals("<?php") || lineText.equals("?>") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						|| (lineText.trim()).startsWith("//")) { //$NON-NLS-1$
+				if (lineText.equals("") //$NON-NLS-1$
+						|| lineText.matches("^(<%|<[?](=|php)?|[?%]>)+$") //$NON-NLS-1$
+						|| lineText.startsWith("//")) { //$NON-NLS-1$
 					result = -1;
 				} else {
 
