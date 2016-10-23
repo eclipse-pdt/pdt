@@ -32,14 +32,14 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 import java_cup.runtime.Symbol;
 
@@ -244,9 +244,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public List<ReplaceEdit> getChanges() {
-		IRegion[] partitions = new IRegion[0];
+		IRegion[] regions = new IRegion[0];
 		try {
-			partitions = getAllSingleLine(TextUtilities.computePartitioning(document,
+			regions = getAllSingleLine(TextUtilities.computePartitioning(document,
 					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, 0, document.getLength(), false));
 		} catch (BadLocationException e) {
 			Logger.logException(e);
@@ -254,7 +254,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		List<ReplaceEdit> allChanges = Collections.unmodifiableList(changes);
 		List<ReplaceEdit> result = new ArrayList<ReplaceEdit>();
 		for (ReplaceEdit edit : allChanges) {
-			if (isInSingleLine(edit, partitions)) {
+			if (isInSingleLine(edit, regions)) {
 				continue;
 			}
 			result.add(edit);
@@ -5014,14 +5014,109 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	private List<IRegion> getAllPhpRegionsInContainer(int containerOffset, ITextRegionContainer container,
+			ITypedRegion partition) {
+		int start = partition.getOffset();
+		int end = partition.getOffset() + partition.getLength();
+		List<IRegion> result = new ArrayList<IRegion>();
+		Iterator<?> regionsIt = container.getRegions().iterator();
+		IRegion current = null;
+
+		while (regionsIt.hasNext()) {
+			ITextRegion region = (ITextRegion) regionsIt.next();
+			if (containerOffset + region.getStart() < start) {
+				continue;
+			}
+			if (containerOffset + region.getStart() + region.getLength() > end) {
+				break;
+			}
+			if (PHPRegionContext.PHP_OPEN.equals(region.getType())) {
+				if (current != null) {
+					result.add(current);
+				}
+				current = new Region(containerOffset + region.getStart(), region.getLength());
+			} else if (PHPRegionContext.PHP_CONTENT.equals(region.getType())) {
+				if (current != null) {
+					if (current.getOffset() + current.getLength() == containerOffset + region.getStart()) {
+						current = new Region(current.getOffset(), current.getLength() + region.getLength());
+					} else {
+						result.add(current);
+						current = new Region(containerOffset + region.getStart(), region.getLength());
+					}
+				} else {
+					current = new Region(containerOffset + region.getStart(), region.getLength());
+				}
+			} else if (PHPRegionContext.PHP_CLOSE.equals(region.getType())) {
+				if (current != null) {
+					if (current.getOffset() + current.getLength() == containerOffset + region.getStart()) {
+						result.add(new Region(current.getOffset(), current.getLength() + region.getLength()));
+					} else {
+						result.add(current);
+						result.add(new Region(containerOffset + region.getStart(), region.getLength()));
+					}
+				} else {
+					result.add(new Region(containerOffset + region.getStart(), region.getLength()));
+				}
+				current = null;
+			}
+		}
+		if (current != null) {
+			result.add(current);
+		}
+
+		return result;
+	}
+
+	/**
+	 * PHP Partitions can contain contiguous &lt;?php ?&gt; regions (see
+	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we
+	 * have to split them manually.
+	 * 
+	 * @param partition
+	 *            PHP Partition
+	 * @return individual &lt;?php ?&gt; regions
+	 */
+	private List<IRegion> getAllPhpRegionsInPhpPartition(ITypedRegion partition) {
+		assert document instanceof IStructuredDocument;
+		assert PHPPartitionTypes.PHP_DEFAULT.equals(partition.getType());
+
+		List<IRegion> regions = new ArrayList<IRegion>();
+		int offset = partition.getOffset();
+		int end = partition.getOffset() + partition.getLength();
+
+		while (offset < end) {
+			IStructuredDocumentRegion sdRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);
+			if (sdRegion == null) {
+				return regions;
+			}
+
+			ITextRegion phpScriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
+
+			if (phpScriptRegion instanceof ITextRegionContainer) {
+				regions.addAll(getAllPhpRegionsInContainer(sdRegion.getStartOffset() + phpScriptRegion.getStart(),
+						(ITextRegionContainer) phpScriptRegion, partition));
+				offset = sdRegion.getStartOffset() + phpScriptRegion.getStart() + phpScriptRegion.getLength();
+			} else {
+				// sdRegion contains opening PHP tag, PHP content and closing
+				// PHP tag
+				regions.add(new Region(sdRegion.getStartOffset(), sdRegion.getLength()));
+				offset = sdRegion.getStartOffset() + sdRegion.getLength();
+			}
+		}
+		return regions;
+	}
+
 	private IRegion[] getAllSingleLine(ITypedRegion[] partitions) throws BadLocationException {
 		List<IRegion> result = new ArrayList<IRegion>();
 		if (document instanceof IStructuredDocument) {
 			for (int i = 0; i < partitions.length; i++) {
-				ITypedRegion iTypedRegion = partitions[i];
-				if (PHPPartitionTypes.PHP_DEFAULT.equals(iTypedRegion.getType())
-						&& isPhpRegionOnSingleLine(iTypedRegion.getOffset(), iTypedRegion.getLength())) {
-					result.add(iTypedRegion);
+				ITypedRegion partition = partitions[i];
+				if (PHPPartitionTypes.PHP_DEFAULT.equals(partition.getType())) {
+					for (IRegion phpRegion : getAllPhpRegionsInPhpPartition(partition)) {
+						if (isPhpRegionOnSingleLine(phpRegion.getOffset(), phpRegion.getLength())) {
+							result.add(phpRegion);
+						}
+					}
 				}
 			}
 		}
@@ -5036,10 +5131,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418959
 		// Tag "?>" is optional to end a PHP region.
-		// If this tag is missing at the very end of a PHP region,
+		// If this tag is missing at the end of a PHP region,
 		// this region will not be considered as a single line.
-		return "?>".equals(document.get(start + length - endTagLength, //$NON-NLS-1$
-				endTagLength));
+		return document.get(start, length).trim().endsWith("?>"); //$NON-NLS-1$
 	}
 
 	public static String join(Collection<String> s, String delimiter) {

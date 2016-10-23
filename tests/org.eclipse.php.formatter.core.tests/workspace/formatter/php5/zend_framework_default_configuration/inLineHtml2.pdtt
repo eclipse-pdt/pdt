@@ -1,0 +1,19 @@
+--TEST--
+Test formatting PHP with HTML mixed code
+Bug 506159 - EmptyStatement nodes should not be located outside of php regions or partitions
+--FILE--
+<h1><?=$pageTitle  ?> <br> <font
+		size="<?=$pageTitle  ?><?=$pageTitle  ?>" color="#8080FF">PHP
+		Development Tools</font>
+</h1>
+<td <?=$pageTitle  ?>="left" width="60%">
+<?php echo $a  ?>
+<?php echo $a  ?>
+--EXPECT--
+<h1><?=$pageTitle  ?> <br> <font
+		size="<?=$pageTitle  ?><?=$pageTitle  ?>" color="#8080FF">PHP
+		Development Tools</font>
+</h1>
+<td <?=$pageTitle  ?>="left" width="60%">
+<?php echo $a  ?>
+<?php echo $a  ?>
