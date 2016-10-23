@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -193,12 +193,10 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 			int endOffset = 0;
 			try {
 				String partitionType = null;
-				IRegion line;
-				String linePart;
 				boolean phpPartitionVisited = false;
 
 				do {
-					line = idoc.getLineInformation(editorLineNumber - 1);
+					IRegion line = idoc.getLineInformation(editorLineNumber - 1);
 					startOffset = line.getOffset();
 					endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
 
@@ -211,9 +209,9 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 						if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 							phpPartitionVisited = true;
 							startOffset = partitions[i].getOffset();
-							linePart = idoc.get(startOffset, partitions[i].getLength()).trim();
-							if (Pattern.matches(".*[a-zA-Z0-0_]+.*", linePart) //$NON-NLS-1$
-									&& !linePart.trim().toLowerCase().equals("<?php")) { //$NON-NLS-1$
+							String linePart = idoc.get(startOffset, partitions[i].getLength()).trim().toLowerCase();
+							if (Pattern.matches(".*[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*.*", linePart) //$NON-NLS-1$
+									&& !linePart.equals("<?php")) { //$NON-NLS-1$
 								result = startOffset;
 								break;
 							}

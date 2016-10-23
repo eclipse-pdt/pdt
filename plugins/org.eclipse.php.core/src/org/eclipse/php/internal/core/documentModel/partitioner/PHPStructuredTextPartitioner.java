@@ -97,7 +97,9 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		return result;
 	}
 
-	@Override
+	/**
+	 * XXX : be warned that adjacent PHP regions will be merged together.
+	 */
 	public ITypedRegion[] computePartitioning(int offset, int length) {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=268930
 		ITypedRegion[] result = new ITypedRegion[0];
