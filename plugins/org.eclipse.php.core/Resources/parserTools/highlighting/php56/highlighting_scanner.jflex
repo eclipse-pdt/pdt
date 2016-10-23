@@ -712,17 +712,17 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 
-<ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>"{WHITESPACE}? {
+<ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>"{NEWLINE}? {
 	return PHP_CLOSETAG;
 }
-<ST_PHP_IN_SCRIPTING>"%>"{WHITESPACE}? {
+<ST_PHP_IN_SCRIPTING>"%>"{NEWLINE}? {
 	if (asp_tags) {
 	    return PHP_CLOSETAG;
 	}
 	return UNKNOWN_TOKEN;
 }
 
-<ST_PHP_LINE_COMMENT>"%>"{WHITESPACE}? {
+<ST_PHP_LINE_COMMENT>"%>"{NEWLINE}? {
 	if (asp_tags) {
 	    return PHP_CLOSETAG;
 	}
