@@ -668,23 +668,28 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 }
 
 
-<ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>"{WHITESPACE}? {
+<ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>" {
 	return PHP_CLOSETAG;
 }
-<ST_PHP_IN_SCRIPTING>"%>"{WHITESPACE}? {
+<ST_PHP_IN_SCRIPTING>"%>" {
 	if (asp_tags) {
 	    return PHP_CLOSETAG;
 	}
 	return UNKNOWN_TOKEN;
 }
 
-<ST_PHP_LINE_COMMENT>"%>"{WHITESPACE}? {
+<ST_PHP_LINE_COMMENT>"%>"{NEWLINE} {
+	yypushback(yylength() - 2);
 	if (asp_tags) {
 	    return PHP_CLOSETAG;
 	}
-	String text = yytext();
-	if(text.indexOf('\r') != -1 || text.indexOf('\n') != -1 ){
-		popState();
+	popState();
+	return PHP_LINE_COMMENT;
+}
+
+<ST_PHP_LINE_COMMENT>"%>" {
+	if (asp_tags) {
+	    return PHP_CLOSETAG;
 	}
 	return PHP_LINE_COMMENT;
 }

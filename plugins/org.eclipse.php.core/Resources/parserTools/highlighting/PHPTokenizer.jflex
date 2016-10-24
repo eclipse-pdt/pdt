@@ -283,8 +283,6 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 	fIsBlockingEnabled = false;
 	int searchStringLength = searchString.length();
 	int n = 0;
-	char lastCheckChar;
-	int i;
 	boolean same = false;
 	while (stillSearching) {
 		n = 0;
@@ -369,7 +367,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				
 				// safety check for array accesses (zzCurrentPos is the *last* character we can check against)
 				if(zzCurrentPos >= searchStringLength && zzCurrentPos <= zzEndRead) {
-					for(i = 0; i < searchStringLength; i++) {
+					for(int i = 0; i < searchStringLength; i++) {
 						if(same && fIsCaseSensitiveBlocking)
 							same = zzBuffer[i + zzCurrentPos - searchStringLength] == searchString.charAt(i);
 						else if(same && !fIsCaseSensitiveBlocking)
@@ -384,7 +382,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			if (same && requireTailSeparator && zzCurrentPos < zzEndRead) {
 				// Additional check for close tags to ensure that targetString="</script" doesn't match
 				// "</scriptS"
-				lastCheckChar = zzBuffer[zzCurrentPos];
+				char lastCheckChar = zzBuffer[zzCurrentPos];
 				// Succeed on "</script>" and "</script "
 				if(lastCheckChar == '>' || Character.isWhitespace(lastCheckChar))
 					stillSearching = false;
@@ -1834,7 +1832,7 @@ PHP_ASP_END=%>
     return XML_TAG_ATTRIBUTE_VALUE;
 }
 /* the PI's close was found */
-<ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> {PIend} {
+<ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> \?> {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction end");//$NON-NLS-1$
 	fEmbeddedHint = UNDEFINED;

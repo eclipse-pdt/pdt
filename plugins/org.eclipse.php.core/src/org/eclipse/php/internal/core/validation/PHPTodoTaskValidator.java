@@ -316,6 +316,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 		for (int z = 0; z < containerRegions.size(); z++) {
 			ITextRegion containerTextRegion = containerRegions.get(z);
 			if (containerTextRegion instanceof PhpScriptRegion) {
+				// XXX: there can be more than one PhpScriptRegion per
+				// ContextRegionContainer
 				return containerTextRegion;
 			}
 		}
