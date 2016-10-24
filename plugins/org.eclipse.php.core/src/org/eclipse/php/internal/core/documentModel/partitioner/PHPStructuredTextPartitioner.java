@@ -25,6 +25,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		return partition == null ? null : partition.getType();
 	}
 
+	@Override
 	public String getPartitionType(final ITextRegion region, final int offset) {
 		// if php region
 		if (isPhpRegion(region.getType())) {
@@ -38,6 +39,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	/**
 	 * to be abstract eventually
 	 */
+	@Override
 	protected void initLegalContentTypes() {
 		super.initLegalContentTypes();
 
@@ -74,10 +76,12 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		return false;
 	}
 
+	@Override
 	public IDocumentPartitioner newInstance() {
 		return new PHPStructuredTextPartitioner();
 	}
 
+	@Override
 	public ITypedRegion getPartition(int offset) {
 
 		// in case we are in the end of document
@@ -97,6 +101,9 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		return result;
 	}
 
+	/**
+	 * XXX: be warned that adjacent PHP regions will be merged together.
+	 */
 	@Override
 	public ITypedRegion[] computePartitioning(int offset, int length) {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=268930

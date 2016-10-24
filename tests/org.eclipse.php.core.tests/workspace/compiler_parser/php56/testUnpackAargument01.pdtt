@@ -5,7 +5,7 @@ Test Argument Unpacking
 ?>
 --EXPECT--
 <ModuleDeclaration start="0" end="32">
-	<ExpressionStatement start="6" end="29">
+	<ExpressionStatement start="6" end="28">
 		<PHPCallExpression start="6" end="25">
 			<FullyQualifiedReference start="6" end="13" name="prepare">
 			</FullyQualifiedReference>
