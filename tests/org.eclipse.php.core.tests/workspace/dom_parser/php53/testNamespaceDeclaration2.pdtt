@@ -17,8 +17,8 @@ namespace AB;
 			<Block start='20' length='0' isCurly='false'>
 			</Block>
 		</NamespaceDeclaration>
-		<EmptyStatement start='21' length='3'/>
-		<InLineHtml start='24' length='110'/>
+		<EmptyStatement start='21' length='2'/>
+		<InLineHtml start='23' length='111'/>
 	</Statements>
 	<Comments>
 	</Comments>

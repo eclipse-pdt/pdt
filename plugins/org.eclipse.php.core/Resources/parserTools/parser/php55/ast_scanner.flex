@@ -999,12 +999,12 @@ if (parsePHPDoc()) {
 //	yymore();
 }
 
-<ST_IN_SCRIPTING>("?>"|"</script"{WHITESPACE}*">"){NEWLINE}? {
+<ST_IN_SCRIPTING>("?>"|"</script"{WHITESPACE}*">") {
     yybegin(YYINITIAL);
     return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
 }
 
-<ST_IN_SCRIPTING>"%>"{NEWLINE}? {
+<ST_IN_SCRIPTING>"%>" {
     if (asp_tags) {
         yybegin(YYINITIAL);
         return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
