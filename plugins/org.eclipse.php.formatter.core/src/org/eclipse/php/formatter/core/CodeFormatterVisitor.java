@@ -156,7 +156,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
 			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
-			throws Exception {
+					throws Exception {
 		this.phpVersion = phpVersion;
 		this.useShortTags = useShortTags;
 		this.document = document;
@@ -1521,7 +1521,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void initCommentIndentVariables(int offset, int startLine,
 			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
-			throws BadLocationException {
+					throws BadLocationException {
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
@@ -3847,6 +3847,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public boolean visit(InfixExpression infixExpression) {
+		int oldIndentationLevel = indentationLevel;
+		boolean oldWasBinaryExpressionWrapped = wasBinaryExpressionWrapped;
 		boolean forceSplit = this.preferences.line_wrap_binary_expression_force_split;
 		if (binaryExpressionLineWrapPolicy == -1) {// not initialized
 			binaryExpressionLineWrapPolicy = this.preferences.line_wrap_binary_expression_line_wrap_policy;
@@ -3979,6 +3981,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			} else {
 				revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex);
 				binaryExpressionLineWrapPolicy = binaryExpressionRevertPolicy;
+				// undo everything
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=506488
+				binaryExpressionRevertPolicy = -1;
+				binaryExpressionSavedBuffer = null; // just by security
+				indentationLevel = oldIndentationLevel;
+				wasBinaryExpressionWrapped = oldWasBinaryExpressionWrapped;
 				infixExpression.accept(this);
 			}
 		} else {
