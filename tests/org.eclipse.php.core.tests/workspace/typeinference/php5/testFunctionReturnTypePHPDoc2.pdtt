@@ -4,9 +4,9 @@ Test Function Return Array Type PHP Doc
 prune: heavyGoals
 --FILE--
 <?php /**
-* @return array[B]|D
+* @return B[]|D
 */ function foo() { return new B(); }
 $a = foo();
-testFunctionReturnTypePHPDoc2($a[0]); ?>
+testFunctionReturnTypePHPDoc2($a); ?>
 --EXPECT--
-Ambigous <B>
+Ambigous <B, D>

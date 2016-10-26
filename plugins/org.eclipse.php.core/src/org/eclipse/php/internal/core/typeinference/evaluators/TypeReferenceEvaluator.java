@@ -231,7 +231,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			} else {
 				fullyQualifiedName = typeReference.getName();
 
-				className = PHPEvaluationUtils.extractArrayType(fullyQualifiedName);
+				className = PHPEvaluationUtils.removeArrayBrackets(fullyQualifiedName);
 				className = PHPModelUtils.extractElementName(className);
 			}
 			ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
