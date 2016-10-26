@@ -10,7 +10,7 @@ class MyObject1 {
 
 /**
  * From 'my_vars.php'
- * @var $liste3 array[MyObject1]
+ * @var MyObject1[] $liste3
  */
 $liste3[0]->|
 --EXPECT--

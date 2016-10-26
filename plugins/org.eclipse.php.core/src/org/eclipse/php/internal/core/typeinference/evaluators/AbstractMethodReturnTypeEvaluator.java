@@ -58,7 +58,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 			try {
 				methods.addAll(Arrays.asList(
 						PHPModelUtils.getFunctions(methodName, sourceModule, typedGoal.getOffset(), cache, null)));
-				for (int i = 0, size = methods.size(); i < size; i++) {
+				for (int i = 0; i < methods.size(); i++) {
 					methodTypes.add(null);
 				}
 			} catch (ModelException e) {

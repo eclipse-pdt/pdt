@@ -21,6 +21,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -499,8 +500,12 @@ public class CodeAssistUtils {
 					for (IEvaluatedType pType : ((AmbiguousType) evaluatedType).getPossibleTypes()) {
 						if (pType instanceof MultiTypeType) {
 							possibleTypes.addAll(((MultiTypeType) pType).getTypes());
+						} else {
+							possibleTypes.add(pType);
 						}
 					}
+				} else if (evaluatedType != UnknownType.INSTANCE) {
+					possibleTypes = Collections.singletonList(evaluatedType);
 				}
 				if (possibleTypes != null && possibleTypes.size() > 0) {
 					List<IType> tmpList = new LinkedList<IType>();

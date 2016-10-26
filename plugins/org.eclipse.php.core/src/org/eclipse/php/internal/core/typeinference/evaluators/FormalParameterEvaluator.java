@@ -121,7 +121,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 								for (TypeReference paramType : tag.getTypeReferences()) {
 									String typeName = paramType.getName();
 
-									typeName = PHPEvaluationUtils.extractArrayType(typeName);
+									typeName = PHPEvaluationUtils.removeArrayBrackets(typeName);
 
 									multiType.addType(
 											PHPClassType.fromTypeName(typeName, sourceModule, paramType.sourceStart()));
