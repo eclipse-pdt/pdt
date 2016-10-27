@@ -26,28 +26,20 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private static final String NEW = "new"; //$NON-NLS-1$
 
-	/*
-	 * @see
-	 * org.eclipse.jface.text.hyperlink.IHyperlinkDetector#detectHyperlinks(
-	 * org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion,
-	 * boolean)
-	 */
+	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		final PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility.getPHPEditor(textViewer);
-		if (editor == null) {
+		ITextEditor textEditor = getAdapter(ITextEditor.class);
+		if (region == null || !(textEditor instanceof PHPStructuredEditor)) {
 			return null;
 		}
 
-		if (region == null) {
-			return null;
-		}
-
-		IModelElement input = EditorUtility.getEditorInputModelElement(editor, false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(textEditor, false);
 		if (input == null) {
 			return null;
 		}
@@ -79,10 +71,10 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (elements != null && elements.length > 0) {
 				final IHyperlink link;
 				if (elements.length == 1) {
-					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(editor));
+					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(textEditor));
 				} else {
 					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements),
-							new OpenAction(editor));
+							new OpenAction(textEditor));
 				}
 				return new IHyperlink[] { link };
 			}

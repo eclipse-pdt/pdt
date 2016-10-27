@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.configuration;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -39,9 +40,9 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
-import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
@@ -404,9 +405,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
-	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
-		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
-		targets.put(ContentTypeIdForPHP.ContentTypeID_PHP, null);
+	protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map<String, IAdaptable> targets = super.getHyperlinkDetectorTargets(sourceViewer);
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			ITextEditor textEditor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
+			targets.put(PHPUiConstants.PHP_SOURCE_TYPE_ID, textEditor);
+		}
 		return targets;
 	}
 
