@@ -19,6 +19,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
 import org.eclipse.dltk.ui.actions.OpenAction;
 import org.eclipse.jface.text.IRegion;
@@ -29,19 +30,18 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 
+	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-
-		PHPStructuredEditor editor = EditorUtility.getPHPEditor(textViewer);
-		if (editor == null) {
+		ITextEditor textEditor = getAdapter(ITextEditor.class);
+		if (region == null || !(textEditor instanceof PHPStructuredEditor)) {
 			return null;
 		}
 
-		IModelElement input = org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInputModelElement(editor,
-				false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(textEditor, false);
 		if (!(input instanceof ISourceModule)) {
 			return null;
 		}
@@ -75,7 +75,7 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 					includeVisitor.getFile(), set);
 			if (includedSourceModule != null) {
 				return new IHyperlink[] { new ModelElementHyperlink(includeVisitor.getSelectRegion(),
-						includedSourceModule, new OpenAction(editor)) };
+						includedSourceModule, new OpenAction(textEditor)) };
 			}
 		}
 		return null;
