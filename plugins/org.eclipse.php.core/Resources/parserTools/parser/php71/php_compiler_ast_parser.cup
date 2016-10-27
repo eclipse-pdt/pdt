@@ -42,13 +42,13 @@ parser code {:
 		return PhpTokenNames.getName(token);
 	}
 
-    protected void report_expected_token_ids()
-    {
-        // XXX : really verbose, disable it completely for now
-        // if (DLTKCore.DEBUG) {
-        //     super.report_expected_token_ids();
-        // }
-    }
+	protected void report_expected_token_ids()
+	{
+	    // XXX : really verbose, disable it completely for now
+	    // if (DLTKCore.DEBUG) {
+	    //     super.report_expected_token_ids();
+	    // }
+	}
 :}
 
 /* terminals */
@@ -399,7 +399,7 @@ reserved_non_modifiers::=
 T_INCLUDE:v
 {:
 	RESULT = v;
-:}	  
+:}
 | T_INCLUDE_ONCE:v
 {:
 	RESULT = v;
@@ -718,7 +718,7 @@ namespace_statement_list:statementList top_statement:statement
 	// Ignore null statements
 	if(statement != null) {
 		statementList.add(statement);
-		if(statement.getKind() == ASTNodeKinds.AST_ERROR){
+		if(statement.getKind() == ASTNodeKinds.AST_ERROR) {
 			if(!parser.declarations.isEmpty()) {
 				Statement node = parser.declarations.peek();
 				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
@@ -749,7 +749,7 @@ namespace_name:name
 {:
 	if (name.getNamespace() == null) {
 		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
-	} 
+	}
 	name.getNamespace().setLocal(true);
 
 	RESULT = name;
@@ -774,7 +774,7 @@ top_statement_list:statementList top_statement:statement
 {:
 	if(statement != null) {
 		parser.addStatement(statement);
-		if(parser.pendingStatement != null){
+		if(parser.pendingStatement != null) {
 			parser.addStatement(parser.pendingStatement);
 			parser.pendingStatement = null;
 		}
@@ -921,7 +921,7 @@ use_type ::=
 T_FUNCTION
 {:
 	RESULT = UseStatement.T_FUNCTION;
-:} 
+:}
 | T_CONST
 {:
 	RESULT = UseStatement.T_CONST;
@@ -1059,7 +1059,7 @@ inner_statement_list:statementList inner_statement:statement
 	// Ignore null statements
 	if(statement != null) {
 		statementList.add(statement);
-		if(statement.getKind() == ASTNodeKinds.AST_ERROR){
+		if(statement.getKind() == ASTNodeKinds.AST_ERROR) {
 			if(!parser.declarations.isEmpty()) {
 				Statement node = parser.declarations.peek();
 				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
@@ -1143,8 +1143,8 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int start = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int start = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(start, iffalseright, innerCondition, trueStatement, falseStatement);
 	}
 	IfStatement ifStatement = new IfStatement(tokenleft, iffalseright, condition, iftrue, falseStatement);
@@ -1160,8 +1160,8 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int start = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int start = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(start, iffalseright, innerCondition, trueStatement, falseStatement);
 	}
 	Block block = new Block(colonleft, ifTrueStatementListright, ifTrueStatementList);
@@ -1497,7 +1497,7 @@ unticked_class_declaration_statement ::=
 class_entry_type:modifier T_STRING:className
 {:
 	ClassDeclaration classDeclaration;
-	if(modifier.modifier==org.eclipse.php.core.compiler.IPHPModifiers.AccTrait){
+	if(modifier.modifier==org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
 		classDeclaration = new TraitDeclaration(modifierleft ,classNameright,
 			classNameleft, classNameright, modifier.modifier, className, null, null,
 			new Block(classNameright,classNameright,null), modifier.doc);
@@ -1514,20 +1514,20 @@ extends_from:superClass errorOrNot implements_list:interfaces
 {:
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.peek();
 	if (superClass != null) {
-        if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
-           parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd()), String.format("A trait (%s) cannot extend a class. Traits can only be composed from other traits with the 'use' keyword", classDeclaration.getName()));
-        } else {
-          classDeclaration.setSuperClass(superClass);
-        }
-    }
+	    if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
+	       parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd()), String.format("A trait (%s) cannot extend a class. Traits can only be composed from other traits with the 'use' keyword", classDeclaration.getName()));
+	    } else {
+	      classDeclaration.setSuperClass(superClass);
+	    }
+	}
 	if (interfaces != null) {
-        if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait && interfaces.size() > 0) {
-        SimpleReference node = (SimpleReference) interfaces.get(0);
-           parser.reportError(new ASTError(node.sourceStart(), node.sourceEnd()), String.format("Cannot use '%s' as interface on '%s' since it is a Trait", node.getName(), classDeclaration.getName()));
-        } else {
-          classDeclaration.setInterfaceList(interfaces);
-        }
-    }
+	    if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait && interfaces.size() > 0) {
+	    SimpleReference node = (SimpleReference) interfaces.get(0);
+	       parser.reportError(new ASTError(node.sourceStart(), node.sourceEnd()), String.format("Cannot use '%s' as interface on '%s' since it is a Trait", node.getName(), classDeclaration.getName()));
+	    } else {
+	      classDeclaration.setInterfaceList(interfaces);
+	    }
+	}
 	classDeclaration.setEnd(interfacesright);
 	classDeclaration.getBody().setStart(interfacesright);
 	classDeclaration.getBody().setEnd(interfacesright);
@@ -1707,7 +1707,7 @@ variable:var
 | T_OPEN_RECT:start array_pair_list:list T_CLOSE_RECT:end
 {:
 	RESULT = new ArrayCreation(startleft, endright, list);
-:} 
+:}
 ;
 
 for_statement ::=
@@ -1933,10 +1933,10 @@ parameter:parameter
 	if(parameter != null) {
 		list.add(parameter);
 	}
-	
-	if (list.size() >= 2){
+
+	if (list.size() >= 2) {
 		FormalParameter previousFormalParameter = (FormalParameter)list.get(list.size() - 2);
-		if (previousFormalParameter.isVariadic()){
+		if (previousFormalParameter.isVariadic()) {
 			parser.reportError(new ASTError(previousFormalParameter.start(), previousFormalParameter.end()), "Only the last parameter can be variadic");
 		}
 	}
@@ -2041,15 +2041,15 @@ argument:argument
 | non_empty_argument_list:paramsList T_COMMA argument:var
 {:
 	paramsList.addNode(var);
-	if (paramsList.getChilds().size() > 1){
-    	ASTNode previousNode = paramsList.getChilds().get((paramsList.getChilds().size() - 2));
-    	if (!(var instanceof PrefixExpression) && previousNode instanceof PrefixExpression){
-    		PrefixExpression pExpression = (PrefixExpression) previousNode;
-    		if (pExpression.getOperatorType() == PrefixExpression.OP_UNPACK){
-    			parser.reportError(new ASTError(var.start(), var.end()), "Cannot use positional argument after argument unpacking");
-    		}
-    	}
-    }
+	if (paramsList.getChilds().size() > 1) {
+		ASTNode previousNode = paramsList.getChilds().get((paramsList.getChilds().size() - 2));
+		if (!(var instanceof PrefixExpression) && previousNode instanceof PrefixExpression) {
+			PrefixExpression pExpression = (PrefixExpression) previousNode;
+			if (pExpression.getOperatorType() == PrefixExpression.OP_UNPACK) {
+				parser.reportError(new ASTError(var.start(), var.end()), "Cannot use positional argument after argument unpacking");
+			}
+		}
+	}
 	RESULT = paramsList;
 :}
 ;
@@ -2204,7 +2204,7 @@ variable_modifiers:modifier property_list:decList T_SEMICOLON
 		ASTNode[] decl = (ASTNode[]) i.next();
 		ConstantReference constant = (ConstantReference)decl[0];
 		Expression initializer = (Expression)decl[1];
-		
+
 		int start = constant.sourceStart();
 		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
 		parser.addDeclarationStatement(new ConstantDeclaration(constant, initializer, modifierValue, sleft, end, docBlock));
@@ -2425,28 +2425,28 @@ trait_alias ::=
 non_empty_trait_modifiers ::=
 T_PUBLIC:value
 {:
-    RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value.doc);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value.doc);
 :}
 
 | T_PROTECTED:value
 {:
-    RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value.doc);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value.doc);
 :}
 
 | T_PRIVATE:value
 {:
-    RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value.doc);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value.doc);
 :}
 ;
 
 trait_modifiers ::=
-        /* empty */
+	    /* empty */
 {:
-    RESULT = null;
+	RESULT = null;
 :}
 | non_empty_trait_modifiers:modifier
 {:
-    RESULT = modifier;
+	RESULT = modifier;
 :}
 ;
 
@@ -2629,9 +2629,9 @@ class_const_list:list T_COMMA class_const_decl:decl
 ;
 
 class_const_decl::=
-identifier:constName T_EQUAL expr:expr 
+identifier:constName T_EQUAL expr:expr
 {:
-	RESULT = new ASTNode[] { new ConstantReference(constNameleft, constNameright, constName), expr}; 
+	RESULT = new ASTNode[] { new ConstantReference(constNameleft, constNameright, constName), expr};
 :}
 ;
 
@@ -3177,36 +3177,36 @@ T_VARIABLE:var
 function_call ::=
 name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    if(functionName.getClass() == SimpleReference.class){
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	if(functionName.getClass() == SimpleReference.class) {
 		RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,(SimpleReference)functionName, parameters);
-    }else{
+	}else{
 		RESULT = new ReflectionStaticMethodInvocation(classNameleft, endright, className, functionName, parameters);
-    }
-    
+	}
+
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    ReflectionStaticMethodInvocation functionInvocation = new ReflectionStaticMethodInvocation(classNameleft, endright, className, reflectionName, parameters);
-    RESULT = functionInvocation;
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	ReflectionStaticMethodInvocation functionInvocation = new ReflectionStaticMethodInvocation(classNameleft, endright, className, reflectionName, parameters);
+	RESULT = functionInvocation;
 :}
 
 | callable_expr:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    RESULT = new ReflectionCallExpression(reflectionNameleft, endright, null, reflectionName, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	RESULT = new ReflectionCallExpression(reflectionNameleft, endright, null, reflectionName, parameters);
 :}
 ;
 
@@ -3232,7 +3232,7 @@ namespace_name:name
 {:
 	if (name.getNamespace() == null) {
 		name.setNamespace(new NamespaceReference(nameleft, nameleft, null));
-	} 
+	}
 
 	name.getNamespace().setLocal(true);
 	RESULT = name;
@@ -3434,13 +3434,13 @@ variable:var
 ;
 
 variable ::=
-callable_variable:var 
+callable_variable:var
 {:
 	RESULT = var;
 :}
 | static_member:s
 {:
-    RESULT = s;
+	RESULT = s;
 :}
 
 | dereferencable:dispatch T_OBJECT_OPERATOR property_name:property
@@ -3493,12 +3493,12 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 :}
 
 | T_CONSTANT_ENCAPSED_STRING:scalar
-{: 
+{:
 	RESULT = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
 :}
 ;
 
-callable_variable::= 
+callable_variable::=
 simple_variable:var
 {:
 	RESULT = var;
@@ -3538,7 +3538,7 @@ simple_variable:var
 :}
 | function_call:c
 {:
-    RESULT = c;
+	RESULT = c;
 :}
 ;
 
@@ -3640,7 +3640,7 @@ identifier:varName
 	RESULT = new ReflectionVariableReference(startleft, endright, expr);
 :}
 
-| simple_variable:v 
+| simple_variable:v
 {:
 	RESULT = v;
 :}
@@ -3657,7 +3657,7 @@ string_st:varName
 	RESULT = new ReflectionVariableReference(startleft, endright, expr);
 :}
 
-| simple_variable:v 
+| simple_variable:v
 {:
 	RESULT = v;
 :}
@@ -3686,7 +3686,7 @@ non_empty_array_pair_list ::=
 possible_array_pair:pair
 {:
 	List list = new LinkedList();
-	if (pair != null) { 
+	if (pair != null) {
 		list.add(pair);
 	}
 	RESULT = list;
@@ -3694,7 +3694,7 @@ possible_array_pair:pair
 
 | non_empty_array_pair_list:list T_COMMA possible_array_pair:pair
 {:
-	if (pair != null) { 
+	if (pair != null) {
 		list.add(pair);
 	}
 	RESULT = list;

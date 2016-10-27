@@ -35,7 +35,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 %function next_token
 %type java_cup.runtime.Symbol
 %eofval{
-    return createSymbol(sym.EOF);
+	return createSymbol(sym.EOF);
 %eofval}
 %eofclose
 
@@ -61,16 +61,16 @@ import org.eclipse.php.internal.core.PHPVersion;
 	private final LinkedList commentList = new LinkedList();
 	private String heredoc = null;
 	private String nowdoc = null;
-    private boolean asp_tags = false;
-    private boolean short_tags_allowed = true;
-    private StateStack stack = new StateStack();
-    protected int commentStartPosition;
+	private boolean asp_tags = false;
+	private boolean short_tags_allowed = true;
+	private StateStack stack = new StateStack();
+	protected int commentStartPosition;
 
 	private AST ast;
 
-    public void setAST(AST ast) {
-    	this.ast = ast;
-    }
+	public void setAST(AST ast) {
+		this.ast = ast;
+	}
 
 	public PHPVersion getPHPVersion() {
 		return PHPVersion.PHP5_6;
@@ -110,64 +110,64 @@ import org.eclipse.php.internal.core.PHPVersion;
 		short_tags_allowed = useShortTags;
 	}
 
-    private void pushState(int state) {
-        stack.pushStack(zzLexicalState);
-        yybegin(state);
-    }
+	private void pushState(int state) {
+	    stack.pushStack(zzLexicalState);
+	    yybegin(state);
+	}
 
-    private void popState() {
-        yybegin(stack.popStack());
-    }
+	private void popState() {
+	    yybegin(stack.popStack());
+	}
 
-    public int getCurrentLine() {
-        return yyline;
-    }
+	public int getCurrentLine() {
+	    return yyline;
+	}
 
-    protected int getTokenStartPosition() {
-        return zzStartRead - _zzPushbackPos;
-    }
+	protected int getTokenStartPosition() {
+	    return zzStartRead - _zzPushbackPos;
+	}
 
-    protected int getTokenLength() {
-        return zzMarkedPos - zzStartRead;
-    }
+	protected int getTokenLength() {
+	    return zzMarkedPos - zzStartRead;
+	}
 
-    public int getLength() {
-        return zzEndRead - _zzPushbackPos;
-    }
+	public int getLength() {
+	    return zzEndRead - _zzPushbackPos;
+	}
 
-    private void handleCommentStart() {
+	private void handleCommentStart() {
 		commentStartPosition = getTokenStartPosition();
 	}
 
 	private void handleLineCommentEnd() {
-         addComment(Comment.TYPE_SINGLE_LINE);
-    }
+	     addComment(Comment.TYPE_SINGLE_LINE);
+	}
 
-    private void handleMultilineCommentEnd() {
-    	addComment(Comment.TYPE_MULTILINE);
-    }
+	private void handleMultilineCommentEnd() {
+		addComment(Comment.TYPE_MULTILINE);
+	}
 
-    private void handlePHPDocEnd() {
+	private void handlePHPDocEnd() {
 		addComment(Comment.TYPE_PHPDOC);
-    }
+	}
 
-    protected void handleVarComment() {
-    	commentStartPosition = getTokenStartPosition();
-    	addComment(Comment.TYPE_MULTILINE);
-    }
+	protected void handleVarComment() {
+		commentStartPosition = getTokenStartPosition();
+		addComment(Comment.TYPE_MULTILINE);
+	}
 
-    private Symbol createFullSymbol(int symbolNumber) {
-        Symbol symbol = createSymbol(symbolNumber);
-        symbol.value = yytext();
-        return symbol;
-    }
+	private Symbol createFullSymbol(int symbolNumber) {
+	    Symbol symbol = createSymbol(symbolNumber);
+	    symbol.value = yytext();
+	    return symbol;
+	}
 
-    protected Symbol createSymbol(int symbolNumber) {
-        int leftPosition = getTokenStartPosition();
-        return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
-    }
+	protected Symbol createSymbol(int symbolNumber) {
+	    int leftPosition = getTokenStartPosition();
+	    return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
+	}
 
-	public int[] getParamenters() {
+	public int[] getParameters() {
 		return new int[] { zzMarkedPos, _zzPushbackPos, zzCurrentPos,
 				zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
 				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0, zzFinalHighSurrogate };
@@ -176,7 +176,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 	/**
 	 * Parses a PHPDoc block comment. Underlying reader (zzReader) can be closed
 	 * in the process (when EOF is reached).
-	 * 
+	 *
 	 * @return true when PHPDoc was parsed, false otherwise (false also implies
 	 *         that underlying lexer was unavailable)
 	 */
@@ -186,11 +186,11 @@ import org.eclipse.php.internal.core.PHPVersion;
 			return false;
 		}
 		yypushback(zzMarkedPos - zzStartRead);
-		int[] parameters = getParamenters();
+		int[] parameters = getParameters();
 		documentorLexer.reset(zzReader, zzBuffer, parameters);
 		Object phpDocBlock = documentorLexer.parse();
 		commentList.add(phpDocBlock);
-		reset(zzReader, documentorLexer.getBuffer(), documentorLexer.getParamenters());
+		reset(zzReader, documentorLexer.getBuffer(), documentorLexer.getParameters());
 		return true;
 	}
 
@@ -206,7 +206,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 	 * by the lexical rules calling
 	 * {@link #reset(java.io.Reader, char[], int[])}. Also be careful that those
 	 * internal variables could change from one version of JFlex to another.
-	 * 
+	 *
 	 * @param reader
 	 * @param buffer
 	 * @param parameters
@@ -384,7 +384,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"goto" {
- 	return createSymbol(ParserConstants.T_GOTO);
+	return createSymbol(ParserConstants.T_GOTO);
 }
 
 <ST_IN_SCRIPTING>"echo" {
@@ -408,11 +408,11 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"insteadof" {
-        return createSymbol(ParserConstants.T_INSTEADOF);
+	    return createSymbol(ParserConstants.T_INSTEADOF);
 }
 
 <ST_IN_SCRIPTING>"callable" {
- return createSymbol(ParserConstants.T_CALLABLE);
+	return createSymbol(ParserConstants.T_CALLABLE);
 }
 
 <ST_IN_SCRIPTING>"extends" {
@@ -424,8 +424,8 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"->" {
-    pushState(ST_LOOKING_FOR_PROPERTY);
-    return createSymbol(ParserConstants.T_OBJECT_OPERATOR);
+	pushState(ST_LOOKING_FOR_PROPERTY);
+	return createSymbol(ParserConstants.T_OBJECT_OPERATOR);
 }
 
 <ST_IN_SCRIPTING,ST_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
@@ -436,13 +436,13 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_LOOKING_FOR_PROPERTY>{LABEL} {
-    popState();
-    return createFullSymbol(ParserConstants.T_STRING);
+	popState();
+	return createFullSymbol(ParserConstants.T_STRING);
 }
 
 <ST_LOOKING_FOR_PROPERTY>{ANY_CHAR} {
-    yypushback(yylength());
-    popState();
+	yypushback(yylength());
+	popState();
 }
 
 <ST_IN_SCRIPTING>"::" {
@@ -518,7 +518,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"namespace" {
- 	return createSymbol(ParserConstants.T_NAMESPACE);
+	return createSymbol(ParserConstants.T_NAMESPACE);
 }
 
 <ST_IN_SCRIPTING>"use" {
@@ -694,62 +694,62 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 
 // TOKENS
 <ST_IN_SCRIPTING> {
-    ";"                     {return createSymbol(ParserConstants.T_SEMICOLON);}
-    ":"                     {return createSymbol(ParserConstants.T_NEKUDOTAIM);}
-    ","                     {return createSymbol(ParserConstants.T_COMMA);}
-    "."                     {return createSymbol(ParserConstants.T_NEKUDA);}
-    "["                     {return createSymbol(ParserConstants.T_OPEN_RECT);}
-    "]"                     {return createSymbol(ParserConstants.T_CLOSE_RECT);}
-    "("                     {return createSymbol(ParserConstants.T_OPEN_PARENTHESE);}
-    ")"                     {return createSymbol(ParserConstants.T_CLOSE_PARENTHESE);}
-    "|"                     {return createSymbol(ParserConstants.T_OR);}
-    "^"                     {return createSymbol(ParserConstants.T_KOVA);}
-    "&"                     {return createSymbol(ParserConstants.T_REFERENCE);}
-    "+"                     {return createSymbol(ParserConstants.T_PLUS);}
-    "-"                     {return createSymbol(ParserConstants.T_MINUS);}
-    "/"                     {return createSymbol(ParserConstants.T_DIV);}
-    "**"                    {return createSymbol(ParserConstants.T_POW);}
-    "*"                     {return createSymbol(ParserConstants.T_TIMES);}
-    "="                     {return createSymbol(ParserConstants.T_EQUAL);}
-    "%"                     {return createSymbol(ParserConstants.T_PRECENT);}
-    "!"                     {return createSymbol(ParserConstants.T_NOT);}
-    "~"                     {return createSymbol(ParserConstants.T_TILDA);}
-    "$"                     {return createSymbol(ParserConstants.T_DOLLAR);}
-    "<"                     {return createSymbol(ParserConstants.T_RGREATER);}
-    ">"                     {return createSymbol(ParserConstants.T_LGREATER);}
-    "?"                     {return createSymbol(ParserConstants.T_QUESTION_MARK);}
-    "@"                     {return createSymbol(ParserConstants.T_AT);}
+	";"                     {return createSymbol(ParserConstants.T_SEMICOLON);}
+	":"                     {return createSymbol(ParserConstants.T_NEKUDOTAIM);}
+	","                     {return createSymbol(ParserConstants.T_COMMA);}
+	"."                     {return createSymbol(ParserConstants.T_NEKUDA);}
+	"["                     {return createSymbol(ParserConstants.T_OPEN_RECT);}
+	"]"                     {return createSymbol(ParserConstants.T_CLOSE_RECT);}
+	"("                     {return createSymbol(ParserConstants.T_OPEN_PARENTHESE);}
+	")"                     {return createSymbol(ParserConstants.T_CLOSE_PARENTHESE);}
+	"|"                     {return createSymbol(ParserConstants.T_OR);}
+	"^"                     {return createSymbol(ParserConstants.T_KOVA);}
+	"&"                     {return createSymbol(ParserConstants.T_REFERENCE);}
+	"+"                     {return createSymbol(ParserConstants.T_PLUS);}
+	"-"                     {return createSymbol(ParserConstants.T_MINUS);}
+	"/"                     {return createSymbol(ParserConstants.T_DIV);}
+	"**"                    {return createSymbol(ParserConstants.T_POW);}
+	"*"                     {return createSymbol(ParserConstants.T_TIMES);}
+	"="                     {return createSymbol(ParserConstants.T_EQUAL);}
+	"%"                     {return createSymbol(ParserConstants.T_PRECENT);}
+	"!"                     {return createSymbol(ParserConstants.T_NOT);}
+	"~"                     {return createSymbol(ParserConstants.T_TILDA);}
+	"$"                     {return createSymbol(ParserConstants.T_DOLLAR);}
+	"<"                     {return createSymbol(ParserConstants.T_RGREATER);}
+	">"                     {return createSymbol(ParserConstants.T_LGREATER);}
+	"?"                     {return createSymbol(ParserConstants.T_QUESTION_MARK);}
+	"@"                     {return createSymbol(ParserConstants.T_AT);}
 }
 
 <ST_IN_SCRIPTING>"{" {
-    pushState(ST_IN_SCRIPTING);
-    return createSymbol(ParserConstants.T_CURLY_OPEN);
+	pushState(ST_IN_SCRIPTING);
+	return createSymbol(ParserConstants.T_CURLY_OPEN);
 
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"${" {
-    pushState(ST_LOOKING_FOR_VARNAME);
-    return createSymbol(ParserConstants.T_DOLLAR_OPEN_CURLY_BRACES);
+	pushState(ST_LOOKING_FOR_VARNAME);
+	return createSymbol(ParserConstants.T_DOLLAR_OPEN_CURLY_BRACES);
 }
 
 <ST_IN_SCRIPTING>"}" {
 	/* This is a temporary fix which is dependant on flex and it's implementation */
-    if (!stack.isEmpty()) {
-        popState();
-    }
-    return createSymbol(ParserConstants.T_CURLY_CLOSE);
+	if (!stack.isEmpty()) {
+	    popState();
+	}
+	return createSymbol(ParserConstants.T_CURLY_CLOSE);
 }
 
 <ST_LOOKING_FOR_VARNAME>{LABEL} {
-    popState();
-    pushState(ST_IN_SCRIPTING);
-    return createFullSymbol(ParserConstants.T_STRING_VARNAME);
+	popState();
+	pushState(ST_IN_SCRIPTING);
+	return createFullSymbol(ParserConstants.T_STRING_VARNAME);
 }
 
 <ST_LOOKING_FOR_VARNAME>{ANY_CHAR} {
-    yypushback(yylength());
-    popState();
-    pushState(ST_IN_SCRIPTING);
+	yypushback(yylength());
+	popState();
+	pushState(ST_IN_SCRIPTING);
 }
 
 <ST_IN_SCRIPTING>{BNUM} {
@@ -757,11 +757,11 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>{LNUM} {
-    return createFullSymbol(ParserConstants.T_LNUMBER);
+	return createFullSymbol(ParserConstants.T_LNUMBER);
 }
 
 <ST_IN_SCRIPTING>{HNUM} {
-    return createFullSymbol(ParserConstants.T_DNUMBER);
+	return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
 <ST_VAR_OFFSET>[0]|([1-9][0-9]*) { /* Offset could be treated as a long */
@@ -769,35 +769,35 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_VAR_OFFSET>{LNUM}|{HNUM}|{BNUM} { /* treat numbers (almost) as strings inside encapsulated strings */
-    return createFullSymbol(ParserConstants.T_NUM_STRING);
+	return createFullSymbol(ParserConstants.T_NUM_STRING);
 }
 
 <ST_IN_SCRIPTING>{DNUM}|{EXPONENT_DNUM} {
-    return createFullSymbol(ParserConstants.T_DNUMBER);
+	return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
 <ST_IN_SCRIPTING>"__CLASS__" {
-    return createSymbol(ParserConstants.T_CLASS_C);
+	return createSymbol(ParserConstants.T_CLASS_C);
 }
 
 <ST_IN_SCRIPTING>"__FUNCTION__" {
-    return createSymbol(ParserConstants.T_FUNC_C);
+	return createSymbol(ParserConstants.T_FUNC_C);
 }
 
 <ST_IN_SCRIPTING>"__METHOD__" {
-    return createSymbol(ParserConstants.T_METHOD_C);
+	return createSymbol(ParserConstants.T_METHOD_C);
 }
 
 <ST_IN_SCRIPTING>"__LINE__" {
-    return createSymbol(ParserConstants.T_LINE);
+	return createSymbol(ParserConstants.T_LINE);
 }
 
 <ST_IN_SCRIPTING>"__FILE__" {
-    return createSymbol(ParserConstants.T_FILE);
+	return createSymbol(ParserConstants.T_FILE);
 }
 
 <ST_IN_SCRIPTING>"__DIR__" {
- 	return createSymbol(ParserConstants.T_DIR);
+	return createSymbol(ParserConstants.T_DIR);
 }
 
 <ST_IN_SCRIPTING>"__NAMESPACE__" {
@@ -805,45 +805,45 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <YYINITIAL>(([^<]|"<"[^?%s<])+)|"<s"|"<" {
-    return createSymbol(ParserConstants.T_INLINE_HTML);
+	return createSymbol(ParserConstants.T_INLINE_HTML);
 }
 
 <YYINITIAL>"<?"|"<script"{WHITESPACE}+"language"{WHITESPACE}*"="{WHITESPACE}*("php"|"\"php\""|"\'php\'"){WHITESPACE}*">" {
-    if (short_tags_allowed || yylength()>2) { /* yyleng>2 means it's not <? but <script> */
-        yybegin(ST_IN_SCRIPTING);
-        //return T_OPEN_TAG;
-    } else {
-        return createSymbol(ParserConstants.T_INLINE_HTML);
-    }
+	if (short_tags_allowed || yylength()>2) { /* yyleng>2 means it's not <? but <script> */
+	    yybegin(ST_IN_SCRIPTING);
+	    //return T_OPEN_TAG;
+	} else {
+	    return createSymbol(ParserConstants.T_INLINE_HTML);
+	}
 }
 
 <YYINITIAL>"<%="|"<?=" {
-    String text = yytext();
-    if ((text.charAt(1)=='%' && asp_tags)
-        || (text.charAt(1)=='?')) {
-        yybegin(ST_IN_SCRIPTING);
-        return createSymbol(ParserConstants.T_OPEN_TAG_WITH_ECHO);
-    } else {
-        return createSymbol(ParserConstants.T_INLINE_HTML);
-    }
+	String text = yytext();
+	if ((text.charAt(1)=='%' && asp_tags)
+	    || (text.charAt(1)=='?')) {
+	    yybegin(ST_IN_SCRIPTING);
+	    return createSymbol(ParserConstants.T_OPEN_TAG_WITH_ECHO);
+	} else {
+	    return createSymbol(ParserConstants.T_INLINE_HTML);
+	}
 }
 
 <YYINITIAL>"<%" {
-    if (asp_tags) {
-        yybegin(ST_IN_SCRIPTING);
+	if (asp_tags) {
+	    yybegin(ST_IN_SCRIPTING);
 		//return T_OPEN_TAG;
-    } else {
-        return createSymbol(ParserConstants.T_INLINE_HTML);
-    }
+	} else {
+	    return createSymbol(ParserConstants.T_INLINE_HTML);
+	}
 }
 
 <YYINITIAL>"<?php"([ \t]|{NEWLINE}) {
-    yybegin(ST_IN_SCRIPTING);
+	yybegin(ST_IN_SCRIPTING);
 	//return T_OPEN_TAG;
 }
 
 <ST_IN_SCRIPTING,ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE,ST_VAR_OFFSET>"$"{LABEL} {
-    return createFullSymbol(ParserConstants.T_VARIABLE);
+	return createFullSymbol(ParserConstants.T_VARIABLE);
 }
 
 <ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE>"$"{LABEL}"->"[a-zA-Z_\u007f-\uffff] {
@@ -865,35 +865,35 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 
 //this is instead {TOKENS}|[{}"`]
 <ST_VAR_OFFSET> {
-    ";"                     {return createSymbol(ParserConstants.T_SEMICOLON);}
-    ":"                     {return createSymbol(ParserConstants.T_NEKUDOTAIM);}
-    ","                     {return createSymbol(ParserConstants.T_COMMA);}
-    "."                     {return createSymbol(ParserConstants.T_NEKUDA);}
-    "["                     {return createSymbol(ParserConstants.T_OPEN_RECT);}
+	";"                     {return createSymbol(ParserConstants.T_SEMICOLON);}
+	":"                     {return createSymbol(ParserConstants.T_NEKUDOTAIM);}
+	","                     {return createSymbol(ParserConstants.T_COMMA);}
+	"."                     {return createSymbol(ParserConstants.T_NEKUDA);}
+	"["                     {return createSymbol(ParserConstants.T_OPEN_RECT);}
 //    "]"                     {return createSymbol(ParserConstants.T_CLOSE_RECT);} //we dont need this line because the rule before deals with it
-    "("                     {return createSymbol(ParserConstants.T_OPEN_PARENTHESE);}
-    ")"                     {return createSymbol(ParserConstants.T_CLOSE_PARENTHESE);}
-    "|"                     {return createSymbol(ParserConstants.T_OR);}
-    "^"                     {return createSymbol(ParserConstants.T_KOVA);}
-    "&"                     {return createSymbol(ParserConstants.T_REFERENCE);}
-    "+"                     {return createSymbol(ParserConstants.T_PLUS);}
-    "-"                     {return createSymbol(ParserConstants.T_MINUS);}
-    "/"                     {return createSymbol(ParserConstants.T_DIV);}
-    "**"                    {return createSymbol(ParserConstants.T_POW);}
-    "*"                     {return createSymbol(ParserConstants.T_TIMES);}
-    "="                     {return createSymbol(ParserConstants.T_EQUAL);}
-    "%"                     {return createSymbol(ParserConstants.T_PRECENT);}
-    "!"                     {return createSymbol(ParserConstants.T_NOT);}
-    "~"                     {return createSymbol(ParserConstants.T_TILDA);}
-    "$"                     {return createSymbol(ParserConstants.T_DOLLAR);}
-    "<"                     {return createSymbol(ParserConstants.T_RGREATER);}
-    ">"                     {return createSymbol(ParserConstants.T_LGREATER);}
-    "?"                     {return createSymbol(ParserConstants.T_QUESTION_MARK);}
-    "@"                     {return createSymbol(ParserConstants.T_AT);}
-    "{"                     {return createSymbol(ParserConstants.T_CURLY_OPEN);}
-    "}"                     {return createSymbol(ParserConstants.T_CURLY_CLOSE);}
-    "\""                     {return createSymbol(ParserConstants.T_QUATE);}
-    "`"                     {return createSymbol(ParserConstants.T_BACKQUATE);}
+	"("                     {return createSymbol(ParserConstants.T_OPEN_PARENTHESE);}
+	")"                     {return createSymbol(ParserConstants.T_CLOSE_PARENTHESE);}
+	"|"                     {return createSymbol(ParserConstants.T_OR);}
+	"^"                     {return createSymbol(ParserConstants.T_KOVA);}
+	"&"                     {return createSymbol(ParserConstants.T_REFERENCE);}
+	"+"                     {return createSymbol(ParserConstants.T_PLUS);}
+	"-"                     {return createSymbol(ParserConstants.T_MINUS);}
+	"/"                     {return createSymbol(ParserConstants.T_DIV);}
+	"**"                    {return createSymbol(ParserConstants.T_POW);}
+	"*"                     {return createSymbol(ParserConstants.T_TIMES);}
+	"="                     {return createSymbol(ParserConstants.T_EQUAL);}
+	"%"                     {return createSymbol(ParserConstants.T_PRECENT);}
+	"!"                     {return createSymbol(ParserConstants.T_NOT);}
+	"~"                     {return createSymbol(ParserConstants.T_TILDA);}
+	"$"                     {return createSymbol(ParserConstants.T_DOLLAR);}
+	"<"                     {return createSymbol(ParserConstants.T_RGREATER);}
+	">"                     {return createSymbol(ParserConstants.T_LGREATER);}
+	"?"                     {return createSymbol(ParserConstants.T_QUESTION_MARK);}
+	"@"                     {return createSymbol(ParserConstants.T_AT);}
+	"{"                     {return createSymbol(ParserConstants.T_CURLY_OPEN);}
+	"}"                     {return createSymbol(ParserConstants.T_CURLY_CLOSE);}
+	"\""                     {return createSymbol(ParserConstants.T_QUATE);}
+	"`"                     {return createSymbol(ParserConstants.T_BACKQUATE);}
 }
 
 <ST_VAR_OFFSET>[ \n\r\t\\'#] {
@@ -903,12 +903,12 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"define" {
-    /* not a keyword, hust for recognize constans.*/
-    return createFullSymbol(ParserConstants.T_DEFINE);
+	/* not a keyword, hust for recognize constans.*/
+	return createFullSymbol(ParserConstants.T_DEFINE);
 }
 
 <ST_IN_SCRIPTING,ST_VAR_OFFSET>{LABEL} {
-    return createFullSymbol(ParserConstants.T_STRING);
+	return createFullSymbol(ParserConstants.T_STRING);
 }
 
 <ST_IN_SCRIPTING>{WHITESPACE} {
@@ -940,21 +940,21 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_ONE_LINE_COMMENT>"?>"|"%>" {
-    if (asp_tags || yytext().charAt(0)!='%') { /* asp comment? */
+	if (asp_tags || yytext().charAt(0)!='%') { /* asp comment? */
 	    handleLineCommentEnd();
-        yypushback(yylength());
+	    yypushback(yylength());
 		yybegin(ST_IN_SCRIPTING);
 	}
 }
 
 <ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}+"$"{LABEL}{WHITESPACE}+("\\"|{LABEL}|"["|"]"|"|")+{WHITESPACE}*"*/" {
-    handleVarComment();
-    //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
+	handleVarComment();
+	//return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
 
 <ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}+("\\"|{LABEL}|"["|"]"|"|")+{WHITESPACE}+"$"{LABEL}{WHITESPACE}*"*/" {
-    handleVarComment();
-    //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
+	handleVarComment();
+	//return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
 
 <ST_IN_SCRIPTING>"/**/" {
@@ -982,8 +982,8 @@ if (parsePHPDoc()) {
 }
 
 <ST_DOCBLOCK>"*/" {
-     handlePHPDocEnd();
-     yybegin(ST_IN_SCRIPTING);
+	 handlePHPDocEnd();
+	 yybegin(ST_IN_SCRIPTING);
 }
 
 <ST_DOCBLOCK>{NEWLINE} {
@@ -994,7 +994,7 @@ if (parsePHPDoc()) {
 
 <ST_IN_SCRIPTING>"/*" {
 	handleCommentStart();
-    yybegin(ST_COMMENT);
+	yybegin(ST_COMMENT);
 }
 
 <ST_COMMENT>[^*]+ {
@@ -1002,7 +1002,7 @@ if (parsePHPDoc()) {
 
 <ST_COMMENT>"*/" {
 	handleMultilineCommentEnd();
-    yybegin(ST_IN_SCRIPTING);
+	yybegin(ST_IN_SCRIPTING);
 }
 
 <ST_COMMENT>"*" {
@@ -1010,66 +1010,66 @@ if (parsePHPDoc()) {
 }
 
 <ST_IN_SCRIPTING>("?>"|"</script"{WHITESPACE}*">") {
-    yybegin(YYINITIAL);
-    return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
+	yybegin(YYINITIAL);
+	return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
 }
 
 <ST_IN_SCRIPTING>"%>" {
-    if (asp_tags) {
-        yybegin(YYINITIAL);
-        return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
-    } else {
-        return createSymbol(ParserConstants.T_INLINE_HTML);
-    }
+	if (asp_tags) {
+	    yybegin(YYINITIAL);
+	    return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
+	} else {
+	    return createSymbol(ParserConstants.T_INLINE_HTML);
+	}
 }
 
 <ST_IN_SCRIPTING>(b?[\"]{DOUBLE_QUOTES_CHARS}*("{"*|"$"*)[\"]) {
-    return createFullSymbol(ParserConstants.T_CONSTANT_ENCAPSED_STRING);
+	return createFullSymbol(ParserConstants.T_CONSTANT_ENCAPSED_STRING);
 }
 
 <ST_IN_SCRIPTING>(b?[']([^'\\]|("\\"{ANY_CHAR}))*[']) {
-    return createFullSymbol(ParserConstants.T_CONSTANT_ENCAPSED_STRING);
+	return createFullSymbol(ParserConstants.T_CONSTANT_ENCAPSED_STRING);
 }
 
 <ST_IN_SCRIPTING>b?[\"] {
-    yybegin(ST_DOUBLE_QUOTES);
-    return createSymbol(ParserConstants.T_QUATE);
+	yybegin(ST_DOUBLE_QUOTES);
+	return createSymbol(ParserConstants.T_QUATE);
 }
 
 <ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
-    int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
-    String hereOrNowDoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
-    int heredoc_len = hereOrNowDoc.length();
+	int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
+	String hereOrNowDoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
+	int heredoc_len = hereOrNowDoc.length();
 
 	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
 
-    if (hereOrNowDoc.charAt(0) == '\'') {
-    	nowdoc = hereOrNowDoc.substring(1, heredoc_len-1);
-    	sym.value = nowdoc;
-    	heredoc_len -= 2;
-    	yybegin(ST_START_NOWDOC);
-    }
-    else if (hereOrNowDoc.charAt(0) == '"') {
-    	heredoc = hereOrNowDoc.substring(1, heredoc_len-1);
-    	sym.value = heredoc;
-    	heredoc_len -= 2;
-    	yybegin(ST_START_HEREDOC);
-    } else {
-    	heredoc = hereOrNowDoc;
-    	sym.value = heredoc;
-    	yybegin(ST_START_HEREDOC);
-    }
-    return sym;
+	if (hereOrNowDoc.charAt(0) == '\'') {
+		nowdoc = hereOrNowDoc.substring(1, heredoc_len-1);
+		sym.value = nowdoc;
+		heredoc_len -= 2;
+		yybegin(ST_START_NOWDOC);
+	}
+	else if (hereOrNowDoc.charAt(0) == '"') {
+		heredoc = hereOrNowDoc.substring(1, heredoc_len-1);
+		sym.value = heredoc;
+		heredoc_len -= 2;
+		yybegin(ST_START_HEREDOC);
+	} else {
+		heredoc = hereOrNowDoc;
+		sym.value = heredoc;
+		yybegin(ST_START_HEREDOC);
+	}
+	return sym;
 }
 
 <ST_IN_SCRIPTING>[`] {
-    yybegin(ST_BACKQUOTE);
-    return createSymbol(ParserConstants.T_BACKQUATE);
+	yybegin(ST_BACKQUOTE);
+	return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
 <ST_IN_SCRIPTING>['] {
-    yybegin(ST_SINGLE_QUOTE);
-    return createSymbol(ParserConstants.T_SINGLE_QUATE);
+	yybegin(ST_SINGLE_QUOTE);
+	return createSymbol(ParserConstants.T_SINGLE_QUATE);
 }
 
 <ST_START_HEREDOC>{ANY_CHAR} {
@@ -1078,46 +1078,46 @@ if (parsePHPDoc()) {
 }
 
 <ST_START_HEREDOC>{LABEL}";"?[\n\r] {
-    String text = yytext();
-    int length = text.length() - 1;
-    text = text.trim();
+	String text = yytext();
+	int length = text.length() - 1;
+	text = text.trim();
 
-    yypushback(1);
+	yypushback(1);
 
-    if (text.endsWith(";")) {
-        text = text.substring(0, text.length() - 1);
-        yypushback(1);
-    }
-    if (text.equals(heredoc)) {
-        heredoc = null;
-        yybegin(ST_IN_SCRIPTING);
-        return createSymbol(ParserConstants.T_END_HEREDOC);
-    }
-    else {
-    	yybegin(ST_HEREDOC);
-    }
+	if (text.endsWith(";")) {
+	    text = text.substring(0, text.length() - 1);
+	    yypushback(1);
+	}
+	if (text.equals(heredoc)) {
+	    heredoc = null;
+	    yybegin(ST_IN_SCRIPTING);
+	    return createSymbol(ParserConstants.T_END_HEREDOC);
+	}
+	else {
+		yybegin(ST_HEREDOC);
+	}
 }
 
 <ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
-    String text = yytext();
+	String text = yytext();
 
-    if (text.charAt(text.length() - 2)== ';') {
+	if (text.charAt(text.length() - 2)== ';') {
 		text = text.substring(0, text.length() - 2);
-        yypushback(1);
-    } else {
+	    yypushback(1);
+	} else {
 		text = text.substring(0, text.length() - 1);
-    }
+	}
 
 	int textLength = text.length();
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		yypushback(2);
-        yybegin(ST_END_HEREDOC);
-        heredoc = null;
-        // we need to remove the closing label from the symbol value.
-        Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-        String value = (String)sym.value;
-        sym.value = value.substring(0, value.length() - heredocLength + 1);
+	    yybegin(ST_END_HEREDOC);
+	    heredoc = null;
+	    // we need to remove the closing label from the symbol value.
+	    Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+	    String value = (String)sym.value;
+	    sym.value = value.substring(0, value.length() - heredocLength + 1);
 	   	return sym;
 	}
 	yypushback(1);
@@ -1134,67 +1134,67 @@ if (parsePHPDoc()) {
 }
 
 <ST_START_NOWDOC>{LABEL}";"?[\n\r] {
-    String text = yytext();
-    int length = text.length() - 1;
-    text = text.trim();
+	String text = yytext();
+	int length = text.length() - 1;
+	text = text.trim();
 
-    yypushback(1);
+	yypushback(1);
 
-    if (text.endsWith(";")) {
-        text = text.substring(0, text.length() - 1);
-        yypushback(1);
-    }
-    if (text.equals(nowdoc)) {
-    	nowdoc = null;
-        yybegin(ST_IN_SCRIPTING);
-        return createSymbol(ParserConstants.T_END_HEREDOC);
-    }
-    else {
-    	yybegin(ST_NOWDOC);
-    }
+	if (text.endsWith(";")) {
+	    text = text.substring(0, text.length() - 1);
+	    yypushback(1);
+	}
+	if (text.equals(nowdoc)) {
+		nowdoc = null;
+	    yybegin(ST_IN_SCRIPTING);
+	    return createSymbol(ParserConstants.T_END_HEREDOC);
+	}
+	else {
+		yybegin(ST_NOWDOC);
+	}
 }
 
 <ST_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
- 	String text = yytext();
+	String text = yytext();
 
- 	if (text.charAt(text.length() - 2)== ';') {
+	if (text.charAt(text.length() - 2)== ';') {
 		text = text.substring(0, text.length() - 2);
-        yypushback(1);
-    } else {
+	    yypushback(1);
+	} else {
 		text = text.substring(0, text.length() - 1);
-    }
+	}
 
- 	int textLength = text.length();
- 	int nowdocLength = nowdoc.length();
+	int textLength = text.length();
+	int nowdocLength = nowdoc.length();
 	if (textLength > nowdocLength && text.substring(textLength - nowdocLength, textLength).equals(nowdoc)) {
 		yypushback(2);
-       	yybegin(ST_END_HEREDOC);
-       	nowdoc = null;
-       	// we need to remove the closing label from the symbol value.
-       	Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-       	String value = (String)sym.value;
-       	sym.value = value.substring(0, value.length() - nowdocLength + 1);
+	   	yybegin(ST_END_HEREDOC);
+	   	nowdoc = null;
+	   	// we need to remove the closing label from the symbol value.
+	   	Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+	   	String value = (String)sym.value;
+	   	sym.value = value.substring(0, value.length() - nowdocLength + 1);
 	   	return sym;
 	}
 	yypushback(1);
 }
 
 <ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
-    return createSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+	return createSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_SINGLE_QUOTE>"\\'" {
-    return createSymbol(ParserConstants.T_CHARACTER);
+	return createSymbol(ParserConstants.T_CHARACTER);
 }
 
 <ST_SINGLE_QUOTE>"\\\\" {
-    return createSymbol(ParserConstants.T_CHARACTER);
+	return createSymbol(ParserConstants.T_CHARACTER);
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {
-    pushState(ST_IN_SCRIPTING);
-    yypushback(yylength()-1);
-    return createSymbol(ParserConstants.T_CURLY_OPEN_WITH_DOLAR);
+	pushState(ST_IN_SCRIPTING);
+	yypushback(yylength()-1);
+	return createSymbol(ParserConstants.T_CURLY_OPEN_WITH_DOLAR);
 }
 
 <ST_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}+ {
@@ -1206,8 +1206,8 @@ The original parsing rule was {DOUBLE_QUOTES_CHARS}*("{"{2,}|"$"{2,}|(("{"+|"$"+
 but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[\"])) {
-    yypushback(1);
-    return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+	yypushback(1);
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_BACKQUOTE>{BACKQUOTE_CHARS}+ {
@@ -1232,23 +1232,23 @@ The original parsing rule was {HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)
 but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
-    yypushback(1);
-    return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+	yypushback(1);
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_DOUBLE_QUOTES>[\"] {
-    yybegin(ST_IN_SCRIPTING);
-    return createSymbol(ParserConstants.T_QUATE);
+	yybegin(ST_IN_SCRIPTING);
+	return createSymbol(ParserConstants.T_QUATE);
 }
 
 <ST_BACKQUOTE>[`] {
-    yybegin(ST_IN_SCRIPTING);
-    return createSymbol(ParserConstants.T_BACKQUATE);
+	yybegin(ST_IN_SCRIPTING);
+	return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
 <ST_SINGLE_QUOTE>['] {
-    yybegin(ST_IN_SCRIPTING);
-    return createSymbol(ParserConstants.T_SINGLE_QUATE);
+	yybegin(ST_IN_SCRIPTING);
+	return createSymbol(ParserConstants.T_SINGLE_QUATE);
 }
 
 <ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_SINGLE_QUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_START_NOWDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
