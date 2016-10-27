@@ -39,14 +39,14 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 %{
 	private int fTokenCount = 0;
- 
+
 	// required holders for white-space compacting
 	private boolean fShouldLoadBuffered = false;
 	private String fBufferedContext = null;
 	private String fBufferedText = null;
 	private int fBufferedStart = 1;
 	private int fBufferedLength = 0;
-	
+
 	// help for php container text region
 	private ContextRegionContainer fBufferedEmbeddedContainer = null;
 	private String f_context = null;
@@ -56,7 +56,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 	// a "hint" as to what an embedded region should be evaluated
 	private String fEmbeddedHint = UNDEFINED;
-	// a "hint" as to what state to enter once an embedded region has 
+	// a "hint" as to what state to enter once an embedded region has
 	// been completed
 	private int fEmbeddedPostState = YYINITIAL;
 	// the container used to create embedded regions
@@ -71,7 +71,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 	// offset for tracking position specific block tags
 	private int fOffset = 0;
-	
+
 	// the name of the current tag being opened
 	private String fCurrentTagName = null;
 
@@ -85,7 +85,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 	// the name of the current tag inside of an embedded region
 	private String internalTagName = null;
 	private String internalContext = null;
-	
+
 	private final XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
 	private PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
 /**
@@ -135,7 +135,7 @@ public final List getRegions() {
 		throw e;
 	}
 	catch (Exception e) {
-		// Since this is convenience method and NOT the recommended 
+		// Since this is convenience method and NOT the recommended
 		// way of getting tokens, many errors are simply hidden
 		Logger.logException("Exception not handled retrieving regions: " + e.getLocalizedMessage(), e);//$NON-NLS-1$
 	}
@@ -160,7 +160,7 @@ protected final boolean containsTagName(String markerTagName) {
 	return false;
 }
 /**
- * user method 
+ * user method
  */
 public final void addBlockMarker(BlockMarker marker) {
 	if(containsTagName(marker.getTagName()))
@@ -168,13 +168,13 @@ public final void addBlockMarker(BlockMarker marker) {
 	fBlockMarkers.add(marker);
 }
 /**
- * user method 
+ * user method
  */
 public final void removeBlockMarker(BlockMarker marker) {
 	fBlockMarkers.remove(marker);
 }
 /**
- * user method 
+ * user method
  */
 public final void removeBlockMarker(String tagname) {
 	if (fBlockMarkers != null) {
@@ -187,7 +187,7 @@ public final void removeBlockMarker(String tagname) {
 }
 /* user method */
 public boolean getBlockMarkerCaseSensitivity() {
-        return getBlockMarkerCaseSensitivity(fCurrentTagName);
+	return getBlockMarkerCaseSensitivity(fCurrentTagName);
 }
 /* user method */
 public boolean getBlockMarkerCaseSensitivity(String name) {
@@ -244,12 +244,12 @@ public final void beginBlockTagScan(String newTagName) {
  * Special tokenizer setup.  Allows tokenization to be initiated at the
  * start of a text block within a "newTagName" tag.
  *
- * Example: 
+ * Example:
  *	Tokenizer toker = new Tokenizer();
  *	toker.setCaseSensitiveBlocking(false);
  *	toker.reset(new java.io.StringReader("afiuhqwkejhtasihgalkwhtq</scripter></scr></script>asgdasga"));
  *	toker.beginBlockMarkerScan("script", BLOCK_TEXT);
- *	toker.getRegions(); 
+ *	toker.getRegions();
  *
  * Returns:
  *	BLOCK_TEXT: 0-40
@@ -265,10 +265,10 @@ public final void beginBlockMarkerScan(String newTagName, String blockcontext) {
 }
 /**
  * Method doScan.
- * 
+ *
  * Returns a context region for all of the text from the current position upto the end of input or
  * to right *before* the first occurrence of searchString
- * 
+ *
  * @param searchString - target string to search for ex.: "-->", "</tagname"
  * @param requireTailSeparator - whether the target must be immediately followed by whitespace or '>'
  * @param context - the context of the scanned region if non-zero length
@@ -287,7 +287,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 	while (stillSearching) {
 		n = 0;
 		// Ensure that enough data from the input exists to compare against the search String.
-		n = yy_advance();  
+		n = yy_advance();
 		while(n != YYEOF && zzCurrentPos < searchStringLength)
 			n = yy_advance();
 		// If the input was too short or we've exhausted the input, stop immediately.
@@ -295,7 +295,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			stillSearching = false;
 		}
 		else {
-			
+
 			/**
 			 * Look for starting PHPs "<?"
 			 */
@@ -303,7 +303,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// since it relies upon *having* closeTagStringLength amount of input to work as designed. Must be sure we don't
 			// spill over the end of the buffer while checking.
 			if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzEndRead - 1 &&
-					zzBuffer[zzCurrentPos - 1] == '<' && 
+					zzBuffer[zzCurrentPos - 1] == '<' &&
 					(zzBuffer[zzCurrentPos] == '?' || (zzBuffer[zzCurrentPos] == '%' && ProjectOptions.isSupportingAspTags(project)))) {
 				fLastInternalBlockStart = zzMarkedPos = zzCurrentPos - 1;
 				zzCurrentPos = zzMarkedPos + 1;
@@ -316,7 +316,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				}
 				return searchContext;
 			}
-			
+
 			// 2) zzCurrentPos - jspstarter.length : There's not searchStringLength of input available; check for a JSP 2 spots back in what we could read
 			// ---
 			// Look for a JSP beginning at the current position; this case wouldn't be handled by the preceding section
@@ -364,7 +364,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
 				// Check the characters in the target versus the last targetLength characters read from the buffer
 				// and see if it matches
-				
+
 				// safety check for array accesses (zzCurrentPos is the *last* character we can check against)
 				if(zzCurrentPos >= searchStringLength && zzCurrentPos <= zzEndRead) {
 					for(int i = 0; i < searchStringLength; i++) {
@@ -418,8 +418,8 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 
 /**
  * Method doScanEndPhp
- * 
- * @see doScan(searchString, req...) 
+ *
+ * @see doScan(searchString, req...)
  * this version can handle two strings as options to search string
  * it originally written to support ?> or %> close tags to php
  * The two strings must be on the same length
@@ -433,15 +433,15 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 private PhpScriptRegion bufferedTextRegion = null;
 private final String doScanEndPhp(String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	yypushback(1); // begin with the last char
-	
-	final AbstractPhpLexer phpLexer = getPhpLexer(); 
+
+	final AbstractPhpLexer phpLexer = getPhpLexer();
 	PhpScriptRegion region = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
-	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParamenters());
+	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParameters());
 
 	bufferedTextRegion = region;
-	
+
 	yybegin(exitState);
 	return searchContext;
 }
@@ -453,10 +453,10 @@ private final String doScanEndPhp(String searchContext, int exitState, int immed
  */
 private AbstractPhpLexer getPhpLexer() {
 	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(zzReader, phpVersion);
-	int[] currentParameters = getParamenters();
+	int[] currentParameters = getParameters();
 	try {
-		// set initial lexer state - we use reflection here since we don't know the constant value of 
-		// of this state in specific PHP version lexer 
+		// set initial lexer state - we use reflection here since we don't know the constant value of
+		// of this state in specific PHP version lexer
 		currentParameters[6] = lexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(lexer);
 	} catch (Exception e) {
 		Logger.logException(e);
@@ -469,7 +469,7 @@ private AbstractPhpLexer getPhpLexer() {
 
 // call the doScan without searching for PHP internal code
 private final String doScan(String searchString, boolean requireTailSeparator, String searchContext, int exitState, int immediateFallbackState) throws IOException {
-	return doScan(searchString, true, requireTailSeparator, searchContext, exitState, immediateFallbackState);	
+	return doScan(searchString, true, requireTailSeparator, searchContext, exitState, immediateFallbackState);
 }
 
 	/* user method */
@@ -485,8 +485,8 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 		assembleEmbeddedContainer(startType, new String[]{endType}, null);
 	}
 	/**
-	 *  user method 
-	 * 
+	 *  user method
+	 *
 	 * Assembles an embedded container beginning with the given startType as
 	 * the first ContextRegion within it and of the type fEmbeddedHint.  The
 	 * endTypes[] array contains the context types that will cause a successful
@@ -509,8 +509,8 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 			fEmbeddedContainer = new ContextRegionContainer();
 			fEmbeddedContainer.setType(fEmbeddedHint);
 			fEmbeddedContainer.setStart(containerStart);
-			// TODO: parent region needs to be set .... but not sure where to get it from 
-			//		fEmbeddedContainer.setParent(parentRegion);
+			// TODO: parent region needs to be set .... but not sure where to get it from
+			// fEmbeddedContainer.setParent(parentRegion);
 		}
 		containerStart = fEmbeddedContainer.getStart();
 		while (notFinished) {
@@ -520,7 +520,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 				ITextRegion newToken;
 				// if it is php content we extract the tokens
 				if (internalContext == PHP_CONTENT) {
-					newToken = bufferedTextRegion; 
+					newToken = bufferedTextRegion;
 					bufferedTextRegion.adjustStart(-containerStart);
 				} else {
 					newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
@@ -558,7 +558,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 				} else if (internalContext == XML_TAG_CLOSE) {
 					isInFirstTag = isInEndTag = false;
 				} else {
-				 	ITextRegionList embeddedRegions = fEmbeddedContainer.getRegions();
+					ITextRegionList embeddedRegions = fEmbeddedContainer.getRegions();
 					if (embeddedRegions.size() > 2 && (embeddedRegions.get(embeddedRegions.size()-1)).getType() == XML_TAG_CLOSE && (embeddedRegions.get(embeddedRegions.size() - 3)).getType() == XML_TAG_OPEN && internalTagName != null) {
 						if (containsTagName(internalTagName)) {
 							longscan = true;
@@ -578,7 +578,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					ITextRegion newToken;
 					// if it is php content we extract the tokens
 					if (internalContext == PHP_CONTENT) {
-						newToken = bufferedTextRegion; 
+						newToken = bufferedTextRegion;
 						bufferedTextRegion.adjustStart(-containerStart);
 					} else {
 						newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
@@ -654,11 +654,11 @@ private final String doBlockScan(String target, String targetContext, int immedi
 	return doScan(target, false, targetContext, immediateFallbackState, immediateFallbackState);
 }
 /**
- * user method 
+ * user method
  * does a lookahead for the current tag name
  */
 private final String doBlockTagScan() throws IOException {
-        fIsCaseSensitiveBlocking = getBlockMarkerCaseSensitivity();
+	fIsCaseSensitiveBlocking = getBlockMarkerCaseSensitivity();
 	return doScan("</" + fCurrentTagName, true, getBlockMarkerContext(fCurrentTagName), YYINITIAL, YYINITIAL);
 }
 
@@ -677,7 +677,7 @@ public void setProject(@Nullable IProject project) {
 }
 
 // NB: this method resets the lexer only partially
-private void reset(java.io.Reader reader, char[] buffer, int[] parameters){
+private void reset(java.io.Reader reader, char[] buffer, int[] parameters) {
 	this.phpVersion = ProjectOptions.getPhpVersion(project);
 	this.bufferedTextRegion = null;
 	this.zzReader = reader;
@@ -692,7 +692,7 @@ private void reset(java.io.Reader reader, char[] buffer, int[] parameters){
 	this.yychar = this.zzStartRead - this._zzPushbackPos;
 }
 
-public int[] getParamenters(){
+public int[] getParameters() {
 	return new int[]{zzMarkedPos, _zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
 }
 
@@ -754,7 +754,7 @@ public final ITextRegion getNextToken() throws IOException {
 			return null;
 		}
 	}
-	
+
 	// store the next token
 	f_context = primGetNextToken();
 	if (f_context == PROXY_CONTEXT) {
@@ -803,18 +803,18 @@ public final ITextRegion getNextToken() throws IOException {
 
 	// if it is php content we extract the tokens
 	if (context == PHP_CONTENT) {
-		return bufferedTextRegion; 
+		return bufferedTextRegion;
 	} else {
 		return fRegionFactory.createToken(context, start, textLength, length, null, fCurrentTagName);
 	}
 }
 
 /* user method */
-public PHPTokenizer(){
+public PHPTokenizer() {
 	super();
 }
 /* user method */
-public PHPTokenizer(char[] charArray){
+public PHPTokenizer(char[] charArray) {
 	this(new CharArrayReader(charArray));
 }
 /* user method */
@@ -856,7 +856,7 @@ public void reset(java.io.Reader in, int newOffset) {
 	fOffset = newOffset;
 
 	/* the input device */
-	zzReader = in; 
+	zzReader = in;
 
 	/* the current state of the DFA */
 	zzState = 0;
@@ -880,9 +880,9 @@ public void reset(java.io.Reader in, int newOffset) {
 	/* startRead marks the beginning of the yytext() string in the buffer */
 	zzStartRead = 0;
 
-	/** 
+	/**
 	 * endRead marks the last character in the buffer, that has been read
-	 * from input 
+	 * from input
 	 */
 	zzEndRead = 0;
 
@@ -899,14 +899,14 @@ public void reset(java.io.Reader in, int newOffset) {
 	//zzAtBOL = true;
 
 	/* zzAtEOF == true <=> the scanner has returned a value for EOF */
-	zzAtEOF = false; 
+	zzAtEOF = false;
 
 
 	/* user vars: */
-	fLastInternalBlockStart = -1;	
+	fLastInternalBlockStart = -1;
 
 	fTokenCount = 0;
-	
+
 	fShouldLoadBuffered = false;
 	fBufferedContext = null;
 	fBufferedText = null;
@@ -927,7 +927,7 @@ public void reset(java.io.Reader in, int newOffset) {
 	 */
 	public BlockTokenizer newInstance() {
 		PHPTokenizer newInstance = new PHPTokenizer();
-		// global tagmarkers can be shared; they have no state and 
+		// global tagmarkers can be shared; they have no state and
 		// are never destroyed (e.g. 'release')
 		for(int i = 0; i < fBlockMarkers.size(); i++) {
 			BlockMarker blockMarker = (BlockMarker) fBlockMarkers.get(i);
@@ -942,7 +942,7 @@ private final String scanXMLCommentText() throws IOException {
 	//   XML_COMMENT_TEXT unless the string occurs IMMEDIATELY, in which
 	//  case change to the ST_XML_COMMENT_END state and return the next
 	//  context as usual.
-	return doScan("-->", true, false,  XML_COMMENT_TEXT, ST_XML_COMMENT_END, ST_XML_COMMENT_END);
+	return doScan("-->", true, false, XML_COMMENT_TEXT, ST_XML_COMMENT_END, ST_XML_COMMENT_END);
 }
 %}
 
@@ -999,7 +999,7 @@ private final String scanXMLCommentText() throws IOException {
 
 %state ST_BLOCK_TAG_SCAN
 
-// added states to PHP 
+// added states to PHP
 %state ST_PHP_CONTENT
 %state ST_XML_ATTRIBUTE_VALUE_SQUOTED
 %state ST_XML_ATTRIBUTE_VALUE_DQUOTED
@@ -1027,7 +1027,7 @@ document = ({prolog} {element} {Misc}*)
 
 // [2] Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
  //Char = (.)
-Char = [\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD] 
+Char = [\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]
 
 // [3] S ::= (0x20 | 0x9 | 0xD | 0xA)+
 S = [\x20\x09\x0D\x0A]+
@@ -1054,8 +1054,8 @@ EntityValue = (\" ([^%&\"] | {PEReference} | {Reference})* \" |  \' ([^%&\'] | {
 // [10] AttValue ::= '"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
 AttValue = ( \" ([^<\"] | {Reference})* \" | \' ([^<\'] | {Reference})* \'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* )
 
-// [11] SystemLiteral ::= ('"' [^"]* '"') | ("'" [^']* "'") 
-SystemLiteral = ((\" [^\"]* \") | (\' [^\']* \')) 
+// [11] SystemLiteral ::= ('"' [^"]* '"') | ("'" [^']* "'")
+SystemLiteral = ((\" [^\"]* \") | (\' [^\']* \'))
 
 // [12] PubidLiteral ::= '"' PubidChar* '"' | "'" (PubidChar - "'")* "'"
 PubidLiteral = (\" {PubidChar}* \" | \' ({PubidChar}\')* "'")
@@ -1084,7 +1084,7 @@ CDSect = ({CDStart}{CData}{CDEnd})
 // [19] CDStart ::= '<\![CDATA['
 CDStart = <\!\[CDATA\[
 
-// [20] CData ::= (Char* - (Char* ']]>' Char*)) 
+// [20] CData ::= (Char* - (Char* ']]>' Char*))
 // implement lookahead behavior during action definition
 CData = ([^(\]\]>)]*)
 
@@ -1190,7 +1190,7 @@ AttlistDecl = (<\!ATTLIST{S}{Name}{AttDef}*{S}?>)
 // [53] AttDef ::= S Name S AttType S DefaultDecl
 AttDef = ({S}{Name}{S}{AttType}{S}{DefaultDecl})
 
-// [54] AttType ::= StringType | TokenizedType | EnumeratedType 
+// [54] AttType ::= StringType | TokenizedType | EnumeratedType
 AttType = ({StringType} | {TokenizedType} | {EnumeratedType})
 
 // [55] StringType ::= 'CDATA'
@@ -1199,10 +1199,10 @@ StringType = (CDATA)
 // [56] TokenizedType ::= 'ID' | 'IDREF' | 'IDREFS' | 'ENTITY' | 'ENTITIES' | 'NMTOKEN' | 'NMTOKENS'
 TokenizedType = (ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS)
 
-// [57] EnumeratedType ::= NotationType | Enumeration 
+// [57] EnumeratedType ::= NotationType | Enumeration
 EnumeratedType = ({NotationType} | {Enumeration})
 
-// [58] NotationType ::= 'NOTATION' S '(' S? Name (S? '|' S? Name)* S? ')' 
+// [58] NotationType ::= 'NOTATION' S '(' S? Name (S? '|' S? Name)* S? ')'
 NotationType = (NOTATION{S}\({S}?{Name}({S}?\|{S}?{Name})*{S}?\))
 
 // [59] Enumeration ::= '(' S? Nmtoken (S? '|' S?  Nmtoken)* S? ')'
@@ -1211,10 +1211,10 @@ Enumeration = (\({S}?{Nmtoken}({S}?\|{S}?{Nmtoken})*{S}?\))
 // [60] DefaultDecl ::= '#REQUIRED' | '#IMPLIED' | (('#FIXED' S)? AttValue)
 DefaultDecl = (\#REQUIRED|\#IMPLIED|((\#FIXED{S})?{AttValue}))
 
-// [61] conditionalSect ::= includeSect | ignoreSect 
+// [61] conditionalSect ::= includeSect | ignoreSect
 conditionalSect = ({includeSect} | {ignoreSect})
 
-// [62] includeSect ::= '<\![' S? 'INCLUDE' S? '[' extSubsetDecl ']]>' 
+// [62] includeSect ::= '<\![' S? 'INCLUDE' S? '[' extSubsetDecl ']]>'
 includeSect = (<\!\[{S}?INCLUDE{S}?\[{extSubsetDecl}\]\]>)
 
 // [63] ignoreSect ::= '<\![' S? 'IGNORE' S? '[' ignoreSectContents* ']]>'
@@ -1253,7 +1253,7 @@ EntityDef = ({EntityValue} | ({ExternalID}{NDataDecl}?))
 // [74] PEDef ::= EntityValue | ExternalID
 PEDef = ({EntityValue} | {ExternalID})
 
-// [75] ExternalID ::= 'SYSTEM' S SystemLiteral | 'PUBLIC' S PubidLiteral S SystemLiteral 
+// [75] ExternalID ::= 'SYSTEM' S SystemLiteral | 'PUBLIC' S PubidLiteral S SystemLiteral
 ExternalID = (SYSTEM{S}{SystemLiteral}|PUBLIC{S}{PubidLiteral}{S}{SystemLiteral} )
 
 // [76] NDataDecl ::= S 'NDATA' S Name
@@ -1268,7 +1268,7 @@ extParsedEnt = ({TextDecl}?{content})
 // [79] extPE ::= TextDecl? extSubsetDecl
 extPE = ({TextDecl}?{extSubsetDecl})
 
-// [80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' |  "'" EncName "'" ) 
+// [80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' |  "'" EncName "'" )
 EncodingDecl = ({S}encoding{S}*{Eq}{S}*(\"{EncName}\"|\'{EncName}\'))
 
 // [81] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*
@@ -1397,7 +1397,7 @@ PHP_ASP_END=%>
 <ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID> {S}* {
 	if(Debug.debugTokenizer)
 		dump("white space");//$NON-NLS-1$
-    return WHITE_SPACE;
+	return WHITE_SPACE;
 }
 
 // BEGIN REGULAR XML
@@ -1407,8 +1407,8 @@ PHP_ASP_END=%>
 		dump("\nstart tag open");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_NAME;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-    yybegin(ST_XML_TAG_NAME);
-    return XML_TAG_OPEN;
+	yybegin(ST_XML_TAG_NAME);
+	return XML_TAG_OPEN;
 }
 
 /* VERY special cases for tags as values */
@@ -1442,7 +1442,7 @@ PHP_ASP_END=%>
 	fStateStack.pop();
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_XML_ATTRIBUTE_NAME);
+	yybegin(ST_XML_ATTRIBUTE_NAME);
 	return PROXY_CONTEXT;
 }
 
@@ -1494,7 +1494,7 @@ PHP_ASP_END=%>
 	yybegin(ST_XML_TAG_NAME);
 	assembleEmbeddedContainer(XML_TAG_OPEN, new String[]{XML_TAG_CLOSE,XML_EMPTY_TAG_CLOSE});
 	fStateStack.pop();
-    yybegin(ST_XML_ATTRIBUTE_NAME);
+	yybegin(ST_XML_ATTRIBUTE_NAME);
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
 	return PROXY_CONTEXT;
@@ -1504,8 +1504,8 @@ PHP_ASP_END=%>
 	// end tag open
 	fEmbeddedHint = XML_TAG_NAME;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-    yybegin(ST_XML_TAG_NAME);
-    return XML_END_TAG_OPEN;
+	yybegin(ST_XML_TAG_NAME);
+	return XML_END_TAG_OPEN;
 }
 
 /* the tag's name was found, start scanning for attributes */
@@ -1514,8 +1514,8 @@ PHP_ASP_END=%>
 		dump("tag name");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_XML_ATTRIBUTE_NAME);
-    return XML_TAG_NAME;
+	yybegin(ST_XML_ATTRIBUTE_NAME);
+	return XML_TAG_NAME;
 }
 
 /* another attribute name was found, resume looking for the equals sign */
@@ -1523,24 +1523,24 @@ PHP_ASP_END=%>
 	// attr name
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-    yybegin(ST_XML_EQUALS);
-    return XML_TAG_ATTRIBUTE_NAME;
+	yybegin(ST_XML_EQUALS);
+	return XML_TAG_ATTRIBUTE_NAME;
 }
 /* an equal sign was found, what's next is the value */
 <ST_XML_EQUALS> {Eq} {
 	// equals
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-    yybegin(ST_XML_ATTRIBUTE_VALUE);
-    return XML_TAG_ATTRIBUTE_EQUALS;
+	yybegin(ST_XML_ATTRIBUTE_VALUE);
+	return XML_TAG_ATTRIBUTE_EQUALS;
 }
 /* the value was found, look for the next name */
 <ST_XML_ATTRIBUTE_VALUE> {AttValue} {
 	// attr value
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_XML_ATTRIBUTE_NAME);
-    return XML_TAG_ATTRIBUTE_VALUE;
+	yybegin(ST_XML_ATTRIBUTE_NAME);
+	return XML_TAG_ATTRIBUTE_VALUE;
 }
 /* the tag's close was found */
 <ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericTagClose} {
@@ -1553,14 +1553,14 @@ PHP_ASP_END=%>
 	}
 	else
 		yybegin(YYINITIAL);
-    return XML_TAG_CLOSE;
+	return XML_TAG_CLOSE;
 }
 /* the tag's close was found, but the tag doesn't need a matching end tag */
 <ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericEmptyTagClose} {
-    yybegin(YYINITIAL);
+	yybegin(YYINITIAL);
 	fEmbeddedHint = UNDEFINED;
 	// empty tag close
-    return XML_EMPTY_TAG_CLOSE;
+	return XML_EMPTY_TAG_CLOSE;
 }
 
 <ST_XML_TAG_NAME> [^</>\u0041-\u005A\u0061-\u007A\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u0131\u0134-\u013E\u0141-\u0148\u014A-\u017E\u0180-\u01C3\u01CD-\u01F0\u01F4-\u01F5\u01FA-\u0217\u0250-\u02A8\u02BB-\u02C1\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03CE\u03D0-\u03D6\u03DA\u03DC\u03DE\u03E0\u03E2-\u03F3\u0401-\u040C\u040E-\u044F\u0451-\u045C\u045E-\u0481\u0490-\u04C4\u04C7-\u04C8\u04CB-\u04CC\u04D0-\u04EB\u04EE-\u04F5\u04F8-\u04F9\u0531-\u0556\u0559\u0561-\u0586\u05D0-\u05EA\u05F0-\u05F2\u0621-\u063A\u0641-\u064A\u0671-\u06B7\u06BA-\u06BE\u06C0-\u06CE\u06D0-\u06D3\u06D5\u06E5-\u06E6\u0905-\u0939\u093D\u0958-\u0961\u0985-\u098C\u098F-\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09DC-\u09DD\u09DF-\u09E1\u09F0-\u09F1\u0A05-\u0A0A\u0A0F-\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32-\u0A33\u0A35-\u0A36\u0A38-\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8B\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2-\u0AB3\u0AB5-\u0AB9\u0ABD\u0AE0\u0B05-\u0B0C\u0B0F-\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32-\u0B33\u0B36-\u0B39\u0B3D\u0B5C-\u0B5D\u0B5F-\u0B61\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99-\u0B9A\u0B9C\u0B9E-\u0B9F\u0BA3-\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB5\u0BB7-\u0BB9\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C33\u0C35-\u0C39\u0C60-\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CDE\u0CE0-\u0CE1\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D28\u0D2A-\u0D39\u0D60-\u0D61\u0E01-\u0E2E\u0E30\u0E32-\u0E33\u0E40-\u0E45\u0E81-\u0E82\u0E84\u0E87-\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA-\u0EAB\u0EAD-\u0EAE\u0EB0\u0EB2-\u0EB3\u0EBD\u0EC0-\u0EC4\u0F40-\u0F47\u0F49-\u0F69\u10A0-\u10C5\u10D0-\u10F6\u1100\u1102-\u1103\u1105-\u1107\u1109\u110B-\u110C\u110E-\u1112\u113C\u113E\u1140\u114C\u114E\u1150\u1154-\u1155\u1159\u115F-\u1161\u1163\u1165\u1167\u1169\u116D-\u116E\u1172-\u1173\u1175\u119E\u11A8\u11AB\u11AE-\u11AF\u11B7-\u11B8\u11BA\u11BC-\u11C2\u11EB\u11F0\u11F9\u1E00-\u1E9B\u1EA0-\u1EF9\u1F00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2126\u212A-\u212B\u212E\u2180-\u2182\u3041-\u3094\u30A1-\u30FA\u3105-\u312C\uAC00-\uD7A3\u4E00-\u9FA5\u3007\u3021-\u3029]* {
@@ -1571,7 +1571,7 @@ PHP_ASP_END=%>
 		return XML_TAG_ATTRIBUTE_VALUE;
 	}
 	yybegin(YYINITIAL);
-    return XML_CONTENT;
+	return XML_CONTENT;
 }
 // END REGULAR XML
 
@@ -1635,15 +1635,15 @@ PHP_ASP_END=%>
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
 	} else if ("<?=".equals(yytext()) //$NON-NLS-1$
-	        && !PHPVersion.PHP5_3.isLessThan(phpVersion)
-	        && !ProjectOptions.useShortTags(project) ) {
-	    yybegin(ST_PI);
-        return XML_PI_OPEN;
-	} else if ("<%".equals(yytext()) //$NON-NLS-1$ 
+			&& !PHPVersion.PHP5_3.isLessThan(phpVersion)
+			&& !ProjectOptions.useShortTags(project) ) {
+		yybegin(ST_PI);
+		return XML_PI_OPEN;
+	} else if ("<%".equals(yytext()) //$NON-NLS-1$
 			&& !ProjectOptions.isSupportingAspTags(project)) {
 		yypushback(1);
 		yybegin(ST_XML_TAG_NAME);
-		return XML_TAG_OPEN; 
+		return XML_TAG_OPEN;
 	} else {
 		// removeing trailing whitespaces for the php open
 		String phpStart = yytext();
@@ -1761,41 +1761,41 @@ PHP_ASP_END=%>
 		dump("XML processing instruction target");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_XML_PI_ATTRIBUTE_NAME);
-    return XML_TAG_NAME;
+	yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+	return XML_TAG_NAME;
 }
 <ST_PI> ([iI][mM][pP][oO][rR][tT]) {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction target");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_DHTML_ATTRIBUTE_NAME);
-    return XML_TAG_NAME;
+	yybegin(ST_DHTML_ATTRIBUTE_NAME);
+	return XML_TAG_NAME;
 }
 <ST_PI> xml-stylesheet {
 	if(Debug.debugTokenizer)
 		dump("XSL processing instruction target");//$NON-NLS-1$
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_XML_PI_ATTRIBUTE_NAME);
-    return XML_TAG_NAME;
+	yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+	return XML_TAG_NAME;
 }
 <ST_PI> {Name} {
 	if(Debug.debugTokenizer)
 		dump("processing instruction target");//$NON-NLS-1$
 	fEmbeddedHint = XML_CONTENT;
-    yybegin(ST_PI_WS);
-    return XML_TAG_NAME;
+	yybegin(ST_PI_WS);
+	return XML_TAG_NAME;
 }
 <ST_PI_WS> {S}+ {
-    yybegin(ST_PI_CONTENT);
-    return WHITE_SPACE;
+	yybegin(ST_PI_CONTENT);
+	return WHITE_SPACE;
 }
 <ST_PI, ST_PI_WS> \?> {
 	if(Debug.debugTokenizer)
 		dump("processing instruction end");//$NON-NLS-1$
 	fEmbeddedHint = UNDEFINED;
-    yybegin(YYINITIAL);
-    return XML_PI_CLOSE;
+	yybegin(YYINITIAL);
+	return XML_PI_CLOSE;
 }
 <ST_PI_CONTENT> . {
 	// block scan until close is found
@@ -1804,23 +1804,23 @@ PHP_ASP_END=%>
 <ST_PI_CONTENT,ST_XML_PI_TAG_CLOSE> \?> {
 	// ended with nothing inside
 	fEmbeddedHint = UNDEFINED;
-    yybegin(YYINITIAL);
-    return XML_PI_CLOSE;
+	yybegin(YYINITIAL);
+	return XML_PI_CLOSE;
 }
 
 <ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_EQUALS> {Name} {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction attribute name");//$NON-NLS-1$
-    yybegin(ST_XML_PI_EQUALS);
-    return XML_TAG_ATTRIBUTE_NAME;
+	yybegin(ST_XML_PI_EQUALS);
+	return XML_TAG_ATTRIBUTE_NAME;
 }
 <ST_XML_PI_EQUALS> {Eq} {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction '='");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-    yybegin(ST_XML_PI_ATTRIBUTE_VALUE);
-    return XML_TAG_ATTRIBUTE_EQUALS;
+	yybegin(ST_XML_PI_ATTRIBUTE_VALUE);
+	return XML_TAG_ATTRIBUTE_EQUALS;
 }
 /* the value was found, look for the next name */
 <ST_XML_PI_ATTRIBUTE_VALUE> {AttValue} {
@@ -1828,31 +1828,31 @@ PHP_ASP_END=%>
 		dump("XML processing instruction attribute value");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_XML_PI_ATTRIBUTE_NAME);
-    return XML_TAG_ATTRIBUTE_VALUE;
+	yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+	return XML_TAG_ATTRIBUTE_VALUE;
 }
 /* the PI's close was found */
 <ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> \?> {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction end");//$NON-NLS-1$
 	fEmbeddedHint = UNDEFINED;
-    yybegin(YYINITIAL);
-    return XML_PI_CLOSE;
+	yybegin(YYINITIAL);
+	return XML_PI_CLOSE;
 }
 // DHTML
 <ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_EQUALS> {Name} {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction attribute name");//$NON-NLS-1$
-    yybegin(ST_DHTML_EQUALS);
-    return XML_TAG_ATTRIBUTE_NAME;
+	yybegin(ST_DHTML_EQUALS);
+	return XML_TAG_ATTRIBUTE_NAME;
 }
 <ST_DHTML_EQUALS> {Eq} {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction '='");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-    yybegin(ST_DHTML_ATTRIBUTE_VALUE);
-    return XML_TAG_ATTRIBUTE_EQUALS;
+	yybegin(ST_DHTML_ATTRIBUTE_VALUE);
+	return XML_TAG_ATTRIBUTE_EQUALS;
 }
 /* the value was found, look for the next name */
 <ST_DHTML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
@@ -1860,16 +1860,16 @@ PHP_ASP_END=%>
 		dump("DHTML processing instruction attribute value");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
-    yybegin(ST_DHTML_ATTRIBUTE_NAME);
-    return XML_TAG_ATTRIBUTE_VALUE;
+	yybegin(ST_DHTML_ATTRIBUTE_NAME);
+	return XML_TAG_ATTRIBUTE_VALUE;
 }
 /* The DHTML PI's close was found */
 <ST_DHTML_EQUALS, ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_ATTRIBUTE_VALUE> [/]*> {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction end");//$NON-NLS-1$
 	fEmbeddedHint = UNDEFINED;
-    yybegin(YYINITIAL);
-    return XML_PI_CLOSE;
+	yybegin(YYINITIAL);
+	return XML_PI_CLOSE;
 }
 
 // XML declarations
@@ -1878,7 +1878,7 @@ PHP_ASP_END=%>
 	fStateStack.push(yystate());
 	if(Debug.debugTokenizer)
 		dump("\ndeclaration start");//$NON-NLS-1$
-    yybegin(ST_XML_DECLARATION);
+	yybegin(ST_XML_DECLARATION);
 	return XML_DECLARATION_OPEN;
 }
 <ST_XML_DECLARATION> [Ee][Ll][Ee][Mm][Ee][Nn][Tt] {
@@ -2012,11 +2012,11 @@ PHP_ASP_END=%>
 //PHP PROCESSING ACTIONS
 // XXX Rule can never be matched:
 <YYINITIAL,ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_XML_COMMENT, ST_XML_ATTRIBUTE_VALUE_DQUOTED, ST_XML_ATTRIBUTE_VALUE_SQUOTED, ST_BLOCK_TAG_INTERNAL_SCAN> {PHP_START} | {PHP_ASP_START} {
-    if (ProjectOptions.isSupportingAspTags(project) ||yytext().charAt(1) != '%') {
+	if (ProjectOptions.isSupportingAspTags(project) ||yytext().charAt(1) != '%') {
 		//removing trailing whitespaces for the php open
 		String phpStart = yytext();
-		int i = phpStart.length() - 1; 
-		while(i >= 0 && Character.isWhitespace(phpStart.charAt(i--))){
+		int i = phpStart.length() - 1;
+		while(i >= 0 && Character.isWhitespace(phpStart.charAt(i--))) {
 			yypushback(1);
 		}
 
@@ -2056,8 +2056,8 @@ PHP_ASP_END=%>
 			}
 			return PROXY_CONTEXT;
 		}
-    }
-    yypushback(1);
+	}
+	yypushback(1);
 	yybegin(ST_XML_TAG_NAME);
 	return XML_TAG_OPEN;
 }
@@ -2065,7 +2065,7 @@ PHP_ASP_END=%>
 <ST_PHP_CONTENT> {PIend} | {PHP_ASP_END} {
 	yybegin(fStateStack.pop());
 	return PHP_CLOSE;
-	
+
 }
 <ST_PHP_CONTENT> .|\n|\r {
 	return doScanEndPhp(PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
@@ -2088,7 +2088,7 @@ PHP_ASP_END=%>
 		dump("0x9");//$NON-NLS-1$
 	return WHITE_SPACE;
 }
-\015 
+\015
 {
 	if(Debug.debugTokenizer)
 		dump("CARRIAGE RETURN");//$NON-NLS-1$
