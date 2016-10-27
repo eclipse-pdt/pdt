@@ -52,44 +52,44 @@ parser code {:
 		return variable;
 	}
 
-    /** Report a non fatal error (or warning).  This method takes a message 
-     *  string and an additional object (to be used by specializations 
-     *  implemented in subclasses).  Here in the base class a very simple 
-     *  implementation is provided which simply prints the message to 
-     *  System.err. 
-     *
-     * @param message an error message.
-     * @param info    an extra object reserved for use by specialized subclasses.
-     */
-    public void report_error(String message, Object info)
-    {
-        if (DLTKCore.DEBUG) {
-            super.report_error(message, info);
-        }
-    }
+	/** Report a non fatal error (or warning).  This method takes a message
+	 *  string and an additional object (to be used by specializations
+	 *  implemented in subclasses).  Here in the base class a very simple
+	 *  implementation is provided which simply prints the message to
+	 *  System.err.
+	 *
+	 * @param message an error message.
+	 * @param info    an extra object reserved for use by specialized subclasses.
+	 */
+	public void report_error(String message, Object info)
+	{
+		if (DLTKCore.DEBUG) {
+			super.report_error(message, info);
+		}
+	}
 
-    protected void report_expected_token_ids()
-    {
-        // XXX : really verbose, disable it completely for now
-        // if (DLTKCore.DEBUG) {
-        //     super.report_expected_token_ids();
-        // }
-    }
+	protected void report_expected_token_ids()
+	{
+		// XXX : really verbose, disable it completely for now
+		// if (DLTKCore.DEBUG) {
+		//     super.report_expected_token_ids();
+		// }
+	}
 
-    public void report_fatal_error(
-    String   message,
-    Object   info)
-    throws java.lang.Exception
-    {
-      /* stop parsing (not really necessary since we throw an exception, but) */
-      done_parsing();
+	public void report_fatal_error(
+	String   message,
+	Object   info)
+	throws java.lang.Exception
+	{
+		/* stop parsing (not really necessary since we throw an exception, but) */
+		done_parsing();
 
-      /* use the normal error message reporting to put out the message */
-      report_error(message, info);
+		/* use the normal error message reporting to put out the message */
+		report_error(message, info);
 
-      /* throw an exception */
-      // throw new Exception("Can't recover from previous error(s)");
-    }
+		/* throw an exception */
+		// throw new Exception("Can't recover from previous error(s)");
+	}
 :}
 
 /* terminals */
@@ -616,8 +616,8 @@ T_CURLY_OPEN:token inner_statement_list:sList T_CURLY_CLOSE:e
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int s = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int s = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(s, iffalseright, parser.ast, innerCondition, trueStatement, falseStatement);
 	}
 	RESULT = new IfStatement(tokenleft, iffalseright, parser.ast, cond, iftrue, falseStatement);
@@ -631,8 +631,8 @@ T_CURLY_OPEN:token inner_statement_list:sList T_CURLY_CLOSE:e
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int s = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int s = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(s, iffalseright, parser.ast, innerCondition, trueStatement, falseStatement);
 	}
 	Block block = new Block(colonleft, ifTrueStatementListright, parser.ast, ifTrueStatementList, false);
@@ -931,7 +931,7 @@ class_entry_type:modifier T_STRING:className
 extends_from:superClass implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
-	if(modifier.intValue()==ClassDeclaration.MODIFIER_TRAIT){
+	if(modifier.intValue()==ClassDeclaration.MODIFIER_TRAIT) {
 		RESULT = new TraitDeclaration(modifierleft ,blockEndright, parser.ast, ClassDeclaration.MODIFIER_NONE,
 			new Identifier(classNameleft, classNameright, parser.ast, className), superClass, interfaces,
 			new Block(blockStartleft, blockEndright, parser.ast, sList));
@@ -2161,7 +2161,7 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 
 | chain_instance_call:chain
 {:
-   RESULT = chain;
+	RESULT = chain;
 :}
 
 | expr:cond T_QUESTION_MARK expr:ifTrue T_NEKUDOTAIM expr:ifFalse
@@ -2288,11 +2288,11 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 array_creation_dereference ::=
 array_creation:creation T_OPEN_RECT dim_offset:ex T_CLOSE_RECT:end
 {:
-  RESULT = new ArrayAccess(creationleft, endright, parser.ast, creation, ex, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ArrayAccess(creationleft, endright, parser.ast, creation, ex, ArrayAccess.VARIABLE_ARRAY);
 :}
 | array_creation_dereference:creation T_OPEN_RECT dim_offset:ex T_CLOSE_RECT:end
 {:
-  RESULT = new ArrayAccess(creationleft, endright, parser.ast, creation, ex, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ArrayAccess(creationleft, endright, parser.ast, creation, ex, ArrayAccess.VARIABLE_ARRAY);
 :}
 ;
 
@@ -2340,31 +2340,31 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
 function_call ::=
 namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new FunctionInvocation(listleft, eright, parser.ast,
-        new FunctionName(listleft, listright, parser.ast,
-            new NamespaceName(listleft, listright, parser.ast, list, false, false)), parameters);
+	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
+		new FunctionName(listleft, listright, parser.ast,
+			new NamespaceName(listleft, listright, parser.ast, list, false, false)), parameters);
 :}
 
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new FunctionInvocation(sleft, eright, parser.ast,
-        new FunctionName(sleft, listright, parser.ast,
-            new NamespaceName(sleft, listright, parser.ast, list, false, true)), parameters);
+	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
+		new FunctionName(sleft, listright, parser.ast,
+			new NamespaceName(sleft, listright, parser.ast, list, false, true)), parameters);
 :}
 
 | T_NS_SEPARATOR:s namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new FunctionInvocation(sleft, eright, parser.ast,
-        new FunctionName(sleft, listright, parser.ast,
-            new NamespaceName(sleft, listright, parser.ast, list, true, false)), parameters);
+	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
+		new FunctionName(sleft, listright, parser.ast,
+			new NamespaceName(sleft, listright, parser.ast, list, true, false)), parameters);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-        new FunctionInvocation(fnleft, eright, parser.ast,
-            new FunctionName(fnleft, fnright, parser.ast,
-                fn), parameters));
+	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+		new FunctionInvocation(fnleft, eright, parser.ast,
+			new FunctionName(fnleft, fnright, parser.ast,
+				fn), parameters));
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM field_access_dim_list_indirect_reference:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
@@ -2374,40 +2374,40 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 	for (int i=0; i<reflectionName.refCount; i++) {
 		finalVar = new ReflectionVariable(reflectionNameleft + reflectionName.refCount - i - 1, reflectionNameright, parser.ast, finalVar);
 	}
-    RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-        new FunctionInvocation(reflectionNameleft, eright, parser.ast,
-            new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, finalVar), parameters));
+	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, finalVar), parameters));
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM field_access_dim_list_indirect_reference:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    Expression finalVar = reflectionName.variable;
+	Expression finalVar = reflectionName.variable;
 	finalVar = parser.resolveDimList((VariableBase)finalVar, reflectionName.list);
 	for (int i=0; i<reflectionName.refCount; i++) {
 		finalVar = new ReflectionVariable(reflectionNameleft + reflectionName.refCount - i - 1, reflectionNameright, parser.ast, finalVar);
 	}
-    RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-        new FunctionInvocation(reflectionNameleft, eright, parser.ast,
-            new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, finalVar), parameters));
+	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, finalVar), parameters));
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-        new FunctionInvocation(fnleft, eright, parser.ast,
-            new FunctionName(fnleft, fnright, parser.ast,
-                fn), parameters));
+	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+		new FunctionInvocation(fnleft, eright, parser.ast,
+			new FunctionName(fnleft, fnright, parser.ast,
+				fn), parameters));
 :}
 
 | variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new FunctionInvocation(reflectionNameleft, eright, parser.ast,
-        new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters);
+	RESULT = new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+		new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters);
 :}
 
 | function_call:call T_OPEN_RECT dim_offset:expr T_CLOSE_RECT:e
 {:
-       RESULT = new ArrayAccess(callleft, eright, parser.ast, call, expr, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ArrayAccess(callleft, eright, parser.ast, call, expr, ArrayAccess.VARIABLE_ARRAY);
 :}
 ;
 
@@ -2465,14 +2465,14 @@ class_name:className
 dynamic_class_name_reference ::=
 dynamic_class_name_variable_property:var
 {:
-	 RESULT = new ClassName(varleft, varright, parser.ast, var);
+	RESULT = new ClassName(varleft, varright, parser.ast, var);
 :}
 ;
 
 dynamic_class_name_variable_property ::=
 base_variable:var
 {:
-    RESULT = var;
+	RESULT = var;
 :}
 
 | dynamic_class_name_variable_property:ch T_OBJECT_OPERATOR variable_without_objects:var
@@ -2637,11 +2637,11 @@ T_ARRAY:s T_OPEN_PARENTHESE static_array_pair_list:list T_CLOSE_PARENTHESE:e
 static_array_creation_dereference ::=
 static_array_creation:ref T_OPEN_RECT static_scalar:exp T_CLOSE_RECT:e
 {:
-   RESULT = new ArrayAccess(refleft, eright, parser.ast, ref, exp, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ArrayAccess(refleft, eright, parser.ast, ref, exp, ArrayAccess.VARIABLE_ARRAY);
 :}
 | static_array_creation_dereference:ref T_OPEN_RECT static_scalar:exp T_CLOSE_RECT:e
 {:
-   RESULT = new ArrayAccess(refleft, eright, parser.ast, ref, exp, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ArrayAccess(refleft, eright, parser.ast, ref, exp, ArrayAccess.VARIABLE_ARRAY);
 :}
 ;
 
@@ -2702,9 +2702,9 @@ common_scalar:scalar
 	RESULT = arr;
 :}
 
-| static_string_dereference:ref 
+| static_string_dereference:ref
 {:
-    RESULT = ref;
+	RESULT = ref;
 :}
 
 | static_class_constant:classConstant
@@ -2723,8 +2723,8 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CLASS:varName
 {:
-    RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className,
-        new Identifier(varNameleft, varNameright, parser.ast, "class"));
+	RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className,
+		new Identifier(varNameleft, varNameright, parser.ast, "class"));
 :}
 ;
 
@@ -2857,7 +2857,7 @@ variable:var
 variable ::=
 base_variable_with_function_calls:var
 {:
-    RESULT = var;
+	RESULT = var;
 :}
 
 | variable:ch T_OBJECT_OPERATOR variable_without_objects:var
@@ -3082,8 +3082,8 @@ object_dim_list:var T_OPEN_RECT dim_offset:index T_CLOSE_RECT:e
 :}
 
 | variable_name:var
-{: 
-	RESULT = new ObjectDimList(var); 
+{:
+	RESULT = new ObjectDimList(var);
 :}
 ;
 

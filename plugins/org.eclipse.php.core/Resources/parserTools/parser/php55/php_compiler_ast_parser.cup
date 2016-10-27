@@ -35,15 +35,15 @@ parser code {:
 			dispatcher = new PHPCallExpression(dispatcher.sourceStart(), callExpression.sourceEnd(), dispatcher, callExpression.getCallName(), callExpression.getArgs());
 		} else {
 			dispatcher =  new FieldAccess(dispatcher.sourceStart(), property.sourceEnd(), dispatcher, property);
-		} 
+		}
 
 		return dispatcher;
 	}
 
-    protected Expression createDispatch(Expression dispatcher, ObjectDimList dimList) {
+	protected Expression createDispatch(Expression dispatcher, ObjectDimList dimList) {
 		return resolveDimList(this.createDispatch(dispatcher, dimList.variable), dimList.list);
 	}
-	
+
 	protected Expression resolveDimList(Expression variable, DimList list) {
 		if (list == null) {
 			return variable;
@@ -63,13 +63,13 @@ parser code {:
 		return PhpTokenNames.getName(token);
 	}
 
-    protected void report_expected_token_ids()
-    {
-        // XXX : really verbose, disable it completely for now
-        // if (DLTKCore.DEBUG) {
-        //     super.report_expected_token_ids();
-        // }
-    }
+	protected void report_expected_token_ids()
+	{
+		// XXX : really verbose, disable it completely for now
+		// if (DLTKCore.DEBUG) {
+		//     super.report_expected_token_ids();
+		// }
+	}
 :}
 
 /* terminals */
@@ -357,7 +357,7 @@ non terminal ArrayCreation static_array_creation;
 non terminal ReflectionArrayVariableReference static_array_creation_dereference;
 
 non terminal ReflectionArrayVariableReference string_dereference;
-non terminal ReflectionArrayVariableReference static_string_dereference; 
+non terminal ReflectionArrayVariableReference static_string_dereference;
 
 precedence left T_OPEN_PARENTHESE, T_CLOSE_PARENTHESE;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -458,7 +458,7 @@ top_statement_list:statementList top_statement:statement
 {:
 	if(statement != null) {
 		parser.addStatement(statement);
-		if(parser.pendingStatement != null){
+		if(parser.pendingStatement != null) {
 			parser.addStatement(parser.pendingStatement);
 			parser.pendingStatement = null;
 		}
@@ -477,7 +477,7 @@ namespace_statement_list:statementList top_statement:statement
 	// Ignore null statements
 	if(statement != null) {
 		statementList.add(statement);
-		if(statement.getKind() == ASTNodeKinds.AST_ERROR){
+		if(statement.getKind() == ASTNodeKinds.AST_ERROR) {
 			if(!parser.declarations.isEmpty()) {
 				Statement node = parser.declarations.peek();
 				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
@@ -679,7 +679,7 @@ inner_statement_list:statementList inner_statement:statement
 	// Ignore null statements
 	if(statement != null) {
 		statementList.add(statement);
-		if(statement.getKind() == ASTNodeKinds.AST_ERROR){
+		if(statement.getKind() == ASTNodeKinds.AST_ERROR) {
 			if(!parser.declarations.isEmpty()) {
 				Statement node = parser.declarations.peek();
 				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
@@ -763,8 +763,8 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int start = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int start = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(start, iffalseright, innerCondition, trueStatement, falseStatement);
 	}
 	IfStatement ifStatement = new IfStatement(tokenleft, iffalseright, condition, iftrue, falseStatement);
@@ -780,8 +780,8 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int start = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int start = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(start, iffalseright, innerCondition, trueStatement, falseStatement);
 	}
 	Block block = new Block(colonleft, ifTrueStatementListright, ifTrueStatementList);
@@ -1110,7 +1110,7 @@ unticked_class_declaration_statement ::=
 class_entry_type:modifier T_STRING:className
 {:
 	ClassDeclaration classDeclaration;
-	if(modifier.modifier==org.eclipse.php.core.compiler.IPHPModifiers.AccTrait){
+	if(modifier.modifier==org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
 		classDeclaration = new TraitDeclaration(modifierleft ,classNameright,
 			classNameleft, classNameright, modifier.modifier, className, null, null,
 			new Block(classNameright,classNameright,null), modifier.doc);
@@ -1127,20 +1127,20 @@ extends_from:superClass errorOrNot implements_list:interfaces
 {:
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.peek();
 	if (superClass != null) {
-        if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
-           parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd()), String.format("A trait (%s) cannot extend a class. Traits can only be composed from other traits with the 'use' keyword", classDeclaration.getName()));
-        } else {
-          classDeclaration.setSuperClass(superClass);
-        }
-    }
+		if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
+			parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd()), String.format("A trait (%s) cannot extend a class. Traits can only be composed from other traits with the 'use' keyword", classDeclaration.getName()));
+		} else {
+			classDeclaration.setSuperClass(superClass);
+		}
+	}
 	if (interfaces != null) {
-        if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait && interfaces.size() > 0) {
-        SimpleReference node = (SimpleReference) interfaces.get(0);
-           parser.reportError(new ASTError(node.sourceStart(), node.sourceEnd()), String.format("Cannot use '%s' as interface on '%s' since it is a Trait", node.getName(), classDeclaration.getName()));
-        } else {
-          classDeclaration.setInterfaceList(interfaces);
-        }
-    }
+		if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait && interfaces.size() > 0) {
+		SimpleReference node = (SimpleReference) interfaces.get(0);
+			parser.reportError(new ASTError(node.sourceStart(), node.sourceEnd()), String.format("Cannot use '%s' as interface on '%s' since it is a Trait", node.getName(), classDeclaration.getName()));
+		} else {
+			classDeclaration.setInterfaceList(interfaces);
+		}
+	}
 	classDeclaration.setEnd(interfacesright);
 	classDeclaration.getBody().setStart(interfacesright);
 	classDeclaration.getBody().setEnd(interfacesright);
@@ -2017,28 +2017,28 @@ trait_alias ::=
 non_empty_trait_modifiers ::=
 T_PUBLIC:value
 {:
-    RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value);
 :}
 
 | T_PROTECTED:value
 {:
-    RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value);
 :}
 
 | T_PRIVATE:value
 {:
-    RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value);
 :}
 ;
 
 trait_modifiers ::=
-        /* empty */
+		/* empty */
 {:
-    RESULT = null;
+	RESULT = null;
 :}
 | non_empty_trait_modifiers:modifier
 {:
-    RESULT = modifier;
+	RESULT = modifier;
 :}
 ;
 
@@ -2191,7 +2191,7 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 ;
 
 chain_instance_call ::=
-T_OPEN_PARENTHESE:start new_expr:expr T_CLOSE_PARENTHESE:end 
+T_OPEN_PARENTHESE:start new_expr:expr T_CLOSE_PARENTHESE:end
 {:
 	RESULT = expr;
 :}
@@ -2590,7 +2590,7 @@ list_variable:vars T_EQUAL expr:expr
 
 | chain_instance_call:call
 {:
-   RESULT = call;
+	RESULT = call;
 :}
 
 | expr:condition T_QUESTION_MARK expr:ifTrue T_NEKUDOTAIM expr:ifFalse
@@ -2713,7 +2713,7 @@ lambda_function_body:body
 | T_STATIC T_FUNCTION:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
 {:
-	
+
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
 		new Block(varsListright, varsListright, null), isReference.booleanValue(), true);
 	parser.addDeclarationStatement(functionDeclaration);
@@ -2812,92 +2812,92 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
 function_call ::=
 namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
 :}
 
 | T_NAMESPACE:namespace T_NS_SEPARATOR namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    if (functionName.getNamespace() != null) {
-        functionName.getNamespace().setLocal(true);
-    }
-    RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	if (functionName.getNamespace() != null) {
+		functionName.getNamespace().setLocal(true);
+	}
+	RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters);
 :}
 
 | T_NS_SEPARATOR:s namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    NamespaceReference namespace = functionName.getNamespace();
-    if (namespace == null) {
-        namespace = new NamespaceReference(sleft, sright, "");
-        functionName.setNamespace(namespace);
-    }
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	NamespaceReference namespace = functionName.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		functionName.setNamespace(namespace);
+	}
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	functionName.setStart(sleft);
-    RESULT = new PHPCallExpression(sleft, endright, null, functionName, parameters);
+	RESULT = new PHPCallExpression(sleft, endright, null, functionName, parameters);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    SimpleReference name;
-    if(functionName instanceof SimpleReference){
-        name = (SimpleReference)functionName;
-    }else{
-        name = new SimpleReference(functionNameleft, functionNameleft, "");
-    }
-    RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	SimpleReference name;
+	if(functionName instanceof SimpleReference) {
+		name = (SimpleReference)functionName;
+	}else{
+		name = new SimpleReference(functionNameleft, functionNameleft, "");
+	}
+	RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM field_access_dim_list_indirect_reference:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
 	Expression finalVar = reflectionName.variable;
 	finalVar = parser.resolveDimList(finalVar, reflectionName.list);
 	for (int i=0; i<reflectionName.refCount; i++) {
 		finalVar = new ReflectionVariableReference(reflectionNameleft + reflectionName.refCount - i - 1, reflectionNameright, finalVar);
 	}
-    ReflectionStaticMethodInvocation functionInvocation = new ReflectionStaticMethodInvocation(classNameleft, endright, className, finalVar, parameters);
-    RESULT = functionInvocation;
+	ReflectionStaticMethodInvocation functionInvocation = new ReflectionStaticMethodInvocation(classNameleft, endright, className, finalVar, parameters);
+	RESULT = functionInvocation;
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM field_access_dim_list_indirect_reference:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
 	Expression finalVar = reflectionName.variable;
 	finalVar = parser.resolveDimList(finalVar, reflectionName.list);
 	for (int i=0; i<reflectionName.refCount; i++) {
 		finalVar = new ReflectionVariableReference(reflectionNameleft + reflectionName.refCount - i - 1, reflectionNameright, finalVar);
 	}
-    RESULT = new ReflectionStaticMethodInvocation(classNameleft, endright, className, finalVar, parameters);
+	RESULT = new ReflectionStaticMethodInvocation(classNameleft, endright, className, finalVar, parameters);
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    SimpleReference name;
-    if(functionName instanceof SimpleReference){
-        name = (SimpleReference)functionName;
-    }else{
-        name = new SimpleReference(functionNameleft, functionNameleft, "");
-    }
-    RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	SimpleReference name;
+	if(functionName instanceof SimpleReference) {
+		name = (SimpleReference)functionName;
+	}else{
+		name = new SimpleReference(functionNameleft, functionNameleft, "");
+	}
+	RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters);
 :}
 
 | variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
-    parameters.setStart(startright);
-    parameters.setEnd(endleft);
-    RESULT = new ReflectionCallExpression(reflectionNameleft, endright, null, reflectionName, parameters);
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	RESULT = new ReflectionCallExpression(reflectionNameleft, endright, null, reflectionName, parameters);
 :}
 
 | function_call:varName T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
@@ -2993,7 +2993,7 @@ dynamic_class_name_variable_property:expr
 dynamic_class_name_variable_property ::=
 base_variable:var
 {:
-    RESULT = var;
+	RESULT = var;
 :}
 
 | dynamic_class_name_variable_property:ch T_OBJECT_OPERATOR variable_without_objects:var
@@ -3255,7 +3255,7 @@ common_scalar:scalar
 :}
 | static_string_dereference:ref
 {:
-   RESULT = ref;
+	RESULT = ref;
 :}
 ;
 
@@ -3269,9 +3269,9 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CLASS:varName
 {:
-    ConstantReference vname = new ConstantReference(varNameleft, varNameright, "class");
-    StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, vname);
-    RESULT = constant;
+	ConstantReference vname = new ConstantReference(varNameleft, varNameright, "class");
+	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, vname);
+	RESULT = constant;
 :}
 ;
 
@@ -3332,7 +3332,7 @@ T_STRING_VARNAME:scalar
 
 | string_dereference:ref
 {:
-   RESULT = ref;
+	RESULT = ref;
 :}
 ;
 

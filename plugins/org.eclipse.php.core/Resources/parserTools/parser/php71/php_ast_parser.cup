@@ -23,8 +23,8 @@ parser code {:
 	AST ast;
 
 	/**
-     * XXX: Reimplement scalars as NamespaceName
-     */
+	 * XXX: Reimplement scalars as NamespaceName
+	 */
 	protected VariableBase detectScalar(VariableBase expr) {
 		if (expr instanceof NamespaceName) {
 			NamespaceName name = (NamespaceName) expr;
@@ -42,44 +42,44 @@ parser code {:
 		this.ast = ast;
 	}
 
-    /** Report a non fatal error (or warning).  This method takes a message 
-     *  string and an additional object (to be used by specializations 
-     *  implemented in subclasses).  Here in the base class a very simple 
-     *  implementation is provided which simply prints the message to 
-     *  System.err. 
-     *
-     * @param message an error message.
-     * @param info    an extra object reserved for use by specialized subclasses.
-     */
-    public void report_error(String message, Object info)
-    {
-        if (DLTKCore.DEBUG) {
-            super.report_error(message, info);
-        }
-    }
+	/** Report a non fatal error (or warning).  This method takes a message
+	 *  string and an additional object (to be used by specializations
+	 *  implemented in subclasses).  Here in the base class a very simple
+	 *  implementation is provided which simply prints the message to
+	 *  System.err.
+	 *
+	 * @param message an error message.
+	 * @param info    an extra object reserved for use by specialized subclasses.
+	 */
+	public void report_error(String message, Object info)
+	{
+		if (DLTKCore.DEBUG) {
+			super.report_error(message, info);
+		}
+	}
 
-    protected void report_expected_token_ids()
-    {
-        // XXX : really verbose, disable it completely for now
-        // if (DLTKCore.DEBUG) {
-        //     super.report_expected_token_ids();
-        // }
-    }
+	protected void report_expected_token_ids()
+	{
+		// XXX : really verbose, disable it completely for now
+		// if (DLTKCore.DEBUG) {
+		//     super.report_expected_token_ids();
+		// }
+	}
 
-    public void report_fatal_error(
-    String   message,
-    Object   info)
-    throws java.lang.Exception
-    {
-      /* stop parsing (not really necessary since we throw an exception, but) */
-      done_parsing();
+	public void report_fatal_error(
+	String   message,
+	Object   info)
+	throws java.lang.Exception
+	{
+		/* stop parsing (not really necessary since we throw an exception, but) */
+		done_parsing();
 
-      /* use the normal error message reporting to put out the message */
-      report_error(message, info);
+		/* use the normal error message reporting to put out the message */
+		report_error(message, info);
 
-      /* throw an exception */
-      // throw new Exception("Can't recover from previous error(s)");
-    }
+		/* throw an exception */
+		// throw new Exception("Can't recover from previous error(s)");
+	}
 :}
 
 /* terminals */
@@ -401,7 +401,7 @@ reserved_non_modifiers::=
 T_INCLUDE:v
 {:
 	RESULT = v;
-:}	  
+:}
 | T_INCLUDE_ONCE:v
 {:
 	RESULT = v;
@@ -808,7 +808,7 @@ use_type ::=
 T_FUNCTION
 {:
 	RESULT = UseStatement.T_FUNCTION;
-:} 
+:}
 | T_CONST
 {:
 	RESULT = UseStatement.T_CONST;
@@ -959,8 +959,8 @@ T_CURLY_OPEN:token inner_statement_list:sList T_CURLY_CLOSE:e
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int s = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int s = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(s, iffalseright, parser.ast, innerCondition, trueStatement, falseStatement);
 	}
 	RESULT = new IfStatement(tokenleft, iffalseright, parser.ast, cond, iftrue, falseStatement);
@@ -974,8 +974,8 @@ T_CURLY_OPEN:token inner_statement_list:sList T_CURLY_CLOSE:e
 
 	for (int i=0 ; i < elseif[0].size() ; i++) {
 		innerCondition = (Expression)elseif[0].get(i);
-	 	trueStatement = (Statement)elseif[1].get(i);
-	 	int s = ((Integer)elseif[2].get(i)).intValue();
+		trueStatement = (Statement)elseif[1].get(i);
+		int s = ((Integer)elseif[2].get(i)).intValue();
 		falseStatement = new IfStatement(s, iffalseright, parser.ast, innerCondition, trueStatement, falseStatement);
 	}
 	Block block = new Block(colonleft, ifTrueStatementListright, parser.ast, ifTrueStatementList, false);
@@ -1288,7 +1288,7 @@ class_entry_type:modifier T_STRING:className
 extends_from:superClass implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
-	if(modifier.intValue()==ClassDeclaration.MODIFIER_TRAIT){
+	if(modifier.intValue()==ClassDeclaration.MODIFIER_TRAIT) {
 		RESULT = new TraitDeclaration(modifierleft ,blockEndright, parser.ast, ClassDeclaration.MODIFIER_NONE,
 			new Identifier(classNameleft, classNameright, parser.ast, className), superClass, interfaces,
 			new Block(blockStartleft, blockEndright, parser.ast, sList));
@@ -2167,9 +2167,9 @@ class_const_list:list T_COMMA class_const_decl:decl
 ;
 
 class_const_decl::=
-identifier:constName T_EQUAL expr:expr 
+identifier:constName T_EQUAL expr:expr
 {:
-	RESULT = new ASTNode[] { new Identifier(constNameleft, constNameright, parser.ast, constName), expr}; 
+	RESULT = new ASTNode[] { new Identifier(constNameleft, constNameright, parser.ast, constName), expr};
 :}
 ;
 
@@ -2510,7 +2510,7 @@ T_LIST:s T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = expr;
 :}
 
-| yield_expr:yield 
+| yield_expr:yield
 {:
 	RESULT = yield;
 :}
@@ -2666,29 +2666,29 @@ T_VARIABLE:var
 function_call ::=
 name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new FunctionInvocation(listleft, eright, parser.ast,
-        new FunctionName(listleft, listright, parser.ast, list), parameters);
+	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
+		new FunctionName(listleft, listright, parser.ast, list), parameters);
 :}
 
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-        new FunctionInvocation(reflectionNameleft, eright, parser.ast,
-            new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
+	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-        new FunctionInvocation(reflectionNameleft, eright, parser.ast,
-            new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
+	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
 :}
 
 | callable_expr:expr T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
-    RESULT = new FunctionInvocation(exprleft, eright, parser.ast,
-        new FunctionName(exprleft, exprright, parser.ast, expr), parameters);
+	RESULT = new FunctionInvocation(exprleft, eright, parser.ast,
+		new FunctionName(exprleft, exprright, parser.ast, expr), parameters);
 :}
 ;
 
@@ -2895,13 +2895,13 @@ variable:var
 
 
 variable ::=
-callable_variable:var 
+callable_variable:var
 {:
 	RESULT = var;
 :}
 | static_member:s
 {:
-    RESULT = s;
+	RESULT = s;
 :}
 
 | dereferencable:dispatch T_OBJECT_OPERATOR property_name:property
@@ -2956,10 +2956,10 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 | T_CONSTANT_ENCAPSED_STRING:scalar
 {:
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_STRING);
-:} 
+:}
 ;
 
-callable_variable::= 
+callable_variable::=
 simple_variable:var
 {:
 	RESULT = var;
@@ -2976,7 +2976,7 @@ simple_variable:var
 
 | dereferencable:d T_CURLY_OPEN expr:dim T_CURLY_CLOSE:e
 {:
-   RESULT = new ArrayAccess(dleft, eright, parser.ast, d, dim, ArrayAccess.VARIABLE_HASHTABLE);
+	RESULT = new ArrayAccess(dleft, eright, parser.ast, d, dim, ArrayAccess.VARIABLE_HASHTABLE);
 :}
 
 | dereferencable:ch T_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
@@ -2986,7 +2986,7 @@ simple_variable:var
 :}
 | function_call:c
 {:
-    RESULT = c;
+	RESULT = c;
 :}
 ;
 
@@ -3082,7 +3082,7 @@ identifier:varName
 	RESULT = new ReflectionVariable(sleft, eright, parser.ast, expr);
 :}
 
-| simple_variable:v 
+| simple_variable:v
 {:
 	RESULT = v;
 :}
@@ -3099,7 +3099,7 @@ string_st:varName
 	RESULT = new ReflectionVariable(sleft, eright, parser.ast, expr);
 :}
 
-| simple_variable:v 
+| simple_variable:v
 {:
 	RESULT = v;
 :}
@@ -3143,7 +3143,7 @@ possible_array_pair:pair
 :}
 ;
 
-array_pair ::= 
+array_pair ::=
 expr:key T_DOUBLE_ARROW expr:value
 {:
 	RESULT = new ArrayElement(keyleft, valueright, parser.ast, key, value);

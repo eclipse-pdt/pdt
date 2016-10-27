@@ -17,7 +17,7 @@ public interface IDocumentorLexer {
 
 	public void reset(java.io.Reader reader, char[] buffer, int[] parameters);
 
-	public int[] getParamenters();
+	public int[] getParameters();
 
 	public char[] getBuffer();
 }
