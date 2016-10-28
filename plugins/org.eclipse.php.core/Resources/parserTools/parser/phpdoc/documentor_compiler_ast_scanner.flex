@@ -203,7 +203,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		yybegin(ST_IN_LONG_DESC);
 	}
 
-	private void hendleNewLine() {
+	private void handleNewLine() {
 		appendText();
 		if (numOfLines == 4) {
 			int firstLineEnd = sBuffer.indexOf("\n", 1);
@@ -255,7 +255,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 	 * that should be accordingly resetted by the lexical rules calling
 	 * {@link #reset(java.io.Reader, char[], int[])}. Also be careful that those
 	 * internal variables could change from one version of JFlex to another.
-	 * 
+	 *
 	 * @param reader
 	 * @param buffer
 	 * @param parameters
@@ -287,7 +287,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		this.zzLexicalState = YYINITIAL;
 	}
 
-	public int[] getParamenters() {
+	public int[] getParameters() {
 		return new int[] { zzMarkedPos, _zzPushbackPos, zzCurrentPos,
 			zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
 			zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0, zzFinalHighSurrogate };
@@ -310,74 +310,74 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 %%
 
 <YYINITIAL> {
-    ^{PHPDOCSTART}({NEWLINE}) {
-        updateStartPos();
-        yybegin(ST_IN_SHORT_DESC);
-    }
-    ^{PHPDOCSTART} {
-        yypushback(yylength());
-        updateStartPos();
-        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
-        // look for @tags on the first line of this PHPDoc block
-        yybegin(ST_IN_FIRST_LINE);
-    }
+	^{PHPDOCSTART}({NEWLINE}) {
+		updateStartPos();
+		yybegin(ST_IN_SHORT_DESC);
+	}
+	^{PHPDOCSTART} {
+		yypushback(yylength());
+		updateStartPos();
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
+		// look for @tags on the first line of this PHPDoc block
+		yybegin(ST_IN_FIRST_LINE);
+	}
 }
 
 <YYINITIAL>{ANY_CHAR}     {}
 
 <ST_IN_FIRST_LINE>^{PHPDOCSTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
-    int position = findTagPosition();
-    TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
-    if (tagkind != null) {
-        startTagsState(tagkind, position);
-    } else {
-        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
-        // no @tags were found on first line, continue normal
-        // processing...
-        updateStartPos(position);
-        // no need to call yypushback(zzMarkedPos - position) here...
-        yybegin(ST_IN_SHORT_DESC);
-    }
+	int position = findTagPosition();
+	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
+	if (tagkind != null) {
+		startTagsState(tagkind, position);
+	} else {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
+		// no @tags were found on first line, continue normal
+		// processing...
+		updateStartPos(position);
+		// no need to call yypushback(zzMarkedPos - position) here...
+		yybegin(ST_IN_SHORT_DESC);
+	}
 }
 
 <ST_IN_FIRST_LINE>^{PHPDOCSTART} {
-    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
-    // no @tags were found on first line, continue normal
-    // processing...
-    updateStartPos();
-    yybegin(ST_IN_SHORT_DESC);
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
+	// no @tags were found on first line, continue normal
+	// processing...
+	updateStartPos();
+	yybegin(ST_IN_SHORT_DESC);
 }
 
 <ST_IN_SHORT_DESC>^{TABS_AND_SPACES}("*/") {
-    maxNumberofLines = 5;
-    handleDocEnd_shortDesc();
-    return -1;
+	maxNumberofLines = 5;
+	handleDocEnd_shortDesc();
+	return -1;
 }
 <ST_IN_SHORT_DESC>{TABS_AND_SPACES}("*/") {
-    maxNumberofLines = 4;
-    handleDocEnd_shortDesc();
-    return -1;
+	maxNumberofLines = 4;
+	handleDocEnd_shortDesc();
+	return -1;
 }
 
 <ST_IN_SHORT_DESC>^{EMPTYLINE}{NEWLINE}     {startLongDescState(false);}
 
 <ST_IN_SHORT_DESC>([.]+[ \t]+{NEWLINE}?)|([.]+{NEWLINE}) {
-    appendText();
-    startLongDescState(true);
+	appendText();
+	startLongDescState(true);
 }
 
-<ST_IN_SHORT_DESC>{NEWLINE}     {hendleNewLine();}
+<ST_IN_SHORT_DESC>{NEWLINE}     {handleNewLine();}
 <ST_IN_SHORT_DESC>.             {}
 
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
-    int position = findTagPosition();
-    TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
-    if (tagkind != null) {
-        startTagsState(tagkind, position);
-    } else {
-        updateStartPos(position);
-        // no need to call yypushback(zzMarkedPos - position) here...
-    }
+	int position = findTagPosition();
+	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
+	if (tagkind != null) {
+		startTagsState(tagkind, position);
+	} else {
+		updateStartPos(position);
+		// no need to call yypushback(zzMarkedPos - position) here...
+	}
 }
 
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC,ST_IN_TAGS>^{LINESTART}     {updateStartPos();}
@@ -389,14 +389,14 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 <ST_IN_LONG_DESC>.             {}
 
 <ST_IN_TAGS>^{LINESTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
-    int position = findTagPosition();
-    TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
-    if (tagkind != null) {
-        setNewTag(tagkind, position);
-    } else {
-        updateStartPos(position);
-        // no need to call yypushback(zzMarkedPos - position) here...
-    }
+	int position = findTagPosition();
+	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
+	if (tagkind != null) {
+		setNewTag(tagkind, position);
+	} else {
+		updateStartPos(position);
+		// no need to call yypushback(zzMarkedPos - position) here...
+	}
 }
 
 <ST_IN_TAGS>{TABS_AND_SPACES}("*/")     {handleDocEnd_inTags();return -1;}
