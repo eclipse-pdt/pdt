@@ -110,7 +110,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 		return lexerStates;
 	}
 
- // End user code
+ 	// End user code
 %}
 
 LNUM=[0-9]+
