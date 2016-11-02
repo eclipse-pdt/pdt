@@ -41,7 +41,6 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_LINE_COMMENT
 %state ST_PHP_HIGHLIGHTING_ERROR
 
-
 %{
 	public PhpLexer(int state) {
 		initialize(state);
@@ -108,9 +107,9 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 		return lexerStates;
 	}
 
- // End user code
-
+ 	// End user code
 %}
+
 LNUM=[0-9]+
 DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM}?)
@@ -132,17 +131,9 @@ HEREDOC_LABEL_NO_NEWLINE=({LABEL}([^a-zA-Z0-9_\u007f-\uffff;$\n\r\\{]|(";"[^$\n\
 DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
 BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
 HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+({HEREDOC_NON_LABEL}|{HEREDOC_LABEL_NO_NEWLINE})))
-
-PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|"/="|".="|"%="|"<<="|">>="|"&="|"|="|"^="|"||"|"&&"|"OR"|"AND"|"XOR"|"<<"|">>"
-
-
-
-
-
+PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|"/="|".="|"%="|"<<="|">>="|"&="|"|="|"^="|"||"|"&&"|"OR"|"AND"|"XOR"|"<<"|">>"
 
 %%
-
-
 
 /***********************************************************************************************
 **************************************** P  H  P ***********************************************
@@ -726,13 +717,13 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 
 <ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
 	int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
-	int startString=3+bprefix;
-	heredoc_len = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
+	int startString = 3 + bprefix;
+	heredoc_len = yylength() - bprefix - 3 - 1 - (yytext().charAt(yylength() - 2) == '\r' ? 1 : 0);
 	while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
 		startString++;
 		heredoc_len--;
 	}
-	heredoc = yytext().substring(startString,heredoc_len+startString);
+	heredoc = yytext().substring(startString, heredoc_len + startString);
 	yybegin(ST_PHP_START_HEREDOC);
 	return PHP_HEREDOC_TAG;
 }
@@ -750,13 +741,13 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 <ST_PHP_START_HEREDOC>{LABEL}";"?[\n\r] {
 	int label_len = yylength() - 1;
 
-	if (yytext().charAt(label_len-1)==';') {
+	if (yytext().charAt(label_len - 1) == ';') {
 		label_len--;
 	}
 
-	if (label_len==heredoc_len && yytext().substring(0,label_len).equals(heredoc)) {
-		heredoc=null;
-		heredoc_len=0;
+	if (label_len == heredoc_len && yytext().substring(0, label_len).equals(heredoc)) {
+		heredoc = null;
+		heredoc_len = 0;
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
@@ -767,12 +758,12 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r]? {
 	int label_len = yylength() - 1;
 
-	if (yytext().charAt(label_len-1)==';') {
+	if (yytext().charAt(label_len - 1) == ';') {
 		label_len--;
 	}
-	if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
-		if ((label_len - heredoc_len-2) >= 0 && yytext().charAt(label_len - heredoc_len-2)=='\r') {
-			label_len = label_len-2;
+	if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len, label_len).equals(heredoc)) {
+		if ((label_len - heredoc_len - 2) >= 0 && yytext().charAt(label_len - heredoc_len - 2) == '\r') {
+			label_len = label_len - 2;
 		} else {
 			label_len--;
 		}
@@ -845,13 +836,13 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({TABS_AND_SPACES}[^\n\r])*({LABEL}";"?)?)? {
-	if(heredoc!=null&&yytext().startsWith(heredoc)) {
+	if(heredoc != null && yytext().startsWith(heredoc)) {
 		String text = yytext();
 		if(heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
-			|| text.charAt(heredoc_len) == '\n'|| text.charAt(heredoc_len) == ';')) {
-			yypushback(yylength()-heredoc_len-1);
-			heredoc=null;
-			heredoc_len=0;
+			|| text.charAt(heredoc_len) == '\n' || text.charAt(heredoc_len) == ';')) {
+			yypushback(yylength() - heredoc_len - 1);
+			heredoc = null;
+			heredoc_len = 0;
 			yybegin(ST_PHP_IN_SCRIPTING);
 			return PHP_HEREDOC_TAG;
 		}

@@ -186,8 +186,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 	private void hendleDesc() {
 		if(zzLexicalState == ST_IN_SHORT_DESC || zzLexicalState == ST_IN_FIRST_LINE) {
 			shortDesc = sBuffer.toString().trim();
-		}
-		else {
+		} else {
 			longDesc = sBuffer.toString().trim();
 		}
 
@@ -226,14 +225,13 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 
 	private void handleDocEnd_shortDesc() {
 		appendLastText();
-		if(numOfLines==maxNumberofLines) {
-			int firstLineEnd = sBuffer.indexOf("\n",1);
-			shortDesc = sBuffer.substring(0,firstLineEnd);
+		if(numOfLines == maxNumberofLines) {
+			int firstLineEnd = sBuffer.indexOf("\n", 1);
+			shortDesc = sBuffer.substring(0, firstLineEnd);
 			shortDesc = shortDesc.trim();
-			sBuffer.delete(0,firstLineEnd);
+			sBuffer.delete(0, firstLineEnd);
 			longDesc = sBuffer.toString().trim();
-		}
-		else {
+		} else {
 			shortDesc = sBuffer.toString().trim();
 		}
 	}

@@ -93,15 +93,14 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  */
 protected final boolean containsTagName(char[] markerTagName, int offset, int tagnameLength) {
 	for(int j = 0; j < fBlockMarkers.size(); j++) {
-		BlockMarker marker = (BlockMarker)fBlockMarkers.get(j);
+		BlockMarker marker = (BlockMarker) fBlockMarkers.get(j);
 		if(marker.getTagName().length() == tagnameLength) {
 			boolean matchesSoFar = true;
 			for(int i = 0; i < tagnameLength && matchesSoFar; i++) {
 				if(marker.isCaseSensitive()) {
 					if(marker.getTagName().charAt(i) != markerTagName[i + offset])
 						matchesSoFar = false;
-				}
-				else {
+				} else {
 					if(Character.toLowerCase(marker.getTagName().charAt(i)) != Character.toLowerCase(markerTagName[i + offset]))
 						matchesSoFar = false;
 				}
@@ -147,12 +146,11 @@ public final List getRegions() {
 protected final boolean containsTagName(String markerTagName) {
 	Iterator blocks = fBlockMarkers.iterator();
 	while(blocks.hasNext()) {
-		BlockMarker marker = (BlockMarker)blocks.next();
+		BlockMarker marker = (BlockMarker) blocks.next();
 		if(marker.isCaseSensitive()) {
 			if(marker.getTagName().equals(markerTagName))
 				return true;
-		}
-		else {
+		} else {
 			if(marker.getTagName().equalsIgnoreCase(markerTagName))
 				return true;
 		}
@@ -193,7 +191,7 @@ public boolean getBlockMarkerCaseSensitivity() {
 public boolean getBlockMarkerCaseSensitivity(String name) {
 	Iterator iterator = fBlockMarkers.iterator();
 	while(iterator.hasNext()) {
-		BlockMarker marker = (BlockMarker)iterator.next();
+		BlockMarker marker = (BlockMarker) iterator.next();
 		boolean casesensitive = marker.isCaseSensitive();
 		if(casesensitive && marker.getTagName().equals(name))
 			return casesensitive;
@@ -210,7 +208,7 @@ public String getBlockMarkerContext() {
 public String getBlockMarkerContext(String name) {
 	Iterator iterator = fBlockMarkers.iterator();
 	while(iterator.hasNext()) {
-		BlockMarker marker = (BlockMarker)iterator.next();
+		BlockMarker marker = (BlockMarker) iterator.next();
 		if(marker.getTagName().equals(name))
 			return marker.getContext();
 	}
@@ -293,8 +291,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 		// If the input was too short or we've exhausted the input, stop immediately.
 		if (n == YYEOF) {
 			stillSearching = false;
-		}
-		else {
+		} else {
 
 			/**
 			 * Look for starting PHPs "<?"
@@ -335,7 +332,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				}
 				return searchContext;
 			}
-			// 3) zzCurrentPos..(zzCurrentPos+jspStartlength-1) : Check at the start of the block one time
+			// 3) zzCurrentPos..(zzCurrentPos+jspStartlength - 1) : Check at the start of the block one time
 			// ---
 			// Look for a JSP beginning immediately in the block area; this case wouldn't be handled by the preceding section
 			// since it relies upon zzCurrentPos equaling exactly the previous end +1 to work as designed.
@@ -357,8 +354,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// and see if it matches
 			if (n == YYEOF) {
 				stillSearching = false;
-			}
-			else {
+			} else {
 				same = true;
 				// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
 				// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
@@ -386,8 +382,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				// Succeed on "</script>" and "</script "
 				if(lastCheckChar == '>' || Character.isWhitespace(lastCheckChar))
 					stillSearching = false;
-			}
-			else {
+			} else {
 				stillSearching = !same || (zzCurrentPos < zzStartRead + searchStringLength);
 			}
 		}
@@ -402,8 +397,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			yybegin(immediateFallbackState);
 			return primGetNextToken();
 		}
-	}
-	else {
+	} else {
 		// We ran through the rest of the input
 		zzMarkedPos = zzCurrentPos;
 		zzCurrentPos++;
@@ -526,7 +520,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
 				}
 				fEmbeddedContainer.getRegions().add(newToken);
-				fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + newToken.getLength() );
+				fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + newToken.getLength());
 				fEmbeddedContainer.setTextLength(fEmbeddedContainer.getTextLength() + newToken.getLength());
 				// DW, 4/16/2003 token regions no longer have parents
 				//newToken.setParent(fEmbeddedContainer);
@@ -548,8 +542,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 						fEmbeddedPostState = ST_ABORT_EMBEDDED;
 						notFinished = false;
 					}
-				}
-				else if (internalContext == XML_TAG_OPEN || internalContext == XML_END_TAG_OPEN) {
+				} else if (internalContext == XML_TAG_OPEN || internalContext == XML_END_TAG_OPEN) {
 					internalTagName = null;
 				}
 				// do upkeep for endTagName usage; must be here since the next token could be the close
@@ -559,7 +552,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					isInFirstTag = isInEndTag = false;
 				} else {
 					ITextRegionList embeddedRegions = fEmbeddedContainer.getRegions();
-					if (embeddedRegions.size() > 2 && (embeddedRegions.get(embeddedRegions.size()-1)).getType() == XML_TAG_CLOSE && (embeddedRegions.get(embeddedRegions.size() - 3)).getType() == XML_TAG_OPEN && internalTagName != null) {
+					if (embeddedRegions.size() > 2 && (embeddedRegions.get(embeddedRegions.size() - 1)).getType() == XML_TAG_CLOSE && (embeddedRegions.get(embeddedRegions.size() - 3)).getType() == XML_TAG_OPEN && internalTagName != null) {
 						if (containsTagName(internalTagName)) {
 							longscan = true;
 							yybegin(ST_BLOCK_TAG_SCAN);
@@ -618,13 +611,12 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					for (int i = 0; i < endTypes.length; i++) {
 						isEndingType = isEndingType || (internalContext == endTypes[i]);
 					}
-				}
-				else {
+				} else {
 					isEndingType = ((isInEndTag && internalContext == XML_TAG_CLOSE) || (isInFirstTag && internalContext == XML_EMPTY_TAG_CLOSE)) && internalTagName != null && internalTagName.equals(endTagName);
 				}
 			}
 			ITextRegionList embeddedList = fEmbeddedContainer.getRegions();
-			notFinished = notFinished && ((!isEndingType) && !isEOF() && (endTagName != null || internalContext != UNDEFINED) && !(internalContext == PROXY_CONTEXT && (embeddedList.get(embeddedList.size()-1)).getType() == UNDEFINED));
+			notFinished = notFinished && ((!isEndingType) && !isEOF() && (endTagName != null || internalContext != UNDEFINED) && !(internalContext == PROXY_CONTEXT && (embeddedList.get(embeddedList.size() - 1)).getType() == UNDEFINED));
 		}
 		// finish adding the last context
 		if (internalContext != null && internalContext != PROXY_CONTEXT) {
@@ -724,8 +716,7 @@ public final ITextRegion getNextToken() throws IOException {
 		start = fBufferedStart;
 		textLength = length = fBufferedLength;
 		fShouldLoadBuffered = false;
-	}
-	else {
+	} else {
 		context = primGetNextToken();
 		if (context == PROXY_CONTEXT) {
 			return fEmbeddedContainer;
@@ -736,15 +727,13 @@ public final ITextRegion getNextToken() throws IOException {
 		}
 		text = yytext();
 		if (context == XML_TAG_NAME) {
-			if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead))
+			if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead))
 				fCurrentTagName = text;
 			else
 				fCurrentTagName = null;
-		}
-		else if (context == XML_TAG_OPEN) {
+		} else if (context == XML_TAG_OPEN) {
 			fIsBlockingEnabled = true;
-		}
-		else if (context == XML_END_TAG_OPEN) {
+		} else if (context == XML_END_TAG_OPEN) {
 			fIsBlockingEnabled = false;
 		}
 		start = yychar;
@@ -761,7 +750,7 @@ public final ITextRegion getNextToken() throws IOException {
 		fBufferedEmbeddedContainer = fEmbeddedContainer;
 		fShouldLoadBuffered = true;
 	} else if (f_context == XML_TAG_NAME) {
-		if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead))
+		if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead))
 			fCurrentTagName = yytext();
 		else
 			fCurrentTagName = null;
@@ -773,15 +762,13 @@ public final ITextRegion getNextToken() throws IOException {
 	fBufferedContext = f_context;
 	fBufferedText = yytext();
 	if (fBufferedContext == XML_TAG_NAME) {
-		if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead))
+		if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead))
 			fCurrentTagName = fBufferedText;
 		else
 			fCurrentTagName = null;
-	}
-	else if (fBufferedContext == XML_TAG_OPEN) {
+	} else if (fBufferedContext == XML_TAG_OPEN) {
 		fIsBlockingEnabled = true;
-	}
-	else if (fBufferedContext == XML_END_TAG_OPEN) {
+	} else if (fBufferedContext == XML_END_TAG_OPEN) {
 		fIsBlockingEnabled = false;
 	}
 	fBufferedStart = yychar;
@@ -866,7 +853,7 @@ public void reset(java.io.Reader in, int newOffset) {
 
 	/* this buffer contains the current text to be matched and is
 	the source of the yytext() string */
-	java.util.Arrays.fill(zzBuffer, (char)0);
+	java.util.Arrays.fill(zzBuffer, (char) 0);
 
 	/* the textposition at the last accepting state */
 	zzMarkedPos = 0;
@@ -1460,7 +1447,7 @@ PHP_ASP_END=%>
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 	// tag inside of JSP attribute value start
 	yybegin(ST_XML_TAG_NAME);
-	assembleEmbeddedContainer(XML_TAG_OPEN, new String[]{XML_TAG_CLOSE,XML_EMPTY_TAG_CLOSE});
+	assembleEmbeddedContainer(XML_TAG_OPEN, new String[]{XML_TAG_CLOSE, XML_EMPTY_TAG_CLOSE});
 	if(yystate() != ST_ABORT_EMBEDDED) {
 		// set incoming state when container
 		// was correctly assembled
@@ -1475,7 +1462,7 @@ PHP_ASP_END=%>
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 	// Php attribute value start - end tag
 	yybegin(ST_XML_TAG_NAME);
-	assembleEmbeddedContainer(XML_END_TAG_OPEN, new String[]{XML_TAG_CLOSE,XML_EMPTY_TAG_CLOSE});
+	assembleEmbeddedContainer(XML_END_TAG_OPEN, new String[]{XML_TAG_CLOSE, XML_EMPTY_TAG_CLOSE});
 	if(yystate() != ST_ABORT_EMBEDDED) {
 		// set incoming state when container
 		// was correctly assembled
@@ -1492,7 +1479,7 @@ PHP_ASP_END=%>
 	fStateStack.push(yystate());
 	// PHP tag embedded name start - start tag
 	yybegin(ST_XML_TAG_NAME);
-	assembleEmbeddedContainer(XML_TAG_OPEN, new String[]{XML_TAG_CLOSE,XML_EMPTY_TAG_CLOSE});
+	assembleEmbeddedContainer(XML_TAG_OPEN, new String[]{XML_TAG_CLOSE, XML_EMPTY_TAG_CLOSE});
 	fStateStack.pop();
 	yybegin(ST_XML_ATTRIBUTE_NAME);
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
@@ -1565,9 +1552,9 @@ PHP_ASP_END=%>
 
 <ST_XML_TAG_NAME> [^</>\u0041-\u005A\u0061-\u007A\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u0131\u0134-\u013E\u0141-\u0148\u014A-\u017E\u0180-\u01C3\u01CD-\u01F0\u01F4-\u01F5\u01FA-\u0217\u0250-\u02A8\u02BB-\u02C1\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03CE\u03D0-\u03D6\u03DA\u03DC\u03DE\u03E0\u03E2-\u03F3\u0401-\u040C\u040E-\u044F\u0451-\u045C\u045E-\u0481\u0490-\u04C4\u04C7-\u04C8\u04CB-\u04CC\u04D0-\u04EB\u04EE-\u04F5\u04F8-\u04F9\u0531-\u0556\u0559\u0561-\u0586\u05D0-\u05EA\u05F0-\u05F2\u0621-\u063A\u0641-\u064A\u0671-\u06B7\u06BA-\u06BE\u06C0-\u06CE\u06D0-\u06D3\u06D5\u06E5-\u06E6\u0905-\u0939\u093D\u0958-\u0961\u0985-\u098C\u098F-\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09DC-\u09DD\u09DF-\u09E1\u09F0-\u09F1\u0A05-\u0A0A\u0A0F-\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32-\u0A33\u0A35-\u0A36\u0A38-\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8B\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2-\u0AB3\u0AB5-\u0AB9\u0ABD\u0AE0\u0B05-\u0B0C\u0B0F-\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32-\u0B33\u0B36-\u0B39\u0B3D\u0B5C-\u0B5D\u0B5F-\u0B61\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99-\u0B9A\u0B9C\u0B9E-\u0B9F\u0BA3-\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB5\u0BB7-\u0BB9\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C33\u0C35-\u0C39\u0C60-\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CDE\u0CE0-\u0CE1\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D28\u0D2A-\u0D39\u0D60-\u0D61\u0E01-\u0E2E\u0E30\u0E32-\u0E33\u0E40-\u0E45\u0E81-\u0E82\u0E84\u0E87-\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA-\u0EAB\u0EAD-\u0EAE\u0EB0\u0EB2-\u0EB3\u0EBD\u0EC0-\u0EC4\u0F40-\u0F47\u0F49-\u0F69\u10A0-\u10C5\u10D0-\u10F6\u1100\u1102-\u1103\u1105-\u1107\u1109\u110B-\u110C\u110E-\u1112\u113C\u113E\u1140\u114C\u114E\u1150\u1154-\u1155\u1159\u115F-\u1161\u1163\u1165\u1167\u1169\u116D-\u116E\u1172-\u1173\u1175\u119E\u11A8\u11AB\u11AE-\u11AF\u11B7-\u11B8\u11BA\u11BC-\u11C2\u11EB\u11F0\u11F9\u1E00-\u1E9B\u1EA0-\u1EF9\u1F00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2126\u212A-\u212B\u212E\u2180-\u2182\u3041-\u3094\u30A1-\u30FA\u3105-\u312C\uAC00-\uD7A3\u4E00-\u9FA5\u3007\u3021-\u3029]* {
 	// inappropriate tag name
-	if(!fStateStack.empty() && (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_SQUOTED||fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_DQUOTED)) {
+	if(!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE_SQUOTED || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE_DQUOTED)) {
 		yybegin(ST_ABORT_EMBEDDED);
-		yypushback(yylength()-1);
+		yypushback(yylength() - 1);
 		return XML_TAG_ATTRIBUTE_VALUE;
 	}
 	yybegin(YYINITIAL);
@@ -1636,7 +1623,7 @@ PHP_ASP_END=%>
 		return XML_PI_OPEN;
 	} else if ("<?=".equals(yytext()) //$NON-NLS-1$
 			&& !PHPVersion.PHP5_3.isLessThan(phpVersion)
-			&& !ProjectOptions.useShortTags(project) ) {
+			&& !ProjectOptions.useShortTags(project)) {
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
 	} else if ("<%".equals(yytext()) //$NON-NLS-1$
@@ -1954,7 +1941,7 @@ PHP_ASP_END=%>
 	if(Debug.debugTokenizer)
 		dump("elementdecl close");//$NON-NLS-1$
 	if (Debug.debugTokenizer) {
-		if(fStateStack.peek()!=YYINITIAL)
+		if(fStateStack.peek() != YYINITIAL)
 			System.out.println("end embedded region");//$NON-NLS-1$
 	}
 	yybegin(fStateStack.pop());
@@ -1979,7 +1966,7 @@ PHP_ASP_END=%>
 	if(Debug.debugTokenizer)
 		dump("attlist close");//$NON-NLS-1$
 	if (Debug.debugTokenizer) {
-		if(fStateStack.peek()!=YYINITIAL)
+		if(fStateStack.peek() != YYINITIAL)
 			System.out.println("end embedded region");//$NON-NLS-1$
 	}
 	yybegin(fStateStack.pop());
@@ -1991,7 +1978,7 @@ PHP_ASP_END=%>
 	if(Debug.debugTokenizer)
 		dump("declaration end");//$NON-NLS-1$
 	if (Debug.debugTokenizer) {
-		if(fStateStack.peek()!=YYINITIAL)
+		if(fStateStack.peek() != YYINITIAL)
 			System.out.println("end embedded region");//$NON-NLS-1$
 	}
 	yybegin(fStateStack.pop());
@@ -2012,7 +1999,7 @@ PHP_ASP_END=%>
 //PHP PROCESSING ACTIONS
 // XXX Rule can never be matched:
 <YYINITIAL,ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_XML_COMMENT, ST_XML_ATTRIBUTE_VALUE_DQUOTED, ST_XML_ATTRIBUTE_VALUE_SQUOTED, ST_BLOCK_TAG_INTERNAL_SCAN> {PHP_START} | {PHP_ASP_START} {
-	if (ProjectOptions.isSupportingAspTags(project) ||yytext().charAt(1) != '%') {
+	if (ProjectOptions.isSupportingAspTags(project) || yytext().charAt(1) != '%') {
 		//removing trailing whitespaces for the php open
 		String phpStart = yytext();
 		int i = phpStart.length() - 1;
@@ -2021,12 +2008,11 @@ PHP_ASP_END=%>
 		}
 
 		fStateStack.push(yystate());
-		if(fStateStack.peek()==YYINITIAL) {
+		if(fStateStack.peek() == YYINITIAL) {
 			// the simple case, just a regular scriptlet out in content
 			yybegin(ST_PHP_CONTENT);
 			return PHP_OPEN;
-		}
-		else {
+		} else {
 			if(yystate() == ST_XML_ATTRIBUTE_VALUE_DQUOTED)
 				fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_DQUOTED;
 			else if(yystate() == ST_XML_ATTRIBUTE_VALUE_SQUOTED)
@@ -2045,12 +2031,10 @@ PHP_ASP_END=%>
 			if(yystate() == ST_XML_TAG_NAME) {
 				fEmbeddedHint = XML_TAG_NAME;
 				fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-			}
-			else if((yystate() == ST_XML_ATTRIBUTE_NAME || yystate() == ST_XML_EQUALS)) {
+			} else if((yystate() == ST_XML_ATTRIBUTE_NAME || yystate() == ST_XML_EQUALS)) {
 				fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 				fEmbeddedPostState = ST_XML_EQUALS;
-			}
-			else if(yystate() == ST_XML_ATTRIBUTE_VALUE) {
+			} else if(yystate() == ST_XML_ATTRIBUTE_VALUE) {
 				fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 				fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 			}
