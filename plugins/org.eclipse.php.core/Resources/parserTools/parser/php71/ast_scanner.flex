@@ -831,8 +831,8 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 
 <YYINITIAL>"<%="|"<?=" {
 	String text = yytext();
-	if ((text.charAt(1)=='%' && asp_tags)
-		|| (text.charAt(1)=='?')) {
+	if ((text.charAt(1) == '%' && asp_tags)
+		|| (text.charAt(1) == '?')) {
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_OPEN_TAG_WITH_ECHO);
 	} else {
@@ -952,7 +952,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_ONE_LINE_COMMENT>"?>"|"%>" {
-	if (asp_tags || yytext().charAt(0)!='%') { /* asp comment? */
+	if (asp_tags || yytext().charAt(0) != '%') { /* asp comment? */
 		handleLineCommentEnd();
 		yypushback(yylength());
 		yybegin(ST_IN_SCRIPTING);
@@ -1023,13 +1023,13 @@ if (parsePHPDoc()) {
 
 <ST_IN_SCRIPTING>("?>"|"</script"{WHITESPACE}*">") {
 	yybegin(YYINITIAL);
-	return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
+	return createSymbol(ParserConstants.T_SEMICOLON); /* implicit ';' at php-end tag */
 }
 
 <ST_IN_SCRIPTING>"%>" {
 	if (asp_tags) {
 		yybegin(YYINITIAL);
-		return createSymbol(ParserConstants.T_SEMICOLON);  /* implicit ';' at php-end tag */
+		return createSymbol(ParserConstants.T_SEMICOLON); /* implicit ';' at php-end tag */
 	} else {
 		return createSymbol(ParserConstants.T_INLINE_HTML);
 	}
@@ -1056,13 +1056,12 @@ if (parsePHPDoc()) {
 	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
 
 	if (hereOrNowDoc.charAt(0) == '\'') {
-		nowdoc = hereOrNowDoc.substring(1, heredoc_len-1);
+		nowdoc = hereOrNowDoc.substring(1, heredoc_len - 1);
 		sym.value = nowdoc;
 		heredoc_len -= 2;
 		yybegin(ST_START_NOWDOC);
-	}
-	else if (hereOrNowDoc.charAt(0) == '"') {
-		heredoc = hereOrNowDoc.substring(1, heredoc_len-1);
+	} else if (hereOrNowDoc.charAt(0) == '"') {
+		heredoc = hereOrNowDoc.substring(1, heredoc_len - 1);
 		sym.value = heredoc;
 		heredoc_len -= 2;
 		yybegin(ST_START_HEREDOC);
@@ -1104,8 +1103,7 @@ if (parsePHPDoc()) {
 		heredoc = null;
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
-	}
-	else {
+	} else {
 		yybegin(ST_HEREDOC);
 	}
 }
@@ -1113,7 +1111,7 @@ if (parsePHPDoc()) {
 <ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
 	String text = yytext();
 
-	if (text.charAt(text.length() - 2)== ';') {
+	if (text.charAt(text.length() - 2) == ';') {
 		text = text.substring(0, text.length() - 2);
 		yypushback(1);
 	} else {
@@ -1128,7 +1126,7 @@ if (parsePHPDoc()) {
 		heredoc = null;
 		// we need to remove the closing label from the symbol value.
 		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-		String value = (String)sym.value;
+		String value = (String) sym.value;
 		sym.value = value.substring(0, value.length() - heredocLength + 1);
 		return sym;
 	}
@@ -1160,8 +1158,7 @@ if (parsePHPDoc()) {
 		nowdoc = null;
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
-	}
-	else {
+	} else {
 		yybegin(ST_NOWDOC);
 	}
 }
@@ -1169,7 +1166,7 @@ if (parsePHPDoc()) {
 <ST_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
 	String text = yytext();
 
-	if (text.charAt(text.length() - 2)== ';') {
+	if (text.charAt(text.length() - 2) == ';') {
 		text = text.substring(0, text.length() - 2);
 		yypushback(1);
 	} else {
@@ -1184,7 +1181,7 @@ if (parsePHPDoc()) {
 		nowdoc = null;
 		// we need to remove the closing label from the symbol value.
 		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-		String value = (String)sym.value;
+		String value = (String) sym.value;
 		sym.value = value.substring(0, value.length() - nowdocLength + 1);
 		return sym;
 	}
@@ -1205,7 +1202,7 @@ if (parsePHPDoc()) {
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {
 	pushState(ST_IN_SCRIPTING);
-	yypushback(yylength()-1);
+	yypushback(yylength() - 1);
 	return createSymbol(ParserConstants.T_CURLY_OPEN_WITH_DOLAR);
 }
 
