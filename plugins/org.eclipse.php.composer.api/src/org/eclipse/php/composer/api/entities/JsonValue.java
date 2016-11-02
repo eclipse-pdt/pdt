@@ -152,7 +152,10 @@ public class JsonValue {
 	 * @return the value as string
 	 */
 	public String getAsString() {
-		return (String) value;
+		if (value instanceof String) {
+			return (String) value;
+		}
+		return value != null ? value.toString() : null;
 	}
 
 	/**
