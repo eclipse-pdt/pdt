@@ -3887,19 +3887,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case FIRST_WRAP_WHEN_NECESSARY:
 			if (lineW > this.preferences.line_wrap_line_split) {
-				wasBinaryExpressionWrapped = indentationLevel == 1;
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				insertNewLine();
 				indentationLevel += binaryExpressionIndentGap;
-				wasBinaryExpressionWrapped = true;
 				indent();
+				wasBinaryExpressionWrapped = true;
 			}
 			break;
 		case WRAP_WHEN_NECESSARY:
 			if (lineW > this.preferences.line_wrap_line_split) {
-				wasBinaryExpressionWrapped = true;
 				insertNewLine();
 				indent();
+				wasBinaryExpressionWrapped = true;
 			}
 			break;
 		case WRAP_FIRST_ELEMENT:
@@ -3910,11 +3909,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					insertNewLine();
 					indentationLevel += binaryExpressionIndentGap;
 					indent();
+					wasBinaryExpressionWrapped = true;
 				} else {
 					binaryExpressionRevertPolicy = WRAP_FIRST_ELEMENT;
 					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 				}
-				wasBinaryExpressionWrapped = true;
 			}
 			break;
 		case WRAP_ALL_ELEMENTS:
@@ -3925,11 +3924,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					insertNewLine();
 					indentationLevel += binaryExpressionIndentGap;
 					indent();
+					wasBinaryExpressionWrapped = true;
 				} else {
 					binaryExpressionRevertPolicy = WRAP_ALL_ELEMENTS;
 					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 				}
-				wasBinaryExpressionWrapped = true;
 			}
 			break;
 		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST:
@@ -3940,6 +3939,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					insertNewLine();
 					indentationLevel += binaryExpressionIndentGap;
 					indent();
+					wasBinaryExpressionWrapped = true;
 
 					// increase the indentation level after the first element
 					indentationLevel++;
@@ -3948,7 +3948,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					binaryExpressionRevertPolicy = WRAP_ALL_ELEMENTS_NO_INDENT_FIRST;
 					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 				}
-				wasBinaryExpressionWrapped = true;
 			}
 			break;
 		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:
@@ -3959,12 +3958,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					binaryExpressionRevertPolicy = WRAP_ALL_ELEMENTS_EXCEPT_FIRST;
 					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 				}
-				wasBinaryExpressionWrapped = true;
 			}
 			break;
 		case ALWAYS_WRAP_ELEMENT:
 			insertNewLine();
 			indent();
+			wasBinaryExpressionWrapped = true;
 			break;
 		}
 
@@ -3984,8 +3983,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				binaryExpressionLineWrapPolicy = binaryExpressionRevertPolicy;
 				// undo everything
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=506488
+				binaryExpressionSavedBuffer = replaceBuffer.toString();
+				// must be null to avoid infinite loop (note that
+				// binaryExpressionSavedBuffer must stay not null to avoid
+				// redefining binaryExpressionSavedNode)
+				binaryExpressionSavedNode = null;
+				binaryExpressionSavedChangesIndex = changes.size() - 1;
 				binaryExpressionRevertPolicy = -1;
-				binaryExpressionSavedBuffer = null; // just by security
 				indentationLevel = oldIndentationLevel;
 				wasBinaryExpressionWrapped = oldWasBinaryExpressionWrapped;
 				infixExpression.accept(this);
