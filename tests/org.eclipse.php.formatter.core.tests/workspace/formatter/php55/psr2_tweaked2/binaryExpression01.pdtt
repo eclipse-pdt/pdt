@@ -1,0 +1,24 @@
+--TEST--
+Bug 506488 - Code formatter 'unhandled loop exception'
+--FILE--
+<?php
+namespace Foo;
+
+use Psr\Http\Message\ServerRequestInterface as Request;
+
+class Foo
+{
+    public function __invoke(Request $req)
+    {
+        $isAlreadyResolved = $request->getAttribute(DomainModelInterface::class) !== null;
+    }
+}
+--EXPECT--
+<?php
+namespace Foo;
+use Psr\Http\Message\ServerRequestInterface as Request;
+class Foo {
+	public function __invoke(Request $req) {
+		$isAlreadyResolved = $request->getAttribute ( DomainModelInterface::class ) !== null;
+	}
+}
