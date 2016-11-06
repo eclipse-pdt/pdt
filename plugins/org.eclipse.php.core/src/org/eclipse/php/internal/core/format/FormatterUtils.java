@@ -54,7 +54,7 @@ public class FormatterUtils {
 			if (tRegion != null) {
 				int regionStart = sdRegion.getStartOffset(tRegion);
 
-				// in case of container we have the extract the PhpScriptRegion
+				// in case of container we have to extract the PhpScriptRegion
 				if (tRegion instanceof ITextRegionContainer) {
 					ITextRegionContainer container = (ITextRegionContainer) tRegion;
 					tRegion = container.getRegionAtCharacterOffset(offset);
@@ -95,7 +95,7 @@ public class FormatterUtils {
 
 			int regionStart = sdRegion.getStartOffset(tRegion);
 
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (tRegion != null && tRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) tRegion;
 				tRegion = container.getRegionAtCharacterOffset(offset);

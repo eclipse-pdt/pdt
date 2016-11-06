@@ -53,7 +53,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			int regionStart = sdRegion.getStartOffset(tRegion);
 
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (tRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) tRegion;
 				tRegion = container.getRegionAtCharacterOffset(offset);

@@ -67,7 +67,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 						if (sdRegion != null) {
 							ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 							int startRegion = sdRegion.getStartOffset();
-							// in case of container we have the extract the
+							// in case of container we have to extract the
 							// PhpScriptRegion
 							if (textRegion instanceof ITextRegionContainer) {
 								ITextRegionContainer container = (ITextRegionContainer) textRegion;

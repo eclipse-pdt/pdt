@@ -63,13 +63,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		if (tRegion == null && offset == document.getLength()) {
-			offset -= 1;
-			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		}
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
-		// in case of container we have the extract the PhpScriptRegion
+		// in case of container we have to extract the PhpScriptRegion
 		if (tRegion instanceof ITextRegionContainer) {
 			ITextRegionContainer container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(offset);
@@ -508,12 +504,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return;
 
 			ITextRegion scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
-			if (scriptRegion == null && offset == document.getLength()) {
-				offset -= 1;
-				scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
-			}
 			int regionStart = sdRegion.getStartOffset(scriptRegion);
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (scriptRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) scriptRegion;
 				scriptRegion = container.getRegionAtCharacterOffset(offset);
@@ -560,12 +552,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return true;
 
 			ITextRegion scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
-			if (scriptRegion == null && offset == document.getLength()) {
-				offset -= 1;
-				scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
-			}
 			int regionStart = sdRegion.getStartOffset(scriptRegion);
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (scriptRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) scriptRegion;
 				scriptRegion = container.getRegionAtCharacterOffset(offset);
