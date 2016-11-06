@@ -44,7 +44,7 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 			return;
 
 		int regionStart = sdRegion.getStartOffset(tRegion);
-		// in case of container we have the extract the PhpScriptRegion
+		// in case of container we have to extract the PhpScriptRegion
 		if (tRegion instanceof ITextRegionContainer) {
 			ITextRegionContainer container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(previousLine.getOffset());

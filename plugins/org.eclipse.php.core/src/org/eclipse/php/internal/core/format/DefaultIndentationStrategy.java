@@ -69,7 +69,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
-		// in case of container we have the extract the PhpScriptRegion
+		// in case of container we have to extract the PhpScriptRegion
 		if (tRegion instanceof ITextRegionContainer) {
 			ITextRegionContainer container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(offset);
@@ -513,7 +513,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			}
 			int regionStart = sdRegion.getStartOffset(scriptRegion);
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (scriptRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) scriptRegion;
 				scriptRegion = container.getRegionAtCharacterOffset(offset);
@@ -565,7 +565,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			}
 			int regionStart = sdRegion.getStartOffset(scriptRegion);
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (scriptRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) scriptRegion;
 				scriptRegion = container.getRegionAtCharacterOffset(offset);

@@ -76,7 +76,7 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 					/* Now check the text region */
 					ITextRegion currentTextRegion = docRegion.getRegionAtCharacterOffset(offset);
 
-					// in case of container we have the extract the
+					// in case of container we have to extract the
 					// PhpScriptRegion
 					if (currentTextRegion instanceof ITextRegionContainer) {
 						ITextRegionContainer container = (ITextRegionContainer) currentTextRegion;

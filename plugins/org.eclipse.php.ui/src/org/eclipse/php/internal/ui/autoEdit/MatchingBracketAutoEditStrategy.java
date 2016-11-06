@@ -154,7 +154,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 			while (currOffset >= 0 && tRegion != null) {
 				int regionStart = sdRegion.getStartOffset(tRegion);
 
-				// in case of container we have the extract the PhpScriptRegion
+				// in case of container we have to extract the PhpScriptRegion
 				if (tRegion instanceof ITextRegionContainer) {
 					ITextRegionContainer container = (ITextRegionContainer) tRegion;
 					tRegion = container.getRegionAtCharacterOffset(currOffset);
@@ -240,7 +240,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 		try {
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
-			// in case of container we have the extract the PhpScriptRegion
+			// in case of container we have to extract the PhpScriptRegion
 			if (tRegion instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) tRegion;
 				tRegion = container.getRegionAtCharacterOffset(offset);
