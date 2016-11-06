@@ -452,7 +452,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 				}
 
-				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
+				if (tRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					regionOffset -= scriptRegion.getStart();
 
@@ -569,7 +569,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 							ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(fixedOffset);
 
 							int regionOffset = offset;
-							// if netsed html/php structure exists
+							// if nested html/php structure exists
 							if (tRegion instanceof ITextRegionContainer) {
 								tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(fixedOffset);
 								// update region offset for in order to get
@@ -577,7 +577,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 								regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 							}
 
-							if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
+							if (tRegion instanceof IPhpScriptRegion) {
 								IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 
 								// update region offset for in order to get

@@ -23,6 +23,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 
 /**
@@ -985,15 +986,22 @@ public final class PHPHeuristicScanner implements Symbols {
 						.getRegionAtCharacterOffset(position);
 				if (sdRegion != null) {
 					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(position);
+					int startRegion = sdRegion.getStartOffset();
+					// in case of container we have the extract the
+					// PhpScriptRegion
+					if (textRegion instanceof ITextRegionContainer) {
+						ITextRegionContainer container = (ITextRegionContainer) textRegion;
+						startRegion += container.getStart();
+						textRegion = container.getRegionAtCharacterOffset(position);
+					}
 					if (textRegion instanceof IPhpScriptRegion) {
 						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-						textRegion = phpScriptRegion
-								.getPhpToken(position - phpScriptRegion.getStart() - sdRegion.getStartOffset());
+						startRegion += phpScriptRegion.getStart();
+						textRegion = phpScriptRegion.getPhpToken(position - startRegion);
+						startRegion += textRegion.getStart();
 
-						int regionStart = textRegion.getStart() + phpScriptRegion.getStart()
-								+ sdRegion.getStartOffset();
 						String partitionType = PHPPartitionTypes.getPartitionType(textRegion.getType());
-						return new TypedRegion(regionStart, textRegion.getLength(), partitionType);
+						return new TypedRegion(startRegion, textRegion.getLength(), partitionType);
 					}
 				}
 			}
@@ -1016,10 +1024,18 @@ public final class PHPHeuristicScanner implements Symbols {
 						.getRegionAtCharacterOffset(position);
 				if (sdRegion != null) {
 					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(position);
+					int startRegion = sdRegion.getStartOffset();
+					// in case of container we have the extract the
+					// PhpScriptRegion
+					if (textRegion instanceof ITextRegionContainer) {
+						ITextRegionContainer container = (ITextRegionContainer) textRegion;
+						startRegion += container.getStart();
+						textRegion = container.getRegionAtCharacterOffset(position);
+					}
 					if (textRegion instanceof IPhpScriptRegion) {
 						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-						textRegion = phpScriptRegion
-								.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+						startRegion += phpScriptRegion.getStart();
+						textRegion = phpScriptRegion.getPhpToken(position - startRegion);
 						return textRegion;
 					}
 				}

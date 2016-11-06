@@ -20,6 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -62,16 +63,21 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 					IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) doc)
 							.getRegionAtCharacterOffset(offset);
 
-					ITextRegion textRegion = null;
-					if (sdRegion != null) {
-						textRegion = sdRegion.getRegionAtCharacterOffset(offset);
-					}
-
 					try {
 						if (sdRegion != null) {
+							ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+							int startRegion = sdRegion.getStartOffset();
+							// in case of container we have the extract the
+							// PhpScriptRegion
+							if (textRegion instanceof ITextRegionContainer) {
+								ITextRegionContainer container = (ITextRegionContainer) textRegion;
+								startRegion += container.getStart();
+								textRegion = container.getRegionAtCharacterOffset(offset);
+							}
 							if (textRegion instanceof IPhpScriptRegion) {
-								IPhpScriptRegion phpReg = (IPhpScriptRegion) textRegion;
-								String partition = phpReg.getPartition(offset - sdRegion.getStart());
+								IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+								startRegion += phpScriptRegion.getStart();
+								String partition = phpScriptRegion.getPartition(offset - startRegion);
 								if (partition.equals(PHPPartitionTypes.PHP_QUOTED_STRING)
 										|| partition.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
 										|| partition.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
