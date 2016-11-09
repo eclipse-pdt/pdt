@@ -2556,8 +2556,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	public IDocument getDocument() {
-		if (getSourceViewer() != null) {
-			return getSourceViewer().getDocument();
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer != null) {
+			return sourceViewer.getDocument();
 		}
 		return null;
 	}
@@ -3297,9 +3298,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				range = reference.getSourceRange();
 				if (range == null)
 					return;
+				IDocument document = getDocument();
 				int offset = range.getOffset();
 				int length = range.getLength();
-				if (offset < 0 || length < 0)
+				// avoid throwing BadLocationException in
+				// GenericPositionManager#addPosition(String, Position)
+				if (offset < 0 || length < 0 || (document != null && offset + length > document.getLength()))
 					return;
 				setHighlightRange(offset, length, moveCursor);
 				if (!moveCursor)
