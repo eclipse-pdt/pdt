@@ -214,16 +214,26 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
 						startState);
 
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498525
-				// Fully re-parse when we're in a heredoc/nowdoc section.
-				// NB: it's much easier and safer to use the lexer state to
-				// determine if we're in a heredoc/nowdoc section,
-				// using PHPRegionTypes make us depend on how each PHP
-				// lexer version analyzes the heredoc/nowdoc content.
-				// In the same way, PHPPartitionTypes.isPHPQuotesState(type)
-				// cannot be used here because it's not exclusive to
-				// heredoc/nowdoc sections.
 				if (phpLexer.isHeredocState(startState.getTopState())) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498525
+					// Fully re-parse when we're in a heredoc/nowdoc section.
+					// NB: it's much easier and safer to use the lexer state to
+					// determine if we're in a heredoc/nowdoc section,
+					// using PHPRegionTypes make us depend on how each PHP
+					// lexer version analyzes the heredoc/nowdoc content.
+					// In the same way, PHPPartitionTypes.isPHPQuotesState(type)
+					// cannot be used here because it's not exclusive to
+					// heredoc/nowdoc sections.
+					return null;
+				}
+				if (isMaybeStartingNewHeredocSection(tokenStart)) {
+					// In case a user is (maybe) starting to write a brand new
+					// heredoc/nowdoc section in a php document, we should fully
+					// re-parse the document to update the lexer to
+					// distinguish "<<" bitwise shift operators from "<<" and
+					// "<<<" operators that are followed by a label.
+					// This also allows highlighters to correctly detect and
+					// highlight opening and closing heredoc/nowdoc tags asap.
 					return null;
 				}
 
@@ -350,6 +360,33 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			this.ST_PHP_IN_SCRIPTING = sRegion.ST_PHP_IN_SCRIPTING;
 			this.isFullReparsed = sRegion.isFullReparsed;
 		}
+	}
+
+	private synchronized final boolean isMaybeStartingNewHeredocSection(final ITextRegion tokenStart) {
+		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
+			try {
+				final ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
+				// lexer has maybe found the "<<" bitwise shift operator
+				return token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2;
+			} catch (BadLocationException e) {
+				// never happens
+				assert false;
+			}
+		} else if (tokenStart.getType() == PHPRegionTypes.PHP_LABEL) {
+			try {
+				ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
+				if (token != null) {
+					token = tokensContainer.getToken(token.getStart() - 1);
+					// lexer has maybe found the "<<" bitwise shift operator
+					return token != null && (token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2);
+				}
+
+			} catch (BadLocationException e) {
+				// never happens
+				assert false;
+			}
+		}
+		return false;
 	}
 
 	private boolean startQuoted(final String text) {
