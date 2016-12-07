@@ -25,7 +25,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.compare.MergeSourceViewer;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
@@ -195,8 +194,8 @@ public class QuickAssistLightBulbUpdater {
 		if (fEditor != null) {
 			return DLTKUIPlugin.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		} else {
-			if (fViewer instanceof MergeSourceViewer) {
-				return ((MergeSourceViewer) fViewer).getAnnotationModel();
+			if (fViewer instanceof SourceViewer) {
+				return ((SourceViewer) fViewer).getAnnotationModel();
 			}
 			return null;
 		}
@@ -206,8 +205,8 @@ public class QuickAssistLightBulbUpdater {
 		if (fEditor != null) {
 			return DLTKUIPlugin.getDocumentProvider().getDocument(fEditor.getEditorInput());
 		} else {
-			if (fViewer instanceof MergeSourceViewer) {
-				return ((MergeSourceViewer) fViewer).getDocument();
+			if (fViewer instanceof SourceViewer) {
+				return ((SourceViewer) fViewer).getDocument();
 			}
 			return null;
 		}
