@@ -3576,7 +3576,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public boolean visit(Identifier identifier) {
-		lineWidth += identifier.getLength();
+		if (identifier.isNullable()) {
+			// workaround for #508914
+			appendToBuffer(QUESTION_MARK);
+			appendToBuffer(identifier.getName());
+			handleChars(identifier.getStart(), identifier.getEnd());
+		} else {
+			lineWidth += identifier.getLength();
+		}
 		return false;
 	}
 
