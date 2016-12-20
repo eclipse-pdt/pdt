@@ -587,10 +587,14 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 								ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
 
 								String tokenType = commentRegion.getType();
-								if (document.getLength() == offset
+								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=509024
+								boolean isStartRegion = PHPPartitionTypes.isPHPDocStartRegion(commentRegion.getType())
+										|| PHPPartitionTypes.isPHPMultiLineCommentStartRegion(commentRegion.getType());
+								boolean isEndRegionAtEOF = document.getLength() == offset
 										&& (PHPPartitionTypes.isPHPDocEndRegion(tokenType)
 												|| PHPPartitionTypes.isPHPMultiLineCommentEndRegion(tokenType))
-										&& document.get(offset - 2, 2).equals("*/")) { //$NON-NLS-1$
+										&& document.get(offset - 2, 2).equals("*/"); //$NON-NLS-1$
+								if (isStartRegion || isEndRegionAtEOF) {
 
 									ITextRegion region = commentRegion;
 									// go up in document and search for the

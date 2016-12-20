@@ -1,0 +1,11 @@
+--TEST--
+Bug 509024 - Invalid comment formating for /**//**/
+--FILE--
+<?php
+		/** comment 1 */|/** comment 2 */
+?>
+--EXPECT--
+<?php
+		/** comment 1 */
+		/** comment 2 */
+?>
