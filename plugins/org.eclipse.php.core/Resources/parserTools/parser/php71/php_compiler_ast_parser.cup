@@ -2200,6 +2200,9 @@ variable_modifiers:modifier property_list:decList T_SEMICOLON
 	int modifierValue = modifier == null ? 0 : modifier.modifier;
 	Iterator i = lists.iterator();
 	PHPDocBlock docBlock = s.doc;
+	if (modifier != null && modifier.doc != null) {
+		docBlock = modifier.doc;
+	}
 	while (i.hasNext()) {
 		ASTNode[] decl = (ASTNode[]) i.next();
 		ConstantReference constant = (ConstantReference) decl[0];

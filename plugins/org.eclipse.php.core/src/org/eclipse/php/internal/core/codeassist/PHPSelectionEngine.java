@@ -784,7 +784,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 			// If we are at class constant definition:
 			if (containerType != null) {
-				if (CONST.equalsIgnoreCase(firstWord)) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=509124
+				// Use "prevWord" since class constants can have visibility
+				// keywords with PHP >= 7.1
+				if (CONST.equalsIgnoreCase(prevWord)) {
 					return PHPModelUtils.getTypeField(containerType, elementName, true);
 				}
 			}
