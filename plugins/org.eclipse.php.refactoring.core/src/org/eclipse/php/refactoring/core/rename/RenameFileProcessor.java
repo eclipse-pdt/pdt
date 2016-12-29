@@ -37,8 +37,7 @@ import org.eclipse.text.edits.MultiTextEdit;
  * @author shachar
  * 
  */
-public class RenameFileProcessor extends AbstraceRenameResourceProcessor
-		implements IReferenceUpdating {
+public class RenameFileProcessor extends AbstraceRenameResourceProcessor implements IReferenceUpdating {
 
 	private static final String ID_RENAME_FILE = "php.refactoring.ui.rename.file"; //$NON-NLS-1$
 	public static final String RENAME_FILE_PROCESSOR_NAME = PhpRefactoringCoreMessages
@@ -77,16 +76,13 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 
-		CompositeChange rootChange = new CompositeChange(
-				RENAME_FILE_PROCESSOR_NAME);
+		CompositeChange rootChange = new CompositeChange(RENAME_FILE_PROCESSOR_NAME);
 		rootChange.markAsSynthetic();
 
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages
-					.getString("RenameFileProcessor.RenamingFile"), 100); //$NON-NLS-1$
+			pm.beginTask(PhpRefactoringCoreMessages.getString("RenameFileProcessor.RenamingFile"), 100); //$NON-NLS-1$
 
 			if (pm.isCanceled())
 				throw new OperationCanceledException();
@@ -110,9 +106,8 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 		return rootChange;
 	}
 
-	private void createRenameReferenceChanges(IProgressMonitor pm,
-			CompositeChange rootChange) throws CoreException,
-			OperationCanceledException {
+	private void createRenameReferenceChanges(IProgressMonitor pm, CompositeChange rootChange)
+			throws CoreException, OperationCanceledException {
 
 		IPath dest = getNewContainerPath();
 		IPath source = resource.getParent().getFullPath();
@@ -120,14 +115,12 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 
 		collectBrakePoint();
 		if (fBreakpoints.getKeys().size() > 0) {
-			RenameBreackpointChange breakePointchange = new RenameBreackpointChange(
-					source, dest, oldName, fNewElementName, fBreakpoints,
-					fBreakpointAttributes);
+			RenameBreackpointChange breakePointchange = new RenameBreackpointChange(source, dest, oldName,
+					fNewElementName, fBreakpoints, fBreakpointAttributes);
 			rootChange.add(breakePointchange);
 		}
 
-		RenameConfigurationChange confChange = new RenameConfigurationChange(
-				source, dest, oldName, fNewElementName);
+		RenameConfigurationChange confChange = new RenameConfigurationChange(source, dest, oldName, fNewElementName);
 		rootChange.add(confChange);
 
 	}
@@ -139,13 +132,11 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 	/**
 	 * Derive the change
 	 */
-	private void createRenameTextChanges(IProgressMonitor pm,
-			CompositeChange rootChange) throws CoreException,
-			OperationCanceledException {
+	private void createRenameTextChanges(IProgressMonitor pm, CompositeChange rootChange)
+			throws CoreException, OperationCanceledException {
 
 		String fileName = program.getSourceModule().getResource().getName();
-		String extension = program.getSourceModule().getResource()
-				.getFileExtension();
+		String extension = program.getSourceModule().getResource().getFileExtension();
 
 		int index = fileName.indexOf("." + extension); //$NON-NLS-1$
 		String className = null;
@@ -177,10 +168,8 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 			for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 				final IFile file = entry.getKey();
 				final Program program = entry.getValue();
-				final RenameIncludeAndClassName rename = new RenameIncludeAndClassName(
-						file, className, newElementName,
-						getUpdateTextualMatches(), getUpdateClassName(),
-						getUpdateReferences(), resource);
+				final RenameIncludeAndClassName rename = new RenameIncludeAndClassName(file, className, newElementName,
+						getUpdateTextualMatches(), getUpdateClassName(), getUpdateReferences(), resource);
 
 				// aggregate the changes identifiers
 				program.accept(rename);
@@ -191,8 +180,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 				pm.worked(1);
 
 				if (rename.hasChanges()) {
-					ProgramFileChange change = new ProgramFileChange(
-							file.getName(), file, program);
+					ProgramFileChange change = new ProgramFileChange(file.getName(), file, program);
 					change.setEdit(new MultiTextEdit());
 					change.setTextType("php"); //$NON-NLS-1$
 
@@ -207,8 +195,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 	}
 
 	private void createFileRenameChange(CompositeChange rootChange) {
-		RenameResourceChange rmChange = new RenameResourceChange(
-				resource.getFullPath(), fNewElementName);
+		RenameResourceChange rmChange = new RenameResourceChange(resource.getFullPath(), fNewElementName);
 
 		rootChange.add(rmChange);
 	}
@@ -224,9 +211,8 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 		RefactoringStatus status = new RefactoringStatus();
 
 		if (!checkReadOnlyAndNull(resource)) {
-			status.merge(RefactoringStatus.createFatalErrorStatus(NLS.bind(
-					PhpRefactoringCoreMessages
-							.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
+			status.merge(RefactoringStatus.createFatalErrorStatus(
+					NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
 		}
 		super.checkInitialConditions(pm);
 
@@ -241,7 +227,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 	 * @return boolean
 	 */
 	private boolean checkReadOnlyAndNull(IResource currentResource) {
-		if (currentResource == null) {
+		if (currentResource == null || currentResource.getResourceAttributes() == null) {
 			return false;
 		}
 		// Do a quick read only check
@@ -258,29 +244,26 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor
 	 * checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 
 		// Checks if one of the resources already exists with the same name in
 		// this location
 		IPath sourcePath = resource.getFullPath().removeLastSegments(1);
 
-		String newFilePath = sourcePath.toOSString() + File.separatorChar
-				+ getNewElementName();
+		String newFilePath = sourcePath.toOSString() + File.separatorChar + getNewElementName();
 
 		IResource dest;
 		if (sourcePath.segmentCount() < 1) {
-			dest = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(getNewElementName());
+			dest = ResourcesPlugin.getWorkspace().getRoot().getProject(getNewElementName());
 		} else {
-			dest = ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(new Path(newFilePath));
+			dest = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(newFilePath));
 		}
 		if (dest.exists()) {
-			status.merge(RefactoringStatus.createFatalErrorStatus(NLS.bind(
-					PhpRefactoringCoreMessages
-							.getString("RenameFileProcessor.8"), getNewElementName(), sourcePath.toOSString()))); //$NON-NLS-1$
+			status.merge(RefactoringStatus
+					.createFatalErrorStatus(NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.8"), //$NON-NLS-1$
+							getNewElementName(), sourcePath.toOSString())));
 		}
 
 		return status;
