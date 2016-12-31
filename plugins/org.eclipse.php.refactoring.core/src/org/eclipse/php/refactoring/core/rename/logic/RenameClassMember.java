@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2015 Zend Technologies and others.
+ * Copyright (c) 2006, 2015, 2016 Zend Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,8 +34,8 @@ public class RenameClassMember extends AbstractRename {
 
 	private int nodeType;
 
-	private static final String RENAME_CLASS_MEMBER = PhpRefactoringCoreMessages
-			.getString("RenameClassPropertyName.0"); //$NON-NLS-1$
+	private static final String RENAME_CLASS_MEMBER = PhpRefactoringCoreMessages.getString("RenameClassPropertyName.0"); //$NON-NLS-1$
+	// can be null
 	private ITypeBinding type;
 
 	private List<IType> traitList;
@@ -43,15 +43,13 @@ public class RenameClassMember extends AbstractRename {
 
 	private Boolean isTraitMethod;
 
-	public RenameClassMember(IFile file, String oldName, String newName,
-			boolean searchTextual, int type) {
+	public RenameClassMember(IFile file, String oldName, String newName, boolean searchTextual, int type) {
 		super(file, oldName, newName, searchTextual);
 		this.nodeType = type;
 	}
 
-	public RenameClassMember(IFile file, String oldName, String newName,
-			boolean searchTextual, ITypeBinding iTypeBinding, int type,
-			ASTNode identifier) {
+	public RenameClassMember(IFile file, String oldName, String newName, boolean searchTextual,
+			ITypeBinding iTypeBinding, int type, ASTNode identifier) {
 		this(file, oldName, newName, searchTextual, type);
 		this.type = iTypeBinding;
 
@@ -61,17 +59,14 @@ public class RenameClassMember extends AbstractRename {
 		}
 		if (iTypeBinding != null && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			String memberName = oldName;
-			if (identifier instanceof Identifier
-					&& (identifier.getParent().getType() == ASTNode.TRAIT_ALIAS || identifier
-							.getParent().getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE)) {
+			if (identifier instanceof Identifier && (identifier.getParent().getType() == ASTNode.TRAIT_ALIAS
+					|| identifier.getParent().getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE)) {
 				memberName = getRealName(identifier);
 
 			}
 			isTraitMethod = isTraitMethod(iTypeBinding, memberName);
-			traitList = iTypeBinding.getTraitList(isTraitMethod, memberName,
-					false);
-			traitListIncludingSuperClass = iTypeBinding.getTraitList(
-					isTraitMethod, memberName, true);
+			traitList = iTypeBinding.getTraitList(isTraitMethod, memberName, false);
+			traitListIncludingSuperClass = iTypeBinding.getTraitList(isTraitMethod, memberName, true);
 		}
 
 		// if (isTraitMethod == null) {
@@ -81,11 +76,9 @@ public class RenameClassMember extends AbstractRename {
 	}
 
 	private boolean isTraitMethod(ITypeBinding typeBinding, String memberName) {
-		if (typeBinding != null && typeBinding.isTrait()
-				&& typeBinding.getPHPElement() != null) {
+		if (typeBinding != null && typeBinding.isTrait() && typeBinding.getPHPElement() != null) {
 			try {
-				IModelElement[] members = ((IType) typeBinding.getPHPElement())
-						.getChildren();
+				IModelElement[] members = ((IType) typeBinding.getPHPElement()).getChildren();
 				for (IModelElement modelElement : members) {
 					if (modelElement.getElementName().equals(memberName)) {
 						if (modelElement instanceof IMethod) {
@@ -128,20 +121,16 @@ public class RenameClassMember extends AbstractRename {
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		if (isChangeMethod()) {
 			try {
-				Identifier identifier = methodDeclaration.getFunction()
-						.getFunctionName();
-				if (!identifier.getName().equals(oldName)
-						|| methodDeclaration.resolveMethodBinding() == null) {
+				Identifier identifier = methodDeclaration.getFunction().getFunctionName();
+				if (!identifier.getName().equals(oldName) || methodDeclaration.resolveMethodBinding() == null) {
 					return super.visit(methodDeclaration);
 				}
-				ITypeBinding declClass = methodDeclaration
-						.resolveMethodBinding().getDeclaringClass();
+				ITypeBinding declClass = methodDeclaration.resolveMethodBinding().getDeclaringClass();
 				if (declClass != null) {
-					if (declClass.equals(type)
-							|| traitEqual(declClass, identifier)) {
+					if (declClass.equals(type) || traitEqual(declClass, identifier)) {
 						addChange(identifier.getStart());
-					} else if (declClass.isSubTypeCompatible(type)
-							|| type.isSubTypeCompatible(declClass)) {
+					} else if (type != null
+							&& (declClass.isSubTypeCompatible(type) || type.isSubTypeCompatible(declClass))) {
 						if (methodDeclaration.getModifier() != Modifiers.AccPrivate) {
 							addChange(identifier.getStart());
 						}
@@ -166,8 +155,7 @@ public class RenameClassMember extends AbstractRename {
 			if (node instanceof Identifier) {
 				Identifier identifier = (Identifier) node;
 				String memberName = getRealName(identifier);
-				List<IType> traitList1 = declClass.getTraitList(
-						isChangeMethod(), memberName, false);
+				List<IType> traitList1 = declClass.getTraitList(isChangeMethod(), memberName, false);
 				for (IType trait1 : traitList1) {
 					for (IType trait : traitList) {
 						if (trait1.equals(trait)) {
@@ -181,16 +169,14 @@ public class RenameClassMember extends AbstractRename {
 	}
 
 	private boolean traitInSuperEqual(ITypeBinding declClass, ASTNode node) {
-		if (declClass != null && traitListIncludingSuperClass != null
-				&& !traitListIncludingSuperClass.isEmpty()) {
+		if (declClass != null && traitListIncludingSuperClass != null && !traitListIncludingSuperClass.isEmpty()) {
 			if (node instanceof Variable) {
 				node = getIdentifer((Variable) node);
 			}
 			if (node instanceof Identifier) {
 				Identifier identifier = (Identifier) node;
 				String memberName = getRealName(identifier);
-				List<IType> traitList1 = declClass.getTraitList(
-						isChangeMethod(), memberName, true);
+				List<IType> traitList1 = declClass.getTraitList(isChangeMethod(), memberName, true);
 				for (IType trait1 : traitList1) {
 					for (IType trait : traitListIncludingSuperClass) {
 						if (trait1.equals(trait)) {
@@ -204,17 +190,14 @@ public class RenameClassMember extends AbstractRename {
 	}
 
 	private boolean isChangeMethod() {
-		return nodeType == ASTNode.METHOD_DECLARATION
-				|| nodeType == ASTNode.FUNCTION_DECLARATION
-				|| nodeType == ASTNode.FUNCTION_NAME
-				|| (isTraitMethod != null && isTraitMethod);
+		return nodeType == ASTNode.METHOD_DECLARATION || nodeType == ASTNode.FUNCTION_DECLARATION
+				|| nodeType == ASTNode.FUNCTION_NAME || (isTraitMethod != null && isTraitMethod);
 	}
 
 	@Override
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		if (isChangeConstant()) {
-			final List<Identifier> variableNames = classConstantDeclaration
-					.names();
+			final List<Identifier> variableNames = classConstantDeclaration.names();
 			for (int j = 0; j < variableNames.size(); j++) {
 				// safe cast to identifier
 				assert variableNames.get(j) instanceof Identifier;
@@ -227,8 +210,7 @@ public class RenameClassMember extends AbstractRename {
 	}
 
 	private boolean isChangeConstant() {
-		return nodeType == ASTNode.STATIC_CONSTANT_ACCESS
-				|| nodeType == ASTNode.CONSTANT_DECLARATION
+		return nodeType == ASTNode.STATIC_CONSTANT_ACCESS || nodeType == ASTNode.CONSTANT_DECLARATION
 				|| (isTraitMethod != null && !isTraitMethod);
 	}
 
@@ -241,35 +223,28 @@ public class RenameClassMember extends AbstractRename {
 			// Work around for getting type binding of class field.
 			// Get the TypeDeclaration of the field at first and then get the
 			// type binding.
-			TypeDeclaration typeDecl = RefactoringUtility
-					.getType(fieldsDeclaration);
+			TypeDeclaration typeDecl = RefactoringUtility.getType(fieldsDeclaration);
 			ITypeBinding declClass = null;
 			if (typeDecl != null) {
 				declClass = typeDecl.resolveTypeBinding();
 			}
 
 			if (declClass != null) {
-				final Variable[] variableNames = fieldsDeclaration
-						.getVariableNames();
+				final Variable[] variableNames = fieldsDeclaration.getVariableNames();
 				for (int j = 0; j < variableNames.length; j++) {
 					// safe cast to identifier
-					if (declClass.equals(type)
-							|| traitEqual(declClass, variableNames[j].getName())) {
+					if (declClass.equals(type) || traitEqual(declClass, variableNames[j].getName())) {
 						assert variableNames[j].getName() instanceof Identifier;
-						final Identifier variable = (Identifier) variableNames[j]
-								.getName();
+						final Identifier variable = (Identifier) variableNames[j].getName();
 						handleIdentifier(variable);
-					} else if (declClass.isSubTypeCompatible(type)
-							|| type.isSubTypeCompatible(declClass)) {
+					} else if (type != null
+							&& (declClass.isSubTypeCompatible(type) || type.isSubTypeCompatible(declClass))) {
 						if (fieldsDeclaration.getModifier() != Modifiers.AccPrivate) {
-							final Identifier variable = (Identifier) variableNames[j]
-									.getName();
+							final Identifier variable = (Identifier) variableNames[j].getName();
 							handleIdentifier(variable);
 						}
-					} else if (traitInSuperEqual(declClass,
-							(Identifier) variableNames[j].getName())) {
-						final Identifier variable = (Identifier) variableNames[j]
-								.getName();
+					} else if (traitInSuperEqual(declClass, (Identifier) variableNames[j].getName())) {
+						final Identifier variable = (Identifier) variableNames[j].getName();
 						handleIdentifier(variable);
 					}
 				}
@@ -279,8 +254,7 @@ public class RenameClassMember extends AbstractRename {
 	}
 
 	private boolean isChangeField() {
-		return nodeType == ASTNode.FIELD_DECLARATION
-				|| nodeType == ASTNode.VARIABLE
+		return nodeType == ASTNode.FIELD_DECLARATION || nodeType == ASTNode.VARIABLE
 				|| (isTraitMethod != null && !isTraitMethod);
 	}
 
@@ -289,23 +263,18 @@ public class RenameClassMember extends AbstractRename {
 	 */
 	public boolean visit(MethodInvocation methodInvocation) {
 		if (isChangeMethod() && methodInvocation.getDispatcher() != null) {
-			ITypeBinding declClass = methodInvocation.getDispatcher()
-					.resolveTypeBinding();
+			ITypeBinding declClass = methodInvocation.getDispatcher().resolveTypeBinding();
 			if (declClass != null) {
 				if (declClass.equals(type)
-						|| traitEqual(declClass, methodInvocation.getMethod()
-								.getFunctionName().getName())) {
+						|| traitEqual(declClass, methodInvocation.getMethod().getFunctionName().getName())) {
 					handleDispatch(methodInvocation);
-				} else if (declClass.isSubTypeCompatible(type)
-						|| type.isSubTypeCompatible(declClass)) {
-					IMethodBinding methodBinding = methodInvocation
-							.resolveMethodBinding();
-					if (methodBinding != null
-							&& methodBinding.getModifiers() != Modifiers.AccPrivate) {
+				} else if (type != null
+						&& (declClass.isSubTypeCompatible(type) || type.isSubTypeCompatible(declClass))) {
+					IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
+					if (methodBinding != null && methodBinding.getModifiers() != Modifiers.AccPrivate) {
 						handleDispatch(methodInvocation);
 					}
-				} else if (traitInSuperEqual(declClass, methodInvocation
-						.getMethod().getFunctionName().getName())) {
+				} else if (traitInSuperEqual(declClass, methodInvocation.getMethod().getFunctionName().getName())) {
 					handleDispatch(methodInvocation);
 				}
 			}
@@ -320,16 +289,15 @@ public class RenameClassMember extends AbstractRename {
 			identifier = getIdentifer((Variable) variable);
 		}
 		if (variable instanceof FunctionInvocation) {
-			Variable functionName = (Variable) ((FunctionInvocation) variable)
-					.getFunctionName().getName();
+			Variable functionName = (Variable) ((FunctionInvocation) variable).getFunctionName().getName();
 			identifier = getIdentifer(functionName);
 		}
 		if (identifier != null && identifier.getName().equals(oldName)) {
 			// ITypeBinding typeBinding = dispatch.getDispatcher()
 			// .resolveTypeBinding();
 
-			// if (typeBinding != null) {
-			// if (type.equals(typeBinding)
+			// if (typeBinding != null && type != null) {
+			// if (typeBinding.equals(type)
 			// || type.isSubTypeCompatible(typeBinding)
 			// || typeBinding.isSubTypeCompatible(type)) {
 			addChange(identifier.getStart());
@@ -362,19 +330,15 @@ public class RenameClassMember extends AbstractRename {
 	 */
 	public boolean visit(FieldAccess fieldAccess) {
 		if (isChangeField()) {
-			ITypeBinding declClass = fieldAccess.getDispatcher()
-					.resolveTypeBinding();
+			ITypeBinding declClass = fieldAccess.getDispatcher().resolveTypeBinding();
 			if (declClass != null) {
-				if (declClass.equals(type)
-						|| traitEqual(declClass, fieldAccess.getMember())) {
+				if (declClass.equals(type) || traitEqual(declClass, fieldAccess.getMember())) {
 					handleDispatch(fieldAccess);
-				} else if (declClass.isSubTypeCompatible(type)
-						|| type.isSubTypeCompatible(declClass)) {
-					IVariableBinding binding = fieldAccess
-							.resolveFieldBinding();
+				} else if (type != null
+						&& (declClass.isSubTypeCompatible(type) || type.isSubTypeCompatible(declClass))) {
+					IVariableBinding binding = fieldAccess.resolveFieldBinding();
 
-					if (binding != null
-							&& binding.getModifiers() != Modifiers.AccPrivate) {
+					if (binding != null && binding.getModifiers() != Modifiers.AccPrivate) {
 						handleDispatch(fieldAccess);
 					}
 				} else if (traitInSuperEqual(declClass, fieldAccess.getMember())) {
@@ -416,8 +380,7 @@ public class RenameClassMember extends AbstractRename {
 			identifier = getIdentifer((Variable) variable);
 		}
 		if (variable instanceof FunctionInvocation) {
-			Expression functionName = ((FunctionInvocation) variable)
-					.getFunctionName().getName();
+			Expression functionName = ((FunctionInvocation) variable).getFunctionName().getName();
 			if (functionName instanceof Variable) {
 				identifier = getIdentifer((Variable) functionName);
 			}
@@ -430,14 +393,12 @@ public class RenameClassMember extends AbstractRename {
 			identifier = (Identifier) member;
 		}
 		if (identifier != null && identifier.getName().equals(oldName)) {
-			ITypeBinding typeBinding = dispatch.getClassName()
-					.resolveTypeBinding();
+			ITypeBinding typeBinding = dispatch.getClassName().resolveTypeBinding();
 			if (typeBinding != null) {
-				if (type.equals(typeBinding)
-						|| type.isSubTypeCompatible(typeBinding)
-						|| typeBinding.isSubTypeCompatible(type)
-						|| traitEqual(typeBinding, identifier)
-						|| traitInSuperEqual(typeBinding, identifier)) {
+				if (typeBinding.equals(type)
+						|| (type != null
+								&& (type.isSubTypeCompatible(typeBinding) || typeBinding.isSubTypeCompatible(type)))
+						|| traitEqual(typeBinding, identifier) || traitInSuperEqual(typeBinding, identifier)) {
 					addChange(identifier.getStart());
 				}
 			}
@@ -458,17 +419,13 @@ public class RenameClassMember extends AbstractRename {
 		if (type != null) {
 			Expression expression = node.getTraitMethod();
 			if (expression.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
-				checkIdentifier(
-						((FullyQualifiedTraitMethodReference) expression)
-								.getFunctionName(),
+				checkIdentifier(((FullyQualifiedTraitMethodReference) expression).getFunctionName(),
 						(node.getModifier() & Modifiers.AccPrivate) != 0);
 			} else if (expression.getType() == ASTNode.IDENTIFIER) {
-				checkIdentifier((Identifier) expression,
-						(node.getModifier() & Modifiers.AccPrivate) != 0);
+				checkIdentifier((Identifier) expression, (node.getModifier() & Modifiers.AccPrivate) != 0);
 			}
 			if (node.getFunctionName() != null) {
-				checkIdentifier(node.getFunctionName(),
-						(node.getModifier() & Modifiers.AccPrivate) != 0);
+				checkIdentifier(node.getFunctionName(), (node.getModifier() & Modifiers.AccPrivate) != 0);
 			}
 		}
 		return false;
@@ -480,8 +437,8 @@ public class RenameClassMember extends AbstractRename {
 			if (declClass != null) {
 				if (declClass.equals(type) || traitEqual(declClass, identifier)) {
 					addChange(identifier.getStart());
-				} else if (declClass.isSubTypeCompatible(type)
-						|| type.isSubTypeCompatible(declClass)) {
+				} else if (type != null
+						&& (declClass.isSubTypeCompatible(type) || type.isSubTypeCompatible(declClass))) {
 					if (!isPrivate) {
 						addChange(identifier.getStart());
 					}
@@ -498,15 +455,13 @@ public class RenameClassMember extends AbstractRename {
 		if (parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
 			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) parent;
 			typeBinding = reference.getClassName().resolveTypeBinding();
-			ITypeBinding temp = getTypeBinding(typeBinding, reference
-					.getFunctionName().getName());
+			ITypeBinding temp = getTypeBinding(typeBinding, reference.getFunctionName().getName());
 			if (temp != null) {
 				return temp;
 			}
 		} else if (parent.getType() == ASTNode.TRAIT_ALIAS) {
 			TraitAlias traitAlias = (TraitAlias) parent;
-			List<NamespaceName> nameList = ((TraitUseStatement) traitAlias
-					.getParent().getParent()).getTraitList();
+			List<NamespaceName> nameList = ((TraitUseStatement) traitAlias.getParent().getParent()).getTraitList();
 			String memberName = null;
 			if (identifier == traitAlias.getFunctionName()) {
 				Expression expression = traitAlias.getTraitMethod();
@@ -546,17 +501,13 @@ public class RenameClassMember extends AbstractRename {
 		return typeBinding;
 	}
 
-	private ITypeBinding getTypeBinding(ITypeBinding typeBinding,
-			String memberName) {
-		if (typeBinding != null && typeBinding.isTrait()
-				&& typeBinding.getPHPElement() != null) {
+	private ITypeBinding getTypeBinding(ITypeBinding typeBinding, String memberName) {
+		if (typeBinding != null && typeBinding.isTrait() && typeBinding.getPHPElement() != null) {
 			try {
-				IModelElement[] members = ((IType) typeBinding.getPHPElement())
-						.getChildren();
+				IModelElement[] members = ((IType) typeBinding.getPHPElement()).getChildren();
 				for (IModelElement modelElement : members) {
 					if (modelElement.getElementName().equals(memberName)
-							|| modelElement.getElementName().equals(
-									"$" + memberName)) { //$NON-NLS-1$
+							|| modelElement.getElementName().equals("$" + memberName)) { //$NON-NLS-1$
 						return typeBinding;
 					}
 				}
