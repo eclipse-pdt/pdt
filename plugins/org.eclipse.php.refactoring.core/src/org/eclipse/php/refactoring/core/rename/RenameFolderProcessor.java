@@ -38,8 +38,7 @@ import org.eclipse.php.refactoring.core.rename.logic.RenameIncludeFolder;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 import org.eclipse.text.edits.MultiTextEdit;
 
-public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
-		implements IReferenceUpdating {
+public class RenameFolderProcessor extends AbstraceRenameResourceProcessor implements IReferenceUpdating {
 	public static final String RENAME_FOLDER_PROCESSOR_NAME = PhpRefactoringCoreMessages
 			.getString("RenameResourceProcessor.0"); //$NON-NLS-1$
 	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PhpRefactoringCoreMessages
@@ -58,8 +57,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 
 	public RenameFolderProcessor(IContainer container) {
 		super(container);
-		attributes.put(IReferenceUpdating.NEEDUPDATECLASSNAME,
-				Boolean.FALSE.toString());
+		attributes.put(IReferenceUpdating.NEEDUPDATECLASSNAME, Boolean.FALSE.toString());
 	}
 
 	@Override
@@ -74,16 +72,13 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 
-		CompositeChange rootChange = new NoReverseCompositeChange(
-				RENAME_FOLDER_PROCESSOR_NAME);
+		CompositeChange rootChange = new NoReverseCompositeChange(RENAME_FOLDER_PROCESSOR_NAME);
 		rootChange.markAsSynthetic();
 
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages
-					.getString("RenameFolderProcessor.RenamingFile"), 100); //$NON-NLS-1$
+			pm.beginTask(PhpRefactoringCoreMessages.getString("RenameFolderProcessor.RenamingFile"), 100); //$NON-NLS-1$
 
 			if (pm.isCanceled())
 				throw new OperationCanceledException();
@@ -106,29 +101,23 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 
 		if (lfm.isInLibraryFolder(resource)) {
 			IFolder folder = (IFolder) resource;
-			IFolder newFolder = resource.getParent().getFolder(
-					Path.fromPortableString(fNewElementName));
+			IFolder newFolder = resource.getParent().getFolder(Path.fromPortableString(fNewElementName));
 
-			RenameLibraryFolderChange change = new RenameLibraryFolderChange(
-					folder, newFolder);
+			RenameLibraryFolderChange change = new RenameLibraryFolderChange(folder, newFolder);
 			rootChange.add(change);
 		}
 	}
 
-	private void createRenameReferenceChange(IProgressMonitor pm,
-			CompositeChange rootChange) throws CoreException {
-		pm.beginTask(
-				PhpRefactoringCoreMessages.getString("RenameFolderProcessor.0"), 0); //$NON-NLS-1$
-		pm.setTaskName(PhpRefactoringCoreMessages
-				.getString("RenameFolderProcessor.1")); //$NON-NLS-1$
+	private void createRenameReferenceChange(IProgressMonitor pm, CompositeChange rootChange) throws CoreException {
+		pm.beginTask(PhpRefactoringCoreMessages.getString("RenameFolderProcessor.0"), 0); //$NON-NLS-1$
+		pm.setTaskName(PhpRefactoringCoreMessages.getString("RenameFolderProcessor.1")); //$NON-NLS-1$
 
 		IPath source = resource.getFullPath().removeLastSegments(1);
 		String oldName = resource.getName();
 		IPath dest = getNewFilePath();
 
-		RenameConfigurationChange confChange = new RenameConfigurationChange(
-				source.removeLastSegments(0), dest.removeLastSegments(0),
-				oldName, fNewElementName);
+		RenameConfigurationChange confChange = new RenameConfigurationChange(source.removeLastSegments(0),
+				dest.removeLastSegments(0), oldName, fNewElementName);
 		rootChange.add(confChange);
 
 		if (pm.isCanceled())
@@ -136,20 +125,18 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 
 		createFileRenameChange(rootChange);
 		if (resource instanceof IProject) {
-			IProject[] referencing = ((IProject) resource)
-					.getReferencingProjects();
+			IProject[] referencing = ((IProject) resource).getReferencingProjects();
 			if (referencing != null && referencing.length > 0) {
-				ProjectReferenceChange change = new ProjectReferenceChange(
-						resource.getName(), getNewElementName(), referencing);
+				ProjectReferenceChange change = new ProjectReferenceChange(resource.getName(), getNewElementName(),
+						referencing);
 
 				rootChange.add(change);
 			}
 		}
 
 		collectBuildPath();
-		RenameBuildAndIcludePathChange biChange = new RenameBuildAndIcludePathChange(
-				source, dest, oldName, fNewElementName, oldBuildEntries,
-				newBuildEntries, oldIncludePath, newIncludePathEntries);
+		RenameBuildAndIcludePathChange biChange = new RenameBuildAndIcludePathChange(source, dest, oldName,
+				fNewElementName, oldBuildEntries, newBuildEntries, oldIncludePath, newIncludePathEntries);
 
 		if (newBuildEntries.size() > 0 || newIncludePathEntries.size() > 0) {
 			rootChange.add(biChange);
@@ -157,9 +144,8 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 
 		collectBrakePoint();
 		if (fBreakpoints.getKeys().size() > 0) {
-			RenameBreackpointChange breakePointchange = new RenameBreackpointChange(
-					source, dest, oldName, fNewElementName, fBreakpoints,
-					fBreakpointAttributes);
+			RenameBreackpointChange breakePointchange = new RenameBreackpointChange(source, dest, oldName,
+					fNewElementName, fBreakpoints, fBreakpointAttributes);
 			rootChange.add(breakePointchange);
 		}
 	}
@@ -187,19 +173,15 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 			IPath remaingPath = entryPath.removeFirstSegments(mattchedPath);
 			IPath newPath;
 			if (mattchedPath == filePath.segmentCount()) {
-				newPath = truncatedPath.removeLastSegments(1)
-						.append(fNewElementName).append(remaingPath);
-				IBuildpathEntry newEntry = RefactoringUtility
-						.createNewBuildpathEntry(fEntryToChange, newPath,
-								filePath, fNewElementName);
+				newPath = truncatedPath.removeLastSegments(1).append(fNewElementName).append(remaingPath);
+				IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(fEntryToChange, newPath, filePath,
+						fNewElementName);
 
 				newBuildEntries.remove(fEntryToChange);
 				newBuildEntries.add(newEntry);
 			} else {
-				IBuildpathEntry newEntry = RefactoringUtility
-						.createNewBuildpathEntry(fEntryToChange,
-								fEntryToChange.getPath(), filePath,
-								fNewElementName);
+				IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(fEntryToChange,
+						fEntryToChange.getPath(), filePath, fNewElementName);
 
 				newBuildEntries.remove(fEntryToChange);
 				newBuildEntries.add(newEntry);
@@ -210,8 +192,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 		oldIncludePath = new ArrayList<IBuildpathEntry>();
 
 		newIncludePathEntries = new ArrayList<IBuildpathEntry>();
-		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager
-				.getInstance().getIncludePaths(project));
+		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager.getInstance().getIncludePaths(project));
 
 		for (IncludePath entry : includePathEntries) {
 			Object includePathEntry = entry.getEntry();
@@ -220,34 +201,26 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 				resource = (IResource) includePathEntry;
 				IPath entryPath = resource.getFullPath();
 
-				IBuildpathEntry oldEntry = RefactoringUtility
-						.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
-								entryPath);
+				IBuildpathEntry oldEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+						entryPath);
 				oldIncludePath.add((IBuildpathEntry) oldEntry);
 
-				if (filePath.isPrefixOf(entryPath)
-						|| entryPath.equals(filePath)) {
-					int mattchedPath = entryPath
-							.matchingFirstSegments(filePath);
+				if (filePath.isPrefixOf(entryPath) || entryPath.equals(filePath)) {
+					int mattchedPath = entryPath.matchingFirstSegments(filePath);
 					IPath truncatedPath = entryPath.uptoSegment(mattchedPath);
-					IPath remaingPath = entryPath
-							.removeFirstSegments(mattchedPath);
+					IPath remaingPath = entryPath.removeFirstSegments(mattchedPath);
 					IPath newPath;
 					if (mattchedPath == filePath.segmentCount()) {
-						newPath = truncatedPath.removeLastSegments(1)
-								.append(fNewElementName).append(remaingPath);
+						newPath = truncatedPath.removeLastSegments(1).append(fNewElementName).append(remaingPath);
 					} else {
-						newPath = truncatedPath.append(fNewElementName).append(
-								remaingPath);
+						newPath = truncatedPath.append(fNewElementName).append(remaingPath);
 					}
-					IBuildpathEntry newEntry = RefactoringUtility
-							.createNewBuildpathEntry(
-									IBuildpathEntry.BPE_SOURCE, newPath);
+					IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+							newPath);
 					newIncludePathEntries.add(newEntry);
 				} else {
-					IBuildpathEntry newEntry = RefactoringUtility
-							.createNewBuildpathEntry(
-									IBuildpathEntry.BPE_SOURCE, entryPath);
+					IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+							entryPath);
 					newIncludePathEntries.add(newEntry);
 				}
 			} else {
@@ -262,9 +235,8 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 	/**
 	 * Derive the change
 	 */
-	private void createRenameTextChanges(IProgressMonitor pm,
-			CompositeChange rootChange) throws CoreException,
-			OperationCanceledException {
+	private void createRenameTextChanges(IProgressMonitor pm, CompositeChange rootChange)
+			throws CoreException, OperationCanceledException {
 
 		try {
 			pm.beginTask(RenameClassProcessor.RENAME_IS_PROCESSING, 1);
@@ -282,10 +254,8 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 				for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 					final IFile file = entry.getKey();
 					final Program program = entry.getValue();
-					final RenameIncludeFolder rename = new RenameIncludeFolder(
-							file, getCurrentElementName(), newElementName,
-							this.resource.getFullPath(), false,
-							getUpdateReferences());
+					final RenameIncludeFolder rename = new RenameIncludeFolder(file, getCurrentElementName(),
+							newElementName, this.resource.getFullPath(), false, getUpdateReferences());
 
 					// aggregate the changes identifiers
 					program.accept(rename);
@@ -296,8 +266,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 					pm.worked(1);
 
 					if (rename.hasChanges()) {
-						ProgramFileChange change = new ProgramFileChange(
-								file.getName(), file, program);
+						ProgramFileChange change = new ProgramFileChange(file.getName(), file, program);
 						change.setEdit(new MultiTextEdit());
 						change.setTextType("php"); //$NON-NLS-1$
 
@@ -312,8 +281,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 	}
 
 	private void createFileRenameChange(CompositeChange rootChange) {
-		RenameResourceChange rmChange = new RenameResourceChange(
-				resource.getFullPath(), fNewElementName);
+		RenameResourceChange rmChange = new RenameResourceChange(resource.getFullPath(), fNewElementName);
 
 		rootChange.add(rmChange);
 
@@ -325,14 +293,12 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 	 * @see org.eclipse.php.refactoring.core.rename.AbstractRenameProcessor#
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
-			throws OperationCanceledException {
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 
 		if (!checkReadOnlyAndNull(resource)) {
-			status.merge(RefactoringStatus.createFatalErrorStatus(NLS.bind(
-					PhpRefactoringCoreMessages
-							.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
+			status.merge(RefactoringStatus.createFatalErrorStatus(
+					NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
 		}
 		try {
 			boolean hasExternalDependencies = false;
@@ -344,16 +310,13 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 				IContainer container = (IContainer) resource;
 
 				Set<IFile> phpFilesSet = new HashSet<IFile>();
-				MoveUtils.getAllPHPFiles(new IResource[] { container },
-						phpFilesSet);
+				MoveUtils.getAllPHPFiles(new IResource[] { container }, phpFilesSet);
 				for (IFile file : phpFilesSet) {
-					ISourceModule sourceModule = DLTKCore
-							.createSourceModuleFrom(file);
+					ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 					IProject project = file.getProject();
 					PHPVersion version = ProjectOptions.getPhpVersion(project);
 
-					ASTParser newParser = ASTParser.newParser(version,
-							sourceModule);
+					ASTParser newParser = ASTParser.newParser(version, sourceModule);
 					Program program = newParser.createAST(null);
 					participantFiles.put(file, program);
 
@@ -362,8 +325,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 			}
 
 			if (hasExternalDependencies) {
-				final String message = PhpRefactoringCoreMessages
-						.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
+				final String message = PhpRefactoringCoreMessages.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
 				return RefactoringStatus.createWarningStatus(message);
 			}
 
@@ -388,8 +350,11 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 		if (currentResource == null) {
 			return false;
 		}
+		ResourceAttributes attributes = currentResource.getResourceAttributes();
+		if (attributes == null)
+			return false;
 		// Do a quick read only check
-		if (currentResource.getResourceAttributes().isReadOnly()) {
+		if (attributes.isReadOnly()) {
 			return false;
 		}
 		return true;
@@ -402,29 +367,26 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 	 * checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 
 		// Checks if one of the resources already exists with the same name in
 		// this location
 		IPath sourcePath = resource.getFullPath().removeLastSegments(1);
 
-		String newFilePath = sourcePath.toOSString() + File.separatorChar
-				+ getNewElementName();
+		String newFilePath = sourcePath.toOSString() + File.separatorChar + getNewElementName();
 
 		IResource dest;
 		if (sourcePath.segmentCount() < 1) {
-			dest = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(getNewElementName());
+			dest = ResourcesPlugin.getWorkspace().getRoot().getProject(getNewElementName());
 		} else {
-			dest = ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(new Path(newFilePath));
+			dest = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(newFilePath));
 		}
 		if (dest.exists()) {
-			status.merge(RefactoringStatus.createFatalErrorStatus(NLS.bind(
-					PhpRefactoringCoreMessages
-							.getString("RenameFileProcessor.8"), getNewElementName(), sourcePath.toOSString()))); //$NON-NLS-1$
+			status.merge(RefactoringStatus
+					.createFatalErrorStatus(NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.8"), //$NON-NLS-1$
+							getNewElementName(), sourcePath.toOSString())));
 		}
 
 		return status;
@@ -534,8 +496,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor
 			List<Change> undos = Arrays.asList(childUndos);
 			Collections.reverse(undos);
 
-			return new NoReverseCompositeChange(getName(),
-					undos.toArray(new Change[undos.size()]));
+			return new NoReverseCompositeChange(getName(), undos.toArray(new Change[undos.size()]));
 		}
 	}
 }
