@@ -708,11 +708,13 @@ public class StubUtility {
 				buf.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
 			}
 		}
-		for (int i = 0; i < paramNames.length; i++) {
-			if (buf.length() > 0) {
-				buf.append(lineDelimiter).append(lineStart);
+		if (null != paramNames) {
+			for (int i = 0; i < paramNames.length; i++) {
+				if (buf.length() > 0) {
+					buf.append(lineDelimiter).append(lineStart);
+				}
+				buf.append("@param ").append(paramNames[i]); //$NON-NLS-1$
 			}
-			buf.append("@param ").append(paramNames[i]); //$NON-NLS-1$
 		}
 		if (null != newExceptions) {
 			for (Iterator<String> iterator = newExceptions.iterator(); iterator.hasNext();) {
