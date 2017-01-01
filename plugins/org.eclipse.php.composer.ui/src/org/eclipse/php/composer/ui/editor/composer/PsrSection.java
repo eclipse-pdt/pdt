@@ -21,12 +21,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.php.composer.api.collection.Psr;
+import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.ui.controller.PsrController;
 import org.eclipse.php.composer.ui.dialogs.PsrDialog;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
@@ -42,9 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ResourceTransfer;
-
-import org.eclipse.php.composer.api.collection.Psr;
-import org.eclipse.php.composer.api.objects.Namespace;
 
 public abstract class PsrSection extends TreeSection implements PropertyChangeListener {
 
@@ -195,7 +189,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 		}
 
 		if (element instanceof Namespace) {
-			namespace = ((Namespace) element).clone();
+			namespace = (Namespace) element;
 		}
 
 		if (namespace != null) {
@@ -204,9 +198,23 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 
 			if (diag.open() == Dialog.OK) {
 				Namespace nmspc = psr.get(namespace.getNamespace());
-				nmspc.clear();
-				nmspc.setNamespace(diag.getNamespace().getNamespace());
-				nmspc.addPaths(diag.getNamespace().getPaths());
+				if (nmspc.equals(diag.getNamespace())) {
+					// nothing changed
+					return;
+				}
+				if (!nmspc.getNamespace().equals(diag.getNamespace().getNamespace())) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=507543
+					// We cannot simply do
+					// "nmspc.setNamespace(diag.getNamespace().getNamespace());"
+					// since namespace name nmspc.getNamespace() is used as key
+					// in map psr.properties
+					// We do remove&add to properly update psr.properties keys
+					psr.remove(nmspc);
+					psr.add(diag.getNamespace());
+				} else {
+					nmspc.clear();
+					nmspc.addPaths(diag.getNamespace().getPaths());
+				}
 			}
 		}
 	}
