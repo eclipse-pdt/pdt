@@ -22,6 +22,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPluginConstants;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
@@ -34,15 +35,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
-
-import org.eclipse.php.composer.api.objects.Namespace;
 
 public class PsrDialog extends Dialog {
 
@@ -83,6 +77,10 @@ public class PsrDialog extends Dialog {
 
 		if (namespace.getNamespace() != null) {
 			namespaceControl.setText(namespace.getNamespace());
+		} else {
+			// must never be null, so at least be sure to always return an empty
+			// string
+			namespace.setNamespace(""); //$NON-NLS-1$
 		}
 
 		namespaceControl.addModifyListener(new ModifyListener() {
@@ -143,6 +141,7 @@ public class PsrDialog extends Dialog {
 		btnRemove.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemove.setText("Remove");
 
+		// XXX: add/remove listener on dialog open/close
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -166,7 +165,12 @@ public class PsrDialog extends Dialog {
 
 		namespace.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
+				// "namespace" can be modified afterwards by
+				// PsrSection#handleEdit()
 				if (e.getPropertyName().contains("#")) {
+					if (pathViewer.getControl().isDisposed()) {
+						return;
+					}
 					pathViewer.refresh();
 				}
 			}
