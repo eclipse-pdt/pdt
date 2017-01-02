@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
+@Deprecated
 public class AliasType extends SourceType {
 	private String alias;
 	private String fullyQualifiedName;

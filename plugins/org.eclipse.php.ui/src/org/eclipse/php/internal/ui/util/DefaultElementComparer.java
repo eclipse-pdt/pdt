@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.jface.viewers.IElementComparer;
 
+@Deprecated
 public class DefaultElementComparer implements IElementComparer {
 
 	public static final DefaultElementComparer INSTANCE = new DefaultElementComparer();

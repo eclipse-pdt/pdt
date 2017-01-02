@@ -28,6 +28,7 @@ import org.w3c.dom.Node;
  * @author guy.g
  * 
  */
+@Deprecated
 public class JFaceNodeAdapterForPHP extends JFaceNodeAdapterForHTML {
 
 	JFaceNodeAdapterFactory fAdapterFactory;

@@ -17,10 +17,12 @@ import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
+import org.eclipse.wst.jsdt.internal.ui.javaeditor.SemanticHighlightingReconciler;
 
 /**
  * Semantic token
  */
+@Deprecated
 public final class SemanticToken {
 
 	/** AST node */

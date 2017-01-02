@@ -24,6 +24,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.part.PluginTransfer;
 
+@Deprecated
 public class PHPViewerDropSupport {
 
 	private final StructuredViewer fViewer;
