@@ -12,15 +12,14 @@ package org.eclipse.php.formatter.core;
 
 import java.util.*;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -28,7 +27,6 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
-import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -44,7 +42,7 @@ import org.osgi.service.prefs.Preferences;
  * 
  * @author moshe, 2007
  */
-public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, IFormatterProcessorFactory {
+public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorFactory {
 
 	private CodeFormatterPreferences fCodeFormatterPreferences = CodeFormatterPreferences.getDefaultPreferences();
 	private static final Map<String, Object> defaultPrefrencesValues = CodeFormatterPreferences.getDefaultPreferences()
@@ -255,31 +253,6 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		// }
 		// } catch (CoreException e) {
 		// }
-	}
-
-	// Return the markers
-	// TODO - This is buggy since the lines might be different now.
-	@Deprecated
-	private void reinsertMarkers(IMarker[] allMarkers, IFile file) throws CoreException {
-		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
-		if (allMarkers != null) {
-			for (IMarker marker : allMarkers) {
-				String markerType = MarkerUtilities.getMarkerType(marker);
-				if (markerType != null) {
-					IBreakpoint breakpoint = breakpointManager.getBreakpoint(marker);
-					if (breakpoint != null) {
-						IMarker createdMarker = file.createMarker(markerType);
-						createdMarker.setAttributes(breakpoint.getMarker().getAttributes());
-						breakpointManager.removeBreakpoint(breakpoint, true);
-						breakpoint.setMarker(createdMarker);
-						breakpointManager.addBreakpoint(breakpoint);
-					} else {
-						MarkerUtilities.createMarker(file, marker.getAttributes(), markerType);
-					}
-				}
-				marker.delete();
-			}
-		}
 	}
 
 	public IFormattingStrategy getFormattingStrategy(String contentType) {
