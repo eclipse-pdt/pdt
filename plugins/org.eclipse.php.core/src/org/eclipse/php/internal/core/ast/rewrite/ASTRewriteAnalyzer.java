@@ -1320,33 +1320,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
-	@Deprecated
-	class ModifierRewriter extends ListRewriter {
-
-		private final Prefix annotationSeparation;
-
-		public ModifierRewriter(Prefix annotationSeparation) {
-			this.annotationSeparation = annotationSeparation;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jdt.internal.core.dom.rewrite.ASTRewriteAnalyzer.
-		 * ListRewriter #getSeparatorString(int)
-		 */
-		protected String getSeparatorString(int nodeIndex) {
-			// ASTNode curr = getNewNode(nodeIndex);
-			// if (curr instanceof Annotation) {
-			// return
-			// this.annotationSeparation.getPrefix(getNodeIndent(nodeIndex +
-			// 1));
-			// }
-			// TODO
-			return super.getSeparatorString(nodeIndex);
-		}
-	}
-
 	// private int rewriteModifiers2(ASTNode node, ChildListPropertyDescriptor
 	// property, int pos) {
 	// RewriteEvent event = getEvent(node, property);
