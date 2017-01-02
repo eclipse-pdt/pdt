@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013, 2014, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2013, 2014, 2015, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
@@ -1250,41 +1251,70 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_throws_section);
 
+		ArrayList<String> stringList = new ArrayList<String>();
+
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
+			List<TypeReference> fragments = tag.getTypeReferences();
+			if (fragments.size() > 0) {
+				stringList.add(handleThrowsException(fragments.get(0).getName().trim(), tag.getValue()));
+			}
+		}
+		for (int i = 0; i < exceptionDescriptions.length; i++) {
+			// by construction, the value of "name" must be a tag name in the
+			// "tags" list
+			String name = (String) exceptionNames.get(i);
+			CharSequence rawDescription = exceptionDescriptions[i];
+			if (name != null) {
+				String fullDesc = handleThrowsException(name, rawDescription);
+				String shortDesc = handleThrowsException(name, null);
+				// Add the inherited exception description when it differs from
+				// the tag exception description.
+				// Also only add the inherited description when it is a full
+				// exception description.
+				if (!stringList.contains(fullDesc) && !fullDesc.equals(shortDesc)) {
+					boolean wasShortDescFound = false;
+					// replace existing short descriptions by full descriptions
+					for (int j = 0; j < stringList.size(); j++) {
+						if (shortDesc.equals(stringList.get(j))) {
+							stringList.set(j, fullDesc);
+							wasShortDescFound = true;
+						}
+					}
+					// add the inherited exception when necessary
+					if (!wasShortDescFound) {
+						stringList.add(fullDesc);
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < stringList.size(); i++) {
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			handleThrowsTag(tag);
+			fBuf.append(stringList.get(i));
 			doWorkAround();
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
-		for (int i = 0; i < exceptionDescriptions.length; i++) {
-			CharSequence description = exceptionDescriptions[i];
-			String name = (String) exceptionNames.get(i);
-			if (name != null) {
-				fBuf.append(BlOCK_TAG_ENTRY_START);
-				if (description != null) {
-					fBuf.append(ScriptElementLabels.CONCAT_STRING);
-					fBuf.append(description);
-				}
-				fBuf.append(BlOCK_TAG_ENTRY_END);
-			}
-		}
 	}
 
-	private void handleThrowsTag(PHPDocTag tag) {
-		List<TypeReference> fragments = tag.getTypeReferences();
-		if (fragments.size() > 0) {
-			String exceptionName = fragments.get(0).getName().trim();
-			fBuf.append(PARAM_THROWS_START);
-			fBuf.append(exceptionName);
-			fBuf.append(PARAM_THROWS_END);
-			String value = tag.getValue().trim();
-			String description = value.substring(exceptionName.length());
-			if (description.length() > 0) {
-				fBuf.append(ScriptElementLabels.CONCAT_STRING);
-				fBuf.append(description.trim());
-			}
+	private String handleThrowsException(String exceptionName, @Nullable CharSequence rawValue) {
+		StringBuffer fBuf = new StringBuffer();
+		fBuf.append(PARAM_THROWS_START);
+		fBuf.append(exceptionName);
+		fBuf.append(PARAM_THROWS_END);
+		if (rawValue == null) {
+			return fBuf.toString();
 		}
+		String description = rawValue.toString().trim();
+		if (description.startsWith(exceptionName)) {
+			description = description.substring(exceptionName.length());
+			description = description.trim();
+		}
+		if (description.length() > 0) {
+			fBuf.append(ScriptElementLabels.CONCAT_STRING);
+			fBuf.append(description);
+		}
+		return fBuf.toString();
 	}
 
 	private void handleParameterTags(List tags, List parameterNames, CharSequence[] parameterTypes,
