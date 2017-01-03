@@ -75,19 +75,19 @@ public class PsrDialog extends Dialog {
 		gd_eventControl.widthHint = ComposerUIPluginConstants.DIALOG_CONTROL_WIDTH;
 		namespaceControl.setLayoutData(gd_eventControl);
 
-		if (namespace.getNamespace() != null) {
-			namespaceControl.setText(namespace.getNamespace());
-		} else {
-			// must never be null, so at least be sure to always return an empty
-			// string
-			namespace.setNamespace(""); //$NON-NLS-1$
-		}
-
 		namespaceControl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				namespace.setNamespace(namespaceControl.getText());
 			}
 		});
+
+		if (namespace.getNamespace() != null) {
+			namespaceControl.setText(namespace.getNamespace());
+		} else {
+			// must never be null, so at least be sure to always return an empty
+			// string
+			namespaceControl.setText(""); //$NON-NLS-1$
+		}
 
 		Label lblHandler = new Label(contents, SWT.NONE);
 		lblHandler.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));

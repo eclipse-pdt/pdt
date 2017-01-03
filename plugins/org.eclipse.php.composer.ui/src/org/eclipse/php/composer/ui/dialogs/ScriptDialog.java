@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.php.composer.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.composer.api.objects.Scripts;
 import org.eclipse.php.composer.ui.ComposerUIPluginConstants;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.SWT;
@@ -21,14 +22,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.php.composer.api.objects.Scripts;
+import org.eclipse.swt.widgets.*;
 
 public class ScriptDialog extends Dialog {
 
@@ -98,6 +92,10 @@ public class ScriptDialog extends Dialog {
 
 		if (handler != null) {
 			handlerControl.setText(handler);
+		} else {
+			// must never be null, so at least be sure to always return an empty
+			// string
+			handlerControl.setText(""); //$NON-NLS-1$
 		}
 
 		return contents;

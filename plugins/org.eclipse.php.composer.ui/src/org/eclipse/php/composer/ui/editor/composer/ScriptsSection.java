@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.composer.api.collection.JsonArray;
+import org.eclipse.php.composer.api.objects.Scripts;
 import org.eclipse.php.composer.ui.controller.ScriptsController;
 import org.eclipse.php.composer.ui.dialogs.ScriptDialog;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
@@ -34,9 +36,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
-import org.eclipse.php.composer.api.collection.JsonArray;
-import org.eclipse.php.composer.api.objects.Scripts;
 
 public class ScriptsSection extends TreeSection implements PropertyChangeListener {
 
@@ -172,7 +171,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 			}
 		}
 
-		if (diag.open() == Dialog.OK) {
+		if (diag.open() == Dialog.OK && diag.getEvent() != null) {
 			composerPackage.getScripts().getAsArray(diag.getEvent()).add(diag.getHandler());
 			refresh();
 		}
@@ -188,7 +187,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
 			diag.setEvent(text);
 			diag.setHandlerEnabled(false);
-			if (diag.open() == Dialog.OK) {
+			if (diag.open() == Dialog.OK && diag.getEvent() != null) {
 				String event = diag.getEvent();
 				if (!event.equalsIgnoreCase(text)) {
 					composerPackage.getScripts().set(event, composerPackage.getScripts().getAsArray(text));

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,7 @@ package org.eclipse.php.composer.ui.editor.composer;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -25,12 +21,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.php.composer.api.collection.Repositories;
+import org.eclipse.php.composer.api.repositories.*;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.php.composer.ui.controller.IController;
 import org.eclipse.php.composer.ui.dialogs.RepositoryDialog;
@@ -44,15 +37,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
-import org.eclipse.php.composer.api.collection.Repositories;
-import org.eclipse.php.composer.api.repositories.ComposerRepository;
-import org.eclipse.php.composer.api.repositories.GitRepository;
-import org.eclipse.php.composer.api.repositories.MercurialRepository;
-import org.eclipse.php.composer.api.repositories.PackageRepository;
-import org.eclipse.php.composer.api.repositories.PearRepository;
-import org.eclipse.php.composer.api.repositories.Repository;
-import org.eclipse.php.composer.api.repositories.SubversionRepository;
 
 public class RepositoriesSection extends TableSection implements PropertyChangeListener {
 
@@ -254,7 +238,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 
 	private void handleAdd() {
 		RepositoryDialog diag = new RepositoryDialog(repositoryViewer.getTable().getShell());
-		if (diag.open() == Dialog.OK) {
+		if (diag.open() == Dialog.OK && diag.getRepository() != null) {
 			composerPackage.getRepositories().add(diag.getRepository());
 		}
 	}
