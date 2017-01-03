@@ -837,14 +837,15 @@ public class PHPDocumentationContentAccess {
 
 		if (deprecatedTag != null)
 			handleDeprecatedTag(deprecatedTag);
-		if (shortDescription != null && shortDescription.length() > 0)
+		boolean hasShortDescription = shortDescription != null && shortDescription.length() > 0;
+		if (hasShortDescription)
 			fBuf.append(shortDescription);
 		if (longDescription != null && longDescription.length() > 0) {
 			fBuf.append("<p>"); //$NON-NLS-1$
 			longDescription = longDescription.replaceAll("(\r\n){2,}|\n{2,}|\r{2,}", "</p><p>"); //$NON-NLS-1$ //$NON-NLS-2$
 			fBuf.append(longDescription);
 			fBuf.append("</p>"); //$NON-NLS-1$
-		} else if (fMethod != null) {
+		} else if (fMethod != null && !hasShortDescription) {
 			CharSequence inherited = fJavadocLookup.getInheritedMainDescription(fMethod);
 			handleInherited(inherited);
 		}
