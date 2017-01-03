@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,9 +106,6 @@ public class RepositoryDialog extends Dialog {
 
 		final Text urlControl = new Text(container, SWT.BORDER);
 		urlControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if (repository != null && repository.has("url")) {
-			urlControl.setText(repository.getUrl());
-		}
 		urlControl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (repository != null) {
@@ -117,6 +114,13 @@ public class RepositoryDialog extends Dialog {
 				url = urlControl.getText();
 			}
 		});
+		if (repository != null && repository.has("url") && repository.getUrl() != null) {
+			urlControl.setText(repository.getUrl());
+		} else {
+			// must never be null, so at least be sure to always return an empty
+			// string
+			urlControl.setText(""); //$NON-NLS-1$
+		}
 
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -124,9 +128,6 @@ public class RepositoryDialog extends Dialog {
 
 		final Text nameControl = new Text(container, SWT.BORDER);
 		nameControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if (repository != null && repository.has("name")) {
-			nameControl.setText(repository.getName());
-		}
 		nameControl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (repository != null) {
@@ -135,6 +136,13 @@ public class RepositoryDialog extends Dialog {
 				name = nameControl.getText();
 			}
 		});
+		if (repository != null && repository.has("name") && repository.getName() != null) {
+			nameControl.setText(repository.getName());
+		} else {
+			// must never be null, so at least be sure to always return an empty
+			// string
+			nameControl.setText(""); //$NON-NLS-1$
+		}
 
 		return container;
 	}
@@ -152,9 +160,13 @@ public class RepositoryDialog extends Dialog {
 			return repository;
 		}
 
+		if (type == null) {
+			return null;
+		}
+
 		Repository repo = RepositoryFactory.create(type);
-		repo.setUrl(url);
-		repo.setName(name);
+		repo.setUrl(url != null ? url : ""); //$NON-NLS-1$
+		repo.setName(name != null ? name : ""); //$NON-NLS-1$
 
 		return repo;
 	}
