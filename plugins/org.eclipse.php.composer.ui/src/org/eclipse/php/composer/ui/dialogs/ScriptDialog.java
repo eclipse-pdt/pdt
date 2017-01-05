@@ -12,7 +12,8 @@ package org.eclipse.php.composer.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
-import org.eclipse.php.composer.api.objects.Scripts;
+import org.eclipse.php.composer.api.collection.Scripts;
+import org.eclipse.php.composer.api.objects.Script;
 import org.eclipse.php.composer.ui.ComposerUIPluginConstants;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.SWT;
@@ -29,8 +30,8 @@ public class ScriptDialog extends Dialog {
 	private Combo eventControl;
 	private Text handlerControl;
 
-	private String event;
-	private String handler;
+	private Script script;
+	private int handlerIndex;
 
 	private boolean handlerEnabled = true;
 	private boolean eventEnabled = true;
@@ -38,12 +39,16 @@ public class ScriptDialog extends Dialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ScriptDialog(Shell parentShell) {
+	public ScriptDialog(Shell parentShell, Script script, int handlerIndex) {
 		super(parentShell);
+		this.script = script;
+		this.handlerIndex = handlerIndex;
 	}
 
-	public ScriptDialog(IShellProvider parentShell) {
+	public ScriptDialog(IShellProvider parentShell, Script script, int handlerIndex) {
 		super(parentShell);
+		this.script = script;
+		this.handlerIndex = handlerIndex;
 	}
 
 	@Override
@@ -69,12 +74,14 @@ public class ScriptDialog extends Dialog {
 		eventControl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				event = eventControl.getText();
+				script.setScript(eventControl.getText());
 			}
 		});
 
-		if (event != null) {
-			eventControl.setText(event);
+		if (script.getScript() != null) {
+			eventControl.setText(script.getScript());
+		} else {
+			// leave it null to indicate that there is no combo box selection
 		}
 
 		Label lblHandler = new Label(contents, SWT.NONE);
@@ -86,12 +93,12 @@ public class ScriptDialog extends Dialog {
 		handlerControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		handlerControl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				handler = handlerControl.getText();
+				script.getHandlers().add(handlerIndex, handlerControl.getText());
 			}
 		});
 
-		if (handler != null) {
-			handlerControl.setText(handler);
+		if (script.getHandlers().get(handlerIndex) != null) {
+			handlerControl.setText((String) script.getHandlers().get(handlerIndex));
 		} else {
 			// must never be null, so at least be sure to always return an empty
 			// string
@@ -115,25 +122,7 @@ public class ScriptDialog extends Dialog {
 		}
 	}
 
-	public void setEvent(String event) {
-		this.event = event;
-		if (eventControl != null) {
-			eventControl.setText(event);
-		}
-	}
-
-	public void setHandler(String handler) {
-		this.handler = handler;
-		if (handlerControl != null) {
-			handlerControl.setText(handler);
-		}
-	}
-
-	public String getEvent() {
-		return event;
-	}
-
-	public String getHandler() {
-		return handler;
+	public Script getScript() {
+		return script;
 	}
 }
