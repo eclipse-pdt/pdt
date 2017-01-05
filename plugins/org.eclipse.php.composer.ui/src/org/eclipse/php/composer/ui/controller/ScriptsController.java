@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,17 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.php.composer.api.collection.Scripts;
+import org.eclipse.php.composer.api.objects.Script;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeItem;
-
-import org.eclipse.php.composer.api.objects.Scripts;
 
 public class ScriptsController extends StyledCellLabelProvider implements ITreeContentProvider {
 
@@ -34,15 +29,20 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 
 	private TreeViewer viewer;
 
-	public ScriptsController() {
+	public ScriptsController(TreeViewer viewer) {
+		this.viewer = viewer;
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		this.viewer = (TreeViewer) viewer;
 		scripts = (Scripts) newInput;
 	}
 
 	public String getText(Object element) {
+
+		if (element instanceof Script) {
+			return ((Script) element).getScript();
+		}
+
 		return element.toString();
 	}
 
@@ -52,10 +52,9 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 
 		StyledString styledString = new StyledString(text);
 
-		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
-			int count = scripts.getAsArray(text).size();
-			styledString.append(" (" + count + ")", StyledString.COUNTER_STYLER);
-
+		if (obj instanceof Script) {
+			Script script = (Script) obj;
+			styledString.append(" (" + script.size() + ")", StyledString.COUNTER_STYLER);
 			cell.setImage(eventImage);
 		} else {
 			cell.setImage(scriptImage);
@@ -76,19 +75,20 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Scripts) {
 			Scripts scripts = (Scripts) parentElement;
-			List<String> children = new ArrayList<String>();
+			List<Script> children = new ArrayList<Script>();
 
 			for (String event : Scripts.getEvents()) {
 				if (scripts.has(event)) {
-					children.add(event);
+					children.add(scripts.get(event));
 				}
 			}
 
 			return children.toArray();
-		} else {
-			String text = parentElement.toString();
-			if (Arrays.asList(Scripts.getEvents()).contains(text)) {
-				return scripts.getAsArray(text).toArray();
+		} else if (parentElement instanceof Script) {
+			Script model = (Script) parentElement;
+			String event = model.getScript();
+			if (Arrays.asList(Scripts.getEvents()).contains(event)) {
+				return model.getHandlers().toArray();
 			}
 		}
 
@@ -116,8 +116,8 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 			if (parent.getData() != null) {
 				return parent.getData();
 			}
-
 		}
+
 		return null;
 	}
 
