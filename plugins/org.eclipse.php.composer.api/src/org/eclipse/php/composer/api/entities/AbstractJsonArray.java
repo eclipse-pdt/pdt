@@ -111,6 +111,33 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 	}
 
 	/**
+	 * Adds a value to the receiver's collection at the given index
+	 * 
+	 * @param index
+	 *            the index
+	 * @param value
+	 *            the new value
+	 */
+	public void add(int index, V newValue) throws IndexOutOfBoundsException {
+		V oldValue = values.get(index);
+
+		if (!values.subList(index, index + 1).contains(newValue)) {
+			values.remove(oldValue);
+			values.add(index, newValue);
+
+			if (oldValue instanceof JsonEntity) {
+				((JsonEntity) oldValue).removePropertyChangeListener(propListener);
+			}
+
+			if (newValue instanceof JsonEntity) {
+				((JsonEntity) newValue).removePropertyChangeListener(propListener);
+			}
+
+			firePropertyChange("#" + index, oldValue, newValue);
+		}
+	}
+
+	/**
 	 * Removes a value from the receiver's collection
 	 * 
 	 * @param value
@@ -128,11 +155,28 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 	}
 
 	/**
+	 * Removes a value from the receiver's collection at the given index
+	 * 
+	 * @param index
+	 *            the index
+	 */
+	public void remove(int index) throws IndexOutOfBoundsException {
+		V value = values.remove(index);
+
+		if (value instanceof JsonEntity) {
+			((JsonEntity) value).removePropertyChangeListener(propListener);
+		}
+
+		firePropertyChange("#" + index, value, null);
+	}
+
+	/**
 	 * If oldValue exists, replaces with newValue
 	 * 
 	 * @param oldValue
 	 * @param newValue
 	 */
+	@Deprecated
 	public void replace(V oldValue, V newValue) {
 		if (values.contains(oldValue)) {
 			int index = values.indexOf(oldValue);
