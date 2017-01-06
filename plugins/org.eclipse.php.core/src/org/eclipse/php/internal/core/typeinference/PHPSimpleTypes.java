@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -59,8 +61,24 @@ public class PHPSimpleTypes {
 	public static final IEvaluatedType STRING = new SimpleType(SimpleType.TYPE_STRING);
 	public static final IEvaluatedType OBJECT = new PHPClassType("object"); //$NON-NLS-1$
 	public static final IEvaluatedType RESOURCE = new PHPClassType("resource"); //$NON-NLS-1$
-	public static final IEvaluatedType ARRAY = new MultiTypeType();
-	public static final IEvaluatedType VOID = new SimpleType(SimpleType.TYPE_NONE); // $NON-NLS-1$
+	public static final IEvaluatedType ARRAY = new MultiTypeType() {
+		@Override
+		public final void addType(IEvaluatedType type) {
+			// by security, make this instance "read-only"
+		}
+
+		@Override
+		public final List<IEvaluatedType> getTypes() {
+			// by security, make this instance "read-only"
+			return Collections.unmodifiableList(super.getTypes());
+		}
+
+		@Override
+		public final String getTypeName() {
+			return "array"; // $NON-NLS-1$
+		}
+	};
+	public static final IEvaluatedType VOID = new SimpleType(SimpleType.TYPE_NONE);
 	public static final IEvaluatedType NULL = new SimpleType(SimpleType.TYPE_NULL);
 	public static final IEvaluatedType MIXED = new PHPClassType("mixed"); //$NON-NLS-1$
 
@@ -100,7 +118,7 @@ public class PHPSimpleTypes {
 	}
 
 	/**
-	 * Case senitive version f
+	 * Case sensitive version
 	 * 
 	 * @param type
 	 * @return

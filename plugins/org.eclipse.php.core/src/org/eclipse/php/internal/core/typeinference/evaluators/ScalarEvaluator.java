@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.FixedAnswerEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
@@ -31,15 +30,15 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 	private static Object evaluateScalar(IGoal goal, Scalar scalar) {
 		int scalarType = scalar.getScalarType();
 
-		int simpleType = SimpleType.TYPE_NONE;
+		IEvaluatedType simpleType = PHPSimpleTypes.VOID;
 		switch (scalarType) {
 		case Scalar.TYPE_INT:
 		case Scalar.TYPE_REAL:
-			simpleType = SimpleType.TYPE_NUMBER;
+			simpleType = PHPSimpleTypes.NUMBER;
 			break;
 		case Scalar.TYPE_STRING:
 			if ("null".equalsIgnoreCase(scalar.getValue())) { //$NON-NLS-1$
-				simpleType = SimpleType.TYPE_NULL;
+				simpleType = PHPSimpleTypes.NULL;
 				break;
 			}
 			// checking specific case for "return $this;" statement
@@ -63,12 +62,12 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 			String value = scalar.getValue();
 			if ("true".equalsIgnoreCase(value) //$NON-NLS-1$
 					|| "false".equalsIgnoreCase(value)) { //$NON-NLS-1$
-				simpleType = SimpleType.TYPE_BOOLEAN;
+				simpleType = PHPSimpleTypes.BOOLEAN;
 			} else {
-				simpleType = SimpleType.TYPE_STRING;
+				simpleType = PHPSimpleTypes.STRING;
 			}
 			break;
 		}
-		return new SimpleType(simpleType);
+		return simpleType;
 	}
 }

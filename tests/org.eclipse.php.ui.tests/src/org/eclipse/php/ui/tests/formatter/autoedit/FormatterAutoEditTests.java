@@ -79,6 +79,10 @@ public class FormatterAutoEditTests {
 		TESTS.put(PHPVersion.PHP7_0,
 				new String[] { "/workspace/formatter-autoedit", "/workspace/phpdoc-generation/php5",
 						"/workspace/phpdoc-generation/php53", "/workspace/phpdoc-generation/php7" });
+		TESTS.put(PHPVersion.PHP7_1,
+				new String[] { "/workspace/formatter-autoedit", "/workspace/phpdoc-generation/php5",
+						"/workspace/phpdoc-generation/php53", "/workspace/phpdoc-generation/php7",
+						"/workspace/phpdoc-generation/php71" });
 	};
 
 	public FormatterAutoEditTests(PHPVersion version, String[] fileNames) {

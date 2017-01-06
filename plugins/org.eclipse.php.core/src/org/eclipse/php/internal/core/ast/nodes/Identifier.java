@@ -94,7 +94,7 @@ public class Identifier extends VariableBase {
 		appendInterval(buffer);
 		buffer.append(" name='").append(name); //$NON-NLS-1$
 		if (isNullable()) {
-			buffer.append(" nullable='").append(nullable); //$NON-NLS-1$
+			buffer.append("' nullable='").append(nullable); //$NON-NLS-1$
 		}
 		buffer.append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}

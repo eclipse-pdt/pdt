@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
@@ -19,6 +18,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.CastExpression;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class CastEvaluator extends GoalEvaluator {
 
@@ -35,21 +35,21 @@ public class CastEvaluator extends GoalEvaluator {
 		switch (operator) {
 		case CastExpression.TYPE_INT:
 		case CastExpression.TYPE_REAL:
-			result = new SimpleType(SimpleType.TYPE_NUMBER);
+			result = PHPSimpleTypes.NUMBER;
 			break;
 		case CastExpression.TYPE_STRING:
-			result = new SimpleType(SimpleType.TYPE_STRING);
+			result = PHPSimpleTypes.STRING;
 			break;
 		case CastExpression.TYPE_ARRAY:
-			result = new SimpleType(SimpleType.TYPE_ARRAY);
+			result = PHPSimpleTypes.ARRAY;
 			break;
 		case CastExpression.TYPE_OBJECT:
 			return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), castExpression.getExpr()) };
 		case CastExpression.TYPE_BOOL:
-			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
+			result = PHPSimpleTypes.BOOLEAN;
 			break;
 		case CastExpression.TYPE_UNSET:
-			result = new SimpleType(SimpleType.TYPE_NULL);
+			result = PHPSimpleTypes.NULL;
 			break;
 		default:
 			throw new IllegalArgumentException();

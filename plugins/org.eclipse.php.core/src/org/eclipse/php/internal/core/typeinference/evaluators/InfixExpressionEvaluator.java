@@ -11,13 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class InfixExpressionEvaluator extends GoalEvaluator {
 
@@ -48,10 +48,10 @@ public class InfixExpressionEvaluator extends GoalEvaluator {
 		case InfixExpression.OP_OR:
 		case InfixExpression.OP_AND:
 		case InfixExpression.OP_XOR:
-			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
+			result = PHPSimpleTypes.BOOLEAN;
 			break;
 		case InfixExpression.OP_CONCAT:
-			result = new SimpleType(SimpleType.TYPE_STRING);
+			result = PHPSimpleTypes.STRING;
 			break;
 		case InfixExpression.OP_PLUS:
 		case InfixExpression.OP_MINUS:
@@ -60,7 +60,7 @@ public class InfixExpressionEvaluator extends GoalEvaluator {
 		case InfixExpression.OP_MOD:
 		case InfixExpression.OP_SL:
 		case InfixExpression.OP_SR:
-			result = new SimpleType(SimpleType.TYPE_NUMBER);
+			result = PHPSimpleTypes.NUMBER;
 			break;
 		default:
 			throw new IllegalArgumentException();

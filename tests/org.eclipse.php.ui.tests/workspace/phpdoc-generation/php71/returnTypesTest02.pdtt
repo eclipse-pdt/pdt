@@ -1,0 +1,17 @@
+--TEST--
+Bug 508914 - Formatter remove nullable return
+--FILE--
+<?php
+/**|
+function get(string $name, int $index):? DateTime {
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param string $name
+ * @param int $index
+ * @return DateTime|NULL
+ */
+function get(string $name, int $index):? DateTime {
+}

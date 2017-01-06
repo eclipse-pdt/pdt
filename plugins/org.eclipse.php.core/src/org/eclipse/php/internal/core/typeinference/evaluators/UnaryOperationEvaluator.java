@@ -11,13 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UnaryOperation;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class UnaryOperationEvaluator extends GoalEvaluator {
 
@@ -33,12 +33,12 @@ public class UnaryOperationEvaluator extends GoalEvaluator {
 		switch (unaryOp.getOperatorType()) {
 		case UnaryOperation.OP_MINUS:
 		case UnaryOperation.OP_PLUS:
-			result = new SimpleType(SimpleType.TYPE_NUMBER);
+			result = PHPSimpleTypes.NUMBER;
 			break;
 		case UnaryOperation.OP_TILDA:
 			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), unaryOp.getExpr()) };
 		case UnaryOperation.OP_NOT:
-			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
+			result = PHPSimpleTypes.BOOLEAN;
 			break;
 		}
 		return IGoal.NO_GOALS;

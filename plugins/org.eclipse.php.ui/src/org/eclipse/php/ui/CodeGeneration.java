@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -372,7 +372,7 @@ public class CodeGeneration {
 			ITypeBinding varType = varTypes[i];
 
 			if (expression instanceof ArrayCreation) {
-				fieldTypes[i] = "array"; //$NON-NLS-1$
+				fieldTypes[i] = PHPSimpleTypes.ARRAY.getTypeName();
 			} else if (expression instanceof Scalar) {
 				Scalar scalar = (Scalar) expression;
 				switch (scalar.getScalarType()) {
@@ -381,7 +381,7 @@ public class CodeGeneration {
 					break;
 				case Scalar.TYPE_STRING:
 					if (!expression.isNullExpression()) {
-						fieldTypes[i] = "string"; //$NON-NLS-1$
+						fieldTypes[i] = PHPSimpleTypes.STRING.getTypeName();
 					} else {
 						// we don't want to use varType to describe
 						// null values (because varType.isAmbiguous() will
@@ -396,7 +396,7 @@ public class CodeGeneration {
 
 			if (null == fieldTypes[i] && null != varType) {
 				if (varType.isArray()) {
-					fieldTypes[i] = "array"; //$NON-NLS-1$
+					fieldTypes[i] = PHPSimpleTypes.ARRAY.getTypeName();
 				} else if (varType.isAmbiguous()) {
 					fieldTypes[i] = "Ambiguous"; //$NON-NLS-1$
 				} else {
@@ -655,7 +655,14 @@ public class CodeGeneration {
 			formalParameters = methodDeclaration.getFunction().formalParameters();
 			Identifier returnType = methodDeclaration.getFunction().getReturnType();
 			if (returnType != null) {
-				retType = returnType.getName();
+				if (returnType.isNullable()) {
+					StringBuilder returnTypeBuffer = new StringBuilder();
+					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR)
+							.append(PHPSimpleTypes.NULL.getTypeName());
+					retType = returnTypeBuffer.toString();
+				} else {
+					retType = returnType.getName();
+				}
 			}
 		} else if (elementAt instanceof FunctionDeclaration) {
 			FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
@@ -663,7 +670,14 @@ public class CodeGeneration {
 			formalParameters = functionDeclaration.formalParameters();
 			Identifier returnType = functionDeclaration.getReturnType();
 			if (returnType != null) {
-				retType = returnType.getName();
+				if (returnType.isNullable()) {
+					StringBuilder returnTypeBuffer = new StringBuilder();
+					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR)
+							.append(PHPSimpleTypes.NULL.getTypeName());
+					retType = returnTypeBuffer.toString();
+				} else {
+					retType = returnType.getName();
+				}
 			}
 		}
 		final List<String> exceptions = new ArrayList<String>();
@@ -721,7 +735,7 @@ public class CodeGeneration {
 				}
 				if (formalParameter.getDefaultValue() != null
 						&& formalParameter.getDefaultValue() instanceof ArrayCreation) {
-					parameterTypes[i++] = "array"; //$NON-NLS-1$
+					parameterTypes[i++] = PHPSimpleTypes.ARRAY.getTypeName();
 					continue;
 				}
 				parameterTypes[i++] = UNKNOWN_TYPE;
@@ -844,6 +858,12 @@ public class CodeGeneration {
 	 */
 	private static boolean appendAllPossibleTypes(IEvaluatedType type, StringBuilder buffer) {
 		List<String> foundTypes = new ArrayList<String>();
+		// special case: the empty array type PHPSimpleTypes.ARRAY can be
+		// returned by CastEvaluator
+		if (type instanceof MultiTypeType && ((MultiTypeType) type).getTypes().isEmpty()) {
+			buffer.append(PHPSimpleTypes.ARRAY.getTypeName()).append(Constants.TYPE_SEPERATOR_CHAR);
+			return true;
+		}
 		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
 				buffer.append(foundType).append(Constants.TYPE_SEPERATOR_CHAR);
@@ -897,10 +917,10 @@ public class CodeGeneration {
 	// return "char";
 	// }
 	// if (paramName.matches("\\$ar[A-Z].*")) {
-	// return "array";
+	// return PHPSimpleTypes.ARRAY.getTypeName();
 	// }
 	// if (paramName.matches("\\$str[A-Z].*")) {
-	// return "string";
+	// return PHPSimpleTypes.STRING.getTypeName();
 	// }
 	// if (paramName.matches("\\$fl[A-Z].*")) {
 	// return "float";
@@ -909,7 +929,7 @@ public class CodeGeneration {
 	// return "integer";
 	// }
 	// if (paramName.matches("\\$b[A-Z].*")) {
-	// return "boolean";
+	// return PHPSimpleTypes.BOOLEAN.getTypeName();
 	// }
 	// return null;
 	// }

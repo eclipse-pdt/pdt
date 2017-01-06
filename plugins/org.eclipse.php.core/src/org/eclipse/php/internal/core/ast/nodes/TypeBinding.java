@@ -545,7 +545,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @see #getDimensions()
 	 */
 	public boolean isArray() {
-		return type.getClass() == MultiTypeType.class;
+		return type instanceof MultiTypeType;
 	}
 
 	/**
@@ -633,7 +633,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         and <code>false</code> otherwise
 	 */
 	public boolean isPrimitive() {
-		return type.getClass() == SimpleType.class && !isNullType();
+		return type instanceof SimpleType && !isNullType();
 	}
 
 	/**
@@ -891,7 +891,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @see ITypeBinding#isUnknown()
 	 */
 	public boolean isUnknown() {
-		return this.elements == null && !(this.type instanceof SimpleType);
+		return this.elements == null && !(isPrimitive() || isNullType() || isArray());
 	}
 
 	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper) {

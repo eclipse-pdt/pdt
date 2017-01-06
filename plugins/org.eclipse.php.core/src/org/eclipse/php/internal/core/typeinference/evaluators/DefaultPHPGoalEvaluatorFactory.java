@@ -15,13 +15,13 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.FixedAnswerEvaluator;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.*;
@@ -121,13 +121,13 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			return new VariableReferenceEvaluator(exprGoal);
 		}
 		if (expressionClass == BackTickExpression.class || expressionClass == Quote.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
+			return new FixedAnswerEvaluator(exprGoal, PHPSimpleTypes.STRING);
 		}
 		if (expressionClass == CloneExpression.class) {
 			return new CloneEvaluator(exprGoal);
 		}
 		if (expressionClass == InstanceOfExpression.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_BOOLEAN));
+			return new FixedAnswerEvaluator(exprGoal, PHPSimpleTypes.BOOLEAN);
 		}
 		if (expressionClass == ConditionalExpression.class) {
 			return new ConditionalExpressionEvaluator(exprGoal);

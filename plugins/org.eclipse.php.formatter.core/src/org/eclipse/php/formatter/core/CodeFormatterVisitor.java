@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015, 2016 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2015, 2016, 2017 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private boolean useShortTags;
 
 	private int indentationLevel;
-	private boolean indentationLevelDesending = false;
+	private boolean indentationLevelDescending = false;
 	private AstLexer astLexer;
 	private boolean isPhpEqualTag = false;
 	private int startRegionPosition = -1;
@@ -146,7 +146,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// for block comment,multiline comment at the end of break statement of case
 	// statement
 	private List<Integer> indentationLevelList = new ArrayList<Integer>();
-	Stack<CommentIndentationObject> commentIndetationStack = new Stack<CodeFormatterVisitor.CommentIndentationObject>();
+	Stack<CommentIndentationObject> commentIndentationStack = new Stack<CodeFormatterVisitor.CommentIndentationObject>();
 
 	private boolean ignoreEmptyLineSetting = false;
 
@@ -449,7 +449,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 	}
 
@@ -574,7 +574,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 					if (inComment) {
 						if (!doNotIndent) {
-							indentForComment(indentationLevelDesending);
+							indentForComment(indentationLevelDescending);
 						}
 					} else {
 						indent();
@@ -627,7 +627,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				indentStringForComment = afterNewLine;
 			}
-			indentationLevelDesending = false;
+			indentationLevelDescending = false;
 			// clear the buffer
 			replaceBuffer.setLength(0);
 		}
@@ -666,11 +666,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int savedLastPosition = lastPosition;
 		boolean isExtraIndentation = false;
 
-		// Map<Integer, CommentIndentationObject> commentIndetationMap = new
+		// Map<Integer, CommentIndentationObject> commentIndentationMap = new
 		// HashMap<Integer, CommentIndentationObject>();
 		CommentIndentationObject cio = new CommentIndentationObject();
-		commentIndetationStack.add(cio);
-		// commentIndetationMap.put(array., cio);
+		commentIndentationStack.add(cio);
+		// commentIndentationMap.put(array., cio);
 		boolean isFirst = true;
 		for (int i = 0; i < array.length; i++) {
 			if (!isFirst) {
@@ -780,7 +780,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			isFirst = false;
 		}
-		commentIndetationStack.pop();
+		commentIndentationStack.pop();
 		if (isExtraIndentation) {
 			indentationLevel--;
 		}
@@ -807,7 +807,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int startLine = document.getLineOfOffset(offset);
 		int start = offset;
 		boolean needIndentNewLine = false;
-		boolean indentationLevelDesending = this.indentationLevelDesending;
+		boolean indentationLevelDescending = this.indentationLevelDescending;
 		inComment = true;
 		boolean previousCommentIsSingleLine = false;
 
@@ -849,7 +849,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						}
 					}
 				} else {
-					if (indentationLevelDesending) {
+					if (indentationLevelDescending) {
 						IRegion reg = document.getLineInformation(commentStartLine - 1);
 						char previousChar = document.getChar(reg.getOffset() + reg.getLength() - 1);
 						int indentationSize = preferences.indentationSize;
@@ -887,8 +887,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 						}
 						insertNewLine();
-						if (!isIndented && !commentIndetationStack.isEmpty()) {
-							CommentIndentationObject cio = commentIndetationStack.peek();
+						if (!isIndented && !commentIndentationStack.isEmpty()) {
+							CommentIndentationObject cio = commentIndentationStack.peek();
 							if (!cio.indented) {
 								cio.indented = true;
 								indentationLevel += indentGap;
@@ -896,7 +896,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						}
 						// TODO should add indent level
 					}
-					if (indentationLevelDesending || blockEnd) {
+					if (indentationLevelDescending || blockEnd) {
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
 							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
@@ -1246,7 +1246,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// insertNewLine();
 						// }
 					}
-					if (indentationLevelDesending || blockEnd) {
+					if (indentationLevelDescending || blockEnd) {
 						// add single indentationChar * indentationSize
 						// Because the comment is the previous
 						// indentation
@@ -1509,10 +1509,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		indentStringForComment = null;
 	}
 
-	private void indentForComment(boolean indentationLevelDesending) {
+	private void indentForComment(boolean indentationLevelDescending) {
 
 		indent();
-		if (indentationLevelDesending || blockEnd) {
+		if (indentationLevelDescending || blockEnd) {
 			for (int i = 0; i < preferences.indentationSize; i++) {
 				appendToBuffer(preferences.indentationChar);
 				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
@@ -1711,7 +1711,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (phpDocTag != null) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469402
 			tag = phpDocTag.getMatchedTag();
-			// if (indentationLevelDesending) {
+			// if (indentationLevelDescending) {
 			// for (int i = 0; i < preferences.indentationSize; i++) {
 			// indentLength += (preferences.indentationChar ==
 			// CodeFormatterPreferences.SPACE_CHAR) ? 1
@@ -2476,7 +2476,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// set the block end
 		if (blockIndentation) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 		int endPosition = block.getEnd() - 1;
 		boolean hasComments = false;
@@ -2707,7 +2707,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		catchClause.getBody().accept(this);
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 		return false;
 	}
@@ -2821,7 +2821,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 		return false;
 	}
@@ -2891,7 +2891,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			acd.getBody().accept(this);
 			if (isIndentationAdded) {
 				indentationLevel--;
-				indentationLevelDesending = true;
+				indentationLevelDescending = true;
 			}
 			lastPosition = acd.getBody().getEnd();
 		}
@@ -2955,7 +2955,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (ifFalse != null) {
 				length = ifFalse.getStart();
 			}
-			colonOffset = getCharPosition(conditionalExpression.getCondition().getEnd(), length, ':');
+			colonOffset = getCharPosition(conditionalExpression.getCondition().getEnd(), length, COLON);
 			handleChars(conditionalExpression.getCondition().getEnd(), colonOffset);
 		}
 
@@ -3280,10 +3280,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 
 		// handle type
-		if (formalParameter.getParameterType() != null) {
-			handleChars(formalParameter.getStart(), formalParameter.getParameterType().getStart());
-			formalParameter.getParameterType().accept(this);
-			lastPosition = formalParameter.getParameterType().getEnd();
+		Expression parameterType = formalParameter.getParameterType();
+		if (parameterType != null) {
+			if (parameterType instanceof Identifier && ((Identifier) parameterType).isNullable()) {
+				appendToBuffer(QUESTION_MARK);
+			}
+			handleChars(formalParameter.getStart(), parameterType.getStart());
+			parameterType.accept(this);
+			lastPosition = parameterType.getEnd();
 			insertSpace();
 		}
 
@@ -3411,6 +3415,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (functionDeclaration.getReturnType() != null) {
 			appendToBuffer(COLON);
 			insertSpace();
+			if (functionDeclaration.getReturnType().isNullable()) {
+				appendToBuffer(QUESTION_MARK);
+			}
 			handleChars(lastPosition, functionDeclaration.getReturnType().getStart());
 			functionDeclaration.getReturnType().accept(this);
 
@@ -3426,7 +3433,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			functionDeclaration.getBody().accept(this);
 			if (isIndentationAdded) {
 				indentationLevel--;
-				indentationLevelDesending = true;
+				indentationLevelDescending = true;
 			}
 		} else {
 			handleSemicolon(lastPosition, functionDeclaration.getEnd());
@@ -4073,7 +4080,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 		return false;
 	}
@@ -4617,7 +4624,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 		return false;
 	}
@@ -4644,7 +4651,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		body.accept(this);
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDesending = true;
+			indentationLevelDescending = true;
 		}
 
 		int lastStatementEndOffset = body.getEnd();
@@ -4756,7 +4763,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			if (isIndentationAdded) {
 				indentationLevel--;
-				indentationLevelDesending = true;
+				indentationLevelDescending = true;
 			}
 		} else {
 			handleSemicolon(lastPosition, namespaceDeclaration.getBody().getStart() - 1);
@@ -4766,9 +4773,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public boolean visit(NamespaceName namespaceName) {
-		if (namespaceName.isNullable()) {
-			appendToBuffer(QUESTION_MARK);
-		}
 		if (namespaceName.isGlobal()) {
 			appendToBuffer("\\"); //$NON-NLS-1$
 		}
@@ -4944,6 +4948,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (lambdaFunctionDeclaration.getReturnType() != null) {
 			appendToBuffer(COLON);
 			insertSpace();
+			if (lambdaFunctionDeclaration.getReturnType().isNullable()) {
+				appendToBuffer(QUESTION_MARK);
+			}
 			handleChars(lastPosition, lambdaFunctionDeclaration.getReturnType().getStart());
 			lambdaFunctionDeclaration.getReturnType().accept(this);
 
@@ -4959,7 +4966,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lambdaFunctionDeclaration.getBody().accept(this);
 			if (isIndentationAdded) {
 				indentationLevel--;
-				indentationLevelDesending = true;
+				indentationLevelDescending = true;
 			}
 		} else {
 			handleSemicolon(lastPosition, lambdaFunctionDeclaration.getEnd());

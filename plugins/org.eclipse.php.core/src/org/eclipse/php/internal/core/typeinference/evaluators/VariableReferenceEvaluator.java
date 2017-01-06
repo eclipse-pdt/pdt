@@ -20,7 +20,6 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -34,6 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
@@ -83,13 +83,13 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				PHPVersion phpVersion = ProjectOptions
 						.getPhpVersion(methodContext.getSourceModule().getScriptProject().getProject());
 				if (lambdas[0] != null && (lambdas[0].isStatic() || phpVersion.isLessThan(PHPVersion.PHP5_4))) {
-					this.results.add(new SimpleType(SimpleType.TYPE_NULL));
+					this.results.add(PHPSimpleTypes.NULL);
 				} else {
 					IEvaluatedType instanceType = methodContext.getInstanceType();
 					if (instanceType != null) {
 						this.results.add(instanceType);
 					} else {
-						this.results.add(new SimpleType(SimpleType.TYPE_NULL));
+						this.results.add(PHPSimpleTypes.NULL);
 					}
 				}
 				return IGoal.NO_GOALS;

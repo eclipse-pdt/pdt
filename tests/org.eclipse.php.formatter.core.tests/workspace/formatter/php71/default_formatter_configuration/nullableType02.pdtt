@@ -1,0 +1,26 @@
+--TEST--
+Bug 508914 - Formatter remove nullable return
+--FILE--
+<?php
+interface ITest
+{
+    public             function          get(string $name, int $index)    :        ?           array;
+}
+
+function         get(string $name, int $index)          :         ?              array {
+}
+
+interface ITest2
+{
+    public             function          get(string $name, int $index)    :   /* comment1 */     ?     /* comment2  */      array;
+}
+--EXPECT--
+<?php
+interface ITest {
+	public function get(string $name, int $index): ?array;
+}
+function get(string $name, int $index): ?array {
+}
+interface ITest2 {
+	public function get(string $name, int $index)    :   /* comment1 */     ?     /* comment2  */      array;
+}

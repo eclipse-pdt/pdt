@@ -1,0 +1,19 @@
+--TEST--
+Check if @return contains "array"
+--FILE--
+<?php
+/**|
+function get(string $name, int $index) {
+    return (array) "";
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param string $name
+ * @param int $index
+ * @return array
+ */
+function get(string $name, int $index) {
+    return (array) "";
+}
