@@ -9,6 +9,9 @@ interface Fooable {
 interface LooseFoo extends Fooable {
 	function foo(		? Fooable 		$f);
 }
+interface LooseFoo2 extends Fooable {
+	function foo(	/* comment1 */	?     /* comment2 */     Fooable 		$f);
+}
 --EXPECT--
 <?php
 interface Fooable {
@@ -16,4 +19,7 @@ interface Fooable {
 }
 interface LooseFoo extends Fooable {
 	function foo(?Fooable $f);
+}
+interface LooseFoo2 extends Fooable {
+	function foo(	/* comment1 */	?     /* comment2 */     Fooable $f);
 }
