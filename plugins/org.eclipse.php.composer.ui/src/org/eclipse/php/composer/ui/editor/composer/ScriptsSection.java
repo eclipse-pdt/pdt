@@ -12,14 +12,19 @@ package org.eclipse.php.composer.ui.editor.composer;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.php.composer.api.objects.Script;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.composer.api.collection.JsonArray;
+import org.eclipse.php.composer.api.objects.Scripts;
 import org.eclipse.php.composer.ui.controller.ScriptsController;
 import org.eclipse.php.composer.ui.dialogs.ScriptDialog;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
@@ -29,7 +34,6 @@ import org.eclipse.php.composer.ui.parts.TreePart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -62,32 +66,8 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		Composite container = createClientContainer(section, 2, toolkit);
 		createViewerPartControl(container, SWT.SINGLE, 2, toolkit);
 		TreePart treePart = getTreePart();
-		ScriptsController scriptsController = new ScriptsController(treePart.getTreeViewer());
+		ScriptsController scriptsController = new ScriptsController();
 		scriptsViewer = treePart.getTreeViewer();
-		scriptsViewer.setUseHashlookup(true);
-		scriptsViewer.setComparer(new IElementComparer() {
-			@Override
-			public int hashCode(Object element) {
-				return element.hashCode();
-			}
-
-			// to support duplicate handler values correctly in TreeViewers
-			// since handlers (attached to a Script object) are stored in a
-			// JsonArray (and not in a UniqueJsonArray)
-			@Override
-			public boolean equals(Object a, Object b) {
-				if (a instanceof String && b instanceof String) {
-					// we cannot reliably compare multiple handler strings
-					// between them, because at least multiple empty handler
-					// strings have all same id (java optimization: a single
-					// empty string instance is available)!
-					// TODO: use a wrapper class around strings to be able to
-					// reliably use the "==" operator everywhere
-					return false;
-				}
-				return a == b;
-			}
-		});
 		scriptsViewer.setContentProvider(scriptsController);
 		scriptsViewer.setLabelProvider(scriptsController);
 
@@ -112,8 +92,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 
 		TreePart treePart = getTreePart();
 		treePart.setButtonEnabled(ADD_INDEX, enabled);
-		treePart.setButtonEnabled(EDIT_INDEX, !selection.isEmpty()
-				&& !(((StructuredSelection) selection).getFirstElement() instanceof Script) && enabled);
+		treePart.setButtonEnabled(EDIT_INDEX, !selection.isEmpty() && enabled);
 		treePart.setButtonEnabled(REMOVE_INDEX, !selection.isEmpty() && enabled);
 	}
 
@@ -181,65 +160,54 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 	}
 
 	private void handleAdd() {
-		Script script = null;
-		Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
+		ScriptDialog diag = new ScriptDialog(scriptsViewer.getTree().getShell());
 
-		// get parent if element is string
-		if (element instanceof String) {
-			element = ((ScriptsController) scriptsViewer.getContentProvider()).getParent(element);
+		if (!scriptsViewer.getSelection().isEmpty()) {
+			Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
+			ScriptsController controller = (ScriptsController) scriptsViewer.getLabelProvider();
+			String text = controller.getText(element);
+			if (Arrays.asList(Scripts.getEvents()).contains(text)) {
+				diag.setEvent(text);
+			}
 		}
 
-		if (element instanceof Script) {
-			script = (Script) element;
-		}
-
-		ScriptDialog dialog = new ScriptDialog(scriptsViewer.getTree().getShell(),
-				new Script(script != null ? script.getScript() : null, ""), 0);
-
-		if (dialog.open() == Dialog.OK && dialog.getScript().getScript() != null) {
-			composerPackage.getScripts().add(dialog.getScript());
+		if (diag.open() == Dialog.OK && diag.getEvent() != null) {
+			composerPackage.getScripts().getAsArray(diag.getEvent()).add(diag.getHandler());
+			refresh();
 		}
 	}
 
 	private void handleEdit() {
-
-		Script script = null;
-		int index = -1;
 		Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
+		ScriptsController controller = (ScriptsController) scriptsViewer.getLabelProvider();
+		String text = controller.getText(element);
+		ScriptDialog diag = new ScriptDialog(scriptsViewer.getTree().getShell());
 
-		// get parent if element is string
-		if (element instanceof String) {
-			element = ((ScriptsController) scriptsViewer.getContentProvider()).getParent(element);
-			// find selection index
-			TreeItem selectedItem = scriptsViewer.getTree().getSelection()[0];
-			TreeItem[] items = selectedItem.getParentItem().getItems();
-			for (int i = 0; i < items.length; i++) {
-				if (items[i] == selectedItem) {
-					index = i;
-					break;
+		// edit event
+		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
+			diag.setEvent(text);
+			diag.setHandlerEnabled(false);
+			if (diag.open() == Dialog.OK && diag.getEvent() != null) {
+				String event = diag.getEvent();
+				if (!event.equalsIgnoreCase(text)) {
+					composerPackage.getScripts().set(event, composerPackage.getScripts().getAsArray(text));
+					composerPackage.getScripts().remove(text);
 				}
 			}
 		}
 
-		if (element instanceof Script) {
-			script = (Script) element;
-		}
-
-		if (script != null && index != -1) {
-			ScriptDialog diag = new ScriptDialog(scriptsViewer.getTree().getShell(), script.clone(), index);
+		// edit handler
+		else {
+			String event = controller.getText(controller.getParent(element));
+			diag.setEvent(event);
+			diag.setHandler(text);
 			diag.setEventEnabled(false);
-
 			if (diag.open() == Dialog.OK) {
-				Script cpscript = composerPackage.getScripts().get(script.getScript());
-				if (cpscript.equals(diag.getScript())) {
-					// nothing changed
-					return;
+				String handler = diag.getHandler();
+				if (!handler.equalsIgnoreCase(text)) {
+					JsonArray events = composerPackage.getScripts().getAsArray(event);
+					events.replace(text, handler);
 				}
-
-				assert cpscript.getScript().equals(diag.getScript().getScript());
-
-				cpscript.clear();
-				cpscript.addHandlers(diag.getScript().getHandlers());
 			}
 		}
 	}
@@ -247,42 +215,30 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 	private void handleRemove() {
 		Object element = ((StructuredSelection) scriptsViewer.getSelection()).getFirstElement();
 		ScriptsController controller = (ScriptsController) scriptsViewer.getLabelProvider();
+		String text = controller.getText(element);
 
-		if (element instanceof Script) {
-			String text = controller.getText(element);
+		// remove event
+		if (Arrays.asList(Scripts.getEvents()).contains(text)) {
 			MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
 					"Do you really wan't to remove " + text + "?", MessageDialog.WARNING, new String[] { "Yes", "No" },
 					0);
 
 			if (diag.open() == Dialog.OK) {
-				composerPackage.getScripts().remove((Script) element);
+				composerPackage.getScripts().remove(text);
 			}
-		} else if (element instanceof String) {
-			String text = controller.getText(element);
-			Script script = (Script) ((ScriptsController) scriptsViewer.getContentProvider()).getParent(element);
-			if (script != null) {
-				int index = -1;
-				// find selection index
-				TreeItem selectedItem = scriptsViewer.getTree().getSelection()[0];
-				TreeItem[] items = selectedItem.getParentItem().getItems();
-				for (int i = 0; i < items.length; i++) {
-					if (items[i] == selectedItem) {
-						index = i;
-						break;
-					}
-				}
+		}
 
-				assert index != -1;
+		// remove handler
+		else {
+			String event = controller.getText(controller.getParent(element));
 
-				String event = controller.getText(script);
+			MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
+					"Do you really wan't to remove " + text + " in " + event + "?", MessageDialog.WARNING,
+					new String[] { "Yes", "No" }, 0);
 
-				MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
-						"Do you really wan't to remove '" + text + "' in " + event + "?", MessageDialog.WARNING,
-						new String[] { "Yes", "No" }, 0);
-
-				if (diag.open() == Dialog.OK) {
-					script.getHandlers().remove(index);
-				}
+			if (diag.open() == Dialog.OK) {
+				JsonArray events = composerPackage.getScripts().getAsArray(event);
+				events.remove(text);
 			}
 		}
 	}
