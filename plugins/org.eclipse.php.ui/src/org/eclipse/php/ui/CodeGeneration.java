@@ -858,12 +858,6 @@ public class CodeGeneration {
 	 */
 	private static boolean appendAllPossibleTypes(IEvaluatedType type, StringBuilder buffer) {
 		List<String> foundTypes = new ArrayList<String>();
-		// special case: the empty array type PHPSimpleTypes.ARRAY can be
-		// returned by CastEvaluator
-		if (type instanceof MultiTypeType && ((MultiTypeType) type).getTypes().isEmpty()) {
-			buffer.append(PHPSimpleTypes.ARRAY.getTypeName()).append(Constants.TYPE_SEPERATOR_CHAR);
-			return true;
-		}
 		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
 				buffer.append(foundType).append(Constants.TYPE_SEPERATOR_CHAR);
@@ -883,19 +877,25 @@ public class CodeGeneration {
 				findAllPossibleTypes(possibleType, foundTypes, level, false);
 			}
 			return true;
-		}
-		if (type instanceof MultiTypeType) {
+		} else if (type instanceof MultiTypeType) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467151
 			List<IEvaluatedType> allPossibleTypes = ((MultiTypeType) type).getTypes();
-			// XXX: allPossibleTypes should not be empty
-			for (IEvaluatedType possibleType : allPossibleTypes) {
-				findAllPossibleTypes(possibleType, foundTypes, level + 1, false);
+			// empty MultiTypeTypes correspond to "array()" occurrences or
+			// "(array)" value casting occurrences
+			if (!allPossibleTypes.isEmpty()) {
+				for (IEvaluatedType possibleType : allPossibleTypes) {
+					findAllPossibleTypes(possibleType, foundTypes, level + 1, false);
+				}
+				return true;
 			}
-			return true;
 		}
-		if (!firstCall) {
+		if (!firstCall || type instanceof MultiTypeType) {
 			StringBuilder buffer = new StringBuilder();
-			buffer.append(type.getTypeName());
+			if (type instanceof MultiTypeType) {
+				buffer.append(PHPSimpleTypes.ARRAY.getTypeName());
+			} else {
+				buffer.append(type.getTypeName());
+			}
 			for (int i = 1; i <= level; i++) {
 				buffer.append(PHPEvaluationUtils.BRACKETS);
 			}

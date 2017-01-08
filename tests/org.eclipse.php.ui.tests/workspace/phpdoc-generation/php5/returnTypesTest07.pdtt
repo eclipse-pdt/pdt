@@ -1,0 +1,17 @@
+--TEST--
+Check if @return contains "array"
+--FILE--
+<?php
+/**|
+function test()  {
+    return array(array((array)""));
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @return array[][]
+ */
+function test()  {
+    return array(array((array)""));
+}
