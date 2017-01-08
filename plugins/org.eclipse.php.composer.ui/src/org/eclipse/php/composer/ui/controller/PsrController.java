@@ -10,12 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.composer.ui.controller;
 
-import org.eclipse.jface.viewers.*;
-import org.eclipse.php.composer.api.collection.Psr;
-import org.eclipse.php.composer.api.objects.Namespace;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeItem;
+
+import org.eclipse.php.composer.api.collection.Psr;
+import org.eclipse.php.composer.api.objects.Namespace;
 
 public class PsrController extends StyledCellLabelProvider implements ITreeContentProvider {
 
@@ -109,6 +115,7 @@ public class PsrController extends StyledCellLabelProvider implements ITreeConte
 
 	@Override
 	public boolean hasChildren(Object element) {
-		return getChildren(element).length > 0;
+		Object[] children = getChildren(element);
+		return children != null && children.length > 0;
 	}
 }

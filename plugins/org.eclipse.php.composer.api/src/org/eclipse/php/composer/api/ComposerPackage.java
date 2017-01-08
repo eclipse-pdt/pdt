@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.php.composer.api.collection.*;
 import org.eclipse.php.composer.api.json.ParseException;
 import org.eclipse.php.composer.api.objects.Config;
 import org.eclipse.php.composer.api.objects.Extra;
+import org.eclipse.php.composer.api.objects.Scripts;
 import org.eclipse.php.composer.api.objects.Support;
 
 /**
