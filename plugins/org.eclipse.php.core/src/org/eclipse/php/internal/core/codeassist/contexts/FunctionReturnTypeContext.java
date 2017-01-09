@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Dawid Pakuła and others.
+ * Copyright (c) 2015, 2017 Dawid Pakuła and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,8 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * <pre>
  *  1. function foo():| {}
  *  2. function foo():s| {}
+ *  3. function foo():?| {}
+ *  4. function foo():?s| {}
  * </pre>
  * 
  * @author Dawid Pakuła
@@ -46,8 +48,21 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 		}
 
 		curr = PHPTextSequenceUtilities.readBackwardSpaces(statementText, curr);
-		if (curr < 1 || statementText.charAt(curr - 1) != ':') {
+		if (curr < 1) {
 			return false;
+		}
+		char prevChar = statementText.charAt(curr - 1);
+		if (prevChar != ':' && prevChar != '?') {
+			return false;
+		}
+		if (prevChar == '?') {
+			if (getPhpVersion().isLessThan(PHPVersion.PHP7_1)) {
+				return false;
+			}
+			curr = PHPTextSequenceUtilities.readBackwardSpaces(statementText, curr - 1);
+			if (curr < 1 || statementText.charAt(curr - 1) != ':') {
+				return false;
+			}
 		}
 
 		curr = PHPTextSequenceUtilities.readBackwardSpaces(statementText, curr - 1);
