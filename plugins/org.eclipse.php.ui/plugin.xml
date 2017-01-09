@@ -2911,7 +2911,7 @@
              <feature name="anonymous class"></feature>
        </phpVersion>  
        <phpVersion
-             name="7.1 - EXPERIMENTAL"
+             name="7.1"
              version="php7.1">
              <feature name="void return type"></feature>
              <feature name="class constant visibility"></feature>
