@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,9 @@ import org.eclipse.php.composer.api.collection.Dependencies;
 import org.eclipse.php.composer.api.collection.JsonArray;
 import org.eclipse.php.composer.api.collection.Psr;
 import org.eclipse.php.composer.api.collection.Repositories;
+import org.eclipse.php.composer.api.collection.Scripts;
 import org.eclipse.php.composer.api.objects.*;
+import org.eclipse.php.composer.api.objects.Script.HandlerValue;
 import org.eclipse.php.composer.api.repositories.*;
 
 import junit.framework.TestCase;
@@ -261,23 +263,41 @@ public abstract class ComposertTestCase extends TestCase {
 		config.setGithubProtocols(githubProtocols);
 	}
 
+	private void addCmd(Scripts scripts, String script, String handler) {
+		if (!scripts.has(script)) {
+			Script s = new Script();
+			s.setScript(script);
+			scripts.add(s);
+		}
+
+		scripts.get(script).add(new HandlerValue(handler));
+	}
+
+	private String getCmd(Scripts scripts, String script, int index) {
+		if (!scripts.has(script) || index < 0 || index >= scripts.get(script).size()) {
+			return null;
+		}
+
+		return scripts.get(script).get(index).getAsString();
+	}
+
 	private void createScripts(ComposerPackage phpPackage) {
 		Scripts scripts = phpPackage.getScripts();
 
-		scripts.getPreInstallCmd().add(PRE_INSTALL_CMD);
-		scripts.getPostInstallCmd().add(POST_INSTALL_CMD);
-		scripts.getPostInstallCmd().add(POST_INSTALL_TEST);
-		scripts.getPreUpdateCmd().add(PRE_UPDATE_CMD);
-		scripts.getPostUpdateCmd().add(POST_UPDATE_CMD);
+		addCmd(scripts, "pre-install-cmd", PRE_INSTALL_CMD);
+		addCmd(scripts, "post-install-cmd", POST_INSTALL_CMD);
+		addCmd(scripts, "post-install-cmd", POST_INSTALL_TEST);
+		addCmd(scripts, "pre-update-cmd", PRE_UPDATE_CMD);
+		addCmd(scripts, "post-update-cmd", POST_UPDATE_CMD);
 
-		scripts.getPrePackageInstall().add(PRE_PACKAGE_INSTALL);
-		scripts.getPostPackageInstall().add(POST_PACKAGE_INSTALL);
+		addCmd(scripts, "pre-package-install", PRE_PACKAGE_INSTALL);
+		addCmd(scripts, "post-package-install", POST_PACKAGE_INSTALL);
 
-		scripts.getPrePackageUpdate().add(PRE_PACKAGE_UPDATE);
-		scripts.getPostPackageUpdate().add(POST_PACKAGE_UPDATE);
+		addCmd(scripts, "pre-package-update", PRE_PACKAGE_UPDATE);
+		addCmd(scripts, "post-package-update", POST_PACKAGE_UPDATE);
 
-		scripts.getPrePackageUninstall().add(PRE_PACKAGE_UNINSTALL);
-		scripts.getPostPackageUninstall().add(POST_PACKAGE_UNINSTALL);
+		addCmd(scripts, "pre-package-uninstall", PRE_PACKAGE_UNINSTALL);
+		addCmd(scripts, "post-package-uninstall", POST_PACKAGE_UNINSTALL);
 	}
 
 	private void createRepositories(ComposerPackage phpPackage) {
@@ -420,21 +440,22 @@ public abstract class ComposertTestCase extends TestCase {
 	protected void doTestScripts(ComposerPackage phpPackage) {
 		Scripts scripts = phpPackage.getScripts();
 
-		assertEquals(PRE_INSTALL_CMD, scripts.getPreInstallCmd().get(0));
-		assertEquals(2, scripts.getPostInstallCmd().size());
-		assertEquals(POST_INSTALL_CMD, scripts.getPostInstallCmd().get(0));
-		assertEquals(POST_INSTALL_TEST, scripts.getPostInstallCmd().get(1));
-		assertEquals(PRE_UPDATE_CMD, scripts.getPreUpdateCmd().get(0));
-		assertEquals(POST_UPDATE_CMD, scripts.getPostUpdateCmd().get(0));
+		assertEquals(PRE_INSTALL_CMD, getCmd(scripts, "pre-install-cmd", 0));
+		assertNotNull(scripts.get("post-install-cmd"));
+		assertEquals(2, scripts.get("post-install-cmd").size());
+		assertEquals(POST_INSTALL_CMD, getCmd(scripts, "post-install-cmd", 0));
+		assertEquals(POST_INSTALL_TEST, getCmd(scripts, "post-install-cmd", 1));
+		assertEquals(PRE_UPDATE_CMD, getCmd(scripts, "pre-update-cmd", 0));
+		assertEquals(POST_UPDATE_CMD, getCmd(scripts, "post-update-cmd", 0));
 
-		assertEquals(PRE_PACKAGE_INSTALL, scripts.getPrePackageInstall().get(0));
-		assertEquals(POST_PACKAGE_INSTALL, scripts.getPostPackageInstall().get(0));
+		assertEquals(PRE_PACKAGE_INSTALL, getCmd(scripts, "pre-package-install", 0));
+		assertEquals(POST_PACKAGE_INSTALL, getCmd(scripts, "post-package-install", 0));
 
-		assertEquals(PRE_PACKAGE_UPDATE, scripts.getPrePackageUpdate().get(0));
-		assertEquals(POST_PACKAGE_UPDATE, scripts.getPostPackageUpdate().get(0));
+		assertEquals(PRE_PACKAGE_UPDATE, getCmd(scripts, "pre-package-update", 0));
+		assertEquals(POST_PACKAGE_UPDATE, getCmd(scripts, "post-package-update", 0));
 
-		assertEquals(PRE_PACKAGE_UNINSTALL, scripts.getPrePackageUninstall().get(0));
-		assertEquals(POST_PACKAGE_UNINSTALL, scripts.getPostPackageUninstall().get(0));
+		assertEquals(PRE_PACKAGE_UNINSTALL, getCmd(scripts, "pre-package-uninstall", 0));
+		assertEquals(POST_PACKAGE_UNINSTALL, getCmd(scripts, "post-package-uninstall", 0));
 	}
 
 	protected void doTestConfig(ComposerPackage phpPackage) {
