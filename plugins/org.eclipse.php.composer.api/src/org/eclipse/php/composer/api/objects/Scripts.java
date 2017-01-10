@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.php.composer.api.collection.JsonArray;
 
@@ -25,6 +21,7 @@ import org.eclipse.php.composer.api.collection.JsonArray;
  * @see http://getcomposer.org/doc/04-schema.md#scripts
  * @author Thomas Gossmann <gos.si>
  */
+@Deprecated
 public class Scripts extends JsonObject {
 
 	@SuppressWarnings("rawtypes")
