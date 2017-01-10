@@ -183,10 +183,6 @@ public class PsrDialog extends Dialog {
 		return namespace;
 	}
 
-	public void setNamespace(Namespace namespace) {
-		this.namespace = namespace;
-	}
-
 	public void setProject(IProject project) {
 		this.project = project;
 	}

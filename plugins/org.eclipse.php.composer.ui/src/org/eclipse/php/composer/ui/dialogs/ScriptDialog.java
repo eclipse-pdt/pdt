@@ -12,7 +12,9 @@ package org.eclipse.php.composer.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
-import org.eclipse.php.composer.api.objects.Scripts;
+import org.eclipse.php.composer.api.collection.Scripts;
+import org.eclipse.php.composer.api.objects.Script;
+import org.eclipse.php.composer.api.objects.Script.HandlerValue;
 import org.eclipse.php.composer.ui.ComposerUIPluginConstants;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.SWT;
@@ -29,8 +31,8 @@ public class ScriptDialog extends Dialog {
 	private Combo eventControl;
 	private Text handlerControl;
 
-	private String event;
-	private String handler;
+	private Script script;
+	private HandlerValue handlerValue;
 
 	private boolean handlerEnabled = true;
 	private boolean eventEnabled = true;
@@ -38,12 +40,16 @@ public class ScriptDialog extends Dialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ScriptDialog(Shell parentShell) {
+	public ScriptDialog(Shell parentShell, Script script, HandlerValue handlerValue) {
 		super(parentShell);
+		this.script = script;
+		this.handlerValue = handlerValue;
 	}
 
-	public ScriptDialog(IShellProvider parentShell) {
+	public ScriptDialog(IShellProvider parentShell, Script script, HandlerValue handlerValue) {
 		super(parentShell);
+		this.script = script;
+		this.handlerValue = handlerValue;
 	}
 
 	@Override
@@ -69,12 +75,14 @@ public class ScriptDialog extends Dialog {
 		eventControl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				event = eventControl.getText();
+				script.setScript(eventControl.getText());
 			}
 		});
 
-		if (event != null) {
-			eventControl.setText(event);
+		if (script.getScript() != null) {
+			eventControl.setText(script.getScript());
+		} else {
+			// leave it null to indicate that there is no combo box selection
 		}
 
 		Label lblHandler = new Label(contents, SWT.NONE);
@@ -86,12 +94,13 @@ public class ScriptDialog extends Dialog {
 		handlerControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		handlerControl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				handler = handlerControl.getText();
+				handlerValue.setValue(handlerControl.getText());
 			}
 		});
 
-		if (handler != null) {
-			handlerControl.setText(handler);
+		String text = handlerValue.getAsString();
+		if (text != null) {
+			handlerControl.setText(text);
 		} else {
 			// must never be null, so at least be sure to always return an empty
 			// string
@@ -115,25 +124,11 @@ public class ScriptDialog extends Dialog {
 		}
 	}
 
-	public void setEvent(String event) {
-		this.event = event;
-		if (eventControl != null) {
-			eventControl.setText(event);
-		}
+	public Script getScript() {
+		return script;
 	}
 
-	public void setHandler(String handler) {
-		this.handler = handler;
-		if (handlerControl != null) {
-			handlerControl.setText(handler);
-		}
-	}
-
-	public String getEvent() {
-		return event;
-	}
-
-	public String getHandler() {
-		return handler;
+	public HandlerValue getHandlerValue() {
+		return handlerValue;
 	}
 }
