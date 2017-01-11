@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -62,6 +63,7 @@ public class PHPProjectPreferences {
 						PHPDebugCorePreferenceNames.SORT_BY_NAME, true, null));
 	}
 
+	@Nullable
 	public static String getDefaultBasePath(IProject project) {
 		String basePath = null;
 		if (project != null && getElementSettingsForProject(project)) {
@@ -82,7 +84,8 @@ public class PHPProjectPreferences {
 		if (basePath != null && !basePath.startsWith("/")) { //$NON-NLS-1$
 			basePath = '/' + basePath;
 		}
-		PHPDebugPlugin.getInstancePreferences().put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
+		// PHPDebugPlugin.getInstancePreferences().put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH,
+		// basePath);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
 			projectScope.getNode(getPreferenceNodeQualifier()).put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH,
