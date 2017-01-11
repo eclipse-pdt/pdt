@@ -61,13 +61,11 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	private boolean isBreakAtFirstLine;
 	private String pathString;
 	private String fileName;
-	private String basePath;
 
-	public PHPWebPageLaunchDialog(String mode, IScriptProject obj, String basePath) {
+	public PHPWebPageLaunchDialog(String mode, IScriptProject obj) {
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.mode = mode;
 		this.project = obj;
-		this.basePath = basePath;
 		this.server = ServersManager.getDefaultServer(obj.getProject());
 	}
 

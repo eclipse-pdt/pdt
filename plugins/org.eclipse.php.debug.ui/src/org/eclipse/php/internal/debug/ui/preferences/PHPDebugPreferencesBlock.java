@@ -564,7 +564,10 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					ServersManager.setDefaultServer(project, (Server) null);
 					debugUINode.remove(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 					debugUINode.remove(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
-					prefs.put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, defaultBasePath);
+					// if (defaultBasePath != null) {
+					// prefs.put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH,
+					// defaultBasePath);
+					// }
 				}
 			}
 		}

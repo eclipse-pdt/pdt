@@ -116,14 +116,11 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 					}
 				}
 
-				String basePath = PHPProjectPreferences.getDefaultBasePath(project);
-
 				boolean breakAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
 				String selectedURL = null;
 				boolean showDebugDialog = true;
 				if (obj instanceof IScriptProject) {
-					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj,
-							basePath);
+					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj);
 					final int open = dialog.open();
 					if (open == PHPWebPageLaunchDialog.OK) {
 						defaultServer = dialog.getServer();
