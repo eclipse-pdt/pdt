@@ -58,7 +58,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 		 */
 		public boolean shouldSpellcheck(int offset, IStructuredModel model) {
 			if (model instanceof DOMModelForPHP) {
-				IStructuredDocument doc = ((DOMModelForPHP) model).getStructuredDocument();
+				IStructuredDocument doc = model.getStructuredDocument();
 				if (doc instanceof BasicStructuredDocument) {
 					IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) doc)
 							.getRegionAtCharacterOffset(offset);

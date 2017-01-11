@@ -19,9 +19,9 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.refactoring.core.RefactoringPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
@@ -36,7 +36,7 @@ public class OrganizeIncludesProcessorDelegate {
 
 	private final IFile file;
 
-	private DOMModelForPHP model;
+	private IStructuredModel model;
 
 	IStructuredDocument document;
 
@@ -79,8 +79,7 @@ public class OrganizeIncludesProcessorDelegate {
 		// directIncludes = OrganizeIncludesUtils.getDirectIncludes(network,
 		// fileData);
 		try {
-			model = (DOMModelForPHP) StructuredModelManager.getModelManager()
-					.getModelForRead(file);
+			model = StructuredModelManager.getModelManager().getModelForRead(file);
 			document = model.getStructuredDocument();
 			return true;
 		} catch (IOException e) {

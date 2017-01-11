@@ -27,7 +27,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
@@ -100,11 +99,10 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 			if (document instanceof IStructuredDocument) {
 				IStructuredDocument structuredDocument = (IStructuredDocument) document;
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
 				IProject project = null;
-				if (doModelForPHP != null) {
-					project = getProject(doModelForPHP);
+				if (structuredModel != null) {
+					project = getProject(structuredModel);
 				}
 				if (project == null) {
 					Logger.logException(new IllegalStateException("Cann't resolve file name")); //$NON-NLS-1$
@@ -131,7 +129,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 				if (codeFormatterVisitor instanceof CodeFormatterVisitor) {
 					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor).getChanges();
 					if (changes.size() > 0) {
-						replaceAll(document, changes, doModelForPHP);
+						replaceAll(document, changes, structuredModel);
 					}
 				}
 
@@ -155,7 +153,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 	 * @param doModelForPHP
 	 * @return project from document
 	 */
-	private final static IProject getProject(DOMModelForPHP doModelForPHP) {
+	private final static IProject getProject(IStructuredModel doModelForPHP) {
 		if (doModelForPHP != null) {
 			final String id = doModelForPHP.getId();
 			if (id != null) {
@@ -205,8 +203,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		if (document instanceof IStructuredDocument) {
 			try {
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
-				project = getProject(doModelForPHP);
+				project = getProject(structuredModel);
 			} finally {
 				if (structuredModel != null) {
 					structuredModel.releaseFromRead();
@@ -216,7 +213,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 		return project;
 	}
 
-	private void replaceAll(IDocument document, List<ReplaceEdit> changes, DOMModelForPHP domModelForPHP)
+	private void replaceAll(IDocument document, List<ReplaceEdit> changes, IStructuredModel domModelForPHP)
 			throws BadLocationException {
 		/*
 		 * Disabled because of
@@ -299,11 +296,10 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 			if (document instanceof IStructuredDocument) {
 				IStructuredDocument structuredDocument = (IStructuredDocument) document;
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
 				IProject project = null;
-				if (doModelForPHP != null) {
-					project = getProject(doModelForPHP);
+				if (structuredModel != null) {
+					project = getProject(structuredModel);
 				}
 				if (project == null) {
 					Logger.logException(new IllegalStateException("Cann't resolve file name")); //$NON-NLS-1$
@@ -330,7 +326,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 				if (codeFormatterVisitor instanceof CodeFormatterVisitor) {
 					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor).getChanges();
 					if (changes.size() > 0) {
-						replaceAll(document, changes, doModelForPHP);
+						replaceAll(document, changes, structuredModel);
 					}
 				}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -274,44 +274,42 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		if (modelManager != null) {
 			IStructuredModel structuredModel = null;
-			structuredModel = modelManager.getExistingModelForRead(viewer.getDocument());
-			if (structuredModel != null) {
-				try {
-					DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
-					try {
-						// Find the structured document region:
-						IStructuredDocument document = (IStructuredDocument) domModelForPHP.getDocument()
-								.getStructuredDocument();
-						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
-						if (sdRegion == null) { // empty file case
-							return false;
-						}
-
-						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
-						if (textRegion == null) {
-							return false;
-						}
-
-						ITextRegionCollection container = sdRegion;
-
-						if (textRegion instanceof ITextRegionContainer) {
-							container = (ITextRegionContainer) textRegion;
-							textRegion = container.getRegionAtCharacterOffset(offset);
-						}
-
-						if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-							IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-							textRegion = phpScriptRegion
-									.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
-							String type = textRegion.getType();
-							if (PHPPartitionTypes.isPHPCommentState(type) || PHPPartitionTypes.isPHPQuotesState(type)) {
-								return true;
-							}
-						}
-					} catch (Exception e) {
-						Logger.logException(e);
+			try {
+				structuredModel = modelManager.getExistingModelForRead(viewer.getDocument());
+				if (structuredModel instanceof DOMModelForPHP) {
+					// Find the structured document region:
+					IStructuredDocument document = structuredModel.getStructuredDocument();
+					IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+					if (sdRegion == null) { // empty file case
+						return false;
 					}
-				} finally {
+
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+					if (textRegion == null) {
+						return false;
+					}
+
+					ITextRegionCollection container = sdRegion;
+
+					if (textRegion instanceof ITextRegionContainer) {
+						container = (ITextRegionContainer) textRegion;
+						textRegion = container.getRegionAtCharacterOffset(offset);
+					}
+
+					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+						textRegion = phpScriptRegion
+								.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+						String type = textRegion.getType();
+						if (PHPPartitionTypes.isPHPCommentState(type) || PHPPartitionTypes.isPHPQuotesState(type)) {
+							return true;
+						}
+					}
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
+			} finally {
+				if (structuredModel != null) {
 					structuredModel.releaseFromRead();
 				}
 			}

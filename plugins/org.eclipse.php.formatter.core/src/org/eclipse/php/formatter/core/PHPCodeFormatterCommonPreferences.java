@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -89,9 +88,8 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 					}
 					return null;
 				}
-				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
-				IProject project = getProject(doModelForPHP);
+				IProject project = getProject(structuredModel);
 				if (project == null) {
 					Logger.logException(new IllegalStateException("Cann't resolve file name")); //$NON-NLS-1$
 				}
@@ -124,8 +122,8 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		}
 		Map<String, Object> p = new HashMap<String, Object>(defaultPrefrencesValues);
 		if (node != null && node.keys().length > 0) {
-			Set<String> propetiesNames = p.keySet();
-			for (Iterator<String> iter = propetiesNames.iterator(); iter.hasNext();) {
+			Set<String> propertiesNames = p.keySet();
+			for (Iterator<String> iter = propertiesNames.iterator(); iter.hasNext();) {
 				String property = (String) iter.next();
 				String value = node.get(property, null);
 				if (value != null) {
@@ -156,7 +154,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 	 * @param doModelForPHP
 	 * @return project from document
 	 */
-	private final static IProject getProject(DOMModelForPHP doModelForPHP) {
+	private final static IProject getProject(IStructuredModel doModelForPHP) {
 		final String id = doModelForPHP.getId();
 		if (id != null) {
 			final IFile file = getFile(id);

@@ -22,7 +22,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.IndentationObject;
@@ -123,8 +122,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		try {
 			IProject project = null;
 			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
-			project = getProject(doModelForPHP);
+			project = getProject(structuredModel);
 			newline = PHPModelUtils.getLineSeparator(project);
 		} catch (Exception e) {
 			PHPUiPlugin.log(e);
@@ -216,7 +214,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	 * @param doModelForPHP
 	 * @return project from document
 	 */
-	private final static IProject getProject(DOMModelForPHP doModelForPHP) {
+	private final static IProject getProject(IStructuredModel doModelForPHP) {
 		final String id = doModelForPHP != null ? doModelForPHP.getId() : null;
 		if (id != null) {
 			final IFile file = getFile(id);
