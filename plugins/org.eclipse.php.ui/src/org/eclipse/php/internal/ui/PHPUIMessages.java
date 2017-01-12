@@ -398,6 +398,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPOutlineContentProvider_0;
 
 	public static String PHPOutlineContentProvider_useStatementsNode;
+	public static String PHPOutlineContentProvider_noParentForModelElementError;
 	public static String PHPSearchResultPage_groupby_file_tooltip;
 	public static String RenameAction_text;
 	public static String IncludePathsPropertyPage_unsavedchanges_message;

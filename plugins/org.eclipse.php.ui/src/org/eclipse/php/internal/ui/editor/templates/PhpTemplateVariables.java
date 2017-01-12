@@ -396,6 +396,8 @@ public class PhpTemplateVariables {
 			if (module == null)
 				return null;
 			IModelElement parent = module.getParent();
+			if (parent == null)
+				return null;
 			path = parent.getElementName();
 			while (!(parent instanceof IProjectFragment)) {
 				parent = parent.getParent();

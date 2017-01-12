@@ -25,6 +25,7 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -297,8 +298,13 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 						if (parent != null) {
 							fOutlineViewer.add(parent, modelElement);
 						}
-					} else {
+					} else if (modelElement.getParent() != null) {
 						fOutlineViewer.add(modelElement.getParent(), modelElement);
+					} else {
+						Logger.log(Logger.ERROR,
+								NLS.bind(PHPUIMessages.PHPOutlineContentProvider_noParentForModelElementError,
+										new Object[] { modelElement.getElementName(), modelElement.getElementType(),
+												modelElement.getClass().getCanonicalName(), modelElement }));
 					}
 					refreshUseStatements(modelElement);
 					break;
