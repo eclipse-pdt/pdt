@@ -400,16 +400,20 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 			if ((className instanceof SimpleReference || className instanceof FullyQualifiedReference)) {
 				IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
-				return getConstructorsIfAny(extractClasses(
-						PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null)));
+				if (evaluatedType != null) {
+					return getConstructorsIfAny(extractClasses(
+							PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null)));
+				}
 			} else if ((className instanceof StaticFieldAccess)) {
 				StaticFieldAccess staticFieldAccess = (StaticFieldAccess) className;
 				if ((offset >= staticFieldAccess.getDispatcher().sourceStart())
 						&& (offset <= staticFieldAccess.getDispatcher().sourceEnd())) {
 					className = staticFieldAccess.getDispatcher();
 					IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, className);
-					return extractClasses(
-							PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null));
+					if (evaluatedType != null) {
+						return extractClasses(
+								PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null));
+					}
 				} else if ((offset >= staticFieldAccess.getField().sourceStart())
 						&& (offset <= staticFieldAccess.getField().sourceEnd())) {
 					className = staticFieldAccess.getField();
@@ -499,7 +503,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private IModelElement[] lookForMatchingElements(PHPDocTag[] tags, ISourceModule sourceModule,
 			ModuleDeclaration parsedUnit, int offset, int end, boolean isMethodOrFunction, IModelAccessCache cache)
-					throws ModelException {
+			throws ModelException {
 		if (tags == null) {
 			return null;
 		}
