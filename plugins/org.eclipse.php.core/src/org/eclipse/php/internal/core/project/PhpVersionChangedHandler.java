@@ -16,12 +16,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.*;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.*;
 
 public class PhpVersionChangedHandler implements IResourceChangeListener {
 
-	private static final String PHP_VERSION = "phpVersion"; //$NON-NLS-1$
+	private static final String PHP_VERSION = PHPCoreConstants.PHP_OPTIONS_PHP_VERSION;
 
 	private HashMap<IProject, HashSet<IPreferencesPropagatorListener>> projectListeners = new HashMap<IProject, HashSet<IPreferencesPropagatorListener>>();
 	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();
