@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Desciption: This class is a factory for ProjectPreferencePropagators. It is a
- * singletone that contains a Map of ProjectPreference propagators based on the
+ * Description: This class is a factory for ProjectPreferencePropagators. It is
+ * a singleton that contains a Map of ProjectPreference propagators based on the
  * node qualifier (which is basically the plugin identifier for that preference)
  * 
  * @author Eden K.,2006

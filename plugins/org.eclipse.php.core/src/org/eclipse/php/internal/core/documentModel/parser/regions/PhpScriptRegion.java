@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,18 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	private static final ITextRegion[] EMPTY_REGION = new ITextRegion[0];
 	private PhpTokenContainer tokensContainer = new PhpTokenContainer();
 	private IProject project;
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=510509
+	// When a project php version changes,
+	// there seem to be a very small race window where PhpScriptRegion objects
+	// can be updated through updateRegion() with the new project php version
+	// *BEFORE* PHPStructuredEditor.fPhpVersionListener was notified to call
+	// completeReparse() to apply the project php version change.
+	// In this case a PhpScriptRegion object will contain tokens and lexer
+	// states for 2 different php versions!
+	// We introduce "currentPhpVersion" to check if updateRegion() is called
+	// with unchanged project php version and force a call to completeReparse()
+	// when necessary (to renew the "tokensContainer" content).
+	PHPVersion currentPhpVersion;
 	private int updatedTokensStart = -1;
 	private int updatedTokensEnd = -1;
 
@@ -73,6 +85,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
+		currentPhpVersion = ProjectOptions.getPhpVersion(this.project);
 		// must be done by the caller when phpLexer is newly created or when it
 		// was used on a different project:
 		// phpLexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
@@ -172,6 +185,12 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			synchronized (tokensContainer) {
+				if (ProjectOptions.getPhpVersion(project) != currentPhpVersion) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=510509
+					// force full reparse
+					return null;
+				}
+
 				// get the region to re-parse
 				ITextRegion tokenStart = tokensContainer.getToken(offset == 0 ? 0 : offset - 1);
 				ITextRegion tokenEnd = tokensContainer.getToken(offset + lengthToReplace);
@@ -212,7 +231,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				final PhpTokenContainer newContainer = new PhpTokenContainer();
 				final AbstractPhpLexer phpLexer = getPhpLexer(
 						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
-						startState);
+						startState, currentPhpVersion);
 
 				if (phpLexer.isHeredocState(startState.getTopState())) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498525
@@ -320,10 +339,11 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	public synchronized void completeReparse(IDocument doc, int start, int length, @Nullable IProject project) {
 		this.project = project;
+		currentPhpVersion = ProjectOptions.getPhpVersion(this.project);
 		// bug fix for 225118 we need to refresh the constants since this
 		// function is being called
 		// after the project's PHP version was changed.
-		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null);
+		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null, currentPhpVersion);
 		try {
 			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField("ST_PHP_LINE_COMMENT").getInt(phpLexer); //$NON-NLS-1$
 			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer); //$NON-NLS-1$
@@ -354,6 +374,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			// cloned)
 			this.tokensContainer = (PhpTokenContainer) sRegion.tokensContainer.clone();
 			this.project = sRegion.project;
+			this.currentPhpVersion = sRegion.currentPhpVersion;
 			this.updatedTokensStart = sRegion.updatedTokensStart;
 			this.updatedTokensEnd = sRegion.updatedTokensEnd;
 			this.ST_PHP_LINE_COMMENT = sRegion.ST_PHP_LINE_COMMENT;
@@ -414,10 +435,11 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @param project
 	 * @param stream
-	 * @return a new lexer for the given project with the given stream
+	 * @param startState
+	 * @param phpVersion
+	 * @return a new lexer for the given php version with the given stream
 	 */
-	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState) {
-		final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState, PHPVersion phpVersion) {
 		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream, phpVersion);
 		lexer.initialize(ST_PHP_IN_SCRIPTING);
 
