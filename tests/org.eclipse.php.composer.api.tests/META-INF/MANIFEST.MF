@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Composer API Plugin - Tests
 Bundle-SymbolicName: org.eclipse.php.composer.api.tests
-Bundle-Version: 4.2.0.qualifier
+Bundle-Version: 4.3.0.qualifier
 Bundle-Vendor: Eclipse PDT
 Fragment-Host: org.eclipse.php.composer.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
