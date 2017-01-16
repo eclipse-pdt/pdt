@@ -31,7 +31,8 @@ public class PhpTokenContainer implements Cloneable {
 	protected final LinkedList<ContextRegion> phpTokens = new LinkedList<ContextRegion>(); // of
 	// ITextRegion
 
-	// holds the location and state, where the lexical anlyzer state was changed
+	// holds the location and state, where the lexical analyzer state was
+	// changed
 	protected final LinkedList<LexerStateChange> lexerStateChanges = new LinkedList<LexerStateChange>(); // of
 	// LexerStateChanged
 
