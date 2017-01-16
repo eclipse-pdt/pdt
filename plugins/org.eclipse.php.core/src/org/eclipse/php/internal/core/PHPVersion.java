@@ -80,7 +80,7 @@ public enum PHPVersion {
 	 * @return
 	 */
 	public static PHPVersion getLatestVersion() {
-		return PHPVersion.PHP7_0;
+		return PHPVersion.translate(org.eclipse.php.core.PHPVersion.getLatestVersion());
 	}
 
 	/**
