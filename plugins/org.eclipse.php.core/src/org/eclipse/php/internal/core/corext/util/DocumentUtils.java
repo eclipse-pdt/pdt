@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public class DocumentUtils {
 				Vector<UsePart> parts = new Vector<UsePart>();
 				parts.add(part);
 
-				total.add(new UseStatement(statement.start(), statement.end(), parts));
+				total.add(new UseStatement(statement.start(), statement.end(), parts, statement.getStatementType()));
 			}
 		}
 
@@ -224,11 +224,35 @@ public class DocumentUtils {
 		return createStringFromUseStatement(statement, "");
 	}
 
+	public static String createStringFromUseStatement(UseStatement statement, boolean addIndentedUsePrefixAndNewline) {
+		return createStringFromUseStatement(statement, "");
+	}
+
+	public static String createStringFromUseStatement(UseStatement statement, String indent) {
+		return createStringFromUseStatement(statement, indent, true);
+	}
+
 	/**
 	 * Create a string from the given UseStatement
 	 */
-	public static String createStringFromUseStatement(UseStatement statement, String indent) {
-		String use = indent + "use ";
+	public static String createStringFromUseStatement(UseStatement statement, String indent,
+			boolean addIndentedUsePrefixAndNewline) {
+		String use = "";
+		if (addIndentedUsePrefixAndNewline) {
+			use = "use ";
+
+			switch (statement.getStatementType()) {
+			case UseStatement.T_NONE:
+				break;
+			case UseStatement.T_FUNCTION:
+				use += "function ";
+				break;
+			case UseStatement.T_CONST:
+				use += "const ";
+				break;
+			}
+		}
+
 		boolean first = true;
 
 		for (UsePart part : statement.getParts()) {
@@ -242,7 +266,10 @@ public class DocumentUtils {
 			first = false;
 		}
 
-		return use + ";\n";
+		if (addIndentedUsePrefixAndNewline) {
+			return use + ";\n";
+		}
+		return use;
 	}
 
 	/**
@@ -283,17 +310,24 @@ public class DocumentUtils {
 			}
 
 			if (parts.size() > 0) {
-				total.add(new UseStatement(statement.start(), statement.end(), parts));
+				total.add(new UseStatement(statement.start(), statement.end(), parts, statement.getStatementType()));
 			}
 		}
 
 		Collections.sort(total, new Comparator<UseStatement>() {
 			@Override
 			public int compare(UseStatement a, UseStatement b) {
-				String partA = createStringFromUseStatement(a).trim().toLowerCase();
-				String partB = createStringFromUseStatement(b).trim().toLowerCase();
-				String[] partsA = partA.substring(4, partA.length() - 1).split("\\\\");
-				String[] partsB = partB.substring(4, partB.length() - 1).split("\\\\");
+				if (a == b) {
+					return 0;
+				}
+				if (a.getStatementType() != b.getStatementType()) {
+					return b.getStatementType() - a.getStatementType();
+				}
+
+				String partA = createStringFromUseStatement(a, false).toLowerCase();
+				String partB = createStringFromUseStatement(b, false).toLowerCase();
+				String[] partsA = partA.split("\\\\");
+				String[] partsB = partB.split("\\\\");
 
 				int checkLength = Math.min(partsA.length, partsB.length);
 				for (int i = 0; i < checkLength; i++) {
@@ -304,7 +338,7 @@ public class DocumentUtils {
 					}
 				}
 
-				return partsA.length == partsB.length ? 1 : 0;
+				return partsB.length - partsA.length;
 			}
 		});
 
