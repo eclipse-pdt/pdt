@@ -24,7 +24,7 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<useUIHarness>true</useUIHarness>
+					<useUIHarness>false</useUIHarness>
 					<useUIThread>false</useUIThread>
 					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine} -Dfile.encoding=UTF-8</argLine>
 					<dependencies>
