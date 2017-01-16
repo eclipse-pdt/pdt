@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.php_4.2.0.qualifier.jar" id="org.eclipse.php" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php_4.3.0.qualifier.jar" id="org.eclipse.php" version="4.3.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.mylyn_4.2.0.qualifier.jar" id="org.eclipse.php.mylyn" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php.mylyn_4.3.0.qualifier.jar" id="org.eclipse.php.mylyn" version="4.3.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.composer_4.2.0.qualifier.jar" id="org.eclipse.php.composer" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php.composer_4.3.0.qualifier.jar" id="org.eclipse.php.composer" version="4.3.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.test_4.2.0.qualifier.jar" id="org.eclipse.php.test" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php.test_4.3.0.qualifier.jar" id="org.eclipse.php.test" version="4.3.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.source_4.2.0.qualifier.jar" id="org.eclipse.php.source" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php.source_4.3.0.qualifier.jar" id="org.eclipse.php.source" version="4.3.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.sdk_4.2.0.qualifier.jar" id="org.eclipse.php.sdk" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php.sdk_4.3.0.qualifier.jar" id="org.eclipse.php.sdk" version="4.3.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.importer_4.2.0.qualifier.jar" id="org.eclipse.php.importer" version="4.2.0.qualifier">
+   <feature url="features/org.eclipse.php.importer_4.3.0.qualifier.jar" id="org.eclipse.php.importer" version="4.3.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
    <category-def name="org.eclipse.php.category" label="PHP Development Tools"/>
