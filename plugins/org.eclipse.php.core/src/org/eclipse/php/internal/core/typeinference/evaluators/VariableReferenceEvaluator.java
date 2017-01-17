@@ -138,12 +138,14 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 					@Override
 					public int compare(PHPDocBlock o1, PHPDocBlock o2) {
-						return o1.sourceStart() - o1.sourceStart();
+						return o2.sourceStart() - o1.sourceStart();
 					}
 				});
 				for (PHPDocBlock block : docBlocks) {
-					if (block.sourceStart() > variableReference.sourceStart()
-							|| localScopeNode.sourceStart() > block.sourceStart()) {
+					if (block.sourceStart() < localScopeNode.sourceStart()) {
+						break;
+					}
+					if (block.sourceStart() > variableReference.sourceStart()) {
 						continue;
 					}
 
