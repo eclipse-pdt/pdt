@@ -135,7 +135,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 				ProjectScope scope = projectToScope.get(project);
 				IEclipsePreferences node = scope.getNode(nodeQualifier);
 				if (node != null) {
-					node.removeNodeChangeListener(projectToNodeListener.get(project));
+					((IEclipsePreferences) node.parent()).removeNodeChangeListener(projectToNodeListener.get(project));
 				}
 			}
 		} catch (Exception e) {
@@ -206,13 +206,22 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 * Adds a node listener to the parent node of the project preferences scope.
 	 */
 	private void addNodeListener(IProject project, ProjectScope projectScope) {
-		if (projectToNodeListener.get(project) != null) {
-			// We already have a node listener defined
-			return;
-		}
 		IEclipsePreferences node = projectScope.getNode(nodeQualifier);
 		if (node != null) {
-			IEclipsePreferences.INodeChangeListener nodeListener = new InnerNodeChangeListener(project);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=510530
+			// A INodeChangeListener can already exist in
+			// "projectToNodeListener" (i.e. nodeListener != null) when a
+			// project is deleted and recreated (a unique IProject object
+			// seems to be cached per project and "survives" creations and
+			// deletions of this project), so reuse it...
+			INodeChangeListener nodeListener = projectToNodeListener.get(project);
+			if (nodeListener == null) {
+				nodeListener = new InnerNodeChangeListener(project);
+			} else {
+				// by security
+				((IEclipsePreferences) node.parent()).removeNodeChangeListener(nodeListener);
+			}
+			// ...and don't forget to add it to the newest parent node
 			((IEclipsePreferences) node.parent()).addNodeChangeListener(nodeListener);
 			projectToNodeListener.put(project, nodeListener);
 			if (!preferenceChangeListeners.containsValue(node)) {

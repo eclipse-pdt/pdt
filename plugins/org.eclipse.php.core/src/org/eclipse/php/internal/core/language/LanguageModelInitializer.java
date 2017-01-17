@@ -110,8 +110,9 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
 			public void closed() {
 				PhpVersionChangedHandler.getInstance()
-						.removePhpVersionChangedListener(project2PhpVerListener.remove(project));
+						.removePhpVersionChangedListener(project2PhpVerListener.get(project));
 				TaskPatternsProvider.unregisterProject(project);
+				project2PhpVerListener.remove(project);
 			}
 		});
 	}

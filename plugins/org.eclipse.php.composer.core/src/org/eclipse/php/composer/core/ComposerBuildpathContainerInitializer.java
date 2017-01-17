@@ -16,12 +16,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.BuildpathContainerInitializer;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.IBuildpathContainer;
-import org.eclipse.dltk.core.IDLTKLanguageToolkit;
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.composer.core.model.ComposerBuildpathContainer;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.composer.core.model.PackageManager;
@@ -89,7 +84,8 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
 			public void closed() {
 				PhpVersionChangedHandler.getInstance()
-						.removePhpVersionChangedListener(project2PhpVerListener.remove(project));
+						.removePhpVersionChangedListener(project2PhpVerListener.get(project));
+				project2PhpVerListener.remove(project);
 			}
 		});
 	}
