@@ -66,8 +66,8 @@ public class CodeAssistUtils {
 	private static final String[] KEYWORD_FUNCTION_NAMES = { "return", "yield", "print", "echo" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static final String NEW = "new"; //$NON-NLS-1$
 
-	private static final Pattern globalPattern = Pattern
-			.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
+	private static final Pattern globalPattern = Pattern.compile(
+			"\\$GLOBALS[ \\t\\n\\r]*\\[[ \\t\\n\\r]*[\\'\\\"][\\w]+[\\'\\\"][ \\t\\n\\r]*\\]"); //$NON-NLS-1$
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
 

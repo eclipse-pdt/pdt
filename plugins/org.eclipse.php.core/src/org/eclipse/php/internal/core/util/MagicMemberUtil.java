@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 
 public class MagicMemberUtil {
-	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
+	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\p{javaWhitespace}+"); //$NON-NLS-1$
 	public static final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
 
 	public static class MagicMember {

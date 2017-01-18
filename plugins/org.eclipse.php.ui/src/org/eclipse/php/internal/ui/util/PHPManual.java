@@ -52,7 +52,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PHPManual {
 
 	private static final String BROWSER_ID = "PHPManual.browser"; //$NON-NLS-1$
-	private static final Pattern HTTP_URL_PATTERN = Pattern.compile("http://[^\\s]*"); //$NON-NLS-1$
+	private static final Pattern HTTP_URL_PATTERN = Pattern.compile("http://[^\\p{javaWhitespace}]*"); //$NON-NLS-1$
 	private static int browserCount = 0;
 
 	private PHPManualSite site;

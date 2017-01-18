@@ -27,7 +27,8 @@ public class INIFileModifier {
 
 	private static final String GLOBAL_SECTION = "__global__"; //$NON-NLS-1$
 	private static final Pattern SECTION_PATTERN = Pattern.compile("\\[([^\\]]+)\\]"); //$NON-NLS-1$
-	private static final Pattern NAME_VAL_PATTERN = Pattern.compile("([\\w]+)\\s*=\\s*(.*)"); //$NON-NLS-1$
+	private static final Pattern NAME_VAL_PATTERN = Pattern
+			.compile("([\\w]+)\\p{javaWhitespace}*=\\p{javaWhitespace}*(.*)"); //$NON-NLS-1$
 
 	class INIFileSection {
 		String name;

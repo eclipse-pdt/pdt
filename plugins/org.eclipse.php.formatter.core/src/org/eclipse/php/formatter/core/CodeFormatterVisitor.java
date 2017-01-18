@@ -959,7 +959,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						}
 					}
 					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
-					commentWords = Arrays.asList(commentContent.substring(commentTokLen).trim().split("[ \\t\\v\\f]")); //$NON-NLS-1$
+					commentWords = Arrays.asList(
+							MagicMemberUtil.WHITESPACE_SEPERATOR.split(commentContent.substring(commentTokLen).trim()));
 					commentWords = removeEmptyString(commentWords);
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();
@@ -1173,7 +1174,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPDoc(false);
-						appendToBuffer(lines.get(i).replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
+						appendToBuffer(lines.get(i).replaceFirst("^\\p{javaWhitespace}+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				}
@@ -1418,7 +1419,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPBlockComment(indentLengthForComment, indentStringForComment, false);
-						appendToBuffer(lines.get(i).replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
+						appendToBuffer(lines.get(i).replaceFirst("^\\p{javaWhitespace}+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				}
