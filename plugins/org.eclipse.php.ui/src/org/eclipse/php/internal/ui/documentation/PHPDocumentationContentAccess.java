@@ -52,7 +52,7 @@ import org.eclipse.text.edits.ReplaceEdit;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class PHPDocumentationContentAccess {
 
-	private static final Pattern INLINE_LINK_PATTERN = Pattern.compile("\\{@link[\\s]+[^\\}]*\\}"); //$NON-NLS-1$
+	private static final Pattern INLINE_LINK_PATTERN = Pattern.compile("\\{@link[\\p{javaWhitespace}]+[^\\}]*\\}"); //$NON-NLS-1$
 
 	private static final String BLOCK_TAG_START = "<dl>"; //$NON-NLS-1$
 	private static final String BLOCK_TAG_END = "</dl>"; //$NON-NLS-1$
@@ -904,7 +904,7 @@ public class PHPDocumentationContentAccess {
 		Matcher m = INLINE_LINK_PATTERN.matcher(fBuf);
 		List<ReplaceEdit> replaceLinks = new ArrayList<ReplaceEdit>();
 		while (m.find()) {
-			String[] strs = m.group().split("[\\s]+", 3); //$NON-NLS-1$
+			String[] strs = m.group().split("[\\p{javaWhitespace}]+", 3); //$NON-NLS-1$
 			String url = removeLastRightCurlyBrace(strs[1]);
 			String link = "";//$NON-NLS-1$
 			if (url.toLowerCase().startsWith("http")) { //$NON-NLS-1$

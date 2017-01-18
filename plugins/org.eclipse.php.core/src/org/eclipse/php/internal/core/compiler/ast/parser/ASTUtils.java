@@ -40,9 +40,11 @@ import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 public class ASTUtils {
 
-	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile("(.*?@var\\s+)([$][^$\\s]+)(\\s+)([^$\\s]+).*", //$NON-NLS-1$
+	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile(
+			"(.*?@var\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+).*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
-	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile("(.*?@var\\s+)([^$\\s]+)(\\s+)([$][^$\\s]+).*", //$NON-NLS-1$
+	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile(
+			"(.*?@var\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+).*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
 
 	/**
