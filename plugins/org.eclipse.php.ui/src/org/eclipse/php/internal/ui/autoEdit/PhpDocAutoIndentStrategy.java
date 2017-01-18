@@ -774,7 +774,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		}
 		// replacing all non-spaces/tabs to single-space, in order to get
 		// "char-clean" prefix
-		leadingString = leadingString.replaceAll("[^\\s]", " "); //$NON-NLS-1$ //$NON-NLS-2$
+		leadingString = leadingString.replaceAll("[^\\p{javaWhitespace}]", " "); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return leadingString;
 	}
