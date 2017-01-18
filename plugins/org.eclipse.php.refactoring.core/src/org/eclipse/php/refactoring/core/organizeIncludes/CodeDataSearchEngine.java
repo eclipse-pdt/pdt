@@ -62,14 +62,14 @@ public class CodeDataSearchEngine {
 	public static final String REGEX_ELEMENT_NAME = "[a-zA-Z_][\\w]*"; //$NON-NLS-1$
 
 	public static final Pattern PATTERN_CLASS_INSTANCE = Pattern
-			.compile(MessageFormat.format("instanceof\\s+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("instanceof[ \\t\\n\\r]+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
 	public static final Pattern PATTERN_CLASS_MEMBER = Pattern
-			.compile(MessageFormat.format("(\\$?{0})\\s?::", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("(\\$?{0})[ \\t\\n\\r]*::", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
-	public static final Pattern PATTERN_CONSTANT_READ = Pattern
-			.compile(MessageFormat.format("(((new|function|instanceof|class|interface)\\s+|\\$)?{0})(?!\\s*\\()", //$NON-NLS-1$
-					new Object[] { REGEX_ELEMENT_NAME }));
+	public static final Pattern PATTERN_CONSTANT_READ = Pattern.compile(MessageFormat.format(
+			"(((new|function|instanceof|class|interface)[ \\t\\n\\r]+|\\$)?{0})(?![ \\t\\n\\r]*\\()", //$NON-NLS-1$
+			new Object[] { REGEX_ELEMENT_NAME }));
 
 	public static final String REGEX_ELEMENT_CALLBACK_DOUBLE = MessageFormat.format("\"({0})\"", //$NON-NLS-1$
 			new Object[] { REGEX_ELEMENT_NAME });
@@ -81,11 +81,12 @@ public class CodeDataSearchEngine {
 
 	public static final Pattern PATTERN_ELEMENT_CALLBACK_SINGLE = Pattern.compile(REGEX_ELEMENT_CALLBACK_SINGLE);
 
-	public static final Pattern PATTERN_FUNCTION_CALL = Pattern.compile(
-			MessageFormat.format("(((new|function)\\s+|\\$)?{0})\\s*\\(", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+	public static final Pattern PATTERN_FUNCTION_CALL = Pattern
+			.compile(MessageFormat.format("(((new|function)[ \\t\\n\\r]+|\\$)?{0})[ \\t\\n\\r]*\\(", //$NON-NLS-1$
+					new Object[] { REGEX_ELEMENT_NAME }));
 
 	private static final Pattern PATTERN_CLASS_NEW = Pattern
-			.compile(MessageFormat.format("new\\s+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
+			.compile(MessageFormat.format("new[ \\t\\n\\r]+(\\$?{0})", new Object[] { REGEX_ELEMENT_NAME })); //$NON-NLS-1$
 
 	// public static DoubleBucketMap<String, CodeDataMatch, CodeData>
 	// searchCallbacks(IStructuredModel model, IProgressMonitor monitor) {

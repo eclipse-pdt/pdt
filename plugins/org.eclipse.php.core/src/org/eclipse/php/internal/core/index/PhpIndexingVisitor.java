@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.index;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -48,6 +47,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
 
 /**
  * PHP indexing visitor for H2 database
@@ -58,7 +58,6 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
-	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
@@ -614,7 +613,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ
 							|| tagKind == TagKind.PROPERTY_WRITE) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
-						final String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
+						final String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
 							break;
 						}
@@ -637,7 +636,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 					} else if (tagKind == TagKind.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
-						String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
+						String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
 							break;
 						}

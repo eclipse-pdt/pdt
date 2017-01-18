@@ -58,7 +58,7 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 	private static class VarCommentCorrectionProposal extends AbstractCorrectionProposal {
 
 		private static final String COMMAND_ID = "org.eclipse.php.ui.insertVarComment"; //$NON-NLS-1$
-		private static final Pattern noneSpacePattern = Pattern.compile("\\S+"); //$NON-NLS-1$
+		private static final Pattern noneSpacePattern = Pattern.compile("[^\\p{javaWhitespace}]+"); //$NON-NLS-1$
 		private ASTNode variableNode;
 		private ISourceModule sourceModule;
 
