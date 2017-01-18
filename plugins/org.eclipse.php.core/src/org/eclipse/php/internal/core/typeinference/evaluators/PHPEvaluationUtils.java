@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
 
 public class PHPEvaluationUtils {
 
@@ -144,7 +145,7 @@ public class PHPEvaluationUtils {
 	 * @return the types of the given variable
 	 */
 	public static Collection<String> getTypeBinding(String name, PHPDocTag docTag) {
-		String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
+		String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 		if (split.length < 2) {
 			return Collections.emptyList();
 		}

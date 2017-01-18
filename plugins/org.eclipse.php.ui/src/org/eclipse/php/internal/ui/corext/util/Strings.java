@@ -24,6 +24,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.php.internal.core.ast.rewrite.IndentManipulation;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
 
 /**
  * Helper class to provide String manipulation functions not available in
@@ -694,7 +695,7 @@ public class Strings {
 	 * @return the trimmed string
 	 */
 	public static String removeDuplicateWhitespaces(String string) {
-		Pattern pattern = Pattern.compile("\\s+"); //$NON-NLS-1$
+		Pattern pattern = MagicMemberUtil.WHITESPACE_SEPERATOR;
 		Matcher matcher = pattern.matcher(string);
 		matcher.find();
 		return matcher.replaceAll(" "); //$NON-NLS-1$
