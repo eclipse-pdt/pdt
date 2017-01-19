@@ -118,7 +118,9 @@ DNUM=([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM}?)
 HNUM="0x"[0-9a-fA-F]+
 LABEL=[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*
-WHITESPACE=[ \n\r\t]+
+/* Definition of \p{javaWhitespace} */
+SINGLE_WHITESPACE=[\t\n\u000b\f\r\u001c\u001d\u001e\u001f \u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2008\u2009\u200a\u2028\u2029\u205f\u3000]+
+WHITESPACE={SINGLE_WHITESPACE}+
 TABS_AND_SPACES=[ \t]*
 TOKENS=[:,.\[\]()|\^&+-//*=%!~$<>?@]
 CLOSE_EXPRESSION=[;]
@@ -582,7 +584,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return UNKNOWN_TOKEN;
 }
 
-<ST_PHP_VAR_OFFSET>[ \n\r\t\\'#] {
+<ST_PHP_VAR_OFFSET>{SINGLE_WHITESPACE}|[\\'#] {
 	yypushback(1);
 	popState();
 	return PHP_ENCAPSED_AND_WHITESPACE;
