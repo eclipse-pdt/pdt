@@ -28,7 +28,7 @@ public class ToggleDevAction extends Action {
 		setDescription("Toggle dev packages");
 		setToolTipText("Toggle dev packages");
 		setId(ID);
-		DLTKPluginImages.setLocalImageDescriptors(this, "th_showqualified.gif"); //$NON-NLS-1$
+		DLTKPluginImages.setLocalImageDescriptors(this, "th_showqualified.png"); //$NON-NLS-1$
 	}
 
 	public void run() {
