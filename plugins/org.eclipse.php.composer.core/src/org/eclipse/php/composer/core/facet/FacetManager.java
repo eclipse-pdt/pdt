@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.facet;
 
+import java.io.ByteArrayInputStream;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.php.composer.api.ComposerConstants;
+import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.facet.PHPFacets;
@@ -22,7 +27,6 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-@SuppressWarnings("restriction")
 public class FacetManager {
 
 	public static IFacetedProject installFacets(IProject project, PHPVersion version, IProgressMonitor monitor) {
@@ -54,6 +58,14 @@ public class FacetManager {
 				facetedProject.installProjectFacet(
 						composerFacet.getVersion(ComposerFacetConstants.COMPOSER_COMPONENT_VERSION_1), composerFacet,
 						monitor);
+			}
+
+			IFile composerJson = project.getFile(ComposerConstants.COMPOSER_JSON);
+			if (!composerJson.exists()) {
+				ComposerPackage composerPackage = new ComposerPackage();
+				composerPackage.setName(project.getName().toLowerCase() + "/" + project.getName().toLowerCase()); //$NON-NLS-1$
+				composerPackage.setDescription(""); //$NON-NLS-1$
+				composerJson.create(new ByteArrayInputStream(composerPackage.toJson().getBytes()), 0, monitor);
 			}
 
 			return facetedProject;
