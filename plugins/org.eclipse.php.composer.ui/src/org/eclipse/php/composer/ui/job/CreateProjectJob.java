@@ -116,7 +116,7 @@ public class CreateProjectJob extends ComposerJob {
 		});
 
 		launcher.launch("create-project",
-				new String[] { "--no-interaction", packageName, projectName, packageVersion });
+				new String[] { "--no-interaction", "--no-progress", packageName, projectName, packageVersion });
 	}
 
 	protected class DummyProject extends Project {
