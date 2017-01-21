@@ -281,7 +281,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		}
 	}
 
-	private void updateReferences(int start, int end) {
+	protected void updateReferences(int start, int end) {
 		// (re)set references
 		variableReference = null;
 		singleTypeReference = null;
@@ -467,6 +467,11 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	public void adjustStart(int start) {
 		setStart(sourceStart() + start);
 		setEnd(sourceEnd() + start);
+		for (Scalar text : texts) {
+			text.setStart(text.sourceStart() + start);
+			text.setEnd(text.sourceEnd() + start);
+		}
+		updateReferences(sourceStart(), sourceEnd());
 	}
 
 }

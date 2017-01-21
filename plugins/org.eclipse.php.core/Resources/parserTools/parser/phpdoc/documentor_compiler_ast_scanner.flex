@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -84,8 +86,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 			PHPDocTag lastTag = tagList.get(tagList.size() - 1);
 			if (lastText.sourceEnd() >= lastTag.sourceEnd()) {
 				textList.remove(textList.size() - 1);
-				if (!isBlank(lastText.getValue())) {
+				if (StringUtils.isNotBlank(lastText.getValue())) {
 					lastTag.getTexts().add(lastText);
+					// replace last tag by a new one with updated source range and internal references
+					tagList.set(tagList.size() - 1, new PHPDocTag(lastTag.sourceStart(), lastText.sourceEnd(),
+							lastTag.getTagKind(), lastTag.getMatchedTag(), lastTag.getValue(), lastTag.getTexts()));
 				}
 			}
 		}
@@ -99,20 +104,9 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		return rv;
 	}
 
-	private boolean isBlank(String value) {
-		char[] line = value.toCharArray();
-		for (int i = 0; i < line.length; i++) {
-			char c = line[i];
-			if (c != '\t' && c != ' ') {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private void startTagsState(TagKind firstState, int position) {
 		updateStartPos();
-		hendleDesc();
+		handleDesc();
 		currTagKind = firstState;
 		tagPosition = position - _zzPushbackPos;
 		matchedTag = firstState.getValue();
@@ -183,7 +177,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 				Scalar.TYPE_STRING));
 	}
 
-	private void hendleDesc() {
+	private void handleDesc() {
 		if(zzLexicalState == ST_IN_SHORT_DESC || zzLexicalState == ST_IN_FIRST_LINE) {
 			shortDesc = sBuffer.toString().trim();
 		} else {
@@ -194,7 +188,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 	}
 
 	private void startLongDescState(boolean withNewLine) {
-		hendleDesc();
+		handleDesc();
 		updateStartPos();
 		if (!withNewLine) {
 			addText("");
