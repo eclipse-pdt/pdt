@@ -467,6 +467,11 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	public void adjustStart(int start) {
 		setStart(sourceStart() + start);
 		setEnd(sourceEnd() + start);
+		for (Scalar text : texts) {
+			text.setStart(text.sourceStart() + start);
+			text.setEnd(text.sourceEnd() + start);
+		}
+		updateReferences(sourceStart(), sourceEnd());
 	}
 
 }
