@@ -555,7 +555,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (!ignoreEmptyLineSetting) {
 				// count empty lines
 				for (int line = startLine; line < endLine; line++) {
-					if (isEmptyLine(line)) {
+					if (isBlankLine(line)) {
 						emptyLines++;
 					}
 				}
@@ -2058,18 +2058,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	private boolean isEmptyLine(int line) throws BadLocationException {
-		int lineStart = document.getLineOffset(line);
-		int lineEnd = lineStart + document.getLineLength(line);
-
-		for (int offset = lineStart; offset < lineEnd; offset++) {
-			char currChar = document.getChar(offset);
-			if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
-				// not empty line
-				return false;
-			}
-		}
-		return true;
+	private boolean isBlankLine(int line) throws BadLocationException {
+		return StringUtils.isBlank(document.get(document.getLineOffset(line), document.getLineLength(line)));
 	}
 
 	// this operation "reverts" the visitor into the last "saved" state of the
