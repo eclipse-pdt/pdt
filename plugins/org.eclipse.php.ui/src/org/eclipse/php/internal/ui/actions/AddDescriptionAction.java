@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.actions;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
@@ -221,7 +222,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 	private String indentPattern(String originalPattern, String indentation, String lineDelim) {
 		String delimPlusIndent = lineDelim + indentation;
-		String indentedPattern = originalPattern.replaceAll(lineDelim, delimPlusIndent) + delimPlusIndent;
+		String indentedPattern = originalPattern.replaceAll(Pattern.quote(lineDelim), delimPlusIndent)
+				+ delimPlusIndent;
 
 		return indentedPattern;
 	}
