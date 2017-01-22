@@ -67,7 +67,7 @@ public class CodeAssistUtils {
 	private static final String NEW = "new"; //$NON-NLS-1$
 
 	private static final Pattern globalPattern = Pattern.compile(
-			"\\$GLOBALS[ \\t\\n\\r]*\\[[ \\t\\n\\r]*[\\'\\\"][\\w]+[\\'\\\"][ \\t\\n\\r]*\\]"); //$NON-NLS-1$
+			"\\$GLOBALS\\p{javaWhitespace}*\\[\\p{javaWhitespace}*[\\'\\\"][\\w]+[\\'\\\"]\\p{javaWhitespace}*\\]"); //$NON-NLS-1$
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
 
