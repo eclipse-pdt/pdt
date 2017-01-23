@@ -1141,6 +1141,16 @@ public class PHPDocumentationContentAccess {
 		}
 	}
 
+	private void handleVarTag(PHPDocTag tag) {
+		if (!tag.isValidVarTag()) {
+			return;
+		}
+		fBuf.append(PARAM_NAME_START);
+		fBuf.append(tag.getSingleTypeReference().getName());
+		fBuf.append(PARAM_NAME_END);
+		fBuf.append(tag.getTrimmedDescText());
+	}
+
 	private void handleContentElements(PHPDocTag tag) {
 		fBuf.append(tag.getValue());
 	}
@@ -1215,6 +1225,9 @@ public class PHPDocumentationContentAccess {
 			if (tag.getTagKind() == TagKind.INHERITDOC) {
 				continue;
 			} else if (tag.getTagKind() == TagKind.VAR) {
+				if (!tag.isValidVarTag()) {
+					continue;
+				}
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=454140
 				// only print @var tags having empty variable name or
 				// having variable name matching the field description
@@ -1225,13 +1238,15 @@ public class PHPDocumentationContentAccess {
 								tag.getVariableReference().getName().equals('$' + fMember.getElementName()))) {
 					continue;
 				}
-				handleBlockTagTitle("Type"); //$NON-NLS-1$
+				handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_var_section);
 			} else {
 				handleBlockTagTitle(tag.getTagKind().getName());
 			}
 			fBuf.append(BlOCK_TAG_ENTRY_START);
 			if (tag.getTagKind() == TagKind.LINK) {
 				handleLinkTag(tag);
+			} else if (tag.getTagKind() == TagKind.VAR) {
+				handleVarTag(tag);
 			} else {
 				handleContentElements(tag);
 			}
