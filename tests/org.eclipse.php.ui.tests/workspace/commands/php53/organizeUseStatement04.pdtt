@@ -1,0 +1,45 @@
+--TEST--
+Bug 482902 - Organize Use Statements command should remove duplicated statements
+--CONFIG--
+command_id: org.eclipse.php.ui.editor.organize.use.statements
+--FILE--
+<?php
+namespace NS1;
+
+use function NS1\func2;
+use NS1\B;
+use const NS1\CONSTB;
+use function NS1\func;
+use NS1\A;
+use const NS1\CONSTA;
+use function NS1\func2;
+use NS1\B;
+use const NS1\CONSTB;
+use function NS1\func;
+use NS1\A;
+use const NS1\CONSTA;
+
+func();
+func2();
+new A();
+new B();
+echo CONSTA;
+echo CONSTB;
+||
+--EXPECT--
+<?php
+namespace NS1;
+
+use NS1\A;
+use NS1\B;
+use function NS1\func;
+use function NS1\func2;
+use const NS1\CONSTA;
+use const NS1\CONSTB;
+
+func();
+func2();
+new A();
+new B();
+echo CONSTA;
+echo CONSTB;
