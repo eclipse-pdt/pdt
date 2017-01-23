@@ -313,7 +313,8 @@ public class DocumentUtils {
 			}
 		}
 
-		Collections.sort(total, new Comparator<UseStatement>() {
+		// sort and remove duplicate UseStatements
+		Set<UseStatement> set = new TreeSet<>(new Comparator<UseStatement>() {
 			@Override
 			public int compare(UseStatement a, UseStatement b) {
 				if (a == b) {
@@ -340,8 +341,9 @@ public class DocumentUtils {
 				return partsA.length - partsB.length;
 			}
 		});
+		set.addAll(total);
 
-		return total;
+		return new ArrayList<UseStatement>(set);
 	}
 
 	/**
