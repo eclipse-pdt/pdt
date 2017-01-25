@@ -110,7 +110,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider impl
 
 	@Override
 	public PipelinedShapeModification interceptAdd(PipelinedShapeModification addModification) {
-		return null;
+		return addModification;
 	}
 
 	@Override
