@@ -2612,21 +2612,34 @@
 		labelProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelProvider"
 		name="PHP Elements"
 		priority="normal">
-
 			<triggerPoints>
 				<or>
-					<adapt type="org.eclipse.core.resources.IProject">
-						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
-					</adapt>
-					<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
-					</adapt>
+					<and>
+						<instanceof	value="org.eclipse.core.resources.IResource" />
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+						</adapt>
+					</and>
+					<and>
+						<instanceof value="org.eclipse.core.resources.IFile" />
+					</and>
+					<instanceof	value="org.eclipse.dltk.core.IProjectFragment" />
+					<instanceof value="org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer" />
+					<instanceof value="org.eclipse.php.internal.core.includepath.IncludePath" />
 				</or>
 			</triggerPoints>
 			
 			<possibleChildren>
 				<or>
-					<instanceof	value="org.eclipse.core.resources.IFolder" />
+					<and>
+						<instanceof	value="org.eclipse.core.resources.IResource" />
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature"/>
+						</adapt>
+					</and>
+					<and>
+						<instanceof value="org.eclipse.core.resources.IFile" />
+          			</and>		
 					<instanceof	value="org.eclipse.dltk.core.IProjectFragment" />
 					<instanceof value="org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer" />
 					<instanceof value="org.eclipse.php.internal.core.includepath.IncludePath" />
