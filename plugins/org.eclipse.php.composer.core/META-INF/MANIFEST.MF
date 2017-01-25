@@ -7,18 +7,14 @@ Bundle-Activator: org.eclipse.php.composer.core.ComposerPlugin
 Bundle-Vendor: Eclipse PDT
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.ui,
  org.eclipse.dltk.core,
  org.eclipse.php.core,
  org.eclipse.php.debug.core,
  org.eclipse.wst.common.project.facet.core,
- org.apache.commons.httpclient,
  org.apache.commons.exec,
  org.apache.commons.logging,
  org.eclipse.php.composer.api,
  org.eclipse.wst.validation,
- org.eclipse.wst.json.core,
- org.apache.httpcomponents.httpcore,
  org.eclipse.e4.core.di.annotations
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
