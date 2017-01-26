@@ -1,0 +1,29 @@
+--TEST--
+Bug 507522 - "Open declaration" not working when using PHPDoc for class attributes
+--FILE--
+<?php
+class MyClass1
+{
+    public function someMethod()
+    {
+        echo "I am a method";
+    }
+}
+
+class MyClass2
+{
+    /** @var object Will contain MyClass1 instance */
+    public  $myVar;
+
+    public function __construct()
+    {
+        $this->myVar = new MyClass1();
+    }
+
+    public function doSomething()
+    {
+        $this->myVar->|someMethod|();
+    }
+}
+--EXPECT--
+method(someMethod)

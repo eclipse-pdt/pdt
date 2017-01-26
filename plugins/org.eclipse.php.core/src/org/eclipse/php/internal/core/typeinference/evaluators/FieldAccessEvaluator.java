@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
+
+import java.util.Arrays;
 
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -23,6 +25,8 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
@@ -44,6 +48,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	// See also method MethodCallTypeEvaluator#produceNextSubgoal()
 	private IGoal[] produceNextSubgoal(IGoal previousGoal, IEvaluatedType previousResult, GoalState goalState) {
 
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
@@ -77,7 +82,6 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 
 		// just starting to evaluate method, evaluate method receiver first:
 		if (state == STATE_INIT) {
-
 			if (receiver == null) {
 				state = STATE_GOT_RECEIVER;
 			} else {
@@ -89,6 +93,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		// receiver must been evaluated now:
 		if (state == STATE_WAITING_RECEIVER) {
 			receiverType = previousResult;
+			previousResult = null;
 			if (receiverType == null) {
 				return null;
 			}
@@ -109,7 +114,12 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		if (state == STATE_WAITING_FIELD_PHPDOC) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
-				return null;
+				previousResult = null;
+				// BUG 507522, stop read if found not simple element
+				if (!PHPTypeInferenceUtils.isSimple(result)
+						|| (result != PHPSimpleTypes.OBJECT && result != PHPSimpleTypes.MIXED)) {
+					return null;
+				}
 			}
 			state = STATE_WAITING_FIELD;
 			TypeContext typeContext = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
@@ -121,10 +131,15 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 
 		if (state == STATE_WAITING_FIELD) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
-				result = previousResult;
+				if (result != null) {
+					result = PHPTypeInferenceUtils
+							.combineTypes(Arrays.asList(new IEvaluatedType[] { result, previousResult }));
+				} else {
+					result = previousResult;
+					previousResult = null;
+				}
 			}
 		}
-
 		return null;
 	}
 
@@ -147,4 +162,5 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		}
 		return IGoal.NO_GOALS;
 	}
+
 }
