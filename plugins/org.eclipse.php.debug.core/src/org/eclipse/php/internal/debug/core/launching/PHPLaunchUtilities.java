@@ -839,6 +839,31 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
+	 * Append PHP executable at the beginning of PATH env variable
+	 * 
+	 * @param env
+	 *            Hash map to append environment variable to
+	 * @param phpExe
+	 *            php executable location
+	 */
+	public static void appendExecutableToPathEnv(Map<String, String> env, File phpExeDir) {
+		String phpPath = phpExeDir.getPath();
+		if (phpPath == null || phpPath.isEmpty()) {
+			return;
+		}
+		phpPath += File.pathSeparatorChar;
+
+		String path = env.get("PATH"); //$NON-NLS-1$
+		if (path == null) {
+			path = phpPath;
+		} else {
+			path = phpPath + path;
+		}
+
+		env.put("PATH", path); //$NON-NLS-1$
+	}
+
+	/**
 	 * Returns needed environment variable that says where to look for 3rd party
 	 * libraries depending on the OS.
 	 * 

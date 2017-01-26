@@ -84,6 +84,7 @@ public class ScriptLauncher {
 		}
 
 		Map<String, String> env = new HashMap<String, String>(System.getenv());
+		PHPLaunchUtilities.appendExecutableToPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 
 		executor.execute(cmd, env);
