@@ -88,7 +88,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			int currOffset = offset;
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(currOffset);
 
-			int regionStart = sdRegion.getStart();
+			int regionStart = sdRegion.getStartOffset();
 			String text = sdRegion.getFullText();
 
 			ITextRegion tRegion = null;

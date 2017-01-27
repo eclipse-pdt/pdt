@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,7 @@ public class PhpIndentationFormatter {
 
 			// get original line information
 			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
-			final int orginalLineStart = originalLineInfo.getOffset();
+			final int originalLineStart = originalLineInfo.getOffset();
 			final int originalLineLength = originalLineInfo.getLength();
 
 			// fast resolving of empty line
@@ -103,7 +103,7 @@ public class PhpIndentationFormatter {
 				return;
 
 			// get formatted line information
-			final String lineText = document.get(orginalLineStart, originalLineLength);
+			final String lineText = document.get(originalLineStart, originalLineLength);
 			final IRegion formattedLineInformation = getFormattedLineInformation(originalLineInfo, lineText);
 
 			if (!shouldReformat(document, formattedLineInformation)) {
@@ -113,7 +113,7 @@ public class PhpIndentationFormatter {
 			// remove ending spaces.
 			final int formattedLineStart = formattedLineInformation.getOffset();
 			final int formattedTextEnd = formattedLineStart + formattedLineInformation.getLength();
-			final int originalTextEnd = orginalLineStart + originalLineLength;
+			final int originalTextEnd = originalLineStart + originalLineLength;
 			if (formattedTextEnd != originalTextEnd) {
 				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, ""); //$NON-NLS-1$
 				// in case there is no text in the line just quit (since the
@@ -124,37 +124,36 @@ public class PhpIndentationFormatter {
 			}
 
 			// get regions
-			final int startingWhiteSpaces = formattedLineStart - orginalLineStart;
+			final int startingWhiteSpaces = formattedLineStart - originalLineStart;
 			final IIndentationStrategy insertionStrategy;
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
+			int scriptRegionPos = sdRegion.getStartOffset();
 			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion lastTokenInLine = null;
 			int regionStart = firstTokenInLine != null ? sdRegion.getStartOffset(firstTokenInLine) : 0;
 			if (firstTokenInLine instanceof ITextRegionContainer) {
+				scriptRegionPos = regionStart;
 				ITextRegionContainer container = (ITextRegionContainer) firstTokenInLine;
 				firstTokenInLine = container.getRegionAtCharacterOffset(formattedLineStart);
 				regionStart += firstTokenInLine.getStart();
 			}
-			int scriptRegionLength = 0;
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
-				if (scriptRegion.getEnd() - 1 < formattedLineStart) {
+				if (scriptRegion.getEnd() <= formattedLineStart) {
 					return;
 				}
-				scriptRegionLength = scriptRegion.getStart();
+				scriptRegionPos += scriptRegion.getStart();
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
-				if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < orginalLineStart
+				if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < originalLineStart
 						&& firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
-					firstTokenInLine = scriptRegion
-							.getPhpToken(formattedLineStart - regionStart + firstTokenInLine.getLength());
+					firstTokenInLine = scriptRegion.getPhpToken(firstTokenInLine.getEnd());
 				}
 				if (formattedTextEnd <= scriptRegion.getEnd()) {
-
 					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd - regionStart - 1);
-					if (lastTokenInLine.getEnd() + sdRegion.getStartOffset() > orginalLineStart + originalLineLength
-							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
-						lastTokenInLine = scriptRegion
-								.getPhpToken(formattedTextEnd - regionStart - 1 - lastTokenInLine.getLength());
+					if (lastTokenInLine.getEnd() + sdRegion.getStartOffset() > originalLineStart + originalLineLength
+							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE
+							&& lastTokenInLine.getStart() > 0) {
+						lastTokenInLine = scriptRegion.getPhpToken(lastTokenInLine.getStart() - 1);
 					}
 				}
 			}
@@ -172,7 +171,7 @@ public class PhpIndentationFormatter {
 			}
 
 			if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-				int startLine = document.getLineOfOffset(firstTokenInLine.getStart() + scriptRegionLength);
+				int startLine = document.getLineOfOffset(firstTokenInLine.getStart() + scriptRegionPos);
 				if (startLine < lineNumber) {
 					ignoreLines.add(lineNumber);
 					return;
@@ -211,7 +210,7 @@ public class PhpIndentationFormatter {
 				oldChar = oldIndentation.charAt(0);
 			}
 			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
-				document.replaceText(sdRegion, orginalLineStart, startingWhiteSpaces, newIndentation);
+				document.replaceText(sdRegion, originalLineStart, startingWhiteSpaces, newIndentation);
 			}
 
 		} catch (BadLocationException e) {
