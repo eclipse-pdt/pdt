@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.preferences;
 
@@ -22,13 +23,13 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 
-	public static final String PREF_ID = "org.eclipse.php.composer.ui.preferences.ComposerSaveActionsPreferencePage";
-	public static final String PROP_ID = "org.eclipse.php.composer.ui.propertyPages.ComposerSaveActionsPreferencePage";
+	public static final String PREF_ID = "org.eclipse.php.composer.ui.preferences.ComposerSaveActionsPreferencePage"; //$NON-NLS-1$
+	public static final String PROP_ID = "org.eclipse.php.composer.ui.propertyPages.ComposerSaveActionsPreferencePage"; //$NON-NLS-1$
 
 	private SaveActionsConfigurationBlock configurationBlock;
 
 	public SaveActionsPreferencePage() {
-		setTitle("Save Actions");
+		setTitle(Messages.SaveActionsPreferencePage_Title);
 		setDescription(null);
 		setPreferenceStore(ComposerUIPlugin.getDefault().getCorePreferenceStore());
 
@@ -78,7 +79,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	@Override
 	public void performHelp() {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic");
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

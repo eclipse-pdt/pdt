@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project.template;
 
@@ -74,12 +75,12 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 
 	@Override
 	protected String getPageTitle() {
-		return "Select package";
+		return Messages.PackageProjectWizardSecondPage_Title;
 	}
 
 	@Override
 	protected String getPageDescription() {
-		return "Search for a package to be used as the startingpoint for your new Composer project.";
+		return Messages.PackageProjectWizardSecondPage_Description;
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 		PackageFilterItem filterItem = filter.getSelectedPackage();
 		final CountDownLatch latch = new CountDownLatch(1);
 
-		monitor.beginTask("Initializing composer project", 2);
+		monitor.beginTask(Messages.PackageProjectWizardSecondPage_InitializingProjectTaskName, 2);
 		monitor.worked(1);
 
 		File file = new File(firstPage.getLocationURI());
@@ -142,9 +143,9 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 		try {
 			PackageProjectWizardFirstPage page = (PackageProjectWizardFirstPage) firstPage;
 			if (page.doesOverrideComposer()) {
-				monitor.beginTask("Updating composer.json with new values", 1);
+				monitor.beginTask(Messages.PackageProjectWizardSecondPage_UpdatingComposerJsonTaskName, 1);
 				ComposerPackage package1 = firstPage.getPackage();
-				IFile file = getProject().getFile(new Path("composer.json"));
+				IFile file = getProject().getFile(new Path("composer.json")); //$NON-NLS-1$
 				if (file != null && file.exists()) {
 					ByteArrayInputStream is = new ByteArrayInputStream(package1.toJson().getBytes());
 					file.setContents(is, IResource.FORCE, monitor);
@@ -171,6 +172,6 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 	@Override
 	protected void setHelpContext(Control control) {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
-				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_secondpage");
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_secondpage"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

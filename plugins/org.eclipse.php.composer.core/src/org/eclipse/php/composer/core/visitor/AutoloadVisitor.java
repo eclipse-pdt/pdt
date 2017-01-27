@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,20 +7,20 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.visitor;
 
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.composer.api.collection.Psr;
+import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-
-import org.eclipse.php.composer.api.collection.Psr;
-import org.eclipse.php.composer.api.objects.Namespace;
 
 @SuppressWarnings("restriction")
 public class AutoloadVisitor extends PHPASTVisitor {
@@ -87,19 +87,19 @@ public class AutoloadVisitor extends PHPASTVisitor {
 		}
 
 		protected void extractPsr0(Scalar namespace, Scalar path, VariableReference reference) {
-			String resourcePath = "";
+			String resourcePath = ""; //$NON-NLS-1$
 
-			if ("$baseDir".equals(reference.getName())) {
-				resourcePath = path.getValue().replace("'", "");
-			} else if ("$vendorDir".equals(reference.getName())) {
-				resourcePath = "vendor" + path.getValue().replace("'", "");
+			if ("$baseDir".equals(reference.getName())) { //$NON-NLS-1$
+				resourcePath = path.getValue().replace("'", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			} else if ("$vendorDir".equals(reference.getName())) { //$NON-NLS-1$
+				resourcePath = "vendor" + path.getValue().replace("'", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
-			if (resourcePath.startsWith("/")) {
-				resourcePath = resourcePath.replaceFirst("/", "");
+			if (resourcePath.startsWith("/")) { //$NON-NLS-1$
+				resourcePath = resourcePath.replaceFirst("/", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			String ns = namespace.getValue().replace("'", "").replace("\\\\", "\\");
+			String ns = namespace.getValue().replace("'", "").replace("\\\\", "\\"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			psr0.add(new Namespace(ns, resourcePath));
 		}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
@@ -46,7 +47,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * @return
 	 */
 	public String getInitString() {
-		return String.format("%s <%s>", get("name"), get("email"));
+		return String.format("%s <%s>", get("name"), get("email")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
@@ -55,7 +56,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * @return the name
 	 */
 	public String getName() {
-		return getAsString("name");
+		return getAsString("name"); //$NON-NLS-1$
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class Person extends JsonObject implements Cloneable {
 	 *            the name to set
 	 */
 	public void setName(String name) {
-		set("name", name);
+		set("name", name); //$NON-NLS-1$
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * @return the email
 	 */
 	public String getEmail() {
-		return getAsString("email");
+		return getAsString("email"); //$NON-NLS-1$
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class Person extends JsonObject implements Cloneable {
 	 *            the email to set
 	 */
 	public void setEmail(String email) {
-		set("email", email);
+		set("email", email); //$NON-NLS-1$
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * @return the homepage
 	 */
 	public String getHomepage() {
-		return getAsString("homepage");
+		return getAsString("homepage"); //$NON-NLS-1$
 	}
 
 	/**
@@ -103,7 +104,7 @@ public class Person extends JsonObject implements Cloneable {
 	 *            the homepage to set
 	 */
 	public void setHomepage(String homepage) {
-		set("homepage", homepage);
+		set("homepage", homepage); //$NON-NLS-1$
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * @return the role
 	 */
 	public String getRole() {
-		return getAsString("role");
+		return getAsString("role"); //$NON-NLS-1$
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * @return this
 	 */
 	public void setRole(String role) {
-		set("role", role);
+		set("role", role); //$NON-NLS-1$
 	}
 
 	/*
@@ -147,7 +148,7 @@ public class Person extends JsonObject implements Cloneable {
 			}
 
 			String p1, p2;
-			String props[] = new String[] { "name", "email", "homepage", "role" };
+			String props[] = new String[] { "name", "email", "homepage", "role" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 			boolean equal = true;
 

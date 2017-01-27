@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Composer Eclipse UI Plugin
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.php.composer.ui;singleton:=true
 Bundle-Version: 4.3.0.qualifier
 Bundle-Activator: org.eclipse.php.composer.ui.ComposerUIPlugin
-Bundle-Vendor: Eclipse PDT
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui.forms,
  org.eclipse.php.composer.core,
  org.eclipse.core.resources,

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.log;
 
@@ -142,13 +143,13 @@ public class Logger {
 	}
 
 	public static void logException(String message, Throwable exception) {
-		_trace("ERROR", message, exception);
+		_trace("ERROR", message, exception); //$NON-NLS-1$
 		// _log(ERROR, message, exception);
 	}
 
 	public static void logException(Throwable exception) {
 
-		_trace("Error", exception.getMessage(), exception);
+		_trace("Error", exception.getMessage(), exception); //$NON-NLS-1$
 		// _log(ERROR, exception.getMessage(), exception);
 	}
 

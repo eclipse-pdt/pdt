@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.importer;
 
@@ -59,14 +60,14 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 	protected IWorkspace workspace;
 	protected StringButtonDialogField targetPath;
 	protected Button useWorkspaceLocation;
-	protected final String defaultMessage = "Select an existing Composer project to automatically setup your project";
+	protected final String defaultMessage = Messages.WizardResourceImportPage_Description;
 	protected String lastNameFromProjectFile = null;
 
 	protected boolean useWorkspace = true;
 
 	public WizardResourceImportPage(IWorkbench aWorkbench, IStructuredSelection selection, String[] strings) {
-		super("Import existing Composer project");
-		setTitle("Import an existing Composer project");
+		super(Messages.WizardResourceImportPage_Name);
+		setTitle(Messages.WizardResourceImportPage_Title);
 		setDescription(defaultMessage);
 	}
 
@@ -100,7 +101,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		GridLayoutFactory.fillDefaults().numColumns(numColumns).applyTo(control);
 
 		projectNameField = new StringDialogField();
-		projectNameField.setLabelText("Project name");
+		projectNameField.setLabelText(Messages.WizardResourceImportPage_ProjectNameLabel);
 		projectNameField.doFillIntoGrid(control, numColumns);
 		LayoutUtil.setHorizontalGrabbing(projectNameField.getTextControl(null));
 
@@ -116,7 +117,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 			@Override
 			public void changeControlPressed(DialogField field) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
-				dialog.setMessage("Select an existing composer project");
+				dialog.setMessage(Messages.WizardResourceImportPage_BrowseDialogMessage);
 				source = dialog.open();
 				try {
 					handleSourcePathChange();
@@ -126,13 +127,13 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 			}
 		});
 
-		sourcePath.setLabelText("Source path");
-		sourcePath.setButtonLabel("Browse");
+		sourcePath.setLabelText(Messages.WizardResourceImportPage_SourcePathLabel);
+		sourcePath.setButtonLabel(Messages.WizardResourceImportPage_BrowseButton);
 		sourcePath.doFillIntoGrid(control, numColumns);
 		sourcePath.getTextControl(null).setEnabled(false);
 
 		useWorkspaceLocation = new Button(control, SWT.CHECK);
-		useWorkspaceLocation.setText("Use default workspace location");
+		useWorkspaceLocation.setText(Messages.WizardResourceImportPage_WorkspaceLocationCheckbox);
 		useWorkspaceLocation.setSelection(true);
 
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(useWorkspaceLocation);
@@ -171,7 +172,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 		workspace = ResourcesPlugin.getWorkspace();
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
-				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_importer");
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_importer"); //$NON-NLS-1$ //$NON-NLS-2$
 		setPageComplete(false);
 	}
 
@@ -209,8 +210,8 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 		String name = composerPackage.getName();
 		if (name != null) {
-			if (name.contains("/")) {
-				String[] split = name.split("/");
+			if (name.contains("/")) { //$NON-NLS-1$
+				String[] split = name.split("/"); //$NON-NLS-1$
 				if (split.length == 2) {
 					name = split[1];
 				}
@@ -231,8 +232,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 		IProject project = workspace.getRoot().getProject(name);
 		if (project != null && project.exists()) {
-			throw new ValidationException("A project with the same name already exists in the workspace",
-					Severity.ERROR);
+			throw new ValidationException(Messages.WizardResourceImportPage_ProjectAlreadyExistsError, Severity.ERROR);
 		}
 	}
 
@@ -242,11 +242,11 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		projectNameField.getTextControl(null).setEnabled(true);
 
 		if (json == null || json.toFile().exists() == false) {
-			setErrorMessage("The selected folder does not contain a composer.json file.");
+			setErrorMessage(Messages.WizardResourceImportPage_NoComposerJsonError);
 			return false;
 		}
 
-		IPath sourceProject = new Path(source).append(".project");
+		IPath sourceProject = new Path(source).append(".project"); //$NON-NLS-1$
 
 		if (sourceProject.toFile().exists()) {
 			try {
@@ -254,7 +254,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 				ProjectDescription projectDescription = reader.read(sourceProject);
 
 				if (projectDescription == null) {
-					setErrorMessage("Cannot read the source project.");
+					setErrorMessage(Messages.WizardResourceImportPage_CannotReadProjectError);
 					return false;
 				}
 
@@ -263,13 +263,12 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 				projectNameField.getTextControl(null).setEnabled(false);
 				lastNameFromProjectFile = projectName;
 
-				setMessage(
-						"The target location contains already an eclipse project. The wizard will use the existing information to import the project");
+				setMessage(Messages.WizardResourceImportPage_EclipseProjectAvailableMessage);
 				return true;
 
 			} catch (IOException e) {
 				Logger.logException(e);
-				setErrorMessage("Error reading source project");
+				setErrorMessage(Messages.WizardResourceImportPage_ErrorReadingProject);
 				return false;
 			}
 		}
@@ -285,7 +284,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 	protected boolean validateDestinationGroup() {
 
 		if (projectName == null || projectName.length() == 0) {
-			setErrorMessage("Please enter a project name");
+			setErrorMessage(Messages.WizardResourceImportPage_18);
 			return false;
 		}
 
@@ -301,7 +300,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		}
 
 		if (target == null) {
-			setMessage("Please select a target path");
+			setMessage(Messages.WizardResourceImportPage_19);
 			return false;
 		}
 
@@ -309,7 +308,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		File file = targetPath.toFile();
 
 		if (file == null || !file.exists() || !file.isDirectory()) {
-			setErrorMessage("The selected target location is invalid");
+			setErrorMessage(Messages.WizardResourceImportPage_20);
 			return false;
 		}
 
@@ -318,7 +317,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		File targetProject = targetProjectPath.toFile();
 
 		if (targetProject == null || targetProject.exists()) {
-			setErrorMessage("The target folder already contains a file/folder with the specified project name");
+			setErrorMessage(Messages.WizardResourceImportPage_21);
 			return false;
 		}
 

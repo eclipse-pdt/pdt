@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project;
 
@@ -18,12 +19,10 @@ import org.eclipse.php.composer.ui.wizard.AbstractWizardSecondPage;
 
 public class ComposerProjectCreationWizard extends AbstractComposerWizard {
 
-	public static final String SELECTED_PROJECT = "SelectedProject";
-
 	public ComposerProjectCreationWizard() {
 		setDefaultPageImageDescriptor(ComposerUIPluginImages.CREATE_PROJECT);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Composer Project");
+		setWindowTitle(Messages.ComposerProjectCreationWizard_Title);
 	}
 
 	@Override

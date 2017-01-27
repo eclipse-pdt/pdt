@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.packages;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +45,7 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 		downloader.addDownloadListener(new DownloadListenerAdapater() {
 			private String getQuery(String url) {
 				try {
-					return URLDecoder.decode(url.replaceFirst(".+q=([^?&]+).*", "$1"), "UTF-8");
+					return URLDecoder.decode(url.replaceFirst(".+q=([^?&]+).*", "$1"), StandardCharsets.UTF_8.name()); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (UnsupportedEncodingException e) {
 					log.error(e);
 				}

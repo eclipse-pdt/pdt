@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard;
 
@@ -24,11 +25,7 @@ import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.editor.composer.ComposerFormEditor;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
@@ -93,7 +90,7 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 			}
 
 			FacetManager.installFacets(project, version, null);
-			IFile json = project.getFile("composer.json");
+			IFile json = project.getFile("composer.json"); //$NON-NLS-1$
 
 			if (json != null) {
 				try {

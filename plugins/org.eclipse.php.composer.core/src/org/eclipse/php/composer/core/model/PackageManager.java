@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.model;
 
@@ -45,8 +46,8 @@ public class PackageManager {
 
 	public final static String BP_COMPOSERPACKAGE_PREFERENCES_PREFIX = ComposerPlugin.ID + ".composerPackage."; //$NON-NLS-1$
 
-	public final static String BP_PROJECT_BUILDPATH_PREFIX = ComposerPlugin.ID + ".projectPackages#";
-	public final static String BP_PROJECT_BUILDPATH_DEV_PREFIX = ComposerPlugin.ID + ".projectDevPackages#";
+	public final static String BP_PROJECT_BUILDPATH_PREFIX = ComposerPlugin.ID + ".projectPackages#"; //$NON-NLS-1$
+	public final static String BP_PROJECT_BUILDPATH_DEV_PREFIX = ComposerPlugin.ID + ".projectDevPackages#"; //$NON-NLS-1$
 
 	private BuildpathJob buildpathJob;
 
@@ -94,7 +95,7 @@ public class PackageManager {
 
 	private String unpackProjectName(String propertyName) {
 
-		String[] strings = propertyName.split("#");
+		String[] strings = propertyName.split("#"); //$NON-NLS-1$
 		return strings[1];
 	}
 
@@ -258,9 +259,9 @@ public class PackageManager {
 		private boolean running;
 
 		public BuildpathJob() {
-			super("Updating composer buildpath");
-			installedPath = new Path("vendor/composer/installed.json");
-			installedDevPath = new Path("vendor/composer/installed_dev.json");
+			super(Messages.PackageManager_BuildPathJobName);
+			installedPath = new Path("vendor/composer/installed.json"); //$NON-NLS-1$
+			installedDevPath = new Path("vendor/composer/installed_dev.json"); //$NON-NLS-1$
 		}
 
 		public void setProject(IProject project) {
@@ -268,9 +269,9 @@ public class PackageManager {
 		}
 
 		private void installLocalPackage(InstalledPackage installedPackage, IProject project) {
-			IPath path = new Path("vendor").append(installedPackage.name);
+			IPath path = new Path("vendor").append(installedPackage.name); //$NON-NLS-1$
 
-			Logger.debug("Installing local version of " + installedPackage.getFullName());
+			Logger.debug("Installing local version of " + installedPackage.getFullName()); //$NON-NLS-1$
 			IResource resource = project.findMember(path);
 
 			if (resource instanceof IFolder) {
@@ -279,7 +280,7 @@ public class PackageManager {
 
 				if (file != null && file.exists() && installedPackage.getLocalFile() != null) {
 					try {
-						Logger.debug("Installing local package " + installedPackage.name + " to "
+						Logger.debug("Installing local package " + installedPackage.name + " to " //$NON-NLS-1$//$NON-NLS-2$
 								+ installedPackage.getLocalFile().getAbsolutePath());
 						installedPackage.getLocalFile().mkdirs();
 						final java.nio.file.Path sourcePath = file.toPath();
@@ -311,7 +312,7 @@ public class PackageManager {
 					}
 				}
 			} else {
-				Logger.debug("Unable to find folder in project for path " + path.toString());
+				Logger.debug("Unable to find folder in project for path " + path.toString()); //$NON-NLS-1$
 			}
 		}
 
@@ -337,7 +338,7 @@ public class PackageManager {
 			IFile installed = (IFile) project.findMember(path);
 
 			if (installed == null) {
-				Logger.debug("Unable to find '" + path.lastSegment() + "' in " + project.getName() + " using path "
+				Logger.debug("Unable to find '" + path.lastSegment() + "' in " + project.getName() + " using path " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						+ path.toString());
 				return;
 			}
@@ -362,22 +363,22 @@ public class PackageManager {
 
 		private void installPackages(List<InstalledPackage> packages, IProject project) {
 
-			Logger.debug("Installing local packages for project " + project.getName());
+			Logger.debug("Installing local packages for project " + project.getName()); //$NON-NLS-1$
 
 			for (InstalledPackage installedPackage : packages) {
 				if (!installedPackage.isLocalVersionAvailable()) {
 					installLocalPackage(installedPackage, project);
 				} else {
-					Logger.debug(installedPackage.getFullName() + " is already installed locally");
+					Logger.debug(installedPackage.getFullName() + " is already installed locally"); //$NON-NLS-1$
 				}
 			}
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			Logger.debug("Running buildpath job");
+			Logger.debug("Running buildpath job"); //$NON-NLS-1$
 			running = true;
-			monitor.setTaskName("Updating composer buildpath...");
+			monitor.setTaskName(Messages.PackageManager_BuildPathTaskName);
 
 			if (project != null) {
 				updateProject(project);
@@ -396,19 +397,19 @@ public class PackageManager {
 		protected void updateProject(IProject project) {
 			try {
 				if (!running) {
-					Logger.debug("Job cancelled");
+					Logger.debug("Job cancelled"); //$NON-NLS-1$
 					throw new InterruptedException();
 				}
 
 				if (!FacetManager.hasComposerFacet(project)) {
-					Logger.debug("Buildpath not running on project without composer nature " + project.getName());
+					Logger.debug("Buildpath not running on project without composer nature " + project.getName()); //$NON-NLS-1$
 					return;
 				}
 
 				IFile installed = (IFile) project.findMember(installedPath);
 
 				if (installed == null) {
-					Logger.debug("Unabled to find installed.json in project " + project.getName());
+					Logger.debug("Unabled to find installed.json in project " + project.getName()); //$NON-NLS-1$
 					return;
 				}
 

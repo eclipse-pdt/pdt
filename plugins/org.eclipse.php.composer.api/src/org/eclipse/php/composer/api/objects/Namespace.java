@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
@@ -36,7 +37,7 @@ public class Namespace extends JsonObject {
 		listen();
 		paths.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				firePropertyChange(getNamespace() + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+				firePropertyChange(getNamespace() + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()); //$NON-NLS-1$
 			}
 		});
 	}
@@ -50,7 +51,7 @@ public class Namespace extends JsonObject {
 	@Override
 	protected Object buildJson() {
 		try {
-			Method mtd = JsonEntity.class.getDeclaredMethod("buildJson");
+			Method mtd = JsonEntity.class.getDeclaredMethod("buildJson"); //$NON-NLS-1$
 			return mtd.invoke(paths);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,7 +61,7 @@ public class Namespace extends JsonObject {
 
 	@Override
 	protected List<String> getOwnProperties() {
-		String[] props = new String[] { "paths" };
+		String[] props = new String[] { "paths" }; //$NON-NLS-1$
 		List<String> list = new ArrayList<String>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
@@ -72,7 +73,7 @@ public class Namespace extends JsonObject {
 	 * @return the name
 	 */
 	public String getNamespace() {
-		return getAsString("namespace");
+		return getAsString("namespace"); //$NON-NLS-1$
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class Namespace extends JsonObject {
 	 *            the name to set
 	 */
 	public void setNamespace(String namespace) {
-		set("namespace", namespace);
+		set("namespace", namespace); //$NON-NLS-1$
 	}
 
 	public void add(String path) {

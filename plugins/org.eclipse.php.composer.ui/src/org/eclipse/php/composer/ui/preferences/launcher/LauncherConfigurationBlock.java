@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.preferences.launcher;
 
@@ -20,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogFieldGroup;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.core.launch.ScriptLauncherManager;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseAdapter;
 import org.eclipse.php.composer.core.log.Logger;
@@ -122,12 +124,12 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 		Group sourceFolderGroup = new Group(result, SWT.NONE);
 		sourceFolderGroup.setLayout(new GridLayout(3, false));
 		sourceFolderGroup.setLayoutData(gd);
-		sourceFolderGroup.setText("PHP executable");
+		sourceFolderGroup.setText(Messages.LauncherConfigurationBlock_Title);
 
 		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gridData.horizontalSpan = 3;
 		Link prefLink = new Link(sourceFolderGroup, SWT.WRAP);
-		prefLink.setText("You can add PHP binaries in the <a>PHP Executables</a> preference page.");
+		prefLink.setText(Messages.LauncherConfigurationBlock_PhpExesLink);
 		prefLink.setLayoutData(gridData);
 
 		prefLink.addSelectionListener(new SelectionAdapter() {
@@ -139,12 +141,12 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 
 		Link helpLink = new Link(sourceFolderGroup, SWT.WRAP);
 		helpLink.setLayoutData(gridData);
-		helpLink.setText("See <a>phptherightway.com</a> if you need help installing the PHP CLI.");
+		helpLink.setText(Messages.LauncherConfigurationBlock_HelpLink);
 		helpLink.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
-							.openURL(new URL("http://www.phptherightway.com/#getting_started"));
+							.openURL(new URL("http://www.phptherightway.com/#getting_started")); //$NON-NLS-1$
 				} catch (Exception e1) {
 					Logger.logException(e1);
 				}
@@ -152,7 +154,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 		});
 
 		exes = new ComboDialogField(SWT.READ_ONLY);
-		exes.setLabelText("PHP executable");
+		exes.setLabelText(Messages.LauncherConfigurationBlock_PhpExeLabel);
 		exes.doFillIntoGrid(sourceFolderGroup, 2);
 		exes.setDialogFieldListener(this);
 
@@ -204,7 +206,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 			}
 		});
 
-		scriptField.setButtonLabel("Browse");
+		scriptField.setButtonLabel(Messages.LauncherConfigurationBlock_BrowseButton);
 
 		boolean useProjectPhar = getBooleanValue(useScriptInsideProject);
 
@@ -267,7 +269,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 		testButton = new Button(parent, SWT.PUSH);
 		testButton.setLayoutData(gd);
 
-		testButton.setText("Test selected PHP executable");
+		testButton.setText(Messages.LauncherConfigurationBlock_TestButton);
 		testButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -284,7 +286,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 					}
 
 					if (phPexeItem == null) {
-						Logger.log(Logger.WARNING, "No executable selected");
+						Logger.log(Logger.WARNING, "No executable selected"); //$NON-NLS-1$
 						return;
 					}
 
@@ -293,12 +295,13 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 							getShell().getDisplay().asyncExec(new Runnable() {
 								@Override
 								public void run() {
-									String message = "PHP binary execution failed.";
+									String message = Messages.LauncherConfigurationBlock_ExecutionFailedMessage;
 									if (response != null && response.length() > 0) {
-										message += " Reason: " + response;
-									} else {
+										message += NLS.bind(Messages.LauncherConfigurationBlock_ReasonMessage,
+												response);
 									}
-									MessageDialog.openInformation(getShell(), "Execution test", message);
+									MessageDialog.openInformation(getShell(),
+											Messages.LauncherConfigurationBlock_TestDialogTitle, message);
 								}
 							});
 						};
@@ -307,13 +310,15 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 							getShell().getDisplay().asyncExec(new Runnable() {
 								@Override
 								public void run() {
-									String message = "PHP binary executed successfully.";
+									String message = Messages.LauncherConfigurationBlock_TestSuccessMessage;
 									if (response != null && response.length() > 0) {
-										message += " Detected PHP version: " + response;
+										message += NLS.bind(Messages.LauncherConfigurationBlock_DetectedVersionMessage,
+												response);
 									} else {
-										message += " Unable to determine PHP version.";
+										message += Messages.LauncherConfigurationBlock_CannotDetermineVersionMessage;
 									}
-									MessageDialog.openInformation(getShell(), "Execution test", message);
+									MessageDialog.openInformation(getShell(),
+											Messages.LauncherConfigurationBlock_TestDialogTitle, message);
 								}
 							});
 						};
@@ -335,13 +340,12 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 		StatusInfo status = new StatusInfo();
 
 		if (phpExes.getAllItems().length == 0) {
-			status = new StatusInfo(StatusInfo.WARNING,
-					"No PHP executable configured. Dependencies cannot be managed properly.");
+			status = new StatusInfo(StatusInfo.WARNING, Messages.LauncherConfigurationBlock_NoPHPConfiguredError);
 		}
 
 		if (buttonGroup != null && buttonGroup.isSelected(1)) {
 			if (!validateScript(scriptField.getText())) {
-				status = new StatusInfo(StatusInfo.WARNING, "The selected file is not a valid php script/archive.");
+				status = new StatusInfo(StatusInfo.WARNING, Messages.LauncherConfigurationBlock_InvalidPHPScriptError);
 			}
 		}
 
@@ -360,7 +364,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 	@Override
 	public void performDefaults() {
 
-		scriptField.setText("");
+		scriptField.setText(""); //$NON-NLS-1$
 		scriptField.setEnabled(false);
 
 		if (buttonGroup != null) {
@@ -368,8 +372,8 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 			buttonGroup.setSelection(1, false);
 		}
 		setValue(useScriptInsideProject, true);
-		setValue(scriptToExecute, "");
-		setValue(phpExecutable, "");
+		setValue(scriptToExecute, ""); //$NON-NLS-1$
+		setValue(phpExecutable, ""); //$NON-NLS-1$
 		validateSettings(null, null, null);
 		super.performDefaults();
 	}

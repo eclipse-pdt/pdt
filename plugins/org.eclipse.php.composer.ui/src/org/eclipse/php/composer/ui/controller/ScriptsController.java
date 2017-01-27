@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.controller;
 
@@ -59,7 +60,7 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 
 		if (obj instanceof Script) {
 			Script script = (Script) obj;
-			styledString.append(" (" + script.size() + ")", StyledString.COUNTER_STYLER);
+			styledString.append(" (" + script.size() + ")", StyledString.COUNTER_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
 			cell.setImage(eventImage);
 		} else {
 			cell.setImage(scriptImage);

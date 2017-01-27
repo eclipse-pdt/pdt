@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.php.composer.api.objects.Support;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
 import org.eclipse.php.composer.ui.editor.ComposerSection;
 import org.eclipse.php.composer.ui.editor.FormEntryAdapter;
@@ -23,8 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
-
-import org.eclipse.php.composer.api.objects.Support;
 
 public class SupportSection extends ComposerSection {
 
@@ -45,8 +45,8 @@ public class SupportSection extends ComposerSection {
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText("Support");
-		section.setDescription("Provide support options to your end-users.");
+		section.setText(Messages.SupportSection_Title);
+		section.setDescription(Messages.SupportSection_Description);
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
 		Composite client = toolkit.createComposite(section);
@@ -74,7 +74,7 @@ public class SupportSection extends ComposerSection {
 	}
 
 	private void createEmailEntry(Composite client, FormToolkit toolkit) {
-		emailEntry = new FormEntry(client, toolkit, "Email", null, false);
+		emailEntry = new FormEntry(client, toolkit, Messages.SupportSection_EmailLabel, null, false);
 		emailEntry.setValue(support.getEmail(), true);
 
 		emailEntry.addFormEntryListener(new FormEntryAdapter() {
@@ -82,7 +82,7 @@ public class SupportSection extends ComposerSection {
 				support.setEmail(entry.getValue());
 			}
 		});
-		support.addPropertyChangeListener("email", new PropertyChangeListener() {
+		support.addPropertyChangeListener("email", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				emailEntry.setValue(support.getEmail(), true);
 			}
@@ -90,7 +90,7 @@ public class SupportSection extends ComposerSection {
 	}
 
 	private void createIssuesEntry(Composite client, FormToolkit toolkit) {
-		issuesEntry = new WeblinkFormEntry(client, toolkit, "Issues");
+		issuesEntry = new WeblinkFormEntry(client, toolkit, Messages.SupportSection_IssuesLabel);
 		issuesEntry.setValue(support.getIssues());
 
 		issuesEntry.addFormEntryListener(new FormEntryAdapter() {
@@ -98,7 +98,7 @@ public class SupportSection extends ComposerSection {
 				support.setIssues(entry.getValue());
 			}
 		});
-		support.addPropertyChangeListener("issues", new PropertyChangeListener() {
+		support.addPropertyChangeListener("issues", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				issuesEntry.setValue(support.getIssues(), true);
 			}
@@ -106,7 +106,7 @@ public class SupportSection extends ComposerSection {
 	}
 
 	private void createForumEntry(Composite client, FormToolkit toolkit) {
-		forumEntry = new WeblinkFormEntry(client, toolkit, "Forum");
+		forumEntry = new WeblinkFormEntry(client, toolkit, Messages.SupportSection_ForumLabel);
 		forumEntry.setValue(support.getForum());
 
 		forumEntry.addFormEntryListener(new FormEntryAdapter() {
@@ -114,7 +114,7 @@ public class SupportSection extends ComposerSection {
 				support.setForum(entry.getValue());
 			}
 		});
-		support.addPropertyChangeListener("forum", new PropertyChangeListener() {
+		support.addPropertyChangeListener("forum", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				forumEntry.setValue(support.getForum(), true);
 			}
@@ -122,7 +122,7 @@ public class SupportSection extends ComposerSection {
 	}
 
 	private void createWikiEntry(Composite client, FormToolkit toolkit) {
-		wikiEntry = new WeblinkFormEntry(client, toolkit, "Wiki");
+		wikiEntry = new WeblinkFormEntry(client, toolkit, Messages.SupportSection_WikiLabel);
 		wikiEntry.setValue(support.getWiki());
 
 		wikiEntry.addFormEntryListener(new FormEntryAdapter() {
@@ -130,7 +130,7 @@ public class SupportSection extends ComposerSection {
 				support.setWiki(entry.getValue());
 			}
 		});
-		support.addPropertyChangeListener("wiki", new PropertyChangeListener() {
+		support.addPropertyChangeListener("wiki", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				wikiEntry.setValue(support.getWiki(), true);
 			}
@@ -138,7 +138,7 @@ public class SupportSection extends ComposerSection {
 	}
 
 	private void createIrcEntry(Composite client, FormToolkit toolkit) {
-		ircEntry = new WeblinkFormEntry(client, toolkit, "Irc");
+		ircEntry = new WeblinkFormEntry(client, toolkit, Messages.SupportSection_IrcLabel);
 		ircEntry.setValue(support.getIrc());
 
 		ircEntry.addFormEntryListener(new FormEntryAdapter() {
@@ -146,7 +146,7 @@ public class SupportSection extends ComposerSection {
 				support.setIrc(entry.getValue());
 			}
 		});
-		support.addPropertyChangeListener("irc", new PropertyChangeListener() {
+		support.addPropertyChangeListener("irc", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				ircEntry.setValue(support.getIrc(), true);
 			}
@@ -154,7 +154,7 @@ public class SupportSection extends ComposerSection {
 	}
 
 	private void createSourceEntry(Composite client, FormToolkit toolkit) {
-		sourceEntry = new WeblinkFormEntry(client, toolkit, "Source");
+		sourceEntry = new WeblinkFormEntry(client, toolkit, Messages.SupportSection_SourceLabel);
 		sourceEntry.setValue(support.getSource());
 
 		sourceEntry.addFormEntryListener(new FormEntryAdapter() {
@@ -162,7 +162,7 @@ public class SupportSection extends ComposerSection {
 				support.setSource(entry.getValue());
 			}
 		});
-		support.addPropertyChangeListener("source", new PropertyChangeListener() {
+		support.addPropertyChangeListener("source", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				sourceEntry.setValue(support.getSource(), true);
 			}

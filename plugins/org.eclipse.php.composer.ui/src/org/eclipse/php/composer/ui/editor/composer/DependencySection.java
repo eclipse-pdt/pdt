@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -26,6 +27,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.composer.api.VersionedPackage;
+import org.eclipse.php.composer.api.collection.Dependencies;
 import org.eclipse.php.composer.ui.controller.DependencyController;
 import org.eclipse.php.composer.ui.dialogs.DependencyDialog;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
@@ -38,9 +42,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
-import org.eclipse.php.composer.api.VersionedPackage;
-import org.eclipse.php.composer.api.collection.Dependencies;
 
 public class DependencySection extends TableSection implements PropertyChangeListener {
 
@@ -60,7 +61,8 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 	public DependencySection(ComposerFormPage page, Composite parent, Dependencies dependencies, String title,
 			String description, boolean expanded) {
 		super(page, parent, Section.EXPANDED | Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR,
-				new String[] { "Edit...", "Remove", "Update" });
+				new String[] { Messages.DependencySection_EditButton, Messages.DependencySection_RemoveButton,
+						Messages.DependencySection_UpdateButton });
 
 		this.dependencies = dependencies;
 		createClient(getSection(), page.getManagedForm().getToolkit(), title, description, expanded);
@@ -153,21 +155,21 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 	}
 
 	private void makeActions() {
-		editAction = new Action("Edit...") {
+		editAction = new Action(Messages.DependencySection_EditActionTitle) {
 			@Override
 			public void run() {
 				handleEdit();
 			}
 		};
 
-		removeAction = new Action("Remove") {
+		removeAction = new Action(Messages.DependencySection_RemoveActionTitle) {
 			@Override
 			public void run() {
 				handleRemove();
 			}
 		};
 
-		updateAction = new Action("Update Selected") {
+		updateAction = new Action(Messages.DependencySection_UpdateActionTitle) {
 			@Override
 			public void run() {
 				handleUpdate();
@@ -205,10 +207,12 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 			names[i] = dep.getName();
 		}
 
-		MessageDialog diag = new MessageDialog(dependencyViewer.getTable().getShell(),
-				"Remove Dependenc" + (selection.size() > 1 ? "ies" : "y"), null,
-				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", MessageDialog.WARNING,
-				new String[] { "Yes", "No" }, 0);
+		String title = selection.size() > 1 ? Messages.DependencySection_RemoveDialogTitlePlural
+				: Messages.DependencySection_RemoveDialogTitle;
+		MessageDialog diag = new MessageDialog(dependencyViewer.getTable().getShell(), title, null,
+				NLS.bind(Messages.DependencySection_RemoveDialogMessage, StringUtils.join(names, ", ")), //$NON-NLS-1$
+				MessageDialog.WARNING,
+				new String[] { Messages.DependencySection_YesButton, Messages.DependencySection_NoButton }, 0);
 
 		if (diag.open() == Dialog.OK) {
 			for (VersionedPackage dep : deps) {

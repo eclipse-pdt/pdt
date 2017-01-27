@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -22,6 +23,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.objects.Script;
 import org.eclipse.php.composer.api.objects.Script.HandlerValue;
 import org.eclipse.php.composer.ui.controller.ScriptsController;
@@ -50,14 +52,15 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 	private static final int REMOVE_INDEX = 2;
 
 	public ScriptsSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
+		super(page, parent, Section.DESCRIPTION, new String[] { Messages.ScriptsSection_AddButton,
+				Messages.ScriptsSection_EditButton, Messages.ScriptsSection_RemoveButton });
 		createClient(getSection(), page.getManagedForm().getToolkit());
 	}
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText("Scripts");
-		section.setDescription("Manage the scripts for your package.");
+		section.setText(Messages.ScriptsSection_Title);
+		section.setDescription(Messages.ScriptsSection_Description);
 		section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.grabExcessVerticalSpace = true;
@@ -122,7 +125,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName().startsWith("scripts")) {
+		if (e.getPropertyName().startsWith("scripts")) { //$NON-NLS-1$
 			refresh();
 		}
 	}
@@ -133,21 +136,21 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 	}
 
 	private void makeActions() {
-		addAction = new Action("Add...") {
+		addAction = new Action(Messages.ScriptsSection_AddActionTitle) {
 			@Override
 			public void run() {
 				handleAdd();
 			}
 		};
 
-		editAction = new Action("Edit...") {
+		editAction = new Action(Messages.ScriptsSection_EditActionTitle) {
 			@Override
 			public void run() {
 				handleEdit();
 			}
 		};
 
-		removeAction = new Action("Remove") {
+		removeAction = new Action(Messages.ScriptsSection_RemoveActionTitle) {
 			@Override
 			public void run() {
 				handleRemove();
@@ -175,7 +178,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 			script = (Script) element;
 		}
 
-		Script dialogScript = new Script(script != null ? script.getScript() : null, new HandlerValue(""));
+		Script dialogScript = new Script(script != null ? script.getScript() : null, new HandlerValue("")); //$NON-NLS-1$
 
 		ScriptDialog dialog = new ScriptDialog(scriptsViewer.getTree().getShell(), dialogScript,
 				dialogScript.getFirst());
@@ -242,9 +245,10 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 
 		if (element instanceof Script) {
 			String text = controller.getText(element);
-			MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
-					"Do you really wan't to remove " + text + "?", MessageDialog.WARNING, new String[] { "Yes", "No" },
-					0);
+			MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(),
+					Messages.ScriptsSection_RemoveEventDialogTitle, null,
+					NLS.bind(Messages.ScriptsSection_RemoveEventDialogMessage, text), MessageDialog.WARNING,
+					new String[] { Messages.ScriptsSection_YesButton, Messages.ScriptsSection_NoButton }, 0);
 
 			if (diag.open() == Dialog.OK) {
 				composerPackage.getScripts().remove((Script) element);
@@ -268,9 +272,11 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 
 				String event = controller.getText(script);
 
-				MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(), "Remove Event", null,
-						"Do you really wan't to remove '" + text + "' in " + event + "?", MessageDialog.WARNING,
-						new String[] { "Yes", "No" }, 0);
+				MessageDialog diag = new MessageDialog(scriptsViewer.getTree().getShell(),
+						Messages.ScriptsSection_RemoveHandlerDialogTitle, null,
+						NLS.bind(Messages.ScriptsSection_RemoveHandlerDialogMessage, text, event),
+						MessageDialog.WARNING,
+						new String[] { Messages.ScriptsSection_YesButton, Messages.ScriptsSection_NoButton }, 0);
 
 				if (diag.open() == Dialog.OK) {
 					script.remove(index);

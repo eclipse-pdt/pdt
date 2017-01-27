@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.packages;
 
@@ -77,7 +78,7 @@ public class AsyncDownloader extends AbstractDownloader {
 			try {
 				URI uri = URI.create(url);
 				final HttpGet httpGet = new HttpGet(uri);
-				httpGet.addHeader("Accept", "*/*"); //$NON-NLS-1$
+				httpGet.addHeader("Accept", "*/*"); //$NON-NLS-1$ //$NON-NLS-2$
 				httpGet.addHeader("User-Agent", getClass().getName()); //$NON-NLS-1$
 				httpGet.addHeader("Host", uri.getHost()); //$NON-NLS-1$
 				HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
@@ -121,7 +122,7 @@ public class AsyncDownloader extends AbstractDownloader {
 						return;
 					}
 					if (entity == null) {
-						throw new ClientProtocolException("Response contains no content");
+						throw new ClientProtocolException("Response contains no content"); //$NON-NLS-1$
 
 					}
 					try {
@@ -191,14 +192,14 @@ public class AsyncDownloader extends AbstractDownloader {
 
 			SSLConnectionSocketFactory ssf = new SSLConnectionSocketFactory(builder.build());
 			Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory> create()
-					.register("http", PlainConnectionSocketFactory.getSocketFactory()).register("https", ssf).build();
+					.register("http", PlainConnectionSocketFactory.getSocketFactory()).register("https", ssf).build(); //$NON-NLS-1$ //$NON-NLS-2$
 			connectionManager = new PoolingHttpClientConnectionManager(r);
 		} catch (NoSuchAlgorithmException e) {
-			log.error("Exception during init", e);
+			log.error("Exception during init", e); //$NON-NLS-1$
 		} catch (KeyManagementException e) {
-			log.error("Exception during init", e);
+			log.error("Exception during init", e); //$NON-NLS-1$
 		} catch (KeyStoreException e) {
-			log.error("Exception during init", e);
+			log.error("Exception during init", e); //$NON-NLS-1$
 		}
 
 	}

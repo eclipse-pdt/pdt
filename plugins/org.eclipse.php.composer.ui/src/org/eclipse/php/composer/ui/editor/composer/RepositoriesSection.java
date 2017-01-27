@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -22,6 +23,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.collection.Repositories;
 import org.eclipse.php.composer.api.repositories.*;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
@@ -58,13 +60,13 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 			private static final long serialVersionUID = -2019489473873127982L;
 
 			{
-				put("generic", ComposerUIPluginImages.REPO_GENERIC);
-				put("git", ComposerUIPluginImages.REPO_GIT);
-				put("svn", ComposerUIPluginImages.REPO_SVN);
-				put("mercurial", ComposerUIPluginImages.REPO_MERCURIAL);
-				put("pear", ComposerUIPluginImages.REPO_PEAR);
-				put("composer", ComposerUIPluginImages.REPO_COMPOSER);
-				put("package", ComposerUIPluginImages.REPO_PACKAGE);
+				put("generic", ComposerUIPluginImages.REPO_GENERIC); //$NON-NLS-1$
+				put("git", ComposerUIPluginImages.REPO_GIT); //$NON-NLS-1$
+				put("svn", ComposerUIPluginImages.REPO_SVN); //$NON-NLS-1$
+				put("mercurial", ComposerUIPluginImages.REPO_MERCURIAL); //$NON-NLS-1$
+				put("pear", ComposerUIPluginImages.REPO_PEAR); //$NON-NLS-1$
+				put("composer", ComposerUIPluginImages.REPO_COMPOSER); //$NON-NLS-1$
+				put("package", ComposerUIPluginImages.REPO_PACKAGE); //$NON-NLS-1$
 			}
 		};
 
@@ -83,8 +85,8 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 				String name;
 
 				// name
-				if (repo.has("name")) {
-					name = repo.getAsString("name");
+				if (repo.has("name")) { //$NON-NLS-1$
+					name = repo.getAsString("name"); //$NON-NLS-1$
 				} else {
 					name = repo.getUrl();
 				}
@@ -113,19 +115,19 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		@Override
 		public Image getImage(Object element) {
 			if (element instanceof GitRepository) {
-				return getRepoImage("git");
+				return getRepoImage("git"); //$NON-NLS-1$
 			} else if (element instanceof SubversionRepository) {
-				return getRepoImage("svn");
+				return getRepoImage("svn"); //$NON-NLS-1$
 			} else if (element instanceof MercurialRepository) {
-				return getRepoImage("mercurial");
+				return getRepoImage("mercurial"); //$NON-NLS-1$
 			} else if (element instanceof PearRepository) {
-				return getRepoImage("pear");
+				return getRepoImage("pear"); //$NON-NLS-1$
 			} else if (element instanceof PackageRepository) {
-				return getRepoImage("package");
+				return getRepoImage("package"); //$NON-NLS-1$
 			} else if (element instanceof ComposerRepository) {
-				return getRepoImage("composer");
+				return getRepoImage("composer"); //$NON-NLS-1$
 			} else if (element instanceof Repository) {
-				return getRepoImage("generic");
+				return getRepoImage("generic"); //$NON-NLS-1$
 			}
 
 			return null;
@@ -133,14 +135,15 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 	}
 
 	public RepositoriesSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
+		super(page, parent, Section.DESCRIPTION, new String[] { Messages.RepositoriesSection_AddButton,
+				Messages.RepositoriesSection_EditButton, Messages.RepositoriesSection_RemoveButton });
 		createClient(getSection(), page.getManagedForm().getToolkit());
 	}
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText("Repositories");
-		section.setDescription("Manage repositories as sources for this package.");
+		section.setText(Messages.RepositoriesSection_Title);
+		section.setDescription(Messages.RepositoriesSection_Description);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Composite container = createClientContainer(section, 2, toolkit);
@@ -199,7 +202,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName().startsWith("repositories")) {
+		if (e.getPropertyName().startsWith("repositories")) { //$NON-NLS-1$
 			refresh();
 		}
 	}
@@ -210,19 +213,19 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 	}
 
 	private void makeActions() {
-		addAction = new Action("Add...") {
+		addAction = new Action(Messages.RepositoriesSection_AddActionTitle) {
 			public void run() {
 				handleAdd();
 			}
 		};
 
-		editAction = new Action("Edit...") {
+		editAction = new Action(Messages.RepositoriesSection_EditActionTitle) {
 			public void run() {
 				handleEdit();
 			}
 		};
 
-		removeAction = new Action("Remove") {
+		removeAction = new Action(Messages.RepositoriesSection_RemoveActionTitle) {
 			public void run() {
 				handleRemove();
 			}
@@ -266,10 +269,12 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 			names[i] = repo.getName();
 		}
 
-		MessageDialog diag = new MessageDialog(repositoryViewer.getTable().getShell(),
-				"Remove Repositor" + (selection.size() > 1 ? "ies" : "y"), null,
-				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", MessageDialog.WARNING,
-				new String[] { "Yes", "No" }, 0);
+		String title = selection.size() > 1 ? Messages.RepositoriesSection_RemoveDialogTitlePlural
+				: Messages.RepositoriesSection_RemoveDialogTitle;
+		MessageDialog diag = new MessageDialog(repositoryViewer.getTable().getShell(), title, null,
+				NLS.bind(Messages.RepositoriesSection_RemoveDialogMessage, StringUtils.join(names, ", ")), //$NON-NLS-1$
+				MessageDialog.WARNING,
+				new String[] { Messages.RepositoriesSection_YesButton, Messages.RepositoriesSection_NoButton }, 0);
 
 		if (diag.open() == Dialog.OK) {
 			for (Repository repo : repos) {

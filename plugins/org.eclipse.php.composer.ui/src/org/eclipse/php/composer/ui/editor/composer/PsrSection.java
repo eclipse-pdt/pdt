@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -22,6 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.collection.Psr;
 import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.ui.controller.PsrController;
@@ -55,7 +57,8 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	protected Psr psr = null;
 
 	public PsrSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
+		super(page, parent, Section.DESCRIPTION, new String[] { Messages.PsrSection_AddButton,
+				Messages.PsrSection_EditButton, Messages.PsrSection_RemoveButton });
 
 		psr = getPsr();
 		createClient(getSection(), page.getManagedForm().getToolkit());
@@ -69,7 +72,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	protected void createClient(Section section, FormToolkit toolkit) {
 		String name = getPsrName();
 		section.setText(name);
-		section.setDescription("Manage the " + name + " settings for your package.");
+		section.setDescription(NLS.bind(Messages.PsrSection_Description, name));
 		section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.grabExcessVerticalSpace = true;
@@ -140,21 +143,21 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	}
 
 	private void makeActions() {
-		addAction = new Action("Add...") {
+		addAction = new Action(Messages.PsrSection_AddActionTitle) {
 			@Override
 			public void run() {
 				handleAdd();
 			}
 		};
 
-		editAction = new Action("Edit...") {
+		editAction = new Action(Messages.PsrSection_EditActionTitle) {
 			@Override
 			public void run() {
 				handleEdit();
 			}
 		};
 
-		removeAction = new Action("Remove") {
+		removeAction = new Action(Messages.PsrSection_RemoveActionTitle) {
 			@Override
 			public void run() {
 				handleRemove();

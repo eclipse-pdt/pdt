@@ -39,7 +39,7 @@ public class AutoloadGroup extends Observable implements IDialogFieldListener {
 
 		// text field for project vendor name
 		namespaceField = new StringDialogField();
-		namespaceField.setLabelText("Namespace");
+		namespaceField.setLabelText(Messages.AutoloadGroup_NamespaceLabel);
 		namespaceField.setDialogFieldListener(this);
 		namespaceField.doFillIntoGrid(nameComposite, 2);
 		LayoutUtil.setHorizontalGrabbing(namespaceField.getTextControl(null));
