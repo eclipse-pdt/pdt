@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -39,8 +40,8 @@ public class ConfigSection extends ComposerSection {
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText("Config");
-		section.setDescription("Configure your package.");
+		section.setText(Messages.ConfigSection_Title);
+		section.setDescription(Messages.ConfigSection_Description);
 		// section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -65,35 +66,35 @@ public class ConfigSection extends ComposerSection {
 	}
 
 	private void createProcessTimeoutEntry(Composite client, FormToolkit toolkit) {
-		processTimeoutEntry = new FormEntry(client, toolkit, "process-timeout", null, false);
+		processTimeoutEntry = new FormEntry(client, toolkit, "process-timeout", null, false); //$NON-NLS-1$
 		Integer processTimeout = composerPackage.getConfig().getProcessTimeout();
 		if (processTimeout != null) {
-			processTimeoutEntry.setValue("" + processTimeout, true);
+			processTimeoutEntry.setValue("" + processTimeout, true); //$NON-NLS-1$
 		}
 
 		processTimeoutEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
-					composerPackage.getConfig().remove("process-timeout");
+					composerPackage.getConfig().remove("process-timeout"); //$NON-NLS-1$
 				} else {
-					composerPackage.getConfig().set("process-timeout", Integer.valueOf(entry.getValue()));
+					composerPackage.getConfig().set("process-timeout", Integer.valueOf(entry.getValue())); //$NON-NLS-1$
 				}
 			}
 		});
-		composerPackage.getConfig().addPropertyChangeListener("process-timeout", new PropertyChangeListener() {
+		composerPackage.getConfig().addPropertyChangeListener("process-timeout", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				Integer processTimeout = composerPackage.getConfig().getProcessTimeout();
 				if (processTimeout == null) {
-					processTimeoutEntry.setValue("", true);
+					processTimeoutEntry.setValue("", true); //$NON-NLS-1$
 				} else {
-					processTimeoutEntry.setValue("" + processTimeout, true);
+					processTimeoutEntry.setValue("" + processTimeout, true); //$NON-NLS-1$
 				}
 			}
 		});
 	}
 
 	private void createVendorDirEntry(Composite client, FormToolkit toolkit) {
-		vendorDirEntry = new FormEntry(client, toolkit, "vendor-dir", null, false);
+		vendorDirEntry = new FormEntry(client, toolkit, "vendor-dir", null, false); //$NON-NLS-1$
 		String vendorDir = composerPackage.getConfig().getVendorDir();
 		if (vendorDir != null) {
 			vendorDirEntry.setValue(vendorDir, true);
@@ -102,18 +103,18 @@ public class ConfigSection extends ComposerSection {
 		vendorDirEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
-					composerPackage.getConfig().remove("vendor-dir");
+					composerPackage.getConfig().remove("vendor-dir"); //$NON-NLS-1$
 				} else {
-					composerPackage.getConfig().set("vendor-dir", entry.getValue());
+					composerPackage.getConfig().set("vendor-dir", entry.getValue()); //$NON-NLS-1$
 				}
 
 			}
 		});
-		composerPackage.getConfig().addPropertyChangeListener("vendor-dir", new PropertyChangeListener() {
+		composerPackage.getConfig().addPropertyChangeListener("vendor-dir", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				String vendorDir = composerPackage.getConfig().getVendorDir();
 				if (vendorDir != null) {
-					vendorDirEntry.setValue("", true);
+					vendorDirEntry.setValue("", true); //$NON-NLS-1$
 				} else {
 					vendorDirEntry.setValue(composerPackage.getConfig().getVendorDir(), true);
 				}
@@ -122,7 +123,7 @@ public class ConfigSection extends ComposerSection {
 	}
 
 	private void createBinDirEntry(Composite client, FormToolkit toolkit) {
-		binDirEntry = new FormEntry(client, toolkit, "bin-dir", null, false);
+		binDirEntry = new FormEntry(client, toolkit, "bin-dir", null, false); //$NON-NLS-1$
 		String binDir = composerPackage.getConfig().getBinDir();
 		if (binDir != null) {
 			binDirEntry.setValue(binDir, true);
@@ -131,17 +132,17 @@ public class ConfigSection extends ComposerSection {
 		binDirEntry.addFormEntryListener(new FormEntryAdapter() {
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
-					composerPackage.getConfig().remove("bin-dir");
+					composerPackage.getConfig().remove("bin-dir"); //$NON-NLS-1$
 				} else {
-					composerPackage.getConfig().set("bin-dir", entry.getValue());
+					composerPackage.getConfig().set("bin-dir", entry.getValue()); //$NON-NLS-1$
 				}
 			}
 		});
-		composerPackage.getConfig().addPropertyChangeListener("bin-dir", new PropertyChangeListener() {
+		composerPackage.getConfig().addPropertyChangeListener("bin-dir", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				String binDir = composerPackage.getConfig().getBinDir();
 				if (binDir == null) {
-					binDirEntry.setValue("", true);
+					binDirEntry.setValue("", true); //$NON-NLS-1$
 				} else {
 					binDirEntry.setValue(binDir, true);
 				}
@@ -150,19 +151,19 @@ public class ConfigSection extends ComposerSection {
 	}
 
 	private void createNotifyOnInstallEntry(Composite client, FormToolkit toolkit) {
-		notifyOnInstallEntry = new BooleanFormEntry(client, toolkit, "notify-on-install");
+		notifyOnInstallEntry = new BooleanFormEntry(client, toolkit, "notify-on-install"); //$NON-NLS-1$
 		notifyOnInstallEntry.setValue(composerPackage.getConfig().getNotifyOnInstall());
 
 		notifyOnInstallEntry.addBooleanFormEntryListener(new IBooleanFormEntryListener() {
 			public void selectionChanged(BooleanFormEntry entry) {
 				if (entry.getValue()) {
-					composerPackage.getConfig().remove("notify-on-install");
+					composerPackage.getConfig().remove("notify-on-install"); //$NON-NLS-1$
 				} else {
 					composerPackage.getConfig().setNotifyOnInstall(entry.getValue());
 				}
 			}
 		});
-		composerPackage.getConfig().addPropertyChangeListener("notify-on-install", new PropertyChangeListener() {
+		composerPackage.getConfig().addPropertyChangeListener("notify-on-install", new PropertyChangeListener() { //$NON-NLS-1$
 			public void propertyChange(PropertyChangeEvent e) {
 				notifyOnInstallEntry.setValue(composerPackage.getConfig().getNotifyOnInstall(), true);
 			}

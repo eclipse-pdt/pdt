@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,16 +7,13 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.collection;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.eclipse.php.composer.api.entities.AbstractJsonObject;
@@ -70,7 +67,7 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 	protected Object buildJson() {
 		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
 		for (Namespace nmspc : this) {
-			Object value = "";
+			Object value = ""; //$NON-NLS-1$
 
 			if (nmspc.size() > 1) {
 				value = getJsonValue(nmspc.getPaths());

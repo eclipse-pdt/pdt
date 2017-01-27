@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
@@ -39,12 +40,12 @@ public class RepositoryDialog extends Dialog {
 
 	private static Map<String, String> repos = new HashMap<String, String>();
 	static {
-		repos.put("composer", "Composer");
-		repos.put("package", "Package");
-		repos.put("git", "Git");
-		repos.put("svn", "Subversion");
-		repos.put("hg", "Mercurial");
-		repos.put("pear", "Pear");
+		repos.put("composer", Messages.RepositoryDialog_ComposerRepoType); //$NON-NLS-1$
+		repos.put("package", Messages.RepositoryDialog_PackageRepoType); //$NON-NLS-1$
+		repos.put("git", Messages.RepositoryDialog_GitRepoType); //$NON-NLS-1$
+		repos.put("svn", Messages.RepositoryDialog_SvnRepoType); //$NON-NLS-1$
+		repos.put("hg", Messages.RepositoryDialog_MercurialRepoType); //$NON-NLS-1$
+		repos.put("pear", Messages.RepositoryDialog_PearRepoType); //$NON-NLS-1$
 	}
 
 	public RepositoryDialog(Shell parentShell, Repository repository) {
@@ -70,7 +71,7 @@ public class RepositoryDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Repository");
+		getShell().setText(Messages.RepositoryDialog_Title);
 		getShell().setImage(ComposerUIPluginImages.REPO_GENERIC.createImage());
 
 		Composite container = new Composite(parent, SWT.NONE);
@@ -80,7 +81,7 @@ public class RepositoryDialog extends Dialog {
 		GridData gd_lblType = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblType.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblType.setLayoutData(gd_lblType);
-		lblType.setText("Type");
+		lblType.setText(Messages.RepositoryDialog_TypeLabel);
 
 		final ValuedCombo typeControl = new ValuedCombo(container, SWT.READ_ONLY, buildEntryList());
 		GridData gd_type = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -102,7 +103,7 @@ public class RepositoryDialog extends Dialog {
 
 		Label lblUrl = new Label(container, SWT.NONE);
 		lblUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblUrl.setText("URL");
+		lblUrl.setText(Messages.RepositoryDialog_UrlLabel);
 
 		final Text urlControl = new Text(container, SWT.BORDER);
 		urlControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -114,7 +115,7 @@ public class RepositoryDialog extends Dialog {
 				url = urlControl.getText();
 			}
 		});
-		if (repository != null && repository.has("url") && repository.getUrl() != null) {
+		if (repository != null && repository.has("url") && repository.getUrl() != null) { //$NON-NLS-1$
 			urlControl.setText(repository.getUrl());
 		} else {
 			// must never be null, so at least be sure to always return an empty
@@ -124,7 +125,7 @@ public class RepositoryDialog extends Dialog {
 
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Name");
+		lblName.setText(Messages.RepositoryDialog_NameLabel);
 
 		final Text nameControl = new Text(container, SWT.BORDER);
 		nameControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -136,7 +137,7 @@ public class RepositoryDialog extends Dialog {
 				name = nameControl.getText();
 			}
 		});
-		if (repository != null && repository.has("name") && repository.getName() != null) {
+		if (repository != null && repository.has("name") && repository.getName() != null) { //$NON-NLS-1$
 			nameControl.setText(repository.getName());
 		} else {
 			// must never be null, so at least be sure to always return an empty

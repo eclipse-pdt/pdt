@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.buildpath;
 
@@ -15,12 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.php.composer.core.resources.IComposerProject;
-
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.ComposerPackages;
 import org.eclipse.php.composer.api.objects.Autoload;
 import org.eclipse.php.composer.api.objects.Namespace;
+import org.eclipse.php.composer.core.resources.IComposerProject;
 
 public class BuildPathParser {
 
@@ -46,23 +46,23 @@ public class BuildPathParser {
 		parsePackage(composer, paths);
 
 		// add composer vendor dir
-		paths.add(vendor + "/composer");
+		paths.add(vendor + "/composer"); //$NON-NLS-1$
 
 		// all installed packages
 		for (ComposerPackage p : packages) {
-			parsePackage(p, paths, vendor + "/" + p.getName());
+			parsePackage(p, paths, vendor + "/" + p.getName()); //$NON-NLS-1$
 		}
 
 		return paths;
 	}
 
 	private void parsePackage(ComposerPackage pkg, List<String> paths) {
-		parsePackage(pkg, paths, "");
+		parsePackage(pkg, paths, ""); //$NON-NLS-1$
 	}
 
 	private void parsePackage(ComposerPackage pkg, List<String> paths, String prefix) {
-		if (prefix != null && !prefix.equals("") && !prefix.endsWith("/")) {
-			prefix += "/";
+		if (prefix != null && !prefix.equals("") && !prefix.endsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
+			prefix += "/"; //$NON-NLS-1$
 		}
 
 		Autoload a = pkg.getAutoload();
@@ -100,9 +100,9 @@ public class BuildPathParser {
 		File f = new File(root.toFile(), path);
 		if (f.exists()) {
 			if (f.isDirectory()) {
-				cleanedPath = f.getPath().replace(root.toOSString(), "");
+				cleanedPath = f.getPath().replace(root.toOSString(), ""); //$NON-NLS-1$
 			} else {
-				cleanedPath = f.getParentFile().getPath().replace(root.toOSString(), "");
+				cleanedPath = f.getParentFile().getPath().replace(root.toOSString(), ""); //$NON-NLS-1$
 			}
 		}
 		return cleanedPath;
@@ -111,23 +111,23 @@ public class BuildPathParser {
 	private void addPath(String path, List<String> paths) {
 		if (path != null && !path.trim().isEmpty()) {
 			// switch from win to unix
-			path = path.replaceAll("\\\\", "/");
+			path = path.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			// path cleanup
-			if (path.startsWith("/")) {
+			if (path.startsWith("/")) { //$NON-NLS-1$
 				path = path.substring(1);
 			}
 
-			if (path.endsWith("/.")) {
+			if (path.endsWith("/.")) { //$NON-NLS-1$
 				path = path.substring(0, path.length() - 2);
 			}
 
-			if (path.endsWith("/")) {
+			if (path.endsWith("/")) { //$NON-NLS-1$
 				path = path.substring(0, path.length() - 1);
 			}
 
-			if (path.equals(".")) {
-				path = "";
+			if (path.equals(".")) { //$NON-NLS-1$
+				path = ""; //$NON-NLS-1$
 			}
 
 			// if (!path.isEmpty()) {
@@ -137,7 +137,7 @@ public class BuildPathParser {
 			// path = project.getProject().getFullPath().toString();
 			// }
 
-			if (path.startsWith("/")) {
+			if (path.startsWith("/")) { //$NON-NLS-1$
 				path = path.substring(1);
 			}
 

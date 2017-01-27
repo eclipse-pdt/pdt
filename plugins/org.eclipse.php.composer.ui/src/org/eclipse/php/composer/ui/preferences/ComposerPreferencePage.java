@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.preferences;
 
@@ -24,13 +25,13 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class ComposerPreferencePage extends PropertyAndPreferencePage {
 
-	public static final String PREF_ID = "org.eclipse.php.composer.ui.preferences.ComposerPreferencePage";
-	public static final String PROP_ID = "org.eclipse.php.composer.ui.propertyPages.ComposerPreferencePage";
+	public static final String PREF_ID = "org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"; //$NON-NLS-1$
+	public static final String PROP_ID = "org.eclipse.php.composer.ui.propertyPages.ComposerPreferencePage"; //$NON-NLS-1$
 
 	private LauncherConfigurationBlock configurationBlock;
 
 	public ComposerPreferencePage() {
-		setTitle("Composer");
+		setTitle(Messages.ComposerPreferencePage_Title);
 		setDescription(null);
 		setPreferenceStore(ComposerUIPlugin.getDefault().getCorePreferenceStore());
 
@@ -81,7 +82,7 @@ public class ComposerPreferencePage extends PropertyAndPreferencePage {
 	@Override
 	public void performHelp() {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic");
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_project_wizard_basic"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

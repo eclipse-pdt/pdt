@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.collection;
 
@@ -26,9 +27,9 @@ import org.eclipse.php.composer.api.objects.Script.HandlerValue;
 public class Scripts extends AbstractJsonObject<Script> implements Iterable<Script> {
 
 	public static String[] getEvents() {
-		return new String[] { "pre-install-cmd", "post-install-cmd", "pre-update-cmd", "post-update-cmd",
-				"pre-package-install", "post-package-install", "pre-package-update", "post-package-update",
-				"pre-package-uninstall", "post-package-uninstall" };
+		return new String[] { "pre-install-cmd", "post-install-cmd", "pre-update-cmd", "post-update-cmd", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				"pre-package-install", "post-package-install", "pre-package-update", "post-package-update", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				"pre-package-uninstall", "post-package-uninstall" }; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private transient PropertyChangeListener listener = new PropertyChangeListener() {
@@ -70,7 +71,7 @@ public class Scripts extends AbstractJsonObject<Script> implements Iterable<Scri
 	protected Object buildJson() {
 		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
 		for (Script script : this) {
-			Object value = "";
+			Object value = ""; //$NON-NLS-1$
 
 			if (script.size() > 1) {
 				value = script.getHandlersJsonValue();

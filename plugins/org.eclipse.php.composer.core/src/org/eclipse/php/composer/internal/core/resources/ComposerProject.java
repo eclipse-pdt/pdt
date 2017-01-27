@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.internal.core.resources;
 
@@ -16,15 +17,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.php.composer.core.resources.IComposerProject;
-
 import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.ComposerPackages;
 import org.eclipse.php.composer.api.collection.Psr;
 import org.eclipse.php.composer.api.objects.Autoload;
 import org.eclipse.php.composer.api.objects.Namespace;
+import org.eclipse.php.composer.core.log.Logger;
+import org.eclipse.php.composer.core.resources.IComposerProject;
 
 public class ComposerProject implements IComposerProject {
 
@@ -80,7 +80,7 @@ public class ComposerProject implements IComposerProject {
 			String vendor = getVendorDir();
 
 			if (root == null || root.segmentCount() <= 1) {
-				throw new RuntimeException("Error getting composer vendor path");
+				throw new RuntimeException("Error getting composer vendor path"); //$NON-NLS-1$
 			}
 
 			vendorPath = root.removeLastSegments(1).addTrailingSeparator().append(vendor);
@@ -130,7 +130,7 @@ public class ComposerProject implements IComposerProject {
 		String vendor = getVendorDir();
 		ComposerPackages packages = new ComposerPackages();
 
-		IFile installed = project.getFile(vendor + "/composer/installed.json");
+		IFile installed = project.getFile(vendor + "/composer/installed.json"); //$NON-NLS-1$
 		if (installed != null && installed.exists()) {
 			packages.addAll(loadInstalled(installed));
 		}
@@ -200,7 +200,7 @@ public class ComposerProject implements IComposerProject {
 	}
 
 	private String getPsrNamespace(IPath path, Psr psr) {
-		IPath appendix = new Path("");
+		IPath appendix = new Path(""); //$NON-NLS-1$
 		while (!path.isEmpty()) {
 			Namespace namespace = psr.getNamespaceForPath(path.addTrailingSeparator().toString());
 			if (namespace == null) {
@@ -209,25 +209,25 @@ public class ComposerProject implements IComposerProject {
 
 			if (namespace != null) {
 				String nmspc = namespace.getNamespace();
-				IPath nmspcPath = new Path(nmspc.replace("\\", "/"));
+				IPath nmspcPath = new Path(nmspc.replace("\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$
 
 				int match = nmspcPath.matchingFirstSegments(appendix);
 				appendix = appendix.removeFirstSegments(match);
 
 				if (appendix.segmentCount() > 0) {
-					nmspc += (!nmspc.isEmpty() ? "\\" : "")
-							+ appendix.removeTrailingSeparator().toString().replace("/", "\\");
+					nmspc += (!nmspc.isEmpty() ? "\\" : "") //$NON-NLS-1$ //$NON-NLS-2$
+							+ appendix.removeTrailingSeparator().toString().replace("/", "\\"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
-				nmspc = nmspc.replace("\\\\", "\\");
-				if (nmspc.endsWith("\\")) {
+				nmspc = nmspc.replace("\\\\", "\\"); //$NON-NLS-1$ //$NON-NLS-2$
+				if (nmspc.endsWith("\\")) { //$NON-NLS-1$
 					nmspc = nmspc.substring(0, nmspc.length() - 1);
 				}
 
 				return nmspc;
 			}
 
-			appendix = new Path(path.lastSegment() + "/" + appendix.toString());
+			appendix = new Path(path.lastSegment() + "/" + appendix.toString()); //$NON-NLS-1$
 			path = path.removeLastSegments(1);
 		}
 

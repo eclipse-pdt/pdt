@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.job;
 
@@ -40,20 +41,20 @@ public class CreateProjectJob extends ComposerJob {
 	private File composerFile;
 
 	public CreateProjectJob(IPath path, String projectName, String packageName, String packageVersion) {
-		super("Creating composer project");
+		super(Messages.CreateProjectJob_Name);
 		this.projectName = projectName;
 		this.packageName = packageName;
 		this.packageVersion = packageVersion;
 		this.path = path;
 
-		Logger.debug("Creating new project " + projectName + " from package " + packageName + " / " + packageVersion);
+		Logger.debug("Creating new project " + projectName + " from package " + packageName + " / " + packageVersion); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		ResourcesPlugin.getWorkspace();
 		DummyProject project = new DummyProject(path);
 		setProject(project);
 
 		try {
 			// TODO: cache the phar file locally
-			composerPath = path.append("composer.phar");
+			composerPath = path.append("composer.phar"); //$NON-NLS-1$
 			composerFile = composerPath.toFile();
 			existed = true;
 			if (!composerFile.exists()) {
@@ -115,8 +116,8 @@ public class CreateProjectJob extends ComposerJob {
 			}
 		});
 
-		launcher.launch("create-project",
-				new String[] { "--no-interaction", "--no-progress", packageName, projectName, packageVersion });
+		launcher.launch("create-project", //$NON-NLS-1$
+				new String[] { "--no-interaction", "--no-progress", packageName, projectName, packageVersion }); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected class DummyProject extends Project {
@@ -141,18 +142,18 @@ public class CreateProjectJob extends ComposerJob {
 	}
 
 	private boolean composerExists() {
-		IPath projectPath = path.append(projectName).append("composer.json");
+		IPath projectPath = path.append(projectName).append("composer.json"); //$NON-NLS-1$
 		return projectPath.toFile().exists();
 	}
 
 	public class DummyResource extends org.eclipse.core.internal.resources.File {
 
 		protected DummyResource() {
-			super(new Path("/"), null);
+			super(new Path("/"), null); //$NON-NLS-1$
 		}
 
 		public IPath getFullPath() {
-			return new Path("/dummy/composer.phar");
+			return new Path("/dummy/composer.phar"); //$NON-NLS-1$
 		}
 	}
 

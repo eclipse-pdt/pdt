@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.entities;
 
@@ -32,15 +33,15 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	private String version;
 
-	private String constraint = "";
-	private String stabilityModifier = "";
-	private String major = "";
-	private String minor = "";
-	private String fix = "";
-	private String build = "";
-	private String stability = "";
-	private String suffix = "";
-	private String prefix = "";
+	private String constraint = ""; //$NON-NLS-1$
+	private String stabilityModifier = ""; //$NON-NLS-1$
+	private String major = ""; //$NON-NLS-1$
+	private String minor = ""; //$NON-NLS-1$
+	private String fix = ""; //$NON-NLS-1$
+	private String build = ""; //$NON-NLS-1$
+	private String stability = ""; //$NON-NLS-1$
+	private String suffix = ""; //$NON-NLS-1$
+	private String prefix = ""; //$NON-NLS-1$
 	private int devPosition = END;
 
 	public Version() {
@@ -56,8 +57,8 @@ public class Version extends Entity implements Comparable<Version> {
 		clear();
 
 		// start parsing
-		if (version.matches(",")) {
-			String parts[] = version.split(",");
+		if (version.matches(",")) { //$NON-NLS-1$
+			String parts[] = version.split(","); //$NON-NLS-1$
 
 			// lowest = this
 			versions.add(this);
@@ -86,27 +87,27 @@ public class Version extends Entity implements Comparable<Version> {
 		String parts[];
 
 		// constraint
-		String constraintPattern = "^(<>|!=|>=?|<=?|==?)?(.+)";
+		String constraintPattern = "^(<>|!=|>=?|<=?|==?)?(.+)"; //$NON-NLS-1$
 		if (version.matches(constraintPattern)) {
-			constraint = version.replaceAll(constraintPattern, "$1");
-			version = version.replaceAll(constraintPattern, "$2");
+			constraint = version.replaceAll(constraintPattern, "$1"); //$NON-NLS-1$
+			version = version.replaceAll(constraintPattern, "$2"); //$NON-NLS-1$
 		}
 
 		// stability modifier
-		if (version.matches(".+@.+")) {
-			parts = version.split("@");
+		if (version.matches(".+@.+")) { //$NON-NLS-1$
+			parts = version.split("@"); //$NON-NLS-1$
 			version = parts[0];
 			stabilityModifier = normalizeStability(parts[1]);
 		}
 
 		// dev version?
-		if (version.startsWith("dev-")) {
+		if (version.startsWith("dev-")) { //$NON-NLS-1$
 			stability = ComposerConstants.DEV;
 			version = version.substring(4);
 			devPosition = BEGIN;
 		}
 
-		parts = version.split("-");
+		parts = version.split("-"); //$NON-NLS-1$
 		int len = parts.length;
 
 		if (len > 0) {
@@ -123,13 +124,13 @@ public class Version extends Entity implements Comparable<Version> {
 	}
 
 	private void parseMain(String main) {
-		if (main.contains(".")) {
+		if (main.contains(".")) { //$NON-NLS-1$
 
-			String parts[] = main.split("\\.");
+			String parts[] = main.split("\\."); //$NON-NLS-1$
 			int len = parts.length;
 
 			if (len > 0) {
-				Pattern pattern = Pattern.compile("(\\D+)?(\\d+)", Pattern.CASE_INSENSITIVE);
+				Pattern pattern = Pattern.compile("(\\D+)?(\\d+)", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 				Matcher matcher = pattern.matcher(parts[0]);
 				matcher.find();
 
@@ -159,7 +160,7 @@ public class Version extends Entity implements Comparable<Version> {
 	}
 
 	private void parseTail(String tail) {
-		Pattern pattern = Pattern.compile("[._-]?(?:(stable|beta|b|RC|alpha|a|patch|pl|p)(?:[.-]?(\\d+))?)?([.-]?dev)?",
+		Pattern pattern = Pattern.compile("[._-]?(?:(stable|beta|b|RC|alpha|a|patch|pl|p)(?:[.-]?(\\d+))?)?([.-]?dev)?", //$NON-NLS-1$
 				Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(tail);
 
@@ -184,27 +185,27 @@ public class Version extends Entity implements Comparable<Version> {
 	}
 
 	private String normalizeStability(String stabi) {
-		if (stabi.equalsIgnoreCase("dev")) {
+		if (stabi.equalsIgnoreCase("dev")) { //$NON-NLS-1$
 			return ComposerConstants.DEV;
 		}
 
-		if (stabi.equalsIgnoreCase("beta") || stabi.equalsIgnoreCase("b")) {
+		if (stabi.equalsIgnoreCase("beta") || stabi.equalsIgnoreCase("b")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return ComposerConstants.BETA;
 		}
 
-		if (stabi.equalsIgnoreCase("alpha") || stabi.equalsIgnoreCase("a")) {
+		if (stabi.equalsIgnoreCase("alpha") || stabi.equalsIgnoreCase("a")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return ComposerConstants.ALPHA;
 		}
 
-		if (stabi.equalsIgnoreCase("rc")) {
+		if (stabi.equalsIgnoreCase("rc")) { //$NON-NLS-1$
 			return ComposerConstants.RC;
 		}
 
-		if (stabi.equalsIgnoreCase("stable")) {
+		if (stabi.equalsIgnoreCase("stable")) { //$NON-NLS-1$
 			return ComposerConstants.STABLE;
 		}
 
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private String build() {
@@ -215,7 +216,7 @@ public class Version extends Entity implements Comparable<Version> {
 		}
 
 		if (devPosition == BEGIN && stability == ComposerConstants.DEV) {
-			sb.append("dev-");
+			sb.append("dev-"); //$NON-NLS-1$
 		}
 
 		if (!prefix.isEmpty()) {
@@ -225,17 +226,17 @@ public class Version extends Entity implements Comparable<Version> {
 		sb.append(major);
 
 		if (!minor.isEmpty()) {
-			sb.append(".");
+			sb.append("."); //$NON-NLS-1$
 			sb.append(minor);
 		}
 
 		if (!fix.isEmpty()) {
-			sb.append(".");
+			sb.append("."); //$NON-NLS-1$
 			sb.append(fix);
 		}
 
 		if (!build.isEmpty()) {
-			sb.append(".");
+			sb.append("."); //$NON-NLS-1$
 			sb.append(build);
 		}
 
@@ -251,12 +252,12 @@ public class Version extends Entity implements Comparable<Version> {
 		}
 
 		if (sx.length() > 0) {
-			sb.append("-");
+			sb.append("-"); //$NON-NLS-1$
 			sb.append(sx);
 		}
 
 		if (!stabilityModifier.isEmpty()) {
-			sb.append("@");
+			sb.append("@"); //$NON-NLS-1$
 			sb.append(stabilityModifier);
 		}
 
@@ -265,7 +266,7 @@ public class Version extends Entity implements Comparable<Version> {
 			for (Version v : versions) {
 				sb.append(v.toString());
 				if (i < versions.size()) {
-					sb.append(",");
+					sb.append(","); //$NON-NLS-1$
 				}
 				i++;
 			}
@@ -292,15 +293,15 @@ public class Version extends Entity implements Comparable<Version> {
 
 	public void clear() {
 		versions.clear();
-		constraint = "";
-		stabilityModifier = "";
-		major = "";
-		minor = "";
-		fix = "";
-		build = "";
-		stability = "";
-		suffix = "";
-		prefix = "";
+		constraint = ""; //$NON-NLS-1$
+		stabilityModifier = ""; //$NON-NLS-1$
+		major = ""; //$NON-NLS-1$
+		minor = ""; //$NON-NLS-1$
+		fix = ""; //$NON-NLS-1$
+		build = ""; //$NON-NLS-1$
+		stability = ""; //$NON-NLS-1$
+		suffix = ""; //$NON-NLS-1$
+		prefix = ""; //$NON-NLS-1$
 		devPosition = END;
 		version = null;
 	}
@@ -326,14 +327,14 @@ public class Version extends Entity implements Comparable<Version> {
 	}
 
 	private void reset() {
-		version = "";
+		version = ""; //$NON-NLS-1$
 	}
 
 	/**
 	 * @return the version
 	 */
 	public String toString() {
-		if ("".equals(version) || version == null) {
+		if ("".equals(version) || version == null) { //$NON-NLS-1$
 			version = build();
 		}
 		return version;
@@ -403,7 +404,7 @@ public class Version extends Entity implements Comparable<Version> {
 		String oldVersion = this.version;
 		versions.clear();
 		parse(version);
-		firePropertyChange("version", oldVersion, this.version);
+		firePropertyChange("version", oldVersion, this.version); //$NON-NLS-1$
 	}
 
 	public void from(Version version) {
@@ -424,7 +425,7 @@ public class Version extends Entity implements Comparable<Version> {
 		prefix = version.getPrefix();
 		devPosition = version.getDevPosition();
 
-		firePropertyChange("version", oldVersion, toString());
+		firePropertyChange("version", oldVersion, toString()); //$NON-NLS-1$
 	}
 
 	/**
@@ -433,7 +434,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setConstraint(String constraint) {
 		reset();
-		firePropertyChange("constraint", this.constraint, this.constraint = constraint);
+		firePropertyChange("constraint", this.constraint, this.constraint = constraint); //$NON-NLS-1$
 	}
 
 	/**
@@ -442,7 +443,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setStabilityModifier(String stabilityModifier) {
 		reset();
-		firePropertyChange("stabilityModifier", this.stabilityModifier, this.stabilityModifier = stabilityModifier);
+		firePropertyChange("stabilityModifier", this.stabilityModifier, this.stabilityModifier = stabilityModifier); //$NON-NLS-1$
 	}
 
 	/**
@@ -451,7 +452,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setMajor(String major) {
 		reset();
-		firePropertyChange("major", this.major, this.major = major);
+		firePropertyChange("major", this.major, this.major = major); //$NON-NLS-1$
 	}
 
 	/**
@@ -460,7 +461,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setMinor(String minor) {
 		reset();
-		firePropertyChange("minor", this.minor, this.minor = minor);
+		firePropertyChange("minor", this.minor, this.minor = minor); //$NON-NLS-1$
 	}
 
 	/**
@@ -469,7 +470,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setFix(String fix) {
 		reset();
-		firePropertyChange("fix", this.fix, this.fix = fix);
+		firePropertyChange("fix", this.fix, this.fix = fix); //$NON-NLS-1$
 	}
 
 	/**
@@ -478,7 +479,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setBuild(String build) {
 		reset();
-		firePropertyChange("build", this.build, this.build = build);
+		firePropertyChange("build", this.build, this.build = build); //$NON-NLS-1$
 	}
 
 	/**
@@ -487,7 +488,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setStability(String stability) {
 		reset();
-		firePropertyChange("stability", this.stability, this.stability = stability);
+		firePropertyChange("stability", this.stability, this.stability = stability); //$NON-NLS-1$
 	}
 
 	/**
@@ -496,7 +497,7 @@ public class Version extends Entity implements Comparable<Version> {
 	 */
 	public void setSuffix(String suffix) {
 		reset();
-		firePropertyChange("suffix", this.suffix, this.suffix = suffix);
+		firePropertyChange("suffix", this.suffix, this.suffix = suffix); //$NON-NLS-1$
 	}
 
 	public int getDevPosition() {
@@ -505,7 +506,7 @@ public class Version extends Entity implements Comparable<Version> {
 
 	public void setDevPosition(int devPosition) {
 		reset();
-		firePropertyChange("devPosition", this.devPosition, this.devPosition = devPosition);
+		firePropertyChange("devPosition", this.devPosition, this.devPosition = devPosition); //$NON-NLS-1$
 	}
 
 	public String getPrefix() {
@@ -514,15 +515,15 @@ public class Version extends Entity implements Comparable<Version> {
 
 	public void setPrefix(String prefix) {
 		reset();
-		firePropertyChange("prefix", this.prefix, this.prefix = prefix);
+		firePropertyChange("prefix", this.prefix, this.prefix = prefix); //$NON-NLS-1$
 	}
 
 	public int compareTo(Version anotherVersion) {
-		if ("dev-master".equals(toString())) {
+		if ("dev-master".equals(toString())) { //$NON-NLS-1$
 			return -1;
 		}
 
-		if ("dev-master".equals(anotherVersion.toString())) {
+		if ("dev-master".equals(anotherVersion.toString())) { //$NON-NLS-1$
 			return 1;
 		}
 

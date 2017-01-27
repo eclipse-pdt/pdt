@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.controller;
 
@@ -15,15 +16,14 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.composer.api.ComposerPackage;
+import org.eclipse.php.composer.api.collection.ComposerPackages;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
 import org.eclipse.zest.core.viewers.IEntityStyleProvider;
 import org.eclipse.zest.core.viewers.IGraphEntityContentProvider;
-
-import org.eclipse.php.composer.api.ComposerPackage;
-import org.eclipse.php.composer.api.collection.ComposerPackages;
 
 public class GraphController extends LabelProvider
 		implements IStructuredContentProvider, IGraphEntityContentProvider, IEntityStyleProvider {
@@ -83,7 +83,7 @@ public class GraphController extends LabelProvider
 		}
 
 		if (element instanceof EntityConnectionData) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		return super.getText(element);

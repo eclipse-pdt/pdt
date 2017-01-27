@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.launch.environment;
 
@@ -35,7 +36,7 @@ public class SysPhpPrjPhar extends PrjPharEnvironment {
 		// specify php.ini location
 		File iniFile = PHPINIUtil.findPHPIni(php);
 		if (iniFile != null) {
-			cmd.addArgument("-c");
+			cmd.addArgument("-c"); //$NON-NLS-1$
 			cmd.addArgument(iniFile.getAbsolutePath());
 		}
 
@@ -46,6 +47,6 @@ public class SysPhpPrjPhar extends PrjPharEnvironment {
 
 	@Override
 	protected IResource getScript(IProject project) {
-		return project.findMember("composer.phar");
+		return project.findMember("composer.phar"); //$NON-NLS-1$
 	}
 }

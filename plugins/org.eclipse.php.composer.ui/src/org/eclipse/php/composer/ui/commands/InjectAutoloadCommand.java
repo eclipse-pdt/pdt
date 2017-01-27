@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.commands;
 
@@ -23,6 +24,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.resources.IComposerProject;
@@ -34,8 +36,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
-
-import org.eclipse.php.composer.api.ComposerConstants;
 
 /**
  * Injects the statement "require_once __DIR__
@@ -67,7 +67,7 @@ public class InjectAutoloadCommand extends AbstractHandler {
 		String vendorDir = composerProject.getVendorDir();
 		String vendor = vendorDir != null ? vendorDir : ComposerConstants.VENDOR_DIR_DEFAULT;
 
-		IFile autoload = project.getFile(vendor + "/autoload.php");
+		IFile autoload = project.getFile(vendor + "/autoload.php"); //$NON-NLS-1$
 		if (autoload == null || autoload.exists() == false) {
 			return null;
 		}
@@ -80,7 +80,7 @@ public class InjectAutoloadCommand extends AbstractHandler {
 		}
 
 		relativeTo = relativeTo.removeFirstSegments(1);
-		insertText("require_once __DIR__ . '/" + relativeTo.toString() + "';");
+		insertText("require_once __DIR__ . '/" + relativeTo.toString() + "';"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return null;
 	}

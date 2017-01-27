@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.launch;
 
@@ -33,7 +34,7 @@ import org.eclipse.php.composer.core.log.Logger;
 @Creatable
 public class ScriptLauncherManager implements ScriptLauncherInterface {
 
-	private static final String LAUNCHER_ID = ComposerPlugin.ID + ".executableLauncher";
+	private static final String LAUNCHER_ID = ComposerPlugin.ID + ".executableLauncher"; //$NON-NLS-1$
 	private final HashMap<String, EnvironmentFactory> factories = new HashMap<String, EnvironmentFactory>();
 
 	@Inject
@@ -45,9 +46,9 @@ public class ScriptLauncherManager implements ScriptLauncherInterface {
 		try {
 			IConfigurationElement[] config = registry.getConfigurationElementsFor(LAUNCHER_ID);
 			for (IConfigurationElement e : config) {
-				final EnvironmentFactory factory = (EnvironmentFactory) e.createExecutableExtension("class");
+				final EnvironmentFactory factory = (EnvironmentFactory) e.createExecutableExtension("class"); //$NON-NLS-1$
 				if (factory != null) {
-					factories.put(e.getAttribute("id"), factory);
+					factories.put(e.getAttribute("id"), factory); //$NON-NLS-1$
 				}
 			}
 		} catch (Exception e) {
@@ -69,7 +70,7 @@ public class ScriptLauncherManager implements ScriptLauncherInterface {
 			throws ScriptNotFoundException, ExecutableNotFoundException {
 		Environment env = getEnvironment(factoryId, project);
 		if (env == null) {
-			throw new ExecutableNotFoundException("Can't find any executable");
+			throw new ExecutableNotFoundException(Messages.ScriptLauncherManager_CannotFindExe);
 		}
 
 		return new ScriptLauncher(env, project);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.job;
 
@@ -31,7 +32,7 @@ public class DownloadJob extends Job {
 	private IProgressMonitor monitor;
 
 	public DownloadJob(IProject project) {
-		super("Downloading composer.phar");
+		super(Messages.DownloadJob_Name);
 		this.project = project;
 	}
 
@@ -41,13 +42,13 @@ public class DownloadJob extends Job {
 
 			this.monitor = monitor;
 
-			monitor.beginTask("Downloading composer.phar from getcomposer.org", 3);
+			monitor.beginTask(Messages.DownloadJob_TaskName, 3);
 
 			downloader = new PharDownloader();
 			InputStream resource = downloader.download();
 
 			monitor.worked(1);
-			IFile file = project.getFile("composer.phar");
+			IFile file = project.getFile("composer.phar"); //$NON-NLS-1$
 			monitor.worked(1);
 
 			file.create(resource, true, new NullProgressMonitor());
@@ -57,8 +58,7 @@ public class DownloadJob extends Job {
 
 		} catch (Exception e) {
 			Logger.logException(e);
-			return new Status(Status.ERROR, ComposerPlugin.ID,
-					"Error while downloading composer.phar. See {workspace}/.metadata/.log for details");
+			return new Status(Status.ERROR, ComposerPlugin.ID, Messages.DownloadJob_ErrorMessage);
 		} finally {
 			monitor.done();
 		}

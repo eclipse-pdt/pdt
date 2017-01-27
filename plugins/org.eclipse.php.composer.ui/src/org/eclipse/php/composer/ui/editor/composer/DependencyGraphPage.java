@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -17,6 +18,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.composer.api.ComposerPackage;
+import org.eclipse.php.composer.api.collection.ComposerPackages;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.resources.IComposerProject;
@@ -39,17 +42,14 @@ import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.HorizontalShift;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
-import org.eclipse.php.composer.api.ComposerPackage;
-import org.eclipse.php.composer.api.collection.ComposerPackages;
-
 /**
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
 public class DependencyGraphPage extends ComposerFormPage implements ModifyListener {
 
-	private static final String SEARCH_ID = "composer.dpg.search";
-	private static final String SEPARATOR_ID = "composer.dpg.separator";
-	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.DependencyGraphPage";
+	private static final String SEARCH_ID = "composer.dpg.search"; //$NON-NLS-1$
+	private static final String SEPARATOR_ID = "composer.dpg.separator"; //$NON-NLS-1$
+	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.DependencyGraphPage"; //$NON-NLS-1$
 	protected ComposerFormEditor editor;
 	private GraphController graphController;
 	private GraphViewer viewer;
@@ -68,7 +68,7 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 	public void setActive(boolean active) {
 		super.setActive(active);
 		if (active) {
-			editor.getHeaderForm().getForm().setText("Dependency Graph");
+			editor.getHeaderForm().getForm().setText(Messages.DependencyGraphPage_Title);
 		}
 
 		active = active && editor.isValidJson();
@@ -190,13 +190,7 @@ public class DependencyGraphPage extends ComposerFormPage implements ModifyListe
 
 	@Override
 	public void modifyText(ModifyEvent e) {
-		long start = System.nanoTime();
-
 		graphController.setFilterText(searchControl.getText());
 		viewer.refresh();
-
-		double elapsed = (System.nanoTime() - start) * 1.0e-9;
-
-		System.err.println("refresh inaaa " + elapsed);
 	}
 }

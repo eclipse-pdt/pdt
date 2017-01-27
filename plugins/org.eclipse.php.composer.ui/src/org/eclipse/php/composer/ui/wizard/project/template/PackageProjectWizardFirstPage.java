@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project.template;
 
@@ -48,8 +49,8 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 	public PackageProjectWizardFirstPage() {
 		super();
 		setPageComplete(false);
-		setTitle("Basic Composer Configuration");
-		setDescription("Create a new project from existing package");
+		setTitle(Messages.PackageProjectWizardFirstPage_Title);
+		setDescription(Messages.PackageProjectWizardFirstPage_Description);
 	}
 
 	@Override
@@ -60,14 +61,14 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 		composite.setLayout(initGridLayout(new GridLayout(1, false), false));
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
-		initialName = "";
+		initialName = ""; //$NON-NLS-1$
 		// create UI elements
 		nameGroup = new NameGroup(composite, initialName, getShell());
 		nameGroup.addObserver(this);
 		PHPLocationGroup = new LocationGroup(composite, nameGroup, getShell());
 
 		overrideComposer = new Button(composite, SWT.CHECK);
-		overrideComposer.setText("Override composer.json from target package");
+		overrideComposer.setText(Messages.PackageProjectWizardFirstPage_OverrideComposerJsonLabel);
 		overrideComposer.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -79,7 +80,7 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 		final Group group = new Group(composite, SWT.None);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setLayout(new GridLayout(3, false));
-		group.setText("");
+		group.setText(""); //$NON-NLS-1$
 
 		settingsGroup = new BasicSettingsGroup(group, getShell());
 		settingsGroup.setEnabled(false);
@@ -122,7 +123,7 @@ public class PackageProjectWizardFirstPage extends ComposerProjectWizardFirstPag
 	@Override
 	protected void setHelpContext(Control container) {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container,
-				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_firstpage");
+				ComposerUIPlugin.PLUGIN_ID + "." + "help_context_wizard_template_firstpage"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public boolean doesOverrideComposer() {

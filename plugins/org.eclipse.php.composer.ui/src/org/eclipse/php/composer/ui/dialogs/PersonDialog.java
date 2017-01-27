@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.composer.api.objects.Person;
 import org.eclipse.php.composer.ui.ComposerUIPluginConstants;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.SWT;
@@ -19,13 +21,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.php.composer.api.objects.Person;
+import org.eclipse.swt.widgets.*;
 
 public class PersonDialog extends Dialog {
 
@@ -54,7 +50,7 @@ public class PersonDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Person");
+		getShell().setText(Messages.PersonDialog_Title);
 		getShell().setImage(ComposerUIPluginImages.PERSON.createImage());
 
 		Composite contents = new Composite(parent, SWT.NONE);
@@ -64,7 +60,7 @@ public class PersonDialog extends Dialog {
 		GridData gd_lblName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblName.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblName.setLayoutData(gd_lblName);
-		lblName.setText("Name");
+		lblName.setText(Messages.PersonDialog_NameLabel);
 
 		name = new Text(contents, SWT.BORDER);
 		GridData gd_name = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -81,7 +77,7 @@ public class PersonDialog extends Dialog {
 
 		Label lblEmail = new Label(contents, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText("Email");
+		lblEmail.setText(Messages.PersonDialog_EmailLabel);
 
 		email = new Text(contents, SWT.BORDER);
 		email.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -96,7 +92,7 @@ public class PersonDialog extends Dialog {
 
 		Label lblHomepage = new Label(contents, SWT.NONE);
 		lblHomepage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblHomepage.setText("Homepage");
+		lblHomepage.setText(Messages.PersonDialog_HomepageLabel);
 
 		homepage = new Text(contents, SWT.BORDER);
 		homepage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -111,7 +107,7 @@ public class PersonDialog extends Dialog {
 
 		Label lblRole = new Label(contents, SWT.NONE);
 		lblRole.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblRole.setText("Role");
+		lblRole.setText(Messages.PersonDialog_RoleLabel);
 
 		role = new Text(contents, SWT.BORDER);
 		role.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

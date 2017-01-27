@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api;
 
@@ -80,7 +81,7 @@ public class ComposerPackage extends DistributedPackage {
 
 	@Override
 	protected List<String> getOwnProperties() {
-		String[] props = new String[] { "keywords", "bin" };
+		String[] props = new String[] { "keywords", "bin" }; //$NON-NLS-1$ //$NON-NLS-2$
 		List<String> list = new ArrayList<String>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
@@ -92,7 +93,7 @@ public class ComposerPackage extends DistributedPackage {
 	 * @return the homepage
 	 */
 	public String getHomepage() {
-		return getAsString("homepage");
+		return getAsString("homepage"); //$NON-NLS-1$
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class ComposerPackage extends DistributedPackage {
 	 *            the homepage to set
 	 */
 	public void setHomepage(String homepage) {
-		set("homepage", homepage);
+		set("homepage", homepage); //$NON-NLS-1$
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class ComposerPackage extends DistributedPackage {
 	 * @return the target-dir
 	 */
 	public String getTargetDir() {
-		return getAsString("target-dir");
+		return getAsString("target-dir"); //$NON-NLS-1$
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class ComposerPackage extends DistributedPackage {
 	 *            the target-dir to set
 	 */
 	public void setTargetDir(String targetDir) {
-		set("target-dir", targetDir);
+		set("target-dir", targetDir); //$NON-NLS-1$
 	}
 
 	/**
@@ -148,7 +149,7 @@ public class ComposerPackage extends DistributedPackage {
 	 * @return the normalized version
 	 */
 	public String getVersionNormalized() {
-		return getAsString("version_normalized");
+		return getAsString("version_normalized"); //$NON-NLS-1$
 	}
 
 	/**
@@ -166,7 +167,7 @@ public class ComposerPackage extends DistributedPackage {
 	 * @return the keywords
 	 */
 	public JsonArray getKeywords() {
-		return getAsArray("keywords");
+		return getAsArray("keywords"); //$NON-NLS-1$
 	}
 
 	/**
@@ -175,7 +176,7 @@ public class ComposerPackage extends DistributedPackage {
 	 * @return the minimum-stability
 	 */
 	public String getMinimumStability() {
-		String stabi = getAsString("minimum-stability");
+		String stabi = getAsString("minimum-stability"); //$NON-NLS-1$
 		if (stabi == null) {
 			return ComposerConstants.STABILITIES[0];
 		} else {
@@ -190,7 +191,7 @@ public class ComposerPackage extends DistributedPackage {
 	 *            the minimum-stability to set
 	 */
 	public void setMinimumStability(String minimumStability) {
-		set("minimum-stability", minimumStability);
+		set("minimum-stability", minimumStability); //$NON-NLS-1$
 	}
 
 	/**
@@ -251,7 +252,7 @@ public class ComposerPackage extends DistributedPackage {
 	 * @return the <code>bin</code> collection
 	 */
 	public JsonArray getBin() {
-		return getAsArray("bin");
+		return getAsArray("bin"); //$NON-NLS-1$
 	}
 
 	public String toString() {

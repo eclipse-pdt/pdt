@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.preferences.launcher;
 
@@ -39,10 +40,10 @@ public class ExecutableTester implements Runnable {
 		try {
 			ScriptExecutor executor = new ScriptExecutor();
 			CommandLine cmd = new CommandLine(phPexeItem.getExecutable());
-			cmd.addArgument("testexecutable");
+			cmd.addArgument("testexecutable"); //$NON-NLS-1$
 
 			Bundle bundle = Platform.getBundle(ComposerUIPlugin.PLUGIN_ID);
-			URL entry = bundle.getEntry("Resources/launcher");
+			URL entry = bundle.getEntry("Resources/launcher"); //$NON-NLS-1$
 
 			File file = new File(FileLocator.resolve(entry).toURI());
 

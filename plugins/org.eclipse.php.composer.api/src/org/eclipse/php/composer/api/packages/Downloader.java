@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.packages;
 
@@ -45,7 +46,7 @@ public class Downloader extends AbstractDownloader {
 			builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
 			SSLConnectionSocketFactory ssf = new SSLConnectionSocketFactory(builder.build());
 			Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory> create()
-					.register("http", PlainConnectionSocketFactory.getSocketFactory()).register("https", ssf).build();
+					.register("http", PlainConnectionSocketFactory.getSocketFactory()).register("https", ssf).build(); //$NON-NLS-1$ //$NON-NLS-2$
 			clientBuilder.setConnectionManager(new BasicHttpClientConnectionManager(r));
 		} catch (Exception e) {
 			for (DownloadListenerInterface listener : listeners) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api;
 
@@ -26,7 +27,7 @@ public abstract class DistributedPackage extends VersionedPackage {
 	 * @return the <code>type</code> value
 	 */
 	public String getType() {
-		return getAsString("type");
+		return getAsString("type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -36,7 +37,7 @@ public abstract class DistributedPackage extends VersionedPackage {
 	 *            new <code>type</code> value
 	 */
 	public void setType(String type) {
-		set("type", type);
+		set("type", type); //$NON-NLS-1$
 	}
 
 	/**

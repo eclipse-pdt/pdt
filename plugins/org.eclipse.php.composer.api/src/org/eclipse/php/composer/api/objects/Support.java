@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
@@ -24,7 +25,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * @return the email
 	 */
 	public String getEmail() {
-		return getAsString("email");
+		return getAsString("email"); //$NON-NLS-1$
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class Support extends JsonObject implements Cloneable {
 	 *            the email to set
 	 */
 	public void setEmail(String email) {
-		set("email", email);
+		set("email", email); //$NON-NLS-1$
 	}
 
 	/**
@@ -43,7 +44,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * @return the issues
 	 */
 	public String getIssues() {
-		return getAsString("issues");
+		return getAsString("issues"); //$NON-NLS-1$
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class Support extends JsonObject implements Cloneable {
 	 *            the issues to set
 	 */
 	public void setIssues(String issues) {
-		set("issues", issues);
+		set("issues", issues); //$NON-NLS-1$
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * @return the forum
 	 */
 	public String getForum() {
-		return getAsString("forum");
+		return getAsString("forum"); //$NON-NLS-1$
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class Support extends JsonObject implements Cloneable {
 	 *            the forum to set
 	 */
 	public void setForum(String forum) {
-		set("forum", forum);
+		set("forum", forum); //$NON-NLS-1$
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * @return the wiki
 	 */
 	public String getWiki() {
-		return getAsString("wiki");
+		return getAsString("wiki"); //$NON-NLS-1$
 	}
 
 	/**
@@ -91,7 +92,7 @@ public class Support extends JsonObject implements Cloneable {
 	 *            the wiki to set
 	 */
 	public void setWiki(String wiki) {
-		set("wiki", wiki);
+		set("wiki", wiki); //$NON-NLS-1$
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * @return the irc
 	 */
 	public String getIrc() {
-		return getAsString("irc");
+		return getAsString("irc"); //$NON-NLS-1$
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class Support extends JsonObject implements Cloneable {
 	 *            the irc to set
 	 */
 	public void setIrc(String irc) {
-		set("irc", irc);
+		set("irc", irc); //$NON-NLS-1$
 	}
 
 	/**
@@ -119,7 +120,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * @return the source
 	 */
 	public String getSource() {
-		return getAsString("source");
+		return getAsString("source"); //$NON-NLS-1$
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class Support extends JsonObject implements Cloneable {
 	 *            the source to set
 	 */
 	public void setSource(String source) {
-		set("source", source);
+		set("source", source); //$NON-NLS-1$
 	}
 
 	/*

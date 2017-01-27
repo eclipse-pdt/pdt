@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.controller;
 
@@ -51,7 +52,7 @@ public class PsrController extends StyledCellLabelProvider implements ITreeConte
 
 		if (obj instanceof Namespace) {
 			Namespace namespace = (Namespace) obj;
-			styledString.append(" (" + namespace.size() + ")", StyledString.COUNTER_STYLER);
+			styledString.append(" (" + namespace.size() + ")", StyledString.COUNTER_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
 			cell.setImage(namespaceImage);
 		} else {
 			cell.setImage(pathImage);

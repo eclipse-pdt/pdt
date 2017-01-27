@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
@@ -37,9 +38,9 @@ public class Scripts extends JsonObject {
 	}
 
 	public static String[] getEvents() {
-		return new String[] { "pre-install-cmd", "post-install-cmd", "pre-update-cmd", "post-update-cmd",
-				"pre-package-install", "post-package-install", "pre-package-update", "post-package-update",
-				"pre-package-uninstall", "post-package-uninstall" };
+		return new String[] { "pre-install-cmd", "post-install-cmd", "pre-update-cmd", "post-update-cmd", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				"pre-package-install", "post-package-install", "pre-package-update", "post-package-update", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				"pre-package-uninstall", "post-package-uninstall" }; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPreInstallCmd() {
-		return getAsArray("pre-install-cmd");
+		return getAsArray("pre-install-cmd"); //$NON-NLS-1$
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPostInstallCmd() {
-		return getAsArray("post-install-cmd");
+		return getAsArray("post-install-cmd"); //$NON-NLS-1$
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPreUpdateCmd() {
-		return getAsArray("pre-update-cmd");
+		return getAsArray("pre-update-cmd"); //$NON-NLS-1$
 	}
 
 	/**
@@ -124,7 +125,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPostUpdateCmd() {
-		return getAsArray("post-update-cmd");
+		return getAsArray("post-update-cmd"); //$NON-NLS-1$
 	}
 
 	/**
@@ -133,7 +134,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPrePackageInstall() {
-		return getAsArray("pre-package-install");
+		return getAsArray("pre-package-install"); //$NON-NLS-1$
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPostPackageInstall() {
-		return getAsArray("post-package-install");
+		return getAsArray("post-package-install"); //$NON-NLS-1$
 	}
 
 	/**
@@ -151,7 +152,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPrePackageUpdate() {
-		return getAsArray("pre-package-update");
+		return getAsArray("pre-package-update"); //$NON-NLS-1$
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPostPackageUpdate() {
-		return getAsArray("post-package-update");
+		return getAsArray("post-package-update"); //$NON-NLS-1$
 	}
 
 	/**
@@ -169,7 +170,7 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPrePackageUninstall() {
-		return getAsArray("pre-package-uninstall");
+		return getAsArray("pre-package-uninstall"); //$NON-NLS-1$
 	}
 
 	/**
@@ -178,6 +179,6 @@ public class Scripts extends JsonObject {
 	 * @return the scripts
 	 */
 	public JsonArray getPostPackageUninstall() {
-		return getAsArray("post-package-uninstall");
+		return getAsArray("post-package-uninstall"); //$NON-NLS-1$
 	}
 }

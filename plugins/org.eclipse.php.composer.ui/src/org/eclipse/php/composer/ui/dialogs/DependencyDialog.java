@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.composer.api.VersionedPackage;
 import org.eclipse.php.composer.ui.ComposerUIPluginConstants;
 import org.eclipse.php.composer.ui.parts.composer.VersionSuggestion;
 import org.eclipse.php.composer.ui.utils.WidgetFactory;
@@ -20,13 +22,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.php.composer.api.VersionedPackage;
+import org.eclipse.swt.widgets.*;
 
 public class DependencyDialog extends Dialog {
 
@@ -56,7 +52,7 @@ public class DependencyDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Edit Dependency");
+		getShell().setText(Messages.DependencyDialog_Title);
 
 		Composite contents = new Composite(parent, SWT.NONE);
 		contents.setLayout(new GridLayout(2, false));
@@ -68,7 +64,7 @@ public class DependencyDialog extends Dialog {
 		GridData gd_lblName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblName.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblName.setLayoutData(gd_lblName);
-		lblName.setText("Name");
+		lblName.setText(Messages.DependencyDialog_NameLabel);
 
 		name = new Text(contents, SWT.BORDER);
 		GridData gd_name = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -81,7 +77,7 @@ public class DependencyDialog extends Dialog {
 
 		Label lblVersion = new Label(contents, SWT.NONE);
 		lblVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblVersion.setText("Version");
+		lblVersion.setText(Messages.DependencyDialog_VersionLabel);
 
 		version = new Text(contents, SWT.BORDER);
 		version.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
