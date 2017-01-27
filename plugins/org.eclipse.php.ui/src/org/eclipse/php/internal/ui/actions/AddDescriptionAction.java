@@ -359,7 +359,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			ITextRegion region = sdRegion.getFirstRegion();
 			if (region.getType() == PHPRegionContext.PHP_OPEN) {
 				// File's content starts with '<?PHP' tag
-				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStart());
+				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStartOffset());
 				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 					phpScriptRegion = (IPhpScriptRegion) region;
 					try {
@@ -375,7 +375,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 				}
 			} else if (region.getType() == DOMRegionContext.XML_DECLARATION_OPEN) {
 				// File's content starts with HTML code
-				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStart());
+				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStartOffset());
 				if (region != null) {
 					phpScriptRegion = null;
 					textRegion = (ITextRegion) region;

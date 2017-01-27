@@ -63,7 +63,7 @@ public final class TextSequenceUtilities {
 		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			try {
 				return ((IPhpScriptRegion) tRegion)
-						.getPhpTokenType(sourceOffset - source.getStart() - tRegion.getStart());
+						.getPhpTokenType(sourceOffset - source.getStartOffset() - tRegion.getStart());
 			} catch (BadLocationException e) {
 				assert false;
 				return null;
