@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.json;
 
@@ -26,8 +27,8 @@ public class JsonFormatter {
 	}
 
 	private static String postProcessing(String json) {
-		json = json.replace("[\n{", "[{");
-		json = json.replace("},\n{", "}, {");
+		json = json.replace("[\n{", "[{"); //$NON-NLS-1$ //$NON-NLS-2$
+		json = json.replace("},\n{", "}, {"); //$NON-NLS-1$ //$NON-NLS-2$
 		return json;
 	}
 
@@ -46,17 +47,17 @@ public class JsonFormatter {
 		private void visit(final List<Object> array, final int indent) {
 			final int length = array.size();
 			if (length == 0) {
-				write("[]", 0);
+				write("[]", 0); //$NON-NLS-1$
 			} else {
-				writeln("[", 0);
+				writeln("[", 0); //$NON-NLS-1$
 				for (int i = 0; i < length; i++) {
 					visit(array.get(i), indent + 1);
 					if (i < length - 1) {
-						writeln(",", 0);
+						writeln(",", 0); //$NON-NLS-1$
 					}
 				}
-				writeln("", 0);
-				write("]", indent);
+				writeln("", 0); //$NON-NLS-1$
+				write("]", indent); //$NON-NLS-1$
 			}
 
 		}
@@ -64,20 +65,20 @@ public class JsonFormatter {
 		private void visit(final Map<String, Object> obj, int indent) {
 			final int length = obj.size();
 			if (length == 0) {
-				write("{}", 0);
+				write("{}", 0); //$NON-NLS-1$
 			} else {
-				writeln("{", 0);
+				writeln("{", 0); //$NON-NLS-1$
 				final Iterator<String> keys = ((Set<String>) obj.keySet()).iterator();
 				while (keys.hasNext()) {
 					final String key = keys.next();
-					write("\"" + escape(key) + "\" : ", indent + 1);
+					write("\"" + escape(key) + "\" : ", indent + 1); //$NON-NLS-1$ //$NON-NLS-2$
 					visit(obj.get(key), indent + 1);
 					if (keys.hasNext()) {
-						writeln(",", 0);
+						writeln(",", 0); //$NON-NLS-1$
 					}
 				}
-				writeln("", 0);
-				write("}", indent);
+				writeln("", 0); //$NON-NLS-1$
+				write("}", indent); //$NON-NLS-1$
 			}
 
 		}
@@ -93,7 +94,7 @@ public class JsonFormatter {
 					indent = 0;
 				}
 				if (object instanceof String) {
-					write("\"" + escape(String.valueOf(object)) + "\"", indent);
+					write("\"" + escape(String.valueOf(object)) + "\"", indent); //$NON-NLS-1$ //$NON-NLS-2$
 				} else if (object instanceof Boolean || object instanceof Number) {
 					write(String.valueOf(object), indent);
 				} else {
@@ -121,7 +122,7 @@ public class JsonFormatter {
 
 		private static String escape(String s) {
 			if (s == null || s.isEmpty()) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			StringBuffer sb = new StringBuffer();
 
@@ -129,25 +130,25 @@ public class JsonFormatter {
 				char ch = s.charAt(i);
 				switch (ch) {
 				case '"':
-					sb.append("\\\"");
+					sb.append("\\\""); //$NON-NLS-1$
 					break;
 				case '\\':
-					sb.append("\\\\");
+					sb.append("\\\\"); //$NON-NLS-1$
 					break;
 				case '\b':
-					sb.append("\\b");
+					sb.append("\\b"); //$NON-NLS-1$
 					break;
 				case '\f':
-					sb.append("\\f");
+					sb.append("\\f"); //$NON-NLS-1$
 					break;
 				case '\n':
-					sb.append("\\n");
+					sb.append("\\n"); //$NON-NLS-1$
 					break;
 				case '\r':
-					sb.append("\\r");
+					sb.append("\\r"); //$NON-NLS-1$
 					break;
 				case '\t':
-					sb.append("\\t");
+					sb.append("\\t"); //$NON-NLS-1$
 					break;
 				// see
 				// https://github.com/pulse00/Composer-Eclipse-Plugin/issues/51
@@ -159,7 +160,7 @@ public class JsonFormatter {
 					if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
 							|| (ch >= '\u2000' && ch <= '\u20FF')) {
 						String ss = Integer.toHexString(ch);
-						sb.append("\\u");
+						sb.append("\\u"); //$NON-NLS-1$
 						for (int k = 0; k < 4 - ss.length(); k++) {
 							sb.append('0');
 						}

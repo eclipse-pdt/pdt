@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,14 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.repositories;
 
 public class PearRepository extends Repository implements Cloneable {
 
 	public PearRepository() {
-		super("pear");
+		super("pear"); //$NON-NLS-1$
 	}
 
 	/**
@@ -22,7 +23,7 @@ public class PearRepository extends Repository implements Cloneable {
 	 * @return the vendor-alias
 	 */
 	public String getVendorAlias() {
-		return getAsString("vendor-alias");
+		return getAsString("vendor-alias"); //$NON-NLS-1$
 	}
 
 	/**
@@ -32,7 +33,7 @@ public class PearRepository extends Repository implements Cloneable {
 	 *            the vendor-alias to set
 	 */
 	public void setVendorAlias(String vendorAlias) {
-		set("vendor-alias", vendorAlias);
+		set("vendor-alias", vendorAlias); //$NON-NLS-1$
 	}
 
 	/*

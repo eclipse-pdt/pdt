@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.actions;
 
@@ -16,17 +17,17 @@ import org.eclipse.php.composer.ui.editor.composer.DependencyGraphPage;
 
 public class ToggleDevAction extends Action {
 
-	public static final String ID = "composer.dpg.toggle";
+	public static final String ID = "composer.dpg.toggle"; //$NON-NLS-1$
 
 	private boolean showDev;
 	private DependencyGraphPage graphPage;
 
 	public ToggleDevAction(DependencyGraphPage graphPage) {
-		super("Toggle dev packages");
+		super(Messages.ToggleDevAction_Text);
 		this.graphPage = graphPage;
 
-		setDescription("Toggle dev packages");
-		setToolTipText("Toggle dev packages");
+		setDescription(Messages.ToggleDevAction_Description);
+		setToolTipText(Messages.ToggleDevAction_ToolTipText);
 		setId(ID);
 		DLTKPluginImages.setLocalImageDescriptors(this, "th_showqualified.png"); //$NON-NLS-1$
 	}

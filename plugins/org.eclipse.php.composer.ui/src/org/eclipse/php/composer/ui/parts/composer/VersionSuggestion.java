@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.parts.composer;
 
@@ -119,7 +120,7 @@ public class VersionSuggestion {
 
 		// suggestions
 		Group suggestions = new Group(body, SWT.SHADOW_IN);
-		suggestions.setText("Most Recent Version Suggestions");
+		suggestions.setText(Messages.VersionSuggestion_SuggestionsLabel);
 		suggestions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		suggestions.setLayout(new GridLayout(2, true));
 		suggestions.setBackgroundMode(SWT.INHERIT_DEFAULT);
@@ -132,7 +133,7 @@ public class VersionSuggestion {
 		recentMajor.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				lastUpdate = RECENT;
-				version.setVersion("~" + recentMajor.getData());
+				version.setVersion("~" + recentMajor.getData()); //$NON-NLS-1$
 			}
 		});
 
@@ -143,13 +144,13 @@ public class VersionSuggestion {
 		recentMinor.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				lastUpdate = RECENT;
-				version.setVersion("~" + recentMajor.getData() + "." + recentMinor.getData());
+				version.setVersion("~" + recentMajor.getData() + "." + recentMinor.getData()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
 
 		// custom
 		custom = new Group(body, SWT.SHADOW_ETCHED_IN);
-		custom.setText("Custom");
+		custom.setText(Messages.VersionSuggestion_CustomLabel);
 		custom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		custom.setLayout(new GridLayout(2, false));
 		custom.setBackgroundMode(SWT.INHERIT_DEFAULT);
@@ -189,24 +190,24 @@ public class VersionSuggestion {
 		WidgetHelper.trimComposite(right, -5, -5, -5, -5, 0, 0);
 
 		Label constraintsLbl = factory.createLabel(right, SWT.NO_BACKGROUND | SWT.TRANSPARENT);
-		constraintsLbl.setText("Constraints:");
+		constraintsLbl.setText(Messages.VersionSuggestion_ConstraintsLabel);
 		constraintsLbl.setBackground(custom.getBackground());
 		constraintsLbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
 		noConstraint = factory.createButton(right, SWT.RADIO | SWT.NO_BACKGROUND);
-		noConstraint.setText("None");
+		noConstraint.setText(Messages.VersionSuggestion_NoneLabel);
 		noConstraint.setBackground(custom.getBackground());
 		noConstraint.setSelection(true);
 		noConstraint.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (prepareCustomVersion()) {
-					customVersion.setConstraint("");
+					customVersion.setConstraint(""); //$NON-NLS-1$
 					version.from(customVersion);
 				}
 			}
 		});
 
-		for (String constraint : new String[] { "~", ">", ">=", "!=", "<", ">=" }) {
+		for (String constraint : new String[] { "~", ">", ">=", "!=", "<", ">=" }) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			Button c = factory.createButton(right, SWT.RADIO | SWT.TRANSPARENT);
 			c.setText(constraint);
 			c.setBackground(custom.getBackground());
@@ -223,14 +224,14 @@ public class VersionSuggestion {
 
 		// Stability Override
 		Label stabilityLbl = factory.createLabel(right);
-		stabilityLbl.setText("Override Stability:");
+		stabilityLbl.setText(Messages.VersionSuggestion_StabilityLabel);
 		stabilityLbl.setBackground(custom.getBackground());
 		gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
 		gd.verticalIndent = 10;
 		stabilityLbl.setLayoutData(gd);
 
 		stabilityOverride = factory.createCombo(right, SWT.READ_ONLY | SWT.FLAT);
-		stabilityOverride.setItems((String[]) ArrayUtils.addAll(new String[] { "" }, ComposerConstants.STABILITIES));
+		stabilityOverride.setItems((String[]) ArrayUtils.addAll(new String[] { "" }, ComposerConstants.STABILITIES)); //$NON-NLS-1$
 		stabilityOverride.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		stabilityOverride.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -258,13 +259,14 @@ public class VersionSuggestion {
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				if (uiFinished) {
-					recentMajor
-							.setText("Major: " + (dataArrived && majorVersion != null ? "~" + majorVersion : "n.a."));
+					recentMajor.setText(Messages.VersionSuggestion_MajorLabel + (dataArrived && majorVersion != null
+							? "~" + majorVersion : Messages.VersionSuggestion_NAValue)); //$NON-NLS-1$
 					recentMajor.setEnabled(dataArrived && majorVersion != null);
 					recentMajor.setData(majorVersion);
 
-					recentMinor.setText("Minor: " + (dataArrived && majorVersion != null && minorVersion != null
-							? "~" + majorVersion + "." + minorVersion : "n.a."));
+					recentMinor.setText(Messages.VersionSuggestion_MinorLabel
+							+ (dataArrived && majorVersion != null && minorVersion != null
+									? "~" + majorVersion + "." + minorVersion : Messages.VersionSuggestion_NAValue)); //$NON-NLS-1$ //$NON-NLS-2$
 					recentMinor.setEnabled(dataArrived && minorVersion != null);
 					recentMinor.setData(minorVersion);
 
@@ -290,7 +292,7 @@ public class VersionSuggestion {
 	private void updateTarget() {
 		updatingTarget = true;
 		if (lastUpdate == RECENT
-				|| (version.getMajor() != null && !version.getMajor().isEmpty() && version.getMajor() != "null")) {
+				|| (version.getMajor() != null && !version.getMajor().isEmpty() && version.getMajor() != "null")) { //$NON-NLS-1$
 
 			String v = version.toString();
 			if (v != null) {
@@ -337,7 +339,7 @@ public class VersionSuggestion {
 				Version v = (Version) obj;
 
 				StyledString styledString = new StyledString(v.toString());
-				styledString.append(" : " + v.getStability(), StyledString.QUALIFIER_STYLER);
+				styledString.append(" : " + v.getStability(), StyledString.QUALIFIER_STYLER); //$NON-NLS-1$
 
 				cell.setText(styledString.toString());
 				cell.setStyleRanges(styledString.getStyleRanges());

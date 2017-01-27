@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
@@ -55,7 +56,7 @@ public class PsrDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Edit Namespace");
+		getShell().setText(Messages.PsrDialog_Title);
 		getShell().setImage(ComposerUIPluginImages.EVENT.createImage());
 
 		Composite contents = new Composite(parent, SWT.NONE);
@@ -68,7 +69,7 @@ public class PsrDialog extends Dialog {
 		GridData gd_lblEvent = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblEvent.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblEvent.setLayoutData(gd_lblEvent);
-		lblEvent.setText("Namespace");
+		lblEvent.setText(Messages.PsrDialog_NamespaceLabel);
 
 		namespaceControl = new Text(contents, SWT.BORDER);
 		GridData gd_eventControl = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
@@ -91,7 +92,7 @@ public class PsrDialog extends Dialog {
 
 		Label lblHandler = new Label(contents, SWT.NONE);
 		lblHandler.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		lblHandler.setText("Paths");
+		lblHandler.setText(Messages.PsrDialog_PathsLabel);
 
 		PathController controller = new PathController();
 		pathViewer = new TableViewer(contents, SWT.BORDER | SWT.FULL_SELECTION);
@@ -113,7 +114,7 @@ public class PsrDialog extends Dialog {
 		Button btnEdit = new Button(buttons, SWT.NONE);
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		btnEdit.setText("Edit...");
+		btnEdit.setText(Messages.PsrDialog_EditButton);
 		btnEdit.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				List<IFolder> folders = new ArrayList<IFolder>();
@@ -124,7 +125,8 @@ public class PsrDialog extends Dialog {
 					}
 				}
 				CheckedTreeSelectionDialog dialog = ResourceDialog.createMulti(pathViewer.getTable().getShell(),
-						"Namespace Paths", "Select folders:", new Class[] { IFolder.class }, project, folders);
+						Messages.PsrDialog_SelectionDialogTitle, Messages.PsrDialog_SelectionDialogMessage,
+						new Class[] { IFolder.class }, project, folders);
 
 				if (dialog.open() == Dialog.OK) {
 					namespace.clear();
@@ -139,7 +141,7 @@ public class PsrDialog extends Dialog {
 
 		Button btnRemove = new Button(buttons, SWT.NONE);
 		btnRemove.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		btnRemove.setText("Remove");
+		btnRemove.setText(Messages.PsrDialog_RemoveButton);
 
 		// XXX: add/remove listener on dialog open/close
 		btnRemove.addSelectionListener(new SelectionAdapter() {
@@ -167,7 +169,7 @@ public class PsrDialog extends Dialog {
 			public void propertyChange(PropertyChangeEvent e) {
 				// "namespace" can be modified afterwards by
 				// PsrSection#handleEdit()
-				if (e.getPropertyName().contains("#")) {
+				if (e.getPropertyName().contains("#")) { //$NON-NLS-1$
 					if (pathViewer.getControl().isDisposed()) {
 						return;
 					}

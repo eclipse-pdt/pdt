@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.buildpath;
 
@@ -17,11 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -53,12 +50,12 @@ public class BuildPathManager {
 	public void update(IProgressMonitor monitor) throws CoreException {
 		// check for valid composer json, stop processing when invalid
 		if (!composerProject.isValidComposerJson()) {
-			Logger.log(Logger.INFO, "Stop BuildPathManager, composer.json invalid");
+			Logger.log(Logger.INFO, "Stop BuildPathManager, composer.json invalid"); //$NON-NLS-1$
 			return;
 		}
 
 		vendorPath = composerProject.getProject().getFullPath().append(composerProject.getVendorDir());
-		composerPath = vendorPath.append("composer");
+		composerPath = vendorPath.append("composer"); //$NON-NLS-1$
 
 		IProject project = composerProject.getProject();
 		IScriptProject scriptProject = composerProject.getScriptProject();
@@ -70,7 +67,7 @@ public class BuildPathManager {
 		IPath[] inclusions;
 
 		try {
-			String encoded = prefs.get(ComposerPreferenceConstants.BUILDPATH_INCLUDES_EXCLUDES, "");
+			String encoded = prefs.get(ComposerPreferenceConstants.BUILDPATH_INCLUDES_EXCLUDES, ""); //$NON-NLS-1$
 			exclusions = scriptProject.decodeBuildpathEntry(encoded).getExclusionPatterns();
 			inclusions = scriptProject.decodeBuildpathEntry(encoded).getInclusionPatterns();
 		} catch (Exception e) {
@@ -178,7 +175,7 @@ public class BuildPathManager {
 			// find the applying exclusion patterns for the new entry
 			for (IPath exclusion : exclusions) {
 
-				if (!exclusion.toString().startsWith("*")) {
+				if (!exclusion.toString().startsWith("*")) { //$NON-NLS-1$
 					exclusion = composerProject.getProject().getFullPath().append(exclusion);
 				}
 
@@ -194,7 +191,7 @@ public class BuildPathManager {
 				}
 
 				// if exclusion starts with wildcard, add also
-				else if (exclusion.toString().startsWith("*")) {
+				else if (exclusion.toString().startsWith("*")) { //$NON-NLS-1$
 					ex.add(exclusion);
 				}
 			}

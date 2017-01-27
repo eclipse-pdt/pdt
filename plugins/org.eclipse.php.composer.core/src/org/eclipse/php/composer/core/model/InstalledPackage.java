@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.model;
 
@@ -26,10 +27,9 @@ import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.log.Logger;
-
-import org.eclipse.php.composer.api.ComposerPackage;
 
 /**
  * Represents a package inside installed(_dev).json. This class is used to
@@ -66,10 +66,10 @@ public class InstalledPackage extends ComposerPackage {
 	public File getLocalFile() {
 		if (localFile == null) {
 			IPath location = ComposerPlugin.getDefault().getStateLocation();
-			IPath localPath = location.append("packages").append(getPath()).append(version);
+			IPath localPath = location.append("packages").append(getPath()).append(version); //$NON-NLS-1$
 			localFile = localPath.toFile();
 
-			Logger.debug("Retrieving local filepath for " + name + ":");
+			Logger.debug("Retrieving local filepath for " + name + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 			Logger.debug(localFile.getAbsolutePath());
 		}
 
@@ -100,10 +100,7 @@ public class InstalledPackage extends ComposerPackage {
 
 		IPath fullPath = EnvironmentPathUtils.getFullPath(EnvironmentManager.getLocalEnvironment(), libPath);
 
-		IPath[] excludes = new IPath[] {
-				new Path(".git/")/*
-									 * , new Path("docs/"), new Path("tests/")
-									 */ };
+		IPath[] excludes = new IPath[] { new Path(".git/") }; //$NON-NLS-1$
 		return DLTKCore.newLibraryEntry(fullPath, new IAccessRule[0], new IBuildpathAttribute[0], new IPath[0],
 				excludes, false, true);
 	}
@@ -118,6 +115,6 @@ public class InstalledPackage extends ComposerPackage {
 	}
 
 	public String getFullName() {
-		return String.format("%s (%s)", name, version);
+		return String.format("%s (%s)", name, version); //$NON-NLS-1$
 	}
 }

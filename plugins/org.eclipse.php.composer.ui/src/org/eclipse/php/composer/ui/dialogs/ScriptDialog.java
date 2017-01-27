@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
@@ -54,7 +55,7 @@ public class ScriptDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Edit Script");
+		getShell().setText(Messages.ScriptDialog_Title);
 		getShell().setImage(ComposerUIPluginImages.EVENT.createImage());
 
 		Composite contents = new Composite(parent, SWT.NONE);
@@ -64,7 +65,7 @@ public class ScriptDialog extends Dialog {
 		GridData gd_lblEvent = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_lblEvent.widthHint = ComposerUIPluginConstants.DIALOG_LABEL_WIDTH;
 		lblEvent.setLayoutData(gd_lblEvent);
-		lblEvent.setText("Event");
+		lblEvent.setText(Messages.ScriptDialog_EventLabel);
 
 		eventControl = new Combo(contents, SWT.READ_ONLY);
 		eventControl.setEnabled(eventEnabled);
@@ -87,7 +88,7 @@ public class ScriptDialog extends Dialog {
 
 		Label lblHandler = new Label(contents, SWT.NONE);
 		lblHandler.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblHandler.setText("Handler");
+		lblHandler.setText(Messages.ScriptDialog_HandlerLabel);
 
 		handlerControl = new Text(contents, SWT.BORDER);
 		handlerControl.setEnabled(handlerEnabled);

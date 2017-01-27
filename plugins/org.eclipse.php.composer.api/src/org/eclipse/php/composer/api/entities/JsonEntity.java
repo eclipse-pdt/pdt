@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.entities;
 
@@ -20,13 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,12 +66,12 @@ public abstract class JsonEntity extends Entity {
 					if (obj != null) {
 						obj.addPropertyChangeListener(new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent e) {
-								firePropertyChange(prop + "." + e.getPropertyName(), e.getOldValue(), e.getNewValue());
+								firePropertyChange(prop + "." + e.getPropertyName(), e.getOldValue(), e.getNewValue()); //$NON-NLS-1$
 
 								// append to sort order - use reflection
 								if (sender instanceof AbstractJsonObject) {
 									try {
-										Method mtd = JsonEntity.class.getDeclaredMethod("appendSortOrder",
+										Method mtd = JsonEntity.class.getDeclaredMethod("appendSortOrder", //$NON-NLS-1$
 												String.class);
 										mtd.setAccessible(true);
 										mtd.invoke(sender, prop);
@@ -170,7 +165,7 @@ public abstract class JsonEntity extends Entity {
 			if (coll.size() > 0) {
 				// call buildJson - use reflection
 				try {
-					Method mtd = JsonEntity.class.getDeclaredMethod("buildJson");
+					Method mtd = JsonEntity.class.getDeclaredMethod("buildJson"); //$NON-NLS-1$
 					return mtd.invoke(coll);
 				} catch (Exception e) {
 					e.printStackTrace();

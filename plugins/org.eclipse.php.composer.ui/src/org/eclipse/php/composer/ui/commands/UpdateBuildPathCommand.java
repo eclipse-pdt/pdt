@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.commands;
 
@@ -40,7 +41,7 @@ public class UpdateBuildPathCommand extends AbstractHandler {
 				IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project);
 
 				final BuildPathManager bpManager = new BuildPathManager(composerProject);
-				final String title = "Update BuildPath";
+				final String title = Messages.UpdateBuildPathCommand_JobName;
 				Job job = new Job(title) {
 
 					@Override

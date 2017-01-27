@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api;
 
@@ -57,7 +58,7 @@ public class MinimalPackage extends JsonObject {
 	 * @return the <code>name</code> value
 	 */
 	public String getName() {
-		return getAsString("name");
+		return getAsString("name"); //$NON-NLS-1$
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class MinimalPackage extends JsonObject {
 	 *            the new <code>name</code> value
 	 */
 	public void setName(String name) {
-		set("name", name);
+		set("name", name); //$NON-NLS-1$
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class MinimalPackage extends JsonObject {
 	 * @return
 	 */
 	public String getDescription() {
-		return getAsString("description");
+		return getAsString("description"); //$NON-NLS-1$
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class MinimalPackage extends JsonObject {
 	 *            the new <code>description</code> value
 	 */
 	public void setDescription(String description) {
-		set("description", description);
+		set("description", description); //$NON-NLS-1$
 	}
 
 }

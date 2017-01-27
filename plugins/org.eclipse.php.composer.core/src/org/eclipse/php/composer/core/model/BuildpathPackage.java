@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,12 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.model;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,11 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.util.GenericXMLWriter;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IAccessRule;
-import org.eclipse.dltk.core.IBuildpathAttribute;
-import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.util.Messages;
 import org.eclipse.dltk.internal.core.util.Util;
@@ -56,7 +50,7 @@ public class BuildpathPackage {
 	public static String serialize(IBuildpathEntry[] entries, boolean isSystemLibrary) throws IOException {
 
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(s, "UTF8"); //$NON-NLS-1$
+		OutputStreamWriter writer = new OutputStreamWriter(s, StandardCharsets.UTF_8); // $NON-NLS-1$
 
 		XMLWriter xmlWriter = new XMLWriter(writer, null, true);
 
@@ -110,7 +104,7 @@ public class BuildpathPackage {
 		writer.flush();
 		writer.close();
 		xmlWriter.close();
-		return s.toString("UTF8");//$NON-NLS-1$
+		return s.toString(StandardCharsets.UTF_8.name());
 
 	}
 

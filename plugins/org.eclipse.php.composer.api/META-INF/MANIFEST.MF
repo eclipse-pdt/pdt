@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Composer API Plugin
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.php.composer.api
 Bundle-Version: 4.3.0.qualifier
-Bundle-Vendor: Eclipse PDT
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.apache.commons.logging,
  org.apache.httpcomponents.httpclient;bundle-version="4.3.6",

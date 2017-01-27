@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.preferences;
 
@@ -43,32 +44,32 @@ public class ComposerConfigurationBlock extends LauncherConfigurationBlock {
 
 	@Override
 	protected String getHeaderLabel() {
-		return "Select the PHP executable to be used for running composer binaries.";
+		return Messages.ComposerConfigurationBlock_HeaderLabel;
 	}
 
 	@Override
 	protected String getProjectChoiceLabel() {
-		return "Download composer per project";
+		return Messages.ComposerConfigurationBlock_ProjectChoiceLabel;
 	}
 
 	@Override
 	protected String getGlobalChoiceLabel() {
-		return "Use global composer";
+		return Messages.ComposerConfigurationBlock_GlobalChoiceLabel;
 	}
 
 	@Override
 	protected String getScriptLabel() {
-		return "Composer binary";
+		return Messages.ComposerConfigurationBlock_BinaryLabel;
 	}
 
 	@Override
 	protected String getButtonGroupLabel() {
-		return "Composer selection";
+		return Messages.ComposerConfigurationBlock_SelectionLabel;
 	}
 
 	@Override
 	protected String getScriptFieldLabel() {
-		return "Custom composer binary";
+		return Messages.ComposerConfigurationBlock_BinaryLocationLabel;
 	}
 
 	@Override

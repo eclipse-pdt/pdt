@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
@@ -32,7 +33,7 @@ public class MissingExecutableDialog extends ErrorDialog {
 	private final Shell shell;
 
 	public MissingExecutableDialog(Shell parentShell, IStatus info) {
-		super(parentShell, "Problem running composer", "Unable to run composer.", info,
+		super(parentShell, Messages.MissingExecutableDialog_Title, Messages.MissingExecutableDialog_Message, info,
 				IStatus.CANCEL | IStatus.ERROR | IStatus.OK | IStatus.WARNING);
 		shell = parentShell;
 	}
@@ -66,9 +67,8 @@ public class MissingExecutableDialog extends ErrorDialog {
 				}
 			}
 		});
-		link.setText(
-				"You need to <a>configure a PHP executable</a> in your preferences in order \nfor the Composer plugin to be able to run composer.");
-		link.setToolTipText("Open the PHP preference page to configure the available PHP executables");
+		link.setText(Messages.MissingExecutableDialog_LinkText);
+		link.setToolTipText(Messages.MissingExecutableDialog_LinkToolTipText);
 		Dialog.applyDialogFont(link);
 
 		return link;

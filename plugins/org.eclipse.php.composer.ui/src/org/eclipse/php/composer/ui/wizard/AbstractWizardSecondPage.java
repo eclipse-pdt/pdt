@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard;
 
@@ -35,6 +36,7 @@ import org.eclipse.dltk.ui.wizards.CapabilityConfigurationPage;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.VersionedPackage;
 import org.eclipse.php.composer.api.objects.Namespace;
@@ -136,7 +138,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		}
 		launcher.addResponseListener(new ConsoleResponseHandler());
 		try {
-			launcher.launch("dumpautoload");
+			launcher.launch("dumpautoload"); //$NON-NLS-1$
 			getProject().refreshLocal(IProject.DEPTH_INFINITE, monitor);
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -149,7 +151,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		if (prefs.getBoolean(ComposerPreferenceConstants.USE_PROJECT_PHAR)) {
 			downloader = new PharDownloader();
 			InputStream resource = downloader.download();
-			IFile file = getProject().getFile("composer.phar");
+			IFile file = getProject().getFile("composer.phar"); //$NON-NLS-1$
 			file.create(resource, true, monitor);
 			file.refreshLocal(IResource.DEPTH_ZERO, monitor);
 		}
@@ -185,14 +187,14 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		}
 
 		if (file.exists()) {
-			Logger.debug("composer.json already exists in the location");
+			Logger.debug("composer.json already exists in the location"); //$NON-NLS-1$
 			return;
 		}
 
 		ComposerPackage composerPackage = firstPage.getPackage();
 		VersionedPackage phpVersion = new VersionedPackage();
-		phpVersion.setName("php");
-		phpVersion.setVersion(">=" + firstPage.getPHPVersionValue().getAlias().replace("php", ""));
+		phpVersion.setName("php"); //$NON-NLS-1$
+		phpVersion.setVersion(">=" + firstPage.getPHPVersionValue().getAlias().replace("php", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		composerPackage.getRequire().add(phpVersion);
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(composerPackage.toJson().getBytes());
@@ -259,7 +261,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			monitor.beginTask("Initializing project", 70);
+			monitor.beginTask(Messages.AbstractWizardSecondPage_InitializingProjectTaskName, 70);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
@@ -286,7 +288,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 			List cpEntries = new ArrayList();
 			cpEntries.add(DLTKCore.newSourceEntry(projectPath.append(srcPath)));
 			cpEntries.add(DLTKCore.newContainerEntry(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH));
-			cpEntries.add(DLTKCore.newSourceEntry(projectPath.append("vendor").append("composer")));
+			cpEntries.add(DLTKCore.newSourceEntry(projectPath.append("vendor").append("composer"))); //$NON-NLS-1$ //$NON-NLS-2$
 
 			buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 			if (monitor.isCanceled()) {
@@ -308,7 +310,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 	public void performFinish(IProgressMonitor monitor) throws CoreException, InterruptedException {
 		try {
 			beforeFinish(monitor);
-			monitor.beginTask("Initializing buildpaths", 10);
+			monitor.beginTask(Messages.AbstractWizardSecondPage_InitializingBuildPathsTaskName, 10);
 			if (getProject() == null || !getProject().exists()) {
 				updateProject(new SubProgressMonitor(monitor, 3));
 			}
@@ -327,12 +329,12 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 	protected void refreshProject(String projectName) {
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		if (project == null) {
-			Logger.log(ERROR, "Error finishing create-project installation. Could not obtain project from workspace: "
+			Logger.log(ERROR, "Error finishing create-project installation. Could not obtain project from workspace: " //$NON-NLS-1$
 					+ projectName);
 			return;
 		}
 
-		new WorkspaceJob("Refreshing " + projectName) {
+		new WorkspaceJob(NLS.bind(Messages.AbstractWizardSecondPage_RefreshingProjectJobName, projectName)) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);

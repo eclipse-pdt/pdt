@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api;
 
@@ -113,10 +114,10 @@ public class RepositoryPackage extends DistributedPackage {
 	 */
 	public String getPackageName(String version) throws Exception {
 		if (!this.versions.has(version)) {
-			throw new Exception("Invalid version " + version + " for package " + getName());
+			throw new Exception("Invalid version " + version + " for package " + getName()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		return String.format("%s:%s", getName(), version);
+		return String.format("%s:%s", getName(), version); //$NON-NLS-1$
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class RepositoryPackage extends DistributedPackage {
 	 * @return the repository
 	 */
 	public String getRepository() {
-		return getAsString("repository");
+		return getAsString("repository"); //$NON-NLS-1$
 	}
 
 	/**
@@ -142,6 +143,6 @@ public class RepositoryPackage extends DistributedPackage {
 	 *            the repository to set
 	 */
 	public void setRepository(String repository) {
-		set("repository", repository);
+		set("repository", repository); //$NON-NLS-1$
 	}
 }

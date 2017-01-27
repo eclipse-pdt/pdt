@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -23,6 +24,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.VersionedPackage;
 import org.eclipse.php.composer.api.collection.ComposerPackages;
@@ -51,8 +53,8 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class ComposerFormEditor extends SharedHeaderFormEditor {
 
-	public static final String ID = "org.eclipse.php.composer.ui.editor.composer.ComposerEditor";
-	public static final String MSG_PARSE_ERROR = "org.eclipse.php.composer.ui.editor.composer.ParseException";
+	public static final String ID = "org.eclipse.php.composer.ui.editor.composer.ComposerEditor"; //$NON-NLS-1$
+	public static final String MSG_PARSE_ERROR = "org.eclipse.php.composer.ui.editor.composer.ParseException"; //$NON-NLS-1$
 
 	protected boolean dirty = false;
 	protected ComposerPackage composerPackage = null;
@@ -144,14 +146,14 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		composerPackage = new ComposerPackage();
 		composerPackage.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
-				Logger.debug("Property change: " + e.getPropertyName() + ", oldValue: " + e.getOldValue()
-						+ ", newValue: " + e.getNewValue());
+				Logger.debug("Property change: " + e.getPropertyName() + ", oldValue: " + e.getOldValue() //$NON-NLS-1$ //$NON-NLS-2$
+						+ ", newValue: " + e.getNewValue()); //$NON-NLS-1$
 
-				if (e.getPropertyName().startsWith("require")) {
+				if (e.getPropertyName().startsWith("require")) { //$NON-NLS-1$
 					newDepSinceLastSave = true;
 				}
 
-				if (e.getPropertyName().startsWith("require-dev")) {
+				if (e.getPropertyName().startsWith("require-dev")) { //$NON-NLS-1$
 					newDevDepSinceLastSave = true;
 				}
 
@@ -164,7 +166,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 	protected void createHeaderContents(IManagedForm headerForm) {
 		super.createHeaderContents(headerForm);
 		ScrolledForm header = headerForm.getForm();
-		header.setText("Composer");
+		header.setText(Messages.ComposerFormEditor_Title);
 
 		FormToolkit toolkit = headerForm.getToolkit();
 		toolkit.decorateFormHeading(header.getForm());
@@ -175,11 +177,14 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 	@Override
 	protected void createPages() {
 		// create pages
-		overviewPage = new OverviewPage(this, OverviewPage.ID, "Overview");
-		dependenciesPage = new DependenciesPage(this, DependenciesPage.ID, "Dependencies");
-		configurationPage = new ConfigurationPage(this, ConfigurationPage.ID, "Configuration");
-		autoloadPage = new AutoloadPage(this, AutoloadPage.ID, "Autoload");
-		graphPage = new DependencyGraphPage(this, DependencyGraphPage.ID, "Dependency Graph");
+		overviewPage = new OverviewPage(this, OverviewPage.ID, Messages.ComposerFormEditor_OverviewPageName);
+		dependenciesPage = new DependenciesPage(this, DependenciesPage.ID,
+				Messages.ComposerFormEditor_DependenciesPageName);
+		configurationPage = new ConfigurationPage(this, ConfigurationPage.ID,
+				Messages.ComposerFormEditor_ConfigurationPageName);
+		autoloadPage = new AutoloadPage(this, AutoloadPage.ID, Messages.ComposerFormEditor_AutoloadPageName);
+		graphPage = new DependencyGraphPage(this, DependencyGraphPage.ID,
+				Messages.ComposerFormEditor_DependencyGraphPageName);
 
 		// add them
 		super.createPages();
@@ -467,7 +472,8 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		if (valid) {
 			removeMessage(MSG_PARSE_ERROR);
 		} else {
-			addMessage(MSG_PARSE_ERROR, "Invalid Json: " + e.getMessage(), IMessage.ERROR);
+			addMessage(MSG_PARSE_ERROR, NLS.bind(Messages.ComposerFormEditor_ParseErrorMessage, e.getMessage()),
+					IMessage.ERROR);
 		}
 
 		// change enabled status for pages

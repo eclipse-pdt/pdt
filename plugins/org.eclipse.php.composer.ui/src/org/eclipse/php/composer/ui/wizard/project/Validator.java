@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project;
 
@@ -29,7 +30,7 @@ public final class Validator extends AbstractValidator {
 		ComposerProjectWizardFirstPage first = (ComposerProjectWizardFirstPage) firstPage;
 		final String vendor = first.settingsGroup.getVendor();
 		if (vendor == null || vendor.length() == 0) {
-			throw new ValidationException("Enter a vendor name.", Severity.WARNING);
+			throw new ValidationException(Messages.Validator_EnterVendorName, Severity.WARNING);
 		}
 	}
 

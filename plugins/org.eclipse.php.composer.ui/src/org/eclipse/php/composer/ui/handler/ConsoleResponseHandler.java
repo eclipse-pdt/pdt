@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.handler;
 
@@ -35,13 +36,13 @@ public class ConsoleResponseHandler extends ExecutionResponseAdapter {
 
 	@Override
 	public void executionAboutToStart() {
-		MessageConsole console = findConsole("Composer");
+		MessageConsole console = findConsole("Composer"); //$NON-NLS-1$
 		console.clearConsole();
 	}
 
 	@Override
 	public void executionMessage(String message) {
-		MessageConsole console = findConsole("Composer");
+		MessageConsole console = findConsole("Composer"); //$NON-NLS-1$
 		MessageConsoleStream out = console.newMessageStream();
 		out.println(message);
 	}

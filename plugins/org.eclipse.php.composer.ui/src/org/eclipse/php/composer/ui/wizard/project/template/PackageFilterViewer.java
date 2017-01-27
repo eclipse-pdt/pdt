@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project.template;
 
@@ -21,6 +22,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.MinimalPackage;
 import org.eclipse.php.composer.api.packages.AsyncPackagistSearch;
 import org.eclipse.php.composer.api.packages.PackageSearchListenerInterface;
@@ -53,7 +55,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		doFind("");
+		doFind(""); //$NON-NLS-1$
 
 	}
 
@@ -88,7 +90,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 
 		showProjectsCheckbox = new Button(parent, SWT.CHECK);
 		showProjectsCheckbox.setSelection(true);
-		showProjectsCheckbox.setText("Show projects only");
+		showProjectsCheckbox.setText(Messages.PackageFilterViewer_ProjectsOnlyLabel);
 		showProjectsCheckbox.addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -147,7 +149,8 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 								}
 								contentProvider.add(items);
 								viewer.refresh();
-								searchResultCount.setText("Found " + result.total + " packages.");
+								searchResultCount
+										.setText(NLS.bind(Messages.PackageFilterViewer_PackagesFound, result.total));
 							}
 						});
 					}
@@ -155,7 +158,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 			});
 
 			if (showProjectsCheckbox.getSelection()) {
-				search.setFilter("project");
+				search.setFilter("project"); //$NON-NLS-1$
 			}
 			if (!text.trim().isEmpty()) {
 				search.search(text);
