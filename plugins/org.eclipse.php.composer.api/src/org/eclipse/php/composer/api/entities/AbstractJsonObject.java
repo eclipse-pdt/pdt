@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.entities;
 
@@ -116,7 +117,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 
 			value = getJsonValue(value);
 
-			if (value == null || value.equals("")) {
+			if (value == null || value.equals("")) { //$NON-NLS-1$
 				continue;
 			}
 
@@ -272,7 +273,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 		if (entity != null) {
 			listeners.put(property, new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
-					firePropertyChange(property + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+					firePropertyChange(property + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()); //$NON-NLS-1$
 				}
 			});
 

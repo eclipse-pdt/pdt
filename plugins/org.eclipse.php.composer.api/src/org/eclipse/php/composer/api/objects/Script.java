@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
@@ -89,7 +90,7 @@ public class Script extends JsonObject {
 		listen();
 		handlers.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				firePropertyChange(getScript() + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+				firePropertyChange(getScript() + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()); //$NON-NLS-1$
 			}
 		});
 	}
@@ -103,7 +104,7 @@ public class Script extends JsonObject {
 	@Override
 	protected Object buildJson() {
 		try {
-			Method mtd = JsonEntity.class.getDeclaredMethod("buildJson");
+			Method mtd = JsonEntity.class.getDeclaredMethod("buildJson"); //$NON-NLS-1$
 			return mtd.invoke(handlers);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -113,7 +114,7 @@ public class Script extends JsonObject {
 
 	@Override
 	protected List<String> getOwnProperties() {
-		String[] props = new String[] { "handlers" };
+		String[] props = new String[] { "handlers" }; //$NON-NLS-1$
 		List<String> list = new ArrayList<String>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
@@ -125,7 +126,7 @@ public class Script extends JsonObject {
 	 * @return the name
 	 */
 	public String getScript() {
-		return getAsString("script");
+		return getAsString("script"); //$NON-NLS-1$
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class Script extends JsonObject {
 	 *            the name to set
 	 */
 	public void setScript(String script) {
-		set("script", script);
+		set("script", script); //$NON-NLS-1$
 	}
 
 	public HandlerValue get(int index) throws IndexOutOfBoundsException {

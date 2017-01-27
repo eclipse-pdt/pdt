@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.entities;
 
@@ -46,7 +47,7 @@ public class JsonValue {
 
 	private Object buildJson(JsonCollection jsonObject) {
 		try {
-			Method mtd = JsonEntity.class.getDeclaredMethod("buildJson");
+			Method mtd = JsonEntity.class.getDeclaredMethod("buildJson"); //$NON-NLS-1$
 			return mtd.invoke(jsonObject);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project.template;
 
@@ -117,22 +118,22 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 	protected void createStatsPart() {
 
 		favorButton = new Button(this, SWT.PUSH);
-		favorButton.setToolTipText("Favorites on packagist.org");
+		favorButton.setToolTipText(Messages.PackagistItem_FavoritesToolTipText);
 		favorButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		favorButton.setImage(ComposerUIPluginImages.STAR.createImage());
 
 		GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(favorButton);
 
 		downloadButton = new Button(this, SWT.TOGGLE);
-		downloadButton.setToolTipText("Select this package for your new project.");
+		downloadButton.setToolTipText(Messages.PackagistItem_DownloadToolTipText);
 
 		if (filterItem.isChecked()) {
 			downloadButton.setSelection(true);
 		}
 
 		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).span(1, 2).applyTo(downloadButton);
-		JsonValue downloads = item.get("downloads");
-		JsonValue favorites = item.get("favers");
+		JsonValue downloads = item.get("downloads"); //$NON-NLS-1$
+		JsonValue favorites = item.get("favers"); //$NON-NLS-1$
 		if (downloads != null && favorites != null) {
 			downloadButton.setText(downloads.getAsString());
 			downloadButton.setImage(ComposerUIPluginImages.DOWNLOAD.createImage());
@@ -163,7 +164,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					final IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null);
-					browser.openURL(new URL(item.getAsString("url")));
+					browser.openURL(new URL(item.getAsString("url"))); //$NON-NLS-1$
 				} catch (Exception e1) {
 					Logger.logException(e1);
 				}
@@ -194,7 +195,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 
 	protected void loadVersionCombo() {
 
-		versionCombo.setItems(new String[] { "Loading versions..." });
+		versionCombo.setItems(new String[] { Messages.PackagistItem_LoadingVersionsMessage });
 		versionCombo.select(0);
 
 		AsyncPackagistDownloader dl = new AsyncPackagistDownloader();

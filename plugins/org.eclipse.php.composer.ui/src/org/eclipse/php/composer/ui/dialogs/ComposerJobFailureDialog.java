@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.dialogs;
 
@@ -34,8 +35,8 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 public class ComposerJobFailureDialog extends ErrorDialog {
 
 	public ComposerJobFailureDialog(String message, IStatus status) {
-		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Composer problem", message, status,
-				IStatus.ERROR | IStatus.OK);
+		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ComposerJobFailureDialog_Title,
+				message, status, IStatus.ERROR | IStatus.OK);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class ComposerJobFailureDialog extends ErrorDialog {
 		// create message
 		if (message != null) {
 			messageLabel = new Label(composite, getMessageLabelStyle());
-			messageLabel.setText("Composer exited with an error");
+			messageLabel.setText(Messages.ComposerJobFailureDialog_Message);
 			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false)
 					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
 					.applyTo(messageLabel);

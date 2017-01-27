@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,12 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.utils;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -45,7 +42,7 @@ public class WidgetFactory {
 		if (toolkit == null) {
 			return new Button(parent, style);
 		} else {
-			return toolkit.createButton(parent, "", style);
+			return toolkit.createButton(parent, "", style); //$NON-NLS-1$
 		}
 	}
 
@@ -67,7 +64,7 @@ public class WidgetFactory {
 		if (toolkit == null) {
 			return new Label(parent, style);
 		} else {
-			return toolkit.createLabel(parent, "", style);
+			return toolkit.createLabel(parent, "", style); //$NON-NLS-1$
 		}
 	}
 
@@ -144,7 +141,7 @@ public class WidgetFactory {
 		if (toolkit == null) {
 			return new Text(parent, style);
 		} else {
-			return toolkit.createText(parent, "", style);
+			return toolkit.createText(parent, "", style); //$NON-NLS-1$
 		}
 	}
 

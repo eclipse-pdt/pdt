@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <!--
-    Copyright (c) 2012, 2016 PDT Extension Group and others.
+    Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -9,14 +9,15 @@
    
     Contributors:
         PDT Extension Group - initial API and implementation
+        Kaloyan Raev - [501269] externalize strings
  -->
 
 <plugin>
-   <extension-point id="executableLauncher" name="executableLauncher" schema="schema/executableLauncher.exsd"/>
+   <extension-point id="executableLauncher" name="%ext-point.executableLauncher.name" schema="schema/executableLauncher.exsd"/>
 
    <extension
          id="org.eclipse.php.composer.core.builder.buildPathManagementBuilder"
-         name="Composer Build Path Management"
+         name="%buildPathManagementBuilder.name"
          point="org.eclipse.core.resources.builders">
       <builder
             callOnEmptyDelta="false"
@@ -31,7 +32,7 @@
       <buildParticipant
             class="org.eclipse.php.composer.core.build.BuildParticipantFactory"
             id="org.eclipse.php.composer.core.buildParticipant"
-            name="Composer Builder"
+            name="%buildParticipant.name"
             nature="org.eclipse.php.core.PHPNature">
       </buildParticipant>
    </extension>
@@ -48,10 +49,10 @@
       <project-facet
             id="php.composer.component">
          <label>
-            Composer
+            %project.facet.label
          </label>
          <description>
-            Adds composer support to your PHP project.
+            %project.facet.description
          </description>
       </project-facet>
       <project-facet-version
@@ -89,10 +90,10 @@
             extends="default.configuration"
             id="org.eclipse.php.composer.core.static-preset">
          <label>
-            Composer
+            %project.facet.preset.label
          </label>
          <description>
-            Sets up a composer PHP project.
+            %project.facet.preset.description
          </description>
          <facet
                id="php.composer.component"
@@ -118,7 +119,7 @@
       <content-type
             base-type="org.eclipse.wst.json.core.jsonsource"
             id="composerJson"
-            name="Composer JSON"
+            name="%content.type.name"
             priority="high">
       </content-type>
       <file-association
@@ -129,11 +130,11 @@
    <extension
          point="org.eclipse.wst.json.core.schemaCatalogContributions">
          <schemaCatalogContribution id="http://schemastore.org/">
-         	<schema name="composer.json"
-         			description="Composer description file"
-         			fileMatch="composer.json,composer.json"
-         			url="http://json.schemastore.org/composer"
-         			uri="schemastore/composer" />
+            <schema name="composer.json"
+                  description="%schema.description"
+                  fileMatch="composer.json,composer.json"
+                  url="http://json.schemastore.org/composer"
+                  uri="schemastore/composer" />
          </schemaCatalogContribution>
          
 	</extension>
@@ -145,7 +146,7 @@
    </extension>
    <extension
         id="composermarker"
-        name="Composer Problem"
+        name="%marker.name"
         point="org.eclipse.core.resources.markers">
         <persistent value="true" />
         <super type="org.eclipse.core.resources.problemmarker"/> 

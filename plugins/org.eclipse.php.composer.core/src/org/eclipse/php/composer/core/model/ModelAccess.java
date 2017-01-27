@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.model;
 
@@ -52,10 +53,10 @@ public class ModelAccess implements NamespaceResolverInterface {
 	protected void initNamespaceMap() throws ParseException {
 		IEclipsePreferences instancePreferences = ConfigurationScope.INSTANCE.getNode(ComposerPlugin.ID);
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			String prefKey = "namespacemap#" + project.getName();
-			String json = instancePreferences.get(prefKey, "{}");
+			String prefKey = "namespacemap#" + project.getName(); //$NON-NLS-1$
+			String json = instancePreferences.get(prefKey, "{}"); //$NON-NLS-1$
 			psr0Map.put(project.getName(), new Psr(json));
-			Logger.debug("loading namespacemap from preferences for project " + project.getName() + " " + json);
+			Logger.debug("loading namespacemap from preferences for project " + project.getName() + " " + json); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -85,10 +86,10 @@ public class ModelAccess implements NamespaceResolverInterface {
 				String path = (String) object;
 				if (root.toString().startsWith((String) path)) {
 					String replacement = path;
-					if (!replacement.endsWith("/")) {
-						replacement += "/";
+					if (!replacement.endsWith("/")) { //$NON-NLS-1$
+						replacement += "/"; //$NON-NLS-1$
 					}
-					return new Path(root.toString().replace(replacement, ""));
+					return new Path(root.toString().replace(replacement, "")); //$NON-NLS-1$
 				}
 			}
 		}
@@ -105,7 +106,7 @@ public class ModelAccess implements NamespaceResolverInterface {
 
 		Psr psr0 = psr0Map.get(project.getName());
 
-		String nsPath = namespace.replace("\\", "/");
+		String nsPath = namespace.replace("\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Namespace ns : psr0) {
 			String other = ns.getNamespace();
 			if (namespace.startsWith(other)) {
@@ -138,11 +139,11 @@ public class ModelAccess implements NamespaceResolverInterface {
 
 	public void updatePsr0(Psr psr0, IScriptProject scriptProject) {
 		// escape namespace separators to avoid deserialization problems
-		String json = psr0.toJson().replace("\\", "\\\\");
+		String json = psr0.toJson().replace("\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
 		IEclipsePreferences instancePreferences = ConfigurationScope.INSTANCE.getNode(ComposerPlugin.ID);
 		psr0Map.put(scriptProject.getProject().getName(), psr0);
-		instancePreferences.put("namespacemap#" + scriptProject.getProject().getName(), json);
-		Logger.debug("updating namespacemap for project " + scriptProject.getProject().getName());
+		instancePreferences.put("namespacemap#" + scriptProject.getProject().getName(), json); //$NON-NLS-1$
+		Logger.debug("updating namespacemap for project " + scriptProject.getProject().getName()); //$NON-NLS-1$
 		try {
 			instancePreferences.flush();
 		} catch (BackingStoreException e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,24 +7,17 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ICheckStateProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.php.composer.api.MinimalPackage;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.php.composer.api.MinimalPackage;
 
 public class PackageController extends StyledCellLabelProvider
 		implements IStructuredContentProvider, ICheckStateProvider, ICheckStateListener {
@@ -72,7 +65,7 @@ public class PackageController extends StyledCellLabelProvider
 
 	public static Image getPackageImage(Object element) {
 		String name = PackageController.getPackageName(element);
-		if (!name.contains("/") && (name.equals("php") || name.startsWith("ext-"))) {
+		if (!name.contains("/") && (name.equals("php") || name.startsWith("ext-"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return phpImage;
 		}
 		return pkgImage;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -22,15 +23,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.composer.api.collection.Persons;
+import org.eclipse.php.composer.api.objects.Person;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.php.composer.ui.dialogs.PersonDialog;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
@@ -43,9 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
-
-import org.eclipse.php.composer.api.collection.Persons;
-import org.eclipse.php.composer.api.objects.Person;
 
 public class AuthorSection extends TableSection implements PropertyChangeListener {
 
@@ -80,12 +73,12 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 
 				StyledString styledString = new StyledString(author.getName());
 
-				if (author.getEmail() != null && !author.getEmail().trim().equals("")) {
-					styledString.append(" <" + author.getEmail().trim() + ">", StyledString.COUNTER_STYLER);
+				if (author.getEmail() != null && !author.getEmail().trim().isEmpty()) {
+					styledString.append(" <" + author.getEmail().trim() + ">", StyledString.COUNTER_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
-				if (author.getHomepage() != null && !author.getHomepage().trim().equals("")) {
-					styledString.append(" - " + author.getHomepage().trim(), StyledString.DECORATIONS_STYLER);
+				if (author.getHomepage() != null && !author.getHomepage().trim().isEmpty()) {
+					styledString.append(" - " + author.getHomepage().trim(), StyledString.DECORATIONS_STYLER); //$NON-NLS-1$
 				}
 
 				cell.setText(styledString.toString());
@@ -99,14 +92,15 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 	}
 
 	public AuthorSection(ComposerFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[] { "Add...", "Edit...", "Remove" });
+		super(page, parent, Section.DESCRIPTION, new String[] { Messages.AuthorSection_AddButton,
+				Messages.AuthorSection_EditButton, Messages.AuthorSection_RemoveButton });
 		// createClient(getSection(), page.getManagedForm().getToolkit());
 	}
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText("Authors");
-		section.setDescription("Honour the glorious authors of this package.");
+		section.setText(Messages.AuthorSection_Title);
+		section.setDescription(Messages.AuthorSection_Description);
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
 		Composite container = createClientContainer(section, 2, toolkit);
@@ -165,7 +159,7 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName().startsWith("authors")) {
+		if (e.getPropertyName().startsWith("authors")) { //$NON-NLS-1$
 			// refresh();
 		}
 	}
@@ -176,19 +170,19 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 	}
 
 	private void makeActions() {
-		addAction = new Action("Add...") {
+		addAction = new Action(Messages.AuthorSection_AddActionTitle) {
 			public void run() {
 				handleAdd();
 			}
 		};
 
-		editAction = new Action("Edit...") {
+		editAction = new Action(Messages.AuthorSection_EditActionTitle) {
 			public void run() {
 				handleEdit();
 			}
 		};
 
-		removeAction = new Action("Remove") {
+		removeAction = new Action(Messages.AuthorSection_RemoveActionTitle) {
 			public void run() {
 				handleRemove();
 			}
@@ -234,10 +228,12 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 			names[i] = person.getName();
 		}
 
-		MessageDialog diag = new MessageDialog(authorViewer.getTable().getShell(),
-				"Remove Author" + (selection.size() > 1 ? "s" : ""), null,
-				"Do you really wan't to remove " + StringUtils.join(names, ", ") + "?", MessageDialog.WARNING,
-				new String[] { "Yes", "No" }, 0);
+		String title = selection.size() > 1 ? Messages.AuthorSection_RemoveDialogTitlePlural
+				: Messages.AuthorSection_RemoveDialogTitle;
+		MessageDialog diag = new MessageDialog(authorViewer.getTable().getShell(), title, null,
+				NLS.bind(Messages.AuthorSection_RemoveDialogMessage, StringUtils.join(names, ", ")), //$NON-NLS-1$
+				MessageDialog.WARNING,
+				new String[] { Messages.AuthorSection_YesButton, Messages.AuthorSection_NoButton }, 0);
 
 		if (diag.open() == Dialog.OK) {
 			for (Person person : persons) {

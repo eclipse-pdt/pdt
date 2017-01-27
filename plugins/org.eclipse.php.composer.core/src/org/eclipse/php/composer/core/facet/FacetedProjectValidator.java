@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Dawid Pakuła and others.
+ * Copyright (c) 2016, 2017 Dawid Pakuła and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Dawid Pakuła - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.facet;
 
@@ -24,7 +25,7 @@ public class FacetedProjectValidator implements IFacetedProjectValidator {
 		}
 		if (!fproj.getProject().getFile(ComposerConstants.COMPOSER_JSON).exists()) {
 			fproj.createErrorMarker(ComposerConstants.PROBLEM_MARKER_TYPE,
-					"Composer Project require composer.json file");
+					Messages.FacetedProjectValidator_MissingComposerJsonFile);
 		}
 	}
 

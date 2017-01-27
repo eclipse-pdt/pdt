@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <!--
-    Copyright (c) 2012, 2016 PDT Extension Group and others.
+    Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
    
     Contributors:
         PDT Extension Group - initial API and implementation
+        Kaloyan Raev - [501269] externalize strings
  -->
 
 <plugin>
@@ -20,7 +21,7 @@
          <command
                commandId="org.eclipse.php.composer.ui.command.install"
                icon="icons/full/obj16/install.gif"
-               label="Install"
+               label="%install.command.label"
                style="push">
          </command>
       </menuContribution>
@@ -29,7 +30,7 @@
             locationURI="menu:sourceMenuId?before=sourceBegin">
          <command
                commandId="org.eclipse.php.composer.ui.command.injectAutoload"
-               label="Inject Composer Autoload-Statement"
+               label="%inject.autoload.command.label"
                style="push">
             <visibleWhen checkEnabled="false">
                <with
@@ -52,7 +53,7 @@
             locationURI="popup:sourcePopupMenuId?after=sourceBegin">
          <command
                commandId="org.eclipse.php.composer.ui.command.injectAutoload"
-               label="Inject Composer Autoload-Statement"
+               label="%inject.autoload.command.name"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -74,7 +75,7 @@
             locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
          <command
                commandId="org.eclipse.php.composer.ui.command.addComposerSupport"
-               label="Add Composer Support"
+               label="%add.composer.support.command.name"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -109,7 +110,7 @@
          </command>
          <command
                commandId="org.eclipse.php.composer.ui.command.removeComposerSupport"
-               label="Remove Composer Support"
+               label="%remove.composer.support.command.name"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -131,7 +132,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <menu
                id="org.eclipse.php.composer.ui.menu.composer"
-               label="Composer"
+               label="%composer.menu.label"
                icon="icons/full/obj16/composer.png">
             <visibleWhen
                   checkEnabled="false">
@@ -173,53 +174,53 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="Run `composer.phar install --no-dev`"
+            description="%install.command.description"
             id="org.eclipse.php.composer.ui.command.install"
-            name="Install Dependencies">
+            name="%install.command.name">
       </command>
       <command
-            description="Run `composer.phar install --dev`"
+            description="%install-dev.command.description"
             id="org.eclipse.php.composer.ui.command.installDev"
-            name="Install Dependencies (dev)">
+            name="%install-dev.command.name">
       </command>
       <command
-            description="Run `composer.phar update --dev`"
+            description="%updateDev.command.description"
             id="org.eclipse.php.composer.ui.command.updateDev"
-            name="Update dependencies (dev)">
+            name="%updateDev.command.name">
       </command>
       <command
-            description="Run `composer.phar update --no-dev`"
+            description="%update.command.description"
             id="org.eclipse.php.composer.ui.command.update"
-            name="Update Dependencies">
+            name="%update.command.name">
       </command>
       <command
-            description="Run `composer.phar self-update`"
+            description="%selfupdate.command.description"
             id="org.eclipse.php.composer.ui.command.selfupdate"
-            name="Self-Update Composer">
+            name="%selfupdate.command.name">
       </command>
       <command
             id="org.eclipse.php.composer.ui.command.graph"
-            name="Dependency Graph">
+            name="%graph.command.name">
       </command>
       <command
             defaultHandler="org.eclipse.php.composer.ui.commands.InjectAutoloadCommand"
             id="org.eclipse.php.composer.ui.command.injectAutoload"
-            name="Inject Composer Autoload-Statement">
+            name="%inject.autoload.command.name">
       </command>
       <command
             defaultHandler="org.eclipse.php.composer.ui.handler.AddComposerSupportHandler"
             id="org.eclipse.php.composer.ui.command.addComposerSupport"
-            name="Add Composer Support">
+            name="%add.composer.support.command.name">
       </command>
       <command
             defaultHandler="org.eclipse.php.composer.ui.handler.RemoveComposerSupportHandler"
             id="org.eclipse.php.composer.ui.command.removeComposerSupport"
-            name="Remove Composer Support">
+            name="%remove.composer.support.command.name">
       </command>
       <command
             defaultHandler="org.eclipse.php.composer.ui.commands.UpdateBuildPathCommand"
             id="org.eclipse.php.composer.ui.command.updateBuildpath"
-            name="Update BuildPath">
+            name="%update.build.path.command.name">
       </command>
    </extension>
    <extension
@@ -228,13 +229,13 @@
             category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
             class="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
             id="org.eclipse.php.composer.ui.preferences.composer"
-            name="Composer">
+            name="%composer.page.name">
       </page>
       <page
             category="org.eclipse.php.composer.ui.preferences.composer"
             class="org.eclipse.php.composer.ui.preferences.SaveActionsPreferencePage"
             id="org.eclipse.php.composer.ui.preferences.composer.saveactions"
-            name="Save Actions">
+            name="%save.actions.page.name">
       </page>
    </extension>
    <!--
@@ -253,7 +254,7 @@
             filenames="composer.json"
             icon="icons/full/obj16/packd_obj.gif"
             id="org.eclipse.php.composer.ui.editor.composer.ComposerEditor"
-            name="Composer">
+            name="%composer.editor.name">
          <contentTypeBinding
                contentTypeId="org.eclipse.php.composer.core.composerJson">
          </contentTypeBinding>
@@ -265,7 +266,7 @@
             category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
             class="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
             id="org.eclipse.php.composer.ui.preferences.project.composer"
-            name="Composer">
+            name="%composer.page.name">
          <enabledWhen>
             <adapt
                   type="org.eclipse.core.resources.IProject">
@@ -281,7 +282,7 @@
             category="org.eclipse.php.composer.ui.preferences.project.composer"
             class="org.eclipse.php.composer.ui.preferences.BuildPathManagementPage"
             id="org.eclipse.php.composer.ui.preferences.project.buildpathManagement"
-            name="Build Path Management">
+            name="%build.path.page.name">
 	         <enabledWhen>
 	            <adapt
 	                  type="org.eclipse.core.resources.IProject">
@@ -296,7 +297,7 @@
             category="org.eclipse.php.composer.ui.preferences.project.composer"
             class="org.eclipse.php.composer.ui.preferences.SaveActionsPreferencePage"
             id="org.eclipse.php.composer.ui.preferences.project.saveactions"
-            name="Save Actions">
+            name="%save.actions.page.name">
 	         <enabledWhen>
 	            <adapt
 	                  type="org.eclipse.core.resources.IProject">
@@ -316,14 +317,14 @@
             finalPerspective="org.eclipse.php.perspective"
             icon="icons/full/obj16/composer_project.gif"
             id="org.eclipse.php.composer.ui.projectwizard"
-            name="Empty Composer Project"
+            name="%composer.project.wizard.name"
             preferredPerspectives="org.eclipse.php.perspective"
             project="true">
          <selection
                class="org.eclipse.core.resources.IResource">
          </selection>
          <description>
-            Creates and initializes a composer project.
+            %composer.project.wizard.description
          </description>
       </wizard>
       <wizard
@@ -332,14 +333,14 @@
             finalPerspective="org.eclipse.php.perspective"
             icon="icons/full/obj16/logical_package_obj.gif"
             id="org.eclipse.php.composer.ui.projectFromPackagewizard"
-            name="Composer Project from existing package"
+            name="%package.project.wizard.name"
             preferredPerspectives="org.eclipse.php.perspective"
             project="true">
          <selection
                class="org.eclipse.core.resources.IResource">
          </selection>
          <description>
-            Creates and initializes a composer project.
+            %package.project.wizard.description
          </description>
       </wizard>
       <primaryWizard
@@ -388,7 +389,7 @@
             class="org.eclipse.php.composer.ui.wizard.importer.ComposerImportWizard"
             icon="icons/full/obj16/correction_move.gif"
             id="org.eclipse.php.composer.ui.importWizard"
-            name="Existing Composer Project">
+            name="%import.project.wizard.name">
       </wizard>
    </extension>
    <extension 

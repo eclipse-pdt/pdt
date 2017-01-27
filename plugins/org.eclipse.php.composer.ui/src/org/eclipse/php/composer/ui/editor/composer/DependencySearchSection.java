@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.editor.composer;
 
@@ -30,11 +31,12 @@ public class DependencySearchSection extends ComposerSection {
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText("Packagist Search");
-		section.setDescription("Search for packages and add the selected packages to the opened section on the left.");
+		section.setText(Messages.DependencySearchSection_Title);
+		section.setDescription(Messages.DependencySearchSection_Description);
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		dependencySearch = new DependencySearch(section, composerPackage, toolkit, "Add Dependencies");
+		dependencySearch = new DependencySearch(section, composerPackage, toolkit,
+				Messages.DependencySearchSection_AddButton);
 
 		section.setClient(dependencySearch.getBody());
 	}

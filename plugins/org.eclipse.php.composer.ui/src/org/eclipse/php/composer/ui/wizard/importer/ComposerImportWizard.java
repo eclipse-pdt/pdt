@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.importer;
 
@@ -77,16 +78,16 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 				IWorkspaceRoot root = workspace.getRoot();
 				String projectName = mainPage.getProjectName();
 				IProject project = root.getProject(mainPage.getProjectName());
-				monitor.beginTask("Importing composer project", 5);
+				monitor.beginTask(Messages.ComposerImportWizard_TaskName, 5);
 
 				try {
 
 					IPath locationPath = new Path(mainPage.getSourcePath());
 					IProjectDescription description = null;
 
-					if (locationPath.append(".project").toFile().exists()) {
+					if (locationPath.append(".project").toFile().exists()) { //$NON-NLS-1$
 						ProjectDescriptionReader reader = new ProjectDescriptionReader(project);
-						description = reader.read(locationPath.append(".project"));
+						description = reader.read(locationPath.append(".project")); //$NON-NLS-1$
 					} else {
 						description = workspace.newProjectDescription(projectName);
 					}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.objects;
 
@@ -27,7 +28,7 @@ public class Config extends JsonObject {
 	 * @return the <code>vendor-bin</code> property
 	 */
 	public String getVendorDir() {
-		return getAsString("vendor-dir");
+		return getAsString("vendor-dir"); //$NON-NLS-1$
 	}
 
 	/**
@@ -37,7 +38,7 @@ public class Config extends JsonObject {
 	 *            the new <code>vendor-bin</code> value
 	 */
 	public void setVendorDir(String vendorDir) {
-		set("vendor-dir", vendorDir);
+		set("vendor-dir", vendorDir); //$NON-NLS-1$
 	}
 
 	/**
@@ -46,7 +47,7 @@ public class Config extends JsonObject {
 	 * @return the <code>bin-dir</code> property
 	 */
 	public String getBinDir() {
-		return getAsString("bin-dir");
+		return getAsString("bin-dir"); //$NON-NLS-1$
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class Config extends JsonObject {
 	 *            the new <code>bin-dir</code> value
 	 */
 	public void setBinDir(String binDir) {
-		set("bin-dir", binDir);
+		set("bin-dir", binDir); //$NON-NLS-1$
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class Config extends JsonObject {
 	 * @return the <code>process-timeout</code> property
 	 */
 	public Integer getProcessTimeout() {
-		return getAsInteger("process-timeout");
+		return getAsInteger("process-timeout"); //$NON-NLS-1$
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class Config extends JsonObject {
 	 *            the new <code>process-timeout</code> value
 	 */
 	public void setProcessTimeout(int processTimeout) {
-		set("process-timeout", processTimeout);
+		set("process-timeout", processTimeout); //$NON-NLS-1$
 	}
 
 	/**
@@ -86,12 +87,12 @@ public class Config extends JsonObject {
 	 * @return the <code>github-protocols</code> property
 	 */
 	public JsonArray getGithubProtocols() {
-		JsonArray protocols = getAsArray("github-protocols");
+		JsonArray protocols = getAsArray("github-protocols"); //$NON-NLS-1$
 		if (protocols == null) {
 			protocols = new JsonArray();
-			protocols.add("git");
-			protocols.add("https");
-			protocols.add("http");
+			protocols.add("git"); //$NON-NLS-1$
+			protocols.add("https"); //$NON-NLS-1$
+			protocols.add("http"); //$NON-NLS-1$
 		}
 		return protocols;
 	}
@@ -103,7 +104,7 @@ public class Config extends JsonObject {
 	 *            the new <code>github-protocols</code> value
 	 */
 	public void setGithubProtocols(JsonArray githubProtocols) {
-		set("github-protocols", githubProtocols);
+		set("github-protocols", githubProtocols); //$NON-NLS-1$
 	}
 
 	/**
@@ -113,8 +114,8 @@ public class Config extends JsonObject {
 	 * @return the <code>notify-on-install</code> property
 	 */
 	public boolean getNotifyOnInstall() {
-		if (has("notify-on-install")) {
-			return getAsBoolean("notify-on-install");
+		if (has("notify-on-install")) { //$NON-NLS-1$
+			return getAsBoolean("notify-on-install"); //$NON-NLS-1$
 		} else {
 			return true;
 		}
@@ -127,6 +128,6 @@ public class Config extends JsonObject {
 	 *            the new <code>notify-on-install</code> value
 	 */
 	public void setNotifyOnInstall(boolean notifyOnInstall) {
-		set("notify-on-install", notifyOnInstall);
+		set("notify-on-install", notifyOnInstall); //$NON-NLS-1$
 	}
 }

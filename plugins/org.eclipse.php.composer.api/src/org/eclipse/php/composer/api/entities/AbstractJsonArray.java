@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.api.entities;
 
@@ -23,7 +24,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 	private transient PropertyChangeListener propListener = new PropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent e) {
 			int index = values.indexOf(e.getSource());
-			firePropertyChange("#" + index + "." + e.getPropertyName(), e.getOldValue(), e.getNewValue());
+			firePropertyChange("#" + index + "." + e.getPropertyName(), e.getOldValue(), e.getNewValue()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	};
 
@@ -107,7 +108,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 			((JsonEntity) value).addPropertyChangeListener(propListener);
 		}
 
-		firePropertyChange("#" + (values.size() - 1), null, value);
+		firePropertyChange("#" + (values.size() - 1), null, value); //$NON-NLS-1$
 	}
 
 	/**
@@ -133,7 +134,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 				((JsonEntity) newValue).removePropertyChangeListener(propListener);
 			}
 
-			firePropertyChange("#" + index, oldValue, newValue);
+			firePropertyChange("#" + index, oldValue, newValue); //$NON-NLS-1$
 		}
 	}
 
@@ -151,7 +152,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 			((JsonEntity) value).removePropertyChangeListener(propListener);
 		}
 
-		firePropertyChange("#" + index, value, null);
+		firePropertyChange("#" + index, value, null); //$NON-NLS-1$
 	}
 
 	/**
@@ -167,7 +168,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 			((JsonEntity) value).removePropertyChangeListener(propListener);
 		}
 
-		firePropertyChange("#" + index, value, null);
+		firePropertyChange("#" + index, value, null); //$NON-NLS-1$
 	}
 
 	/**
@@ -191,7 +192,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 				((JsonEntity) newValue).removePropertyChangeListener(propListener);
 			}
 
-			firePropertyChange("#" + index, oldValue, newValue);
+			firePropertyChange("#" + index, oldValue, newValue); //$NON-NLS-1$
 		}
 	}
 

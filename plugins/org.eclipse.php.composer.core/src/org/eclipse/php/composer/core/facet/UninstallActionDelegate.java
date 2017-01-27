@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     PDT Extension Group - initial API and implementation
+ *     Kaloyan Raev - [501269] externalize strings
  *******************************************************************************/
 package org.eclipse.php.composer.core.facet;
 
@@ -43,7 +44,7 @@ public class UninstallActionDelegate implements IDelegate {
 		// remove the composer nature
 		int index = getBuilderIndex(project);
 		if (index != -1) {
-			progress.subTask("Uninstalling composer builder");
+			progress.subTask(Messages.UninstallActionDelegate_TaskName);
 			final IProjectDescription description = project.getDescription();
 			final List<ICommand> commands = new ArrayList<ICommand>();
 			commands.addAll(Arrays.asList(description.getBuildSpec()));
@@ -65,10 +66,10 @@ public class UninstallActionDelegate implements IDelegate {
 				}
 
 				// deactivated builder
-				if ("org.eclipse.ui.externaltools.ExternalToolBuilder".equals(cmd.getBuilderName())) {
+				if ("org.eclipse.ui.externaltools.ExternalToolBuilder".equals(cmd.getBuilderName())) { //$NON-NLS-1$
 					Map<String, String> args = cmd.getArguments();
-					if (args.containsKey("LaunchConfigHandle")) {
-						String launch = args.get("LaunchConfigHandle");
+					if (args.containsKey("LaunchConfigHandle")) { //$NON-NLS-1$
+						String launch = args.get("LaunchConfigHandle"); //$NON-NLS-1$
 						if (launch.contains(ComposerBuildPathManagementBuilder.ID)) {
 							return i;
 						}
