@@ -1,0 +1,21 @@
+--TEST--
+Test formatting PHP with strange if-endif block.
+Text "<?phpelse" must be handled as tag "<?" + label "phpelse"
+--FILE--
+<?php
+if (true) :
+    echo 'ok';
+    ?>
+ <?phpelse :
+    echo 'ko';
+endif;
+?>
+--EXPECT--
+<?php
+if (true) :
+	echo 'ok';
+	?>
+ <?phpelse :
+    echo 'ko';
+endif;
+?>

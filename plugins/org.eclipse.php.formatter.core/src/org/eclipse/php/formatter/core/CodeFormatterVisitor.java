@@ -371,15 +371,28 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private byte getPhpStartTag(int offset) {
 		try {
-			if (document.getChar(offset) == '<') {
-				if (document.getChar(offset + 1) == '%') {
+			int docLength = document.getLength() - offset;
+			if (docLength >= 1 && document.getChar(offset) == '<') {
+				if (docLength >= 2 && document.getChar(offset + 1) == '%') {
 					return PHP_OPEN_ASP_TAG;
-				} else if (document.getChar(offset + 2) == '=') {
+				} else if (docLength >= 3 && document.getChar(offset + 2) == '=') {
 					return PHP_OPEN_SHORT_TAG_WITH_EQUAL;
-				} else if (document.getChar(offset + 2) != 'p' && document.getChar(offset + 2) != 'P') {
+				} else if (docLength >= 3 && document.getChar(offset + 2) != 'p'
+						&& document.getChar(offset + 2) != 'P') {
 					return PHP_OPEN_SHORT_TAG;
-				} else if (document.getChar(offset + 1) == '?') {
-					return PHP_OPEN_TAG;
+				} else if (docLength >= 2 && document.getChar(offset + 1) == '?') {
+					char separatorChar = docLength >= 6 ? document.getChar(offset + 5) : '\0';
+					// The definition of token PHP_START in PHPTokenizer.jflex
+					// tells us that "<?php" must ALWAYS be followed by a
+					// whitespace character.
+					if (separatorChar == ' ' || separatorChar == '\t' || separatorChar == '\r'
+							|| separatorChar == '\n') {
+						return PHP_OPEN_TAG;
+					} else {
+						// For example, string "<?phpXYZ :" must be treated as
+						// a PHP_OPEN_SHORT_TAG followed by label "XYZ"
+						return PHP_OPEN_SHORT_TAG;
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -2112,14 +2125,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
-	private int setSpaceAfterBlock(int offset) {
+	private void setSpaceAfterBlock(Statement statement) {
+		if (statement instanceof Block && !((Block) statement).isCurly()) {
+			// do not insert a space when handling "if :" and "else :" blocks
+			return;
+		}
 		if (this.preferences.insert_space_after_closing_brace_in_block) {
 			insertSpace();
-			// handleChars(offset, offset + 1);
-			// return offset + 1;
-			handleChars(offset, offset);
 		}
-		return offset;
 	}
 
 	public boolean visit(ArrayAccess arrayAccess) {
@@ -2850,7 +2863,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
 		// insertSpace();
 		appendToBuffer("new "); //$NON-NLS-1$
-		// lineWidth += 3; // the 'new' word
 		handleChars(classInstanceCreation.getStart(), classInstanceCreation.getClassName().getStart());
 		classInstanceCreation.getClassName().accept(this);
 		if (this.preferences.insert_space_before_opening_paren_in_function) {
@@ -3083,31 +3095,29 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		lineWidth += 2;
 		Statement body = doStatement.getBody();
 		handleAction(doStatement.getStart() + 2, body, true);
-		int lastPosition = body.getEnd();// this variable
-		// will be changed
-		int doActionEnd = body.getEnd();
 		if (preferences.control_statement_insert_newline_before_while_in_do) {
 			insertNewLine();
 			indent();
 		} else {
-			lastPosition = setSpaceAfterBlock(doActionEnd);
+			setSpaceAfterBlock(body);
 		}
 
 		String textBetween = ""; //$NON-NLS-1$
 		int indexOfWhile = -1;
+		int lastPosition = body.getEnd();
 		try {
-			textBetween = document.get(doActionEnd, doStatement.getCondition().getStart() - doActionEnd).toLowerCase();
+			textBetween = document.get(lastPosition, doStatement.getCondition().getStart() - body.getEnd())
+					.toLowerCase();
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;
 		}
-		indexOfWhile = textBetween.indexOf("while"); //$NON-NLS-1$
+		indexOfWhile = textBetween.lastIndexOf("while"); //$NON-NLS-1$
 		if (indexOfWhile > 0) {
-			indexOfWhile += doActionEnd;
-			handleChars(lastPosition, indexOfWhile);
+			indexOfWhile += lastPosition;
+			handleChars(lastPosition, indexOfWhile + 5);
 			appendToBuffer("while"); //$NON-NLS-1$
-			handleChars(indexOfWhile, indexOfWhile);
-			lastPosition = indexOfWhile;
+			lastPosition = indexOfWhile + 5; // 5 = "while".length()
 		} else {
 			appendToBuffer("while"); //$NON-NLS-1$
 		}
@@ -3670,7 +3680,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					insertNewLine();
 					indent();
 				} else {
-					lastPosition = setSpaceAfterBlock(ifStatement.getTrueStatement().getEnd());
+					setSpaceAfterBlock(ifStatement.getTrueStatement());
 				}
 
 				try {
@@ -3736,7 +3746,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				indent();
 			} else {
 				if (len == 2) {
-					lastPosition = setSpaceAfterBlock(ifStatement.getTrueStatement().getEnd());
+					setSpaceAfterBlock(ifStatement.getTrueStatement());
 				}
 			}
 
@@ -3845,10 +3855,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		indexOfElse = textBetween.lastIndexOf("else"); //$NON-NLS-1$
 		if (indexOfElse > 0) {
 			indexOfElse += trueStatementEnd;
-			handleChars(lastPosition, indexOfElse);
+			handleChars(lastPosition, indexOfElse + 4);
 			appendToBuffer("else"); //$NON-NLS-1$
-			handleChars(indexOfElse, indexOfElse);
-			lastPosition = indexOfElse;
+			lastPosition = indexOfElse + 4; // 4 = "else".length()
 		} else {
 			appendToBuffer("else"); //$NON-NLS-1$
 		}
