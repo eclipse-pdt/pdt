@@ -2150,8 +2150,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			lastPosition = arrayAccess.getIndex().getEnd();
 		}
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468155
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+		// https://bugs.eclipse.org/bugs/attachment.cgi?id=245293
+		// if (arrayAccess.getArrayType() == ArrayAccess.VARIABLE_ARRAY) {
+		// appendToBuffer(CLOSE_BRACKET);
+		// } else {
+		// appendToBuffer(CLOSE_CURLY);
+		// }
+		// handleChars(lastPosition, arrayAccess.getEnd());
+
 		handleChars(lastPosition, arrayAccess.getEnd() - 1);
 		lineWidth++;// we need to add the closing bracket/curly
+
 		return false;
 	}
 
@@ -2211,13 +2223,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		}
 
-		if (arrayCreation.isHasArrayKey()) {
-			appendToBuffer(CLOSE_PARN);
-		} else {
-			appendToBuffer(CLOSE_BRACKET);
-		}
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468155
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+		// https://bugs.eclipse.org/bugs/attachment.cgi?id=245293
+		// if (arrayCreation.isHasArrayKey()) {
+		// appendToBuffer(CLOSE_PARN);
+		// } else {
+		// appendToBuffer(CLOSE_BRACKET);
+		// }
+		// handleChars(lastPosition, arrayCreation.getEnd());
 
-		handleChars(lastPosition, arrayCreation.getEnd());
+		handleChars(lastPosition, arrayCreation.getEnd() - 1);
+		lineWidth++;// we need to add the closing bracket/parenthesis
 
 		return false;
 	}
@@ -2479,7 +2496,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			indentationLevel--;
 			indentationLevelDescending = true;
 		}
-		int endPosition = block.getEnd() - 1;
+		int endPosition = block.getEnd();
 		boolean hasComments = false;
 		if (startRegionPosition < endPosition && endRegionPosition >= endPosition) {
 			try {
@@ -2521,27 +2538,28 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		}
 
-		if (block.getEnd() > block.getStart()) {
-			int end = block.getEnd() - 1;
+		if (endPosition > lastStatementEndOffset) {
+			// exclude closing curly
+			int end = endPosition - 1;
 			if (!block.isCurly()) {
 				switch (block.getParent().getType()) {
 				case ASTNode.SWITCH_STATEMENT:
-					end = block.getEnd() - "endswitch".length();//$NON-NLS-1$
+					end = endPosition - "endswitch".length();//$NON-NLS-1$
 					break;
 				case ASTNode.WHILE_STATEMENT:
-					end = block.getEnd() - "endwhile".length();//$NON-NLS-1$
+					end = endPosition - "endwhile".length();//$NON-NLS-1$
 					break;
 				case ASTNode.FOR_STATEMENT:
-					end = block.getEnd() - "endfor".length();//$NON-NLS-1$
+					end = endPosition - "endfor".length();//$NON-NLS-1$
 					break;
 				case ASTNode.FOR_EACH_STATEMENT:
-					end = block.getEnd() - "endforeach".length();//$NON-NLS-1$
+					end = endPosition - "endforeach".length();//$NON-NLS-1$
 					break;
 				case ASTNode.DECLARE_STATEMENT:
-					end = block.getEnd() - "enddeclare".length();//$NON-NLS-1$
+					end = endPosition - "enddeclare".length();//$NON-NLS-1$
 					break;
 				case ASTNode.IF_STATEMENT:
-					end = block.getEnd();
+					end = endPosition;
 					break;
 				}
 			}
@@ -2571,7 +2589,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			blockEnd = true;
 			handleChars(lastStatementEndOffset, end);
 			blockEnd = false;
-			lineWidth++;// closing curly
+			if (block.isCurly()) {
+				lineWidth++;// closing curly
+			}
 		}
 		return false;
 	}

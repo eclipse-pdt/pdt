@@ -9,7 +9,6 @@ $x = ['name' => 'Gonzalo', 'surname' => 'Ayuso' // test comment
 <?php
 $x = [ 
 		'name' => 'Gonzalo',
-		'surname' => 'Ayuso' 
-] // test comment
-;
+		'surname' => 'Ayuso'  // test comment
+];
 ?>

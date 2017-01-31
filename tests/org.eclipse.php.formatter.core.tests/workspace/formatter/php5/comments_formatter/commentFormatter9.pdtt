@@ -12,9 +12,9 @@ $x[
 ?>
 --EXPECT--
 <?php
-return array()
+return array(
 // this is a comment
-;
+);
 $x[
 // this is a comment
 ] = 0;

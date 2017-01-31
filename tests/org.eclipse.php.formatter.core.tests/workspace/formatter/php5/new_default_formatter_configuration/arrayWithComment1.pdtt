@@ -13,8 +13,7 @@ class stats{
 class stats {
 	private $arr = array (
 			1,
-			2 
-	) // 3
-;
+			2  // 3
+	);
 }
 ?>

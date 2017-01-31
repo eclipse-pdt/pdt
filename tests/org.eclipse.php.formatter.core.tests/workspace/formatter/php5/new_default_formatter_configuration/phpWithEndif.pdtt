@@ -1,0 +1,13 @@
+--TEST--
+Test formatting PHP with if-endif block
+(no additional newlines should be inserted before "endif;" after each formatting)
+--FILE--
+<?php
+if (true) :
+    echo "ok";
+endif;
+--EXPECT--
+<?php
+if (true) :
+	echo "ok";
+endif;
