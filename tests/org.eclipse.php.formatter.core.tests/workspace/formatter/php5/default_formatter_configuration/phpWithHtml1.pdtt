@@ -43,7 +43,8 @@ endforeach;
 		if ($page != $this->current) :
 			?>
    <a href="<?php echo $this->url(array('page' => $page));?>"><?php echo $page;?> </a> |
-		 <?php
+<?php
+		
 else :
 			echo $page;
 			?> |
