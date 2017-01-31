@@ -179,9 +179,9 @@
             name="%install.command.name">
       </command>
       <command
-            description="%install-dev.command.description"
+            description="%installDev.command.description"
             id="org.eclipse.php.composer.ui.command.installDev"
-            name="%install-dev.command.name">
+            name="%installDev.command.name">
       </command>
       <command
             description="%updateDev.command.description"
