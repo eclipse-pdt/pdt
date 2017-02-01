@@ -200,7 +200,7 @@ public class PhpSourceParser extends XMLSourceParser {
 					ITextRegionContainer container = (ITextRegionContainer) lastRegion;
 					container.getRegions().add(region);
 					// containers must have parent set ...
-					// setting for EACH subregion is redundent, but not sure
+					// setting for EACH subregion is redundant, but not sure
 					// where else to do, so will do here for now.
 					container.setParent(currentNode);
 					// DW 4/16/2003 regions no longer have parents

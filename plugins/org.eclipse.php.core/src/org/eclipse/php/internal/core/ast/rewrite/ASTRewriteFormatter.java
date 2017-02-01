@@ -433,7 +433,7 @@ import org.eclipse.text.edits.*;
 		char[] newPrefixArr = newPrefix.toCharArray();
 		for (int i = newPrefixArr.length - 1; i >= 0; i--) {
 			char c = newPrefixArr[i];
-			if (c == ' ' || c == '\r' || c == '\n' || c == '\t') {
+			if (Character.isWhitespace(c)) {
 				newPrefixEnding.append(c);
 			} else {
 				break;
