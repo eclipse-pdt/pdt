@@ -80,6 +80,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private static final char OPEN_CURLY = '{';
 	private static final char CLOSE_CURLY = '}';
 	private static final char OPEN_BRACKET = '[';
+	@SuppressWarnings("unused")
 	private static final char CLOSE_BRACKET = ']';
 	private static final char COLON = ':';
 	private static final char SEMICOLON = ';';
@@ -236,6 +237,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private char getBufferFirstChar(int position) throws BadLocationException {
 		for (int offset = position; offset < replaceBuffer.length(); offset++) {
 			char currChar = replaceBuffer.charAt(offset);
+			// XXX: we only work with a reduced set of whitespace characters,
+			// because those characters will be reused to indent lines.
 			if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
 				// not empty line
 				return currChar;
@@ -386,8 +389,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					// PHPTokenizer.jflex tells us that "<?php" must ALWAYS
 					// be followed by a whitespace character to be recognized as
 					// a PHP_OPEN_TAG
-					if (separatorChar == ' ' || separatorChar == '\t' || separatorChar == '\r'
-							|| separatorChar == '\n') {
+					if (Character.isWhitespace(separatorChar)) {
 						return PHP_OPEN_TAG;
 					}
 				}
@@ -569,7 +571,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (!ignoreEmptyLineSetting) {
 				// count empty lines
 				for (int line = startLine; line < endLine; line++) {
-					if (isEmptyLine(line)) {
+					if (isBlankLine(line)) {
 						emptyLines++;
 					}
 				}
@@ -1452,23 +1454,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		handleCharsWithoutComments(start, end);
 	}
 
-	private void indentBaseOnPrevLine(int commentStartLine) throws BadLocationException {
-		IRegion prevLine = document.getLineInformation(commentStartLine);
-		loop: for (int i = 0; i < prevLine.getLength(); i++) {
-			switch (document.getChar(i + prevLine.getOffset())) {
-			case ' ':
-			case '\t':
-			case '\r':
-			case '\n':
-				appendToBuffer(document.getChar(i + prevLine.getOffset()));
-				break;
-			default:
-				break loop;
-			}
-
-		}
-	}
-
 	private boolean canHandlePHPDocComment(PHPDocBlock comment, int offset) throws BadLocationException {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
 		// do not handle single-line PHPDoc comment with @var tag inside
@@ -1479,30 +1464,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
 		int commentEndLine = document.getLineOfOffset(comment.sourceEnd() + offset);
 		return commentStartLine != commentEndLine;
-	}
-
-	private boolean isComment(IRegion iRegion) {
-		for (int i = 0; i < iRegion.getLength() - 1; i++) {
-			try {
-				switch (document.getChar(iRegion.getOffset() + i)) {
-				case '/':
-					if (document.getChar(iRegion.getOffset() + i + 1) == '/')
-						return true;
-					else if (document.getChar(iRegion.getOffset() + i + 1) == '*')
-						return true;
-				case '*':
-					return true;
-				case ' ':
-				case '\t':
-					break;
-				default:
-					return false;
-				}
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-		}
-		return false;
 	}
 
 	private boolean endWithNewLineIndent(String string) {
@@ -2072,18 +2033,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	private boolean isEmptyLine(int line) throws BadLocationException {
-		int lineStart = document.getLineOffset(line);
-		int lineEnd = lineStart + document.getLineLength(line);
-
-		for (int offset = lineStart; offset < lineEnd; offset++) {
-			char currChar = document.getChar(offset);
-			if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
-				// not empty line
-				return false;
-			}
-		}
-		return true;
+	private boolean isBlankLine(int line) throws BadLocationException {
+		return StringUtils.isBlank(document.get(document.getLineOffset(line), document.getLineLength(line)));
 	}
 
 	// this operation "reverts" the visitor into the last "saved" state of the
@@ -5024,6 +4975,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @see org.eclipse.php.internal.core.format.ICodeFormattingProcessor#
 	 * createIndentationString(int)
 	 */
+	@SuppressWarnings("null")
 	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits < 0) {
 			throw new IllegalArgumentException();

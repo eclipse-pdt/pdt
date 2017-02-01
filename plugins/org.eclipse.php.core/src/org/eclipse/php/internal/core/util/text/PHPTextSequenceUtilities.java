@@ -40,9 +40,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPTextSequenceUtilities {
 
-	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function[ \\t\\n\\r]", //$NON-NLS-1$
+	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\p{javaWhitespace}", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
-	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)[ \\t\\n\\r]", //$NON-NLS-1$
+	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\p{javaWhitespace}", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
 
 	private static final String LBRACE = "{"; //$NON-NLS-1$
