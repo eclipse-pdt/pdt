@@ -1739,7 +1739,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			if (content[i] == ';') {
 				return i;
 			}
-			if (content[i] != ' ' && content[i] != '\t' && content[i] != '\n' && content[i] != '\r') {
+			if (!Character.isWhitespace(content[i])) {
 				return startIndex;
 			}
 		}
@@ -2883,8 +2883,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			case RewriteEvent.INSERTED:
 				Identifier identifier = (Identifier) event.getNewValue();
 				String name = identifier.getName();
-				if (name != null) {
-					if (!name.endsWith(" ") && !name.endsWith("\t")) { //$NON-NLS-1$ //$NON-NLS-2$
+				if (name != null && name.length() > 0) {
+					if (!Character.isWhitespace(name.charAt(name.length() - 1))) {
 						name += ' ';
 					}
 					doTextInsert(formalParameter.getStart(), name, getEditGroup(event));

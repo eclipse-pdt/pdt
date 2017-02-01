@@ -1009,6 +1009,11 @@ PIecho = <\?=
 PIstart = <\?
 PIend   = \?>
 
+/* Definition of \p{javaWhitespace} */
+/* Replaces [ \n\r\t] or {S} */
+WHITESPACE=[\t\n\u000b\f\r\u001c\u001d\u001e\u001f \u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2008\u2009\u200a\u2028\u2029\u205f\u3000]
+NO_XML_CHAR=[^\'\"<>/\t\n\u000b\f\r\u001c\u001d\u001e\u001f \u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2008\u2009\u200a\u2028\u2029\u205f\u3000]
+
 // [1] document ::= prolog element Misc*
 document = ({prolog} {element} {Misc}*)
 
@@ -1026,20 +1031,20 @@ NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender})
 //Name = ({NameChar}{NameChar}*)
 Name = ({Letter} | _ | :){NameChar}*
 
-// [6] Names ::= {Name} ({S} {Name})*
-Names = ({Name} ({S} {Name})*)
+// [6] Names ::= {Name} ({WHITESPACE} {Name})*
+Names = ({Name} ({WHITESPACE} {Name})*)
 
 // [7] Nmtoken ::= (NameChar)+
 Nmtoken = ({NameChar}+)
 
 // [8] Nmtokens ::= Nmtoken (S Nmtoken)*
-Nmtokens = ({Nmtoken} ({S} {Nmtoken})*)
+Nmtokens = ({Nmtoken} ({WHITESPACE} {Nmtoken})*)
 
 // [9] EntityValue ::= '"' ([^%&"] | PEReference | Reference)* '"' |  "'" ([^%&'] | PEReference | Reference)* "'"
 EntityValue = (\" ([^%&\"] | {PEReference} | {Reference})* \" |  \' ([^%&\'] | {PEReference} | {Reference})* \')
 
 // [10] AttValue ::= '"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
-AttValue = ( \" ([^<\"] | {Reference})* \" | \' ([^<\'] | {Reference})* \'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* )
+AttValue = ( \" ([^<\"] | {Reference})* \" | \' ([^<\'] | {Reference})* \'  | ({NO_XML_CHAR}|\/+{NO_XML_CHAR} )* )
 
 // [11] SystemLiteral ::= ('"' [^"]* '"') | ("'" [^']* "'")
 SystemLiteral = ((\" [^\"]* \") | (\' [^\']* \'))
@@ -1082,10 +1087,10 @@ CDEnd = (\]\]>)
 prolog = ({XMLDecl}? {Misc}* ({doctypedecl} {Misc}*)?)
 
 // [23] XMLDecl ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
-XMLDecl = (<\?xml {VersionInfo} {EncodingDecl}? {SDDecl}? {S}? \?>)
+XMLDecl = (<\?xml {VersionInfo} {EncodingDecl}? {SDDecl}? {WHITESPACE}? \?>)
 
 // [24] VersionInfo ::= S 'version' Eq (' VersionNum ' | " VersionNum ")
-VersionInfo = ({S}version{Eq}(\'{VersionNum}\' | \"{VersionNum}\"))
+VersionInfo = ({WHITESPACE}version{Eq}(\'{VersionNum}\' | \"{VersionNum}\"))
 
 // [25] Eq ::= S? '=' S?
 Eq = (\=)
@@ -1094,10 +1099,10 @@ Eq = (\=)
 VersionNum = (([a-zA-Z0-9_.:]|\-)+)
 
 // [27] Misc ::= Comment | S
-Misc = ({Comment} | {S})
+Misc = ({Comment} | {WHITESPACE})
 
 // [28] doctypedecl ::= '<\!DOCTYPE' S Name (S ExternalID)?  S? ('[' (markupdecl | PEReference | S)* ']' S?)? '>'
-doctypedecl = (<\!DOCTYPE{S}{Name} ({S}{ExternalID})? {S}? (\[ ({markupdecl}|{PEReference}|{S})* \]{S}?)?>)
+doctypedecl = (<\!DOCTYPE{WHITESPACE}{Name} ({WHITESPACE}{ExternalID})? {WHITESPACE}? (\[ ({markupdecl}|{PEReference}|{WHITESPACE})* \]{WHITESPACE}?)?>)
 
 // [29] markupdecl ::= elementdecl | AttlistDecl | EntityDecl | NotationDecl | Comment
 markupdecl = ({elementdecl} | {AttlistDecl} | {EntityDecl} | {NotationDecl} | {Comment})
@@ -1106,10 +1111,10 @@ markupdecl = ({elementdecl} | {AttlistDecl} | {EntityDecl} | {NotationDecl} | {C
 extSubset = ({TextDecl}? {extSubsetDecl})
 
 // [31] extSubsetDecl ::= ( markupdecl | conditionalSect | PEReference | S )*
-extSubsetDecl = (( {markupdecl} | {conditionalSect} | {PEReference} | {S} )*)
+extSubsetDecl = (( {markupdecl} | {conditionalSect} | {PEReference} | {WHITESPACE} )*)
 
 // [32]  SDDecl  ::= S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))
-SDDecl  = ({S}standalone{Eq}{S}*((\'(yes|no)\')|(\"(yes|no)\")))
+SDDecl  = ({WHITESPACE}standalone{Eq}{WHITESPACE}*((\'(yes|no)\')|(\"(yes|no)\")))
 
 // [33]  LanguageID  ::= Langcode ('-' Subcode)*
 LanguageID  = ({Langcode}(\-{Subcode})*)
@@ -1133,22 +1138,22 @@ Subcode = (([a-z]|[A-Z])+)
 element  = ({EmptyElemTag} | {STag} {content} {ETag})
 
 // [40]  STag  ::= '<' Name (S Attribute)* S? '>'
-STag = (<{Name}({S}{Attribute})*{S}?>)
+STag = (<{Name}({WHITESPACE}{Attribute})*{WHITESPACE}?>)
 
 // [41]  Attribute ::= Name Eq AttValue
-Attribute = ({Name}{S}*{Eq}{S}*{AttValue})
+Attribute = ({Name}{WHITESPACE}*{Eq}{WHITESPACE}*{AttValue})
 
 // [42]  ETag  ::= 'Name S? '>'
-ETag = (<\/{Name}{S}?>)
+ETag = (<\/{Name}{WHITESPACE}?>)
 
 // [43]  content  ::= (element | CharData | Reference | CDSect | Comment)*
 content = (({element} | {CharData} | {Reference} | {CDSect} | {Comment})*)
 
 // [44]  EmptyElemTag  ::= '<' Name (S Attribute)* S? '/>'
-EmptyElemTag = (<{Name}({S}{Attribute})*{S}?\/>)
+EmptyElemTag = (<{Name}({WHITESPACE}{Attribute})*{WHITESPACE}?\/>)
 
 // [45] elementdecl ::= '<\!ELEMENT' S Name S contentspec S? '>'
-elementdecl = (<\!ELEMENT{S}{Name}{S}{contentspec}{S}?>)
+elementdecl = (<\!ELEMENT{WHITESPACE}{Name}{WHITESPACE}{contentspec}{WHITESPACE}?>)
 
 // [46] contentspec ::= 'EMPTY' | 'ANY' | Mixed | children
 contentspec = (EMPTY|ANY|{Mixed}|{children})
@@ -1161,21 +1166,21 @@ children = (({choice}|{seq})(\?|\*|\+)?)
 cp = (({Name} | {choice} | {seq}) (\?|\*|\+)?)
 
 // [49] choice ::= '(' S? cp ( S? '|' S? cp )* S? ')'
-// choice = \({S}?{cp}({S}?\|{S}?{cp})*{S}?\)
-choice = \({S}?{Name}({S}?\|{S}?{Name})*{S}?\)
+// choice = \({WHITESPACE}?{cp}({WHITESPACE}?\|{WHITESPACE}?{cp})*{WHITESPACE}?\)
+choice = \({WHITESPACE}?{Name}({WHITESPACE}?\|{WHITESPACE}?{Name})*{WHITESPACE}?\)
 
 // [50] seq ::= '(' S? cp ( S? ',' S? cp )* S? ')'
-// seq = (\({S}?{cp}({S}?\,{S}?{cp})*{S}?\))
-seq = (\({S}?{Name}({S}?\,{S}?{Name})*{S}?\))
+// seq = (\({WHITESPACE}?{cp}({WHITESPACE}?\,{WHITESPACE}?{cp})*{WHITESPACE}?\))
+seq = (\({WHITESPACE}?{Name}({WHITESPACE}?\,{WHITESPACE}?{Name})*{WHITESPACE}?\))
 
 // [51] Mixed ::= '(' S? '#PCDATA' (S? '|' S? Name)* S?  ')*' | '(' S? '#PCDATA' S? ')'
-Mixed = ({S}?\#PCDATA({S}?\|{S}?{Name})*{S}?)*\|({S}?\#PCDATA{S}?)
+Mixed = ({WHITESPACE}?\#PCDATA({WHITESPACE}?\|{WHITESPACE}?{Name})*{WHITESPACE}?)*\|({WHITESPACE}?\#PCDATA{WHITESPACE}?)
 
 // [52] AttlistDecl ::= '<\!ATTLIST' S Name AttDef* S? '>'
-AttlistDecl = (<\!ATTLIST{S}{Name}{AttDef}*{S}?>)
+AttlistDecl = (<\!ATTLIST{WHITESPACE}{Name}{AttDef}*{WHITESPACE}?>)
 
 // [53] AttDef ::= S Name S AttType S DefaultDecl
-AttDef = ({S}{Name}{S}{AttType}{S}{DefaultDecl})
+AttDef = ({WHITESPACE}{Name}{WHITESPACE}{AttType}{WHITESPACE}{DefaultDecl})
 
 // [54] AttType ::= StringType | TokenizedType | EnumeratedType
 AttType = ({StringType} | {TokenizedType} | {EnumeratedType})
@@ -1190,22 +1195,22 @@ TokenizedType = (ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS)
 EnumeratedType = ({NotationType} | {Enumeration})
 
 // [58] NotationType ::= 'NOTATION' S '(' S? Name (S? '|' S? Name)* S? ')'
-NotationType = (NOTATION{S}\({S}?{Name}({S}?\|{S}?{Name})*{S}?\))
+NotationType = (NOTATION{WHITESPACE}\({WHITESPACE}?{Name}({WHITESPACE}?\|{WHITESPACE}?{Name})*{WHITESPACE}?\))
 
 // [59] Enumeration ::= '(' S? Nmtoken (S? '|' S?  Nmtoken)* S? ')'
-Enumeration = (\({S}?{Nmtoken}({S}?\|{S}?{Nmtoken})*{S}?\))
+Enumeration = (\({WHITESPACE}?{Nmtoken}({WHITESPACE}?\|{WHITESPACE}?{Nmtoken})*{WHITESPACE}?\))
 
 // [60] DefaultDecl ::= '#REQUIRED' | '#IMPLIED' | (('#FIXED' S)? AttValue)
-DefaultDecl = (\#REQUIRED|\#IMPLIED|((\#FIXED{S})?{AttValue}))
+DefaultDecl = (\#REQUIRED|\#IMPLIED|((\#FIXED{WHITESPACE})?{AttValue}))
 
 // [61] conditionalSect ::= includeSect | ignoreSect
 conditionalSect = ({includeSect} | {ignoreSect})
 
 // [62] includeSect ::= '<\![' S? 'INCLUDE' S? '[' extSubsetDecl ']]>'
-includeSect = (<\!\[{S}?INCLUDE{S}?\[{extSubsetDecl}\]\]>)
+includeSect = (<\!\[{WHITESPACE}?INCLUDE{WHITESPACE}?\[{extSubsetDecl}\]\]>)
 
 // [63] ignoreSect ::= '<\![' S? 'IGNORE' S? '[' ignoreSectContents* ']]>'
-ignoreSect = (<\!\[{S}?IGNORE{S}?\[{ignoreSectContents}*\]\]>)
+ignoreSect = (<\!\[{WHITESPACE}?IGNORE{WHITESPACE}?\[{ignoreSectContents}*\]\]>)
 
 // [64] ignoreSectContents ::= Ignore ('<\![' ignoreSectContents ']]>' Ignore)*
 ignoreSectContents = ({Ignore}(<\!\[{ignoreSectContents}\]\]>{Ignore})*)
@@ -1229,10 +1234,10 @@ PEReference = (%{Name};)
 EntityDecl = ({GEDecl} | {PEDecl})
 
 // [71] GEDecl ::= '<\!ENTITY' S Name S EntityDef S? '>'
-GEDecl = (<\!ENTITY{S}{Name}{S}{EntityDef}{S}?>)
+GEDecl = (<\!ENTITY{WHITESPACE}{Name}{WHITESPACE}{EntityDef}{WHITESPACE}?>)
 
 // [72] PEDecl ::= '<\!ENTITY' S '%' S Name S PEDef S? '>'
-PEDecl = (<\!ENTITY{S}\%{S}{Name}{S}{PEDef}{S}?>)
+PEDecl = (<\!ENTITY{WHITESPACE}\%{WHITESPACE}{Name}{WHITESPACE}{PEDef}{WHITESPACE}?>)
 
 // [73] EntityDef ::= EntityValue | (ExternalID NDataDecl?)
 EntityDef = ({EntityValue} | ({ExternalID}{NDataDecl}?))
@@ -1241,13 +1246,13 @@ EntityDef = ({EntityValue} | ({ExternalID}{NDataDecl}?))
 PEDef = ({EntityValue} | {ExternalID})
 
 // [75] ExternalID ::= 'SYSTEM' S SystemLiteral | 'PUBLIC' S PubidLiteral S SystemLiteral
-ExternalID = (SYSTEM{S}{SystemLiteral}|PUBLIC{S}{PubidLiteral}{S}{SystemLiteral} )
+ExternalID = (SYSTEM{WHITESPACE}{SystemLiteral}|PUBLIC{WHITESPACE}{PubidLiteral}{WHITESPACE}{SystemLiteral} )
 
 // [76] NDataDecl ::= S 'NDATA' S Name
-NDataDecl = ({S}NDATA{S}{Name})
+NDataDecl = ({WHITESPACE}NDATA{WHITESPACE}{Name})
 
 // [77] TextDecl ::= '<?xml' VersionInfo? EncodingDecl S? '?>'
-TextDecl = (<\?xml{VersionInfo}?{EncodingDecl}{S}?\?>)
+TextDecl = (<\?xml{VersionInfo}?{EncodingDecl}{WHITESPACE}?\?>)
 
 // [78] extParsedEnt ::= TextDecl? content
 extParsedEnt = ({TextDecl}?{content})
@@ -1256,16 +1261,16 @@ extParsedEnt = ({TextDecl}?{content})
 extPE = ({TextDecl}?{extSubsetDecl})
 
 // [80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' |  "'" EncName "'" )
-EncodingDecl = ({S}encoding{S}*{Eq}{S}*(\"{EncName}\"|\'{EncName}\'))
+EncodingDecl = ({WHITESPACE}encoding{WHITESPACE}*{Eq}{WHITESPACE}*(\"{EncName}\"|\'{EncName}\'))
 
 // [81] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*
 EncName = ([A-Za-z]([A-Za-z0-9._]|\-)*)
 
 // [82] NotationDecl ::= '<\!NOTATION' S Name S (ExternalID |  PublicID) S? '>'
-NotationDecl = (<\!NOTATION{S}{Name}{S}({ExternalID}|{PublicID}){S}?>)
+NotationDecl = (<\!NOTATION{WHITESPACE}{Name}{WHITESPACE}({ExternalID}|{PublicID}){WHITESPACE}?>)
 
 // [83] PublicID ::= 'PUBLIC' S PubidLiteral
-PublicID = (PUBLIC{S}{PubidLiteral})
+PublicID = (PUBLIC{WHITESPACE}{PubidLiteral})
 
 // [84]  Letter ::= BaseChar | Ideographic
 Letter = ({BaseChar} | {Ideographic})
@@ -1371,7 +1376,6 @@ Digit =  [\u0030-\u0039\u0660-\u0669\u06F0-\u06F9\u0966-\u096F\u09E6-\u09EF\u0A6
 Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-\u309E\u30FC-\u30FE]
 
 //PHP MACROS
-WHITESPACE = [ \n\r\t]
 //PHP_START = {WHITESPACE}*(<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
 PHP_START = <\?[Pp][Hh][P|p]{WHITESPACE}+
 //PIend = \?>
@@ -1381,7 +1385,7 @@ PHP_ASP_END=%>
 
 
 /* white space within a tag */
-<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID> {S}* {
+<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID> {WHITESPACE}* {
 	if(Debug.debugTokenizer)
 		dump("white space");//$NON-NLS-1$
 	return WHITE_SPACE;
@@ -1773,7 +1777,7 @@ PHP_ASP_END=%>
 	yybegin(ST_PI_WS);
 	return XML_TAG_NAME;
 }
-<ST_PI_WS> {S}+ {
+<ST_PI_WS> {WHITESPACE}+ {
 	yybegin(ST_PI_CONTENT);
 	return WHITE_SPACE;
 }
@@ -1842,7 +1846,7 @@ PHP_ASP_END=%>
 	return XML_TAG_ATTRIBUTE_EQUALS;
 }
 /* the value was found, look for the next name */
-<ST_DHTML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
+<ST_DHTML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]({NO_XML_CHAR}|\/+{NO_XML_CHAR} )* ) {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction attribute value");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
@@ -1910,13 +1914,13 @@ PHP_ASP_END=%>
 	yybegin(ST_XML_DOCTYPE_ID_SYSTEM);
 	return XML_DOCTYPE_EXTERNAL_ID_SYSTEM;
 }
-<ST_XML_DOCTYPE_ID_PUBLIC> {AttValue}|{PubidLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
+<ST_XML_DOCTYPE_ID_PUBLIC> {AttValue}|{PubidLiteral}|([\'\"]({NO_XML_CHAR}|\/+{NO_XML_CHAR} )* ) {
 	if(Debug.debugTokenizer)
 		dump("doctype public reference");//$NON-NLS-1$
 	yybegin(ST_XML_DOCTYPE_ID_SYSTEM);
 	return XML_DOCTYPE_EXTERNAL_ID_PUBREF;
 }
-<ST_XML_DOCTYPE_ID_SYSTEM> {AttValue}|{SystemLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
+<ST_XML_DOCTYPE_ID_SYSTEM> {AttValue}|{SystemLiteral}|([\'\"]({NO_XML_CHAR}|\/+{NO_XML_CHAR} )* ) {
 	if(Debug.debugTokenizer)
 		dump("doctype system reference");//$NON-NLS-1$
 	yybegin(ST_XML_DECLARATION_CLOSE);
@@ -1925,7 +1929,7 @@ PHP_ASP_END=%>
 // end DOCTYPE handling
 
 // begin ELEMENT handling procedure
-<ST_XML_ELEMENT_DECLARATION> {AttValue}|{PubidLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
+<ST_XML_ELEMENT_DECLARATION> {AttValue}|{PubidLiteral}|([\'\"]({NO_XML_CHAR}|\/+{NO_XML_CHAR} )* ) {
 	if(Debug.debugTokenizer)
 		dump("elementdecl name");//$NON-NLS-1$
 	yybegin(ST_XML_ELEMENT_DECLARATION_CONTENT);
@@ -1950,7 +1954,7 @@ PHP_ASP_END=%>
 // end ELEMENT handling
 
 // begin ATTLIST handling procedure
-<ST_XML_ATTLIST_DECLARATION> {AttValue}|{PubidLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
+<ST_XML_ATTLIST_DECLARATION> {AttValue}|{PubidLiteral}|([\'\"]({NO_XML_CHAR}|\/+{NO_XML_CHAR} )* ) {
 	if(Debug.debugTokenizer)
 		dump("attlist name");//$NON-NLS-1$
 	yybegin(ST_XML_ATTLIST_DECLARATION_CONTENT);
@@ -1986,7 +1990,7 @@ PHP_ASP_END=%>
 }
 // end DECLARATION handling
 
-<YYINITIAL> [^<&%]*|[&%]{S}+{Name}[^&%<]*|[&%]{Name}([^;&%<]*|{S}+;*) {
+<YYINITIAL> [^<&%]*|[&%]{WHITESPACE}+{Name}[^&%<]*|[&%]{Name}([^;&%<]*|{WHITESPACE}+;*) {
 	if(Debug.debugTokenizer)
 		dump("\nXML content");//$NON-NLS-1$
 	return XML_CONTENT;
@@ -2060,26 +2064,4 @@ PHP_ASP_END=%>
 		System.out.println("!!!unexpected!!!: \"" + yytext() + "\":" + //$NON-NLS-1$ //$NON-NLS-2$
 			yychar + "-" + (yychar + yylength()));//$NON-NLS-1$
 	return UNDEFINED;
-}
-
-\040 {
-	if(Debug.debugTokenizer)
-		dump("SPACE");//$NON-NLS-1$
-	return WHITE_SPACE;
-}
-\011 {
-	if(Debug.debugTokenizer)
-		dump("0x9");//$NON-NLS-1$
-	return WHITE_SPACE;
-}
-\015
-{
-	if(Debug.debugTokenizer)
-		dump("CARRIAGE RETURN");//$NON-NLS-1$
-	return WHITE_SPACE;
-}
-\012 {
-	if(Debug.debugTokenizer)
-		dump("LINE FEED");//$NON-NLS-1$
-	return WHITE_SPACE;
 }

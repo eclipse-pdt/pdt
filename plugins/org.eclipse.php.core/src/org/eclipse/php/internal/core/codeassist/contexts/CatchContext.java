@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class CatchContext extends StatementContext {
 
-	protected static final Pattern CATCH_PATTERN = Pattern.compile("catch[ \\t\\n\\r]*[^{]*", //$NON-NLS-1$
+	protected static final Pattern CATCH_PATTERN = Pattern.compile("catch\\p{javaWhitespace}*[^{]*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
 
 	private int catchStart;
