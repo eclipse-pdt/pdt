@@ -1371,7 +1371,8 @@ Digit =  [\u0030-\u0039\u0660-\u0669\u06F0-\u06F9\u0966-\u096F\u09E6-\u09EF\u0A6
 Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-\u309E\u30FC-\u30FE]
 
 //PHP MACROS
-WHITESPACE = [ \n\r\t]
+/* Definition of \p{javaWhitespace} */
+WHITESPACE=[\t\n\u000b\f\r\u001c\u001d\u001e\u001f \u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2008\u2009\u200a\u2028\u2029\u205f\u3000]
 //PHP_START = {WHITESPACE}*(<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
 PHP_START = <\?[Pp][Hh][P|p]{WHITESPACE}+
 //PIend = \?>
