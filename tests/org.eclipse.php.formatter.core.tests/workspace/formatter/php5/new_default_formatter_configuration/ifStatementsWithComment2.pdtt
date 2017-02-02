@@ -1,0 +1,22 @@
+--TEST--
+Test formatting if statements
+--FILE--
+<?php
+if (true) {
+} /* else section */ else /* else section */ {
+}
+
+do {
+} /* while section */ while /* while section */ (true);
+?>
+--EXPECT--
+<?php
+if (true) {
+} /* else section */
+else /* else section */
+{
+}
+do {
+} /* while section */
+while /* while section */ (true );
+?>
