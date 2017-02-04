@@ -16,14 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.internal.p2.ui.discovery.wizards.AbstractDiscoveryItem;
 import org.eclipse.equinox.internal.p2.ui.discovery.wizards.DiscoveryResources;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.MinimalPackage;
 import org.eclipse.php.composer.api.RepositoryPackage;
 import org.eclipse.php.composer.api.collection.Versions;
 import org.eclipse.php.composer.api.entities.JsonValue;
+import org.eclipse.php.composer.api.entities.Version;
 import org.eclipse.php.composer.api.packages.AsyncPackagistDownloader;
 import org.eclipse.php.composer.api.packages.PackageListenerInterface;
 import org.eclipse.php.composer.core.log.Logger;
@@ -183,10 +186,27 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 	}
 
 	protected void loadVersionsFromCache() {
-		versionCombo.setItems(filterItem.getVersions());
-		versionCombo.select(0);
-		versionCombo.setVisible(true);
-		filterItem.setSelectedVersion(versionCombo.getText());
+		if (!versionCombo.isDisposed()) {
+			String[] versions = filterItem.getVersions();
+			versionCombo.setItems(versions);
+			int index = 0;
+			for (String version : versions) {
+				if (StringUtils.equals(version, filterItem.getSelectedVersion())) {
+					versionCombo.select(index);
+					break;
+				}
+				index++;
+			}
+			if (index == versions.length && versions.length > 0) {
+				versionCombo.select(0);
+			}
+			versionCombo.setVisible(true);
+			if (versionCombo.getSelectionIndex() != -1) {
+				filterItem.setSelectedVersion(versionCombo.getText());
+			}
+		} else {
+			filterItem.setSelectedVersion(null);
+		}
 
 		for (PackageFilterChangedListener listener : listeners) {
 			listener.filterChanged(filterItem);
@@ -215,14 +235,22 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 			public void packageLoaded(RepositoryPackage repositoryPackage) {
 				Versions versions = repositoryPackage.getVersions();
 				final List<String> versionNames = new ArrayList<String>();
+				String selectVersion = null;
 				for (Entry<String, ComposerPackage> version : versions) {
+					Version detailedVersion = versions.getDetailedVersion(version.getValue().getVersion());
+					if (selectVersion == null && detailedVersion != null
+							&& detailedVersion.getStability() == ComposerConstants.STABLE) {
+						selectVersion = version.getValue().getVersion();
+					}
 					versionNames.add(version.getValue().getVersion());
 				}
+				final String selectedVersion = selectVersion;
 
 				getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						filterItem.setVersions(versionNames.toArray(new String[versionNames.size()]));
+						filterItem.setSelectedVersion(selectedVersion);
 						loadVersionsFromCache();
 					}
 				});
