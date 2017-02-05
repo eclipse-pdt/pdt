@@ -78,6 +78,7 @@ abstract public class ComposerJob extends Job {
 
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
+		boolean callLauncherRunException = false;
 		try {
 
 			this.monitor = monitor;
@@ -85,10 +86,14 @@ abstract public class ComposerJob extends Job {
 			try {
 				launcher = manager.getLauncher(ComposerEnvironmentFactory.FACTORY_ID, getProject());
 			} catch (ExecutableNotFoundException e) {
+				callLauncherRunException = true;
+				doOnLauncherRunException(e);
 				// inform the user of the missing executable
 				Display.getDefault().asyncExec(new MissingExecutableRunner());
 				return Status.OK_STATUS;
 			} catch (ScriptNotFoundException e) {
+				callLauncherRunException = true;
+				doOnLauncherRunException(e);
 				// run the downloader
 				Display.getDefault().asyncExec(new DownloadRunner());
 				return Status.OK_STATUS;
@@ -120,6 +125,10 @@ abstract public class ComposerJob extends Job {
 				monitor.worked(1);
 			}
 		} catch (Exception e) {
+			if (!callLauncherRunException) {
+				callLauncherRunException = true;
+				doOnLauncherRunException(e);
+			}
 			Logger.logException(e);
 			return ERROR_STATUS;
 		} finally {
@@ -127,6 +136,9 @@ abstract public class ComposerJob extends Job {
 		}
 
 		return Status.OK_STATUS;
+	}
+
+	protected void doOnLauncherRunException(Exception e) {
 	}
 
 	abstract protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException;

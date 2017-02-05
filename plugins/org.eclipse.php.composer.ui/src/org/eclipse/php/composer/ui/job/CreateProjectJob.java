@@ -69,6 +69,14 @@ public class CreateProjectJob extends ComposerJob {
 	}
 
 	@Override
+	protected void doOnLauncherRunException(Exception e) {
+		// to avoid deadlocks in
+		// PackageProjectWizardSecondPage#beforeFinish() at
+		// latch.await()
+		notifyOnFail();
+	}
+
+	@Override
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
 
 		// cloning large projects can take a long time...
