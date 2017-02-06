@@ -203,6 +203,10 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 			versionCombo.setVisible(true);
 			if (versionCombo.getSelectionIndex() != -1) {
 				filterItem.setSelectedVersion(versionCombo.getText());
+			} else {
+				// at this point filterItem.getSelectedVersion() should always
+				// return null, but let's do it by security
+				filterItem.setSelectedVersion(null);
 			}
 		} else {
 			filterItem.setSelectedVersion(null);
