@@ -479,7 +479,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (isIndentationAdded) {
 			indentationLevel--;
-			indentationLevelDescending = true;
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=511502
+			if (action.getType() == ASTNode.BLOCK) {
+				indentationLevelDescending = true;
+			}
 		}
 	}
 
