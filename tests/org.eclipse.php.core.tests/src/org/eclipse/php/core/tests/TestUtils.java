@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -357,6 +358,10 @@ public final class TestUtils {
 			diff = StringUtils.difference(tmpExpected, tmpActual);
 		}
 		return null;
+	}
+
+	public static void lockWorkspaceTree(boolean lock) {
+		((Workspace) ResourcesPlugin.getWorkspace()).setTreeLocked(lock);
 	}
 
 	private static String getDiffError(String expected, String actual, int expectedDiff, int actualDiff) {
