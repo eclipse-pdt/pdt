@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.search.indexing.AbstractJob;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
@@ -162,6 +163,7 @@ public final class TestUtils {
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
+			discardAutoBuild();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -179,6 +181,7 @@ public final class TestUtils {
 		IFolder folder = project.getFolder(folderName);
 		try {
 			folder.create(true, true, null);
+			discardAutoBuild();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -197,6 +200,7 @@ public final class TestUtils {
 		IFile file = project.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
+			discardAutoBuild();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -215,6 +219,7 @@ public final class TestUtils {
 		IFile file = folder.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
+			discardAutoBuild();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -230,6 +235,7 @@ public final class TestUtils {
 		try {
 			project.close(null);
 			project.delete(true, true, null);
+			discardAutoBuild();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -243,6 +249,7 @@ public final class TestUtils {
 	public static void deleteFile(IFile file) {
 		try {
 			file.delete(true, null);
+			discardAutoBuild();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -357,6 +364,14 @@ public final class TestUtils {
 			diff = StringUtils.difference(tmpExpected, tmpActual);
 		}
 		return null;
+	}
+
+	private static void discardAutoBuild() {
+		final IJobManager jobManager = Job.getJobManager();
+		Job[] autoBuildJobs = jobManager.find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+		for (Job job : autoBuildJobs) {
+			job.cancel();
+		}
 	}
 
 	private static String getDiffError(String expected, String actual, int expectedDiff, int actualDiff) {
