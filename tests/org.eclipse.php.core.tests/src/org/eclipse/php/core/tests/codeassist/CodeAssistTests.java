@@ -14,14 +14,21 @@ package org.eclipse.php.core.tests.codeassist;
 
 import static org.junit.Assert.fail;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -97,6 +104,36 @@ public class CodeAssistTests {
 		@Override
 		public void addFlag(int flag) {
 			// ignore
+		}
+
+	}
+
+	private static class Dumper extends Job {
+
+		CountDownLatch latch;
+
+		public Dumper(CountDownLatch latch) {
+			super("");
+			setSystem(true);
+			setUser(false);
+			this.latch = latch;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			boolean takesTooLong = false;
+			try {
+				if (!latch.await(4, TimeUnit.SECONDS)) {
+					takesTooLong = true;
+				}
+				if (takesTooLong) {
+					TestUtils.dumpThreads();
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return Status.OK_STATUS;
 		}
 
 	}
@@ -192,7 +229,9 @@ public class CodeAssistTests {
 		}
 		// Replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-		testFile = TestUtils.createFile(project, "test.php", data);
+		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+		fileName = fileName.substring(0, fileName.indexOf('.'));
+		testFile = TestUtils.createFile(project, fileName + ".php", data);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
@@ -222,6 +261,9 @@ public class CodeAssistTests {
 		String content = new String(sourceModule.getSourceAsCharArray());
 		document.set(content);
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
+		final CountDownLatch latch = new CountDownLatch(1);
+		Dumper dumper = new Dumper(latch);
+		dumper.schedule();
 		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
@@ -232,6 +274,7 @@ public class CodeAssistTests {
 				Logger.log(Logger.ERROR, problem.getMessage());
 			}
 		});
+		latch.countDown();
 		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
