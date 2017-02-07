@@ -14,6 +14,7 @@ package org.eclipse.php.core.tests.codeassist;
 
 import static org.junit.Assert.fail;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -22,6 +23,12 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -45,7 +52,6 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -103,9 +109,9 @@ public class CodeAssistTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final String DEFAULT_CURSOR = "|";
 
 	static {
-
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5/exclusive", "/workspace/codeassist/php5",
 				"/workspace/codeassist/php5/classExclusive" });
 		TESTS.put(PHPVersion.PHP5_3,
@@ -130,12 +136,10 @@ public class CodeAssistTests {
 						"/workspace/codeassist/php7", "/workspace/codeassist/php71" });
 	};
 
-	protected static final String DEFAULT_CURSOR = "|";
-
-	protected IProject project;
-	protected IFile testFile;
-	protected List<IFile> otherFiles = null;
-	protected PHPVersion version;
+	private IProject project;
+	private IFile testFile;
+	private List<IFile> otherFiles = null;
+	private PHPVersion version;
 
 	public CodeAssistTests(PHPVersion version, String[] fileNames) {
 		this.version = version;
@@ -153,15 +157,28 @@ public class CodeAssistTests {
 	}
 
 	@Test
-	public void assist(String fileName) throws Exception {
-		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
-		pdttFile.applyPreferences();
-		CompletionProposal[] proposals = getProposals(pdttFile);
-		compareProposals(proposals, pdttFile);
+	public void assist(final String fileName) throws Exception {
+		final Exception[] exception = new Exception[1];
+		ResourcesPlugin.getWorkspace().run(new ICoreRunnable() {
+			@Override
+			public void run(IProgressMonitor monitor) throws CoreException {
+				try {
+					final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
+					pdttFile.applyPreferences();
+					final int offset = createFiles(pdttFile);
+					CompletionProposal[] proposals = getProposals(DLTKCore.createSourceModuleFrom(testFile), offset);
+					compareProposals(proposals, pdttFile);
+					deleteFiles();
+				} catch (Exception e) {
+					exception[0] = e;
+				}
+			}
+		}, ResourcesPlugin.getWorkspace().getRoot(), IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+		if (exception[0] != null)
+			throw exception[0];
 	}
 
-	@After
-	public void after() throws Exception {
+	private void deleteFiles() {
 		if (testFile != null) {
 			TestUtils.deleteFile(testFile);
 		}
@@ -171,6 +188,7 @@ public class CodeAssistTests {
 					TestUtils.deleteFile(file);
 			}
 		}
+		ResourcesPlugin.getWorkspace().checkpoint(false);
 	}
 
 	/**
@@ -182,7 +200,7 @@ public class CodeAssistTests {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected int createFile(PdttFile pdttFile) throws Exception {
+	private int createFiles(PdttFile pdttFile) throws Exception {
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		String data = pdttFile.getFile();
 		String[] otherFiles = pdttFile.getOtherFiles();
@@ -192,7 +210,9 @@ public class CodeAssistTests {
 		}
 		// Replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-		testFile = TestUtils.createFile(project, "test.php", data);
+		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+		fileName = fileName.substring(0, fileName.indexOf('.'));
+		testFile = TestUtils.createFile(project, fileName + ".php", data);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
@@ -200,24 +220,12 @@ public class CodeAssistTests {
 			this.otherFiles.add(i, tmp);
 			i++;
 		}
+		ResourcesPlugin.getWorkspace().checkpoint(false);
 		TestUtils.waitForIndexer();
 		return offset;
 	}
 
-	protected ISourceModule getSourceModule() {
-		return DLTKCore.createSourceModuleFrom(testFile);
-	}
-
-	protected CompletionProposal[] getProposals(PdttFile pdttFile) throws Exception {
-		int offset = createFile(pdttFile);
-		return getProposals(offset);
-	}
-
-	protected CompletionProposal[] getProposals(int offset) throws ModelException {
-		return getProposals(getSourceModule(), offset);
-	}
-
-	protected static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+	private CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
 		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
 		String content = new String(sourceModule.getSourceAsCharArray());
 		document.set(content);
@@ -235,10 +243,8 @@ public class CodeAssistTests {
 		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
-	protected static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile)
-			throws Exception {
+	private void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
-
 		boolean proposalsEqual = true;
 		if (proposals.length == expectedProposals.length) {
 			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
@@ -257,7 +263,6 @@ public class CodeAssistTests {
 								found = true;
 								break;
 							}
-
 						} else if ((modelElement instanceof FakeConstructor)
 								&& (modelElement.getParent() instanceof AliasType)) {
 							if (((AliasType) modelElement.getParent()).getAlias().equals(expectedProposal.name)) {
@@ -265,7 +270,6 @@ public class CodeAssistTests {
 								found = true;
 								break;
 							}
-
 						} else {
 							if (modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
 								found = true;
@@ -287,7 +291,6 @@ public class CodeAssistTests {
 		} else {
 			proposalsEqual = false;
 		}
-
 		if (!proposalsEqual) {
 			StringBuilder errorBuf = new StringBuilder();
 			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
@@ -320,7 +323,7 @@ public class CodeAssistTests {
 		}
 	}
 
-	private static String getCursor(PdttFile pdttFile) {
+	private String getCursor(PdttFile pdttFile) {
 		Map<String, String> config = pdttFile.getConfig();
 		return config.get("cursor");
 	}
