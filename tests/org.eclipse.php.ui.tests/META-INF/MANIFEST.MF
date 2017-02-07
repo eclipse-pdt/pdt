@@ -20,7 +20,8 @@ Require-Bundle: org.junit,
  org.eclipse.ui.ide,
  org.eclipse.jface.text,
  org.eclipse.wst.validation,
- org.eclipse.ui.views
+ org.eclipse.ui.views,
+ org.eclipse.dltk.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: Eclipse PDT
