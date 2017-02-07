@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -162,6 +163,7 @@ public final class TestUtils {
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
+			refreshWorkspace();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -179,6 +181,7 @@ public final class TestUtils {
 		IFolder folder = project.getFolder(folderName);
 		try {
 			folder.create(true, true, null);
+			refreshWorkspace();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -197,6 +200,7 @@ public final class TestUtils {
 		IFile file = project.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
+			refreshWorkspace();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -215,6 +219,7 @@ public final class TestUtils {
 		IFile file = folder.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
+			refreshWorkspace();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -357,6 +362,10 @@ public final class TestUtils {
 			diff = StringUtils.difference(tmpExpected, tmpActual);
 		}
 		return null;
+	}
+
+	private static void refreshWorkspace() throws CoreException {
+		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
 
 	private static String getDiffError(String expected, String actual, int expectedDiff, int actualDiff) {
