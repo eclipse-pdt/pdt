@@ -14,14 +14,18 @@ package org.eclipse.php.ui.tests.contentassist;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -49,7 +53,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -71,6 +74,7 @@ public class ContentAssistTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final String DEFAULT_CURSOR = "|";
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5" });
@@ -83,8 +87,6 @@ public class ContentAssistTests {
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php56", "/workspace/codeassist/php7", "/workspace/codeassist/php71" });
 	};
-
-	protected static final String DEFAULT_CURSOR = "|";
 
 	@Context
 	public static Bundle getBundle() {
@@ -99,10 +101,11 @@ public class ContentAssistTests {
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
 		ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
-		// set auto insert to true,if there are only one proposal in the CA,it
-		// will insert the proposal,so we can test CA without UI interaction
+		/*
+		 * Set auto insert to true,if there are only one proposal in the CA,it
+		 * will insert the proposal,so we can test CA without UI interaction
+		 */
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
-		// Disable WTP validation to skip unnecessary clashes
 		TestUtils.setProjectPhpVersion(project, phpVersion);
 	}
 
@@ -114,27 +117,12 @@ public class ContentAssistTests {
 	@Test
 	public void assist(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
-		pdttFile.applyPreferences();
-
-		String data = pdttFile.getFile();
-		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
-		final int offset = data.lastIndexOf(cursor);
-
-		// replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
-		final ByteArrayInputStream stream = new ByteArrayInputStream(data.getBytes());
 		final Exception[] err = new Exception[1];
-
-		final String[] result = new String[1];
 		Display.getDefault().syncExec(new Runnable() {
-
 			@Override
 			public void run() {
 				try {
-					createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
-					openEditor();
-					result[0] = executeAutoInsert(offset);
-					closeEditor();
+					doAssist(pdttFile);
 				} catch (Exception e) {
 					err[0] = e;
 				}
@@ -143,12 +131,41 @@ public class ContentAssistTests {
 		if (err[0] != null) {
 			throw err[0];
 		}
+	}
 
+	private void doAssist(final PdttFile pdttFile) throws Exception {
+		pdttFile.applyPreferences();
+		final String pdttFileData = pdttFile.getFile();
+		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
+		final int offset = pdttFileData.lastIndexOf(cursor);
+
+		// replace the offset character
+		final String data = pdttFileData.substring(0, offset) + pdttFileData.substring(offset + 1);
+
+		final Exception[] exception = new Exception[1];
+		final String[] result = new String[1];
+		ResourcesPlugin.getWorkspace().run(new ICoreRunnable() {
+			@Override
+			public void run(IProgressMonitor monitor) throws CoreException {
+				try {
+					String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+					fileName = fileName.substring(0, fileName.indexOf('.')) + ".php";
+					createFiles(data, fileName, pdttFile.getOtherFiles());
+					openEditor();
+					result[0] = executeAutoInsert(offset);
+					closeEditor();
+					deleteFiles();
+				} catch (Exception e) {
+					exception[0] = e;
+				}
+			}
+		}, ResourcesPlugin.getWorkspace().getRoot(), IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+		if (exception[0] != null)
+			throw exception[0];
 		PDTTUtils.assertContents(pdttFile.getExpected(), result[0]);
 	}
 
-	@After
-	public void after() throws Exception {
+	private void deleteFiles() throws Exception {
 		if (testFile != null) {
 			TestUtils.deleteFile(testFile);
 		}
@@ -162,22 +179,12 @@ public class ContentAssistTests {
 		}
 	}
 
-	private static String getCursor(PdttFile pdttFile) {
+	private String getCursor(PdttFile pdttFile) {
 		Map<String, String> config = pdttFile.getConfig();
 		return config.get("cursor");
 	}
 
-	protected InputStream[] prepareOtherStreams(PdttFile file) {
-		String[] contents = file.getOtherFiles();
-		InputStream[] result = new InputStream[contents.length];
-		for (int i = 0; i < contents.length; i++) {
-			result[i] = new ByteArrayInputStream(contents[i].getBytes());
-		}
-
-		return result;
-	}
-
-	protected void openEditor() throws Exception {
+	private void openEditor() throws Exception {
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 		IEditorInput input = new FileEditorInput(testFile);
@@ -193,13 +200,13 @@ public class ContentAssistTests {
 		}
 	}
 
-	protected void closeEditor() {
+	private void closeEditor() {
 		fEditor.doSave(null);
 		fEditor.getSite().getPage().closeEditor(fEditor, false);
 		fEditor = null;
 	}
 
-	protected String executeAutoInsert(int offset) {
+	private String executeAutoInsert(int offset) {
 		StructuredTextViewer viewer = null;
 		Display display = Display.getDefault();
 		long timeout = System.currentTimeMillis() + 3000;
@@ -218,14 +225,15 @@ public class ContentAssistTests {
 		return fEditor.getDocument().get();
 	}
 
-	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
-		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
-		testFile.create(inputStream, true, null);
+	private void createFiles(String content, String fileName, String[] other) throws Exception {
+		testFile = project.getFile(new Path(fileName).lastSegment());
+		testFile = TestUtils.createFile(project, new Path(fileName).lastSegment(), content);
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
-			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
-			otherFiles[i].create(other[i], true, null);
+			otherFiles[i] = TestUtils.createFile(project, new Path(i + fileName).addFileExtension("php").lastSegment(),
+					other[i]);
 		}
+		ResourcesPlugin.getWorkspace().checkpoint(false);
 		TestUtils.waitForIndexer();
 	}
 
