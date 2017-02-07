@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.search.indexing.AbstractJob;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.ModelManager;
@@ -162,6 +163,7 @@ public final class TestUtils {
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
+			DLTKCore.create(project);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -179,6 +181,7 @@ public final class TestUtils {
 		IFolder folder = project.getFolder(folderName);
 		try {
 			folder.create(true, true, null);
+			DLTKCore.create(folder);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -197,6 +200,7 @@ public final class TestUtils {
 		IFile file = project.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
+			DLTKCore.create(file);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -215,6 +219,7 @@ public final class TestUtils {
 		IFile file = folder.getFile(fileName);
 		try {
 			file.create(new ByteArrayInputStream(fileContent.getBytes()), true, null);
+			DLTKCore.create(file);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
