@@ -15,14 +15,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.php.core.tests,
  org.eclipse.wst.sse.core,
  org.junit,
- org.apache.commons.lang,
  org.eclipse.php.refactoring.ui,
  org.eclipse.ui,
- org.eclipse.debug.core,
  org.eclipse.debug.ui,
- org.eclipse.dltk.debug,
- org.eclipse.php.debug.core,
- org.eclipse.wst.validation
+ org.eclipse.php.debug.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.refactoring.core.test
