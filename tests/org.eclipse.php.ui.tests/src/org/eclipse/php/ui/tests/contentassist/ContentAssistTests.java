@@ -16,6 +16,7 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -131,7 +132,9 @@ public class ContentAssistTests {
 			@Override
 			public void run() {
 				try {
-					createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
+					String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+					fileName = fileName.substring(0, fileName.indexOf('.')) + ".php";
+					createFile(stream, fileName, prepareOtherStreams(pdttFile));
 					openEditor();
 					result[0] = executeAutoInsert(offset);
 					closeEditor();
@@ -219,7 +222,7 @@ public class ContentAssistTests {
 	}
 
 	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
-		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
+		testFile = project.getFile(new Path(fileName).lastSegment());
 		testFile.create(inputStream, true, null);
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {

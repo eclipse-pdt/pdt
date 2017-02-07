@@ -197,6 +197,10 @@ public class PdttFile {
 		return file;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
 	public String getOtherFile(int index) {
 		assertNotNull(new StringBuilder("File:").append(fileName).append('[').append(index)
 				.append("] doesn't contain --FILE").append(index).append("-- section").toString(),
