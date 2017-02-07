@@ -14,14 +14,21 @@ package org.eclipse.php.core.tests.codeassist;
 
 import static org.junit.Assert.fail;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -45,7 +52,6 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -57,6 +63,36 @@ public class CodeAssistTests {
 
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
+
+	private static class Dumper extends Job {
+
+		CountDownLatch latch;
+
+		public Dumper(CountDownLatch latch) {
+			super("");
+			setSystem(true);
+			setUser(false);
+			this.latch = latch;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			boolean takesTooLong = false;
+			try {
+				if (!latch.await(55, TimeUnit.SECONDS)) {
+					takesTooLong = true;
+				}
+				if (takesTooLong) {
+					TestUtils.dumpThreads();
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return Status.OK_STATUS;
+		}
+
+	}
 
 	private static abstract class TestCompletionRequestor extends CompletionRequestor
 			implements IPHPCompletionRequestor {
@@ -103,9 +139,9 @@ public class CodeAssistTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final String DEFAULT_CURSOR = "|";
 
 	static {
-
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5/exclusive", "/workspace/codeassist/php5",
 				"/workspace/codeassist/php5/classExclusive" });
 		TESTS.put(PHPVersion.PHP5_3,
@@ -130,12 +166,10 @@ public class CodeAssistTests {
 						"/workspace/codeassist/php7", "/workspace/codeassist/php71" });
 	};
 
-	protected static final String DEFAULT_CURSOR = "|";
-
-	protected IProject project;
-	protected IFile testFile;
-	protected List<IFile> otherFiles = null;
-	protected PHPVersion version;
+	private IProject project;
+	private IFile testFile;
+	private List<IFile> otherFiles = null;
+	private PHPVersion version;
 
 	public CodeAssistTests(PHPVersion version, String[] fileNames) {
 		this.version = version;
@@ -153,15 +187,16 @@ public class CodeAssistTests {
 	}
 
 	@Test
-	public void assist(String fileName) throws Exception {
+	public void assist(final String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
-		CompletionProposal[] proposals = getProposals(pdttFile);
+		final int offset = createFiles(pdttFile);
+		CompletionProposal[] proposals = getProposals(DLTKCore.createSourceModuleFrom(testFile), offset);
 		compareProposals(proposals, pdttFile);
+		deleteFiles();
 	}
 
-	@After
-	public void after() throws Exception {
+	private void deleteFiles() {
 		if (testFile != null) {
 			TestUtils.deleteFile(testFile);
 		}
@@ -182,7 +217,7 @@ public class CodeAssistTests {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected int createFile(PdttFile pdttFile) throws Exception {
+	private int createFiles(PdttFile pdttFile) throws Exception {
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		String data = pdttFile.getFile();
 		String[] otherFiles = pdttFile.getOtherFiles();
@@ -192,7 +227,9 @@ public class CodeAssistTests {
 		}
 		// Replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-		testFile = TestUtils.createFile(project, "test.php", data);
+		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+		fileName = fileName.substring(0, fileName.indexOf('.'));
+		testFile = TestUtils.createFile(project, fileName + ".php", data);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
@@ -204,23 +241,13 @@ public class CodeAssistTests {
 		return offset;
 	}
 
-	protected ISourceModule getSourceModule() {
-		return DLTKCore.createSourceModuleFrom(testFile);
-	}
-
-	protected CompletionProposal[] getProposals(PdttFile pdttFile) throws Exception {
-		int offset = createFile(pdttFile);
-		return getProposals(offset);
-	}
-
-	protected CompletionProposal[] getProposals(int offset) throws ModelException {
-		return getProposals(getSourceModule(), offset);
-	}
-
-	protected static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+	private CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
 		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
 		String content = new String(sourceModule.getSourceAsCharArray());
 		document.set(content);
+		CountDownLatch latch = new CountDownLatch(1);
+		Dumper dumper = new Dumper(latch);
+		dumper.schedule();
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
 		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
 			public void accept(CompletionProposal proposal) {
@@ -231,14 +258,13 @@ public class CodeAssistTests {
 			public void completionFailure(IProblem problem) {
 				Logger.log(Logger.ERROR, problem.getMessage());
 			}
-		});
+		}, 60000);
+		latch.countDown();
 		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
-	protected static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile)
-			throws Exception {
+	private void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
-
 		boolean proposalsEqual = true;
 		if (proposals.length == expectedProposals.length) {
 			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
@@ -257,7 +283,6 @@ public class CodeAssistTests {
 								found = true;
 								break;
 							}
-
 						} else if ((modelElement instanceof FakeConstructor)
 								&& (modelElement.getParent() instanceof AliasType)) {
 							if (((AliasType) modelElement.getParent()).getAlias().equals(expectedProposal.name)) {
@@ -265,7 +290,6 @@ public class CodeAssistTests {
 								found = true;
 								break;
 							}
-
 						} else {
 							if (modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
 								found = true;
@@ -287,7 +311,6 @@ public class CodeAssistTests {
 		} else {
 			proposalsEqual = false;
 		}
-
 		if (!proposalsEqual) {
 			StringBuilder errorBuf = new StringBuilder();
 			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
@@ -320,7 +343,7 @@ public class CodeAssistTests {
 		}
 	}
 
-	private static String getCursor(PdttFile pdttFile) {
+	private String getCursor(PdttFile pdttFile) {
 		Map<String, String> config = pdttFile.getConfig();
 		return config.get("cursor");
 	}
