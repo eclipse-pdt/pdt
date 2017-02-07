@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -166,6 +167,14 @@ public final class TestUtils {
 			Logger.logException(e);
 		}
 		return project;
+	}
+
+	public static void refreshWorkspace() {
+		try {
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	/**

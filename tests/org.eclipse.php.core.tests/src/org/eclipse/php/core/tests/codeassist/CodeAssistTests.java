@@ -14,6 +14,7 @@ package org.eclipse.php.core.tests.codeassist;
 
 import static org.junit.Assert.fail;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -192,7 +193,9 @@ public class CodeAssistTests {
 		}
 		// Replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-		testFile = TestUtils.createFile(project, "test.php", data);
+		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+		fileName = fileName.substring(0, fileName.indexOf('.'));
+		testFile = TestUtils.createFile(project, fileName + ".php", data);
 		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
@@ -205,7 +208,8 @@ public class CodeAssistTests {
 	}
 
 	protected ISourceModule getSourceModule() {
-		return DLTKCore.createSourceModuleFrom(testFile);
+		ISourceModule module = DLTKCore.createSourceModuleFrom(testFile);
+		return module;
 	}
 
 	protected CompletionProposal[] getProposals(PdttFile pdttFile) throws Exception {
@@ -217,7 +221,8 @@ public class CodeAssistTests {
 		return getProposals(getSourceModule(), offset);
 	}
 
-	protected static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+	protected CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+		TestUtils.refreshWorkspace();
 		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
 		String content = new String(sourceModule.getSourceAsCharArray());
 		document.set(content);
