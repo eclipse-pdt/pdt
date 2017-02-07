@@ -14,8 +14,7 @@ package org.eclipse.php.ui.tests.contentassist;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -116,13 +115,12 @@ public class ContentAssistTests {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		pdttFile.applyPreferences();
 
-		String data = pdttFile.getFile();
+		final String pdttFileData = pdttFile.getFile();
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
-		final int offset = data.lastIndexOf(cursor);
+		final int offset = pdttFileData.lastIndexOf(cursor);
 
 		// replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
-		final ByteArrayInputStream stream = new ByteArrayInputStream(data.getBytes());
+		final String data = pdttFileData.substring(0, offset) + pdttFileData.substring(offset + 1);
 		final Exception[] err = new Exception[1];
 
 		final String[] result = new String[1];
@@ -131,7 +129,9 @@ public class ContentAssistTests {
 			@Override
 			public void run() {
 				try {
-					createFile(stream, Long.toString(System.currentTimeMillis()), prepareOtherStreams(pdttFile));
+					String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+					fileName = fileName.substring(0, fileName.indexOf('.')) + ".php";
+					createFile(data, fileName, pdttFile.getOtherFiles());
 					openEditor();
 					result[0] = executeAutoInsert(offset);
 					closeEditor();
@@ -165,16 +165,6 @@ public class ContentAssistTests {
 	private static String getCursor(PdttFile pdttFile) {
 		Map<String, String> config = pdttFile.getConfig();
 		return config.get("cursor");
-	}
-
-	protected InputStream[] prepareOtherStreams(PdttFile file) {
-		String[] contents = file.getOtherFiles();
-		InputStream[] result = new InputStream[contents.length];
-		for (int i = 0; i < contents.length; i++) {
-			result[i] = new ByteArrayInputStream(contents[i].getBytes());
-		}
-
-		return result;
 	}
 
 	protected void openEditor() throws Exception {
@@ -218,13 +208,13 @@ public class ContentAssistTests {
 		return fEditor.getDocument().get();
 	}
 
-	protected void createFile(InputStream inputStream, String fileName, InputStream[] other) throws Exception {
-		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
-		testFile.create(inputStream, true, null);
+	protected void createFile(String content, String fileName, String[] other) throws Exception {
+		testFile = project.getFile(new Path(fileName).lastSegment());
+		testFile = TestUtils.createFile(project, new Path(fileName).lastSegment(), content);
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
-			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
-			otherFiles[i].create(other[i], true, null);
+			otherFiles[i] = TestUtils.createFile(project, new Path(i + fileName).addFileExtension("php").lastSegment(),
+					other[i]);
 		}
 		TestUtils.waitForIndexer();
 	}
