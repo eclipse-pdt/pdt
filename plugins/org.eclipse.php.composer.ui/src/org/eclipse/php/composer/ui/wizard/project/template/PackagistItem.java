@@ -32,6 +32,7 @@ import org.eclipse.php.composer.api.packages.PackageListenerInterface;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -74,20 +75,20 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 
 	private void createContent() {
 
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(4, false);
 		layout.marginLeft = 7;
 		layout.marginTop = 2;
 		layout.marginBottom = 2;
 		setLayout(layout);
 
 		nameLabel = new Label(this, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(nameLabel);
+		GridDataFactory.fillDefaults().grab(true, false).span(4, 1).align(SWT.BEGINNING, SWT.CENTER).applyTo(nameLabel);
 		nameLabel.setFont(resources.getSmallHeaderFont());
 		nameLabel.setText(item.getName());
 
 		description = new Label(this, SWT.NULL | SWT.WRAP);
 
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1)
+		GridDataFactory.fillDefaults().grab(true, false).span(4, 1)
 				/* .indent(45, 0).hint(100, SWT.DEFAULT) */.applyTo(description);
 		String descriptionText = item.getDescription();
 		int maxDescriptionLength = 162;
@@ -127,6 +128,13 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 
 		GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(favorButton);
 
+		CLabel label = new CLabel(this, SWT.NONE);
+
+		versionCombo = new Combo(this, SWT.READ_ONLY);
+
+		GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).span(1, 2).hint(200, SWT.DEFAULT)
+				.applyTo(versionCombo);
+
 		downloadButton = new Button(this, SWT.TOGGLE);
 		downloadButton.setToolTipText(Messages.PackagistItem_DownloadToolTipText);
 
@@ -134,19 +142,18 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 			downloadButton.setSelection(true);
 		}
 
+		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).span(1, 2).applyTo(label);
 		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).span(1, 2).applyTo(downloadButton);
+
 		JsonValue downloads = item.get("downloads"); //$NON-NLS-1$
 		JsonValue favorites = item.get("favers"); //$NON-NLS-1$
 		if (downloads != null && favorites != null) {
-			downloadButton.setText(downloads.getAsString());
-			downloadButton.setImage(ComposerUIPluginImages.DOWNLOAD.createImage());
+			label.setImage(ComposerUIPluginImages.DOWNLOAD.createImage());
+			label.setText(Messages.PackagistItem_InstallLabelText + downloads.getAsString());
+			downloadButton.setText(Messages.PackagistItem_DownloadLabelText);
 			favorButton.setText(favorites.getAsString());
 		}
 
-		versionCombo = new Combo(this, SWT.READ_ONLY);
-
-		GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).span(1, 2).hint(200, SWT.DEFAULT)
-				.applyTo(versionCombo);
 	}
 
 	protected void initializeListeners() {
