@@ -25,8 +25,10 @@ public class Messages extends NLS {
 	public static String PackageProjectWizardSecondPage_InitializingProjectTaskName;
 	public static String PackageProjectWizardSecondPage_Title;
 	public static String PackageProjectWizardSecondPage_UpdatingComposerJsonTaskName;
+	public static String PackagistItem_DownloadLabelText;
 	public static String PackagistItem_DownloadToolTipText;
 	public static String PackagistItem_FavoritesToolTipText;
+	public static String PackagistItem_InstallLabelText;
 	public static String PackagistItem_LoadingVersionsMessage;
 	public static String Validator_DirectoryNotEmptyError;
 	static {
