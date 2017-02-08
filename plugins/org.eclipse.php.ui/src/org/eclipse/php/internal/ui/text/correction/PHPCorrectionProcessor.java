@@ -110,9 +110,9 @@ public class PHPCorrectionProcessor
 	public static boolean hasCorrections(Annotation annotation) {
 		if (annotation instanceof IScriptAnnotation) {
 			IScriptAnnotation javaAnnotation = (IScriptAnnotation) annotation;
-			if (javaAnnotation.getId() != null) {
-				ISourceModule cu = javaAnnotation.getSourceModule();
-				return hasCorrections(cu, javaAnnotation.getId(), javaAnnotation.getMarkerType());
+			if (javaAnnotation.getSourceModule() != null && javaAnnotation.getId() != null) {
+				return hasCorrections(javaAnnotation.getSourceModule(), javaAnnotation.getId(),
+						javaAnnotation.getMarkerType());
 			}
 
 		}
