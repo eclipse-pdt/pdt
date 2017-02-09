@@ -15,6 +15,8 @@ import java.util.*;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -88,7 +90,8 @@ public class PHPCorrectionProcessor
 		return fgContributedAssistProcessors;
 	}
 
-	public static boolean hasCorrections(ISourceModule cu, IProblemIdentifier identifier, String markerType) {
+	public static boolean hasCorrections(@NonNull ISourceModule cu, @NonNull IProblemIdentifier identifier,
+			@Nullable String markerType) {
 		ContributedProcessorDescriptor[] processors = getCorrectionProcessors();
 		SafeHasCorrections collector = new SafeHasCorrections(cu, identifier);
 		for (int i = 0; i < processors.length; i++) {
@@ -110,9 +113,9 @@ public class PHPCorrectionProcessor
 	public static boolean hasCorrections(Annotation annotation) {
 		if (annotation instanceof IScriptAnnotation) {
 			IScriptAnnotation javaAnnotation = (IScriptAnnotation) annotation;
-			if (javaAnnotation.getId() != null) {
-				ISourceModule cu = javaAnnotation.getSourceModule();
-				return hasCorrections(cu, javaAnnotation.getId(), javaAnnotation.getMarkerType());
+			if (javaAnnotation.getSourceModule() != null && javaAnnotation.getId() != null) {
+				return hasCorrections(javaAnnotation.getSourceModule(), javaAnnotation.getId(),
+						javaAnnotation.getMarkerType());
 			}
 
 		}
@@ -451,7 +454,7 @@ public class PHPCorrectionProcessor
 		private final IProblemIdentifier fIdentifier;
 		private boolean fHasCorrections;
 
-		public SafeHasCorrections(ISourceModule cu, IProblemIdentifier identifier) {
+		public SafeHasCorrections(@NonNull ISourceModule cu, @NonNull IProblemIdentifier identifier) {
 			fCu = cu;
 			Scanner problemScanner = new Scanner(identifier.name());
 			if (problemScanner.hasNextInt()) {
