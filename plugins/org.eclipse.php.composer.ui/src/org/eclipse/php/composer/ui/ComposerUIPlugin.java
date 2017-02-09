@@ -31,6 +31,8 @@ public class ComposerUIPlugin extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.php.composer.ui"; //$NON-NLS-1$
 
+	public static final Object FAMILY_COMPOSER = new Object();
+
 	// The shared instance
 	private static ComposerUIPlugin plugin;
 

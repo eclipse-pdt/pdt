@@ -12,6 +12,7 @@
 package org.eclipse.php.composer.ui.job;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -62,6 +63,12 @@ abstract public class ComposerJob extends Job {
 	public ComposerJob(IProject project, String name) {
 		this(name);
 		this.setProject(project);
+	}
+
+	@Override
+	public boolean belongsTo(Object family) {
+		return Objects.equals(ComposerUIPlugin.FAMILY_COMPOSER, family) || Objects.equals(project, family)
+				|| (project != null && Objects.equals(project.getName(), family));
 	}
 
 	@Override
