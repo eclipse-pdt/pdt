@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.compiler.problem.*;
 import org.eclipse.dltk.core.IModelMarker;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
@@ -24,6 +25,7 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
  */
 public class ProblemLocation implements IProblemLocation {
 
+	@Nullable
 	private final IProblemIdentifier fIdentifier;
 	private final String[] fArguments;
 	private final int fOffset;
