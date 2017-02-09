@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.codeassist;
 
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -46,6 +44,7 @@ import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -156,8 +155,20 @@ public class CodeAssistTests {
 	public void assist(String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
-		CompletionProposal[] proposals = getProposals(pdttFile);
-		compareProposals(proposals, pdttFile);
+
+		CompletionProposal[] proposals = null;
+		boolean result = false;
+		int attempts = 0;
+
+		do {
+			attempts++;
+			proposals = getProposals(pdttFile);
+			result = compareProposals(proposals, pdttFile);
+		} while (!result && proposals.length == 0 && Boolean.getBoolean("testStability") && attempts < 3);
+
+		if (!result) {
+			fail(proposals, pdttFile);
+		}
 	}
 
 	@After
@@ -235,11 +246,10 @@ public class CodeAssistTests {
 		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
-	protected static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile)
+	protected static boolean compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile)
 			throws Exception {
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
 
-		boolean proposalsEqual = true;
 		if (proposals.length == expectedProposals.length) {
 			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
 				boolean found = false;
@@ -280,48 +290,48 @@ public class CodeAssistTests {
 					}
 				}
 				if (!found) {
-					proposalsEqual = false;
-					break;
+					return false;
 				}
 			}
+			return true;
 		} else {
-			proposalsEqual = false;
-		}
-
-		if (!proposalsEqual) {
-			StringBuilder errorBuf = new StringBuilder();
-			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-			errorBuf.append(pdttFile.getExpected());
-			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-			for (CompletionProposal p : proposals) {
-				IModelElement modelElement = p.getModelElement();
-				if (modelElement == null || modelElement.getElementName() == null) {
-					errorBuf.append("keyword(").append(p.getName()).append(")\n");
-				} else {
-					switch (modelElement.getElementType()) {
-					case IModelElement.FIELD:
-						errorBuf.append("field");
-						break;
-					case IModelElement.METHOD:
-						errorBuf.append("method");
-						break;
-					case IModelElement.TYPE:
-						errorBuf.append("type");
-						break;
-					}
-					if (modelElement instanceof AliasType) {
-						errorBuf.append('(').append(((AliasType) modelElement).getAlias()).append(")\n");
-					} else {
-						errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
-					}
-				}
-			}
-			fail(errorBuf.toString());
+			return false;
 		}
 	}
 
 	private static String getCursor(PdttFile pdttFile) {
 		Map<String, String> config = pdttFile.getConfig();
 		return config.get("cursor");
+	}
+
+	private static void fail(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) {
+		StringBuilder errorBuf = new StringBuilder();
+		errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+		errorBuf.append(pdttFile.getExpected());
+		errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+		for (CompletionProposal p : proposals) {
+			IModelElement modelElement = p.getModelElement();
+			if (modelElement == null || modelElement.getElementName() == null) {
+				errorBuf.append("keyword(").append(p.getName()).append(")\n");
+			} else {
+				switch (modelElement.getElementType()) {
+				case IModelElement.FIELD:
+					errorBuf.append("field");
+					break;
+				case IModelElement.METHOD:
+					errorBuf.append("method");
+					break;
+				case IModelElement.TYPE:
+					errorBuf.append("type");
+					break;
+				}
+				if (modelElement instanceof AliasType) {
+					errorBuf.append('(').append(((AliasType) modelElement).getAlias()).append(")\n");
+				} else {
+					errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
+				}
+			}
+		}
+		Assert.fail(errorBuf.toString());
 	}
 }
