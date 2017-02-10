@@ -14,8 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.composer.ui.job.messages"; //$NON-NLS-1$
-	public static String ComposerJob_DownloadDialogMessage;
-	public static String ComposerJob_DownloadDialogTitle;
+	public static String ComposerJob_DownloadErrorMessage;
 	public static String ComposerJob_ErrorMessage;
 	public static String CreateProjectJob_Name;
 	public static String DownloadJob_ErrorMessage;

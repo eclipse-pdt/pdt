@@ -21,11 +21,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.launch.ExecutableNotFoundException;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
@@ -39,7 +36,6 @@ import org.eclipse.php.composer.ui.handler.ConsoleResponseHandler;
 import org.eclipse.php.composer.ui.job.runner.ComposerFailureMessageRunner;
 import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 abstract public class ComposerJob extends Job {
 
@@ -87,24 +83,35 @@ abstract public class ComposerJob extends Job {
 	protected IStatus run(final IProgressMonitor monitor) {
 		boolean callDoOnLauncherRunException = false;
 		try {
-
 			this.monitor = monitor;
 
-			try {
-				launcher = manager.getLauncher(ComposerEnvironmentFactory.FACTORY_ID, getProject());
-			} catch (ExecutableNotFoundException e) {
-				callDoOnLauncherRunException = true;
-				doOnLauncherRunException(e);
-				// inform the user of the missing executable
-				Display.getDefault().asyncExec(new MissingExecutableRunner());
-				return Status.OK_STATUS;
-			} catch (ScriptNotFoundException e) {
-				callDoOnLauncherRunException = true;
-				doOnLauncherRunException(e);
-				// run the downloader
-				Display.getDefault().asyncExec(new DownloadRunner());
-				return Status.OK_STATUS;
-			}
+			boolean tryAgain = false;
+			do {
+				try {
+					launcher = manager.getLauncher(ComposerEnvironmentFactory.FACTORY_ID, getProject());
+					tryAgain = false;
+				} catch (ExecutableNotFoundException e) {
+					callDoOnLauncherRunException = true;
+					doOnLauncherRunException(e);
+					// inform the user of the missing executable
+					Display.getDefault().asyncExec(new MissingExecutableRunner());
+					return Status.OK_STATUS;
+				} catch (ScriptNotFoundException e) {
+					callDoOnLauncherRunException = true;
+					doOnLauncherRunException(e);
+					if (tryAgain) {
+						Display.getDefault().asyncExec(
+								new ComposerFailureMessageRunner(Messages.ComposerJob_DownloadErrorMessage, monitor));
+						return Status.OK_STATUS;
+					} else {
+						// run the downloader
+						DownloadJob job = new DownloadJob(getProject());
+						job.schedule();
+						job.join();
+						tryAgain = true;
+					}
+				}
+			} while (tryAgain);
 
 			launcher.addResponseListener(new ConsoleResponseHandler());
 			launcher.addResponseListener(new ExecutionResponseAdapter() {
@@ -158,31 +165,4 @@ abstract public class ComposerJob extends Job {
 		this.project = project;
 	}
 
-	private class DownloadRunner implements Runnable {
-
-		@Override
-		public void run() {
-
-			Shell shell = Display.getCurrent().getActiveShell();
-
-			if (shell == null) {
-				Logger.debug("Unable to get shell for message dialog."); //$NON-NLS-1$
-				return;
-			}
-
-			if (MessageDialog.openConfirm(shell, Messages.ComposerJob_DownloadDialogTitle,
-					Messages.ComposerJob_DownloadDialogMessage)) {
-				DownloadJob job = new DownloadJob(getProject());
-				job.addJobChangeListener(new JobChangeAdapter() {
-					@Override
-					public void done(IJobChangeEvent event) {
-						// re-schedule the original job
-						ComposerJob.this.schedule();
-					}
-				});
-				job.setUser(true);
-				job.schedule();
-			}
-		}
-	}
 }
