@@ -13,9 +13,9 @@ $x[
 --EXPECT--
 <?php
 return array(
-// this is a comment
+    // this is a comment
 );
 $x[
-// this is a comment
+    // this is a comment
 ] = 0;
 ?>

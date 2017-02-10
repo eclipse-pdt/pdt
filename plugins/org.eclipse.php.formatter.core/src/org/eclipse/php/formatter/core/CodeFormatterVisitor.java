@@ -2184,6 +2184,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468155
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=439568
 		// https://bugs.eclipse.org/bugs/attachment.cgi?id=245293
 		// if (arrayAccess.getArrayType() == ArrayAccess.VARIABLE_ARRAY) {
 		// appendToBuffer(CLOSE_BRACKET);
@@ -2192,6 +2193,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// }
 		// handleChars(lastPosition, arrayAccess.getEnd());
 
+		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayAccess.getEnd() - 1);
 		lineWidth++;// we need to add the closing bracket/curly
 
@@ -2256,6 +2258,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468155
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=439568
 		// https://bugs.eclipse.org/bugs/attachment.cgi?id=245293
 		// if (arrayCreation.isHasArrayKey()) {
 		// appendToBuffer(CLOSE_PARN);
@@ -2264,6 +2267,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// }
 		// handleChars(lastPosition, arrayCreation.getEnd());
 
+		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayCreation.getEnd() - 1);
 		lineWidth++;// we need to add the closing bracket/parenthesis
 
