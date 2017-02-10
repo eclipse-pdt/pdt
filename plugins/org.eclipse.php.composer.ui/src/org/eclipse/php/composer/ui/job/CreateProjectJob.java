@@ -14,6 +14,8 @@ package org.eclipse.php.composer.ui.job;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FileUtils;
@@ -40,6 +42,10 @@ public class CreateProjectJob extends ComposerJob {
 	private boolean existed;
 	private File composerFile;
 
+	public CreateProjectJob(IPath path, String projectName, String packageName) {
+		this(path, projectName, packageName, null);
+	}
+
 	public CreateProjectJob(IPath path, String projectName, String packageName, String packageVersion) {
 		super(Messages.CreateProjectJob_Name);
 		this.projectName = projectName;
@@ -47,7 +53,14 @@ public class CreateProjectJob extends ComposerJob {
 		this.packageVersion = packageVersion;
 		this.path = path;
 
-		Logger.debug("Creating new project " + projectName + " from package " + packageName + " / " + packageVersion); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (Logger.isDebugging()) {
+			String msg = "Creating new project " + projectName + " from package " + packageName; //$NON-NLS-1$ //$NON-NLS-2$
+			if (packageVersion != null) {
+				msg += " / " + packageVersion; //$NON-NLS-1$
+			}
+			Logger.debug(msg);
+		}
+
 		ResourcesPlugin.getWorkspace();
 		DummyProject project = new DummyProject(path);
 		setProject(project);
@@ -124,8 +137,16 @@ public class CreateProjectJob extends ComposerJob {
 			}
 		});
 
-		launcher.launch("create-project", //$NON-NLS-1$
-				new String[] { "--no-interaction", "--no-progress", packageName, projectName, packageVersion }); //$NON-NLS-1$ //$NON-NLS-2$
+		List<String> params = new ArrayList<>();
+		params.add("--no-interaction");
+		params.add("--no-progress");
+		params.add(packageName);
+		params.add(projectName);
+		if (packageVersion != null) {
+			params.add(packageVersion);
+		}
+
+		launcher.launch("create-project", params.toArray(new String[params.size()])); //$NON-NLS-1$
 	}
 
 	protected class DummyProject extends Project {
