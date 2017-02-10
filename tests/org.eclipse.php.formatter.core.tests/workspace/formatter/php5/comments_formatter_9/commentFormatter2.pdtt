@@ -1,0 +1,68 @@
+--TEST--
+Bug 457517 - Code formatter inserts extra lines after comment lines when "Enable line comment formatting" is unchecked.
+Check if preferences.blank_line_preserve_empty_lines = 10 is correctly applied.
+--FILE--
+<?php
+if (true) {
+    // comment 1
+    
+
+
+
+
+
+
+
+
+
+
+    
+    
+    // comment 2
+    
+    $x = 0;
+    
+
+    
+    
+
+
+
+
+
+
+
+
+    $y = 0;
+}
+?>
+--EXPECT--
+<?php
+if (true) {
+    // comment 1
+    
+
+
+
+
+
+
+
+
+
+    // comment 2
+    
+    $x = 0;
+    
+
+
+
+
+
+
+
+
+
+    $y = 0;
+}
+?>

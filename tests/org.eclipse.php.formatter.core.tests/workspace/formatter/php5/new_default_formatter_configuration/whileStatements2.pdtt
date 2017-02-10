@@ -1,0 +1,196 @@
+--TEST--
+Bug 511502 - Incorrect nesting of comments following a control structure without a block
+--FILE--
+<?php
+if (true) {
+	if (true) {
+		while ( true )
+			// find a way to be clever
+			// find a way to be clever
+			echo "stuff";
+		// find a way to be clever
+		// find a way to be clever
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true ) {
+			// find a way to be clever
+			// find a way to be clever
+			echo "stuff";
+			// find a way to be clever
+			// find a way to be clever
+		}
+		// find a way to be clever
+		// find a way to be clever
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true )
+			/* find a way to be clever */
+			/* find a way to be clever */
+			echo "stuff";
+		/* find a way to be clever */
+		/* find a way to be clever */
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true ) {
+			/* find a way to be clever */
+			/* find a way to be clever */
+			echo "stuff";
+			/* find a way to be clever */
+			/* find a way to be clever */
+		}
+		/* find a way to be clever */
+		/* find a way to be clever */
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true )
+			echo "stuff";
+		/**
+		 * find a way to be clever
+		 */
+		/**
+		 * find a way to be clever
+		 */
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true ) {
+			/**
+			 * find a way to be clever
+			 */
+			/**
+			 * find a way to be clever
+			 */
+			echo "stuff";
+		/**
+		 * find a way to be clever
+		 */
+		/**
+		 * find a way to be clever
+		 */
+		}
+		/**
+		 * find a way to be clever
+		 */
+		/**
+		 * find a way to be clever
+		 */
+		echo "clever";
+	}
+}
+?>
+--EXPECT--
+<?php
+if (true) {
+	if (true) {
+		while ( true )
+			// find a way to be clever
+			// find a way to be clever
+			echo "stuff";
+		// find a way to be clever
+		// find a way to be clever
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true ) {
+			// find a way to be clever
+			// find a way to be clever
+			echo "stuff";
+			// find a way to be clever
+			// find a way to be clever
+		}
+		// find a way to be clever
+		// find a way to be clever
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true )
+			/* find a way to be clever */
+			/* find a way to be clever */
+			echo "stuff";
+		/* find a way to be clever */
+		/* find a way to be clever */
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true ) {
+			/* find a way to be clever */
+			/* find a way to be clever */
+			echo "stuff";
+			/* find a way to be clever */
+			/* find a way to be clever */
+		}
+		/* find a way to be clever */
+		/* find a way to be clever */
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true )
+			echo "stuff";
+		/**
+		 * find a way to be clever
+		 */
+		/**
+		 * find a way to be clever
+		 */
+		echo "clever";
+	}
+}
+
+if (true) {
+	if (true) {
+		while ( true ) {
+			/**
+			 * find a way to be clever
+			 */
+			/**
+			 * find a way to be clever
+			 */
+			echo "stuff";
+		/**
+		 * find a way to be clever
+		 */
+		/**
+		 * find a way to be clever
+		 */
+		}
+		/**
+		 * find a way to be clever
+		 */
+		/**
+		 * find a way to be clever
+		 */
+		echo "clever";
+	}
+}
+?>
