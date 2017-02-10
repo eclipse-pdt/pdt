@@ -1,0 +1,31 @@
+--TEST--
+Bug 457517 - Code formatter inserts extra lines after comment lines when "Enable line comment formatting" is unchecked
+--FILE--
+<?php
+if(true){
+	
+	//test
+	echo 'test';
+	
+	//test2
+	
+	echo 'test2';//test3
+	
+	echo 'test3';
+	
+}
+?>
+--EXPECT--
+<?php
+if (true) {
+    
+    //test
+    echo 'test';
+    
+    //test2
+    
+    echo 'test2'; //test3
+    
+    echo 'test3';
+}
+?>
