@@ -140,8 +140,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// this is for never indent at first line
 	private boolean doNotIndent = false;
 	boolean inComment = false;
-	private int indentLengthForComment;
-	private String indentStringForComment;
+	private int indentLengthForComment = -1;
+	private String indentStringForComment = null;
 	private boolean blockEnd;
 	private boolean recordCommentIndentVariables = false;
 	// for block comment,multiline comment at the end of break statement of case
@@ -968,8 +968,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 					if (startLine == commentStartLine) {
 						initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
-						// adjust lineWidth, because indentLengthForComment may
-						// contain '\t'
 						lineWidth = indentLengthForComment;
 					}
 					if (startAtFirstColumn && this.preferences.never_indent_line_comments_on_first_column) {
@@ -1466,6 +1464,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		inComment = false;
 		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
+		resetCommentIndentVariables();
 		handleCharsWithoutComments(start, end);
 	}
 

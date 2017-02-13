@@ -1,0 +1,48 @@
+--TEST--
+Check that indentation string is valid and recalculated for each group of comments.
+--FILE--
+<?php
+
+class MyClass extends MyBaseClass
+{
+
+    private function foo(& $row)
+    {
+        /*
+         * indentation string for this comment should not be stored...
+         */
+    }
+
+    function addColumns(Table $table)
+    {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $column->setNativeType($type);
+            // comment 1
+        // ...to be reused here!!!
+            $column->setSize($size);
+        }
+    }
+}
+?>
+--EXPECT--
+<?php
+
+class MyClass extends MyBaseClass
+{
+    private function foo(& $row)
+    {
+        /*
+         * indentation string for this comment should not be stored...
+         */
+    }
+    function addColumns(Table $table)
+    {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $column->setNativeType($type);
+            // comment 1
+            // ...to be reused here!!!
+            $column->setSize($size);
+        }
+    }
+}
+?>
