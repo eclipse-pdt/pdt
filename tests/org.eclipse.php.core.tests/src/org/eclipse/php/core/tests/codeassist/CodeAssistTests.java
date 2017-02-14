@@ -22,13 +22,18 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.codeassist.ICompletionEngine;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -214,15 +219,15 @@ public class CodeAssistTests {
 	}
 
 	protected CompletionProposal[] getProposals(int offset) throws ModelException {
-		return getProposals(getSourceModule(), offset);
+		return getProposals((SourceModule) getSourceModule(), offset);
 	}
 
-	protected static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+	protected static CompletionProposal[] getProposals(SourceModule sourceModule, int offset) throws ModelException {
 		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
 		String content = new String(sourceModule.getSourceAsCharArray());
 		document.set(content);
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
-		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
+		codeComplete(sourceModule, offset, new TestCompletionRequestor(document, offset) {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
@@ -233,6 +238,28 @@ public class CodeAssistTests {
 			}
 		});
 		return proposals.toArray(new CompletionProposal[proposals.size()]);
+	}
+
+	protected static void codeComplete(final SourceModule cu, final int position, CompletionRequestor requestor)
+			throws ModelException {
+
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(cu);
+		if (toolkit == null) {
+			return;
+		}
+
+		final ICompletionEngine[] engines = DLTKLanguageManager.getCompletionEngines(toolkit.getNatureId());
+		if (engines != null) {
+			for (ICompletionEngine engine : engines) {
+				engine.setRequestor(requestor);
+
+				engine.setOptions(cu.getScriptProject().getOptions(true));
+				engine.setProject(cu.getScriptProject());
+
+				engine.setProgressMonitor(new NullProgressMonitor());
+				engine.complete(cu, position, 0);
+			}
+		}
 	}
 
 	protected static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile)
