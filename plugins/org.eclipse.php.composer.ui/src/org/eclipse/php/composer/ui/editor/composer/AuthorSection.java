@@ -71,7 +71,8 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 			if (obj instanceof Person) {
 				Person author = (Person) obj;
 
-				StyledString styledString = new StyledString(author.getName());
+				StyledString styledString = author.getName() != null ? new StyledString(author.getName())
+						: new StyledString();
 
 				if (author.getEmail() != null && !author.getEmail().trim().isEmpty()) {
 					styledString.append(" <" + author.getEmail().trim() + ">", StyledString.COUNTER_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
