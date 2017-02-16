@@ -20,9 +20,15 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -57,6 +63,37 @@ public class CodeAssistTests {
 
 	@ClassRule
 	public static TestWatcher watcher = new TestSuiteWatcher();
+
+	private static class Dumper extends Job {
+
+		CountDownLatch latch;
+
+		public Dumper(CountDownLatch latch) {
+			super("");
+			setSystem(true);
+			setUser(false);
+			this.latch = latch;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			boolean takesTooLong = false;
+			try {
+				if (!latch.await(3, TimeUnit.SECONDS)) {
+					takesTooLong = true;
+				}
+				while (takesTooLong && !monitor.isCanceled()) {
+					TestUtils.dumpThreads();
+					Thread.sleep(100);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return Status.OK_STATUS;
+		}
+
+	}
 
 	private static abstract class TestCompletionRequestor extends CompletionRequestor
 			implements IPHPCompletionRequestor {
@@ -152,12 +189,20 @@ public class CodeAssistTests {
 
 	@Test
 	public void assist(final String fileName) throws Exception {
+
+		CountDownLatch latch = new CountDownLatch(1);
+		Dumper dumper = new Dumper(latch);
+		dumper.schedule();
+
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
 		final int offset = createFiles(pdttFile);
 		CompletionProposal[] proposals = getProposals(DLTKCore.createSourceModuleFrom(testFile), offset);
 		compareProposals(proposals, pdttFile);
 		deleteFiles();
+
+		latch.countDown();
+		dumper.cancel();
 	}
 
 	private void deleteFiles() {
