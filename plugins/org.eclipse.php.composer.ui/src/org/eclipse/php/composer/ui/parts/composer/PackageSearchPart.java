@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.composer.ui.parts.composer;
 
+import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.ui.controller.PackageController;
 import org.eclipse.php.composer.ui.utils.WidgetFactory;
 import org.eclipse.swt.SWT;
@@ -22,8 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import org.eclipse.php.composer.api.ComposerPackage;
 
 public class PackageSearchPart {
 
