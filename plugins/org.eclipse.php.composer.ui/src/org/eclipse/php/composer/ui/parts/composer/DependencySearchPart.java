@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.composer.ui.parts.composer;
 
+import org.eclipse.php.composer.api.ComposerPackage;
+import org.eclipse.php.composer.api.VersionedPackage;
 import org.eclipse.php.composer.ui.utils.WidgetFactory;
 import org.eclipse.php.composer.ui.utils.WidgetHelper;
 import org.eclipse.swt.SWT;
@@ -20,9 +22,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Twistie;
-
-import org.eclipse.php.composer.api.ComposerPackage;
-import org.eclipse.php.composer.api.VersionedPackage;
 
 public class DependencySearchPart extends PackageSearchPart {
 
@@ -39,17 +38,19 @@ public class DependencySearchPart extends PackageSearchPart {
 		WidgetHelper.trimComposite(body, 0, 0, 0, 0, 0, 0);
 
 		// title
-		Composite title = factory.createComposite(body, SWT.NO_BACKGROUND);
+		Composite title = factory.createComposite(body, SWT.NONE);
 		title.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		title.setLayout(new GridLayout(3, false));
+		title.setBackground(getBackgroundColor());
 		WidgetHelper.trimComposite(title, -5, -5, -5, -5, 0, 0);
 
 		// toggle box
-		Composite toggleBox = factory.createComposite(title, SWT.NO_BACKGROUND);
+		Composite toggleBox = factory.createComposite(title, SWT.NONE);
 		toggleBox.setLayout(new GridLayout());
-		toggle = new Twistie(toggleBox, SWT.NO_BACKGROUND | SWT.NO_FOCUS);
+		toggleBox.setBackground(getBackgroundColor());
+		toggle = new Twistie(toggleBox, SWT.NO_FOCUS);
+		toggle.setBackground(getBackgroundColor());
 		toggle.setData(this);
-		WidgetHelper.trimComposite(toggleBox, 3, -7, 0, 0, 0, 0);
 
 		// package
 		createPackageCheckbox(title, factory, name);

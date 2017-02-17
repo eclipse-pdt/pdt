@@ -41,8 +41,6 @@ public class VersionSuggestion {
 	private static final int RECENT = 0;
 	private static final int CUSTOM = 1;
 
-	private FormToolkit toolkit = null;
-	private WidgetFactory factory = null;
 	private Text target;
 	private Composite body;
 
@@ -72,12 +70,10 @@ public class VersionSuggestion {
 	public VersionSuggestion(String name, Composite parent, Text target, ComposerPackage composerPackage,
 			FormToolkit toolkit) {
 		this(name, parent, target, composerPackage, new WidgetFactory(toolkit));
-		this.toolkit = toolkit;
 	}
 
 	public VersionSuggestion(String name, Composite parent, Text target, ComposerPackage composerPackage,
 			WidgetFactory factory) {
-		this.factory = factory;
 		this.target = target;
 		this.composerPackage = composerPackage;
 
@@ -123,7 +119,7 @@ public class VersionSuggestion {
 		suggestions.setText(Messages.VersionSuggestion_SuggestionsLabel);
 		suggestions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		suggestions.setLayout(new GridLayout(2, true));
-		suggestions.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		suggestions.setBackground(parent.getBackground());
 		WidgetHelper.trimComposite(suggestions, 0, 0, 0, 0, 0, 5);
 
 		// major
@@ -153,7 +149,7 @@ public class VersionSuggestion {
 		custom.setText(Messages.VersionSuggestion_CustomLabel);
 		custom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		custom.setLayout(new GridLayout(2, false));
-		custom.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		custom.setBackground(parent.getBackground());
 		WidgetHelper.trimComposite(custom, 0, 0, 0, 0, 0, 5);
 
 		VersionController controller = new VersionController();
@@ -183,20 +179,20 @@ public class VersionSuggestion {
 		versions.setComparator(new VersionSorter());
 
 		// constraints
-		right = factory.createComposite(custom, SWT.NO_BACKGROUND);
+		right = factory.createComposite(custom, SWT.NONE);
 		right.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		right.setLayout(new GridLayout(3, false));
-		right.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		right.setBackground(parent.getBackground());
 		WidgetHelper.trimComposite(right, -5, -5, -5, -5, 0, 0);
 
-		Label constraintsLbl = factory.createLabel(right, SWT.NO_BACKGROUND | SWT.TRANSPARENT);
+		Label constraintsLbl = factory.createLabel(right, SWT.NONE);
 		constraintsLbl.setText(Messages.VersionSuggestion_ConstraintsLabel);
-		constraintsLbl.setBackground(custom.getBackground());
+		constraintsLbl.setBackground(right.getBackground());
 		constraintsLbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
-		noConstraint = factory.createButton(right, SWT.RADIO | SWT.NO_BACKGROUND);
+		noConstraint = factory.createButton(right, SWT.RADIO);
 		noConstraint.setText(Messages.VersionSuggestion_NoneLabel);
-		noConstraint.setBackground(custom.getBackground());
+		noConstraint.setBackground(right.getBackground());
 		noConstraint.setSelection(true);
 		noConstraint.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -208,9 +204,9 @@ public class VersionSuggestion {
 		});
 
 		for (String constraint : new String[] { "~", ">", ">=", "!=", "<", ">=" }) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			Button c = factory.createButton(right, SWT.RADIO | SWT.TRANSPARENT);
+			Button c = factory.createButton(right, SWT.RADIO);
 			c.setText(constraint);
-			c.setBackground(custom.getBackground());
+			c.setBackground(right.getBackground());
 			c.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (prepareCustomVersion()) {

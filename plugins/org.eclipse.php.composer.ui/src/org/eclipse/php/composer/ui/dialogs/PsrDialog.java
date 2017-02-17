@@ -108,10 +108,10 @@ public class PsrDialog extends Dialog {
 		buttons.setLayout(new GridLayout(1, false));
 
 		WidgetHelper.trimComposite(buttons, 0);
-		WidgetHelper.setMargin(buttons, -3, -3);
-		WidgetHelper.setSpacing(buttons, -4, 0);
+		WidgetHelper.setMargin(buttons, 1, 1);
+		WidgetHelper.setSpacing(buttons, 0, 0);
 
-		Button btnEdit = new Button(buttons, SWT.NONE);
+		Button btnEdit = new Button(buttons, SWT.PUSH);
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnEdit.setText(Messages.PsrDialog_EditButton);

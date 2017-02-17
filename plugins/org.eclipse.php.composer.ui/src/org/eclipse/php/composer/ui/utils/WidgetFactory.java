@@ -31,7 +31,7 @@ public class WidgetFactory {
 	// ---- Button
 
 	public Button createButton(Composite parent) {
-		return createButton(parent, SWT.DEFAULT);
+		return createButton(parent, SWT.PUSH);
 	}
 
 	public static Button createButton(FormToolkit toolkit, Composite parent) {
