@@ -20,13 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.internal.p2.ui.discovery.wizards.AbstractDiscoveryItem;
 import org.eclipse.equinox.internal.p2.ui.discovery.wizards.DiscoveryResources;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.MinimalPackage;
 import org.eclipse.php.composer.api.RepositoryPackage;
 import org.eclipse.php.composer.api.collection.Versions;
 import org.eclipse.php.composer.api.entities.JsonValue;
-import org.eclipse.php.composer.api.entities.Version;
 import org.eclipse.php.composer.api.packages.AsyncPackagistDownloader;
 import org.eclipse.php.composer.api.packages.PackageListenerInterface;
 import org.eclipse.php.composer.core.log.Logger;
@@ -244,24 +242,17 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 
 			@Override
 			public void packageLoaded(RepositoryPackage repositoryPackage) {
-				Versions versions = repositoryPackage.getVersions();
+				final Versions versions = repositoryPackage.getVersions();
 				final List<String> versionNames = new ArrayList<String>();
-				String selectVersion = null;
 				for (Entry<String, ComposerPackage> version : versions) {
-					Version detailedVersion = versions.getDetailedVersion(version.getValue().getVersion());
-					if (selectVersion == null && detailedVersion != null
-							&& detailedVersion.getStability() == ComposerConstants.STABLE) {
-						selectVersion = version.getValue().getVersion();
-					}
 					versionNames.add(version.getValue().getVersion());
 				}
-				final String selectedVersion = selectVersion;
 
 				getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						filterItem.setVersions(versionNames.toArray(new String[versionNames.size()]));
-						filterItem.setSelectedVersion(selectedVersion);
+						filterItem.setSelectedVersion(versions.getDefaultVersion());
 						loadVersionsFromCache();
 					}
 				});
