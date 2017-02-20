@@ -306,7 +306,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_PRINT;
 }
 
-<ST_PHP_IN_SCRIPTING>"class" {
+<ST_PHP_IN_SCRIPTING,ST_PHP_IDENTIFIER>"class" {
 	return PHP_CLASS;
 }
 

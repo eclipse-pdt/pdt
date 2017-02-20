@@ -70,7 +70,9 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(StaticConstantAccess access) {
-			highlight(access.getConstant());
+			if (!access.getConstant().getName().equalsIgnoreCase("class")) { //$NON-NLS-1$
+				highlight(access.getConstant());
+			}
 			return true;
 		}
 

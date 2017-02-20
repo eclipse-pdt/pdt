@@ -12,7 +12,6 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.ast.nodes.FieldsDeclaration;
-import org.eclipse.php.core.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.core.ast.nodes.Variable;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
@@ -23,12 +22,6 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 	protected class StaticFieldApply extends AbstractSemanticApply {
 
 		private boolean visitField = false;
-
-		@Override
-		public boolean visit(StaticConstantAccess classConstantAccess) {
-			highlight(classConstantAccess.getConstant());
-			return true;
-		}
 
 		@Override
 		public boolean visit(FieldsDeclaration fieldsDeclaration) {

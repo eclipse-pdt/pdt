@@ -80,7 +80,8 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlightNamespaceType((NamespaceName) name, true);
 			} else if (name instanceof Identifier) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
-				if ("self".equalsIgnoreCase(((Identifier) name).getName())) { //$NON-NLS-1$
+				if ("self".equalsIgnoreCase(((Identifier) name).getName()) //$NON-NLS-1$
+						|| "class".equalsIgnoreCase(((Identifier) name).getName())) { //$NON-NLS-1$
 					return true;
 				}
 				highlight(name);
