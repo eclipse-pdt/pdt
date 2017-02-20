@@ -10,22 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.composer.api.collection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.entities.AbstractIterableJsonObject;
 import org.eclipse.php.composer.api.entities.Version;
-
-import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * Represents a version property in a composer package or version collection in
@@ -56,12 +47,25 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 	}
 
 	/**
-	 * Returns the most recent version
+	 * Returns the most recent version based on version number and stability.
 	 * 
 	 * @return
 	 */
 	public String getDefaultVersion() {
-		return (String) properties.entrySet().iterator().next().getKey();
+		Set<String> sortedVersions = new TreeSet<String>(properties.keySet()).descendingSet();
+
+		for (String stability : ComposerConstants.STABILITIES) {
+			for (String version : sortedVersions) {
+				Version v = getDetailedVersion(version);
+				if (v != null && Objects.equals(stability, v.getStability())) {
+					return version;
+				}
+			}
+		}
+
+		// if no version matches any of the known stabilities, return the first
+		// one
+		return (sortedVersions.isEmpty()) ? null : sortedVersions.iterator().next();
 	}
 
 	public Set<String> toSet() {
@@ -180,6 +184,8 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 		}
 
 		super.set(version, composerPackage);
+
+		Collections.sort(sortOrder);
 	}
 
 	public void remove(String version) {
