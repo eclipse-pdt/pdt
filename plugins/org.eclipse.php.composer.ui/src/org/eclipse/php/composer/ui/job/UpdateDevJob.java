@@ -8,6 +8,7 @@
  * Contributors:
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
+ *     Kaloyan Raev - [503025] Composer is using deprecated --dev option
  *******************************************************************************/
 package org.eclipse.php.composer.ui.job;
 
@@ -35,7 +36,7 @@ public class UpdateDevJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		String[] options = new String[] { "--dev", "--no-progress", "--no-ansi" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String[] options = new String[] { "--no-progress", "--no-ansi" }; //$NON-NLS-1$ //$NON-NLS-2$
 		if (packages == null) {
 			launcher.launch("update", options); //$NON-NLS-1$
 		} else {
