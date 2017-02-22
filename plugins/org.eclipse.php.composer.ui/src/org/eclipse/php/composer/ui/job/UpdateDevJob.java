@@ -36,7 +36,7 @@ public class UpdateDevJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		String[] options = new String[] { "--no-progress", "--no-ansi" }; //$NON-NLS-1$ //$NON-NLS-2$
+		String[] options = new String[] { "--dev" }; //$NON-NLS-1$
 		if (packages == null) {
 			launcher.launch("update", options); //$NON-NLS-1$
 		} else {
