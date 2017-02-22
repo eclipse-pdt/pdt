@@ -12,9 +12,12 @@
 package org.eclipse.php.composer.ui.job;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
 public class InstallJob extends ComposerJob {
@@ -24,6 +27,12 @@ public class InstallJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		launcher.launch("install", new String[] { "--no-dev", "--no-progress", "--no-ansi" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		List<String> params = new ArrayList<>();
+		params.add("--no-dev"); //$NON-NLS-1$
+		// workaround for incorrect progress displaying on Windows
+		if (Platform.OS_WIN32.equals(Platform.getOS())) {
+			params.add("--no-progress"); //$NON-NLS-1$
+		}
+		launcher.launch("install", params.toArray(new String[0])); //$NON-NLS-1$
 	}
 }

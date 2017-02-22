@@ -13,10 +13,13 @@
 package org.eclipse.php.composer.ui.job;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
 public class UpdateDevJob extends ComposerJob {
@@ -36,11 +39,14 @@ public class UpdateDevJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		String[] options = new String[] { "--no-progress", "--no-ansi" }; //$NON-NLS-1$ //$NON-NLS-2$
-		if (packages == null) {
-			launcher.launch("update", options); //$NON-NLS-1$
-		} else {
-			launcher.launch("update", ArrayUtils.addAll(options, packages)); //$NON-NLS-1$
+		List<String> params = new ArrayList<>();
+		if (packages != null) {
+			params.addAll(Arrays.asList(packages));
 		}
+		// workaround for incorrect progress displaying on Windows
+		if (Platform.OS_WIN32.equals(Platform.getOS())) {
+			params.add("--no-progress"); //$NON-NLS-1$
+		}
+		launcher.launch("update", params.toArray(new String[0])); //$NON-NLS-1$
 	}
 }
