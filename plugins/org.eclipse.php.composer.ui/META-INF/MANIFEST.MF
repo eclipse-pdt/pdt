@@ -30,7 +30,11 @@ Require-Bundle: org.eclipse.ui.forms,
  org.eclipse.equinox.p2.ui.discovery,
  org.eclipse.equinox.p2.discovery,
  org.eclipse.php.server.core,
- org.eclipse.wst.common.project.facet.ui
+ org.eclipse.wst.common.project.facet.ui,
+ org.eclipse.tm.terminal.view.core,
+ org.eclipse.tm.terminal.view.ui,
+ org.eclipse.tm.terminal.connector.process,
+ org.eclipse.tm.terminal.control
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: 

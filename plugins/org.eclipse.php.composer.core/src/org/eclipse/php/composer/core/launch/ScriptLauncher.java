@@ -91,6 +91,10 @@ public class ScriptLauncher {
 		executor.execute(cmd, env);
 	}
 
+	protected Set<ExecutionResponseListener> getListeners() {
+		return listeners;
+	}
+
 	public void abort() {
 		executor.abort();
 	}

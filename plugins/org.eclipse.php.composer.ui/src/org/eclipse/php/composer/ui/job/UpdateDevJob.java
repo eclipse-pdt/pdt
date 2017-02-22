@@ -15,7 +15,6 @@ package org.eclipse.php.composer.ui.job;
 import java.io.IOException;
 
 import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
@@ -36,11 +35,10 @@ public class UpdateDevJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		String[] options = new String[] { "--no-progress", "--no-ansi" }; //$NON-NLS-1$ //$NON-NLS-2$
 		if (packages == null) {
-			launcher.launch("update", options); //$NON-NLS-1$
+			launcher.launch("update"); //$NON-NLS-1$
 		} else {
-			launcher.launch("update", ArrayUtils.addAll(options, packages)); //$NON-NLS-1$
+			launcher.launch("update", packages); //$NON-NLS-1$
 		}
 	}
 }
