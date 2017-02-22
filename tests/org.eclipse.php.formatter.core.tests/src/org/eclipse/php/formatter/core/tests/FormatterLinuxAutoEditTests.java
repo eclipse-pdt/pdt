@@ -56,18 +56,23 @@ public class FormatterLinuxAutoEditTests extends FormatterTests {
 		PdttFile pdttFile = pdttFiles.get(fileName);
 		IDocument document = StructuredModelManager.getModelManager().getModelForRead(file).getStructuredDocument();
 		String data = document.get();
-		int offset = data.lastIndexOf(OFFSET_CHAR);
-		if (offset == -1) {
+		int offset1 = data.indexOf(OFFSET_CHAR);
+		int offset2 = data.lastIndexOf(OFFSET_CHAR);
+		if (offset1 == -1) {
 			throw new IllegalArgumentException(data + ",offset character is not set");
 		}
 		// replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
+		if (offset1 == offset2) {
+			data = data.substring(0, offset1) + data.substring(offset1 + 1);
+		} else {
+			data = data.substring(0, offset1) + data.substring(offset1 + 1, offset2) + data.substring(offset2 + 1);
+		}
 		document.set(data);
 		MainAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
 		DocumentCommand cmd = new DocumentCommand() {
 		};
-		cmd.offset = offset;
-		cmd.length = 0;
+		cmd.offset = offset1;
+		cmd.length = offset1 == offset2 ? 0 : offset2 - offset1 - 1;
 		if (pdttFile.getOther() != null) {
 			cmd.text = pdttFile.getOther().replaceAll("\r\n", "\n");
 		} else {
