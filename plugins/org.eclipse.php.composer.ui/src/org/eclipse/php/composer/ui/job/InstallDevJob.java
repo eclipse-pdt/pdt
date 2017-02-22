@@ -25,6 +25,6 @@ public class InstallDevJob extends ComposerJob {
 	}
 
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
-		launcher.launch("install", new String[] { "--no-progress", "--no-ansi" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		launcher.launch("install", new String[] { "--dev" }); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

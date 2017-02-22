@@ -139,7 +139,6 @@ public class CreateProjectJob extends ComposerJob {
 
 		List<String> params = new ArrayList<>();
 		params.add("--no-interaction");
-		params.add("--no-progress");
 		params.add(packageName);
 		params.add(projectName);
 		if (packageVersion != null) {
