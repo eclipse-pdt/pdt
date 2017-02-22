@@ -158,8 +158,21 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			PHPUiPlugin.log(e);
 		}
 		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
-		String start = "<?php"; //$NON-NLS-1$
-		newdocument.set(start + newline + tempsb.toString());
+		String tempstr = tempsb.toString();
+		String tempstrtrim = tempstr.trim();
+		boolean addedPhpOpenTag = false;
+		if (tempstrtrim.startsWith("<?") || tempstrtrim.startsWith("<%")) { //$NON-NLS-1$ //$NON-NLS-2$
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=512579
+			// Do not add an additional opening tag, or
+			// PHPTextSequenceUtilities#getStatement() could later be confused
+			// and return one of the duplicated opening tags as a valid
+			// statement.
+			newdocument.set(tempstr);
+		} else {
+			String start = "<?php"; //$NON-NLS-1$
+			newdocument.set(start + newline + tempstr);
+			addedPhpOpenTag = true;
+		}
 		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(), indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
@@ -167,7 +180,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		try {
 			int lineNumber = newdocument.getNumberOfLines();
 			for (int i = 0; i < lineNumber; i++) {
-				if (i == 0) {
+				if (i == 0 && addedPhpOpenTag) {
 					continue;
 				}
 				IRegion region = newdocument.getLineInformation(i);
