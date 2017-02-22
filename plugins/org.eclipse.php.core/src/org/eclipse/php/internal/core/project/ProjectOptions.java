@@ -15,6 +15,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -26,7 +28,7 @@ public class ProjectOptions {
 	private ProjectOptions() {
 	}
 
-	private static IProject getProject(IModelElement modelElement) {
+	private static @Nullable IProject getProject(@NonNull IModelElement modelElement) {
 		IScriptProject scriptProject = modelElement.getScriptProject();
 		if (scriptProject != null) {
 			return scriptProject.getProject();
@@ -34,7 +36,7 @@ public class ProjectOptions {
 		return null;
 	}
 
-	public static PHPVersion getPhpVersion(IModelElement modelElement) {
+	public static PHPVersion getPhpVersion(@NonNull IModelElement modelElement) {
 		return getPhpVersion(getProject(modelElement));
 	}
 
@@ -46,7 +48,7 @@ public class ProjectOptions {
 		return getDefaultPhpVersion();
 	}
 
-	public static PHPVersion getPhpVersion(IFile file) {
+	public static PHPVersion getPhpVersion(@NonNull IFile file) {
 		PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
 		IProject project = file.getProject();
 		if (project != null && project.isAccessible()) {
@@ -55,7 +57,7 @@ public class ProjectOptions {
 		return phpVersion;
 	}
 
-	public static PHPVersion getPhpVersion(String fileName) {
+	public static PHPVersion getPhpVersion(@NonNull String fileName) {
 		PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
 		if (resource != null) {
@@ -71,32 +73,32 @@ public class ProjectOptions {
 		return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.PHP_VERSION));
 	}
 
-	public static boolean setPhpVersion(PHPVersion version, IProject project) {
+	public static boolean setPhpVersion(@NonNull PHPVersion version, @NonNull IProject project) {
 		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.PHP_VERSION,
 				version.getAlias(), project);
 	}
 
-	public static final boolean isSupportingAspTags(IProject project) {
+	public static final boolean isSupportingAspTags(@Nullable IProject project) {
 		return project == null ? false
 				: Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
-						null, project)).booleanValue();
+						"false", project)).booleanValue(); //$NON-NLS-1$
 	}
 
-	public static boolean useShortTags(IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null,
-				project);
+	public static boolean useShortTags(@Nullable IProject project) {
+		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS,
+				"true", project); // $NON-NLS-1$
 		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
 
-	public static boolean useShortTags(IModelElement modelElement) {
+	public static boolean useShortTags(@NonNull IModelElement modelElement) {
 		return useShortTags(getProject(modelElement));
 	}
 
-	public static final boolean isSupportingAspTags(IFile file) {
+	public static final boolean isSupportingAspTags(@NonNull IFile file) {
 		return isSupportingAspTags(file.getProject());
 	}
 
-	public static final boolean setSupportingAspTags(boolean value, IProject project) {
+	public static final boolean setSupportingAspTags(boolean value, @NonNull IProject project) {
 		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
 				Boolean.toString(value), project);
 	}

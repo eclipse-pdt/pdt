@@ -85,12 +85,12 @@ public class ProjectOptions {
 	public static final boolean isSupportingASPTags(@Nullable IProject project) {
 		return project == null ? false
 				: Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
-						null, project)).booleanValue();
+						"false", project)).booleanValue(); //$NON-NLS-1$
 	}
 
 	public static boolean useShortTags(@Nullable IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null,
-				project);
+		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS,
+				"true", project); // $NON-NLS-1$
 		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
 

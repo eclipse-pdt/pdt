@@ -1,5 +1,5 @@
 /**********************************************************************
- Copyright (c) 2000, 2015 IBM Corp. and others.
+ Copyright (c) 2000, 2015, 2017 IBM Corp. and others.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Common Public License v1.0
  which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.IndentationObject;
 import org.eclipse.php.internal.core.format.PhpIndentationFormatter;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -157,9 +158,30 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
 		}
-		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
-		String start = "<?php"; //$NON-NLS-1$
-		newdocument.set(start + newline + tempsb.toString());
+		PhpSourceParser sourceParser = new PhpSourceParser();
+		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(sourceParser);
+		int lastIdx = tempsb.length() - 2; // 2 = "<?".length() = "<%".length()
+		String tempstr = ""; //$NON-NLS-1$
+		for (int idx = 0; idx <= lastIdx; idx++) {
+			if (!Character.isWhitespace(tempsb.charAt(idx)) || idx == lastIdx) {
+				tempstr = tempsb.substring(idx, idx + 2);
+				break;
+			}
+		}
+
+		boolean addedPhpOpenTag = false;
+		if (tempstr.equals("<?") || (ProjectOptions.useShortTags(sourceParser.getProject()) && tempstr.equals("<%"))) { //$NON-NLS-1$ //$NON-NLS-2$
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=512579
+			// Do not add an additional opening tag, or
+			// PHPTextSequenceUtilities#getStatement() could later be confused
+			// and return one of the duplicated opening tags as a valid
+			// statement.
+			newdocument.set(tempsb.toString());
+		} else {
+			String start = "<?php"; //$NON-NLS-1$
+			newdocument.set(start + newline + tempsb.toString());
+			addedPhpOpenTag = true;
+		}
 		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(), indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
@@ -167,7 +189,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		try {
 			int lineNumber = newdocument.getNumberOfLines();
 			for (int i = 0; i < lineNumber; i++) {
-				if (i == 0) {
+				if (i == 0 && addedPhpOpenTag) {
 					continue;
 				}
 				IRegion region = newdocument.getLineInformation(i);
