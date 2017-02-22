@@ -14,27 +14,23 @@ package org.eclipse.php.composer.ui.job;
 import java.io.IOException;
 import java.util.Objects;
 
-import javax.inject.Inject;
-
 import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.launch.ExecutableNotFoundException;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
-import org.eclipse.php.composer.core.launch.ScriptLauncherManager;
 import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
 import org.eclipse.php.composer.core.launch.environment.ComposerEnvironmentFactory;
-import org.eclipse.php.composer.core.launch.execution.ExecutionResponseAdapter;
+import org.eclipse.php.composer.core.launch.environment.Environment;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
-import org.eclipse.php.composer.ui.handler.ConsoleResponseHandler;
 import org.eclipse.php.composer.ui.job.runner.ComposerFailureMessageRunner;
 import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
+import org.eclipse.php.composer.ui.terminal.ComposerLauncher;
 import org.eclipse.swt.widgets.Display;
 
 abstract public class ComposerJob extends Job {
@@ -44,16 +40,11 @@ abstract public class ComposerJob extends Job {
 	private boolean cancelling = false;
 	private ScriptLauncher launcher;
 
-	@Inject
-	public ScriptLauncherManager manager;
-
 	protected static final IStatus ERROR_STATUS = new Status(Status.ERROR, ComposerPlugin.ID,
 			Messages.ComposerJob_ErrorMessage);
 
 	public ComposerJob(String name) {
 		super(name);
-
-		ContextInjectionFactory.inject(this, ComposerUIPlugin.getDefault().getEclipseContext());
 	}
 
 	public ComposerJob(IProject project, String name) {
@@ -88,7 +79,13 @@ abstract public class ComposerJob extends Job {
 			boolean tryAgain = false;
 			do {
 				try {
-					launcher = manager.getLauncher(ComposerEnvironmentFactory.FACTORY_ID, getProject());
+					Environment env = new ComposerEnvironmentFactory().getEnvironment(getProject());
+					if (env == null) {
+						throw new ExecutableNotFoundException(Messages.ComposerJob_CannotFindExe);
+					}
+
+					launcher = new ComposerLauncher(env, getProject());
+
 					tryAgain = false;
 				} catch (ExecutableNotFoundException e) {
 					callDoOnLauncherRunException = true;
@@ -112,21 +109,6 @@ abstract public class ComposerJob extends Job {
 					}
 				}
 			} while (tryAgain);
-
-			launcher.addResponseListener(new ConsoleResponseHandler());
-			launcher.addResponseListener(new ExecutionResponseAdapter() {
-				public void executionFailed(final String response, final Exception exception) {
-					Display.getDefault().asyncExec(new ComposerFailureMessageRunner(response, monitor));
-				}
-
-				@Override
-				public void executionMessage(String message) {
-					if (monitor != null && message != null) {
-						monitor.subTask(message);
-						monitor.worked(1);
-					}
-				}
-			});
 
 			monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
 			monitor.worked(1);

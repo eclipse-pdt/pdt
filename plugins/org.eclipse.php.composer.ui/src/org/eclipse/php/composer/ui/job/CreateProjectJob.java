@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.api.packages.PharDownloader;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseListener;
@@ -138,8 +139,11 @@ public class CreateProjectJob extends ComposerJob {
 		});
 
 		List<String> params = new ArrayList<>();
-		params.add("--no-interaction");
-		params.add("--no-progress");
+		// workaround for incorrect progress displaying on Windows
+		if (Platform.OS_WIN32.equals(Platform.getOS())) {
+			params.add("--no-progress"); //$NON-NLS-1$
+		}
+
 		params.add(packageName);
 		params.add(projectName);
 		if (packageVersion != null) {

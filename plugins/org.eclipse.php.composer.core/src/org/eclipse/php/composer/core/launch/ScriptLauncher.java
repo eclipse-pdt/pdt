@@ -66,7 +66,7 @@ public class ScriptLauncher {
 		launch(argument, new String[] { param });
 	}
 
-	public void launch(String argument, String[] params) throws ExecuteException, IOException, InterruptedException {
+	public void launch(String argument, String... params) throws ExecuteException, IOException, InterruptedException {
 		CommandLine cmd = environment.getCommand();
 		cmd.addArgument(argument);
 		cmd.addArguments(params);
@@ -89,6 +89,10 @@ public class ScriptLauncher {
 		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 
 		executor.execute(cmd, env);
+	}
+
+	protected Set<ExecutionResponseListener> getListeners() {
+		return listeners;
 	}
 
 	public void abort() {
