@@ -8,6 +8,7 @@
  * Contributors:
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
+ *     Kaloyan Raev - [501591] No scroll in the package area when creating a project
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project.template;
 
@@ -149,6 +150,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 								}
 								contentProvider.add(items);
 								viewer.refresh();
+								viewer.getControl().requestLayout();
 								searchResultCount
 										.setText(NLS.bind(Messages.PackageFilterViewer_PackagesFound, result.total));
 							}
