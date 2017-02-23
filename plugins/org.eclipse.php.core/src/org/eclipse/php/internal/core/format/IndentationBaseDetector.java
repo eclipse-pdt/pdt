@@ -45,15 +45,15 @@ public class IndentationBaseDetector {
 				document.getRegionAtCharacterOffset(lineInfo.getOffset()), true);
 	}
 
-	public int getIndentationBaseLine(boolean checkMultiLine) throws BadLocationException {
-		if (checkMultiLine) {
+	public int getIndentationBaseLine(boolean checkMultiLineStatement) throws BadLocationException {
+		if (checkMultiLineStatement) {
 			currLineIndex = adjustLine(currLineIndex, offset);
 		}
 		while (currLineIndex > 0) {
-			if (isIndentationBase(offset, currLineIndex, checkMultiLine)) {
+			if (isIndentationBase(offset, currLineIndex, checkMultiLineStatement)) {
 				return currLineIndex;
 			}
-			currLineIndex = getNextLineIndex(offset, currLineIndex, checkMultiLine);
+			currLineIndex = getNextLineIndex(offset, currLineIndex, checkMultiLineStatement);
 		}
 		return 0;
 	}
@@ -92,7 +92,7 @@ public class IndentationBaseDetector {
 		return currLineIndex;
 	}
 
-	private boolean isIndentationBase(int offset, int currLineIndex, boolean checkMultiLine)
+	private boolean isIndentationBase(int offset, int currLineIndex, boolean checkMultiLineStatement)
 			throws BadLocationException {
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
 
@@ -113,13 +113,14 @@ public class IndentationBaseDetector {
 			return true;
 		}
 
+		// NB: lineStartOffset could be greater than checkedOffset after this
+		// loop
 		while (Character.isWhitespace(document.getChar(lineStartOffset))) {
 			lineStartOffset++;
 		}
 
 		// need to get to the first tRegion - so that we wont get the state of
-		// the
-		// tRegion in the previos line
+		// the tRegion in the previous line
 
 		// checked line beginning offset (after incrementing spaces in beginning
 		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStartOffset, true);
@@ -137,9 +138,8 @@ public class IndentationBaseDetector {
 		boolean shouldNotConsiderAsIndentationBase = shouldNotConsiderAsIndentationBase(checkedLineBeginState,
 				forLineEndState);
 
-		if ((shouldNotConsiderAsIndentationBase
-				|| (checkMultiLine && isInMultiLineStatement(checkedLineBeginState, checkedLineEndState, checkedOffset,
-						lineStartOffset, currLineIndex) && !isMultilineContentInsideBraceless(checkedOffset)))
+		if ((shouldNotConsiderAsIndentationBase || (checkMultiLineStatement && isInMultiLineStatement(currLineIndex)
+				&& !isMultilineContentInsideBraceless(checkedOffset)))
 				&& !lineContainIncompleteBlock(checkedOffset, lineStartOffset)) {
 			return false;
 		}
@@ -195,6 +195,7 @@ public class IndentationBaseDetector {
 		return -1;
 	}
 
+	// NB: lineStartOffset can be greater than checkedOffset
 	private boolean lineContainIncompleteBlock(int checkedOffset, int lineStartOffset) throws BadLocationException {
 		if (checkedOffset == document.getLength() && checkedOffset > 0) {
 			checkedOffset--;
@@ -272,7 +273,8 @@ public class IndentationBaseDetector {
 		return false;
 	}
 
-	private int getNextLineIndex(int offset, int currLineIndex, boolean checkMultiLine) throws BadLocationException {
+	private int getNextLineIndex(int offset, int currLineIndex, boolean checkMultiLineStatement)
+			throws BadLocationException {
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
 		final int currLineEndOffset = lineInfo.getOffset() + lineInfo.getLength();
 		String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset(), true);
@@ -283,15 +285,15 @@ public class IndentationBaseDetector {
 		if (insideBraceless >= 0) {
 			return document.getLineOfOffset(insideBraceless);
 		}
-		if (isMultilineType(checkedLineBeginState)
-				&& (checkMultiLine || shouldNotConsiderAsIndentationBase(checkedLineBeginState, forLineEndState))) {
+		if (isMultilineType(checkedLineBeginState) && (checkMultiLineStatement
+				|| shouldNotConsiderAsIndentationBase(checkedLineBeginState, forLineEndState))) {
 			int index = getMultiLineStatementStartOffset(lineInfo.getOffset(), currLineIndex);
 			if (index > -1) {
 				return index;
 			}
 		}
 
-		if (checkMultiLine) {
+		if (checkMultiLineStatement) {
 			int result = adjustLine(currLineIndex, currLineEndOffset);
 			if (result == currLineIndex && result != 0) {
 				result--;
@@ -387,8 +389,7 @@ public class IndentationBaseDetector {
 		return beginState == PHPPartitionTypes.PHP_DEFAULT || endState == PHPPartitionTypes.PHP_DEFAULT;
 	}
 
-	private boolean isInMultiLineStatement(String checkedLineBeginState, String checkedLineEndState, int checkedOffset,
-			int lineStartOffset, int currLineIndex) throws BadLocationException {
+	private boolean isInMultiLineStatement(int currLineIndex) throws BadLocationException {
 		return getMultiLineStatementStartOffset(currLineIndex) > -1 ? true : false;
 	}
 

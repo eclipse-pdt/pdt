@@ -21,7 +21,7 @@ public class IndentationUtils {
 	/**
 	 * a statement spanning multi line starts with a region of type
 	 * regionType,the lines'(except 1st) indentation are same as/based on 1st
-	 * line,then this this method return true,else return false.
+	 * line,then this method return true,else return false.
 	 * 
 	 * @param regionType
 	 * @return
