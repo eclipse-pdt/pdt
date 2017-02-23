@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.core.compiler.IPHPModifiers;
@@ -89,8 +90,8 @@ abstract public class AbstractASTParser extends lr_parser {
 	}
 
 	protected void reportError(IProblemReporter problemReporter, String fileName, int start, int end, int lineNumber,
-			String message) {
-		DefaultProblem problem = new DefaultProblem(fileName, message, PhpProblemIdentifier.SYNTAX, new String[0],
+			IProblemIdentifier problemIdentifier, String message) {
+		DefaultProblem problem = new DefaultProblem(fileName, message, problemIdentifier, new String[0],
 				ProblemSeverities.Error, start, end, lineNumber, -1);
 		problemReporter.reportProblem(problem);
 	}
@@ -118,7 +119,8 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		if (message != null && problemReporter != null && fileName != null) {
 			int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
-			reportError(problemReporter, fileName, error.sourceStart(), error.sourceEnd(), lineNumber, message);
+			reportError(problemReporter, fileName, error.sourceStart(), error.sourceEnd(), lineNumber,
+					error.getProblem(), message);
 		}
 	}
 
@@ -242,7 +244,8 @@ abstract public class AbstractASTParser extends lr_parser {
 			}
 		}
 
-		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, errorMessage.toString());
+		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, PhpProblemIdentifier.SYNTAX,
+				errorMessage.toString());
 	}
 
 	protected abstract String getTokenName(int token);

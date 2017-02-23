@@ -13,8 +13,10 @@ package org.eclipse.php.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
@@ -28,8 +30,16 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class ASTError extends Statement {
 
+	private IProblemIdentifier problemIdentifier;
+
 	public ASTError(int start, int end) {
 		super(start, end);
+		this.problemIdentifier = PhpProblemIdentifier.SYNTAX;
+	}
+
+	public ASTError(int start, int end, IProblemIdentifier problemIdentifier) {
+		super(start, end);
+		this.problemIdentifier = problemIdentifier;
 	}
 
 	public void childrenAccept(Visitor visitor) {
@@ -58,5 +68,9 @@ public class ASTError extends Statement {
 
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	public IProblemIdentifier getProblem() {
+		return this.problemIdentifier;
 	}
 }
