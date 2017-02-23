@@ -228,28 +228,23 @@ public class PhpIndentationFormatter {
 	}
 
 	/**
-	 * @return the formatted line (without whitespaces) information Note: this
-	 *         is an O(n) implementation (firstly it looks a bit complicated but
-	 *         it worth it, the previous version was 3*n on the string's length)
+	 * @return the formatted line (without whitespaces) information
 	 */
 	private IRegion getFormattedLineInformation(IRegion lineInfo, String lineText) {
 		// start checking from left and right to the center
 		int leftNonWhitespaceChar = 0;
 		int rightNonWhitespaceChar = lineText.length() - 1;
 		final char[] chars = lineText.toCharArray();
-		boolean keepSearching = true;
 
-		while (keepSearching) {
-			final boolean leftIsWhiteSpace = chars[leftNonWhitespaceChar] == CHAR_SPACE
-					|| chars[leftNonWhitespaceChar] == CHAR_TAB;
-			final boolean rightIsWhiteSpace = chars[rightNonWhitespaceChar] == CHAR_SPACE
-					|| chars[rightNonWhitespaceChar] == CHAR_TAB;
-			if (leftIsWhiteSpace)
-				leftNonWhitespaceChar++;
-			if (rightIsWhiteSpace)
-				rightNonWhitespaceChar--;
-			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace)
-					&& (leftNonWhitespaceChar <= rightNonWhitespaceChar);
+		for (; leftNonWhitespaceChar <= rightNonWhitespaceChar; leftNonWhitespaceChar++) {
+			if (chars[leftNonWhitespaceChar] != CHAR_SPACE && chars[leftNonWhitespaceChar] != CHAR_TAB) {
+				break;
+			}
+		}
+		for (; leftNonWhitespaceChar <= rightNonWhitespaceChar; rightNonWhitespaceChar--) {
+			if (chars[rightNonWhitespaceChar] != CHAR_SPACE && chars[rightNonWhitespaceChar] != CHAR_TAB) {
+				break;
+			}
 		}
 
 		// if line is empty then the indexes were switched
