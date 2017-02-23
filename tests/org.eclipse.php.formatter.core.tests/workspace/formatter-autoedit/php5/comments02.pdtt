@@ -1,5 +1,5 @@
 --TEST--
-Tests formatting array statements.
+Tests formatting comments.
 --FILE--
 <?php
 /**

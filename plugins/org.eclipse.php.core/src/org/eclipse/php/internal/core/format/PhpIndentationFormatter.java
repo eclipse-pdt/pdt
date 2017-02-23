@@ -248,7 +248,8 @@ public class PhpIndentationFormatter {
 				leftNonWhitespaceChar++;
 			if (rightIsWhiteSpace)
 				rightNonWhitespaceChar--;
-			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace) && (leftNonWhitespaceChar < rightNonWhitespaceChar);
+			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace)
+					&& (leftNonWhitespaceChar <= rightNonWhitespaceChar);
 		}
 
 		// if line is empty then the indexes were switched

@@ -1,0 +1,36 @@
+--TEST--
+Tests formatting pasted PHPDoc.
+Bug 512579 - First PHPDoc in file is sometimes wrongly formatted on copy&paste
+--FILE--
+|<?php
+|
+--OTHER--
+<?php
+/**
+ * Description1.
+         
+                        
+                         
+                   
+                      
+                   
+                   
+Description2.
+ * Description3.
+         
+                        
+                         
+                   
+                      
+                   
+                   
+ */
+class A {}
+--EXPECT--
+<?php
+/**
+ * Description1.
+ Description2.
+ * Description3.
+ */
+class A {}
