@@ -14,6 +14,7 @@ package org.eclipse.php.composer.ui.editor.toolbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.SWT;
@@ -40,11 +41,6 @@ public class SearchControl extends ControlContribution {
 		this.managedForm = managedForm;
 	}
 
-	private boolean isMac() {
-		String os = System.getProperty("os.name"); //$NON-NLS-1$
-		return os != null && os.startsWith("Mac"); //$NON-NLS-1$
-	}
-
 	public String getText() {
 		return searchText.getText().trim();
 	}
@@ -63,14 +59,21 @@ public class SearchControl extends ControlContribution {
 		Composite composite = toolkit.createComposite(parent);
 
 		GridLayout layout = new GridLayout(3, false);
-		layout.marginWidth = 0;
-		// gross, but on the Mac the search controls are cut off on the bottom,
-		// so they need to be bumped up a little. other OSs are fine.
-		if (isMac()) {
-			layout.marginHeight = 1;
-		}
 		layout.verticalSpacing = 0;
-		layout.marginBottom = 0;
+		layout.marginWidth = 0;
+
+		switch (Platform.getOS()) {
+		case Platform.OS_LINUX:
+			layout.marginHeight = -4;
+			break;
+		case Platform.OS_MACOSX:
+			layout.marginHeight = 1;
+			break;
+
+		default:
+			layout.marginHeight = 0;
+		}
+
 		composite.setLayout(layout);
 		composite.setBackground(null);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
