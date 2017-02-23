@@ -56,7 +56,6 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 	private final PackageFilterItem filterItem;
 	private Button favorButton;
 	private Combo versionCombo;
-	private boolean isLoadingVersions = false;
 	private List<PackageFilterChangedListener> listeners = new ArrayList<PackageFilterChangedListener>();
 
 	public PackagistItem(Composite parent, int style, DiscoveryResources resources, PackageFilterItem element) {
@@ -99,6 +98,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 		description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		createStatsPart();
+		createSeparator();
 		initializeListeners();
 		initState();
 	}
@@ -152,6 +152,12 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 			favorButton.setText(favorites.getAsString());
 		}
 
+	}
+
+	protected void createSeparator() {
+		Label separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridDataFactory.fillDefaults().indent(0, 8).grab(true, false).span(4, 1).align(SWT.FILL, SWT.BEGINNING)
+				.applyTo(separator);
 	}
 
 	protected void initializeListeners() {
