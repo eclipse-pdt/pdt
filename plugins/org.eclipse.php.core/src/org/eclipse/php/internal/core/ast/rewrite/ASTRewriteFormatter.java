@@ -499,6 +499,30 @@ import org.eclipse.text.edits.*;
 		}
 	}
 
+	private class FormattingPrefix implements Prefix {
+		private int kind;
+		private String string;
+		private int start;
+		private int length;
+
+		public FormattingPrefix(String string, String sub, int kind) {
+			this.start = string.indexOf(sub);
+			this.length = sub.length();
+			this.string = string;
+			this.kind = kind;
+		}
+
+		public String getPrefix(int indent) {
+			Position pos = new Position(this.start, this.length);
+			String str = this.string;
+			TextEdit res = formatString(this.kind, str, 0, str.length(), indent);
+			if (res != null) {
+				str = evaluateFormatterEdit(str, res, new Position[] { pos });
+			}
+			return str.substring(pos.offset + 1, pos.offset + pos.length - 1);
+		}
+	}
+
 	private class BlockFormattingPrefix implements BlockContext {
 		private String prefix;
 		private int start;
@@ -560,9 +584,7 @@ import org.eclipse.text.edits.*;
 
 	// public final Prefix VAR_INITIALIZER= new FormattingPrefix("A a={};",
 	// "a={" , CodeFormatter.K_STATEMENTS); //$NON-NLS-1$ //$NON-NLS-2$
-	// public final Prefix METHOD_BODY= new FormattingPrefix("void a() {}", ")
-	// {" , CodeFormatter.K_CLASS_BODY_DECLARATIONS); //$NON-NLS-1$
-	// //$NON-NLS-2$
+	public final Prefix METHOD_BODY = new FormattingPrefix("void a() {}", ") {", 4); //$NON-NLS-1$ //$NON-NLS-2$
 	// public final Prefix FINALLY_BLOCK= new FormattingPrefix("try {} finally
 	// {}", "} finally {", CodeFormatter.K_STATEMENTS); //$NON-NLS-1$
 	// //$NON-NLS-2$
