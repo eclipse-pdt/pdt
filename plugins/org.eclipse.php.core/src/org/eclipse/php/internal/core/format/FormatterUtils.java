@@ -128,7 +128,7 @@ public class FormatterUtils {
 		int startOffset = lineInfo.getOffset();
 		int length = lineInfo.getLength();
 		char[] line = document.get(startOffset, length).toCharArray();
-		for (int i = 0; i < line.length; i++) {
+		for (int i = 0; i < length; i++) {
 			char c = line[i];
 			if (Character.isWhitespace(c)) {
 				helpBuffer.append(c);

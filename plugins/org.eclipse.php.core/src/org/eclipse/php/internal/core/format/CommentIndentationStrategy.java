@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,7 +54,8 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 		if (tRegion instanceof IPhpScriptRegion) {
 			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 			tRegion = scriptRegion.getPhpToken(previousLine.getOffset() - regionStart);
-			if (tRegion.getStart() + regionStart < previousLine.getOffset()) {
+			if (regionStart + tRegion.getTextEnd() <= previousLine.getOffset()) {
+				// blanks at previousLine.getOffset() belong to previous token
 				tRegion = scriptRegion.getPhpToken(tRegion.getEnd());
 			}
 		}
@@ -63,10 +64,23 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 		if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(tRegion.getType())
 				|| PHPPartitionTypes.isPHPDocStartRegion(tRegion.getType())) {
 			final String blanks = FormatterUtils.getLineBlanks(document, previousLine);
-			// add the indentation of jthe previous line and a single space in
+			// add the indentation of the previous line and a single space in
 			// addition
 			result.append(blanks);
 			result.append(" "); //$NON-NLS-1$
+		} else if (PHPPartitionTypes.isPHPMultiLineCommentRegion(tRegion.getType())
+				|| PHPPartitionTypes.isPHPDocRegion(tRegion.getType())) {
+			// add the indentation of the previous (non-empty) line belonging to
+			// the comment
+			String blanks = FormatterUtils.getLineBlanks(document, previousLine);
+			// update previous line location
+			lineNumber--;
+			// check if previous line was not totally blank
+			while (lineNumber > 0 && blanks.length() == previousLine.getLength()) {
+				previousLine = document.getLineInformation(--lineNumber);
+				blanks = FormatterUtils.getLineBlanks(document, previousLine);
+			}
+			result.append(blanks);
 		} else {
 			super.placeMatchingBlanks(document, result, lineNumber, forOffset);
 		}
