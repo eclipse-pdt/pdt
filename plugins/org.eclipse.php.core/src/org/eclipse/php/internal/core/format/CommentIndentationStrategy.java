@@ -73,9 +73,10 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 			// add the indentation of the previous (non-empty) line belonging to
 			// the comment
 			String blanks = FormatterUtils.getLineBlanks(document, previousLine);
-			// update previous line location
+			// update line location
 			lineNumber--;
-			// check if previous line was not totally blank
+			// check if previous line was not totally blank, otherwise choose
+			// another line
 			while (lineNumber > 0 && blanks.length() == previousLine.getLength()) {
 				previousLine = document.getLineInformation(--lineNumber);
 				blanks = FormatterUtils.getLineBlanks(document, previousLine);
