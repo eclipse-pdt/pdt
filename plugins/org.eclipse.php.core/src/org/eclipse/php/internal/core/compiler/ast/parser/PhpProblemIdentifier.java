@@ -35,4 +35,10 @@ public enum PhpProblemIdentifier implements IProblemIdentifier, IProblemIdentifi
 		return MARKER_TYPE_ID;
 	}
 
+	public static PhpProblemIdentifier getProblem(IProblemIdentifier identifier) {
+		if (identifier == null)
+			return null;
+		return (PhpProblemIdentifier) identifier;
+	}
+
 }

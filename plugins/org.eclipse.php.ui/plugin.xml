@@ -2933,6 +2933,15 @@
 	            </markerType>
 	         </handledMarkerTypes>
 	    </quickFixProcessor>
+		<quickFixProcessor
+			class="org.eclipse.php.internal.ui.text.correction.QuickFixProcessor"
+			id="quickFixProcessor">
+	          <handledMarkerTypes>
+	            <markerType
+	                  id="org.eclipse.php.core.phpproblemmarker">
+	            </markerType>
+	         </handledMarkerTypes>
+		</quickFixProcessor>
 	</extension>
    <extension
          point="org.eclipse.ui.ide.markerResolution">

@@ -2913,9 +2913,50 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			}
 		}
 
+		try {
+			pos = getRightParenthesesStartPosition(pos) + 1;
+			pos = doVisit(functionDeclaration, FunctionDeclaration.RETURN_TYPE_PROPERTY, pos);
+		} catch (CoreException e) {
+		}
 		// Body
-		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.BODY_PROPERTY);
+		rewriteMethodBody(functionDeclaration, pos);
 		return false;
+	}
+
+	private void rewriteMethodBody(FunctionDeclaration parent, int startPos) {
+		RewriteEvent event = getEvent(parent, FunctionDeclaration.BODY_PROPERTY);
+		if (event != null) {
+			switch (event.getChangeKind()) {
+			case RewriteEvent.INSERTED: {
+				int endPos = parent.getStart() + parent.getLength();
+				TextEditGroup editGroup = getEditGroup(event);
+				ASTNode body = (ASTNode) event.getNewValue();
+				doTextRemove(startPos, endPos - startPos, editGroup);
+				int indent = getIndent(parent.getStart()) + 1;
+				String prefix = this.formatter.METHOD_BODY.getPrefix(indent);
+				doTextInsert(startPos, prefix, editGroup);
+				doTextInsert(startPos, body, indent, true, editGroup);
+				return;
+			}
+			case RewriteEvent.REMOVED: {
+				TextEditGroup editGroup = getEditGroup(event);
+				ASTNode body = (ASTNode) event.getOriginalValue();
+				int endPos = parent.getStart() + parent.getLength();
+				doTextRemoveAndVisit(startPos, endPos - startPos, body, editGroup);
+				doTextInsert(startPos, ";", editGroup); //$NON-NLS-1$
+				return;
+			}
+			case RewriteEvent.REPLACED: {
+				TextEditGroup editGroup = getEditGroup(event);
+				ASTNode body = (ASTNode) event.getOriginalValue();
+				doTextRemoveAndVisit(body.getStart(), body.getLength(), body, editGroup);
+				doTextInsert(body.getStart(), (ASTNode) event.getNewValue(), getIndent(body.getStart()), true,
+						editGroup);
+				return;
+			}
+			}
+		}
+		voidVisit(parent, FunctionDeclaration.BODY_PROPERTY);
 	}
 
 	private void rewriteFunctionReference(FunctionDeclaration functionDeclaration) {
