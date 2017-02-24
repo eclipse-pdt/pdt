@@ -310,11 +310,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
 			fSimpleLabelProvider = new ScriptUILabelProvider();
-			fSimpleLabelProvider.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED
-					| ScriptElementLabels.ROOT_POST_QUALIFIED | ScriptElementLabels.APPEND_ROOT_PATH
-					| ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES
-					| ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.M_EXCEPTIONS
-					| ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.T_TYPE_PARAMETERS);
+			fSimpleLabelProvider
+					.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED | ScriptElementLabels.ROOT_POST_QUALIFIED
+							| ScriptElementLabels.APPEND_ROOT_PATH | ScriptElementLabels.M_PARAMETER_TYPES
+							| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_PARAMETER_INITIALIZERS
+							| ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.M_EXCEPTIONS
+							| ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.T_TYPE_PARAMETERS);
 		}
 		return fSimpleLabelProvider;
 	}

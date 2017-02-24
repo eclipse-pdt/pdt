@@ -52,10 +52,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_FULLY_QUALIFIED
 			| ScriptElementLabels.M_PRE_RETURNTYPE | ScriptElementLabels.M_PARAMETER_TYPES
-			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_EXCEPTIONS
-			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE | ScriptElementLabels.M_PRE_TYPE_PARAMETERS
-			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED
-			| ScriptElementLabels.M_APP_RETURNTYPE;
+			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_PARAMETER_INITIALIZERS
+			| ScriptElementLabels.M_EXCEPTIONS | ScriptElementLabels.F_PRE_TYPE_SIGNATURE
+			| ScriptElementLabels.M_PRE_TYPE_PARAMETERS | ScriptElementLabels.T_TYPE_PARAMETERS
+			| ScriptElementLabels.USE_RESOLVED | ScriptElementLabels.M_APP_RETURNTYPE;
 
 	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~ScriptElementLabels.F_FULLY_QUALIFIED
 			| ScriptElementLabels.F_POST_QUALIFIED;

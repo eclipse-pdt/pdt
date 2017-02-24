@@ -31,7 +31,8 @@ public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implemen
 
 	public final static long DEFAULT_TEXTFLAGS = ScriptElementLabels.ROOT_VARIABLE
 			| ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES
-			| ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED;
+			| ScriptElementLabels.M_PARAMETER_INITIALIZERS | ScriptElementLabels.M_APP_RETURNTYPE
+			| ScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED;
 	public final static int DEFAULT_IMAGEFLAGS = ScriptElementImageProvider.OVERLAY_ICONS;
 
 	private int fTextFlagMask;
