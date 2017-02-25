@@ -906,8 +906,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else {
 					if (getBufferFirstChar(0) == '\0') {
 						if (position >= 0) {
-							replaceBuffer.setLength(0);
-							lineWidth = 0;
+							if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+								replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
+							}
 							insertNewLine();
 						} else {
 							replaceBuffer.setLength(0);
@@ -2428,8 +2429,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lastStatementEndOffset;
 		if (isUnbracketedNamespace) {
+			// XXX: block should normally start at block.getStart() - 1
+			// Also see how ast node class NamespaceDeclaration creates its body
 			lastStatementEndOffset = block.getStart() - 1;
 		} else {
+			// start after curly position
 			lastStatementEndOffset = block.getStart() + 1;
 		}
 
@@ -2572,7 +2576,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		}
 
-		if (endPosition > lastStatementEndOffset) {
+		if (endPosition > lastStatementEndOffset
+				// handle the case of an unbracketed namespace with no block
+				// statements, where value of lastStatementEndOffset is still
+				// block.getStart() - 1
+				&& !(lastStatementEndOffset == block.getStart() - 1 && block.getEnd() == block.getStart())) {
 			// exclude closing curly
 			int end = endPosition - 1;
 			if (!block.isCurly()) {
