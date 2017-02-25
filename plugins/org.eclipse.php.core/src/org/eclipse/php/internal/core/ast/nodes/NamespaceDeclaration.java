@@ -74,9 +74,7 @@ public class NamespaceDeclaration extends Statement {
 		this.bracketed = bracketed;
 
 		if (body == null) {
-			// XXX: should be "new Block(end, end, ast, new
-			// ArrayList<Statement>(), false);"
-			body = new Block(end + 1, end + 1, ast, new ArrayList<Statement>(), false);
+			body = new Block(end, end, ast, new ArrayList<Statement>(), false);
 		}
 		body.setParent(this, BODY_PROPERTY);
 
