@@ -9,7 +9,7 @@ Test Namespace Element Declarations
 			<NamespaceName start='16' length='1' global='false' current='false'>
 				<Identifier start='16' length='1' name='A'/>
 			</NamespaceName>
-			<Block start='19' length='13' isCurly='false'>
+			<Block start='18' length='14' isCurly='false'>
 				<ConstantDeclaration start='19' length='12' modifier=''>
 					<VariableName>
 						<Identifier start='25' length='1' name='C'/>

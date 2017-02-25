@@ -9,7 +9,7 @@ Test Namespace Declaration
 			<NamespaceName start='16' length='1' global='false' current='false'>
 				<Identifier start='16' length='1' name='A'/>
 			</NamespaceName>
-			<Block start='19' length='0' isCurly='false'>
+			<Block start='18' length='0' isCurly='false'>
 			</Block>
 		</NamespaceDeclaration>
 		<EmptyStatement start='19' length='2'/>

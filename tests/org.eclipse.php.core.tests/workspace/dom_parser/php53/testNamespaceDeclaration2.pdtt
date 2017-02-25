@@ -14,7 +14,7 @@ namespace AB;
 			<NamespaceName start='16' length='2' global='false' current='false'>
 				<Identifier start='16' length='2' name='AB'/>
 			</NamespaceName>
-			<Block start='20' length='0' isCurly='false'>
+			<Block start='19' length='0' isCurly='false'>
 			</Block>
 		</NamespaceDeclaration>
 		<EmptyStatement start='21' length='2'/>

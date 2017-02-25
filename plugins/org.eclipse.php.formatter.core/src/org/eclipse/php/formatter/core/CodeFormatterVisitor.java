@@ -2429,9 +2429,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lastStatementEndOffset;
 		if (isUnbracketedNamespace) {
-			// XXX: block should normally start at block.getStart() - 1
-			// Also see how ast node class NamespaceDeclaration creates its body
-			lastStatementEndOffset = block.getStart() - 1;
+			lastStatementEndOffset = block.getStart();
 		} else {
 			// start after curly position
 			lastStatementEndOffset = block.getStart() + 1;
@@ -2576,11 +2574,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		}
 
-		if (endPosition > lastStatementEndOffset
-				// handle the case of an unbracketed namespace with no block
-				// statements, where value of lastStatementEndOffset is still
-				// block.getStart() - 1
-				&& !(lastStatementEndOffset == block.getStart() - 1 && block.getEnd() == block.getStart())) {
+		if (endPosition > lastStatementEndOffset) {
 			// exclude closing curly
 			int end = endPosition - 1;
 			if (!block.isCurly()) {
@@ -4828,7 +4822,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				indentationLevelDescending = true;
 			}
 		} else {
-			handleSemicolon(lastPosition, namespaceDeclaration.getBody().getStart() - 1);
+			handleSemicolon(lastPosition, namespaceDeclaration.getBody().getStart());
 			namespaceDeclaration.getBody().accept(this);
 		}
 		return false;

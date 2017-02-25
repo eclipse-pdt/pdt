@@ -16,7 +16,7 @@ function bar() {}
 			<NamespaceName start='16' length='3' global='false' current='false'>
 				<Identifier start='16' length='3' name='NS1'/>
 			</NamespaceName>
-			<Block start='21' length='29' isCurly='false'>
+			<Block start='20' length='30' isCurly='false'>
 				<ClassDeclaration start='21' length='10' modifier=''>
 					<ClassName>
 						<Identifier start='27' length='1' name='A'/>
@@ -45,7 +45,7 @@ function bar() {}
 			<NamespaceName start='60' length='3' global='false' current='false'>
 				<Identifier start='60' length='3' name='NS2'/>
 			</NamespaceName>
-			<Block start='65' length='29' isCurly='false'>
+			<Block start='64' length='30' isCurly='false'>
 				<ClassDeclaration start='65' length='10' modifier=''>
 					<ClassName>
 						<Identifier start='71' length='1' name='A'/>
