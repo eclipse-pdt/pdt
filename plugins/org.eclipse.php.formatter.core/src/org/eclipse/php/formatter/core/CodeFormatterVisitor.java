@@ -906,8 +906,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else {
 					if (getBufferFirstChar(0) == '\0') {
 						if (position >= 0) {
-							replaceBuffer.setLength(0);
-							lineWidth = 0;
+							if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+								replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
+							}
 							insertNewLine();
 						} else {
 							replaceBuffer.setLength(0);

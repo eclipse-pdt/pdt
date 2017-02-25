@@ -1,0 +1,22 @@
+--TEST--
+Bug 423845 - Formatter ignores blank lines before namespace declarations when comment exists
+--FILE--
+<?php
+// Comment
+/* Comment */
+/**
+ * Comment
+ */
+namespace MyNamespace;
+?>
+--EXPECT--
+<?php
+
+// Comment
+/* Comment */
+/**
+ * Comment
+ */
+namespace MyNamespace;
+
+?>
