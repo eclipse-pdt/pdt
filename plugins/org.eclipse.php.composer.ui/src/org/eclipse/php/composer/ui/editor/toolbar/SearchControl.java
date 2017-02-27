@@ -64,7 +64,7 @@ public class SearchControl extends ControlContribution {
 
 		switch (Platform.getOS()) {
 		case Platform.OS_LINUX:
-			layout.marginHeight = -4;
+			layout.marginHeight = -2;
 			break;
 		case Platform.OS_MACOSX:
 			layout.marginHeight = 1;
