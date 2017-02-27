@@ -272,11 +272,11 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		// menuService.populateContributionManager(manager,
 		// "toolbar:org.eclipse.php.composer.ui.editor.toolbar");
 
-		manager.add(getInstallAction());
 		manager.add(getInstallDevAction());
+		manager.add(getInstallAction());
 		manager.add(new Separator());
-		manager.add(getUpdateNoDevAction());
 		manager.add(getUpdateAction());
+		manager.add(getUpdateNoDevAction());
 		manager.add(new Separator());
 		manager.add(getSelfUpdateAction());
 		manager.update(true);
