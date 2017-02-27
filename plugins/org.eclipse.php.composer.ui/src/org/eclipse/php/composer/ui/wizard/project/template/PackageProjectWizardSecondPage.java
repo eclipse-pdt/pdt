@@ -160,13 +160,8 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 
 	@Override
 	public void filterChanged(PackageFilterItem item) {
-
-		if (item != null && item.getSelectedVersion() != null) {
-			setPageComplete(true);
-			return;
-		}
-
-		setPageComplete(false);
+		boolean canFinish = item != null && item.isChecked() && item.getSelectedVersion() != null;
+		setPageComplete(canFinish);
 	}
 
 	@Override
