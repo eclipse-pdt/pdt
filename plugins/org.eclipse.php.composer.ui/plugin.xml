@@ -252,7 +252,7 @@
             class="org.eclipse.php.composer.ui.editor.composer.ComposerFormEditor"
             default="true"
             filenames="composer.json"
-            icon="icons/full/obj16/packd_obj.gif"
+            icon="icons/full/obj16/packd_obj.png"
             id="org.eclipse.php.composer.ui.editor.composer.ComposerEditor"
             name="%composer.editor.name">
          <contentTypeBinding
@@ -331,7 +331,7 @@
             category="org.eclipse.php.project.ui"
             class="org.eclipse.php.composer.ui.wizard.project.template.PackageProjectCreationWizard"
             finalPerspective="org.eclipse.php.perspective"
-            icon="icons/full/obj16/logical_package_obj.gif"
+            icon="icons/full/obj16/logical_package_obj.png"
             id="org.eclipse.php.composer.ui.projectFromPackagewizard"
             name="%package.project.wizard.name"
             preferredPerspectives="org.eclipse.php.perspective"
@@ -387,7 +387,7 @@
       <wizard
             category="org.eclipse.php.ui.PHP"
             class="org.eclipse.php.composer.ui.wizard.importer.ComposerImportWizard"
-            icon="icons/full/obj16/correction_move.gif"
+            icon="icons/full/obj16/correction_move.png"
             id="org.eclipse.php.composer.ui.importWizard"
             name="%import.project.wizard.name">
       </wizard>

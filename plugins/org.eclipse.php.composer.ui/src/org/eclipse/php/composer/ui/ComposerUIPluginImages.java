@@ -27,14 +27,14 @@ public class ComposerUIPluginImages {
 
 	public static final ImageDescriptor ADD_DEPENDENCY = create(T_WIZBAN, "packagist.png"); //$NON-NLS-1$
 	public static final ImageDescriptor CREATE_PROJECT = create(T_WIZBAN, "newpack_wiz.png"); //$NON-NLS-1$
-	public static final ImageDescriptor CREATE_PROJECT_FROM_PACKAGE = create(T_WIZBAN, "newsrcfldr_wiz.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor IMPORT_PROJECT = create(T_WIZBAN, "packrefact_wiz.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor CREATE_PROJECT_FROM_PACKAGE = create(T_WIZBAN, "newsrcfldr_wiz.png"); //$NON-NLS-1$
+	public static final ImageDescriptor IMPORT_PROJECT = create(T_WIZBAN, "packrefact_wiz.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor PERSON = create(T_OBJ16, "person.png"); //$NON-NLS-1$
-	public static final ImageDescriptor PAGE = create(T_OBJ16, "page.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor PACKAGE = create(T_OBJ16, "package.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PAGE = create(T_OBJ16, "page.png"); //$NON-NLS-1$
+	public static final ImageDescriptor PACKAGE = create(T_OBJ16, "package.png"); //$NON-NLS-1$
 	public static final ImageDescriptor NAMESPACE = create(T_OBJ16, "namespace_obj.png"); //$NON-NLS-1$
-	public static final ImageDescriptor PACKAGE_FOLDER = create(T_OBJ16, "packagefolder_obj.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PACKAGE_FOLDER = create(T_OBJ16, "packagefolder_obj.png"); //$NON-NLS-1$
 	public static final ImageDescriptor COMPOSER = create(T_OBJ16, "composer.png"); //$NON-NLS-1$
 	public static final ImageDescriptor PHP = create(T_OBJ16, "php.png"); //$NON-NLS-1$
 	public static final ImageDescriptor BROWSER = create(T_OBJ16, "browser.png"); //$NON-NLS-1$
@@ -59,8 +59,8 @@ public class ComposerUIPluginImages {
 	public static final ImageDescriptor REPO_PACKAGE = PACKAGE;
 	public static final ImageDescriptor REPO_COMPOSER = COMPOSER;
 
-	public static final ImageDescriptor BUILDPATH_INCLUDE = create(T_OBJ16, "buildpath_include.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor BUILDPATH_EXCLUDE = create(T_OBJ16, "buildpath_exclude.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor BUILDPATH_INCLUDE = create(T_OBJ16, "buildpath_include.png"); //$NON-NLS-1$
+	public static final ImageDescriptor BUILDPATH_EXCLUDE = create(T_OBJ16, "buildpath_exclude.png"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		return create(prefix, name, true);

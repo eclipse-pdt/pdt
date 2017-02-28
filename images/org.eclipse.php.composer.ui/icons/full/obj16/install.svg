@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="lprio_tsk.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4996-4">
+      <stop
+         style="stop-color:#02468c;stop-opacity:1"
+         offset="0"
+         id="stop4998-5" />
+      <stop
+         style="stop-color:#0e62a4;stop-opacity:1"
+         offset="1"
+         id="stop5000-5" />
+    </linearGradient>
+    <linearGradient
+       y2="1051.7347"
+       x2="13.903196"
+       y1="1062.1353"
+       x1="13.903196"
+       gradientTransform="translate(38.469436,55.035191)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient5028"
+       xlink:href="#linearGradient4996-4"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="31.999999"
+     inkscape:cx="4.6914412"
+     inkscape:cy="7.010236"
+     inkscape:document-units="px"
+     inkscape:current-layer="g8159"
+     showgrid="true"
+     inkscape:window-width="1171"
+     inkscape:window-height="959"
+     inkscape:window-x="1387"
+     inkscape:window-y="399"
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-global="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4099" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     transform="translate(0,-1036.3622)">
+    <g
+       style="display:inline"
+       id="g8159"
+       transform="translate(-8.2201163,-12.904699)">
+      <text
+         xml:space="preserve"
+         style="font-size:15.07241726px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5028);fill-opacity:1;stroke:none;display:inline;font-family:Kozuka Mincho Pr6N H;-inkscape-font-specification:Kozuka Mincho Pr6N H Heavy"
+         x="50.288464"
+         y="1117.2119"
+         id="text4140-1-8-1"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4142-7-8-7"
+           x="50.288464"
+           y="1117.2119"
+           style="fill:url(#linearGradient5028);fill-opacity:1">Kozuka Mincho Pr6N H</tspan></text>
+      <path
+         style="fill:#76a8e3;fill-opacity:1;stroke:#085498;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 14.564918,1057.7539 -1.966641,0 0,1.0386 3.082544,3.0825 1.049611,0 3.021777,-3.0218 c 0,0 0.140572,-1.1584 0,-1.0772 -0.140571,0.081 -2.115796,0 -2.115796,0 l 0,-3.9554 -1.425262,-1.4253 -1.624136,1.4695 z"
+         id="path4176"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccsccccc" />
+    </g>
+  </g>
+</svg>
