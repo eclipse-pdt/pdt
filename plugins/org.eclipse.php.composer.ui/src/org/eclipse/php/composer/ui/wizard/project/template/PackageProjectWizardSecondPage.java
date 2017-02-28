@@ -52,6 +52,8 @@ public class PackageProjectWizardSecondPage extends AbstractWizardSecondPage
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
+		filter.getControl().setFocus();
+
 		if (filter.getSelectedPackage() == null || filter.getSelectedPackage().getSelectedVersion() == null) {
 			setPageComplete(false);
 		}

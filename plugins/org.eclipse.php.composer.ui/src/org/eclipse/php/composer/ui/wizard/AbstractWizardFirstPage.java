@@ -116,6 +116,14 @@ abstract public class AbstractWizardFirstPage extends WizardPage implements IPHP
 		setHelpContext(composite);
 	}
 
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible) {
+			nameGroup.setFocus();
+		}
+	}
+
 	public void performFinish(IProgressMonitor monitor) {
 
 	}

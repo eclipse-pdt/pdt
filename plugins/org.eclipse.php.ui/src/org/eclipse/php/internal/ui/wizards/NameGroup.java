@@ -67,4 +67,8 @@ public final class NameGroup extends Observable implements IDialogFieldListener 
 	public void dialogFieldChanged(DialogField field) {
 		fireEvent();
 	}
+
+	public void setFocus() {
+		fNameField.setFocus();
+	}
 }

@@ -658,6 +658,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
+		fNameGroup.setFocus();
+
 		if (visible) {
 			// if there is a project we are going from 2nd to 1st
 			// remove the project
