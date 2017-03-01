@@ -62,8 +62,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		int endOffset = startOffset + command.length;
 
 		try {
-			String startState = FormatterUtils.getPartitionType(document, startOffset, true);
-			String endState = FormatterUtils.getPartitionType(document, endOffset, true);
+			String startState = FormatterUtils.getPartitionType(document, startOffset);
+			String endState = FormatterUtils.getPartitionType(document, endOffset);
 			if (startState == PHPPartitionTypes.PHP_QUOTED_STRING || endState == PHPPartitionTypes.PHP_QUOTED_STRING
 					|| (startState == PHPPartitionTypes.PHP_DEFAULT && endState == PHPPartitionTypes.PHP_DEFAULT
 							&& document.getChar(endOffset - 1) == '\'')) {
@@ -82,7 +82,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 					} else {
 						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(startOffset);
 						ITextRegion tRegion = getPhpRegion(sdRegion, startOffset);
-						// adding a specific char to close the qoute in case the
+						// adding a specific char to close the quote in case the
 						// 2 following conditions fulfilled:
 						// 1. The region ends with whitespace.
 						// 2. The command offest is located at the end of the
@@ -191,7 +191,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 	}
 
 	/**
-	 * returns true if the lexical state demands qoute balance
+	 * returns true if the lexical state demands quote balance
 	 */
 	private boolean isQuoteAllowed(String state, char quote) {
 		return (state == PHPPartitionTypes.PHP_DEFAULT) || (state == PHPRegionTypes.PHP_OPENTAG)
@@ -200,7 +200,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
 	public int isMatchingCharNeeded(IStructuredDocument document, int offset, char quoteChar) {
 		try {
-			String postCharState = FormatterUtils.getPartitionType(document, offset, true);
+			String postCharState = FormatterUtils.getPartitionType(document, offset);
 			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG
 					|| postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
 				if (isSpecialOpenCurlyInQuotes(document, offset)) {
@@ -282,7 +282,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		}
 
 		// fixed bug 197412
-		if (sdRegion.getFullText().charAt(offset - sdRegion.getStartOffset()) != BACK_QOUTE) {
+		if (sdRegion.getFullText().charAt(offset - sdRegion.getStartOffset()) != BACK_QUOTE) {
 			return false;
 		}
 
@@ -292,7 +292,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		}
 
 		// fixed bug 197412
-		if (sdRegion.getFullText().charAt(offset + 1 - sdRegion.getStartOffset()) != BACK_QOUTE) {
+		if (sdRegion.getFullText().charAt(offset + 1 - sdRegion.getStartOffset()) != BACK_QUOTE) {
 			return false;
 		}
 		return true;

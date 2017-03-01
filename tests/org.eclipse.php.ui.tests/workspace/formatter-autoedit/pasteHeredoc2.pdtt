@@ -1,0 +1,29 @@
+--TEST--
+Bug 512891 - Autoedit should not indent lines inside quoted strings and heredocs
+--FILE--
+<?php
+$query = <<<EOF
+SELECT * FROM my_table
+| ORDER BY column1
+        , CASE
+             WHEN lower(column1) = lower(column2) then ''
+             ELSE lower(column1)
+          END
+|EOF;
+--OTHER--
+ ORDER BY column1
+        , CASE
+             WHEN lower(column1) = lower(column2) then ''
+             ELSE lower(column1)
+          END
+
+--EXPECT--
+<?php
+$query = <<<EOF
+SELECT * FROM my_table
+ ORDER BY column1
+        , CASE
+             WHEN lower(column1) = lower(column2) then ''
+             ELSE lower(column1)
+          END
+EOF;

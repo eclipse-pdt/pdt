@@ -36,9 +36,9 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	protected static final char ROUND_CLOSE = ')';
 	protected static final char SQUARE_OPEN = '[';
 	protected static final char SQUARE_CLOSE = ']';
-	protected static final char SINGLE_QOUTE = '\'';
-	protected static final char DOUBLE_QOUTES = '\"';
-	protected static final char BACK_QOUTE = '`';
+	protected static final char SINGLE_QUOTE = '\'';
+	protected static final char DOUBLE_QUOTES = '\"';
+	protected static final char BACK_QUOTE = '`';
 	protected static final char BACK_SLASH = '\\';
 
 	protected static final int SEARCH_NOT_VALID = -1;
@@ -52,7 +52,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	}
 
 	protected boolean isQuote(final char c) {
-		return c == SINGLE_QOUTE || c == DOUBLE_QOUTES || c == BACK_QOUTE;
+		return c == SINGLE_QUOTE || c == DOUBLE_QUOTES || c == BACK_QUOTE;
 	}
 
 	protected static char getMatchingChar(final char c) {
@@ -69,9 +69,9 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 			return SQUARE_CLOSE;
 		case SQUARE_CLOSE:
 			return SQUARE_OPEN;
-		case DOUBLE_QOUTES:
-		case SINGLE_QOUTE:
-		case BACK_QOUTE:
+		case DOUBLE_QUOTES:
+		case SINGLE_QUOTE:
+		case BACK_QUOTE:
 			return c;
 		}
 
@@ -134,7 +134,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 			return false;
 
 		final char firstChar = document.getChar(sdRegion.getStartOffset() + tRegion.getStart());
-		if (firstChar != DOUBLE_QOUTES && firstChar != BACK_QOUTE)
+		if (firstChar != DOUBLE_QUOTES && firstChar != BACK_QUOTE)
 			return false;
 
 		final char bracketChar = document.getChar(offset + 1);

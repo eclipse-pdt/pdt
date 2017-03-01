@@ -123,10 +123,10 @@ public class IndentationBaseDetector {
 		// the tRegion in the previous line
 
 		// checked line beginning offset (after incrementing spaces in beginning
-		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStartOffset, true);
+		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStartOffset);
 
 		// checked line end
-		final String checkedLineEndState = FormatterUtils.getPartitionType(document, checkedOffset, true);
+		final String checkedLineEndState = FormatterUtils.getPartitionType(document, checkedOffset);
 
 		// the current potential line for formatting begin offset
 		final String forLineEndState = FormatterUtils.getPartitionType(document, offset);
@@ -277,7 +277,7 @@ public class IndentationBaseDetector {
 			throws BadLocationException {
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
 		final int currLineEndOffset = lineInfo.getOffset() + lineInfo.getLength();
-		String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset(), true);
+		String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset());
 
 		String forLineEndState = FormatterUtils.getPartitionType(document, currLineEndOffset);
 
