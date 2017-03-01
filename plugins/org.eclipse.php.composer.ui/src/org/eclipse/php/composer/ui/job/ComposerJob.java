@@ -8,6 +8,7 @@
  * Contributors:
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
+ *     Kaloyan Raev - [511744] Wizard freezes if no PHP executable is configured
  *******************************************************************************/
 package org.eclipse.php.composer.ui.job;
 
@@ -20,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.window.Window;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.launch.ExecutableNotFoundException;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
@@ -88,11 +90,16 @@ abstract public class ComposerJob extends Job {
 
 					tryAgain = false;
 				} catch (ExecutableNotFoundException e) {
-					callDoOnLauncherRunException = true;
-					doOnLauncherRunException(e);
 					// inform the user of the missing executable
-					Display.getDefault().asyncExec(new MissingExecutableRunner());
-					return Status.OK_STATUS;
+					MissingExecutableRunner runner = new MissingExecutableRunner();
+					Display.getDefault().syncExec(runner);
+					if (runner.getReturnCode() == Window.OK) {
+						tryAgain = true;
+					} else {
+						callDoOnLauncherRunException = true;
+						doOnLauncherRunException(e);
+						return Status.OK_STATUS;
+					}
 				} catch (ScriptNotFoundException e) {
 					callDoOnLauncherRunException = true;
 					doOnLauncherRunException(e);
