@@ -1071,10 +1071,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		final Collection<? extends Expression> variables = ((ListVariable) listVariable).getVariables();
 		for (Expression expression : variables) {
 
+			VariableReference varReference = null;
 			if (expression instanceof VariableReference) {
+				varReference = (VariableReference) expression;
+			} else if (expression instanceof ArrayElement) {
+				ArrayElement arrayElement = (ArrayElement) expression;
+				if (arrayElement.getValue() instanceof VariableReference) {
+					varReference = (VariableReference) arrayElement.getValue();
+				}
+			}
+
+			if (varReference != null) {
 				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 				info.modifiers = Modifiers.AccPublic;
-				info.name = ((VariableReference) expression).getName();
+				info.name = varReference.getName();
 				info.nameSourceEnd = expression.sourceEnd() - 1;
 				info.nameSourceStart = expression.sourceStart();
 				info.declarationStart = expression.sourceStart();
