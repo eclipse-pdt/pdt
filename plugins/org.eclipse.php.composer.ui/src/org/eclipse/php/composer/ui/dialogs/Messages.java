@@ -19,6 +19,8 @@ public class Messages extends NLS {
 	public static String DependencyDialog_NameLabel;
 	public static String DependencyDialog_Title;
 	public static String DependencyDialog_VersionLabel;
+	public static String MissingExecutableDialog_CancelButtonLabel;
+	public static String MissingExecutableDialog_ConfigureButtonLabel;
 	public static String MissingExecutableDialog_LinkText;
 	public static String MissingExecutableDialog_LinkToolTipText;
 	public static String MissingExecutableDialog_Message;

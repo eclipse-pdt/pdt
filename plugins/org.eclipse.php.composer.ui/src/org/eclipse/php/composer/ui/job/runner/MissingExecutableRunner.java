@@ -8,6 +8,7 @@
  * Contributors:
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
+ *     Kaloyan Raev - [511744] Wizard freezes if no PHP executable is configured
  *******************************************************************************/
 package org.eclipse.php.composer.ui.job.runner;
 
@@ -20,6 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 public class MissingExecutableRunner implements Runnable {
+
+	private int returnCode;
+
 	@Override
 	public void run() {
 		try {
@@ -27,9 +31,13 @@ public class MissingExecutableRunner implements Runnable {
 					Messages.MissingExecutableRunner_ErrorMessage);
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			MissingExecutableDialog dialog = new MissingExecutableDialog(shell, status);
-			dialog.open();
-		} catch (Exception e2) {
-			Logger.logException(e2);
+			returnCode = dialog.open();
+		} catch (Exception e) {
+			Logger.logException(e);
 		}
+	}
+
+	public int getReturnCode() {
+		return returnCode;
 	}
 }

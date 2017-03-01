@@ -8,6 +8,7 @@
  * Contributors:
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
+ *     Kaloyan Raev - [511744] Wizard freezes if no PHP executable is configured
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard;
 
@@ -19,6 +20,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
@@ -32,7 +34,6 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 /**
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractComposerWizard extends NewElementWizard implements INewWizard, IExecutableExtension {
 
 	protected AbstractWizardFirstPage firstPage;
@@ -80,26 +81,28 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 
 		boolean res = super.performFinish();
 		if (res) {
-
 			BasicNewProjectResourceWizard.updatePerspective(config);
-			selectAndReveal(lastPage.getScriptProject().getProject());
-			IProject project = lastPage.getScriptProject().getProject();
-			PHPVersion version = firstPage.getPHPVersionValue();
-			if (version == null) {
-				version = ProjectOptions.getDefaultPhpVersion();
-			}
+			IScriptProject scriptProject = lastPage.getScriptProject();
+			if (scriptProject != null) {
+				IProject project = scriptProject.getProject();
+				selectAndReveal(project);
+				PHPVersion version = firstPage.getPHPVersionValue();
+				if (version == null) {
+					version = ProjectOptions.getDefaultPhpVersion();
+				}
 
-			FacetManager.installFacets(project, version, null);
-			IFile json = project.getFile("composer.json"); //$NON-NLS-1$
+				FacetManager.installFacets(project, version, null);
+				IFile json = project.getFile("composer.json"); //$NON-NLS-1$
 
-			if (json != null) {
-				try {
-					IEditorInput editorInput = new FileEditorInput(json);
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					IWorkbenchPage page = window.getActivePage();
-					page.openEditor(editorInput, ComposerFormEditor.ID);
-				} catch (Exception e) {
-					Logger.logException(e);
+				if (json != null) {
+					try {
+						IEditorInput editorInput = new FileEditorInput(json);
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						IWorkbenchPage page = window.getActivePage();
+						page.openEditor(editorInput, ComposerFormEditor.ID);
+					} catch (Exception e) {
+						Logger.logException(e);
+					}
 				}
 			}
 		}
