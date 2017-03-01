@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML {
 
-	public String getContentType(final int offset, final boolean preferOpenPartitions) {
+	public String getContentType(final int offset) {
 		final ITypedRegion partition = getPartition(offset);
 		return partition == null ? null : partition.getType();
 	}

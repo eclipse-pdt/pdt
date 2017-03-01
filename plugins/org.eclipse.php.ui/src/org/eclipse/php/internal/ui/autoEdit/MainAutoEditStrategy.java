@@ -42,7 +42,15 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 			// case of multi line comment or php doc
 			docBlockAutoEditStrategy.customizeDocumentCommand(document, command);
 		} else if (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
-			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=512891
+			// At this point we only know that command.offset is inside or just
+			// after some "quoted string".
+			// Do an additional check to be sure we indent lines only when
+			// command.offset is lying outside "quoted strings".
+			if (FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
+					true) != PHPPartitionTypes.PHP_QUOTED_STRING) {
+				indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+			}
 			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
 		} else if (partitionType == PHPPartitionTypes.PHP_DEFAULT
 				|| partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) {

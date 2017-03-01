@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,7 @@ public class FormatterUtils {
 	}
 
 	public static @Nullable String getPartitionType(IStructuredDocument document, int offset,
-			boolean preferOpenPartitions) {
+			boolean preferNonWhitespacePartitions) {
 		try {
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 			if (sdRegion == null) {
@@ -104,14 +104,17 @@ public class FormatterUtils {
 
 			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				int regionOffset = offset - regionStart;
-				return scriptRegion.getPartition(regionOffset);
+				if (preferNonWhitespacePartitions
+						&& scriptRegion.getPhpToken(offset - regionStart).getTextEnd() <= offset - regionStart) {
+					return scriptRegion.getPartition(scriptRegion.getPhpToken(offset - regionStart).getEnd());
+				}
+				return scriptRegion.getPartition(offset - regionStart);
 			}
 		} catch (final BadLocationException e) {
 		}
 
 		partitioner.connect(document);
-		return partitioner.getContentType(offset, preferOpenPartitions);
+		return partitioner.getContentType(offset);
 	}
 
 	public static @Nullable String getPartitionType(IStructuredDocument document, int offset) {

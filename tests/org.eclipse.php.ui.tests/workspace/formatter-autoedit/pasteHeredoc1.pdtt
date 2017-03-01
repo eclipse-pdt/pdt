@@ -1,0 +1,26 @@
+--TEST--
+Bug 512891 - Autoedit should not indent lines inside quoted strings and heredocs
+--FILE--
+<?php
+$query = <<<EOF
+SELECT CASE
+          WHEN x <> y then ''
+|          ELSE x
+       END column1
+  FROM my_table
+EOF;
+--OTHER--
+          WHEN x <> y then ''
+          WHEN x <> y then ''
+
+--EXPECT--
+<?php
+$query = <<<EOF
+SELECT CASE
+          WHEN x <> y then ''
+          WHEN x <> y then ''
+          WHEN x <> y then ''
+          ELSE x
+       END column1
+  FROM my_table
+EOF;

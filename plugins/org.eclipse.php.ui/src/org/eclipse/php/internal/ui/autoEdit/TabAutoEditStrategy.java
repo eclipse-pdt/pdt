@@ -54,8 +54,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			// XXX: in same way, we should probably disable
 			// IndentLineAutoEditStrategy when inside a JavaScript partition,
 			// and let JavaAutoIndentStrategy do all the job...
-			String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
-					true);
+			String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset);
 			if (partitionType == null || FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)
 					|| IHTMLPartitions.HTML_DEFAULT.equals(partitionType)
 					|| IHTMLPartitions.SCRIPT.equals(partitionType)) {

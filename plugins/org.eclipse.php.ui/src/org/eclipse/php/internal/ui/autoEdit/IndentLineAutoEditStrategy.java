@@ -163,7 +163,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 
 		final int offset = command.offset;
 
-		String currentState = FormatterUtils.getPartitionType(document, offset, true);
+		String currentState = FormatterUtils.getPartitionType(document, offset);
 
 		// fixed bug 186710
 		// scan for the first char that not equals to space or tab
@@ -184,8 +184,8 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		return null;
 	}
 
-	private IIndentationStrategy getAutoEditStrategy(final char insertionStrtegyKey) {
-		switch (insertionStrtegyKey) {
+	private IIndentationStrategy getAutoEditStrategy(final char insertionStrategyKey) {
+		switch (insertionStrategyKey) {
 		case '}':
 			return curlyCloseAutoEditStrategy;
 		default:
