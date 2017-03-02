@@ -37,9 +37,6 @@ public class PhpIndentationFormatter {
 	private final int length;
 	private final int start;
 
-	private static final byte CHAR_TAB = '\t';
-	private static final byte CHAR_SPACE = ' ';
-
 	private final StringBuffer resultBuffer = new StringBuffer();
 	private boolean isInHeredoc;
 	private Set<Integer> ignoreLines = new HashSet<Integer>();
@@ -237,12 +234,12 @@ public class PhpIndentationFormatter {
 		final char[] chars = lineText.toCharArray();
 
 		for (; leftNonWhitespaceChar <= rightNonWhitespaceChar; leftNonWhitespaceChar++) {
-			if (chars[leftNonWhitespaceChar] != CHAR_SPACE && chars[leftNonWhitespaceChar] != CHAR_TAB) {
+			if (!Character.isWhitespace(chars[leftNonWhitespaceChar])) {
 				break;
 			}
 		}
 		for (; leftNonWhitespaceChar <= rightNonWhitespaceChar; rightNonWhitespaceChar--) {
-			if (chars[rightNonWhitespaceChar] != CHAR_SPACE && chars[rightNonWhitespaceChar] != CHAR_TAB) {
+			if (!Character.isWhitespace(chars[rightNonWhitespaceChar])) {
 				break;
 			}
 		}
