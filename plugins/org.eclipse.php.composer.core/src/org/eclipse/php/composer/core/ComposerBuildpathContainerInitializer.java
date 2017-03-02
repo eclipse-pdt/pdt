@@ -34,7 +34,6 @@ import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserve
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class ComposerBuildpathContainerInitializer extends BuildpathContainerInitializer {
 
 	public static final String CONTAINER = ComposerPlugin.ID + ".CONTAINER"; //$NON-NLS-1$

@@ -23,6 +23,27 @@ import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 
 public class BuildPathParser {
+	public static class BuildPathInfo implements Comparable<BuildPathInfo> {
+		public static final int SOURCE = 2;
+
+		public static final int VENDOR = 4;
+
+		public final String path;
+
+		public final int type;
+
+		public BuildPathInfo(String path, int type) {
+			this.path = path;
+			this.type = type;
+		}
+
+		@Override
+		public int compareTo(BuildPathInfo o) {
+			return path.compareTo(o.path);
+		}
+	}
+
+	private static String EMPTY = ""; //$NON-NLS-1$
 
 	private IComposerProject project;
 
@@ -30,37 +51,42 @@ public class BuildPathParser {
 		this.project = project;
 	}
 
+	@Deprecated
 	public List<String> getPaths() {
-		ComposerPackages packages = project.getInstalledPackages();
-		if (packages == null) {
-			return null;
+		List<BuildPathInfo> pathsInfo = getPathsInfo();
+		List<String> pathes = new ArrayList<String>(pathsInfo.size());
+		for (BuildPathInfo info : pathsInfo) {
+			pathes.add(info.path);
 		}
 
+		return pathes;
+	}
+
+	public List<BuildPathInfo> getPathsInfo() {
 		ComposerPackage composer = project.getComposerPackage();
 		String vendor = project.getVendorDir();
 
 		// empty list for found package paths
-		List<String> paths = new ArrayList<String>();
+		List<BuildPathInfo> paths = new ArrayList<BuildPathInfo>();
 
 		// add source paths from this package
-		parsePackage(composer, paths);
+		parsePackage(composer, paths, EMPTY, BuildPathInfo.SOURCE);
 
 		// add composer vendor dir
-		paths.add(vendor + "/composer"); //$NON-NLS-1$
+		paths.add(new BuildPathInfo(vendor + "/composer", BuildPathInfo.VENDOR)); //$NON-NLS-1$
 
 		// all installed packages
-		for (ComposerPackage p : packages) {
-			parsePackage(p, paths, vendor + "/" + p.getName()); //$NON-NLS-1$
+		ComposerPackages packages = project.getInstalledPackages();
+		if (packages != null) {
+			for (ComposerPackage p : packages) {
+				parsePackage(p, paths, vendor + "/" + p.getName(), BuildPathInfo.VENDOR); //$NON-NLS-1$
+			}
 		}
 
 		return paths;
 	}
 
-	private void parsePackage(ComposerPackage pkg, List<String> paths) {
-		parsePackage(pkg, paths, ""); //$NON-NLS-1$
-	}
-
-	private void parsePackage(ComposerPackage pkg, List<String> paths, String prefix) {
+	private void parsePackage(ComposerPackage pkg, List<BuildPathInfo> paths, String prefix, int type) {
 		if (prefix != null && !prefix.equals("") && !prefix.endsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
 			prefix += "/"; //$NON-NLS-1$
 		}
@@ -70,27 +96,27 @@ public class BuildPathParser {
 		// psr-0
 		for (Namespace namespace : a.getPsr0()) {
 			for (Object path : namespace.getPaths()) {
-				addPath(prefix + path, paths);
+				addPath(prefix + path, paths, type);
 			}
 		}
 
 		// psr-4
 		for (Namespace namespace : a.getPsr4()) {
 			for (Object path : namespace.getPaths()) {
-				addPath(prefix + path, paths);
+				addPath(prefix + path, paths, type);
 			}
 		}
 
 		// classmap
 		for (Object path : a.getClassMap()) {
 			String cleanedPath = getDirectory(prefix + (String) path);
-			addPath(cleanedPath, paths);
+			addPath(cleanedPath, paths, type);
 		}
 
 		// files
 		for (Object path : a.getFiles()) {
 			String cleanedPath = getDirectory(prefix + (String) path);
-			addPath(cleanedPath, paths);
+			addPath(cleanedPath, paths, type);
 		}
 	}
 
@@ -108,7 +134,7 @@ public class BuildPathParser {
 		return cleanedPath;
 	}
 
-	private void addPath(String path, List<String> paths) {
+	private void addPath(String path, List<BuildPathInfo> paths, int type) {
 		if (path != null && !path.trim().isEmpty()) {
 			// switch from win to unix
 			path = path.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -142,7 +168,7 @@ public class BuildPathParser {
 			}
 
 			if (!paths.contains(path)) {
-				paths.add(path);
+				paths.add(new BuildPathInfo(path, type));
 			}
 		}
 	}

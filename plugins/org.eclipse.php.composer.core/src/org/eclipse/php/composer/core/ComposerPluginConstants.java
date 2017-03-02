@@ -31,4 +31,25 @@ public class ComposerPluginConstants {
 	 */
 	public static final String DEFAULT_SRC_FOLDER = "src"; //$NON-NLS-1$
 
+	/**
+	 * Composer build path attribute name
+	 * 
+	 * @since 4.3
+	 */
+	public static final String BPE_ATTR_NAME = "composer"; //$NON-NLS-1$
+
+	/**
+	 * Composer build path attribute source value
+	 * 
+	 * @since 4.3
+	 */
+	public static final String BPE_ATTR_SOURCE = "source"; //$NON-NLS-1$
+
+	/**
+	 * Composer build path attribute vendor value
+	 * 
+	 * @since 4.3
+	 */
+	public static final String BPE_ATTR_VENDOR = "vendor"; //$NON-NLS-1$
+
 }

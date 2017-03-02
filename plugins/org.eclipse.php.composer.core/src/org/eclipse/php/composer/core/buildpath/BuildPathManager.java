@@ -11,26 +11,24 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.buildpath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.php.composer.core.ComposerPlugin;
+import org.eclipse.php.composer.core.ComposerPluginConstants;
 import org.eclipse.php.composer.core.ComposerPreferenceConstants;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.resources.IComposerProject;
-import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.wst.validation.ValidationFramework;
 
-@SuppressWarnings("restriction")
 public class BuildPathManager {
 
 	private IComposerProject composerProject;
@@ -60,63 +58,72 @@ public class BuildPathManager {
 		IProject project = composerProject.getProject();
 		IScriptProject scriptProject = composerProject.getScriptProject();
 		BuildPathParser parser = new BuildPathParser(composerProject);
-		List<String> paths = parser.getPaths();
+		List<BuildPathParser.BuildPathInfo> paths = parser.getPathsInfo();
 
 		// project prefs
 		IEclipsePreferences prefs = ComposerPlugin.getDefault().getProjectPreferences(project);
 		IPath[] inclusions;
+		List<IPath> exs = new ArrayList<IPath>();
 
 		try {
 			String encoded = prefs.get(ComposerPreferenceConstants.BUILDPATH_INCLUDES_EXCLUDES, ""); //$NON-NLS-1$
-			exclusions = scriptProject.decodeBuildpathEntry(encoded).getExclusionPatterns();
 			inclusions = scriptProject.decodeBuildpathEntry(encoded).getInclusionPatterns();
+			exs.addAll(Arrays.asList(scriptProject.decodeBuildpathEntry(encoded).getExclusionPatterns()));
 		} catch (Exception e) {
-			exclusions = new IPath[] {};
 			inclusions = new IPath[] {};
 		}
 
 		// add includes
 		for (IPath inclusion : inclusions) {
-			paths.add(inclusion.toString());
+			paths.add(new BuildPathParser.BuildPathInfo(inclusion.toString(), BuildPathParser.BuildPathInfo.SOURCE));
 		}
 
 		// clean up exclusion patterns: remove exact matches
-		List<IPath> exs = new ArrayList<IPath>();
-		for (IPath exclusion : exclusions) {
-			String exc = exclusion.removeTrailingSeparator().toString();
 
-			if (paths.contains(exc)) {
-				paths.remove(exc);
-			} else {
-				exs.add(exclusion);
+		for (Iterator<IPath> eit = exs.iterator(); eit.hasNext();) {
+
+			String exc = eit.next().removeTrailingSeparator().toString();
+			for (Iterator<BuildPathParser.BuildPathInfo> it = paths.iterator(); it.hasNext();) {
+				BuildPathParser.BuildPathInfo info = it.next();
+				if (info.path.equals(exc)) {
+					it.remove();
+				}
 			}
 		}
 		exclusions = exs.toArray(new IPath[] {});
 
 		// clean build path
-		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-		for (IBuildpathEntry entry : rawBuildpath) {
-			if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-				BuildPathUtils.removeEntryFromBuildPath(scriptProject, entry);
-			}
-		}
+		List<IBuildpathEntry> buildPath = new ArrayList<IBuildpathEntry>(
+				Arrays.asList(scriptProject.getRawBuildpath()));
 
-		// sort paths for nesting detection
+		for (Iterator<IBuildpathEntry> it = buildPath.iterator(); it.hasNext();) {
+			IBuildpathEntry entry = it.next();
+			if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE
+					&& entry.getExtraAttribute(ComposerPluginConstants.BPE_ATTR_NAME) != null) {
+				it.remove();
+			}
+
+		}
 		Collections.sort(paths);
+		// sort paths for nesting detection
+		Collections.sort(buildPath, new Comparator<IBuildpathEntry>() {
+
+			@Override
+			public int compare(IBuildpathEntry o1, IBuildpathEntry o2) {
+				return o1.getPath().toString().compareTo(o2.getPath().toString());
+			}
+		});
 
 		// add new entries to buildpath
-		List<IBuildpathEntry> newEntries = new ArrayList<IBuildpathEntry>();
-		for (String path : paths) {
-			IPath entry = new Path(path);
+		for (BuildPathParser.BuildPathInfo path : paths) {
+			IPath entry = new Path(path.path);
 			IFolder folder = project.getFolder(entry);
 			if (folder != null && folder.exists()) {
-				addPath(folder.getFullPath(), newEntries);
+				addPath(folder.getFullPath(), buildPath, path.type);
 			}
 		}
 
-		if (newEntries.size() > 0) {
-			BuildPathUtils.addNonDupEntriesToBuildPath(scriptProject, newEntries);
-		}
+		DLTKCore.create(project).setRawBuildpath(buildPath.toArray(new IBuildpathEntry[0]), monitor);
 
 		IFolder folder = project.getFolder(new Path(composerProject.getVendorDir()));
 
@@ -130,12 +137,20 @@ public class BuildPathManager {
 		}
 	}
 
-	private void addPath(IPath path, List<IBuildpathEntry> entries) {
+	private void addPath(IPath path, List<IBuildpathEntry> entries, int type) {
 		// find parent
 		IBuildpathEntry parent = null;
 		int parentLength = 0;
 		IPath entryPath;
-		for (IBuildpathEntry entry : entries) {
+		for (Iterator<IBuildpathEntry> it = entries.iterator(); it.hasNext();) {
+			IBuildpathEntry entry = it.next();
+			if (entry.getEntryKind() != IBuildpathEntry.BPE_SOURCE) {
+				continue;
+			}
+			if (entry.getPath().equals(path)) {
+				it.remove();
+				continue;
+			}
 			entryPath = entry.getPath();
 			if (entryPath.isPrefixOf(path) && (parent == null || (entryPath.toString().length() > parentLength))) {
 				parent = entry;
@@ -158,15 +173,23 @@ public class BuildPathManager {
 			}
 
 			entries.remove(parent);
+			if (parent.getExtraAttribute(ComposerPluginConstants.BPE_ATTR_NAME) != null) {
+				parent = DLTKCore.newSourceEntry(parent.getPath(), BuildpathEntry.INCLUDE_ALL,
+						exclusions.toArray(new IPath[] {}),
+						new IBuildpathAttribute[] {
+								DLTKCore.newBuildpathAttribute(ComposerPluginConstants.BPE_ATTR_NAME,
+										parent.getExtraAttribute(ComposerPluginConstants.BPE_ATTR_NAME)) });
+				entries.add(parent);
+			}
 
-			parent = DLTKCore.newSourceEntry(parent.getPath(), exclusions.toArray(new IPath[] {}));
-			entries.add(parent);
 		}
 
 		// add own entry
 		// leave vendor/composer untouched with exclusions
 		if (vendorPath.equals(path) || composerPath.equals(path)) {
-			entries.add(DLTKCore.newSourceEntry(path));
+			entries.add(DLTKCore.newSourceEntry(path, BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE,
+					new IBuildpathAttribute[] { DLTKCore.newBuildpathAttribute(ComposerPluginConstants.BPE_ATTR_NAME,
+							ComposerPluginConstants.BPE_ATTR_VENDOR) }));
 
 			// add exclusions
 		} else {
@@ -196,8 +219,21 @@ public class BuildPathManager {
 				}
 			}
 
-			entries.add(DLTKCore.newSourceEntry(path, ex.toArray(new IPath[] {})));
+			entries.add(DLTKCore.newSourceEntry(path, BuildpathEntry.INCLUDE_ALL, ex.toArray(new IPath[] {}),
+					new IBuildpathAttribute[] { DLTKCore.newBuildpathAttribute(ComposerPluginConstants.BPE_ATTR_NAME,
+							getTypeName(type)) }));
 		}
+	}
+
+	protected String getTypeName(int type) {
+		switch (type) {
+		case BuildPathParser.BuildPathInfo.SOURCE:
+			return ComposerPluginConstants.BPE_ATTR_SOURCE;
+		case BuildPathParser.BuildPathInfo.VENDOR:
+			return ComposerPluginConstants.BPE_ATTR_VENDOR;
+		}
+
+		return null;
 	}
 
 	// is this method necessary at all?
