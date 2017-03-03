@@ -20,8 +20,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.Document;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.ast.util.Util;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
@@ -189,6 +191,8 @@ public class ASTParser {
 		AST ast = p.getAST();
 
 		p.setSourceModule(sourceModule);
+		if (sourceModule != null)
+			p.setLineEndTable(Util.lineEndTable(new Document(sourceModule.getSource())));
 
 		// now reset the ast default node flag back to differntate between
 		// original nodes
