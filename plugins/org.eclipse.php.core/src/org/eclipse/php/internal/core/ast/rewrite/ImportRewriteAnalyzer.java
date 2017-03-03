@@ -160,6 +160,9 @@ public final class ImportRewriteAnalyzer {
 	}
 
 	private static String getFullName(UseStatement decl) {
+		if (decl.parts().get(0).getAlias() != null) {
+			return decl.parts().get(0).getAlias().getName();
+		}
 		return decl.parts().get(0).getName().getName();
 	}
 

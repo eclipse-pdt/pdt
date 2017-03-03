@@ -13,6 +13,13 @@ package org.eclipse.php.core.ast.nodes;
 
 import java.util.*;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
+import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
@@ -24,6 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
+import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
 import org.eclipse.text.edits.TextEdit;
 
 /**
@@ -48,7 +56,7 @@ public class Program extends ASTNode {
 	private Map<NamespaceDeclaration, List<UseStatement>> fUseStatements;
 
 	private List<NamespaceDeclaration> fNamespaceDeclarations;
-	
+
 	/**
 	 * The structural property of this node type.
 	 */
@@ -654,6 +662,32 @@ public class Program extends ASTNode {
 			PHPCorePlugin.log(e);
 		}
 		return null;
+	}
+
+	public IProblem[] getProblems() {
+		try {
+			if (getSourceModule() == null) {
+				return new IProblem[0];
+			}
+
+			IResource resource = getSourceModule().getUnderlyingResource();
+			if (resource != null) {
+				IMarker[] markers = resource.findMarkers(PhpProblemIdentifier.MARKER_TYPE_ID, true,
+						IResource.DEPTH_ONE);
+				IProblem[] problems = new DefaultProblem[markers.length];
+				for (int i = 0; i < markers.length; ++i) {
+					IProblemIdentifier id = DefaultProblemIdentifier.decode(markers[i].getAttribute("id", "")); //$NON-NLS-1$ //$NON-NLS-2$
+					String message = markers[i].getAttribute(IMarker.MESSAGE, ""); //$NON-NLS-1$
+					int start = markers[i].getAttribute(IMarker.CHAR_START, 0);
+					int end = markers[i].getAttribute(IMarker.CHAR_END, 0);
+					int line = markers[i].getAttribute(IMarker.LINE_NUMBER, 0);
+					problems[i] = new DefaultProblem(resource.getName(), message, id, null, null, start, end, line, 0);
+				}
+				return problems;
+			}
+		} catch (CoreException e) {
+		}
+		return new IProblem[0];
 	}
 
 	public Map<NamespaceDeclaration, List<UseStatement>> getUseStatements() {

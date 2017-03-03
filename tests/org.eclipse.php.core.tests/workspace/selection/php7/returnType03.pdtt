@@ -5,6 +5,8 @@ Test return type
 
 namespace Foo\Bar;
 
+use Traversable;
+
 function f1(): |Traversable| {
 }
 --EXPECT--
