@@ -499,5 +499,17 @@ public class Bindings {
 		}
 		return null;
 	}
+	
+	public static ITypeBinding getBindingOfParentType(ASTNode node) {
+		while (node != null) {
+			if (node instanceof TypeDeclaration) {
+				return ((TypeDeclaration) node).resolveTypeBinding();
+			} else if (node instanceof AnonymousClassDeclaration) {
+				return ((AnonymousClassDeclaration) node).resolveTypeBinding();
+			}
+			node = node.getParent();
+		}
+		return null;
+	}
 
 }

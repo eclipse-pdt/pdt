@@ -103,9 +103,10 @@ public final class ImportRewrite {
 		public final static int KIND_TYPE = 1;
 
 		/**
-		 * Kind constant specifying that the element is a static field import.
+		 * Kind constant specifying that the element is a static constant
+		 * import.
 		 */
-		public final static int KIND_STATIC_FIELD = 2;
+		public final static int KIND_STATIC_CONSTANT = 2;
 
 		/**
 		 * Kind constant specifying that the element is a static method import.
@@ -126,10 +127,10 @@ public final class ImportRewrite {
 		 *            field name or * for on-demand imports.
 		 * @param kind
 		 *            The kind of the element. Can be either {@link #KIND_TYPE},
-		 *            {@link #KIND_STATIC_FIELD} or {@link #KIND_STATIC_METHOD}.
-		 *            Implementors should be prepared for new, currently
-		 *            unspecified kinds and return {@link #RES_NAME_UNKNOWN} by
-		 *            default.
+		 *            {@link #KIND_STATIC_CONSTANT} or
+		 *            {@link #KIND_STATIC_METHOD}. Implementors should be
+		 *            prepared for new, currently unspecified kinds and return
+		 *            {@link #RES_NAME_UNKNOWN} by default.
 		 * @return Returns the result of the lookup. Can be either
 		 *         {@link #RES_NAME_FOUND}, {@link #RES_NAME_UNKNOWN} or
 		 *         {@link #RES_NAME_CONFLICT}.
@@ -197,7 +198,12 @@ public final class ImportRewrite {
 				for (UseStatement useStatement : entry.getValue()) {
 					for (UseStatementPart part : useStatement.parts()) {
 						StringBuilder buf = new StringBuilder();
-						buf.append(NORMAL_PREFIX).append(part.getName().getName());
+						buf.append(NORMAL_PREFIX);
+						if (part.getAlias() != null) {
+							buf.append(part.getAlias().getName());
+						} else {
+							buf.append(part.getName().getName());
+						}
 						imports.add(buf.toString());
 					}
 				}
@@ -225,9 +231,11 @@ public final class ImportRewrite {
 			if (namespaces.size() > 0) {
 				for (NamespaceDeclaration namespace : namespaces) {
 					this.restoreExistingImports.put(namespace, false);
+					this.existingImports.put(namespace, new ArrayList<>());
 				}
 			} else {
 				this.restoreExistingImports.put(null, false);
+				this.existingImports.put(null, new ArrayList<>());
 			}
 		}
 		this.filterImplicitImports = true;
@@ -268,8 +276,12 @@ public final class ImportRewrite {
 	 * @return the compilation unit for which this import rewrite was created
 	 *         for.
 	 */
-	public ISourceModule getProgram() {
+	public ISourceModule getSourceModule() {
 		return this.compilationUnit;
+	}
+
+	public Program getProgram() {
+		return this.astRoot;
 	}
 
 	/**
@@ -371,17 +383,12 @@ public final class ImportRewrite {
 	 *         conflict prevented the import.
 	 */
 	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, ImportRewriteContext context) {
-		int angleBracketOffset = qualifiedTypeName.indexOf('<');
-		if (angleBracketOffset != -1) {
-			return internalAddImport(namespace, qualifiedTypeName.substring(0, angleBracketOffset), context)
-					+ qualifiedTypeName.substring(angleBracketOffset);
-		}
-		int bracketOffset = qualifiedTypeName.indexOf('[');
-		if (bracketOffset != -1) {
-			return internalAddImport(namespace, qualifiedTypeName.substring(0, bracketOffset), context)
-					+ qualifiedTypeName.substring(bracketOffset);
-		}
-		return internalAddImport(namespace, qualifiedTypeName, context);
+		return internalAddImport(namespace, qualifiedTypeName, null, context);
+	}
+
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias,
+			ImportRewriteContext context) {
+		return internalAddImport(namespace, qualifiedTypeName, alias, context);
 	}
 
 	/**
@@ -409,7 +416,11 @@ public final class ImportRewrite {
 		return addImport(namespace, qualifiedTypeName, this.defaultContext);
 	}
 
-	private String internalAddImport(NamespaceDeclaration namespace, String fullTypeName,
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias) {
+		return addImport(namespace, qualifiedTypeName, alias, this.defaultContext);
+	}
+
+	private String internalAddImport(NamespaceDeclaration namespace, String fullTypeName, String alias,
 			ImportRewriteContext context) {
 		int idx = fullTypeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		String typeContainerName, typeName;
@@ -425,14 +436,30 @@ public final class ImportRewrite {
 		}
 
 		if (typeContainerName.length() == 0) {
+			if (alias != null) {
+				return alias;
+			}
+			if (fullTypeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				fullTypeName = NamespaceReference.NAMESPACE_SEPARATOR + fullTypeName;
+			}
 			return fullTypeName;
 		}
 
 		if (context == null)
 			context = this.defaultContext;
 
+		if (alias != null) {
+			typeName = alias;
+			fullTypeName += " as " + alias; //$NON-NLS-1$
+		}
 		int res = context.findInContext(namespace, typeContainerName, typeName, ImportRewriteContext.KIND_TYPE);
 		if (res == ImportRewriteContext.RES_NAME_CONFLICT) {
+			if (alias != null) {
+				return alias;
+			}
+			if (fullTypeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				fullTypeName = NamespaceReference.NAMESPACE_SEPARATOR + fullTypeName;
+			}
 			return fullTypeName;
 		}
 		if (res == ImportRewriteContext.RES_NAME_UNKNOWN) {

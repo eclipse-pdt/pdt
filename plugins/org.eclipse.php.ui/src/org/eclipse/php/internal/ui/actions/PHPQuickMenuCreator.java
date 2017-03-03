@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IRegion;
@@ -92,5 +96,20 @@ public class PHPQuickMenuCreator extends QuickMenuCreator {
 		}
 
 		return new Region(start, end - start);
+	}
+
+	/**
+	 * Returns a handler that can create and open the quick menu.
+	 * 
+	 * @return a handler that can create and open the quick menu
+	 */
+	public IHandler createHandler() {
+		return new AbstractHandler() {
+			@Override
+			public Object execute(ExecutionEvent event) throws ExecutionException {
+				createMenu();
+				return null;
+			}
+		};
 	}
 }

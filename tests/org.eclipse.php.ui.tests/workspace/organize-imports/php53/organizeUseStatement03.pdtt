@@ -1,0 +1,45 @@
+--TEST--
+Test organize use statements for alias
+--FILE--
+<?php
+namespace name;
+
+use Boo\D;
+use Boo\D as E;
+use Boo\D as F;
+use Boo\D as G;
+
+class Foo extends E {
+    
+    public function bar(\Boo\D $d): F {
+        $fun = function(): G {
+        };
+    }
+    
+}
+
+namespace Boo;
+
+class D {
+}
+--EXPECT--
+<?php
+namespace name;
+
+use Boo\D as E;
+use Boo\D as F;
+use Boo\D as G;
+
+class Foo extends E {
+    
+    public function bar(\Boo\D $d): F {
+        $fun = function(): G {
+        };
+    }
+    
+}
+
+namespace Boo;
+
+class D {
+}

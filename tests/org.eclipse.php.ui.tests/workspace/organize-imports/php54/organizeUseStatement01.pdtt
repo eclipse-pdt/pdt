@@ -1,0 +1,30 @@
+--TEST--
+Test organize use statements for trait
+--FILE--
+<?php
+namespace name;
+
+class Foo {
+    use Bar;
+
+}
+
+namespace Boo;
+
+trait Bar {
+}
+--EXPECT--
+<?php
+namespace name;
+
+use Boo\Bar;
+
+class Foo {
+    use Bar;
+
+}
+
+namespace Boo;
+
+trait Bar {
+}

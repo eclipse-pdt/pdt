@@ -79,6 +79,10 @@ public class LambdaFunctionDeclaration extends Expression {
 				}
 			}
 
+			if (this.returnType != null) {
+				this.returnType.traverse(visitor);
+			}
+
 			if (this.body != null) {
 				this.body.traverse(visitor);
 			}

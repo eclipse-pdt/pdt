@@ -1,0 +1,38 @@
+--TEST--
+Test organize use statements with multi namespace declarations
+--FILE--
+<?php
+namespace name\ns1;
+
+class Foo extends Bar {
+}
+
+namespace name\ns2;
+
+class Foo extends Bar {
+}
+
+namespace name\ns3;
+
+class Bar {
+}
+--EXPECT--
+<?php
+namespace name\ns1;
+
+use name\ns3\Bar;
+
+class Foo extends Bar {
+}
+
+namespace name\ns2;
+
+use name\ns3\Bar;
+
+class Foo extends Bar {
+}
+
+namespace name\ns3;
+
+class Bar {
+}

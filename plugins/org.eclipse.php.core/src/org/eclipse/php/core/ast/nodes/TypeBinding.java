@@ -532,7 +532,8 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the type binding
 	 */
 	public ITypeBinding getTypeDeclaration() {
-		// TODO Auto-generated method stub
+		if (elements.length > 0)
+			return resolver.getTypeBinding((IType) elements[0]);
 		return null;
 	}
 
