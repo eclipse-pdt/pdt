@@ -12,50 +12,49 @@ package org.eclipse.php.internal.ui.text.correction;
 
 import java.util.Collection;
 
-import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.actions.OrganizeUseStatementsAction;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.text.correction.proposals.ChangeCorrectionProposal;
 import org.eclipse.php.internal.ui.text.correction.proposals.RemoveUnusedUseStatementProposal;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.part.FileEditorInput;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReorgCorrectionsSubProcessor {
 
-	private final static String ORGANIZE_USE_STATEMENTS_ID = "org.eclipse.php.ui.editor.organize.use.statements"; //$NON-NLS-1$
-
 	public static void removeImportStatementProposals(IInvocationContext context, IProblemLocation problem,
 			Collection proposals) {
 		RemoveUnusedUseStatementProposal proposal = new RemoveUnusedUseStatementProposal(context, problem, 5);
-		proposals.add(new RunCommandProposal());
 		proposals.add(proposal);
-	}
 
-	static private class RunCommandProposal extends AbstractCorrectionProposal {
-
-		public RunCommandProposal() {
-			super(CorrectionMessages.ReorgCorrectionsSubProcessor_organizeimports_description, 10,
-					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_CHANGE), ORGANIZE_USE_STATEMENTS_ID);
-		}
-
-		@Override
-		public void apply(IDocument document) {
-			ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-			try {
-				service.getCommand(getCommandId()).executeWithChecks(new ExecutionEvent());
-			} catch (Exception e) {
-				Logger.logException(e);
+		final ISourceModule cu = context.getCompilationUnit();
+		String name = CorrectionMessages.ReorgCorrectionsSubProcessor_organizeimports_description;
+		ChangeCorrectionProposal proposal1 = new ChangeCorrectionProposal(name, null,
+				IProposalRelevance.ORGANIZE_IMPORTS, DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_CHANGE)) {
+			@Override
+			public void apply(IDocument document) {
+				IEditorInput input = new FileEditorInput((IFile) cu.getResource());
+				IWorkbenchPage p = PHPUiPlugin.getActivePage();
+				if (p == null) {
+					return;
+				}
+				IEditorPart part = p.findEditor(input);
+				if (part instanceof PHPStructuredEditor) {
+					OrganizeUseStatementsAction action = new OrganizeUseStatementsAction(part);
+					action.run(cu);
+				}
 			}
-		}
-
-		@Override
-		public String getAdditionalProposalInfo() {
-			return null;
-		}
+		};
+		proposals.add(proposal1);
 	}
 
 }
