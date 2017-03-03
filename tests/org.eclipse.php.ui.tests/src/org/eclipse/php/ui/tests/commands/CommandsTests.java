@@ -29,6 +29,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -38,21 +40,18 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.actions.OrganizeUseStatementsAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.junit.After;
 import org.junit.ClassRule;
@@ -80,7 +79,7 @@ public class CommandsTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 
 	static {
-		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/commands/php53" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/commands/php53", "/workspace/commands/php54" });
 	};
 
 	@Context
@@ -135,7 +134,7 @@ public class CommandsTests {
 					openEditor();
 					String result = selectAndExecute(getCommandId(pdttFile), range.getOffset(), range.getLength());
 					closeEditor();
-					if (!pdttFile.getExpected().trim().equals(result.trim())) {
+					if (!pdttFile.getExpected().replace("\r", "").trim().equals(result.replace("\r", "").trim())) {
 						StringBuilder errorBuf = new StringBuilder();
 						errorBuf.append("\nEXPECTED RESULT:\n-----------------------------\n");
 						errorBuf.append(pdttFile.getExpected());
@@ -203,14 +202,11 @@ public class CommandsTests {
 					+ testFile.getLocation() + ")");
 		}
 		viewer.setSelectedRange(offset, length);
-		IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-		IHandlerService handlerService = (IHandlerService) serviceLocator.getService(IHandlerService.class);
 
-		if (commandId == null) {
-			fail("command_id configuration entry is not added.");
+		if (fEditor instanceof PHPStructuredEditor) {
+			OrganizeUseStatementsAction action = new OrganizeUseStatementsAction(fEditor);
+			action.run(EditorUtility.getEditorInputModelElement(fEditor, false));
 		}
-
-		handlerService.executeCommand(commandId, new Event());
 
 		return fEditor.getDocument().get();
 	}

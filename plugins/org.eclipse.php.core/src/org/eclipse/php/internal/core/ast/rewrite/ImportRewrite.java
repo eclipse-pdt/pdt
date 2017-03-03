@@ -225,9 +225,11 @@ public final class ImportRewrite {
 			if (namespaces.size() > 0) {
 				for (NamespaceDeclaration namespace : namespaces) {
 					this.restoreExistingImports.put(namespace, false);
+					this.existingImports.put(namespace, new ArrayList<>());
 				}
 			} else {
 				this.restoreExistingImports.put(null, false);
+				this.existingImports.put(null, new ArrayList<>());
 			}
 		}
 		this.filterImplicitImports = true;

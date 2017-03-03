@@ -23,10 +23,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.PHPActionConstants;
-import org.eclipse.php.internal.ui.actions.ToggleMarkOccurrencesAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -177,6 +174,13 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		ITextEditor editor = null;
 		if (part instanceof ITextEditor)
 			editor = (ITextEditor) part;
+
+		if (editor != null) {
+			OrganizeUseStatementsAction organizeUseStatementsAction = new OrganizeUseStatementsAction(part);
+			organizeUseStatementsAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.ORGANIZE_USE_STATEMENT);
+			organizeUseStatementsAction.setEnabled(editor.isEditable());
+			editor.setAction("OrganizeUseStatements", organizeUseStatementsAction); //$NON-NLS-1$
+		}
 
 		fMarkOccurrencesAction.setEditor(editor);
 

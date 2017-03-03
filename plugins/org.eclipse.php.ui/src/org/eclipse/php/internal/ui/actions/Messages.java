@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.osgi.util.NLS;
 
+import com.ibm.icu.text.MessageFormat;
+
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.actions.messages"; //$NON-NLS-1$
 	public static String NamespaceGroupingActionGroup_0;
@@ -34,11 +36,31 @@ public class Messages extends NLS {
 	public static String OpenViewActionGroup_ShowInLabel;
 	public static String RemoveFromIncludepathAction_0;
 
+	public static String OrganizeImportsAction_label;
+	public static String OrganizeImportsAction_tooltip;
+	public static String OrganizeImportsAction_description;
+	public static String OrganizeImportsAction_multi_error_parse;
+	public static String OrganizeImportsAction_multi_error_unresolvable;
+	public static String OrganizeImportsAction_selectiondialog_title;
+	public static String OrganizeImportsAction_selectiondialog_message;
+	public static String OrganizeImportsAction_summary_added_singular;
+	public static String OrganizeImportsAction_summary_added_plural;
+	public static String OrganizeImportsAction_summary_removed_singular;
+	public static String OrganizeImportsAction_summary_removed_plural;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
 	private Messages() {
+	}
+
+	public static String format(String message, Object object) {
+		return MessageFormat.format(message, new Object[] { object });
+	}
+
+	public static String format(String message, Object[] objects) {
+		return MessageFormat.format(message, objects);
 	}
 }

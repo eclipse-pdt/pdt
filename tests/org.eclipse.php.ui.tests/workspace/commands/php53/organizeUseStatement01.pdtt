@@ -4,20 +4,48 @@ Test organize imports action
 command_id: org.eclipse.php.ui.editor.organize.use.statements
 --FILE--
 <?php
-use Boo\C;
-use Boo\A;
-use Boo\B;
+namespace name;
 
-new A();
-new B();
+use Boo\A;
+use Boo\D;
+use Error;
+use name\Foo;
+use name\Foo;
+
+new Exception();
 new C();
+new Foo();
+
+class Foo extends Error {
+}
+
+namespace Boo;
+
+class C {
+}
+
+class D {
+}
 ||
 --EXPECT--
 <?php
-use Boo\A;
-use Boo\B;
-use Boo\C;
+namespace name;
 
-new A();
-new B();
+use Boo\C;
+use Error;
+use Exception;
+
+new Exception();
 new C();
+new Foo();
+
+class Foo extends Error {
+}
+
+namespace Boo;
+
+class C {
+}
+
+class D {
+}
