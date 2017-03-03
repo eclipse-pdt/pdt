@@ -1,0 +1,27 @@
+
+--TEST--
+Test unimplemented method error check
+--FILE--
+<?php
+namespace error5\ns1;
+
+use error5\ns2\Foo;
+
+class Bar {
+
+    function foo() {
+        $a = new class() implements Foo {
+        };
+    }
+
+}
+
+namespace error5\ns2;
+
+interface Foo {
+
+    function test();
+
+}
+--EXPECT--
+[line=9, start=101, end=108] The type new Foo() {...} must implement the inherited abstract method Foo::test()

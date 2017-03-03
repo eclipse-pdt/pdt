@@ -1,0 +1,30 @@
+--TEST--
+Test unimplemented method error check
+--FILE--
+<?php
+namespace error5\ns1;
+
+final class FinalClass {
+}
+
+interface IFoo {
+}
+
+class Foo {
+}
+
+class Bar extends FinalClass {
+}
+
+class Bar1 implements Foo {
+}
+
+interface IBar extends Foo {
+}
+
+class Bar2 extends Foo implements IFoo {
+}
+--EXPECT--
+[line=13, start=110, end=120] The type Bar cannot subclass the final class FinalClass
+[line=16, start=148, end=151] The type Foo cannot be a superinterface of Bar1; a superinterface must be an interface
+[line=19, start=180, end=183] The type Foo cannot be a superinterface of IBar; a superinterface must be an interface

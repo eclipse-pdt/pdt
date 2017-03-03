@@ -1,0 +1,41 @@
+--TEST--
+Test type reference error check
+--FILE--
+<?php
+namespace error\ns1;
+
+use Exception;
+use error\ns2;
+use error\ns2\Foo;
+use Exception as E;
+
+class Foo1 implements IBar {
+    
+    function test(IBar $bar) {
+    }
+    
+    function test1(Foo $bar) {
+        new Exception();
+        new Error();
+        new ns2\Foo();
+        new \error\ns2\Foo();
+        new ns2\Foo5();
+        new E();
+        new \name\ns2\Foo6();
+    }
+    
+}
+
+namespace error\ns2;
+
+class Foo {
+}
+
+interface IBar {
+}
+--EXPECT--
+[line=9, start=120, end=124] IBar cannot be resolved to a type
+[line=11, start=150, end=154] IBar cannot be resolved to a type
+[line=16, start=242, end=247] Error cannot be resolved to a type
+[line=19, start=316, end=324] Foo5 cannot be resolved to a type
+[line=21, start=357, end=371] Foo6 cannot be resolved to a type
