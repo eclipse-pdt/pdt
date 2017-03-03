@@ -1,0 +1,28 @@
+--TEST--
+Test superclass error check
+--FILE--
+<?php
+final class FinalClass {
+}
+
+interface IFoo {
+}
+
+class Foo {
+}
+
+class Bar extends FinalClass {
+}
+
+class Bar1 implements Foo {
+}
+
+interface IBar extends Foo {
+}
+
+class Bar2 extends Foo implements IFoo {
+}
+--EXPECT--
+[line=11, start=87, end=97] The type Bar cannot subclass the final class FinalClass
+[line=14, start=125, end=128] The type Foo cannot be a superinterface of Bar1; a superinterface must be an interface
+[line=17, start=157, end=160] The type Foo cannot be a superinterface of IBar; a superinterface must be an interface

@@ -1,0 +1,26 @@
+--TEST--
+Test unimplemented method error check
+--FILE--
+<?php
+namespace error4\ns1;
+
+use error4\ns2\Foo;
+
+class Bar implements Foo {
+
+    function test2() {
+    }
+
+}
+
+namespace error4\ns2;
+
+interface Foo {
+
+    function test();
+
+    function test2();
+
+}
+--EXPECT--
+[line=6, start=56, end=59] The type Bar must implement the inherited abstract method Foo::test()

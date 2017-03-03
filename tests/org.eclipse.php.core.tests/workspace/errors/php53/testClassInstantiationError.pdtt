@@ -1,0 +1,21 @@
+--TEST--
+Test class instantiation error check
+--FILE--
+<?php
+namespace ns1;
+
+final class FinalClass {
+}
+
+interface IFoo {
+}
+
+abstract class Foo {
+}
+
+new IFoo();
+new Foo();
+new FinalClass();
+--EXPECT--
+[line=13, start=98, end=102] Cannot instantiate the type IFoo
+[line=14, start=110, end=113] Cannot instantiate the type Foo

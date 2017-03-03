@@ -2609,6 +2609,32 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
+	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration) {
+		if (!hasChildrenChanges(anonymousClassDeclaration)) {
+			return doVisitUnchangedChildren(anonymousClassDeclaration);
+		}
+		try {
+			// Rewrite the super-class property
+			rewriteAnonymousClassDeclarationSuperClass(anonymousClassDeclaration);
+			// Rewrite the interfaces
+			int pos;
+			if (anonymousClassDeclaration.getSuperClass() == null) {
+				pos = anonymousClassDeclaration.getStart();
+			} else {
+				pos = anonymousClassDeclaration.getSuperClass().getEnd();
+			}
+			rewriteNodeList(anonymousClassDeclaration, AnonymousClassDeclaration.INTERFACES_PROPERTY, pos,
+					" implements ", //$NON-NLS-1$
+					", "); //$NON-NLS-1$
+			// Rewrite the body
+			return rewriteRequiredNodeVisit(anonymousClassDeclaration, AnonymousClassDeclaration.BODY_PROPERTY);
+		} catch (Exception e) {
+			handleException(e);
+		}
+		return false;
+	}
+
 	/*
 	 * Rewrite the modifier part of the class declaration
 	 * 
@@ -2659,20 +2685,40 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			case RewriteEvent.REMOVED:
 				superClass = (Identifier) event.getOriginalValue();
 				// locate the end offset of the deletion
-				int deletionEnd;
-				if (classDeclaration.interfaces().size() > 0) {
-					deletionEnd = getScanner().getTokenStartOffset(
-							SymbolsProvider.getSymbol(SymbolsProvider.IMPLEMENTS_ID, scanner.getPHPVersion()),
-							classDeclaration.getStart());
-				} else {
-					deletionEnd = classDeclaration.getBody().getStart();
-				}
+				int deletionEnd = getExtendedEnd(superClass);
 				int deletionStart = classDeclaration.getName().getEnd();
-				doTextRemove(deletionStart, deletionEnd - deletionStart, editGroup);
-				doTextInsert(deletionStart, " ", editGroup); //$NON-NLS-1$
+				doTextRemoveAndVisit(deletionStart, deletionEnd - deletionStart, superClass, getEditGroup(event));
 				break;
 			case RewriteEvent.REPLACED:
 				rewriteRequiredNode(classDeclaration, ClassDeclaration.SUPER_CLASS_PROPERTY);
+				break;
+			}
+		}
+	}
+
+	private void rewriteAnonymousClassDeclarationSuperClass(AnonymousClassDeclaration anonymousClassDeclaration)
+			throws CoreException {
+		RewriteEvent event = getEvent(anonymousClassDeclaration, AnonymousClassDeclaration.SUPER_CLASS_PROPERTY);
+		if (event != null) {
+			int changeKind = event.getChangeKind();
+			TextEditGroup editGroup = getEditGroup(event);
+			switch (changeKind) {
+			case RewriteEvent.INSERTED:
+				Identifier superClass = (Identifier) event.getNewValue();
+				int insertionPos = anonymousClassDeclaration.getStart() - 1;
+				String extendsKeyword = " extends "; //$NON-NLS-1$
+				doTextInsert(insertionPos, extendsKeyword, editGroup);
+				doTextInsert(insertionPos, superClass, 0, false, editGroup);
+				break;
+			case RewriteEvent.REMOVED:
+				superClass = (Identifier) event.getOriginalValue();
+				// locate the end offset of the deletion
+				int deletionEnd = getExtendedEnd(superClass);
+				int deletionStart = anonymousClassDeclaration.getStart() - 1;
+				doTextRemoveAndVisit(deletionStart, deletionEnd - deletionStart, superClass, getEditGroup(event));
+				break;
+			case RewriteEvent.REPLACED:
+				rewriteRequiredNode(anonymousClassDeclaration, AnonymousClassDeclaration.SUPER_CLASS_PROPERTY);
 				break;
 			}
 		}

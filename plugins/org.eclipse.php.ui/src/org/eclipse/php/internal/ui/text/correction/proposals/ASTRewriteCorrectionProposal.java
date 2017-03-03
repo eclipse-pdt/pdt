@@ -13,10 +13,13 @@ package org.eclipse.php.internal.ui.text.correction.proposals;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.DLTKUIStatus;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
+import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.text.edits.TextEdit;
 
@@ -32,7 +35,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 
 	private ASTRewrite fRewrite;
 
-	// private ImportRewrite fImportRewrite;
+	private ImportRewrite fImportRewrite;
 
 	/**
 	 * Constructs a AST rewrite correction proposal.
@@ -61,9 +64,9 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 * @return the import rewriter or <code>null</code> if no import rewriter is
 	 *         set
 	 */
-	// public ImportRewrite getImportRewrite() {
-	// return fImportRewrite;
-	// }
+	public ImportRewrite getImportRewrite() {
+		return fImportRewrite;
+	}
 
 	/**
 	 * Sets the import rewriter used for this compilation unit.
@@ -71,9 +74,9 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 * @param rewrite
 	 *            the import rewriter
 	 */
-	// public void setImportRewrite(ImportRewrite rewrite) {
-	// fImportRewrite= rewrite;
-	// }
+	public void setImportRewrite(ImportRewrite rewrite) {
+		fImportRewrite = rewrite;
+	}
 
 	/**
 	 * Sets the import rewriter used for this compilation unit.
@@ -82,10 +85,10 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 *            the AST for the current CU
 	 * @return returns the create import rewriter
 	 */
-	// public ImportRewrite createImportRewrite(CompilationUnit astRoot) {
-	// fImportRewrite= StubUtility.createImportRewrite(astRoot, true);
-	// return fImportRewrite;
-	// }
+	public ImportRewrite createImportRewrite(Program astRoot) {
+		fImportRewrite = ImportRewrite.create(astRoot, true);
+		return fImportRewrite;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -106,10 +109,9 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR, e));
 			}
 		}
-		// if (fImportRewrite != null) {
-		// editRoot.addChild(fImportRewrite.rewriteImports(new
-		// NullProgressMonitor()));
-		// }
+		if (fImportRewrite != null) {
+			editRoot.addChild(fImportRewrite.rewriteImports(new NullProgressMonitor()));
+		}
 	}
 
 	/**

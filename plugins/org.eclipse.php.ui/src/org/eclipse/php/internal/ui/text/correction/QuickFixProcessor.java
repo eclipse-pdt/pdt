@@ -19,12 +19,12 @@ import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.php.ui.text.correction.IQuickFixProcessor;
 import org.eclipse.php.ui.text.correction.IQuickFixProcessorExtension;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessorExtension {
 
 	@Override
@@ -34,8 +34,8 @@ public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessor
 			return null;
 		}
 
-		HashSet handledProblems = new HashSet(locations.length);
-		ArrayList resultingCollections = new ArrayList();
+		HashSet<IProblemIdentifier> handledProblems = new HashSet<>(locations.length);
+		ArrayList<AbstractCorrectionProposal> resultingCollections = new ArrayList<>();
 		for (int i = 0; i < locations.length; i++) {
 			IProblemLocation curr = locations[i];
 			IProblemIdentifier id = curr.getProblemIdentifier();
@@ -52,13 +52,25 @@ public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessor
 		return false;
 	}
 
-	private void process(IInvocationContext context, IProblemLocation problem, Collection proposals)
-			throws CoreException {
+	private void process(IInvocationContext context, IProblemLocation problem,
+			Collection<AbstractCorrectionProposal> proposals) throws CoreException {
 		if (!(problem.getProblemIdentifier() instanceof PhpProblemIdentifier))
 			return;
 
 		PhpProblemIdentifier id = (PhpProblemIdentifier) problem.getProblemIdentifier();
 		switch (id) {
+		case UnusedImport:
+		case DuplicateImport:
+		case UnnecessaryImport:
+			ReorgCorrectionsSubProcessor.removeImportStatementProposals(context, problem, proposals);
+			break;
+		case ImportNotFound:
+			ReorgCorrectionsSubProcessor.removeImportStatementProposals(context, problem, proposals);
+			break;
+		case ClassExtendFinalClass:
+			ModifierCorrectionSubProcessor.addNonAccessibleReferenceProposal(context, problem, proposals,
+					ModifierCorrectionSubProcessor.TO_NON_FINAL, IProposalRelevance.REMOVE_FINAL_MODIFIER);
+			break;
 		case AbstractMethodInAbstractClass:
 		case BodyForAbstractMethod:
 			ModifierCorrectionSubProcessor.addAbstractMethodProposals(context, problem, proposals);
@@ -68,6 +80,15 @@ public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessor
 			break;
 		case MethodRequiresBody:
 			ModifierCorrectionSubProcessor.addMethodRequiresBodyProposals(context, problem, proposals);
+			break;
+		case UndefinedType:
+			UnresolvedElementsSubProcessor.getTypeProposals(context, problem, proposals);
+			break;
+		case AbstractMethodMustBeImplemented:
+			LocalCorrectionsSubProcessor.addUnimplementedMethodsProposals(context, problem, proposals);
+			break;
+		case SuperclassMustBeAClass:
+			LocalCorrectionsSubProcessor.getInterfaceExtendsClassProposals(context, problem, proposals);
 			break;
 		default:
 			return;
@@ -84,6 +105,14 @@ public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessor
 		case AbstractMethodsInConcreteClass:
 		case BodyForAbstractMethod:
 		case MethodRequiresBody:
+		case AbstractMethodMustBeImplemented:
+		case ClassExtendFinalClass:
+		case DuplicateImport:
+		case ImportNotFound:
+		case SuperclassMustBeAClass:
+		case UndefinedType:
+		case UnnecessaryImport:
+		case UnusedImport:
 			return true;
 		default:
 			break;
