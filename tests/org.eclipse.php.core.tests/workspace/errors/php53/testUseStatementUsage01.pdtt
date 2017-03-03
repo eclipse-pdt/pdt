@@ -1,10 +1,47 @@
 --TEST--
-Test unused use statement
+Test use statement
 --FILE--
 <?php
-use Test\UnusedStatement;
-use Test\UsedStatement;
+namespace name\ns1;
 
-new UsedStatement();
+use name\ns1;
+use name\ns2;
+use name\ns3;
+use name\ns1\Foo3; // same namespace
+use name\ns2\Bar;
+use name\ns2\Foo1;
+use name\ns2\Foo1 as Foo4;
+use name\ns2\Foo2;
+use Exception as Foo1;
+use name\ns2\Foo5;
+
+class Foo3 extends Bar {
+}
+
+new Foo1();
+new Foo4();
+new Bar();
+new foo1(); // case insensitive
+new ns2\Foo2();
+new \name\ns2\Foo5();
+
+namespace name\ns2;
+
+class Foo1 {
+}
+
+class Foo2 {
+}
+
+class Foo5 {
+}
 --EXPECT--
-[line=2, start=6, end=31] Unused import 'Test\UnusedStatement', consider removing
+[line=4, start=31, end=39] The import name\ns1 is never used
+[line=6, start=59, end=67] The import name\ns3 cannot be resolved
+[line=7, start=73, end=86] The import name\ns1\Foo3 is unnecessary
+[line=8, start=110, end=122] The import name\ns2\Bar cannot be resolved
+[line=11, start=174, end=187] The import name\ns2\Foo2 is never used
+[line=12, start=193, end=202] Cannot use Exception as Foo1 because the name is already in use
+[line=13, start=216, end=229] The import name\ns2\Foo5 is never used
+[line=15, start=251, end=254] Bar cannot be resolved to a type
+[line=20, start=288, end=291] Bar cannot be resolved to a type

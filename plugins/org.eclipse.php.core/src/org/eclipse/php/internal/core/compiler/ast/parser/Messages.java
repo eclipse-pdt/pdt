@@ -38,7 +38,18 @@ public class Messages extends NLS {
 	public static String BodyForAbstractMethod;
 	public static String MethodRequiresBody;
 	public static String AbstractMethodsInConcreteClass;
-
+	public static String UndefinedType;
+	public static String AbstractMethodMustBeImplemented;
+	public static String ImportNotFound;
+	public static String DuplicateImport;
+	public static String DuplicateDeclaration;
+	public static String UnusedImport;
+	public static String UnnecessaryImport;
+	public static String ClassExtendFinalClass;
+	public static String CannotInstantiateType;
+	public static String SuperclassMustBeAClass;
+	public static String SuperInterfaceMustBeAnInterface;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
