@@ -59,7 +59,10 @@ public final class CorrectionMessages extends NLS {
 	public static String CorrectPackageDeclarationProposal_remove_description;
 	public static String CorrectPackageDeclarationProposal_add_description;
 	public static String CorrectPackageDeclarationProposal_change_description;
-
+	public static String RemoveUnusedUseStatementProposal_removeunusedusestatement_description;
+	public static String RemoveUnusedUseStatementProposal_removeunnecessaryusestatement_description;
+	public static String RemoveUnusedUseStatementProposal_removeduplicateusestatement_description;
+	
 	public static String ChangeCorrectionProposal_0;
 	public static String ChangeCorrectionProposal_2;
 	public static String ChangeCorrectionProposal_5;

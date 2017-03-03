@@ -1,0 +1,27 @@
+--TEST--
+Test use statement
+--FILE--
+<?php
+namespace error2\ns1;
+
+use error3\ns2\Bar;
+
+class Foo1 {
+
+    function test(): Bar {
+    }
+
+    function test1(): Bar1 {
+    }
+
+}
+
+namespace error3\ns2;
+
+class Bar {
+}
+
+interface Bar1 {
+}
+--EXPECT--
+[line=11, start=120, end=124] Bar1 cannot be resolved to a type

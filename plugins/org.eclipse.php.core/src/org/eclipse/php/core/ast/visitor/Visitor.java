@@ -378,4 +378,9 @@ public interface Visitor {
 	public boolean visit(FinallyClause YieldExpression);
 
 	public void endVisit(FinallyClause YieldExpression);
+
+	// php7.0
+	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration);
+
+	public void endVisit(AnonymousClassDeclaration anonymousClassDeclaration);
 }
