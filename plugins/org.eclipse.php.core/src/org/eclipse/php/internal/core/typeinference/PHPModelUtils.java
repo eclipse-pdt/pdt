@@ -51,7 +51,10 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.*;
+import org.eclipse.php.internal.core.Constants;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -63,6 +66,10 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 
 public class PHPModelUtils {
 
+	/**
+	 * User-readable string for separating list items (e.g. ", ").
+	 */
+	public final static String COMMA_STRING = ", "; //$NON-NLS-1$
 	public static final String ENCLOSING_TYPE_SEPARATOR = new String(
 			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); // $NON-NLS-1$
 
@@ -2352,6 +2359,28 @@ public class PHPModelUtils {
 			}
 		}
 		return elements;
+	}
+
+	public static void getMethodLabel(IMethod method, StringBuilder buf) {
+		try {
+			buf.append(method.getElementName());
+			buf.append('(');
+			final IParameter[] params = method.getParameters();
+			for (int i = 0, nParams = params.length; i < nParams; i++) {
+				if (i > 0) {
+					buf.append(COMMA_STRING);
+				}
+				if (params[i].getType() != null) {
+					buf.append(params[i].getType());
+				} else {
+					buf.append(params[i].getName());
+				}
+			}
+			buf.append(')');
+
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
 	}
 
 }

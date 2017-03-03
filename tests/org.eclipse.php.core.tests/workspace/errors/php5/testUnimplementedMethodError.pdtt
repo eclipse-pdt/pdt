@@ -1,0 +1,23 @@
+--TEST--
+Test unimplemented method error check
+--FILE--
+<?php
+class Bar extends Foo {
+
+    function test2() {
+    }
+
+}
+
+abstract class Foo {
+
+    abstract function test();
+
+    abstract function test2();
+    
+    function test3() {
+    }
+
+}
+--EXPECT--
+[line=2, start=12, end=15] The type Bar must implement the inherited abstract method Foo::test()
