@@ -1,43 +1,41 @@
 --TEST--
-Bug 477908 - Use statement validator search occurrences in comments
+Test organize use statements with multi namespace declarations
 --CONFIG--
 command_id: org.eclipse.php.ui.editor.organize.use.statements
 --FILE--
 <?php
-use Boo\F;
-use Boo\E;
-use Boo\D;
-use Boo\C;
-use Boo\A;
-use Boo\B;
+namespace name\ns1;
 
-//new A();
-new A();
-new B();
-//new C();
-/*
-new D();
-*/
-/**
- *new E();
- */
-new F();
+class Foo extends Bar {
+}
+
+namespace name\ns2;
+
+class Foo extends Bar {
+}
+
+namespace name\ns3;
+
+class Bar {
+}
 ||
 --EXPECT--
 <?php
-use Boo\A;
-use Boo\B;
-use Boo\E;
-use Boo\F;
+namespace name\ns1;
 
-//new A();
-new A();
-new B();
-//new C();
-/*
-new D();
-*/
-/**
- *new E();
- */
-new F();
+use name\ns3\Bar;
+
+class Foo extends Bar {
+}
+
+namespace name\ns2;
+
+use name\ns3\Bar;
+
+class Foo extends Bar {
+}
+
+namespace name\ns3;
+
+class Bar {
+}
