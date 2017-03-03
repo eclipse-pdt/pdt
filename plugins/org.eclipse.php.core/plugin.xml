@@ -158,12 +158,12 @@
 			nature="org.eclipse.php.core.PHPNature">
 		</buildParticipant>
 		<buildParticipant
-			class="org.eclipse.php.internal.core.builder.OrganizeBuildParticipantFactory"
-			id="org.eclipse.php.core.buildParticipant.organizeUseStatements"
-			name="%organizeBuildParticipant.name"
-			nature="org.eclipse.php.core.PHPNature">
-			<requires id="org.eclipse.php.core.buildParticipant.parser" />
-		</buildParticipant>
+             class="org.eclipse.php.internal.core.builder.ValidatorBuildParticipantFactory"
+             id="org.eclipse.php.core.buildParticipant.validator"
+             name="%validatorBuildParticipant.name"
+             nature="org.eclipse.php.core.PHPNature">
+             <requires id="org.eclipse.php.core.buildParticipant.parser" />
+     	</buildParticipant>
 		<buildParticipant
 			class="org.eclipse.php.internal.core.builder.TaskTagBuildParticipantFactory"
 			id="org.eclipse.php.core.buildParticipant.findTaskTags"
