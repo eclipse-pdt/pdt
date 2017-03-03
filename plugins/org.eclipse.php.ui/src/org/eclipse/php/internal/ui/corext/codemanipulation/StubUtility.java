@@ -12,19 +12,18 @@
 package org.eclipse.php.internal.ui.corext.codemanipulation;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ImportContainer;
+import org.eclipse.dltk.internal.core.ImportDeclaration;
 import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.internal.ui.DLTKUIStatus;
 import org.eclipse.jface.text.BadLocationException;
@@ -37,9 +36,17 @@ import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
+import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.ast.util.Signature;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContext;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
@@ -62,6 +69,146 @@ public class StubUtility {
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.INTERFACEBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.ENUMBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.ANNOTATIONBODY_ID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static MethodDeclaration createImplementationStub(@NonNull ISourceModule unit,
+			NamespaceDeclaration namespace, ASTRewrite rewrite, ImportRewrite imports, IMethod method, boolean deferred)
+			throws CoreException {
+		Assert.isNotNull(imports);
+		Assert.isNotNull(rewrite);
+
+		AST ast = rewrite.getAST();
+		MethodDeclaration decl = ast.newMethodDeclaration();
+		decl.setModifier(getImplementationModifiers(ast, method, deferred));
+		FunctionDeclaration func = ast.newFunctionDeclaration();
+		func.setFunctionName(ast.newIdentifier(method.getElementName()));
+		decl.setFunction(func);
+
+		IParameter[] typeParams = method.getParameters();
+		List<FormalParameter> typeParameters = decl.getFunction().formalParameters();
+
+		ISourceModule sourceModule = method.getSourceModule();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		org.eclipse.dltk.ast.declarations.MethodDeclaration methodDeclaration = PHPModelUtils
+				.getNodeByMethod(moduleDeclaration, method);
+		List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter> arguments = (List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter>) methodDeclaration
+				.getArguments();
+
+		boolean supportNullable = ProjectOptions.getPHPVersion(unit).isGreaterThan(PHPVersion.PHP7_0);
+		Map<String, ImportDeclaration> importContainers = getImportContainer(method);
+		String declaringNamespace = getDeclaringNamespace(method);
+		if (typeParams != null) {
+			for (int i = 0; i < typeParams.length; i++) {
+				FormalParameter newTypeParam = ast.newFormalParameter();
+				org.eclipse.php.core.compiler.ast.nodes.FormalParameter currTypeParam = arguments.get(i);
+				IParameter curr = typeParams[i];
+
+				if (currTypeParam.getParameterType() != null) {
+					String typeName = addImports(namespace, curr.getType(), declaringNamespace, importContainers,
+							imports);
+					if (typeName != null) {
+						String parameterType = curr.getType();
+						if (supportNullable
+								&& ((FullyQualifiedReference) currTypeParam.getParameterType()).isNullable()) {
+							parameterType = '?' + parameterType;
+						}
+						newTypeParam.setParameterType(ast.newIdentifier(parameterType));
+					}
+				}
+				newTypeParam.setParameterName(ast.newIdentifier(curr.getName()));
+				if (curr.getDefaultValue() != null) {
+					newTypeParam.setDefaultValue(ast.newIdentifier(curr.getDefaultValue()));
+				}
+				typeParameters.add(newTypeParam);
+			}
+		}
+
+		FullyQualifiedReference returnType = (FullyQualifiedReference) ((PHPMethodDeclaration) methodDeclaration)
+				.getReturnType();
+		if (returnType != null && supportNullable) {
+			String returnTypeName = returnType.getName();
+			if (returnType.isNullable()) {
+				returnTypeName = '?' + returnTypeName;
+			}
+			func.setReturnType(ast.newIdentifier(returnTypeName));
+			addImports(namespace, returnType.getName(), declaringNamespace, importContainers, imports);
+		}
+		if (!deferred) {
+			Block body = ast.newBlock();
+			func.setBody(body);
+		}
+		return decl;
+	}
+
+	private static String getDeclaringNamespace(IMethod method) {
+		IType namespace = PHPModelUtils.getCurrentNamespace(method);
+		if (namespace != null) {
+			return namespace.getElementName();
+		}
+		return "";
+	}
+
+	private static int getImplementationModifiers(AST ast, IMethod method, boolean deferred) throws ModelException {
+		int modifiers = method.getFlags() & ~Modifiers.AccAbstract & ~Modifiers.AccPrivate;
+		if (deferred) {
+			modifiers = modifiers & ~Modifiers.AccProtected;
+			modifiers = modifiers | Modifiers.AccPublic;
+		}
+		return modifiers;
+	}
+
+	private static Map<String, ImportDeclaration> getImportContainer(IMethod method) throws ModelException {
+		Map<String, ImportDeclaration> importContainers = new HashMap<String, ImportDeclaration>();
+		ImportContainersFinder finder = new ImportContainersFinder(importContainers);
+		method.getSourceModule().accept(finder);
+		return importContainers;
+	}
+
+	private static String addImports(NamespaceDeclaration namespace, String typeName, String declaringNamespace,
+			Map<String, ImportDeclaration> importContainers, ImportRewrite imports) {
+		if (PHPSimpleTypes.isSimpleType(typeName)) {
+			return typeName;
+		}
+		ImportDeclaration importDeclaration = importContainers.get(typeName);
+		if (importDeclaration != null) {
+			typeName = importDeclaration.getElementName();
+		} else if (typeName != null && declaringNamespace != null && !declaringNamespace.equals("")) { //$NON-NLS-1$
+			typeName = declaringNamespace + NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+		}
+		if (typeName != null) {
+			imports.addImport(namespace, typeName);
+			return typeName;
+		}
+		return null;
+	}
+
+	private static class ImportContainersFinder implements IModelElementVisitor {
+
+		Map<String, ImportDeclaration> importContainers;
+
+		public ImportContainersFinder(Map<String, ImportDeclaration> importContainers) {
+			this.importContainers = importContainers;
+		}
+
+		@Override
+		public boolean visit(IModelElement element) {
+			if (element instanceof ImportContainer) {
+				try {
+					for (IModelElement ele : ((ImportContainer) element).getChildren()) {
+						if (!importContainers.containsKey(ele.getElementName())) {
+							importContainers.put(PHPModelUtils.extractElementName(ele.getElementName()),
+									(ImportDeclaration) ele);
+						}
+					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+				}
+				return false;
+			}
+			return true;
+		}
+
 	}
 
 	/*

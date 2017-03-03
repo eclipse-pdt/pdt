@@ -1,0 +1,22 @@
+--TEST--
+Test type reference error check
+--FILE--
+<?php
+namespace error2\ns1;
+
+use error2\ns2\Trait2;
+
+class Foo1 {
+
+    use Trait1, Trait2, \error2\ns2\Trait3;
+
+}
+
+namespace error2\ns2;
+
+trait Trait2 {
+}
+trait Trait3 {
+}
+--EXPECT--
+[line=8, start=75, end=81] Trait1 cannot be resolved to a type

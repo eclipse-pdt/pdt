@@ -43,6 +43,7 @@ import org.eclipse.php.internal.core.search.Messages;
 /**
  * @author Yannick de Lange <yannickl88@gmail.com>
  */
+@Deprecated
 public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantType implements IExecutableExtension {
 
 	private static final String UNUSED_MESSAGE = CoreMessages.getString("use_unused"); //$NON-NLS-1$

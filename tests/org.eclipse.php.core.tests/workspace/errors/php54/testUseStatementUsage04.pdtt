@@ -2,36 +2,18 @@
 Test unused use statement
 --FILE--
 <?php
-namespace gossi\swagger;
+namespace name\ns1;
 
-use gossi\swagger\parts\DescriptionPart;
-use gossi\swagger\parts\ExtensionPart;
-use gossi\swagger\parts\UrlPart;
-use phootwork\collection\CollectionUtils;
-use phootwork\lang\Arrayable;
+use name\ns2;
+use name\ns2\Foo;
 
-class ExternalDocs extends AbstractModel implements Arrayable {
+class Foo3 {
+    use Foo, ns2\Foo;
 
-	use DescriptionPart;
-	use UrlPart;
-	use ExtensionPart;
+}
 
-	public function __construct($contents = []) {
-		$this->parse($contents);
-	}
+namespace name\ns2;
 
-	private function parse($contents = []) {
-		$data = CollectionUtils::toMap($contents);
-
-		// parts
-		$this->parseDescription($data);
-		$this->parseUrl($data);
-		$this->parseExtensions($data);
-	}
-
-	public function toArray() {
-		return $this->export('description', 'url');
-	}
-
+trait Foo {
 }
 --EXPECT--

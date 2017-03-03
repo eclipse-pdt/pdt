@@ -1,0 +1,8 @@
+--TEST--
+Test type reference error check
+--FILE--
+<?php
+
+new Foo100();
+--EXPECT--
+[line=3, start=11, end=17] Foo100 cannot be resolved to a type
