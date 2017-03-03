@@ -118,6 +118,9 @@ public class LambdaFunctionDeclaration extends Expression {
 		setStatic(isStatic);
 		this.staticStart = staticStart;
 		this.returnType = returnType;
+		if (this.returnType != null) {
+			this.returnType.setParent(this, RETURN_TYPE_PROPERTY);
+		}
 	}
 
 	public LambdaFunctionDeclaration(AST ast) {
@@ -139,6 +142,9 @@ public class LambdaFunctionDeclaration extends Expression {
 		for (ASTNode node : this.lexicalVariables) {
 			node.accept(visitor);
 		}
+		if (returnType != null) {
+			returnType.accept(visitor);
+		}
 		if (body != null) {
 			body.accept(visitor);
 		}
@@ -152,6 +158,9 @@ public class LambdaFunctionDeclaration extends Expression {
 		for (ASTNode node : this.lexicalVariables) {
 			node.accept(visitor);
 		}
+		if (returnType != null) {
+			returnType.accept(visitor);
+		}
 		if (body != null) {
 			body.traverseTopDown(visitor);
 		}
@@ -163,6 +172,9 @@ public class LambdaFunctionDeclaration extends Expression {
 		}
 		for (ASTNode node : this.lexicalVariables) {
 			node.accept(visitor);
+		}
+		if (returnType != null) {
+			returnType.accept(visitor);
 		}
 		if (body != null) {
 			body.traverseBottomUp(visitor);

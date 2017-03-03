@@ -1326,13 +1326,8 @@
 			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.add.objectoperator" />
 		<command name="%toggleMarkOccurrences.label" description="%toggleMarkOccurrences.description"
 			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.toggleMarkOccurrences" />
-		<command
-        categoryId="org.eclipse.php.ui.category.source"
-        defaultHandler="org.eclipse.php.internal.ui.actions.OrganizeUseStatementsHandler"
-        description="%ActionDefinition.organizeUseStatements.description"
-        id="org.eclipse.php.ui.editor.organize.use.statements"
-        name="%ActionDefinition.organizeUseStatements.name"/>
-
+		<command name="%ActionDefinition.organizeUseStatements.name"  description="%ActionDefinition.organizeUseStatements.description"
+			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.editor.organize.use.statements" />
 		<!-- perspectives -->
 		<command name="%PerspectiveCommand.php.name" description="%PerspectiveCommand.php.description"
 			categoryId="org.eclipse.ui.category.perspectives" id="org.eclipse.php.perspective" />
