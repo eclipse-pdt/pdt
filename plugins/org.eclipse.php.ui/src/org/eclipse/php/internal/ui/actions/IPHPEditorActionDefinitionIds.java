@@ -198,6 +198,8 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 
 	public static final String OPEN_DECLARATION = "org.eclipse.php.ui.edit.text.open.editor"; //$NON-NLS-1$
 
+	public static final String ORGANIZE_USE_STATEMENT = "org.eclipse.php.ui.editor.organize.use.statements"; //$NON-NLS-1$
+
 	/**
 	 * Action definition ID of the navigate -> open type hierarchy action (value
 	 * <code>"org.eclipse.php.ui.edit.text.php.open.type.hierarchy"</code>).

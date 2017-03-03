@@ -14,6 +14,7 @@ package org.eclipse.php.core.compiler.ast.nodes;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -85,6 +86,14 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 
 	public void setReturnType(TypeReference returnType) {
 		this.returnType = returnType;
+	}
+
+	@Override
+	protected void traverseChildNodes(ASTVisitor visitor) throws Exception {
+		super.traverseChildNodes(visitor);
+		if (this.returnType != null) {
+			this.returnType.traverse(visitor);
+		}
 	}
 
 	/**
