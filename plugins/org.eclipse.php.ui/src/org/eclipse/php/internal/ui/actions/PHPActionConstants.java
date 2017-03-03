@@ -112,6 +112,8 @@ public class PHPActionConstants {
 	 */
 	public static final String FORMAT = "org.eclipse.php.ui.actions.Format"; //$NON-NLS-1$
 
+	public static final String ORGANIZE_USE_STATEMENTS = "org.eclipse.pdt.ui.actions.OrganizeUseStatements"; //$NON-NLS-1$
+
 	/**
 	 * Source menu: name of standard Format Element global action (value
 	 * <code>"org.eclipse.php.ui.actions.FormatElement"</code>).
