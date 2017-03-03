@@ -11,19 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.text.edits.TextEdit;
@@ -46,6 +44,8 @@ public class Program extends ASTNode {
 	 * Comments array of the php program
 	 */
 	private final ASTNode.NodeList<Comment> comments = new ASTNode.NodeList<Comment>(COMMENTS_PROPERTY);
+
+	private Map<NamespaceDeclaration, List<UseStatement>> fUseStatements = new HashMap<>();
 
 	/**
 	 * The structural property of this node type.
@@ -653,4 +653,68 @@ public class Program extends ASTNode {
 		}
 		return null;
 	}
+
+	public List<UseStatement> getUseStatements(int position) {
+		NamespaceDeclaration namespace = getNamespaceDeclaration(position);
+		if (fUseStatements.get(namespace) == null) {
+			UseStatementFinder visitor = new UseStatementFinder();
+			if (namespace != null) {
+				namespace.accept(visitor);
+			} else {
+				this.accept(visitor);
+			}
+			fUseStatements.put(namespace, visitor.getUseStatements());
+		}
+		return fUseStatements.get(namespace);
+	}
+
+	public NamespaceDeclaration getNamespaceDeclaration(int position) {
+		NamespaceFinder finder = new NamespaceFinder(position);
+		this.accept(finder);
+		return finder.getNamespace();
+	}
+
+	private class NamespaceFinder extends ApplyAll {
+		private int position;
+		private NamespaceDeclaration currentNamespace = null;
+
+		public NamespaceFinder(int position) {
+			this.position = position;
+		}
+
+		@Override
+		protected boolean apply(ASTNode node) {
+			if (node instanceof NamespaceDeclaration) {
+				if (node.getStart() <= position && node.getEnd() >= position)
+					currentNamespace = (NamespaceDeclaration) node;
+				return false;
+			}
+			return true;
+		}
+
+		public NamespaceDeclaration getNamespace() {
+			return currentNamespace;
+		}
+
+	}
+
+	private class UseStatementFinder extends ApplyAll {
+
+		private List<UseStatement> useStatements = new ArrayList<UseStatement>();
+
+		@Override
+		protected boolean apply(ASTNode node) {
+			if (node instanceof UseStatement) {
+				useStatements.add((UseStatement) node);
+				return false;
+			}
+			return true;
+		}
+
+		public List<UseStatement> getUseStatements() {
+			return useStatements;
+		}
+
+	}
+
 }

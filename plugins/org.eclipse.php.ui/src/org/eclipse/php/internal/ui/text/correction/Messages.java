@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.text.correction;
 
 import org.eclipse.osgi.util.NLS;
 
+import com.ibm.icu.text.MessageFormat;
+
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.text.correction.messages"; //$NON-NLS-1$
 	public static String ContributedProcessorDescriptor_4;
@@ -28,6 +30,14 @@ public class Messages extends NLS {
 	public static String ProblemLocation_7;
 	public static String ProblemLocation_8;
 	public static String ProblemLocation_9;
+
+	public static String format(String message, Object object) {
+		return MessageFormat.format(message, new Object[] { object });
+	}
+
+	public static String format(String message, Object[] objects) {
+		return MessageFormat.format(message, objects);
+	}
 
 	static {
 		// initialize resource bundle

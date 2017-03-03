@@ -71,7 +71,7 @@ public class NamespaceReference extends TypeReference {
 
 	public String getName() {
 		StringBuilder buf = new StringBuilder();
-		if (global) {
+		if (!super.getName().equals("") && global) {
 			buf.append(NAMESPACE_SEPARATOR);
 		}
 		if (local) {
