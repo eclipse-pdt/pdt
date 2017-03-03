@@ -79,8 +79,6 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
 		if (s.getPHPDoc() != null)
 			s.getPHPDoc().traverse(this);
-		if (s.getReturnType() != null)
-			s.getReturnType().traverse(this);
 		return visitGeneral(s);
 	}
 

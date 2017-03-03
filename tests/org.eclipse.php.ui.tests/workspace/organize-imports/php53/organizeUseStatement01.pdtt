@@ -1,0 +1,48 @@
+--TEST--
+Test organize imports action
+--FILE--
+<?php
+namespace name;
+
+use Boo\A;
+use Boo\D;
+use Error;
+use name\Foo;
+use name\Foo;
+
+new Exception();
+new C();
+new Foo();
+
+class Foo extends Error {
+}
+
+namespace Boo;
+
+class C {
+}
+
+class D {
+}
+--EXPECT--
+<?php
+namespace name;
+
+use Boo\C;
+use Error;
+use Exception;
+
+new Exception();
+new C();
+new Foo();
+
+class Foo extends Error {
+}
+
+namespace Boo;
+
+class C {
+}
+
+class D {
+}

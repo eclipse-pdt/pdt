@@ -1,0 +1,38 @@
+--TEST--
+Test organize use statements for keywords
+--FILE--
+<?php
+namespace name;
+
+class Foo extends Bar {
+
+    function test() {
+        parent::class;
+    }
+
+}
+
+namespace name1;
+
+class Bar {
+
+}
+--EXPECT--
+<?php
+namespace name;
+
+use name1\Bar;
+
+class Foo extends Bar {
+
+    function test() {
+        parent::class;
+    }
+
+}
+
+namespace name1;
+
+class Bar {
+
+}

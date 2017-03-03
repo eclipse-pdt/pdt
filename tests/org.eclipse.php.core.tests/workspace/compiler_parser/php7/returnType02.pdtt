@@ -23,14 +23,14 @@ $foo = function (): MySpace\Test {
 	</InterfaceDeclaration>
 	<ClassDeclaration start="57" end="109" modifiers="" name="C">
 		<PHPMethodDeclaration start="68" end="107" modifiers="static" name="foo">
-			<ReturnType>
-				<FullyQualifiedReference start="96" end="102" name="string">
-				</FullyQualifiedReference>
-			</ReturnType>
 			<FormalParameter start="88" end="93" modifiers="" isMandatory="true">
 				<VariableReference start="88" end="93" name="$var1">
 				</VariableReference>
 			</FormalParameter>
+			<ReturnType>
+				<FullyQualifiedReference start="96" end="102" name="string">
+				</FullyQualifiedReference>
+			</ReturnType>
 		</PHPMethodDeclaration>
 	</ClassDeclaration>
 	<ExpressionStatement start="110" end="147">
