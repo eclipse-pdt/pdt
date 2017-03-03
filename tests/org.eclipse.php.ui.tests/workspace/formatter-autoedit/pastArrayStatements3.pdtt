@@ -1,0 +1,19 @@
+--TEST--
+Bug 512891 - Autoedit should not indent lines inside quoted strings and heredocs
+--FILE--
+<?php
+$infos = array_merge(array(
+		'a' => $numeroGeremi,
+		|'b' => $contactEmail,
+		'c' => $numeroGeremi|
+), $params);
+--OTHER--
+  'd' => $numeroGeremi,
+                 
+--EXPECT--
+<?php
+$infos = array_merge(array(
+		'a' => $numeroGeremi,
+		'd' => $numeroGeremi,
+		
+), $params);

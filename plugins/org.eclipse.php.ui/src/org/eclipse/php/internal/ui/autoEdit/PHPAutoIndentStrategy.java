@@ -103,14 +103,15 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 					return;
 				}
 
-				// be smart and remove remaining line characters after selection
-				// when those characters are all blank characters
+				// be smart and remove remaining blank characters after
+				// selection
 				int selectionEndOffset = command.offset + command.length;
 				region = document.getLineInformation(document.getLineOfOffset(selectionEndOffset));
-				int lineEndLength = region.getOffset() + region.getLength() - selectionEndOffset;
-				if (lineEndLength > 0 && StringUtils.isBlank(document.get(selectionEndOffset, lineEndLength))) {
-					// adjust the length to include remaining line characters
-					command.length += lineEndLength;
+				for (int i = selectionEndOffset, lineEndOffset = region.getOffset()
+						+ region.getLength(); i < lineEndOffset
+								&& (document.getChar(i) == ' ' || document.getChar(i) == '\t'); i++) {
+					// adjust the length to include the blank character
+					command.length++;
 				}
 			}
 		} catch (BadLocationException e) {

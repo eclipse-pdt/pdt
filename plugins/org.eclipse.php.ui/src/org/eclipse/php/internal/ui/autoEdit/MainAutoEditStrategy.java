@@ -41,19 +41,29 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 		if (partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 			// case of multi line comment or php doc
 			docBlockAutoEditStrategy.customizeDocumentCommand(document, command);
-		} else if (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
+			return;
+		}
+
+		String previousPartitionType = command.offset > 0
+				? FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset - 1) : null;
+
+		if (previousPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING
+				&& partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
+			String nextPartitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
+					true);
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=512891
 			// At this point we only know that command.offset is inside or just
 			// after some "quoted string".
-			// Do an additional check to be sure we indent lines only when
-			// command.offset is lying outside "quoted strings".
-			if (FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
-					true) != PHPPartitionTypes.PHP_QUOTED_STRING) {
-				indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+			// Do an additional check to be sure we handle lines only when
+			// command.offset is lying inside "quoted strings".
+			if (nextPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
+				quotesAutoEditStrategy.customizeDocumentCommand(document, command);
+				return;
 			}
-			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
-		} else if (partitionType == PHPPartitionTypes.PHP_DEFAULT
-				|| partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) {
+		}
+
+		if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT
+				|| partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
 			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
 			if (caseDefaultAutoEditStrategy.wasApplied()) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=499818
