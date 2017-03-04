@@ -22,6 +22,7 @@ import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.php.internal.core.ast.rewrite.IndentManipulation;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
@@ -684,4 +685,41 @@ public class Strings {
 		matcher.find();
 		return matcher.replaceAll(" "); //$NON-NLS-1$
 	}
+
+	/**
+	 * Sets the given <code>styler</code> to use for
+	 * <code>matchingRegions</code> (obtained from
+	 * {@link org.eclipse.jdt.core.search.SearchPattern#getMatchingRegions}) in
+	 * the <code>styledString</code> starting from the given <code>index</code>.
+	 * 
+	 * @param styledString
+	 *            the styled string to mark
+	 * @param index
+	 *            the index from which to start marking
+	 * @param matchingRegions
+	 *            the regions to mark
+	 * @param styler
+	 *            the styler to use for marking
+	 */
+	public static void markMatchingRegions(StyledString styledString, int index, int[] matchingRegions, Styler styler) {
+		if (matchingRegions != null) {
+			int offset = -1;
+			int length = 0;
+			for (int i = 0; i + 1 < matchingRegions.length; i = i + 2) {
+				if (offset == -1)
+					offset = index + matchingRegions[i];
+
+				// Concatenate adjacent regions
+				if (i + 2 < matchingRegions.length
+						&& matchingRegions[i] + matchingRegions[i + 1] == matchingRegions[i + 2]) {
+					length = length + matchingRegions[i + 1];
+				} else {
+					styledString.setStyle(offset, length + matchingRegions[i + 1], styler);
+					offset = -1;
+					length = 0;
+				}
+			}
+		}
+	}
+
 }
