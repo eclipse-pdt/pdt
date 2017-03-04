@@ -37,7 +37,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 		pos = pos == -1 ? pos2 : (pos2 == -1 ? pos : Math.min(pos, pos2));
 		if (pos != -1) {
 			final String type = pattern.substring(0, pos);
-			return extractTypeChars(type).toCharArray();
+			return parseType(type).getSimpleName().toCharArray();
 		}
 		return null;
 	}
@@ -67,6 +67,8 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 			final int begin = pos + TYPE_DELIMITER.length();
 			if (begin < pattern.length()) {
 				return pattern.substring(begin);
+			} else {
+				return ""; //$NON-NLS-1$
 			}
 		}
 		return pattern;
@@ -90,7 +92,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 	}
 
 	public ITypePattern parseType(String patternString) {
-		return new TypePatten(extractPHPTypeQualification(patternString), extractPHPTypeChars(patternString));
+		return new TypePattern(extractPHPTypeQualification(patternString), extractPHPTypeChars(patternString));
 
 	}
 }

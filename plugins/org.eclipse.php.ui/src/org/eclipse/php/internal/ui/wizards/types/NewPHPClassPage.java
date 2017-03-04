@@ -22,7 +22,6 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.dltk.ui.dialogs.ITypeInfoFilterExtension;
 import org.eclipse.dltk.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -31,8 +30,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.php.internal.ui.preferences.includepath.IncludePathUtils;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -302,11 +301,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 							return false;
 						};
 					}
-				}, PHPLanguageToolkit.getDefault());
-
-		dialog.setListLabelProvider(new PHPFullPathLabelProvider());
-		dialog.setListSelectionLabelDecorator(new PHPFullPathLabelProvider());
-		dialog.setDetailsLabelProvider(new StatusLineLabelProvider());
+				});
 
 		dialog.setTitle(Messages.NewPHPClassPage_0);
 		dialog.setMessage(Messages.NewPHPClassPage_15);
