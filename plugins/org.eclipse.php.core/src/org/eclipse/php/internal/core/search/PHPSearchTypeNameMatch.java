@@ -28,4 +28,15 @@ public class PHPSearchTypeNameMatch extends DLTKSearchTypeNameMatch {
 	public String getFullyQualifiedName() {
 		return getType().getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
 	}
+
+	@Override
+	public String getTypeContainerName() {
+		IType outerType = getType().getDeclaringType();
+		if (outerType != null) {
+			return outerType.getTypeQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
+		} else {
+			return getType().getScriptFolder().getElementName();
+		}
+	}
+
 }

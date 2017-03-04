@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.search.TypeNameMatch;
 import org.eclipse.dltk.internal.corext.util.History;
 import org.eclipse.dltk.internal.corext.util.QualifiedTypeNameHistory;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
-import org.eclipse.dltk.internal.ui.util.TypeNameMatchLabelProvider;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -202,8 +201,8 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 		// remember selection
 		ISelection sel = editor.getSelectionProvider().getSelection();
 		TypeNameMatch[] result = null;
-		ILabelProvider labelProvider = new PHPTypeNameMatchLabelProvider(TypeNameMatchLabelProvider.SHOW_FULLYQUALIFIED,
-				PHPUILanguageToolkit.getInstance());
+		ILabelProvider labelProvider = new PHPTypeNameMatchLabelProvider(
+				PHPTypeNameMatchLabelProvider.SHOW_FULLYQUALIFIED, PHPUILanguageToolkit.getInstance());
 
 		MultiElementListSelectionDialog dialog = new MultiElementListSelectionDialog(getShell(), labelProvider) {
 			@Override

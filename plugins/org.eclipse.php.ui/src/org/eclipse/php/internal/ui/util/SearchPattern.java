@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
+import org.eclipse.dltk.internal.core.search.StringOperation;
+
 /**
  * Class SearchPattern is a utility class for any search utility that has to
  * find matches for search wildcards patterns.
@@ -25,12 +27,12 @@ public class SearchPattern {
 	}
 
 	/**
-	 * Checks if a given string matches a given pattern. The pattern can contain
-	 * the '*' symbol which can replace any series of carachters, and the '?'
-	 * symbol which can replace any single character. If third argument is
-	 * <code>true</code>, then pattern match behaves as if the given pattern
-	 * ends with '*', thus, for example, matching 'aabbc' string with 'aabb'
-	 * pattern will return a true result. The match is case sensitive.
+	 * Checks if a given string matches a given pattern. The pattern can contain the
+	 * '*' symbol which can replace any series of carachters, and the '?' symbol
+	 * which can replace any single character. If third argument is
+	 * <code>true</code>, then pattern match behaves as if the given pattern ends
+	 * with '*', thus, for example, matching 'aabbc' string with 'aabb' pattern will
+	 * return a true result. The match is case sensitive.
 	 * 
 	 * @param pattern
 	 *            The string pattern
@@ -73,12 +75,12 @@ public class SearchPattern {
 	}
 
 	/**
-	 * Checks if a given string matches a given pattern. The pattern can contain
-	 * the '*' symbol which can replace any series of carachters, and the '?'
-	 * symbol which can replace any single character. If fourth argument is
-	 * <code>true</code>, then pattern match behaves as if the given pattern
-	 * ends with '*', thus, for example, matching 'aabbc' string with 'aabb'
-	 * pattern will return a true result.
+	 * Checks if a given string matches a given pattern. The pattern can contain the
+	 * '*' symbol which can replace any series of carachters, and the '?' symbol
+	 * which can replace any single character. If fourth argument is
+	 * <code>true</code>, then pattern match behaves as if the given pattern ends
+	 * with '*', thus, for example, matching 'aabbc' string with 'aabb' pattern will
+	 * return a true result.
 	 * 
 	 * @param pattern
 	 *            The string pattern
@@ -105,12 +107,11 @@ public class SearchPattern {
 	}
 
 	/**
-	 * Checks if a given string matches a given pattern. The pattern can contain
-	 * the '*' symbol which can replace any series of carachters, and the '?'
-	 * symbol which can replace any single character. The pattern match behaves
-	 * as if the given pattern ends with '*', thus, for example, matching
-	 * 'aabbc' string with 'aabb' pattern will return a true result. The search
-	 * is case sensitive.
+	 * Checks if a given string matches a given pattern. The pattern can contain the
+	 * '*' symbol which can replace any series of carachters, and the '?' symbol
+	 * which can replace any single character. The pattern match behaves as if the
+	 * given pattern ends with '*', thus, for example, matching 'aabbc' string with
+	 * 'aabb' pattern will return a true result. The search is case sensitive.
 	 * 
 	 * @param pattern
 	 *            The string pattern
@@ -120,4 +121,20 @@ public class SearchPattern {
 	public static boolean match(String pattern, String str) {
 		return match(pattern, str, true, true);
 	}
+
+	public static final boolean camelCaseMatch(String pattern, String name, boolean samePartCount) {
+		if (pattern == null)
+			return true; // null pattern is equivalent to '*'
+		if (name == null)
+			return false; // null name cannot match
+
+		return camelCaseMatch(pattern, 0, pattern.length(), name, 0, name.length(), samePartCount);
+	}
+
+	public static final boolean camelCaseMatch(String pattern, int patternStart, int patternEnd, String name,
+			int nameStart, int nameEnd, boolean samePartCount) {
+		return StringOperation.getCamelCaseMatchingRegions(pattern, patternStart, patternEnd, name, nameStart, nameEnd,
+				samePartCount) != null;
+	}
+
 }
