@@ -30,6 +30,16 @@ public class PHPSearchTypeNameMatch extends DLTKSearchTypeNameMatch implements I
 	}
 
 	@Override
+	public String getTypeContainerName() {
+		IType outerType = getType().getDeclaringType();
+		if (outerType != null) {
+			return outerType.getTypeQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
+		} else {
+			return getType().getScriptFolder().getElementName();
+		}
+	}
+
+	@Override
 	public String getContainerName() {
 		return getTypeContainerName();
 	}

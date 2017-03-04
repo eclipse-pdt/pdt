@@ -30,7 +30,6 @@ import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.ui.wizards.TypedElementSelectionValidator;
-import org.eclipse.dltk.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.dltk.ui.dialogs.ITypeInfoFilterExtension;
 import org.eclipse.dltk.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -40,12 +39,12 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -1726,10 +1725,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 							return false;
 						};
 					}
-				}, PHPLanguageToolkit.getDefault());
-		dialog.setListLabelProvider(new PHPFullPathLabelProvider());
-		dialog.setListSelectionLabelDecorator(new PHPFullPathLabelProvider());
-		dialog.setDetailsLabelProvider(new StatusLineLabelProvider());
+				});
 
 		dialog.setTitle(Messages.NewPHPTypePage_interfacesSelection);
 		dialog.setMessage(Messages.NewPHPTypePage_selectInterfaces);
@@ -1767,10 +1763,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 							return false;
 						};
 					}
-				}, PHPLanguageToolkit.getDefault());
-		dialog.setListLabelProvider(new PHPFullPathLabelProvider());
-		dialog.setListSelectionLabelDecorator(new PHPFullPathLabelProvider());
-		dialog.setDetailsLabelProvider(new StatusLineLabelProvider());
+				});
 
 		dialog.setTitle(Messages.NewPHPTypePage_traitsSelection);
 		dialog.setMessage(Messages.NewPHPTypePage_selectTraits);
