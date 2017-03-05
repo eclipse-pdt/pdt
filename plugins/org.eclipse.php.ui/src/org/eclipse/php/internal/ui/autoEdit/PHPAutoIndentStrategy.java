@@ -12,25 +12,14 @@
  **********************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
-import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.IndentationObject;
 import org.eclipse.php.internal.core.format.PhpIndentationFormatter;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
@@ -39,10 +28,7 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
  */
 public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 
-	private DefaultIndentationStrategy defaultStrategy;
-
 	public PHPAutoIndentStrategy() {
-		defaultStrategy = new DefaultIndentationStrategy();
 	}
 
 	@Override
@@ -53,9 +39,6 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		if (c.text != null && c.text.length() > 1 && c.text.trim().length() > 1
 				&& getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_PASTE)) {
 			try {
-				// bug 459462
-				defaultStrategy.setIndentationObject(null);
-
 				smartPaste(d, c);
 			} catch (Exception e) {
 				PHPUiPlugin.log(e);
@@ -81,13 +64,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		if (command.offset == -1 || document.getLength() == 0) {
 			return;
 		}
-		StringBuffer helpBuffer = new StringBuffer();
 		IndentationObject indentationObject = null;
+		char fakeFirstCharAfterCommandText = '#';
 		try {
 			if (document instanceof IStructuredDocument) {
 				indentationObject = new IndentationObject((IStructuredDocument) document);
-				defaultStrategy.placeMatchingBlanksForStructuredDocument((IStructuredDocument) document, helpBuffer,
-						document.getLineOfOffset(command.offset), command.offset);
 				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
 
 				if (command.offset == region.getOffset()) {
@@ -108,131 +89,38 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				// selection
 				int selectionEndOffset = command.offset + command.length;
 				region = document.getLineInformation(document.getLineOfOffset(selectionEndOffset));
-				for (int i = selectionEndOffset, lineEndOffset = region.getOffset()
-						+ region.getLength(); i < lineEndOffset
-								&& (document.getChar(i) == ' ' || document.getChar(i) == '\t'); i++) {
-					// adjust the length to include the blank character
-					command.length++;
+				int i = selectionEndOffset;
+				int lineEndOffset = region.getOffset() + region.getLength();
+				for (; i < lineEndOffset && (document.getChar(i) == ' ' || document.getChar(i) == '\t'); i++) {
+				}
+				// adjust the length to include the blank characters
+				command.length += i - selectionEndOffset;
+				if (i < lineEndOffset) {
+					// we need later to add first non-blank character to command
+					// selection to calculate correctly latest line indentation
+					fakeFirstCharAfterCommandText = document.getChar(i);
 				}
 			}
-		} catch (BadLocationException e) {
-			PHPUiPlugin.log(e);
-		}
 
-		String newline = PHPModelUtils.getLineSeparator(null);
-		IStructuredModel structuredModel = null;
-		try {
-			IProject project = null;
-			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			project = getProject(structuredModel);
-			newline = PHPModelUtils.getLineSeparator(project);
-		} catch (Exception e) {
-			PHPUiPlugin.log(e);
-		} finally {
-			if (structuredModel != null) {
-				structuredModel.releaseFromRead();
-			}
-		}
-		Document tempdocument = new Document(command.text);
-		int lines = tempdocument.getNumberOfLines();
-		// starting empty lines of pasted code.
-		int startingEmptyLines = 0;
-		StringBuilder tempsb = new StringBuilder();
-		try {
-			for (int i = 0; i < lines; i++) {
-				IRegion region = tempdocument.getLineInformation(i);
-				if (tempsb.length() > 0) {
-					tempsb.append(newline);
-				}
-				String currentLine = tempdocument.get(region.getOffset(), region.getLength());
-				if (tempsb.length() == 0) {
-					if (StringUtils.isBlank(currentLine)) {
-						startingEmptyLines++;
-					} else {
-						tempsb.append(currentLine.trim());
-					}
+			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
+			StringBuilder tempsb = new StringBuilder(command.offset + command.text.length() + 1);
+			tempsb.append(document.get(0, command.offset)).append(command.text).append(fakeFirstCharAfterCommandText);
+			newdocument.set(tempsb.toString());
+			PhpIndentationFormatter formatter = new PhpIndentationFormatter(command.offset, command.text.length(),
+					indentationObject);
+			formatter.format(newdocument.getRegionAtCharacterOffset(command.offset));
 
-				} else {
-					tempsb.append(tempdocument.get(region.getOffset(), region.getLength()));
-				}
-			}
-		} catch (BadLocationException e) {
-			PHPUiPlugin.log(e);
-		}
-		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
-		String start = "<?php"; //$NON-NLS-1$
-		newdocument.set(start + newline + tempsb.toString());
-		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(), indentationObject);
-		formatter.format(newdocument.getFirstStructuredDocumentRegion());
-
-		List<String> list = new ArrayList<>();
-		try {
-			int lineNumber = newdocument.getNumberOfLines();
-			for (int i = 0; i < lineNumber; i++) {
-				if (i == 0) {
-					continue;
-				}
-				IRegion region = newdocument.getLineInformation(i);
-				String line = newdocument.get(region.getOffset(), region.getLength());
-				list.add(line);
-			}
-		} catch (BadLocationException e) {
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < startingEmptyLines; i++) {
-			String lineDelimiter = null;
-			try {
-				lineDelimiter = tempdocument.getLineDelimiter(i);
-			} catch (BadLocationException e) {
-			}
-			if (lineDelimiter == null) {
-				lineDelimiter = newline;
-			}
-			sb.append(lineDelimiter);
-		}
-		for (int i = 0; i < list.size(); i++) {
-			if (!formatter.getIgnoreLines().contains(i + 1)) {
-				sb.append(helpBuffer);
-			}
-			sb.append(list.get(i));
-			if (i == list.size() - 1) {
+			if (newdocument.charAt(newdocument.getLength() - 1) == fakeFirstCharAfterCommandText) {
+				// fakeFirstCharAfterCommandText should always be the last
+				// character of newdocument...
+				command.text = newdocument.get(command.offset, newdocument.getLength() - command.offset - 1);
 			} else {
-				String lineDelimiter = null;
-				try {
-					lineDelimiter = tempdocument.getLineDelimiter(startingEmptyLines + i);
-				} catch (BadLocationException e) {
-				}
-				if (lineDelimiter == null) {
-					lineDelimiter = newline;
-				}
-				sb.append(lineDelimiter);
+				// ... or we have to look after it
+				command.text = newdocument.get(command.offset, newdocument.getLength() - command.offset);
+				command.text = command.text.substring(0, command.text.lastIndexOf(fakeFirstCharAfterCommandText));
 			}
-
+		} catch (BadLocationException e) {
+			PHPUiPlugin.log(e);
 		}
-		command.text = sb.toString();
 	}
-
-	/**
-	 * @param doModelForPHP
-	 * @return project from document
-	 */
-	private final static IProject getProject(IStructuredModel doModelForPHP) {
-		final String id = doModelForPHP != null ? doModelForPHP.getId() : null;
-		if (id != null) {
-			final IFile file = getFile(id);
-			if (file != null) {
-				return file.getProject();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param id
-	 * @return the file from document
-	 */
-	private static IFile getFile(final String id) {
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(id));
-	}
-
 }
