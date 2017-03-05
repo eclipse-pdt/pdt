@@ -87,7 +87,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			// get original line information
 			final int lineNumber = document.getLineOfOffset(command.offset);
 			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
-			final int originalLineStart = document.getLineOffset(lineNumber);
+			final int originalLineStart = originalLineInfo.getOffset();
 			int originalIndentSize = 0;
 			int autoIndentSize = 0;
 

@@ -41,7 +41,7 @@ public class PhpIndentationFormatter {
 	private static final byte CHAR_SPACE = ' ';
 
 	private final StringBuffer resultBuffer = new StringBuffer();
-	private boolean isInHeredoc;
+	private boolean isInHeredoc = false;
 	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
 	public PhpIndentationFormatter(int start, int length, IndentationObject indentationObject) {
@@ -57,7 +57,7 @@ public class PhpIndentationFormatter {
 	public void format(IStructuredDocumentRegion sdRegion) {
 		assert sdRegion != null;
 
-		// resolce formatter range
+		// resolve formatter range
 		int regionStart = sdRegion.getStartOffset();
 		int regionEnd = sdRegion.getEnd();
 
@@ -96,7 +96,7 @@ public class PhpIndentationFormatter {
 			// get original line information
 			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
 			final int originalLineStart = originalLineInfo.getOffset();
-			final int originalLineLength = originalLineInfo.getLength();
+			int originalLineLength = originalLineInfo.getLength();
 
 			// fast resolving of empty line
 			if (originalLineLength == 0)
@@ -113,9 +113,9 @@ public class PhpIndentationFormatter {
 			// remove ending spaces.
 			final int formattedLineStart = formattedLineInformation.getOffset();
 			final int formattedTextEnd = formattedLineStart + formattedLineInformation.getLength();
-			final int originalTextEnd = originalLineStart + originalLineLength;
-			if (formattedTextEnd != originalTextEnd) {
-				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, ""); //$NON-NLS-1$
+			if (formattedTextEnd != originalLineStart + originalLineLength) {
+				document.replace(formattedTextEnd, originalLineStart + originalLineLength - formattedTextEnd, ""); //$NON-NLS-1$
+				originalLineLength = formattedTextEnd - originalLineStart;
 				// in case there is no text in the line just quit (since the
 				// formatted of empty line is empty line)
 				if (formattedLineStart == formattedTextEnd) {
@@ -195,8 +195,7 @@ public class PhpIndentationFormatter {
 			// Fill the buffer with blanks as if we added a "\n" to the end of
 			// the prev element.
 			// insertionStrategy.placeMatchingBlanks(editor,doc,insertionStrtegyKey,resultBuffer,startOffset-1);
-			insertionStrategy.placeMatchingBlanks(document, resultBuffer, lineNumber,
-					document.getLineOffset(lineNumber));
+			insertionStrategy.placeMatchingBlanks(document, resultBuffer, lineNumber, originalLineStart);
 
 			// replace the starting spaces
 			final String newIndentation = resultBuffer.toString();
