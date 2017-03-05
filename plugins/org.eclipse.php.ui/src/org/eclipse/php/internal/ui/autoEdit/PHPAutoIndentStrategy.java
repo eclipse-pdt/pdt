@@ -1,5 +1,5 @@
 /**********************************************************************
- Copyright (c) 2000, 2015 IBM Corp. and others.
+ Copyright (c) 2000, 2015, 2017 IBM Corp. and others.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Common Public License v1.0
  which accompanies this distribution, and is available at
@@ -93,8 +93,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				if (command.offset == region.getOffset()) {
 					// nothing to do
 				} else if (StringUtils.isBlank(document.get(region.getOffset(), command.offset - region.getOffset()))) {
-					document.replace(region.getOffset(), command.offset - region.getOffset(), ""); //$NON-NLS-1$
-					// adjust the offset
+					// adjust the length
+					command.length += command.offset - region.getOffset();
+					// and finally adjust the offset
 					command.offset = region.getOffset();
 				} else {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495295

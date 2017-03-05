@@ -124,7 +124,7 @@ public class PhpIndentationFormatter {
 			}
 
 			// get regions
-			final int startingWhiteSpaces = formattedLineStart - originalLineStart;
+			final int endingWhiteSpaces = formattedLineStart - originalLineStart;
 			final IIndentationStrategy insertionStrategy;
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
 			int scriptRegionPos = sdRegion.getStartOffset();
@@ -189,7 +189,7 @@ public class PhpIndentationFormatter {
 			} else if (firstTokenType == PHPRegionTypes.PHP_CLOSETAG) {
 				insertionStrategy = phpCloseTagIndentationStrategy;
 			} else {
-				insertionStrategy = getIndentationStrategy(lineText.charAt(startingWhiteSpaces));
+				insertionStrategy = getIndentationStrategy(lineText.charAt(endingWhiteSpaces));
 			}
 
 			// Fill the buffer with blanks as if we added a "\n" to the end of
@@ -200,7 +200,7 @@ public class PhpIndentationFormatter {
 
 			// replace the starting spaces
 			final String newIndentation = resultBuffer.toString();
-			final String oldIndentation = lineText.substring(0, startingWhiteSpaces);
+			final String oldIndentation = lineText.substring(0, endingWhiteSpaces);
 			char newChar = '\0';
 			if (newIndentation.length() > 0) {
 				newChar = newIndentation.charAt(0);
@@ -210,7 +210,7 @@ public class PhpIndentationFormatter {
 				oldChar = oldIndentation.charAt(0);
 			}
 			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
-				document.replaceText(sdRegion, originalLineStart, startingWhiteSpaces, newIndentation);
+				document.replaceText(sdRegion, originalLineStart, endingWhiteSpaces, newIndentation);
 			}
 
 		} catch (BadLocationException e) {
