@@ -59,7 +59,7 @@ public class PhpIndentationFormatter {
 
 		// resolve formatter range
 		int regionStart = sdRegion.getStartOffset();
-		int regionEnd = sdRegion.getEnd();
+		int regionEnd = sdRegion.getEndOffset();
 
 		int formatRequestStart = getStart();
 		int formatRequestEnd = formatRequestStart + getLength();
@@ -171,7 +171,7 @@ public class PhpIndentationFormatter {
 			}
 
 			if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-				int startLine = document.getLineOfOffset(firstTokenInLine.getStart() + scriptRegionPos);
+				int startLine = document.getLineOfOffset(scriptRegionPos + firstTokenInLine.getStart());
 				if (startLine < lineNumber) {
 					ignoreLines.add(lineNumber);
 					return;
