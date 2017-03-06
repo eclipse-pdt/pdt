@@ -22,6 +22,18 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 
+	public CommentIndentationStrategy() {
+	}
+
+	/**
+	 * 
+	 * @param indentationObject
+	 *            basic indentation preferences, can be null
+	 */
+	public CommentIndentationStrategy(IndentationObject indentationObject) {
+		setIndentationObject(indentationObject);
+	}
+
 	/**
 	 * If we are inside a comment, check the previous line: In case it is the
 	 * comment start (meaning the first line), this line will be indented.

@@ -844,9 +844,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled || progressMonitor.isCanceled()
-					|| fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection)
-							|| fForcedMarkOccurrencesSelection == fSelection)
+			return fCanceled || progressMonitor.isCanceled() || fPostSelectionValidator != null
+					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -3648,7 +3647,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		SourceViewerConfiguration config = getSourceViewerConfiguration();
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (config != null && sourceViewer instanceof ITextViewerExtension7) {
-			((ITextViewerExtension7) sourceViewer).setTabsToSpacesConverter(new TabAutoEditStrategy());
+			// NB: no need to reset the indentation object used by the
+			// TabAutoEditStrategy object because installTabsToSpacesConverter()
+			// is called each time the editor is bound to a new document.
+			TabAutoEditStrategy strategy = new TabAutoEditStrategy(false);
+			((ITextViewerExtension7) sourceViewer).setTabsToSpacesConverter(strategy);
 			updateIndentPrefixes();
 		}
 	}
