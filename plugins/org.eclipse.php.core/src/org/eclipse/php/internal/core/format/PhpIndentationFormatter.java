@@ -126,18 +126,18 @@ public class PhpIndentationFormatter {
 			final int originalLineStart = originalLineInfo.getOffset();
 			int originalLineLength = originalLineInfo.getLength();
 
-			// fast resolving of empty line
-			if (originalLineLength == 0) {
-				retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
-				document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
-				return;
-			}
-
 			// get formatted line information
 			final String lineText = document.get(originalLineStart, originalLineLength);
 			final IRegion formattedLineInformation = getFormattedLineInformation(originalLineInfo, lineText);
 
 			if (!shouldReformat(document, formattedLineInformation)) {
+				return;
+			}
+
+			// fast resolving of empty line
+			if (originalLineLength == 0) {
+				retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
+				document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
 				return;
 			}
 
