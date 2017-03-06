@@ -1,0 +1,17 @@
+--TEST--
+Bug 513109 - autoedit should reduce indentation when pasting php code with closing curly brackets
+--FILE--
+<?php
+|if (true) {
+|    $a = true;
+}
+?>
+--OTHER--
+if (true) {
+
+--EXPECT--
+<?php
+if (true) {
+	$a = true;
+}
+?>

@@ -24,7 +24,7 @@ class A {
 	function copy_is_bad() {
 		print "relative indent not kept";
 	}
-
+	
 	function copy_is_bad() {
 		print "relative indent not kept";
 	}

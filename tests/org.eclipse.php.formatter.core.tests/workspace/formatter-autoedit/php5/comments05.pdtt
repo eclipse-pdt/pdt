@@ -30,7 +30,21 @@ class A {}
 <?php
 /**
  * Description1.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  Description2.
  * Description3.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  */
 class A {}

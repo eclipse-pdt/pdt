@@ -41,7 +41,10 @@ public class PhpIndentationFormatter {
 	private static final byte CHAR_SPACE = ' ';
 
 	private final StringBuffer resultBuffer = new StringBuffer();
-	private boolean isInHeredoc = false;
+	private final StringBuffer lastEmptyLineIndentationBuffer = new StringBuffer();
+	private int lastEmptyLineNumber;
+	private boolean isInHeredoc;
+	@Deprecated
 	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
 	public PhpIndentationFormatter(int start, int length, IndentationObject indentationObject) {
@@ -50,12 +53,23 @@ public class PhpIndentationFormatter {
 		this.defaultIndentationStrategy = new DefaultIndentationStrategy(indentationObject);
 		this.curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 		this.caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy(indentationObject);
-		this.commentIndentationStrategy = new CommentIndentationStrategy();
-		this.phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
+		this.commentIndentationStrategy = new CommentIndentationStrategy(indentationObject);
+		this.phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy(indentationObject);
+	}
+
+	// XXX: also give the possibility to modify this.start, this.length and
+	// indentationObject?
+	protected void reset() {
+		resultBuffer.setLength(0);
+		lastEmptyLineIndentationBuffer.setLength(0);
+		lastEmptyLineNumber = -1;
+		isInHeredoc = false;
 	}
 
 	public void format(IStructuredDocumentRegion sdRegion) {
 		assert sdRegion != null;
+
+		reset();
 
 		// resolve formatter range
 		int regionStart = sdRegion.getStartOffset();
@@ -79,6 +93,21 @@ public class PhpIndentationFormatter {
 			formatLine(document, lineIndex);
 		}
 
+		reset();
+	}
+
+	private void retrieveEmptyLineIndentation(IStructuredDocument document, StringBuffer result, int lineNumber,
+			int forOffset) throws BadLocationException {
+		if (lastEmptyLineNumber >= 0 && lastEmptyLineNumber == lineNumber - 1) {
+			// re-use previous line indentation if previous line was also an
+			// empty line (to avoid unnecessary calls to placeMatchingBlanks())
+			result.append(lastEmptyLineIndentationBuffer);
+		} else {
+			getDefaultIndentationStrategy().placeMatchingBlanks(document, result, lineNumber, forOffset);
+			lastEmptyLineIndentationBuffer.setLength(0);
+			lastEmptyLineIndentationBuffer.append(result);
+		}
+		lastEmptyLineNumber = lineNumber;
 	}
 
 	/**
@@ -86,7 +115,6 @@ public class PhpIndentationFormatter {
 	 * 
 	 * @param document
 	 * @param lineNumber
-	 *            TODO: we should invoke document.replace() one and not twice!
 	 */
 	private void formatLine(IStructuredDocument document, int lineNumber) {
 		resultBuffer.setLength(0);
@@ -99,8 +127,11 @@ public class PhpIndentationFormatter {
 			int originalLineLength = originalLineInfo.getLength();
 
 			// fast resolving of empty line
-			if (originalLineLength == 0)
+			if (originalLineLength == 0) {
+				retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
+				document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
 				return;
+			}
 
 			// get formatted line information
 			final String lineText = document.get(originalLineStart, originalLineLength);
@@ -119,6 +150,8 @@ public class PhpIndentationFormatter {
 				// in case there is no text in the line just quit (since the
 				// formatted of empty line is empty line)
 				if (formattedLineStart == formattedTextEnd) {
+					retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
+					document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
 					return;
 				}
 			}
@@ -140,6 +173,8 @@ public class PhpIndentationFormatter {
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
 				if (regionStart + scriptRegion.getEnd() <= formattedLineStart) {
+					retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
+					document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
 					return;
 				}
 				scriptRegionPos = regionStart;
@@ -159,8 +194,11 @@ public class PhpIndentationFormatter {
 			}
 
 			// if the next char is not from this line
-			if (firstTokenInLine == null)
+			if (firstTokenInLine == null) {
+				retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
+				document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
 				return;
+			}
 
 			String firstTokenType = firstTokenInLine.getType();
 
@@ -209,7 +247,7 @@ public class PhpIndentationFormatter {
 				oldChar = oldIndentation.charAt(0);
 			}
 			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
-				document.replaceText(sdRegion, originalLineStart, endingWhiteSpaces, newIndentation);
+				document.replace(originalLineStart, endingWhiteSpaces, newIndentation);
 			}
 
 		} catch (BadLocationException e) {
@@ -274,6 +312,7 @@ public class PhpIndentationFormatter {
 		return length;
 	}
 
+	@Deprecated
 	public Set<Integer> getIgnoreLines() {
 		return ignoreLines;
 	}

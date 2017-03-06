@@ -20,10 +20,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
-import org.eclipse.php.internal.core.format.FormatterUtils;
-import org.eclipse.php.internal.core.format.IIndentationStrategy;
-import org.eclipse.php.internal.core.format.IIndentationStrategyExtension1;
+import org.eclipse.php.internal.core.format.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -46,6 +43,18 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 	IAfterNewLineAutoEditStrategy pairCurlyBracketAutoEditStrategy = new PairCurlyBracketAutoEditStrategy();
 
 	private IndentationExtensionRegistry registry = IndentationExtensionRegistry.getInstance();
+
+	public IndentLineAutoEditStrategy() {
+	}
+
+	/**
+	 * 
+	 * @param indentationObject
+	 *            basic indentation preferences, can be null
+	 */
+	public IndentLineAutoEditStrategy(IndentationObject indentationObject) {
+		setIndentationObject(indentationObject);
+	}
 
 	private void autoIndentAfterNewLine(final IStructuredDocument document, final DocumentCommand command) {
 		try {
