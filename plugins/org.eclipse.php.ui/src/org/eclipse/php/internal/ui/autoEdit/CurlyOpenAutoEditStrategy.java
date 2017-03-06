@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.format.IndentationObject;
 import org.eclipse.php.internal.core.format.IndentationUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -23,6 +24,18 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  */
 
 public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implements IAutoEditStrategy {
+
+	public CurlyOpenAutoEditStrategy() {
+	}
+
+	/**
+	 * 
+	 * @param indentationObject
+	 *            basic indentation preferences, can be null
+	 */
+	public CurlyOpenAutoEditStrategy(IndentationObject indentationObject) {
+		setIndentationObject(indentationObject);
+	}
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text != null && command.text.endsWith("{")) { //$NON-NLS-1$
