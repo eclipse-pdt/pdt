@@ -9,6 +9,7 @@
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
  *     Kaloyan Raev - [511744] Wizard freezes if no PHP executable is configured
+ *     Bartlomiej Laczkowski - [513093]  Lot of DLTK model exceptions...
  *******************************************************************************/
 package org.eclipse.php.composer.ui.job;
 
@@ -17,9 +18,9 @@ import java.util.Objects;
 
 import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceFilterDescription;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.composer.core.ComposerPlugin;
@@ -33,6 +34,7 @@ import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.composer.ui.job.runner.ComposerFailureMessageRunner;
 import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
 import org.eclipse.php.composer.ui.terminal.ComposerLauncher;
+import org.eclipse.php.composer.ui.utils.ResourceFilterUtil;
 import org.eclipse.swt.widgets.Display;
 
 abstract public class ComposerJob extends Job {
@@ -44,6 +46,8 @@ abstract public class ComposerJob extends Job {
 
 	protected static final IStatus ERROR_STATUS = new Status(Status.ERROR, ComposerPlugin.ID,
 			Messages.ComposerJob_ErrorMessage);
+
+	private final String FILTER_RESOURCE_PATH = "vendor/composer";
 
 	public ComposerJob(String name) {
 		super(name);
@@ -75,6 +79,7 @@ abstract public class ComposerJob extends Job {
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
 		boolean callDoOnLauncherRunException = false;
+		IResourceFilterDescription resourceFilter = null;
 		try {
 			this.monitor = monitor;
 
@@ -119,6 +124,8 @@ abstract public class ComposerJob extends Job {
 
 			monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
 			monitor.worked(1);
+			// Add filter to skip unwanted resource notifications
+			resourceFilter = ResourceFilterUtil.createExcludeFilter(project, FILTER_RESOURCE_PATH);
 			launch(launcher);
 			monitor.worked(1);
 
@@ -135,6 +142,13 @@ abstract public class ComposerJob extends Job {
 			Logger.logException(e);
 			return ERROR_STATUS;
 		} finally {
+			if (resourceFilter != null)
+				try {
+					// Remove filter and refresh to reflect all changes.
+					resourceFilter.delete(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
 			monitor.done();
 		}
 
