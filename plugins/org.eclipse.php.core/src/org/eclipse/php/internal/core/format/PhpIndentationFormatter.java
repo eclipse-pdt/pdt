@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.format;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.Logger;
@@ -96,8 +97,8 @@ public class PhpIndentationFormatter {
 		reset();
 	}
 
-	private void retrieveEmptyLineIndentation(IStructuredDocument document, StringBuffer result, int lineNumber,
-			int forOffset) throws BadLocationException {
+	private void doEmptyLineIndentation(IStructuredDocument document, StringBuffer result, int lineNumber,
+			int forOffset, int forLength) throws BadLocationException {
 		if (lastEmptyLineNumber >= 0 && lastEmptyLineNumber == lineNumber - 1) {
 			// re-use previous line indentation if previous line was also an
 			// empty line (to avoid unnecessary calls to placeMatchingBlanks())
@@ -108,6 +109,9 @@ public class PhpIndentationFormatter {
 			lastEmptyLineIndentationBuffer.append(result);
 		}
 		lastEmptyLineNumber = lineNumber;
+		if (!(forLength == 0 && result.length() == 0)) {
+			document.replace(forOffset, forLength, result.toString());
+		}
 	}
 
 	/**
@@ -136,8 +140,7 @@ public class PhpIndentationFormatter {
 
 			// fast resolving of empty line
 			if (originalLineLength == 0) {
-				retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
-				document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
+				doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, originalLineLength);
 				return;
 			}
 
@@ -145,15 +148,13 @@ public class PhpIndentationFormatter {
 			final int formattedLineStart = formattedLineInformation.getOffset();
 			final int formattedTextEnd = formattedLineStart + formattedLineInformation.getLength();
 			if (formattedTextEnd != originalLineStart + originalLineLength) {
-				document.replace(formattedTextEnd, originalLineStart + originalLineLength - formattedTextEnd, ""); //$NON-NLS-1$
-				originalLineLength = formattedTextEnd - originalLineStart;
-				// in case there is no text in the line just quit (since the
-				// formatted of empty line is empty line)
+				// resolve blank line
 				if (formattedLineStart == formattedTextEnd) {
-					retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
-					document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
+					doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, originalLineLength);
 					return;
 				}
+				document.replace(formattedTextEnd, originalLineStart + originalLineLength - formattedTextEnd, ""); //$NON-NLS-1$
+				originalLineLength = formattedTextEnd - originalLineStart;
 			}
 
 			// get regions
@@ -173,8 +174,7 @@ public class PhpIndentationFormatter {
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
 				if (regionStart + scriptRegion.getEnd() <= formattedLineStart) {
-					retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
-					document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
+					doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, 0);
 					return;
 				}
 				scriptRegionPos = regionStart;
@@ -195,8 +195,7 @@ public class PhpIndentationFormatter {
 
 			// if the next char is not from this line
 			if (firstTokenInLine == null) {
-				retrieveEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart);
-				document.replace(originalLineStart, originalLineLength, resultBuffer.toString());
+				doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, 0);
 				return;
 			}
 
@@ -238,15 +237,7 @@ public class PhpIndentationFormatter {
 			// replace the starting spaces
 			final String newIndentation = resultBuffer.toString();
 			final String oldIndentation = lineText.substring(0, endingWhiteSpaces);
-			char newChar = '\0';
-			if (newIndentation.length() > 0) {
-				newChar = newIndentation.charAt(0);
-			}
-			char oldChar = '\0';
-			if (oldIndentation.length() > 0) {
-				oldChar = oldIndentation.charAt(0);
-			}
-			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
+			if (!StringUtils.equals(oldIndentation, newIndentation)) {
 				document.replace(originalLineStart, endingWhiteSpaces, newIndentation);
 			}
 

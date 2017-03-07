@@ -73,16 +73,25 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 
 				if (command.offset == region.getOffset()) {
 					// nothing to do
-				} else if (StringUtils.isBlank(document.get(region.getOffset(), command.offset - region.getOffset()))) {
-					// adjust the length
-					command.length += command.offset - region.getOffset();
-					// and finally adjust the offset
-					command.offset = region.getOffset();
 				} else {
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495295
-					// there are non-blank characters before cursor position,
-					// we can't apply auto-indenting in this case
-					return;
+					String textBeforeCommandOffset = document.get(region.getOffset(),
+							command.offset - region.getOffset());
+					if (StringUtils.isBlank(textBeforeCommandOffset)) {
+						// adjust the length
+						command.length += command.offset - region.getOffset();
+						// and finally adjust the offset
+						command.offset = region.getOffset();
+					} else {
+						// add line text located before command offset
+						StringBuilder tempsb = new StringBuilder(
+								textBeforeCommandOffset.length() + command.text.length());
+						tempsb.append(textBeforeCommandOffset).append(command.text);
+						command.text = tempsb.toString();
+						// adjust the length
+						command.length += command.offset - region.getOffset();
+						// and finally adjust the offset
+						command.offset = region.getOffset();
+					}
 				}
 
 				// be smart and remove remaining blank characters after
