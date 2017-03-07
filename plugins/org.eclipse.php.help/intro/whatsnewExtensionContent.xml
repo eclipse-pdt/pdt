@@ -10,7 +10,7 @@
 	<extensionContent id="org.eclipse.pdt" name="PDT" style="css/whatsnew.css"
 		alt-style="css/whatsnew.properties" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
-			<link label="PHP Development Tools" url="https://wiki.eclipse.org/PDT/NewIn41"
+			<link label="PHP Development Tools" url="https://wiki.eclipse.org/PDT/NewIn43"
 				id="pdt-noteworthy" style-id="content-link">
 				<text>Find out about the major new features in this release</text>
 			</link>
