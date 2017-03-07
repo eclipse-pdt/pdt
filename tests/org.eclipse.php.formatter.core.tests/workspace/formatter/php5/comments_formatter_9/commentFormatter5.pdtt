@@ -1,0 +1,35 @@
+--TEST--
+Test formatting for comments
+No bug - correctly indent single-line comments placed after a multi-line comment starting on a non-empty line
+--FILE--
+<?php
+
+function foo()
+{
+    if (true) {
+    } /*
+                  * comment1
+                  */
+    // comment1
+                 // comment2
+                 // comment3
+    if (true) {
+    }
+}
+?>
+--EXPECT--
+<?php
+
+function foo()
+{
+    if (true) {
+    } /*
+       * comment1
+       */
+    // comment1
+    // comment2
+    // comment3
+    if (true) {
+    }
+}
+?>
