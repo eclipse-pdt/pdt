@@ -865,6 +865,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean indentationLevelDescending = this.indentationLevelDescending;
 		inComment = true;
 		boolean previousCommentIsSingleLine = false;
+		resetCommentIndentVariables();
 
 		comments: for (Iterator<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> iter = commentList
 				.iterator(); iter.hasNext();) {
@@ -937,36 +938,34 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					needIndentNewLine = true;
 				}
 
+				if (!previousCommentIsSingleLine) {
+					resetCommentIndentVariables();
+				}
 				doNotIndent = true;
-				boolean resetCommentIndentVariables = true;
 				if (indentOnFirstColumn) {
-					if (previousCommentIsSingleLine && indentStringForComment != null) {
+					if (indentLengthForComment >= 0) {
 						appendToBuffer(indentStringForComment);
 						// adjust lineWidth, because indentLengthForComment may
 						// contain '\t'
 						lineWidth = indentLengthForComment;
-						resetCommentIndentVariables = false;
 					} else {
 						indent();
 					}
+					doNotIndent = false;
 					if (lineWidth > 0) {
 						startAtFirstColumn = false;
 					}
-					doNotIndent = false;
 				}
 				previousCommentIsSingleLine = true;
-				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 
+				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 				doNotIndent = false;
 				resetEnableStatus(
 						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
+
 				if (this.editsEnabled && this.preferences.comment_format_line_comment
 						&& (startAtFirstColumn && this.preferences.comment_format_line_comment_starting_on_first_column
 								|| !startAtFirstColumn)) {
-					if (resetCommentIndentVariables) {
-						resetCommentIndentVariables();
-					}
-
 					if (startLine == commentStartLine) {
 						initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
 						lineWidth = indentLengthForComment;
@@ -1007,7 +1006,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							if (!startAtFirstColumn || (startAtFirstColumn && indentOnFirstColumn)) {
 								if (indentLengthForComment >= 0) {
 									appendToBuffer(indentStringForComment);
-
 								} else {
 									indent();
 								}
