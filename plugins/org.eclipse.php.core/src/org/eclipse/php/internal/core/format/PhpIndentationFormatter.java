@@ -174,6 +174,7 @@ public class PhpIndentationFormatter {
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
 				if (regionStart + scriptRegion.getEnd() <= formattedLineStart) {
+					// XXX: should never happen
 					doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, 0);
 					return;
 				}
