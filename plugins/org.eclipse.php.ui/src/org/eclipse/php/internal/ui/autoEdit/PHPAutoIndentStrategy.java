@@ -125,7 +125,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				// character of newdocument...
 				command.text = newdocument.get(command.offset, newdocument.getLength() - command.offset - 1);
 			} else {
-				// ... or we have to look after it
+				// ... or we have to look after it (but should never be
+				// necessary)
 				command.text = newdocument.get(command.offset, newdocument.getLength() - command.offset);
 				command.text = command.text.substring(0, command.text.lastIndexOf(fakeFirstCharAfterCommandText));
 			}
