@@ -41,6 +41,14 @@ public class BuildPathParser {
 		public int compareTo(BuildPathInfo o) {
 			return path.compareTo(o.path);
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof BuildPathInfo)) {
+				return false;
+			}
+			return compareTo((BuildPathInfo) obj) == 0;
+		}
 	}
 
 	private static String EMPTY = ""; //$NON-NLS-1$
@@ -167,8 +175,9 @@ public class BuildPathParser {
 				path = path.substring(1);
 			}
 
-			if (!paths.contains(path)) {
-				paths.add(new BuildPathInfo(path, type));
+			BuildPathInfo pathInfo = new BuildPathInfo(path, type);
+			if (!paths.contains(pathInfo)) {
+				paths.add(pathInfo);
 			}
 		}
 	}
