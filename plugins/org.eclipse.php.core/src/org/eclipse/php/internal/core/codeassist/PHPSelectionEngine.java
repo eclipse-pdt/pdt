@@ -59,7 +59,6 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
-import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -368,8 +367,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return EMPTY;
 			}
 			String name = evaluatedType.getTypeName();
-			IModelElement[] types = PHPModelUtils.getTypes(name, sourceModule, offset, cache, null,
-					!(evaluatedType instanceof PHPTraitType));
+			IModelElement[] types = PHPModelUtils.getTypes(name, sourceModule, offset, cache, null);
+			if (types.length == 0) {
+				types = PHPModelUtils.getTraits(name, sourceModule, offset, cache, null);
+			}
 			if (types.length == 0) {
 				// This can be a constant or namespace in PHP 5.3:
 				if (name.length() > 0 && name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
