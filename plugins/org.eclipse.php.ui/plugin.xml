@@ -143,6 +143,27 @@
         <primaryWizard
               id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard">
         </primaryWizard>
+        <wizard
+              category="org.eclipse.php.project.ui"
+              class="org.eclipse.php.internal.ui.wizards.types.NewPHPClassWizard"
+              icon="icons/full/obj16/class_obj.png"
+              id="org.eclipse.php.ui.wizards.ClassWizard"
+              name="New Class">
+        </wizard>
+        <wizard
+              category="org.eclipse.php.project.ui"
+              class="org.eclipse.php.internal.ui.wizards.types.NewPHPInterfaceWizard"
+              icon="icons/full/obj16/phpinterfacedata.png"
+              id="org.eclipse.php.ui.wizards.InterfaceWizard"
+              name="New Interface">
+        </wizard>
+        <wizard
+              category="org.eclipse.php.project.ui"
+              class="org.eclipse.php.internal.ui.wizards.types.NewPHPTraitWizard"
+              icon="icons/full/obj16/trait_obj.png"
+              id="org.eclipse.php.ui.wizards.TraitWizard"
+              name="New Trait">
+        </wizard>
 	</extension>
 
 	<!--
