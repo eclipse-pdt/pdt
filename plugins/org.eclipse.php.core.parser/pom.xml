@@ -4,11 +4,11 @@
 	<parent>
         <artifactId>plugins</artifactId>
         <groupId>org.eclipse.php</groupId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>org.eclipse.php.core.parser</artifactId>
-	<version>4.3.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
