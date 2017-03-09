@@ -31,7 +31,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  * @author yaronm
  */
-@Deprecated
 public class CodeInjector {
 	private int offset = -1;
 	private IStructuredDocument document = null;

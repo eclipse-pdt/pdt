@@ -25,7 +25,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-@Deprecated
 public abstract class BasicPHPWizardPage extends WizardPage {
 
 	private IStatus fCurrStatus;
