@@ -13,7 +13,7 @@
 <feature
       id="org.eclipse.php.importer"
       label="%featureName"
-      version="4.3.0.qualifier"
+      version="5.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.php.importer.ui"
       license-feature="org.eclipse.license"
