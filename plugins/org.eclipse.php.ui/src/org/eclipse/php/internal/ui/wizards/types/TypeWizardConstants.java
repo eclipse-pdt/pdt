@@ -23,9 +23,9 @@ public class TypeWizardConstants {
 	public final static String PROTECTED_MODIFIER = "protected"; //$NON-NLS-1$
 	public final static String PUBLIC_MODIFIER = "public"; //$NON-NLS-1$
 	public final static String STATIC_MODIFIER = "static"; //$NON-NLS-1$
-	public final static String CLASS_ICON_WIZBAN = "icons/full/obj16/newclass_wiz.png"; //$NON-NLS-1$
-	public final static String TRAIT_ICON_WIZBAN = "icons/full/obj16/newtrait_wiz.png"; //$NON-NLS-1$
-	public final static String INTERFACE_ICON_WIZBAN = "icons/full/obj16/newint_wiz.png"; //$NON-NLS-1$
+	public final static String CLASS_ICON_WIZBAN = "icons/full/wizban/newclass_wiz.png"; //$NON-NLS-1$
+	public final static String TRAIT_ICON_WIZBAN = "icons/full/wizban/newtrait_wiz.png"; //$NON-NLS-1$
+	public final static String INTERFACE_ICON_WIZBAN = "icons/full/wizban/newint_wiz.png"; //$NON-NLS-1$
 	public final static String NEW_FILE_DEFAULT_NAME = "newfile.php";//$NON-NLS-1$
 
 }
