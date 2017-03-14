@@ -144,13 +144,13 @@ public class Logger {
 
 	public static void logException(String message, Throwable exception) {
 		_trace("ERROR", message, exception); //$NON-NLS-1$
-		// _log(ERROR, message, exception);
+		_log(ERROR, message, exception);
 	}
 
 	public static void logException(Throwable exception) {
 
 		_trace("Error", exception.getMessage(), exception); //$NON-NLS-1$
-		// _log(ERROR, exception.getMessage(), exception);
+		_log(ERROR, exception.getMessage(), exception);
 	}
 
 	public static void traceException(String category, String message, Throwable exception) {

@@ -151,7 +151,15 @@ public class BuildPathManager {
 				it.remove();
 				continue;
 			}
+
 			entryPath = entry.getPath();
+			// user defined build path conflicted with composer entry
+			if (entry.getExtraAttribute(ComposerPluginConstants.BPE_ATTR_NAME) == null) {
+				if (path.isPrefixOf(entryPath) || entryPath.isPrefixOf(path)) {
+					it.remove();
+				}
+				continue;
+			}
 			if (entryPath.isPrefixOf(path) && (parent == null || (entryPath.toString().length() > parentLength))) {
 				parent = entry;
 				parentLength = parent.getPath().toString().length();
