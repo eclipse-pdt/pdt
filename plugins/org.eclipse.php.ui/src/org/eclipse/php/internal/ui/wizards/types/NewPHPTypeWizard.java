@@ -224,16 +224,16 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 		String elementType = ""; //$NON-NLS-1$
 		switch (page.fTypeKind) {
 		case NewPHPTypePage.CLASS_TYPE:
-			elementType = IDEUIMessages.getString("NewPHPTypeWizard_class"); //$NON-NLS-1$
+			elementType = Messages.NewPHPTypeWizard_class;
 			break;
 		case NewPHPTypePage.INTERFACE_TYPE:
-			elementType = IDEUIMessages.getString("NewPHPTypeWizard_interface"); //$NON-NLS-1$
+			elementType = Messages.NewPHPTypeWizard_interface;
 			break;
 		case NewPHPTypePage.TRAIT_TYPE:
-			elementType = IDEUIMessages.getString("NewPHPTypeWizard_trait"); //$NON-NLS-1$
+			elementType = Messages.NewPHPTypeWizard_trait;
 			break;
 		}
-		buffer.append(elementType + IDEUIMessages.getString("NewPHPTypeWizard_creationWasSuccessful")); //$NON-NLS-1$
+		buffer.append(elementType + Messages.NewPHPTypeWizard_creationWasSuccessful);
 		for (String element : warnings) {
 			buffer.append(element + "\n"); //$NON-NLS-1$
 		}
@@ -403,8 +403,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 					if (parent.getElementName().equals(page.getRealNamespace())) {
 						return;
 					}
-					String use = parent.getElementName() + "\\"//$NON-NLS-1$
-							+ type.getElementName();
+					String use = parent.getElementName() + '\\' + type.getElementName();
 					if (!existingImports.contains(use)) {
 						imports.add(use);
 					}

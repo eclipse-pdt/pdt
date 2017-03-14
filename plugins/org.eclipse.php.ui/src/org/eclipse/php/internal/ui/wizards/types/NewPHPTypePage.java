@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.wizards.types;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -155,9 +156,9 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 	protected String getSuperInterfacesLabel() {
 		if (fTypeKind != INTERFACE_TYPE) {
-			return IDEUIMessages.getString("NewPHPTypePage_interfaces"); //$NON-NLS-1$
+			return Messages.NewPHPTypePage_interfaces;
 		}
-		return IDEUIMessages.getString("NewPHPTypePage_extendedInterfaces"); //$NON-NLS-1$
+		return Messages.NewPHPTypePage_extendedInterfaces;
 	}
 
 	// the location of where to inject the new element's code
@@ -173,7 +174,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		layout.marginWidth = 0;
 
 		Label label = new Label(container, SWT.NULL);
-		label.setText(IDEUIMessages.getString("NewPHPTypePage_sourceFolder")); //$NON-NLS-1$
+		label.setText(Messages.NewPHPTypePage_sourceFolder);
 
 		sourceText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -197,7 +198,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		});
 
 		browseSourceBtn = new Button(container, SWT.PUSH);
-		browseSourceBtn.setText(IDEUIMessages.getString("NewPHPTypePage_browse")); //$NON-NLS-1$
+		browseSourceBtn.setText(Messages.NewPHPTypePage_browse);
 		gd = new GridData();
 		gd.verticalAlignment = GridData.BEGINNING;
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseSourceBtn);
@@ -219,7 +220,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		});
 
 		final Button newFileBtn = new Button(container, SWT.RADIO);
-		newFileBtn.setText(IDEUIMessages.getString("NewPHPTypePage_createNewFile")); //$NON-NLS-1$
+		newFileBtn.setText(Messages.NewPHPTypePage_createNewFile);
 		newFileBtn.setSelection(!isInExistingPHPFile);
 		newFileBtn.addSelectionListener(new SelectionListener() {
 
@@ -260,7 +261,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		new Label(container, SWT.NULL);
 
 		existingFileBtn = new Button(container, SWT.RADIO);
-		existingFileBtn.setText(IDEUIMessages.getString("NewPHPTypePage_addInExistingFile")); //$NON-NLS-1$
+		existingFileBtn.setText(Messages.NewPHPTypePage_addInExistingFile);
 		existingFileBtn.setSelection(isInExistingPHPFile);
 		existingFileBtn.addSelectionListener(new SelectionListener() {
 
@@ -301,7 +302,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		browseExistingFile = new Button(container, SWT.PUSH);
-		browseExistingFile.setText(IDEUIMessages.getString("NewPHPTypePage_browse")); //$NON-NLS-1$
+		browseExistingFile.setText(Messages.NewPHPTypePage_browse);
 		gd = new GridData();
 		gd.verticalAlignment = GridData.BEGINNING;
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseExistingFile);
@@ -331,10 +332,10 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		injectLayout.marginWidth = 0;
 
 		firstBlockBtn = new Button(injectLocation, SWT.RADIO);
-		firstBlockBtn.setText(IDEUIMessages.getString("NewPHPTypePage_firstPHPBlock")); //$NON-NLS-1$
+		firstBlockBtn.setText(Messages.NewPHPTypePage_firstPHPBlock);
 		firstBlockBtn.setSelection(true);
 		Button newPHPBlockBtn = new Button(injectLocation, SWT.RADIO);
-		newPHPBlockBtn.setText(IDEUIMessages.getString("NewPHPTypePage_newPHPBlock")); //$NON-NLS-1$
+		newPHPBlockBtn.setText(Messages.NewPHPTypePage_newPHPBlock);
 
 		new Separator(SWT.SEPARATOR | SWT.HORIZONTAL).doFillIntoGrid(container, 3, 1);
 	}
@@ -407,7 +408,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	protected void addElementNameText(Composite container, String type) {
 		GridData gd = new GridData();
 		Label elementNameLabel = new Label(container, SWT.NULL);
-		elementNameLabel.setText(type + IDEUIMessages.getString("NewPHPTypePage_name")); //$NON-NLS-1$
+		elementNameLabel.setText(type + Messages.NewPHPTypePage_name);
 		elementNameLabel.setLayoutData(gd);
 
 		elementName = new Text(container, SWT.BORDER | SWT.SINGLE);
@@ -547,7 +548,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	 */
 	protected void addElementModifiers(Composite container, String[] modifiersNames) {
 		Label modifiersLabel = new Label(container, SWT.NULL);
-		modifiersLabel.setText(IDEUIMessages.getString("NewPHPTypePage_modifiers")); //$NON-NLS-1$
+		modifiersLabel.setText(Messages.NewPHPTypePage_modifiers);
 		modifiers = new Composite(container, SWT.NONE);
 		int len = modifiersNames.length;
 		GridLayout layout = new GridLayout();
@@ -823,7 +824,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		// gd.horizontalSpan = 3;
 		gd.verticalAlignment = GridData.BEGINNING;
 		Label whichMethods = new Label(elementSection, SWT.NULL);
-		whichMethods.setText(IDEUIMessages.getString("NewPHPTypePage_checkboxesToCreate")); //$NON-NLS-1$
+		whichMethods.setText(Messages.NewPHPTypePage_checkboxesToCreate);
 		whichMethods.setLayoutData(gd);
 
 		checkBoxesCreationComp = new Composite(elementSection, SWT.NULL);
@@ -1086,19 +1087,16 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		case VALIDATE_ELEMENT_NAME:
 			elementNameStatus = new StatusInfo();
 			if (getElementName() == null || getElementName().length() == 0) {
-				String message = IDEUIMessages.getString("NewPHPTypePage_nameMustNotBeEmpty"); //$NON-NLS-1$
+				String message = Messages.NewPHPTypePage_nameMustNotBeEmpty;
 				switch (fTypeKind) {
 				case CLASS_TYPE:
-					message = IDEUIMessages.getString("NewPHPTypePage_class") //$NON-NLS-1$
-							+ message;
+					message = Messages.NewPHPTypePage_class + message;
 					break;
 				case INTERFACE_TYPE:
-					message = IDEUIMessages.getString("NewPHPTypePage_interface") //$NON-NLS-1$
-							+ message;
+					message = Messages.NewPHPTypePage_interface + message;
 					break;
 				case TRAIT_TYPE:
-					message = IDEUIMessages.getString("NewPHPTypePage_trait") //$NON-NLS-1$
-							+ message;
+					message = Messages.NewPHPTypePage_trait + message;
 					break;
 				}
 				elementNameStatus.setError(message);
@@ -1125,20 +1123,16 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 						for (IType type : types) {
 							if (type.getElementName().equalsIgnoreCase(getElementName())) {
 								if (fTypeKind == CLASS_TYPE && !PHPFlags.isClass(type.getElementType())) {
-									elementNameStatus.setError(IDEUIMessages.getString("NewPHPTypePage_class") //$NON-NLS-1$
-											+ getElementName()
-											+ IDEUIMessages.getString("NewPHPTypePage_alreadyExistsInFile") //$NON-NLS-1$
-											+ existingFileName);
+									elementNameStatus.setError(Messages.NewPHPTypePage_class + getElementName()
+											+ Messages.NewPHPTypePage_alreadyExistsInFile + existingFileName);
 									break;
 								} else if (fTypeKind == INTERFACE_TYPE && PHPFlags.isInterface(type.getElementType())) {
-									elementNameStatus.setError(IDEUIMessages.getString("NewPHPTypePage_interface") //$NON-NLS-1$
-											+ getElementName()
-											+ IDEUIMessages.getString("NewPHPTypePage_alreadyExistsInFile")); //$NON-NLS-1$
+									elementNameStatus.setError(Messages.NewPHPTypePage_interface + getElementName()
+											+ Messages.NewPHPTypePage_alreadyExistsInFile);
 									break;
 								} else if (fTypeKind == TRAIT_TYPE && PHPFlags.isInterface(type.getElementType())) {
-									elementNameStatus.setError(IDEUIMessages.getString("NewPHPTypePage_trait") //$NON-NLS-1$
-											+ getElementName()
-											+ IDEUIMessages.getString("NewPHPTypePage_alreadyExistsInFile")); //$NON-NLS-1$
+									elementNameStatus.setError(Messages.NewPHPTypePage_trait + getElementName()
+											+ Messages.NewPHPTypePage_alreadyExistsInFile);
 									break;
 								}
 							}
@@ -1151,20 +1145,17 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			// fix bug 14446 - add PHP identifier validation
 			if (getProject() != null) {
 				if (!isValidPhpIdentifier(getElementName())) {
-					String message = IDEUIMessages.getString("NewPHPTypePage_InvalidPhp"); //$NON-NLS-1$
-					String nameLabel = IDEUIMessages.getString("NewPHPTypePage_InvalidPhpName"); //$NON-NLS-1$
+					String message = Messages.NewPHPTypePage_InvalidPhp;
+					String nameLabel = Messages.NewPHPTypePage_InvalidPhpName;
 					switch (fTypeKind) {
 					case CLASS_TYPE:
-						message = message + IDEUIMessages.getString("NewPHPTypePage_class") //$NON-NLS-1$
-								+ nameLabel;
+						message = message + Messages.NewPHPTypePage_class + nameLabel;
 						break;
 					case INTERFACE_TYPE:
-						message = message + IDEUIMessages.getString("NewPHPTypePage_interface") //$NON-NLS-1$
-								+ nameLabel;
+						message = message + Messages.NewPHPTypePage_interface + nameLabel;
 						break;
 					case TRAIT_TYPE:
-						message = message + IDEUIMessages.getString("NewPHPTypePage_trait") //$NON-NLS-1$
-								+ nameLabel;
+						message = message + Messages.NewPHPTypePage_trait + nameLabel;
 						break;
 					}
 					elementNameStatus.setError(message);
@@ -1181,13 +1172,13 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			existingFileStatus = new StatusInfo();
 			if (isInExistingPHPFile()) {
 				if (existingFileText.getText().length() == 0) {
-					existingFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_existingFileMustNotBeEmpty")); //$NON-NLS-1$
+					existingFileStatus.setError(Messages.NewPHPTypePage_existingFileMustNotBeEmpty);
 				} else if (!isPathExist(sourceText.getText() + File.separatorChar + existingFileText.getText())) {
-					existingFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_targetPHPFile") //$NON-NLS-1$
-							+ existingFileText.getText() + IDEUIMessages.getString("NewPHPTypePage_doesNotExist")); //$NON-NLS-1$
+					existingFileStatus.setError(Messages.NewPHPTypePage_targetPHPFile + existingFileText.getText()
+							+ Messages.NewPHPTypePage_doesNotExist);
 				} else if (!isPHPSuffix(existingFileText.getText())) {
-					existingFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_phpFile") //$NON-NLS-1$
-							+ existingFileText.getText() + IDEUIMessages.getString("NewPHPTypePage_notPhpExtention")); //$NON-NLS-1$
+					existingFileStatus.setError(Messages.NewPHPTypePage_phpFile + existingFileText.getText()
+							+ Messages.NewPHPTypePage_notPhpExtention);
 				}
 			}
 			updateStatus(findMostSevereStatus());
@@ -1197,20 +1188,18 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			if (!isInExistingPHPFile()) {
 				String fileName = newFileText.getText();
 				if (fileName.length() == 0) {
-					newFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_fileMustnotBeEmpty")); //$NON-NLS-1$
+					newFileStatus.setError(Messages.NewPHPTypePage_fileMustnotBeEmpty);
 				}
 
 				else if (isPathExist(sourceText.getText() + File.separatorChar + fileName)) {
-					newFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_phpFile") //$NON-NLS-1$
-							+ fileName + IDEUIMessages.getString("NewPHPTypePage_alreadyExists")); //$NON-NLS-1$
+					newFileStatus.setError(
+							Messages.NewPHPTypePage_phpFile + fileName + Messages.NewPHPTypePage_alreadyExists);
 				} else if (!isPHPSuffix(fileName)) {
-					newFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_phpFile") //$NON-NLS-1$
-							+ fileName + IDEUIMessages.getString("NewPHPTypePage_notPhpExtention")); //$NON-NLS-1$
+					newFileStatus.setError(
+							Messages.NewPHPTypePage_phpFile + fileName + Messages.NewPHPTypePage_notPhpExtention);
 				} else if (!isValidFileName(fileName)) {
-					newFileStatus.setError(IDEUIMessages.getString("NewPHPTypePage_phpFile") //$NON-NLS-1$
-
-							+ IDEUIMessages.format("NewPHPTypePage.0", //$NON-NLS-1$
-									new String[] { fileName }));
+					newFileStatus.setError(Messages.NewPHPTypePage_phpFile
+							+ MessageFormat.format(Messages.NewPHPTypePage_filename_not_valid, fileName));
 				}
 			}
 			updateStatus(findMostSevereStatus());
@@ -1219,25 +1208,24 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			namespaceStatus = new StatusInfo();
 			String namespace = getNamespace();
 			if (namespace != null && !namespace.isEmpty()) {
-				int separator = namespace.indexOf("/", 0); //$NON-NLS-1$
+				int separator = namespace.indexOf('/', 0);
 				if (separator != -1) {
-					namespaceStatus.setError(IDEUIMessages.getString("NewPHPTypePage_invalidSeparator")); //$NON-NLS-1$
+					namespaceStatus.setError(Messages.NewPHPTypePage_invalidSeparator);
 				} else {
 					if (namespace.endsWith("\\")) {//$NON-NLS-1$
-						namespaceStatus.setError(IDEUIMessages.getString("NewPHPTypePage_emptySublevel")); //$NON-NLS-1$
+						namespaceStatus.setError(Messages.NewPHPTypePage_emptySublevel);
 					} else {
 						String[] segments = namespace.split("\\\\");//$NON-NLS-1$
 						if (segments.length == 1 && !isValidPhpIdentifier(namespace.trim())) {
-							namespaceStatus.setError(IDEUIMessages.getString("NewPHPTypePage_invalidNamespaceName")); //$NON-NLS-1$
+							namespaceStatus.setError(Messages.NewPHPTypePage_invalidNamespaceName);
 						} else {
 							for (String segment : segments) {
 								if (segment.isEmpty()) {
-									namespaceStatus.setError(IDEUIMessages.getString("NewPHPTypePage_emptySublevel")); //$NON-NLS-1$
+									namespaceStatus.setError(Messages.NewPHPTypePage_emptySublevel);
 								} else {
 									try {
 										Integer.valueOf(segment);
-										namespaceStatus
-												.setError(IDEUIMessages.getString("NewPHPTypePage_invalidSublevel")); //$NON-NLS-1$
+										namespaceStatus.setError(Messages.NewPHPTypePage_invalidSublevel);
 									} catch (NumberFormatException e) {
 										// valid segment
 									}
@@ -1315,8 +1303,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			// changes source folder manually by typing a location to a Java
 			// project for example..
 			if (classes == null || classes.length == 0) {
-				interfacesStatus.setError(IDEUIMessages.getString("NewPHPTypePage_interface") //$NON-NLS-1$
-						+ interfaceName + IDEUIMessages.getString("NewPHPTypePage_doesnotExistInProject")); //$NON-NLS-1$
+				interfacesStatus.setError(Messages.NewPHPTypePage_interface + interfaceName
+						+ Messages.NewPHPTypePage_doesnotExistInProject);
 				updateStatus(findMostSevereStatus());
 				return;
 			}
@@ -1333,8 +1321,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 			// not found exact file but same interface name...
 			if (!foundSiblings) {
-				interfacesStatus.setWarning(IDEUIMessages.getString("NewPHPClassPage_interface") //$NON-NLS-1$
-						+ interfaceName + ""); //$NON-NLS-1$
+				interfacesStatus.setWarning(Messages.NewPHPClassPage_interface + interfaceName);
 				updateStatus(findMostSevereStatus());
 				return;
 			}
@@ -1355,8 +1342,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				// check if the file name are equals and path are different
 				if (!superClassSrcPath.removeLastSegments(1).equals(new Path(getSourceText()))
 						&& superClassSrcFileName.equals(currentSrcFileName)) {
-					interfacesStatus.setError(IDEUIMessages.getString("NewPHPTypePage_cannotImplementInterface") //$NON-NLS-1$
-							+ interfaceName + IDEUIMessages.getString("NewPHPClassPage_fileNameColission")); //$NON-NLS-1$
+					interfacesStatus.setError(Messages.NewPHPTypePage_cannotImplementInterface + interfaceName);
 					updateStatus(findMostSevereStatus());
 					return;
 				}
@@ -1386,8 +1372,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			// changes source folder manually by typing a location to a Java
 			// project for example..
 			if (classes == null || classes.length == 0) {
-				traitsStatus.setError(IDEUIMessages.getString("NewPHPTypePage_trait") //$NON-NLS-1$
-						+ interfaceName + IDEUIMessages.getString("NewPHPTypePage_doesnotExistInProject")); //$NON-NLS-1$
+				traitsStatus.setError(
+						Messages.NewPHPTypePage_trait + interfaceName + Messages.NewPHPTypePage_doesnotExistInProject);
 				updateStatus(findMostSevereStatus());
 				return;
 			}
@@ -1404,8 +1390,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 			// not found exact file but same interface name...
 			if (!foundSiblings) {
-				traitsStatus.setWarning(IDEUIMessages.getString("NewPHPClassPage_trait") //$NON-NLS-1$
-						+ interfaceName + ""); //$NON-NLS-1$
+				traitsStatus.setWarning(Messages.NewPHPClassPage_trait + interfaceName);
 				updateStatus(findMostSevereStatus());
 				return;
 			}
@@ -1426,8 +1411,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				// check if the file name are equals and path are different
 				if (!superClassSrcPath.removeLastSegments(1).equals(new Path(getSourceText()))
 						&& superClassSrcFileName.equals(currentSrcFileName)) {
-					traitsStatus.setError(IDEUIMessages.getString("NewPHPTypePage_cannotImplementTrait") //$NON-NLS-1$
-							+ interfaceName + IDEUIMessages.getString("NewPHPClassPage_fileNameColission")); //$NON-NLS-1$
+					traitsStatus.setError(Messages.NewPHPTypePage_cannotImplementTrait + interfaceName);
 					updateStatus(findMostSevereStatus());
 					return;
 				}
@@ -1485,22 +1469,22 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		sourceFolderStatus = new StatusInfo();
 		String sourcePath = sourceText.getText();
 		if (sourcePath.length() == 0) {
-			sourceFolderStatus.setError(IDEUIMessages.getString("NewPHPTypePage_sourceFolderMustNotBeEmpty")); //$NON-NLS-1$
+			sourceFolderStatus.setError(Messages.NewPHPTypePage_sourceFolderMustNotBeEmpty);
 		} else if (!isValidSourcePath(sourcePath)) {
-			sourceFolderStatus.setError(IDEUIMessages.getString("NewPHPTypePage_sourceFolder2") //$NON-NLS-1$
-					+ sourcePath + IDEUIMessages.getString("NewPHPTypePage_isIllegal")); //$NON-NLS-1$
+			sourceFolderStatus
+					.setError(Messages.NewPHPTypePage_sourceFolder2 + sourcePath + Messages.NewPHPTypePage_isIllegal);
 		}
 		// check if project is closed
 		else {
 			IProject currentProject = getCurrentProject();
 			if (currentProject == null || !currentProject.isAccessible()) {
-				sourceFolderStatus.setError(IDEUIMessages.getString("NewPHPTypePage_sourceFolder2") //$NON-NLS-1$
-						+ sourcePath + IDEUIMessages.getString("NewPHPTypePage_isNotAccessible")); //$NON-NLS-1$
+				sourceFolderStatus.setError(
+						Messages.NewPHPTypePage_sourceFolder2 + sourcePath + Messages.NewPHPTypePage_isNotAccessible);
 			} else {
 				IScriptProject model = DLTKCore.create(currentProject);
 				if (model == null) {
-					sourceFolderStatus.setError(IDEUIMessages.getString("NewPHPTypePage.sourceFolder") //$NON-NLS-1$
-							+ sourcePath + IDEUIMessages.getString("NewPHPTypePage.doesNotPointToPhpProject")); //$NON-NLS-1$
+					sourceFolderStatus.setError(Messages.NewPHPTypePage_sourceFolder + sourcePath
+							+ Messages.NewPHPTypePage_doesNotPointToPhpProject);
 				}
 			}
 		}
@@ -1651,8 +1635,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	public void createControl(Composite parent) {
-		String[] addButtons = new String[] { IDEUIMessages.getString("NewPHPTypePage_add"), null, //$NON-NLS-1$
-				IDEUIMessages.getString("NewPHPTypePage_remove") }; //$NON-NLS-1$
+		String[] addButtons = new String[] { Messages.NewPHPTypePage_add, null, Messages.NewPHPTypePage_remove };
 		IListAdapter listAdapter = new IListAdapter() {
 			public void customButtonPressed(ListDialogField field, int index) {
 			}
@@ -1704,7 +1687,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			}
 		};
 		fTraitsDialogField.setTableColumns(new ListDialogField.ColumnsDescription(1, false));
-		fTraitsDialogField.setLabelText(IDEUIMessages.getString("NewPHPClassPage_traits"));//$NON-NLS-1$
+		fTraitsDialogField.setLabelText(Messages.NewPHPClassPage_traits);
 		fTraitsDialogField.setRemoveButtonIndex(2);
 		fTraitsDialogField.setDialogFieldListener(this);
 	}
@@ -1715,8 +1698,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	 */
 	private void chooseNewSourceFolder() {
 		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(),
-				ResourcesPlugin.getWorkspace().getRoot(), false,
-				IDEUIMessages.getString("NewPHPTypePage_selectNewSourceFolder")); //$NON-NLS-1$
+				ResourcesPlugin.getWorkspace().getRoot(), false, Messages.NewPHPTypePage_selectNewSourceFolder);
 		dialog.showClosedProjects(false);
 		if (dialog.open() == Window.OK) {
 			final Object[] result = dialog.getResult();
@@ -1746,8 +1728,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(),
 				new WorkbenchContentProvider());
 		dialog.setValidator(validator);
-		dialog.setTitle(IDEUIMessages.getString("NewPHPTypePage.phpFileSelection")); //$NON-NLS-1$
-		dialog.setMessage(IDEUIMessages.getString("NewPHPTypePage.selectExistingPHPFile")); //$NON-NLS-1$
+		dialog.setTitle(Messages.NewPHPTypePage_phpFileSelection);
+		dialog.setMessage(Messages.NewPHPTypePage_selectExistingPHPFile);
 		dialog.addFilter(new NotUsedPHPFileFilter(usedFiles));
 		dialog.setInput(root);
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
@@ -1815,9 +1797,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		dialog.setListSelectionLabelDecorator(new PHPFullPathLabelProvider());
 		dialog.setDetailsLabelProvider(new StatusLineLabelProvider());
 
-		dialog.setTitle(IDEUIMessages.getString("NewPHPTypePage_interfacesSelection")); //$NON-NLS-1$
-		dialog.setMessage(IDEUIMessages.getString("NewPHPTypePage_selectInterfaces")); //$NON-NLS-1$
-		// dialog.setInitialPattern("");
+		dialog.setTitle(Messages.NewPHPTypePage_interfacesSelection);
+		dialog.setMessage(Messages.NewPHPTypePage_selectInterfaces);
 		dialog.setInitialPattern("", //$NON-NLS-1$
 				FilteredItemsSelectionDialog.FULL_SELECTION);
 
@@ -1858,9 +1839,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		dialog.setListSelectionLabelDecorator(new PHPFullPathLabelProvider());
 		dialog.setDetailsLabelProvider(new StatusLineLabelProvider());
 
-		dialog.setTitle(IDEUIMessages.getString("NewPHPTypePage_traitsSelection")); //$NON-NLS-1$
-		dialog.setMessage(IDEUIMessages.getString("NewPHPTypePage_selectTraits")); //$NON-NLS-1$
-		// dialog.setInitialPattern("");
+		dialog.setTitle(Messages.NewPHPTypePage_traitsSelection);
+		dialog.setMessage(Messages.NewPHPTypePage_selectTraits);
 		dialog.setInitialPattern("", //$NON-NLS-1$
 				FilteredItemsSelectionDialog.FULL_SELECTION);
 
