@@ -52,7 +52,10 @@ import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.StatusUtil;
 import org.eclipse.php.internal.ui.wizards.BasicPHPWizardPage;
-import org.eclipse.php.internal.ui.wizards.fields.*;
+import org.eclipse.php.internal.ui.wizards.fields.DialogField;
+import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
+import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
+import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
@@ -164,21 +167,20 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	// the location of where to inject the new element's code
 	protected void createLocationSection(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NULL);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		container.setLayoutData(gd);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 
 		final GridLayout layout = new GridLayout();
-		container.setLayout(layout);
 		layout.numColumns = 3;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
+
+		container.setLayout(layout);
 
 		Label label = new Label(container, SWT.NULL);
 		label.setText(Messages.NewPHPTypePage_sourceFolder);
 
 		sourceText = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		sourceText.setLayoutData(gd);
+		sourceText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		sourceText.setEditable(false);
 
 		// init PHPVersion
@@ -193,21 +195,16 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				validatePageValues(VALIDATE_SOURCE_FOLDER);
 				validatePageValues(VALIDATE_NEW_FILE);
 				updateDisabled();
-				// setDefaultNamespace();
 			}
 		});
 
 		browseSourceBtn = new Button(container, SWT.PUSH);
 		browseSourceBtn.setText(Messages.NewPHPTypePage_browse);
-		gd = new GridData();
+		GridData gd = new GridData();
 		gd.verticalAlignment = GridData.BEGINNING;
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseSourceBtn);
 		browseSourceBtn.setLayoutData(gd);
-		browseSourceBtn.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
+		browseSourceBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				chooseNewSourceFolder();
 				String sourcePath = sourceText.getText();
@@ -222,11 +219,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		final Button newFileBtn = new Button(container, SWT.RADIO);
 		newFileBtn.setText(Messages.NewPHPTypePage_createNewFile);
 		newFileBtn.setSelection(!isInExistingPHPFile);
-		newFileBtn.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
+		newFileBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (isInExistingPHPFile) {
 					isInExistingPHPFile = false;
@@ -251,22 +244,14 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 300;
 		newFileText.setLayoutData(gd);
-		newFileText.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				validatePageValues(VALIDATE_NEW_FILE);
-			}
-		});
+		newFileText.addModifyListener(e -> validatePageValues(VALIDATE_NEW_FILE));
 
 		new Label(container, SWT.NULL);
 
 		existingFileBtn = new Button(container, SWT.RADIO);
 		existingFileBtn.setText(Messages.NewPHPTypePage_addInExistingFile);
 		existingFileBtn.setSelection(isInExistingPHPFile);
-		existingFileBtn.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		existingFileBtn.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
 				if (!isInExistingPHPFile) {
@@ -290,14 +275,10 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd.widthHint = 300;
 		existingFileText.setLayoutData(gd);
 		existingFileText.setText(existingFileName);
-		existingFileText.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				validatePageValues(VALIDATE_EXISTING_FILE);
-				updateDisabled();
-				setDefaultNamespace();
-			}
-
+		existingFileText.addModifyListener(e -> {
+			validatePageValues(VALIDATE_EXISTING_FILE);
+			updateDisabled();
+			setDefaultNamespace();
 		});
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -308,10 +289,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseExistingFile);
 		browseExistingFile.setLayoutData(gd);
 
-		browseExistingFile.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		browseExistingFile.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
 				openPhpFileDialog();
@@ -337,7 +315,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		Button newPHPBlockBtn = new Button(injectLocation, SWT.RADIO);
 		newPHPBlockBtn.setText(Messages.NewPHPTypePage_newPHPBlock);
 
-		new Separator(SWT.SEPARATOR | SWT.HORIZONTAL).doFillIntoGrid(container, 3, 1);
+		new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL)
+				.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 3, 1));
 	}
 
 	protected void handlePHPVersion() {
@@ -416,13 +395,9 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd.horizontalSpan = 2;
 		elementName.setLayoutData(gd);
 		elementName.setFocus();
-		elementName.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				validatePageValues(VALIDATE_ELEMENT_NAME);
-				updateNewFilename();
-			}
-
+		elementName.addModifyListener(e -> {
+			validatePageValues(VALIDATE_ELEMENT_NAME);
+			updateNewFilename();
 		});
 		if (initialElementName != null) {
 			elementName.setText(initialElementName);
@@ -454,13 +429,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		namespaceText.setLayoutData(gd);
-		namespaceText.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				changeSourceFolder();
-			}
-
-		});
+		namespaceText.addModifyListener(e -> changeSourceFolder());
 		setDefaultNamespace();
 	}
 
@@ -605,10 +574,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd.grabExcessVerticalSpace = true;
 		gd.widthHint = getMaxFieldWidth();
 		addInterfacesBtn = (Button) fSuperInterfacesDialogField.getButtonBox(parent).getChildren()[0];
-		addInterfacesBtn.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		addInterfacesBtn.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
 				Object result = chooseInterfaces();
@@ -655,10 +621,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd.grabExcessVerticalSpace = true;
 		gd.widthHint = getMaxFieldWidth();
 		addTraitsBtn = (Button) fTraitsDialogField.getButtonBox(parent).getChildren()[0];
-		addTraitsBtn.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		addTraitsBtn.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
 				Object result = chooseTraits();
@@ -1634,6 +1597,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		return null;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		String[] addButtons = new String[] { Messages.NewPHPTypePage_add, null, Messages.NewPHPTypePage_remove };
 		IListAdapter listAdapter = new IListAdapter() {
@@ -1647,14 +1611,15 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			}
 		};
 
-		fSuperInterfacesDialogField = new ListDialogField(listAdapter, addButtons, new PHPFullPathLabelProvider()) {
+		fSuperInterfacesDialogField = new ListDialogField<IType>(listAdapter, addButtons,
+				new PHPFullPathLabelProvider()) {
 			// override these methods to validate interfaces
-			public void removeElement(Object element) throws IllegalArgumentException {
+			public void removeElement(IType element) throws IllegalArgumentException {
 				super.removeElement(element);
 				validateInterfaces(getProject());
 			}
 
-			public void removeElements(List elements) {
+			public void removeElements(List<IType> elements) {
 				super.removeElements(elements);
 				validateInterfaces(getProject());
 			}
@@ -1669,14 +1634,14 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		fSuperInterfacesDialogField.setRemoveButtonIndex(2);
 		fSuperInterfacesDialogField.setDialogFieldListener(this);
 
-		fTraitsDialogField = new ListDialogField(listAdapter, addButtons, new PHPFullPathLabelProvider()) {
+		fTraitsDialogField = new ListDialogField<IType>(listAdapter, addButtons, new PHPFullPathLabelProvider()) {
 			// override these methods to validate interfaces
-			public void removeElement(Object element) throws IllegalArgumentException {
+			public void removeElement(IType element) throws IllegalArgumentException {
 				super.removeElement(element);
 				validateInterfaces(getProject());
 			}
 
-			public void removeElements(List elements) {
+			public void removeElements(List<IType> elements) {
 				super.removeElements(elements);
 				validateInterfaces(getProject());
 			}

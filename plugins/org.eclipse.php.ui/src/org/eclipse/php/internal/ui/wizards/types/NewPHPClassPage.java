@@ -39,10 +39,8 @@ import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.StatusUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -80,8 +78,6 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		final Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
 		composite.setLayout(layout);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
 
 		// the location section will be generic all new elements types (classes,
 		// interfaces etc.)
@@ -115,13 +111,12 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	}
 
 	private void createElementSection(final Composite composite) {
-		GridLayout layout = new GridLayout(3, false);
 		// the element section is specific to an interface OR a class
 		final Composite elementSection = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout(3, false);
 		elementSection.setLayout(layout);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+
+		GridData gd = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
 		elementSection.setLayoutData(gd);
 
 		addElementNameText(elementSection, Messages.NewPHPClassPage_7);
@@ -148,18 +143,15 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		superClassName = new Text(elementSection, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		superClassName.setLayoutData(gd);
-		superClassName.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-				String projectName = getProjectName(getSourceText());
-				if (projectName != null && projectName.length() > 0) {
-					IProject currentProject = workspaceRoot.getProject(projectName);
-					IScriptProject model = DLTKCore.create(currentProject);
-					String superClassName = ((Text) e.getSource()).getText().trim();
-					if (model != null) {
-						validateSuperClass(model, superClassName);
-					}
+		superClassName.addModifyListener(e -> {
+			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			String projectName = getProjectName(getSourceText());
+			if (projectName != null && projectName.length() > 0) {
+				IProject currentProject = workspaceRoot.getProject(projectName);
+				IScriptProject model = DLTKCore.create(currentProject);
+				String superClassName = ((Text) e.getSource()).getText().trim();
+				if (model != null) {
+					validateSuperClass(model, superClassName);
 				}
 			}
 		});
@@ -170,10 +162,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		// gd.verticalAlignment = GridData.BEGINNING;
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseSuperBtn);
 		browseSuperBtn.setLayoutData(gd);
-		browseSuperBtn.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
+		browseSuperBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IType result = chooseSuperClass();
 				superClassData = result;
@@ -182,7 +171,6 @@ public class NewPHPClassPage extends NewPHPTypePage {
 				}
 				changeButtonEnableStatus();
 			}
-
 		});
 
 		// // use this dummy to take care of layout

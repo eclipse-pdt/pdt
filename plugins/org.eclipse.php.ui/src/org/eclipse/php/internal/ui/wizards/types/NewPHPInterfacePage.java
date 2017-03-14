@@ -35,6 +35,7 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 		super(Messages.NewPHPInterfacePage_0);
 		fTypeKind = INTERFACE_TYPE;
 		setMessage(Messages.NewPHPInterfacePage_1);
+		setDescription(Messages.NewPHPInterfacePage_1);
 		setTitle(Messages.NewPHPInterfacePage_2);
 		interfacesStatus = new StatusInfo();
 	}

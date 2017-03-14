@@ -2780,6 +2780,54 @@
         			</or>
 				</enablement>
 			</commonWizard>
+      <commonWizard
+            menuGroupId="org.eclipse.php.project.ui.types"
+            type="new"
+            wizardId="org.eclipse.php.ui.wizards.ClassWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.eclipse.php.core.PHPNature">
+                  </test>
+               </adapt>
+            </or>
+         </enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.eclipse.php.project.ui.types"
+            type="new"
+            wizardId="org.eclipse.php.ui.wizards.InterfaceWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.eclipse.php.core.PHPNature">
+                  </test>
+               </adapt>
+            </or>
+         </enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.eclipse.php.project.ui.types"
+            type="new"
+            wizardId="org.eclipse.php.ui.wizards.TraitWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.eclipse.php.core.PHPNature">
+                  </test>
+               </adapt>
+            </or>
+         </enablement>
+      </commonWizard>
 			
 			<dropAssistant
 				class="org.eclipse.dltk.internal.ui.navigator.ScriptDropAssistant"

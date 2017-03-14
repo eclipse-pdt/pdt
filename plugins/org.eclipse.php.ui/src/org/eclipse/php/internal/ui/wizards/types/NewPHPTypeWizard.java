@@ -21,7 +21,6 @@ import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -45,7 +44,6 @@ import org.eclipse.php.internal.ui.preferences.includepath.IncludePathUtils;
 import org.eclipse.php.internal.ui.util.CodeInjector;
 import org.eclipse.php.internal.ui.wizards.PHPFileCreationWizard.FileCreator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -79,13 +77,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 
 	public NewPHPTypeWizard() {
 		super();
-		setHelpAvailable(true);
 		setNeedsProgressMonitor(true);
-	}
-
-	@Override
-	public void createPageControls(Composite pageContainer) {
-		super.createPageControls(pageContainer);
 	}
 
 	@Override
@@ -101,62 +93,59 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 		}
 
 		final IFile file = root.getFile(new Path(containerName).append(fileName));
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException {
-				try {
+		IRunnableWithProgress op = monitor -> {
+			try {
+				new FileCreator() {
+					@Override
+					protected void normalizeFile(IFile file) {
+						super.normalizeFile(file);
+						IContentFormatter formatter = PHPUiPlugin.getDefault().getActiveFormatter();
+						try {
+							IStructuredModel structuredModel = null;
 
-					new FileCreator() {
-						@Override
-						protected void normalizeFile(IFile file) {
-							super.normalizeFile(file);
-							IContentFormatter formatter = PHPUiPlugin.getDefault().getActiveFormatter();
+							structuredModel = StructuredModelManager.getModelManager().getModelForEdit(file);
+							if (structuredModel == null) {
+								return;
+							}
 							try {
-								IStructuredModel structuredModel = null;
+								// setup structuredModel
+								// Note: We are getting model for edit. Will
+								// save model if model
+								// changed.
+								IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
-								structuredModel = StructuredModelManager.getModelManager().getModelForEdit(file);
-								if (structuredModel == null) {
-									return;
-								}
-								try {
-									// setup structuredModel
-									// Note: We are getting model for edit. Will
-									// save model if model
-									// changed.
-									IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
-
-									IRegion region = new Region(0, structuredDocument.getLength());
-									if (formatter instanceof IContentFormatter2) {
-										IContentFormatter2 contentFormatter2 = (IContentFormatter2) formatter;
-										if (NewPHPTypeWizard.this instanceof NewPHPTraitWizard) {
-											contentFormatter2.format(structuredDocument, region, PHPVersion.PHP5_4);
-										} else if (NewPHPTypeWizard.this instanceof NewPHPInterfaceWizard) {
-											contentFormatter2.format(structuredDocument, region, PHPVersion.PHP5_4);
-										} else {
-											formatter.format(structuredDocument, region);
-										}
+								IRegion region = new Region(0, structuredDocument.getLength());
+								if (formatter instanceof IContentFormatter2) {
+									IContentFormatter2 contentFormatter2 = (IContentFormatter2) formatter;
+									if (NewPHPTypeWizard.this instanceof NewPHPTraitWizard) {
+										contentFormatter2.format(structuredDocument, region, PHPVersion.PHP5_4);
+									} else if (NewPHPTypeWizard.this instanceof NewPHPInterfaceWizard) {
+										contentFormatter2.format(structuredDocument, region, PHPVersion.PHP5_4);
 									} else {
 										formatter.format(structuredDocument, region);
 									}
-									structuredModel.save();
-								} finally {
-									// release from model manager
-									if (structuredModel != null) {
-										structuredModel.releaseFromEdit();
-									}
+								} else {
+									formatter.format(structuredDocument, region);
 								}
-								currentProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-							} catch (IOException e) {
-								Logger.logException(e);
-							} catch (CoreException e) {
-								Logger.logException(e);
+								structuredModel.save();
+							} finally {
+								// release from model manager
+								if (structuredModel != null) {
+									structuredModel.releaseFromEdit();
+								}
 							}
+							currentProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+						} catch (IOException e) {
+							Logger.logException(e);
+						} catch (CoreException e) {
+							Logger.logException(e);
 						}
-					}.createFile(NewPHPTypeWizard.this, file, monitor, contents);
-				} catch (CoreException e) {
-					throw new InvocationTargetException(e);
-				} finally {
-					monitor.done();
-				}
+					}
+				}.createFile(NewPHPTypeWizard.this, file, monitor, contents);
+			} catch (CoreException e) {
+				throw new InvocationTargetException(e);
+			} finally {
+				monitor.done();
 			}
 		};
 		try {
@@ -466,39 +455,37 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 		final IFolder newFolderHandle = createFolderHandle(newFolderPath);
 
 		final boolean createVirtualFolder = false;
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) {
-				AbstractOperation op;
-				op = new CreateFolderOperation(newFolderHandle, null, createVirtualFolder, null,
-						IDEWorkbenchMessages.WizardNewFolderCreationPage_title);
-				try {
-					// see bug
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
-					// directly execute the operation so that the undo state is
-					// not preserved. Making this undoable can result in
-					// accidental
-					// folder (and file) deletions.
-					op.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
-				} catch (final ExecutionException e) {
-					getContainer().getShell().getDisplay().syncExec(new Runnable() {
-						public void run() {
-							if (e.getCause() instanceof CoreException) {
-								ErrorDialog.openError(getContainer().getShell(), // Was
-																					// Utilities.getFocusShell()
-										IDEWorkbenchMessages.WizardNewFolderCreationPage_errorTitle, null, // no
-																											// special
-																											// message
-										((CoreException) e.getCause()).getStatus());
-							} else {
-								IDEWorkbenchPlugin.log(getClass(), "createNewFolder()", e.getCause()); //$NON-NLS-1$
-								MessageDialog.openError(getContainer().getShell(),
-										IDEWorkbenchMessages.WizardNewFolderCreationPage_internalErrorTitle,
-										NLS.bind(IDEWorkbenchMessages.WizardNewFolder_internalError,
-												e.getCause().getMessage()));
-							}
+		IRunnableWithProgress op = monitor -> {
+			AbstractOperation op1;
+			op1 = new CreateFolderOperation(newFolderHandle, null, createVirtualFolder, null,
+					IDEWorkbenchMessages.WizardNewFolderCreationPage_title);
+			try {
+				// see bug
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
+				// directly execute the operation so that the undo state is
+				// not preserved. Making this undoable can result in
+				// accidental
+				// folder (and file) deletions.
+				op1.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
+			} catch (final ExecutionException e) {
+				getContainer().getShell().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						if (e.getCause() instanceof CoreException) {
+							ErrorDialog.openError(getContainer().getShell(), // Was
+																				// Utilities.getFocusShell()
+									IDEWorkbenchMessages.WizardNewFolderCreationPage_errorTitle, null, // no
+																										// special
+																										// message
+									((CoreException) e.getCause()).getStatus());
+						} else {
+							IDEWorkbenchPlugin.log(getClass(), "createNewFolder()", e.getCause()); //$NON-NLS-1$
+							MessageDialog.openError(getContainer().getShell(),
+									IDEWorkbenchMessages.WizardNewFolderCreationPage_internalErrorTitle,
+									NLS.bind(IDEWorkbenchMessages.WizardNewFolder_internalError,
+											e.getCause().getMessage()));
 						}
-					});
-				}
+					}
+				});
 			}
 		};
 

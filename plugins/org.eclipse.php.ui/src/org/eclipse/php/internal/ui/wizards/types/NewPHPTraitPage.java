@@ -38,6 +38,7 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 		super(Messages.NewPHPTraitPage_0);
 		fTypeKind = TRAIT_TYPE;
 		setMessage(Messages.NewPHPTraitPage_1);
+		setDescription(Messages.NewPHPTraitPage_1);
 		setTitle(Messages.NewPHPTraitPage_2);
 		interfacesStatus = new StatusInfo();
 	}
@@ -116,20 +117,17 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 		}
 		// close the wizard if it is PHP4 project and user selected not to
 		// continue
-		getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
-					MessageDialog dialog = new MessageDialog(getShell(),
-							phpVersion.getAlias().toUpperCase() + Messages.NewPHPTraitPage_4, null,
-							Messages.NewPHPTraitPage_5 + phpVersion.getAlias().toUpperCase()
-									+ Messages.NewPHPTraitPage_6,
-							MessageDialog.QUESTION,
-							new String[] { Messages.NewPHPTraitPage_7, Messages.NewPHPTraitPage_8 }, 0);
-					int res = dialog.open();
-					if (res != 0) {// NO clicked
-						WizardDialog wizardDialog = ((WizardDialog) getContainer());
-						wizardDialog.close();
-					}
+		getShell().getDisplay().asyncExec(() -> {
+			if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
+				MessageDialog dialog = new MessageDialog(getShell(),
+						phpVersion.getAlias().toUpperCase() + Messages.NewPHPTraitPage_4, null,
+						Messages.NewPHPTraitPage_5 + phpVersion.getAlias().toUpperCase() + Messages.NewPHPTraitPage_6,
+						MessageDialog.QUESTION, new String[] { Messages.NewPHPTraitPage_7, Messages.NewPHPTraitPage_8 },
+						0);
+				int res = dialog.open();
+				if (res != 0) {// NO clicked
+					WizardDialog wizardDialog = ((WizardDialog) getContainer());
+					wizardDialog.close();
 				}
 			}
 		});

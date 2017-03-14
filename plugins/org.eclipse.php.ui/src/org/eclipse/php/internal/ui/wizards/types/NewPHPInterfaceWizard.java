@@ -81,11 +81,7 @@ public class NewPHPInterfaceWizard extends NewPHPTypeWizard implements INewWizar
 		}
 
 		if (validator.hasWarnings()) {
-			getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					showWarningsDialog(validator.getWarnings());
-				}
-			});
+			getShell().getDisplay().asyncExec(() -> showWarningsDialog(validator.getWarnings()));
 		}
 		page.saveGeneratedGroupValues();
 		return true;
