@@ -27,7 +27,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.ui.converter.String2KeywordsConverter;
 import org.eclipse.php.composer.ui.wizard.project.BasicSettingsGroup;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.IPHPProjectCreateWizardPage;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
@@ -207,7 +207,7 @@ abstract public class AbstractWizardFirstPage extends WizardPage implements IPHP
 
 	public PHPVersion getPHPVersionValue() {
 		if (versionGroup != null) {
-			return PHPVersion.fromApi(versionGroup.fConfigurationBlock.getPHPVersionValue());
+			return versionGroup.fConfigurationBlock.getPHPVersionValue();
 		}
 		return null;
 	}

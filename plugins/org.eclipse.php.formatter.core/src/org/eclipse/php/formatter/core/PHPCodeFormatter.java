@@ -26,7 +26,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;

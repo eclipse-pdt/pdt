@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ArrayAccess;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Variable;

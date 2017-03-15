@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharException;

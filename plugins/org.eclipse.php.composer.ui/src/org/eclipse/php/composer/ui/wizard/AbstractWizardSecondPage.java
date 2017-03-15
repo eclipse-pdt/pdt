@@ -51,7 +51,7 @@ import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.composer.ui.handler.ConsoleResponseHandler;
 import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -204,7 +204,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 
 	protected void setPhpLangOptions() {
 		boolean useASPTags = false;
-		PHPVersion phpVersion = PHPVersion.fromApi(firstPage.versionGroup.fConfigurationBlock.getPHPVersionValue());
+		PHPVersion phpVersion = firstPage.versionGroup.fConfigurationBlock.getPHPVersionValue();
 		ProjectOptions.setSupportingAspTags(useASPTags, getProject());
 		ProjectOptions.setPhpVersion(phpVersion, getProject());
 	}

@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.Nullable;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;

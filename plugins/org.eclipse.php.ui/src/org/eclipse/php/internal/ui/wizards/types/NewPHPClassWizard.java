@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;

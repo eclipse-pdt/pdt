@@ -27,7 +27,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
 import org.junit.Test;
 

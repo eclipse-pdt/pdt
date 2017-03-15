@@ -32,7 +32,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.preferences.includepath.IncludePathUtils;
 import org.eclipse.php.internal.ui.util.SWTUtil;

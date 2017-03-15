@@ -18,7 +18,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**

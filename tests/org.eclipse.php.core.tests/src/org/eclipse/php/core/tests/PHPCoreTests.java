@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.osgi.framework.BundleContext;
 
 /**

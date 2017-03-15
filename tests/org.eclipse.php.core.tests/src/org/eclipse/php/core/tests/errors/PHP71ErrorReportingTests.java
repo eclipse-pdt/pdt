@@ -14,7 +14,7 @@ package org.eclipse.php.core.tests.errors;
 
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)

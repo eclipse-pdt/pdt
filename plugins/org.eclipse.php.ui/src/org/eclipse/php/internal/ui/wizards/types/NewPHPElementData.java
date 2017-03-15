@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.wizards.types;
 
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 /**
  * This class represents a Data Object that contains all the necessary data from
