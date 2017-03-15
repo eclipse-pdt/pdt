@@ -157,7 +157,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			if (initialReconcile || astProvider.isActive(unit)) {
 				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit.getScriptProject().getProject());
 				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
-				createdAST = newParser.createAST(null);
+				createdAST = newParser != null ? newParser.createAST(null) : null;
 				if (createdAST != null && document != null) {
 					createdAST.setSourceModule(unit);
 					createdAST.setSourceRange(0, document.getLength());
