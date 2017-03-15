@@ -45,7 +45,7 @@ public class FunctionReturnTypeStrategy extends GlobalTypesStrategy {
 		String prefix = context.getPrefix();
 		String suffix = ""; //$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(context);
-		PHPVersion phpVersion = context.getPhpVersion().toApi();
+		PHPVersion phpVersion = context.getPhpVersion();
 		for (SimpleProposal proposal : TYPES) {
 			if (proposal.isValid(prefix, phpVersion)) {
 				reporter.reportKeyword(proposal.getProposal(), suffix, replaceRange);

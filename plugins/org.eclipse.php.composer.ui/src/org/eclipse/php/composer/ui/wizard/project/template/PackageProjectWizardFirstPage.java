@@ -21,7 +21,7 @@ import org.eclipse.php.composer.ui.converter.String2KeywordsConverter;
 import org.eclipse.php.composer.ui.wizard.LocationGroup;
 import org.eclipse.php.composer.ui.wizard.project.BasicSettingsGroup;
 import org.eclipse.php.composer.ui.wizard.project.ComposerProjectWizardFirstPage;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage.VersionGroup;

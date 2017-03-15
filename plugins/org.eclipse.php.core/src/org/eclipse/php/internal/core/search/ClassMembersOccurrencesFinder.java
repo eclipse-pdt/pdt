@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.search;
 import java.util.List;
 
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 

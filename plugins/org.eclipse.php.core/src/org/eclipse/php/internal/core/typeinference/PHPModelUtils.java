@@ -43,6 +43,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.*;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
@@ -1248,7 +1249,7 @@ public class PHPModelUtils {
 	@NonNull
 	public static IType[] getNamespaceType(String namespace, String prefix, boolean exactName,
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor, boolean isType)
-					throws ModelException {
+			throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
 		Collection<IType> result = new LinkedList<IType>();
