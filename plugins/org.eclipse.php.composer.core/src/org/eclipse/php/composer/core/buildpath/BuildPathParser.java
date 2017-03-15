@@ -14,6 +14,7 @@ package org.eclipse.php.composer.core.buildpath;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.php.composer.api.ComposerPackage;
@@ -39,7 +40,16 @@ public class BuildPathParser {
 
 		@Override
 		public int compareTo(BuildPathInfo o) {
-			return path.compareTo(o.path);
+			int c = path.compareTo(o.path);
+			return c != 0 ? c : type - o.type;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof BuildPathInfo)) {
+				return false;
+			}
+			return compareTo((BuildPathInfo) obj) == 0;
 		}
 	}
 
@@ -53,7 +63,7 @@ public class BuildPathParser {
 
 	@Deprecated
 	public List<String> getPaths() {
-		List<BuildPathInfo> pathsInfo = getPathsInfo();
+		TreeSet<BuildPathInfo> pathsInfo = getPathsInfo();
 		List<String> pathes = new ArrayList<String>(pathsInfo.size());
 		for (BuildPathInfo info : pathsInfo) {
 			pathes.add(info.path);
@@ -62,12 +72,12 @@ public class BuildPathParser {
 		return pathes;
 	}
 
-	public List<BuildPathInfo> getPathsInfo() {
+	public TreeSet<BuildPathInfo> getPathsInfo() {
 		ComposerPackage composer = project.getComposerPackage();
 		String vendor = project.getVendorDir();
 
 		// empty list for found package paths
-		List<BuildPathInfo> paths = new ArrayList<BuildPathInfo>();
+		TreeSet<BuildPathInfo> paths = new TreeSet<BuildPathInfo>();
 
 		// add source paths from this package
 		parsePackage(composer, paths, EMPTY, BuildPathInfo.SOURCE);
@@ -86,7 +96,7 @@ public class BuildPathParser {
 		return paths;
 	}
 
-	private void parsePackage(ComposerPackage pkg, List<BuildPathInfo> paths, String prefix, int type) {
+	private void parsePackage(ComposerPackage pkg, TreeSet<BuildPathInfo> paths, String prefix, int type) {
 		if (prefix != null && !prefix.equals("") && !prefix.endsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
 			prefix += "/"; //$NON-NLS-1$
 		}
@@ -134,7 +144,7 @@ public class BuildPathParser {
 		return cleanedPath;
 	}
 
-	private void addPath(String path, List<BuildPathInfo> paths, int type) {
+	private void addPath(String path, TreeSet<BuildPathInfo> paths, int type) {
 		if (path != null && !path.trim().isEmpty()) {
 			// switch from win to unix
 			path = path.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -167,9 +177,7 @@ public class BuildPathParser {
 				path = path.substring(1);
 			}
 
-			if (!paths.contains(path)) {
-				paths.add(new BuildPathInfo(path, type));
-			}
+			paths.add(new BuildPathInfo(path, type));
 		}
 	}
 }
