@@ -240,19 +240,16 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 				return;
 			}
 
-			if (!(path.endsWith(".xml"))) {
-				path.concat(".xml");
-			}
+			// if (!(path.endsWith(".xml"))) {
+			// path.concat(".xml");
+			// }
 
 			FormatterUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTSAVEPATH, dialog.getFilterPath());
 
 			final File file = new File(path);
-			if (file.exists()
-					&& !MessageDialog.openQuestion(fComposite.getShell(),
-							FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_title,
-							Messages.format(
-									FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_message,
-									path))) {
+			if (file.exists() && !MessageDialog.openQuestion(fComposite.getShell(),
+					FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_title, Messages.format(
+							FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_message, path))) {
 				return;
 			}
 
