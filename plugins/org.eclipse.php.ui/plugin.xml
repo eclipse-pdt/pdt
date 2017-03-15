@@ -84,6 +84,10 @@
 
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation"/>
 
+			<!-- Type wizards -->
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.ClassWizard"></newWizardShortcut>
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.InterfaceWizard"></newWizardShortcut>
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.TraitWizard"></newWizardShortcut>
 		</perspectiveExtension>
 
 		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
