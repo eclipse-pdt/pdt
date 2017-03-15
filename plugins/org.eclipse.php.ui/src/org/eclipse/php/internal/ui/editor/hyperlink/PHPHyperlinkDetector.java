@@ -34,7 +34,7 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		ITextEditor textEditor = getAdapter(ITextEditor.class);
+		ITextEditor textEditor = (ITextEditor) getAdapter(ITextEditor.class);
 		if (region == null || !(textEditor instanceof PHPStructuredEditor)) {
 			return null;
 		}
