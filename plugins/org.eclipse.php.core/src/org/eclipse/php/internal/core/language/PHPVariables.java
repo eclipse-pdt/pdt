@@ -15,7 +15,7 @@ package org.eclipse.php.internal.core.language;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 /**
  * This is a container for predefined PHP variables

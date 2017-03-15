@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.*;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 

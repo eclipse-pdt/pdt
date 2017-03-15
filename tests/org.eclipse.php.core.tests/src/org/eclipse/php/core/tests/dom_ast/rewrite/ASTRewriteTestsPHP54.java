@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration;

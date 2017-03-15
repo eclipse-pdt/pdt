@@ -35,7 +35,7 @@ import org.eclipse.php.core.tests.performance.filenetwork.FileNetworkTestsWrappe
 import org.eclipse.php.core.tests.performance.markoccurrence.MarkOccurrenceTestsWrapper;
 import org.eclipse.php.core.tests.performance.selection.SelectionEngineTestsWrapper;
 import org.eclipse.php.core.tests.performance.typeinference.TypeInferenceTestsWrapper;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 

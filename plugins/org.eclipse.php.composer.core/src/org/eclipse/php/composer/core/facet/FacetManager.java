@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.facet.PHPFacetsConstants;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;

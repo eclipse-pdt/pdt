@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast.rewrite;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 public class NodeDeletionTestsPHP7 extends NodeDeletionTests {
 

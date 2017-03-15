@@ -33,7 +33,7 @@ import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
 import org.eclipse.php.core.tests.performance.ProjectSuite;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
