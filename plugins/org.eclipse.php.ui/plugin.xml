@@ -83,6 +83,15 @@
 			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer"/>
 
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation"/>
+   <newWizardShortcut
+         id="org.eclipse.php.ui.wizards.ClassWizard">
+   </newWizardShortcut>
+   <newWizardShortcut
+         id="org.eclipse.php.ui.wizards.InterfaceWizard">
+   </newWizardShortcut>
+   <newWizardShortcut
+         id="org.eclipse.php.ui.wizards.TraitWizard">
+   </newWizardShortcut>
 
 		</perspectiveExtension>
 
