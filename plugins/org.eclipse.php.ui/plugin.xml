@@ -76,6 +76,11 @@
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
 			<newWizardShortcut id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard" />
 
+			<!-- Type wizards -->
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.ClassWizard" />
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.InterfaceWizard" />
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.TraitWizard" />
+
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
 			<showInPart id="org.eclipse.php.ui.explorer"/>
 			<showInPart id="org.eclipse.egit.ui.RepositoriesView"/>
@@ -83,7 +88,6 @@
 			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer"/>
 
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation"/>
-
 		</perspectiveExtension>
 
 		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
