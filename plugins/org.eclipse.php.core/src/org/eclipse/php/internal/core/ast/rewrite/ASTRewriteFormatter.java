@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.format.DefaultCodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;

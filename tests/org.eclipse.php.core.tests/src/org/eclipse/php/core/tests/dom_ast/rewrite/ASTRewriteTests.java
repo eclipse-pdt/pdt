@@ -25,7 +25,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;

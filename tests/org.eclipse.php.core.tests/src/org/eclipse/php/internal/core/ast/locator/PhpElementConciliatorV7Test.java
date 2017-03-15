@@ -15,7 +15,7 @@ package org.eclipse.php.internal.core.ast.locator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.junit.Test;

@@ -18,7 +18,7 @@ import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;

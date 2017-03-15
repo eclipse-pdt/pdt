@@ -33,7 +33,7 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;

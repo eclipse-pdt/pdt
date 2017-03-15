@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;

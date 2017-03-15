@@ -783,7 +783,7 @@ public class PHPLaunchUtilities {
 			item = PHPDebugPlugin.getPHPexeItem(project);
 		} else {
 			IPath exePath = Path.fromPortableString(path);
-			org.eclipse.php.internal.core.PHPVersion version = PHPRuntime.getPHPVersion(exePath);
+			org.eclipse.php.core.PHPVersion version = PHPRuntime.getPHPVersion(exePath);
 			if (version == null) {
 				String exeName = exePath.lastSegment();
 				item = PHPexes.getInstance().getItem(exeName);

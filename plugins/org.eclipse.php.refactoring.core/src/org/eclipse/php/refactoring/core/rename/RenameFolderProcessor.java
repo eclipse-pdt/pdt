@@ -25,7 +25,7 @@ import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.core.libfolders.RenameLibraryFolderChange;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.includepath.IncludePath;

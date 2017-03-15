@@ -30,7 +30,7 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;

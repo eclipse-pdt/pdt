@@ -21,7 +21,7 @@ import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;

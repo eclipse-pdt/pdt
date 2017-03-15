@@ -30,7 +30,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;

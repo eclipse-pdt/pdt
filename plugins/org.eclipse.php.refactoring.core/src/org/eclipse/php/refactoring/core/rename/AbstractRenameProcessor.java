@@ -28,7 +28,7 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.RenameProcessor;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;

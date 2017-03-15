@@ -275,8 +275,8 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		return PHPVersion.byAlias(getValue(PREF_PHP_VERSION));
 	}
 
-	private org.eclipse.php.internal.core.PHPVersion getOldPHPVersionValue() {
-		return org.eclipse.php.internal.core.PHPVersion.fromApi(getPHPVersionValue());
+	private PHPVersion getOldPHPVersionValue() {
+		return getPHPVersionValue();
 	}
 
 	// Accessed from the PHP project Wizard

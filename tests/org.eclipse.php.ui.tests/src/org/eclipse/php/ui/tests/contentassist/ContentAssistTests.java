@@ -37,7 +37,7 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPTestEditor;

@@ -21,7 +21,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.CodeFormatterVisitor;
 import org.eclipse.php.formatter.ui.Logger;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.text.edits.ReplaceEdit;
 

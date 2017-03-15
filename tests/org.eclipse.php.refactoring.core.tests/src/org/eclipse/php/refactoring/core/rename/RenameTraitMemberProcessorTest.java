@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;

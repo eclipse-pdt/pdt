@@ -18,7 +18,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.php.core.tests.performance.ProjectSuite;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 /**
  * Various performance tests performed on Zend Framework project.

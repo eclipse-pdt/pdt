@@ -20,7 +20,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;

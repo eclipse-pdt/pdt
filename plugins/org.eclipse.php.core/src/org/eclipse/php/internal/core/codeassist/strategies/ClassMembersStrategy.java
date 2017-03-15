@@ -22,7 +22,7 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;

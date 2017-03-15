@@ -20,7 +20,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.AnonymousClassInstanceType;

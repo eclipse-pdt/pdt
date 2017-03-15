@@ -22,7 +22,7 @@ import org.eclipse.dltk.ui.infoviews.ModelElementArray;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;

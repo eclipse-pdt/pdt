@@ -26,7 +26,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -34,7 +34,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-@SuppressWarnings("restriction")
 public class ComposerImportWizard extends Wizard implements IImportWizard {
 
 	private IWorkbench workbench;

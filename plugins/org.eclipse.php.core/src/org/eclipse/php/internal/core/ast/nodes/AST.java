@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.search.Messages;

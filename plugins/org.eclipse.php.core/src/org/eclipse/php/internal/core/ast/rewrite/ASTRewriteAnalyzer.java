@@ -25,7 +25,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.BlockContext;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.NodeMarker;

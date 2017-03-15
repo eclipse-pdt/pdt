@@ -48,7 +48,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;

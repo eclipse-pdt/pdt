@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.rewrite;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 
 import java_cup.runtime.Symbol;

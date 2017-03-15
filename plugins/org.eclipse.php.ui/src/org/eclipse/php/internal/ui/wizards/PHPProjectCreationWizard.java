@@ -21,7 +21,7 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;

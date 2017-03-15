@@ -23,7 +23,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.ProjectOptions;
