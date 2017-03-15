@@ -25,7 +25,7 @@ import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.editor.composer.ComposerFormEditor;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.FileEditorInput;

@@ -21,7 +21,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.UniqueIdentityElementUtil;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;

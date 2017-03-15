@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.documentModel.parser;
 import java.io.Reader;
 
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.search.Messages;
 
 public class PhpLexerFactory {

@@ -15,7 +15,7 @@ import java.util.List;
 
 import java_cup.runtime.Scanner;
 
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 /**
  * Description:

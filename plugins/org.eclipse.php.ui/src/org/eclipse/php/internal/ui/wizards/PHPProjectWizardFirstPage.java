@@ -43,7 +43,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -562,7 +562,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				public void statusChanged(IStatus status) {
 				}
 			}, (IProject) null, null);
-			fConfigurationBlock.setMinimumVersion(minimumVersion.toApi());
+			fConfigurationBlock.setMinimumVersion(minimumVersion);
 			fConfigurationBlock.createContents(group);
 			fConfigurationBlock.setEnabled(false);
 		}
@@ -957,7 +957,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	public PHPVersion getPHPVersionValue() {
 		if (fVersionGroup != null) {
-			return PHPVersion.fromApi(fVersionGroup.fConfigurationBlock.getPHPVersionValue());
+			return fVersionGroup.fConfigurationBlock.getPHPVersionValue();
 		}
 		return null;
 	}

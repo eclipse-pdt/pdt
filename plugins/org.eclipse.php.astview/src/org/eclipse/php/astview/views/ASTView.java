@@ -66,7 +66,7 @@ import org.eclipse.php.astview.ASTViewPlugin;
 import org.eclipse.php.astview.EditorUtility;
 import org.eclipse.php.astview.NodeFinder;
 import org.eclipse.php.astview.TreeInfoCollector;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;

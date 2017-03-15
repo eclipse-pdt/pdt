@@ -16,7 +16,7 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 
 /**
  * Implementors of this interface should supply an

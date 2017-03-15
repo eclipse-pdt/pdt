@@ -23,7 +23,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.resources.IComposerProject;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
