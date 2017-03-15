@@ -33,10 +33,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -115,18 +113,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 								IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 								IRegion region = new Region(0, structuredDocument.getLength());
-								if (formatter instanceof IContentFormatter2) {
-									IContentFormatter2 contentFormatter2 = (IContentFormatter2) formatter;
-									if (NewPHPTypeWizard.this instanceof NewPHPTraitWizard) {
-										contentFormatter2.format(structuredDocument, region, PHPVersion.PHP5_4);
-									} else if (NewPHPTypeWizard.this instanceof NewPHPInterfaceWizard) {
-										contentFormatter2.format(structuredDocument, region, PHPVersion.PHP5_4);
-									} else {
-										formatter.format(structuredDocument, region);
-									}
-								} else {
-									formatter.format(structuredDocument, region);
-								}
+								formatter.format(structuredDocument, region);
 								structuredModel.save();
 							} finally {
 								// release from model manager

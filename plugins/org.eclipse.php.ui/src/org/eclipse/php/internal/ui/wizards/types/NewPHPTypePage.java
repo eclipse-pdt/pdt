@@ -1600,14 +1600,15 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	@Override
 	public void createControl(Composite parent) {
 		String[] addButtons = new String[] { Messages.NewPHPTypePage_add, null, Messages.NewPHPTypePage_remove };
-		IListAdapter listAdapter = new IListAdapter() {
-			public void customButtonPressed(ListDialogField field, int index) {
+		IListAdapter<IType> listAdapter = new IListAdapter<IType>() {
+
+			public void customButtonPressed(ListDialogField<IType> field, int index) {
 			}
 
-			public void doubleClicked(ListDialogField field) {
+			public void doubleClicked(ListDialogField<IType> field) {
 			}
 
-			public void selectionChanged(ListDialogField field) {
+			public void selectionChanged(ListDialogField<IType> field) {
 			}
 		};
 

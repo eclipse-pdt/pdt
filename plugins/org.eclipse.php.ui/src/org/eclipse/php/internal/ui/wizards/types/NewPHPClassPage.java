@@ -50,7 +50,6 @@ import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 public class NewPHPClassPage extends NewPHPTypePage {
 
 	protected Text superClassName;
-	// private Composite methodStubsCreationComp;
 	private Label superPath;
 	private IType superClassData;
 	private Button browseSuperBtn;
