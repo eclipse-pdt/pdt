@@ -16,9 +16,8 @@
 #default_phpdoc#
 #abstract_var# #final_var# #element_type# #class_name# /*superclass:*/extends #superclass_name#/*:superclass*/ /*implements:*/implements /*interfaces:*/#interface_name#/*:interfaces*//*:implements*/{
   #todo_text#
-  /*usetrait:*/use /*traits:*/#trait_name#/*:traits*/{
-  
-  }/*:usetrait*/
+  /*usetrait:*/use /*traits:*/#trait_name#/*:traits*/;/*:usetrait*/
+
   /*functions:*/
   /*func_phpdoc:*/
   /**
