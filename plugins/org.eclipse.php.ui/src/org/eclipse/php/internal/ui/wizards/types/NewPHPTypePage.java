@@ -868,8 +868,9 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		} else if ((container = getInitialContainer(selection)) != null) {
 			setContainer(container);
 			result = container;
-		} else
+		} else {
 			result = null;
+		}
 		return result;
 	}
 
@@ -1904,5 +1905,13 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 	protected boolean requireOnceShouldEnabled() {
 		return !fSuperInterfacesDialogField.getElements().isEmpty() || !fTraitsDialogField.getElements().isEmpty();
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible) {
+			elementName.setFocus();
+		}
 	}
 }
