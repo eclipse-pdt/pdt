@@ -23,7 +23,7 @@
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
 		<eclipseNext>false</eclipseNext>
-		<p2.mirrorsPrefix>/tools/pdt/updates/4.3/</p2.mirrorsPrefix>
+		<p2.mirrorsPrefix>/tools/pdt/updates/5.0/</p2.mirrorsPrefix>
 		<p2.statsURL>http://download.eclipse.org/stats</p2.statsURL>
 		<p2.mirrorsURL>http://www.eclipse.org/downloads/download.php?format=xml&amp;file=${p2.mirrorsPrefix}</p2.mirrorsURL>
 		<p2.statsTrackedArtifacts>org.eclipse.php,org.eclipse.php.mylyn,org.eclipse.php.composer</p2.statsTrackedArtifacts>
@@ -202,12 +202,6 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
 		</repository>
-		<repository>
-			<!-- XXX: Drop since Neon.2 -->
-			<id>wtp-neon</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/webtools/repository/neon/</url>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -247,7 +241,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>mars</eclipse.name>
+				<eclipse.name>neon</eclipse.name>
 			</properties>
 		</profile>
 		<profile>
@@ -258,7 +252,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>neon</eclipse.name>
+				<eclipse.name>oxygen</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php-repository</module>

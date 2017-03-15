@@ -26,7 +26,7 @@ public class JsonParserTest extends ComposertTestCase {
 			new ComposerPackage("{\n\"bla\":\'arg\n}");
 			fail();
 		} catch (ParseException e) {
-			assertEquals("Unterminated string at line 3 column 2", e.getMessage());
+			assertTrue(e.getMessage().startsWith("Unterminated string at line 3 column 2"));
 		}
 	}
 
