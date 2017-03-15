@@ -58,7 +58,7 @@ public class BuildPathManager {
 		IProject project = composerProject.getProject();
 		IScriptProject scriptProject = composerProject.getScriptProject();
 		BuildPathParser parser = new BuildPathParser(composerProject);
-		List<BuildPathParser.BuildPathInfo> paths = parser.getPathsInfo();
+		TreeSet<BuildPathParser.BuildPathInfo> paths = parser.getPathsInfo();
 
 		// project prefs
 		IEclipsePreferences prefs = ComposerPlugin.getDefault().getProjectPreferences(project);
@@ -104,7 +104,6 @@ public class BuildPathManager {
 			}
 
 		}
-		Collections.sort(paths);
 		// sort paths for nesting detection
 		Collections.sort(buildPath, new Comparator<IBuildpathEntry>() {
 
@@ -114,7 +113,9 @@ public class BuildPathManager {
 			}
 		});
 
-		// add new entries to buildpath
+		// Add new entries to buildpath.
+		// NB: "paths" is a TreeSet that is already correctly sorted through
+		// BuildPathInfo.compareTo(BuildPathInfo o)
 		for (BuildPathParser.BuildPathInfo path : paths) {
 			IPath entry = new Path(path.path);
 			IFolder folder = project.getFolder(entry);
