@@ -152,21 +152,21 @@
               class="org.eclipse.php.internal.ui.wizards.types.NewPHPClassWizard"
               icon="icons/full/etool16/newclass_wiz.png"
               id="org.eclipse.php.ui.wizards.ClassWizard"
-              name="New Class">
+              name="Class">
         </wizard>
         <wizard
               category="org.eclipse.php.project.ui"
               class="org.eclipse.php.internal.ui.wizards.types.NewPHPInterfaceWizard"
               icon="icons/full/etool16/newint_wiz.png"
               id="org.eclipse.php.ui.wizards.InterfaceWizard"
-              name="New Interface">
+              name="Interface">
         </wizard>
         <wizard
               category="org.eclipse.php.project.ui"
               class="org.eclipse.php.internal.ui.wizards.types.NewPHPTraitWizard"
               icon="icons/full/etool16/newtrait_wiz.png"
               id="org.eclipse.php.ui.wizards.TraitWizard"
-              name="New Trait">
+              name="Trait">
         </wizard>
 	</extension>
 
