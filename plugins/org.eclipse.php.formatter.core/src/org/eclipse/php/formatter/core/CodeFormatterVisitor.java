@@ -738,9 +738,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					insertSpace();
 				}
 				appendToBuffer(COMMA);
-				if (insertSpaceAfterComma) {
-					insertSpace();
-				}
 			}
 
 			// after the first element and wrap policy is except first element
@@ -749,7 +746,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				changesIndex = changes.size() - 1;
 				savedLastPosition = lastPosition;
 			}
-
+			boolean isInsertNewLine = false;
 			switch (lineWrapPolicy) {
 			case NO_LINE_WRAP:
 				break;
@@ -762,12 +759,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 
 					indent();
+					isInsertNewLine = true;
 				}
 				break;
 			case WRAP_WHEN_NECESSARY:
 				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					insertNewLine();
 					indent();
+					isInsertNewLine = true;
 				}
 				break;
 			case WRAP_FIRST_ELEMENT:
@@ -781,6 +780,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentationLevel += indentGap;
 					}
 					indent();
+					isInsertNewLine = true;
 				}
 				break;
 			case WRAP_ALL_ELEMENTS:
@@ -794,6 +794,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentationLevel += indentGap;
 					}
 					indent();
+					isInsertNewLine = true;
 				}
 				break;
 			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST:
@@ -808,6 +809,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentationLevel += indentGap;
 					}
 					indent();
+					isInsertNewLine = true;
 
 					// increase the indentation level after the first element
 					indentationLevel++;
@@ -826,12 +828,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentationLevel += indentGap;
 					}
 					indent();
+					isInsertNewLine = true;
 				}
 				break;
 			case ALWAYS_WRAP_ELEMENT:
 				insertNewLine();
 				indent();
+				isInsertNewLine = true;
 				break;
+			}
+
+			if (!isInsertNewLine && !isFirst && insertSpaceAfterComma) {
+				insertSpace();
 			}
 
 			handleChars1(lastPosition, array[i].getStart(), oldIndentationLevel != indentationLevel, indentGap);

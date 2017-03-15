@@ -7,9 +7,9 @@ $a = array (0, 'Dodo'=>'Golo', $a[$a] ,
 ?>
 --EXPECT--
 <?php
-$a = array (0, 
-		'Dodo' => 'Golo', 
-		$a [$a], 
-		$b => foo (), 
+$a = array (0,
+		'Dodo' => 'Golo',
+		$a [$a],
+		$b => foo (),
 		4 => $myClass->getFirst () );
 ?>

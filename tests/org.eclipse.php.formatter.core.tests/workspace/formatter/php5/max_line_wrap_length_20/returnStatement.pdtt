@@ -28,7 +28,7 @@ function square($num) {
 }
 
 function small_numbers() {
-	return array (0, 
+	return array (0,
 			1, 2 );
 }
 

@@ -57,7 +57,7 @@ foreach (array(1, 2, 3, 4, 5) as $v) {
 <?php
 /* foreach example 1: value only */
 
-$a = array (1, 2, 3, 
+$a = array (1, 2, 3,
 		17 );
 
 foreach ( $a as $v ) {
@@ -66,7 +66,7 @@ foreach ( $a as $v ) {
 
 /* foreach example 2: value (with its manual access notation printed for illustration) */
 
-$a = array (1, 2, 3, 
+$a = array (1, 2, 3,
 		17 );
 
 $i = 0; /* for illustrative purposes only */
@@ -79,9 +79,9 @@ foreach ( $a as $v ) {
 /* foreach example 3: key and value */
 
 $a = array (
-		"one" => 1, 
-		"two" => 2, 
-		"three" => 3, 
+		"one" => 1,
+		"two" => 2,
+		"three" => 3,
 		"seventeen" => 17 );
 
 foreach ( $a as $k => $v ) {
@@ -103,7 +103,7 @@ foreach ( $a as $v1 ) {
 
 /* foreach example 5: dynamic arrays */
 
-foreach ( array (1, 
+foreach ( array (1,
 		2, 3, 4, 5 ) as $v ) {
 	echo "$v\n";
 }

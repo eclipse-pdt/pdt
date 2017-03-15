@@ -28,11 +28,11 @@ while (++$i) {
 ?>
 --EXPECT--
 <?php
-$arr = array ('one', 
-		'two', 
-		'three', 
-		'four', 
-		'stop', 
+$arr = array ('one',
+		'two',
+		'three',
+		'four',
+		'stop',
 		'five' );
 while ( list ( , $val ) = each ( $arr ) ) {
 	if ($val ==
