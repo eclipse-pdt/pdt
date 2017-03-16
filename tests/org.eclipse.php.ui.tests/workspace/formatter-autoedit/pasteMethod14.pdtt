@@ -1,0 +1,36 @@
+--TEST--
+Bug 513109 - handle some more autoedit scenarios
+--FILE--
+<?php
+function foo()
+{
+    switch ($a) {
+    case '1':
+        break;
+    case '2':
+        break;
+    |default:
+        break;
+    }
+}
+?>
+--OTHER--
+case '3':
+break;
+
+--EXPECT--
+<?php
+function foo()
+{
+    switch ($a) {
+    case '1':
+        break;
+    case '2':
+        break;
+    case '3':
+    	break;
+    default:
+        break;
+    }
+}
+?>
