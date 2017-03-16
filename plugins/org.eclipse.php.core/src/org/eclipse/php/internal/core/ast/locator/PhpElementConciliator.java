@@ -79,7 +79,8 @@ public class PhpElementConciliator {
 		parent = namespaceName.getParent();
 		if (parent.getType() == ASTNode.FUNCTION_NAME || parent.getType() == ASTNode.CLASS_NAME
 				|| parent.getType() == ASTNode.NAMESPACE || parent.getType() == ASTNode.USE_STATEMENT_PART
-				|| parent.getType() == ASTNode.TRAIT_USE_STATEMENT) {
+				|| parent.getType() == ASTNode.TRAIT_USE_STATEMENT
+				|| parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 			return false;
 		}
 
