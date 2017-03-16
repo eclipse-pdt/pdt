@@ -21,7 +21,7 @@ import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedPosition;
-import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
 import org.eclipse.php.internal.core.ast.rewrite.ITrackedNodePosition;
 import org.eclipse.php.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.swt.graphics.Image;

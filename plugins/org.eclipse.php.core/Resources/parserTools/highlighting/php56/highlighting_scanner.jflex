@@ -11,7 +11,7 @@
 
 package org.eclipse.php.internal.core.documentModel.parser.php56;
 
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%

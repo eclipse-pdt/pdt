@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.corext.dom;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 
 public class Selection {
 

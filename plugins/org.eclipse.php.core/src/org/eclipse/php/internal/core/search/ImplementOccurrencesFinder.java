@@ -14,9 +14,9 @@
  */
 package org.eclipse.php.internal.core.search;
 
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
  * Finds all implement occurrences of an extended class or an implemented

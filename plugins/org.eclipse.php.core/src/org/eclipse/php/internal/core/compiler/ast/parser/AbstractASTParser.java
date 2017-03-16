@@ -23,8 +23,8 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;

@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**

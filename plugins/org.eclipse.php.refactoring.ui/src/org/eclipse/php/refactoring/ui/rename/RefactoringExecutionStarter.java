@@ -13,8 +13,8 @@ package org.eclipse.php.refactoring.ui.rename;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.swt.widgets.Shell;
 
 /**

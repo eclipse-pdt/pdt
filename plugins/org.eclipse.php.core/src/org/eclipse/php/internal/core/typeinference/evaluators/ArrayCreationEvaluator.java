@@ -19,8 +19,8 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
+import org.eclipse.php.core.compiler.ast.nodes.ArrayCreation;
+import org.eclipse.php.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
 public class ArrayCreationEvaluator extends GoalEvaluator {

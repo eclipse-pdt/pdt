@@ -18,7 +18,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;

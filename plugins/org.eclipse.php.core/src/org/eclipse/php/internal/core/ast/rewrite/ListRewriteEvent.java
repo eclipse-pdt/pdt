@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.rewrite;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 
 /**
  *

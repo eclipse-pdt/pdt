@@ -14,10 +14,10 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This strategy completes global classes after 'new' statement. It adds "self"

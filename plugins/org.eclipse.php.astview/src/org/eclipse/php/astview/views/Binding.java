@@ -13,10 +13,10 @@ package org.eclipse.php.astview.views;
 
 import java.util.ArrayList;
 
-import org.eclipse.php.internal.core.ast.nodes.IBinding;
-import org.eclipse.php.internal.core.ast.nodes.IMethodBinding;
-import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.core.ast.nodes.IBinding;
+import org.eclipse.php.core.ast.nodes.IMethodBinding;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.core.ast.nodes.IVariableBinding;
 import org.eclipse.swt.graphics.Image;
 
 /**

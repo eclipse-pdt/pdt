@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.search;
 
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.ast.nodes.*;
 
 public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 

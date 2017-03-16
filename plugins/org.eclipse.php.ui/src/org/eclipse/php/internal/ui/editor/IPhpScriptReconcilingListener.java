@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.ui.editor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 
 /**
  * Interface of an object listening to Java reconciling.

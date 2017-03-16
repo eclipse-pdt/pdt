@@ -15,8 +15,8 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Block;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
 
 /**
  * AST visitor optimized for finding type declarations in PHP source modules.

@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;

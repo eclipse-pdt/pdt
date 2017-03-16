@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.LocalVariableIndex;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;

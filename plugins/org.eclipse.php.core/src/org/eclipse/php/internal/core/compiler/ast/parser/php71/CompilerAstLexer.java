@@ -11,11 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser.php71;
 
-import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
+import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
+import org.eclipse.php.core.compiler.ast.nodes.Comment;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 

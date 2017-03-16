@@ -27,16 +27,16 @@ import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -565,10 +565,10 @@ public class UseStatementInjector {
 	 * @return
 	 */
 	private List<String> getImportedTypeName(ModuleDeclaration moduleDeclaration, final int offset) {
-		org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement[] useStatements = ASTUtils
+		org.eclipse.php.core.compiler.ast.nodes.UseStatement[] useStatements = ASTUtils
 				.getUseStatements(moduleDeclaration, offset);
 		List<String> importedClass = new ArrayList<String>();
-		for (org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement statement : useStatements) {
+		for (org.eclipse.php.core.compiler.ast.nodes.UseStatement statement : useStatements) {
 			for (UsePart usePart : statement.getParts()) {
 				String name;
 				if (usePart.getAlias() != null) {

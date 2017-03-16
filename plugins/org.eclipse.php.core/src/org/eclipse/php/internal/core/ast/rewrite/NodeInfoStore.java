@@ -16,7 +16,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInfo;
 
 /**

@@ -24,7 +24,7 @@ import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusContext;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.TokenScanner;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.internal.core.corext.dom.SelectionAnalyzer;

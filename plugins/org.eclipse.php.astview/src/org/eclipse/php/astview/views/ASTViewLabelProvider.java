@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.util.Signature;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;

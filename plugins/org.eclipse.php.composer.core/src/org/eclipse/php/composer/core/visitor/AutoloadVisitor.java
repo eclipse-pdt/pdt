@@ -16,10 +16,10 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.composer.api.collection.Psr;
 import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.core.model.ModelAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.core.compiler.ast.nodes.ArrayCreation;
+import org.eclipse.php.core.compiler.ast.nodes.ArrayElement;
+import org.eclipse.php.core.compiler.ast.nodes.InfixExpression;
+import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
 @SuppressWarnings("restriction")

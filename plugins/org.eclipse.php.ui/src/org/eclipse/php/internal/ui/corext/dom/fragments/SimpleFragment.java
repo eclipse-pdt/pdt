@@ -12,10 +12,10 @@
 package org.eclipse.php.internal.ui.corext.dom.fragments;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Identifier;
+import org.eclipse.php.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.text.edits.TextEditGroup;
 

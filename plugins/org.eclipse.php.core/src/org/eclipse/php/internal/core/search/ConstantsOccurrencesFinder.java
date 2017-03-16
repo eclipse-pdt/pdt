@@ -16,8 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
-import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
  * Constants occurrences finder.

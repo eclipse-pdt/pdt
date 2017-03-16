@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.ISelectionListener;

@@ -21,7 +21,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;

@@ -29,7 +29,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.visitor.TraitUseStatementVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.text.edits.ReplaceEdit;

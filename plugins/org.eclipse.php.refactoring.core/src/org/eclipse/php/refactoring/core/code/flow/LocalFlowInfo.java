@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.code.flow;
 
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.core.ast.nodes.IVariableBinding;
 
 class LocalFlowInfo extends FlowInfo {
 

@@ -17,7 +17,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;

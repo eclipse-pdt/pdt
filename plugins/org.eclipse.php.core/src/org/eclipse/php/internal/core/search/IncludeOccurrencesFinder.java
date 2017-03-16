@@ -16,8 +16,8 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.ast.nodes.*;
 
 public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 

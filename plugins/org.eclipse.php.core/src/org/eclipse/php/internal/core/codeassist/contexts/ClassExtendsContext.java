@@ -16,7 +16,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This context represents the state when staying after 'extends' keyword in a

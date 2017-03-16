@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.ArrayAccess;
-import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
+import org.eclipse.php.core.ast.nodes.ArrayAccess;
+import org.eclipse.php.core.ast.nodes.FunctionDeclaration;
+import org.eclipse.php.core.ast.nodes.Identifier;
+import org.eclipse.php.core.ast.nodes.StaticFieldAccess;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

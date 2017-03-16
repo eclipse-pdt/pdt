@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.search.ui.NewSearchUI;

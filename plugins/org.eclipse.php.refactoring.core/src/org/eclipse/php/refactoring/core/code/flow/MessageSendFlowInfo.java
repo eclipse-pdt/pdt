@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.code.flow;
 
-import org.eclipse.php.internal.core.ast.nodes.IMethodBinding;
-import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.core.ast.nodes.IMethodBinding;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
 
 class MessageSendFlowInfo extends FlowInfo {
 

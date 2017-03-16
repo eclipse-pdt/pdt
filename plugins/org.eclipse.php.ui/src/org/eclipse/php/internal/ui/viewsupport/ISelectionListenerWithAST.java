@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.ui.viewsupport;
 
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.ui.IEditorPart;
 
 /**

@@ -15,7 +15,7 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 

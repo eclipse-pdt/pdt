@@ -9,7 +9,7 @@ package org.eclipse.php.internal.core.ast.scanner.php54;
 
 import java.util.*;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.dltk.ast.Modifiers;
 
 parser code {:

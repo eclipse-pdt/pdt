@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.search;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Program;
 
 public interface IOccurrencesFinder {
 

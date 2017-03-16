@@ -21,8 +21,8 @@ import org.eclipse.dltk.evaluation.types.IClassType;
 import org.eclipse.dltk.ti.types.ClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
 /**

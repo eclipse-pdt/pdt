@@ -14,8 +14,8 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.YieldExpression;
+import org.eclipse.php.core.compiler.ast.nodes.ReturnStatement;
+import org.eclipse.php.core.compiler.ast.nodes.YieldExpression;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
 public class ReturnDetector extends PHPASTVisitor {

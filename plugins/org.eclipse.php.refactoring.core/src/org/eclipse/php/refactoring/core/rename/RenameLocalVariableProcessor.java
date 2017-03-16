@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
-import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameLocalVariable;
 

@@ -32,9 +32,9 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.IContext;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
