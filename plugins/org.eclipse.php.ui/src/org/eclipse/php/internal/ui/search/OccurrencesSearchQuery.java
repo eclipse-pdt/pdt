@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.search.DLTKElementLine;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.Messages;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;

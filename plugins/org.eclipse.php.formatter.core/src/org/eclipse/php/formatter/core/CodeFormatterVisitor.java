@@ -22,13 +22,13 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.core.compiler.ast.nodes.VarComment;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag.TagKind;
-import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -854,7 +854,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
 	private void handleComments(int offset, int end,
-			List<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> commentList, boolean isIndented,
+			List<org.eclipse.php.core.compiler.ast.nodes.Comment> commentList, boolean isIndented,
 			int indentGap) throws Exception {
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
@@ -867,9 +867,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean previousCommentIsSingleLine = false;
 		resetCommentIndentVariables();
 
-		comments: for (Iterator<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> iter = commentList
+		comments: for (Iterator<org.eclipse.php.core.compiler.ast.nodes.Comment> iter = commentList
 				.iterator(); iter.hasNext();) {
-			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment = iter.next();
+			org.eclipse.php.core.compiler.ast.nodes.Comment comment = iter.next();
 			int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
 			int position = replaceBuffer.lastIndexOf(lineSeparator);
 			boolean startAtFirstColumn = (document.getLineOffset(commentStartLine) == comment.sourceStart() + offset);
@@ -878,7 +878,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			boolean indentOnFirstColumn;
 			String commentContent;
 			switch (comment.getCommentType()) {
-			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_SINGLE_LINE:
+			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_SINGLE_LINE:
 				indentOnFirstColumn = !startAtFirstColumn
 						|| !this.preferences.never_indent_line_comments_on_first_column;
 				if (startLine == commentStartLine) {
@@ -1055,7 +1055,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 				start = comment.sourceEnd() + offset;
 				break;
-			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
+			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
 				inComment = false;
 				handleCharsWithoutComments(start, comment.sourceStart() + offset);
@@ -1074,8 +1074,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					appendToBuffer("/**"); //$NON-NLS-1$
 
 					commentWords = new ArrayList<String>();
-					org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] texts = block.getTexts().toArray(
-							new org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[block.getTexts().size()]);
+					org.eclipse.php.core.compiler.ast.nodes.Scalar[] texts = block.getTexts().toArray(
+							new org.eclipse.php.core.compiler.ast.nodes.Scalar[block.getTexts().size()]);
 					PHPDocTag[] tags = block.getTags();
 					if ((tags == null || tags.length == 0)) {
 						texts = getNonblankScalars(texts);
@@ -1085,7 +1085,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 					// description is blank
 					if (getNonblankScalars(texts).length == 0) {
-						texts = new org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[0];
+						texts = new org.eclipse.php.core.compiler.ast.nodes.Scalar[0];
 					}
 					if (this.preferences.comment_new_lines_at_javadoc_boundaries) {
 						insertNewLineForPHPDoc();
@@ -1096,7 +1096,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 					int textsLength = texts.length;
 					for (int j = 0; j < textsLength; j++) {
-						org.eclipse.php.internal.core.compiler.ast.nodes.Scalar scalar = texts[j];
+						org.eclipse.php.core.compiler.ast.nodes.Scalar scalar = texts[j];
 						String word = scalar.getValue();
 						if (word.trim().length() > 0) {
 							commentWords.add(word);
@@ -1210,7 +1210,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				insertNewLine();
 				indent();
 				break;
-			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_MULTILINE:
+			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_MULTILINE:
 				previousCommentIsSingleLine = false;
 				// ignore multi line comments in the middle of code
 				// example while /* kuku */ ( /* kuku */$a > 0 )
@@ -1223,7 +1223,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					resetEnableStatus(
 							document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 					for (; iter.hasNext();) {
-						org.eclipse.php.internal.core.compiler.ast.nodes.Comment nextComment = iter.next();
+						org.eclipse.php.core.compiler.ast.nodes.Comment nextComment = iter.next();
 						resetEnableStatus(document.get(nextComment.sourceStart() + offset,
 								nextComment.sourceEnd() - nextComment.sourceStart()));
 					}
@@ -1551,7 +1551,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	private void initCommentIndentVariables(int offset, int startLine,
-			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
+			org.eclipse.php.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
 			throws BadLocationException {
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
@@ -1611,8 +1611,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return result;
 	}
 
-	private org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] getNonblankScalars(
-			org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] texts) {
+	private org.eclipse.php.core.compiler.ast.nodes.Scalar[] getNonblankScalars(
+			org.eclipse.php.core.compiler.ast.nodes.Scalar[] texts) {
 		int end = texts.length;
 		for (int i = texts.length - 1; i >= 0; i--) {
 			if (StringUtils.isBlank(texts[i].getValue())) {
@@ -1624,7 +1624,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		}
 		if (end == 0) {
-			return new org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[0];
+			return new org.eclipse.php.core.compiler.ast.nodes.Scalar[0];
 		}
 		int start = 0;
 		for (int i = 0; i < texts.length; i++) {
@@ -1636,7 +1636,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			}
 		}
-		org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] result = new org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[end
+		org.eclipse.php.core.compiler.ast.nodes.Scalar[] result = new org.eclipse.php.core.compiler.ast.nodes.Scalar[end
 				- start];
 		System.arraycopy(texts, start, result, 0, end - start);
 		return result;

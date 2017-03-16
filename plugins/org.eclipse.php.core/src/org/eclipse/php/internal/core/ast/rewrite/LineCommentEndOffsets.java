@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.rewrite;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.Comment;
+import org.eclipse.php.core.ast.nodes.Comment;
 
 public class LineCommentEndOffsets {
 

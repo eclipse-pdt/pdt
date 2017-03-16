@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast.rewrite;
 
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 
 public interface ICodeManiplator {
 

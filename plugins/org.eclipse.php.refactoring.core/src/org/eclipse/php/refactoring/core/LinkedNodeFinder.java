@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
-import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;

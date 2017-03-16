@@ -13,9 +13,9 @@ package org.eclipse.php.internal.core.ast.rewrite;
 
 import java.util.*;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Block;
+import org.eclipse.php.core.ast.nodes.StructuralPropertyDescriptor;
 import org.eclipse.php.internal.core.ast.util.Signature;
 import org.eclipse.text.edits.TextEditGroup;
 

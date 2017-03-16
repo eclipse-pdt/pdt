@@ -23,7 +23,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.corext.util.Resources;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.extract.NameSuggestVisitor;

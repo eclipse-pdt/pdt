@@ -13,7 +13,7 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.search.AbstractOccurrencesFinder;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;

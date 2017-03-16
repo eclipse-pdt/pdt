@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 
 public class ASTRewriteFlattener extends AbstractVisitor {

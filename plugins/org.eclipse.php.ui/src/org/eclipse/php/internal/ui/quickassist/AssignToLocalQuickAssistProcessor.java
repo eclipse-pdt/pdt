@@ -12,8 +12,8 @@ package org.eclipse.php.internal.ui.quickassist;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Expression;
 import org.eclipse.php.internal.ui.editor.contentassist.AssignToLocalCompletionProposal;
 import org.eclipse.php.internal.ui.text.correction.IInvocationContext;
 import org.eclipse.php.internal.ui.text.correction.IProblemLocation;

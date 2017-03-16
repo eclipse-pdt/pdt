@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.TryStatement;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
-import org.eclipse.php.internal.core.ast.nodes.YieldExpression;
+import org.eclipse.php.core.ast.nodes.Block;
+import org.eclipse.php.core.ast.nodes.TryStatement;
+import org.eclipse.php.core.ast.nodes.Variable;
+import org.eclipse.php.core.ast.nodes.YieldExpression;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;

@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.search;
 
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 
 /**
  * A global variable occurrences finder.

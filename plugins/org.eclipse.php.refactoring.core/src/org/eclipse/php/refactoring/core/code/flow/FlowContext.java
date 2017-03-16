@@ -16,9 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
-import org.eclipse.php.internal.core.ast.nodes.TryStatement;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.core.ast.nodes.TryStatement;
 
 public class FlowContext {
 

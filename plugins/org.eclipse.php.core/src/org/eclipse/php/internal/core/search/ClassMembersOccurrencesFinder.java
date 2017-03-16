@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**

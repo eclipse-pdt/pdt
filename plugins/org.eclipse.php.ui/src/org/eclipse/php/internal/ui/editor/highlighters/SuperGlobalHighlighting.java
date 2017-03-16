@@ -11,10 +11,10 @@
 package org.eclipse.php.internal.ui.editor.highlighters;
 
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.ArrayAccess;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
-import org.eclipse.php.internal.core.ast.nodes.VariableBase;
+import org.eclipse.php.core.ast.nodes.ArrayAccess;
+import org.eclipse.php.core.ast.nodes.Identifier;
+import org.eclipse.php.core.ast.nodes.Variable;
+import org.eclipse.php.core.ast.nodes.VariableBase;
 import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;

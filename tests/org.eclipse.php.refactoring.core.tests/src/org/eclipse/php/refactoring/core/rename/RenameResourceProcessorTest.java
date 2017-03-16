@@ -13,8 +13,8 @@ package org.eclipse.php.refactoring.core.rename;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.tests.runner.PDTTList;
-import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
 import org.junit.Test;

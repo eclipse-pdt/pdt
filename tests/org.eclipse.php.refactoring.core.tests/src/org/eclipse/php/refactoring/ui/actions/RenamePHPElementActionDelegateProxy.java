@@ -12,8 +12,8 @@ package org.eclipse.php.refactoring.ui.actions;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Program;
 
 public class RenamePHPElementActionDelegateProxy extends RenamePHPElementActionDelegate {
 

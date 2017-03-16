@@ -15,9 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
+import org.eclipse.php.core.compiler.ast.nodes.ArrayCreation;
+import org.eclipse.php.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.core.compiler.ast.nodes.GlobalStatement;
 
 /**
  * This is a container for array declaration

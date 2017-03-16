@@ -13,7 +13,7 @@ package org.eclipse.php.refactoring.core.code.flow;
 
 import java.util.HashSet;
 
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.core.ast.nodes.Identifier;
 
 class BranchFlowInfo extends FlowInfo {
 

@@ -16,8 +16,8 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.evaluation.types.IClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.ast.nodes.AnonymousClassDeclaration;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.AnonymousClassDeclaration;
 
 public class AnonymousClassInstanceType implements IClassType {
 

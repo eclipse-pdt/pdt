@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
-import org.eclipse.php.internal.core.compiler.ast.nodes.TraitDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.TraitDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**

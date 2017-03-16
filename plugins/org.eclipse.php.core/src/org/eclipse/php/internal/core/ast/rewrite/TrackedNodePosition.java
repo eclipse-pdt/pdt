@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.ast.rewrite;
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.TextEditGroup;
 

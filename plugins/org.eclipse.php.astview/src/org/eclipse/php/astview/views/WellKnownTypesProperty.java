@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.astview.views;
 
-import org.eclipse.php.internal.core.ast.nodes.AST;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.AST;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.swt.graphics.Image;
 
 public class WellKnownTypesProperty extends ASTAttribute {

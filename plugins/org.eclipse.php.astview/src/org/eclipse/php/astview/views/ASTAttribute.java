@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.astview.views;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.swt.graphics.Image;
 
 

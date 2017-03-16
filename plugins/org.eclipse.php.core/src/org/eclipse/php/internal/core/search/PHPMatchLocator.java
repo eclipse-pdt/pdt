@@ -31,8 +31,8 @@ import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
 import org.eclipse.dltk.internal.core.search.matching.MethodPattern;
 import org.eclipse.dltk.internal.core.search.matching.OrPattern;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocator extends MatchLocator {

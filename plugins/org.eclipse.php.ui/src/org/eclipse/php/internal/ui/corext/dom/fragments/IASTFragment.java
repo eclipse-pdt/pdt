@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.dom.fragments;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.text.edits.TextEditGroup;
 

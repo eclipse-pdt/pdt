@@ -11,10 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.code.flow;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
-import org.eclipse.php.internal.core.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.core.ast.nodes.ReturnStatement;
+import org.eclipse.php.core.ast.nodes.Variable;
 
 public class InOutFlowAnalyzer extends FlowAnalyzer {
 

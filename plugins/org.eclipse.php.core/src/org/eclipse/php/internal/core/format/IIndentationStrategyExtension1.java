@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public interface IIndentationStrategyExtension1 extends IIndentationStrategy {

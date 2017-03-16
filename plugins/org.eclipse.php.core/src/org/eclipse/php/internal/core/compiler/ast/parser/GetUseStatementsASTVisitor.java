@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
 
 /**
  * AST visitor for finding all use statements in a PHP source module.

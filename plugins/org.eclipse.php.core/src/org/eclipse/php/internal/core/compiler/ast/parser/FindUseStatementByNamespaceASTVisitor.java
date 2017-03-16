@@ -11,10 +11,10 @@
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
