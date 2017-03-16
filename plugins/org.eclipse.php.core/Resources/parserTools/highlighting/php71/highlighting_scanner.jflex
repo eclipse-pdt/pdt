@@ -509,6 +509,26 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_ARRAY;
 }
 
+<ST_PHP_IN_SCRIPTING>"string" {
+	return PHP_STRING;
+}
+
+<ST_PHP_IN_SCRIPTING>"int" {
+	return PHP_INT;
+}
+
+<ST_PHP_IN_SCRIPTING>"float" {
+	return PHP_FLOAT;
+}
+
+<ST_PHP_IN_SCRIPTING>"bool" {
+	return PHP_BOOL;
+}
+
+<ST_PHP_IN_SCRIPTING>"void" {
+	return PHP_VOID;
+}
+
 <ST_PHP_IN_SCRIPTING>"parent" {
 	return PHP_PARENT;
 }

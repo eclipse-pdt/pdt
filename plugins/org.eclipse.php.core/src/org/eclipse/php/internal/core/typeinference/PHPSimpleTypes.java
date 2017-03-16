@@ -101,7 +101,7 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("string", new TypeInfo(STRING, PHPVersion.PHP7_0)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("resource", new TypeInfo(RESOURCE, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("object", new TypeInfo(OBJECT, null)); //$NON-NLS-1$
-		SIMPLE_TYPES.put("void", new TypeInfo(VOID, null)); //$NON-NLS-1$
+		SIMPLE_TYPES.put("void", new TypeInfo(VOID, PHPVersion.PHP7_1)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("null", new TypeInfo(NULL, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("mixed", new TypeInfo(MIXED, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("callable", new TypeInfo(CALLABLE, PHPVersion.PHP5_4)); //$NON-NLS-1$

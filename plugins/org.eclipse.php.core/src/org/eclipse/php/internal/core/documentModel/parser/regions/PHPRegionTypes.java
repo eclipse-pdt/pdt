@@ -41,6 +41,16 @@ public interface PHPRegionTypes {
 
 	static final String PHP_ARRAY = "PHP_ARRAY"; //$NON-NLS-1$
 
+	static final String PHP_STRING = "PHP_STRING"; //$NON-NLS-1$
+
+	static final String PHP_INT = "PHP_INT"; //$NON-NLS-1$
+
+	static final String PHP_FLOAT = "PHP_FLOAT"; //$NON-NLS-1$
+
+	static final String PHP_BOOL = "PHP_BOOL"; //$NON-NLS-1$
+
+	static final String PHP_VOID = "PHP_VOID"; //$NON-NLS-1$
+
 	// static final String PHP_TILDA = "PHP_TILDA";
 
 	static final String PHP_FINAL = "PHP_FINAL"; //$NON-NLS-1$
