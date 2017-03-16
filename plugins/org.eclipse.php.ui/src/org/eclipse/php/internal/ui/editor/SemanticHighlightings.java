@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.editor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
+import org.eclipse.php.core.ast.nodes.Expression;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.graphics.RGB;
 

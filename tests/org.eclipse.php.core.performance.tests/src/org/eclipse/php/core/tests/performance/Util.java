@@ -29,14 +29,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.ASTParser;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.ASTParser;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class Util {
 
-	public static void copyInputStream(InputStream in, OutputStream out)
-			throws IOException {
+	public static void copyInputStream(InputStream in, OutputStream out) throws IOException {
 		byte[] buffer = new byte[1024];
 		int len;
 		while ((len = in.read(buffer)) >= 0)
@@ -46,8 +45,7 @@ public class Util {
 		out.close();
 	}
 
-	public static void unzip(File file, String targetDirectory)
-			throws Exception {
+	public static void unzip(File file, String targetDirectory) throws Exception {
 
 		System.out.println("Extracting: " + file);
 
@@ -65,8 +63,7 @@ public class Util {
 
 			String entryName = entry.getName();
 
-			if (entryName.startsWith(stripName + "/")
-					|| entryName.startsWith(stripName + "\\")) {
+			if (entryName.startsWith(stripName + "/") || entryName.startsWith(stripName + "\\")) {
 				entryName = entryName.substring(stripName.length() + 1);
 			}
 
@@ -76,34 +73,29 @@ public class Util {
 				continue;
 			}
 			copyInputStream(zipFile.getInputStream(entry),
-					new BufferedOutputStream(new FileOutputStream(new File(
-							targetDirectory, entryName))));
+					new BufferedOutputStream(new FileOutputStream(new File(targetDirectory, entryName))));
 		}
 		zipFile.close();
 	}
 
-	public static File downloadFile(String fileURL, String targetDirectory)
-			throws Exception {
+	public static File downloadFile(String fileURL, String targetDirectory) throws Exception {
 
 		System.out.println("Retrieving: " + fileURL);
 
 		String cacheDir = System.getProperty("cacheDirectory");
 		if (cacheDir == null) {
-			cacheDir = System.getProperty("java.io.tmpdir") + File.separator
-					+ "pdt-test-cache";
+			cacheDir = System.getProperty("java.io.tmpdir") + File.separator + "pdt-test-cache";
 		}
 		new File(cacheDir).mkdirs();
 
 		URL url = new URL(fileURL);
-		String fileName = url.getFile().substring(
-				url.getPath().lastIndexOf('/') + 1);
+		String fileName = url.getFile().substring(url.getPath().lastIndexOf('/') + 1);
 
 		File cachedFile = new File(cacheDir, fileName);
 		if (!cachedFile.exists()) {
 
 			URLConnection urlConnection = url.openConnection();
-			InputStream inputStream = new BufferedInputStream(urlConnection
-					.getInputStream());
+			InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
 			FileOutputStream outputStream = new FileOutputStream(cachedFile);
 			byte[] bytes = new byte[8192];
 			int count = inputStream.read(bytes);
@@ -118,15 +110,13 @@ public class Util {
 			outputStream.close();
 
 		} else {
-			System.out.println("File: " + cachedFile.getAbsolutePath()
-					+ " already exists");
+			System.out.println("File: " + cachedFile.getAbsolutePath() + " already exists");
 		}
 
 		return cachedFile;
 	}
 
-	public static void downloadAndExtract(String fileURL, String targetDirectory)
-			throws Exception {
+	public static void downloadAndExtract(String fileURL, String targetDirectory) throws Exception {
 		File file = downloadFile(fileURL, targetDirectory);
 		unzip(file, targetDirectory);
 	}
@@ -136,8 +126,7 @@ public class Util {
 		return createProgramFromSource(source);
 	}
 
-	public static Program createProgramFromSource(ISourceModule source)
-			throws Exception {
+	public static Program createProgramFromSource(ISourceModule source) throws Exception {
 		IProject project = source.getScriptProject().getProject();
 		PHPVersion version;
 		if (project != null) {
@@ -145,8 +134,7 @@ public class Util {
 		} else {
 			version = ProjectOptions.getDefaultPhpVersion();
 		}
-		ASTParser newParser = ASTParser.newParser(version,
-				(ISourceModule) source);
+		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
 		return newParser.createAST(null);
 	}
 

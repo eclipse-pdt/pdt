@@ -12,8 +12,8 @@
 package org.eclipse.php.internal.ui.text.correction;
 
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Program;
 
 /**
  * Context information for quick fix and quick assist processors.

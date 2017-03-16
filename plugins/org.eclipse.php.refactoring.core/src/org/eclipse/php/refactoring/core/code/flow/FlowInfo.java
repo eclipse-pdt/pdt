@@ -13,10 +13,10 @@ package org.eclipse.php.refactoring.core.code.flow;
 
 import java.util.*;
 
-import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.TryStatement;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.core.ast.nodes.Identifier;
+import org.eclipse.php.core.ast.nodes.TryStatement;
 
 public abstract class FlowInfo {
 

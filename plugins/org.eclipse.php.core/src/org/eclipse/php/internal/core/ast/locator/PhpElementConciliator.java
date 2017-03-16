@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.locator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**

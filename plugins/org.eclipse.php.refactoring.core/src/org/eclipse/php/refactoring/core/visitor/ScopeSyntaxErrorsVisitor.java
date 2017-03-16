@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.visitor;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTError;
-import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
+import org.eclipse.php.core.ast.nodes.ASTError;
+import org.eclipse.php.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 
 /**

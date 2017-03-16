@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.wizard;
 
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 
 public class StubTypeContext {
 	private String fBeforeString;

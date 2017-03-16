@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.rewrite;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.text.edits.TextEditGroup;
 

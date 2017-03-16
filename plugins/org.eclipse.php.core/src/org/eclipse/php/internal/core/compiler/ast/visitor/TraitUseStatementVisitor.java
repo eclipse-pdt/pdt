@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.compiler.ast.visitor;
 
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.TraitUseStatement;
+import org.eclipse.php.core.compiler.ast.nodes.TraitUseStatement;
 
 /**
  * AST visitor for finding trait use statements in PHP source modules.

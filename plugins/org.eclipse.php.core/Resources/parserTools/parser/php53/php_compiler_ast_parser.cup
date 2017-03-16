@@ -12,7 +12,7 @@ import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.*;
 import org.eclipse.dltk.ast.references.*;
 import org.eclipse.dltk.ast.statements.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.*;
 import org.eclipse.php.internal.core.ast.scanner.php53.*;
 

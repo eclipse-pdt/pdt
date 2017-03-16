@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.code.flow;
 
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.ReturnStatement;
+import org.eclipse.php.core.ast.nodes.Expression;
+import org.eclipse.php.core.ast.nodes.ReturnStatement;
 
 class ReturnFlowInfo extends FlowInfo {
 

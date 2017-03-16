@@ -14,8 +14,8 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This context represents state when staying in a 'instanceof' statement. <br/>

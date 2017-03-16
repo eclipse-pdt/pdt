@@ -19,10 +19,10 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.Region;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.core.compiler.ast.nodes.Include;
+import org.eclipse.php.core.compiler.ast.nodes.InfixExpression;
+import org.eclipse.php.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class IncludeHyperlinkVisitor extends ASTVisitor {

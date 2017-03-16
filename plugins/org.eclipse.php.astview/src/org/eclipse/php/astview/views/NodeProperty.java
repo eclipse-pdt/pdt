@@ -13,8 +13,8 @@ package org.eclipse.php.astview.views;
 
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.StructuralPropertyDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 public class NodeProperty extends ASTAttribute {

@@ -26,7 +26,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.ProgramFileChange;
 import org.eclipse.php.refactoring.core.changes.RenameBreackpointChange;

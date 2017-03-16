@@ -16,10 +16,10 @@ import java.util.List;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.compiler.ast.nodes.Comment;
+import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 

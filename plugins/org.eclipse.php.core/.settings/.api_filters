@@ -16,14 +16,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/php/internal/core/compiler/ast/nodes/PHPDocBlock.java" type="org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock">
-        <filter id="338722907">
-            <message_arguments>
-                <message_argument value="org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock"/>
-                <message_argument value="PHPDocBlock(int, int, String, PHPDocTag[])"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java" type="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer">
         <filter id="388194388">
             <message_arguments>

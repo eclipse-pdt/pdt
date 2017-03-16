@@ -17,8 +17,8 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**

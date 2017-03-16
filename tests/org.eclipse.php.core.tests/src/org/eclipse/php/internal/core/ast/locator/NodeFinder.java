@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.ast.locator;
 
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**

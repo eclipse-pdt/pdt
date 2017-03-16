@@ -29,7 +29,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.MatchLocatorParser;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocatorParser extends MatchLocatorParser {

@@ -17,9 +17,9 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
 
 /**
  * Base AST visitor for finding use statements in PHP source modules.

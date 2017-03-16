@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.corext.dom.fragments;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 class ASTMatchingFragmentFinder extends ApplyAll {

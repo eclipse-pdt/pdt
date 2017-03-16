@@ -12,7 +12,7 @@ package org.eclipse.php.refactoring.core.changes;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ltk.core.refactoring.DocumentChange;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 
 public class ProgramDocumentChange extends DocumentChange {
 

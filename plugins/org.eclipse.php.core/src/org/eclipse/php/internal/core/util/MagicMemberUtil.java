@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.util;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 
 public class MagicMemberUtil {
 	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\p{javaWhitespace}+"); //$NON-NLS-1$

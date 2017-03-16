@@ -11,8 +11,8 @@
 package org.eclipse.php.refactoring.core.extract.function;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.core.ast.nodes.IVariableBinding;
 
 public class ParameterInfo {
 

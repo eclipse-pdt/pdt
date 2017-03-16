@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.dom.fragments;
 
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.ParenthesisExpression;
+import org.eclipse.php.core.ast.nodes.Expression;
+import org.eclipse.php.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 
 class SimpleExpressionFragment extends SimpleFragment implements IExpressionFragment {

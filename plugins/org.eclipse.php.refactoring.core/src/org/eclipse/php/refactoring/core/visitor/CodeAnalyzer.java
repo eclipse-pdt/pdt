@@ -17,9 +17,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.SingleFieldDeclaration;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.SingleFieldDeclaration;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.refactoring.core.SourceModuleSourceContext;
 

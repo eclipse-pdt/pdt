@@ -12,7 +12,7 @@
 package org.eclipse.php.core.tests.performance.ast.locator;
 
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**
@@ -50,8 +50,7 @@ public class NodeFinder extends ApplyAll {
 		NodeFinder finder = new NodeFinder(start, length);
 		root.accept(finder);
 		ASTNode result = finder.getCoveredNode();
-		if (result == null || result.getStart() != start
-				|| result.getLength() != length) {
+		if (result == null || result.getStart() != start || result.getLength() != length) {
 			return finder.getCoveringNode();
 		}
 		return result;

@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.visitor;
 
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 
 /**
  * Abstract visitor to apply a single method over all AST nodes In order to

@@ -13,7 +13,7 @@ package org.eclipse.php.astview.views;
 
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.swt.graphics.Image;
 
 /**

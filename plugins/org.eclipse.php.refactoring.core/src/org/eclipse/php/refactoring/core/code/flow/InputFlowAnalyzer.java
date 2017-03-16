@@ -13,7 +13,7 @@ package org.eclipse.php.refactoring.core.code.flow;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 
 public class InputFlowAnalyzer extends FlowAnalyzer {

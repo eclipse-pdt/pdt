@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 
 /**
  * Variable declaration scope. Each scope contains mapping between variable name

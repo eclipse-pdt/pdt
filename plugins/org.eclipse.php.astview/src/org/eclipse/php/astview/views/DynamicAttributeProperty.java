@@ -13,7 +13,7 @@
 package org.eclipse.php.astview.views;
 
 
-import org.eclipse.php.internal.core.ast.nodes.IBinding;
+import org.eclipse.php.core.ast.nodes.IBinding;
 import org.eclipse.swt.graphics.Image;
 
 

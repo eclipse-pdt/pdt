@@ -13,7 +13,7 @@ package org.eclipse.php.refactoring.ui.rename;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
