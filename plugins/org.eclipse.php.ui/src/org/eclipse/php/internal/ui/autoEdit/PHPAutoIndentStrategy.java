@@ -65,7 +65,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			return;
 		}
 		IndentationObject indentationObject = null;
-		char fakeFirstCharAfterCommandText = '#';
+		String fakeFirstCharsAfterCommandText = "#"; //$NON-NLS-1$
 		try {
 			if (document instanceof IStructuredDocument) {
 				indentationObject = new IndentationObject((IStructuredDocument) document);
@@ -105,30 +105,33 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				// adjust the length to include the blank characters
 				command.length += i - selectionEndOffset;
 				if (i < lineEndOffset) {
-					// we need later to add first non-blank line character to
-					// the command selection so we can correctly calculate
-					// last line indentation
-					fakeFirstCharAfterCommandText = document.getChar(i);
+					int j = i + 1;
+					for (; j < lineEndOffset && !(document.getChar(j) == ' ' || document.getChar(j) == '\t'); j++) {
+					}
+					// We need later to add (at least) first non-blank line
+					// character to the command selection so we can correctly
+					// calculate last line indentation. It's even better to have
+					// all consecutive non-blank characters to handle correctly
+					// special PHP keywords like "case" or "default".
+					fakeFirstCharsAfterCommandText = document.get(i, j - i);
 				}
 			}
 
 			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
 			StringBuilder tempsb = new StringBuilder(command.offset + command.text.length() + 1);
-			tempsb.append(document.get(0, command.offset)).append(command.text).append(fakeFirstCharAfterCommandText);
+			tempsb.append(document.get(0, command.offset)).append(command.text).append(fakeFirstCharsAfterCommandText);
 			newdocument.set(tempsb.toString());
 			PhpIndentationFormatter formatter = new PhpIndentationFormatter(command.offset, command.text.length(),
 					indentationObject);
 			formatter.format(newdocument.getRegionAtCharacterOffset(command.offset));
 
-			if (newdocument.getChar(newdocument.getLength() - 1) == fakeFirstCharAfterCommandText) {
-				// fakeFirstCharAfterCommandText should always be the last
-				// character of newdocument...
+			if (fakeFirstCharsAfterCommandText.length() == 1
+					&& newdocument.getChar(newdocument.getLength() - 1) == fakeFirstCharsAfterCommandText.charAt(0)) {
+				// fast path
 				command.text = newdocument.get(command.offset, newdocument.getLength() - command.offset - 1);
 			} else {
-				// ... or we have to look after it (but should never be
-				// necessary)
 				command.text = newdocument.get(command.offset, newdocument.getLength() - command.offset);
-				command.text = command.text.substring(0, command.text.lastIndexOf(fakeFirstCharAfterCommandText));
+				command.text = command.text.substring(0, command.text.lastIndexOf(fakeFirstCharsAfterCommandText));
 			}
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
