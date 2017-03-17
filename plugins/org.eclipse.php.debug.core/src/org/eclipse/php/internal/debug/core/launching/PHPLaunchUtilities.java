@@ -851,16 +851,26 @@ public class PHPLaunchUtilities {
 		if (phpPath == null || phpPath.isEmpty()) {
 			return;
 		}
-		phpPath += File.pathSeparatorChar;
 
-		String path = env.get("PATH"); //$NON-NLS-1$
+		String pathKey = getPathEnvKey(env);
+		String path = env.get(pathKey);
 		if (path == null) {
 			path = phpPath;
 		} else {
-			path = phpPath + path;
+			path = phpPath + File.pathSeparatorChar + path;
 		}
 
-		env.put("PATH", path); //$NON-NLS-1$
+		env.put(pathKey, path);
+	}
+
+	private static String getPathEnvKey(Map<String, String> env) {
+		String pathKey = "PATH"; //$NON-NLS-1$
+		for (String key : env.keySet()) {
+			if ("path".equalsIgnoreCase(key)) { //$NON-NLS-1$
+				pathKey = key;
+			}
+		}
+		return pathKey;
 	}
 
 	/**
