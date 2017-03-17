@@ -67,7 +67,6 @@ public class ComposerLauncher extends ScriptLauncher {
 			envs.add(key + '=' + env.get(key));
 		}
 		properties.put(ITerminalsConnectorConstants.PROP_PROCESS_ENVIRONMENT, envs.toArray(new String[envs.size()]));
-		properties.put(ITerminalsConnectorConstants.PROP_PROCESS_MERGE_ENVIRONMENT, true);
 		ITerminalServiceOutputStreamMonitorListener[] outListeners = new ITerminalServiceOutputStreamMonitorListener[] {
 				new ITerminalServiceOutputStreamMonitorListener() {
 
