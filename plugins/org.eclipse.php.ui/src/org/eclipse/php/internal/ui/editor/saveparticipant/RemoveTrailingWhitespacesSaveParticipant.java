@@ -28,6 +28,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -123,12 +124,14 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 
 		try {
 			IDocument document = new Document(compilationUnit.getSource());
-			MultiTextEdit edits = computeTextEdit(document);
-			if (edits.hasChildren()) {
+			DeleteEdit[] deletes = FormatterUtils.getTrailingWhitespaces(document, ignoreEmptyLines);
+			if (deletes.length > 0) {
+				MultiTextEdit multiEdit = new MultiTextEdit();
+				multiEdit.addChildren(deletes);
 				final SourceModuleChange change = new SourceModuleChange(
 						"Remove trailing whitespaces from " + compilationUnit.getElementName(), compilationUnit); //$NON-NLS-1$
 				change.setSaveMode(TextFileChange.LEAVE_DIRTY);
-				change.setEdit(edits);
+				change.setEdit(multiEdit);
 				change.perform(monitor);
 			}
 		} catch (Exception e) {
