@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.codeassist;
 
-import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-
 /**
  * Completion strategy resolves completion proposals according to completion
  * context.

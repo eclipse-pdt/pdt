@@ -13,8 +13,6 @@ package org.eclipse.php.core.codeassist;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 
 /**
  * Completion context holds an information about cursor position in time when
@@ -34,7 +32,8 @@ public interface ICompletionContext {
 	 * @param phpScriptRegion
 	 *            PHP script region
 	 * @param partitionType
-	 *            Partition type (see {@link PHPRegionTypes})
+	 *            Partition type (see
+	 *            {@link org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes})
 	 * @param offset
 	 * @return <code>true</code> if this context is valid for the current
 	 *         position, otherwise <code>false</code>

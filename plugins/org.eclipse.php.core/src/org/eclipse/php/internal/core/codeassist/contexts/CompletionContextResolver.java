@@ -19,10 +19,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.core.codeassist.CompletionCompanion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
 
 /**
