@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.codeassist;
+package org.eclipse.php.core.codeassist;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.compiler.env.IModuleSource;
