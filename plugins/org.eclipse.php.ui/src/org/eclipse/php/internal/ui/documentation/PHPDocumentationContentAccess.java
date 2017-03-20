@@ -1395,9 +1395,10 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleLinkTag(PHPDocTag tag) {
-		fBuf.append("<a href="); //$NON-NLS-1$
-		fBuf.append(tag.getValue());
-		fBuf.append(">").append(tag.getValue()).append("</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		String uri = tag.getValue().trim();
+		fBuf.append("<a href=\""); //$NON-NLS-1$
+		fBuf.append(uri);
+		fBuf.append("\">").append(uri).append("</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void handleSeeTag(PHPDocTag tag) {
