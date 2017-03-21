@@ -9,11 +9,13 @@
  *     PDT Extension Group - initial API and implementation
  *     Kaloyan Raev - [501269] externalize strings
  *     Kaloyan Raev - [501591] No scroll in the package area when creating a project
+ *     Kaloyan Raev - [513981] Sync issue with filtering packages
  *******************************************************************************/
 package org.eclipse.php.composer.ui.wizard.project.template;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.equinox.internal.p2.ui.discovery.util.ControlListItem;
 import org.eclipse.equinox.internal.p2.ui.discovery.util.ControlListViewer;
@@ -52,6 +54,8 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 	private PackageFilterItem currentSelection = null;
 	private List<PackageFilterChangedListener> listeners = new ArrayList<PackageFilterChangedListener>();
 	private Label searchResultCount;
+
+	private String lastQuery;
 
 	@Override
 	public void createControl(Composite parent) {
@@ -117,6 +121,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 	@Override
 	protected void doFind(String text) {
 		try {
+			lastQuery = text;
 
 			contentProvider.clear();
 			viewer.setInput(contentProvider.packages);
@@ -135,7 +140,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 				}
 
 				@Override
-				public void packagesFound(List<MinimalPackage> packages, String query, final SearchResult result) {
+				public void packagesFound(List<MinimalPackage> packages, final String query, final SearchResult result) {
 					if (packages != null) {
 						final List<PackageFilterItem> items = new ArrayList<PackageFilterItem>();
 						for (MinimalPackage pkg : packages) {
@@ -146,6 +151,10 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 							@Override
 							public void run() {
 								if (viewer.getControl().isDisposed()) {
+									return;
+								}
+								if (!Objects.equals(query, lastQuery)) {
+									// this data is already obsolete
 									return;
 								}
 								contentProvider.add(items);
