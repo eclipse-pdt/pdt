@@ -225,7 +225,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 	}
 
 	public void createProject(IProject project, URI locationURI, IProgressMonitor monitor) throws CoreException {
-		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
+		PHPProjectUtils.createProjectAt(project, locationURI, getScriptNature(), monitor);
 	}
 
 	public IProject getCurrProject() {
@@ -302,6 +302,24 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 			// adding build paths, and language-Container:
 			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
 			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
+		} finally {
+			monitor.done();
+		}
+	}
+
+	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
+
+		int nSteps = 5;
+		monitor.beginTask(NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script, nSteps);
+
+		try {
+			final IProject project = getScriptProject().getProject();
+			configureProject(project, new SubProgressMonitor(monitor, 5));
+		} catch (OperationCanceledException e) {
+			throw new InterruptedException();
 		} finally {
 			monitor.done();
 		}
