@@ -22,7 +22,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 
 public class PHPProjectUtils {
+
 	public static void createProjectAt(IProject project, URI locationURI, IProgressMonitor monitor)
+			throws CoreException {
+		createProjectAt(project, locationURI, null, monitor);
+	}
+
+	public static void createProjectAt(IProject project, URI locationURI, String natureId, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -37,6 +43,11 @@ public class PHPProjectUtils {
 					locationURI = null;
 				}
 				desc.setLocationURI(locationURI);
+
+				if (natureId != null) {
+					desc.setNatureIds(new String[] { natureId });
+				}
+
 				project.create(desc, monitor);
 			}
 			if (!project.isOpen()) {
@@ -47,4 +58,5 @@ public class PHPProjectUtils {
 			monitor.done();
 		}
 	}
+
 }
