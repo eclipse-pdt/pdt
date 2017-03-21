@@ -29,6 +29,7 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -276,7 +277,7 @@ public class QuickAssistLightBulbUpdater {
 
 			// this iterator is not protected, it may throw
 			// ConcurrentModificationExceptions
-			Iterator iter = model.getAnnotationIterator();
+			Iterator<Annotation> iter = model.getAnnotationIterator();
 			while (iter.hasNext()) {
 				Annotation annot = (Annotation) iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {

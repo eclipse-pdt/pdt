@@ -35,6 +35,8 @@ import org.eclipse.php.internal.ui.text.correction.*;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
+import org.eclipse.php.ui.text.correction.IInvocationContext;
+import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 

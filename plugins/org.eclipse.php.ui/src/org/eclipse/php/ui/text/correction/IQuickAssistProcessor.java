@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.ui.text.correction;
+package org.eclipse.php.ui.text.correction;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;

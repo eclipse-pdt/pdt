@@ -40,6 +40,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.text.correction.proposals.ChangeCorrectionProposal;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.ui.text.correction.*;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMarkerHelpRegistry;
 import org.eclipse.ui.IMarkerResolution;
@@ -238,7 +239,7 @@ public class PHPCorrectionProcessor
 
 			fErrorMessage = null;
 			if (model != null && annotations != null) {
-				ArrayList<ICompletionProposal> proposals = new ArrayList<>(10);
+				ArrayList<IScriptCompletionProposal> proposals = new ArrayList<>(10);
 				IStatus status = collectProposals(context, model, annotations, true, !fAssistant.isUpdatedOffset(),
 						proposals);
 				res = proposals.toArray(new ICompletionProposal[proposals.size()]);
@@ -260,7 +261,7 @@ public class PHPCorrectionProcessor
 	}
 
 	public static IStatus collectProposals(IInvocationContext context, IAnnotationModel model, Annotation[] annotations,
-			boolean addQuickFixes, boolean addQuickAssists, Collection proposals) {
+			boolean addQuickFixes, boolean addQuickAssists, Collection<IScriptCompletionProposal> proposals) {
 		List<ProblemLocation> problems = new ArrayList<>();
 
 		// collect problem locations and corrections from marker annotations
@@ -323,7 +324,8 @@ public class PHPCorrectionProcessor
 		return null;
 	}
 
-	private static void collectMarkerProposals(SimpleMarkerAnnotation annotation, Collection proposals) {
+	private static void collectMarkerProposals(SimpleMarkerAnnotation annotation,
+			Collection<IScriptCompletionProposal> proposals) {
 		IMarker marker = annotation.getMarker();
 		IMarkerResolution[] res = IDE.getMarkerHelpRegistry().getResolutions(marker);
 		if (res.length > 0) {
@@ -375,10 +377,10 @@ public class PHPCorrectionProcessor
 
 	private static class SafeCorrectionCollector extends SafeCorrectionProcessorAccess {
 		private final IInvocationContext fContext;
-		private final Collection fProposals;
+		private final Collection<IScriptCompletionProposal> fProposals;
 		private IProblemLocation[] fLocations;
 
-		public SafeCorrectionCollector(IInvocationContext context, Collection proposals) {
+		public SafeCorrectionCollector(IInvocationContext context, Collection<IScriptCompletionProposal> proposals) {
 			fContext = context;
 			fProposals = proposals;
 		}
@@ -404,9 +406,10 @@ public class PHPCorrectionProcessor
 	private static class SafeAssistCollector extends SafeCorrectionProcessorAccess {
 		private final IInvocationContext fContext;
 		private final IProblemLocation[] fLocations;
-		private final Collection fProposals;
+		private final Collection<IScriptCompletionProposal> fProposals;
 
-		public SafeAssistCollector(IInvocationContext context, IProblemLocation[] locations, Collection proposals) {
+		public SafeAssistCollector(IInvocationContext context, IProblemLocation[] locations,
+				Collection<IScriptCompletionProposal> proposals) {
 			fContext = context;
 			fLocations = locations;
 			fProposals = proposals;
@@ -484,7 +487,7 @@ public class PHPCorrectionProcessor
 	}
 
 	public static IStatus collectCorrections(IInvocationContext context, IProblemLocation[] locations,
-			Collection proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		ContributedProcessorDescriptor[] processors = getCorrectionProcessors();
 		SafeCorrectionCollector collector = new SafeCorrectionCollector(context, proposals);
 		for (int i = 0; i < processors.length; i++) {
@@ -532,7 +535,7 @@ public class PHPCorrectionProcessor
 	}
 
 	public static IStatus collectAssists(IInvocationContext context, IProblemLocation[] locations,
-			Collection proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		ContributedProcessorDescriptor[] processors = getAssistProcessors();
 		SafeAssistCollector collector = new SafeAssistCollector(context, locations, proposals);
 		collector.process(processors);
