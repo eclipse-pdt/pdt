@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.text.correction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -32,6 +33,8 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.contentassist.CompletionProposalComparator;
+import org.eclipse.php.ui.text.correction.IInvocationContext;
+import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.*;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -45,7 +48,6 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 		private int fOffset;
 		private int fLength;
 		private IScriptCompletionProposal fProposal;
-		private final IMarker fMarker;
 
 		/**
 		 * Constructor for CorrectionMarkerResolution.
@@ -61,13 +63,12 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 		 * @param marker
 		 *            the marker to fix
 		 */
-		public CorrectionMarkerResolution(ISourceModule cu, int offset, int length, IScriptCompletionProposal proposal,
-				IMarker marker) {
+		public CorrectionMarkerResolution(ISourceModule cu, int offset, int length,
+				IScriptCompletionProposal proposal) {
 			fSourceModule = cu;
 			fOffset = offset;
 			fLength = length;
 			fProposal = proposal;
-			fMarker = marker;
 		}
 
 		@Override
@@ -149,7 +150,7 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 
 					IInvocationContext context = new AssistContext(cu, location.getOffset(), location.getLength());
 
-					ArrayList<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
+					List<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
 					PHPCorrectionProcessor.collectCorrections(context, new IProblemLocation[] { location }, proposals);
 					Collections.sort(proposals, new CompletionProposalComparator());
 
@@ -157,7 +158,7 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 					IMarkerResolution[] resolutions = new IMarkerResolution[nProposals];
 					for (int i = 0; i < nProposals; i++) {
 						resolutions[i] = new CorrectionMarkerResolution(context.getCompilationUnit(),
-								location.getOffset(), location.getLength(), proposals.get(i), marker);
+								location.getOffset(), location.getLength(), proposals.get(i));
 					}
 					return resolutions;
 				}

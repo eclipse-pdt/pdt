@@ -90,11 +90,11 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   the name of the class that implements this Quick Fix processor. The
 class must be public and implement
-&lt;samp&gt;org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor&lt;/samp&gt;
+&lt;samp&gt;org.eclipse.php.ui.text.correction.IQuickFixProcessor&lt;/samp&gt;
 with a public 0-argument constructor.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.php.ui.text.correction.IQuickFixProcessor"/>
                </appinfo>
             </annotation>
          </attribute>

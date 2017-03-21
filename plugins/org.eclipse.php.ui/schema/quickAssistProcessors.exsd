@@ -83,11 +83,11 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   the name of the class that implements this Quick Assist processor. The
 class must be public and implement
-&lt;samp&gt;com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickAssistProcessor&lt;/samp&gt;
+&lt;samp&gt;org.eclipse.php.ui.text.correction.IQuickAssistProcessor&lt;/samp&gt;
 with a public 0-argument constructor.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickAssistProcessor"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.php.ui.text.correction.IQuickAssistProcessor"/>
                </appinfo>
             </annotation>
          </attribute>

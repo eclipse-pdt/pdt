@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.text.correction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -152,7 +153,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 			// Let superclass deal with this
 			return super.showPossibleQuickAssists();
 
-		ArrayList resultingAnnotations = new ArrayList(20);
+		List<Annotation> resultingAnnotations = new ArrayList<>(20);
 		try {
 			Point selectedRange = fViewer.getSelectedRange();
 			int currOffset = selectedRange.x;
@@ -190,7 +191,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	}
 
 	public static int collectQuickFixableAnnotations(ITextEditor editor, int invocationLocation, boolean goToClosest,
-			ArrayList resultingAnnotations) throws BadLocationException {
+			List<Annotation> resultingAnnotations) throws BadLocationException {
 		IAnnotationModel model = DLTKUIPlugin.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
 		if (model == null) {
 			return invocationLocation;
@@ -198,7 +199,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 
 		ensureUpdatedAnnotations(editor);
 
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		if (goToClosest) {
 			IRegion lineInfo = getRegionOfInterest(editor, invocationLocation);
 			if (lineInfo == null) {
@@ -207,8 +208,8 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 			int rangeStart = lineInfo.getOffset();
 			int rangeEnd = rangeStart + lineInfo.getLength();
 
-			ArrayList allAnnotations = new ArrayList();
-			ArrayList allPositions = new ArrayList();
+			List<Annotation> allAnnotations = new ArrayList<>();
+			List<Position> allPositions = new ArrayList<>();
 			int bestOffset = Integer.MAX_VALUE;
 			while (iter.hasNext()) {
 				Annotation annot = (Annotation) iter.next();

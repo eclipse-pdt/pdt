@@ -23,6 +23,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.ui.IEditorPart;
 
 public class AssistContext extends TextInvocationContext implements IInvocationContext {
