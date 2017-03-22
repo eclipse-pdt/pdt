@@ -40,17 +40,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>eclipse-current</id>
-			<activation>
-				<property>
-					<name>!eclipseNext</name>
-				</property>
-			</activation>
-			<modules>
-				<module>org.eclipse.php.importer-feature</module>
-			</modules>
-		</profile>
 	</profiles>
 	<modules>
 		<module>org.eclipse.php-feature</module>
