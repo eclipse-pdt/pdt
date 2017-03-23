@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -69,7 +69,7 @@ public class PHPLanguageLibraryDecorator implements ILabelDecorator, ILightweigh
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof BuildPathContainer && ((BuildPathContainer) element).getBuildpathEntry().getPath()
 				.equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
-			PHPVersion version = ProjectOptions.getPhpVersion(((BuildPathContainer) element).getScriptProject());
+			PHPVersion version = ProjectOptions.getPHPVersion(((BuildPathContainer) element).getScriptProject());
 			if (version != null) {
 				decoration.addSuffix(
 						new StringBuilder(" [PHP ").append(version.getAlias().substring(3)).append("]").toString()); //$NON-NLS-1$ //$NON-NLS-2$

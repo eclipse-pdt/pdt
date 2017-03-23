@@ -17,9 +17,9 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserFactory;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.search.Messages;
 
 public class PHPSourceParserFactory extends AbstractSourceParser implements ISourceParserFactory, ISourceParser {
@@ -28,13 +28,7 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ast.parser.ISourceParser#parse(org.eclipse.dltk.compiler
-	 * .env.IModuleSource, org.eclipse.dltk.compiler.problem.IProblemReporter)
-	 */
+	@Override
 	public IModuleDeclaration parse(IModuleSource module, IProblemReporter reporter) {
 		final String fileName = module.getFileName();
 		AbstractPHPSourceParser parser = createParser(fileName);
@@ -42,7 +36,7 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	}
 
 	protected AbstractPHPSourceParser createParser(String fileName) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(fileName);
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(fileName);
 		AbstractPHPSourceParser parser = createParser(fileName, phpVersion);
 		if (parser == null) {
 			if (phpVersion == null) {

@@ -27,15 +27,15 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.ArrayVariableReference;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
@@ -66,8 +66,8 @@ public class CodeAssistUtils {
 	private static final String[] KEYWORD_FUNCTION_NAMES = { "return", "yield", "print", "echo" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static final String NEW = "new"; //$NON-NLS-1$
 
-	private static final Pattern globalPattern = Pattern.compile(
-			"\\$GLOBALS[ \\t\\n\\r]*\\[[ \\t\\n\\r]*[\\'\\\"][\\w]+[\\'\\\"][ \\t\\n\\r]*\\]"); //$NON-NLS-1$
+	private static final Pattern globalPattern = Pattern
+			.compile("\\$GLOBALS[ \\t\\n\\r]*\\[[ \\t\\n\\r]*[\\'\\\"][\\w]+[\\'\\\"][ \\t\\n\\r]*\\]"); //$NON-NLS-1$
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
 
@@ -369,7 +369,7 @@ public class CodeAssistUtils {
 		}
 
 		boolean arrayReference = false;
-		PHPVersion version = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		PHPVersion version = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 		if (propertyName.endsWith("]") //$NON-NLS-1$
 				&& version.isGreaterThan(PHPVersion.PHP5_3)) {
 			int closeBracketIndex = propertyName.lastIndexOf(')');
@@ -397,7 +397,7 @@ public class CodeAssistUtils {
 
 	public static IType[] getTraitsFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
 			int offset) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
 			return EMPTY_TYPES;
 		}
@@ -559,7 +559,7 @@ public class CodeAssistUtils {
 	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText,
 			int propertyEndPosition, boolean isClassTriger, int offset) {
 
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
 				propertyEndPosition, true);

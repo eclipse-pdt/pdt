@@ -37,14 +37,14 @@ import org.eclipse.dltk.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.util.Key;
@@ -327,7 +327,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				if (currentProject != null && !currentProject.isAccessible()) {
 					phpVersion = null;
 				} else {
-					phpVersion = ProjectOptions.getPhpVersion(currentProject);
+					phpVersion = ProjectOptions.getPHPVersion(currentProject);
 				}
 			} else {
 				phpVersion = null;
@@ -335,7 +335,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		}
 		// use workspace default php version if it is null
 		if (phpVersion == null) {
-			phpVersion = ProjectOptions.getDefaultPhpVersion();
+			phpVersion = ProjectOptions.getDefaultPHPVersion();
 		}
 	}
 

@@ -25,9 +25,14 @@ import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 
 public class PhpModelAccess extends ModelAccess {
+
+	@NonNull
 	public static final IType[] NULL_TYPES = new IType[0];
+	@NonNull
 	public static final IMethod[] NULL_METHODS = new IMethod[0];
+	@NonNull
 	public static final IField[] NULL_FIELDS = new IField[0];
+
 	private static final PhpModelAccess instance = new PhpModelAccess();
 
 	@NonNull

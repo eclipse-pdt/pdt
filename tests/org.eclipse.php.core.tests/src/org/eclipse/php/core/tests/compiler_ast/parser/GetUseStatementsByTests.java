@@ -27,7 +27,7 @@ import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;

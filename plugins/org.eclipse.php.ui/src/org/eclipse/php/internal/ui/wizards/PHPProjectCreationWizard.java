@@ -20,10 +20,10 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.facet.PHPFacets;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.ui.INewWizard;
@@ -101,7 +101,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 			IProject project = fLastPage.getScriptProject().getProject();
 			PHPVersion version = fFirstPage.getPHPVersionValue();
 			if (version == null) {
-				version = ProjectOptions.getDefaultPhpVersion();
+				version = ProjectOptions.getDefaultPHPVersion();
 			}
 			try {
 				PHPFacets.createFacetedProject(project, version, new NullProgressMonitor());

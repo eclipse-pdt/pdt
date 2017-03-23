@@ -34,10 +34,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPRuntime;
@@ -233,7 +233,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		if (defaultItem == null) {
 			defaultItem = PHPDebugPlugin.getWorkspaceDefaultExe();
 		}
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
 		PHPexeItem[] matchingItems = PHPexes.getInstance().getCompatibleItems(PHPexes.getInstance().getAllItems(),
 				phpVersion);
 		if (Arrays.asList(matchingItems).contains(defaultItem)) {

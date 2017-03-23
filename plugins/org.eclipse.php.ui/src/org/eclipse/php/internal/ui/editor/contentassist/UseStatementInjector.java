@@ -26,13 +26,14 @@ import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
@@ -40,7 +41,6 @@ import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -241,8 +241,8 @@ public class UseStatementInjector {
 				}
 				return offset;
 			} else
-				// class members should return offset directly
-				if (modelElement.getElementType() != IModelElement.TYPE && !(modelElement instanceof FakeConstructor)) {
+			// class members should return offset directly
+			if (modelElement.getElementType() != IModelElement.TYPE && !(modelElement instanceof FakeConstructor)) {
 				IModelElement type = modelElement.getAncestor(IModelElement.TYPE);
 				if (type != null && !PHPFlags.isNamespace(((IType) type).getFlags())) {
 					return offset;
@@ -315,7 +315,7 @@ public class UseStatementInjector {
 				}
 			}
 
-			PHPVersion phpVersion = ProjectOptions.getPhpVersion(modelElement);
+			PHPVersion phpVersion = ProjectOptions.getPHPVersion(modelElement);
 			// if the class/namespace has not been imported
 			// add use statement
 			if (program != null && !importedTypeName.contains(typeName)

@@ -20,13 +20,13 @@ import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -85,7 +85,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
-		currentPhpVersion = ProjectOptions.getPhpVersion(this.project);
+		currentPhpVersion = ProjectOptions.getPHPVersion(this.project);
 		// must be done by the caller when phpLexer is newly created or when it
 		// was used on a different project:
 		// phpLexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
@@ -185,7 +185,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			synchronized (tokensContainer) {
-				if (ProjectOptions.getPhpVersion(project) != currentPhpVersion) {
+				if (ProjectOptions.getPHPVersion(project) != currentPhpVersion) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=510509
 					// force full reparse
 					return null;
@@ -339,7 +339,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	public synchronized void completeReparse(IDocument doc, int start, int length, @Nullable IProject project) {
 		this.project = project;
-		currentPhpVersion = ProjectOptions.getPhpVersion(this.project);
+		currentPhpVersion = ProjectOptions.getPHPVersion(this.project);
 		// bug fix for 225118 we need to refresh the constants since this
 		// function is being called
 		// after the project's PHP version was changed.
@@ -447,7 +447,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		if (startState != null) {
 			startState.restoreState(lexer);
 		}
-		lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
+		lexer.setAspTags(ProjectOptions.isSupportingASPTags(project));
 		return lexer;
 	}
 

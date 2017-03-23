@@ -26,7 +26,7 @@ import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;

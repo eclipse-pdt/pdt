@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 
 /**
  * Class members occurrences finder.
@@ -55,7 +55,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		PHPVersion phpVersion = PHPVersion.PHP5_4;
 		if (root.getSourceModule().getScriptProject() != null
 				&& root.getSourceModule().getScriptProject().getProject() != null) {
-			phpVersion = ProjectOptions.getPhpVersion(root.getSourceModule().getScriptProject().getProject());
+			phpVersion = ProjectOptions.getPHPVersion(root.getSourceModule().getScriptProject().getProject());
 		}
 
 		if (node.getType() == ASTNode.IDENTIFIER) {

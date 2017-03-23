@@ -70,7 +70,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -450,7 +450,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	}
 
 	private PHPVersion getInitialASTLevel(ISourceModule typeRoot) {
-		return ProjectOptions.getPhpVersion(typeRoot.getScriptProject().getProject());
+		return ProjectOptions.getPHPVersion(typeRoot.getScriptProject().getProject());
 	}
 
 	private Program internalSetInput(ISourceModule input, int offset, int length, PHPVersion phpVersion)

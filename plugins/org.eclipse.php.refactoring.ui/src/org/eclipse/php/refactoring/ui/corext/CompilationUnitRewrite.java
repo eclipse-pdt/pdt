@@ -26,8 +26,8 @@ import org.eclipse.ltk.core.refactoring.CategorizedTextEditGroup;
 import org.eclipse.ltk.core.refactoring.GroupCategorySet;
 import org.eclipse.php.core.ast.nodes.AST;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.refactoring.ui.RefactoringUIPlugin;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -327,7 +327,7 @@ public class CompilationUnitRewrite {
 	public Program getRoot() {
 		if (fRoot == null) {
 			try {
-				fRoot = new RefactoringASTParser(ProjectOptions.getPhpVersion(fCu), ProjectOptions.useShortTags(fCu))
+				fRoot = new RefactoringASTParser(ProjectOptions.getPHPVersion(fCu), ProjectOptions.useShortTags(fCu))
 						.parse(fCu, fOwner, fResolveBindings, fStatementsRecovery, fBindingsRecovery, null);
 			} catch (Exception e) {
 				RefactoringUIPlugin.log(e);

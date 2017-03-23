@@ -52,10 +52,10 @@ import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import org.eclipse.php.composer.ui.handler.ConsoleResponseHandler;
 import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.wizards.IPHPProjectCreateWizardPage;
 import org.eclipse.php.internal.ui.wizards.PHPBuildpathDetector;
 import org.eclipse.php.ui.util.PHPProjectUtils;
@@ -205,8 +205,8 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 	protected void setPhpLangOptions() {
 		boolean useASPTags = false;
 		PHPVersion phpVersion = firstPage.versionGroup.fConfigurationBlock.getPHPVersionValue();
-		ProjectOptions.setSupportingAspTags(useASPTags, getProject());
-		ProjectOptions.setPhpVersion(phpVersion, getProject());
+		ProjectOptions.setSupportingASPTags(useASPTags, getProject());
+		ProjectOptions.setPHPVersion(phpVersion, getProject());
 	}
 
 	protected URI getProjectLocationURI() throws CoreException {

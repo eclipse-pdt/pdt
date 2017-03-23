@@ -24,12 +24,12 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharException;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.tar.TarArchiveFile;
 import org.eclipse.php.internal.core.tar.TarException;
 
@@ -304,8 +304,8 @@ public class PHPToolkitUtil {
 				.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 
 		PHPVersion version = PHPVersion.byAlias(versionName);
-		if (version != null && ProjectOptions.getDefaultPhpVersion() != version) {
-			ProjectOptions.setPhpVersion(version, project);
+		if (version != null && ProjectOptions.getDefaultPHPVersion() != version) {
+			ProjectOptions.setPHPVersion(version, project);
 		}
 	}
 

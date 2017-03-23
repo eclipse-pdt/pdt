@@ -30,7 +30,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;

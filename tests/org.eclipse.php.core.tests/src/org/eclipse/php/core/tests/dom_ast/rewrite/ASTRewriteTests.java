@@ -87,7 +87,7 @@ import org.eclipse.php.core.ast.nodes.WhileStatement;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.ClassRule;
 import org.junit.Test;

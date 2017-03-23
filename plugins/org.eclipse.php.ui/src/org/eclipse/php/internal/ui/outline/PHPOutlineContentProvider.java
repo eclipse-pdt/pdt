@@ -25,12 +25,12 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.model.ImportDeclarationVisitor;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeType;
 import org.eclipse.php.internal.core.util.OutlineFilter;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -101,7 +101,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 					.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 			phpVersion = PHPVersion.byAlias(versionName);
 		} else {
-			phpVersion = ProjectOptions.getPhpVersion(modelElement.getScriptProject().getProject());
+			phpVersion = ProjectOptions.getPHPVersion(modelElement.getScriptProject().getProject());
 		}
 		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}

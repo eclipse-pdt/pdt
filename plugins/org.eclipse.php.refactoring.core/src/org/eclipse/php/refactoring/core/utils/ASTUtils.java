@@ -17,11 +17,10 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 
 public class ASTUtils {
-	public static Program createProgramFromSource(ISourceModule source)
-			throws Exception {
+	public static Program createProgramFromSource(ISourceModule source) throws Exception {
 		IResource resource = source.getResource();
 		IProject project = null;
 		if (resource instanceof IFile) {
@@ -29,12 +28,11 @@ public class ASTUtils {
 		}
 		PHPVersion version;
 		if (project != null) {
-			version = ProjectOptions.getPhpVersion(project);
+			version = ProjectOptions.getPHPVersion(project);
 		} else {
-			version = ProjectOptions.getDefaultPhpVersion();
+			version = ProjectOptions.getDefaultPHPVersion();
 		}
-		ASTParser newParser = ASTParser.newParser(version,
-				(ISourceModule) source);
+		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
 		return newParser.createAST(null);
 	}
 }

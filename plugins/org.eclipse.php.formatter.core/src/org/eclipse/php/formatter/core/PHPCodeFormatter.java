@@ -27,10 +27,10 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -122,7 +122,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, 
 				}
 
 				// php format
-				PHPVersion version = ProjectOptions.getPhpVersion(project);
+				PHPVersion version = ProjectOptions.getPHPVersion(project);
 				boolean useShortTags = ProjectOptions.useShortTags(project);
 				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(project, document, version,
 						useShortTags, region);

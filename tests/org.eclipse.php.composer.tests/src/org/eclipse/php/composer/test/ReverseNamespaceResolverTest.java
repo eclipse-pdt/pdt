@@ -23,9 +23,9 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.junit.Test;
 
 public class ReverseNamespaceResolverTest extends ComposerModelTests {
@@ -45,7 +45,7 @@ public class ReverseNamespaceResolverTest extends ComposerModelTests {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		scriptProject.getProject().setDescription(desc, null);
 
-		ProjectOptions.setPhpVersion(PHPVersion.PHP5_3, scriptProject.getProject());
+		ProjectOptions.setPHPVersion(PHPVersion.PHP5_3, scriptProject.getProject());
 
 		PHPFacets.setFacetedVersion(scriptProject.getProject(), PHPVersion.PHP5_3);
 		FacetManager.installFacets(scriptProject.getProject(), PHPVersion.PHP5_3, new NullProgressMonitor());

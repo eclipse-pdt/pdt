@@ -41,7 +41,7 @@ import org.eclipse.php.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -58,7 +58,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		super(goal);
 		this.typeReference = typeReference;
 		if (goal.getContext() instanceof ISourceModuleContext) {
-			phpVersion = ProjectOptions.getPhpVersion(((ISourceModuleContext) goal.getContext()).getSourceModule());
+			phpVersion = ProjectOptions.getPHPVersion(((ISourceModuleContext) goal.getContext()).getSourceModule());
 		}
 	}
 

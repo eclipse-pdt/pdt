@@ -15,11 +15,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.language.ILanguageModelProvider;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
  * Default initializer for standard PHP functions/classes
@@ -33,7 +33,7 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 
 	public IPath getPath(IScriptProject project) {
 		try {
-			return new Path(getLanguageLibraryPath(project, ProjectOptions.getPhpVersion(project)));
+			return new Path(getLanguageLibraryPath(project, ProjectOptions.getPHPVersion(project)));
 		} catch (Exception e) {
 			Logger.logException(e);
 			return null;

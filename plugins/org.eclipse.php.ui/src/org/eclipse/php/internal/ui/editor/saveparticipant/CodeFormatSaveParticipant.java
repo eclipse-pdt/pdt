@@ -28,10 +28,10 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -91,11 +91,11 @@ public class CodeFormatSaveParticipant implements IPostSaveListener {
 
 		IContentFormatter formatter = PHPUiPlugin.getDefault().getActiveFormatter();
 
-		if (formatter instanceof IFormatterProcessorFactory) {
+		if (formatter instanceof IFormatterProcessorFactory && project != null) {
 			try {
 				IDocument document = new Document(compilationUnit.getSource());
 				ICodeFormattingProcessor processor = ((IFormatterProcessorFactory) formatter)
-						.getCodeFormattingProcessor(document, ProjectOptions.getPhpVersion(project),
+						.getCodeFormattingProcessor(document, ProjectOptions.getPHPVersion(project),
 								ProjectOptions.useShortTags(project), new Region(0, document.getLength()));
 				MultiTextEdit edits = processor.getTextEdits();
 				if (edits.hasChildren()) {
