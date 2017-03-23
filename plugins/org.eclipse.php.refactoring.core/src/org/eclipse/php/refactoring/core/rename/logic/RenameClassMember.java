@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.RefactoringPlugin;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
@@ -55,7 +55,7 @@ public class RenameClassMember extends AbstractRename {
 
 		PHPVersion phpVersion = PHPVersion.PHP5_4;
 		if (file.getProject() != null) {
-			phpVersion = ProjectOptions.getPhpVersion(file.getProject());
+			phpVersion = ProjectOptions.getPHPVersion(file.getProject());
 		}
 		if (iTypeBinding != null && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			String memberName = oldName;

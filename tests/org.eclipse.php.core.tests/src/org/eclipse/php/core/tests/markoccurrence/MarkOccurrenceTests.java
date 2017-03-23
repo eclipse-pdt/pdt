@@ -26,6 +26,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTParser;
+import org.eclipse.php.core.ast.nodes.Identifier;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -33,14 +39,8 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.ast.nodes.ASTNode;
-import org.eclipse.php.core.ast.nodes.ASTParser;
-import org.eclipse.php.core.ast.nodes.Identifier;
-import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
@@ -213,9 +213,9 @@ public class MarkOccurrenceTests {
 	public Program createProgramFromSource(ISourceModule source) throws Exception {
 		PHPVersion version;
 		if (project != null) {
-			version = ProjectOptions.getPhpVersion(project);
+			version = ProjectOptions.getPHPVersion(project);
 		} else {
-			version = ProjectOptions.getDefaultPhpVersion();
+			version = ProjectOptions.getDefaultPHPVersion();
 		}
 		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
 		return newParser.createAST(null);

@@ -24,8 +24,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.ast.locator.Locator;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.ActionUtils;
 import org.eclipse.php.internal.ui.actions.RenamePHPElementAction;
@@ -204,7 +204,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 
 				// locate the php element to refactor
 				ASTParser parser = ASTParser.newParser(new StringReader(doc.get()),
-						ProjectOptions.getPhpVersion(project), ProjectOptions.useShortTags(project));
+						ProjectOptions.getPHPVersion(project), ProjectOptions.useShortTags(project));
 				final Program program = parser.createAST(new NullProgressMonitor());
 				locateNode = Locator.locateNode(program, offset);
 			}

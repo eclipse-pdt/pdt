@@ -36,15 +36,15 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.GlobalNamespace;
 import org.eclipse.php.internal.core.util.OutlineFilter;
 import org.eclipse.php.internal.ui.Logger;
@@ -346,7 +346,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	}
 
 	protected boolean supportsNamespaces(IScriptProject project) {
-		PHPVersion version = ProjectOptions.getPhpVersion(project.getProject());
+		PHPVersion version = ProjectOptions.getPHPVersion(project.getProject());
 		return version.isGreaterThan(PHPVersion.PHP5);
 	}
 

@@ -20,8 +20,8 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -50,7 +50,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	private boolean isFunctionParameterContext = false;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule);
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule);
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

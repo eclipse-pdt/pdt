@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -151,8 +151,8 @@ public class ComposerCoreTestPlugin extends Plugin {
 	 * @throws CoreException
 	 */
 	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
-		if (phpVersion != ProjectOptions.getPhpVersion(project)) {
-			ProjectOptions.setPhpVersion(phpVersion, project);
+		if (phpVersion != ProjectOptions.getPHPVersion(project)) {
+			ProjectOptions.setPHPVersion(phpVersion, project);
 			waitForAutoBuild();
 			waitForIndexer();
 		}

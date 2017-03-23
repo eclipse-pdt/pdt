@@ -26,7 +26,7 @@ import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.editor.composer.ComposerFormEditor;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
@@ -88,7 +88,7 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 				selectAndReveal(project);
 				PHPVersion version = firstPage.getPHPVersionValue();
 				if (version == null) {
-					version = ProjectOptions.getDefaultPhpVersion();
+					version = ProjectOptions.getDefaultPHPVersion();
 				}
 
 				FacetManager.installFacets(project, version, null);

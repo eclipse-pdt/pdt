@@ -20,13 +20,13 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.internal.core.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -88,9 +88,9 @@ public abstract class AbstractConciliatorTest {
 		}
 		PHPVersion version;
 		if (project != null) {
-			version = ProjectOptions.getPhpVersion(project);
+			version = ProjectOptions.getPHPVersion(project);
 		} else {
-			version = ProjectOptions.getDefaultPhpVersion();
+			version = ProjectOptions.getDefaultPHPVersion();
 		}
 		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
 		return newParser.createAST(null);

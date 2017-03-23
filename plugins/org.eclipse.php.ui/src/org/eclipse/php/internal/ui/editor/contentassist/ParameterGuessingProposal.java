@@ -25,14 +25,14 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -185,7 +185,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	}
 
 	private boolean shouldHaveGlobalNamespace() {
-		if (ProjectOptions.getPhpVersion(sProject.getProject()).isLessThan(PHPVersion.PHP5_3)) {
+		if (ProjectOptions.getPHPVersion(sProject.getProject()).isLessThan(PHPVersion.PHP5_3)) {
 			return false;
 		}
 		IType type = method.getDeclaringType();

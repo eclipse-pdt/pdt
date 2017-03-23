@@ -19,12 +19,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -253,7 +253,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 					IType namespace = PHPModelUtils.getCurrentNamespace(type);
 					if (!PHPFlags.isNamespace(flags) && namespace == null && currentNamespace != null
 							&& !ProjectOptions
-									.getPhpVersion(PHPCompletionProposalCollector.this.getScriptProject().getProject())
+									.getPHPVersion(PHPCompletionProposalCollector.this.getScriptProject().getProject())
 									.isLessThan(PHPVersion.PHP5_3)
 							&& PHPCompletionProposalCollector.this.document
 									.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {

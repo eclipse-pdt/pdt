@@ -34,7 +34,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -303,7 +303,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			}
 			if ("self".equals(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
 				return true;
-			} else if (PHPVersion.PHP5_4.isLessThan(ProjectOptions.getPhpVersion(sourceModule))
+			} else if (PHPVersion.PHP5_4.isLessThan(ProjectOptions.getPHPVersion(sourceModule))
 					&& "self".equalsIgnoreCase(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
 				return true;
 			}

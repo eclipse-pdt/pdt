@@ -21,7 +21,7 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser implements ISourceParser {
 	private String fileName;

@@ -26,8 +26,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Assignment;
@@ -52,7 +50,9 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.core.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -106,7 +106,7 @@ public class BindingTests {
 			// Wait for indexer...
 			TestUtils.waitForIndexer();
 		}
-		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
+		PHPVersion version = ProjectOptions.getDefaultPHPVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()), version, false,

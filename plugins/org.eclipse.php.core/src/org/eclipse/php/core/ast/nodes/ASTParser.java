@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
@@ -93,7 +93,7 @@ public class ASTParser {
 	 * Factory methods for ASTParser
 	 */
 	public static ASTParser newParser(ISourceModule sourceModule) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 
 		return newParser(phpVersion, sourceModule);
 	}

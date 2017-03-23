@@ -30,7 +30,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -81,7 +81,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				} catch (Exception e) {
 				}
 				PHPVersion phpVersion = ProjectOptions
-						.getPhpVersion(methodContext.getSourceModule().getScriptProject().getProject());
+						.getPHPVersion(methodContext.getSourceModule().getScriptProject().getProject());
 				if (lambdas[0] != null && (lambdas[0].isStatic() || phpVersion.isLessThan(PHPVersion.PHP5_4))) {
 					this.results.add(PHPSimpleTypes.NULL);
 				} else {

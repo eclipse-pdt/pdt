@@ -15,9 +15,9 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.search.Messages;
 
 /**
@@ -118,7 +118,7 @@ public class PHPKeywords {
 	}
 
 	public static PHPKeywords getInstance(IProject project) {
-		PHPVersion version = ProjectOptions.getPhpVersion(project);
+		PHPVersion version = ProjectOptions.getPHPVersion(project);
 		synchronized (instances) {
 			if (!instances.containsKey(version)) {
 				PHPKeywords instance;

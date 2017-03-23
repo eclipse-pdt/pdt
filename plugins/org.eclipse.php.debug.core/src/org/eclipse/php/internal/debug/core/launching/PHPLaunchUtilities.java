@@ -40,12 +40,12 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -963,7 +963,7 @@ public class PHPLaunchUtilities {
 			String scriptPath, String[] args, String phpVersion) throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
-		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on" //$NON-NLS-1$
+		String aspTags = ProjectOptions.isSupportingASPTags(project) ? "on" //$NON-NLS-1$
 				: "off"; //$NON-NLS-1$
 		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
 				: "off"; //$NON-NLS-1$
@@ -1002,7 +1002,7 @@ public class PHPLaunchUtilities {
 			throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
-		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on" //$NON-NLS-1$
+		String aspTags = ProjectOptions.isSupportingASPTags(project) ? "on" //$NON-NLS-1$
 				: "off"; //$NON-NLS-1$
 		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
 				: "off"; //$NON-NLS-1$

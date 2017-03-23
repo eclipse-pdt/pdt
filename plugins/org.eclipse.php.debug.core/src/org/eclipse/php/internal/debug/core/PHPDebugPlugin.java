@@ -31,7 +31,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
@@ -388,7 +388,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static String getCurrentDebuggerId(IProject project) {
 		if (project != null) {
-			PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+			PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
 			if (phpVersion != null) {
 				return getCurrentDebuggerId(phpVersion);
 			}
@@ -417,7 +417,7 @@ public class PHPDebugPlugin extends Plugin {
 					return PHPexes.getInstance().getItem(phpExe);
 				}
 			}
-			PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+			PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
 			if (phpVersion != null) {
 				return getPHPexeItem(phpVersion);
 			}

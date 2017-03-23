@@ -29,7 +29,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;

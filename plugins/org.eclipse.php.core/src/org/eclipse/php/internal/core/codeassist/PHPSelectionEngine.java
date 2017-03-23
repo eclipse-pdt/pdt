@@ -40,12 +40,13 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -53,7 +54,6 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -99,7 +99,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		ISourceModule sourceModule = (ISourceModule) sourceUnit.getModelElement();
-		phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 
 		// First, try to resolve using AST (if we have parsed it well):
 		IModelAccessCache cache = new PerFileModelAccessCache(sourceModule);

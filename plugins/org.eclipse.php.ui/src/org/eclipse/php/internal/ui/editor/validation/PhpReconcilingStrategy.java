@@ -24,12 +24,12 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.util.Util;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
@@ -155,7 +155,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			}
 
 			if (initialReconcile || astProvider.isActive(unit)) {
-				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit.getScriptProject().getProject());
+				PHPVersion phpVersion = ProjectOptions.getPHPVersion(unit.getScriptProject().getProject());
 				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
 				createdAST = newParser != null ? newParser.createAST(null) : null;
 				if (createdAST != null && document != null) {

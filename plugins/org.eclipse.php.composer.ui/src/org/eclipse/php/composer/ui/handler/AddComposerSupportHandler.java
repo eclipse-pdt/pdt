@@ -23,7 +23,7 @@ import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.ui.editor.composer.ComposerFormEditor;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -43,7 +43,7 @@ public class AddComposerSupportHandler extends AbstractHandler {
 				IAdaptable adaptable = (IAdaptable) item;
 				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
 
-				FacetManager.installFacets(project, ProjectOptions.getDefaultPhpVersion(), null);
+				FacetManager.installFacets(project, ProjectOptions.getDefaultPHPVersion(), null);
 
 				if (window != null) {
 					IFile composerJson = project.getFile(ComposerConstants.COMPOSER_JSON);

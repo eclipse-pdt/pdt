@@ -20,18 +20,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.CompletionCompanion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -76,7 +76,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
-		this.phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		this.phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 
 		try {
 			this.document = determineDocument(sourceModule, requestor);
@@ -792,7 +792,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private List<String> useTypes;
 
 	public boolean isInUseTraitStatement(int offset, IStructuredDocumentRegion sdRegion) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
 			return false;
 		}
