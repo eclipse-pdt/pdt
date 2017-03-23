@@ -215,7 +215,7 @@ public class BuildPathUtils {
 	 */
 	public static List<IBuildpathEntry> getContainedBuildpathes(IPath resourcePath, IScriptProject project) {
 		if (resourcePath == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		IBuildpathEntry[] buildpath = null;
@@ -225,7 +225,7 @@ public class BuildPathUtils {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		ArrayList<IBuildpathEntry> result = new ArrayList<IBuildpathEntry>();

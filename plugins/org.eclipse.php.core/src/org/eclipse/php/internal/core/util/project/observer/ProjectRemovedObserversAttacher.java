@@ -29,7 +29,7 @@ public class ProjectRemovedObserversAttacher {
 
 	private static ProjectRemovedObserversAttacher instance = new ProjectRemovedObserversAttacher();
 
-	private Map project2CompositeProjectChangeObserver = new HashMap();
+	private Map<IProject, IProjectClosedObserver> project2CompositeProjectChangeObserver = new HashMap<>();
 	private IResourceChangeListener resourceChangeListener;
 
 	public static ProjectRemovedObserversAttacher getInstance() {

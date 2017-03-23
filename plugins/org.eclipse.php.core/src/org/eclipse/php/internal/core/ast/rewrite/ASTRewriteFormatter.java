@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.*;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.format.DefaultCodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
@@ -132,13 +132,13 @@ import org.eclipse.text.edits.*;
 	private final NodeInfoStore placeholders;
 	private final RewriteEventStore eventStore;
 
-	private final Map<?, ?> options;
+	private final Map<String, String> options;
 	private IDocument document;
 	private PHPVersion phpVersion;
 	private boolean useShortTags;
 
 	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders, RewriteEventStore eventStore,
-			Map<?, ?> options, String lineDelimiter, PHPVersion version, boolean useShortTags) {
+			Map<String, String> options, String lineDelimiter, PHPVersion version, boolean useShortTags) {
 		this.document = document;
 		this.placeholders = placeholders;
 		this.eventStore = eventStore;
@@ -283,8 +283,8 @@ import org.eclipse.text.edits.*;
 		return new MultiTextEdit();
 	}
 
-	private ICodeFormattingProcessor createCodeFormatter(Map<?, ?> options, IRegion region, IDocument document)
-			throws Exception {
+	private ICodeFormattingProcessor createCodeFormatter(Map<String, String> options, IRegion region,
+			IDocument document) throws Exception {
 		if (getContentFormatter() != null) {
 			return contentFormatter.getCodeFormattingProcessor(document, phpVersion, useShortTags, region);
 		}

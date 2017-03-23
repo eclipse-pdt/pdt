@@ -51,7 +51,7 @@ public class PHPCorePlugin extends Plugin {
 
 	/** Whether the "PHP Toolkit" is initialized */
 	public static transient boolean toolkitInitialized;
-	private final ListenerList shutdownListeners = new ListenerList();
+	private final ListenerList<IShutdownListener> shutdownListeners = new ListenerList<>();
 	private ProjectConversionListener projectConvertListener = new ProjectConversionListener();
 	private ReindexOperationListener reindexOperationListener = new ReindexOperationListener();
 
@@ -385,7 +385,7 @@ public class PHPCorePlugin extends Plugin {
 	 * @see #getDefaultOptions()
 	 * @see JavaCorePreferenceInitializer for changing default settings
 	 */
-	public static Hashtable getOptions() {
+	public static Hashtable<String, String> getOptions() {
 		return ModelManager.getModelManager().getOptions();
 	}
 

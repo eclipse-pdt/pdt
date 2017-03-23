@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
 import org.eclipse.php.core.PHPVersion;
@@ -299,7 +300,7 @@ public class PHPToolkitUtil {
 		return null;
 	}
 
-	public static void setProjectVersion(IProject project) {
+	public static void setProjectVersion(@NonNull IProject project) {
 		String versionName = CorePreferencesSupport.getInstance()
 				.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 
