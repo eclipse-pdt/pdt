@@ -33,30 +33,19 @@
       <discovery label="Eclipse PDT Website" url="http://eclipse.org/pdt/"/>
    </url>
 
-   <includes
-         id="org.eclipse.php"
-         version="0.0.0"/>
-
    <requires>
+      <import feature="org.eclipse.php"/>
       <import feature="org.eclipse.wst.json_ui.feature"/>
    </requires>
 
    <plugin
+         id="org.eclipse.php.composer.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
          id="org.eclipse.php.composer.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.exec"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.logging"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -68,25 +57,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpclient"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpcore"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.php.composer.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
 </feature>
