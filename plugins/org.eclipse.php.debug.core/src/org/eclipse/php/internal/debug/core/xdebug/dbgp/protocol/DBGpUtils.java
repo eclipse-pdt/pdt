@@ -18,12 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.browser.WebBrowserView;
 
 public class DBGpUtils {
 
@@ -117,29 +111,6 @@ public class DBGpUtils {
 					+ resp.getRawXML(), caller, null);
 		}
 		return false;
-	}
-
-	/**
-	 * open the internal browser view if you can
-	 * 
-	 * @param url
-	 */
-	public static void openInternalBrowserView(final String url) {
-
-		// can't invoke this on the UI Thread
-		final String viewId = "org.eclipse.ui.browser.view"; //$NON-NLS-1$
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				try {
-					IViewPart viewPart = window.getActivePage().showView(viewId);
-					if (viewPart instanceof WebBrowserView)
-						((WebBrowserView) viewPart).setURL(url);
-				} catch (PartInitException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		});
 	}
 
 	private static String adjustURIWhiteSpaces(String fileName) {
