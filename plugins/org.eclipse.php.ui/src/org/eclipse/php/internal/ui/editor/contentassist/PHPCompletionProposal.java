@@ -43,16 +43,9 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	 */
 	private IInformationControlCreator fCreator;
 
-	@Deprecated
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
-	}
-
-	@Deprecated
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			String displayString, int relevance, boolean indoc) {
-		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,

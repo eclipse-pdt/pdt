@@ -38,12 +38,6 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 	 */
 	private IInformationControlCreator fCreator;
 
-	@Deprecated
-	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName,
-			String[] paramTypes, int start, int length, String displayName, String completionProposal) {
-		super(jproject, cu, methodName, paramTypes, start, length, displayName, completionProposal);
-	}
-
 	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName,
 			String[] paramTypes, int start, int length, StyledString displayName, String completionProposal) {
 		super(jproject, cu, methodName, paramTypes, start, length, displayName.toString(), completionProposal);

@@ -167,22 +167,6 @@ public class Strings {
 		return Character.toLowerCase(ch) == ch;
 	}
 
-	/**
-	 * @deprecated use
-	 *             org.apache.commons.lang3.StringUtils.startsWithIgnoreCase()
-	 */
-	public static boolean startsWithIgnoreCase(String text, String prefix) {
-		int textLength = text.length();
-		int prefixLength = prefix.length();
-		if (textLength < prefixLength)
-			return false;
-		for (int i = prefixLength - 1; i >= 0; i--) {
-			if (Character.toLowerCase(prefix.charAt(i)) != Character.toLowerCase(text.charAt(i)))
-				return false;
-		}
-		return true;
-	}
-
 	public static String removeNewLine(String message) {
 		StringBuilder result = new StringBuilder();
 		int current = 0;

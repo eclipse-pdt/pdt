@@ -61,18 +61,6 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
 public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
-	public static interface IRemoveOldBinariesQuery {
-		/**
-		 * Do the callback. Returns <code>true</code> if .class files should be
-		 * removed from the old output location.
-		 * 
-		 * @param oldOutputLocation
-		 *            The old output location
-		 * @return Returns true if .class files should be removed.
-		 * @throws OperationCanceledException
-		 */
-		boolean doQuery(IPath oldOutputLocation) throws OperationCanceledException;
-	}
 
 	protected IWorkspaceRoot fWorkspaceRoot;
 	protected ListDialogField fBuildPathList;
