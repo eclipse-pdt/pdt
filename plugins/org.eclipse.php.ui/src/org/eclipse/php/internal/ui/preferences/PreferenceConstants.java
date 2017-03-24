@@ -17,8 +17,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant;
@@ -238,26 +238,6 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(63, 85, 191);
-
-	/**
-	 * A named preference that holds the color for the TASK tag inside the
-	 * comment
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	@Deprecated
-	public static final String EDITOR_TASK_COLOR = "editorColorTask"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the default color for the TASK tag inside
-	 * the comment
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	@Deprecated
-	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if correction indicators are shown in

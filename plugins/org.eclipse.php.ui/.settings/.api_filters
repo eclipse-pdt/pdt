@@ -8,14 +8,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/php/internal/ui/util/MultiElementSelection.java" type="org.eclipse.php.internal.ui.util.MultiElementSelection">
-        <filter id="571473929">
-            <message_arguments>
-                <message_argument value="StructuredSelection"/>
-                <message_argument value="MultiElementSelection"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/php/internal/ui/util/ValuedCombo.java" type="org.eclipse.php.internal.ui.util.ValuedCombo">
         <filter id="571473929">
             <message_arguments>

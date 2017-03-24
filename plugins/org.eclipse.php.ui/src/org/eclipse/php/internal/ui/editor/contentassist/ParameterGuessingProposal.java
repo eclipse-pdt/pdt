@@ -71,14 +71,6 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	private IRegion fSelectedRegion; // initialized by apply()
 	private IPositionUpdater fUpdater;
 
-	@Deprecated
-	public ParameterGuessingProposal(CompletionProposal proposal, IScriptProject jproject, ISourceModule cu,
-			String methodName, String[] paramTypes, int start, int length, String displayName,
-			String completionProposal, boolean fillBestGuess, Object extraInfo, IDocument document) {
-		this(proposal, jproject, cu, methodName, paramTypes, start, length, new StyledString(displayName),
-				completionProposal, fillBestGuess, extraInfo, document);
-	}
-
 	public ParameterGuessingProposal(CompletionProposal proposal, IScriptProject jproject, ISourceModule cu,
 			String methodName, String[] paramTypes, int start, int length, StyledString displayName,
 			String completionProposal, boolean fillBestGuess, Object extraInfo, IDocument document) {

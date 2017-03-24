@@ -381,35 +381,4 @@ public class PhpTemplateVariables {
 		}
 	}
 
-	@Deprecated
-	public static class Namespace extends TemplateVariableResolver {
-		public static final String NAME = "namespace"; //$NON-NLS-1$
-
-		public Namespace() {
-			super(NAME, Messages.PhpTemplateVariables_31);
-		}
-
-		protected String resolve(TemplateContext context) {
-			String path = null;
-
-			ISourceModule module = getSourceModule(context);
-			if (module == null)
-				return null;
-			IModelElement parent = module.getParent();
-			path = parent.getElementName();
-			while (!(parent instanceof IProjectFragment)) {
-				parent = parent.getParent();
-				if (parent.getElementName().length() == 0)
-					break;
-				path = parent.getElementName() + "\\" + path; //$NON-NLS-1$
-			}
-			return path;
-
-		}
-
-		protected boolean isUnambiguous(TemplateContext context) {
-			return resolve(context) != null;
-		}
-	}
-
 }

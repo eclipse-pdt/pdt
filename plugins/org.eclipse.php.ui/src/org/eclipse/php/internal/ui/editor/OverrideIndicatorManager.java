@@ -131,11 +131,6 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 		fAnnotationModelLockObject = getLockObject(fAnnotationModel);
 	}
 
-	@Deprecated
-	public OverrideIndicatorManager(IAnnotationModel annotationModel, IModelElement modelElement, Program ast) {
-		this(annotationModel);
-	}
-
 	/**
 	 * Returns the lock object for the given annotation model.
 	 * 
