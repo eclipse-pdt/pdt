@@ -107,6 +107,7 @@ Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatte
  org.eclipse.php.ui.folding,
  org.eclipse.php.ui.format,
  org.eclipse.php.ui.preferences,
+ org.eclipse.php.ui.text.correction,
  org.eclipse.php.ui.util,
  org.eclipse.php.ui.wizards
 Bundle-Vendor: %Bundle-Vendor.1
