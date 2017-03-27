@@ -45,6 +45,10 @@ public interface IVariableFacet {
 		 */
 		KIND_ARRAY_MEMBER,
 		/**
+		 * Facet indicating that corresponding element is constant.
+		 */
+		KIND_CONSTANT,
+		/**
 		 * Facet indicating that corresponding element is resource.
 		 */
 		KIND_RESOURCE,
@@ -81,7 +85,8 @@ public interface IVariableFacet {
 		 */
 		VIRTUAL_UNINIT,
 		/**
-		 * Facet indicating that corresponding element is 'virtual array' member.
+		 * Facet indicating that corresponding element is 'virtual array'
+		 * member.
 		 */
 		VIRTUAL_ARRAY_MEMBER;
 

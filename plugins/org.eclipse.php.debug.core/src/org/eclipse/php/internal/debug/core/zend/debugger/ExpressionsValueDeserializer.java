@@ -12,10 +12,13 @@
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
-import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_ARRAY_MEMBER;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_OBJECT_MEMBER;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class ExpressionsValueDeserializer {
 
@@ -65,26 +68,25 @@ public class ExpressionsValueDeserializer {
 
 	private ExpressionValue buildIntType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(int) " + value; //$NON-NLS-1$
+		String valueAsString = value; // $NON-NLS-1$
 		return new ExpressionValue(PHP_INT, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildFloatType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(float) " + value; //$NON-NLS-1$
+		String valueAsString = value; // $NON-NLS-1$
 		return new ExpressionValue(PHP_FLOAT, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildSringType(VariableReader reader) {
 		String value = reader.readString();
-		String valueAsString = "(string:" + value.length() + ") " + value; //$NON-NLS-1$ //$NON-NLS-2$
+		String valueAsString = "\"" + value + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 		return new ExpressionValue(PHP_STRING, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildBooleanType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(boolean) " //$NON-NLS-1$
-				+ ((value.equals("0")) ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String valueAsString = ((value.equals("0")) ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return new ExpressionValue(PHP_BOOL, value, valueAsString, null);
 	}
 
@@ -155,7 +157,7 @@ public class ExpressionsValueDeserializer {
 			}
 			expressionNodes[i].setValue(build(expression, reader));
 		}
-		String valueAsString = "Object of: " + className; //$NON-NLS-1$
+		String valueAsString = "Object of: " + PHPModelUtils.extractElementName(className); //$NON-NLS-1$
 		return new ExpressionValue(PHP_OBJECT, className, valueAsString, expressionNodes, originalLength);
 	}
 

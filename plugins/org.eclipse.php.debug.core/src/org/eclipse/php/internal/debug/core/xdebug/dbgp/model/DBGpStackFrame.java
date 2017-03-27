@@ -26,6 +26,35 @@ import org.w3c.dom.Node;
 
 public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
+	private static class DBGpVariableContainer {
+		IVariable[] locals = null;
+
+		/**
+		 * @param varName
+		 * @return
+		 * @throws DebugException
+		 */
+		public IVariable findVariable(String varName) throws DebugException {
+			if (locals != null) {
+				final IVariable variable = findVariable(varName, locals);
+				if (variable != null) {
+					return variable;
+				}
+			}
+			return null;
+		}
+
+		private static IVariable findVariable(String varName, IVariable[] vars) throws DebugException {
+			for (int i = 0; i < vars.length; i++) {
+				final IVariable var = vars[i];
+				if (var.getName().equals(varName)) {
+					return var;
+				}
+			}
+			return null;
+		}
+	}
+
 	private DBGpThread owningThread;
 	private String qualifiedFile = ""; // fully qualified name of //$NON-NLS-1$
 										// the file this stack frame is in
@@ -35,8 +64,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	private int lineNo; // line within the file of this stack frame
 	private String name = ""; // string to display in debugger for //$NON-NLS-1$
 								// this stack frame
-	private IVariable[] currentVariables;
-	private IVariable[] previousVariables;
+	private DBGpVariableContainer currentVariables;
+	private DBGpVariableContainer previousVariables;
 	private Node descriptor;
 
 	// private IVariable[] variables; // variables exposed to this stack frame
@@ -120,15 +149,16 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	public synchronized IVariable[] getVariables() throws DebugException {
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
 		if (currentVariables == null) {
+			currentVariables = new DBGpVariableContainer();
 			// fetch new set of variables
 			IVariable[] incoming = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
-			currentVariables = new IVariable[incoming.length];
+			currentVariables.locals = new IVariable[incoming.length];
 			for (int i = 0; i < incoming.length; i++) {
 				DBGpVariable variable = ((DBGpVariable) incoming[i]);
-				currentVariables[i] = merge(variable);
+				currentVariables.locals[i] = merge(variable);
 			}
 		}
-		return currentVariables;
+		return currentVariables.locals;
 	}
 
 	/*
@@ -391,7 +421,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		DBGpVariable incoming = (DBGpVariable) variable;
 		if (incoming.getFullName().isEmpty())
 			return incoming;
-		for (IVariable stored : previousVariables) {
+		for (IVariable stored : previousVariables.locals) {
 			if (stored instanceof DBGpVariable) {
 				DBGpVariable previous = (DBGpVariable) stored;
 				if (previous.getFullName().equals(incoming.getFullName())) {
@@ -401,6 +431,16 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 			}
 		}
 		return variable;
+	}
+
+	public synchronized IVariable findVariable(String varName) throws DebugException {
+		if (currentVariables == null) {
+			getVariables();
+		}
+		if (currentVariables != null) {
+			return (IVariable) currentVariables.findVariable(varName);
+		}
+		return null;
 	}
 
 }

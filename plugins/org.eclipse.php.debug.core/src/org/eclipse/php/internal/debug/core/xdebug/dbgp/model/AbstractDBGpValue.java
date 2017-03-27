@@ -150,6 +150,10 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 		return fHasVariables;
 	}
 
+	public String getValueDetail() throws DebugException {
+		return getValueString();
+	}
+
 	/**
 	 * Generates and returns related value string.
 	 * 
