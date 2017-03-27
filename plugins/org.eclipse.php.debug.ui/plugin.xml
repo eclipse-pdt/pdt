@@ -338,8 +338,14 @@
 			icon="icon/full/obj16/browser_output.png"
 			id="org.eclipse.debug.ui.PHPBrowserOutput" name="%browserOutput.name">
 		</view>
+		<view
+            allowMultiple="true"
+            category="org.eclipse.php.ui.views"
+            class="org.eclipse.php.internal.debug.ui.views.coverage.CodeCoverageView"
+            icon="icon/full/obj16/code_coverage_view.png"
+            id="org.eclipse.php.debug.ui.CodeCoverageView" name="%codeCoverageView.name">
+        </view>
 	</extension>
-	
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%sourceNotFoundEditorName"
 			icon="platform:/plugin/org.eclipse.debug.ui/icons/full/obj16/stckframe_obj.gif"
@@ -351,6 +357,24 @@
 	<extension point="org.eclipse.ui.themes">
 		<themeElementCategory id="org.eclipse.php.debug.ui.themePHPDebug"
 			label="%PHP.debug" />
+		<colorDefinition
+            categoryId="org.eclipse.php.debug.ui.themePHPDebug"
+            id="org.eclipse.php.debug.ui.themePHPDebug.codeCoverageCoveredLinesBg"
+            label="%colorDefinition.codeCoverageCovered.label"
+            value="207,223,239">
+      	<description>
+      		%colorDefinition.codeCoverageCovered.description
+      	</description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.php.debug.ui.themePHPDebug"
+            id="org.eclipse.php.debug.ui.themePHPDebug.codeCoverageUncoveredLinesBg"
+            label="%colorDefinition.codeCoverageUncovered.label"
+            value="255,223,239">
+      	<description>
+      		%colorDefinition.codeCoverageUncovered.description
+      	</description>
+      </colorDefinition>
 	</extension>
 	
 	<extension point="org.eclipse.ui.perspectiveExtensions">
@@ -462,6 +486,12 @@
 			id="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
 			name="%Step.filtering">
 		</page>
+		<page
+            category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            class="org.eclipse.php.internal.debug.ui.preferences.coverage.CodeCoveragePreferencePage"
+            id="org.eclipse.php.debug.ui.codeCoveragePage"
+            name="%codeCoveragePreferencePage.name">
+        </page>
 	</extension>
 	
 	<extension point="org.eclipse.ui.propertyPages">
@@ -759,5 +789,9 @@
             verticalRulerPreferenceKey="phpExceptionBreakpointAnnotationVerticalRuler"
             verticalRulerPreferenceValue="true">
       </specification>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.php.internal.debug.ui.preferences.coverage.CodeCoveragePreferenceInitializer"/>
    </extension>
 </plugin>

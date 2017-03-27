@@ -27,12 +27,15 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.debug.ui.editor.RemoteFileStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.input.IPlatformIndependentPathEditorInput;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
@@ -47,8 +50,16 @@ import com.ibm.icu.text.MessageFormat;
 
 public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IExecutableExtension {
 
+	private String originalURL;
+
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset)
 			throws CoreException {
+
+		// check if file is a remote storage one
+		if (input instanceof RemoteFileStorageEditorInput) {
+			RemoteFileStorage storage = (RemoteFileStorage) ((RemoteFileStorageEditorInput) input).getStorage();
+			this.originalURL = storage.getOriginalURL();
+		}
 
 		// check if this is a history file and if it is so - skip adding it
 		Object storage = input.getAdapter(IStorage.class);
@@ -159,6 +170,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 	@Override
 	public IBreakpoint createBreakpoint(IEditorInput input, IResource resource, int lineNumber, int charStart,
 			int charEnd, Map<String, String> attributes) throws CoreException {
+		attributes.put(IDebugParametersKeys.ORIGINAL_URL, originalURL);
 		return new PHPConditionalBreakpoint(resource, lineNumber, charStart, charEnd, attributes);
 	}
 

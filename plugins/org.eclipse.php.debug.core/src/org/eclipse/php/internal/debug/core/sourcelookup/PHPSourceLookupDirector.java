@@ -20,7 +20,6 @@ import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
  * PHP source lookup director. For PHP source lookup there is one source lookup
  * participant.
  */
-@SuppressWarnings("restriction")
 public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 
 	/*
@@ -43,6 +42,11 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 		Object sourceElement = super.getSourceElement(element);
 		if (sourceElement == null && element instanceof IStackFrame) {
 			sourceElement = new SourceNotFoundEditorInput((IStackFrame) element);
+		}
+		if (sourceElement == null) {
+			if (element instanceof IStackFrame) {
+				sourceElement = new SourceNotFoundEditorInput((IStackFrame) element);
+			}
 		}
 		return sourceElement;
 	}

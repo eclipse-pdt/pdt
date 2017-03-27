@@ -28,6 +28,8 @@ public interface IRemoteDebugger extends Debugger, CommunicationClient, Communic
 
 	public IDebugHandler getDebugHandler();
 
+	public byte[] getFileContent(String fileName);
+
 	public boolean go(GoResponseHandler responseHandler);
 
 	public boolean isActive();

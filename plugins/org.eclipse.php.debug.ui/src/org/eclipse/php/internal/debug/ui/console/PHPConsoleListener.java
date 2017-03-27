@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.debug.ui.console;
 
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.launching.DebugConsoleMonitor;
 import org.eclipse.php.internal.debug.core.launching.PHPHyperLink;
@@ -40,6 +41,7 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 	protected IHyperlink createLink(DebugError debugError) {
 		String fileName = debugError.getFullPathName();
 		int lineNumber = debugError.getLineNumber();
-		return new PHPFileLink(fileName, lineNumber);
+		String url = fLaunch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+		return new PHPFileLink(fileName, lineNumber, url);
 	}
 }

@@ -30,6 +30,7 @@ public class PHPDebugCorePreferenceNames {
 	public static final String ZEND_NEW_PROTOCOL = Debug_ID + "zend_new_protocol"; //$NON-NLS-1$
 	public static final String CLIENT_IP = Debug_ID + "client_ip"; //$NON-NLS-1$
 	public static final String DEBUG_RESPONSE_TIMEOUT = Debug_ID + "response_timeout"; //$NON-NLS-1$
+	public static final String ZEND_DEBUG_ENCRYPTED_SSL_DATA = "zend_debug_use_ssl_encryption"; //$NON-NLS-1$
 
 	// Workspace defaults PHP executables keys
 	public static final String INSTALLED_PHP_NAMES = Debug_ID + "installedPHPNames"; //$NON-NLS-1$

@@ -232,6 +232,10 @@
            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest"
            id="org.eclipse.php.debug.core.debugger.messages.SetProtocolRequest"
         name="Set Protocol Request"/>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCodeCoverageRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.GetCodeCoverageRequest"
+            name="Get Code Coverage Request"/>
         
 	  <!-- Response Messages -->
 
@@ -308,6 +312,10 @@
            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse"
            id="org.eclipse.php.debug.core.debugger.messages.SetProtocolResponse"
         name="Set Protocol Response"/>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCodeCoverageResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.GetCodeCoverageResponse"
+            name="Get Code Coverage Response"/>
 
 	  <!-- Notification Messages -->
 
@@ -490,5 +498,13 @@
       <super
             type="org.eclipse.debug.core.breakpointMarker">
       </super>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageAdapterFactory">
+		 <adapter type="org.eclipse.dltk.core.ISourceModule"/>         
+      </factory>
    </extension>
 </plugin>
