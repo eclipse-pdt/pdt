@@ -11,86 +11,183 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.hovers;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IValue;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
-import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackVariable;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.corext.dom.NodeFinder;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
-import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
-import org.eclipse.php.ui.editor.hover.IPHPTextHover;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.w3c.dom.Node;
 
-public class XDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
+public class XDebugTextHover extends PHPDebugTextHover {
 
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		if (hoverRegion == null || textViewer == null || textViewer.getDocument() == null) {
+	@Override
+	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
+		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
+		if (frame == null)
 			return null;
-		}
 
-		IAdaptable adaptable = DebugUITools.getDebugContext();
-		if (adaptable instanceof DBGpStackFrame) {
-			DBGpStackFrame context = (DBGpStackFrame) adaptable;
-
-			int offset = hoverRegion.getOffset();
-			IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument())
-					.getRegionAtCharacterOffset(offset);
-			ITextRegion region = null;
-			if (flatNode != null) {
-				region = flatNode.getRegionAtCharacterOffset(offset);
+		DBGpVariable variable = null;
+		try {
+			ISourceModule sourceModule = getEditorInputModelElement();
+			ASTNode root = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
+			if (root == null) {
+				ASTParser parser = ASTParser.newParser(sourceModule);
+				root = parser.createAST(null);
 			}
+			ASTNode node = NodeFinder.perform(root, hoverRegion.getOffset(), hoverRegion.getLength());
 
-			ITextRegionCollection container = flatNode;
-			if (region instanceof ITextRegionContainer) {
-				container = (ITextRegionContainer) region;
-				region = container.getRegionAtCharacterOffset(offset);
-			}
-
-			if (region != null && container != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
-				try {
-					region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
-				} catch (BadLocationException e) {
-					region = null;
-				}
-
-				if (region != null) {
-					String regionType = region.getType();
-					if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_THIS) {
-						String variable = null;
-						try {
-							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
-							if (variable != null) {
-								variable = variable.trim();
-								variable = "<B>" + variable + " = </B>" + getByProperty(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-						} catch (BadLocationException e) {
-							Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
-						}
-						return variable;
+			if (node instanceof Scalar) {
+				Scalar scalar = (Scalar) node;
+				if (node.getParent() instanceof ArrayAccess) {
+					ArrayAccess access = (ArrayAccess) node.getParent();
+					DBGpVariable var = getVariable(computeExpression(access.getName()));
+					String arrayAccessKey = scalar.getStringValue();
+					if (scalar.getScalarType() == Scalar.TYPE_STRING) {
+						arrayAccessKey = arrayAccessKey.replace("\"", "");
+					}
+					arrayAccessKey = "[" + arrayAccessKey + "]";
+					variable = fetchMember(var, arrayAccessKey);
+				} else if (!(scalar.getParent() instanceof Include) && scalar.getScalarType() == Scalar.TYPE_STRING) {
+					if (!(scalar.getStringValue().startsWith("\"") && scalar.getStringValue().endsWith("\""))) {
+						variable = getVariable(scalar.getStringValue());
+						variable.addFacets(KIND_CONSTANT);
+						variable.addFacets(MOD_PUBLIC);
 					}
 				}
+			} else if (node.getParent() instanceof Variable && node.getParent().getParent() instanceof FieldAccess) {
+				String nodeName = ((Identifier) node).getName();
+				String expression = computeExpression(((FieldAccess) node.getParent().getParent()).getDispatcher());
+				DBGpVariable var = getVariable(expression);
+				variable = fetchMember(var, nodeName);
+			} else if (node.getParent() instanceof StaticConstantAccess) {
+				String nodeName = ((Identifier) node).getName();
+				StaticConstantAccess staticAccess = (StaticConstantAccess) node.getParent();
+				String className = resolveTypeName((Identifier) staticAccess.getClassName());
+				if (className != null) {
+					String name = className + "::" + nodeName;
+					variable = getVariable(name);
+					if (nodeName.equals("class")) {
+						variable.addFacets(VIRTUAL_CLASS);
+					} else {
+						variable.addFacets(KIND_CONSTANT);
+						variable.addFacets(MOD_PUBLIC);
+					}
+				}
+			} else if (node.getParent() instanceof StaticFieldAccess) {
+				Variable var = (Variable) node;
+				String nodeName = ((Identifier) var.getName()).getName();
+				StaticFieldAccess staticAccess = (StaticFieldAccess) node.getParent();
+				Identifier identifier = null;
+				if (staticAccess.getClassName() instanceof Identifier) {
+					identifier = (Identifier) staticAccess.getClassName();
+				} else if (staticAccess.getClassName() instanceof VariableBase) {
+					identifier = (Identifier) var.getName();
+				}
+				String className = resolveTypeName(identifier);
+				String name = className + "::$" + nodeName;
+				variable = getVariable(name);
+			} else if (node.getParent() instanceof ConstantDeclaration) {
+				String nodeName = ((Identifier) node).getName();
+				IField field = (IField) sourceModule.getElementAt(node.getStart());
+				if (field.getParent() instanceof IType) {
+					IType type = (IType) field.getParent();
+					String typeName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
+					if (!PHPFlags.isNamespace(type.getFlags())) {
+						variable = getVariable(typeName + "::" + nodeName);
+					} else {
+						variable = getVariable(typeName + "\\" + nodeName);
+					}
+					variable.addFacets(KIND_CONSTANT);
+					variable.addFacets(MOD_PUBLIC);
+				}
+			} else if (node.getParent() instanceof SingleFieldDeclaration) {
+				IField field = (IField) sourceModule.getElementAt(node.getStart());
+				String typeName = "";
+				boolean isAnonymous = false;
+				if (field.getParent() instanceof IType) {
+					IType type = (IType) field.getParent();
+					typeName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
+					isAnonymous = PHPFlags.isAnonymous(type.getFlags());
+				}
+				Variable var = (Variable) node;
+				String nodeName = ((Identifier) var.getName()).getName();
+				if (!PHPFlags.isStatic(field.getFlags())) {
+					DBGpVariable varThis = getVariable("$this");
+					if (isAnonymous || typeName.equals(varThis.getValue().getValueString())) {
+						variable = fetchMember(varThis, nodeName);
+					}
+				} else {
+					variable = getVariable(typeName + "::$" + nodeName);
+				}
+			} else {
+				IDocument document = textViewer.getDocument();
+				if (document != null) {
+					String variableName = document.get(hoverRegion.getOffset(), hoverRegion.getLength());
+					variable = (DBGpVariable) frame.findVariable(variableName);
+				}
 			}
+		} catch (Exception e) {
+			PHPDebugPlugin.log(e);
+		}
+		return variable;
+
+	}
+
+	protected IStackFrame getFrame() {
+		IAdaptable adaptable = DebugUITools.getDebugContext();
+		if (adaptable != null) {
+			return adaptable.getAdapter(DBGpStackFrame.class);
 		}
 		return null;
 	}
 
-	public IHoverMessageDecorator getMessageDecorator() {
-		return null;
+	protected DBGpVariable getVariable(String expression) {
+		DBGpVariable variable = null;
+		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
+		if (isStack(expression)) {
+			variable = getByProperty(frame, expression);
+		} else {
+			variable = getByEval(frame, expression);
+		}
+		return variable;
+	}
+
+	private void setContextFacets(IVariable variable) {
+		if (variable instanceof DBGpVariable) {
+			DBGpVariable dbgpVariable = (DBGpVariable) variable;
+			try {
+				String endName = dbgpVariable.getName();
+				if (VariablesUtil.isThis(endName))
+					dbgpVariable.addFacets(KIND_THIS);
+				else if (VariablesUtil.isSuperGlobal(endName))
+					dbgpVariable.addFacets(KIND_SUPER_GLOBAL);
+				else if (VariablesUtil.isClassIndicator(endName))
+					dbgpVariable.addFacets(VIRTUAL_CLASS);
+				else
+					dbgpVariable.addFacets(KIND_LOCAL);
+			} catch (DebugException e) {
+				// should not happen
+			}
+		}
 	}
 
 	/**
@@ -100,34 +197,16 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 	 *            The variable name
 	 * @return
 	 */
-	protected String getByEval(DBGpTarget debugTarget, String expression) {
-		String value = null;
+	protected DBGpVariable getByEval(DBGpStackFrame context, String expression) {
+		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
 		Node resp = debugTarget.eval(expression);
 		if (resp == null) {
-			return ""; //$NON-NLS-1$
+			return null; // $NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpEvalVariable(debugTarget, expression, resp);
-		IValue val = null;
-		try {
-			val = tempVar.getValue();
-			if (val != null) {
-				value = val.getValueString();
-			}
-		} catch (DebugException e) {
-		}
-		if (value != null && value.length() == 0) {
-			value = PHPDebugUIMessages.XDebugHover_empty;
-			return value;
-		}
-		if (value != null) {
-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		}
-		return value;
+		return new DBGpEvalVariable(debugTarget, expression, resp);
 	}
 
-	protected String getByProperty(DBGpStackFrame context, String variable) {
-		String value = null;
+	protected DBGpVariable getByProperty(DBGpStackFrame context, String variable) {
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
 		String stackLevel = context.getStackLevel();
 		Node resp = debugTarget.getProperty(variable, stackLevel, 0);
@@ -137,26 +216,35 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 			resp = debugTarget.getProperty(variable, stackLevel, 0);
 		}
 		if (resp == null) {
-			return ""; //$NON-NLS-1$
+			return null; // $NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpStackVariable(debugTarget, resp, Integer.valueOf(stackLevel));
-		IValue val = null;
+		DBGpVariable var = new DBGpStackVariable(debugTarget, resp, Integer.valueOf(stackLevel));
+		setContextFacets(var);
+		return var;
+	}
+
+	private boolean isStack(String expression) {
+		if (expression.startsWith("$")) {//$NON-NLS-1$
+			ISourceRange enclosingIdentifier = PHPTextSequenceUtilities.getEnclosingIdentifier(expression, 0);
+			if (enclosingIdentifier != null && enclosingIdentifier.getLength() == expression.length() + 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private DBGpVariable fetchMember(DBGpVariable variable, String memberName) {
 		try {
-			val = tempVar.getValue();
-			if (val != null) {
-				value = val.getValueString();
+			if (variable.getValue() == null || variable.getValue().getVariables() == null)
+				return null;
+			for (IVariable child : variable.getValue().getVariables()) {
+				if (child.getName().equals(memberName) && child instanceof DBGpVariable) {
+					return (DBGpVariable) child;
+				}
 			}
 		} catch (DebugException e) {
 		}
-		if (value != null && value.length() == 0) {
-			value = PHPDebugUIMessages.XDebugHover_empty;
-			return value;
-		}
-		if (value != null) {
-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		}
-		return value;
+		return null;
 	}
 
 }

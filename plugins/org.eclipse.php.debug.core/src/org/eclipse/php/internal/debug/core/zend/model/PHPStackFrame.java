@@ -15,10 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IRegisterGroup;
-import org.eclipse.debug.core.model.IStackFrame;
-import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
@@ -27,6 +24,35 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
  * PHP stack frame.
  */
 public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
+
+	private static class PHPVariableContainer {
+		IVariable[] locals = null;
+
+		/**
+		 * @param varName
+		 * @return
+		 * @throws DebugException
+		 */
+		public IVariable findVariable(String varName) throws DebugException {
+			if (locals != null) {
+				final IVariable variable = findVariable(varName, locals);
+				if (variable != null) {
+					return variable;
+				}
+			}
+			return null;
+		}
+
+		private static IVariable findVariable(String varName, IVariable[] vars) throws DebugException {
+			for (int i = 0; i < vars.length; i++) {
+				final IVariable var = vars[i];
+				if (var.getName().equals(varName)) {
+					return var;
+				}
+			}
+			return null;
+		}
+	}
 
 	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
 
@@ -37,8 +63,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private int fLineNumber;
 	private int fDepth;
 	private Expression[] fLocalVariables;
-	private IVariable[] fCurrentVariables;
-	private IVariable[] fPreviousVariables;
+	private PHPVariableContainer fCurrentVariables;
+	private PHPVariableContainer fPreviousVariables;
 
 	/**
 	 * Create new PHP stack frame
@@ -110,7 +136,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		PHPVariable incoming = (PHPVariable) variable;
 		if (incoming.getFullName().isEmpty())
 			return incoming;
-		for (IVariable stored : fPreviousVariables) {
+		for (IVariable stored : fPreviousVariables.locals) {
 			if (stored instanceof PHPVariable) {
 				PHPVariable previous = (PHPVariable) stored;
 				if (previous.getFullName().equals(incoming.getFullName())) {
@@ -148,13 +174,24 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	public synchronized IVariable[] getVariables() throws DebugException {
 		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
 		if (fCurrentVariables == null) {
-			fCurrentVariables = new PHPVariable[localVariables.length];
+			fCurrentVariables = new PHPVariableContainer();
+			fCurrentVariables.locals = new PHPVariable[localVariables.length];
 			for (int i = 0; i < localVariables.length; i++) {
 				PHPVariable incoming = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i]);
-				fCurrentVariables[i] = merge(incoming);
+				fCurrentVariables.locals[i] = merge(incoming);
 			}
 		}
-		return fCurrentVariables;
+		return fCurrentVariables.locals;
+	}
+
+	public synchronized IVariable findVariable(String varName) throws DebugException {
+		if (fCurrentVariables == null) {
+			getVariables();
+		}
+		if (fCurrentVariables != null) {
+			return (IVariable) fCurrentVariables.findVariable(varName);
+		}
+		return null;
 	}
 
 	/*

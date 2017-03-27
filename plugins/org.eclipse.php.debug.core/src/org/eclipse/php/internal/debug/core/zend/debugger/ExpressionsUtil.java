@@ -11,14 +11,17 @@
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.PHP_VIRTUAL_CLASS;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_CONSTANT;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_OBJECT_MEMBER;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.MOD_STATIC;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 
@@ -29,17 +32,44 @@ import org.eclipse.php.internal.debug.core.model.VariablesUtil;
  */
 public class ExpressionsUtil {
 
+	private static final String CHECK_CLASS_METHOD_EXISTS = "eval(''if (class_exists(\\''ReflectionClass\\'')) return (new ReflectionClass({0}))->hasMethod(\\''{1}\\''); else return false;'');"; //$NON-NLS-1$
+
 	private static final class FetchStaticsExpression extends DefaultExpression {
 
 		static final String FETCH_STATIC_MEMBERS = "eval(''if (class_exists(\\''ReflectionClass\\'') && class_exists(\\''{0}\\'')) return (new ReflectionClass(\\''{0}\\''))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
 
 		public FetchStaticsExpression(String className) {
-			super(MessageFormat.format(FETCH_STATIC_MEMBERS, className));
+			super(MessageFormat.format(FETCH_STATIC_MEMBERS, className), className);
 		}
 
 		@Override
 		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
-			return new DefaultExpression(this, endName, endRepresentation, KIND_OBJECT_MEMBER, MOD_STATIC);
+			return new DefaultExpression(this, endName, "::$" + endName, KIND_OBJECT_MEMBER, MOD_STATIC);
+		}
+
+	}
+
+	private static final class FetchClassConstantsExpression extends DefaultExpression {
+
+		static final String FETCH_CONSTANTS = "eval(''if (class_exists(\\''ReflectionClass\\'') && class_exists(\\''{0}\\'')) return (new ReflectionClass(\\''{0}\\''))->getConstants(); else return array();'');"; //$NON-NLS-1$
+
+		public FetchClassConstantsExpression(String className) {
+			super(MessageFormat.format(FETCH_CONSTANTS, className), className);
+		}
+
+		@Override
+		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
+			return new DefaultExpression(this, endName, "::" + endName, KIND_CONSTANT);
+		}
+
+	}
+
+	private static final class FetchConstantExpression extends DefaultExpression {
+
+		static final String FETCH_CONSTANT = "eval(''return constant(\\''{0}\\'');'');"; //$NON-NLS-1$
+
+		public FetchConstantExpression(String constantName) {
+			super(MessageFormat.format(FETCH_CONSTANT, constantName), constantName);
 		}
 
 	}
@@ -61,11 +91,22 @@ public class ExpressionsUtil {
 
 	private static final Map<Expression, String> staticMemberClassNames = new WeakHashMap<Expression, String>();
 
+	private static Map<ExpressionsManager, ExpressionsUtil> fInstance = new HashMap<>();
+
+	private ExpressionsManager fExpressionsManager;
+
 	/**
 	 * 
 	 */
-	private ExpressionsUtil() {
-		// Utility class - no public constructor
+	private ExpressionsUtil(ExpressionsManager expressionsManager) {
+		fExpressionsManager = expressionsManager;
+	}
+
+	public static ExpressionsUtil getInstance(ExpressionsManager expressionsManager) {
+		if (fInstance.get(expressionsManager) == null) {
+			fInstance.put(expressionsManager, new ExpressionsUtil(expressionsManager));
+		}
+		return fInstance.get(expressionsManager);
 	}
 
 	/**
@@ -75,14 +116,14 @@ public class ExpressionsUtil {
 	 * @param expressionsManager
 	 * @return expressions of static members for given class
 	 */
-	public static Expression[] fetchStaticMembers(String className, ExpressionsManager expressionsManager) {
+	public Expression[] fetchStaticMembers(String className) {
 		Expression staticMembers = new FetchStaticsExpression(className);
-		expressionsManager.update(staticMembers, 1);
+		fExpressionsManager.update(staticMembers, 1);
 		Expression[] members = staticMembers.getValue().getChildren();
 		// Possibly interrupted, crash, etc.
 		if (members == null)
 			return new Expression[0];
-		int[] mods = fetchStaticMembersVisibility(className, members, expressionsManager);
+		int[] mods = fetchStaticMembersVisibility(className, members);
 		// Possibly interrupted, crash, etc.
 		if (mods == null)
 			return new Expression[0];
@@ -102,6 +143,41 @@ public class ExpressionsUtil {
 		return new Expression[0];
 	}
 
+	public Expression[] fetchClassConstants(String className) {
+		Expression constants = new FetchClassConstantsExpression(className);
+		fExpressionsManager.update(constants, 1);
+		Expression[] members = constants.getValue().getChildren();
+
+		if (members == null)
+			return new Expression[0];
+		for (Expression e : members) {
+			e.addFacets(Facet.MOD_PUBLIC);
+		}
+		return members;
+	}
+
+	public Expression fetchConstant(String constantName) {
+		Expression constant = new FetchConstantExpression(constantName);
+		fExpressionsManager.update(constant, 1);
+		Expression newExpression = new DefaultExpression(constantName, KIND_CONSTANT, Facet.MOD_PUBLIC);
+		newExpression.setValue(constant.getValue());
+		return newExpression;
+	}
+
+	private boolean invokeMethod(String object, String method, StringBuffer result) {
+		Expression e = new DefaultExpression(MessageFormat.format(CHECK_CLASS_METHOD_EXISTS, object, method));
+		fExpressionsManager.update(e, 1);
+		if (e.getValue().getValue() != null && e.getValue().getValue().equals("1")) {
+			String expression = object + "->" + method + "()";
+			e = new DefaultExpression(expression);
+			fExpressionsManager.getExpressionValue(e, 1);
+			fExpressionsManager.update(e, 1);
+			result.append(e.getValue().getValue());
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Return class name for corresponding static member expression.
 	 * 
@@ -119,8 +195,8 @@ public class ExpressionsUtil {
 	 * @param expressionsManager
 	 * @return "virtual class" expression with child static members
 	 */
-	public static Expression fetchStaticContext(String className, ExpressionsManager expressionsManager) {
-		Expression[] staticMembers = fetchStaticMembers(className, expressionsManager);
+	public Expression fetchStaticContext(String className) {
+		Expression[] staticMembers = fetchStaticMembers(className);
 		if (staticMembers.length == 0)
 			return null;
 		Expression classStaticContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
@@ -130,8 +206,7 @@ public class ExpressionsUtil {
 		return classStaticContext;
 	}
 
-	private static int[] fetchStaticMembersVisibility(String className, Expression[] members,
-			ExpressionsManager expressionsManager) {
+	private int[] fetchStaticMembersVisibility(String className, Expression[] members) {
 		StringBuilder tuple = new StringBuilder();
 		for (int i = 0; i < members.length; i++) {
 			tuple.append(MessageFormat.format(FetchStaticsVisibilityExpression.TUPLE_ELEMENT, className,
@@ -140,7 +215,7 @@ public class ExpressionsUtil {
 				tuple.append(',');
 		}
 		Expression fetchModifiersExpression = new FetchStaticsVisibilityExpression(tuple.toString());
-		expressionsManager.update(fetchModifiersExpression, 1);
+		fExpressionsManager.update(fetchModifiersExpression, 1);
 		Expression[] computed = fetchModifiersExpression.getValue().getOriChildren();
 		if (computed == null)
 			return null;
@@ -148,6 +223,57 @@ public class ExpressionsUtil {
 		for (int i = 0; i < computed.length; i++)
 			mods[i] = Integer.valueOf((String) computed[i].getValue().getValue());
 		return mods;
+	}
+
+	public Expression fetchClassContext(String className) {
+		Expression classContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
+		ExpressionValue classStaticContextValue = new ExpressionValue(PHP_VIRTUAL_CLASS, className, className, null);
+		classContext.setValue(classStaticContextValue);
+		return classContext;
+	}
+
+	public String getValueDetail(Expression expression) {
+		ExpressionValue value = expression.getValue();
+		if (value.getDataType() == DataType.PHP_OBJECT) {
+			StringBuffer result = new StringBuffer();
+			boolean exists = invokeMethod(expression.getFullName(), "__toString", result);
+			if (exists)
+				return result.toString();
+		} else if (value.getDataType() == DataType.PHP_ARRAY) {
+			fExpressionsManager.update(expression, 1);
+			StringBuffer result = new StringBuffer("[");
+			for (int i = 0; i < expression.getValue().getChildren().length; i++) {
+				Expression child = expression.getValue().getChildren()[i];
+				if (i > 0) {
+					result.append(",");
+					result.append(" ");
+				}
+				result.append(child.getLastName());
+				result.append(" => ");
+				result.append(getValueDetail(child));
+			}
+			result.append("]");
+			return result.toString();
+		} else if (value.getDataType() == DataType.PHP_STRING) {
+			String result = expression.getValue().getValueAsString();
+			int length = result.length();
+			return result.substring(1, length - 1);
+		}
+		return expression.getValue().getValueAsString();
+	}
+
+	/**
+	 * Returns the variable value.
+	 * 
+	 * @param variable
+	 *            The variable name
+	 * @return
+	 */
+	public Expression buildExpression(String variable) {
+		Expression expression = fExpressionsManager.buildExpression(variable);
+		fExpressionsManager.getExpressionValue(expression, 1);
+		fExpressionsManager.update(expression, 1);
+		return expression;
 	}
 
 }
