@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
 import java.text.MessageFormat;
 
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
@@ -104,6 +105,27 @@ public class DBGpArrayValue extends AbstractDBGpContainerValue {
 		}
 		variable.fFullName = getOwner().getFullName() + '[' + arrayKey + ']';
 		return variable;
+	}
+
+	public String getValueDetail() throws DebugException {
+		StringBuffer result = new StringBuffer("[");
+		IVariable[] variables = getVariables();
+		for (int i = 0; i < variables.length; i++) {
+			IVariable child = variables[i];
+			if (i > 0) {
+				result.append(",");
+				result.append(" ");
+			}
+			result.append(child.getName());
+			result.append(" => ");
+			if (child.getValue() instanceof AbstractDBGpValue) {
+				result.append(((AbstractDBGpValue) child.getValue()).getValueDetail());
+			} else {
+				result.append(child.getValue().getValueString());
+			}
+		}
+		result.append("]");
+		return result.toString();
 	}
 
 }

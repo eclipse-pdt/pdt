@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
@@ -109,6 +110,16 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 				Facet.KIND_OBJECT_MEMBER);
 		variable.fFullName = getOwner().getFullName() + "->" + variable.fName; //$NON-NLS-1$
 		return variable;
+	}
+
+	public String getValueDetail() throws DebugException {
+		String toString = this.fOwner.getFullName() + "->__toString()";
+		Node resp = ((DBGpTarget) fOwner.getDebugTarget()).eval(toString);
+		if (resp == null) {
+			return super.getValueDetail();
+		}
+		DBGpEvalVariable variable = new DBGpEvalVariable(fOwner.getDebugTarget(), toString, resp);
+		return variable.getValue().getValueString();
 	}
 
 }

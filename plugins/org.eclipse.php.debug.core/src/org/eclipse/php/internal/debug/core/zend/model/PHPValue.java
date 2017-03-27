@@ -26,6 +26,7 @@ import org.eclipse.php.internal.debug.core.model.VirtualPartition;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
+import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsUtil;
 
 /**
  * Value of a PHP variable.
@@ -93,6 +94,11 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 */
 	public String getValueString() throws DebugException {
 		return fExpressionValue.getValueAsString();
+	}
+
+	public String getValueDetail() throws DebugException {
+		return ExpressionsUtil.getInstance(((PHPDebugTarget) getDebugTarget()).getExpressionManager())
+				.getValueDetail(fExpression);
 	}
 
 	/*

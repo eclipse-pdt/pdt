@@ -52,8 +52,10 @@ import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
+import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
 import org.eclipse.php.internal.debug.ui.*;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPExceptionBreakpointAnnotation;
@@ -95,7 +97,13 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		String detail = ""; //$NON-NLS-1$
 		try {
-			detail = value.getValueString();
+			if (value instanceof PHPValue) {
+				detail = ((PHPValue) value).getValueDetail();
+			} else if (value instanceof AbstractDBGpValue) {
+				detail = ((AbstractDBGpValue) value).getValueDetail();
+			} else {
+				detail = value.getValueString();
+			}
 		} catch (DebugException e) {
 		}
 		listener.detailComputed(value, detail);
@@ -266,6 +274,14 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		}
 		if (facetOwner.hasFacet(KIND_ARRAY_MEMBER)) {
 			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_ARRAY);
+		}
+		if (facetOwner.hasFacet(KIND_CONSTANT)) {
+			if (facetOwner.hasFacet(Facet.MOD_PUBLIC)) {
+				return getDebugImageRegistry().get(new PHPDebugUICompositeImageDescriptor(
+						PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS),
+						PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_CONSTANT),
+						PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+			}
 		}
 		if (facetOwner.hasFacet(KIND_OBJECT_MEMBER)) {
 			if (facetOwner.hasFacet(Facet.MOD_PUBLIC)) {
