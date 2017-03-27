@@ -60,6 +60,7 @@ public final class WhiteSpaceOptions {
 			return fParent;
 		}
 
+		@Override
 		public final String toString() {
 			return fName;
 		}
@@ -78,6 +79,7 @@ public final class WhiteSpaceOptions {
 			super(parent, workingValues, messageKey);
 		}
 
+		@Override
 		public void setChecked(boolean checked) {
 			for (final Iterator<Node> iter = fChildren.iterator(); iter.hasNext();)
 				(iter.next()).setChecked(checked);
@@ -87,6 +89,7 @@ public final class WhiteSpaceOptions {
 			fChildren.add(child);
 		}
 
+		@Override
 		public List<String> getSnippets() {
 			final ArrayList<String> snippets = new ArrayList<String>(fChildren.size());
 			for (Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
@@ -100,6 +103,7 @@ public final class WhiteSpaceOptions {
 			return snippets;
 		}
 
+		@Override
 		public void getCheckedLeafs(List<Node> list) {
 			for (Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
 				iter.next().getCheckedLeafs(list);
@@ -122,6 +126,7 @@ public final class WhiteSpaceOptions {
 			fSnippets.add(snippet);
 		}
 
+		@Override
 		public void setChecked(boolean checked) {
 			fWorkingValues.put(fKey, checked ? CodeFormatterPreferences.TRUE : CodeFormatterPreferences.FALSE);
 		}
@@ -130,10 +135,12 @@ public final class WhiteSpaceOptions {
 			return CodeFormatterPreferences.TRUE.equals(fWorkingValues.get(fKey));
 		}
 
+		@Override
 		public List<String> getSnippets() {
 			return fSnippets;
 		}
 
+		@Override
 		public void getCheckedLeafs(List<Node> list) {
 			if (getChecked())
 				list.add(this);

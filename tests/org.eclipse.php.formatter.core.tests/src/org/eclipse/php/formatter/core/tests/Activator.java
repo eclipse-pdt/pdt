@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
-import org.eclipse.php.formatter.core.Logger;
+import org.eclipse.php.internal.formatter.core.Logger;
 import org.osgi.framework.BundleContext;
 
 /**

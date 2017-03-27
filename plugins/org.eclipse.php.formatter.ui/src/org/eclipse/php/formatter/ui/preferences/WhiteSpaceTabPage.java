@@ -67,25 +67,31 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 			fTreeViewer = new ContainerCheckedTreeViewer(fComposite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 			fTreeViewer.setContentProvider(new ITreeContentProvider() {
+				@Override
 				public Object[] getElements(Object inputElement) {
 					return ((Collection<?>) inputElement).toArray();
 				}
 
+				@Override
 				public Object[] getChildren(Object parentElement) {
 					return ((Node) parentElement).getChildren().toArray();
 				}
 
+				@Override
 				public Object getParent(Object element) {
 					return ((Node) element).getParent();
 				}
 
+				@Override
 				public boolean hasChildren(Object element) {
 					return ((Node) element).hasChildren();
 				}
 
+				@Override
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				}
 
+				@Override
 				public void dispose() {
 				}
 			});
@@ -114,6 +120,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			doUpdatePreview();
 		}
 
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 			if (selection.isEmpty())
@@ -127,6 +134,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			doUpdatePreview();
 		}
 
+		@Override
 		public void checkStateChanged(CheckStateChangedEvent event) {
 			final Node node = (Node) event.getElement();
 			node.setChecked(event.getChecked());
@@ -152,6 +160,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			}
 		}
 
+		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			final ISelection selection = event.getSelection();
 			if (selection instanceof IStructuredSelection) {
@@ -216,10 +225,12 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			fInnerViewer = new TreeViewer(sashForm, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 
 			fInnerViewer.setContentProvider(new ITreeContentProvider() {
+				@Override
 				public Object[] getElements(Object inputElement) {
 					return ((Collection<?>) inputElement).toArray();
 				}
 
+				@Override
 				public Object[] getChildren(Object parentElement) {
 					final List<Node> children = ((Node) parentElement).getChildren();
 					final ArrayList<Node> innerChildren = new ArrayList<Node>();
@@ -231,12 +242,14 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 					return innerChildren.toArray();
 				}
 
+				@Override
 				public Object getParent(Object element) {
 					if (element instanceof InnerNode)
 						return ((InnerNode) element).getParent();
 					return null;
 				}
 
+				@Override
 				public boolean hasChildren(Object element) {
 					final List<Node> children = ((Node) element).getChildren();
 					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();)
@@ -245,9 +258,11 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 					return false;
 				}
 
+				@Override
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				}
 
+				@Override
 				public void dispose() {
 				}
 			});
@@ -323,6 +338,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			return fComposite;
 		}
 
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
@@ -371,6 +387,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			doUpdatePreview();
 		}
 
+		@Override
 		public void checkStateChanged(CheckStateChangedEvent event) {
 			final OptionNode option = (OptionNode) event.getElement();
 			if (option != null) {
@@ -400,6 +417,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			fPhpElementComponent = new PhpElementComponent();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			final int index = fSwitchCombo.getSelectionIndex();
 			if (index == 0) {
@@ -470,21 +488,25 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		fSwitchComponent = new SwitchComponent();
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 		fSwitchComponent.createContents(numColumns, composite);
 
 		isInitialized = true;
 	}
 
+	@Override
 	protected void initializePage() {
 		fSwitchComponent.initialize();
 	}
 
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}
 
+	@Override
 	protected void doUpdatePreview() {
 		if (fPreview != null) {
 			setPreferencesValues(fworkingValues);
@@ -492,6 +514,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			setPreferencesValues(fworkingValues);

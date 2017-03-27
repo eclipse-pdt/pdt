@@ -31,12 +31,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.php.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.formatter.ui.FormatterUIPlugin;
 import org.eclipse.php.formatter.ui.Logger;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
+import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 import org.osgi.service.prefs.BackingStoreException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,6 +57,7 @@ public class ProfileStore {
 		private String fName;
 		private Map<String, Object> fSettings;
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes)
 				throws SAXException {
 
@@ -69,13 +70,14 @@ public class ProfileStore {
 			} else if (qName.equals(XML_NODE_PROFILE)) {
 
 				fName = attributes.getValue(XML_ATTRIBUTE_NAME);
-				fSettings = new HashMap<String, Object>(200);
+				fSettings = new HashMap<>(200);
 
 			} else if (qName.equals(XML_NODE_ROOT)) {
-				fProfiles = new ArrayList<Profile>();
+				fProfiles = new ArrayList<>();
 			}
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String qName) {
 			if (qName.equals(XML_NODE_PROFILE)) {
 				fProfiles.add(new CustomProfile(fName, fSettings));

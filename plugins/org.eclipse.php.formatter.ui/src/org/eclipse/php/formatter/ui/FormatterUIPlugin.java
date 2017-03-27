@@ -12,9 +12,6 @@ package org.eclipse.php.formatter.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.formatter.core.CodeFormatterConstants;
-import org.eclipse.php.formatter.ui.preferences.ProfileManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -36,23 +33,12 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.
-	 * BundleContext )
-	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		initPreferenceDefaults();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
-	 * BundleContext )
-	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
@@ -77,15 +63,6 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 
 	public static void logErrorMessage(String message) {
 		log(new Status(IStatus.ERROR, PLUGIN_ID, 10001, message, null));
-	}
-
-	private void initPreferenceDefaults() {
-		IPreferenceStore store = FormatterUIPlugin.getDefault().getPreferenceStore();
-		store.setDefault(CodeFormatterConstants.FORMATTER_PROFILE, ProfileManager.PHP_PROFILE);
-	}
-
-	public String getID() {
-		return PLUGIN_ID;
 	}
 
 }

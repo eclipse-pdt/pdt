@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -38,12 +39,12 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.formatter.core.Logger;
+import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.formatter.ui.preferences.ProfileStore;
-import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.internal.formatter.core.Logger;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.junit.ClassRule;
@@ -173,8 +174,8 @@ public class FormatterTests {
 
 	private static void setDefaultFormatter(IScopeContext scopeContext, ProfileManager profileManager) {
 		profileManager.clearAllSettings(scopeContext);
-		if (profileManager.getSelected().getID() != ProfileManager.PHP_PROFILE) {
-			profileManager.setSelected(profileManager.getProfile(ProfileManager.PHP_PROFILE));
+		if (profileManager.getSelected().getID() != PHPDefaultFormatterPreferences.ID) {
+			profileManager.setSelected(profileManager.getProfile(PHPDefaultFormatterPreferences.ID));
 		}
 		profileManager.commitChanges(scopeContext);
 	}

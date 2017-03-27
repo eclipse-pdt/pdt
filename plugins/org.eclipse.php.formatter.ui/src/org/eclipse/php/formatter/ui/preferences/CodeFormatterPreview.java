@@ -40,6 +40,7 @@ public class CodeFormatterPreview extends PhpPreview {
 		fPreviewDocument = new Document();
 	}
 
+	@Override
 	protected void doFormatPreview() {
 		fText.setRedraw(false);
 		try {

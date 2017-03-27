@@ -113,6 +113,7 @@ public class PreferencesAccess {
 		 * 
 		 * @see org.eclipse.core.runtime.preferences.IScopeContext#getName()
 		 */
+		@Override
 		public String getName() {
 			return fOriginal.getName();
 		}
@@ -124,6 +125,7 @@ public class PreferencesAccess {
 		 * org.eclipse.core.runtime.preferences.IScopeContext#getNode(java.lang
 		 * .String)
 		 */
+		@Override
 		public IEclipsePreferences getNode(String qualifier) {
 			return fWorkingCopyManager.getWorkingCopy(fOriginal.getNode(qualifier));
 		}
@@ -133,6 +135,7 @@ public class PreferencesAccess {
 		 * 
 		 * @see org.eclipse.core.runtime.preferences.IScopeContext#getLocation()
 		 */
+		@Override
 		public IPath getLocation() {
 			return fOriginal.getLocation();
 		}

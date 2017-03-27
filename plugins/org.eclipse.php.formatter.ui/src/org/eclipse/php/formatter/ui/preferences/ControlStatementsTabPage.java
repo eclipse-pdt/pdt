@@ -40,6 +40,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 		super(modifyDialog, codeFormatterPreferences);
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 
 		final Group generalGroup = createGroup(numColumns, composite,
@@ -79,6 +80,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 		fSimpleIfPref.setIsChecked(codeFormatterPreferences.control_statement_keep_simple_if_on_one_line);
 
 		fThenStatementPref.addObserver(new Observer() {
+			@Override
 			public void update(Observable o, Object arg) {
 				fSimpleIfPref.setEnabled(!fThenStatementPref.isChecked());
 			}
@@ -102,6 +104,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 		isInitialized = true;
 	}
 
+	@Override
 	protected void initializePage() {
 		fPreview.setPreviewText(PREVIEW);
 	}
@@ -113,6 +116,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
@@ -125,6 +129,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doUpdatePreview()
 	 */
+	@Override
 	protected void doUpdatePreview() {
 		fPreview.update();
 	}
@@ -133,6 +138,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 		return createCheckboxPref(composite, span, name);
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			codeFormatterPreferences.control_statement_insert_newline_before_else_and_elseif_in_if = newLineBeforeElseCB

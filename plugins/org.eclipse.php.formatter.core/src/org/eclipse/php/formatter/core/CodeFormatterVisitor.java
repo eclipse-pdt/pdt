@@ -20,14 +20,14 @@ import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.jface.text.*;
-import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
+import org.eclipse.php.core.compiler.ast.nodes.VarComment;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
@@ -36,6 +36,8 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
+import org.eclipse.php.internal.formatter.core.DocumentReader;
+import org.eclipse.php.internal.formatter.core.Logger;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -156,6 +158,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		this(document, codeFormatterPreferences, lineSeparator, phpVersion, useShortTags, region, 0);
 	}
 
+	public CodeFormatterVisitor(IDocument document, String lineSeparator, PHPVersion phpVersion, boolean useShortTags,
+			IRegion region) throws Exception {
+		this(document, CodeFormatterPreferences.getDefaultPreferences(), lineSeparator, phpVersion, useShortTags,
+				region, 0);
+	}
+
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
 			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
 			throws Exception {
@@ -193,12 +201,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			program.accept(this);
 		}
 
-	}
-
-	public CodeFormatterVisitor(IDocument document, String lineSeparator, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region) throws Exception {
-		this(document, CodeFormatterPreferences.getDefaultPreferences(), lineSeparator, phpVersion, useShortTags,
-				region, 0);
 	}
 
 	// insert chars to the buffer
@@ -853,9 +855,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// TODO: Do correct comment placement
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
-	private void handleComments(int offset, int end,
-			List<org.eclipse.php.core.compiler.ast.nodes.Comment> commentList, boolean isIndented,
-			int indentGap) throws Exception {
+	private void handleComments(int offset, int end, List<org.eclipse.php.core.compiler.ast.nodes.Comment> commentList,
+			boolean isIndented, int indentGap) throws Exception {
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
 
@@ -867,8 +868,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean previousCommentIsSingleLine = false;
 		resetCommentIndentVariables();
 
-		comments: for (Iterator<org.eclipse.php.core.compiler.ast.nodes.Comment> iter = commentList
-				.iterator(); iter.hasNext();) {
+		comments: for (Iterator<org.eclipse.php.core.compiler.ast.nodes.Comment> iter = commentList.iterator(); iter
+				.hasNext();) {
 			org.eclipse.php.core.compiler.ast.nodes.Comment comment = iter.next();
 			int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
 			int position = replaceBuffer.lastIndexOf(lineSeparator);
@@ -1073,11 +1074,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					newLineOfComment = false;
 					appendToBuffer("/**"); //$NON-NLS-1$
 
-					commentWords = new ArrayList<String>();
-					org.eclipse.php.core.compiler.ast.nodes.Scalar[] texts = block.getTexts().toArray(
-							new org.eclipse.php.core.compiler.ast.nodes.Scalar[block.getTexts().size()]);
+					commentWords = new ArrayList<>();
+					org.eclipse.php.core.compiler.ast.nodes.Scalar[] texts = block.getTexts()
+							.toArray(new org.eclipse.php.core.compiler.ast.nodes.Scalar[block.getTexts().size()]);
 					PHPDocTag[] tags = block.getTags();
-					if ((tags == null || tags.length == 0)) {
+					if (tags == null || tags.length == 0) {
 						texts = getNonblankScalars(texts);
 					}
 					boolean lastLineIsBlank = false;
@@ -1146,7 +1147,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							if ((i == tags.length - 1) && !this.preferences.comment_new_lines_at_javadoc_boundaries) {
 								words = getNonblankWords(words);
 							}
-							commentWords = new ArrayList<String>();
+							commentWords = new ArrayList<>();
 
 							if (getNonblankWords(words).length == 0) {
 								boolean hasRefs = phpDocTag.getAllReferencesWithOrigOrder().size() != 0;
@@ -1335,7 +1336,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					commentContent = commentContent.trim();
 					commentContent = commentContent.substring(2, commentContent.length() - 2);
 					List<String> lines = Arrays.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
-					commentWords = new ArrayList<String>();
+					commentWords = new ArrayList<>();
 					if (lines.size() == 1) {
 						String word = lines.get(0).trim();
 						commentWords.add(word);
@@ -1353,7 +1354,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							appendToBuffer(" "); //$NON-NLS-1$
 							appendToBuffer(sb.toString());
 							appendToBuffer("*/"); //$NON-NLS-1$
-							commentWords = new ArrayList<String>();
+							commentWords = new ArrayList<>();
 							handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset,
 									true);
 							// if (needInsertNewLine) {
@@ -1382,7 +1383,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							// }
 							break;
 						}
-						commentWords = new ArrayList<String>();
+						commentWords = new ArrayList<>();
 					}
 					newLineOfComment = false;
 					if (this.preferences.comment_new_lines_at_block_boundaries) {
@@ -1467,23 +1468,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		handleCharsWithoutComments(start, end);
 	}
 
-	private void indentBaseOnPrevLine(int commentStartLine) throws BadLocationException {
-		IRegion prevLine = document.getLineInformation(commentStartLine);
-		loop: for (int i = 0; i < prevLine.getLength(); i++) {
-			switch (document.getChar(i + prevLine.getOffset())) {
-			case ' ':
-			case '\t':
-			case '\r':
-			case '\n':
-				appendToBuffer(document.getChar(i + prevLine.getOffset()));
-				break;
-			default:
-				break loop;
-			}
-
-		}
-	}
-
 	private boolean canHandlePHPDocComment(PHPDocBlock comment, int offset) throws BadLocationException {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
 		// do not handle single-line PHPDoc comment with @var tag inside
@@ -1494,30 +1478,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
 		int commentEndLine = document.getLineOfOffset(comment.sourceEnd() + offset);
 		return commentStartLine != commentEndLine;
-	}
-
-	private boolean isComment(IRegion iRegion) {
-		for (int i = 0; i < iRegion.getLength() - 1; i++) {
-			try {
-				switch (document.getChar(iRegion.getOffset() + i)) {
-				case '/':
-					if (document.getChar(iRegion.getOffset() + i + 1) == '/')
-						return true;
-					else if (document.getChar(iRegion.getOffset() + i + 1) == '*')
-						return true;
-				case '*':
-					return true;
-				case ' ':
-				case '\t':
-					break;
-				default:
-					return false;
-				}
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-		}
-		return false;
 	}
 
 	private boolean endWithNewLineIndent(String string) {
@@ -1600,7 +1560,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public static List<String> removeEmptyString(List<String> commentWords) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for (int i = 0; i < commentWords.size(); i++) {
 			String word = commentWords.get(i);
 			if (word.trim().length() != 0) {
@@ -1682,7 +1642,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			indertWordToCommentBlock(word, indentLength, blanks);
 		}
-		commentWords = new ArrayList<String>();
+		commentWords = new ArrayList<>();
 
 	}
 
@@ -2151,6 +2111,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
+	@Override
 	public boolean visit(ArrayAccess arrayAccess) {
 		Expression variableName = arrayAccess.getName();
 		variableName.accept(this);
@@ -2198,6 +2159,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ArrayCreation arrayCreation) {
 		if (this.preferences.insert_space_before_opening_paren_in_array) {
 			insertSpace();
@@ -2293,6 +2255,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
+	@Override
 	public boolean visit(ArrayElement arrayElement) {
 		if (arrayElement.getKey() != null) {
 			arrayElement.getKey().accept(this);
@@ -2309,6 +2272,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Assignment assignment) {
 		VariableBase leftSide = assignment.getLeftHandSide();
 		leftSide.accept(this);
@@ -2329,16 +2293,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ASTError astError) {
 		updateLinesWidth(astError);
 		return false;
 	}
 
+	@Override
 	public boolean visit(BackTickExpression backTickExpression) {
 		updateLinesWidth(backTickExpression);
 		return false;
 	}
 
+	@Override
 	public boolean visit(Block block) {
 		boolean blockIndentation = false;
 		boolean isPhpMode = true;
@@ -2642,6 +2609,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						|| statements[0].getType() == ASTNode.THROW_STATEMENT);
 	}
 
+	@Override
 	public boolean visit(BreakStatement breakStatement) {
 		int lastPosition = breakStatement.getStart() + 5;
 		lineWidth += 5;
@@ -2658,6 +2626,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(CastExpression castExpression) {
 		// (type) expression
 		appendToBuffer(OPEN_PARN);
@@ -2722,6 +2691,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(CatchClause catchClause) {
 		// handle the chars between the 'catch' and the identifier start
 		// position
@@ -2767,6 +2737,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		boolean isFirst = true;
 
@@ -2823,6 +2794,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		// handle spaces between modifier, 'class' and class name
 		String modifier = ClassDeclaration.getModifier(classDeclaration.getModifier());
@@ -2881,6 +2853,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
 		// insertSpace();
 		appendToBuffer("new "); //$NON-NLS-1$
@@ -2953,11 +2926,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassName className) {
 		className.getName().accept(this);
 		return false;
 	}
 
+	@Override
 	public boolean visit(CloneExpression cloneExpression) {
 		insertSpace();
 		lineWidth += 5;// the 'clone'
@@ -2969,11 +2944,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Comment comment) {
 		// do nothing
 		return false;
 	}
 
+	@Override
 	public boolean visit(ConditionalExpression conditionalExpression) {
 		boolean isTernaryOperator = conditionalExpression.getOperatorType() == ConditionalExpression.OP_TERNARY;
 		// start
@@ -3038,6 +3015,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ContinueStatement continueStatement) {
 		int lastPosition = continueStatement.getStart() + 8;
 		lineWidth += 8;
@@ -3054,6 +3032,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(DeclareStatement declareStatement) {
 		boolean isFirst = true;
 		if (this.preferences.insert_space_before_opening_paren_in_declare) {
@@ -3111,6 +3090,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(DoStatement doStatement) {
 		// do-while body
 		lineWidth += 2;
@@ -3164,6 +3144,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(EchoStatement echoStatement) {
 		int lastPosition = echoStatement.getStart();
 
@@ -3185,6 +3166,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(EmptyStatement emptyStatement) {
 		int start = emptyStatement.getStart();
 		int end = emptyStatement.getEnd();
@@ -3199,6 +3181,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		Expression expression = expressionStatement.getExpression();
 		expression.accept(this);
@@ -3206,6 +3189,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(FieldAccess fieldAccess) {
 		fieldAccess.getDispatcher().accept(this);
 		if (this.preferences.insert_space_before_arrow_in_field_access) {
@@ -3223,6 +3207,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(FieldsDeclaration fieldsDeclaration) {
 		boolean isFirst = true;
 		Variable[] variableNames = fieldsDeclaration.getVariableNames();
@@ -3282,6 +3267,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ForEachStatement forEachStatement) {
 		if (this.preferences.insert_space_before_open_paren_in_foreach) {
 			insertSpace();
@@ -3320,6 +3306,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(FormalParameter formalParameter) {
 		// handle const in PHP4
 		int lastPosition = formalParameter.getStart();
@@ -3363,6 +3350,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ForStatement forStatement) {
 		int lastPosition = forStatement.getStart() + 3;
 		lineWidth += 3;
@@ -3411,6 +3399,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(getDocumentString(functionDeclaration.getStart(), functionDeclaration.getStart() + 8));// append
@@ -3491,6 +3480,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
 
 		// in case of function print there no need for parenthesis
@@ -3610,10 +3600,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		handleChars(lastPosition, functionInvocation.getEnd());
 	}
 
+	@Override
 	public boolean visit(FunctionName functionName) {
 		return true;
 	}
 
+	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		int lastPosition = globalStatement.getStart() + 6;
 		lineWidth += 6;// the word 'global'
@@ -3630,11 +3622,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Identifier identifier) {
 		lineWidth += identifier.getLength();
 		return false;
 	}
 
+	@Override
 	public boolean visit(IfStatement ifStatement) {
 		int len;
 		try {
@@ -3888,12 +3882,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return lastPosition;
 	}
 
+	@Override
 	public boolean visit(IgnoreError ignoreError) {
 		lineWidth++;// the '@' sign
 		ignoreError.getExpression().accept(this);
 		return false;
 	}
 
+	@Override
 	public boolean visit(Include include) {
 		int lastPosition = include.getStart();
 		int len = (include.getIncludeType() == Include.IT_INCLUDE || include.getIncludeType() == Include.IT_REQUIRE) ? 7
@@ -3908,6 +3904,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(InfixExpression infixExpression) {
 		int oldIndentationLevel = indentationLevel;
 		boolean oldWasBinaryExpressionWrapped = wasBinaryExpressionWrapped;
@@ -4079,11 +4076,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return lineW;
 	}
 
+	@Override
 	public boolean visit(InLineHtml inLineHtml) {
 		updateLinesWidth(inLineHtml);
 		return false;
 	}
 
+	@Override
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
 		instanceOfExpression.getExpression().accept(this);
 		if (this.preferences.insert_space_before_binary_operation) {
@@ -4102,6 +4101,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		insertSpace();
 		lineWidth += 9;// interface
@@ -4139,6 +4139,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ListVariable listVariable) {
 		if (this.preferences.insert_space_before_opening_paren_in_list) {
 			insertSpace();
@@ -4170,6 +4171,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(MethodDeclaration classMethodDeclaration) {
 		// handle method modifiers
 		String originalModifier = getDocumentString(classMethodDeclaration.getStart(),
@@ -4194,6 +4196,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(MethodInvocation methodInvocation) {
 		VariableBase dispatch = methodInvocation.getDispatcher();
 
@@ -4280,6 +4283,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
 		appendToBuffer(OPEN_PARN);
 		if (this.preferences.insert_space_after_open_paren_in_parenthesis_expression) {
@@ -4301,6 +4305,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(PostfixExpression postfixExpressions) {
 		postfixExpressions.getVariable().accept(this);
 		if (this.preferences.insert_space_before_postfix_expression) {
@@ -4316,6 +4321,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(PrefixExpression prefixExpression) {
 		if (prefixExpression.getOperator() != PrefixExpression.OP_UNPACK
 				&& this.preferences.insert_space_before_prefix_expression) {
@@ -4332,6 +4338,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Program program) {
 		isPhpEqualTag = false;
 		int lastStatementEndOffset = 0;
@@ -4445,6 +4452,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Quote quote) {
 		updateLinesWidth(quote);
 		if (quote.getQuoteType() == Quote.QT_HEREDOC) {
@@ -4463,18 +4471,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Reference reference) {
 		lineWidth++;// &$a
 		reference.getExpression().accept(this);
 		return false;
 	}
 
+	@Override
 	public boolean visit(ReflectionVariable reflectionVariable) {
 		lineWidth++;// $$a
 		reflectionVariable.getName().accept(this);
 		return false;
 	}
 
+	@Override
 	public boolean visit(ReturnStatement returnStatement) {
 		int lastPosition = returnStatement.getStart() + 6;
 		lineWidth += 6;
@@ -4491,6 +4502,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(YieldExpression yieldExpression) {
 		lineWidth += 5;
 		// handle [key => expr] or just [expr]
@@ -4521,11 +4533,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Scalar scalar) {
 		updateLinesWidth(scalar);
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess staticConstantAccess) {
 		staticConstantAccess.getClassName().accept(this);
 		if (this.preferences.insert_space_before_coloncolon_in_field_access) {
@@ -4541,6 +4555,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess staticFieldAccess) {
 		staticFieldAccess.getClassName().accept(this);
 		if (this.preferences.insert_space_before_coloncolon_in_field_access) {
@@ -4556,6 +4571,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
 		staticMethodInvocation.getClassName().accept(this);
 		if (this.preferences.insert_space_before_coloncolon_in_method_invocation) {
@@ -4571,6 +4587,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticStatement staticStatement) {
 		int lastPosition = staticStatement.getStart() + 6;
 		lineWidth += 6;
@@ -4587,6 +4604,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(SwitchCase switchCase) {
 		// handle the chars between the 'case'/'default' and the condition start
 		// position/ first statement
@@ -4642,6 +4660,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(SwitchStatement switchStatement) {
 		// handle the chars between the 'switch' and the expr start position
 		if (this.preferences.insert_space_before_opening_paren_in_switch) {
@@ -4683,6 +4702,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(ThrowStatement throwStatement) {
 		insertSpace();
 		lineWidth += 5;
@@ -4696,6 +4716,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(TryStatement tryStatement) {
 		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 				this.preferences.insert_space_before_opening_brace_in_block);
@@ -4742,6 +4763,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(UnaryOperation unaryOperation) {
 		if (this.preferences.insert_space_before_unary_expression) {
 			insertSpace();
@@ -4757,6 +4779,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(Variable variable) {
 		if (variable.isDollared()) {
 			lineWidth++;
@@ -4765,6 +4788,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(WhileStatement whileStatement) {
 		// handle the chars between the 'while' and the condition start position
 		if (this.preferences.insert_space_before_opening_paren_in_while) {
@@ -4797,6 +4821,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	// PHP 5.3 new nodes:
 
+	@Override
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		appendToBuffer("namespace"); //$NON-NLS-1$
 		insertSpace();
@@ -4826,6 +4851,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(NamespaceName namespaceName) {
 		if (namespaceName.isGlobal()) {
 			appendToBuffer("\\"); //$NON-NLS-1$
@@ -4856,6 +4882,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(UseStatement useStatement) {
 		int lastPosition = useStatement.getStart() + 3;
 		lineWidth += 3;// the word 'use'
@@ -4898,6 +4925,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(UseStatementPart useStatementPart) {
 		appendStatementType(useStatementPart.getStatementType());
 
@@ -4923,6 +4951,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
+	@Override
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
 		StringBuilder buffer = new StringBuilder();
 		if (lambdaFunctionDeclaration.isStatic()) {
@@ -5029,6 +5058,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitUseStatement node) {
 		if (node.getTraitList().size() > 0) {
 			// int lastPosition = node.getStart() + 3;
@@ -5045,6 +5075,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @see org.eclipse.php.internal.core.format.ICodeFormattingProcessor#
 	 * createIndentationString(int)
 	 */
+	@Override
 	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits < 0) {
 			throw new IllegalArgumentException();
@@ -5068,6 +5099,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @see org.eclipse.php.internal.core.format.ICodeFormattingProcessor#
 	 * getTextEdits ()
 	 */
+	@Override
 	public @NonNull MultiTextEdit getTextEdits() {
 		List<ReplaceEdit> allChanges = getChanges();
 		MultiTextEdit rootEdit = new MultiTextEdit();
@@ -5093,7 +5125,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			ITypedRegion partition) {
 		int start = partition.getOffset();
 		int end = partition.getOffset() + partition.getLength();
-		List<IRegion> result = new ArrayList<IRegion>();
+		List<IRegion> result = new ArrayList<>();
 		Iterator<?> regionsIt = container.getRegions().iterator();
 		IRegion current = null;
 
@@ -5155,7 +5187,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		assert document instanceof IStructuredDocument;
 		assert PHPPartitionTypes.PHP_DEFAULT.equals(partition.getType());
 
-		List<IRegion> regions = new ArrayList<IRegion>();
+		List<IRegion> regions = new ArrayList<>();
 		int offset = partition.getOffset();
 		int end = partition.getOffset() + partition.getLength();
 
@@ -5182,7 +5214,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	private IRegion[] getAllSingleLine(ITypedRegion[] partitions) throws BadLocationException {
-		List<IRegion> result = new ArrayList<IRegion>();
+		List<IRegion> result = new ArrayList<>();
 		if (document instanceof IStructuredDocument) {
 			for (int i = 0; i < partitions.length; i++) {
 				ITypedRegion partition = partitions[i];

@@ -8,7 +8,7 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.internal.formatter.core;
 
 import org.eclipse.wst.html.core.internal.format.HTMLElementFormatter;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatter;
@@ -53,11 +53,14 @@ public class HTMLElementFormatterForPhpCode extends HTMLElementFormatter {
 
 	/**
 	 */
+	@Override
 	protected void formatChildNodes(IDOMNode node, HTMLFormatContraints contraints) {
-		if (node == null)
+		if (node == null) {
 			return;
-		if (!node.hasChildNodes())
+		}
+		if (!node.hasChildNodes()) {
 			return;
+		}
 
 		// concat adjacent texts
 		node.normalize();
@@ -105,6 +108,7 @@ public class HTMLElementFormatterForPhpCode extends HTMLElementFormatter {
 			contraints.setFormatWithSiblingIndent(indent);
 	}
 
+	@Override
 	protected void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
 		// fixed bug 198901 - prevent the HTML formatter to format the value of
 		// style attribute

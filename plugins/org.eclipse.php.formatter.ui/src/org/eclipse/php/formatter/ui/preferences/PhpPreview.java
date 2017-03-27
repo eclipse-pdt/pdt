@@ -114,7 +114,7 @@ public abstract class PhpPreview {
 		fStyleProvider.loadColors();
 
 		IStructuredDocumentRegion node = fNodes;
-		final Collection<StyleRange> holdResults = new ArrayList<StyleRange>();
+		final Collection<StyleRange> holdResults = new ArrayList<>();
 		fStyleProvider.prepareTextRegions(node, 0, fInput.length(), holdResults);
 
 		for (Iterator<StyleRange> iter = holdResults.iterator(); iter.hasNext();) {

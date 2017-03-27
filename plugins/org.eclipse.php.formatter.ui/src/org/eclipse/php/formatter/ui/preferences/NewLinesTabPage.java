@@ -53,6 +53,7 @@ public class NewLinesTabPage extends ModifyDialogTabPage {
 		super(modifyDialog, codeFormatterPreferences);
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 
 		final Group newlinesGroup = createGroup(numColumns, composite,
@@ -91,21 +92,25 @@ public class NewLinesTabPage extends ModifyDialogTabPage {
 		isInitialized = true;
 	}
 
+	@Override
 	protected void initializePage() {
 		fPreview.setPreviewText(PREVIEW);
 	}
 
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}
 
+	@Override
 	protected void doUpdatePreview() {
 		if (fPreview != null) {
 			fPreview.update();
 		}
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			codeFormatterPreferences.new_line_in_empty_class_body = inEmptyClassBodyCB.isChecked();

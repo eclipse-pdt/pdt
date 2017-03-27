@@ -44,16 +44,17 @@ public class ProfileAdapterFactory implements IAdapterFactory {
 				}
 			}
 
-			if (profiles == null)
-				profiles = new ArrayList<Profile>();
+			if (profiles == null) {
+				profiles = new ArrayList<>();
+			}
 
 			return (T) (new ProfileManager(profiles, currContext));
 		}
 		return null;
 	}
 
+	@Override
 	public Class<?>[] getAdapterList() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -59,6 +59,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 		super(modifyDialog, preferences);
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 		// general setting
 		final Group generalGroup = createGroup(numColumns, composite,
@@ -97,6 +98,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 		// enabled the indentation size checkbox according to the indentation
 		// type
 		tabPolicy.addObserver(new Observer() {
+			@Override
 			public void update(Observable o, Object arg) {
 				int index = tabPolicy.getSelectionIndex();
 				char indentChar = index == 0 ? CodeFormatterPreferences.SPACE_CHAR : CodeFormatterPreferences.TAB_CHAR;
@@ -148,6 +150,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 		isInitialized = true;
 	}
 
+	@Override
 	public void initializePage() {
 		fPreview.setPreviewText(PREVIEW);
 	}
@@ -159,6 +162,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
@@ -171,12 +175,14 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doUpdatePreview()
 	 */
+	@Override
 	protected void doUpdatePreview() {
 		if (fPreview != null) {
 			fPreview.update();
 		}
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			int index = tabPolicy.getSelectionIndex();

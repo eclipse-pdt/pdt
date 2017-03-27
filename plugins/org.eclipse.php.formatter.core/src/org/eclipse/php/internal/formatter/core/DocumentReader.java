@@ -8,7 +8,7 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.internal.formatter.core;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -29,6 +29,7 @@ public class DocumentReader extends Reader {
 		this.phpDocument = document;
 	}
 
+	@Override
 	public int read() throws IOException {
 		try {
 			if (index < size) {

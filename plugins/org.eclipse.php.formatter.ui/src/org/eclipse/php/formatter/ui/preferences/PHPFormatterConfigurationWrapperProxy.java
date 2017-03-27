@@ -20,40 +20,49 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class PHPFormatterConfigurationWrapperProxy implements IPHPFormatterConfigurationBlockWrapper {
 	private IPHPFormatterConfigurationBlockWrapper pConfigurationBlock;
 
+	@Override
 	public Control createContents(Composite composite) {
 		return pConfigurationBlock.createContents(composite);
 	}
 
+	@Override
 	public void dispose() {
 		pConfigurationBlock.dispose();
 	}
 
+	@Override
 	public String getDescription() {
 		return pConfigurationBlock.getDescription();
 	}
 
+	@Override
 	public boolean hasProjectSpecificOptions(IProject project) {
 		return pConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
+	@Override
 	public void init(IStatusChangeListener statusChangedListener, IProject project,
 			IWorkbenchPreferenceContainer container) {
 		pConfigurationBlock = new PHPFormatterConfigurationWrapper();
 		pConfigurationBlock.init(statusChangedListener, project, container);
 	}
 
+	@Override
 	public void performApply() {
 		pConfigurationBlock.performApply();
 	}
 
+	@Override
 	public void performDefaults() {
 		pConfigurationBlock.performDefaults();
 	}
 
+	@Override
 	public boolean performOk() {
 		return pConfigurationBlock.performOk();
 	}
 
+	@Override
 	public void useProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		pConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 	}

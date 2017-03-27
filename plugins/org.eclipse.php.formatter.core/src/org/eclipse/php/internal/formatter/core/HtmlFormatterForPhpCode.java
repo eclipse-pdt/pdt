@@ -8,7 +8,7 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.internal.formatter.core;
 
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;

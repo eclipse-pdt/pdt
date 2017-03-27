@@ -63,11 +63,13 @@ public class CreateProfileDialog extends StatusDialog {
 		fSortedNames = fProfileManager.getSortedDisplayNames();
 	}
 
+	@Override
 	public void create() {
 		super.create();
 		setTitle(FormatterMessages.CreateProfileDialog_dialog_title);
 	}
 
+	@Override
 	public Control createDialogArea(Composite parent) {
 
 		final int numColumns = 2;
@@ -97,6 +99,7 @@ public class CreateProfileDialog extends StatusDialog {
 		fNameText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fNameText.setLayoutData(gd);
 		fNameText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				doValidation();
 			}
@@ -120,10 +123,12 @@ public class CreateProfileDialog extends StatusDialog {
 		fEditCheckbox = new Button(composite, SWT.CHECK);
 		fEditCheckbox.setText(FormatterMessages.CreateProfileDialog_open_edit_dialog_checkbox_text);
 		fEditCheckbox.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fOpenEditDialog = ((Button) e.widget).getSelection();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -137,7 +142,6 @@ public class CreateProfileDialog extends StatusDialog {
 		fEditCheckbox.setSelection(fOpenEditDialog);
 
 		fProfileCombo.setItems(fSortedNames);
-		fProfileCombo.setText(fProfileManager.getProfile(ProfileManager.DEFAULT_PROFILE).getName());
 		updateStatus(fEmpty);
 
 		applyDialogFont(composite);
@@ -164,6 +168,7 @@ public class CreateProfileDialog extends StatusDialog {
 		updateStatus(fOk);
 	}
 
+	@Override
 	protected void okPressed() {
 		if (!getStatus().isOK())
 			return;

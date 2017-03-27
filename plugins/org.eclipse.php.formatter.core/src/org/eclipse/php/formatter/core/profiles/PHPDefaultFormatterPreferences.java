@@ -8,14 +8,21 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.formatter.core.profiles;
+
+import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.CodeFormatterVisitor;
+import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
 
 /**
  * Utility class for populating a <code>CodeFormatterPreferences</code> with PHP
  * default Formatter settings
  */
-final class PHPDefaultFormatterPreferences implements ICodeFormatterPreferencesInitializer {
+public final class PHPDefaultFormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
+	public static final String ID = "org.eclipse.php.formatter.ui.default";
+
+	@Override
 	public CodeFormatterPreferences initValues() {
 		CodeFormatterPreferences preferences = new CodeFormatterPreferences();
 

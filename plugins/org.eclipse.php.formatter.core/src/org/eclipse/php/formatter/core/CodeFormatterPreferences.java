@@ -13,6 +13,13 @@ package org.eclipse.php.formatter.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
+import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
+import org.eclipse.php.internal.formatter.core.FormattingProfile;
+import org.eclipse.php.internal.formatter.core.FormattingProfileRegistry;
+
 /**
  * @author moshe, 2007
  */
@@ -881,15 +888,24 @@ public class CodeFormatterPreferences {
 	}
 
 	public static CodeFormatterPreferences getDefaultPreferences() {
+		IEclipsePreferences preferences = DefaultScope.INSTANCE.getNode(FormatterCorePlugin.PLUGIN_ID);
+		String profile = preferences.get(CodeFormatterConstants.FORMATTER_PROFILE, null);
+		if (profile != null) {
+			FormattingProfile formattingProfile = new FormattingProfileRegistry().getProfile(profile);
+			if (formattingProfile != null) {
+				return formattingProfile.getImplementation().initValues();
+			}
+		}
 		return new PHPDefaultFormatterPreferences().initValues();
 	}
 
+	@Override
 	public String toString() {
 		return getMap().toString();
 	}
 
 	public Map<String, Object> getMap() {
-		Map<String, Object> options = new HashMap<String, Object>();
+		Map<String, Object> options = new HashMap<>();
 		options.put("indentationChar", String.valueOf(indentationChar)); //$NON-NLS-1$
 		options.put(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE, String.valueOf(indentationSize));
 		options.put(CodeFormatterConstants.FORMATTER_TAB_SIZE, String.valueOf(tabSize));

@@ -41,12 +41,10 @@ public abstract class ModifyDialogTabPage {
 	 * added by the respective factory methods and updates the page's preview on
 	 * each change.
 	 */
-	protected final Observer fUpdater = new Observer() {
-		public void update(Observable o, Object arg) {
-			updatePreferences();
-			doUpdatePreview();
-			notifyValuesModified();
-		}
+	protected final Observer fUpdater = (o, arg) -> {
+		updatePreferences();
+		doUpdatePreview();
+		notifyValuesModified();
 	};
 
 	/**
@@ -65,6 +63,7 @@ public abstract class ModifyDialogTabPage {
 		 */
 		public abstract Control getControl();
 
+		@Override
 		protected void setChanged() {
 			super.setChanged();
 			notifyObservers();
@@ -78,9 +77,10 @@ public abstract class ModifyDialogTabPage {
 		private final Button fCheckbox;
 
 		public CheckboxPreference(Composite composite, int numColumns, String text) {
-			if (text == null)
+			if (text == null) {
 				throw new IllegalArgumentException(
 						FormatterMessages.ModifyDialogTabPage_error_msg_values_text_unassigned);
+			}
 
 			fCheckbox = new Button(composite, SWT.CHECK);
 			fCheckbox.setText(text);
@@ -88,6 +88,7 @@ public abstract class ModifyDialogTabPage {
 			fCheckbox.setFont(composite.getFont());
 
 			fCheckbox.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					setChanged();
 				}
@@ -110,6 +111,7 @@ public abstract class ModifyDialogTabPage {
 			return fCheckbox.isEnabled();
 		}
 
+		@Override
 		public Control getControl() {
 			return fCheckbox;
 		}
@@ -136,6 +138,7 @@ public abstract class ModifyDialogTabPage {
 					createGridData(1, GridData.HORIZONTAL_ALIGN_FILL, fCombo.computeSize(SWT.DEFAULT, SWT.DEFAULT).x));
 
 			fCombo.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					setChanged();
 				}
@@ -165,6 +168,7 @@ public abstract class ModifyDialogTabPage {
 			return fCombo.getSelectionIndex();
 		}
 
+		@Override
 		public Control getControl() {
 			return fCombo;
 		}
@@ -196,20 +200,18 @@ public abstract class ModifyDialogTabPage {
 			fMaxValue = maxValue;
 
 			fNumberText.addFocusListener(new FocusListener() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					NumberPreference.this.focusGained();
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					NumberPreference.this.focusLost();
 				}
 			});
 
-			fNumberText.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					fieldModified();
-				}
-			});
+			fNumberText.addModifyListener(e -> fieldModified());
 		}
 
 		private IStatus createErrorStatus() {
@@ -227,10 +229,11 @@ public abstract class ModifyDialogTabPage {
 		protected void focusLost() {
 			updateStatus(null);
 			final String input = fNumberText.getText();
-			if (!validInput(input))
+			if (!validInput(input)) {
 				fSelected = fOldSelected;
-			else
+			} else {
 				fSelected = Integer.parseInt(input);
+			}
 			if (fSelected != fOldSelected) {
 				setChanged();
 				fNumberText.setText(Integer.toString(fSelected));
@@ -275,6 +278,7 @@ public abstract class ModifyDialogTabPage {
 			return fSelected;
 		}
 
+		@Override
 		public Control getControl() {
 			return fNumberText;
 		}
@@ -286,24 +290,7 @@ public abstract class ModifyDialogTabPage {
 	 */
 	protected final class StringPreference extends Preference {
 
-		/**
-		 * Validates the input.
-		 * <p>
-		 * The default implementation declares all non-<code>null</code> values
-		 * as valid.
-		 * </p>
-		 * 
-		 * @since 3.6
-		 */
-		protected class Validator {
-			boolean isValid(String input) {
-				return input != null;
-			}
-		}
-
 		private final Label fLabel;
-
-		// private final Text fText;
 
 		private IInputValidator fInputValidator;
 
@@ -329,32 +316,19 @@ public abstract class ModifyDialogTabPage {
 			fNumberText.setLayoutData(createGridData(1, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					fPixelConverter.convertWidthInCharsToPixels(length)));
 
-			// createLabel(numColumns - 1, composite, text,
-			// GridData.FILL_HORIZONTAL);
-			//
-			// fNumberText = new Text(composite, SWT.SINGLE | SWT.BORDER
-			// | SWT.RIGHT);
-			// fNumberText.setFont(composite.getFont());
-			// // final int length = Integer.toString(maxValue).length() + 3;
-			// fNumberText.setLayoutData(createGridData(1,
-			// GridData.HORIZONTAL_ALIGN_END,
-			// fPixelConverter.convertWidthInCharsToPixels(length)));
-
 			fNumberText.addFocusListener(new FocusListener() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					StringPreference.this.focusGained();
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					StringPreference.this.focusLost();
 				}
 			});
 
-			fNumberText.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					fieldModified();
-				}
-			});
+			fNumberText.addModifyListener(e -> fieldModified());
 		}
 
 		public void setEnabled(boolean isEnabled) {
@@ -370,48 +344,6 @@ public abstract class ModifyDialogTabPage {
 			fNumberText.setSelection(0, fNumberText.getCharCount());
 		}
 
-		// protected void focusLost() {
-		// updateStatus(null);
-		// final String input = fNumberText.getText();
-		// if (!validInput(input))
-		// fSelected = fOldSelected;
-		// else
-		// fSelected = input;
-		// if (fSelected != fOldSelected) {
-		// setChanged();
-		// fNumberText.setText(fSelected);
-		// }
-		// }
-
-		// protected void fieldModified() {
-		// final String trimInput = fNumberText.getText().trim();
-		// final boolean valid = validInput(trimInput);
-		//
-		// updateStatus(valid ? null : createErrorStatus());
-		//
-		// if (valid) {
-		// final int number = Integer.parseInt(trimInput);
-		// if (fSelected != number) {
-		// fSelected = number;
-		// setChanged();
-		// }
-		// }
-		// }
-		// private boolean validInput(String trimInput) {
-		// boolean isValid = true;
-		//
-		// try {
-		// int number = Integer.parseInt(trimInput);
-		// if (number < fMinValue || number > fMaxValue) {
-		// isValid = false;
-		// }
-		// } catch (NumberFormatException x) {
-		// isValid = false;
-		// }
-		//
-		// return isValid;
-		// }
-
 		public void setValue(String value) {
 			fNumberText.setText(value);
 		}
@@ -424,10 +356,11 @@ public abstract class ModifyDialogTabPage {
 		protected void focusLost() {
 			updateStatus(null);
 			final String input = fNumberText.getText();
-			if (fInputValidator != null && fInputValidator.isValid(input) != null)
+			if (fInputValidator != null && fInputValidator.isValid(input) != null) {
 				fSelected = fOldSelected;
-			else
+			} else {
 				fSelected = input;
+			}
 			if (fSelected != fOldSelected) {
 				setChanged();
 				fNumberText.setText(fSelected);
@@ -443,20 +376,16 @@ public abstract class ModifyDialogTabPage {
 					fSelected = text;
 					setChanged();
 				}
-			} else
+			} else {
 				updateStatus(createErrorStatus(errorText));
+			}
 		}
-
-		// private void saveSelected() {
-		// getPreferences().put(getKey(), fSelected);
-		// setChanged();
-		// notifyObservers();
-		// }
 
 		public String getValue() {
 			return fSelected;
 		}
 
+		@Override
 		public Control getControl() {
 			return fNumberText;
 		}
@@ -486,11 +415,12 @@ public abstract class ModifyDialogTabPage {
 
 		public DefaultFocusManager() {
 			fDialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();
-			fItemMap = new HashMap<Control, Integer>();
-			fItemList = new ArrayList<Control>();
+			fItemMap = new HashMap<>();
+			fItemList = new ArrayList<>();
 			fIndex = 0;
 		}
 
+		@Override
 		public void focusGained(FocusEvent e) {
 			fDialogSettings.put(PREF_LAST_FOCUS_INDEX, fItemMap.get(e.widget).intValue());
 		}
@@ -545,7 +475,7 @@ public abstract class ModifyDialogTabPage {
 	/**
 	 * Constant array for boolean selection
 	 */
-	protected static String[] FALSE_TRUE = { CodeFormatterConstants.FALSE, CodeFormatterConstants.TRUE };
+	protected static final String[] FALSE_TRUE = { CodeFormatterConstants.FALSE, CodeFormatterConstants.TRUE };
 
 	/**
 	 * A pixel converter for layout calculations
@@ -633,9 +563,11 @@ public abstract class ModifyDialogTabPage {
 
 		scroll.addControlListener(new ControlListener() {
 
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				settingsContainer.setSize(settingsContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			}

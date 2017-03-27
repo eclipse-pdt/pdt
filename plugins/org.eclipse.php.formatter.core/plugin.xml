@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.2"?>
 <plugin>
-   <extension
-         point="org.eclipse.php.ui.phpFormatterProcessor">
-         <processor
-	        class="org.eclipse.php.formatter.core.PHPCodeFormatter"
-	        id="org.eclipse.php.formatter.core.PHPCodeFormatter"
-	        name="PHP Code Formatter"/>
-   </extension>
-   <extension
-         point="org.eclipse.php.core.phpFormatterCommonPreferences">
-         <processor
-	        class="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
-	        id="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
-	        name="PHP Code Formatter Common Preferences"/>     
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.eclipse.php.formatter.core.CodeFormatterPreferenceInitializer">
-      </initializer>
-   </extension>
+	<extension-point id="profiles" name="PHP Formatter Profiles"
+		schema="schema/profiles.exsd" />
+	<extension point="org.eclipse.php.ui.phpFormatterProcessor">
+		<processor class="org.eclipse.php.formatter.core.PHPCodeFormatter"
+			id="org.eclipse.php.formatter.core.PHPCodeFormatter" name="PHP Code Formatter" />
+	</extension>
+	<extension point="org.eclipse.php.core.phpFormatterCommonPreferences">
+		<processor
+			class="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
+			id="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
+			name="PHP Code Formatter Common Preferences" />
+	</extension>
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.php.internal.formatter.core.CodeFormatterPreferenceInitializer">
+		</initializer>
+	</extension>
+	<extension point="org.eclipse.php.formatter.core.profiles">
+		<profile
+			class="org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences"
+			id="org.eclipse.php.formatter.ui.default" name="PHP Conventions">
+		</profile>
+		<profile
+			class="org.eclipse.php.formatter.core.profiles.ZendFrameworkFormatterPreferences"
+			id="org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences"
+			name="Zend Framework 1 Conventions" />
+		<profile
+			class="org.eclipse.php.formatter.core.profiles.PSR2FormatterPreferences"
+			id="org.eclipse.php.formatter.ui.psr2" name="PSR-2">
+		</profile>
+	</extension>
 </plugin>

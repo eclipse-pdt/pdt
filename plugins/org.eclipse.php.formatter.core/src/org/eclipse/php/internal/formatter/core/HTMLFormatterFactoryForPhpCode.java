@@ -8,13 +8,9 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.internal.formatter.core;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatter;
-import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
@@ -76,35 +72,4 @@ class HTMLFormatterFactoryForPhpCode {
 		super();
 	}
 
-	protected StructuredFormatPreferencesXML getFormatPreferences() {
-		if (fFormatPreferences == null) {
-			fFormatPreferences = new StructuredFormatPreferencesXML();
-
-			IPreferencesService service = Platform.getPreferencesService();
-			fFormatPreferences
-					.setLineWidth(service.getInt(HTMLCorePlugin.ID, HTMLCorePreferenceNames.LINE_WIDTH, 0, null));
-			fFormatPreferences.setSplitMultiAttrs(
-					service.getBoolean(HTMLCorePlugin.ID, HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS, false, null));
-			fFormatPreferences.setAlignEndBracket(
-					service.getBoolean(HTMLCorePlugin.ID, HTMLCorePreferenceNames.ALIGN_END_BRACKET, false, null));
-			fFormatPreferences.setClearAllBlankLines(
-					service.getBoolean(HTMLCorePlugin.ID, HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, false, null));
-
-			char indentChar = ' ';
-			String indentCharPref = service.getString(HTMLCorePlugin.ID, HTMLCorePreferenceNames.INDENTATION_CHAR, null,
-					null);
-			if (HTMLCorePreferenceNames.TAB.equals(indentCharPref)) {
-				indentChar = '\t';
-			}
-			int indentationWidth = service.getInt(HTMLCorePlugin.ID, HTMLCorePreferenceNames.INDENTATION_SIZE, 0, null);
-
-			StringBuilder indent = new StringBuilder();
-			for (int i = 0; i < indentationWidth; i++) {
-				indent.append(indentChar);
-			}
-			fFormatPreferences.setIndent(indent.toString());
-		}
-
-		return fFormatPreferences;
-	}
 }
