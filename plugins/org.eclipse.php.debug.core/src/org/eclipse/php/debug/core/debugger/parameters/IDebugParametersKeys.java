@@ -26,6 +26,11 @@ public interface IDebugParametersKeys {
 	public static final String WEB_SERVER_DEBUGGER = "webServerDebugger"; //$NON-NLS-1$
 
 	/**
+	 * Type of debugger (Built-in server)
+	 */
+	public static final String BUILTIN_SERVER_DEBUGGER = "builtinServerDebugger"; //$NON-NLS-1$
+
+	/**
 	 * Type of debugger (PHP executable)
 	 */
 	public static final String EXECUTABLE_LAUNCH = "executable_launch"; //$NON-NLS-1$
