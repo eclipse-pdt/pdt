@@ -11,6 +11,8 @@
 package org.eclipse.php.debug.ui;
 
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileContentRequestorsRegistry;
+import org.eclipse.php.internal.debug.ui.launching.OpenRemoteFileExternalRequestor;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeVerifier;
 import org.eclipse.ui.IStartup;
 
@@ -22,7 +24,6 @@ import org.eclipse.ui.IStartup;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class DebugEarlyStartup implements IStartup {
 
 	/*
@@ -32,6 +33,8 @@ public class DebugEarlyStartup implements IStartup {
 	 */
 	@Override
 	public void earlyStartup() {
+		RemoteFileContentRequestorsRegistry.getInstance()
+				.addExternalRequestHandler(new OpenRemoteFileExternalRequestor());
 		// Verify all of the available PHP executables
 		PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 	}

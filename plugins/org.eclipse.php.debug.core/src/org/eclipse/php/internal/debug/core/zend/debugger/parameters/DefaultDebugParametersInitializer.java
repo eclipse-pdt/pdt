@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Hashtable;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
@@ -24,6 +25,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IWebDebugParametersInitial
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -31,9 +33,23 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 /**
  * Default debug parameters initializer.
  */
-@SuppressWarnings("restriction")
 public class DefaultDebugParametersInitializer extends AbstractDebugParametersInitializer
 		implements IWebDebugParametersInitializer {
+
+	// Advanced parameters
+	public static final String USE_SSL = "use_ssl"; //$NON-NLS-1$
+	public static final String CODE_COVERAGE = "debug_coverage"; //$NON-NLS-1$
+	public static final String DEBUG_NO_REMOTE = "no_remote"; //$NON-NLS-1$
+	public static final String DEBUG_USE_REMOTE = "use_remote"; //$NON-NLS-1$
+	public static final String DEBUG_FASTFILE = "debug_fastfile"; //$NON-NLS-1$
+	public static final String START_PROFILE = "start_profile"; //$NON-NLS-1$
+
+	// Marker flags
+	public static final String GET_FILE_CONTENT = "get_file_content"; //$NON-NLS-1$
+	public static final String LINE_NUMBER = "line_number"; //$NON-NLS-1$
+	public static final String IS_DEBUG_URL = "isDebugURL"; //$NON-NLS-1$
+	public static final String IS_PROFILE_URL = "isProfileURL"; //$NON-NLS-1$
+	public static final String DEBUG_LINE_BP = "debug_line_bp"; //$NON-NLS-1$
 
 	/*
 	 * (non-Javadoc)
@@ -112,6 +128,37 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		// Disable Z-Ray
 		parameters.put(ZRAY_DISABLE, "1"); //$NON-NLS-1$
 
+		String isExecutableLaunch = launch.getAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH);
+		if (isExecutableLaunch == null || !Boolean.valueOf(isExecutableLaunch).booleanValue()) {
+			// Advanced session settings
+			if (launchConfiguration != null) {
+				try {
+					if (launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false)) {
+						// do not allow access to local files
+						parameters.put(DEBUG_NO_REMOTE, "1"); //$NON-NLS-1$
+					} else {
+						parameters.put(DEBUG_USE_REMOTE, "1"); //$NON-NLS-1$
+					}
+				} catch (CoreException e) {
+				}
+			}
+		} else {
+			// Debug agains PHP exe also using dummy.php:
+			parameters.put(DEBUG_USE_REMOTE, "1"); //$NON-NLS-1$
+		}
+
+		String codeCoverageFlag = launch.getAttribute(IPHPDebugConstants.DEBUGGING_COLLECT_CODE_COVERAGE);
+		if (codeCoverageFlag != null) {
+			if (Integer.parseInt(codeCoverageFlag) > 0)
+				parameters.put(CODE_COVERAGE, codeCoverageFlag); // $NON-NLS-1$
+		}
+		// Set the use_ssl for any local or remote debug configuration
+		boolean useSSL = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+				.getBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
+		if (useSSL) {
+			parameters.put(USE_SSL, "1"); //$NON-NLS-1$
+		}
+		parameters.put(DEBUG_FASTFILE, "1"); //$NON-NLS-1$
 		return parameters;
 	}
 

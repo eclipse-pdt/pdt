@@ -12,10 +12,8 @@ package org.eclipse.php.internal.debug.core.zend.communication;
 
 /**
  * Used for handling file content response that was called on-demand.
- * 
- * @author michael
  */
-public interface IFileContentRequestor {
+public interface IRemoteFileContentRequestor {
 
 	/**
 	 * This method is called when file content requested by this class is
@@ -28,7 +26,8 @@ public interface IFileContentRequestor {
 	 * @param lineNumber
 	 *            Requested line number
 	 */
-	public void fileContentReceived(byte[] content, String fileName, int lineNumber);
+	public void fileContentReceived(byte[] content, String serverAddress, String originalURL, String fileName,
+			int lineNumber);
 
 	/**
 	 * This method is called when the HTTP request to the debug server is

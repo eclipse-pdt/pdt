@@ -31,6 +31,8 @@ import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -44,7 +46,6 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class MapLocalFileDialog extends TrayDialog {
 
 	/**
@@ -225,16 +226,16 @@ public class MapLocalFileDialog extends TrayDialog {
 	private static final Object[] EMPTY = new Object[0];
 	private static final Object EXTERNAL_CONTAINER = new Object();
 
-	private String title;
 	private VirtualPath path;
 	private PathEntry[] pathEntries;
 	private PathEntry result;
 	private TreeViewer entriesViewer;
+	private Button selectMappingRadio;
+	private Button selectRemoteRadio;
 
-	public MapLocalFileDialog(Shell shell, String title, VirtualPath path, PathEntry[] pathEntries) {
+	public MapLocalFileDialog(Shell shell, VirtualPath path, PathEntry[] pathEntries) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.title = title;
 		this.path = path;
 		this.pathEntries = pathEntries;
 	}
@@ -260,17 +261,10 @@ public class MapLocalFileDialog extends TrayDialog {
 		getShell().setActive();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.
-	 * Shell)
-	 */
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(title);
+		newShell.setText(Messages.OpenLocalFileSearchFilter_Open_file_request);
 		newShell.setData(WorkbenchHelpSystem.HELP_KEY, IPHPHelpContextIds.PATH_MAPPING);
 		newShell.addHelpListener(new HelpListener() {
 			public void helpRequested(HelpEvent arg0) {
@@ -299,7 +293,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		GridData layoutData;
 		final Font boldFont = new Font(parent.getFont().getDevice(), fontData);
 		Label remoteLabel = new Label(parent, SWT.NONE);
-		remoteLabel.setText(Messages.OpenLocalFileSearchFilter_Select_the_local_resource_match);
+		remoteLabel.setText(Messages.OpenLocalFileSearchFilter_Remote_file_is_requested);
 		layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		remoteLabel.setLayoutData(layoutData);
@@ -310,11 +304,40 @@ public class MapLocalFileDialog extends TrayDialog {
 		layoutData.horizontalSpan = 2;
 		layoutData.horizontalIndent = convertVerticalDLUsToPixels(10);
 		label.setLayoutData(layoutData);
+
+		selectRemoteRadio = new Button(parent, SWT.RADIO);
+		selectRemoteRadio.setSelection(false);
+		selectRemoteRadio.setText(Messages.OpenLocalFileSearchFilter_Open_remote);
+		layoutData = new GridData();
+		layoutData.horizontalSpan = 2;
+		selectRemoteRadio.setLayoutData(layoutData);
+
+		selectMappingRadio = new Button(parent, SWT.RADIO);
+		selectMappingRadio.setSelection(true);
+		selectMappingRadio.setText(Messages.OpenLocalFileSearchFilter_Map_and_open_local);
+		layoutData = new GridData();
+		layoutData.horizontalSpan = 2;
+		selectMappingRadio.setLayoutData(layoutData);
+
+		selectRemoteRadio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectMappingRadio.setSelection(!selectRemoteRadio.getSelection());
+			}
+		});
+		selectMappingRadio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectRemoteRadio.setSelection(!selectMappingRadio.getSelection());
+				entriesViewer.getTree().setEnabled(selectMappingRadio.getSelection());
+				validate();
+			}
+		});
+
 		entriesViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
 		layoutData.minimumHeight = convertVerticalDLUsToPixels(80);
-		layoutData.verticalIndent = 10;
 		entriesViewer.getControl().setLayoutData(layoutData);
 		entriesViewer.setContentProvider(new ContentProvider());
 		entriesViewer.setLabelProvider(new LabelProvider());
@@ -340,7 +363,6 @@ public class MapLocalFileDialog extends TrayDialog {
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
 		validate();
-
 		return control;
 	}
 
@@ -348,12 +370,14 @@ public class MapLocalFileDialog extends TrayDialog {
 		Button okButton = getButton(IDialogConstants.OK_ID);
 		okButton.setEnabled(false);
 		result = null;
-		Object selectedElement = ((IStructuredSelection) entriesViewer.getSelection()).getFirstElement();
-		if (selectedElement instanceof PathEntry) {
-			okButton.setEnabled(true);
-			result = (PathEntry) selectedElement;
+		if (selectMappingRadio.getSelection()) {
+			Object selectedElement = ((IStructuredSelection) entriesViewer.getSelection()).getFirstElement();
+			if (selectedElement instanceof PathEntry) {
+				okButton.setEnabled(true);
+				result = (PathEntry) selectedElement;
+			}
 		} else {
-			okButton.setEnabled(false);
+			okButton.setEnabled(true);
 		}
 	}
 

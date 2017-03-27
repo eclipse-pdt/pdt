@@ -21,6 +21,7 @@ public interface IPHPDebugConstants {
 	public static final String ATTR_INI_LOCATION = "ATTR_INI_LOCATION"; //$NON-NLS-1$
 	public static final String ATTR_FILE = "ATTR_FILE"; //$NON-NLS-1$
 	public static final String ATTR_FILE_FULL_PATH = "ATTR_FILE_FULL_PATH"; //$NON-NLS-1$
+	public static final String ATTR_ENABLE_CODE_COVERAGE = "ATTR_ENABLE_CODE_COVERAGE"; //$NON-NLS-1$
 
 	/**
 	 * Unique identifier for the PHP debug model (value
@@ -81,6 +82,8 @@ public interface IPHPDebugConstants {
 	public static final String DEBUGGING_DEBUG_NO_REMOTE = "debugNoRemote"; //$NON-NLS-1$
 	public static final String DEBUGGING_GET_FILE_CONTENT = "get_file_content"; //$NON-NLS-1$
 	public static final String DEBUGGING_LINE_NUMBER = "line_number"; //$NON-NLS-1$
+	public static final String DEBUGGING_USE_SERVER_FILES = "debugNoRemote"; //$NON-NLS-1$
+	public static final String DEBUGGING_COLLECT_CODE_COVERAGE = "collectCodeCoverage"; //$NON-NLS-1$
 
 	public static final String PREF_STEP_FILTERS_LIST = ID_PHP_DEBUG_CORE + ".pref_step_filters_list"; //$NON-NLS-1$
 }

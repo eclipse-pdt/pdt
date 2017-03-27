@@ -26,7 +26,6 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class OpenLocalFileSearchFilter implements ILocalFileSearchFilter {
 
 	/*
@@ -38,20 +37,16 @@ public class OpenLocalFileSearchFilter implements ILocalFileSearchFilter {
 	 * org.eclipse.php.internal.debug.core.pathmapper.VirtualPath,
 	 * java.lang.String)
 	 */
-
-	@Override
 	public LocalFileSearchResult filter(final PathEntry[] entries, final VirtualPath remotePath,
 			final String serverName) {
 		final SyncObject<LocalFileSearchResult> searchResult = new SyncObject<LocalFileSearchResult>();
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			@Override
 			public void run() {
 				final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				if (shell != null) {
 					shell.forceActive();
 				}
-				MapLocalFileDialog dialog = new MapLocalFileDialog(shell,
-						Messages.OpenLocalFileSearchFilter_Open_file_request, remotePath, entries);
+				MapLocalFileDialog dialog = new MapLocalFileDialog(shell, remotePath, entries);
 				LocalFileSearchResult filteredResult;
 				if (dialog.open() == Window.OK) {
 					filteredResult = new LocalFileSearchResult(dialog.getResult());

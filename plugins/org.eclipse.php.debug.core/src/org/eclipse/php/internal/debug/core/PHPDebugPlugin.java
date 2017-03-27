@@ -11,7 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -21,6 +27,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
@@ -52,7 +59,6 @@ import org.osgi.framework.BundleListener;
 /**
  * The PHP Debug plug-in class.
  */
-@SuppressWarnings("restriction")
 public class PHPDebugPlugin extends Plugin {
 
 	/**
@@ -108,6 +114,125 @@ public class PHPDebugPlugin extends Plugin {
 
 	}
 
+	private static class ExtDirSupport {
+
+		private static final String EXTENSION_POINT_NAME = "phpExe"; //$NON-NLS-1$
+		private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
+		private static final String PHPEXE_TAG = "phpExe"; //$NON-NLS-1$
+
+		/**
+		 * Sets extension_dir in php.ini file for all php executables (i.e.
+		 * resources/php53, resources/php54) provided by extension point
+		 * "phpExe", for OSs different than Windows.
+		 * 
+		 * @throws IOException
+		 * @throws URISyntaxException
+		 */
+		public static void setExtDirInPHPIniFile() {
+
+			final IExtensionRegistry registry = Platform.getExtensionRegistry();
+			final IConfigurationElement[] elements = registry.getConfigurationElementsFor("org.eclipse.php.debug.core",
+					EXTENSION_POINT_NAME);
+			Matcher matcher = null;
+			Pattern pattern = null;
+			for (final IConfigurationElement element : elements) {
+				if (PHPEXE_TAG.equals(element.getName())) {
+					try {
+						String location = substitudeVariables(element.getAttribute(LOCATION_ATTRIBUTE));
+						final String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
+						location = location.substring(0, location.lastIndexOf("/")) //$NON-NLS-1$
+								.concat("/php.ini"); //$NON-NLS-1$
+
+						File phpIni = getFileFromLocation(location, pluginId);
+						if (phpIni == null)
+							continue;
+
+						File phpIniDir = phpIni.getParentFile();
+						String fileName = phpIni.getAbsolutePath();
+						String iniContent = readFile(fileName);
+						String correctDir = phpIniDir.getAbsolutePath().concat(File.separator).replaceAll("\\\\",
+								"\\\\\\\\");
+						pattern = Pattern.compile("(extension_dir=.*)(ext[^\\s]*)");
+						matcher = pattern.matcher(iniContent);
+						if (matcher.find()) {
+							Path iniPath = new Path(matcher.group(1).replaceAll("extension_dir=", ""));
+							Path currentPath = new Path(correctDir);
+							if (!currentPath.isPrefixOf(iniPath)) {
+								iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
+										"extension_dir=\"" + correctDir
+												+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\")
+												+ "\"");
+								pattern = Pattern.compile("(zend_extension=.*)(ext[^\\s]ZendDebugger[^\\s]*)");
+								matcher = pattern.matcher(iniContent);
+								if (matcher.find()) {
+									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
+											"zend_extension=\"" + correctDir
+													+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\")
+													+ "\"");
+								}
+								pattern = Pattern.compile("(zend_extension=.*)(ext[^\\s]xdebug[^\\s]*)");
+								matcher = pattern.matcher(iniContent);
+								if (matcher.find()) {
+									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
+											"zend_extension=\"" + correctDir
+													+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\")
+													+ "\"");
+								}
+								pattern = Pattern.compile("(openssl.cafile=.*)(ca-bundle.crt[^\\s]*)");
+								matcher = pattern.matcher(iniContent);
+								if (matcher.find()) {
+									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
+											"openssl.cafile=\"" + correctDir + matcher.group(2).replace("\"", "")
+													+ "\"");
+								}
+								BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+								writer.write(iniContent);
+								writer.flush();
+								writer.close();
+							}
+						}
+					} catch (Exception ex) {
+						log(ex);
+					}
+				}
+			}
+		}
+
+		private static String substitudeVariables(String expression) throws CoreException {
+			return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(expression, true);
+		}
+
+		private static File getFileFromLocation(String location, String pluginId) throws IOException {
+			if (Paths.get(location).isAbsolute()) {
+				return new File(location);
+			} else {
+				URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), null);
+				if (url != null) {
+					url = FileLocator.resolve(url);
+					String filename = url.getFile();
+					return new File(filename);
+				}
+			}
+			return null;
+		}
+
+		private static String readFile(String file) throws IOException {
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String line = null;
+				StringBuilder stringBuilder = new StringBuilder();
+				String ls = System.getProperty("line.separator");
+
+				while ((line = reader.readLine()) != null) {
+					stringBuilder.append(line);
+					stringBuilder.append(ls);
+				}
+
+				return stringBuilder.toString();
+			}
+		}
+
+	}
+
 	public static final String ID = "org.eclipse.php.debug.core"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
 	public static final int INTERNAL_WARNING = 10002;
@@ -134,6 +259,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		ExtDirSupport.setExtDirInPHPIniFile();
 	}
 
 	/**

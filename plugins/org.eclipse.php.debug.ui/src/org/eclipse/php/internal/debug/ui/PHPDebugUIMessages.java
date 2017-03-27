@@ -40,22 +40,16 @@ public class PHPDebugUIMessages extends NLS {
 	public static String BreakpointCreated_1;
 	public static String Browse;
 	public static String CannotRunToLine;
-
 	public static String CreateStepFilterDialog_addStepFilter;
-
 	public static String CreateStepFilterDialog_invalidPathPattern;
-
 	public static String CreateStepFilterDialog_patternToFilter;
-
 	public static String CreateStepFilterDialog_stepFilterAlreadyExists;
 	public static String DebugBrowserView_swtBrowserNotAvailable0;
-
 	public static String DefaultPHPBreakpointProvider_0;
 	public static String DefaultPHPBreakpointProvider_Breakpoint_cannot_be_installed_on_history_file;
 	public static String EnableSetCondition_1;
 	public static String EnterCondition_1;
 	public static String ErrorCreatingBreakpoint_1;
-
 	public static String FilterLabelProvider_readOnly;
 	public static String InstalledPHPsBlock_0;
 	public static String InstalledPHPsBlock_1;
@@ -72,14 +66,12 @@ public class PHPDebugUIMessages extends NLS {
 	public static String InstalledPHPsBlock_5;
 	public static String InstalledPHPsBlock_6;
 	public static String InstalledPHPsBlock_9;
-
 	public static String InstalledPHPsBlock_Fetching_php_exe_info;
 	public static String InstalledPHPsBlock_PHP_executables_search;
 	public static String InstalledPHPsBlock_Processing_search_results;
 	public static String InstalledPHPsBlock_Search_result_dialog_message;
 	public static String InstalledPHPsBlock_Searching_with_found;
 	public static String InstalledPHPsBlock_setDefault;
-
 	public static String launch_failure_exec_msg_text;
 	public static String launch_failure_msg_title;
 	public static String launch_failure_no_config;
@@ -100,13 +92,9 @@ public class PHPDebugUIMessages extends NLS {
 	public static String MPresentation_Suspended_1;
 	public static String MPresentation_Terminated_1;
 	public static String NewPHPsComboBlock_13;
-
 	public static String NewPHPsComboBlock_14;
-
 	public static String NewPHPsComboBlock_15;
-
 	public static String NewPHPsComboBlock_4;
-
 	public static String PHP_File;
 	public static String PHP_File_Not_Exist;
 	public static String PHP_Location_Message;
@@ -130,146 +118,85 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugPreferencesAddon_debugTransferEncoding;
 	public static String PHPDebugPreferencesAddon_selectedEncoding;
 	public static String PHPDebugPreferencesAddon_unsupportedEncoding;
-
 	public static String PHPDebugPreferencesBlock_0;
-
 	public static String PHPDebugPreferencesBlock_1;
-
 	public static String PHPDebugPreferencesBlock_10;
-
 	public static String PHPDebugPreferencesBlock_11;
-
 	public static String PHPDebugPreferencesBlock_2;
-
 	public static String PHPDebugPreferencesBlock_3;
-
 	public static String PHPDebugPreferencesBlock_9;
-
 	public static String PHPDebugPreferencesBlock_CLIDebugger;
-
 	public static String PHPDebugPreferencesBlock_CLISettings;
-
 	public static String PHPDebugPreferencesBlock_ServerDebugger;
-
 	public static String PHPDebugStepFilterPreferencePage_addFilter;
-
 	public static String PHPDebugStepFilterPreferencePage_addResource;
-
 	public static String PHPDebugStepFilterPreferencePage_alreadyExists;
-
 	public static String PHPDebugStepFilterPreferencePage_definedStepFilters;
-
 	public static String PHPDebugStepFilterPreferencePage_deselectAll;
-
 	public static String PHPDebugStepFilterPreferencePage_filterColon;
-
 	public static String PHPDebugStepFilterPreferencePage_remove;
-
 	public static String PHPDebugStepFilterPreferencePage_selectAll;
-
 	public static String PHPDebugStepFilterPreferencePage_selectResourceToFilter;
-
 	public static String PHPDebugStepFilterPreferencePage_stepFiltering;
-
 	public static String PHPDebugStepFilterPreferencePage_stepFiltersAreApplied;
-
 	public static String PHPDebugStepFilterPreferencePage_useStepFilters;
 	public static String PHPDebugUIPlugin_0;
 	public static String PHPDebugUIPlugin_1;
 	public static String PHPDebugUIPlugin_2;
-
 	public static String PHPexe_Run_With_Debug_Info;
 	public static String PHPExeCompositeFragment_0;
-
 	public static String PHPExeCompositeFragment_1;
-
 	public static String PHPExeCompositeFragment_10;
-
 	public static String PHPExeCompositeFragment_11;
-
 	public static String PHPExeCompositeFragment_13;
-
 	public static String PHPExeCompositeFragment_15;
-
 	public static String PHPExeCompositeFragment_2;
-
 	public static String PHPExeCompositeFragment_3;
-
 	public static String PHPExecutableLaunchTab_2;
-
 	public static String PHPExecutableLaunchTab_argumentsWillNotBePassed;
-
 	public static String PHPExecutableLaunchTab_Debugger_group_name;
-
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
-
 	public static String PHPExecutableLaunchTab_No_debugger_is_attached;
-
 	public static String PHPExecutableLaunchTab_PHP_debugger_type;
-
 	public static String PHPExecutableLaunchTab_scriptArguments;
-
 	public static String PHPExecutableLaunchTab_variables;
-
 	public static String PHPExeLaunchShortcut_0;
-
 	public static String PHPexesComboBlock_1;
-
 	public static String PHPexesComboBlock_10;
-
 	public static String PHPexesComboBlock_11;
-
 	public static String PHPexesComboBlock_12;
-
 	public static String PHPexesComboBlock_13;
-
 	public static String PHPexesComboBlock_2;
 	public static String PHPexesComboBlock_3;
 	public static String PHPexesComboBlock_15;
 	public static String PHPexesComboBlock_16;
-
 	public static String PHPexesComboBlock_0;
-
 	public static String PHPexesComboBlock_4;
-
 	public static String PHPexesComboBlock_5;
-
 	public static String PHPexesComboBlock_14;
-
 	public static String PHPexesComboBlock_6;
-
 	public static String PHPexesComboBlock_7;
-
 	public static String PHPexesComboBlock_8;
-
 	public static String PHPexesComboBlock_9;
-
 	public static String PHPLaunchingPreferencePage_Always;
 	public static String PHPLaunchingPreferencePage_multipleMessage;
 	public static String PHPLaunchingPreferencePage_Never;
 	public static String PHPLaunchingPreferencePage_Prompt;
 	public static String PHPLaunchingPreferencePage_switchToPHPMessage;
-
 	public static String PHPModelPresentation_Break_on_error_condition;
-
 	public static String PHPModelPresentation_Break_on_exception;
-
 	public static String PHPModelPresentation_ParallelRequests;
-
 	public static String PHPModelPresentation_PHP_Applications;
 	public static String AbstractVariableValueEditor_ChangeValueTitle;
 	public static String AbstractVariableValueEditor_EnterValue;
 	public static String AbstractVariableValueEditor_ErrorChangingValue;
 	public static String AbstractVariableValueEditor_UnexpectedErrorWhileValueChange;
-
 	public static String PHPResourceSelectionDialog_selectResource;
 	public static String PHPRunToLineAdapter_0;
 	public static String PHPRunToLineAdapter_1;
 	public static String PHPRunToLineAdapter_2;
 	public static String PHPsComboBlock_2;
-
 	public static String PHPsComboBlock_3;
-
 	public static String PHPsComboBlock_noPHPsMessage;
 	public static String PHPsComboBlock_NoPHPsTitle;
 	public static String PHPsPreferencePage_1;
@@ -282,18 +209,36 @@ public class PHPDebugUIMessages extends NLS {
 	public static String ShowView_errorTitle;
 	public static String SourceNotFoundEditorInput_Source_Not_Found_1;
 	public static String SourceNotFoundEditorInput_Source_not_found_for__0__2;
-
 	public static String WorkbenchOptionsBlock_workbench_options;
 	public static String WorkingDirectory;
-
 	public static String XDebugWatch_failed;
 	public static String XDebugHover_empty;
-
 	public static String XDebugModelPresentation_Waiting;
 	public static String XDebugPresentation_line;
 	public static String AbstractVariableValueEditor_UnexpectedError;
-
 	public static String AbstractVariableValueEditor_InvalidValue;
+	public static String CodeCoverageConfigurationBlock_1;
+	public static String CodeCoverageConfigurationBlock_2;
+	public static String CodeCoverageConfigurationBlock_3;
+	public static String CodeCoveragePreferencePage_0;
+	public static String CodeCoverageSection_1;
+	public static String CodeCoverageTextViewer_1;
+	public static String CodeCoverageTextViewer_2;
+	public static String CodeCoverageTextViewer_3;
+	public static String CodeCoverageTextViewer_4;
+	public static String CodeCoverageViewActionGroup_0;
+	public static String CodeCoverageViewActionGroup_1;
+	public static String CodeCoverageViewActionGroup_2;
+	public static String CodeCoverageViewActionGroup_3;
+	public static String CodeCoverageViewActionGroup_4;
+	public static String CodeCoverageViewActionGroup_5;
+	public static String CodeCoverageViewer_0;
+	public static String CodeCoverageViewer_1;
+	public static String ZendDebuggerWebLaunchSettingsSection_Source_location;
+	public static String ZendDebuggerWebLaunchSettingsSection_Source_will_be_taken_from;
+	public static String ZendDebuggerWebLaunchSettingsSection_Source_the_server;
+	public static String ZendDebuggerWebLaunchSettingsSection_Source_local_otherwise_server;
+	public static String OpenCoverageAction_0;
 
 	static {
 		// load message values from bundle file

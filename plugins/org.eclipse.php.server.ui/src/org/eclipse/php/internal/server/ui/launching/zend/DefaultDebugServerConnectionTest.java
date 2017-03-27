@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -44,12 +46,12 @@ import org.eclipse.php.internal.debug.core.zend.testConnection.IDebugServerTestL
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.ui.Logger;
+import org.eclipse.php.internal.server.ui.launching.Messages;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * Default implementation for Zend Debugger server connectivity test.
  */
-@SuppressWarnings("restriction")
 public class DefaultDebugServerConnectionTest implements IDebugServerConnectionTest, IDebugServerTestListener {
 
 	protected class TestPerformer implements IRunnableWithProgress {
@@ -299,9 +301,10 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		// Release the latch as we have event
 		fClientTestLatch.countDown();
 		switch (e.getEventType()) {
-		case DebugServerTestEvent.TEST_SUCCEEDED:
+		case DebugServerTestEvent.TEST_SUCCEEDED: {
 			showSuccessDialog();
 			break;
+		}
 		case DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION:
 			MessageDialog.openError(fShell,
 					PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), //$NON-NLS-1$
@@ -314,16 +317,35 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		}
 	}
 
+	/**
+	 * Returns the last/current host that the test was performed for.
+	 * 
+	 * @return last/current host name
+	 */
+	public String getCurrentHost() {
+		return fCurrentHost;
+	}
+
 	protected String generateDebugQuery(String host) {
-		String urlToDebug = ""; //$NON-NLS-1$
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(fURL);
-		queryBuilder.append("/dummy.php?start_debug=1&debug_port="); //$NON-NLS-1$
-		queryBuilder.append(getPort());
-		queryBuilder.append("&debug_fastfile=1&debug_host="); //$NON-NLS-1$
-		queryBuilder.append(host + "&testConnection=true"); //$NON-NLS-1$
-		urlToDebug = queryBuilder.toString();
-		return urlToDebug;
+		StringBuilder debugQuery = new StringBuilder();
+		debugQuery.append(fURL);
+		String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", //$NON-NLS-1$
+				null);
+		if (!dummyFile.startsWith("/")) { //$NON-NLS-1$
+			dummyFile = "/" + dummyFile; //$NON-NLS-1$
+		}
+		debugQuery.append(dummyFile).append("?start_debug=1&debug_port="); //$NON-NLS-1$
+		int port = getDebugPort();
+		debugQuery.append(port);
+		debugQuery.append("&debug_fastfile=1&debug_host="); //$NON-NLS-1$
+		debugQuery.append(host + "&testConnection=true"); //$NON-NLS-1$
+		boolean useSSL = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+				.getBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
+		if (useSSL) {
+			debugQuery.append("&use_ssl=1"); //$NON-NLS-1$
+		}
+		return debugQuery.toString();
 	}
 
 	protected String getPort() {
@@ -332,6 +354,22 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		int customPort = ZendDebuggerSettingsUtil.getDebugPort(fServer.getUniqueId());
 		if (customPort != -1)
 			port = String.valueOf(customPort);
+		return port;
+	}
+
+	/**
+	 * Returns debug port.
+	 * 
+	 * @return debug port
+	 */
+	protected int getDebugPort() {
+		int port = -1;
+		port = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		// Set up custom port from server configuration
+		int customPort = ZendDebuggerSettingsUtil.getDebugPort(fServer.getUniqueId());
+		if (customPort != -1) {
+			port = customPort;
+		}
 		return port;
 	}
 
@@ -374,16 +412,22 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	}
 
 	protected void showSuccessDialog() {
-		String message = NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_success"), //$NON-NLS-1$
-				fCurrentHost);
+		String message = MessageFormat.format(Messages.DebugServerConnectionTest_test_successfull, fCurrentHost);
 		final StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(message);
-		if (fTimeoutServerList.size() > 0) {
-			stringBuilder.append("\n"); //$NON-NLS-1$
-			stringBuilder.append(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_however")); //$NON-NLS-1$
-			stringBuilder.append(addTimeOutsMessage("")); //$NON-NLS-1$
+		if (getAllLocalHostsAddresses().length > 1) {
+			stringBuilder.append('\n');
+			stringBuilder.append(Messages.DebugServerConnectionTest_some_IPs_seems_to_be_redundant);
+			StringBuilder addresses = new StringBuilder();
+			for (String address : getAllLocalHostsAddresses()) {
+				if (!address.equals(fCurrentHost)) {
+					addresses.append((addresses.length() != 0 ? ", " : "") //$NON-NLS-1$ //$NON-NLS-2$
+							+ '\'' + address + '\'');
+				}
+			}
+			stringBuilder.append(addresses.toString());
 		}
-		fShell.getDisplay().asyncExec(new Runnable() {
+		fShell.getDisplay().syncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openInformation(fShell,
 						PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), //$NON-NLS-1$

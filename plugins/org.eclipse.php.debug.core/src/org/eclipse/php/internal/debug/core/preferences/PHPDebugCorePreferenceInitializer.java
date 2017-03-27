@@ -70,6 +70,10 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		node.put(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
 
 		node.putBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME, false);
+
+		node.putBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
+		node.put(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+
 		List<Inet4Address> clientHosts = new ArrayList<Inet4Address>();
 		clientHosts.add(LOCALHOST);
 		try {
