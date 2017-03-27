@@ -38,7 +38,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	private IProcess fProcess;
 	private boolean fTerminated = false;
 	protected DebugOutput fDebugOutput = new DebugOutput();
-	private CopyOnWriteArrayList<IPHPDebugTarget> fDebugTargets = new CopyOnWriteArrayList<IPHPDebugTarget>();
+	protected CopyOnWriteArrayList<IPHPDebugTarget> fDebugTargets = new CopyOnWriteArrayList<IPHPDebugTarget>();
 
 	/**
 	 * Creates new multiple debug targets wrapper.
@@ -52,7 +52,9 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 		fLaunch = launch;
 		fProcess = process;
 		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPDebugConstants.PHPProcessType);
-		((PHPProcess) fProcess).setDebugTarget(this);
+		if (fProcess instanceof PHPProcess) {
+			((PHPProcess) fProcess).setDebugTarget(this);
+		}
 		fireCreationEvent();
 		DebugPlugin.getDefault().addDebugEventListener(this);
 	}
