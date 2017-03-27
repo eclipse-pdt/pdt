@@ -73,6 +73,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 		super(modifyDialog, codeFormatterPreferences);
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 		Group group = createGroup(numColumns, composite, FormatterMessages.BlankLinesTabPage_namespace_group_title);
 		namespaceDecl = createNumberPref(group, numColumns,
@@ -143,6 +144,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 		isInitialized = true;
 	}
 
+	@Override
 	protected void initializePage() {
 		fPreview.setPreviewText(PREVIEW);
 	}
@@ -154,6 +156,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
@@ -166,12 +169,14 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doUpdatePreview()
 	 */
+	@Override
 	protected void doUpdatePreview() {
 		if (fPreview != null) {
 			fPreview.update();
 		}
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			codeFormatterPreferences.blank_line_before_class_declaration = classDecl.getValue();

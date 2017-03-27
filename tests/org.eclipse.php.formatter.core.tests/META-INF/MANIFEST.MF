@@ -15,6 +15,6 @@ Require-Bundle: org.junit,
  org.eclipse.php.formatter.core,
  org.eclipse.php.formatter.ui,
  org.eclipse.jface.text
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.core.tests

@@ -94,10 +94,11 @@ public class ModifyDialog extends StatusDialog {
 		codeFormatterPreferences = new CodeFormatterPreferences(preferences);
 		updateStatus(fStandardStatus);
 		setStatusLineAboveButtons(false);
-		fTabPages = new ArrayList<ModifyDialogTabPage>();
+		fTabPages = new ArrayList<>();
 		fDialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();
 	}
 
+	@Override
 	public void create() {
 		super.create();
 		int lastFocusNr = 0;
@@ -117,12 +118,14 @@ public class ModifyDialog extends StatusDialog {
 		}
 	}
 
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		shell.setText(fTitle);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.FORMATTER_PREFERENCES);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 
 		final Composite composite = (Composite) super.createDialogArea(parent);
@@ -155,9 +158,11 @@ public class ModifyDialog extends StatusDialog {
 		applyDialogFont(composite);
 
 		fTabFolder.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				final TabItem tabItem = (TabItem) e.item;
 				final ModifyDialogTabPage page = (ModifyDialogTabPage) tabItem.getData();
@@ -169,6 +174,7 @@ public class ModifyDialog extends StatusDialog {
 		return composite;
 	}
 
+	@Override
 	public void updateStatus(IStatus status) {
 		super.updateStatus(status != null ? status : fStandardStatus);
 	}
@@ -178,6 +184,7 @@ public class ModifyDialog extends StatusDialog {
 	 * 
 	 * @see org.eclipse.jface.window.Window#getInitialSize()
 	 */
+	@Override
 	protected Point getInitialSize() {
 		Point initialSize = super.getInitialSize();
 		try {
@@ -199,6 +206,7 @@ public class ModifyDialog extends StatusDialog {
 	 * @see org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.
 	 * graphics .Point)
 	 */
+	@Override
 	protected Point getInitialLocation(Point initialSize) {
 		try {
 			return new Point(fDialogSettings.getInt(DS_KEY_PREFERRED_X), fDialogSettings.getInt(DS_KEY_PREFERRED_Y));
@@ -207,6 +215,7 @@ public class ModifyDialog extends StatusDialog {
 		}
 	}
 
+	@Override
 	public boolean close() {
 		final Rectangle shell = getShell().getBounds();
 
@@ -223,11 +232,13 @@ public class ModifyDialog extends StatusDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
+	@Override
 	protected void okPressed() {
 		applyPressed();
 		super.okPressed();
 	}
 
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.CLIENT_ID) {
 			applyPressed();
@@ -253,6 +264,7 @@ public class ModifyDialog extends StatusDialog {
 		fApplyButton.setEnabled(false);
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		fApplyButton = createButton(parent, IDialogConstants.CLIENT_ID, FormatterMessages.ModifyDialog_apply_button,
 				false);

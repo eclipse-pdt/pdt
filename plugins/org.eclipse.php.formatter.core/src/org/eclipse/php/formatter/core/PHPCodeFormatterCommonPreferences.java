@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.formatter.core.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -39,6 +40,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 	private static final Map<String, Object> defaultPrefrencesValues = CodeFormatterPreferences.getDefaultPreferences()
 			.getMap();
 
+	@Override
 	public int getIndentationWrappedLineSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
@@ -48,6 +50,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		}
 	}
 
+	@Override
 	public int getIndentationArrayInitSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
@@ -57,6 +60,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		}
 	}
 
+	@Override
 	public int getIndentationSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
@@ -66,6 +70,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		}
 	}
 
+	@Override
 	public char getIndentationChar(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
@@ -113,18 +118,18 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 
 		IEclipsePreferences node = null;
 		if (project != null) {
-			ProjectScope scope = (ProjectScope) new ProjectScope(project);
+			ProjectScope scope = new ProjectScope(project);
 			node = scope.getNode(FormatterCorePlugin.PLUGIN_ID);
 		}
 		if (node == null || node.get(CodeFormatterConstants.FORMATTER_PROFILE, null) == null) {
 			IScopeContext context = InstanceScope.INSTANCE;
 			node = context.getNode(FormatterCorePlugin.PLUGIN_ID);
 		}
-		Map<String, Object> p = new HashMap<String, Object>(defaultPrefrencesValues);
+		Map<String, Object> p = new HashMap<>(defaultPrefrencesValues);
 		if (node != null && node.keys().length > 0) {
 			Set<String> propertiesNames = p.keySet();
 			for (Iterator<String> iter = propertiesNames.iterator(); iter.hasNext();) {
-				String property = (String) iter.next();
+				String property = iter.next();
 				String value = node.get(property, null);
 				if (value != null) {
 					p.put(property, value);
@@ -154,7 +159,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 	 * @param doModelForPHP
 	 * @return project from document
 	 */
-	private final static IProject getProject(IStructuredModel doModelForPHP) {
+	private static final IProject getProject(IStructuredModel doModelForPHP) {
 		final String id = doModelForPHP.getId();
 		if (id != null) {
 			final IFile file = getFile(id);
@@ -173,6 +178,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(id));
 	}
 
+	@Override
 	public int getTabSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
@@ -182,6 +188,7 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 		}
 	}
 
+	@Override
 	public boolean useTab(IDocument document) {
 		return getIndentationChar(document) == '\t';
 	}

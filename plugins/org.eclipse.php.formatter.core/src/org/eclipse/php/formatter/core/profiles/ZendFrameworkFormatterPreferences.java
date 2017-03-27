@@ -8,7 +8,7 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.ui.preferences;
+package org.eclipse.php.formatter.core.profiles;
 
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.CodeFormatterVisitor;
@@ -18,11 +18,14 @@ import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
  * Utility class for populating a <code>CodeFormatterPreferences</code> with
  * Zend Framework default formatter settings
  */
-final public class PSR2FormatterPreferences implements ICodeFormatterPreferencesInitializer {
+final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
-	public PSR2FormatterPreferences() {
+	public static final String ID = "org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences";
+
+	public ZendFrameworkFormatterPreferences() {
 	}
 
+	@Override
 	public CodeFormatterPreferences initValues() {
 		CodeFormatterPreferences preferences = new CodeFormatterPreferences();
 
@@ -32,7 +35,7 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 
 		preferences.brace_position_for_block = CodeFormatterPreferences.SAME_LINE;
 		preferences.brace_position_for_function = CodeFormatterPreferences.NEXT_LINE;
-		preferences.brace_position_for_lambda_function = CodeFormatterPreferences.SAME_LINE;
+		preferences.brace_position_for_lambda_function = CodeFormatterPreferences.NEXT_LINE;
 		preferences.brace_position_for_switch = CodeFormatterPreferences.SAME_LINE;
 		preferences.brace_position_for_class = CodeFormatterPreferences.NEXT_LINE;
 
@@ -128,7 +131,7 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.insert_space_before_open_paren_in_foreach = true;
 		preferences.insert_space_before_opening_paren_in_if = true;
 		preferences.insert_space_before_opening_paren_in_list = true;
-		preferences.insert_space_before_opening_paren_in_function_declaration = false;
+		preferences.insert_space_before_opening_paren_in_function_declaration = true;
 		preferences.insert_space_before_opening_paren_in_function = false;
 		preferences.insert_space_before_opening_paren_in_switch = true;
 		preferences.insert_space_before_opening_paren_in_while = true;
@@ -145,8 +148,8 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.insert_space_before_closing_paren_in_declare = false;
 		preferences.insert_space_before_opening_paren_in_declare = false;
 
-		preferences.line_wrap_wrapped_lines_indentation = 1;
-		preferences.line_wrap_array_init_indentation = 1;
+		preferences.line_wrap_wrapped_lines_indentation = 2;
+		preferences.line_wrap_array_init_indentation = 2;
 		preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy = 1;
 		preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy = 1;
 		preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy = 1;
@@ -158,9 +161,7 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 
 		preferences.new_line_in_empty_class_body = true;
 
-		preferences.line_wrap_line_split = 9999;
-
-		preferences.blank_lines_after_namespace = 1;
+		preferences.line_wrap_line_split = 80;
 
 		// blank line
 		preferences.blank_line_preserve_empty_lines = 1;
@@ -168,9 +169,6 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.blank_line_before_constant_declaration = 1;
 		preferences.blank_line_before_field_declaration = 1;
 		preferences.blank_line_before_method_declaration = 1;
-
-		// control statements
-		preferences.control_statement_keep_else_if_on_same_line = true;
 
 		// comments
 
@@ -189,7 +187,7 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.comment_insert_new_line_for_parameter = true;
 		preferences.comment_new_lines_at_block_boundaries = true;
 		preferences.comment_new_lines_at_javadoc_boundaries = true;
-		preferences.comment_line_length = 9999;
+		preferences.comment_line_length = 80;
 		preferences.comment_preserve_white_space_between_code_and_line_comments = false;
 		preferences.never_indent_block_comments_on_first_column = false;
 		preferences.never_indent_line_comments_on_first_column = false;

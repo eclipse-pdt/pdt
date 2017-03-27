@@ -57,6 +57,7 @@ public class ProfileStore {
 		private String fName;
 		private Map<String, Object> fSettings;
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes)
 				throws SAXException {
 
@@ -69,13 +70,14 @@ public class ProfileStore {
 			} else if (qName.equals(XML_NODE_PROFILE)) {
 
 				fName = attributes.getValue(XML_ATTRIBUTE_NAME);
-				fSettings = new HashMap<String, Object>(200);
+				fSettings = new HashMap<>(200);
 
 			} else if (qName.equals(XML_NODE_ROOT)) {
-				fProfiles = new ArrayList<Profile>();
+				fProfiles = new ArrayList<>();
 			}
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String qName) {
 			if (qName.equals(XML_NODE_PROFILE)) {
 				fProfiles.add(new CustomProfile(fName, fSettings));

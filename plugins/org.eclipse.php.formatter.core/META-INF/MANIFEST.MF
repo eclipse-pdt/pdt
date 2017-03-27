@@ -6,17 +6,19 @@ Bundle-Version: 5.0.0.qualifier
 Bundle-Activator: org.eclipse.php.formatter.core.FormatterCorePlugin
 Bundle-Vendor: Eclipse PDT
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.php.core.parser,
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.php.core.parser,
  org.eclipse.php.core,
  org.eclipse.wst.xml.core,
- org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
  org.eclipse.dltk.core,
  org.eclipse.wst.html.core,
- org.eclipse.debug.core,
  org.apache.commons.lang3,
  org.eclipse.dltk.annotations;resolution:=optional
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.php.formatter.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.eclipse.php.formatter.core,
+ org.eclipse.php.formatter.core.profiles,
+ org.eclipse.php.internal.formatter.core;x-friends:="org.eclipse.php.formatter.ui"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

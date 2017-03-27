@@ -54,11 +54,13 @@ public class AlreadyExistsDialog extends StatusDialog {
 		fEmpty = new StatusInfo(IStatus.ERROR, FormatterMessages.AlreadyExistsDialog_message_profile_name_empty);
 	}
 
+	@Override
 	public void create() {
 		super.create();
 		setTitle(FormatterMessages.AlreadyExistsDialog_dialog_title);
 	}
 
+	@Override
 	public Control createDialogArea(Composite parent) {
 
 		initializeComposite(parent);
@@ -77,12 +79,14 @@ public class AlreadyExistsDialog extends StatusDialog {
 		fNameText.setFocus();
 
 		fNameText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				doValidation();
 			}
 		});
 
 		fRenameRadio.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fNameText.setEnabled(true);
 				fNameText.setFocus();
@@ -90,16 +94,19 @@ public class AlreadyExistsDialog extends StatusDialog {
 				doValidation();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
 
 		fOverwriteRadio.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fNameText.setEnabled(false);
 				doValidation();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -177,6 +184,7 @@ public class AlreadyExistsDialog extends StatusDialog {
 		updateStatus(fOk);
 	}
 
+	@Override
 	protected void okPressed() {
 		if (!getStatus().isOK())
 			return;

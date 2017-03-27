@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.php.formatter.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.formatter.ui" id="profiles" name="PHP Formatter Profiles"/>
+         <meta.schema plugin="org.eclipse.php.formatter" id="profiles" name="PHP Formatter Profiles"/>
       </appInfo>
       <documentation>
          This extension point provide the ability to add new profiles to the php code formatter

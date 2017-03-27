@@ -65,6 +65,7 @@ public class BracesTabPage extends ModifyDialogTabPage {
 		super(modifyDialog, preferences);
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 
 		final Group group = createGroup(numColumns, composite,
@@ -86,10 +87,12 @@ public class BracesTabPage extends ModifyDialogTabPage {
 		isInitialized = true;
 	}
 
+	@Override
 	protected void initializePage() {
 		fPreview.setPreviewText(PREVIEW);
 	}
 
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
@@ -99,12 +102,14 @@ public class BracesTabPage extends ModifyDialogTabPage {
 		return createComboPref(composite, numColumns, message, fBracePositionNames);
 	}
 
+	@Override
 	protected void doUpdatePreview() {
 		if (fPreview != null) {
 			fPreview.update();
 		}
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			codeFormatterPreferences.brace_position_for_class = getComboValue(classDeclaration);

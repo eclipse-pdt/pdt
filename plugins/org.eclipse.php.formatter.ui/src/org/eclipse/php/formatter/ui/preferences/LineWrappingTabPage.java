@@ -34,10 +34,9 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	/**
 	 * Represents a line wrapping category. All members are final.
 	 */
-	private final static class Category {
+	private static final class Category {
 		private static final String LINE_WRAP_POLICY_KEY = "_line_wrap_policy";
 		private static final String INDENT_POLICY_KEY = "_indent_policy";
-		// private static final String FORCE_SPLIT_KEY = "_force_split";
 
 		public final String key;
 		public final String name;
@@ -49,7 +48,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			this.key = _key;
 			this.name = _name;
 			this.previewText = _previewText != null ? createPreviewHeader(_name) + _previewText : null;
-			children = new ArrayList<Category>();
+			children = new ArrayList<>();
 		}
 
 		/**
@@ -60,6 +59,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			this(null, null, _name);
 		}
 
+		@Override
 		public String toString() {
 			return name;
 		}
@@ -77,7 +77,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		}
 	}
 
-	private final static String PREF_CATEGORY_INDEX = FormatterUIPlugin.PLUGIN_ID
+	private static final String PREF_CATEGORY_INDEX = FormatterUIPlugin.PLUGIN_ID
 			+ "formatter_page.line_wrapping_tab_page.last_category_index"; //$NON-NLS-1$
 
 	private final class CategoryListener implements ISelectionChangedListener, IDoubleClickListener {
@@ -87,7 +87,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		private int fIndex = 0;
 
 		public CategoryListener(List<Category> categoriesTree) {
-			fCategoriesList = new ArrayList<Category>();
+			fCategoriesList = new ArrayList<>();
 			flatten(fCategoriesList, categoriesTree);
 		}
 
@@ -100,9 +100,11 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			}
 		}
 
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
-			if (event != null)
+			if (event != null) {
 				fSelection = (IStructuredSelection) event.getSelection();
+			}
 
 			if (fSelection.size() == 0) {
 				disableAll();
@@ -122,8 +124,9 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 		private String getGroupLabel(Category category) {
 			if (fSelection.size() == 1) {
-				if (fSelectionState.getElements().size() == 1)
+				if (fSelectionState.getElements().size() == 1) {
 					return Messages.format(FormatterMessages.LineWrappingTabPage_group, category.name.toLowerCase());
+				}
 				return Messages.format(FormatterMessages.LineWrappingTabPage_multi_group, new String[] {
 						category.name.toLowerCase(), Integer.toString(fSelectionState.getElements().size()) });
 			}
@@ -158,6 +161,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			fCategoriesViewer.setSelection(new StructuredSelection(new Category[] { category }));
 		}
 
+		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			final ISelection selection = event.getSelection();
 			if (selection instanceof IStructuredSelection) {
@@ -168,7 +172,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	}
 
 	private class SelectionState {
-		private List<Category> fElements = new ArrayList<Category>();
+		private List<Category> fElements = new ArrayList<>();
 
 		public void refreshState(IStructuredSelection selection) {
 			fElements.clear();
@@ -188,8 +192,9 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			while (iterator.hasNext()) {
 				category = iterator.next();
 				if (category.children.size() == 0) {
-					if (!fElements.contains(category))
+					if (!fElements.contains(category)) {
 						fElements.add(category);
+					}
 				} else {
 					evaluateElements(category.children.iterator());
 				}
@@ -350,7 +355,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		fDialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();
 
 		final String previewLineWidth = fDialogSettings.get(PREF_PREVIEW_LINE_WIDTH);
-		fPreviewPreferences = new HashMap<String, String>();
+		fPreviewPreferences = new HashMap<>();
 		fPreviewPreferences.put(LINE_SPLIT,
 				previewLineWidth != null ? previewLineWidth : Integer.toString(DEFAULT_PREVIEW_WINDOW_LINE_WIDTH));
 
@@ -377,7 +382,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		expressions.children.add(fBinaryExpressionCategory);
 		expressions.children.add(fArrayInitializerExpressionsCategory);
 
-		final List<Category> root = new ArrayList<Category>();
+		final List<Category> root = new ArrayList<>();
 		root.add(classDeclarations);
 		root.add(methodDeclarations);
 		root.add(functionCalls);
@@ -386,6 +391,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		return root;
 	}
 
+	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
 
 		final Group lineWidthGroup = createGroup(numColumns, composite,
@@ -402,25 +408,31 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		fCategoriesViewer = new TreeViewer(composite /* categoryGroup */,
 				SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
 		fCategoriesViewer.setContentProvider(new ITreeContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return ((Collection<?>) inputElement).toArray();
 			}
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				return ((Category) parentElement).children.toArray();
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				return null;
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				return !((Category) element).children.isEmpty();
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 
+			@Override
 			public void dispose() {
 			}
 		});
@@ -472,6 +484,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		fForceSplit.setEnabled(isLineWrapEnabled);
 	}
 
+	@Override
 	protected void updatePreferences() {
 		if (isInitialized) {
 			codeFormatterPreferences.line_wrap_line_split = fMaxLineWidthPref.getValue();
@@ -479,20 +492,24 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		}
 	}
 
+	@Override
 	protected PhpPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}
 
+	@Override
 	protected void doUpdatePreview() {
 
 	}
 
+	@Override
 	protected void initializePage() {
 		fCategoriesViewer.addSelectionChangedListener(fCategoryListener);
 		fCategoriesViewer.addDoubleClickListener(fCategoryListener);
 
 		fForceSplit.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean isSelected = fForceSplit.getSelection();
 				Iterator<Category> iter = fSelectionState.fElements.iterator();
@@ -505,6 +522,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			}
 		});
 		fIndentStyleCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int comboSelection = fIndentStyleCombo.getSelectionIndex();
 				Iterator<Category> iter = fSelectionState.fElements.iterator();
@@ -517,6 +535,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			}
 		});
 		fWrappingStyleCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateControlEnablement();
 				int comboSelection = fWrappingStyleCombo.getSelectionIndex();
@@ -538,6 +557,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		fDefaultFocusManager.add(fForceSplit);
 	}
 
+	@Override
 	protected void notifyValuesModified() {
 		super.notifyValuesModified();
 		if (fPreview != null) {

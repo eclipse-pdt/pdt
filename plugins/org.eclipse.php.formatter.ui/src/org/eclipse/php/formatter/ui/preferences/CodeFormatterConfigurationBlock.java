@@ -64,6 +64,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			fProfileManager.addObserver(this);
 		}
 
+		@Override
 		public void update(Observable o, Object arg) {
 			final int value = ((Integer) arg).intValue();
 			switch (value) {
@@ -109,15 +110,18 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			updateSelection();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			final int index = fProfileCombo.getSelectionIndex();
 			Profile selectedProfile = fSortedProfiles.get(index);
 			fProfileManager.setSelected(selectedProfile);
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@Override
 		public void update(Observable o, Object arg) {
 			if (arg == null)
 				return;
@@ -156,6 +160,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			update(fProfileManager, null);
 		}
 
+		@Override
 		public void update(Observable o, Object arg) {
 			Profile selected = ((ProfileManager) o).getSelected();
 			final boolean notBuiltIn = !selected.isBuiltInProfile();
@@ -166,6 +171,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			fRenameButton.setEnabled(notBuiltIn);
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			final Button button = (Button) e.widget;
 			if (button == fSaveButton)
@@ -182,12 +188,14 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 				renameButtonPressed();
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
 		private void renameButtonPressed() {
-			if (fProfileManager.getSelected().isBuiltInProfile())
+			if (fProfileManager.getSelected().isBuiltInProfile()) {
 				return;
+			}
 			final CustomProfile profile = (CustomProfile) fProfileManager.getSelected();
 			final RenameProfileDialog renameDialog = new RenameProfileDialog(fComposite.getShell(), profile,
 					fProfileManager);
@@ -240,10 +248,6 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 				return;
 			}
 
-			// if (!(path.endsWith(".xml"))) {
-			// path.concat(".xml");
-			// }
-
 			FormatterUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTSAVEPATH, dialog.getFilterPath());
 
 			final File file = new File(path);
@@ -253,7 +257,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 				return;
 			}
 
-			final Collection<Profile> profiles = new ArrayList<Profile>();
+			final Collection<Profile> profiles = new ArrayList<>();
 
 			profiles.add(selected);
 			try {
@@ -310,6 +314,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			fPhpPreview.update();
 		}
 
+		@Override
 		public void update(Observable o, Object arg) {
 			final int value = ((Integer) arg).intValue();
 			switch (value) {
@@ -407,13 +412,14 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		new StoreUpdater();
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		final int numColumns = 5;
 
 		fPixConv = new PixelConverter(parent);
 		fComposite = createComposite(parent, numColumns);
 
-		fProfileCombo = createProfileCombo(fComposite, numColumns - 3, fPixConv.convertWidthInCharsToPixels(20));
+		fProfileCombo = createProfileCombo(fComposite, numColumns - 3);
 		fEditButton = createButton(fComposite, FormatterMessages.CodingStyleConfigurationBlock_edit_button_desc,
 				GridData.HORIZONTAL_ALIGN_BEGINNING);
 		fRenameButton = createButton(fComposite, FormatterMessages.CodingStyleConfigurationBlock_rename_button_desc,
@@ -444,6 +450,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		return fComposite;
 	}
 
+	@Override
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		return null;
 	}
@@ -451,15 +458,18 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 	@Override
 	public void performDefaults() {
 		String[] items = fProfileCombo.getItems();
-		int index = 0;
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].equalsIgnoreCase("PHP Conventions [built-in]")) {
-				index = i;
-				break;
+		Profile defaultProfile = fProfileManager.getDefaultProfile();
+		if (defaultProfile != null) {
+			int index = 0;
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equalsIgnoreCase(defaultProfile.getName())) {
+					index = i;
+					break;
+				}
 			}
+			fProfileCombo.select(index);
+			fProfileManager.setSelected(defaultProfile);
 		}
-		fProfileCombo.select(index);
-		fProfileManager.setSelected(fProfileManager.getProfile(ProfileManager.PHP_PROFILE));
 
 		super.performDefaults();
 	}
@@ -474,18 +484,16 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		return super.performOk();
 	}
 
+	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
+	@Override
 	public void widgetSelected(SelectionEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
+	@Override
 	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
-		// TODO Auto-generated method stub
 	}
 
 	private static Button createButton(Composite composite, String text, final int style) {
@@ -499,10 +507,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		return button;
 	}
 
-	private static Combo createProfileCombo(Composite composite, int span, int widthHint) {
-		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+	private static Combo createProfileCombo(Composite composite, int span) {
+		final GridData gd = new GridData(SWT.FILL, SWT.BEGINNING, false, false);
 		gd.horizontalSpan = span;
-		gd.widthHint = widthHint;
 
 		final Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.setFont(composite.getFont());

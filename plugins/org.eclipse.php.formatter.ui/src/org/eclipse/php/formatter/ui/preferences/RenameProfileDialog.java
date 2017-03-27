@@ -52,6 +52,7 @@ public class RenameProfileDialog extends StatusDialog {
 		fNoMessage = new StatusInfo(IStatus.ERROR, ""); //$NON-NLS-1$
 	}
 
+	@Override
 	public Control createDialogArea(Composite parent) {
 
 		final int numColumns = 2;
@@ -81,6 +82,7 @@ public class RenameProfileDialog extends StatusDialog {
 		fNameText.setSelection(0, fProfile.getName().length());
 		fNameText.setLayoutData(gd);
 		fNameText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				doValidation();
 			}
@@ -121,6 +123,7 @@ public class RenameProfileDialog extends StatusDialog {
 		return fRenamedProfile;
 	}
 
+	@Override
 	protected void okPressed() {
 		if (!getStatus().isOK())
 			return;
