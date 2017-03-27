@@ -153,14 +153,14 @@ public class PHPDebugTarget extends PHPDebugElement
 	 */
 	public PHPDebugTarget(DebugConnection connectionThread, ILaunch launch, String phpExe, IFile fileToDebug,
 			int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project)
-					throws CoreException {
+			throws CoreException {
 		this(connectionThread, launch, phpExe, fileToDebug.getName(), requestPort, process, runAsDebug, stopAtFirstLine,
 				project);
 	}
 
 	public PHPDebugTarget(DebugConnection connectionThread, ILaunch launch, String phpExe, String fileToDebug,
 			int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project)
-					throws CoreException {
+			throws CoreException {
 		super(null);
 		fDebugConnection = connectionThread;
 		fName = fileToDebug;
@@ -201,7 +201,9 @@ public class PHPDebugTarget extends PHPDebugElement
 		fIsRunAsDebug = runAsDebug;
 		fProject = project;
 		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPDebugConstants.PHPProcessType);
-		((PHPProcess) fProcess).setDebugTarget(this);
+		if (fProcess instanceof PHPProcess) {
+			((PHPProcess) fProcess).setDebugTarget(this);
+		}
 		fRequestPort = requestPort;
 
 		// synchronized (fUsedPorts) {
