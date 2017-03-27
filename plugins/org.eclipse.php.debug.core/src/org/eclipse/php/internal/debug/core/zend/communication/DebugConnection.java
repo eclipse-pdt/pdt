@@ -70,7 +70,6 @@ import com.ibm.icu.text.MessageFormat;
  * 
  * @author shalom
  */
-@SuppressWarnings("restriction")
 public class DebugConnection {
 
 	/**
@@ -695,12 +694,16 @@ public class DebugConnection {
 		 */
 		if (launch == null)
 			launch = fetchLaunch(sessionDescriptor);
-		/*
-		 * If session is primary (new one has come) and launch exists then it
-		 * means that session has been restarted. If so, terminate the previous
-		 * launch.
-		 */
-		else if (sessionDescriptor.isPrimary() && !launch.isTerminated())
+
+		else if (isBuildinServerLaunch(launch)) {
+			hookBuiltinServerLaunch(launch, sessionDescriptor);
+			return true;
+			/*
+			 * If session is primary (new one has come) and launch exists then
+			 * it means that session has been restarted. If so, terminate the
+			 * previous launch.
+			 */
+		} else if (sessionDescriptor.isPrimary() && !launch.isTerminated())
 			try {
 				launch.terminate();
 			} catch (DebugException e) {
@@ -719,6 +722,42 @@ public class DebugConnection {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Hook a server debug session
+	 * 
+	 * @param launch
+	 *            An {@link ILaunch}
+	 * @param startedNotification
+	 *            A DebugSessionStartedNotification
+	 */
+	protected void hookBuiltinServerLaunch(final ILaunch launch, SessionDescriptor sessionDescriptor)
+			throws CoreException {
+		String uri = sessionDescriptor.getStartedNotification().getUri();
+		String scriptName = uri.substring(0, uri.indexOf('?'));
+		String[] projectName = uri.split("/", 3);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName[1]);
+
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		messageReceiver
+				.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "") + scriptName; //$NON-NLS-1$
+		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		try {
+			requestPort = Integer.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
+		} catch (Exception e) {
+			// should not happen
+		}
+		boolean runWithDebug = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
+			runWithDebug = false;
+		}
+		debugTarget = new PHPDebugTarget(this, launch, URL, requestPort, launch.getProcesses()[0], runWithDebug, false,
+				project);
+		// Bind debug target to the launch
+		bindTarget(launch);
 	}
 
 	/**
@@ -1001,6 +1040,10 @@ public class DebugConnection {
 	 */
 	protected boolean isServerLaunch(ILaunch launch) {
 		return Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER));
+	}
+
+	protected boolean isBuildinServerLaunch(ILaunch launch) {
+		return Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.BUILTIN_SERVER_DEBUGGER));
 	}
 
 	/**

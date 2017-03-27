@@ -76,6 +76,9 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 		boolean isWebServerDebugger = Boolean.toString(true)
 				.equals(debugTarget.getLaunch().getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER));
+		boolean isBuiltinServerDebugger = Boolean.toString(true)
+				.equals(debugTarget.getLaunch().getAttribute(IDebugParametersKeys.BUILTIN_SERVER_DEBUGGER));
+
 		String debugType = ""; //$NON-NLS-1$
 		try {
 			debugType = launchConfiguration.getAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, ""); //$NON-NLS-1$
@@ -85,7 +88,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 		if (isFirstFileToDebug) { // we suppose that we always get full path
 			// here
-			if (isWebServerDebugger) {
+			if (isWebServerDebugger || isBuiltinServerDebugger) {
 				debugTarget.mapFirstDebugFile(remoteFileName);
 
 				// set current working directory to the current script directory

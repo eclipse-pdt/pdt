@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.server.core.moduleTypes">
+      <moduleType
+            id="php.web"
+            name="PHP Project">
+      </moduleType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.runtimeTypes">
+      <runtimeType
+            class="org.eclipse.php.internal.server.core.builtin.PHPRuntime"
+            description="PHP 5.4"
+            id="org.eclipse.php.server.runtime.54"
+            name="PHP 5.4"
+            supportsManualCreation="true"
+            vendor="PHP">
+         <moduleType
+               types="php.web"
+               versions="5.0, 5.3, 5.4">
+         </moduleType>
+      </runtimeType>
+      <runtimeType
+            class="org.eclipse.php.internal.server.core.builtin.PHPRuntime"
+            description="PHP 5.5"
+            id="org.eclipse.php.server.runtime.55"
+            name="PHP 5.5"
+            supportsManualCreation="true"
+            vendor="PHP">
+         <moduleType
+               types="php.web"
+               versions="5.0, 5.3, 5.4, 5.5">
+         </moduleType>
+      </runtimeType>
+      <runtimeType
+            class="org.eclipse.php.internal.server.core.builtin.PHPRuntime"
+            description="PHP 5.6"
+            id="org.eclipse.php.server.runtime.56"
+            name="PHP 5.6"
+            supportsManualCreation="true"
+            vendor="PHP">
+         <moduleType
+               types="php.web"
+               versions="5.0, 5.3, 5.4, 5.5, 5.6">
+         </moduleType>
+      </runtimeType>
+      <runtimeType
+            class="org.eclipse.php.internal.server.core.builtin.PHPRuntime"
+            description="PHP 7.0"
+            id="org.eclipse.php.server.runtime.70"
+            name="PHP 7.0"
+            supportsManualCreation="true"
+            vendor="PHP">
+         <moduleType
+               types="php.web"
+               versions="5.0, 5.3, 5.4, 5.5, 5.6, 7.0">
+         </moduleType>
+      </runtimeType>
+      <runtimeType
+            class="org.eclipse.php.internal.server.core.builtin.PHPRuntime"
+            description="PHP 7.1"
+            id="org.eclipse.php.server.runtime.71"
+            name="PHP 7.1"
+            supportsManualCreation="true"
+            vendor="PHP">
+         <moduleType
+               types="php.web"
+               versions="5.0, 5.3, 5.4, 5.5, 5.6, 7.0, 7.1">
+         </moduleType>
+      </runtimeType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.runtimeLocators">
+      <runtimeLocator
+            class="org.eclipse.php.internal.server.core.builtin.PHPRuntimeLocator"
+            id="org.eclipse.php.server.core.PHPRuntimeLocator"
+            typeIds="org.eclipse.php.server.runtime.*">
+      </runtimeLocator>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.serverTypes">
+      <serverType
+            behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
+            class="org.eclipse.php.internal.server.core.builtin.PHPServer"
+            description="PHP 5.4 Built-in Server"
+            hasConfiguration="true"
+            id="org.eclipse.php.server.builtin.54"
+            initialState="stopped"
+            launchConfigId="org.eclipse.php.server.core.launchConfigurationType"
+            name="PHP 5.4 Built-in Server"
+            runtime="true"
+            runtimeTypeId="org.eclipse.php.server.runtime.54"
+            startTimeout="30000"
+            stopTimeout="15000"
+            supportsRemoteHosts="false">
+      </serverType>
+      <serverType
+            behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
+            class="org.eclipse.php.internal.server.core.builtin.PHPServer"
+            description="PHP 5.4 Built-in Server"
+            hasConfiguration="true"
+            id="org.eclipse.php.server.builtin.55"
+            initialState="stopped"
+            launchConfigId="org.eclipse.php.server.core.launchConfigurationType"
+            name="PHP 5.5 Built-in Server"
+            runtime="true"
+            runtimeTypeId="org.eclipse.php.server.runtime.55"
+            startTimeout="30000"
+            stopTimeout="15000"
+            supportsRemoteHosts="false">
+      </serverType>
+      <serverType
+            behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
+            class="org.eclipse.php.internal.server.core.builtin.PHPServer"
+            description="PHP 5.6 Built-in Server"
+            hasConfiguration="true"
+            id="org.eclipse.php.server.builtin.56"
+            initialState="stopped"
+            launchConfigId="org.eclipse.php.server.core.launchConfigurationType"
+            name="PHP 5.6 Built-in Server"
+            runtime="true"
+            runtimeTypeId="org.eclipse.php.server.runtime.56"
+            startTimeout="30000"
+            stopTimeout="15000"
+            supportsRemoteHosts="false">
+      </serverType>
+      <serverType
+            behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
+            class="org.eclipse.php.internal.server.core.builtin.PHPServer"
+            description="PHP 7.0 Built-in Server"
+            hasConfiguration="true"
+            id="org.eclipse.php.server.builtin.70"
+            initialState="stopped"
+            launchConfigId="org.eclipse.php.server.core.launchConfigurationType"
+            name="PHP 7.0 Built-in Server"
+            runtime="true"
+            runtimeTypeId="org.eclipse.php.server.runtime.70"
+            startTimeout="30000"
+            stopTimeout="15000"
+            supportsRemoteHosts="false">
+      </serverType>
+      <serverType
+            behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
+            class="org.eclipse.php.internal.server.core.builtin.PHPServer"
+            description="PHP 7.1 Built-in Server"
+            hasConfiguration="true"
+            id="org.eclipse.php.server.builtin.71"
+            initialState="stopped"
+            launchConfigId="org.eclipse.php.server.core.launchConfigurationType"
+            name="PHP 7.1 Built-in Server"
+            runtime="true"
+            runtimeTypeId="org.eclipse.php.server.runtime.71"
+            startTimeout="30000"
+            stopTimeout="15000"
+            supportsRemoteHosts="false">
+      </serverType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.moduleFactories">
+      <moduleFactory
+            class="org.eclipse.php.internal.server.core.builtin.PHPProjectModuleFactory"
+            id="org.eclipse.php.builtin.server.core.moduleFactory"
+            projects="true">
+         <moduleType
+               types="php.web"
+               versions="*">
+         </moduleType>
+      </moduleFactory>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.eclipse.php.internal.server.core.builtin.PHPServerLaunchConfigurationDelegate"
+            id="org.eclipse.php.server.core.launchConfigurationType"
+            modes="run, debug"
+            name="PHP Built-in Server"
+            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.publishTasks">
+      <publishTask
+            class="org.eclipse.php.internal.server.core.builtin.PublishTask"
+            id="org.eclipse.php.builtin.server.core.publishTask"
+            typeIds="org.eclipse.php.server.builtin.*">
+      </publishTask>
+   </extension>
+
+</plugin>
