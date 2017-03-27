@@ -47,6 +47,10 @@ public class Messages extends NLS {
 	public static String ZendDebuggerServerSettingsSection_Connection_settings;
 	public static String ZendDebuggerServerSettingsSection_Response_timeout;
 	public static String ZendDebuggerServerSettingsSection_Response_timeout_is_missing;
+	public static String ZendDebuggerServerSettingsSection_Client_host_IP_might_be_invalid;
+	public static String ZendDebuggerServerSettingsSection_Client_hosts_IPs_might_be_invalid;
+	public static String ZendDebuggerServerSettingsSection_Client_host_IPS_might_be_redundant;
+	public static String ZendDebuggerServerSettingsSection_Configure_button;
 
 	static {
 		// initialize resource bundle

@@ -11,16 +11,23 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.communication;
 
+import java.io.IOException;
+import java.net.BindException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugUtil;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
@@ -81,6 +88,38 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		}
 
 		/**
+		 * Initialize a ServerSocket or a SSLServerSocket to listen for debug
+		 * requests on a specified port. The port and the SSL definitions are
+		 * defined in the workspace preferences.
+		 * 
+		 * @return True, if the reset did not yield any errors; False,
+		 *         otherwise.
+		 */
+		public boolean resetSocket() {
+			stopListen();
+			int port = getReceiverPort();
+			try {
+				synchronized (lock) {
+					if (useSSL) {
+						SSLServerSocket sslServerSocket = (SSLServerSocket) SSLServerSocketFactory.getDefault()
+								.createServerSocket(port);
+						sslServerSocket.setEnabledCipherSuites(sslServerSocket.getSupportedCipherSuites());
+						serverSocket = sslServerSocket;
+					} else {
+						serverSocket = new ServerSocket(port);
+					}
+					startListen();
+					return true;
+				}
+			} catch (BindException exc) {
+				handleMultipleBindingError();
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
+			return false;
+		}
+
+		/**
 		 * Starts a connection on the given Socket. This method can be
 		 * overridden by extending classes to create a different debug
 		 * connection.
@@ -98,6 +137,29 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	private IPreferenceChangeListener defaultPortListener = null;
 
 	private IDebuggerSettingsListener debuggerSettingsListener = null;
+
+	private IPreferenceChangeListener sslChangeListener;
+
+	private static boolean useSSL;
+
+	/*
+	 * Listen to any changes in the SSL preference.
+	 */
+	private class SSLChangeListener implements IPreferenceChangeListener {
+		public void preferenceChange(PreferenceChangeEvent event) {
+			if (event.getKey().equals(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA)) {
+				Object newValueObj = event.getNewValue();
+				if (newValueObj != null) {
+					if (newValueObj instanceof String)
+						setUseSSL(Boolean.valueOf((String) newValueObj));
+					else if (newValueObj instanceof Boolean)
+						setUseSSL((Boolean) newValueObj);
+				}
+				if (newValueObj == null)
+					setUseSSL(false);
+			}
+		}
+	}
 
 	// A port change listener
 	private class DefaultPortListener implements IPreferenceChangeListener {
@@ -149,8 +211,33 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		return new CommunicationDaemon(port);
 	}
 
+	/**
+	 * Returns if there is a use of SSL encryption for this connection.
+	 * 
+	 * @return True, iff there is a SSL use; False, otherwise.
+	 */
+	public synchronized boolean isUsingSSL() {
+		return useSSL;
+	}
+
+	/**
+	 * Set the use of SSL encryption for the connection.
+	 * 
+	 * @param enable
+	 */
+	public synchronized void setUseSSL(boolean enable) {
+		if (enable == isUsingSSL()) {
+			return;
+		}
+		// useSSLConnectionChanged = true;
+		useSSL = enable;
+		resetSocket();
+	}
+
 	@Override
 	public void init() {
+		useSSL = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+				.getBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
 		registerListeners();
 		reset();
 	}
@@ -222,14 +309,21 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 			debuggerSettingsListener = new DebuggerSettingsListener();
 			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
 		}
+		if (sslChangeListener == null) {
+			sslChangeListener = new SSLChangeListener();
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(sslChangeListener);
+		}
 	}
 
 	private void unregisterListeners() {
 		if (defaultPortListener != null) {
-			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(defaultPortListener);
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).removePreferenceChangeListener(defaultPortListener);
 		}
 		if (debuggerSettingsListener != null) {
-			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
+			DebuggerSettingsManager.INSTANCE.removeSettingsListener(debuggerSettingsListener);
+		}
+		if (sslChangeListener != null) {
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).removePreferenceChangeListener(sslChangeListener);
 		}
 	}
 

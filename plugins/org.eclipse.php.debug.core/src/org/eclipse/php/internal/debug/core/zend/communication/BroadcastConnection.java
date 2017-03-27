@@ -22,12 +22,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.core.util.VersionUtils;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugUtil;
 import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerServerSettings;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.server.core.Server;
@@ -39,7 +41,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Shalom Gibly
  */
-@SuppressWarnings("restriction")
 public class BroadcastConnection {
 
 	/**
@@ -280,21 +281,25 @@ public class BroadcastConnection {
 	}
 
 	protected String getResponseString(boolean addQuestionMark, String host, int port) {
+		int sslOn = isUseSSL() ? 1 : 0;
 		String result = addQuestionMark ? "?" : "&"; //$NON-NLS-1$ //$NON-NLS-2$
 		result += DEBUG_PORT + '=' + port;
 		result += '&' + DEBUG_HOST + '=' + host;
 		result += '&' + DEBUG_FASTFILE + '=' + String.valueOf(1);
-		result += '&' + USE_TUNNELING + '=' + String.valueOf(0);
+		if (isUseSSL())
+			result += '&' + USE_SSL + '=' + String.valueOf(sslOn);
 		return result;
 	}
 
 	protected String getJSonResponseString(boolean addQuestionMark, String host, int port) {
 		String result = null;
+		int sslOn = isUseSSL() ? 1 : 0;
 		JSONDescriptor descriptor = new JSONDescriptor();
 		descriptor.put(DEBUG_HOST, JSONDescriptor.quote(host));
 		descriptor.put(DEBUG_PORT, String.valueOf(port));
 		descriptor.put(DEBUG_FASTFILE, String.valueOf(1));
-		descriptor.put(USE_TUNNELING, String.valueOf(0));
+		if (isUseSSL())
+			descriptor.put(USE_SSL, String.valueOf(sslOn));
 		result = IDE_SETTINGS + descriptor.getString();
 		return result;
 	}
@@ -343,6 +348,11 @@ public class BroadcastConnection {
 			}
 		}
 		return PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+	}
+
+	private boolean isUseSSL() {
+		return InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+				.getBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
 	}
 
 }

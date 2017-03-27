@@ -14,17 +14,21 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
+import org.eclipse.debug.core.sourcelookup.ISourceContainer;
+import org.eclipse.debug.internal.core.sourcelookup.SourceLookupMessages;
 import org.eclipse.dltk.core.IArchiveEntry;
 import org.eclipse.dltk.core.IModelStatusConstants;
 import org.eclipse.dltk.core.ModelException;
@@ -34,24 +38,35 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.util.HandleFactory;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPSymbolicLinksCache;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.core.util.FileUtils;
+import org.eclipse.php.internal.core.util.SyncObject;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
+import org.eclipse.php.internal.debug.core.zend.communication.IRemoteFileContentRequestor;
+import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 
 /**
  * The PHP source lookup participant knows how to translate a PHP stack frame
  * into a source file name
  */
-@SuppressWarnings("restriction")
 public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant {
 
 	private LinkSubjectFileFinder linkSubjectFileFinder = new LinkSubjectFileFinder();
+	private Map<String, RemoteFileStorage> remoteStorageCache;
+
+	public PHPSourceLookupParticipant() {
+		remoteStorageCache = new HashMap<String, RemoteFileStorage>();
+	}
 
 	/**
 	 * Helper class for finding workspace files that might point to provided
@@ -204,6 +219,86 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	 * findSourceElements(java.lang.Object)
 	 */
 	public Object[] findSourceElements(Object object) throws CoreException {
+		try {
+			// Check if the source should be retrieved from the server.
+			// If so, get it.
+			Object[] sourceElements = getRemoteSourceElements(object, false);
+			if (sourceElements != EMPTY) {
+				return sourceElements;
+			}
+		} catch (CoreException ce) {
+		}
+		// In case that the source should be obtained from the local client, or,
+		// in case that the source was
+		// not found on the client, perform the code below.
+		try {
+			// Try to get it locally.
+			Object[] result = getLocalSourceElements(object);
+			if (result != EMPTY) {
+				return result;
+			}
+		} catch (CoreException ce) {
+		}
+
+		List<Object> results = new ArrayList<Object>();
+		CoreException single = null;
+		MultiStatus multiStatus = null;
+		String name = getSourceName(object);
+		if (name != null) {
+			ISourceContainer[] containers = getSourceContainers();
+			for (int i = 0; i < containers.length; i++) {
+				try {
+					ISourceContainer container = getDelegateContainer(containers[i]);
+					if (container != null) {
+						Object[] objects = container.findSourceElements(name);
+						if (objects.length > 0) {
+							if (isFindDuplicates()) {
+								for (int j = 0; j < objects.length; j++) {
+									results.add(objects[j]);
+								}
+							} else {
+								if (objects.length == 1) {
+									return objects;
+								}
+								return new Object[] { objects[0] };
+							}
+						} else {
+							// Try to get the file remotely from the server
+							return getRemoteSourceElements(object, true);
+						}
+					}
+				} catch (CoreException e) {
+					if (single == null) {
+						single = e;
+					} else if (multiStatus == null) {
+						multiStatus = new MultiStatus(PHPDebugPlugin.ID, PHPDebugPlugin.INTERNAL_ERROR,
+								new IStatus[] { single.getStatus() }, SourceLookupMessages.Source_Lookup_Error, null);
+						multiStatus.add(e.getStatus());
+					} else {
+						multiStatus.add(e.getStatus());
+					}
+				}
+			}
+		}
+		if (results.isEmpty()) {
+			if (multiStatus != null) {
+				throw new CoreException(multiStatus);
+			} else if (single != null) {
+				throw single;
+			}
+			return EMPTY;
+		}
+		return results.toArray();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		remoteStorageCache.clear();
+		remoteStorageCache = null;
+	}
+
+	private Object[] getLocalSourceElements(Object object) throws CoreException {
 		Object[] sourceElements = EMPTY;
 		try {
 			sourceElements = super.findSourceElements(object);
@@ -258,6 +353,69 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			}
 		}
 		return sourceElements;
+	}
+
+	private Object[] getRemoteSourceElements(Object stackFrameObj, boolean forceRetrieval) throws CoreException {
+
+		if (stackFrameObj instanceof PHPStackFrame) {
+
+			PHPStackFrame stackFrame = (PHPStackFrame) stackFrameObj;
+			ILaunchConfiguration launchConfiguration = stackFrame.getLaunch().getLaunchConfiguration();
+
+			if (launchConfiguration != null) {
+				if (forceRetrieval
+						|| launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false)) {
+					// Return a Remote
+					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
+
+					String fileName = stackFrame.getAbsoluteFileName();
+					RemoteFileStorage fileStorage = (RemoteFileStorage) remoteStorageCache.get(fileName);
+
+					if (fileStorage == null) {
+
+						RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
+						String decodedFileName;
+						try {
+							decodedFileName = URLDecoder.decode(fileName, "UTF-8");
+						} catch (UnsupportedEncodingException e) {
+							decodedFileName = fileName;
+						}
+
+						String originalURL = debugTarget.getLaunch().getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+
+						fileStorage = getRemoteFileStorage(remoteDebugger, decodedFileName, originalURL);
+
+						remoteStorageCache.put(fileName, fileStorage);
+					}
+					return new Object[] { fileStorage };
+				}
+			}
+		}
+		return EMPTY;
+	}
+
+	private RemoteFileStorage getRemoteFileStorage(RemoteDebugger remoteDebugger, final String fileName,
+			final String originalURL) {
+		final SyncObject<RemoteFileStorage> syncObject = new SyncObject<>();
+		final CountDownLatch waitForContentLatch = new CountDownLatch(1);
+		if (remoteDebugger == null || !remoteDebugger.isActive()) {
+			return null;
+		}
+		RemoteDebugger.requestRemoteFile(new IRemoteFileContentRequestor() {
+			public void fileContentReceived(byte[] content, String serverAddress, String originalURL, String fileName,
+					int lineNumber) {
+				syncObject.set(new RemoteFileStorage(content, fileName, originalURL));
+			}
+
+			public void requestCompleted(Exception e) {
+				waitForContentLatch.countDown();
+			}
+		}, fileName, 0, originalURL);
+		try {
+			waitForContentLatch.await(10, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+		}
+		return syncObject.get();
 	}
 
 }

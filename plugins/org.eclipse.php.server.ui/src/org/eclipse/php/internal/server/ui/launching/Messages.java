@@ -26,6 +26,10 @@ public class Messages extends NLS {
 	public static String PHPWebPageLaunchShortcut_3;
 	public static String PHPWebPageLaunchShortcut_4;
 	public static String PHPWebPageLaunchShortcut_9;
+	public static String DebugServerConnectionTest_some_IPs_seems_to_be_redundant;
+	public static String DebugServerConnectionTest_test_result;
+	public static String DebugServerConnectionTest_test_successfull;
+	public static String DefaultServerTestMessageDialog_0;
 
 	static {
 		// initialize resource bundle

@@ -335,8 +335,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			matches = matchedByProtocol;
 		// Filter out the servers by URL port
 		List<Server> matchedByPort = new ArrayList<Server>();
+		int urlPort = url.getPort() != -1 ? url.getPort() : Server.DEFAULT_HTTP_PORT;
 		for (Server server : matches) {
-			if (url.getPort() == server.getPort()) {
+			if (urlPort == server.getPort()) {
 				matchedByPort.add(server);
 			}
 		}

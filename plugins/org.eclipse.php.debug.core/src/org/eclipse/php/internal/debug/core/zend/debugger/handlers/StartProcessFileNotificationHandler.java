@@ -69,6 +69,11 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 	protected void prepareForProcessing(String remoteFileName, PHPDebugTarget debugTarget) {
 
+		if (isFirstFileToDebug && PHPDebugPlugin.isDummyFile(remoteFileName)) {
+			debugTarget.setLastFileName(remoteFileName);
+			return;
+		}
+
 		RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
 		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 

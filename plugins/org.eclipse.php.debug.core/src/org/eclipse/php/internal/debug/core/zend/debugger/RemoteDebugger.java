@@ -13,23 +13,24 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.*;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
@@ -44,16 +45,15 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
-import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.*;
+import org.eclipse.php.internal.debug.core.launching.DebugSessionIdGenerator;
 import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
-import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
-import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
+import org.eclipse.php.internal.debug.core.zend.communication.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.zend.debugger.parameters.DefaultDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.swt.widgets.Display;
 
@@ -61,6 +61,58 @@ import org.eclipse.swt.widgets.Display;
  * An IRemoteDebugger implementation.
  */
 public class RemoteDebugger implements IRemoteDebugger {
+
+	private static class RemoteFileQuery {
+
+		/**
+		 * Generates and return query URL.
+		 * 
+		 * @param url
+		 * @param isProfile
+		 * @param launchConfiguration
+		 * @return query URL
+		 */
+		public static String generateQuery(String url) {
+			StringBuffer buffer = new StringBuffer(url);
+			if (url.indexOf("?") == -1) { //$NON-NLS-1$
+				buffer.append('?');
+			} else {
+				if (!url.endsWith("&")) {
+					buffer.append('&');
+				}
+			}
+			Map<String, String> parameters = new Hashtable<String, String>();
+			parameters.put(DefaultDebugParametersInitializer.START_DEBUG, "1"); //$NON-NLS-1$
+			parameters.put(DefaultDebugParametersInitializer.SEND_SESS_END, "1"); //$NON-NLS-1$
+			parameters.put(DefaultDebugParametersInitializer.DEBUG_NO_CACHE, Long.toString(System.currentTimeMillis()));
+			parameters.put(DefaultDebugParametersInitializer.ORIGINAL_URL, url);
+			parameters.put(DefaultDebugParametersInitializer.DEBUG_SESSION_ID,
+					String.valueOf(DebugSessionIdGenerator.generateSessionID()));
+			parameters.put(DefaultDebugParametersInitializer.DEBUG_NO_REMOTE, "1"); //$NON-NLS-1$
+			parameters.put(DefaultDebugParametersInitializer.DEBUG_FASTFILE, "1"); //$NON-NLS-1$
+			parameters.put(DefaultDebugParametersInitializer.ZRAY_DISABLE, "1"); //$NON-NLS-1$
+			parameters.put(DefaultDebugParametersInitializer.IS_DEBUG_URL, "1"); //$NON-NLS-1$
+			boolean useSSL = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+					.getBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
+			if (useSSL) {
+				parameters.put(DefaultDebugParametersInitializer.USE_SSL, "1"); //$NON-NLS-1$
+			}
+			Iterator<String> it = parameters.keySet().iterator();
+			while (it.hasNext()) {
+				String key = it.next();
+				buffer.append(key).append('=');
+				try {
+					buffer.append(URLEncoder.encode(parameters.get(key), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+				}
+				if (it.hasNext()) {
+					buffer.append('&');
+				}
+			}
+			return buffer.toString();
+		}
+
+	}
 
 	/**
 	 * Original PDT protocol ID from 04/2006
@@ -94,6 +146,70 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Latest protocol ID
 	 */
 	public static final int PROTOCOL_ID_LATEST = PROTOCOL_ID_2012121702;
+
+	// ========================== commercial debug protocols:
+	// ===================================
+
+	/**
+	 * Original commercial debug protocol ID from 04/2006 which changes from
+	 * original PDT protocol by the {@link FileContentRequest} message which
+	 * allows to send file contents over the debug connection to/from debugger.
+	 */
+	public static final int COMMERCIAL_PROTOCOL_ID_2006040901 = 2006040901;
+
+	/**
+	 * Improved protocol ID from 06/2007 which provides new message type (
+	 * {@link StartProcessFileNotification}) that allows to control debug state
+	 * when debugger is preparing processing new file. We use this state for
+	 * doing on-demand path mapping, and for sending breakpoints for the next
+	 * file.
+	 */
+	public static final int COMMERCIAL_PROTOCOL_ID_2006040903 = 2006040903;
+
+	/**
+	 * New protocol ID from 04/2008 which provides two new message types:
+	 * {@link GetCWDRequest} allows to ask Debugger to return current working
+	 * directory,
+	 */
+	public static final int COMMERCIAL_PROTOCOL_ID_2006040905 = 2006040905;
+
+	/**
+	 * New protocol ID from 12/2012 which provides new message type:
+	 * {@link AddFilesRequest} allows send initial list of files which contain
+	 * at least one breakpoint.
+	 */
+	public static final int COMMERCIAL_PROTOCOL_ID_2012121702 = 2012121702;
+
+	/**
+	 * Should always point to the latest commercial I5 protocol
+	 */
+	public static final int COMMERCIAL_PROTOCOL_ID_LATEST = COMMERCIAL_PROTOCOL_ID_2012121702;
+
+	// ========================== i5-OS protocols:
+	// ===================================
+
+	/**
+	 * Original commercial debug protocol ID for Debugger i5-edition from
+	 * 04/2006 (parallel to COMMERCIAL_PROTOCOL_ID_2006040901)
+	 */
+	public static final int COMMERCIAL_I5_PROTOCOL_ID_2006040902 = 2006040902;
+
+	/**
+	 * This is the protocol ID for Debugger i5-edition from 06/2007 (parallel to
+	 * COMMERCIAL_PROTOCOL_ID_2006040903)
+	 */
+	public static final int COMMERCIAL_I5_PROTOCOL_ID_2006040904 = 2006040904;
+
+	/**
+	 * This is the protocol ID for Debugger i5-edition from 04/2008 (parallel to
+	 * COMMERCIAL_PROTOCOL_ID_2006040905)
+	 */
+	public static final int COMMERCIAL_I5_PROTOCOL_ID_2006040906 = 2006040906;
+
+	/**
+	 * Should always point to the latest commercial I5 protocol
+	 */
+	public static final int COMMERCIAL_I5_PROTOCOL_ID_LATEST = COMMERCIAL_I5_PROTOCOL_ID_2006040906;
 
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
@@ -295,6 +411,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return local file, or <code>null</code> in case of resolving failure
 	 */
 	public String convertToLocalFilename(String remoteFile) {
+		if (isUseServerFiles()) {
+			return remoteFile;
+		}
 		String currentScript = null;
 		PHPstack callStack = getCallStack();
 		if (callStack == null)
@@ -317,6 +436,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return local file, or <code>null</code> in case of resolving failure
 	 */
 	public String convertToLocalFilename(String remoteFile, String cwd, String currentScript) {
+		if (isUseServerFiles()) {
+			return remoteFile;
+		}
 		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
 		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
 			return remoteFile;
@@ -844,7 +966,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 *         <code>false</code>
 	 */
 	protected boolean detectProtocolID() {
-		boolean isUseNewProtocol = false;
+		String isWebServerLaunch = getDebugHandler().getDebugTarget().getLaunch()
+				.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER);
+		boolean isWebDebug = (isWebServerLaunch != null && Boolean.valueOf(isWebServerLaunch).booleanValue());
+		boolean isUseNewProtocol = true;
 		try {
 			ILaunchConfiguration config = getDebugHandler().getDebugTarget().getLaunch().getLaunchConfiguration();
 			String debuggerId = config.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
@@ -855,34 +980,56 @@ public class RemoteDebugger implements IRemoteDebugger {
 				isUseNewProtocol = debuggerConfiguration.isUseNewProtocol();
 			}
 		} catch (CoreException e) {
-			PHPDebugPlugin.log(e);
+			Logger.logException(e);
 		}
-		// check whether debugger is using the latest protocol ID:
-		if (isUseNewProtocol && setProtocol(PROTOCOL_ID_LATEST)) {
-			return true;
+
+		if (isWebDebug && PHPDebugUtil.isSystem5()) {
+			if (setProtocol(COMMERCIAL_I5_PROTOCOL_ID_LATEST)) {
+				return true;
+			}
+			if (setProtocol(COMMERCIAL_PROTOCOL_ID_2006040905)) {
+				warnOlderDebugVersion();
+				return true;
+			}
+			if (setProtocol(COMMERCIAL_I5_PROTOCOL_ID_2006040904)) {
+				warnOlderDebugVersion();
+				return true;
+			}
+			if (setProtocol(COMMERCIAL_I5_PROTOCOL_ID_2006040902)) {
+				warnOlderDebugVersion();
+				return true;
+			}
+			// Debugger is not an i5 edition
+			warnNonI5Debugger();
+			finish();
+		} else {
+			// check whether debugger is using the latest protocol ID:
+			if (isUseNewProtocol && setProtocol(COMMERCIAL_PROTOCOL_ID_LATEST)) {
+				return true;
+			}
+			if (setProtocol(COMMERCIAL_PROTOCOL_ID_2006040905)) {
+				// do not warn that it is old, it does not support Add Files
+				// only
+				return true;
+			}
+			if (setProtocol(COMMERCIAL_PROTOCOL_ID_2006040903)) {
+				warnOlderDebugVersion();
+				return true;
+			}
+			// check whether debugger is using one of older protocol ID:
+			if (setProtocol(COMMERCIAL_PROTOCOL_ID_2006040901)) {
+				// warn user that he is using an old debugger
+				warnOlderDebugVersion();
+				return true;
+			}
+			// All of above failed, check if the connection is active (it could
+			// be
+			// terminated in the meantime by the user i.e.)
+			if (!isActive())
+				return true;
+			// user is using an incompatible version of debugger:
+			getDebugHandler().wrongDebugServer();
 		}
-		// check whether debugger is using one of older protocol ID:
-		if (setProtocol(PROTOCOL_ID_2006040705)) {
-			return true;
-		}
-		// check whether debugger is using one of older protocol ID:
-		if (setProtocol(PROTOCOL_ID_2006040703)) {
-			// warn user that he is using an old debugger
-			warnOlderDebugVersion();
-			return true;
-		}
-		// check whether debugger is using one of older protocol ID:
-		if (setProtocol(PROTOCOL_ID_2006040701)) {
-			// warn user that he is using an old debugger
-			warnOlderDebugVersion();
-			return true;
-		}
-		// All of above failed, check if the connection is active (it could be
-		// terminated in the meantime by the user i.e.)
-		if (!isActive())
-			return true;
-		// user is using an incompatible version of debugger:
-		getDebugHandler().wrongDebugServer();
 		return false;
 	}
 
@@ -906,6 +1053,56 @@ public class RemoteDebugger implements IRemoteDebugger {
 				}
 			});
 		}
+	}
+
+	public static void warnNonI5Debugger() {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openError(Display.getDefault().getActiveShell(),
+						PHPDebugCoreMessages.RemoteDebugger_LicenseError,
+						PHPDebugCoreMessages.RemoteDebugger_WarnNoneI5);
+			}
+		});
+	}
+
+	public static void requestRemoteFile(final IRemoteFileContentRequestor requester, String fileName,
+			final int lineNumber, String remoteURL) {
+		RemoteFileContentRequestorsRegistry.getInstance().addRequestor(requester, fileName, lineNumber);
+		final StringBuilder urlBuf = new StringBuilder(RemoteFileQuery.generateQuery(remoteURL));
+		try {
+			fileName = URLEncoder.encode(fileName, "UTF-8"); //$NON-NLS-1$
+		} catch (UnsupportedEncodingException e) {
+		}
+		urlBuf.append("&") //$NON-NLS-1$
+				.append(DefaultDebugParametersInitializer.GET_FILE_CONTENT).append('=').append(fileName);
+		urlBuf.append("&") //$NON-NLS-1$
+				.append(DefaultDebugParametersInitializer.LINE_NUMBER).append('=').append(lineNumber);
+		final String fileName2 = fileName;
+		// Send the request to the server:
+		Job requestFileJob = new Job(PHPDebugCoreMessages.RemoteDebugger_RequestFileFromServer) {
+			public IStatus run(IProgressMonitor monitor) {
+				try {
+					URL requestURL = new URL(urlBuf.toString());
+					URLConnection connection = requestURL.openConnection();
+					InputStream inputStream = connection.getInputStream();
+					while (inputStream.read() != -1) {
+						// do nothing on the content returned by standard stream
+					}
+					requester.requestCompleted(null);
+
+				} catch (Exception e) {
+					RemoteFileContentRequestorsRegistry.getInstance().removeRequestor(fileName2, lineNumber);
+					requester.requestCompleted(e);
+
+					Logger.logException(e);
+				} finally {
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		requestFileJob.setUser(false);
+		requestFileJob.schedule();
 	}
 
 	public boolean setProtocol(int protocolID) {
@@ -1296,6 +1493,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return remoteFile;
 	}
 
+	private boolean isUseServerFiles() {
+		boolean useServerFiles = false;
+		try {
+			useServerFiles = getDebugHandler().getDebugTarget().getLaunch().getLaunchConfiguration()
+					.getAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false);
+		} catch (CoreException e) {
+			PHPDebugPlugin.log(e);
+		}
+		return useServerFiles;
+	}
+
 	public List<IPath> getIncludePaths(IProject project) throws ModelException {
 		if (project == null)
 			return new ArrayList<IPath>();
@@ -1325,6 +1533,35 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		resolvedIncludePaths.put(project.getName(), includePaths);
 		return includePaths;
+	}
+
+	/**
+	 * Requests Code Coverage information from the debugger and returns it.
+	 * 
+	 * @return CodeCoverageData[] Code coverage information. If this remote
+	 *         debugger is not active, or in case of error this method returns
+	 *         <code>null</code>.
+	 */
+	public CodeCoverageData[] getCodeCoverageData() {
+		if (!this.isActive()) {
+			return null;
+		}
+
+		GetCodeCoverageRequest request = new GetCodeCoverageRequest();
+		IDebugResponseMessage response = sendCustomRequest(request);
+		if (response != null && response instanceof GetCodeCoverageResponse) {
+			CodeCoverageData[] codeCoverageData = ((GetCodeCoverageResponse) response).getCodeCoverageData();
+			for (int i = 0; i < codeCoverageData.length; ++i) {
+				String localFileName = convertToLocalFilename(codeCoverageData[i].getFileName(), null, null);
+				if (localFileName == null) {
+					localFileName = codeCoverageData[i].getFileName();
+				}
+				codeCoverageData[i].setLocalFileName(localFileName);
+				codeCoverageData[i].setURL(getDebugHandler().getDebugTarget().getURL());
+			}
+			return codeCoverageData;
+		}
+		return null;
 	}
 
 	@Override

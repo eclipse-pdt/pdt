@@ -14,6 +14,8 @@ package org.eclipse.php.internal.debug.ui.presentation;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,17 +44,21 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
+import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.ui.*;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPExceptionBreakpointAnnotation;
+import org.eclipse.php.internal.debug.ui.editor.RemoteFileStorageEditorInput;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
@@ -133,6 +139,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	}
 
 	public String getEditorId(IEditorInput input, Object inputObject) {
+		if (inputObject instanceof RemoteFileStorage) {
+			return PHPUiConstants.PHP_EDITOR_ID;
+		}
 		if (input instanceof NonExistingPHPFileEditorInput) {
 			return UntitledPHPEditor.ID;
 		}
@@ -151,6 +160,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
 	 */
 	public IEditorInput getEditorInput(Object element) {
+		if (element instanceof RemoteFileStorage) {
+			return new RemoteFileStorageEditorInput((RemoteFileStorage) element);
+		}
 		if (element instanceof IFile) {
 			return new FileEditorInput((IFile) element);
 		}
@@ -480,6 +492,22 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	protected IEditorInput getLineBreakpointEditorInput(Object element) {
 		ILineBreakpoint bp = (ILineBreakpoint) element;
 		IMarker marker = bp.getMarker();
+		try {
+			String originalURL = (String) marker.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+			if (originalURL != null) {
+				final String location = (String) marker
+						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+				String decodedFileName;
+				try {
+					decodedFileName = URLDecoder.decode(location, "UTF-8"); //$NON-NLS-1$
+				} catch (UnsupportedEncodingException e) {
+					decodedFileName = location;
+				}
+				return new RemoteFileStorageEditorInput(new RemoteFileStorage(null, decodedFileName, originalURL));
+			}
+		} catch (CoreException e) {
+			DLTKUIPlugin.log(e);
+		}
 		IResource resource = marker.getResource();
 		if (resource instanceof IFile) {
 			return new FileEditorInput((IFile) resource);

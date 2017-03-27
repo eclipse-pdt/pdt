@@ -20,6 +20,7 @@ import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.launching.AbstractPHPLaunchConfigurationDebuggerTab.StatusMessage;
 import org.eclipse.php.internal.debug.ui.launching.AbstractPHPLaunchConfigurationDebuggerTab.WidgetListener;
 import org.eclipse.php.internal.server.core.Server;
@@ -36,7 +37,6 @@ import org.eclipse.swt.widgets.*;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunchSettingsSection {
 
 	private Group browserGroup;
@@ -48,6 +48,9 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 	private Text debugFromTxt;
 	private Button resetBt;
 	private Button debugContinueBt;
+	private Group sourceLocationGroup;
+	private Button sourcesLocal;
+	private Button sourcesServer;
 
 	/*
 	 * (non-Javadoc)
@@ -61,6 +64,7 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 	public void createSection(Composite parent, WidgetListener widgetListener) {
 		super.createSection(parent, widgetListener);
 		createBrowserGroup(parent);
+		createSourceLocationGroup(parent);
 	}
 
 	/*
@@ -99,6 +103,10 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 			debugFromTxt.setText(startFromURL);
 			updateDebugFrom();
 			enableSessionSettingButtons(isOpenInBrowser);
+			// Initialize the source location
+			boolean localCopy = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false);
+			sourcesLocal.setSelection(!localCopy);
+			sourcesServer.setSelection(localCopy);
 		} catch (CoreException e) {
 		}
 	}
@@ -130,6 +138,17 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 			// Allow only debug-first-page
 			configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 		}
+		// Apply the source location
+		boolean value = sourcesServer.getSelection();
+		try {
+			if (configuration.hasAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES)
+					&& value != (configuration.getAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false))) {
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, value);
+			} else if (!configuration.hasAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES) && value) {
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, value);
+			}
+		} catch (CoreException e) {
+		}
 	}
 
 	/*
@@ -143,6 +162,7 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
 		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false);
 	}
 
 	/*
@@ -282,6 +302,26 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 				}
 			}
 		});
+	}
+
+	private void createSourceLocationGroup(Composite parent) {
+		// Add the source origin groups
+		sourceLocationGroup = new Group(parent, SWT.NONE);
+		sourceLocationGroup.setLayout(new GridLayout(1, false));
+		sourceLocationGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		sourceLocationGroup.setText(PHPDebugUIMessages.ZendDebuggerWebLaunchSettingsSection_Source_location);
+		Label label = new Label(sourceLocationGroup, SWT.NONE);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		label.setLayoutData(data);
+		label.setText(PHPDebugUIMessages.ZendDebuggerWebLaunchSettingsSection_Source_will_be_taken_from);
+
+		sourcesServer = SWTFactory.createRadioButton(sourceLocationGroup,
+				PHPDebugUIMessages.ZendDebuggerWebLaunchSettingsSection_Source_the_server);
+		sourcesLocal = SWTFactory.createRadioButton(sourceLocationGroup,
+				PHPDebugUIMessages.ZendDebuggerWebLaunchSettingsSection_Source_local_otherwise_server);
+		// Add widget listeners
+		sourcesLocal.addSelectionListener(widgetListener);
+		sourcesServer.addSelectionListener(widgetListener);
 	}
 
 }

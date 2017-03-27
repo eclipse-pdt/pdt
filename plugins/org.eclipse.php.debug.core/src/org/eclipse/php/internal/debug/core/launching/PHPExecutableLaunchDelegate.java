@@ -57,6 +57,19 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
 		try {
+			ILaunchConfiguration configuration = launch.getLaunchConfiguration();
+			boolean isProfileLaunch = launch.getLaunchMode().equals(ILaunchManager.PROFILE_MODE);
+			if (isProfileLaunch) {
+				final boolean enableCodeCoverage = configuration
+						.getAttribute(IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE, false);
+				launch.setAttribute(IPHPDebugConstants.DEBUGGING_COLLECT_CODE_COVERAGE,
+						enableCodeCoverage ? String.valueOf(1) : String.valueOf(0));
+			}
+		} catch (CoreException e) {
+			DebugPlugin.log(e);
+		}
+
+		try {
 			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH, Boolean.toString(true));
 
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry

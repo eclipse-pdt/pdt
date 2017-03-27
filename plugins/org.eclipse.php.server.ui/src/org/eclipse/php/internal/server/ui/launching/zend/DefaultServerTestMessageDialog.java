@@ -14,6 +14,7 @@ package org.eclipse.php.internal.server.ui.launching.zend;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.php.internal.server.ui.launching.Messages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -56,7 +57,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 	protected void addLinksToMessage(Composite labelComposite) {
 		Link link = new Link(labelComposite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		link.setText(org.eclipse.php.internal.server.ui.launching.zend.JFaceResources.DefaultServerTestMessageDialog_0);
+		link.setText(Messages.DefaultServerTestMessageDialog_0);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				PlatformUI.getWorkbench().getHelpSystem().displayHelp(IPHPHelpContextIds.SETTING_UP_REMOTE_DEBUGGING);

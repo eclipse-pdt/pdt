@@ -36,6 +36,7 @@ public class PHPDebugUIImages {
 	private static final String T_OVR = ICONS_PATH + "ovr16/"; //$NON-NLS-1$
 	private static final String T_ELCL = ICONS_PATH + "elcl16/"; //$NON-NLS-1$
 	private static final String T_DLCL = ICONS_PATH + "dlcl16/"; //$NON-NLS-1$
+	private static final String T_EVIEW = ICONS_PATH + "eview16/"; //$NON-NLS-1$
 	private static final String T_WIZBAN = ICONS_PATH + "wizban/"; //$NON-NLS-1$
 
 	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT = "IMG_OVR_CONDITIONAL_BREAKPOINT"; //$NON-NLS-1$
@@ -72,6 +73,10 @@ public class PHPDebugUIImages {
 	public static final String IMG_DLCL_EXCEPTION_BREAKPOINT = "IMG_DLCL_EXCEPTION_BREAKPOINT"; //$NON-NLS-1$
 	public static final String IMG_ELCL_ERROR_BREAKPOINT = "IMG_ELCL_ERROR_BREAKPOINT"; //$NON-NLS-1$
 	public static final String IMG_DLCL_ERROR_BREAKPOINT = "IMG_DLCL_ERROR_BREAKPOINT"; //$NON-NLS-1$
+
+	public static final String IMG_EVIEW_EVENT_PREV = "IMG_EVIEW_EVENT_PREVIOUS"; //$NON-NLS-1$
+	public static final String IMG_EVIEW_EVENT_NEXT = "IMG_EVIEW_EVENT_NEXT"; //$NON-NLS-1$
+	public static final String IMG_OBJ_REMOTE_FILE = "IMG_OBJ_REMOTE_FILE"; //$NON-NLS-1$
 
 	/**
 	 * Returns the image managed under the given key in this registry.
@@ -140,6 +145,10 @@ public class PHPDebugUIImages {
 		declareRegistryImage(IMG_DLCL_EXCEPTION_BREAKPOINT, T_DLCL + "pexception_bp.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_ELCL_ERROR_BREAKPOINT, T_ELCL + "perror_bp.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_DLCL_ERROR_BREAKPOINT, T_DLCL + "perror_bp.png"); //$NON-NLS-1$
+
+		declareRegistryImage(IMG_EVIEW_EVENT_PREV, T_EVIEW + "code_coverage_prev.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_EVIEW_EVENT_NEXT, T_EVIEW + "code_coverage_next.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_REMOTE_FILE, T_OBJ + "remote_file.png"); //$NON-NLS-1$
 	}
 
 	/**

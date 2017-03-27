@@ -124,6 +124,22 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	}
 
 	/**
+	 * @return whether to use SSL encryption when debugging
+	 */
+	public boolean isUseSSL() {
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, true, null);
+	}
+
+	/**
+	 * @param useSSL
+	 *            whether to use SSL encryption when debugging
+	 */
+	public void setUseSSL(boolean useSSL) {
+		preferences.putBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, useSSL);
+	}
+
+	/**
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getScriptLaunchDelegateClass()
 	 */
 	public String getScriptLaunchDelegateClass() {
@@ -147,6 +163,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				defaultPreferences.get(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, null));
 		setBroadcastPort(defaultPreferences.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 0));
 		setDummyFile(defaultPreferences.get(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, null));
+		setUseSSL(defaultPreferences.getBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false));
 		save();
 	}
 

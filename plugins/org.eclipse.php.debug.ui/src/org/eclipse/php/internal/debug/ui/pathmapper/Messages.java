@@ -17,7 +17,9 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.pathmapper.messages"; //$NON-NLS-1$
 	public static String OpenLocalFileSearchFilter_External_files;
 	public static String OpenLocalFileSearchFilter_Open_file_request;
-	public static String OpenLocalFileSearchFilter_Select_the_local_resource_match;
+	public static String OpenLocalFileSearchFilter_Map_and_open_local;
+	public static String OpenLocalFileSearchFilter_Open_remote;
+	public static String OpenLocalFileSearchFilter_Remote_file_is_requested;
 	public static String PathEntrySelectionDialog_0;
 	public static String PathEntrySelectionDialog_1;
 	public static String PathEntrySelectionDialog_2;

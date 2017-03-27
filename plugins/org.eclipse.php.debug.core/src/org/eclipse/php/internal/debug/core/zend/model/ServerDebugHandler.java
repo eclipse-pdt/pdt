@@ -13,20 +13,27 @@ package org.eclipse.php.internal.debug.core.zend.model;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
-import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.*;
+import org.eclipse.php.internal.debug.core.zend.debugger.parameters.DefaultDebugParametersInitializer;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 
@@ -35,13 +42,15 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Shalom Gibly
  */
-@SuppressWarnings("restriction")
 public class ServerDebugHandler extends SimpleDebugHandler {
 
-	private IRemoteDebugger fRemoteDebugger;
-	private boolean fStatus;
+	protected IRemoteDebugger fRemoteDebugger;
+	protected boolean fStatus;
 	protected PHPDebugTarget fDebugTarget;
 	protected DebugConnection fDebugConnection;
+	protected boolean fCodeCoverage;
+	protected boolean fUseLocalCopy;
+	protected CodeCoverageData[] fCodeCoverageData;
 
 	public ServerDebugHandler() {
 	}
@@ -52,12 +61,68 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
+
+		fUseLocalCopy = true;
+		ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
+		try {
+			fUseLocalCopy = !launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_USE_SERVER_FILES, false);
+		} catch (CoreException e) {
+			DebugPlugin.log(e);
+		}
+
+		if (fUseLocalCopy) {
+			// Bind server with this launch configuration if we can find any:
+			final String serverURL = fDebugTarget.getURL();
+			if (serverURL != null) {
+				try {
+					String serverName = null;
+					Server serverLookup = ServersManager.findByURL(serverURL);
+					if (serverLookup != null)
+						serverName = serverLookup.getName();
+					if (serverName != null) {
+						ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
+						wc.setAttribute(Server.NAME, serverName);
+						synchronized (launchConfiguration) {
+							wc.doSave();
+						}
+					}
+				} catch (CoreException e) {
+					DebugPlugin.log(e);
+				}
+			}
+			// XXX: add initial mapping for debugging via PHP Web Script (needed
+			// for the first breakpoint)
+			try {
+				String debugType = launchConfiguration.getAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, ""); //$NON-NLS-1$
+				if (debugType.equals(IDebugParametersKeys.PHP_WEB_SCRIPT_DEBUG)) {
+					PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+					String debugFilePath = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE,
+							(String) null);
+					String debugFileFullPath = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH,
+							(String) null);
+					if (pathMapper != null && debugFilePath != null && debugFileFullPath != null
+							&& pathMapper.getLocalFile(debugFileFullPath) == null) {
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFilePath);
+						if (resource instanceof IFile) {
+							pathMapper.addEntry(debugFileFullPath,
+									new PathEntry(debugFilePath, Type.WORKSPACE, resource.getParent()),
+									MappingSource.ENVIRONMENT);
+						} else if (new File(debugFilePath).exists()) {
+							pathMapper.addEntry(debugFilePath, new PathEntry(debugFilePath, Type.EXTERNAL,
+									new File(debugFilePath).getParentFile()), MappingSource.ENVIRONMENT);
+						}
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+
 		if (isUsingPathMapper()) {
 			/*
 			 * Hack for the case when htdocs is symlinked to the workspace. Zend
 			 * Debugger resolves symbolic links later and it breaks path mapper.
 			 */
-			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
 			try {
 				String lcServerName = launchConfiguration.getAttribute(Server.NAME, (String) null);
 				if ((lcServerName == null || lcServerName.isEmpty()) && fDebugTarget.getURL() != null) {
@@ -110,6 +175,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setRunStart(true);
 			}
 		}
+
+		fCodeCoverage = query.indexOf(DefaultDebugParametersInitializer.CODE_COVERAGE) != -1;
 	}
 
 	public void connectionEstablished() {
@@ -192,13 +259,22 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	}
 
 	public void handleScriptEnded() {
-		Logger.debugMSG("ServerDebugHandler: handleScriptEnded"); //$NON-NLS-1$
 		try {
-			Logger.debugMSG("ServerDebugHandler: Calling Terminate()"); //$NON-NLS-1$
-			fDebugTarget.terminate();
+			if (fCodeCoverage) {
+				IRemoteDebugger remoteDebugger = getRemoteDebugger();
+				if (remoteDebugger instanceof RemoteDebugger) {
+					fCodeCoverageData = ((RemoteDebugger) remoteDebugger).getCodeCoverageData();
+				}
+			}
+		} finally {
+			Logger.debugMSG("ServerDebugHandler: handleScriptEnded"); //$NON-NLS-1$
+			try {
+				Logger.debugMSG("ServerDebugHandler: Calling Terminate()"); //$NON-NLS-1$
+				fDebugTarget.terminate();
 
-		} catch (DebugException e1) {
-			Logger.logException("ServerDebugHandler: terminate failed", e1); //$NON-NLS-1$
+			} catch (DebugException e1) {
+				Logger.logException("ServerDebugHandler: terminate failed", e1); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -264,12 +340,22 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		return fDebugTarget;
 	}
 
+	/**
+	 * Returns code coverage data from the last debug session.
+	 * 
+	 * @return CodeCoverage data or <code>null</code> if there wasn't directive
+	 *         to retreive code coverage data.
+	 */
+	public CodeCoverageData[] getLastCodeCoverageData() {
+		return fCodeCoverageData;
+	}
+
 	protected IRemoteDebugger createRemoteDebugger() {
 		return new RemoteDebugger(this, fDebugConnection);
 	}
 
 	protected boolean isUsingPathMapper() {
-		return true;
+		return fUseLocalCopy;
 	}
 
 }

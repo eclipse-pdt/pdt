@@ -24,7 +24,11 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.debug.core.zend.communication.IRemoteFileContentRequestor;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.debug.ui.editor.OpenRemoteFileContentRequestor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -46,6 +50,7 @@ public class PHPFileLink implements IHyperlink {
 
 	protected String fileName;
 	protected int lineNumber;
+	private String url;
 
 	/**
 	 * Constructs a hyperlink to the specified file.
@@ -55,23 +60,29 @@ public class PHPFileLink implements IHyperlink {
 	 * @param lineNumber
 	 *            The line number to select
 	 */
-	public PHPFileLink(String fileName, int lineNumber) {
+	public PHPFileLink(String fileName, int lineNumber, String url) {
 		this.fileName = fileName;
 		this.lineNumber = lineNumber;
+		this.url = url;
 	}
 
 	public void linkActivated() {
+		Object element = findSourceModule(fileName);
 		try {
-			Object element = findSourceModule(fileName);
 			if (element != null) {
 				openElementInEditor(element);
+				return;
+			}
+			if (url != null) {
+				IRemoteFileContentRequestor requestor = new OpenRemoteFileContentRequestor();
+				RemoteDebugger.requestRemoteFile(requestor, fileName, lineNumber, url);
 				return;
 			}
 			if (EditorUtility.openLocalFile(fileName, lineNumber) != null) {
 				return;
 			}
 		} catch (CoreException e) {
-			PHPDebugUIPlugin.log(e);
+			Logger.logException(e);
 		}
 		// did not find source
 		MessageDialog.openInformation(PHPDebugUIPlugin.getActiveWorkbenchShell(), Messages.PHPFileLink_0,
