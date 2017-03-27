@@ -29,8 +29,17 @@ public class DefaultExpression implements Expression {
 	 * @param expression
 	 */
 	public DefaultExpression(String expression) {
+		this(expression, expression);
+	}
+
+	/**
+	 * Creates new default expression.
+	 * 
+	 * @param expression
+	 */
+	public DefaultExpression(String expression, String fullName) {
 		name = new String[] { expression.trim() };
-		fullName = expression;
+		this.fullName = fullName;
 		setValue(null);
 	}
 
@@ -41,8 +50,18 @@ public class DefaultExpression implements Expression {
 	 * @param facets
 	 */
 	public DefaultExpression(String expression, Facet... facets) {
+		this(expression, expression, facets);
+	}
+
+	/**
+	 * Creates new default expression.
+	 * 
+	 * @param expression
+	 * @param facets
+	 */
+	public DefaultExpression(String expression, String fullName, Facet... facets) {
 		name = new String[] { expression.trim() };
-		fullName = expression;
+		this.fullName = fullName;
 		setValue(null);
 		addFacets(facets);
 	}

@@ -31,6 +31,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	private Map<String, Object> hashResultDepthOne = new HashMap<String, Object>();
 	private Map<String, byte[]> hashResultDepthZero = new HashMap<String, byte[]>();
 	private ExpressionsValueDeserializer expressionValueDeserializer;
+	private ExpressionsUtil fExpressionsUtil;
 
 	/**
 	 * Creates new DefaultExpressionsManager
@@ -38,6 +39,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	public DefaultExpressionsManager(Debugger debugger, String transferEncoding) {
 		this.debugger = debugger;
 		expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
+		fExpressionsUtil = ExpressionsUtil.getInstance(this);
 	}
 
 	public byte[] getExpressionValue(Expression expression, int depth) {
@@ -94,7 +96,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		String className = (String) dummyClass.getValue().getValue();
 		// Check if we are in static context
 		if (!hasThis && !"0".equals(className)) { //$NON-NLS-1$
-			Expression staticClassContext = ExpressionsUtil.fetchStaticContext(className, this);
+			Expression staticClassContext = fExpressionsUtil.fetchStaticContext(className);
 			if (staticClassContext != null)
 				currentVariables.add(staticClassContext);
 		}
@@ -116,8 +118,8 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		ExpressionValue expressionValue = expressionValueDeserializer.deserializer(expression, value);
 		// Workaround for fetching static members for objects
 		if (expressionValue.getDataType() == PHP_OBJECT && CurrentContextExpression.supportsStaticContext(debugger)) {
-			Expression[] expressionStaticNodes = ExpressionsUtil.fetchStaticMembers((String) expressionValue.getValue(),
-					this);
+			Expression[] expressionStaticNodes = fExpressionsUtil
+					.fetchStaticMembers((String) expressionValue.getValue());
 			List<Expression> allNodes = new ArrayList<Expression>();
 			allNodes.addAll(Arrays.asList(expressionStaticNodes));
 			allNodes.addAll(Arrays.asList(expressionValue.getChildren()));
