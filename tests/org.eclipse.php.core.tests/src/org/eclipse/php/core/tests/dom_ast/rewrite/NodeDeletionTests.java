@@ -42,7 +42,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.ReturnStatement;
 import org.eclipse.php.core.ast.nodes.Statement;
 import org.eclipse.php.core.ast.nodes.SwitchStatement;
-import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.Test;

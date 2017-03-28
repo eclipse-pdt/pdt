@@ -14,8 +14,8 @@ package org.eclipse.php.internal.core.corext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFlattener;
-import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 public class ASTNodes {
 

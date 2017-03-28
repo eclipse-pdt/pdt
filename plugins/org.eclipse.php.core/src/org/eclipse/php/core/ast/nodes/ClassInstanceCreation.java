@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.match.ASTMatcher;
-import org.eclipse.php.internal.core.ast.visitor.Visitor;
+import org.eclipse.php.core.ast.match.ASTMatcher;
+import org.eclipse.php.core.ast.visitor.Visitor;
 
 /**
  * Represents a class instantiation. This class holds the class name as an

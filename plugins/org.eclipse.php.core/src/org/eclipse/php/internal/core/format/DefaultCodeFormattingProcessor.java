@@ -17,8 +17,8 @@ package org.eclipse.php.internal.core.format;
 import java.util.Map;
 
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.text.edits.MultiTextEdit;
 
 /**

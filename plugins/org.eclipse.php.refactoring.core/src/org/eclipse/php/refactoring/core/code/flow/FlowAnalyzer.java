@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 
 /**
  * Special flow analyzer to determine the return value of the extracted method

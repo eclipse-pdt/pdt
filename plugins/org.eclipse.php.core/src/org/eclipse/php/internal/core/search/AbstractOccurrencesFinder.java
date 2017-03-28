@@ -21,9 +21,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 
 /**

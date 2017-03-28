@@ -14,7 +14,7 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.core.corext.dom.SelectionAnalyzer;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 
