@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.ast.visitor;
+package org.eclipse.php.core.ast.visitor;
 
 import org.eclipse.php.core.ast.nodes.*;
 

@@ -26,8 +26,8 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.ast.nodes.GotoLabel;
+import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.codeassist.contexts.GotoStatementContext;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**

@@ -97,7 +97,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.MethodDeclaration)
 	 */
 	public boolean visit(MethodDeclaration methodDeclaration) {

@@ -13,9 +13,9 @@ package org.eclipse.php.refactoring.core.extract.function;
 import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.match.ASTMatcher;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 /* package */class SnippetFinder extends AbstractVisitor {
 

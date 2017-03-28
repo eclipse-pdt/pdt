@@ -17,8 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
 
@@ -139,7 +139,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ArrayAccess)
 	 */
 	public boolean visit(ArrayAccess arrayAccess) {

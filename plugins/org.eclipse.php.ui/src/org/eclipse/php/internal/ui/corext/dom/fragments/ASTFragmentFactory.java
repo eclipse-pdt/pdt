@@ -19,7 +19,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.Expression;
 import org.eclipse.php.core.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.ast.visitor.HierarchicalVisitor;
+import org.eclipse.php.core.ast.visitor.HierarchicalVisitor;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.internal.core.corext.dom.SelectionAnalyzer;
 

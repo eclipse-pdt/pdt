@@ -18,9 +18,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**
  * Internal class for associating comments with AST nodes.
