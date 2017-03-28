@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 public class LocalVariableIndex extends AbstractVisitor {
 

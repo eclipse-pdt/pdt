@@ -20,7 +20,7 @@ import org.eclipse.php.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 
 @SuppressWarnings("restriction")
 public class AutoloadVisitor extends PHPASTVisitor {

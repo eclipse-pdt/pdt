@@ -73,7 +73,7 @@ public class RenameLocalVariable extends AbstractRename {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse
+	 * org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.eclipse
 	 * .php.internal.core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {

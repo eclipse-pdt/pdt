@@ -13,7 +13,7 @@ package org.eclipse.php.refactoring.core.visitor;
 
 import org.eclipse.php.core.ast.nodes.ASTError;
 import org.eclipse.php.core.ast.nodes.FunctionDeclaration;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 /**
  * This purpose of this visitor is to check if there is a syntax error in the

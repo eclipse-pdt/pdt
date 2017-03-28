@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.ast.match;
+package org.eclipse.php.core.ast.match;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.core.ast.nodes.ASTNode;

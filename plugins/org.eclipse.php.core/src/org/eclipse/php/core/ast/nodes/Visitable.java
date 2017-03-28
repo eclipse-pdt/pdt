@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
-import org.eclipse.php.internal.core.ast.visitor.Visitor;
+import org.eclipse.php.core.ast.visitor.Visitor;
 
 /**
  * Supporting the visitor pattern to the Abstract Syntax Tree (AST) nodes

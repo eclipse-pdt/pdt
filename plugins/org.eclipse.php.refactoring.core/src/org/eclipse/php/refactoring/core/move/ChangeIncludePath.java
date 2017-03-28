@@ -23,7 +23,7 @@ import org.eclipse.php.core.ast.nodes.Expression;
 import org.eclipse.php.core.ast.nodes.Include;
 import org.eclipse.php.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.core.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;

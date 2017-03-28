@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
-import org.eclipse.php.internal.core.ast.match.ASTMatcher;
-import org.eclipse.php.internal.core.ast.visitor.Visitor;
+import org.eclipse.php.core.ast.match.ASTMatcher;
+import org.eclipse.php.core.ast.visitor.Visitor;
 
 public class TraitPrecedenceStatement extends TraitStatement {
 	private TraitPrecedence precedence;

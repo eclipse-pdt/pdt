@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 
 /**
  * Conciles the php element from a given path NOTE: use the

@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.BlockContext;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.NodeMarker;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.Prefix;
@@ -35,7 +36,6 @@ import org.eclipse.php.internal.core.ast.rewrite.NodeInfoStore.StringPlaceholder
 import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.php.internal.core.ast.rewrite.TargetSourceRangeComputer.SourceRange;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.text.edits.*;
 
 import java_cup.runtime.Symbol;
@@ -2093,7 +2093,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.SingleFieldDeclaration)
 	 */
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
@@ -2542,7 +2542,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ArrayElement)
 	 */
 	public boolean visit(ArrayElement arrayElement) {
@@ -2615,7 +2615,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ASTError)
 	 */
 	@Override
@@ -2630,7 +2630,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.BackTickExpression)
 	 */
 	public boolean visit(BackTickExpression backTickExpression) {
@@ -2645,7 +2645,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ClassConstantDeclaration)
 	 */
 	@Override
@@ -2662,7 +2662,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ClassDeclaration)
 	 */
 	@Override
@@ -2765,7 +2765,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ClassName)
 	 */
 	public boolean visit(ClassName className) {
@@ -2775,7 +2775,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.CloneExpression)
 	 */
 	public boolean visit(CloneExpression cloneExpression) {
@@ -2785,7 +2785,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Comment)
 	 */
 	@Override
@@ -2797,7 +2797,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.DeclareStatement)
 	 */
 	@Override
@@ -2814,7 +2814,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.EchoStatement)
 	 */
 	public boolean visit(EchoStatement echoStatement) {
@@ -2828,7 +2828,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ForEachStatement)
 	 */
 	@Override
@@ -2848,7 +2848,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.FormalParameter)
 	 */
 	public boolean visit(FormalParameter formalParameter) {
@@ -2958,7 +2958,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.FunctionDeclaration)
 	 */
 	public boolean visit(FunctionDeclaration functionDeclaration) {
@@ -3030,7 +3030,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.FunctionInvocation)
 	 */
 	public boolean visit(FunctionInvocation functionInvocation) {
@@ -3056,7 +3056,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.FunctionName)
 	 */
 	public boolean visit(FunctionName functionName) {
@@ -3066,7 +3066,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.GlobalStatement)
 	 */
 	public boolean visit(GlobalStatement globalStatement) {
@@ -3080,7 +3080,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Identifier)
 	 */
 	public boolean visit(Identifier node) {
@@ -3096,7 +3096,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.IgnoreError)
 	 */
 	public boolean visit(IgnoreError ignoreError) {
@@ -3106,7 +3106,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Include)
 	 */
 	public boolean visit(Include include) {
@@ -3155,7 +3155,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.InLineHtml)
 	 */
 	@Override
@@ -3170,7 +3170,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.InstanceOfExpression)
 	 */
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
@@ -3181,7 +3181,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.InterfaceDeclaration)
 	 */
 	@Override
@@ -3205,7 +3205,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ListVariable)
 	 */
 	public boolean visit(ListVariable listVariable) {
@@ -3219,7 +3219,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ParenthesisExpression)
 	 */
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
@@ -3229,7 +3229,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Quote)
 	 */
 	public boolean visit(Quote quote) {
@@ -3338,7 +3338,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Reference)
 	 */
 	public boolean visit(Reference reference) {
@@ -3348,7 +3348,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.ReflectionVariable)
 	 */
 	public boolean visit(ReflectionVariable reflectionVariable) {
@@ -3361,7 +3361,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Scalar)
 	 */
 	public boolean visit(Scalar scalar) {
@@ -3392,7 +3392,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.StaticConstantAccess)
 	 */
 	public boolean visit(StaticConstantAccess classConstantAccess) {
@@ -3403,7 +3403,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.StaticFieldAccess)
 	 */
 	public boolean visit(StaticFieldAccess staticFieldAccess) {
@@ -3414,7 +3414,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.StaticMethodInvocation)
 	 */
 	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
@@ -3425,7 +3425,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.StaticStatement)
 	 */
 	public boolean visit(StaticStatement staticStatement) {
@@ -3439,7 +3439,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.UnaryOperation)
 	 */
 	public boolean visit(UnaryOperation unaryOperation) {
@@ -3450,7 +3450,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {
