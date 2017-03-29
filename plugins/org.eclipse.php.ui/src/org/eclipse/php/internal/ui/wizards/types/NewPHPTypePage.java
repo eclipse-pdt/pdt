@@ -1478,14 +1478,11 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	protected IModelElement getInitialPHPElement(final IStructuredSelection selection) {
-
 		if (selection != null && !selection.isEmpty()) {
 			Object obj = selection.getFirstElement();
 			IModelElement codeData = null;
 			if (obj instanceof NodeImpl) {
-				if (obj instanceof IAdaptable) {
-					obj = ((IAdaptable) obj).getAdapter(IModelElement.class);
-				}
+				obj = ((IAdaptable) obj).getAdapter(IModelElement.class);
 			}
 
 			if (obj instanceof ISourceModule) {

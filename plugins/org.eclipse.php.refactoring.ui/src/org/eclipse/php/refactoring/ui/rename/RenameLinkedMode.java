@@ -178,7 +178,7 @@ public class RenameLinkedMode {
 			return;
 		}
 
-		ISourceViewer viewer = fEditor.getTextViewer();
+		TextViewer viewer = fEditor.getTextViewer();
 		IDocument document = viewer.getDocument();
 		fOriginalSelection = viewer.getSelectedRange();
 		int offset = fOriginalSelection.x;
@@ -320,10 +320,8 @@ public class RenameLinkedMode {
 																						// selection
 			}
 
-			if (viewer instanceof IEditingSupportRegistry) {
-				IEditingSupportRegistry registry = (IEditingSupportRegistry) viewer;
-				registry.register(fFocusEditingSupport);
-			}
+			IEditingSupportRegistry registry = viewer;
+			registry.register(fFocusEditingSupport);
 
 			openSecondaryPopup();
 			// startAnimation();
@@ -354,36 +352,34 @@ public class RenameLinkedMode {
 
 		fShowPreview |= showPreview;
 		try {
-			ISourceViewer viewer = fEditor.getTextViewer();
-			if (viewer instanceof SourceViewer) {
-				SourceViewer sourceViewer = (SourceViewer) viewer;
-				Control viewerControl = sourceViewer.getControl();
-				if (viewerControl instanceof Composite) {
-					Composite composite = (Composite) viewerControl;
-					Display display = composite.getDisplay();
+			SourceViewer sourceViewer = fEditor.getTextViewer();
 
-					// Flush pending redraw requests:
-					while (!display.isDisposed() && display.readAndDispatch()) {
-					}
+			Control viewerControl = sourceViewer.getControl();
+			if (viewerControl instanceof Composite) {
+				Composite composite = (Composite) viewerControl;
+				Display display = composite.getDisplay();
 
-					// Copy editor area:
-					GC gc = new GC(composite);
-					Point size;
-					try {
-						size = composite.getSize();
-						image = new Image(gc.getDevice(), size.x, size.y);
-						gc.copyArea(image, 0, 0);
-					} finally {
-						gc.dispose();
-						gc = null;
-					}
-
-					// Persist editor area while executing refactoring:
-					label = new Label(composite, SWT.NONE);
-					label.setImage(image);
-					label.setBounds(0, 0, size.x, size.y);
-					label.moveAbove(null);
+				// Flush pending redraw requests:
+				while (!display.isDisposed() && display.readAndDispatch()) {
 				}
+
+				// Copy editor area:
+				GC gc = new GC(composite);
+				Point size;
+				try {
+					size = composite.getSize();
+					image = new Image(gc.getDevice(), size.x, size.y);
+					gc.copyArea(image, 0, 0);
+				} finally {
+					gc.dispose();
+					gc = null;
+				}
+
+				// Persist editor area while executing refactoring:
+				label = new Label(composite, SWT.NONE);
+				label.setImage(image);
+				label.setBounds(0, 0, size.x, size.y);
+				label.moveAbove(null);
 			}
 
 			String newName = fNamePosition.getContent();
@@ -512,11 +508,8 @@ public class RenameLinkedMode {
 			fInfoPopup.close();
 		}
 
-		ISourceViewer viewer = fEditor.getTextViewer();
-		if (viewer instanceof IEditingSupportRegistry) {
-			IEditingSupportRegistry registry = (IEditingSupportRegistry) viewer;
-			registry.unregister(fFocusEditingSupport);
-		}
+		TextViewer viewer = fEditor.getTextViewer();
+		viewer.unregister(fFocusEditingSupport);
 
 		((PHPStructuredTextViewer) viewer).setFireSelectionChanged(true);
 	}

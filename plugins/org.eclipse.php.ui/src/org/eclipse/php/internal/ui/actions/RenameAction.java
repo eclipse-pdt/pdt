@@ -25,7 +25,7 @@ import org.eclipse.ui.*;
 
 public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActionDelegate {
 
-	private IActionDelegate fRenamePHPElement;
+	private IPHPActionDelegator fRenamePHPElement;
 	private RenameResourceAction resourceAction;
 	private ISelection selection;
 	private static final String RENAME_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.RenameElement"; //$NON-NLS-1$
@@ -45,9 +45,7 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 						resourceAction = new RenameResourceAction(page.getActivePart().getSite());
 				}
 			} else {
-				if (fRenamePHPElement instanceof IWorkbenchWindowActionDelegate) {
-					((IWorkbenchWindowActionDelegate) fRenamePHPElement).init(window);
-				}
+				fRenamePHPElement.init(window);
 			}
 		}
 

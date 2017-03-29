@@ -305,20 +305,18 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit,
 						context, dispatch.getDispatcher());
 				if (dispatcherType != null) {
-					IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
+					IType[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
 							(ISourceModuleContext) context, offset);
 					List<IModelElement> fields = new LinkedList<IModelElement>();
 					if (elements != null) {
 						for (IModelElement element : elements) {
-							if (element instanceof IType) {
-								IType type = (IType) element;
-								try {
-									fields.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyField(type,
-											cache.getSuperTypeHierarchy(type, new NullProgressMonitor()), fieldName,
-											true, new NullProgressMonitor())));
-								} catch (Exception e) {
-									PHPCorePlugin.log(e);
-								}
+							IType type = (IType) element;
+							try {
+								fields.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyField(type,
+										cache.getSuperTypeHierarchy(type, new NullProgressMonitor()), fieldName, true,
+										new NullProgressMonitor())));
+							} catch (Exception e) {
+								PHPCorePlugin.log(e);
 							}
 						}
 					}

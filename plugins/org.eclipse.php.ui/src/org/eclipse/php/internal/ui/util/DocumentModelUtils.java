@@ -38,12 +38,8 @@ public class DocumentModelUtils {
 	 * @param project
 	 */
 	private static void resetDocumentReParser(@Nullable IStructuredDocument document, @Nullable IProject project) {
-		if (!(document instanceof IStructuredDocument)) {
-			return;
-		}
-		IStructuredDocument structuredDocument = (IStructuredDocument) document;
-		if (structuredDocument.getReParser() instanceof PhpSourceParser) {
-			((PhpSourceParser) structuredDocument.getReParser()).setProject(project);
+		if (document != null && document.getReParser() instanceof PhpSourceParser) {
+			((PhpSourceParser) document.getReParser()).setProject(project);
 		}
 	}
 
