@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension point="org.eclipse.ui.views">
+		<view allowMultiple="false" category="org.eclipse.php.ui.views"
+			class="org.eclipse.php.phpunit.ui.view.PHPUnitView" icon="icons/full/main.png"
+			id="org.eclipse.php.phpunit.PHPUnitView" name="%name" />
+	</extension>
+
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.php.perspective">
+			<view id="org.eclipse.php.phpunit.PHPUnitView" relative="org.eclipse.ui.console.ConsoleView"
+				relationship="stack" visible="false" />
+			<view id="org.eclipse.php.debug.ui.CodeCoverageView"
+				relationship="stack" relative="org.eclipse.ui.console.ConsoleView"
+				visible="false" />
+
+			<newWizardShortcut id="org.eclipse.php.phpunit.wizards.TestCaseWizard" />
+			<newWizardShortcut id="org.eclipse.php.phpunit.wizards.TestSuiteWizard" />
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
+			<view id="org.eclipse.php.phpunit.PHPUnitView" relative="org.eclipse.ui.console.ConsoleView"
+				relationship="stack" visible="false" />
+			<view id="com.zend.php.debug.ui.views.CodeCoverageView"
+				relationship="stack" relative="org.eclipse.ui.console.ConsoleView"
+				visible="false" />
+		</perspectiveExtension>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+			class="org.eclipse.php.phpunit.ui.preference.PHPUnitPreferencePage"
+			id="org.eclipse.php.phpunit.preferences" name="%name">
+			<keywordReference id="org.eclipse.php.phpunit.PHPUnit" />
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.keywords">
+		<keyword id="org.eclipse.php.phpunit.PHPUnit" label="%keyword.label" />
+	</extension>
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			id="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType" name="%phpunit.launch.type.name"
+			public="true" />
+
+	</extension>
+	<extension point="org.eclipse.debug.core.launchDelegates">
+		<launchDelegate
+			delegate="org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchConfigurationDelegate"
+			id="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType.debug"
+			modes="run, debug, profile" name="%phpunit.launcher.name"
+			sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+			sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+			type="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType">
+			<modeCombination modes="run">
+			</modeCombination>
+			<modeCombination modes="debug"
+				perspective="org.eclipse.debug.ui.DebugPerspective">
+			</modeCombination>
+			<modeCombination modes="profile"
+				perspective="com.zend.php.profile.ui.perspective">
+			</modeCombination>
+		</launchDelegate>
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchConfigurationGroup"
+			description="%name"
+			id="org.eclipse.php.phpunit.launchConfigurationTabGroups.PHPUnit"
+			type="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType" />
+	</extension>
+	<extension point="org.eclipse.ui.newWizards">
+		<category id="org.eclipse.php.phpunit" name="%name"
+			parentCategory="org.eclipse.php.project.ui" />
+		<wizard category="org.eclipse.php.project.ui/org.eclipse.php.phpunit"
+			class="org.eclipse.php.phpunit.ui.wizards.TestCaseWizard" icon="icons/full/etool16/new_testcase.gif"
+			id="org.eclipse.php.phpunit.wizards.TestCaseWizard" name="%case" />
+		<wizard category="org.eclipse.php.project.ui/org.eclipse.php.phpunit"
+			class="org.eclipse.php.phpunit.ui.wizards.TestSuiteWizard" icon="icons/full/etool16/new_testsuite.gif"
+			id="org.eclipse.php.phpunit.wizards.TestSuiteWizard" name="%suite" />
+	</extension>
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.eclipse.ui.category.views"
+			description="%name" id="org.eclipse.php.phpunit.PHPUnitView" name="%name" />
+		<command categoryId="org.eclipse.debug.ui.category.run"
+			description="%run" id="org.eclipse.php.phpunit.LaunchShortcut.run"
+			name="%run" />
+		<command categoryId="org.eclipse.debug.ui.category.run"
+			description="%debug" id="org.eclipse.php.phpunit.LaunchShortcut.debug"
+			name="%debug" />
+	</extension>
+	<extension point="org.eclipse.ui.bindings">
+		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.run"
+			contextId="org.eclipse.ui.globalScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M3+M2+X U" />
+		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.debug"
+			contextId="org.eclipse.ui.globalScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M3+M2+D U" />
+	</extension>
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceInitializer" />
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType"
+			icon="icons/full/main.png" id="org.eclipse.php.phpunit.launch" />
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchShortcuts">
+		<shortcut class="org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchShortcut"
+			icon="icons/full/main.png" id="org.eclipse.php.phpunit.LaunchShortcut"
+			label="%test" modes="run,debug,profile">
+
+			<description description="%test" mode="run" />
+			<description description="%test" mode="debug" />
+			<description description="%test" mode="profile" />
+
+			<contextualLaunch>
+				<enablement>
+					<count value="1">
+					</count>
+					<iterate operator="and">
+						<test property="org.eclipse.php.phpunit.testablePHP" value="true" />
+					</iterate>
+				</enablement>
+			</contextualLaunch>
+
+			<configurationType
+				id="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType">
+			</configurationType>
+		</shortcut>
+	</extension>
+	<extension point="org.eclipse.php.debug.core.phpDebugHandlers">
+		<handler class="org.eclipse.php.phpunit.debug.PHPUnitDebugHandler"
+			id="org.eclipse.php.phpunit.PHPUnitDebugHandler" name="org.eclipse.php.phpunit.PHPUnitDebugHandler" />
+	</extension>
+	<extension point="org.eclipse.php.debug.core.phpDebugParametersInitializers">
+		<initializer
+			class="org.eclipse.php.phpunit.debug.PHPUnitDebugParametersInitializer"
+			handler="org.eclipse.php.phpunit.PHPUnitDebugHandler" id="org.eclipse.php.phpunit.debugParametersInitializer.debug"
+			launchConfigurationType="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType"
+			mode="debug" name="org.eclipse.php.phpunit.debugParametersInitializer" />
+		<initializer
+			class="org.eclipse.php.phpunit.debug.PHPUnitDebugParametersInitializer"
+			handler="org.eclipse.php.phpunit.PHPUnitDebugHandler" id="org.eclipse.php.phpunit.debugParametersInitializer.run"
+			launchConfigurationType="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType"
+			mode="run" name="org.eclipse.php.phpunit.debugParametersInitializer" />
+	</extension>
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			class="org.eclipse.php.phpunit.ui.launch.PHPUnitPropertyTester" id="org.eclipse.php.phpunit.propertyTester"
+			namespace="org.eclipse.php.phpunit" properties="testablePHP" type="java.lang.Object" />
+	</extension>
+	<extension point="org.eclipse.php.debug.ui.phpCodeCoverageFilter">
+		<filter class="org.eclipse.php.phpunit.ui.PHPUnitCodeCoverageFilter">
+		</filter> 
+	</extension>
+	<extension point="org.eclipse.php.debug.ui.phpDebuggerLaunchSettingsSections">
+		<phpDebuggerLaunchSettingsSection
+			debuggerId="org.eclipse.php.debug.core.zendDebugger" id="org.eclipse.php.debug.ui.zendDebuggerExeLaunchSettings"
+			launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType"
+			name="Zend Debugger Exe Launch Settings"
+			section="org.eclipse.php.phpunit.ui.launch.PHPUnitZDLaunchSettingsSection">
+		</phpDebuggerLaunchSettingsSection>
+		<phpDebuggerLaunchSettingsSection
+			debuggerId="org.eclipse.php.debug.core.xdebugDebugger" id="org.eclipse.php.debug.ui.xDebugExeLaunchSettings"
+			launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType"
+			name="XDebug Exe Launch Settings"
+			section="org.eclipse.php.phpunit.ui.launch.PHPUnitXDLaunchSettingsSection">
+		</phpDebuggerLaunchSettingsSection>
+	</extension>
+	<!--<extension point="com.zend.php.profile.ui.phpProfilerLaunchSettingsSections"> 
+		<phpProfilerLaunchSettingsSection id="org.eclipse.php.debug.ui.zendDebuggerProfilerExeLaunchSettings" 
+		launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType" name="Zend 
+		Debugger Profiler Exe Launch Settings" profilerId="org.eclipse.php.debug.core.zendDebugger" 
+		section="com.zend.php.profile.ui.launcher.ZendDebuggerProfileExeLaunchSettingsSection"> 
+		</phpProfilerLaunchSettingsSection> <phpProfilerLaunchSettingsSection id="org.eclipse.php.debug.ui.xdebugProfilerExeLaunchSettings" 
+		launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType" name="XDebug 
+		Profiler Exe Launch Settings" profilerId="org.eclipse.php.debug.core.xdebugDebugger" 
+		section="com.zend.php.profile.ui.launcher.XDebugProfileExeLaunchSettingsSection"> 
+		</phpProfilerLaunchSettingsSection> </extension> -->
+
+	<extension point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard menuGroupId="org.eclipse.php.project.ui.testing"
+			type="new" wizardId="org.eclipse.php.phpunit.wizards.TestCaseWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<test property="org.eclipse.core.resources.projectNature"
+							value="org.eclipse.php.core.PHPNature">
+						</test>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+		<commonWizard menuGroupId="org.eclipse.php.project.ui.testing"
+			type="new" wizardId="org.eclipse.php.phpunit.wizards.TestSuiteWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<test property="org.eclipse.core.resources.projectNature"
+							value="org.eclipse.php.core.PHPNature">
+						</test>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+	</extension>
+</plugin>

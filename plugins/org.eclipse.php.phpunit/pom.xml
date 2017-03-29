@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.zend</groupId>
+		<artifactId>plugins</artifactId>
+		<version>13.6.0-SNAPSHOT</version>
+		<relativePath>../plugins-releng/pom.xml</relativePath>
+	</parent>
+	<groupId>com.zend</groupId>
+	<artifactId>com.zend.php.phpunit</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target>
+								<ant antfile="../../core-releng/resources.xml" target="fetchResource">
+									<property name="name" value="${phpunit.phar.name}" />
+									<property name="version" value="${phpunit.phar.version}" />
+									<property name="location" value="${phpunit.phar.location}" />
+									<property name="dest" value="resources/phpunit.phar" />
+									<property name="format" value="phar" />
+									<property name="mvn.plugin.classpath" refid="maven.plugin.classpath" />
+								</ant>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

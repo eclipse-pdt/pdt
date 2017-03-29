@@ -50,7 +50,7 @@ Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui.preferences.stepFilter;x-internal:=true,
  org.eclipse.php.internal.debug.ui.presentation;x-internal:=true,
  org.eclipse.php.internal.debug.ui.views;x-internal:=true,
- org.eclipse.php.internal.debug.ui.views.coverage;x-internal:=true,
+ org.eclipse.php.internal.debug.ui.views.coverage;x-friends:="org.eclipse.php.phpunit",
  org.eclipse.php.internal.debug.ui.views.variables;x-internal:=true,
  org.eclipse.php.internal.debug.ui.watch;x-internal:=true,
  org.eclipse.php.internal.debug.ui.wizards;x-internal:=true

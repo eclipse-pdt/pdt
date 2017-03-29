@@ -95,6 +95,7 @@ Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatte
  org.eclipse.php.internal.ui.viewsupport;x-internal:=true,
  org.eclipse.php.internal.ui.wizards;x-internal:=true,
  org.eclipse.php.internal.ui.wizards.fields;x-internal:=true,
+ org.eclipse.php.internal.ui.wizards.types;x-friends:="org.eclipse.php.phpunit",
  org.eclipse.php.ui,
  org.eclipse.php.ui.actions,
  org.eclipse.php.ui.actions.filters,
