@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PHPUnit Plug-in
+Bundle-SymbolicName: org.eclipse.php.phpunit;singleton:=true
+Bundle-Version: 13.6.0.qualifier
+Bundle-Activator: org.eclipse.php.phpunit.PHPUnitPlugin
+Bundle-Vendor: Rogue Wave Software, Inc.
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.php.ui,
+ org.eclipse.php.debug.ui,
+ org.eclipse.debug.ui,
+ org.eclipse.php.debug.core,
+ org.eclipse.php.core,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.sse.core,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.expressions,
+ org.eclipse.jface.text,
+ org.eclipse.dltk.core,
+ org.eclipse.dltk.ui,
+ org.eclipse.wst.sse.ui,
+ org.eclipse.dltk.launching,
+ org.eclipse.php.debug.daemon,
+ com.ibm.icu,
+ com.google.gson,
+ org.eclipse.ui.console,
+ org.apache.commons.io
+Bundle-ActivationPolicy: lazy
+Eclipse-BundleShape: dir
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+
