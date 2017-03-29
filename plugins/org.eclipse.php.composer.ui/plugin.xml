@@ -30,7 +30,7 @@
             locationURI="menu:sourceMenuId?before=sourceBegin">
          <command
                commandId="org.eclipse.php.composer.ui.command.injectAutoload"
-               label="%inject.autoload.command.label"
+               label="%inject.autoload.command.name"
                style="push">
             <visibleWhen checkEnabled="false">
                <with
