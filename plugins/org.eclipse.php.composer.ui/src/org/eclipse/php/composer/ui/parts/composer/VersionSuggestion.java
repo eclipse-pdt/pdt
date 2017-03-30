@@ -260,9 +260,10 @@ public class VersionSuggestion {
 					recentMajor.setEnabled(dataArrived && majorVersion != null);
 					recentMajor.setData(majorVersion);
 
+					String minorValue = (dataArrived && majorVersion != null && minorVersion != null
+							? "~" + majorVersion + "." + minorVersion : null); //$NON-NLS-1$ //$NON-NLS-2$
 					recentMinor.setText(Messages.VersionSuggestion_MinorLabel
-							+ (dataArrived && majorVersion != null && minorVersion != null
-									? "~" + majorVersion + "." + minorVersion : Messages.VersionSuggestion_NAValue)); //$NON-NLS-1$ //$NON-NLS-2$
+							+ (minorValue != null ? minorValue : Messages.VersionSuggestion_NAValue));
 					recentMinor.setEnabled(dataArrived && minorVersion != null);
 					recentMinor.setData(minorVersion);
 
@@ -279,6 +280,13 @@ public class VersionSuggestion {
 
 					if (dataArrived) {
 						versions.setInput(pkg.getVersions());
+
+						// set default
+						if (minorValue != null && !minorValue.isEmpty()) {
+							target.setText(minorValue);
+						} else {
+							target.setText("dev-master"); //$NON-NLS-1$
+						}
 					}
 				}
 			}
