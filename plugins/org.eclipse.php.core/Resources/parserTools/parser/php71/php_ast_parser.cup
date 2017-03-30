@@ -3240,10 +3240,16 @@ T_CURLY_OPEN_WITH_DOLAR:s variable:var T_CURLY_CLOSE:e
 	RESULT = new ReflectionVariable(sleft, eright, parser.ast, new Variable(varNameleft, varNameright, parser.ast, varName));
 :}
 
-| T_DOLLAR_OPEN_CURLY_BRACES:s T_STRING_VARNAME:varName T_OPEN_RECT expr:index T_CLOSE_RECT T_CURLY_CLOSE:e
+| T_DOLLAR_OPEN_CURLY_BRACES:s T_STRING_VARNAME:varName T_OPEN_RECT expr:index T_CLOSE_RECT:c T_CURLY_CLOSE:e
 {:
-	RESULT = new ArrayAccess(sleft, eright, parser.ast,
-		new Variable(varNameleft, varNameright, parser.ast, varName), index, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ReflectionVariable(sleft, eright, parser.ast, new ArrayAccess(varNameleft, cright, parser.ast,
+		new Variable(varNameleft, varNameright, parser.ast, varName), index, ArrayAccess.VARIABLE_ARRAY));
+:}
+
+| T_DOLLAR_OPEN_CURLY_BRACES:s T_STRING_VARNAME:varName T_CURLY_OPEN expr:index T_CURLY_CLOSE:c T_CURLY_CLOSE:e
+{:
+	RESULT = new ReflectionVariable(sleft, eright, parser.ast, new ArrayAccess(varNameleft, cright, parser.ast,
+		new Variable(varNameleft, varNameright, parser.ast, varName), index, ArrayAccess.VARIABLE_HASHTABLE));
 :}
 ;
 
