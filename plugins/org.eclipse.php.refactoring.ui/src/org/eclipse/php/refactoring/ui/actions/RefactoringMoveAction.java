@@ -10,33 +10,28 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.ui.actions;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 import org.eclipse.php.internal.ui.actions.AbstractMoveDelegator;
 import org.eclipse.php.internal.ui.actions.ActionUtils;
-import org.eclipse.php.internal.ui.actions.PHPMoveProjectAction;
 import org.eclipse.php.refactoring.core.move.PHPMoveProcessor;
 import org.eclipse.php.refactoring.core.move.PHPProjectMoveProcessor;
 import org.eclipse.php.refactoring.ui.PHPRefactoringUIMessages;
 import org.eclipse.php.refactoring.ui.utils.RefactoringStarter;
 import org.eclipse.php.refactoring.ui.wizard.PHPMoveWizard;
 import org.eclipse.php.refactoring.ui.wizard.PHPProjectMoveWizard;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
-import org.eclipse.ui.actions.SelectionListenerAction;
 
 /**
  * Action called when the user selects Refactoring->Move the action triggers the
@@ -47,7 +42,7 @@ import org.eclipse.ui.actions.SelectionListenerAction;
 public class RefactoringMoveAction extends AbstractMoveDelegator {
 
 	private IStructuredSelection selectedResources;
-	private Shell fShell;
+	private IShellProvider fShellProvider;
 	private IContainer target;
 
 	/**
@@ -55,8 +50,8 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	 */
 	public void run(IStructuredSelection selection) {
 
-		if (fShell == null) {
-			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (fShellProvider == null) {
+			fShellProvider = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		}
 
 		if (selection == null) {
@@ -78,7 +73,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 
 			MoveRefactoring refactoring = new MoveRefactoring(processor);
 			PHPProjectMoveWizard wizard = new PHPProjectMoveWizard(refactoring, project);
-			new RefactoringStarter().activate(refactoring, wizard, fShell,
+			new RefactoringStarter().activate(refactoring, wizard, fShellProvider.getShell(),
 					PHPRefactoringUIMessages.getString("RefactoringMoveAction.0"), true); //$NON-NLS-1$
 			return;
 		}
@@ -104,7 +99,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 
 		MoveRefactoring refactoring = new MoveRefactoring(processor);
 		PHPMoveWizard wizard = new PHPMoveWizard(refactoring);
-		new RefactoringStarter().activate(refactoring, wizard, fShell,
+		new RefactoringStarter().activate(refactoring, wizard, fShellProvider.getShell(),
 				PHPRefactoringUIMessages.getString("RefactoringMoveAction.0"), true); //$NON-NLS-1$
 	}
 
@@ -124,25 +119,9 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	}
 
 	private final void unableToRunMoveAction() {
-		MessageDialog.openInformation(fShell, PHPRefactoringUIMessages.getString("RefactoringMoveAction.1"), //$NON-NLS-1$
+		MessageDialog.openInformation(fShellProvider.getShell(),
+				PHPRefactoringUIMessages.getString("RefactoringMoveAction.1"), //$NON-NLS-1$
 				PHPRefactoringUIMessages.getString("RefactoringMoveAction.2")); //$NON-NLS-1$
-	}
-
-	/**
-	 * Handles project move. Project move, moves the actual location of the
-	 * project on the file system
-	 * 
-	 * @param selection
-	 * @return
-	 */
-	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
-		List list = selection.toList();
-		SelectionListenerAction action = null;
-		if (list.size() == 0 || list.get(0) instanceof IProject || list.get(0) instanceof ScriptProject) {
-			action = new PHPMoveProjectAction(fShell);
-			action.selectionChanged(selection);
-		}
-		return action;
 	}
 
 	public void dispose() {
@@ -150,7 +129,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	}
 
 	public void init(IWorkbenchWindow window) {
-		fShell = window.getShell();
+		fShellProvider = window;
 	}
 
 	public void run(IAction action) {

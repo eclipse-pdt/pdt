@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  */
 public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy implements IAppliedAutoEditStrategy {
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		applied = false;
 		if (command.text == null) {
@@ -65,6 +66,7 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 	private StringBuffer buffer = new StringBuffer();
 	private boolean applied = false;
 
+	@Override
 	public boolean wasApplied() {
 		return applied;
 	}

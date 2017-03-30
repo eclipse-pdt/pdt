@@ -94,6 +94,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 * @see org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.
 	 * IActionBars )
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBar) {
 		fOccurrencesGroup.fillActionBars(actionBar);
 		fReferencesGroup.fillActionBars(actionBar);
@@ -108,6 +109,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		if (!PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {

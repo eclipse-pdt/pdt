@@ -77,6 +77,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared in Window.
 	 */
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
@@ -93,6 +94,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared in Window.
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 		Control contents = super.createContents(parent);
 
@@ -111,6 +113,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * The <code>SaveAsDialog</code> implementation of this <code>Window</code>
 	 * method disposes of the banner image when the dialog is closed.
 	 */
+	@Override
 	public boolean close() {
 		if (dlgTitleImage != null) {
 			dlgTitleImage.dispose();
@@ -121,6 +124,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		GridLayout parentLayout = (GridLayout) parent.getLayout();
 		parentLayout.makeColumnsEqualWidth = false;
@@ -132,6 +136,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		// top level composite
 		Composite parentComposite = (Composite) super.createDialogArea(parent);
@@ -148,6 +153,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		composite.setFont(parentComposite.getFont());
 
 		Listener listener = new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				setDialogComplete(validatePage());
 			}
@@ -190,6 +196,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected void okPressed() {
 		IPath path = resourceGroup.getContainerFullPath().append(resourceGroup.getResource());
 
@@ -317,6 +324,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
 		IDialogSettings settings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(DIALOG_SETTINGS_SECTION);

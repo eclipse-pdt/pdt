@@ -73,6 +73,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void threadChange(Thread thread) {
 		if (fTransfer)
 			Job.getJobManager().transferRule(fRule, thread);
@@ -81,6 +82,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadL
 	/*
 	 * @see IRunnableWithProgress#run(IProgressMonitor)
 	 */
+	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		try {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -101,6 +103,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadL
 			 * org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime
 			 * .IProgressMonitor)
 			 */
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					WorkbenchRunnableAdapter.this.run(monitor);
@@ -119,6 +122,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadL
 				return Status.OK_STATUS;
 			}
 
+			@Override
 			public boolean belongsTo(Object family) {
 				return jobFamiliy == family;
 			}

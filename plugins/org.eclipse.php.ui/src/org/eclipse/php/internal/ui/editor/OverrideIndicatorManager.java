@@ -177,6 +177,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 			 * org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core
 			 * .dom.MethodDeclaration)
 			 */
+			@Override
 			public boolean visit(MethodDeclaration node) {
 				IMethodBinding binding = node.resolveMethodBinding();
 
@@ -254,6 +255,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	 * @seeorg.eclipse.dltk.internal.ui.text.IScriptReconcilingListener#
 	 * aboutToBeReconciled()
 	 */
+	@Override
 	public void aboutToBeReconciled() {
 	}
 
@@ -286,6 +288,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	 * reconciled (org.eclipse.php.internal.core.ast.nodes.Program, boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void reconciled(Program ast, boolean forced, IProgressMonitor progressMonitor) {
 		if (ast != null) {
 			updateAnnotations(ast, progressMonitor);

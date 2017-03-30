@@ -177,6 +177,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	 * @param region
 	 * @return the text attribute
 	 */
+	@Override
 	protected TextAttribute getAttributeFor(ITextRegion region) {
 		TextAttribute result = null;
 
@@ -216,6 +217,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	 * 
 	 * @param colorKey
 	 */
+	@Override
 	protected void addTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
 			String enableKey = PreferenceConstants.getEnabledPreferenceKey(colorKey);
@@ -293,6 +295,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		return result;
 	}
 
+	@Override
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength,
 			Collection holdResults) {
 		final int partitionStartOffset = typedRegion.getOffset();
@@ -647,6 +650,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		return fColorTypes;
 	}
 
+	@Override
 	public void loadColors() {
 		addTextAttribute(PreferenceConstants.EDITOR_NORMAL_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
@@ -673,6 +677,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		fColorPreferences = preferenceStore;
 	}
 
+	@Override
 	public IPreferenceStore getColorPreferences() {
 		if (fColorPreferences != null) {
 			return fColorPreferences;
@@ -683,6 +688,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	/*
 	 * Handle preference changes
 	 */
+	@Override
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		if (event != null) {
 			String prefKey = event.getProperty();

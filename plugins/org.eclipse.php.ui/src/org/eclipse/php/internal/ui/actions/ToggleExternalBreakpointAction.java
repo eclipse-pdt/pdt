@@ -51,6 +51,7 @@ public class ToggleExternalBreakpointAction extends ToggleBreakpointAction {
 	 * @see
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
+	@Override
 	protected boolean hasMarkers() {
 		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(), getResource(), getDocument(),
 				getAnnotationModel(), getRulerInfo());
@@ -62,6 +63,7 @@ public class ToggleExternalBreakpointAction extends ToggleBreakpointAction {
 	 * @see
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
 	 */
+	@Override
 	protected IMarker[] getMarkers() {
 		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(), getResource(), getDocument(),
 				getAnnotationModel(), getRulerInfo());

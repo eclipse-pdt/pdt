@@ -18,11 +18,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
@@ -33,23 +28,6 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  *         (IModelElement -> IResource).
  */
 public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.actions.FormatActionDelegate {
-	private IWorkbenchSiteProgressService getActiveProgressService() {
-		IWorkbenchSiteProgressService service = null;
-		if (PlatformUI.isWorkbenchRunning()) {
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (activeWorkbenchWindow != null) {
-				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if (activePage != null) {
-					IWorkbenchPart activePart = activePage.getActivePart();
-					if (activePart != null) {
-						service = (IWorkbenchSiteProgressService) activePart.getSite()
-								.getAdapter(IWorkbenchSiteProgressService.class);
-					}
-				}
-			}
-		}
-		return service;
-	}
 
 	class FormatJob extends Job {
 
@@ -57,6 +35,7 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 			super(name);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			IStatus status = Status.OK_STATUS;
 
@@ -92,6 +71,7 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR,
 			SSEUIMessages.FormatActionDelegate_errorStatusMessage, null);
 
+	@Override
 	protected Job getJob() {
 		return new FormatJob(SSEUIMessages.FormatActionDelegate_jobName);
 	}

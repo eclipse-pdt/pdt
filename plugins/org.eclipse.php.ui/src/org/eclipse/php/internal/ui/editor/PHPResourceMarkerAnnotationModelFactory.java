@@ -35,6 +35,7 @@ public class PHPResourceMarkerAnnotationModelFactory extends StructuredResourceM
 	 * @see org.eclipse.core.filebuffers.IAnnotationModelFactory#
 	 * createAnnotationModel (org.eclipse.core.runtime.IPath)
 	 */
+	@Override
 	public IAnnotationModel createAnnotationModel(IPath location) {
 		IAnnotationModel model = null;
 		IFile file = FileBuffers.getWorkspaceFileAtLocation(location);

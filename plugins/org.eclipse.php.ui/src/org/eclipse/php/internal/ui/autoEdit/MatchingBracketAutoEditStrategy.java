@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (TypingPreferences.closeBrackets && command.text != null) {
 			int length = command.text.length();

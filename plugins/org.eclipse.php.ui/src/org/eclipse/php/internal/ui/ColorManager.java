@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ColorManager extends DLTKColorManager {
 
-	protected Map<String, RGB> fKeyTable = new HashMap<String, RGB>(10);
-	protected Map<Display, Map> fDisplayTable = new HashMap<Display, Map>(2);
+	protected Map<String, RGB> fKeyTable = new HashMap<>(10);
+	protected Map<Display, Map> fDisplayTable = new HashMap<>(2);
 
 	/**
 	 * Flag which tells if the colors are automatically disposed when the
@@ -58,6 +58,7 @@ public class ColorManager extends DLTKColorManager {
 		fAutoDisposeOnDisplayDispose = autoDisposeOnDisplayDispose;
 	}
 
+	@Override
 	public void dispose(Display display) {
 		Map colorTable = fDisplayTable.get(display);
 		if (colorTable != null) {
@@ -73,6 +74,7 @@ public class ColorManager extends DLTKColorManager {
 	/*
 	 * @see IColorManager#getColor(RGB)
 	 */
+	@Override
 	public Color getColor(RGB rgb) {
 
 		if (rgb == null)
@@ -84,11 +86,7 @@ public class ColorManager extends DLTKColorManager {
 			colorTable = new HashMap<RGB, Color>(10);
 			fDisplayTable.put(display, colorTable);
 			if (fAutoDisposeOnDisplayDispose) {
-				display.disposeExec(new Runnable() {
-					public void run() {
-						dispose(display);
-					}
-				});
+				display.disposeExec(() -> dispose(display));
 			}
 		}
 
@@ -104,6 +102,7 @@ public class ColorManager extends DLTKColorManager {
 	/*
 	 * @see IColorManager#dispose
 	 */
+	@Override
 	public void dispose() {
 		if (!fAutoDisposeOnDisplayDispose)
 			dispose(Display.getCurrent());
@@ -112,6 +111,7 @@ public class ColorManager extends DLTKColorManager {
 	/*
 	 * @see IColorManager#getColor(String)
 	 */
+	@Override
 	public Color getColor(String key) {
 
 		if (key == null)
@@ -124,6 +124,7 @@ public class ColorManager extends DLTKColorManager {
 	/*
 	 * @see IColorManagerExtension#bindColor(String, RGB)
 	 */
+	@Override
 	public void bindColor(String key, RGB rgb) {
 		Object value = fKeyTable.get(key);
 		if (value != null)
@@ -135,6 +136,7 @@ public class ColorManager extends DLTKColorManager {
 	/*
 	 * @see IColorManagerExtension#unbindColor(String)
 	 */
+	@Override
 	public void unbindColor(String key) {
 		fKeyTable.remove(key);
 	}

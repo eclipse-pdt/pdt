@@ -58,6 +58,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 
+	@Override
 	protected boolean isValidPrefix(String prefix) {
 		String word = getDisplayString();
 		if (word.startsWith("$") && !prefix.startsWith("$")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -79,10 +80,12 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		return result;
 	}
 
+	@Override
 	protected boolean isSmartTrigger(char trigger) {
 		return trigger == '$';
 	}
 
+	@Override
 	public void apply(IDocument document, char trigger, int offset) {
 		IModelElement modelElement = getModelElement();
 
@@ -136,6 +139,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		return replacementString.length();
 	}
 
+	@Override
 	public IContextInformation getContextInformation() {
 		String displayString = getDisplayString();
 		if (displayString.indexOf('(') == -1) {
@@ -144,22 +148,27 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		return super.getContextInformation();
 	}
 
+	@Override
 	protected boolean isCamelCaseMatching() {
 		return true;
 	}
 
+	@Override
 	protected boolean insertCompletion() {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
 				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
 	}
 
+	@Override
 	protected ScriptTextTools getTextTools() {
 		return PHPUiPlugin.getDefault().getTextTools();
 	}
 
+	@Override
 	public IInformationControlCreator getInformationControlCreator() {
 		if (fCreator == null) {
 			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
+				@Override
 				public IInformationControl createInformationControl(Shell parent) {
 					if (BrowserInformationControl.isAvailable(parent)) {
 						return new BrowserInformationControl(parent, PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
@@ -173,6 +182,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		return fCreator;
 	}
 
+	@Override
 	public Object getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT;
 	}

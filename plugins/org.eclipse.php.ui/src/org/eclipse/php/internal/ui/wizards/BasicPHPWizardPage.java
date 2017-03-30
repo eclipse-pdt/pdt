@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.ui.wizards;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.WizardPage;
@@ -184,6 +184,7 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 	/*
 	 * @see WizardPage#becomesVisible
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		fPageVisible = visible;
@@ -196,7 +197,7 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		updateStatus(fCurrStatus);
 	}
 
-	public ArrayList setComboItems(Combo combo, ArrayList arrItems) {
+	public List<String> setComboItems(Combo combo, List<String> arrItems) {
 		arrItems.clear();
 		arrItems.add(combo.getText()); // must be first
 		String[] items = combo.getItems();

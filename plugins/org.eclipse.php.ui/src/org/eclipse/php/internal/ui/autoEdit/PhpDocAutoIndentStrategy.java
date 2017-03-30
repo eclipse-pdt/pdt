@@ -542,6 +542,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	/*
 	 * @see IAutoIndentStrategy#customizeDocumentCommand
 	 */
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 
 		if (!isSmartMode())
@@ -653,24 +654,6 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	/**
-	 * Returns the method inherited from, <code>null</code> if method is newly
-	 * defined.
-	 * 
-	 * @param method
-	 *            the method being written
-	 * @return the ancestor method, or <code>null</code> if none
-	 * @throws ModelException
-	 *             if accessing the PHP model fails
-	 */
-	private static IMethod getInheritedMethod(IMethod method) throws ModelException {
-		IType declaringType = method.getDeclaringType();
-		if (null == declaringType)
-			return null;
-		MethodOverrideTester tester = SuperTypeHierarchyCache.getMethodOverrideTester(declaringType);
-		return tester.findOverriddenMethod(method, true);
-	}
-
-	/**
 	 * Returns the compilation unit of the compilation unit editor invoking the
 	 * <code>AutoIndentStrategy</code>, might return <code>null</code> on error.
 	 * 
@@ -751,34 +734,6 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	private String createDefaultComment(String lineDelimiter) {
 		return PHPDOC_COMMENT_BLOCK_START + lineDelimiter + PHP_COMMENT_BLOCK_MID + lineDelimiter
 				+ PHP_COMMENT_BLOCK_END;
-	}
-
-	/**
-	 * Calculates the leading string to be used as indentation prefix
-	 * 
-	 * @param document
-	 *            The IStructuredDocument that we are working on
-	 * @param modelElem
-	 *            A PHPFileData that need to be documented
-	 * 
-	 * @return String to be used as leading indentation
-	 */
-	private String getIndentString(IDocument document, IModelElement modelElem) throws BadLocationException {
-		int elementOffset = 0;
-		String leadingString = null;
-		try {
-			elementOffset = getCodeDataOffset(modelElem);
-			int lineStartOffset = document.getLineInformationOfOffset(elementOffset).getOffset();
-			leadingString = document.get(lineStartOffset, elementOffset - lineStartOffset);
-		} catch (ModelException e) {
-			Logger.logException(e);
-			return null;
-		}
-		// replacing all non-spaces/tabs to single-space, in order to get
-		// "char-clean" prefix
-		leadingString = leadingString.replaceAll("[^\\p{javaWhitespace}]", " "); //$NON-NLS-1$ //$NON-NLS-2$
-
-		return leadingString;
 	}
 
 	private int getCodeDataOffset(IModelElement modelElem) throws ModelException {

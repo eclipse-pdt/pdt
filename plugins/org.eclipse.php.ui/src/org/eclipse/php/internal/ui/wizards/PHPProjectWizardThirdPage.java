@@ -70,7 +70,7 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 			}
 			init(scriptProject, rawBuildpath, true);
 		} else {
-			throw (new IllegalStateException());
+			throw new IllegalStateException();
 		}
 	}
 

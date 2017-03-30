@@ -29,6 +29,7 @@ public class AdapterFactoryProviderForPhp implements AdapterFactoryProvider {
 	/*
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */
+	@Override
 	public void addAdapterFactories(IStructuredModel structuredModel) {
 		// these are the main factories, on model's factory registry
 		addContentBasedFactories(structuredModel);
@@ -64,10 +65,12 @@ public class AdapterFactoryProviderForPhp implements AdapterFactoryProvider {
 	/*
 	 * @see AdapterFactoryProvider#isFor(ContentTypeDescription)
 	 */
+	@Override
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
 		return (contentTypeDescription instanceof PHPModelHandler);
 	}
 
+	@Override
 	public void reinitializeFactories(IStructuredModel structuredModel) {
 	}
 }

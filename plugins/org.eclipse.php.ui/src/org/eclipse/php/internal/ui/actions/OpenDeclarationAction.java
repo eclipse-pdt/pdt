@@ -27,6 +27,7 @@ public class OpenDeclarationAction extends PHPEditorResolvingAction implements I
 		super(resourceBundle, "OpenAction_declaration_", editor); //$NON-NLS-1$
 	}
 
+	@Override
 	protected void doRun(IModelElement modelElement) {
 		try {
 			OpenActionUtil.open(modelElement);
@@ -37,6 +38,7 @@ public class OpenDeclarationAction extends PHPEditorResolvingAction implements I
 		}
 	}
 
+	@Override
 	protected boolean isValid(IModelElement modelElement) {
 		if (super.isValid(modelElement)) {
 			return !LanguageModelInitializer.isLanguageModelElement(modelElement);

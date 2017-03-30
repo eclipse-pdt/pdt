@@ -49,6 +49,7 @@ public class NewWizard extends Wizard {
 	/**
 	 * Create the wizard pages
 	 */
+	@Override
 	public void addPages() {
 		IWizardCategory root = WorkbenchPlugin.getDefault().getNewWizardRegistry().getRootCategory();
 		IWizardDescriptor[] primary = new IWizardDescriptor[0];
@@ -130,6 +131,7 @@ public class NewWizard extends Wizard {
 	 * 
 	 * @return boolean
 	 */
+	@Override
 	public boolean performFinish() {
 		// save our selection state
 		mainPage.saveWidgetValues();
@@ -173,6 +175,7 @@ public class NewWizard extends Wizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#canFinish()
 	 */
+	@Override
 	public boolean canFinish() {
 		// we can finish if the first page is current and the the page can
 		// finish early.

@@ -38,6 +38,7 @@ public class NewPHPInterfaceWizard extends NewPHPTypeWizard implements INewWizar
 		addPage(page);
 	}
 
+	@Override
 	public void addPages() {
 		if (page == null) {
 			page = new NewPHPInterfacePage();
@@ -46,6 +47,7 @@ public class NewPHPInterfaceWizard extends NewPHPTypeWizard implements INewWizar
 		}
 	}
 
+	@Override
 	public boolean performFinish() {
 		if (page.isInExistingPHPFile()) {
 			// add the existing file's name to the already existings requires !
@@ -100,7 +102,7 @@ public class NewPHPInterfaceWizard extends NewPHPTypeWizard implements INewWizar
 		data.namespace = page.getNamespace();
 		List<String> existingImports = getExistingImports();
 		data.existingImports = existingImports.toArray(new String[0]);
-		List<String> imports = new ArrayList<String>();
+		List<String> imports = new ArrayList<>();
 		for (IType type : interfaces) {
 			addImport(imports, type, existingImports);
 		}
@@ -123,6 +125,7 @@ public class NewPHPInterfaceWizard extends NewPHPTypeWizard implements INewWizar
 	 */
 	class InterfacePostFinishValidator extends PostFinishValidator {
 
+		@Override
 		public void packAndValidate() {
 			super.packAndValidate();
 			// run over all requested interfaces and add their functions and

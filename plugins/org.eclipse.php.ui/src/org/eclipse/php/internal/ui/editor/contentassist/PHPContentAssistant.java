@@ -63,10 +63,12 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 		setSorter(new PHPCompletionProposalSorter());
 	}
 
+	@Override
 	protected AutoAssistListener createAutoAssistListener() {
 		return new AutoAssistListener2();
 	}
 
+	@Override
 	public void install(ITextViewer textViewer) {
 		super.install(textViewer);
 		fViewer = textViewer;
@@ -76,6 +78,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 		}
 	}
 
+	@Override
 	public void uninstall() {
 		super.uninstall();
 		if (fPreferenceChangeListener != null) {
@@ -85,6 +88,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 		fViewer = null;
 	}
 
+	@Override
 	public void setAutoActivationDelay(int delay) {
 		fAutoActivationDelay = delay;
 		super.setAutoActivationDelay(delay);
@@ -100,12 +104,14 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 		private final static int SHOW_PROPOSALS = 1;
 		private final static int SHOW_CONTEXT_INFO = 2;
 
+		@Override
 		protected void start(int showStyle) {
 			fShowStyle = showStyle;
 			fThread = new Thread(this, "AutoAssist Delay"); //$NON-NLS-1$
 			fThread.start();
 		}
 
+		@Override
 		public void run() {
 			try {
 				while (true) {
@@ -126,6 +132,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 			fThread = null;
 		}
 
+		@Override
 		protected void reset(int showStyle) {
 			synchronized (fMutex) {
 				fShowStyle = showStyle;
@@ -134,6 +141,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 			}
 		}
 
+		@Override
 		protected void stop() {
 			Thread threadToStop = fThread;
 			if (threadToStop != null && threadToStop.isAlive()) {
@@ -141,6 +149,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 			}
 		}
 
+		@Override
 		public void keyPressed(KeyEvent e) {
 			// Only act on typed characters and ignore modifier-only events
 			if (e.character == 0 && (e.keyCode & SWT.KEYCODE_BIT) == 0) {
@@ -291,6 +300,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 		}
 	}
 
+	@Override
 	public boolean provide(IContentAssistProcessor processor) {
 		return true;
 	}

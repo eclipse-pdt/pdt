@@ -32,7 +32,6 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.dltk.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.dltk.ui.dialogs.ITypeInfoFilterExtension;
-import org.eclipse.dltk.ui.dialogs.ITypeInfoRequestor;
 import org.eclipse.dltk.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.*;
@@ -57,7 +56,10 @@ import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
 import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
 import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -132,7 +134,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	private Button browseSourceBtn;
 	private Button browseExistingFile;
 	private Composite checkBoxesCreationComp;
-	// private Composite statementsCreationComp;
 	protected int fTypeKind;
 	private boolean isInExistingPHPFile = false;
 	private Composite injectLocation;
@@ -187,15 +188,13 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		handlePHPVersion();
 		sourceText.setText(sourceFolder);
 		handlePHPVersion();
-		sourceText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				Text textSource = (Text) e.getSource();
-				sourceFolder = textSource.getText();
-				handlePHPVersion();
-				validatePageValues(VALIDATE_SOURCE_FOLDER);
-				validatePageValues(VALIDATE_NEW_FILE);
-				updateDisabled();
-			}
+		sourceText.addModifyListener(e -> {
+			Text textSource = (Text) e.getSource();
+			sourceFolder = textSource.getText();
+			handlePHPVersion();
+			validatePageValues(VALIDATE_SOURCE_FOLDER);
+			validatePageValues(VALIDATE_NEW_FILE);
+			updateDisabled();
 		});
 
 		browseSourceBtn = new Button(container, SWT.PUSH);
@@ -205,6 +204,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseSourceBtn);
 		browseSourceBtn.setLayoutData(gd);
 		browseSourceBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				chooseNewSourceFolder();
 				String sourcePath = sourceText.getText();
@@ -220,6 +220,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		newFileBtn.setText(Messages.NewPHPTypePage_createNewFile);
 		newFileBtn.setSelection(!isInExistingPHPFile);
 		newFileBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (isInExistingPHPFile) {
 					isInExistingPHPFile = false;
@@ -253,6 +254,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		existingFileBtn.setSelection(isInExistingPHPFile);
 		existingFileBtn.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!isInExistingPHPFile) {
 					isInExistingPHPFile = true;
@@ -291,6 +293,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 		browseExistingFile.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openPhpFileDialog();
 				validatePageValues(VALIDATE_EXISTING_FILE);
@@ -341,15 +344,14 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 	protected IScriptProject getProject() {
 		String sourcePath = sourceText.getText();
-		if (sourcePath.length() > 0) {
-			if (isValidSourcePath(sourcePath)) {
-				IProject currProject = getCurrentProject();
-				if (currProject != null) {
-					return DLTKCore.create(currProject);
-				}
+		if (sourcePath.length() > 0 && isValidSourcePath(sourcePath)) {
+			IProject currProject = getCurrentProject();
+			if (currProject != null) {
+				return DLTKCore.create(currProject);
 			}
 		}
 		return null;
+
 	}
 
 	/**
@@ -375,7 +377,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		IPath containerPath = new Path(path.replace('\\', IPath.SEPARATOR));
 		containerPath = new Path(containerPath.segment(0));
 		IResource resource = workspaceRoot.findMember(containerPath);
-		return (resource != null);
+		return resource != null;
 	}
 
 	/**
@@ -415,6 +417,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		namespaceCheckbox.setLayoutData(gd);
 		namespaceCheckbox.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				changeSourceFolder();
 			}
@@ -439,7 +442,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			String sourceFolder = getSourceText();
 			IPath sourcePath = new Path(sourceFolder);
 			sourcePath = sourcePath.removeLastSegments(sourcePath.segmentCount() - removedSegmentNumber);
-			// sourcePath = sourcePath.append(namespaceText.getText());
 			String[] segments = namespaceText.getText().split("\\\\");//$NON-NLS-1$
 			for (String segment : segments) {
 				sourcePath = sourcePath.append(segment);
@@ -527,7 +529,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 
-		// rowLayout.spacing = 10;
 		for (int i = 0; i < modifiersNames.length; i++) {
 			// fixed bug 14450 - change the modifier from checkboxes to radio
 			// buttons
@@ -555,6 +556,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		tableViewer.setColumnProperties(new String[] { INTERFACE });
 
 		tableViewer.getTable().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.keyCode == SWT.F2 && event.stateMask == 0) {
 					ISelection selection = tableViewer.getSelection();
@@ -576,6 +578,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		addInterfacesBtn = (Button) fSuperInterfacesDialogField.getButtonBox(parent).getChildren()[0];
 		addInterfacesBtn.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Object result = chooseInterfaces();
 				if (result != null && result instanceof IType) {
@@ -602,6 +605,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		final TableViewer tableViewer = fTraitsDialogField.getTableViewer();
 		tableViewer.setColumnProperties(new String[] { INTERFACE });
 		tableViewer.getTable().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.keyCode == SWT.F2 && event.stateMask == 0) {
 					ISelection selection = tableViewer.getSelection();
@@ -623,6 +627,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		addTraitsBtn = (Button) fTraitsDialogField.getButtonBox(parent).getChildren()[0];
 		addTraitsBtn.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Object result = chooseTraits();
 				if (result != null && result instanceof IType) {
@@ -658,7 +663,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				if (!lastNamespace.equals(namespaceText.getText())) {
 					return namespaceText.getText();
 				} else {
-					return new String();
+					return ""; //$NON-NLS-1$
 				}
 			}
 		}
@@ -733,7 +738,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			return null;
 		}
 
-		HashMap<String, Boolean> result = new HashMap<String, Boolean>();
+		HashMap<String, Boolean> result = new HashMap<>();
 		Button[] modBtns = (Button[]) modifiers.getChildren();
 
 		if (modBtns == null || modBtns.length == 0) {
@@ -741,7 +746,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		}
 
 		for (Button element : modBtns) {
-			result.put(element.getText(), new Boolean(element.getSelection()));
+			result.put(element.getText(), element.getSelection());
 		}
 		return result;
 	}
@@ -784,7 +789,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	 */
 	protected void addCheckboxesCreation(Composite elementSection, String[] checkBoxes) {
 		GridData gd = new GridData();
-		// gd.horizontalSpan = 3;
 		gd.verticalAlignment = GridData.BEGINNING;
 		Label whichMethods = new Label(elementSection, SWT.NULL);
 		whichMethods.setText(Messages.NewPHPTypePage_checkboxesToCreate);
@@ -800,9 +804,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			if (element != null) {
 				Button button = new Button(checkBoxesCreationComp, SWT.CHECK);
 				button.setText(element);
-				// String value =
-				// getValue(getPHPCoreKey(PHPCoreConstants.CODEGEN_ADD_COMMENTS));
-				// button.setSelection(Boolean.valueOf(value).booleanValue());
 			} else {
 				new Label(checkBoxesCreationComp, SWT.NULL);
 			}
@@ -877,7 +878,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	protected void initValues() {
 		validatePageValues(VALIDATE_SOURCE_FOLDER);
 		if (!isInExistingPHPFile) {
-			// newFileText.setText(IDEUIConstants.NEW_FILE_DEFAULT_NAME);
 			existingFileText.setEnabled(false);
 			browseExistingFile.setEnabled(false);
 			Control[] buttons = injectLocation.getChildren();
@@ -915,10 +915,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 	protected void initGeneratedGroupValues() {
 		preferenceStore = PHPUiPlugin.getDefault().getPreferenceStore();
-		// String lastCheckboxValue = preferenceStore
-		// .getString(getPreferencePrefix()
-		// + PreferenceKeys.GENERATED_VALUES_OF_CREATE_CLASS);
-		// if (lastCheckboxValue != null) {
 		Button[] checkboxes = getGeneratedGroupCheckboxes();
 		for (Button button : checkboxes) {
 			initSelectionStatus(button);
@@ -952,7 +948,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	protected Button[] getGeneratedGroupCheckboxes() {
-		List<Button> list = new ArrayList<Button>();
+		List<Button> list = new ArrayList<>();
 		Control[] btns = null;
 		if (checkBoxesCreationComp != null) {
 			btns = checkBoxesCreationComp.getChildren();
@@ -966,7 +962,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	protected String getPreferencePrefix() {
-		return "";//$NON-NLS-1$
+		return ""; //$NON-NLS-1$
 	}
 
 	protected void updateDisabled() {
@@ -1007,12 +1003,10 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		if (existingPHPFile != null && existingPHPFile.exists()) {
 			try {
 				IModelElement[] rootElements = existingPHPFile.getChildren();
-				if (rootElements.length > 0) {
-					if (rootElements[0] instanceof IType) {
-						IType firstElement = (IType) rootElements[0];
-						if (PHPFlags.isNamespace(firstElement.getFlags())) {
-							return true;
-						}
+				if (rootElements.length > 0 && rootElements[0] instanceof IType) {
+					IType firstElement = (IType) rootElements[0];
+					if (PHPFlags.isNamespace(firstElement.getFlags())) {
+						return true;
 					}
 				}
 			} catch (ModelException e) {
@@ -1020,6 +1014,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			}
 		}
 		return false;
+
 	}
 
 	protected String getLastNamespace() {
@@ -1069,9 +1064,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 				IFile file = wsRoot.getFile(p);
 
-				// PHPFileData fileData =
-				// PHPWorkspaceModelManager.getInstance().getModelForFile(p.toString());
-
 				ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 				if (sourceModule != null && sourceModule.exists()) {
 					IType[] types = null;
@@ -1107,23 +1099,21 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			}
 
 			// fix bug 14446 - add PHP identifier validation
-			if (getProject() != null) {
-				if (!isValidPhpIdentifier(getElementName())) {
-					String message = Messages.NewPHPTypePage_InvalidPhp;
-					String nameLabel = Messages.NewPHPTypePage_InvalidPhpName;
-					switch (fTypeKind) {
-					case CLASS_TYPE:
-						message = message + Messages.NewPHPTypePage_class + nameLabel;
-						break;
-					case INTERFACE_TYPE:
-						message = message + Messages.NewPHPTypePage_interface + nameLabel;
-						break;
-					case TRAIT_TYPE:
-						message = message + Messages.NewPHPTypePage_trait + nameLabel;
-						break;
-					}
-					elementNameStatus.setError(message);
+			if (getProject() != null && !isValidPhpIdentifier(getElementName())) {
+				String message = Messages.NewPHPTypePage_InvalidPhp;
+				String nameLabel = Messages.NewPHPTypePage_InvalidPhpName;
+				switch (fTypeKind) {
+				case CLASS_TYPE:
+					message = message + Messages.NewPHPTypePage_class + nameLabel;
+					break;
+				case INTERFACE_TYPE:
+					message = message + Messages.NewPHPTypePage_interface + nameLabel;
+					break;
+				case TRAIT_TYPE:
+					message = message + Messages.NewPHPTypePage_trait + nameLabel;
+					break;
 				}
+				elementNameStatus.setError(message);
 			}
 			updateStatus(findMostSevereStatus());
 			break;
@@ -1188,7 +1178,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 									namespaceStatus.setError(Messages.NewPHPTypePage_emptySublevel);
 								} else {
 									try {
-										Integer.valueOf(segment);
+										Integer.parseInt(segment);
 										namespaceStatus.setError(Messages.NewPHPTypePage_invalidSublevel);
 									} catch (NumberFormatException e) {
 										// valid segment
@@ -1324,7 +1314,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		while (iter.hasNext()) {
 
 			traitsStatus = new StatusInfo();
-			IType interfaceObj = (IType) iter.next();
+			IType interfaceObj = iter.next();
 
 			String interfaceName = interfaceObj.getElementName();
 
@@ -1474,7 +1464,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IPath containerPath = new Path(path);
 		IResource resource = workspaceRoot.findMember(containerPath);
-		return (resource != null);
+		return resource != null;
 	}
 
 	protected IModelElement getInitialPHPElement(final IStructuredSelection selection) {
@@ -1541,25 +1531,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				existingFile = (IFile) obj;
 				codeData = DLTKCore.create((IFile) obj);
 			}
-			// the following lines were removed since currently the
-			// new php element can be inserted in php blocks and not within
-			// methods.
-			// if (codeData instanceof PHPFileData) {
-			// final PHPFileData fileData = (PHPFileData) codeData;
-			// final PHPClassData[] classes = fileData.getClasses();
-			// if (classes.length > 0)
-			// codeData = classes[0];
-			// else {
-			// final PHPFunctionData[] functions = fileData.getFunctions();
-			// if (functions.length > 0)
-			// codeData = functions[0];
-			// }
-			// } else if (codeData instanceof PHPFunctionData) {
-			// final PHPCodeData classData = codeData.getContainer();
-			// if (classData instanceof PHPClassData)
-			// codeData = codeData.getContainer();
-			// }
-
 			if (codeData != null) {
 				return codeData;
 			}
@@ -1600,12 +1571,15 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		String[] addButtons = new String[] { Messages.NewPHPTypePage_add, null, Messages.NewPHPTypePage_remove };
 		IListAdapter<IType> listAdapter = new IListAdapter<IType>() {
 
+			@Override
 			public void customButtonPressed(ListDialogField<IType> field, int index) {
 			}
 
+			@Override
 			public void doubleClicked(ListDialogField<IType> field) {
 			}
 
+			@Override
 			public void selectionChanged(ListDialogField<IType> field) {
 			}
 		};
@@ -1613,16 +1587,19 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		fSuperInterfacesDialogField = new ListDialogField<IType>(listAdapter, addButtons,
 				new PHPFullPathLabelProvider()) {
 			// override these methods to validate interfaces
+			@Override
 			public void removeElement(IType element) throws IllegalArgumentException {
 				super.removeElement(element);
 				validateInterfaces(getProject());
 			}
 
+			@Override
 			public void removeElements(List<IType> elements) {
 				super.removeElements(elements);
 				validateInterfaces(getProject());
 			}
 
+			@Override
 			public void removeAllElements() {
 				super.removeAllElements();
 				validateInterfaces(getProject());
@@ -1635,16 +1612,19 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 		fTraitsDialogField = new ListDialogField<IType>(listAdapter, addButtons, new PHPFullPathLabelProvider()) {
 			// override these methods to validate interfaces
+			@Override
 			public void removeElement(IType element) throws IllegalArgumentException {
 				super.removeElement(element);
 				validateInterfaces(getProject());
 			}
 
+			@Override
 			public void removeElements(List<IType> elements) {
 				super.removeElements(elements);
 				validateInterfaces(getProject());
 			}
 
+			@Override
 			public void removeAllElements() {
 				super.removeAllElements();
 				validateInterfaces(getProject());
@@ -1721,6 +1701,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			fExcludes = excludedFiles;
 		}
 
+		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof IFile) {
 				if (fExcludes != null && fExcludes.contains(element)) {
@@ -1738,22 +1719,21 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		FilteredTypesSelectionDialog dialog = new FilteredTypesSelectionDialog(getShell(), false,
 				PlatformUI.getWorkbench().getProgressService(), SearchEngine.createSearchScope(getProject()),
 				IDLTKSearchConstants.TYPE, new TypeSelectionExtension() {
+					@Override
 					public ITypeInfoFilterExtension getFilterExtension() {
-						return new ITypeInfoFilterExtension() {
-							public boolean select(ITypeInfoRequestor typeInfoRequestor) {
-								// is interface
-								if (Flags.isInterface(typeInfoRequestor.getModifiers())) {
-									List<IType> alreadySelectedInterfaces = fSuperInterfacesDialogField.getElements();
-									for (IType interfaceName : alreadySelectedInterfaces) {
-										if (interfaceName.getElementName()
-												.equalsIgnoreCase(typeInfoRequestor.getTypeName())) {
-											return false;
-										}
+						return typeInfoRequestor -> {
+							// is interface
+							if (Flags.isInterface(typeInfoRequestor.getModifiers())) {
+								List<IType> alreadySelectedInterfaces = fSuperInterfacesDialogField.getElements();
+								for (IType interfaceName : alreadySelectedInterfaces) {
+									if (interfaceName.getElementName()
+											.equalsIgnoreCase(typeInfoRequestor.getTypeName())) {
+										return false;
 									}
-									return true;
 								}
-								return false;
+								return true;
 							}
+							return false;
 						};
 					}
 				}, PHPLanguageToolkit.getDefault());
@@ -1780,22 +1760,21 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		FilteredTypesSelectionDialog dialog = new FilteredTypesSelectionDialog(getShell(), false,
 				PlatformUI.getWorkbench().getProgressService(), SearchEngine.createSearchScope(getProject()),
 				IDLTKSearchConstants.TYPE, new TypeSelectionExtension() {
+					@Override
 					public ITypeInfoFilterExtension getFilterExtension() {
-						return new ITypeInfoFilterExtension() {
-							public boolean select(ITypeInfoRequestor typeInfoRequestor) {
-								// is interface
-								if (PHPFlags.isTrait(typeInfoRequestor.getModifiers())) {
-									List<IType> alreadySelectedInterfaces = fTraitsDialogField.getElements();
-									for (IType interfaceName : alreadySelectedInterfaces) {
-										if (interfaceName.getElementName()
-												.equalsIgnoreCase(typeInfoRequestor.getTypeName())) {
-											return false;
-										}
+						return typeInfoRequestor -> {
+							// is interface
+							if (PHPFlags.isTrait(typeInfoRequestor.getModifiers())) {
+								List<IType> alreadySelectedInterfaces = fTraitsDialogField.getElements();
+								for (IType interfaceName : alreadySelectedInterfaces) {
+									if (interfaceName.getElementName()
+											.equalsIgnoreCase(typeInfoRequestor.getTypeName())) {
+										return false;
 									}
-									return true;
 								}
-								return false;
+								return true;
 							}
+							return false;
 						};
 					}
 				}, PHPLanguageToolkit.getDefault());
@@ -1849,12 +1828,10 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		if ((projectPath == null) || (projectPath.length() == 0)) {
 			return null;
 		}
-		IProject currentProject = null;// workspaceRoot.getProject(projectPath);
 		if (!isValidSourcePath(projectPath)) {
 			return null;
 		}
-		currentProject = workspaceRoot.getProject(getProjectName(projectPath));
-		return currentProject;
+		return workspaceRoot.getProject(getProjectName(projectPath));
 	}
 
 	protected String getValue(Key key) {
@@ -1889,6 +1866,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		return null;
 	}
 
+	@Override
 	public void dialogFieldChanged(DialogField field) {
 		changeButtonEnableStatus();
 	}

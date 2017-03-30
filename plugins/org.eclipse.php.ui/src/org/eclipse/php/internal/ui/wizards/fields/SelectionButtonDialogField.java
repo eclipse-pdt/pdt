@@ -20,8 +20,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-;
-
 /**
  * Dialog Field containing a single button such as a radio or checkbox button.
  */
@@ -82,6 +80,7 @@ public class SelectionButtonDialogField extends DialogField {
 	/*
 	 * @see DialogField#doFillIntoGrid
 	 */
+	@Override
 	public Control[] doFillIntoGrid(Composite parent, int nColumns) {
 		assertEnoughColumns(nColumns);
 
@@ -101,6 +100,7 @@ public class SelectionButtonDialogField extends DialogField {
 	/*
 	 * @see DialogField#getNumberOfControls
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 1;
 	}
@@ -125,10 +125,12 @@ public class SelectionButtonDialogField extends DialogField {
 			fButton.setEnabled(isEnabled());
 			fButton.setSelection(fIsSelected);
 			fButton.addSelectionListener(new SelectionListener() {
+				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 					doWidgetSelected(e);
 				}
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					doWidgetSelected(e);
 				}
@@ -168,6 +170,7 @@ public class SelectionButtonDialogField extends DialogField {
 	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#setLabelText
 	 * (java.lang.String)
 	 */
+	@Override
 	public void setLabelText(String labeltext) {
 		fLabelText = labeltext;
 		if (isOkToUse(fButton)) {
@@ -199,6 +202,7 @@ public class SelectionButtonDialogField extends DialogField {
 	/*
 	 * @see DialogField#updateEnableState
 	 */
+	@Override
 	protected void updateEnableState() {
 		super.updateEnableState();
 		if (isOkToUse(fButton)) {
@@ -212,6 +216,7 @@ public class SelectionButtonDialogField extends DialogField {
 	 * @see
 	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
 	 */
+	@Override
 	public void refresh() {
 		super.refresh();
 		if (isOkToUse(fButton)) {

@@ -46,6 +46,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		this.explicit = explicit;
 	}
 
+	@Override
 	protected ScriptCompletionProposal createOverrideCompletionProposal(IScriptProject scriptProject,
 			ISourceModule compilationUnit, String name, String[] paramTypes, int start, int length, String label,
 			String string) {
@@ -58,6 +59,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i);
 	}
 
+	@Override
 	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length,
 			Image image, StyledString displayString, int i, boolean isInDoc) {
 		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i, isInDoc);
@@ -79,6 +81,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	// return labelProvider;
 	// }
 
+	@Override
 	protected IScriptCompletionProposal createPackageProposal(CompletionProposal proposal) {
 		final AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createPackageProposal(
 				proposal);
@@ -89,6 +92,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return scriptProposal;
 	}
 
+	@Override
 	protected IScriptCompletionProposal createKeywordProposal(CompletionProposal proposal) {
 		AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createKeywordProposal(
 				proposal);
@@ -99,6 +103,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return scriptProposal;
 	}
 
+	@Override
 	protected IScriptCompletionProposal createScriptCompletionProposal(CompletionProposal proposal) {
 		ScriptCompletionProposal completionProposal;
 		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
@@ -131,6 +136,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return completionProposal;
 	}
 
+	@Override
 	protected char[] getVarTrigger() {
 		// variable proposal will be inserted automatically if one of these
 		// characters
@@ -138,10 +144,12 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return null;
 	}
 
+	@Override
 	public IDocument getDocument() {
 		return document;
 	}
 
+	@Override
 	public boolean isExplicit() {
 		return explicit;
 	}
@@ -171,6 +179,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 			Image image = getImage(
 					((PHPCompletionProposalLabelProvider) getLabelProvider()).createMethodImageDescriptor(proposal));
 			scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, image, displayString, 0) {
+				@Override
 				public String getReplacementString() {
 					IMethod method = (IMethod) proposal.getModelElement();
 					if (ProposalExtraInfo.isNoInsert(proposal.getExtraInfo())) {
@@ -206,6 +215,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				paramTypes, start, length, label, string, false, extraInfo, document);
 	}
 
+	@Override
 	protected IScriptCompletionProposal createTypeProposal(final CompletionProposal typeProposal) {
 		String completion = typeProposal.getCompletion();
 		int replaceStart = typeProposal.getReplaceStart();
@@ -220,6 +230,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				displayString, 0) {
 			private boolean fReplacementStringComputed = false;
 
+			@Override
 			public String getReplacementString() {
 				if (!fReplacementStringComputed) {
 					String replacementString = computeReplacementString();
@@ -302,6 +313,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 	}
 
+	@Override
 	protected IScriptCompletionProposal createFieldProposal(final CompletionProposal proposal) {
 		String completion = String.valueOf(proposal.getCompletion());
 		int start = proposal.getReplaceStart();
@@ -315,6 +327,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				displayString, 0) {
 			private boolean fReplacementStringComputed = false;
 
+			@Override
 			public String getReplacementString() {
 				if (!fReplacementStringComputed) {
 					String replacementString = computeReplacementString();
@@ -352,10 +365,12 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return scriptProposal;
 	}
 
+	@Override
 	public int getOffset() {
 		return offset;
 	}
 
+	@Override
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
@@ -379,10 +394,12 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return super.computeRelevance(proposal);
 	}
 
+	@Override
 	public boolean filter(int flag) {
 		return (flags & flag) != 0;
 	}
 
+	@Override
 	public void addFlag(int flag) {
 		flags |= flag;
 	}

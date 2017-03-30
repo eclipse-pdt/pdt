@@ -44,6 +44,7 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 		setStyledDisplayString(displayName);
 	}
 
+	@Override
 	public void apply(IDocument document, char trigger, int offset) {
 		UseStatementInjector injector = new UseStatementInjector(this);
 		offset = injector.inject(document, getTextViewer(), offset);
@@ -53,11 +54,13 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 		calculateCursorPosition(document, offset);
 	}
 
+	@Override
 	public boolean isAutoInsertable() {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT,
 				false, null);
 	}
 
+	@Override
 	protected boolean insertCompletion() {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
 				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
@@ -112,6 +115,7 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 		}
 	}
 
+	@Override
 	public IContextInformation getContextInformation() {
 		String displayString = getDisplayString();
 
@@ -167,17 +171,21 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 		return new ContextInformation(displayString, infoDisplayString);
 	}
 
+	@Override
 	protected boolean isCamelCaseMatching() {
 		return true;
 	}
 
+	@Override
 	protected ScriptTextTools getTextTools() {
 		return PHPUiPlugin.getDefault().getTextTools();
 	}
 
+	@Override
 	public IInformationControlCreator getInformationControlCreator() {
 		if (fCreator == null) {
 			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
+				@Override
 				public IInformationControl createInformationControl(Shell parent) {
 					if (BrowserInformationControl.isAvailable(parent)) {
 						return new BrowserInformationControl(parent, PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,

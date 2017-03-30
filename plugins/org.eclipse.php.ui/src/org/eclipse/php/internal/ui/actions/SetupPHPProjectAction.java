@@ -60,6 +60,7 @@ public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDele
 			doInstall(project, null);
 		} else {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					doInstall(project, monitor);
 				}
@@ -74,6 +75,7 @@ public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDele
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (fTarget == null)
 			return;
@@ -89,6 +91,7 @@ public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDele
 
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			fTarget = ((IStructuredSelection) selection).toArray();
@@ -111,6 +114,7 @@ public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDele
 		}
 	}
 
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		fPart = targetPart;
 	}

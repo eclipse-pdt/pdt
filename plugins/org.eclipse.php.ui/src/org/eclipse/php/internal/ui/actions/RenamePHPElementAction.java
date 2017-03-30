@@ -40,6 +40,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	// ---- Structured selection
 	// ------------------------------------------------
 
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
 			if (selection.size() == 1) {
@@ -68,6 +69,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		return (IModelElement) first;
 	}
 
+	@Override
 	public void run(IStructuredSelection selection) {
 		IModelElement element = getPHPElement(selection);
 		if (element == null) {
@@ -85,10 +87,12 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	// ---- text selection
 	// ------------------------------------------------------------
 
+	@Override
 	public void selectionChanged(ITextSelection selection) {
 		setEnabled(true);
 	}
 
+	@Override
 	public void run(ITextSelection selection) {
 		try {
 			IModelElement element = getPHPElement();

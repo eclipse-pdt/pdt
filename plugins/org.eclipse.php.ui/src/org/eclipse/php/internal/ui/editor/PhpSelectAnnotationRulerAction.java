@@ -69,6 +69,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	 * 
 	 * @see org.eclipse.ui.texteditor.SelectMarkerRulerAction#run()
 	 */
+	@Override
 	public void run() {
 		if (fStore.getBoolean(PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER)) {
 			return;
@@ -83,6 +84,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	public void runWithEvent(Event event) {
 		if (fAnnotation instanceof OverrideIndicatorManager.OverrideIndicator) {
 			((OverrideIndicatorManager.OverrideIndicator) fAnnotation).open();
@@ -107,6 +109,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	 * 
 	 * @see org.eclipse.ui.texteditor.SelectMarkerRulerAction#update()
 	 */
+	@Override
 	public void update() {
 		findPhpAnnotation();
 		setEnabled(true); // super.update() might change this later

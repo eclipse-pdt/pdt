@@ -16,6 +16,7 @@ public class FilterDecorator extends SimpleFilter {
 	private IFilter filter;
 
 	private IFilterChangeListener myFilterChangeListener = new IFilterChangeListener() {
+		@Override
 		public void notifyFilterChanged() {
 			FilterDecorator.this.notifyFilterChanged();
 		}
@@ -26,6 +27,7 @@ public class FilterDecorator extends SimpleFilter {
 		filter.addFilterChangeListener(myFilterChangeListener);
 	}
 
+	@Override
 	public Object[] filter(Object[] elements) {
 		return filter.filter(elements);
 	}

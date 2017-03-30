@@ -80,7 +80,7 @@ public class SelectionConverter {
 		if (!selection.isEmpty()) {
 			IModelElement[] result = new IModelElement[selection.size()];
 			int i = 0;
-			for (Iterator iter = selection.iterator(); iter.hasNext(); i++) {
+			for (Iterator<?> iter = selection.iterator(); iter.hasNext(); i++) {
 				Object element = iter.next();
 				if (!(element instanceof IModelElement))
 					return EMPTY_RESULT;
@@ -230,6 +230,7 @@ public class SelectionConverter {
 		final class CodeResolveRunnable implements IRunnableWithProgress {
 			IModelElement[] result;
 
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					result = codeResolve(input, selection);

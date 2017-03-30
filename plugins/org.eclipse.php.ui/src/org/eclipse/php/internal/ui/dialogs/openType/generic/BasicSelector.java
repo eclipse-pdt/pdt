@@ -17,10 +17,8 @@ import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.ElementSpecif
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.IFilter;
 import org.eclipse.php.internal.ui.util.SearchPattern;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -116,7 +114,8 @@ public class BasicSelector extends Composite {
 		tableViewer.addFilter(phpTypeViewerFilter);
 		// Functionality to go to the text when pressing the up arrow and found
 		// in the first element
-		tableViewer.getControl().addKeyListener(new KeyListener() {
+		tableViewer.getControl().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				StructuredSelection structuredSelection = (StructuredSelection) tableViewer.getSelection();
 				if (structuredSelection.getFirstElement() == tableViewer.getElementAt(0) && SWT.ARROW_UP == e.keyCode) {
@@ -124,12 +123,10 @@ public class BasicSelector extends Composite {
 				}
 			}
 
-			public void keyReleased(KeyEvent e) {
-			}
-
 		});
 
-		tableViewer.getControl().addKeyListener(new KeyListener() {
+		tableViewer.getControl().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if ((e.keyCode & SWT.KEYCODE_BIT) == 0) {
 					if ((e.keyCode > 'a' && e.keyCode < 'z') || (e.keyCode > 'A' && e.keyCode < 'Z')) {
@@ -147,10 +144,6 @@ public class BasicSelector extends Composite {
 					}
 				}
 			}
-
-			public void keyReleased(KeyEvent e) {
-			}
-
 		});
 	}
 
@@ -161,22 +154,16 @@ public class BasicSelector extends Composite {
 
 	private void createFilterText() {
 		this.filterText = new Text(this, SWT.BORDER);
-		filterText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				phpTypeViewerFilter.setFilterText(filterText.getText());
-			}
-		});
+		filterText.addModifyListener(e -> phpTypeViewerFilter.setFilterText(filterText.getText()));
 
 		// When pressing the down arrow and found in the text, the focus is
 		// changed for the table
-		filterText.addKeyListener(new KeyListener() {
+		filterText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (SWT.ARROW_DOWN == e.keyCode && tableViewer.getTableElements().length != 0) {
 					tableViewer.getControl().setFocus();
 				}
-			}
-
-			public void keyReleased(KeyEvent e) {
 			}
 		});
 	}
@@ -194,24 +181,30 @@ public class BasicSelector extends Composite {
 		this.basicSelectorLabelProvider = basicSelectorLabelProvider;
 		this.tableViewer.setLabelProvider(new ITableLabelProvider() {
 
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				return BasicSelector.this.basicSelectorLabelProvider.getElementImage(element);
 			}
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
 				return BasicSelector.this.basicSelectorLabelProvider.getElementDescription(element);
 			}
 
+			@Override
 			public void addListener(ILabelProviderListener listener) {
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
 
+			@Override
 			public void removeListener(ILabelProviderListener listener) {
 			}
 
@@ -226,6 +219,7 @@ public class BasicSelector extends Composite {
 
 		private String textFilter = ""; //$NON-NLS-1$
 
+		@Override
 		public boolean select(Object element) {
 			if (textFilter.equals("")) { //$NON-NLS-1$
 				return false;

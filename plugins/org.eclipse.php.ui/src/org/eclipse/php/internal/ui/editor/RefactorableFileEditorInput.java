@@ -34,6 +34,7 @@ public class RefactorableFileEditorInput
 	/*
 	 * (non-Javadoc) Method declared on IPersistableElement.
 	 */
+	@Override
 	public String getFactoryId() {
 		return FileEditorInputFactory.getFactoryId();
 	}
@@ -43,6 +44,7 @@ public class RefactorableFileEditorInput
 	 * 
 	 * @see org.eclipse.ui.IPathEditorInput#getPath()
 	 */
+	@Override
 	public IPath getPath() {
 		return innerEditorInput.getPath();
 	}
@@ -52,6 +54,7 @@ public class RefactorableFileEditorInput
 	 * 
 	 * @see org.eclipse.ui.IURIEditorInput#getURI()
 	 */
+	@Override
 	public URI getURI() {
 		return innerEditorInput.getURI();
 	}
@@ -59,6 +62,7 @@ public class RefactorableFileEditorInput
 	/*
 	 * (non-Javadoc) Method declared on Object.
 	 */
+	@Override
 	public int hashCode() {
 		return innerEditorInput.hashCode();
 	}
@@ -66,6 +70,7 @@ public class RefactorableFileEditorInput
 	/*
 	 * (non-Javadoc) Method declared on IPersistableElement.
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		FileEditorInputFactory.saveState(memento, innerEditorInput);
 	}
@@ -75,6 +80,7 @@ public class RefactorableFileEditorInput
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return innerEditorInput.toString(); // $NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -102,26 +108,32 @@ public class RefactorableFileEditorInput
 		return innerEditorInput.equals(obj);
 	}
 
+	@Override
 	public IFile getFile() {
 		return innerEditorInput.getFile();
 	}
 
+	@Override
 	public IStorage getStorage() throws CoreException {
 		return innerEditorInput.getStorage();
 	}
 
+	@Override
 	public boolean exists() {
 		return innerEditorInput.exists();
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return innerEditorInput.getImageDescriptor();
 	}
 
+	@Override
 	public String getName() {
 		return innerEditorInput.getName();
 	}
 
+	@Override
 	public IPersistableElement getPersistable() {
 		// if the file has been deleted,return null will make this EidtorInput
 		// be removed from NavigationHistory
@@ -130,10 +142,12 @@ public class RefactorableFileEditorInput
 		return innerEditorInput.getPersistable();
 	}
 
+	@Override
 	public String getToolTipText() {
 		return innerEditorInput.getToolTipText();
 	}
 
+	@Override
 	public Object getAdapter(Class adapter) {
 		return innerEditorInput.getAdapter(adapter);
 	}

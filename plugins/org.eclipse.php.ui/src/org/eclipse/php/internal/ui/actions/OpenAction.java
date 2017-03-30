@@ -73,6 +73,7 @@ public class OpenAction extends SelectionDispatchAction {
 	 * We override this function since we've changed isEnabled() to check its
 	 * status according to the selection
 	 */
+	@Override
 	public void selectionChanged(ITextSelection selection) {
 	}
 
@@ -80,6 +81,7 @@ public class OpenAction extends SelectionDispatchAction {
 	 * We override this function since we've changed isEnabled() to check its
 	 * status according to the selection
 	 */
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		setEnabled(checkEnabled(selection));
 	}
@@ -112,6 +114,7 @@ public class OpenAction extends SelectionDispatchAction {
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
+	@Override
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
@@ -138,6 +141,7 @@ public class OpenAction extends SelectionDispatchAction {
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
+	@Override
 	public void run(IStructuredSelection selection) {
 		if (!checkEnabled(selection))
 			return;

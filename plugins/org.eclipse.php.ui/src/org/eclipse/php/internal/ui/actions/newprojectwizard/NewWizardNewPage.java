@@ -326,7 +326,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		treeViewer.setLabelProvider(new WorkbenchLabelProvider());
 		treeViewer.addSelectionChangedListener(this);
 
-		ArrayList inputArray = new ArrayList();
+		List inputArray = new ArrayList<>();
 
 		for (int i = 0; i < primaryWizards.length; i++) {
 			inputArray.add(primaryWizards[i]);
@@ -406,6 +406,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org
 			 * .eclipse.jface.viewers.DoubleClickEvent)
 			 */
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection s = (IStructuredSelection) event.getSelection();
 				selectionChanged(new SelectionChangedEvent(event.getViewer(), s));
@@ -451,6 +452,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 				// and the current 'no show all'
 				private Object[] delta = new Object[0];
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					boolean showAll = showAllCheck.getSelection();
 
@@ -531,6 +533,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			 * org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse
 			 * .swt.events.DisposeEvent)
 			 */
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				for (Iterator i = imageTable.values().iterator(); i.hasNext();) {
 					((Image) i.next()).dispose();
@@ -604,6 +607,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * @param selectionEvent
 	 *            ISelection
 	 */
+	@Override
 	public void selectionChanged(SelectionChangedEvent selectionEvent) {
 		page.setErrorMessage(null);
 		page.setMessage(null);
@@ -653,6 +657,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		// work around for 62039
 		final StructuredSelection selection = new StructuredSelection(selected);
 		filteredTree.getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				filteredTree.getViewer().setSelection(selection, true);
 			}
@@ -780,6 +785,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			selectedNode = (WorkbenchWizardNode) selectedWizards.get(selectedObject);
 		} else {
 			selectedNode = new WorkbenchWizardNode(page, selectedObject) {
+				@Override
 				public IWorkbenchWizard createWizard() throws CoreException {
 					return wizardElement.createWizard();
 				}
@@ -794,7 +800,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		updateDescription(selectedObject);
 	}
 
-	private ArrayList<IWizardDescriptor> sortWizard(List wizards) {
+	private List<IWizardDescriptor> sortWizard(List wizards) {
 		ArrayList<IWizardDescriptor> result = new ArrayList<IWizardDescriptor>();
 		for (String id : PROJECT_WIZARD_ID) {
 			for (int i = 0; i < wizards.size(); i++) {

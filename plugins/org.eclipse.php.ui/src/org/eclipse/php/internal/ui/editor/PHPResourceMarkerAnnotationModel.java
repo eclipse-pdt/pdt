@@ -62,20 +62,23 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	 * org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#isAcceptable(
 	 * org.eclipse.core.resources.IMarker)
 	 */
+	@Override
 	protected boolean isAcceptable(IMarker marker) {
 		if (marker == null) {
 			return false;
 		}
 		try {
 			Object attr = marker.getAttribute(IBreakpointConstants.ATTR_HIDDEN);
-			if (attr != null && ((Boolean) attr).equals(Boolean.TRUE))
+			if (attr != null && ((Boolean) attr).equals(Boolean.TRUE)) {
 				return false;
+			}
 		} catch (CoreException e) {
 			// ignore
 		}
 
-		if (fSecondaryMarkerAttributeValue == null)
+		if (fSecondaryMarkerAttributeValue == null) {
 			return super.isAcceptable(marker);
+		}
 
 		String secondaryId = marker.getAttribute(SECONDARY_ID_KEY, ""); //$NON-NLS-1$
 		IPath path = Path.fromPortableString(secondaryId);
@@ -97,6 +100,7 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	 * @seeorg.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#
 	 * createMarkerAnnotation(org.eclipse.core.resources.IMarker)
 	 */
+	@Override
 	protected MarkerAnnotation createMarkerAnnotation(IMarker marker) {
 		/*
 		 * We need to do some special processing if marker is a validation (aka
@@ -116,6 +120,7 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	 * org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#getMarkerPosition
 	 * (org.eclipse.core.resources.IMarker)
 	 */
+	@Override
 	public Position getMarkerPosition(IMarker marker) {
 		Position pos = super.getMarkerPosition(marker);
 
@@ -149,6 +154,7 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 		 * 
 		 * @see org.eclipse.ui.texteditor.MarkerAnnotation#getImage(org.eclipse.swt.widgets.Display)
 		 */
+		@Override
 		protected Image getImage(Display display) {
 			Image image = null;
 			if (fAnnotationType == TemporaryAnnotation.ANNOT_ERROR) {

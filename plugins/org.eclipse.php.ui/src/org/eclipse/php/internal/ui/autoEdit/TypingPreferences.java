@@ -43,6 +43,7 @@ public class TypingPreferences {
 		addPhpForPhpStartTags = store.getBoolean(PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS);
 		store.addPropertyChangeListener(new IPropertyChangeListener() {
 
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				String property = event.getProperty();
 				if (property == PreferenceConstants.EDITOR_CLOSE_STRINGS) {

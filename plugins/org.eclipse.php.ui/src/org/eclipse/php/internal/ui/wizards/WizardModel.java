@@ -36,7 +36,7 @@ public class WizardModel {
 	 */
 	public static final String SERVER = "server"; //$NON-NLS-1$
 
-	private Map map = new HashMap();
+	private Map<String, Object> map = new HashMap<>();
 
 	/**
 	 * Returns the object in the wizard model with the given id.

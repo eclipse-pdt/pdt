@@ -27,7 +27,7 @@ import org.eclipse.ui.INewWizard;
  */
 public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 
-	private ArrayList<IMethod> funcsToAdd = new ArrayList<IMethod>();
+	private ArrayList<IMethod> funcsToAdd = new ArrayList<>();
 
 	public NewPHPClassWizard() {
 		super();
@@ -42,6 +42,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 		addPage(page);
 	}
 
+	@Override
 	public void addPages() {
 		if (page == null) {
 			page = new NewPHPClassPage();
@@ -50,6 +51,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 		}
 	}
 
+	@Override
 	public boolean performFinish() {
 		if (page.isInExistingPHPFile()) {
 			// add the existing file's name to the already existings requires !
@@ -113,7 +115,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 		data.traits = traits;
 		List<String> existingImports = getExistingImports();
 		data.existingImports = existingImports.toArray(new String[0]);
-		List<String> imports = new ArrayList<String>();
+		List<String> imports = new ArrayList<>();
 		for (IType type : interfaces) {
 			addImport(imports, type, existingImports);
 		}
@@ -154,10 +156,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 		data.requiredToAdd = getRequires();
 		if (data.isExistingFile) {
 			data.isInFirstBlock = page.isInFirstPHPBlock();
-			// if (existingPHPFile.getPHPBlocks() != null &&
-			// existingPHPFile.getPHPBlocks().length > 0) {
 			data.hasFirstBlock = true;
-			// }
 		}
 		data.imports = imports.toArray(new String[0]);
 		return data;
@@ -171,6 +170,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 	 */
 	class ClassPostFinishValidator extends PostFinishValidator {
 
+		@Override
 		public void packAndValidate() {
 			super.packAndValidate();
 			// run over all requested interfaces and add their functions and

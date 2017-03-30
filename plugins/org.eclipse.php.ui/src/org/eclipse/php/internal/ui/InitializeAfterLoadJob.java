@@ -23,6 +23,7 @@ public class InitializeAfterLoadJob extends UIJob {
 			super(name);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("", 10); //$NON-NLS-1$
 			try {
@@ -35,6 +36,7 @@ public class InitializeAfterLoadJob extends UIJob {
 			return new Status(IStatus.OK, PHPCorePlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		}
 
+		@Override
 		public boolean belongsTo(Object family) {
 			return PHPUiPlugin.ID.equals(family);
 		}
@@ -45,6 +47,7 @@ public class InitializeAfterLoadJob extends UIJob {
 		setSystem(true);
 	}
 
+	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
 		Job job = new RealJob(PHPUIMessages.InitializeAfterLoadJob_1);
 		job.setPriority(Job.SHORT);

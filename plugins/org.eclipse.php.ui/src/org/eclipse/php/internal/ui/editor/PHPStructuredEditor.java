@@ -382,6 +382,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged
 		 * (org.eclipse.jface.viewers.SelectionChangedEvent)
 		 */
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
 			PHPStructuredEditor.this.selectionChanged();
@@ -400,6 +401,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			this.configuration = configuration;
 		}
 
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			if (!configuration.isLinkedWithEditor(null)) {
 				return;
@@ -407,6 +409,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			doSelectionChanged(event);
 		}
 
+		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			doSelectionChanged(event);
 		}
@@ -555,6 +558,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover" //$NON-NLS-1$
 						.equals(annotationHover.getClass().getName()))
 					controlCreator = new IInformationControlCreator() {
+						@Override
 						public IInformationControl createInformationControl(final Shell shell) {
 							final int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
 							final int style = SWT.V_SCROLL | SWT.H_SCROLL;
@@ -692,6 +696,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * 
 		 * @since 3.1
 		 */
+		@Override
 		public void windowActivated(IWorkbenchWindow window) {
 			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
 				fForcedMarkOccurrencesSelection = getSelectionProvider().getSelection();
@@ -708,6 +713,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * 
 		 * @since 3.1
 		 */
+		@Override
 		public void windowDeactivated(IWorkbenchWindow window) {
 			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
 				removeOccurrenceAnnotations();
@@ -720,6 +726,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * 
 		 * @since 3.1
 		 */
+		@Override
 		public void windowClosed(IWorkbenchWindow window) {
 		}
 
@@ -729,6 +736,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * 
 		 * @since 3.1
 		 */
+		@Override
 		public void windowOpened(IWorkbenchWindow window) {
 		}
 	}
@@ -774,6 +782,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged
 		 * (org.eclipse.jface.text.DocumentEvent)
 		 */
+		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			if (fOccurrencesFinderJob != null)
 				fOccurrencesFinderJob.doCancel();
@@ -784,6 +793,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse
 		 * .jface.text.DocumentEvent)
 		 */
+		@Override
 		public void documentChanged(DocumentEvent event) {
 		}
 
@@ -792,6 +802,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * inputDocumentAboutToBeChanged (org.eclipse.jface.text.IDocument,
 		 * org.eclipse.jface.text.IDocument)
 		 */
+		@Override
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
 			if (oldInput == null)
 				return;
@@ -804,6 +815,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org
 		 * .eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
 		 */
+		@Override
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 			if (newInput == null)
 				return;
@@ -852,6 +864,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		/*
 		 * @see Job#run(org.eclipse.core.runtime.IProgressMonitor)
 		 */
+		@Override
 		public IStatus run(IProgressMonitor progressMonitor) {
 			if (isCanceled(progressMonitor))
 				return Status.CANCEL_STATUS;
@@ -951,6 +964,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * getInformation (org.eclipse.jface.text.ITextViewer,
 		 * org.eclipse.jface.text.IRegion)
 		 */
+		@Override
 		public String getInformation(final ITextViewer textViewer, final IRegion subject) {
 			return fHoverInfo.toString();
 		}
@@ -963,6 +977,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * 
 		 * @since 3.2
 		 */
+		@Override
 		public Object getInformation2(final ITextViewer textViewer, final IRegion subject) {
 			return fHoverInfo;
 		}
@@ -972,6 +987,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * org.eclipse.jface.text.information.IInformationProviderExtension2
 		 * #getInformationPresenterControlCreator()
 		 */
+		@Override
 		public IInformationControlCreator getInformationPresenterControlCreator() {
 			return fControlCreator;
 		}
@@ -981,6 +997,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * org.eclipse.jface.text.information.IInformationProvider#getSubject
 		 * (org.eclipse.jface.text.ITextViewer, int)
 		 */
+		@Override
 		public IRegion getSubject(final ITextViewer textViewer, final int invocationOffset) {
 			return fHoverRegion;
 		}
@@ -1070,6 +1087,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	// added by zhaozw,or there will be a exception for files in the phar
+	@Override
 	protected void setDocumentProvider(IEditorInput input) {
 		setDocumentProvider(DLTKUIPlugin.getDocumentProvider());
 	}
@@ -1853,6 +1871,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
+	@Override
 	protected void createActions() {
 		super.createActions();
 
@@ -2138,6 +2157,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			installOccurrencesFinder(true);
 
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell shell) {
 				boolean cutDown = false;
 				int style = cutDown ? SWT.NONE : SWT.V_SCROLL | SWT.H_SCROLL;
@@ -2168,11 +2188,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	private class EditorReconcilingListener implements ISourceReconcilingListener {
 
+		@Override
 		public void aboutToBeReconciled() {
 			PHPStructuredEditor.this.aboutToBeReconciled();
 
 		}
 
+		@Override
 		public void reconciled(IDocument document, IAnnotationModel model, boolean forced,
 				IProgressMonitor progressMonitor) {
 		}
@@ -2295,6 +2317,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
+	@Override
 	public Object getAdapter(Class required) {
 
 		if (required == IFoldingStructureProviderExtension.class && fProjectionModelUpdater != null) {
@@ -2632,6 +2655,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			int styles) {
 		if (getProject() != null) {
 			fFormatterProfileListener = new IPreferencesPropagatorListener() {
+				@Override
 				public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 					SourceViewerConfiguration config = getSourceViewerConfiguration();
 					ISourceViewer sourceViewer = getSourceViewer();
@@ -2644,6 +2668,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					}
 				}
 
+				@Override
 				public IProject getProject() {
 					IScriptProject scriptProject = PHPStructuredEditor.this.getProject();
 					if (scriptProject != null) {
@@ -2677,6 +2702,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#performSave(boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	protected void performSave(boolean overwrite, IProgressMonitor progressMonitor) {
 		IDocumentProvider p = getDocumentProvider();
 		if (p instanceof ISourceModuleDocumentProvider) {
@@ -2731,6 +2757,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
+	@Override
 	public void aboutToBeReconciled() {
 		fReconcileSelection = true;
 		// Notify AST provider
@@ -2748,6 +2775,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public void reconciled(Program ast, boolean forced, IProgressMonitor progressMonitor) {
 
 		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=58245
@@ -3087,6 +3115,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		fMarkOccurrenceAnnotations = true;
 
 		fPostSelectionListenerWithAST = new ISelectionListenerWithAST() {
+			@Override
 			public void selectionChanged(IEditorPart part, ITextSelection selection, Program astRoot) {
 				updateOccurrenceAnnotations(selection, astRoot);
 			}
@@ -3238,6 +3267,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (sourceViewer instanceof ITextViewerExtension5) {
 			final ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
 			Display.getDefault().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (!styledText.isDisposed()) {
 						caret[0] = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
@@ -3261,6 +3291,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			return;
 		final ISelection[] selection = new ISelection[1];
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				selection[0] = getSelectionProvider().getSelection();
 			}
@@ -3335,6 +3366,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
+	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
 		if (getDocument() instanceof IStructuredDocument) {
 			CommandStack commandStack = ((IStructuredDocument) getDocument()).getUndoManager().getCommandStack();
@@ -3353,6 +3385,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		return super.getSourceViewer();
 	}
 
+	@Override
 	public void update() {
 		super.update();
 		if (fPHPOutlinePage != null && fPHPOutlinePage instanceof ConfigurableContentOutlinePage) {
@@ -3368,6 +3401,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 *            the viewer
 	 * @since 3.0
 	 */
+	@Override
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
 		IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
@@ -3400,6 +3434,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 *            the viewer
 	 * @since 3.3
 	 */
+	@Override
 	protected void installTextDragAndDrop(final ISourceViewer viewer) {
 		if (viewer == null || fIsTextDragAndDropInstalled)
 			return;
@@ -3420,6 +3455,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			String fSelectedText;
 			Point fSelection;
 
+			@Override
 			public void dragStart(DragSourceEvent event) {
 				fTextDragAndDropToken = null;
 				try {
@@ -3449,11 +3485,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				return offset >= fSelection.x && offset < fSelection.y;
 			}
 
+			@Override
 			public void dragSetData(DragSourceEvent event) {
 				event.data = fSelectedText;
 				fTextDragAndDropToken = this; // Can be any non-null object
 			}
 
+			@Override
 			public void dragFinished(DragSourceEvent event) {
 				try {
 					if (event.detail == DND.DROP_MOVE && validateEditorInputState()) {
@@ -3483,6 +3521,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 			private Point fSelection;
 
+			@Override
 			public void dragEnter(DropTargetEvent event) {
 				fTextDragAndDropToken = null;
 				fSelection = st.getSelection();
@@ -3497,6 +3536,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				}
 			}
 
+			@Override
 			public void dragOperationChanged(DropTargetEvent event) {
 				if (event.detail == DND.DROP_DEFAULT) {
 					if ((event.operations & DND.DROP_MOVE) != 0) {
@@ -3509,10 +3549,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				}
 			}
 
+			@Override
 			public void dragOver(DropTargetEvent event) {
 				event.feedback |= DND.FEEDBACK_SCROLL;
 			}
 
+			@Override
 			public void drop(DropTargetEvent event) {
 				try {
 					if (fTextDragAndDropToken != null && event.detail == DND.DROP_MOVE) {
@@ -3595,6 +3637,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 *            the viewer
 	 * @since 3.3
 	 */
+	@Override
 	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
 		if (viewer == null || !fIsTextDragAndDropInstalled)
 			return;
@@ -3639,10 +3682,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		super.firePropertyChange(property);
 	}
 
+	@Override
 	protected boolean isTabsToSpacesConversionEnabled() {
 		return true;
 	}
 
+	@Override
 	protected void installTabsToSpacesConverter() {
 		SourceViewerConfiguration config = getSourceViewerConfiguration();
 		ISourceViewer sourceViewer = getSourceViewer();
@@ -3665,6 +3710,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * 
 	 * @since 3.3
 	 */
+	@Override
 	protected void uninstallTabsToSpacesConverter() {
 	}
 

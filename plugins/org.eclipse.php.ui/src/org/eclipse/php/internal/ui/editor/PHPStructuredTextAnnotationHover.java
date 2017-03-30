@@ -291,36 +291,32 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		if (model == null) {
 			return messages;
 		}
-		HashMap messagesAtPosition = new HashMap();
-		Iterator e = model.getAnnotationIterator();
+		Map messagesAtPosition = new HashMap();
+		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
-			Object o = e.next();
-			if (o instanceof Annotation) {
-				Annotation a = (Annotation) o;
-				Position position = model.getPosition(a);
-				if (position == null)
-					continue;
-
-				if (compareRulerLine(position, document, line) == 1) {
-					if (a instanceof AnnotationBag) {
-						AnnotationBag bag = (AnnotationBag) a;
-						Iterator iterator = bag.iterator();
-						while (iterator.hasNext()) {
-							Annotation annotation = (Annotation) iterator.next();
-							addText(model, annotation, messages, messagesAtPosition);
-						}
-					} else {
-						addText(model, a, messages, messagesAtPosition);
+			Annotation a = e.next();
+			Position position = model.getPosition(a);
+			if (position == null) {
+				continue;
+			}
+			if (compareRulerLine(position, document, line) == 1) {
+				if (a instanceof AnnotationBag) {
+					AnnotationBag bag = (AnnotationBag) a;
+					Iterator<Annotation> iterator = bag.iterator();
+					while (iterator.hasNext()) {
+						Annotation annotation = (Annotation) iterator.next();
+						addText(model, annotation, messages, messagesAtPosition);
 					}
-
+				} else {
+					addText(model, a, messages, messagesAtPosition);
 				}
+
 			}
 		}
 		return messages;
 	}
 
-	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages,
-			HashMap messagesAtPosition) {
+	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages, Map messagesAtPosition) {
 		Position position = model.getPosition(annotation);
 		if (position != null && includeAnnotation(annotation, position, messagesAtPosition)) {
 			String text = getText(annotation);
@@ -375,9 +371,10 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	/**
 	 * Copy from DefaultAnnotationHover
 	 */
-	private boolean includeAnnotation(Annotation annotation, Position position, HashMap messagesAtPosition) {
-		if (!isIncluded(annotation))
+	private boolean includeAnnotation(Annotation annotation, Position position, Map messagesAtPosition) {
+		if (!isIncluded(annotation)) {
 			return false;
+		}
 
 		String text = annotation.getText();
 		return (text != null && !isDuplicateAnnotation(messagesAtPosition, position, text));
@@ -389,23 +386,26 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	private boolean isDuplicateAnnotation(Map messagesAtPosition, Position position, String message) {
 		if (messagesAtPosition.containsKey(position)) {
 			Object value = messagesAtPosition.get(position);
-			if (message.equals(value))
+			if (message.equals(value)) {
 				return true;
+			}
 
 			if (value instanceof List) {
 				List messages = (List) value;
-				if (messages.contains(message))
+				if (messages.contains(message)) {
 					return true;
+				}
 
 				messages.add(message);
 			} else {
-				ArrayList messages = new ArrayList();
+				List<Object> messages = new ArrayList<>();
 				messages.add(value);
 				messages.add(message);
 				messagesAtPosition.put(position, messages);
 			}
-		} else
+		} else {
 			messagesAtPosition.put(position, message);
+		}
 		return false;
 	}
 

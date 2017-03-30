@@ -179,6 +179,7 @@ public class TreeListDialogField extends DialogField {
 	/*
 	 * @see DialogField#doFillIntoGrid
 	 */
+	@Override
 	public Control[] doFillIntoGrid(Composite parent, int nColumns) {
 		PixelConverter converter = new PixelConverter(parent);
 
@@ -216,6 +217,7 @@ public class TreeListDialogField extends DialogField {
 	/*
 	 * @see DialogField#getNumberOfControls
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 3;
 	}
@@ -248,6 +250,7 @@ public class TreeListDialogField extends DialogField {
 
 			fTreeControl = (Tree) fTree.getControl();
 			fTreeControl.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					handleKeyPressed(e);
 				}
@@ -283,8 +286,7 @@ public class TreeListDialogField extends DialogField {
 	 * Subclasses may override to specify a different style.
 	 */
 	protected int getTreeStyle() {
-		int style = SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
-		return style;
+		return SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
 	}
 
 	protected TreeViewer createTreeViewer(Composite parent) {
@@ -333,10 +335,12 @@ public class TreeListDialogField extends DialogField {
 			assertCompositeNotNull(parent);
 
 			SelectionListener listener = new SelectionListener() {
+				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 					doButtonSelected(e);
 				}
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					doButtonSelected(e);
 				}
@@ -403,6 +407,7 @@ public class TreeListDialogField extends DialogField {
 	/*
 	 * @see DialogField#dialogFieldChanged
 	 */
+	@Override
 	public void dialogFieldChanged() {
 		super.dialogFieldChanged();
 		updateButtonState();
@@ -448,6 +453,7 @@ public class TreeListDialogField extends DialogField {
 	/*
 	 * @see DialogField#updateEnableState
 	 */
+	@Override
 	protected void updateEnableState() {
 		super.updateEnableState();
 
@@ -675,11 +681,9 @@ public class TreeListDialogField extends DialogField {
 	public void postSetSelection(final ISelection selection) {
 		if (isOkToUse(fTreeControl)) {
 			Display d = fTreeControl.getDisplay();
-			d.asyncExec(new Runnable() {
-				public void run() {
-					if (isOkToUse(fTreeControl)) {
-						selectElements(selection);
-					}
+			d.asyncExec(() -> {
+				if (isOkToUse(fTreeControl)) {
+					selectElements(selection);
 				}
 			});
 		}
@@ -688,6 +692,7 @@ public class TreeListDialogField extends DialogField {
 	/**
 	 * Refreshes the tree.
 	 */
+	@Override
 	public void refresh() {
 		super.refresh();
 		if (isOkToUse(fTreeControl)) {
@@ -828,6 +833,7 @@ public class TreeListDialogField extends DialogField {
 
 		// ------- ITreeContentProvider Interface ------------
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// will never happen
 		}
@@ -836,13 +842,16 @@ public class TreeListDialogField extends DialogField {
 			return false;
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object obj) {
 			return fElements.toArray();
 		}
 
+		@Override
 		public Object[] getChildren(Object element) {
 			if (fTreeAdapter != null) {
 				return fTreeAdapter.getChildren(TreeListDialogField.this, element);
@@ -850,6 +859,7 @@ public class TreeListDialogField extends DialogField {
 			return NO_ELEMENTS;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			if (!fElements.contains(element) && fTreeAdapter != null) {
 				return fTreeAdapter.getParent(TreeListDialogField.this, element);
@@ -857,6 +867,7 @@ public class TreeListDialogField extends DialogField {
 			return fParentElement;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (fTreeAdapter != null) {
 				return fTreeAdapter.hasChildren(TreeListDialogField.this, element);
@@ -866,6 +877,7 @@ public class TreeListDialogField extends DialogField {
 
 		// ------- ISelectionChangedListener Interface ------------
 
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			doListSelected(event);
 		}
@@ -876,6 +888,7 @@ public class TreeListDialogField extends DialogField {
 		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.
 		 * eclipse .jface.viewers.DoubleClickEvent)
 		 */
+		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			doDoubleClick(event);
 		}

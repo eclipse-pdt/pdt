@@ -78,6 +78,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void selectionChanged(ITextSelection selection) {
 		setEnabled(true);
 	}
@@ -85,6 +86,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void selectionChanged(ModelTextSelection selection) {
 		try {
 			IModelElement resolveEnclosingElement;
@@ -93,9 +95,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 					SharedASTProvider.WAIT_YES, null);
 			setEnabled(astRoot != null && new MethodExitsFinder().initialize(astRoot, selection.getOffset(),
 					selection.getLength()) == null);
-		} catch (ModelException e) {
-			PHPUiPlugin.log(e);
-		} catch (IOException e) {
+		} catch (ModelException | IOException e) {
 			PHPUiPlugin.log(e);
 		}
 	}
@@ -103,6 +103,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		setEnabled(false);
 	}
@@ -110,6 +111,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	/*
 	 * (non-JavaDoc) Method declared in SelectionDispatchAction.
 	 */
+	@Override
 	public final void run(ITextSelection ts) {
 		ISourceModule input = getEditorInput(fEditor);
 		if (!ActionUtil.isProcessable(getShell(), input))
@@ -119,9 +121,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 			String result = engine.run(input, ts.getOffset(), ts.getLength());
 			if (result != null)
 				showMessage(getShell(), fEditor, result);
-		} catch (ModelException e) {
-			PHPUiPlugin.log(e);
-		} catch (IOException e) {
+		} catch (ModelException | IOException e) {
 			PHPUiPlugin.log(e);
 		}
 	}

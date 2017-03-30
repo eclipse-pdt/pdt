@@ -31,18 +31,22 @@ public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage
 				PHPUIMessages.newPhpFile_wizard_templatePage_description);
 	}
 
+	@Override
 	protected String getTemplateContextTypeId() {
 		return CodeTemplateContextType.NEW_FILE_CONTEXTTYPE;
 	}
 
+	@Override
 	protected String getUseTemplateMessage() {
 		return PHPUIMessages.newPhpFile_wizard_templatePage_usePhpTemplate;
 	}
 
+	@Override
 	protected ContextTypeRegistry getTemplatesContextTypeRegistry() {
 		return PHPUiPlugin.getDefault().getCodeTemplateContextRegistry();
 	}
 
+	@Override
 	protected String getTemplatesLocationMessage() {
 		ContextTypeRegistry templateContextRegistry = getTemplatesContextTypeRegistry();
 		TemplateContextType templateContextType = templateContextRegistry.getContextType(getTemplateContextTypeId());
@@ -50,14 +54,17 @@ public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage
 		return NLS.bind(PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation, name);
 	}
 
+	@Override
 	protected String getPreferencePageId() {
 		return "org.eclipse.php.ui.preferences.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
 	}
 
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		return PreferenceConstants.getPreferenceStore();
 	}
 
+	@Override
 	protected String getNewFileWizardTemplatePageHelpId() {
 		return null;
 	}

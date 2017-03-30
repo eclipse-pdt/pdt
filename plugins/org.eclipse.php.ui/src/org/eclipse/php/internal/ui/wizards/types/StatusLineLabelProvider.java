@@ -36,6 +36,7 @@ public class StatusLineLabelProvider extends LabelProvider {
 		fClassImage = DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_CLASS);
 	}
 
+	@Override
 	public String getText(Object element) {
 		if (element != null) {
 			String elementName = ""; //$NON-NLS-1$
@@ -75,6 +76,7 @@ public class StatusLineLabelProvider extends LabelProvider {
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		Image result = null;
 		if (element != null) {
@@ -84,7 +86,7 @@ public class StatusLineLabelProvider extends LabelProvider {
 				type = typeMatch.getType();
 			}
 			if (element instanceof SourceType) {
-				type = ((IType) element);
+				type = (IType) element;
 			}
 			if (type == null) {
 				return null;

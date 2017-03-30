@@ -101,6 +101,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 				}
 
 				IPropertyChangeListener workingSetListener = new IPropertyChangeListener() {
+					@Override
 					public void propertyChange(PropertyChangeEvent event) {
 						doWorkingSetChanged(event);
 					}
@@ -126,12 +127,14 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		super.setGroups(filtered.toArray(new ActionGroup[filtered.size()]));
 	}
 
+	@Override
 	protected void restoreFilterAndSorterState(IMemento memento) {
 		super.restoreFilterAndSorterState(memento);
 		fViewActionGroup.restoreState(memento);
 
 	}
 
+	@Override
 	protected void saveFilterAndSorterState(IMemento memento) {
 		super.saveFilterAndSorterState(memento);
 		fViewActionGroup.saveState(memento);
@@ -184,6 +187,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	 * this method call ScriptExplorerActionGroup.handleDoubleClick(event) at
 	 * most cases, except fNavigateActionGroup relative operation
 	 */
+	@Override
 	protected void handleDoubleClick(DoubleClickEvent event) {
 		TreeViewer viewer = getPart().getTreeViewer();
 		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -220,6 +224,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 				.equals(DLTKUIPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DOUBLE_CLICK));
 	}
 
+	@Override
 	public ViewActionGroup getWorkingSetActionGroup() {
 		return fViewActionGroup;
 	}

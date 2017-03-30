@@ -72,6 +72,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 		return null;
 	}
 
+	@Override
 	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
 		try {
 

@@ -21,6 +21,7 @@ public class CompositeFactoryAsserter implements CompositeFactory {
 		innerCompositeFactory = compositeFactory;
 	}
 
+	@Override
 	public Composite createComposite(Composite parent) {
 		Composite composite = innerCompositeFactory.createComposite(parent);
 		// assert composite != null;

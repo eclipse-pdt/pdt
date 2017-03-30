@@ -50,16 +50,20 @@ public class AutoActivationTrigger implements ISelectionChangedListener {
 		}
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		textViewer.removeSelectionChangedListener(this);
 
 		final long delay = Platform.getPreferencesService().getLong(PHPCorePlugin.ID,
 				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200, null);
 		new Timer("Temporary Completion Delay").schedule(new TimerTask() { //$NON-NLS-1$
+			@Override
 			public void run() {
 				textViewer.getControl().getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						BusyIndicator.showWhile(textViewer.getControl().getDisplay(), new Runnable() {
+							@Override
 							public void run() {
 								textViewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
 							}

@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.IModelElement;
  */
 public class AddDescriptionHandler extends SelectionHandler implements IHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		final IModelElement element = getCurrentModelElement(event);

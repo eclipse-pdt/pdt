@@ -51,6 +51,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 		setWindowTitle(PHPUIMessages.PHPProjectCreationWizard_WizardTitle);
 	}
 
+	@Override
 	public void addPages() {
 		super.addPages();
 		fFirstPage = new PHPProjectWizardFirstPage();
@@ -81,6 +82,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 		fLastPage = fSecondPage;
 	}
 
+	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		if (fFirstPage != null)
 			fFirstPage.performFinish(monitor); // use the full progress monitor
@@ -90,6 +92,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 			fThirdPage.performFinish(monitor); // use the full progress monitor
 	}
 
+	@Override
 	public boolean performFinish() {
 		boolean res = super.performFinish();
 		if (res) {
@@ -120,8 +123,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 				model.putObject(SELECTED_PROJECT, fLastPage.getScriptProject().getProject());
 
-				IRunnableWithProgress run = (IRunnableWithProgress) Platform.getAdapterManager().getAdapter(model,
-						IRunnableWithProgress.class);
+				IRunnableWithProgress run = Platform.getAdapterManager().getAdapter(model, IRunnableWithProgress.class);
 
 				if (run != null) {
 					try {
@@ -142,16 +144,19 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 	 * Stores the configuration element for the wizard. The config element will
 	 * be used in <code>performFinish</code> to set the result perspective.
 	 */
+	@Override
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
 		fConfigElement = cfig;
 	}
 
+	@Override
 	public boolean performCancel() {
 		if (!fFirstPage.isExistingLocation())
 			fFirstPage.performCancel();
 		return super.performCancel();
 	}
 
+	@Override
 	public IModelElement getCreatedElement() {
 		return DLTKCore.create(fFirstPage.getProjectHandle());
 	}

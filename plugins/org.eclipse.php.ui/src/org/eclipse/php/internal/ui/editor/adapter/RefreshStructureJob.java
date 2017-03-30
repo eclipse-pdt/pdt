@@ -53,15 +53,15 @@ class RefreshStructureJob extends Job {
 	}
 
 	/** List of refresh requests (Nodes) */
-	private final List fRequests;
+	private final List<Node> fRequests;
 	/** the structured viewers */
-	List fViewers = new ArrayList(3);
+	List<StructuredViewer> fViewers = new ArrayList<>(3);
 
 	public RefreshStructureJob() {
 		super(XMLUIMessages.refreshoutline_0); // $NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
-		fRequests = new ArrayList(2);
+		fRequests = new ArrayList<>(2);
 	}
 
 	private synchronized void addRequest(Node node) {
@@ -168,52 +168,51 @@ class RefreshStructureJob extends Job {
 	 */
 	private void doRefresh(final Node node, final StructuredViewer[] viewers) {
 		final Display display = PlatformUI.getWorkbench().getDisplay();
-		display.asyncExec(new Runnable() {
-			public void run() {
-				if (DEBUG)
-					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-				for (int i = 0; i < viewers.length; i++) {
-					if (!viewers[i].getControl().isDisposed()) {
-						StructuredViewer viewer = viewers[i];
-						if (node.getNodeType() == Node.DOCUMENT_NODE || // this
-																		// was
-																		// the
-																		// original
-																		// condition
-						((node.getNodeType() == Node.ELEMENT_NODE)
-								&& (((IDOMNode) node).getFirstStructuredDocumentRegion()
-										.getType() == PHPRegionTypes.PHP_CONTENT)
-								&& (viewer.getContentProvider() instanceof PHPOutlineContentProvider) /*
-																										 * &&
-																										 * (
-																										 * (
-																										 * (
-																										 * PHPOutlineContentProvider
-																										 * )
-																										 * viewer
-																										 * .
-																										 * getContentProvider
-																										 * (
-																										 * )
-																										 * )
-																										 * .
-																										 * getMode
-																										 * (
-																										 * )
-																										 * ==
-																										 * PHPOutlineContentProvider
-																										 * .
-																										 * MODE_PHP
-																										 * )
-																										 */)) {
-							viewers[i].refresh(true);
-						} else {
-							viewers[i].refresh(node, true);
-						}
+		display.asyncExec(() -> {
+			if (DEBUG) {
+				System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			for (int i = 0; i < viewers.length; i++) {
+				if (!viewers[i].getControl().isDisposed()) {
+					StructuredViewer viewer = viewers[i];
+					if (node.getNodeType() == Node.DOCUMENT_NODE || // this
+																	// was
+																	// the
+																	// original
+																	// condition
+					((node.getNodeType() == Node.ELEMENT_NODE)
+							&& (((IDOMNode) node).getFirstStructuredDocumentRegion()
+									.getType() == PHPRegionTypes.PHP_CONTENT)
+							&& (viewer.getContentProvider() instanceof PHPOutlineContentProvider) /*
+																									 * &&
+																									 * (
+																									 * (
+																									 * (
+																									 * PHPOutlineContentProvider
+																									 * )
+																									 * viewer
+																									 * .
+																									 * getContentProvider
+																									 * (
+																									 * )
+																									 * )
+																									 * .
+																									 * getMode
+																									 * (
+																									 * )
+																									 * ==
+																									 * PHPOutlineContentProvider
+																									 * .
+																									 * MODE_PHP
+																									 * )
+																									 */)) {
+						viewers[i].refresh(true);
 					} else {
-						if (DEBUG)
-							System.out.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
+						viewers[i].refresh(node, true);
+					}
+				} else {
+					if (DEBUG) {
+						System.out.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
 					}
 				}
 			}
@@ -228,10 +227,10 @@ class RefreshStructureJob extends Job {
 	 *         refresh and the viewers in which to refresh them
 	 */
 	private synchronized Object[] getRequests() {
-		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
+		Node[] toRefresh = fRequests.toArray(new Node[fRequests.size()]);
 		fRequests.clear();
 
-		StructuredViewer[] viewers = (StructuredViewer[]) fViewers.toArray(new StructuredViewer[fViewers.size()]);
+		StructuredViewer[] viewers = fViewers.toArray(new StructuredViewer[fViewers.size()]);
 		fViewers.clear();
 
 		return new Object[] { toRefresh, viewers };
@@ -243,14 +242,16 @@ class RefreshStructureJob extends Job {
 	 * @param node
 	 */
 	public void refresh(StructuredViewer viewer, Node node) {
-		if (node == null)
+		if (node == null) {
 			return;
+		}
 
 		addViewer(viewer);
 		addRequest(node);
 		schedule(UPDATE_DELAY);
 	}
 
+	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {
@@ -260,8 +261,9 @@ class RefreshStructureJob extends Job {
 			StructuredViewer[] viewers = (StructuredViewer[]) requests[1];
 
 			for (int i = 0; i < nodes.length; i++) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 				doRefresh(nodes[i], viewers);
 			}
 		} finally {

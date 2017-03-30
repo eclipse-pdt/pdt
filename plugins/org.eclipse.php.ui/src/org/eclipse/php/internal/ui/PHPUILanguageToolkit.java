@@ -31,22 +31,27 @@ public class PHPUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 		return sToolkit;
 	}
 
+	@Override
 	public IDLTKLanguageToolkit getCoreToolkit() {
 		return PHPLanguageToolkit.getDefault();
 	}
 
+	@Override
 	public IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
 
+	@Override
 	public String getPartitioningId() {
 		return PHPPartitionTypes.PHP_DEFAULT;
 	}
 
+	@Override
 	public String getEditorId(Object inputElement) {
 		return "org.eclipse.php.editor"; //$NON-NLS-1$
 	}
 
+	@Override
 	public ScriptElementLabels getScriptElementLabels() {
 		return new PHPElementLabels();
 	}

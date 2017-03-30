@@ -58,6 +58,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partActivated(IWorkbenchPartReference ref) {
 			if (isJavaEditor(ref) && !isActiveEditor(ref)) {
 				activeJavaEditorChanged(ref.getPart(true));
@@ -68,6 +69,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partBroughtToTop(IWorkbenchPartReference ref) {
 			if (isJavaEditor(ref) && !isActiveEditor(ref)) {
 				activeJavaEditorChanged(ref.getPart(true));
@@ -78,6 +80,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partClosed(IWorkbenchPartReference ref) {
 			if (isActiveEditor(ref)) {
 				if (DEBUG) {
@@ -92,6 +95,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partDeactivated(IWorkbenchPartReference ref) {
 		}
 
@@ -99,6 +103,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partOpened(IWorkbenchPartReference ref) {
 			if (isJavaEditor(ref) && !isActiveEditor(ref)) {
 				activeJavaEditorChanged(ref.getPart(true));
@@ -109,6 +114,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partHidden(IWorkbenchPartReference ref) {
 		}
 
@@ -116,6 +122,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partVisible(IWorkbenchPartReference ref) {
 			if (isJavaEditor(ref) && !isActiveEditor(ref)) {
 				activeJavaEditorChanged(ref.getPart(true));
@@ -126,6 +133,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.
 		 * IWorkbenchPartReference)
 		 */
+		@Override
 		public void partInputChanged(IWorkbenchPartReference ref) {
 			if (isJavaEditor(ref) && isActiveEditor(ref)) {
 				activeJavaEditorChanged(ref.getPart(true));
@@ -136,6 +144,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.
 		 * IWorkbenchWindow)
 		 */
+		@Override
 		public void windowActivated(IWorkbenchWindow window) {
 			IWorkbenchPartReference ref = window.getPartService().getActivePartReference();
 			if (isJavaEditor(ref) && !isActiveEditor(ref)) {
@@ -147,6 +156,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.
 		 * IWorkbenchWindow)
 		 */
+		@Override
 		public void windowDeactivated(IWorkbenchWindow window) {
 		}
 
@@ -154,6 +164,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.
 		 * IWorkbenchWindow)
 		 */
+		@Override
 		public void windowClosed(IWorkbenchWindow window) {
 			if (fActiveEditor != null && fActiveEditor.getSite() != null
 					&& window == fActiveEditor.getSite().getWorkbenchWindow()) {
@@ -170,6 +181,7 @@ public final class ASTProvider {
 		 * @seeorg.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.
 		 * IWorkbenchWindow)
 		 */
+		@Override
 		public void windowOpened(IWorkbenchWindow window) {
 			window.getPartService().addPartListener(this);
 		}
@@ -599,6 +611,7 @@ public final class ASTProvider {
 		final Program root[] = new Program[1];
 
 		SafeRunner.run(new ISafeRunnable() {
+			@Override
 			public void run() {
 				try {
 					if (progressMonitor != null && progressMonitor.isCanceled()) {
@@ -620,6 +633,7 @@ public final class ASTProvider {
 				}
 			}
 
+			@Override
 			public void handleException(Throwable ex) {
 				IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK,
 						"Error in PDT UI during AST creation", ex); //$NON-NLS-1$

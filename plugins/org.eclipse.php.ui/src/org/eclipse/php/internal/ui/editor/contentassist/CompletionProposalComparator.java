@@ -48,6 +48,7 @@ public class CompletionProposalComparator implements Comparator {
 		fOrderAlphabetically = orderAlphabetically;
 	}
 
+	@Override
 	public int compare(Object o1, Object o2) {
 		ICompletionProposal p1 = (ICompletionProposal) o1;
 		ICompletionProposal p2 = (ICompletionProposal) o2;

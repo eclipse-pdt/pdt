@@ -14,15 +14,16 @@ package org.eclipse.php.internal.ui.wizards.fields;
 import org.eclipse.jface.contentassist.SubjectControlContentAssistant;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.contentassist.ContentAssistHandler;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 
@@ -54,11 +55,8 @@ public class StringDialogField extends DialogField {
 		contentAssistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
 
 		contentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-		contentAssistant.setInformationControlCreator(new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
-			}
-		});
+		contentAssistant.setInformationControlCreator(
+				parent -> new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true)));
 
 		return contentAssistant;
 	}
@@ -72,6 +70,7 @@ public class StringDialogField extends DialogField {
 	/*
 	 * @see DialogField#doFillIntoGrid
 	 */
+	@Override
 	public Control[] doFillIntoGrid(Composite parent, int nColumns) {
 		assertEnoughColumns(nColumns);
 
@@ -86,6 +85,7 @@ public class StringDialogField extends DialogField {
 	/*
 	 * @see DialogField#getNumberOfControls
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
 	}
@@ -103,6 +103,7 @@ public class StringDialogField extends DialogField {
 	/*
 	 * @see DialogField#setFocus
 	 */
+	@Override
 	public boolean setFocus() {
 		if (isOkToUse(fTextControl)) {
 			fTextControl.setFocus();
@@ -123,11 +124,7 @@ public class StringDialogField extends DialogField {
 	public Text getTextControl(Composite parent) {
 		if (fTextControl == null) {
 			assertCompositeNotNull(parent);
-			fModifyListener = new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					doModifyText(e);
-				}
-			};
+			fModifyListener = e -> doModifyText(e);
 
 			fTextControl = new Text(parent, SWT.SINGLE | SWT.BORDER);
 			// moved up due to 1GEUNW2
@@ -156,6 +153,7 @@ public class StringDialogField extends DialogField {
 	/*
 	 * @see DialogField#updateEnableState
 	 */
+	@Override
 	protected void updateEnableState() {
 		super.updateEnableState();
 		if (isOkToUse(fTextControl)) {
@@ -202,6 +200,7 @@ public class StringDialogField extends DialogField {
 	 * @see
 	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
 	 */
+	@Override
 	public void refresh() {
 		super.refresh();
 		if (isOkToUse(fTextControl)) {

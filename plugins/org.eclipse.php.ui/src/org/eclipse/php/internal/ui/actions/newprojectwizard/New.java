@@ -53,10 +53,12 @@ public final class New extends WizardHandler {
 	 */
 	private String categoryId = null;
 
+	@Override
 	protected String getWizardIdParameterId() {
 		return IWorkbenchCommandConstants.FILE_NEW_PARM_WIZARDID;
 	}
 
+	@Override
 	protected IWizardRegistry getWizardRegistry() {
 		return PlatformUI.getWorkbench().getNewWizardRegistry();
 	}
@@ -81,6 +83,7 @@ public final class New extends WizardHandler {
 		categoryId = id;
 	}
 
+	@Override
 	protected IStructuredSelection getSelectionToUse(ExecutionEvent event) {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		IStructuredSelection selectionToPass = StructuredSelection.EMPTY;
@@ -143,6 +146,7 @@ public final class New extends WizardHandler {
 		return null;
 	}
 
+	@Override
 	protected void executeHandler(ExecutionEvent event) {
 		IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
 		if (activeWorkbenchWindow == null) {

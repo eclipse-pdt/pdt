@@ -91,6 +91,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		return fFirstPage;
 	}
 
+	@Override
 	protected boolean useNewSourcePage() {
 		return true;
 	}
@@ -99,6 +100,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		fKeepContent = fFirstPage.getDetect();
 
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					if (fIsAutobuild == null) {
@@ -246,6 +248,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		setHelpContext(getControl());
 	}
 
+	@Override
 	protected void setHelpContext(Control control) {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
 				IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
@@ -311,6 +314,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		return detector;
 	}
 
+	@Override
 	protected String getScriptNature() {
 		return PHPNature.ID;
 	}
@@ -485,6 +489,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
 	}
 
+	@Override
 	public void initPage() {
 		// to be called from previous page setVisible(false) only !
 		changeToNewProject();

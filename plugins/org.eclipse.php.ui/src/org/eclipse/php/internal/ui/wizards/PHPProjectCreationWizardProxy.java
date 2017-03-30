@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.wizards;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.IWorkbenchWizard;
 
 public class PHPProjectCreationWizardProxy {
@@ -40,7 +41,7 @@ public class PHPProjectCreationWizardProxy {
 			try {
 				phpProjectWizard = (IWorkbenchWizard) phpProjectWizardElement.createExecutableExtension(CLASS_ATTR);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				PHPUiPlugin.log(e);
 			}
 		}
 		if (phpProjectWizard == null) {

@@ -117,6 +117,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			super(type, description);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			return context.getVariable(getType());
 		}
@@ -130,6 +131,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			super(TAGS, PhpTemplateMessages.CodeTemplateContextType_variable_description_tags);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			return "@"; //$NON-NLS-1$
 		}
@@ -390,6 +392,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	 * org.eclipse.jdt.internal.corext.template.ContextType#validate(java.lang
 	 * .String)
 	 */
+	@Override
 	public void validate(String pattern) throws TemplateException {
 		super.validate(pattern);
 		if (fIsComment) {

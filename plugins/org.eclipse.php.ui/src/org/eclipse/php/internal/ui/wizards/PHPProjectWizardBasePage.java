@@ -104,6 +104,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 	 * @see
 	 * org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
+	@Override
 	protected String[] getValidationPropertyNames() {
 		return new String[] { IProjectCreationPropertiesNew.PROJECT_NAME, PROJECT_LOCATION };
 	}
@@ -115,6 +116,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 	 * org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(
 	 * org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
 		top.setLayout(new GridLayout(1, true));

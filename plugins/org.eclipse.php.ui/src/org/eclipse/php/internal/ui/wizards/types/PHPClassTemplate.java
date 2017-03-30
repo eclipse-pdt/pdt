@@ -33,10 +33,12 @@ public class PHPClassTemplate extends PHPElementTemplate {
 		super();
 	}
 
+	@Override
 	public String getTemplatePath() {
 		return TypeWizardConstants.CLASS_TEMPLATE_LOCATION;
 	}
 
+	@Override
 	public String processTemplate(NewPHPElementData data) {
 		// handle class default PHPDOC
 		set(DEFAULT_PHPDOC_VAR, ""); //$NON-NLS-1$
@@ -227,7 +229,7 @@ public class PHPClassTemplate extends PHPElementTemplate {
 		MethodDeclaration decl = null;
 		ISourceModule sourceModule = null;
 		for (int i = 0; i < methodsToOverride.length; i++) {
-			IMethod func = (IMethod) methodsToOverride[i];
+			IMethod func = methodsToOverride[i];
 
 			sourceModule = func.getSourceModule();
 			ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
@@ -254,10 +256,8 @@ public class PHPClassTemplate extends PHPElementTemplate {
 			}
 
 			// loop on all function's params
-
-			// PHPFunctionParameter[] params = func.getParameters();
 			List<?> paramsList = decl.getArguments();
-			FormalParameter[] params = (FormalParameter[]) paramsList.toArray(new FormalParameter[paramsList.size()]);
+			FormalParameter[] params = paramsList.toArray(new FormalParameter[paramsList.size()]);
 
 			set(FUNC_PARAM_NAME_VAR, ""); //$NON-NLS-1$
 			compile(FUNC_PARAMS_STRUCT_COMPILED, FUNC_PARAMS_STRUCT, false);
@@ -348,7 +348,7 @@ public class PHPClassTemplate extends PHPElementTemplate {
 	// generates a constructor
 	private void generateConstructor(NewPHPElementData data) {
 		IMethod func = null;
-		if ((data.superClass != null)) {
+		if (data.superClass != null) {
 			IMethod[] methods = null;
 			try {
 				methods = data.superClass.getMethods();
@@ -407,8 +407,7 @@ public class PHPClassTemplate extends PHPElementTemplate {
 				} else {
 					if (decl != null) {
 						List<?> paramsList = decl.getArguments();
-						FormalParameter[] params = (FormalParameter[]) paramsList
-								.toArray(new FormalParameter[paramsList.size()]);
+						FormalParameter[] params = paramsList.toArray(new FormalParameter[paramsList.size()]);
 						if (params != null) {
 							for (int k = 0; k < params.length; k++) {
 								String funcParam = params[k].getName();
@@ -430,10 +429,10 @@ public class PHPClassTemplate extends PHPElementTemplate {
 		FormalParameter[] params = null;
 		if (decl != null) {
 			List<?> paramsList = decl.getArguments();
-			params = (FormalParameter[]) paramsList.toArray(new FormalParameter[paramsList.size()]);
+			params = paramsList.toArray(new FormalParameter[paramsList.size()]);
 		}
 
-		StringBuffer paramsOverriden = new StringBuffer();
+		StringBuilder paramsOverriden = new StringBuilder();
 		if (func != null) {
 			paramsOverriden.append("parent::__construct("); //$NON-NLS-1$
 		}
@@ -523,6 +522,7 @@ public class PHPClassTemplate extends PHPElementTemplate {
 		compile(FUNCTIONS_STRUCT_COMPILED, FUNCTIONS_STRUCT, true);
 	}
 
+	@Override
 	public String getRequiredPHPs() {
 		return requiredPHPsBlock;
 	}

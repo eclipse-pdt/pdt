@@ -38,6 +38,7 @@ public class NewPHPTraitWizard extends NewPHPTypeWizard implements INewWizard {
 		addPage(page);
 	}
 
+	@Override
 	public void addPages() {
 		if (page == null) {
 			page = new NewPHPTraitPage();
@@ -46,6 +47,7 @@ public class NewPHPTraitWizard extends NewPHPTypeWizard implements INewWizard {
 		}
 	}
 
+	@Override
 	public boolean performFinish() {
 		if (page.isInExistingPHPFile()) {
 			// add the existing file's name to the already existings requires !
@@ -100,7 +102,7 @@ public class NewPHPTraitWizard extends NewPHPTypeWizard implements INewWizard {
 		data.namespace = page.getNamespace();
 		List<String> existingImports = getExistingImports();
 		data.existingImports = existingImports.toArray(new String[0]);
-		List<String> imports = new ArrayList<String>();
+		List<String> imports = new ArrayList<>();
 		for (IType type : interfaces) {
 			addImport(imports, type, existingImports);
 		}
@@ -123,18 +125,18 @@ public class NewPHPTraitWizard extends NewPHPTypeWizard implements INewWizard {
 	 */
 	class InterfacePostFinishValidator extends PostFinishValidator {
 
+		@Override
 		public void packAndValidate() {
 			super.packAndValidate();
-			ArrayList<?> existingFuncsNamesList = new ArrayList<Object>();
 			// run over all requested interfaces and add their functions and
 			// requires in order to be overriden
-			handleInterfaces(existingFuncsNamesList, requiredNamesExcludeList);
+			handleInterfaces(requiredNamesExcludeList);
 		}
 
 		// adds all the methods to override from the hierarchy of Interfaces
 		// recursively
 		// plus adds all the required php files
-		private void handleInterfaces(ArrayList<?> existingFuncsNamesList, ArrayList<?> requiredNamesExcludeList) {
+		private void handleInterfaces(List<?> requiredNamesExcludeList) {
 			for (IType currentInterface : page.getInterfaces()) {
 				if (currentInterface != null) {
 					extractReqruiresInclude(currentInterface);

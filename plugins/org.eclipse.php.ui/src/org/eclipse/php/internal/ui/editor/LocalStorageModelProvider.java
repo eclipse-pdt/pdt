@@ -53,10 +53,12 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IExtend
 public class LocalStorageModelProvider extends StorageDocumentProvider implements IModelProvider {
 
 	private class InternalElementStateListener implements IElementStateListener {
+		@Override
 		public void elementContentAboutToBeReplaced(Object element) {
 			LocalStorageModelProvider.this.fireElementContentAboutToBeReplaced(element);
 		}
 
+		@Override
 		public void elementContentReplaced(Object element) {
 			StorageInfo info = (StorageInfo) getElementInfo(element);
 			if (info == null) {
@@ -129,15 +131,18 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 			}
 		}
 
+		@Override
 		public void elementDeleted(Object element) {
 
 			LocalStorageModelProvider.this.fireElementDeleted(element);
 		}
 
+		@Override
 		public void elementDirtyStateChanged(Object element, boolean isDirty) {
 			LocalStorageModelProvider.this.fireElementDirtyStateChanged(element, isDirty);
 		}
 
+		@Override
 		public void elementMoved(Object originalElement, Object movedElement) {
 			LocalStorageModelProvider.this.fireElementMoved(originalElement, movedElement);
 		}
@@ -267,6 +272,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 		return path;
 	}
 
+	@Override
 	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException {
 		IAnnotationModel model = null;
 		if (element instanceof IStorageEditorInput) {
@@ -291,6 +297,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 		return model;
 	}
 
+	@Override
 	protected IDocument createDocument(Object element) {
 		// The following is largely copied from FileModelProvider
 		IDocument document = null;
@@ -382,6 +389,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	 * Also create ModelInfo - extra resource synchronization classes should be
 	 * stored within the ModelInfo
 	 */
+	@Override
 	protected ElementInfo createElementInfo(Object element) throws CoreException {
 		if (getModelInfoFor((IEditorInput) element) == null) {
 			createModelInfo((IEditorInput) element);
@@ -422,6 +430,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 		fModelInfoMap.put(input, modelInfo);
 	}
 
+	@Override
 	protected void disposeElementInfo(Object element, ElementInfo info) {
 		if (element instanceof IEditorInput) {
 			IEditorInput input = (IEditorInput) element;
@@ -455,6 +464,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	 * org.eclipse.ui.texteditor.AbstractDocumentProvider#doResetDocument(java
 	 * .lang.Object, org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	protected void doResetDocument(Object element, IProgressMonitor monitor) throws CoreException {
 		fReuseModelDocument = false;
 		super.doResetDocument(element, monitor);
@@ -465,6 +475,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	 * @see org.eclipse.ui.texteditor.AbstractDocumentProvider#doSaveDocument(org.eclipse.core.runtime.IProgressMonitor,
 	 *      java.lang.Object, org.eclipse.jface.text.IDocument, boolean)
 	 */
+	@Override
 	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
 			throws CoreException {
 		IDocumentProvider provider = null;
@@ -491,6 +502,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	 * 
 	 * @see org.eclipse.wst.sse.ui.IModelProvider#getModel(java.lang.Object)
 	 */
+	@Override
 	public IStructuredModel getModel(Object element) {
 		if (element instanceof IEditorInput)
 			return getModel((IEditorInput) element);

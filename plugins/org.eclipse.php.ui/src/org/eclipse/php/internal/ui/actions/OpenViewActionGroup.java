@@ -127,6 +127,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	/*
 	 * (non-Javadoc) Method declared in ActionGroup
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBar) {
 		super.fillActionBars(actionBar);
 		setGlobalActionHandlers(actionBar);
@@ -135,6 +136,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	/*
 	 * (non-Javadoc) Method declared in ActionGroup
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		if (!fIsTypeHiararchyViewerOwner)
@@ -156,6 +158,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	/*
 	 * @see ActionGroup#dispose()
 	 */
+	@Override
 	public void dispose() {
 		fSelectionProvider.removeSelectionChangedListener(fOpenTypeHierarchy);
 		fSelectionProvider.removeSelectionChangedListener(fOpenCallHierarchy);

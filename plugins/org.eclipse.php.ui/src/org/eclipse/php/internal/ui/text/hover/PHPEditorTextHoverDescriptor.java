@@ -54,6 +54,7 @@ public class PHPEditorTextHoverDescriptor {
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_EXTENSION_POINT);
 
 		Arrays.sort(elements, new Comparator<IConfigurationElement>() {
+			@Override
 			public int compare(IConfigurationElement e1, IConfigurationElement e2) {
 				int p1 = 0;
 				int p2 = 0;
@@ -172,25 +173,27 @@ public class PHPEditorTextHoverDescriptor {
 		return Boolean.valueOf(fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE)).booleanValue();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !obj.getClass().equals(this.getClass()) || getId() == null)
 			return false;
 		return getId().equals(((PHPEditorTextHoverDescriptor) obj).getId());
 	}
 
+	@Override
 	public int hashCode() {
 		return getId().hashCode();
 	}
 
 	private static PHPEditorTextHoverDescriptor[] createDescriptors(IConfigurationElement[] elements) {
-		List result = new ArrayList(elements.length);
+		List<PHPEditorTextHoverDescriptor> result = new ArrayList<>(elements.length);
 		for (IConfigurationElement element : elements) {
 			if (HOVER_TAG.equals(element.getName())) {
 				PHPEditorTextHoverDescriptor desc = new PHPEditorTextHoverDescriptor(element);
 				result.add(desc);
 			}
 		}
-		return (PHPEditorTextHoverDescriptor[]) result.toArray(new PHPEditorTextHoverDescriptor[result.size()]);
+		return result.toArray(new PHPEditorTextHoverDescriptor[result.size()]);
 	}
 
 	private static void initializeFromPreferences(PHPEditorTextHoverDescriptor[] hovers) {
@@ -198,7 +201,7 @@ public class PHPEditorTextHoverDescriptor {
 				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
 
 		StringTokenizer tokenizer = new StringTokenizer(compiledTextHoverModifiers, VALUE_SEPARATOR);
-		HashMap idToModifier = new HashMap(tokenizer.countTokens() / 2);
+		Map<String, String> idToModifier = new HashMap<>(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
@@ -210,7 +213,7 @@ public class PHPEditorTextHoverDescriptor {
 				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 
 		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks, VALUE_SEPARATOR);
-		HashMap idToModifierMask = new HashMap(tokenizer.countTokens() / 2);
+		Map<String, String> idToModifierMask = new HashMap<>(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();

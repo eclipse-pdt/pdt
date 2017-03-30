@@ -42,6 +42,7 @@ public class TextTemplate {
 			setStructName(structName);
 		}
 
+		@Override
 		public boolean equals(final Object o) {
 			if (o instanceof StructPatternHandler) {
 				final StructPatternHandler handler = (StructPatternHandler) o;

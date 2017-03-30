@@ -129,10 +129,12 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		super.doubleClicked(textViewer);
 	}
 
+	@Override
 	protected IRegion findExtendedDoubleClickSelection(IDocument document, int offset) {
 		IRegion match = fPairMatcher.match(document, offset);
-		if (match != null && match.getLength() >= 2)
+		if (match != null && match.getLength() >= 2) {
 			return new Region(match.getOffset() + 1, match.getLength() - 2);
+		}
 		return findWord(document, offset);
 	}
 

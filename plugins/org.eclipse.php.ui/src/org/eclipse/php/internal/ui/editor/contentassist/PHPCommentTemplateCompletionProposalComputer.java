@@ -31,6 +31,7 @@ public class PHPCommentTemplateCompletionProposalComputer extends PHPCompletionP
 
 	}
 
+	@Override
 	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
 		context.getCoreContext();
 		return new PhpCommentTemplateCompletionProcessor(context);

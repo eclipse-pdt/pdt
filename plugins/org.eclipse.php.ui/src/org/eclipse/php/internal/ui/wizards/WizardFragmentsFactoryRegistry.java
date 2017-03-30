@@ -45,10 +45,10 @@ public class WizardFragmentsFactoryRegistry {
 		WizardFragmentsFactoryRegistry registry = getInstance();
 		Map<String, ICompositeFragmentFactory> factories = registry.factories.get(fragmentsGroupID);
 		if (factories == null) {
-			factories = new LinkedHashMap<String, ICompositeFragmentFactory>();
+			factories = new LinkedHashMap<>();
 			List<FragmentsFactory> fragments = registry.fragments.get(fragmentsGroupID);
 			for (int i = 0; i < fragments.size(); i++) {
-				FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
+				FragmentsFactory factory = fragments.get(i);
 				factories.put(factory.getID(), factory.createFragmentFactory());
 			}
 			registry.factories.put(fragmentsGroupID, factories);
@@ -59,8 +59,8 @@ public class WizardFragmentsFactoryRegistry {
 	}
 
 	private WizardFragmentsFactoryRegistry() {
-		factories = new HashMap<String, Map<String, ICompositeFragmentFactory>>();
-		fragments = new HashMap<String, List<FragmentsFactory>>();
+		factories = new HashMap<>();
+		fragments = new HashMap<>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.ID, EXTENSION_POINT_NAME);
 
@@ -72,7 +72,7 @@ public class WizardFragmentsFactoryRegistry {
 				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
 				List<FragmentsFactory> list = fragments.get(groupID);
 				if (list == null) {
-					list = new ArrayList<WizardFragmentsFactoryRegistry.FragmentsFactory>();
+					list = new ArrayList<>();
 					fragments.put(groupID, list);
 				}
 				if (element.getNamespaceIdentifier().equals(PHPUiPlugin.ID)) {
@@ -97,10 +97,10 @@ public class WizardFragmentsFactoryRegistry {
 		// Scan the fragments and separate the fragments that lacks the
 		// place-after property from
 		// those that have it.
-		List<List<FragmentsFactory>> rootsFragments = new ArrayList<List<FragmentsFactory>>();
-		List<List<FragmentsFactory>> nonRootFragments = new ArrayList<List<FragmentsFactory>>();
+		List<List<FragmentsFactory>> rootsFragments = new ArrayList<>();
+		List<List<FragmentsFactory>> nonRootFragments = new ArrayList<>();
 		for (int i = 0; i < fragments.size(); i++) {
-			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
+			FragmentsFactory factory = fragments.get(i);
 			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
@@ -143,12 +143,12 @@ public class WizardFragmentsFactoryRegistry {
 		if (factoriesGroup == null || factoriesGroup.size() == 0) {
 			return true;
 		}
-		FragmentsFactory factory = (FragmentsFactory) factoriesGroup.get(0);
+		FragmentsFactory factory = factoriesGroup.get(0);
 		String placeAfter = factory.getPlaceAfter();
 		for (int i = 0; i < targetFactories.size(); i++) {
 			List<FragmentsFactory> list = targetFactories.get(i);
 			for (int j = 0; j < list.size(); j++) {
-				FragmentsFactory nextFactory = (FragmentsFactory) list.get(j);
+				FragmentsFactory nextFactory = list.get(j);
 				if (nextFactory.getID().equals(placeAfter)) {
 					// This list is the list we should add to
 					if (list.size() > j + 1) {
@@ -171,7 +171,7 @@ public class WizardFragmentsFactoryRegistry {
 
 	// add an element to a List by wrapping it in another List.
 	private void addAsList(List<List<FragmentsFactory>> target, FragmentsFactory element) {
-		List<FragmentsFactory> list = new ArrayList<FragmentsFactory>();
+		List<FragmentsFactory> list = new ArrayList<>();
 		list.add(element);
 		target.add(list);
 	}
@@ -199,6 +199,7 @@ public class WizardFragmentsFactoryRegistry {
 		public ICompositeFragmentFactory createFragmentFactory() {
 			SafeRunner.run(new SafeRunnable(
 					"Error creation extension for extension-point org.eclipse.php.server.ui.wizardAndCompositeFragments") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					factory = (ICompositeFragmentFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

@@ -60,9 +60,11 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	String docBlock;
 	String lineDelim;
 
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		final IModelElement[] modelElement = getModelElement();
 		if (modelElement == null) {
@@ -322,6 +324,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		return -1;
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection == null || !(selection instanceof IStructuredSelection)) {
 			return;
@@ -329,7 +332,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 		setModelElement(new IModelElement[structuredSelection.size()]);
-		Iterator i = structuredSelection.iterator();
+		Iterator<?> i = structuredSelection.iterator();
 		int idx = 0;
 		final IModelElement[] modelElement = getModelElement();
 		while (i.hasNext()) {
@@ -428,6 +431,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	}
 
 	private final class modelElementComparatorImplementation implements Comparator<IModelElement> {
+		@Override
 		public int compare(IModelElement object1, IModelElement object2) {
 			/*
 			 * handling null-pointers on both levels (object=null or

@@ -54,6 +54,7 @@ public abstract class LinkMessageDialog extends MessageDialog {
 	 * org.eclipse.jface.dialogs.IconAndMessageDialog#createMessageArea(org.
 	 * eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createMessageArea(Composite composite) {
 		// Create image
 		Image image = getImage();
@@ -70,6 +71,7 @@ public abstract class LinkMessageDialog extends MessageDialog {
 			messageLabel.setFont(composite.getFont());
 			messageLabel.setText(dialogMessage);
 			messageLabel.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					linkActivated();
 				}

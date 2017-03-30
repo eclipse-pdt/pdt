@@ -112,7 +112,8 @@ public class SemanticHighlightingManager {
 		PreferenceConverter.setDefault(store, key, newValue);
 		store.setDefault(key, ColorHelper.toRGBString(newValue));
 
-		if (oldValue != null && !oldValue.equals(newValue))
+		if (oldValue != null && !oldValue.equals(newValue)) {
 			store.firePropertyChangeEvent(key, oldValue, newValue);
+		}
 	}
 }

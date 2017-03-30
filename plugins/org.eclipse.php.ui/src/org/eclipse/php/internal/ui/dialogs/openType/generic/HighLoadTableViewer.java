@@ -28,6 +28,7 @@ public class HighLoadTableViewer extends Composite {
 	private Object[] sortedElements = elements;
 	private Object[] tableElements = elements;
 	private ISorter sorter = new ISorter() {
+		@Override
 		public Object[] sort(Object[] elements) {
 			return elements;
 		}
@@ -43,6 +44,7 @@ public class HighLoadTableViewer extends Composite {
 		setLayout(new FillLayout());
 		tableViewer = new TableViewer(this, style);
 		compositeFilter.addFilterChangeListener(new IFilterChangeListener() {
+			@Override
 			public void notifyFilterChanged() {
 				applyFilter2TableViewer();
 			}

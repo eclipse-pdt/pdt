@@ -33,6 +33,7 @@ public class SortAction extends Action {
 	public static final String PREF_IS_SORTED = "SortingAction.isChecked"; //$NON-NLS-1$
 	private TreeViewer treeViewer;
 	private ModelElementSorter fComparator = new ModelElementSorter() {
+		@Override
 		public int compare(org.eclipse.jface.viewers.Viewer viewer, Object e1, Object e2) {
 
 			if (e1 instanceof UseStatementsNode) {
@@ -45,6 +46,7 @@ public class SortAction extends Action {
 		};
 	};
 	private SourcePositionSorter fSourcePositonComparator = new SourcePositionSorter() {
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IImportContainer || e2 instanceof IImportContainer) {
 				try {
@@ -80,6 +82,7 @@ public class SortAction extends Action {
 		valueChanged(checked, false);
 	}
 
+	@Override
 	public void run() {
 		valueChanged(isChecked(), true);
 	}
@@ -87,6 +90,7 @@ public class SortAction extends Action {
 	private void valueChanged(final boolean on, boolean store) {
 		setChecked(on);
 		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				if (on) {
 					treeViewer.setComparator(fComparator);

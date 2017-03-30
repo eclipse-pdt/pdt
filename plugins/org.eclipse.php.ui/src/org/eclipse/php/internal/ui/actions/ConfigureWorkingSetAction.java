@@ -34,9 +34,7 @@ public class ConfigureWorkingSetAction extends Action {
 		fWorkingSetModel = model;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public void run() {
 		List<IWorkingSet> workingSets = new ArrayList<>(Arrays.asList(fWorkingSetModel.getAllWorkingSets()));
 		IWorkingSet[] activeWorkingSets = fWorkingSetModel.getActiveWorkingSets();

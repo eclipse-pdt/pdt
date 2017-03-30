@@ -103,6 +103,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	protected WorkingSetGroup fWorkingSetGroup;
 	protected WizardFragment fragment;
 
+	@Override
 	public void createControl(Composite parent) {
 
 		initializeDialogUnits(parent);
@@ -255,6 +256,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * NewWizardMessages.
 	 */
 	public final class Validator implements Observer {
+		@Override
 		public void update(Observable o, Object arg) {
 			final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
 			final String name = fNameGroup.getName();
@@ -275,12 +277,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			// check whether project already exists
 			final IProject handle = getProjectHandle();
 
-			if (!isInLocalServer()) {
-				if (handle.exists()) {
-					setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
-					setPageComplete(false);
-					return;
-				}
+			if (!isInLocalServer() && handle.exists()) {
+				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
+				setPageComplete(false);
+				return;
 			}
 
 			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -395,13 +395,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 					.getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
-			// PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-			// (PreferenceConstants.JavaScriptSupportEnable),
-			// fEnableJavaScriptSupport.getSelection());
 		}
 
 		public boolean getSelection() {
@@ -464,6 +463,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		 * @see java.util.Observer#update(java.util.Observable,
 		 * java.lang.Object)
 		 */
+		@Override
 		public void update(Observable o, Object arg) {
 			updateEnableState();
 		}
@@ -499,6 +499,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		 * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
 		 * .swt.events.SelectionEvent)
 		 */
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
@@ -511,10 +512,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		 * 
 		 * @since 3.5
 		 */
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			updateEnableState();
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 
 			String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
@@ -558,9 +561,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fDefaultValues.doFillIntoGrid(group, numColumns);
 			fCustomValues.doFillIntoGrid(group, 2);
 
-			fConfigurationBlock = createConfigurationBlock(new IStatusChangeListener() {
-				public void statusChanged(IStatus status) {
-				}
+			fConfigurationBlock = createConfigurationBlock(status -> {
 			}, (IProject) null, null);
 			fConfigurationBlock.setMinimumVersion(minimumVersion);
 			fConfigurationBlock.createContents(group);
@@ -585,10 +586,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		 * @see java.util.Observer#update(java.util.Observable,
 		 * java.lang.Object)
 		 */
+		@Override
 		public void update(Observable o, Object arg) {
 			fireEvent();
 		}
 
+		@Override
 		public void changeControlPressed(DialogField field) {
 			IEnvironment environment = getEnvironment();
 			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
@@ -596,7 +599,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				String selectedDirectory = environmentUI.selectFolder(page.getShell());
 
 				if (selectedDirectory != null) {
-					// fLocation.setText(selectedDirectory);
 					DLTKUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
 				}
 			}
@@ -604,6 +606,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		public abstract IEnvironment getEnvironment();
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			if (field == fDefaultValues) {
 				final boolean checked = fDefaultValues.isSelected();
@@ -614,10 +617,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fireEvent();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			String prefID = PHPInterpreterPreferencePage.PREF_ID;
 			PreferencesUtil.createPreferenceDialogOn(page.getShell(), prefID, new String[] { prefID }, null).open();
@@ -684,6 +689,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				doRemoveProject(monitor);
 			}
@@ -731,6 +737,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		fKeepContent = this.getDetect();
 
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					if (fIsAutobuild == null) {
@@ -806,33 +813,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 	}
 
-	private void restoreExistingFiles(URI projectLocation, IProgressMonitor monitor) throws CoreException {
-		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1 : 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$
-		try {
-			if (fDotProjectBackup != null) {
-				IFileStore projectFile = EFS.getStore(projectLocation).getChild(FILENAME_PROJECT);
-				projectFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotProjectBackup, projectFile, new SubProgressMonitor(monitor, 1));
-			}
-		} catch (IOException e) {
-			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project, e);
-			throw new CoreException(status);
-		}
-		try {
-			if (fDotBuildpathBackup != null) {
-				IFileStore buildpathFile = EFS.getStore(projectLocation).getChild(FILENAME_BUILDPATH);
-				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotBuildpathBackup, buildpathFile, new SubProgressMonitor(monitor, 1));
-			}
-		} catch (IOException e) {
-			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath, e);
-			throw new CoreException(status);
-		}
-	}
-
 	private File createBackup(IFileStore source, String name) throws CoreException {
 		try {
 			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -848,12 +828,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	private void copyFile(IFileStore source, File target) throws IOException, CoreException {
 		InputStream is = source.openInputStream(EFS.NONE, null);
 		FileOutputStream os = new FileOutputStream(target);
-		copyFile(is, os);
-	}
-
-	private void copyFile(File source, IFileStore target, IProgressMonitor monitor) throws IOException, CoreException {
-		FileInputStream is = new FileInputStream(source);
-		OutputStream os = target.openOutputStream(EFS.NONE, monitor);
 		copyFile(is, os);
 	}
 
@@ -918,6 +892,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 	}
 
+	@Override
 	public void initPage() {
 	}
 
@@ -929,16 +904,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	public void performFinish(IProgressMonitor monitor) {
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().asyncExec(() -> {
+			PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable),
+					fJavaScriptSupportGroup.getSelection());
+			IWorkingSet[] workingSets = fWorkingSetGroup.getSelectedWorkingSets();
+			((NewElementWizard) getWizard()).getWorkbench().getWorkingSetManager().addToWorkingSets(getProjectHandle(),
+					workingSets);
 
-			public void run() {
-				PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable),
-						fJavaScriptSupportGroup.getSelection());
-				IWorkingSet[] workingSets = fWorkingSetGroup.getSelectedWorkingSets();
-				((NewElementWizard) getWizard()).getWorkbench().getWorkingSetManager()
-						.addToWorkingSets(getProjectHandle(), workingSets);
-
-			}
 		});
 	}
 

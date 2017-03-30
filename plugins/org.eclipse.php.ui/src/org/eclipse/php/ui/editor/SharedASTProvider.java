@@ -74,6 +74,7 @@ public final class SharedASTProvider {
 		/*
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString() {
 			return fName;
 		}

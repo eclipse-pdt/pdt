@@ -43,6 +43,7 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	private static final String OVERRIDE_IMG_DESC_ID = "PHPPluginImages.DESC_OBJ_OVERRIDES"; //$NON-NLS-1$
 	private static final String OVERWRITE_IMG_DESC_ID = "PHPPluginImages.DESC_OBJ_IMPLEMENTS"; //$NON-NLS-1$
 
+	@Override
 	public Image getManagedImage(Annotation annotation) {
 		return null;
 	}
@@ -52,6 +53,7 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId
 	 * (org.eclipse.jface.text.source.Annotation)
 	 */
+	@Override
 	public String getImageDescriptorId(Annotation annotation) {
 		if (!isImageProviderFor(annotation))
 			return null;
@@ -67,11 +69,13 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor
 	 * (java.lang.String)
 	 */
+	@Override
 	public ImageDescriptor getImageDescriptor(String imageDescritporId) {
-		if (OVERWRITE_IMG_DESC_ID.equals(imageDescritporId))
+		if (OVERWRITE_IMG_DESC_ID.equals(imageDescritporId)) {
 			return PHPPluginImages.DESC_OBJ_IMPLEMENTS;
-		else if (OVERRIDE_IMG_DESC_ID.equals(imageDescritporId))
+		} else if (OVERRIDE_IMG_DESC_ID.equals(imageDescritporId)) {
 			return PHPPluginImages.DESC_OBJ_OVERRIDES;
+		}
 
 		return null;
 	}

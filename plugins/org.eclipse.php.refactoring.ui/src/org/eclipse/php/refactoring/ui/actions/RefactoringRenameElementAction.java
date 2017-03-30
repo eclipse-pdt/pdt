@@ -34,6 +34,7 @@ import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesR
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.refactoring.ui.PHPRefactoringUIMessages;
 import org.eclipse.php.refactoring.ui.rename.RefactoringExecutionStarter;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.MoveResourceAction;
@@ -111,13 +112,12 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 	}
 
 	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
-
-		List list = selection.toList();
+		List<?> list = selection.toList();
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
-			action = new RenameResourceAction(getShell());
+			action = new RenameResourceAction(getSite());
 			action.selectionChanged(selection);
 		} else {
-			action = new MoveResourceAction(getShell());
+			action = new MoveResourceAction(getSite());
 			action.selectionChanged(selection);
 
 		}
@@ -126,8 +126,9 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 
 	public void run(IStructuredSelection selection) {
 
-		if (!isEnabled())
+		if (!isEnabled()) {
 			return;
+		}
 
 		try {
 			IResource resource;
@@ -228,7 +229,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		}
 
 		// check if all saved
-		final List dirtyEditors = SaveFilesHandler.getDirtyEditors(project);
+		final List<IEditorPart> dirtyEditors = SaveFilesHandler.getDirtyEditors(project);
 		return dirtyEditors.size() == 0;
 	}
 

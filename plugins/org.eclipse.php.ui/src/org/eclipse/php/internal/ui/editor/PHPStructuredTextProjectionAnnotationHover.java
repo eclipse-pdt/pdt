@@ -39,6 +39,7 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 	 * 
 	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#canHandleMouseCursor()
 	 */
+	@Override
 	public boolean canHandleMouseCursor() {
 		// TODO Auto-generated method stub
 		return false;
@@ -51,9 +52,11 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 	 * 
 	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverControlCreator()
 	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fInformationControlCreator == null) {
 			fInformationControlCreator = new IInformationControlCreator() {
+				@Override
 				public IInformationControl createInformationControl(Shell parent) {
 					return new PHPSourceViewerInformationControl(parent);
 				}
@@ -68,6 +71,7 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer,
 	 *      org.eclipse.jface.text.source.ILineRange, int)
 	 */
+	@Override
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleLines) {
 		return getProjectionTextAtLine(sourceViewer, lineRange.getStartLine(), visibleLines);
 	}
@@ -87,18 +91,21 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 		if (model != null) {
 			try {
 				IDocument document = viewer.getDocument();
-				Iterator e = model.getAnnotationIterator();
+				Iterator<Annotation> e = model.getAnnotationIterator();
 				while (e.hasNext()) {
 					ProjectionAnnotation annotation = (ProjectionAnnotation) e.next();
-					if (!annotation.isCollapsed())
+					if (!annotation.isCollapsed()) {
 						continue;
+					}
 
 					Position position = model.getPosition(annotation);
-					if (position == null)
+					if (position == null) {
 						continue;
+					}
 
-					if (isCaptionLine(annotation, position, document, line))
+					if (isCaptionLine(annotation, position, document, line)) {
 						return getText(document, position.getOffset(), position.getLength(), visibleLines);
+					}
 
 				}
 			} catch (BadLocationException x) {
@@ -143,6 +150,7 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverLineRange(org.eclipse.jface.text.source.ISourceViewer,
 	 *      int)
 	 */
+	@Override
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		return new LineRange(lineNumber, 1);
 	}

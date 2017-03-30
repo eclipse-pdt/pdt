@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.actions;
 import java.io.File;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.ui.actions.MoveProjectAction;
 
 /**
@@ -26,8 +26,8 @@ import org.eclipse.ui.actions.MoveProjectAction;
  */
 public class PHPMoveProjectAction extends MoveProjectAction {
 
-	public PHPMoveProjectAction(Shell shell) {
-		super(shell);
+	public PHPMoveProjectAction(IShellProvider shellProvider) {
+		super(shellProvider);
 	}
 
 	@Override

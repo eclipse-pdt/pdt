@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IType;
@@ -54,6 +51,7 @@ public class SuperTypeHierarchyCache {
 			markAsAccessed();
 		}
 
+		@Override
 		public void typeHierarchyChanged(ITypeHierarchy typeHierarchy) {
 			removeHierarchyEntryFromCache(this);
 		}
@@ -80,6 +78,7 @@ public class SuperTypeHierarchyCache {
 		 * 
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString() {
 			return "Super hierarchy of: " + fTypeHierarchy.getType().getElementName(); //$NON-NLS-1$
 		}
@@ -88,8 +87,8 @@ public class SuperTypeHierarchyCache {
 
 	private static final int CACHE_SIZE = 8;
 
-	private static ArrayList fgHierarchyCache = new ArrayList(CACHE_SIZE);
-	private static Map fgMethodOverrideTesterCache = new LRUMap(CACHE_SIZE);
+	private static List<HierarchyCacheEntry> fgHierarchyCache = new ArrayList<>(CACHE_SIZE);
+	private static Map<IType, MethodOverrideTester> fgMethodOverrideTesterCache = new LRUMap(CACHE_SIZE);
 
 	private static int fgCacheHits = 0;
 	private static int fgCacheMisses = 0;
@@ -104,20 +103,20 @@ public class SuperTypeHierarchyCache {
 	public static MethodOverrideTester getMethodOverrideTester(IType type) throws ModelException {
 		MethodOverrideTester test = null;
 		synchronized (fgMethodOverrideTesterCache) {
-			test = (MethodOverrideTester) fgMethodOverrideTesterCache.get(type);
+			test = fgMethodOverrideTesterCache.get(type);
 		}
 		if (test == null) {
 			ITypeHierarchy hierarchy = getTypeHierarchy(type); // don't nest the
 			// locks
 			synchronized (fgMethodOverrideTesterCache) {
-				test = (MethodOverrideTester) fgMethodOverrideTesterCache.get(type); // test
-																						// again
-																						// after
-																						// waiting
-																						// a
-																						// long
-																						// time
-																						// for
+				test = fgMethodOverrideTesterCache.get(type); // test
+																// again
+																// after
+																// waiting
+																// a
+																// long
+																// time
+																// for
 				// 'getTypeHierarchy'
 				if (test == null) {
 					test = new MethodOverrideTester(type, hierarchy);
@@ -130,8 +129,9 @@ public class SuperTypeHierarchyCache {
 
 	private static void removeMethodOverrideTester(ITypeHierarchy hierarchy) {
 		synchronized (fgMethodOverrideTesterCache) {
-			for (Iterator iter = fgMethodOverrideTesterCache.values().iterator(); iter.hasNext();) {
-				MethodOverrideTester curr = (MethodOverrideTester) iter.next();
+			for (Iterator<MethodOverrideTester> iter = fgMethodOverrideTesterCache.values().iterator(); iter
+					.hasNext();) {
+				MethodOverrideTester curr = iter.next();
 				if (curr != null && curr.getTypeHierarchy() != null && curr.getTypeHierarchy().equals(hierarchy)) {
 					iter.remove();
 				}
@@ -166,9 +166,9 @@ public class SuperTypeHierarchyCache {
 				// find obsolete entries or remove entry that was least recently
 				// accessed
 				HierarchyCacheEntry oldest = null;
-				ArrayList obsoleteHierarchies = new ArrayList(CACHE_SIZE);
+				List<HierarchyCacheEntry> obsoleteHierarchies = new ArrayList<>(CACHE_SIZE);
 				for (int i = 0; i < nEntries; i++) {
-					HierarchyCacheEntry entry = (HierarchyCacheEntry) fgHierarchyCache.get(i);
+					HierarchyCacheEntry entry = fgHierarchyCache.get(i);
 					ITypeHierarchy curr = entry.getTypeHierarchy();
 					if (!curr.exists() || hierarchy.contains(curr.getType())) {
 						obsoleteHierarchies.add(entry);
@@ -180,7 +180,7 @@ public class SuperTypeHierarchyCache {
 				}
 				if (!obsoleteHierarchies.isEmpty()) {
 					for (int i = 0; i < obsoleteHierarchies.size(); i++) {
-						removeHierarchyEntryFromCache((HierarchyCacheEntry) obsoleteHierarchies.get(i));
+						removeHierarchyEntryFromCache(obsoleteHierarchies.get(i));
 					}
 				} else if (oldest != null) {
 					removeHierarchyEntryFromCache(oldest);
@@ -206,7 +206,7 @@ public class SuperTypeHierarchyCache {
 		if (type != null) {
 			synchronized (fgHierarchyCache) {
 				for (int i = fgHierarchyCache.size() - 1; i >= 0; i--) {
-					HierarchyCacheEntry curr = (HierarchyCacheEntry) fgHierarchyCache.get(i);
+					HierarchyCacheEntry curr = fgHierarchyCache.get(i);
 					ITypeHierarchy hierarchy = curr.getTypeHierarchy();
 					if (!hierarchy.exists()) {
 						removeHierarchyEntryFromCache(curr);
@@ -251,7 +251,7 @@ public class SuperTypeHierarchyCache {
 	/**
 	 * 
 	 */
-	public static class LRUMap extends LinkedHashMap {
+	public static class LRUMap extends LinkedHashMap<IType, MethodOverrideTester> {
 
 		private static final long serialVersionUID = 1L;
 		private final int fMaxSize;
@@ -261,7 +261,8 @@ public class SuperTypeHierarchyCache {
 			fMaxSize = maxSize;
 		}
 
-		protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
+		@Override
+		protected boolean removeEldestEntry(java.util.Map.Entry<IType, MethodOverrideTester> eldest) {
 			return size() > fMaxSize;
 		}
 	}

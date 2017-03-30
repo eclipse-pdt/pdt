@@ -102,7 +102,7 @@ public abstract class PHPElementTemplate extends TextTemplate {
 		url = FileLocator.resolve(url);
 		final BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) url.getContent()));
 		String line;
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		while ((line = reader.readLine()) != null) {
 			buffer.append(line);
 			buffer.append("\n"); //$NON-NLS-1$
@@ -135,10 +135,8 @@ public abstract class PHPElementTemplate extends TextTemplate {
 		String name = superClass.getElementName();
 		try {
 			IModelElement parent = superClass.getParent();
-			if (parent instanceof IType) {
-				if (PHPFlags.isNamespace(((IType) parent).getFlags())) {
-					name = parent.getElementName() + "\\" + name; //$NON-NLS-1$
-				}
+			if (parent instanceof IType && PHPFlags.isNamespace(((IType) parent).getFlags())) {
+				name = parent.getElementName() + "\\" + name; //$NON-NLS-1$
 			}
 		} catch (ModelException e) {
 			// do not log, just continue

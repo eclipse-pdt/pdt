@@ -18,15 +18,16 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 public class PHPElementLabels extends ScriptElementLabels {
-	private final String MIXED_RETURN_TYPE = "mixed"; //$NON-NLS-1$
-	private final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
-	private final String QUESTION_MARK = "?"; //$NON-NLS-1$
+	private final static String MIXED_RETURN_TYPE = "mixed"; //$NON-NLS-1$
+	private final static String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
+	private final static String QUESTION_MARK = "?"; //$NON-NLS-1$
 
 	/**
 	 * User-readable string for reference ("&").
 	 */
-	public final static String REFERENCE_STRING = "&"; //$NON-NLS-1$
+	public static final String REFERENCE_STRING = "&"; //$NON-NLS-1$
 
+	@Override
 	protected void getTypeLabel(IType type, long flags, StringBuffer buf) {
 		if (getFlag(flags, T_FULLY_QUALIFIED | T_CONTAINER_QUALIFIED)) {
 			IModelElement elem = type.getParent();
@@ -103,6 +104,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 		}
 	}
 
+	@Override
 	protected void getMethodLabel(IMethod method, long flags, StringBuffer buf) {
 
 		try {
@@ -151,6 +153,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 		}
 	}
 
+	@Override
 	protected void getMethodParameters(IMethod method, long flags, StringBuffer buf) throws ModelException {
 		if (getFlag(flags, M_PARAMETER_TYPES | M_PARAMETER_NAMES)) {
 			if (method.exists()) {

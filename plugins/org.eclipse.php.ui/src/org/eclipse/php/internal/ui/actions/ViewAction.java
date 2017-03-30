@@ -25,6 +25,7 @@ public class ViewAction extends Action {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void run() {
 		if (isChecked())
 			fActionGroup.setMode(fMode);

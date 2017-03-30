@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NewPHPInterfacePage extends NewPHPTypePage {
 
-	private final static String[] INTERFACE__CHECKBOXES = new String[] { REQUIRE_ONCE, PHP_DOC_BLOCKS };
+	private static final String[] INTERFACE__CHECKBOXES = new String[] { REQUIRE_ONCE, PHP_DOC_BLOCKS };
 
 	public NewPHPInterfacePage() {
 		super(Messages.NewPHPInterfacePage_0);
@@ -40,6 +40,7 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 		interfacesStatus = new StatusInfo();
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		super.createControl(parent);
@@ -56,10 +57,6 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 
 		setControl(composite);
 		initValues();
-	}
-
-	protected void initValues() {
-		super.initValues();
 	}
 
 	// create this element's section
@@ -79,6 +76,7 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 		addCheckboxesCreation(elementSection, INTERFACE__CHECKBOXES);
 	}
 
+	@Override
 	protected void sourceFolderChanged() {
 		super.sourceFolderChanged();
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -99,6 +97,7 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 	/**
 	 * Finds the most severe error (if there is one)
 	 */
+	@Override
 	protected IStatus findMostSevereStatus() {
 		return StatusUtil.getMostSevere(new IStatus[] { elementNameStatus, sourceFolderStatus, newFileStatus,
 				existingFileStatus, interfacesStatus, namespaceStatus });
@@ -108,6 +107,7 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 	 * This method was overriden to handle cases in which project's PHP version
 	 * is less than 5
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		if (!visible) {
 			super.setVisible(visible);

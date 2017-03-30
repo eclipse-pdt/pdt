@@ -43,6 +43,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 		this.resetIndentationOnEachDocumentCommand = resetIndentationOnEachDocumentCommand;
 	}
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if ((command.text != null) && command.text.equals("\t")) { //$NON-NLS-1$
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464605

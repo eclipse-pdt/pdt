@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.ltk.core.refactoring.CheckConditionsOperation;
 import org.eclipse.ltk.core.refactoring.CreateChangeOperation;
 import org.eclipse.ltk.core.refactoring.PerformChangeOperation;
@@ -31,7 +32,6 @@ import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.ltk.internal.core.refactoring.resource.MoveResourcesProcessor;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
@@ -40,7 +40,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 
 	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
 	private IStructuredSelection selectedResources;
-	private Shell fShell;
+	private IShellProvider fShellProvider;
 	private AbstractMoveDelegator moveActionDelegate;
 	private IContainer target;
 
@@ -60,16 +60,16 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
 		List<?> list = selection.toList();
 		SelectionListenerAction action = null;
-		if (fShell == null) {
-			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (fShellProvider == null) {
+			fShellProvider = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		}
 
 		if (list.size() == 0 || list.get(0) instanceof IProject || (list.get(0) instanceof IAdaptable
 				&& ((IAdaptable) list.get(0)).getAdapter(IResource.class) instanceof IProject)) {
-			action = new PHPMoveProjectAction(fShell);
+			action = new PHPMoveProjectAction(fShellProvider);
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
-			action = new MoveResourceAction(fShell);
+			action = new MoveResourceAction(fShellProvider);
 			if (list.size() == 1) {
 				Object object = list.get(0);
 				if (object instanceof ElementImplForPhp && ((ElementImplForPhp) object).getModelElement() != null) {
@@ -134,7 +134,8 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 			RefactoringStatus refactoringStatus = checkOp.getStatus();
 
 			if (refactoringStatus != null && !refactoringStatus.isOK()) {
-				MessageDialog.openError(fShell, Messages.ReorgMoveAction_0, Messages.ReorgMoveAction_1);
+				MessageDialog.openError(fShellProvider.getShell(), Messages.ReorgMoveAction_0,
+						Messages.ReorgMoveAction_1);
 			}
 			return false;
 		}
@@ -142,6 +143,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 		return true;
 	}
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor != null) {
 			if (moveActionDelegate == null) {
@@ -162,6 +164,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (moveActionDelegate != null) {
 			if (target != null) {
@@ -173,6 +176,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (moveActionDelegate != null) {
 			moveActionDelegate.selectionChanged(action, selection);
@@ -183,16 +187,19 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 		}
 	}
 
+	@Override
 	public void dispose() {
 
 	}
 
+	@Override
 	public void setTarget(IContainer target) {
 		this.target = target;
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
-		fShell = window.getShell();
+		fShellProvider = window;
 
 		IPHPActionDelegator action = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
 

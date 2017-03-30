@@ -134,6 +134,7 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	 * @see org.eclipse.ui.actions.BaseNewWizardMenu#addItems(org.eclipse.jface.
 	 * action .IContributionManager)
 	 */
+	@Override
 	protected void addItems(List list) {
 		ArrayList shortCuts = new ArrayList();
 		addShortcuts(shortCuts);
@@ -200,6 +201,7 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	/*
 	 * (non-Javadoc) Method declared on IContributionItem.
 	 */
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -219,6 +221,7 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	 * 
 	 * @see org.eclipse.ui.actions.BaseNewWizardMenu#getContributionItems()
 	 */
+	@Override
 	protected IContributionItem[] getContributionItems() {
 		if (isEnabled()) {
 			return super.getContributionItems();

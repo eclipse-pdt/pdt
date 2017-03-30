@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
@@ -66,6 +65,7 @@ public class PHPVersionGroup implements SelectionListener {
 		fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 
 		fEnableProjectSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateEnableState();
 			}
@@ -95,10 +95,12 @@ public class PHPVersionGroup implements SelectionListener {
 		}
 	}
 
+	@Override
 	public void widgetSelected(SelectionEvent e) {
 		widgetDefaultSelected(e);
 	}
 
+	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		String prefID = PHPInterpreterPreferencePage.PREF_ID;
 		Map data = null;
@@ -113,9 +115,7 @@ public class PHPVersionGroup implements SelectionListener {
 	}
 
 	protected IStatusChangeListener getNewStatusChangedListener() {
-		return new IStatusChangeListener() {
-			public void statusChanged(IStatus status) {
-			}
+		return status -> {
 		};
 	}
 
@@ -130,10 +130,6 @@ public class PHPVersionGroup implements SelectionListener {
 	}
 
 	public void setPropertiesInDataModel(IProject project) {
-		// if (fEnableProjectSettings.getSelection()) {
-		// PHPVersion version = fConfigurationBlock.getPHPVersionValue();
-		// boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
-
 		// FIXME : update project with values
 		// dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS,
 		// useASPTags);

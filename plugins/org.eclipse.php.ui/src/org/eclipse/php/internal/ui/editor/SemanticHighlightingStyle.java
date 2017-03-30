@@ -74,13 +74,15 @@ public class SemanticHighlightingStyle {
 	 * @return RGB the RGB
 	 */
 	private static RGB findRGB(String key, RGB defaultRGB) {
-		if (!PlatformUI.isWorkbenchRunning())
+		if (!PlatformUI.isWorkbenchRunning()) {
 			return defaultRGB;
+		}
 
 		ColorRegistry registry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
 		RGB rgb = registry.getRGB(key);
-		if (rgb != null)
+		if (rgb != null) {
 			return rgb;
+		}
 		return defaultRGB;
 	}
 

@@ -90,6 +90,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 	 * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse
 	 * .jface.util.PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(final PropertyChangeEvent event) {
 		if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
 			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT))
@@ -123,9 +124,11 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 			DocumentReader docReader;
 			Document document;
 
+			@Override
 			public void textChanging(TextChangingEvent event) {
 			}
 
+			@Override
 			public void textChanged(TextChangedEvent event) {
 				if (docReader == null) {
 					document = new Document();
@@ -140,6 +143,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 
 			}
 
+			@Override
 			public void textSet(TextChangedEvent event) {
 			}
 
@@ -170,6 +174,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 		return fDefaultForeground;
 	}
 
+	@Override
 	public Font getFont() {
 		return fText.getFont();
 	}
@@ -207,6 +212,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 			return;
 		final String n = name;
 		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				if (e.childID == ACC.CHILDID_SELF)
 					e.result = n;
@@ -230,6 +236,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 		fDefaultForeground = newDefaultForeground;
 	}
 
+	@Override
 	public void setFont(Font font) {
 		fText.setFont(font);
 		fText.redraw();
@@ -297,6 +304,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 	 * 
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
+	@Override
 	public void dispose() {
 		editorStore.removePropertyChangeListener(this);
 		fDefaultBackground.dispose();

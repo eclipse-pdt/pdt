@@ -37,20 +37,20 @@ public class ActionUtils {
 	final private static IContentType contentType = Platform.getContentTypeManager()
 			.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 
-	public static boolean containsOnlyProjects(List elements) {
+	public static boolean containsOnlyProjects(List<?> elements) {
 		if (elements.isEmpty())
 			return false;
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			if (!isProject(iter.next()))
 				return false;
 		}
 		return true;
 	}
 
-	public static boolean containsOnly(List elements, Class clazz) {
+	public static boolean containsOnly(List<?> elements, Class<?> clazz) {
 		if (elements.isEmpty())
 			return false;
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			// if (!clazz.isAssignableFrom(iter.next().getClass()))
 			if (!clazz.isAssignableFrom(iter.next().getClass()))
 				return false;
@@ -63,65 +63,69 @@ public class ActionUtils {
 				|| element instanceof IProject;
 	}
 
-	public static IResource[] getResources(List elements) {
+	public static IResource[] getResources(List<?> elements) {
 		return getResources(elements, false);
 	}
 
-	public static IResource[] getResources(List elements, boolean includePHPFileData) {
-		List resources = new ArrayList(elements.size());
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+	public static IResource[] getResources(List<?> elements, boolean includePHPFileData) {
+		List<IResource> resources = new ArrayList<>(elements.size());
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof IResource)
-				resources.add(element);
-			else if (includePHPFileData && element instanceof ISourceModule) {
+			if (element instanceof IResource) {
+				resources.add((IResource) element);
+			} else if (includePHPFileData && element instanceof ISourceModule) {
 				resources.add(((ISourceModule) element).getResource());
 			}
 		}
-		return (IResource[]) resources.toArray(new IResource[resources.size()]);
+		return resources.toArray(new IResource[resources.size()]);
 	}
 
 	public static IResource[] getResources(final Object[] elements) {
-		List result = new ArrayList();
+		List<IResource> result = new ArrayList<>();
 		for (Object element : elements) {
-			if (element instanceof IResource)
-				result.add(element);
+			if (element instanceof IResource) {
+				result.add((IResource) element);
+			}
 		}
-		return (IResource[]) result.toArray(new IResource[result.size()]);
+		return result.toArray(new IResource[result.size()]);
 	}
 
 	public static IResource[] getPHPResources(final Object[] elements) {
-		List result = new ArrayList();
+		List<IResource> result = new ArrayList<>();
 
 		for (Object element : elements) {
 			if (element instanceof IFile) {
 				if (contentType.isAssociatedWith(((IResource) element).getName())) {
-					result.add(element);
+					result.add((IResource) element);
 				}
-			} else if (element instanceof IResource) // other resource then file
-				result.add(element);
+			} else if (element instanceof IResource) { // other resource then
+														// file
+				result.add((IResource) element);
+			}
 		}
-		return (IResource[]) result.toArray(new IResource[result.size()]);
+		return result.toArray(new IResource[result.size()]);
 	}
 
-	public static Object[] getPHPElements(List elements) {
+	public static Object[] getPHPElements(List<?> elements) {
 		return getPHPElements(elements, false);
 	}
 
-	public static Object[] getPHPElements(List elements, boolean phpFileDataIsResource) {
-		List phpElements = new ArrayList(elements.size());
+	public static Object[] getPHPElements(List<?> elements, boolean phpFileDataIsResource) {
+		List<Object> phpElements = new ArrayList<>(elements.size());
 		for (Object element : elements) {
 			if (element instanceof IModelElement || element instanceof IScriptProject)/* PHPProjectModel */// ||
 																											// element
 																											// instanceof
 																											// PHPWorkspaceModelManager)
-				if (!phpFileDataIsResource || !(element instanceof ISourceModule))
+				if (!phpFileDataIsResource || !(element instanceof ISourceModule)) {
 					phpElements.add(element);
+				}
 		}
 		return phpElements.toArray();
 	}
 
 	public static Object[] getPHPElements(final Object[] elements) {
-		List resources = new ArrayList(elements.length);
+		List<Object> resources = new ArrayList<>(elements.length);
 		for (Object element : elements) {
 			if (element instanceof ISourceModule || element instanceof IScriptProject)/* PHPProjectModel */// ||
 																											// element

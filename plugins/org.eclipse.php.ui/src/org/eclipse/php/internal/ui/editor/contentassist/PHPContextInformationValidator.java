@@ -27,6 +27,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 	private int fPosition;
 	private int fCurrentParameter;
 
+	@Override
 	public void install(IContextInformation info, ITextViewer viewer, int offset) {
 		fInformation = info;
 		fViewer = viewer;
@@ -131,6 +132,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		return charCount;
 	}
 
+	@Override
 	public boolean isContextInformationValid(int offset) {
 		try {
 			if (offset < fPosition)
@@ -149,6 +151,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		}
 	}
 
+	@Override
 	public boolean updatePresentation(int offset, TextPresentation presentation) {
 		int currentParameter = -1;
 

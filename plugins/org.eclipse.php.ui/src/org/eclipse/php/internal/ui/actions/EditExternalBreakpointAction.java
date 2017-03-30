@@ -41,6 +41,7 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * @see
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
+	@Override
 	protected boolean hasMarkers() {
 		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(), getResource(), getDocument(),
 				getAnnotationModel(), getRulerInfo());
@@ -52,6 +53,7 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * @see
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
 	 */
+	@Override
 	protected IMarker[] getMarkers() {
 		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(), getResource(), getDocument(),
 				getAnnotationModel(), getRulerInfo());
@@ -62,6 +64,7 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction#update()
 	 */
+	@Override
 	public void update() {
 		breakpoints = getBreakpoints(getMarkers());
 		boolean enableThisAction = hasMarkers() && breakpoints.length > 0;

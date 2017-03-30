@@ -50,6 +50,7 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		fChangeListener = changeListener;
 		if (fChangeListener == null) {
 			fChangeListener = new IPropertyChangeListener() {
+				@Override
 				public void propertyChange(PropertyChangeEvent event) {
 				}
 			};
@@ -66,6 +67,7 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 			fActiveActionGroup = fFilterActionGroup;
 	}
 
+	@Override
 	public void dispose() {
 		fFilterActionGroup.dispose();
 		fShowActionGroup.dispose();
@@ -74,6 +76,7 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		super.dispose();
 	}
 
+	@Override
 	public void setWorkingSetModel(WorkingSetModel model) {
 		fShowActionGroup.setWorkingSetMode(model);
 		fWorkingSetAssignementAction.setWorkingSetModel(model);
@@ -90,6 +93,7 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		// super.fillActionBars(actionBars);
 		fMenuManager = actionBars.getMenuManager();
@@ -121,6 +125,7 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		}
 	}
 
+	@Override
 	public void fillFilters(StructuredViewer viewer) {
 		ViewerFilter workingSetFilter = fFilterActionGroup.getWorkingSetFilter();
 		if (showProjects()) {
@@ -130,6 +135,7 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		}
 	}
 
+	@Override
 	public void setMode(int mode) {
 		fMode = mode;
 		fActiveActionGroup.cleanViewMenu(fMenuManager);
@@ -147,14 +153,17 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 			fChangeListener.propertyChange(event);
 	}
 
+	@Override
 	public PHPWorkingSetFilterActionGroup getFilterGroup() {
 		return fFilterActionGroup;
 	}
 
+	@Override
 	public void restoreState(IMemento memento) {
 		fFilterActionGroup.restoreState(memento);
 	}
 
+	@Override
 	public void saveState(IMemento memento) {
 		fFilterActionGroup.saveState(memento);
 	}

@@ -43,12 +43,14 @@ public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		IMenuManager menuManager = actionBars.getMenuManager();
 		fillViewMenu(menuManager);
 	}
 
+	@Override
 	public void fillViewMenu(IMenuManager menuManager) {
 		fConfigureWorkingSetAction = new ConfigureWorkingSetAction(fSite);
 		if (fWorkingSetModel != null)
@@ -56,6 +58,7 @@ public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSe
 		addAction(menuManager, fConfigureWorkingSetAction);
 	}
 
+	@Override
 	public void cleanViewMenu(IMenuManager menuManager) {
 		for (Iterator<IContributionItem> iter = fContributions.iterator(); iter.hasNext();) {
 			menuManager.remove((IContributionItem) iter.next());

@@ -66,8 +66,8 @@ import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 
 	private IStructuredSelection fSelection;
-	protected ArrayList<String> requiredNamesExcludeList = new ArrayList<String>();
-	protected ArrayList<String> requiredToAdd = new ArrayList<String>();
+	protected ArrayList<String> requiredNamesExcludeList = new ArrayList<>();
+	protected ArrayList<String> requiredToAdd = new ArrayList<>();
 	protected NewPHPTypePage page;
 	protected ISourceModule existingPHPFile = null;
 	protected String compilationResult;
@@ -122,9 +122,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 								}
 							}
 							currentProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-						} catch (IOException e) {
-							Logger.logException(e);
-						} catch (CoreException e) {
+						} catch (IOException | CoreException e) {
 							Logger.logException(e);
 						}
 					}
@@ -196,7 +194,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	}
 
 	public void showWarningsDialog(String[] warnings) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		String elementType = ""; //$NON-NLS-1$
 		switch (page.fTypeKind) {
 		case NewPHPTypePage.CLASS_TYPE:
@@ -259,8 +257,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 
 		for (IStructuredDocumentRegion currentRegion : subRegions) {
 			if (currentRegion instanceof XMLStructuredDocumentRegion) {
-				ITextRegion[] textRegions = currentRegion.getRegions().toArray();
-				return textRegions;
+				return currentRegion.getRegions().toArray();
 			}
 		}
 
@@ -391,7 +388,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	}
 
 	protected List<String> getExistingImports() {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		if (existingPHPFile != null && existingPHPFile.exists()) {
 			try {
 				IModelElement[] rootElements = existingPHPFile.getChildren();
@@ -434,11 +431,6 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 
 	public IFolder createNewFolder(IPath newFolderPath) {
 		IFolder newFolder = null;
-
-		// create the new folder and cache it if successful
-		// final IPath containerPath = resourceGroup.getContainerFullPath();
-		// IPath newFolderPath =
-		// containerPath.append(resourceGroup.getResource());
 		final IFolder newFolderHandle = createFolderHandle(newFolderPath);
 
 		final boolean createVirtualFolder = false;
@@ -455,22 +447,19 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 				// folder (and file) deletions.
 				op1.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
 			} catch (final ExecutionException e) {
-				getContainer().getShell().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						if (e.getCause() instanceof CoreException) {
-							ErrorDialog.openError(getContainer().getShell(), // Was
-																				// Utilities.getFocusShell()
-									IDEWorkbenchMessages.WizardNewFolderCreationPage_errorTitle, null, // no
-																										// special
-																										// message
-									((CoreException) e.getCause()).getStatus());
-						} else {
-							IDEWorkbenchPlugin.log(getClass(), "createNewFolder()", e.getCause()); //$NON-NLS-1$
-							MessageDialog.openError(getContainer().getShell(),
-									IDEWorkbenchMessages.WizardNewFolderCreationPage_internalErrorTitle,
-									NLS.bind(IDEWorkbenchMessages.WizardNewFolder_internalError,
-											e.getCause().getMessage()));
-						}
+				getContainer().getShell().getDisplay().syncExec(() -> {
+					if (e.getCause() instanceof CoreException) {
+						ErrorDialog.openError(getContainer().getShell(), // Was
+																			// Utilities.getFocusShell()
+								IDEWorkbenchMessages.WizardNewFolderCreationPage_errorTitle, null, // no
+																									// special
+																									// message
+								((CoreException) e.getCause()).getStatus());
+					} else {
+						IDEWorkbenchPlugin.log(getClass(), "createNewFolder()", e.getCause()); //$NON-NLS-1$
+						MessageDialog.openError(getContainer().getShell(),
+								IDEWorkbenchMessages.WizardNewFolderCreationPage_internalErrorTitle, NLS.bind(
+										IDEWorkbenchMessages.WizardNewFolder_internalError, e.getCause().getMessage()));
 					}
 				});
 			}

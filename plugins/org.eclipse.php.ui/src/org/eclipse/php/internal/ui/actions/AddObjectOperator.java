@@ -41,6 +41,7 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 		super();
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 		ITextEditor textEditor = null;

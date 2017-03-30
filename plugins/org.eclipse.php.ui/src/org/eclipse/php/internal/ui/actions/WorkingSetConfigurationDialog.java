@@ -50,6 +50,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			fIcons = new Hashtable<ImageDescriptor, Image>();
 		}
 
+		@Override
 		public void dispose() {
 			Iterator<Image> iterator = fIcons.values().iterator();
 			while (iterator.hasNext()) {
@@ -59,6 +60,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			super.dispose();
 		}
 
+		@Override
 		public Image getImage(Object object) {
 			Assert.isTrue(object instanceof IWorkingSet);
 			IWorkingSet workingSet = (IWorkingSet) object;
@@ -73,6 +75,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			return icon;
 		}
 
+		@Override
 		public String getText(Object object) {
 			Assert.isTrue(object instanceof IWorkingSet);
 			IWorkingSet workingSet = (IWorkingSet) object;
@@ -81,6 +84,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	}
 
 	private class Filter extends ViewerFilter {
+		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			IWorkingSet ws = (IWorkingSet) element;
 			String id = ws.getId();
@@ -166,6 +170,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
 		setInitialSelection();
@@ -176,6 +181,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 		composite.setFont(parent.getFont());
@@ -200,6 +206,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	private void createTableViewer(Composite parent) {
 		fTableViewer = CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.MULTI);
 		fTableViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateButtonAvailability();
 			}
@@ -213,17 +220,21 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fTableViewer.addFilter(new Filter());
 		fTableViewer.setLabelProvider(new WorkingSetLabelProvider());
 		fTableViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object element) {
 				return ((List<?>) element).toArray();
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
 		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				handleSelectionChanged();
 			}
@@ -243,6 +254,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				WorkingSetMessages.WorkingSetConfigurationDialog_new_label, false);
 		fNewButton.setFont(composite.getFont());
 		fNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				createWorkingSet();
 			}
@@ -252,6 +264,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				WorkingSetMessages.WorkingSetConfigurationDialog_edit_label, false);
 		fEditButton.setFont(composite.getFont());
 		fEditButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				editSelectedWorkingSet();
 			}
@@ -261,6 +274,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				WorkingSetMessages.WorkingSetConfigurationDialog_remove_label, false);
 		fRemoveButton.setFont(composite.getFont());
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				removeSelectedWorkingSets();
 			}
@@ -282,6 +296,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fUpButton.setFont(parent.getFont());
 		setButtonLayoutData(fUpButton);
 		fUpButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				moveUp(((IStructuredSelection) fTableViewer.getSelection()).toList());
 			}
@@ -292,6 +307,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fDownButton.setFont(parent.getFont());
 		setButtonLayoutData(fDownButton);
 		fDownButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				moveDown(((IStructuredSelection) fTableViewer.getSelection()).toList());
 			}
@@ -302,6 +318,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fSelectAll.setFont(parent.getFont());
 		setButtonLayoutData(fSelectAll);
 		fSelectAll.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				selectAll();
 			}
@@ -312,6 +329,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fDeselectAll.setFont(parent.getFont());
 		setButtonLayoutData(fDeselectAll);
 		fDeselectAll.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				deselectAll();
 			}
@@ -321,6 +339,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void okPressed() {
 		List<IWorkingSet> newResult = getResultWorkingSets();
 		fResult = (IWorkingSet[]) newResult.toArray(new IWorkingSet[newResult.size()]);
@@ -341,6 +360,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void cancelPressed() {
 		restoreAddedWorkingSets();
 		restoreChangedWorkingSets();
@@ -417,6 +437,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#open()
 	 */
+	@Override
 	public int open() {
 		fAddedWorkingSets = new ArrayList<IWorkingSet>();
 		fRemovedWorkingSets = new ArrayList<IWorkingSet>();

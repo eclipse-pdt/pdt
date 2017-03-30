@@ -40,6 +40,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 		super();
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 		ITextEditor textEditor = null;
@@ -94,6 +95,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 		return null;
 	}
 
+	@Override
 	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		int openCommentOffset = textSelection.getOffset();
 		int closeCommentOffset = openCommentOffset + textSelection.getLength();

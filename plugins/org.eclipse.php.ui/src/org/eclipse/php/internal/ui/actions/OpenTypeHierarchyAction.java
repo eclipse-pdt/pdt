@@ -100,6 +100,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
+	@Override
 	public void selectionChanged(final ITextSelection selection) {
 
 		IJobManager jobManager = Job.getJobManager();
@@ -128,6 +129,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		if (selection == null || selection.size() != 1) {
 			setEnabled(false);
@@ -171,6 +173,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
+	@Override
 	public void run(ITextSelection selection) {
 		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, true);
 		if (input == null || !ActionUtil.isProcessable(getShell(), input) || !(input instanceof ISourceModule)) {
@@ -184,6 +187,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
+	@Override
 	public void run(IStructuredSelection selection) {
 		if (selection instanceof ITextSelection) {
 			run((ITextSelection) selection);
@@ -301,6 +305,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		return new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), PHPUiPlugin.INTERNAL_ERROR, message, null);
 	}
 
+	@Override
 	public void update() {
 		setEnabled(fEditor != null);
 	}

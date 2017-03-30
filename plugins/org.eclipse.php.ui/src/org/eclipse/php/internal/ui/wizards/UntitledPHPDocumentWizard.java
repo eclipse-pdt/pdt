@@ -61,6 +61,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 	/*
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
 	 */
+	@Override
 	public void dispose() {
 		fWindow = null;
 	}
@@ -68,6 +69,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 	/*
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
+	@Override
 	public boolean performFinish() {
 
 		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
@@ -76,7 +78,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 
 		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(fileStore, UNTITLED_PHP_DOC_PREFIX);
 
-		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input).toFile();
+		File realFile = input.getPath(input).toFile();
 		realFile.deleteOnExit();
 
 		IWorkbenchPage page = fWindow.getActivePage();
@@ -110,9 +112,6 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 				// set document dirty
 				document.replace(0, 0, ""); //$NON-NLS-1$
 			}
-		} catch (PartInitException e) {
-			Logger.logException(e);
-			return false;
 		} catch (CoreException e) {
 			Logger.logException(e);
 			return false;
@@ -127,6 +126,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
 	 * org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		fWindow = workbench.getActiveWorkbenchWindow();
 	}

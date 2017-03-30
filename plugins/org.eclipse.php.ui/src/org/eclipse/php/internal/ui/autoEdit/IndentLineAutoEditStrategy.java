@@ -157,6 +157,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		}
 	}
 
+	@Override
 	public void customizeDocumentCommand(final IDocument document, final DocumentCommand command) {
 		if (command.text != null && TextUtilities.endsWith(document.getLegalLineDelimiters(), command.text) != -1) {
 			setIndentationObject(null); // reset
@@ -229,6 +230,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		final ISourceModule[] sourceModules = new ISourceModule[1];
 		// resolve current sourceModule
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchPage page = PHPUiPlugin.getActivePage();
 				if (page != null) {

@@ -31,11 +31,13 @@ public class ElementAddition implements Runnable {
 		this.defaultElementSelection = defaultElementSelection;
 	}
 
+	@Override
 	public void run() {
 		while (true) {
 			continueAddingElements = true;
 			elementsChanged = false;
 			Display.getDefault().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (!continueAddingElements) {
 						return;
@@ -58,6 +60,7 @@ public class ElementAddition implements Runnable {
 					element = tableElements[i];
 				}
 				Display.getDefault().syncExec(new Runnable() {
+					@Override
 					public void run() {
 						if (!continueAddingElements) {
 							return;
@@ -70,6 +73,7 @@ public class ElementAddition implements Runnable {
 						break;
 					}
 					Display.getDefault().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							if (!continueAddingElements) {
 								return;

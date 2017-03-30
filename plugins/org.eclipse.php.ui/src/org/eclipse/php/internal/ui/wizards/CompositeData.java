@@ -22,10 +22,12 @@ public class CompositeData implements ICompositeData {
 	private IDialogSettings settings;
 	private Observer observer;
 
+	@Override
 	public Composite getParentComposite() {
 		return paretnt;
 	}
 
+	@Override
 	public IDialogSettings getSettings() {
 		return settings;
 	}
@@ -38,6 +40,7 @@ public class CompositeData implements ICompositeData {
 		this.settings = settings;
 	}
 
+	@Override
 	public Observer getObserver() {
 		return observer;
 	}

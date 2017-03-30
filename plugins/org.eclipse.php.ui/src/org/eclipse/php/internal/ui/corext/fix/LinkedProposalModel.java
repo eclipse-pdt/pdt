@@ -29,7 +29,7 @@ public class LinkedProposalModel {
 		}
 
 		if (fPositionGroups == null) {
-			fPositionGroups = new HashMap();
+			fPositionGroups = new HashMap<>();
 		}
 		fPositionGroups.put(positionGroup.getGroupId(), positionGroup);
 	}

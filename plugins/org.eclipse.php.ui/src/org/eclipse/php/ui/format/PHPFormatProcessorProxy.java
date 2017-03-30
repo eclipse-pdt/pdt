@@ -41,7 +41,6 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 
 	private static IConfigurationElement phpFormatterElement;
-	// private static String phpFormatterClassName;
 	private static IContentFormatter phpFormatter;
 
 	static {
@@ -50,7 +49,6 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 		for (IConfigurationElement element : elements) {
 			String name = element.getName();
 			if (PHPUiPlugin.FORMATTER_PROCESSOR.equals(name)) {
-				// phpFormatterClassName = element.getAttribute(CLASS_ATTR);
 				phpFormatterElement = element;
 			}
 		}
@@ -61,8 +59,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 			try {
 				phpFormatter = (IContentFormatter) phpFormatterElement.createExecutableExtension(CLASS_ATTR);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				PHPUiPlugin.log(e);
 			}
 		}
 		if (phpFormatter == null) {
@@ -78,6 +75,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
 	 * formatDocument(org.eclipse.jface.text.IDocument, int, int)
 	 */
+	@Override
 	public void formatDocument(IDocument document, int start, int length) throws IOException, CoreException {
 		IRegion region = new Region(start, length);
 		getFormatter().format(document, region);
@@ -89,28 +87,27 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
 	 * formatFile(org.eclipse.core.resources.IFile)
 	 */
+	@Override
 	public void formatFile(IFile file) throws IOException, CoreException {
 		IStructuredDocument document = null;
 		IStructuredModel structuredModel = null;
 		try {
-			if (file != null) {
-				if (file.exists()) {
-					structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
-					if (structuredModel != null) {
-						document = structuredModel.getStructuredDocument();
-					} else {
-						document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
-					}
+			if (file != null && file.exists()) {
+				structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
+				if (structuredModel != null) {
+					document = structuredModel.getStructuredDocument();
+				} else {
+					document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
 				}
 			}
 
 			if (document != null) {
 				Region region = new Region(0, document.getLength());
 				IContentFormatter formatter = getFormatter();
-				if (formatter != null)
+				if (formatter != null) {
 					formatter.format(document, region);
+				}
 			}
-
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 		} finally {
@@ -129,6 +126,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * formatModel
 	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)
 	 */
+	@Override
 	public void formatModel(IStructuredModel structuredModel) {
 		IStructuredDocument document = structuredModel.getStructuredDocument();
 		IContentFormatter formatter = getFormatter();
@@ -144,6 +142,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int,
 	 * int)
 	 */
+	@Override
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 		IStructuredDocument document = structuredModel.getStructuredDocument();
 		Region region = new Region(start, length);
@@ -158,6 +157,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
 	 * formatNode(org.w3c.dom.Node)
 	 */
+	@Override
 	public void formatNode(Node node) {
 
 	}
@@ -168,6 +168,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
 	 * setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void setProgressMonitor(IProgressMonitor monitor) {
 
 	}

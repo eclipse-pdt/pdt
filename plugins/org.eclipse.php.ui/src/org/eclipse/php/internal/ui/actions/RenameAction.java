@@ -30,10 +30,12 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 	private ISelection selection;
 	private static final String RENAME_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.RenameElement"; //$NON-NLS-1$
 
+	@Override
 	public void dispose() {
 
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		if (window != null) {
 
@@ -55,6 +57,7 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 		fRenamePHPElement = PHPActionDelegatorRegistry.getActionDelegator(RENAME_ELEMENT_ACTION_ID);
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (resourceAction != null) {
 			if (!selection.isEmpty()) {
@@ -84,6 +87,7 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 
@@ -93,6 +97,7 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 
 	}
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (fRenamePHPElement == null) {
 			init();

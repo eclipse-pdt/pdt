@@ -163,6 +163,7 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	/*
 	 * (non-Javadoc) Method declared on IAction.
 	 */
+	@Override
 	public void run() {
 		dispatchRun(getSelection());
 	}
@@ -170,6 +171,7 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	/*
 	 * (non-Javadoc) Method declared on ISelectionChangedListener.
 	 */
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		dispatchSelectionChanged(event.getSelection());
 	}

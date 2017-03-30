@@ -128,7 +128,8 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 							if (repairer != null) {
 								TextPresentation presentation = new TextPresentation(damage, 1000);
 								repairer.createPresentation(presentation, r);
-								for (Iterator iterator = presentation.getAllStyleRangeIterator(); iterator.hasNext();) {
+								for (Iterator<StyleRange> iterator = presentation.getAllStyleRangeIterator(); iterator
+										.hasNext();) {
 									StyleRange styleRange = (StyleRange) iterator.next();
 									// the styleRange's scope may be out of
 									// the
@@ -189,8 +190,9 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 							if (repairer != null) {
 								TextPresentation presentation = new TextPresentation(damage, 1000);
 								repairer.createPresentation(presentation, r);
-								for (Iterator iterator = presentation.getAllStyleRangeIterator(); iterator.hasNext();) {
-									StyleRange styleRange = (StyleRange) iterator.next();
+								for (Iterator<StyleRange> iterator = presentation.getAllStyleRangeIterator(); iterator
+										.hasNext();) {
+									StyleRange styleRange = iterator.next();
 									fRangeSet.add(styleRange);
 								}
 							}
@@ -203,6 +205,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 				}
 				Collections.sort(fRangeSet, new Comparator<StyleRange>() {
 
+					@Override
 					public int compare(StyleRange o1, StyleRange o2) {
 						return o1.start - o2.start;
 					}
@@ -386,6 +389,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 		return result;
 	}
 
+	@Override
 	public void setRepairer(IPresentationRepairer repairer, String contentType) {
 		super.setRepairer(repairer, contentType);
 		Assert.isNotNull(contentType);

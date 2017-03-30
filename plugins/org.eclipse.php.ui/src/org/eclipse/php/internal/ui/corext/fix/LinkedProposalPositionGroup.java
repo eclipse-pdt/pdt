@@ -97,14 +97,17 @@ public class LinkedProposalPositionGroup {
 			fIsFirst = isFirst;
 		}
 
+		@Override
 		public int getOffset() {
 			return fPos.getStartPosition();
 		}
 
+		@Override
 		public int getLength() {
 			return fPos.getLength();
 		}
 
+		@Override
 		public int getSequenceRank() {
 			return fIsFirst ? 0 : 1;
 		}
@@ -133,6 +136,7 @@ public class LinkedProposalPositionGroup {
 		 * computeEdits (int, org.eclipse.jface.text.link.LinkedPosition, char,
 		 * int, org.eclipse.jface.text.link.LinkedModeModel)
 		 */
+		@Override
 		public TextEdit computeEdits(int offset, LinkedPosition position, char trigger, int stateMask,
 				LinkedModeModel model) throws CoreException {
 			// ImportRewrite impRewrite=
@@ -148,13 +152,13 @@ public class LinkedProposalPositionGroup {
 	}
 
 	private final String fGroupId;
-	private final List/* <Position> */ fPositions;
-	private final List/* <Proposal> */ fProposals;
+	private final List<PositionInformation> fPositions;
+	private final List<Proposal> fProposals;
 
 	public LinkedProposalPositionGroup(String groupID) {
 		fGroupId = groupID;
-		fPositions = new ArrayList();
-		fProposals = new ArrayList();
+		fPositions = new ArrayList<>();
+		fProposals = new ArrayList<>();
 	}
 
 	public void addPosition(PositionInformation position) {

@@ -50,6 +50,7 @@ class NewWizardCollectionComparator extends ViewerComparator {
 	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
 	 */
+	@Override
 	public int category(Object element) {
 		if (element instanceof WorkbenchWizardElement) {
 			return -1;
@@ -82,6 +83,7 @@ class NewWizardCollectionComparator extends ViewerComparator {
 	 * Return true if this sorter is affected by a property change of
 	 * propertyName on the specified element.
 	 */
+	@Override
 	public boolean isSorterProperty(Object object, String propertyId) {
 		return propertyId.equals(IBasicPropertyConstants.P_TEXT);
 	}

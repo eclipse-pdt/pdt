@@ -63,7 +63,7 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
 public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 	protected IWorkspaceRoot fWorkspaceRoot;
-	protected ListDialogField fBuildPathList;
+	protected ListDialogField<BPListElement> fBuildPathList;
 	protected StringButtonDialogField fBuildPathDialogField;
 	protected StatusInfo fPathStatus;
 	protected StatusInfo fBuildPathStatus;
@@ -124,6 +124,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		fBuildPathDialogField.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 	}
 
+	@Override
 	protected abstract boolean supportZips();
 
 	/**
@@ -136,6 +137,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	}
 
 	// -------- UI creation ---------
+	@Override
 	public Control createControl(Composite parent) {
 		fSWTWidget = parent;
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -192,6 +194,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		folder.setSelection(fPageIndex);
 		fCurrPage = (BuildPathBasePage) folder.getItem(fPageIndex).getData();
 		folder.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tabChanged(e.item);
 			}
@@ -226,10 +229,11 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	 *            - if the project is an existing script project - the buildpath
 	 *            entries of the existing project
 	 */
+	@Override
 	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
 		fCurrScriptProject = jproject;
 		boolean projectExists = false;
-		List newBuildpath = null;
+		List<BPListElement> newBuildpath = null;
 		IProject project = fCurrScriptProject.getProject();
 		projectExists = (project.exists() && project.getFile(".buildpath").exists()); //$NON-NLS-1$
 		if (projectExists) {
@@ -243,7 +247,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		if (newBuildpath == null) {
 			newBuildpath = getDefaultBuildpath(jproject);
 		}
-		List exportedEntries = new ArrayList();
+		List<BPListElement> exportedEntries = new ArrayList<>();
 		for (int i = 0; i < newBuildpath.size(); i++) {
 			BPListElement curr = (BPListElement) newBuildpath.get(i);
 			if (curr.isExported() || curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
@@ -258,6 +262,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		updateUI();
 	}
 
+	@Override
 	protected void updateUI() {
 		if (fSWTWidget == null || fSWTWidget.isDisposed()) {
 			return;
@@ -266,6 +271,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			doUpdateUI();
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (fSWTWidget == null || fSWTWidget.isDisposed()) {
 						return;
@@ -276,6 +282,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		}
 	}
 
+	@Override
 	protected void doUpdateUI() {
 		fBuildPathDialogField.refresh();
 		fBuildPathList.refresh();
@@ -298,24 +305,27 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		return buf.toString();
 	}
 
+	@Override
 	public boolean hasChangesInDialog() {
 		String currSettings = getEncodedSettings();
 		return !currSettings.equals(fUserSettingsTimeStamp);
 	}
 
+	@Override
 	public boolean hasChangesInBuildpathFile() {
 		IFile file = fCurrScriptProject.getProject().getFile(".buildpath"); //$NON-NLS-1$
 		return fFileTimeStamp != file.getModificationStamp();
 	}
 
+	@Override
 	public void initializeTimeStamps() {
 		IFile file = fCurrScriptProject.getProject().getFile(".buildpath"); //$NON-NLS-1$
 		fFileTimeStamp = file.getModificationStamp();
 		fUserSettingsTimeStamp = getEncodedSettings();
 	}
 
-	protected ArrayList getExistingEntries(IBuildpathEntry[] buildpathEntries) {
-		ArrayList newBuildpath = new ArrayList();
+	protected List<BPListElement> getExistingEntries(IBuildpathEntry[] buildpathEntries) {
+		List<BPListElement> newBuildpath = new ArrayList<>();
 		for (int i = 0; i < buildpathEntries.length; i++) {
 			IBuildpathEntry curr = buildpathEntries[i];
 			newBuildpath.add(BPListElement.createFromExisting(curr, fCurrScriptProject));
@@ -328,6 +338,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	 * @return Returns the script project. Can return <code>null<code> if the
 	 *         page has not been initialized.
 	 */
+	@Override
 	public IScriptProject getScriptProject() {
 		return fCurrScriptProject;
 	}
@@ -336,26 +347,29 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	 * @return Returns the current class path (raw). Note that the entries
 	 *         returned must not be valid.
 	 */
+	@Override
 	public IBuildpathEntry[] getRawBuildPath() {
-		List elements = fBuildPathList.getElements();
+		List<BPListElement> elements = fBuildPathList.getElements();
 		int nElements = elements.size();
 		IBuildpathEntry[] entries = new IBuildpathEntry[elements.size()];
 		for (int i = 0; i < nElements; i++) {
-			BPListElement currElement = (BPListElement) elements.get(i);
+			BPListElement currElement = elements.get(i);
 			entries[i] = currElement.getBuildpathEntry();
 		}
 		return entries;
 	}
 
+	@Override
 	public int getPageIndex() {
 		return fPageIndex;
 	}
 
 	// -------- evaluate default settings --------
+	@Override
 	protected abstract IPreferenceStore getPreferenceStore();
 
-	protected List getDefaultBuildpath(IScriptProject jproj) {
-		List list = new ArrayList();
+	protected List<BPListElement> getDefaultBuildpath(IScriptProject jproj) {
+		List<BPListElement> list = new ArrayList<>();
 		IResource srcFolder;
 		IPreferenceStore store = getPreferenceStore();
 		if (store != null) {
@@ -378,11 +392,13 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 	public class BuildPathAdapter implements IStringButtonAdapter, IDialogFieldListener {
 		// -------- IStringButtonAdapter --------
+		@Override
 		public void changeControlPressed(DialogField field) {
 			buildPathChangeControlPressed(field);
 		}
 
 		// ---------- IDialogFieldListener --------
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			buildPathDialogFieldChanged(field);
 		}
@@ -419,9 +435,10 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	/**
 	 * Validates the build path.
 	 */
+	@Override
 	public void updatePathStatus() {
 		fPathStatus.setOK();
-		List elements = fBuildPathList.getElements();
+		List<BPListElement> elements = fBuildPathList.getElements();
 		BPListElement entryMissing = null;
 		int nEntriesMissing = 0;
 
@@ -430,7 +447,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 		IBuildpathEntry[] entries = new IBuildpathEntry[elements.size()];
 		for (int i = elements.size() - 1; i >= 0; i--) {
-			BPListElement currElement = (BPListElement) elements.get(i);
+			BPListElement currElement = elements.get(i);
 
 			entries[i] = currElement.getBuildpathEntry();
 			if (currElement.isMissing()) {
@@ -468,11 +485,12 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		updateBuildPathStatus();
 	}
 
+	@Override
 	protected void updateBuildPathStatus() {
-		List elements = fBuildPathList.getElements();
+		List<BPListElement> elements = fBuildPathList.getElements();
 		IBuildpathEntry[] entries = new IBuildpathEntry[elements.size()];
 		for (int i = elements.size() - 1; i >= 0; i--) {
-			BPListElement currElement = (BPListElement) elements.get(i);
+			BPListElement currElement = elements.get(i);
 			entries[i] = currElement.getBuildpathEntry();
 		}
 		IModelStatus status = BuildpathEntry.validateBuildpath(fCurrScriptProject, entries);
@@ -532,6 +550,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		}
 	}
 
+	@Override
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		initializeTimeStamps();
@@ -542,7 +561,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	 * Creates the script project and sets the configured build path and output
 	 * location. If the project already exists only build paths are updated.
 	 */
-	public static void flush(List buildpathEntries, IScriptProject javaProject, IProgressMonitor monitor)
+	public static void flush(List<BPListElement> buildpathEntries, IScriptProject javaProject, IProgressMonitor monitor)
 			throws CoreException, OperationCanceledException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -563,8 +582,8 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			int nEntries = buildpathEntries.size();
 			IBuildpathEntry[] buildpath = new IBuildpathEntry[nEntries];
 			int i = 0;
-			for (Iterator iter = buildpathEntries.iterator(); iter.hasNext();) {
-				BPListElement entry = (BPListElement) iter.next();
+			for (Iterator<BPListElement> iter = buildpathEntries.iterator(); iter.hasNext();) {
+				BPListElement entry = iter.next();
 				buildpath[i] = entry.getBuildpathEntry();
 				i++;
 				IResource res = entry.getResource();
@@ -675,7 +694,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
 		ISelectionStatusValidator validator = new TypedElementSelectionValidator(acceptedClasses, false);
 		IProject[] allProjects = fWorkspaceRoot.getProjects();
-		ArrayList rejectedElements = new ArrayList(allProjects.length);
+		List<IProject> rejectedElements = new ArrayList<>(allProjects.length);
 		IProject currProject = fCurrScriptProject.getProject();
 		for (int i = 0; i < allProjects.length; i++) {
 			if (!allProjects[i].equals(currProject)) {
@@ -701,6 +720,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	}
 
 	// -------- tab switching ----------
+	@Override
 	protected void tabChanged(Widget widget) {
 		if (widget instanceof TabItem) {
 			TabItem tabItem = (TabItem) widget;
@@ -738,6 +758,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		return null;
 	}
 
+	@Override
 	public void setElementToReveal(IBuildpathEntry entry, String attributeKey) {
 		int pageIndex = getPageIndex(entry.getEntryKind());
 		if (fTabFolder == null) {
@@ -754,13 +775,14 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 					}
 				}
 				BuildPathBasePage page = (BuildPathBasePage) fTabFolder.getItem(pageIndex).getData();
-				List selection = new ArrayList(1);
+				List<Object> selection = new ArrayList<>(1);
 				selection.add(elementToSelect);
 				page.setSelection(selection, true);
 			}
 		}
 	}
 
+	@Override
 	public void addElement(IBuildpathEntry entry) {
 		int pageIndex = getPageIndex(entry.getEntryKind());
 		if (fTabFolder == null) {

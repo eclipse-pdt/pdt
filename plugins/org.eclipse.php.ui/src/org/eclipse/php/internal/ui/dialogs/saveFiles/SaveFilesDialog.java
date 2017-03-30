@@ -44,10 +44,12 @@ public class SaveFilesDialog extends ListSelectionDialog {
 
 	public SaveFilesDialog(Shell parent, List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
 		super(parent, dirtyEditors, ArrayContentProvider.getInstance(), new LabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return ((IEditorPart) element).getTitleImage();
 			}
 
+			@Override
 			public String getText(Object element) {
 				IEditorPart editor = (IEditorPart) element;
 				IFile file = (IFile) editor.getEditorInput().getAdapter(IResource.class);
@@ -64,12 +66,14 @@ public class SaveFilesDialog extends ListSelectionDialog {
 		setMessage(PHPUIMessages.SaveFilesDialog_3);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite container) {
 		Composite area = (Composite) super.createDialogArea(container);
 		if (promptAutoSave) {
 			final Button check = new Button(area, SWT.CHECK);
 			check.setText(PHPUIMessages.SaveFilesDialog_4);
 			check.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					result.setAutoSave(check.getSelection());
 				}

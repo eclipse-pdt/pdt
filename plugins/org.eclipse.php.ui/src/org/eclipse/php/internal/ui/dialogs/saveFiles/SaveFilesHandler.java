@@ -62,7 +62,7 @@ public class SaveFilesHandler {
 	 * @return An array of IEditorParts containing all the dirty editors for the
 	 *         files in the list.
 	 */
-	public static List getDirtyEditors(IProject project) {
+	public static List<IEditorPart> getDirtyEditors(IProject project) {
 		List<IEditorPart> result = new ArrayList<>(0);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
@@ -96,6 +96,7 @@ public class SaveFilesHandler {
 			this.monitor = monitor;
 		}
 
+		@Override
 		public void run() {
 			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors.size());
 			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
@@ -120,6 +121,7 @@ public class SaveFilesHandler {
 			this.promptAutoSave = promptAutoSave;
 		}
 
+		@Override
 		public void run() {
 			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result,
 					promptAutoSave);

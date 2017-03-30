@@ -20,10 +20,12 @@ public class PHPInterfaceTemplate extends PHPElementTemplate {
 	public static final String EXTENDS_INTERFACES_STRUCT = "extends_interfaces"; //$NON-NLS-1$
 	public static final String EXTENDS_INTERFACES_STRUCT_COMPILED = "extends_interfaces_compiled"; //$NON-NLS-1$
 
+	@Override
 	public String getTemplatePath() {
 		return TypeWizardConstants.INTERFACE_TEMPLATE_LOCATION;
 	}
 
+	@Override
 	public String processTemplate(NewPHPElementData data) {
 		// handle class default PHPDOC
 		set(DEFAULT_PHPDOC_VAR, ""); //$NON-NLS-1$
@@ -119,6 +121,7 @@ public class PHPInterfaceTemplate extends PHPElementTemplate {
 		}
 	}
 
+	@Override
 	public String getRequiredPHPs() {
 		return requiredPHPsBlock;
 	}

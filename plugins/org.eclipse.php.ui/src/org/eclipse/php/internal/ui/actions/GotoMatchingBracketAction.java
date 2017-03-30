@@ -36,6 +36,7 @@ public class GotoMatchingBracketAction extends Action {
 		setEnabled(true);
 	}
 
+	@Override
 	public void run() {
 		fEditor.gotoMatchingBracket();
 	}

@@ -17,16 +17,18 @@ import java.util.List;
 
 public class CompositeFilter extends SimpleFilter {
 
-	private List filters = new ArrayList();
+	private List<IFilter> filters = new ArrayList<>();
 
 	private IFilterChangeListener myFilterChangeListener = new IFilterChangeListener() {
+		@Override
 		public void notifyFilterChanged() {
 			CompositeFilter.this.notifyFilterChanged();
 		}
 	};
 
+	@Override
 	public Object[] filter(Object[] elements) {
-		for (Iterator iter = filters.iterator(); iter.hasNext();) {
+		for (Iterator<IFilter> iter = filters.iterator(); iter.hasNext();) {
 			IFilter filter = (IFilter) iter.next();
 			elements = filter.filter(elements);
 		}

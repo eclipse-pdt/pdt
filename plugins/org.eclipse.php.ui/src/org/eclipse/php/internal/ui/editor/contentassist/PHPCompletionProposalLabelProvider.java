@@ -40,10 +40,12 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 
 	private static final String ENCLOSING_TYPE_SEPARATOR = String.valueOf(NamespaceReference.NAMESPACE_SEPARATOR);
 
+	@Override
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		return createStyledMethodProposalLabel(methodProposal).toString();
 	}
 
+	@Override
 	protected String createOverrideMethodProposalLabel(CompletionProposal methodProposal) {
 		return createStyledOverrideMethodProposalLabel(methodProposal).toString();
 	}
@@ -132,6 +134,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 				.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE);
 	}
 
+	@Override
 	public String createTypeProposalLabel(CompletionProposal typeProposal) {
 		return createStyledTypeProposalLabel(typeProposal).toString();
 	}
@@ -179,6 +182,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		return super.createTypeImageDescriptor(proposal);
 	}
 
+	@Override
 	public String createFieldProposalLabel(CompletionProposal proposal) {
 		return createStyledFieldProposalLabel(proposal).toString();
 	}

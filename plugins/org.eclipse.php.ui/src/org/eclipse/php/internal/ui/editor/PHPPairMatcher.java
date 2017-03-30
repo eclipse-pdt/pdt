@@ -44,17 +44,20 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		fPairs = pairs;
 	}
 
+	@Override
 	public IRegion match(IDocument document, int offset) {
 
 		fOffset = offset;
 
-		if (fOffset < 0)
+		if (fOffset < 0) {
 			return null;
+		}
 
 		fDocument = document;
 
-		if (fDocument != null && matchPairsAt() && fStartPos != fEndPos)
+		if (fDocument != null && matchPairsAt() && fStartPos != fEndPos) {
 			return new Region(fStartPos, fEndPos - fStartPos + 1);
+		}
 
 		return null;
 	}
@@ -62,6 +65,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	/**
 	 * @see org.eclipse.jface.text.source.ICharacterPairMatcher#getAnchor()
 	 */
+	@Override
 	public int getAnchor() {
 		return fAnchor;
 	}
@@ -69,6 +73,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	/**
 	 * @see org.eclipse.jface.text.source.ICharacterPairMatcher#dispose()
 	 */
+	@Override
 	public void dispose() {
 		clear();
 		fDocument = null;
@@ -77,6 +82,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	/*
 	 * @see org.eclipse.jface.text.source.ICharacterPairMatcher#clear()
 	 */
+	@Override
 	public void clear() {
 	}
 
@@ -132,11 +138,13 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	private int searchForClosingPeer(int offset, char openingPeer, char closingPeer, IDocument document)
 			throws BadLocationException {
 		boolean useGenericsHeuristic = openingPeer == '<';
-		if (useGenericsHeuristic && !fHighlightAngularBrackets)
+		if (useGenericsHeuristic && !fHighlightAngularBrackets) {
 			return -1;
+		}
 		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, false);
-		if (useGenericsHeuristic && !isTypeParameterBracket(offset, document, scanner))
+		if (useGenericsHeuristic && !isTypeParameterBracket(offset, document, scanner)) {
 			return -1;
+		}
 
 		int closedAt = scanner.findClosingPeer(offset + 1, openingPeer, closingPeer);
 
@@ -229,8 +237,9 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 					|| prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSYNCHRONIZED
 					|| prevToken == Symbols.TokenSTATIC
 					|| (prevToken == Symbols.TokenIDENT && isTypeParameterIntroducer(previous))
-					|| prevToken == Symbols.TokenEOF)
+					|| prevToken == Symbols.TokenEOF) {
 				return true;
+			}
 		} catch (BadLocationException e) {
 			return false;
 		}

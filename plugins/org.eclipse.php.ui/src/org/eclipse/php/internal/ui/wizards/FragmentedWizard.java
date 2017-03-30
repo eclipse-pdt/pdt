@@ -116,9 +116,11 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @return boolean
 	 */
+	@Override
 	public boolean performCancel() {
 		final List<WizardFragment> list = getAllWizardFragments();
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					Iterator<WizardFragment> iterator = list.iterator();
@@ -160,6 +162,7 @@ public class FragmentedWizard implements IWizard {
 	 */
 	private static void openError(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
 				MessageDialog.openError(shell, PHPUIMessages.FragmentedWizard_0, message);
@@ -176,6 +179,7 @@ public class FragmentedWizard implements IWizard {
 	 */
 	private static void openError(final String message, final IStatus status) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
 				ErrorDialog.openError(shell, PHPUIMessages.FragmentedWizard_1, message, status);
@@ -183,6 +187,7 @@ public class FragmentedWizard implements IWizard {
 		});
 	}
 
+	@Override
 	public boolean performFinish() {
 		if (currentFragment != null)
 			currentFragment.exit();
@@ -193,6 +198,7 @@ public class FragmentedWizard implements IWizard {
 
 		final List<WizardFragment> list = getAllWizardFragments();
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) {
 				// enter & exit the remaining pages
 				int index = list.indexOf(cFragment);
@@ -200,6 +206,7 @@ public class FragmentedWizard implements IWizard {
 					final WizardFragment fragment = (WizardFragment) list.get(++index);
 					try {
 						Display.getDefault().syncExec(new Runnable() {
+							@Override
 							public void run() {
 								FragmentedWizardPage page = getFragmentData(fragment);
 								if (page.getControl() == null && pageContainerHook != null) {
@@ -221,10 +228,12 @@ public class FragmentedWizard implements IWizard {
 							super(getJobTitle());
 						}
 
+						@Override
 						public boolean belongsTo(Object family) {
 							return "org.eclipse.wst.server.ui.family".equals(family); //$NON-NLS-1$
 						}
 
+						@Override
 						public IStatus run(IProgressMonitor monitor2) {
 							try {
 								Iterator<WizardFragment> iterator = list.iterator();
@@ -368,6 +377,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#addPages()
 	 */
+	@Override
 	public void addPages() {
 		if (addingPages)
 			return;
@@ -421,6 +431,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#canFinish()
 	 */
+	@Override
 	public boolean canFinish() {
 		// Default implementation is to check if all pages are complete.
 		for (int i = 0; i < pages.size(); i++) {
@@ -436,6 +447,7 @@ public class FragmentedWizard implements IWizard {
 	 * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createPageControls(Composite pageContainer) {
 		this.pageContainerHook = pageContainer;
 		// the default behavior is to create all the pages controls
@@ -451,6 +463,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// notify pages
 		for (int i = 0; i < pages.size(); i++) {
@@ -469,6 +482,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getContainer()
 	 */
+	@Override
 	public IWizardContainer getContainer() {
 		return container;
 	}
@@ -478,6 +492,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getDefaultPageImage()
 	 */
+	@Override
 	public Image getDefaultPageImage() {
 		return defaultImage;
 	}
@@ -487,6 +502,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getDialogSettings()
 	 */
+	@Override
 	public IDialogSettings getDialogSettings() {
 		return dialogSettings;
 	}
@@ -498,6 +514,7 @@ public class FragmentedWizard implements IWizard {
 	 * org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard
 	 * .IWizardPage)
 	 */
+	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		int index = pages.indexOf(page);
 		if (index == pages.size() - 1 || index == -1)
@@ -512,6 +529,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getPage(java.lang.String)
 	 */
+	@Override
 	public IWizardPage getPage(String name) {
 		for (int i = 0; i < pages.size(); i++) {
 			IWizardPage page = (IWizardPage) pages.get(i);
@@ -527,6 +545,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getPageCount()
 	 */
+	@Override
 	public int getPageCount() {
 		return pages.size();
 	}
@@ -536,6 +555,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getPages()
 	 */
+	@Override
 	public IWizardPage[] getPages() {
 		return (IWizardPage[]) pages.toArray(new IWizardPage[pages.size()]);
 	}
@@ -547,6 +567,7 @@ public class FragmentedWizard implements IWizard {
 	 * org.eclipse.jface.wizard.IWizard#getPreviousPage(org.eclipse.jface.wizard
 	 * .IWizardPage)
 	 */
+	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		int index = pages.indexOf(page);
 		if (index == 0 || index == -1)
@@ -560,6 +581,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getStartingPage()
 	 */
+	@Override
 	public IWizardPage getStartingPage() {
 		if (pages.size() == 0)
 			return null;
@@ -572,6 +594,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getTitleBarColor()
 	 */
+	@Override
 	public RGB getTitleBarColor() {
 		return titleBarColor;
 	}
@@ -581,6 +604,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getWindowTitle()
 	 */
+	@Override
 	public String getWindowTitle() {
 		return windowTitle;
 	}
@@ -590,6 +614,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#isHelpAvailable()
 	 */
+	@Override
 	public boolean isHelpAvailable() {
 		return isHelpAvailable;
 	}
@@ -599,6 +624,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#needsPreviousAndNextButtons()
 	 */
+	@Override
 	public boolean needsPreviousAndNextButtons() {
 		return forcePreviousAndNextButtons || pages.size() > 1;
 	}
@@ -608,6 +634,7 @@ public class FragmentedWizard implements IWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
 	 */
+	@Override
 	public boolean needsProgressMonitor() {
 		return needsProgressMonitor;
 	}
@@ -619,6 +646,7 @@ public class FragmentedWizard implements IWizard {
 	 * org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard
 	 * .IWizardContainer)
 	 */
+	@Override
 	public void setContainer(IWizardContainer wizardContainer) {
 		this.container = wizardContainer;
 	}

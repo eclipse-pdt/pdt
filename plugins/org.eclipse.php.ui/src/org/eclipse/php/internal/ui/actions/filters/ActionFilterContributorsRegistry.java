@@ -30,7 +30,7 @@ class ActionFilterContributorsRegistry {
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
 	private static ActionFilterContributorsRegistry instance;
-	private Map contributorElements = new HashMap();
+	private Map<String, IConfigurationElement> contributorElements = new HashMap<>();
 
 	private ActionFilterContributorsRegistry() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPUiPlugin.ID,
@@ -63,6 +63,7 @@ class ActionFilterContributorsRegistry {
 		if (element != null) {
 			final IActionFilterContributor contributor[] = new IActionFilterContributor[1];
 			SafeRunner.run(new SafeRunnable(PHPUIMessages.ActionFilterContributorsRegistry_0 + EXTENSION_POINT) {
+				@Override
 				public void run() throws Exception {
 					contributor[0] = (IActionFilterContributor) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

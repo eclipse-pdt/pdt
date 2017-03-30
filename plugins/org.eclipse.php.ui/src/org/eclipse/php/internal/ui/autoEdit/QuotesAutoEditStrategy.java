@@ -34,6 +34,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (TypingPreferences.closeQuotes && command.text != null) {
 			int length = command.text.length();

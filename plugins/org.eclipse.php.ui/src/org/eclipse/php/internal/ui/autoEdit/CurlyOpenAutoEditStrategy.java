@@ -37,6 +37,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implem
 		setIndentationObject(indentationObject);
 	}
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text != null && command.text.endsWith("{")) { //$NON-NLS-1$
 			setIndentationObject(null); // reset
@@ -70,6 +71,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implem
 
 	}
 
+	@Override
 	protected String getCommandText() {
 		return "{"; //$NON-NLS-1$
 	}

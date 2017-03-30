@@ -19,16 +19,20 @@ public class FormatDocumentAction implements IWorkbenchWindowActionDelegate {
 
 	FormatActionDelegate action = new FormatActionDelegate();
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		this.action.run(action);
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.action.selectionChanged(action, selection);
 	}

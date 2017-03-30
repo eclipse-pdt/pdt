@@ -51,7 +51,7 @@ public class CompilationUnitRewrite {
 
 	// TODO: add RefactoringStatus fStatus;?
 	private ISourceModule fCu;
-	private List/* <TextEditGroup> */ fTextEditGroups = new ArrayList();
+	private List<TextEditGroup> fTextEditGroups = new ArrayList<>();
 
 	private Program fRoot; // lazily initialized
 	private ASTRewrite fRewrite; // lazily initialized
@@ -145,7 +145,7 @@ public class CompilationUnitRewrite {
 
 	public void clearASTRewrite() {
 		fRewrite = null;
-		fTextEditGroups = new ArrayList();
+		fTextEditGroups = new ArrayList<>();
 	}
 
 	public void clearImportRewrites() {
@@ -285,8 +285,8 @@ public class CompilationUnitRewrite {
 				if (!isEmptyEdit(rewriteEdit)) {
 					multiEdit.addChild(rewriteEdit);
 					if (generateGroups) {
-						for (Iterator iter = fTextEditGroups.iterator(); iter.hasNext();) {
-							TextEditGroup group = (TextEditGroup) iter.next();
+						for (Iterator<TextEditGroup> iter = fTextEditGroups.iterator(); iter.hasNext();) {
+							TextEditGroup group = iter.next();
 							cuChange.addTextEditGroup(group);
 						}
 					}
@@ -355,36 +355,9 @@ public class CompilationUnitRewrite {
 		return fRewrite;
 	}
 
-	// public ImportRewrite getImportRewrite() {
-	// if (fImportRewrite == null) {
-	// // lazily initialized to avoid lengthy processing in
-	// checkInitialConditions(..)
-	// try {
-	// if (fRoot == null) {
-	// fImportRewrite= StubUtility.createImportRewrite(fCu, true);
-	// } else {
-	// fImportRewrite= StubUtility.createImportRewrite(getRoot(), true);
-	// }
-	// } catch (CoreException e) {
-	// JavaPlugin.log(e);
-	// throw new IllegalStateException(e.getMessage()); // like
-	// ASTParser#createAST(..) does
-	// }
-	// }
-	// return fImportRewrite;
-	//
-	// }
-	//
-	// public ImportRemover getImportRemover() {
-	// if (fImportRemover == null) {
-	// fImportRemover= new ImportRemover(fCu.getJavaProject(), getRoot());
-	// }
-	// return fImportRemover;
-	// }
-
 	public void clearGroupDescriptions() {
-		for (Iterator iter = fTextEditGroups.iterator(); iter.hasNext();) {
-			TextEditGroup group = (TextEditGroup) iter.next();
+		for (Iterator<TextEditGroup> iter = fTextEditGroups.iterator(); iter.hasNext();) {
+			TextEditGroup group = iter.next();
 			group.clearTextEdits();
 		}
 	}

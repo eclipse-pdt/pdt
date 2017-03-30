@@ -69,6 +69,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		/*
 		 * @see IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 			fStore = null;
 		}
@@ -76,6 +77,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		/*
 		 * @see IStructuredContentProvider#getElements(Object)
 		 */
+		@Override
 		public Object[] getElements(Object input) {
 			return fStore.getTemplates(NewGenericFileTemplatesWizardPage.this.getTemplateContextTypeId());
 		}
@@ -83,6 +85,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		/*
 		 * @see IContentProvider#inputChanged(Viewer, Object, Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			fStore = (ProjectTemplateStore) newInput;
 		}
@@ -98,6 +101,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
@@ -107,6 +111,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			Template template = (Template) element;
 
@@ -190,6 +195,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		});
 	}
 
+	@Override
 	public void createControl(Composite ancestor) {
 		Composite parent = new Composite(ancestor, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -273,11 +279,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			}
 		});
 
-		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent e) {
-				updateViewerInput();
-			}
-		});
+		fTableViewer.addSelectionChangedListener(e -> updateViewerInput());
 
 		// create viewer that displays currently selected template's contents
 		fPatternViewer = doCreateViewer(parent);

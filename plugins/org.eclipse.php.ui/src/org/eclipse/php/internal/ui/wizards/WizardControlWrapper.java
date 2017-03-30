@@ -41,6 +41,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * 
 	 * @see org.eclipse.php.server.apache.ui.IControlHandler#update()
 	 */
+	@Override
 	public void update() {
 		wizard.update();
 	}
@@ -51,6 +52,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setTitle(java.lang.
 	 * String )
 	 */
+	@Override
 	public void setTitle(String title) {
 		wizard.setTitle(title);
 	}
@@ -62,6 +64,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * org.eclipse.php.server.apache.ui.IControlHandler#setDescription(java.
 	 * lang.String)
 	 */
+	@Override
 	public void setDescription(String desc) {
 		wizard.setDescription(desc);
 	}
@@ -73,6 +76,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * org.eclipse.php.server.apache.ui.IControlHandler#setImageDescriptor(org
 	 * .eclipse.jface.resource.ImageDescriptor)
 	 */
+	@Override
 	public void setImageDescriptor(ImageDescriptor image) {
 		wizard.setImageDescriptor(image);
 	}
@@ -84,6 +88,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * org.eclipse.php.server.apache.ui.IControlHandler#setMessage(java.lang
 	 * .String, int)
 	 */
+	@Override
 	public void setMessage(String newMessage, int newType) {
 		wizard.setMessage(newMessage, newType);
 	}
@@ -93,6 +98,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * 
 	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#getKind()
 	 */
+	@Override
 	public Kind getKind() {
 		return Kind.WIZARD;
 	}
@@ -103,6 +109,7 @@ public class WizardControlWrapper implements IControlHandler {
 	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#run(boolean,
 	 * boolean, org.eclipse.jface.operation.IRunnableWithProgress)
 	 */
+	@Override
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
 			throws InvocationTargetException, InterruptedException {
 		wizard.run(fork, cancelable, runnable);

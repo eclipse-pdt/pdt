@@ -70,6 +70,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(final Composite parent) {
 		super.createControl(parent);
 		setFileName(computeDefaultFileName());
@@ -88,6 +89,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 	 * This method is overridden to set additional validation specific to html
 	 * files.
 	 */
+	@Override
 	protected boolean validatePage() {
 		setMessage(null);
 		setErrorMessage(null);
@@ -115,7 +117,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 			setErrorMessage(PHPUIMessages.PHPFileCreationWizardPage_15);
 			return false;
 		}
-		if (!fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) { //$NON-NLS-1$
+		if (!fileName.isEmpty() && containerFolder.getFile(new Path(fileName)).exists()) { // $NON-NLS-1$
 			setErrorMessage(PHPUIMessages.PHPFileCreationWizardPage_14);
 			return false;
 		}

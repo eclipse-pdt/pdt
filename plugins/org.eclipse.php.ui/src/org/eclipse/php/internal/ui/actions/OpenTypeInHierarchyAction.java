@@ -31,6 +31,7 @@ public class OpenTypeInHierarchyAction extends org.eclipse.dltk.ui.actions.OpenT
 	 * org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
 	 * ()
 	 */
+	@Override
 	protected IDLTKUILanguageToolkit getLanguageToolkit() {
 		return PHPUILanguageToolkit.getInstance();
 	}

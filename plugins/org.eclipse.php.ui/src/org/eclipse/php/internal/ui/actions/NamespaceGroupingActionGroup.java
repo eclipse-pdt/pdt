@@ -32,6 +32,7 @@ public class NamespaceGroupingActionGroup extends ActionGroup {
 		fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 	}
 
+	@Override
 	public void fillActionBars(IActionBars actionBar) {
 		super.fillActionBars(actionBar);
 		fillViewMenu(actionBar.getMenuManager());
@@ -56,11 +57,13 @@ public class NamespaceGroupingActionGroup extends ActionGroup {
 			setChecked(fStore.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES));
 		}
 
+		@Override
 		public void run() {
 			final boolean on = isChecked();
 			fStore.setValue(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES, on);
 
 			BusyIndicator.showWhile(fViewer.getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					fViewer.getControl().setRedraw(false);
 					fViewer.refresh();

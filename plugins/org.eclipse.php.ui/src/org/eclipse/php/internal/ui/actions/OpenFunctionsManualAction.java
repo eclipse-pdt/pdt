@@ -27,12 +27,14 @@ public class OpenFunctionsManualAction extends PHPEditorResolvingAction implemen
 		super(resourceBundle, "OpenFunctionsManualAction_", editor); //$NON-NLS-1$
 	}
 
+	@Override
 	protected void doRun(IModelElement modelElement) {
 		if (isValid(modelElement)) {
 			PHPManualFactory.getManual().showFunctionHelp(url);
 		}
 	}
 
+	@Override
 	protected boolean isValid(IModelElement modelElement) {
 		if (super.isValid(modelElement)) {
 			if (LanguageModelInitializer.isLanguageModelElement(modelElement)) {

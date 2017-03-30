@@ -248,26 +248,22 @@ public class ContainerSelectionGroup extends Composite {
 		treeViewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
 		treeViewer.setComparator(new ViewerComparator());
 		treeViewer.setUseHashlookup(true);
-		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				containerSelectionChanged((IContainer) selection.getFirstElement()); // allow
-																						// null
-			}
+		treeViewer.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			containerSelectionChanged((IContainer) selection.getFirstElement()); // allow
+																					// null
 		});
-		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				ISelection selection = event.getSelection();
-				if (selection instanceof IStructuredSelection) {
-					Object item = ((IStructuredSelection) selection).getFirstElement();
-					if (item == null) {
-						return;
-					}
-					if (treeViewer.getExpandedState(item)) {
-						treeViewer.collapseToLevel(item, 1);
-					} else {
-						treeViewer.expandToLevel(item, 1);
-					}
+		treeViewer.addDoubleClickListener(event -> {
+			ISelection selection = event.getSelection();
+			if (selection instanceof IStructuredSelection) {
+				Object item = ((IStructuredSelection) selection).getFirstElement();
+				if (item == null) {
+					return;
+				}
+				if (treeViewer.getExpandedState(item)) {
+					treeViewer.collapseToLevel(item, 1);
+				} else {
+					treeViewer.expandToLevel(item, 1);
 				}
 			}
 		});
@@ -297,8 +293,9 @@ public class ContainerSelectionGroup extends Composite {
 			return (new Path(pathName)).makeAbsolute();
 
 		}
-		if (selectedContainer == null)
+		if (selectedContainer == null) {
 			return null;
+		}
 		return selectedContainer.getFullPath();
 
 	}
@@ -324,7 +321,7 @@ public class ContainerSelectionGroup extends Composite {
 		selectedContainer = container;
 
 		// expand to and select the specified container
-		List itemsToExpand = new ArrayList();
+		List<IContainer> itemsToExpand = new ArrayList<>();
 		IContainer parent = container.getParent();
 		while (parent != null) {
 			itemsToExpand.add(0, parent);

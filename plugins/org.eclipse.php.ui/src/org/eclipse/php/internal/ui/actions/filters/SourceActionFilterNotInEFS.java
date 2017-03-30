@@ -15,6 +15,7 @@ import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
 public class SourceActionFilterNotInEFS implements IActionFilterContributor {
 
+	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		/*
 		 * if (target instanceof IModelElement) { IModelElement modelElem =

@@ -82,6 +82,7 @@ public abstract class CompositeFragment extends Composite {
 	 * 
 	 * @param fragmentData
 	 */
+	@Override
 	public void setData(Object fragmentData) {
 		this.fragmentData = fragmentData;
 	}
@@ -91,6 +92,7 @@ public abstract class CompositeFragment extends Composite {
 	 * 
 	 * @return The data instance attached to this fragment.
 	 */
+	@Override
 	public Object getData() {
 		return fragmentData;
 	}

@@ -75,7 +75,7 @@ public class PHPFullPathLabelProvider extends LabelProvider implements ILabelDec
 				type = typeMatch.getType();
 			}
 			if (element instanceof IType) {
-				type = ((IType) element);
+				type = (IType) element;
 			}
 			if (type != null) {
 				try {

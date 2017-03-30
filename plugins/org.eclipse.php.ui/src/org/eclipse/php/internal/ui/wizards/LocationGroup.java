@@ -179,6 +179,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
+	@Override
 	public void update(Observable o, Object arg) {
 		if (isInWorkspace()) {
 			fLocation.setText(getDefaultPath(fNameGroup.getName()));
@@ -223,6 +224,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		return environments[localEnv];
 	}
 
+	@Override
 	public void changeControlPressed(DialogField field) {
 		IEnvironment environment = getEnvironment();
 		IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
@@ -236,6 +238,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		}
 	}
 
+	@Override
 	public void dialogFieldChanged(DialogField field) {
 		if (field == fWorkspaceRadio) {
 			final boolean checked = fWorkspaceRadio.isSelected();

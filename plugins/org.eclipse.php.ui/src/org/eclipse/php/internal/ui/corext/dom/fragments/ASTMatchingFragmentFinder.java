@@ -44,6 +44,7 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches.size()]);
 	}
 
+	@Override
 	protected boolean apply(ASTNode node) {
 		// if the change scope is the program scope, we don't want it to affect
 		// the function scope

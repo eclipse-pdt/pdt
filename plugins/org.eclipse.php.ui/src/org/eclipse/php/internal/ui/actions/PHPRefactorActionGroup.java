@@ -47,6 +47,7 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 	/*
 	 * (non-Javadoc) Method declared in ActionGroup
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		ISelection selection = getSelection();
 		if (selection instanceof IStructuredSelection) {

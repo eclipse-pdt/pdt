@@ -64,6 +64,7 @@ public final class NameGroup extends Observable implements IDialogFieldListener 
 		fNameField.setText(name);
 	}
 
+	@Override
 	public void dialogFieldChanged(DialogField field) {
 		fireEvent();
 	}

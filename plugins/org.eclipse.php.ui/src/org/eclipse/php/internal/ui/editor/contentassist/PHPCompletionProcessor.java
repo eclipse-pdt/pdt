@@ -33,14 +33,17 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 		setCompletionProposalAutoActivationCharacters(getAutoactivationTriggers());
 	}
 
+	@Override
 	protected String getNatureId() {
 		return PHPNature.ID;
 	}
 
+	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		return contextInformationValidator;
 	}
 
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return contextInformationActivationChars;
 	}
@@ -49,6 +52,7 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 		return completionAutoActivationChars;
 	}
 
+	@Override
 	protected ContentAssistInvocationContext createContext(ITextViewer viewer, int offset) {
 
 		boolean oldExplicitValue = explicit;

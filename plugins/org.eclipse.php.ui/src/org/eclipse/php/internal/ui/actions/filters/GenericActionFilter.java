@@ -21,6 +21,7 @@ public class GenericActionFilter implements IActionFilter {
 	 */
 	public static final String PN_CONTRIBUTOR_ID = "actionFilterContributorId"; //$NON-NLS-1$
 
+	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		if (PN_CONTRIBUTOR_ID.equals(name)) {
 			// find relevant action filter contributor:

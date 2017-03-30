@@ -163,10 +163,10 @@ public class RefactoringASTParser {
 	 *            an element (not the Java model)
 	 * @return compiler options
 	 */
-	public static Map getCompilerOptions(IModelElement element) {
+	public static Map<String, String> getCompilerOptions(IModelElement element) {
 		IScriptProject project = element.getScriptProject();
-		Map options = project.getOptions(true);
-		for (Iterator iter = options.keySet().iterator(); iter.hasNext();) {
+		Map<String, String> options = project.getOptions(true);
+		for (Iterator<String> iter = options.keySet().iterator(); iter.hasNext();) {
 			String key = (String) iter.next();
 			String value = (String) options.get(key);
 			if (DLTKCore.ERROR.equals(value) || DLTKCore.WARNING.equals(value)) {

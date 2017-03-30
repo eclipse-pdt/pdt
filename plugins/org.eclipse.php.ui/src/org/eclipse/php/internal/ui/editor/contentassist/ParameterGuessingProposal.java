@@ -87,6 +87,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	/*
 	 * @see ICompletionProposalExtension#apply(IDocument, char)
 	 */
+	@Override
 	public void apply(IDocument document, char trigger, int offset) {
 		try {
 			dealPrefix();
@@ -301,6 +302,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 * 
 	 * @return Returns a int
 	 */
+	@Override
 	public final int getReplacementLength() {
 		if (!fReplacementLengthComputed)
 			setReplacementLength(fProposal.getReplaceEnd() - fProposal.getReplaceStart());
@@ -313,6 +315,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 * @param replacementLength
 	 *            The replacementLength to set
 	 */
+	@Override
 	public final void setReplacementLength(int replacementLength) {
 		fReplacementLengthComputed = true;
 		super.setReplacementLength(replacementLength);
@@ -386,6 +389,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		return !isInDoc() && completion.length() > 0;
 	}
 
+	@Override
 	protected boolean isValidPrefix(String prefix) {
 		initAlias();
 		String replacementString = null;
@@ -540,6 +544,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	/*
 	 * @see ICompletionProposal#getSelection(IDocument)
 	 */
+	@Override
 	public Point getSelection(IDocument document) {
 		if (fSelectedRegion == null)
 			return new Point(getReplacementOffset(), 0);
@@ -565,13 +570,16 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 				 * org.eclipse.jface.text.link.ILinkedModeListener#left(org.
 				 * eclipse.jface.text.link.LinkedModeModel, int)
 				 */
+				@Override
 				public void left(LinkedModeModel environment, int flags) {
 					ensurePositionCategoryRemoved(document);
 				}
 
+				@Override
 				public void suspend(LinkedModeModel environment) {
 				}
 
+				@Override
 				public void resume(LinkedModeModel environment, int flags) {
 				}
 			});
@@ -662,6 +670,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		return guessingMethod;
 	}
 
+	@Override
 	public Object getExtraInfo() {
 		return extraInfo;
 	}

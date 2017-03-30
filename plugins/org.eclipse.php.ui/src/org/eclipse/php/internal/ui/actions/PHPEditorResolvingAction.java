@@ -36,6 +36,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 		setEnabled(true);
 	}
 
+	@Override
 	public void run() {
 		IModelElement[] modelElement = getSelectedElement();
 		IModelElement selected = null;
@@ -65,6 +66,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 		return modelElement != null;
 	}
 
+	@Override
 	public void update() {
 		setEnabled(getTextEditor() != null/* && isValid(getSelectedElement()) */);
 	}

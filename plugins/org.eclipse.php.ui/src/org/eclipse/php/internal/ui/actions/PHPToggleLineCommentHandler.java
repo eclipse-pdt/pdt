@@ -53,6 +53,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 	 *      org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument,
 	 *      org.eclipse.jface.text.ITextSelection)
 	 */
+	@Override
 	protected void processAction(final ITextEditor textEditor, final IStructuredDocument document,
 			ITextSelection textSelection) {
 
@@ -256,6 +257,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		/**
 		 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
 		 */
+		@Override
 		public void run(IProgressMonitor monitor) {
 			// start work
 			monitor.beginTask(SSEUIMessages.ToggleComment_progress, this.fSelectionEndLine - this.fSelectionStartLine);
@@ -328,18 +330,6 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			}
 			// done work
 			monitor.done();
-		}
-
-		/**
-		 * <p>
-		 * Assumes that the given offset is at the begining of a line and adds
-		 * the line comment prefix there
-		 * </p>
-		 * 
-		 */
-		public void apply(IStructuredDocument document, int offset, int length) throws BadLocationException {
-
-			document.replace(offset, 0, SINGLE_LINE_COMMENT + BLANK);
 		}
 
 		/**

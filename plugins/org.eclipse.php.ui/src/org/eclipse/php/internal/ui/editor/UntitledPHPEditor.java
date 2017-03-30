@@ -52,6 +52,7 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	/**
 	 * Overrides
 	 */
+	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
 		performSaveAs(progressMonitor);
 	}
@@ -59,6 +60,7 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	/**
 	 * Overrides
 	 */
+	@Override
 	protected void performSaveAs(IProgressMonitor progressMonitor) {
 		Shell shell = getSite().getShell();
 		final IEditorInput input = getEditorInput();
@@ -69,15 +71,17 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		dialog.create();
 
 		if (dialog.open() == Window.CANCEL) {
-			if (progressMonitor != null)
+			if (progressMonitor != null) {
 				progressMonitor.setCanceled(true);
+			}
 			return;
 		}
 
 		IPath newPath = dialog.getResult();
 		if (newPath == null) {
-			if (progressMonitor != null)
+			if (progressMonitor != null) {
 				progressMonitor.setCanceled(true);
+			}
 			return;
 		}
 
@@ -120,8 +124,9 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 
 		deleteUntitledStorageFile(file);
 
-		if (progressMonitor != null)
+		if (progressMonitor != null) {
 			progressMonitor.setCanceled(!success);
+		}
 
 		return;
 	}

@@ -21,5 +21,5 @@ public interface IFilter {
 
 	public void removeFilterChangeListener(IFilterChangeListener filterChangeListener);
 
-	public List getFilterChangeListeners();
+	public List<IFilterChangeListener> getFilterChangeListeners();
 }

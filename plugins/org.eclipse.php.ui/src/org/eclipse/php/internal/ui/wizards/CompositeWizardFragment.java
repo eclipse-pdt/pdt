@@ -31,6 +31,7 @@ public abstract class CompositeWizardFragment extends WizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#hasComposite()
 	 */
+	@Override
 	public boolean hasComposite() {
 		return true;
 	}

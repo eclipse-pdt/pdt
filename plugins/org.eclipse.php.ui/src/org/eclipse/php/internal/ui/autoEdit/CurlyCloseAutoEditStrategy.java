@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy implements IAutoEditStrategy {
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text != null && command.text.trim().endsWith("}")) { //$NON-NLS-1$
 			autoIndentAfterCurlyClose((IStructuredDocument) document, command);

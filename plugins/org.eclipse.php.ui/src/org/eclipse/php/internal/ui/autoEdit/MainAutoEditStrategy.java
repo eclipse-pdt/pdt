@@ -32,6 +32,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PhpDocAutoIndentStrategy();
 	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
 
+	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text == null) {
 			return;

@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NewPHPTraitPage extends NewPHPTypePage {
 
-	private final static String[] TRAIT__CHECKBOXES = new String[] { PHP_DOC_BLOCKS };
+	private static final String[] TRAIT__CHECKBOXES = new String[] { PHP_DOC_BLOCKS };
 
 	public NewPHPTraitPage() {
 		super(Messages.NewPHPTraitPage_0);
@@ -43,6 +43,7 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 		interfacesStatus = new StatusInfo();
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		super.createControl(parent);
@@ -62,10 +63,6 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 		elementName.setFocus();
 	}
 
-	protected void initValues() {
-		super.initValues();
-	}
-
 	// create this element's section
 	private void createElementSection(Composite container) {
 		GridLayout layout = new GridLayout(3, false);
@@ -81,6 +78,7 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 		addCheckboxesCreation(elementSection, TRAIT__CHECKBOXES);
 	}
 
+	@Override
 	protected void sourceFolderChanged() {
 		super.sourceFolderChanged();
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -101,6 +99,7 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 	/**
 	 * Finds the most severe error (if there is one)
 	 */
+	@Override
 	protected IStatus findMostSevereStatus() {
 		return StatusUtil.getMostSevere(new IStatus[] { elementNameStatus, sourceFolderStatus, newFileStatus,
 				existingFileStatus, interfacesStatus, namespaceStatus });
@@ -110,6 +109,7 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 	 * This method was overriden to handle cases in which project's PHP version
 	 * is less than 5
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		if (!visible) {
 			super.setVisible(visible);
@@ -126,7 +126,7 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 						0);
 				int res = dialog.open();
 				if (res != 0) {// NO clicked
-					WizardDialog wizardDialog = ((WizardDialog) getContainer());
+					WizardDialog wizardDialog = (WizardDialog) getContainer();
 					wizardDialog.close();
 				}
 			}

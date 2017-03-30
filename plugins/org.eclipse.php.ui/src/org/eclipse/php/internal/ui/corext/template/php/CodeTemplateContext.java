@@ -44,6 +44,7 @@ public class CodeTemplateContext extends TemplateContext {
 	 * org.eclipse.jdt.internal.corext.template.TemplateContext#evaluate(org
 	 * .eclipse.jdt.internal.corext.template.Template)
 	 */
+	@Override
 	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
 		// test that all variables are defined
 		// Iterator iterator = getContextType().resolvers();
@@ -103,6 +104,7 @@ public class CodeTemplateContext extends TemplateContext {
 	 * org.eclipse.jdt.internal.corext.template.TemplateContext#canEvaluate(
 	 * org.eclipse.jdt.internal.corext.template.Template)
 	 */
+	@Override
 	public boolean canEvaluate(Template template) {
 		return true;
 	}

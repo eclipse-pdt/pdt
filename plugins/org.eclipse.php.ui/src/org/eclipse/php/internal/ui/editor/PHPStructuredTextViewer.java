@@ -121,6 +121,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
 					if (fPostSelectionLength != -1) {
 						Display.getDefault().syncExec(new Runnable() {
+							@Override
 							public void run() {
 								synchronized (PHPStructuredTextViewer.this) {
 									if (fPostSelectionOffset >= 0 && fPostSelectionLength >= 0
@@ -340,6 +341,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * @see
 	 * org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
 	 */
+	@Override
 	public boolean canDoOperation(int operation) {
 		if (operation == SHOW_HIERARCHY) {
 			return fHierarchyPresenter != null;
@@ -492,6 +494,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#unconfigure()
 	 */
+	@Override
 	public void unconfigure() {
 		if (fHierarchyPresenter != null) {
 			fHierarchyPresenter.uninstall();
@@ -587,12 +590,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 *            the text presentation listener
 	 * @since 3.0
 	 */
+	@Override
 	public void prependTextPresentationListener(ITextPresentationListener listener) {
 
 		Assert.isNotNull(listener);
 
-		if (fTextPresentationListeners == null)
-			fTextPresentationListeners = new ArrayList();
+		if (fTextPresentationListeners == null) {
+			fTextPresentationListeners = new ArrayList<>();
+		}
 
 		fTextPresentationListeners.remove(listener);
 		fTextPresentationListeners.add(0, listener);
@@ -608,6 +613,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * @param length
 	 *            the length of the newly selected range in the visible document
 	 */
+	@Override
 	protected void selectionChanged(int offset, int length) {
 		if (fFireSelectionChanged) {
 			super.selectionChanged(offset, length);
@@ -660,6 +666,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	class InternalCommandStackListener implements CommandStackListener {
+		@Override
 		public void commandStackChanged(EventObject event) {
 			fireDirty();
 		}

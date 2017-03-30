@@ -28,6 +28,7 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 	/*
 	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
 	 */
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		action.selectionChanged(null, event.getSelection());
 	}
@@ -35,6 +36,7 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 	/*
 	 * @see SelectionDispatchAction#update(ISelection)
 	 */
+	@Override
 	public void update(ISelection selection) {
 	}
 
@@ -45,6 +47,7 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 	 * org.eclipse.dltk.ui.actions.SelectionDispatchAction#run(org.eclipse.jface
 	 * .viewers.IStructuredSelection)
 	 */
+	@Override
 	public void run(IStructuredSelection selection) {
 		action.selectionChanged(null, selection);
 		action.run(null);
@@ -57,6 +60,7 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 	 * org.eclipse.dltk.ui.actions.SelectionDispatchAction#run(org.eclipse.jface
 	 * .text.ITextSelection)
 	 */
+	@Override
 	public void run(ITextSelection selection) {
 		action.selectionChanged(null, selection);
 		action.run(null);

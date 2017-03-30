@@ -19,26 +19,30 @@ public class SimpleFilter implements IFilter {
 
 	private List<IFilterChangeListener> filterChangeListeners = new ArrayList<>();
 
+	@Override
 	public Object[] filter(Object[] elements) {
 		return elements;
 	}
 
+	@Override
 	public void addFilterChangeListener(IFilterChangeListener filterChangeListener) {
 		filterChangeListeners.add(filterChangeListener);
 	}
 
+	@Override
 	public void removeFilterChangeListener(IFilterChangeListener filterChangeListener) {
 		filterChangeListeners.remove(filterChangeListener);
 	}
 
-	public List getFilterChangeListeners() {
+	@Override
+	public List<IFilterChangeListener> getFilterChangeListeners() {
 		return filterChangeListeners;
 	}
 
 	protected void notifyFilterChanged() {
-		for (Iterator filterChangeListenerIterator = getFilterChangeListeners().iterator(); filterChangeListenerIterator
-				.hasNext();) {
-			IFilterChangeListener filterChangeListener = (IFilterChangeListener) filterChangeListenerIterator.next();
+		for (Iterator<IFilterChangeListener> filterChangeListenerIterator = getFilterChangeListeners()
+				.iterator(); filterChangeListenerIterator.hasNext();) {
+			IFilterChangeListener filterChangeListener = filterChangeListenerIterator.next();
 			filterChangeListener.notifyFilterChanged();
 
 		}

@@ -24,6 +24,7 @@ import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 
 class PhpWorkingSetPageContentProvider extends StandardModelElementContentProvider {
 
+	@Override
 	public boolean hasChildren(Object element) {
 
 		if (element instanceof IProject && !((IProject) element).isAccessible())
@@ -32,6 +33,7 @@ class PhpWorkingSetPageContentProvider extends StandardModelElementContentProvid
 		return super.hasChildren(element);
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		try {
 			if (parentElement instanceof IScriptModel)
@@ -56,7 +58,7 @@ class PhpWorkingSetPageContentProvider extends StandardModelElementContentProvid
 		IProjectFragment[] externalFragments;
 
 		if (fragments != null) {
-			ArrayList<IProjectFragment> collect = new ArrayList<IProjectFragment>();
+			ArrayList<IProjectFragment> collect = new ArrayList<>();
 			for (IProjectFragment fragment : fragments) {
 				if (fragment instanceof ExternalProjectFragment) {
 					collect.add(fragment);

@@ -40,6 +40,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	 * The visual part that is using this content provider is about to be
 	 * disposed. Deallocate all allocated SWT resources.
 	 */
+	@Override
 	public void dispose() {
 	}
 
@@ -48,6 +49,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
 	 * Object)
 	 */
+	@Override
 	public Object[] getChildren(Object element) {
 		if (element instanceof IWorkspace) {
 			// check if closed projects should be shown
@@ -89,6 +91,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
+	@Override
 	public Object[] getElements(Object element) {
 		return getChildren(element);
 	}
@@ -98,6 +101,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
 	 * )
 	 */
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof IResource) {
 			return ((IResource) element).getParent();
@@ -110,6 +114,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
 	 * Object)
 	 */
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
@@ -117,6 +122,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	/*
 	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged
 	 */
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 

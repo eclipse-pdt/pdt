@@ -40,6 +40,7 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 	public PhpElementAdapterFactory() {
 	}
 
+	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof IImplForPhp) {
 			if (adapterType == IModelElement.class) {
@@ -61,6 +62,7 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 		return adapterType2Object.get(adapterType);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
 		Class[] classArray = new Class[adapterType2Object.size()];

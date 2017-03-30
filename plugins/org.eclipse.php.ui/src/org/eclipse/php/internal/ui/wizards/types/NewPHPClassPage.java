@@ -24,15 +24,14 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.dltk.ui.dialogs.ITypeInfoFilterExtension;
-import org.eclipse.dltk.ui.dialogs.ITypeInfoRequestor;
 import org.eclipse.dltk.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.preferences.includepath.IncludePathUtils;
 import org.eclipse.php.internal.ui.util.SWTUtil;
@@ -53,9 +52,9 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	private Label superPath;
 	private IType superClassData;
 	private Button browseSuperBtn;
-	private final static String[] CLASS_CHECKBOXES_PHP5 = new String[] { REQUIRE_ONCE, CONSTRUCTOR, PHP_DOC_BLOCKS,
+	private static final String[] CLASS_CHECKBOXES_PHP5 = new String[] { REQUIRE_ONCE, CONSTRUCTOR, PHP_DOC_BLOCKS,
 			null, DESTRUCTOR, TODOS, null, INHERITED_ABSTRACT_METHODS };
-	public final static String[] CLASS_MODIFIERS = new String[] { "none", //$NON-NLS-1$
+	public static final String[] CLASS_MODIFIERS = new String[] { "none", //$NON-NLS-1$
 			"final", "abstract" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final int VALIDATE_SUPER_CLASS = 5;
@@ -71,6 +70,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		interfacesStatus = new StatusInfo();
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		super.createControl(parent);
@@ -90,6 +90,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		initValues();
 	}
 
+	@Override
 	protected void initValues() {
 		super.initValues();
 		if (superClassData != null) {
@@ -97,6 +98,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		}
 	}
 
+	@Override
 	protected void validatePageValues(int validationCode) {
 		super.validatePageValues(validationCode);
 		IProject currentProject = getCurrentProject();
@@ -104,7 +106,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 			IScriptProject model = DLTKCore.create(currentProject);
 
 			if (superClassName != null && (superClassName.getText().length()) > 0 && (model != null)) {
-				validateSuperClass(model, getSuperclassName());
+				validateSuperClass(getSuperclassName());
 			}
 		}
 	}
@@ -150,7 +152,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 				IScriptProject model = DLTKCore.create(currentProject);
 				String superClassName = ((Text) e.getSource()).getText().trim();
 				if (model != null) {
-					validateSuperClass(model, superClassName);
+					validateSuperClass(superClassName);
 				}
 			}
 		});
@@ -158,10 +160,10 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		browseSuperBtn = new Button(elementSection, SWT.PUSH);
 		browseSuperBtn.setText(Messages.NewPHPClassPage_9);
 		gd = new GridData();
-		// gd.verticalAlignment = GridData.BEGINNING;
 		gd.widthHint = SWTUtil.getButtonWidthHint(browseSuperBtn);
 		browseSuperBtn.setLayoutData(gd);
 		browseSuperBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IType result = chooseSuperClass();
 				superClassData = result;
@@ -184,6 +186,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	/**
 	 * @see NewPHPTypePage.java
 	 */
+	@Override
 	protected void sourceFolderChanged() {
 		super.sourceFolderChanged();
 		if (browseSuperBtn == null) {
@@ -207,7 +210,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		// check that superclass exists in model
 		String superclassName = getSuperclassName();
 		if (superclassName.length() > 0) {
-			validateSuperClass(model, superclassName);
+			validateSuperClass(superclassName);
 		}
 
 		// check that interfaces exist in model
@@ -219,7 +222,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		}
 	}
 
-	private void validateSuperClass(IScriptProject scriptProject, final String superclassName) {
+	private void validateSuperClass(final String superclassName) {
 		superPath.setText(""); //$NON-NLS-1$
 		superClassStatus = new StatusInfo();
 		if (superclassName.length() == 0) {
@@ -288,16 +291,15 @@ public class NewPHPClassPage extends NewPHPTypePage {
 				PlatformUI.getWorkbench().getProgressService(),
 				SearchEngine.createSearchScope(DLTKCore.create(project)), IDLTKSearchConstants.TYPE,
 				new TypeSelectionExtension() {
+					@Override
 					public ITypeInfoFilterExtension getFilterExtension() {
-						return new ITypeInfoFilterExtension() {
-							public boolean select(ITypeInfoRequestor typeInfoRequestor) {
-								int modifiers = typeInfoRequestor.getModifiers();
-								if (!PHPFlags.isFinal(modifiers) && !PHPFlags.isInterface(modifiers)
-										&& !PHPFlags.isNamespace(modifiers) && !PHPFlags.isTrait(modifiers)) {
-									return true;
-								}
-								return false;
+						return typeInfoRequestor -> {
+							int modifiers = typeInfoRequestor.getModifiers();
+							if (!PHPFlags.isFinal(modifiers) && !PHPFlags.isInterface(modifiers)
+									&& !PHPFlags.isNamespace(modifiers) && !PHPFlags.isTrait(modifiers)) {
+								return true;
 							}
+							return false;
 						};
 					}
 				}, PHPLanguageToolkit.getDefault());
@@ -347,11 +349,13 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	/**
 	 * Finds the most severe error (if there is one)
 	 */
+	@Override
 	protected IStatus findMostSevereStatus() {
 		return StatusUtil.getMostSevere(new IStatus[] { elementNameStatus, sourceFolderStatus, newFileStatus,
 				existingFileStatus, superClassStatus, interfacesStatus, namespaceStatus });
 	}
 
+	@Override
 	protected IModelElement getInitialPHPElement(IStructuredSelection selection) {
 		IModelElement codeData = super.getInitialPHPElement(selection);
 
@@ -366,6 +370,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		return codeData;
 	}
 
+	@Override
 	protected void changeButtonEnableStatus() {
 		super.changeButtonEnableStatus();
 		Button button = getButton(NewPHPClassPage.INHERITED_ABSTRACT_METHODS);
@@ -374,6 +379,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		}
 	}
 
+	@Override
 	protected boolean requireOnceShouldEnabled() {
 		return super.requireOnceShouldEnabled() || superClassData != null;
 	}

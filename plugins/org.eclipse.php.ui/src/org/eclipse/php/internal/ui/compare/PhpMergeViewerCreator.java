@@ -54,6 +54,7 @@ public class PhpMergeViewerCreator implements IViewerCreator {
 				return IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 			}
 
+			@Override
 			public IDocumentPartitioner getDocumentPartitioner() {
 				return new PHPStructuredTextPartitioner();
 			}
