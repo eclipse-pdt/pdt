@@ -753,15 +753,13 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_LOOKING_FOR_VARNAME>{LABEL} {
-	popState();
-	pushState(ST_IN_SCRIPTING);
+	yybegin(ST_IN_SCRIPTING);
 	return createFullSymbol(ParserConstants.T_STRING_VARNAME);
 }
 
 <ST_LOOKING_FOR_VARNAME>{ANY_CHAR} {
 	yypushback(yylength());
-	popState();
-	pushState(ST_IN_SCRIPTING);
+	yybegin(ST_IN_SCRIPTING);
 }
 
 <ST_IN_SCRIPTING>{BNUM} {

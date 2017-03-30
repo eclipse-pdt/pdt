@@ -3808,9 +3808,14 @@ T_CURLY_OPEN_WITH_DOLAR:start variable:var T_CURLY_CLOSE:end
 	RESULT = new ReflectionVariableReference(startleft, endright, new Scalar(varNameleft, varNameright, varName, Scalar.TYPE_STRING));
 :}
 
-| T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_OPEN_RECT expr:index T_CLOSE_RECT T_CURLY_CLOSE:end
+| T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_OPEN_RECT expr:index T_CLOSE_RECT:c T_CURLY_CLOSE:end
 {:
-	RESULT = new ArrayVariableReference(startleft, endright, varName, index, ArrayVariableReference.VARIABLE_ARRAY);
+	RESULT = new ReflectionVariableReference(startleft, endright, new ArrayVariableReference(varNameleft, cright, varName, index, ArrayVariableReference.VARIABLE_ARRAY));
+:}
+
+| T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_CURLY_OPEN expr:index T_CURLY_CLOSE:c T_CURLY_CLOSE:end
+{:
+	RESULT = new ReflectionVariableReference(startleft, endright, new ArrayVariableReference(varNameleft, cright, varName, index, ArrayVariableReference.VARIABLE_HASHTABLE));
 :}
 ;
 
