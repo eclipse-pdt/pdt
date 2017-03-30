@@ -30,7 +30,7 @@ import org.eclipse.php.composer.api.entities.Version;
 public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 
 	private Map<String, Version> detailedVersions = null;
-	private SortedMap<String, List<String>> majors = new TreeMap<String, List<String>>();
+	private SortedMap<String, List<Integer>> majors = new TreeMap<>();
 
 	public Versions() {
 	}
@@ -95,14 +95,14 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 			String major = v.getMajor();
 			if (major != null) {
 				if (!majors.containsKey(major)) {
-					majors.put(major, new ArrayList<String>());
+					majors.put(major, new ArrayList<Integer>());
 				}
 
-				List<String> majorList = majors.get(major);
+				List<Integer> majorList = majors.get(major);
 
 				String minor = v.getMinor();
 				if (minor != null && !majorList.contains(minor)) {
-					majors.get(major).add(minor);
+					majors.get(major).add(Integer.parseInt(minor));
 					Collections.sort(majorList);
 					Collections.reverse(majorList);
 				}
@@ -172,7 +172,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 		prepareDetailedVersions();
 
 		if (majors.containsKey(major) && majors.get(major).size() > 0) {
-			return majors.get(major).get(0);
+			return majors.get(major).get(0).toString();
 		}
 
 		return null;
@@ -198,7 +198,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 				String major = v.getMajor();
 				if (major != null) {
 					if (majors.containsKey(major)) {
-						List<String> majorList = majors.get(major);
+						List<Integer> majorList = majors.get(major);
 
 						String minor = v.getMinor();
 						if (minor != null && majorList.contains(minor)) {
