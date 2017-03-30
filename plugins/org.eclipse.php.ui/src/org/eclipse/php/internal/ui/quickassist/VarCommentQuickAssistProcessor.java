@@ -129,6 +129,9 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 			varTypeHint.append("/** @var "); //$NON-NLS-1$
 			varTypeHint.append(typeName);
 			varTypeHint.append(" "); //$NON-NLS-1$
+			if (variableNode instanceof Variable && !((Variable) variableNode).isDollared()) {
+				varTypeHint.append("$"); //$NON-NLS-1$
+			}
 			varTypeHint.append(varName);
 			varTypeHint.append(" */"); //$NON-NLS-1$
 			varTypeHint.append(TextUtilities.getDefaultLineDelimiter(document));
@@ -187,7 +190,8 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 			switch (selectedNode.getType()) {
 			case ASTNode.VARIABLE:
-				if (((Variable) selectedNode).isDollared()) {
+				if (((Variable) selectedNode).isDollared() || org.eclipse.php.internal.core.corext.ASTNodes
+						.isQuotedDollaredCurlied((Variable) selectedNode)) {
 					ASTNode parent = selectedNode.getParent();
 					if (parent != null && (parent.getType() == ASTNode.SINGLE_FIELD_DECLARATION
 							|| parent.getType() == ASTNode.FORMAL_PARAMETER)) {
