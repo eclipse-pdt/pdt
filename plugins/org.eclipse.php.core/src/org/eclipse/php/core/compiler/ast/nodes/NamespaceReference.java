@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
-import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.references.TypeReference;
 
 /**
@@ -25,11 +24,6 @@ public class NamespaceReference extends TypeReference {
 	public final static String NAMESPACE_DELIMITER = "\\";
 	private boolean global;
 	private boolean local;
-
-	@Deprecated
-	public NamespaceReference(DLTKToken token) {
-		super(token);
-	}
 
 	public NamespaceReference(int start, int end, String name) {
 		super(start, end, name);

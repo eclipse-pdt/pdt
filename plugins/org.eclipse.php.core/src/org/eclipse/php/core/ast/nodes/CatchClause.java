@@ -163,7 +163,6 @@ public class CatchClause extends Statement {
 	 * 
 	 * @return the exception variable declaration node
 	 */
-	@Deprecated
 	public Expression getClassName() {
 		return this.classNames.get(0);
 	}

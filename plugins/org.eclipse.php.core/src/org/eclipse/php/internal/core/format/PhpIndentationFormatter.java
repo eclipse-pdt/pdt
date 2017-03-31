@@ -45,7 +45,6 @@ public class PhpIndentationFormatter {
 	private final StringBuffer lastEmptyLineIndentationBuffer = new StringBuffer();
 	private int lastEmptyLineNumber;
 	private boolean isInHeredoc;
-	@Deprecated
 	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
 	public PhpIndentationFormatter(int start, int length, IndentationObject indentationObject) {
@@ -302,11 +301,6 @@ public class PhpIndentationFormatter {
 
 	protected final int getLength() {
 		return length;
-	}
-
-	@Deprecated
-	public Set<Integer> getIgnoreLines() {
-		return ignoreLines;
 	}
 
 	protected IIndentationStrategy getIndentationStrategy(char c) {

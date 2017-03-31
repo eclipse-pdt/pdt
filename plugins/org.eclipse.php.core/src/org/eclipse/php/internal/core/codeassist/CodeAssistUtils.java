@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -70,14 +69,6 @@ public class CodeAssistUtils {
 			.compile("\\$GLOBALS[ \\t\\n\\r]*\\[[ \\t\\n\\r]*[\\'\\\"][\\w]+[\\'\\\"][ \\t\\n\\r]*\\]"); //$NON-NLS-1$
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
-
-	/**
-	 * @deprecated use
-	 *             org.apache.commons.lang3.StringUtils.startsWithIgnoreCase()
-	 */
-	public static boolean startsWithIgnoreCase(String word, String prefix) {
-		return StringUtils.startsWithIgnoreCase(word, prefix);
-	}
 
 	/**
 	 * Returns type of a class field defined by name.

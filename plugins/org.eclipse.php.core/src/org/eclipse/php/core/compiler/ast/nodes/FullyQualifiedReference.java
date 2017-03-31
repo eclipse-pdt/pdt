@@ -12,7 +12,6 @@
 package org.eclipse.php.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.references.TypeReference;
 
 /**
@@ -25,11 +24,6 @@ public class FullyQualifiedReference extends TypeReference {
 
 	private NamespaceReference namespace;
 	private boolean nullable;
-
-	@Deprecated
-	public FullyQualifiedReference(DLTKToken token) {
-		super(token);
-	}
 
 	public FullyQualifiedReference(int start, int end, String name, NamespaceReference namespace) {
 		super(start, end, name);

@@ -570,11 +570,6 @@ public class PHPTextSequenceUtilities {
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	@Deprecated
-	public static int getPrivousTriggerIndex(@NonNull CharSequence textSequence, int startPosition) {
-		return getPreviousTriggerIndex(textSequence, startPosition);
-	}
-
 	public static int getPreviousTriggerIndex(@NonNull CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		int bracketsNum = 0;

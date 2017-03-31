@@ -18,7 +18,6 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
@@ -462,16 +461,6 @@ public class Util {
 			e.printStackTrace();
 		}
 		return original;
-	}
-
-	/**
-	 * Returns true iff str.toLowerCase().endsWith(end.toLowerCase())
-	 * implementation is not creating extra strings.
-	 * 
-	 * @deprecated use org.apache.commons.lang3.StringUtils.endsWithIgnoreCase()
-	 */
-	public final static boolean endsWithIgnoreCase(String str, String end) {
-		return StringUtils.endsWithIgnoreCase(str, end);
 	}
 
 	/**

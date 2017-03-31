@@ -12,7 +12,6 @@
 package org.eclipse.php.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
@@ -33,11 +32,6 @@ public class ReflectionVariableReference extends Expression {
 	public ReflectionVariableReference(int start, int end, Expression name) {
 		super(start, end);
 		this.expression = name;
-	}
-
-	@Deprecated
-	public ReflectionVariableReference(DLTKToken token) {
-		super(token);
 	}
 
 	public int getKind() {
