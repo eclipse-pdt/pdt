@@ -12,7 +12,6 @@
 package org.eclipse.php.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableKind;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -38,13 +37,6 @@ public class ArrayVariableReference extends VariableReference {
 	 */
 	private final Expression index;
 	private final int arrayType;
-
-	@Deprecated
-	public ArrayVariableReference(DLTKToken token, Expression index, int arrayType) {
-		super(token);
-		this.index = index;
-		this.arrayType = arrayType;
-	}
 
 	public ArrayVariableReference(int start, int end, String name, VariableKind kind, Expression index, int arrayType) {
 		super(start, end, name, kind);

@@ -79,20 +79,6 @@ public class PHPDocBlock extends Comment {
 		return res.toArray(new PHPDocTag[res.size()]);
 	}
 
-	/**
-	 * For backward compatibility with PHPDocTagKinds. Use getTags(TagKind kind)
-	 * instead.
-	 * 
-	 * @deprecated
-	 */
-	public PHPDocTag[] getTags(int tagId) {
-		TagKind tagKind = TagKind.getTagKind(tagId);
-		if (tagKind == null) {
-			return new PHPDocTag[0];
-		}
-		return getTags(tagKind);
-	}
-
 	public void adjustStart(int start) {
 		setStart(sourceStart() + start);
 		setEnd(sourceEnd() + start);

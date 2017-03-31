@@ -58,20 +58,6 @@ public class ASTMatcher {
 	 * </p>
 	 */
 	public ASTMatcher() {
-		this(false);
-	}
-
-	/**
-	 * Creates a new AST matcher instance.
-	 * 
-	 * @param matchDocTags
-	 *            <code>true</code> if doc comment tags are to be compared by
-	 *            default, and <code>false</code> otherwise
-	 * @see #match(Javadoc,Object)
-	 * @since 3.0
-	 */
-	@Deprecated
-	public ASTMatcher(boolean matchDocTags) {
 	}
 
 	/**

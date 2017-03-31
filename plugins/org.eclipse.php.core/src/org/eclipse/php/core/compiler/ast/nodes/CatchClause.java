@@ -73,11 +73,6 @@ public class CatchClause extends Statement {
 		return ASTNodeKinds.CATCH_CLAUSE;
 	}
 
-	@Deprecated
-	public TypeReference getClassName() {
-		return classNames.get(0);
-	}
-
 	public List<TypeReference> getClassNames() {
 		return classNames;
 	}

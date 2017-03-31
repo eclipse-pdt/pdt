@@ -12,7 +12,6 @@
 package org.eclipse.php.core.ast.nodes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,18 +61,6 @@ public class ClassInstanceCreation extends VariableBase {
 		propertyList.add(CTOR_PARAMS_PROPERTY);
 		propertyList.add(ANONYMOUS_CLASS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}
-
-	@Deprecated
-	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams) {
-		this(start, end, ast, className, ctorParams == null ? null : Arrays.asList(ctorParams));
-	}
-
-	@Deprecated
-	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams,
-			AnonymousClassDeclaration anonymousClassDeclaration) {
-		this(start, end, ast, className, ctorParams == null ? null : Arrays.asList(ctorParams),
-				anonymousClassDeclaration);
 	}
 
 	public ClassInstanceCreation(AST ast) {

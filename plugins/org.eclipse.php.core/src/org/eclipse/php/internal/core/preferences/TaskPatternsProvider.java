@@ -68,11 +68,6 @@ public class TaskPatternsProvider {
 		}
 	}
 
-	@Deprecated
-	public synchronized @NonNull Pattern[] getPetternsForWorkspace() {
-		return getPatternsForWorkspace();
-	}
-
 	public synchronized @NonNull Pattern[] getPatternsForWorkspace() {
 		initPatternsDB();
 		return workspacePatterns;

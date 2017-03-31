@@ -12,7 +12,6 @@
 package org.eclipse.php.core.ast.nodes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,11 +58,6 @@ public class SwitchCase extends Statement {
 		propertyList.add(ACTIONS_PROPERTY);
 		propertyList.add(IS_DEFAULT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}
-
-	@Deprecated
-	public SwitchCase(int start, int end, AST ast, Expression value, Statement[] actions, boolean isDefault) {
-		this(start, end, ast, value, actions == null ? null : Arrays.asList(actions), isDefault);
 	}
 
 	public SwitchCase(int start, int end, AST ast, Expression value, List<Statement> actions, boolean isDefault) {

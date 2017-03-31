@@ -26,7 +26,7 @@ import org.eclipse.php.internal.core.typeinference.evaluators.FormalParameterEva
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
-public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
+public class PHPDocTag extends ASTNode {
 
 	public enum TagKind {
 

@@ -350,9 +350,6 @@ public interface PHPRegionTypes {
 
 	static final String PHPDOC_COMMENT_END = "PHPDOC_COMMENT_END"; //$NON-NLS-1$
 
-	@Deprecated
-	static final String PHPDOC_TODO = "PHPDOC_TODO"; //$NON-NLS-1$
-
 	static final String PHPDOC_GENERIC_TAG = "PHPDOC_GENERIC_TAG"; //$NON-NLS-1$
 
 	static final String UNKNOWN_TOKEN = "UNKNOWN_TOKEN"; //$NON-NLS-1$
