@@ -38,7 +38,9 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 							&& ((FieldAccess) variable.getParent()).getDispatcher() == variable)) {
 				Expression varName = variable.getName();
 				if (params.contains(((Identifier) varName).getName()) && varName instanceof Identifier
-						&& variable.isDollared() && variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS) {
+						&& ((variable.isDollared() && variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS)
+								|| (!variable.isDollared() && org.eclipse.php.internal.core.corext.ASTNodes
+										.isQuotedDollaredCurlied(variable)))) {
 					highlight(variable);
 				}
 			}

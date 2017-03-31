@@ -2766,13 +2766,7 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 ;
 
 scalar ::=
-T_STRING_VARNAME:scalar
-{:
-	// TODO: check if this is a scalar
-	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
-	RESULT = s;
-:}
-| class_constant:classConstant
+class_constant:classConstant
 {:
 	RESULT = classConstant;
 :}
@@ -3338,10 +3332,14 @@ tracked_variable:var
 	RESULT = var;
 :}
 
-| T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_OPEN_RECT expr:index T_CLOSE_RECT T_CURLY_CLOSE:end
+| T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_OPEN_RECT expr:index T_CLOSE_RECT:c T_CURLY_CLOSE:end
 {:
-	VariableReference indexedVar = new ArrayVariableReference(startleft, endright, varName, index, ArrayVariableReference.VARIABLE_ARRAY);
-	RESULT = indexedVar;
+	RESULT = new ReflectionVariableReference(startleft, endright, new ArrayVariableReference(varNameleft, cright, varName, index, ArrayVariableReference.VARIABLE_ARRAY));
+:}
+
+| T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_CURLY_CLOSE:end
+{:
+	RESULT = new ReflectionVariableReference(startleft, endright, new Scalar(varNameleft, varNameright, varName, Scalar.TYPE_STRING));
 :}
 
 | T_CURLY_OPEN_WITH_DOLAR:start variable:var T_CURLY_CLOSE:end
