@@ -755,10 +755,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(statement, 0);
 			String firstWord = statement.subSequence(0, firstWordEnd).toString();
 
-			// If this is variable:
-			if (elementName.charAt(0) == '$' && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
+			boolean isDollared = elementName.charAt(0) == '$';
+			// If this is a variable (inside and outside quoted strings or
+			// heredoc sections). Note that trigger equal to "${" and
+			// elementName without "$" should only happen when variable occurs
+			// in quoted strings or heredoc sections.
+			if ((isDollared && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) || (!isDollared && "${".equals(trigger))) { //$NON-NLS-1$
 				// Don't show escaped variables within PHP string:
-				if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
+				if (isDollared && PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
 					try {
 						char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
 						if (charBefore == NamespaceReference.NAMESPACE_SEPARATOR) {
@@ -770,7 +774,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 
 				// If we are in var definition:
-				if (containerType != null) {
+				if (isDollared && containerType != null) {
 					if (VAR.equalsIgnoreCase(firstWord) || PRIVATE.equalsIgnoreCase(firstWord)
 							|| STATIC.equalsIgnoreCase(firstWord) || PUBLIC.equalsIgnoreCase(firstWord)
 							|| PROTECTED.equalsIgnoreCase(firstWord)) {
@@ -781,7 +785,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					}
 				}
 
-				return getGlobalOrMethodFields(sourceModule, offset, elementName);
+				return getGlobalOrMethodFields(sourceModule, offset, isDollared ? elementName : "$" + elementName); //$NON-NLS-1$
 			}
 
 			// If we are at class constant definition:
