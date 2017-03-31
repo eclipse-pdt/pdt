@@ -19,7 +19,7 @@ import org.eclipse.php.core.ast.visitor.ApplyAll;
 
 /**
  * Conciles the php element from a given path NOTE: use the
- * {@link #concile(LinkedList)} method, to identifiy the path element
+ * {@link #concile(LinkedList)} method, to identify the path element
  * 
  * @author Roy, 2007
  */
@@ -331,7 +331,8 @@ public class PhpElementConciliator {
 		}
 
 		// check for not variables / or $this / or field declaration
-		if (!parent.isDollared() || isThisVariable(parent) || parent.getType() == ASTNode.FIELD_DECLARATION) {
+		if ((!parent.isDollared() && !org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(parent))
+				|| isThisVariable(parent) || parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
 
@@ -359,7 +360,9 @@ public class PhpElementConciliator {
 	}
 
 	private final static boolean isThisVariable(Variable variable) {
-		return (variable.isDollared() && variable.getName() instanceof Identifier
+		return ((variable.isDollared()
+				|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+				&& variable.getName() instanceof Identifier
 				&& THIS.equalsIgnoreCase(((Identifier) variable.getName()).getName()));
 	}
 
@@ -401,11 +404,12 @@ public class PhpElementConciliator {
 
 		final Variable variable = (Variable) parent;
 		// if it is not a dollared variable - it is not a global one
-		if (!variable.isDollared() || variable.getParent().getType() == ASTNode.FIELD_DECLARATION) {
+		if ((!variable.isDollared() && !org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+				|| variable.getParent().getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
 
-		// ignore static memeber call
+		// ignore static member call
 		if (parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
 			final StaticFieldAccess staticFieldAccess = (StaticFieldAccess) parent.getParent();
 			if (staticFieldAccess.getMember() == variable) {
@@ -489,7 +493,8 @@ public class PhpElementConciliator {
 			final Expression variableName = arrayAccess.getName();
 			if (variableName.getType() == ASTNode.VARIABLE) {
 				Variable var = (Variable) variableName;
-				if (var.isDollared() && var.getName() instanceof Identifier) {
+				if ((var.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(var))
+						&& var.getName() instanceof Identifier) {
 					final Identifier id = (Identifier) var.getName();
 					return id.getName().equals("_GLOBALS") //$NON-NLS-1$
 							|| id.getName().equals("GLOBALS"); //$NON-NLS-1$
@@ -510,10 +515,10 @@ public class PhpElementConciliator {
 		final List<Variable> variables = globalStatement.variables();
 		for (final Variable current : variables) {
 			// if the variable is reflection (eg. global $$var) skip
-			if (current.getName().getType() == ASTNode.IDENTIFIER) {
+			if (current.isDollared() && current.getName() instanceof Identifier) {
 				Identifier id = (Identifier) current.getName();
 
-				// variables are case sensative
+				// variables are case sensitive
 				if (id.getName().equals(targetIdentifier.getName())) {
 					return true;
 				}
@@ -761,7 +766,8 @@ public class PhpElementConciliator {
 
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
-				if (variable.isDollared()) {
+				if (variable.isDollared()
+						|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable)) {
 					assert variable.getName().getType() == ASTNode.IDENTIFIER;
 					Identifier identifier = (Identifier) variable.getName();
 					if (identifier.getName().equals(name)) {
@@ -909,7 +915,9 @@ public class PhpElementConciliator {
 				Identifier identifier = (Identifier) node;
 				if (identifier.getParent().getType() == ASTNode.VARIABLE) {
 					Variable variable = (Variable) identifier.getParent();
-					if (variable.isDollared() && isGlobalScope && name.equals(identifier.getName())) {
+					if ((variable.isDollared()
+							|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+							&& isGlobalScope && name.equals(identifier.getName())) {
 						exists = true;
 					}
 				}
