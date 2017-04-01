@@ -98,7 +98,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				} else {
 					tRegion = null;
 				}
-			} while (tRegion != null && tRegion.getStart() + regionStart > lineStartOffset);
+			} while (tRegion != null && tRegion.getStart() + regionStart >= lineStartOffset);
 		}
 
 		return null;
