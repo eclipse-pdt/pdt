@@ -259,7 +259,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		fTableViewer.setLabelProvider(new TemplateLabelProvider());
 		fTableViewer.setContentProvider(new TemplateContentProvider());
 
-		fTableViewer.setSorter(new ViewerSorter() {
+		fTableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object object1, Object object2) {
 				if (object1 instanceof Template && object2 instanceof Template) {

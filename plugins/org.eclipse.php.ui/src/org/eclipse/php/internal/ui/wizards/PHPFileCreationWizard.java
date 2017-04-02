@@ -18,7 +18,9 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.DLTKCore;
@@ -257,12 +259,6 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				return WorkbenchEncoding.getWorkbenchDefaultEncoding();
 			}
 
-		}
-
-		private static void throwCoreException(String message) throws CoreException {
-			IStatus status = new Status(IStatus.ERROR, PHPUIMessages.PHPFileCreationWizard_4, IStatus.OK, message,
-					null);
-			throw new CoreException(status);
 		}
 
 		/**

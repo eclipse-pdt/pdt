@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -36,11 +37,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 	private OverlayPreferenceStore fStore;
 
 	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
-	private SelectionListener fCheckBoxListener = new SelectionListener() {
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
+	private SelectionListener fCheckBoxListener = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
@@ -67,7 +64,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		ArrayList overlayKeys = new ArrayList();
+		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_MARK_OCCURRENCES));
@@ -209,14 +206,10 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		indent(slave);
 		boolean masterState = fStore.getBoolean(masterKey);
 		slave.setEnabled(masterState);
-		SelectionListener listener = new SelectionListener() {
+		SelectionListener listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				slave.setEnabled(master.getSelection());
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		};
 		master.addSelectionListener(listener);

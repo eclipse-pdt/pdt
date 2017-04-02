@@ -47,24 +47,24 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 		if (fConfigurationBlocks == null) {
 			fConfigurationBlocks = new IPHPPreferencePageBlock[0];
 		}
-		HashMap map = new HashMap();
+		Map<String, IPHPPreferencePageBlock> map = new HashMap<>();
 		for (int i = 0; i < fConfigurationBlocks.length; i++) {
 			IPHPPreferencePageBlock block = fConfigurationBlocks[i];
 			map.put(block.getComparableName(), block);
 		}
-		Set keys = map.keySet();
+		Set<String> keys = map.keySet();
 
 		fConfigurationBlocks = new IPHPPreferencePageBlock[keys.size()];
-		ArrayList keysList = new ArrayList();
-		for (Iterator iter = keys.iterator(); iter.hasNext();) {
-			String comperableName = (String) iter.next();
+		List<String> keysList = new ArrayList<>();
+		for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
+			String comperableName = iter.next();
 			keysList.add(comperableName);
 		}
 		Collections.sort(keysList);
 		int i = 0;
-		for (Iterator iter = keysList.iterator(); iter.hasNext(); i++) {
-			String comperableName = (String) iter.next();
-			fConfigurationBlocks[i] = (IPHPPreferencePageBlock) map.get(comperableName);
+		for (Iterator<String> iter = keysList.iterator(); iter.hasNext(); i++) {
+			String comperableName = iter.next();
+			fConfigurationBlocks[i] = map.get(comperableName);
 		}
 	}
 
