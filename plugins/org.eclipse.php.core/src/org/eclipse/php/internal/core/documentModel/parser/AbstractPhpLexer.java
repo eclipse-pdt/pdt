@@ -214,6 +214,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		if (bufferedTokens != null) {
 			if (bufferedTokens.isEmpty()) {
 				bufferedTokens = null;
+				bufferedLength = 0;
 			} else {
 				return removeFromBuffer();
 			}

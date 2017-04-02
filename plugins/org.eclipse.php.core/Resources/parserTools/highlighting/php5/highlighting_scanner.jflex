@@ -40,6 +40,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_DOC_COMMENT
 %state ST_PHP_LINE_COMMENT
 %state ST_PHP_HIGHLIGHTING_ERROR
+%state ST_PHP_DOLLAR_CURLY_OPEN
 
 %{
 	public PhpLexer(int state) {
@@ -466,16 +467,38 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_SEMICOLON;
 }
 
-<ST_PHP_IN_SCRIPTING>"{" {
+<ST_PHP_IN_SCRIPTING>"{"{WHITESPACE}? {
+	// Whitespaces are directly appended to the curly before pushState()
+	// is effective or whitespaces would be stored in a separate ContextRegion.
+	// Method PhpTokenContainer#addLast() will correct the curlies length...
+	if (!phpStack.isEmpty()) {
+		// Only push the state when stack is not empty, it's useless otherwise
+		// (and it pollutes the stack).
+		pushState(ST_PHP_IN_SCRIPTING);
+	}
 	return PHP_CURLY_OPEN;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"${" {
-	pushState(ST_PHP_IN_SCRIPTING);
+	// We can have nested curlies after applying this rule,
+	// so we have to count all curlies...
+	yypushback(1);
+	pushState(ST_PHP_DOLLAR_CURLY_OPEN);
 	return PHP_TOKEN;
 }
 
-<ST_PHP_IN_SCRIPTING>"}" {
+<ST_PHP_DOLLAR_CURLY_OPEN>"{"{WHITESPACE}? {
+	// Whitespaces are directly appended to the curly before pushState()
+	// is effective or whitespaces would be stored in a separate ContextRegion.
+	// Method PhpTokenContainer#addLast() will correct the curlies length...
+	yybegin(ST_PHP_IN_SCRIPTING);
+	return PHP_CURLY_OPEN;
+}
+
+<ST_PHP_IN_SCRIPTING>"}"{WHITESPACE}? {
+	// Whitespaces are directly appended to the curly before pushState()
+	// is effective or whitespaces would be stored in a separate ContextRegion.
+	// Method PhpTokenContainer#addLast() will correct the curlies length...
 	if (!phpStack.isEmpty()) {
 		popState();
 	}
@@ -804,6 +827,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
+	// We can have nested curlies after applying rule below for "${",
+	// so we have to count all curlies...
 	yypushback(1);
 	pushState(ST_PHP_IN_SCRIPTING);
 	return PHP_CURLY_OPEN;
@@ -899,7 +924,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_SINGLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_SINGLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_DOLLAR_CURLY_OPEN>. {
 	yypushback(1);
 	pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }

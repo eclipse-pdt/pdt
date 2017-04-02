@@ -837,7 +837,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		 */
 		public boolean visit(Variable variable) {
 			Expression name = variable.getName();
-			if (variable.isDollared() && name instanceof Identifier) {
+			if ((variable.isDollared()
+					|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+					&& name instanceof Identifier) {
 				String variableName = ((Identifier) name).getName();
 				if (!variableName.equalsIgnoreCase("this") //$NON-NLS-1$
 						&& !variablesSet.contains(variableName)) {
