@@ -319,7 +319,12 @@ public class PhpTokenContainer implements Cloneable {
 		}
 		// if state was change - we add a new token and add state
 		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
-			int textLength = (AbstractPhpLexer.WHITESPACE.equals(yylex)) ? 0 : yylengthLength;
+			int textLength = yylengthLength;
+			if (yylex == AbstractPhpLexer.WHITESPACE) {
+				textLength = 0;
+			} else if (yylex == AbstractPhpLexer.PHP_CURLY_OPEN || yylex == AbstractPhpLexer.PHP_CURLY_CLOSE) {
+				textLength = 1;
+			}
 
 			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
@@ -333,7 +338,11 @@ public class PhpTokenContainer implements Cloneable {
 			final ITextRegion last = phpTokens.getLast();
 			last.adjustLength(yylength);
 		} else { // else - add as a new token
-			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
+			int textLength = yylengthLength;
+			if (yylex == AbstractPhpLexer.PHP_CURLY_OPEN || yylex == AbstractPhpLexer.PHP_CURLY_CLOSE) {
+				textLength = 1;
+			}
+			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
 		}
 	}
