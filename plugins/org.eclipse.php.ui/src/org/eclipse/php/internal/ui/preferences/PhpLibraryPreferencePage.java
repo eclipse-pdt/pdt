@@ -81,18 +81,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class NewButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return true;
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			editUserLibraryElement(null);
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_new_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 0;
 		}
@@ -100,18 +104,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class EditButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return canEdit(field.getSelectedElements());
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doEdit(field.getSelectedElements());
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_edit_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 1;
 		}
@@ -119,18 +127,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class AddZipButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return canAdd(field.getSelectedElements()) && getLanguageToolkit().languageSupportZIPBuildpath();
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doAdd(field.getSelectedElements());
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_addzip_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 2;
 		}
@@ -138,18 +150,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class AddExternalButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return canAdd(field.getSelectedElements());
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doAddExternal(field.getSelectedElements());
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_addext_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 3;
 		}
@@ -157,18 +173,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class RemoveButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return canRemove(field.getSelectedElements());
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doRemove(field.getSelectedElements());
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_remove_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 4;
 		}
@@ -176,18 +196,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class UpButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return canMoveUp(field.getSelectedElements());
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doMoveUp(field.getSelectedElements());
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_UserLibraryPreferencePage_libraries_up_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 5;
 		}
@@ -195,18 +219,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class DownButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return canMoveDown(field.getSelectedElements());
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doMoveDown(field.getSelectedElements());
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_UserLibraryPreferencePage_libraries_down_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 6;
 		}
@@ -214,18 +242,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class LoadButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return true;
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doLoad();
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_load_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 7;
 		}
@@ -233,18 +265,22 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class SaveButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return field.getSize() > 0;
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 			doSave();
 		}
 
+		@Override
 		public String getLabel() {
 			return PreferencesMessages.UserLibraryPreferencePage_libraries_save_button;
 		}
 
+		@Override
 		public int getPosition() {
 			return 8;
 		}
@@ -252,17 +288,21 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private class EmptyButtonHandler implements IPHPLibraryButtonHandler {
 
+		@Override
 		public boolean selectionChanged(TreeListDialogField field) {
 			return false;
 		}
 
+		@Override
 		public void handleSelection(TreeListDialogField field) {
 		}
 
+		@Override
 		public String getLabel() {
 			return null;
 		}
 
+		@Override
 		public int getPosition() {
 			return 9;
 		}
@@ -367,6 +407,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		return NLS.bind(ID_TEMPLATE, toolkit.getLanguageName().toLowerCase());
 	}
 
+	@Override
 	protected void doSelectionChanged(TreeListDialogField field) {
 		if (handlers != null) {
 			int size = handlers.size();
@@ -376,12 +417,14 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
+	@Override
 	protected void doCustomButtonPressed(TreeListDialogField field, int index) {
 		if (handlers != null) {
 			handlers.get(index).handleSelection(field);
 		}
 	}
 
+	@Override
 	protected IDLTKLanguageToolkit getLanguageToolkit() {
 		return PHPLanguageToolkit.getDefault();
 	}
@@ -584,6 +627,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		dialog.open();
 	}
 
+	@Override
 	protected void doDoubleClicked(TreeListDialogField field) {
 		List selected = field.getSelectedElements();
 		if (canEdit(selected)) {
@@ -591,6 +635,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
+	@Override
 	protected boolean canAdd(List list) {
 		if (getSingleSelectedLibrary(list) == null) {
 			return false;
@@ -883,22 +928,27 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 		private final Object[] EMPTY = new Object[0];
 
+		@Override
 		public void customButtonPressed(TreeListDialogField field, int index) {
 			doCustomButtonPressed(field, index);
 		}
 
+		@Override
 		public void selectionChanged(TreeListDialogField field) {
 			doSelectionChanged(field);
 		}
 
+		@Override
 		public void doubleClicked(TreeListDialogField field) {
 			doDoubleClicked(field);
 		}
 
+		@Override
 		public void keyPressed(TreeListDialogField field, KeyEvent event) {
 			doKeyPressed(field, event);
 		}
 
+		@Override
 		public Object[] getChildren(TreeListDialogField field, Object element) {
 			if (element instanceof BPUserLibraryElement) {
 				BPUserLibraryElement elem = (BPUserLibraryElement) element;
@@ -914,6 +964,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 			return EMPTY;
 		}
 
+		@Override
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElementAttribute) {
 				return ((BPListElementAttribute) element).getParent();
@@ -923,6 +974,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(TreeListDialogField field, Object element) {
 			return getChildren(field, element).length > 0;
 		}

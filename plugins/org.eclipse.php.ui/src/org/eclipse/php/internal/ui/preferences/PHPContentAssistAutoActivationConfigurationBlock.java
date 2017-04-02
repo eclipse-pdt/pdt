@@ -36,16 +36,19 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 	protected Button autoActivationCheckBox;
 	protected Text autoActivationDelay;
 
+	@Override
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent,
 				PHPUIMessages.CodeAssistPreferencePage_autoActivationSectionLabel);
 		autoActivationCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_enableAutoActivation,
 				PHPCoreConstants.CODEASSIST_AUTOACTIVATION, 0);
 		autoActivationCheckBox.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean autoActivateSectionEnabled = ((Button) e.widget).getSelection();
 				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
@@ -68,10 +71,12 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
 	}
 
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getCorePreferenceStore();
 	}
 
+	@Override
 	protected void storeValues() {
 		super.storeValues();
 		try {
@@ -82,6 +87,7 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 	}
 
 	// restore text boxes enablement according to the checkbox
+	@Override
 	protected void restoreDefaultTextValues() {
 		super.restoreDefaultTextValues();
 		setControlsEnablement();

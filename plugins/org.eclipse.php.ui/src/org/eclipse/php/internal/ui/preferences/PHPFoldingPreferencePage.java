@@ -16,17 +16,21 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPFoldingPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
+	@Override
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new FoldingConfigurationBlock(overlayPreferenceStore);
 	}
 
+	@Override
 	protected String getHelpId() {
 		return IPHPHelpContextIds.FOLDING_PREFERENCES;
 	}
 
+	@Override
 	protected void setDescription() {
 	}
 
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 	}

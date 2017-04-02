@@ -39,10 +39,12 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	/*
 	 * @see IChange#getName()
 	 */
+	@Override
 	public String getName() {
 		return Messages.format(RefactoringCoreMessages.DeleteSourceManipulationChange_0, getElementName());
 	}
 
+	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
 		// delete changes don't provide an undo operation
 		ISourceManipulation element = getSourceModification();
@@ -69,6 +71,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	/*
 	 * @see IChange#getModifiedLanguageElement()
 	 */
+	@Override
 	public Object getModifiedElement() {
 		return DLTKCore.create(fHandle);
 	}
@@ -76,6 +79,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	/*
 	 * @see DeleteChange#doDelete(IProgressMonitor)
 	 */
+	@Override
 	protected Change doDelete(IProgressMonitor pm) throws CoreException {
 		ISourceManipulation element = getSourceModification();
 		// we have to save dirty compilation units before deleting them.

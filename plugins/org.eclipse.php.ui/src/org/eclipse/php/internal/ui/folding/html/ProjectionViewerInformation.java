@@ -47,6 +47,7 @@ class ProjectionViewerInformation {
 			fInfo = info;
 		}
 
+		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			IDocument document = event.getDocument();
 			if (fInfo.getDocument() == document) {
@@ -54,6 +55,7 @@ class ProjectionViewerInformation {
 			}
 		}
 
+		@Override
 		public void documentChanged(DocumentEvent event) {
 			// register a post notification replace so that projection
 			// annotation model will be updated after all documentChanged
@@ -78,6 +80,7 @@ class ProjectionViewerInformation {
 			fInfo = info;
 		}
 
+		@Override
 		public void perform(IDocument document, IDocumentListener owner) {
 			IJobManager jobManager = Job.getJobManager();
 			if (jobManager.find("Applying annotation model changes").length == 0) { //$NON-NLS-1$
@@ -290,10 +293,12 @@ class ProjectionViewerInformation {
 			this.fInfo = fInfo;
 		}
 
+		@Override
 		public boolean belongsTo(Object family) {
 			return getName().equals(family);
 		}
 
+		@Override
 		public IStatus run(IProgressMonitor monitor) {
 			fInfo.applyAnnotationModelChanges();
 			fInfo.setIsDocumentChanging(false);

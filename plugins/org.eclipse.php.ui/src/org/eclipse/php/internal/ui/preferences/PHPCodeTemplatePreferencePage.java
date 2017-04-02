@@ -40,6 +40,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see PreferencePage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fCodeTemplateConfigurationBlock = new PHPCodeTemplateBlock(getNewStatusChangedListener(), getProject(),
@@ -61,6 +62,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
 	 * createPreferenceContent(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createPreferenceContent(Composite composite) {
 		return fCodeTemplateConfigurationBlock.createContents(composite);
 	}
@@ -71,6 +73,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
+	@Override
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 		if (fCodeTemplateConfigurationBlock != null) {
@@ -81,6 +84,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		if (fCodeTemplateConfigurationBlock != null) {
 			return fCodeTemplateConfigurationBlock.performOk(useProjectSettings());
@@ -91,6 +95,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see PreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		if (fCodeTemplateConfigurationBlock != null) {
@@ -103,6 +108,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * 
 	 * @see org.eclipse.jface.dialogs.DialogPage#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fCodeTemplateConfigurationBlock != null) {
 			fCodeTemplateConfigurationBlock.dispose();
@@ -127,6 +133,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * 
 	 * @see org.eclipse.jface.preference.IPreferencePage#performCancel()
 	 */
+	@Override
 	public boolean performCancel() {
 		if (fCodeTemplateConfigurationBlock != null) {
 			fCodeTemplateConfigurationBlock.performCancel();
@@ -140,6 +147,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
 	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
+	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return fCodeTemplateConfigurationBlock.hasProjectSpecificOptions(project);
 	}
@@ -150,6 +158,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
 	 * getPreferencePageID()
 	 */
+	@Override
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
@@ -160,6 +169,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
 	 * getPropertyPageID()
 	 */
+	@Override
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}

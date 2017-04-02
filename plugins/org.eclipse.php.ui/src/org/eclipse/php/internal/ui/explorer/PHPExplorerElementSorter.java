@@ -22,6 +22,7 @@ import org.eclipse.php.internal.ui.util.NamespaceNode;
 public class PHPExplorerElementSorter extends ModelElementSorter {
 	private static final int INCLUDE_PATH_CONTAINER = 59;
 
+	@Override
 	public int category(Object element) {
 		if (element instanceof IncludePathContainer) {
 			return INCLUDE_PATH_CONTAINER;
@@ -30,6 +31,7 @@ public class PHPExplorerElementSorter extends ModelElementSorter {
 		}
 	}
 
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		if (e1 instanceof NamespaceNode && e2 instanceof NamespaceNode) {
 			return ((NamespaceNode) e1).getElementName().compareTo(((NamespaceNode) e2).getElementName());

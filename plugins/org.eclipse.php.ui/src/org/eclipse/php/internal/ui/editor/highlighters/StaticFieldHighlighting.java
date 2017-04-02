@@ -47,6 +47,7 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 			return false;
 		}
 
+		@Override
 		public boolean visit(Variable var) {
 			if (visitField && var.isDollared()) {
 				highlight(var);
@@ -76,6 +77,7 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setItalicByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.StaticFieldHighlighting_0;
 	}

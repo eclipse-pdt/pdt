@@ -29,11 +29,13 @@ public class PHPTextTools extends ScriptTextTools {
 		super(PHPPartitionTypes.PHP_DEFAULT, LEGAL_CONTENT_TYPES, autoDisposeOnDisplayDispose);
 	}
 
+	@Override
 	public ScriptSourceViewerConfiguration createSourceViewerConfiguraton(IPreferenceStore preferenceStore,
 			ITextEditor editor, String partitioning) {
 		return null;
 	}
 
+	@Override
 	public IColorManager getColorManager() {
 		return PHPUiPlugin.getDefault().getColorManager();
 	}

@@ -76,6 +76,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 		return false;
 	}
 
+	@Override
 	public void createPresentation(TextPresentation presentation, ITypedRegion region) {
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=491328
@@ -111,6 +112,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 		fProvider = provider;
 	}
 
+	@Override
 	public void setDocument(IDocument document) {
 		super.setDocument(document);
 		if (fProvider instanceof AbstractLineStyleProvider)

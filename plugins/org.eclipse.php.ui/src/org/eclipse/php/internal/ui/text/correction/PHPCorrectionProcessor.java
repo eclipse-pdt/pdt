@@ -165,15 +165,18 @@ public class PHPCorrectionProcessor
 
 		fAssistant.addCompletionListener(new ICompletionListener() {
 
+			@Override
 			public void assistSessionEnded(ContentAssistEvent event) {
 				fAssistant.setStatusLineVisible(false);
 			}
 
+			@Override
 			public void assistSessionStarted(ContentAssistEvent event) {
 				fAssistant.setStatusLineVisible(true);
 				fAssistant.setStatusMessage(getJumpHintStatusLineMessage());
 			}
 
+			@Override
 			public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
 				if (proposal instanceof IStatusLineProposal) {
 					IStatusLineProposal statusLineProposal = (IStatusLineProposal) proposal;
@@ -214,6 +217,7 @@ public class PHPCorrectionProcessor
 	/*
 	 * @see IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
 	 */
+	@Override
 	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext) {
 
 		ICompletionProposal[] res = null;
@@ -351,12 +355,14 @@ public class PHPCorrectionProcessor
 			SafeRunner.run(this);
 		}
 
+		@Override
 		public void run() throws Exception {
 			safeRun(fDescriptor);
 		}
 
 		protected abstract void safeRun(ContributedProcessorDescriptor processor) throws Exception;
 
+		@Override
 		public void handleException(Throwable exception) {
 			if (fMulti == null) {
 				fMulti = new MultiStatus(PHPUiPlugin.ID, IStatus.OK,
@@ -389,6 +395,7 @@ public class PHPCorrectionProcessor
 			fLocations = locations;
 		}
 
+		@Override
 		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
 			IQuickFixProcessor curr = (IQuickFixProcessor) desc.getProcessor(fContext.getCompilationUnit(),
 					IQuickFixProcessor.class);
@@ -415,6 +422,7 @@ public class PHPCorrectionProcessor
 			fProposals = proposals;
 		}
 
+		@Override
 		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
 			IQuickAssistProcessor curr = (IQuickAssistProcessor) desc.getProcessor(fContext.getCompilationUnit(),
 					IQuickAssistProcessor.class);
@@ -442,6 +450,7 @@ public class PHPCorrectionProcessor
 			return fHasAssists;
 		}
 
+		@Override
 		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
 			IQuickAssistProcessor processor = (IQuickAssistProcessor) desc.getProcessor(fContext.getCompilationUnit(),
 					IQuickAssistProcessor.class);
@@ -475,6 +484,7 @@ public class PHPCorrectionProcessor
 			return fHasCorrections;
 		}
 
+		@Override
 		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
 			IQuickFixProcessor processor = (IQuickFixProcessor) desc.getProcessor(fCu, IQuickFixProcessor.class);
 			if (processor != null && processor.hasCorrections(fCu, fProblemId)) {
@@ -546,6 +556,7 @@ public class PHPCorrectionProcessor
 	/*
 	 * @see IContentAssistProcessor#getErrorMessage()
 	 */
+	@Override
 	public String getErrorMessage() {
 		return fErrorMessage;
 	}
@@ -556,6 +567,7 @@ public class PHPCorrectionProcessor
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	public boolean canFix(Annotation annotation) {
 		return hasCorrections(annotation);
 	}
@@ -567,12 +579,14 @@ public class PHPCorrectionProcessor
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
 		if (invocationContext instanceof IInvocationContext)
 			return hasAssists((IInvocationContext) invocationContext);
 		return false;
 	}
 
+	@Override
 	public boolean canFix(IScriptAnnotation annotation) {
 		if (annotation instanceof Annotation) {
 			return canFix((Annotation) annotation);
@@ -580,13 +594,16 @@ public class PHPCorrectionProcessor
 		return false;
 	}
 
+	@Override
 	public boolean canFix(IMarker marker) {
 		return false;
 	}
 
+	@Override
 	public void computeQuickAssistProposals(IScriptAnnotation annotation, IScriptCorrectionContext context) {
 	}
 
+	@Override
 	public void computeQuickAssistProposals(IMarker marker, IScriptCorrectionContext context) {
 	}
 }

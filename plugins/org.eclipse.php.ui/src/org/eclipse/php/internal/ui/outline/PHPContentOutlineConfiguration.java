@@ -92,6 +92,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		this.mode = mode;
 	}
 
+	@Override
 	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 
@@ -103,6 +104,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 				this, viewer);
 
 		propertyChangeListener = new IPropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals("checked")) { //$NON-NLS-1$
 					boolean checked = ((Boolean) event.getNewValue()).booleanValue();
@@ -146,6 +148,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return items;
 	}
 
+	@Override
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 		// fShowGroupsAction = new ShowGroupsAction("Show Groups", viewer);
@@ -177,6 +180,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	}
 
+	@Override
 	public void unconfigure(TreeViewer viewer) {
 		// if (fShowGroupsAction != null) {
 		// fShowGroupsAction.dispose();
@@ -192,6 +196,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		super.unconfigure(viewer);
 	}
 
+	@Override
 	public IContentProvider getContentProvider(final TreeViewer viewer) {
 		if (MODE_PHP == mode) {
 			if (fContentProvider == null) {
@@ -201,6 +206,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		} else if (MODE_HTML == mode) {
 			if (fContentProviderHTML == null) {
 				fContentProviderHTML = new JFaceNodeContentProvider() {
+					@Override
 					public Object[] getElements(Object object) {
 						if (object instanceof ISourceModule) {
 							IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
@@ -248,6 +254,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return viewer.getContentProvider();
 	}
 
+	@Override
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=493711
 		if (viewer.getInput() == null) {
@@ -274,6 +281,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return (ILabelProvider) viewer.getLabelProvider();
 	}
 
+	@Override
 	public ISelection getSelection(final TreeViewer viewer, final ISelection selection) {
 		if (!isLinkedWithEditor(viewer)) {
 			return lastSelection;
@@ -307,6 +315,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return super.getSelection(viewer, lastSelection);
 	}
 
+	@Override
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
 			fSimpleLabelProvider = new ScriptUILabelProvider();
@@ -320,6 +329,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return fSimpleLabelProvider;
 	}
 
+	@Override
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 		if (activeEditor instanceof StructuredTextEditor) {
@@ -338,6 +348,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return null;
 	}
 
+	@Override
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		super.enableShowAttributes(showAttributes, treeViewer);
 		// fix bug #241111 - show attributes in outline
@@ -350,6 +361,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	class UseStatementAwareImageProvider extends ScriptElementImageProvider {
 
+		@Override
 		public ImageDescriptor getBaseImageDescriptor(IModelElement element, int renderFlags) {
 			if (element instanceof UseStatementsNode) {
 				return DLTKPluginImages.DESC_OBJS_IMPCONT;
@@ -379,6 +391,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			super(labelProvider, null, null);
 		}
 
+		@Override
 		public String getText(Object element) {
 			return getStyledText(element).toString();
 		}
@@ -397,6 +410,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			fImageLabelProvider = new UseStatementAwareImageProvider();
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element instanceof UseStatementsNode) {
 				return PHPUIMessages.PHPContentOutlineConfiguration_2;

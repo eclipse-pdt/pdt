@@ -23,6 +23,7 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 		/**
 		 * Visit the function declaration
 		 */
+		@Override
 		public boolean visit(FunctionDeclaration functionDeclaration) {
 			if (functionDeclaration.getParent().getType() != ASTNode.METHOD_DECLARATION) {
 				highlight(functionDeclaration.getFunctionName());
@@ -33,6 +34,7 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 		/**
 		 * skip static call invocation, and add to changes list the global calls
 		 */
+		@Override
 		public boolean visit(FunctionInvocation functionInvocation) {
 			final Expression functionName = functionInvocation.getFunctionName().getName();
 			final int invocationParent = functionInvocation.getParent().getType();
@@ -64,6 +66,7 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(true).setItalicByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.FunctionHighlighting_0;
 	}

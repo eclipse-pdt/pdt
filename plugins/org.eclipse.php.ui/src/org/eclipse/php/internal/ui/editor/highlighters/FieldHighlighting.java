@@ -59,6 +59,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(Variable var) {
 			if (visitField > 0 && !var.isDollared()) {
 				highlight(var);
@@ -79,6 +80,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 			}
 		}
 
+		@Override
 		public boolean visit(TraitUseStatement node) {
 			ISourceModule sourceModule = getSourceModule();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
@@ -200,6 +202,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.FieldHighlighting_0;
 	}

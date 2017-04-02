@@ -33,6 +33,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			super(sourceModule);
 		}
 
+		@Override
 		public boolean visit(CatchClause catchStatement) {
 			List<Expression> classNames = catchStatement.getClassNames();
 			for (Expression className : classNames) {
@@ -43,6 +44,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(StaticConstantAccess staticDispatch) {
 			Expression className = staticDispatch.getClassName();
 			if (className instanceof Identifier) {
@@ -51,6 +53,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			return false;
 		}
 
+		@Override
 		public boolean visit(StaticFieldAccess staticDispatch) {
 			Expression className = staticDispatch.getClassName();
 			if (className instanceof Identifier) {
@@ -59,6 +62,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			return false;
 		}
 
+		@Override
 		public boolean visit(StaticMethodInvocation staticDispatch) {
 			Expression className = staticDispatch.getClassName();
 			if (className instanceof Identifier) {
@@ -67,6 +71,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(ClassName className) {
 			if (className.getName() instanceof Identifier) {
 				Identifier identifier = (Identifier) className.getName();
@@ -75,11 +80,13 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 			return false;
 		}
 
+		@Override
 		public boolean visit(ClassDeclaration classDeclaration) {
 			checkSuper(classDeclaration.getSuperClass(), classDeclaration.interfaces());
 			return true;
 		}
 
+		@Override
 		public boolean visit(TraitDeclaration traitDeclaration) {
 			checkSuper(traitDeclaration.getSuperClass(), traitDeclaration.interfaces());
 			return true;
@@ -144,6 +151,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(false).setDefaultTextColor(new RGB(0, 0, 192));
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.InternalClassHighlighting_0;
 	}

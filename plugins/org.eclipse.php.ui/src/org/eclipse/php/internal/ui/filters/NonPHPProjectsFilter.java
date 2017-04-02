@@ -22,6 +22,7 @@ public class NonPHPProjectsFilter extends ViewerFilter {
 	/*
 	 * @see ViewerFilter
 	 */
+	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IScriptProject) {
 			IScriptProject sp = (IScriptProject) element;

@@ -41,10 +41,12 @@ public class DeleteWizard extends RefactoringWizard {
 				.setQueries(new ReorgQueries(this));
 	}
 
+	@Override
 	protected void addUserInputPages() {
 		addPage(new DeleteInputPage());
 	}
 
+	@Override
 	public int getMessageLineWidthInChars() {
 		return 0;
 	}
@@ -54,6 +56,7 @@ public class DeleteWizard extends RefactoringWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.Wizard#needsProgressMonitor()
 	 */
+	@Override
 	public boolean needsProgressMonitor() {
 		DeleteRefactoring refactoring = (DeleteRefactoring) getRefactoring();
 		RefactoringProcessor processor = refactoring.getProcessor();
@@ -72,6 +75,7 @@ public class DeleteWizard extends RefactoringWizard {
 			super(PAGE_NAME, true, MessageWizardPage.STYLE_QUESTION);
 		}
 
+		@Override
 		protected String getMessageString() {
 			try {
 				if (1 == numberOfSelectedElements()) {
@@ -93,6 +97,7 @@ public class DeleteWizard extends RefactoringWizard {
 			}
 		}
 
+		@Override
 		public void createControl(Composite parent) {
 			super.createControl(parent);
 
@@ -127,6 +132,7 @@ public class DeleteWizard extends RefactoringWizard {
 
 			fDeleteSubPackagesCheckBox.addSelectionListener(new SelectionAdapter() {
 
+				@Override
 				public void widgetSelected(SelectionEvent event) {
 					getDeleteProcessor().setDeleteSubPackages(fDeleteSubPackagesCheckBox.getSelection());
 				}
@@ -156,6 +162,7 @@ public class DeleteWizard extends RefactoringWizard {
 			return getSelectedScriptElements().length + getSelectedResources().length;
 		}
 
+		@Override
 		protected boolean performFinish() {
 			return super.performFinish() || getDeleteProcessor().wasCanceled(); // close
 			// the
@@ -170,6 +177,7 @@ public class DeleteWizard extends RefactoringWizard {
 			return true;
 		}
 
+		@Override
 		public void dispose() {
 			if (fDeleteSubPackagesCheckBox != null && saveSettings())
 				getRefactoringSettings().put(DIALOG_SETTINGS_DELETE_SUB_PACKAGES,

@@ -62,6 +62,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addPages() {
 		super.addPages();
 
@@ -74,6 +75,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List getInsertedElements() {
 		List result = super.getInsertedElements();
 		if (getEntryToEdit().getOrginalPath() == null)
@@ -85,6 +87,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List getRemovedElements() {
 		return fAddFolderPage.getRemovedElements();
 	}
@@ -92,6 +95,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List getModifiedElements() {
 		return fAddFolderPage.getModifiedElements();
 	}
@@ -99,6 +103,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean performFinish() {
 
 		boolean res = super.performFinish();
@@ -108,6 +113,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 		return res;
 	}
 
+	@Override
 	public void cancel() {
 		fAddFolderPage.restore();
 	}

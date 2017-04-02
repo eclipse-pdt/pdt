@@ -89,6 +89,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		this.result = result;
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		// super.createButtonBar(parent);
 		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
@@ -97,6 +98,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		okButton.setEnabled(enableOK);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -127,6 +129,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		name.setLayoutData(data);
 		name.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				verifyComplete();
 			}
@@ -139,6 +142,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		data.horizontalSpan = 2;
 		remoteSiteBtn.setLayoutData(data);
 		remoteSiteBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = remoteSiteBtn.getSelection();
 				url.setEnabled(enabled);
@@ -154,6 +158,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		data.horizontalSpan = 2;
 		url.setLayoutData(data);
 		url.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				verifyComplete();
 			}
@@ -166,6 +171,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		data.horizontalSpan = 2;
 		localDirectoryBtn.setLayoutData(data);
 		localDirectoryBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = localDirectoryBtn.getSelection();
 				localDir.setEnabled(enabled);
@@ -181,6 +187,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		data.horizontalIndent = convertWidthInCharsToPixels(3);
 		localDir.setLayoutData(data);
 		localDir.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				verifyComplete();
 			}
@@ -194,6 +201,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		dirBrowseButton.setText("..."); //$NON-NLS-1$
 		dirBrowseButton.setAlignment(SWT.CENTER);
 		dirBrowseButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				DirectoryDialog dialog = new DirectoryDialog(
 						PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
@@ -214,6 +222,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			data.horizontalSpan = 2;
 			chmFileBtn.setLayoutData(data);
 			chmFileBtn.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					boolean enabled = chmFileBtn.getSelection();
 					chmFile.setEnabled(enabled);
@@ -229,6 +238,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			data.horizontalIndent = convertWidthInCharsToPixels(3);
 			chmFile.setLayoutData(data);
 			chmFile.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					verifyComplete();
 				}
@@ -242,6 +252,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			chmBrowseButton.setText("..."); //$NON-NLS-1$
 			chmBrowseButton.setAlignment(SWT.CENTER);
 			chmBrowseButton.addListener(SWT.Selection, new Listener() {
+				@Override
 				public void handleEvent(Event event) {
 					FileDialog dialog = new FileDialog(
 							PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
@@ -271,6 +282,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		fileExtLabel.setText(PHPUIMessages.NewPHPManualSiteDialog_fileExtension);
 		fileExtCombo = new Combo(fileExtGroup, SWT.READ_ONLY);
 		fileExtCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				verifyComplete();
 			}
@@ -390,6 +402,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		return false;
 	}
 
+	@Override
 	protected void updateButtonsEnableState(IStatus status) {
 		if (okButton != null && !okButton.isDisposed() && name.getText().trim().length() != 0)
 			okButton.setEnabled(!status.matches(IStatus.ERROR));

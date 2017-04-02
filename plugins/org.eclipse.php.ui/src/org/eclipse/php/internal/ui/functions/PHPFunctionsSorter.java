@@ -27,6 +27,7 @@ public class PHPFunctionsSorter extends ModelElementSorter {
 	/**
 	 * Display the ConstantNode first in the tree, then the rest of the elements
 	 */
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		if (e1 instanceof ConstantNode) {
 			return -1;

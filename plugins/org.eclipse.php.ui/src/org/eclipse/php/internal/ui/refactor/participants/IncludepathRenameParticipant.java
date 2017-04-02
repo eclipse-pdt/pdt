@@ -44,6 +44,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * initialize(java.lang.Object)
 	 */
+	@Override
 	protected boolean initialize(Object element) {
 		if (element instanceof IModelElement && accepts((IModelElement) element)) {
 			fElement = (IModelElement) element;
@@ -77,6 +78,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * getName()
 	 */
+	@Override
 	public String getName() {
 		return ""; //$NON-NLS-1$
 	}
@@ -89,6 +91,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context)
 			throws OperationCanceledException {
 		return new RefactoringStatus();
@@ -101,6 +104,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		List changes = new ArrayList();
 		IResource resource = getBreakpointContainer();

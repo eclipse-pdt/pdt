@@ -107,12 +107,14 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 		return true;
 	}
 
+	@Override
 	public void addPages() {
 		super.addPages();
 		pharPackageWizardPage = new PharPackageWizardPage(pharPackage, fSelection);
 		addPage(pharPackageWizardPage);
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// ignore the selection argument since the main export wizard changed it
 		fSelection = getValidSelection();

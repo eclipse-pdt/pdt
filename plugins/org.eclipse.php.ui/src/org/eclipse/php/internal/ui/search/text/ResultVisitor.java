@@ -43,6 +43,7 @@ public class ResultVisitor extends TextSearchRequestor {
 		this(false, false);
 	}
 
+	@Override
 	public boolean acceptFile(IFile file) throws CoreException {
 		if (fIsFileSearchOnly) {
 			fResult.add(new FileMatch(file));
@@ -51,20 +52,24 @@ public class ResultVisitor extends TextSearchRequestor {
 		return true;
 	}
 
+	@Override
 	public boolean reportBinaryFile(IFile file) {
 		return fSearchInBinaries;
 	}
 
+	@Override
 	public boolean acceptPatternMatch(TextSearchMatchAccess matchRequestor) throws CoreException {
 		fCachedMatches.add(new FileMatch(matchRequestor.getFile(), matchRequestor.getMatchOffset(),
 				matchRequestor.getMatchLength(), getLineElement(matchRequestor.getMatchOffset(), matchRequestor)));
 		return true;
 	}
 
+	@Override
 	public void beginReporting() {
 		fCachedMatches.clear();
 	}
 
+	@Override
 	public void endReporting() {
 		flushMatches();
 	}

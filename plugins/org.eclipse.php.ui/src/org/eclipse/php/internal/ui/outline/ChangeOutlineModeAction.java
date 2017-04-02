@@ -32,6 +32,7 @@ public class ChangeOutlineModeAction extends Action {
 		setChecked(prefMode == mode);
 	}
 
+	@Override
 	public void run() {
 		contentOutlineConfiguration.setMode(mode);
 		contentOutlineConfiguration.getContentProvider(viewer);

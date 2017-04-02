@@ -81,6 +81,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	// Accessed from the PHP project Wizard
+	@Override
 	public Control createContents(Composite parent) {
 		setShell(parent.getShell());
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -102,6 +103,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		useShortTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
 		useShortTagsButton.setText(PHPUIMessages.Preferences_php_editor_useShortTagsAsPhp_label);
 		useShortTagsButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				setUseShortTagsValue(Boolean.toString(useShortTagsButton.getSelection()));
 			}
@@ -132,11 +134,13 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		List<Entry> entryList = prepareVersionEntryList();
 		versionCombo = new ValuedCombo(composite, SWT.READ_ONLY, entryList);
 		versionCombo.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String selectedValue = versionCombo.getSelectionValue();
 				setPhpVersionValue(selectedValue);
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
@@ -145,6 +149,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		return composite;
 	}
 
+	@Override
 	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		if (!areSettingsEnabled()) {
 			return;
@@ -233,6 +238,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		validateSettings(PREF_SHORT_TAGS, null, null);
 	}
 
+	@Override
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		String title = PHPUIMessages.PHPVersionConfigurationBlock_needsbuild_title;
 		String message;
@@ -245,6 +251,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		// return null;
 	}
 
+	@Override
 	protected void updateControls() {
 		unpackPHPVersion();
 		if (!hideShortTags) {

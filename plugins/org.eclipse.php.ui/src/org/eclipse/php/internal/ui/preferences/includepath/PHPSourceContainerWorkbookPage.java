@@ -59,6 +59,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		protected INewWizard createWizard() throws CoreException {
 			return fWizard;
 		}
@@ -66,6 +67,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IAction.RESULT)) {
 				if (event.getNewValue().equals(Boolean.TRUE)) {
@@ -181,10 +183,12 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	 * org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathBasePage#setTitle
 	 * (java.lang.String)
 	 */
+	@Override
 	public void setTitle(String title) {
 		fFoldersList.setLabelText(title);
 	}
 
+	@Override
 	public void init(IScriptProject jproject) {
 		fCurrJProject = jproject;
 		updateFoldersList();
@@ -212,6 +216,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
+	@Override
 	public Control getControl(Composite parent) {
 
 		initContainerElements();
@@ -252,22 +257,27 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		private final Object[] EMPTY_ARR = new Object[0];
 
 		// -------- IListAdapter --------
+		@Override
 		public void customButtonPressed(TreeListDialogField field, int index) {
 			sourcePageCustomButtonPressed(field, index);
 		}
 
+		@Override
 		public void selectionChanged(TreeListDialogField field) {
 			sourcePageSelectionChanged(field);
 		}
 
+		@Override
 		public void doubleClicked(TreeListDialogField field) {
 			sourcePageDoubleClicked(field);
 		}
 
+		@Override
 		public void keyPressed(TreeListDialogField field, KeyEvent event) {
 			sourcePageKeyPressed(field, event);
 		}
 
+		@Override
 		public Object[] getChildren(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElement) {
 				return ((BPListElement) element).getChildren();
@@ -275,6 +285,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 			return EMPTY_ARR;
 		}
 
+		@Override
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElementAttribute) {
 				return ((BPListElementAttribute) element).getParent();
@@ -282,11 +293,13 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(TreeListDialogField field, Object element) {
 			return (element instanceof BPListElement);
 		}
 
 		// ---------- IDialogFieldListener --------
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			sourcePageDialogFieldChanged(field);
 		}
@@ -557,6 +570,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#getSelection
 	 */
+	@Override
 	public List getSelection() {
 		return fFoldersList.getSelectedElements();
 	}
@@ -564,6 +578,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fFoldersList.selectElements(new StructuredSelection(selElements));
 		if (expand) {
@@ -573,6 +588,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
+	@Override
 	public boolean isEntryKind(int kind) {
 		return kind == IBuildpathEntry.BPE_SOURCE;
 	}

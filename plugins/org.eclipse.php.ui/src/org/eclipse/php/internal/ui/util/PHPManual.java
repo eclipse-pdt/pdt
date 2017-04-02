@@ -304,6 +304,7 @@ public class PHPManual {
 	}
 
 	private class MkHandler extends URLStreamHandler {
+		@Override
 		protected URLConnection openConnection(URL arg0) throws IOException {
 			return null;
 		}

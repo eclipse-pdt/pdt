@@ -56,10 +56,12 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 	private class PHPEditorTextHoverDescriptorLabelProvider implements ITableLabelProvider {
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			switch (columnIndex) {
 			case ENABLED_PROP:
@@ -77,26 +79,32 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			return null;
 		}
 
+		@Override
 		public void addListener(ILabelProviderListener listener) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			return false;
 		}
 
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
 		}
 	}
 
 	private class PHPEditorTextHoverDescriptorContentProvider implements IStructuredContentProvider {
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// Do nothing since the viewer listens to resource deltas
 		}
 
+		@Override
 		public void dispose() {
 		}
 
@@ -104,6 +112,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			return false;
 		}
 
+		@Override
 		public Object[] getElements(Object element) {
 			return (Object[]) element;
 		}
@@ -124,11 +133,13 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
@@ -166,6 +177,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	 *            the parent composite
 	 * @return the control for the preference page
 	 */
+	@Override
 	public Control createControl(Composite parent) {
 
 		Composite hoverComposite = new Composite(parent, SWT.NONE);
@@ -202,10 +214,12 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		layouter.setLayoutData(gd);
 
 		fHoverTable.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleHoverListSelection();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -232,6 +246,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			 * checkStateChanged
 			 * (org.eclipse.jface.viewers.CheckStateChangedEvent)
 			 */
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				String id = ((PHPEditorTextHoverDescriptor) event.getElement()).getId();
 				if (id == null)
@@ -263,10 +278,12 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		fModifierEditor.addKeyListener(new KeyListener() {
 			private boolean isModifierCandidate;
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				isModifierCandidate = e.keyCode > 0 && e.character == 0 && e.stateMask == 0;
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				if (isModifierCandidate && e.stateMask > 0 && e.character == 0) {// &&
 																					// e.time
@@ -313,6 +330,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		});
 
 		fModifierEditor.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				handleModifierModified();
 			}
@@ -344,6 +362,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		return PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
 	}
 
+	@Override
 	public void initialize() {
 		PHPEditorTextHoverDescriptor[] hoverDescs = getContributedHovers();
 		fHoverConfigs = new HoverConfig[hoverDescs.length];
@@ -369,6 +388,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		fHoverTableViewer.refresh();
 	}
 
+	@Override
 	public void performOk() {
 		StringBuilder buf = new StringBuilder();
 		StringBuilder maskBuf = new StringBuilder();
@@ -394,6 +414,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		PHPUiPlugin.getDefault().resetPHPEditorTextHoverDescriptors();
 	}
 
+	@Override
 	public void performDefaults() {
 		restoreFromPreferences();
 		initializeFields();
@@ -553,6 +574,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	/*
 	 * @see DialogPage#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// nothing to dispose
 	}

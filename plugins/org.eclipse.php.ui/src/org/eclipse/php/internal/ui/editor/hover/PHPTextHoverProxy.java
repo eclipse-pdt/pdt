@@ -31,6 +31,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 		setPreferenceStore(store);
 	}
 
+	@Override
 	public void setPreferenceStore(IPreferenceStore store) {
 		super.setPreferenceStore(store);
 
@@ -38,6 +39,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 			fHover.setPreferenceStore(getPreferenceStore());
 	}
 
+	@Override
 	public void setEditor(IEditorPart editor) {
 		super.setEditor(editor);
 		if (fHover != null && getEditor() != null) {
@@ -52,6 +54,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	/*
 	 * @see ITextHover#getHoverRegion(ITextViewer, int)
 	 */
+	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 		if (ensureHoverCreated()) {
 			return fHover.getHoverRegion(textViewer, offset);
@@ -62,6 +65,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	/*
 	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (ensureHoverCreated()) {
@@ -70,6 +74,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 		return null;
 	}
 
+	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		if (ensureHoverCreated()) {
 			if (fHover instanceof ITextHoverExtension2)
@@ -104,6 +109,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		if (ensureHoverCreated() && (fHover instanceof ITextHoverExtension))
 			return ((ITextHoverExtension) fHover).getHoverControlCreator();
@@ -111,6 +117,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 		return null;
 	}
 
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (ensureHoverCreated() && (fHover instanceof IInformationProviderExtension2))
 			return ((IInformationProviderExtension2) fHover).getInformationPresenterControlCreator();
@@ -124,6 +131,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	 * @see org.eclipse.php.internal.ui.editor.hover.IPHPTextHover#
 	 * getMessageDecorator ()
 	 */
+	@Override
 	public IHoverMessageDecorator getMessageDecorator() {
 		return fHover.getMessageDecorator();
 	}

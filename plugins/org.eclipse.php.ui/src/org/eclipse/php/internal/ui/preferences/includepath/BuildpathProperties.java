@@ -39,6 +39,7 @@ public class BuildpathProperties extends BuildPathsPropertyPage implements IWork
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHP_BUILD_PATH_PROPERTIES);
 	}
 
+	@Override
 	public IDLTKLanguageToolkit getLanguageToolkit() {
 		return PHPLanguageToolkit.getDefault();
 	}

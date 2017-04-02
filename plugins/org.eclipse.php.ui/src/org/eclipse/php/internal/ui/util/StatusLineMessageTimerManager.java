@@ -61,9 +61,11 @@ public class StatusLineMessageTimerManager {
 			this.statusLineManager = statusLineManager;
 		}
 
+		@Override
 		public void run() {
 			Display display = PlatformUI.getWorkbench().getDisplay();
 			display.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (StatusLineMessageTimerManager.statusLineManager == statusLineManager
 							&& message == StatusLineMessageTimerManager.message) {

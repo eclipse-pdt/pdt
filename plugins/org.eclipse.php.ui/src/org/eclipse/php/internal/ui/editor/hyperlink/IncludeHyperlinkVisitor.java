@@ -43,6 +43,7 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 		this.filePath = new StringBuilder();
 	}
 
+	@Override
 	public boolean visit(Expression expr) throws ModelException {
 		if (expr.sourceStart() < offset && expr.sourceEnd() > offset) {
 			if (expr instanceof Include) {
@@ -125,6 +126,7 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 		return new Path(path).removeLastSegments(1).toOSString();
 	}
 
+	@Override
 	public boolean visitGeneral(ASTNode n) {
 		return !found;
 	}

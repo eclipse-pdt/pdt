@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.Logger;
  */
 public class NonPublicFilter extends ViewerFilter {
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (element instanceof IMethod) {
 			IMethod method = (IMethod) element;

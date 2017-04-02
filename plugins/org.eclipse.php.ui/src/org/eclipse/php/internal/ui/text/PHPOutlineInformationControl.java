@@ -45,6 +45,7 @@ public class PHPOutlineInformationControl extends ScriptOutlineInformationContro
 		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin.getDefault().getPreferenceStore());
 	}
 
+	@Override
 	protected ITypeHierarchy getSuperTypeHierarchy(org.eclipse.dltk.core.IType type) {
 
 		ITypeHierarchy th = (ITypeHierarchy) fTypeHierarchies.get(type);
@@ -76,6 +77,7 @@ public class PHPOutlineInformationControl extends ScriptOutlineInformationContro
 		return false;
 	}
 
+	@Override
 	protected TreeViewer createTreeViewer(Composite parent, int style) {
 		TreeViewer viewer = super.createTreeViewer(parent, style);
 

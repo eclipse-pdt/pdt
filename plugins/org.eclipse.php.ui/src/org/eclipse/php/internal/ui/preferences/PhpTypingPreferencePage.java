@@ -25,20 +25,24 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 
 	private TypingConfigurationBlock typingConfigurationBlock;
 
+	@Override
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		typingConfigurationBlock = new TypingConfigurationBlock(this, overlayPreferenceStore);
 		return typingConfigurationBlock;
 	}
 
+	@Override
 	protected String getHelpId() {
 		return IPHPHelpContextIds.TYPING_PREFERENCES;
 	}
 
+	@Override
 	protected void setDescription() {
 		setDescription(""); //$NON-NLS-1$
 
 	}
 
+	@Override
 	protected Label createDescriptionLabel(Composite parent) {
 		return null;
 	}
@@ -47,6 +51,7 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 	 * This method overrides the default behavior in order to refresh values
 	 * that are updated due to changes in other Preference pages
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			typingConfigurationBlock.refreshValues();
@@ -54,6 +59,7 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 		super.setVisible(visible);
 	}
 
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 	}

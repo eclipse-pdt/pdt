@@ -101,6 +101,7 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 	/**
 	 * @see MultiOperation
 	 */
+	@Override
 	protected String getMainTaskName() {
 		return Messages.operation_deleteResourceProgress;
 	}
@@ -110,6 +111,7 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 	 *      or <code>deleteScriptFolder</code> depending on the type of
 	 *      <code>element</code>.
 	 */
+	@Override
 	protected void processElement(IModelElement element) throws ModelException {
 		switch (element.getElementType()) {
 		case IModelElement.SOURCE_MODULE:
@@ -131,6 +133,7 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 	/**
 	 * @see MultiOperation
 	 */
+	@Override
 	protected void verify(IModelElement element) throws ModelException {
 		if (element == null || !element.exists()) {
 			error(IModelStatusConstants.ELEMENT_DOES_NOT_EXIST, element);

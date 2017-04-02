@@ -54,6 +54,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			setDisabledImageDescriptor(DLTKPluginImages.DESC_DLCL_FILTER);
 		}
 
+		@Override
 		public void run() {
 			openDialog();
 		}
@@ -99,6 +100,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		/*
 		 * Overrides method from ContributionItem.
 		 */
+		@Override
 		public void fill(Menu menu, int index) {
 			MenuItem mi = new MenuItem(menu, SWT.CHECK, index);
 			mi.setText("&" + fItemNumber + " " + fFilterName); //$NON-NLS-1$ //$NON-NLS-2$
@@ -110,6 +112,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			// mi.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_JAVA_WORKING_SET));
 			mi.setSelection(fState);
 			mi.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					fState = !fState;
 					fActionGroup.setFilter(fFilterId, fState);
@@ -120,6 +123,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		/*
 		 * @see org.eclipse.jface.action.IContributionItem#isDynamic()
 		 */
+		@Override
 		public boolean isDynamic() {
 			return true;
 		}
@@ -215,6 +219,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	/*
 	 * Method declared on ActionGroup.
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		fillToolBar(actionBars.getToolBarManager());
 		fillViewMenu(actionBars.getMenuManager());
@@ -385,6 +390,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 
 		fMenuManager = viewMenu;
 		fMenuListener = new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				removePreviousLRUFilterActions(manager);
 				addLRUFilterActions(manager);
@@ -427,6 +433,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	/*
 	 * Method declared on ActionGroup.
 	 */
+	@Override
 	public void dispose() {
 		if (fMenuManager != null)
 			fMenuManager.removeMenuListener(fMenuListener);

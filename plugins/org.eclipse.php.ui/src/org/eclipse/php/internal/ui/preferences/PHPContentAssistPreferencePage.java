@@ -24,18 +24,22 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PHPContentAssistPreferencePage extends AbstractMultiBlockPreferencePage {
 
+	@Override
 	protected void setDescription() {
 		setDescription(""); //$NON-NLS-1$
 	}
 
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 	}
 
+	@Override
 	protected String getPreferencePageID() {
 		return PHPUiConstants.CONTENT_ASSIST_PROFERENCE_PAGE;
 	}
 
+	@Override
 	public void performHelp() {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.CODE_ASSIST_PREFERENCES);
 		getControl().notifyListeners(SWT.Help, new Event());

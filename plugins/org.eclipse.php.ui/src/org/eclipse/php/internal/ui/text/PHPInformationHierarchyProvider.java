@@ -50,6 +50,7 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 	/*
 	 * @see IInformationProvider#getSubject(ITextViewer, int)
 	 */
+	@Override
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
 			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
@@ -64,6 +65,7 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 	/*
 	 * @see IInformationProvider#getInformation(ITextViewer, IRegion)
 	 */
+	@Override
 	public String getInformation(ITextViewer textViewer, IRegion subject) {
 		return getInformation2(textViewer, subject).toString();
 	}
@@ -76,6 +78,7 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 	 * org.eclipse.jface.text.IRegion)) as it returns the enclosing type for
 	 * members, and not the element itself (nirc)
 	 */
+	@Override
 	public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 		if (fEditor == null)
 			return null;

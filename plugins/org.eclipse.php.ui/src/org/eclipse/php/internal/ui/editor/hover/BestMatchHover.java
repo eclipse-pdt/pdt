@@ -87,6 +87,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	/*
 	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		checkTextHovers();
@@ -111,6 +112,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	 * org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
 	 * .jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
 	 */
+	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 
 		checkTextHovers();
@@ -145,6 +147,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fBestHover instanceof ITextHoverExtension)
 			return ((ITextHoverExtension) fBestHover).getHoverControlCreator();
@@ -158,6 +161,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fBestHover instanceof IInformationProviderExtension2)
 			return ((IInformationProviderExtension2) fBestHover).getInformationPresenterControlCreator();
@@ -171,6 +175,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	 * @seeorg.eclipse.php.internal.ui.editor.hover.AbstractPHPTextHover#
 	 * getMessageDecorator()
 	 */
+	@Override
 	public IHoverMessageDecorator getMessageDecorator() {
 		if (fBestHover instanceof IPHPTextHover) {
 			return ((IPHPTextHover) fBestHover).getMessageDecorator();

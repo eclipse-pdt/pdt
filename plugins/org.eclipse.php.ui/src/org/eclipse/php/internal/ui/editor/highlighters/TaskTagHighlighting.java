@@ -57,6 +57,7 @@ public class TaskTagHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setDefaultTextColor(124, 165, 213).setBoldByDefault(true).setEnabledByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.TaskTagHighlighting_0;
 	}

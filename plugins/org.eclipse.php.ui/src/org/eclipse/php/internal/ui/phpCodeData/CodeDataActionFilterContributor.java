@@ -15,6 +15,7 @@ import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
 public class CodeDataActionFilterContributor implements IActionFilterContributor {
 
+	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		// null phpCodeData.getUserData() indicates on language model elements
 		return true;// modelElem.getPrimaryElement() != null &&

@@ -62,6 +62,7 @@ public class PHPArchiveFileFilter extends ViewerFilter {
 	/*
 	 * @see ViewerFilter#select
 	 */
+	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 
 		if (element instanceof IFile) {

@@ -39,10 +39,12 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 	// "php-trait-statement"; //$NON-NLS-1$
 	public static final String PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID = "php-class-members"; //$NON-NLS-1$
 
+	@Override
 	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, offset, length, sourceModule);
 	}
 
+	@Override
 	public ScriptTemplateContext createContext(IDocument document, Position position, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, position, sourceModule);
 	}

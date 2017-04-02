@@ -124,6 +124,7 @@ public class DeleteModifications extends RefactoringModifications {
 		return resourcesCollector;
 	}
 
+	@Override
 	public void buildDelta(IResourceChangeDescriptionFactory deltaFactory) {
 		for (Iterator iter = fDelete.iterator(); iter.hasNext();) {
 			Object element = iter.next();
@@ -134,6 +135,7 @@ public class DeleteModifications extends RefactoringModifications {
 		getResourceModifications().buildDelta(deltaFactory);
 	}
 
+	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor owner,
 			String[] natures, SharableParticipants shared) {
 		List result = new ArrayList();

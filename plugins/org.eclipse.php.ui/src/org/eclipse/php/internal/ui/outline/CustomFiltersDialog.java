@@ -94,6 +94,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 
+	@Override
 	protected void configureShell(Shell shell) {
 		setTitle(FilterMessages.CustomFiltersDialog_title);
 		setMessage(FilterMessages.CustomFiltersDialog_filterList_label);
@@ -108,6 +109,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		initializeDialogUnits(parent);
 		// create a composite with standard margins and spacing
@@ -144,6 +146,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		fUserDefinedPatterns.setEnabled(fEnablePatterns);
 		info.setEnabled(fEnablePatterns);
 		fEnableUserDefinedPatterns.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean state = fEnableUserDefinedPatterns.getSelection();
 				fUserDefinedPatterns.setEnabled(state);
@@ -192,6 +195,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		data.heightHint = convertHeightInCharsToPixels(3);
 		description.setLayoutData(data);
 		fCheckBoxList.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
@@ -207,6 +211,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 			 * org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged
 			 * (org.eclipse.jface.viewers.CheckStateChangedEvent)
 			 */
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				Object element = event.getElement();
 				if (element instanceof FilterDescriptor) {
@@ -237,6 +242,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, label, false);
 		SWTUtil.setButtonDimensionHint(selectButton);
 		SelectionListener listener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fCheckBoxList.setAllChecked(true);
 				fFilterDescriptorChangeHistory.clear();
@@ -251,6 +257,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, label, false);
 		SWTUtil.setButtonDimensionHint(deselectButton);
 		listener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fCheckBoxList.setAllChecked(false);
 				fFilterDescriptorChangeHistory.clear();
@@ -267,6 +274,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 			fCheckBoxList.setChecked(itemsToCheck.next(), true);
 	}
 
+	@Override
 	protected void okPressed() {
 		if (fBuiltInFilters != null) {
 			ArrayList<FilterDescriptor> result = new ArrayList<FilterDescriptor>();
@@ -281,10 +289,12 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private ILabelProvider createLabelPrivder() {
 		return new LabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof FilterDescriptor)
 					return ((FilterDescriptor) element).getName();

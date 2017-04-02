@@ -37,10 +37,12 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.SaveParticipa
 
 public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListener {
 
+	@Override
 	public String getName() {
 		return "Remove trailing whitespaces"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getId() {
 		return ID;
 	}
@@ -74,11 +76,13 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 		ignoreEmptyLines = Boolean.parseBoolean(ignoreEmptyPref);
 	}
 
+	@Override
 	public boolean isEnabled(ISourceModule compilationUnit) {
 		return new PreferencesLookupDelegate(compilationUnit.getScriptProject().getProject()).getBoolean(PHPUiPlugin.ID,
 				EDITOR_SAVE_PARTICIPANT_PREFIX + ID);
 	}
 
+	@Override
 	public boolean needsChangedRegions(ISourceModule compilationUnit) throws CoreException {
 		return false;
 	}
@@ -112,6 +116,7 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 		return multiEdit;
 	}
 
+	@Override
 	public void saved(ISourceModule compilationUnit, IRegion[] changedRegions, IProgressMonitor monitor)
 			throws CoreException {
 		IScriptProject project = compilationUnit.getScriptProject();

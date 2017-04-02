@@ -100,6 +100,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public List getChildren(Object element) {
 		if (children == null) {
 			initialize();
@@ -111,6 +112,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public InputStream getContents(Object element) {
 		try {
 			return tarFile.getInputStream((PharEntry) element);
@@ -137,6 +139,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public String getFullPath(Object element) {
 		return stripPath(((PharEntry) element).getName());
 	}
@@ -144,6 +147,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public String getLabel(Object element) {
 		if (element.equals(root)) {
 			return ((PharEntry) element).getName();
@@ -157,6 +161,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	 * 
 	 * @return TarEntry entry
 	 */
+	@Override
 	public Object getRoot() {
 		return root;
 	}
@@ -176,6 +181,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	 * @see org.eclipse.ui.internal.wizards.datatransfer.
 	 * ILeveledImportStructureProvider #closeArchive()
 	 */
+	@Override
 	public boolean closeArchive() {
 		try {
 			getPharFile().close();
@@ -218,6 +224,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public boolean isFolder(Object element) {
 		return ((PharEntry) element).isDirectory();
 	}
@@ -245,10 +252,12 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 		return path;
 	}
 
+	@Override
 	public void setStrip(int level) {
 		stripLevel = level;
 	}
 
+	@Override
 	public int getStrip() {
 		return stripLevel;
 	}

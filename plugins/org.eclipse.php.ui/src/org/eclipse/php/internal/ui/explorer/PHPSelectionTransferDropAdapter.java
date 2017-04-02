@@ -56,6 +56,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean performDrop(Object data) {
 		try {
 			switch (getCurrentOperation()) {
@@ -150,10 +151,12 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	// ---- TransferDropTargetListener interface
 	// ---------------------------------------
 
+	@Override
 	public Transfer getTransfer() {
 		return LocalSelectionTransfer.getTransfer();
 	}
 
+	@Override
 	public boolean isEnabled(DropTargetEvent event) {
 		Object target = event.item != null ? event.item.getData() : null;
 		if (target == null)
@@ -164,11 +167,13 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	// ---- Actual DND
 	// -----------------------------------------------------------------
 
+	@Override
 	public void dragEnter(DropTargetEvent event) {
 		clear();
 		super.dragEnter(event);
 	}
 
+	@Override
 	public void dragLeave(DropTargetEvent event) {
 		clear();
 		super.dragLeave(event);
@@ -187,6 +192,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
 		return determineOperation(target, operation, transferType,
 				DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY) != DND.DROP_NONE;
@@ -195,6 +201,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected int determineOperation(Object target, int operation, TransferData transferType, int operations) {
 		int result = internalDetermineOperation(target, operation, operations);
 
@@ -292,6 +299,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 		return false;
 	}
 
+	@Override
 	protected void initializeSelection() {
 		if (fElements != null)
 			return;
@@ -305,6 +313,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 		fElements = ((IStructuredSelection) s).toList();
 	}
 
+	@Override
 	protected ISelection getSelection() {
 		return fSelection;
 	}
@@ -407,6 +416,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected int getCurrentLocation() {
 		if (getFeedbackEnabled()) {
 			return super.getCurrentLocation();

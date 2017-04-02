@@ -68,6 +68,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		this.explicit = explicit;
 	}
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		document = viewer.getDocument();
 		try {
@@ -263,6 +264,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		return null;
 	}
 
+	@Override
 	protected boolean isValidPrefix(String prefix) {
 		if ((!explicit || isSelection) && (prefix == null || prefix.length() == 0)) {
 			return false;
@@ -333,6 +335,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	// ICompletionProposal[matches.size()]);
 	// }
 
+	@Override
 	protected String extractPrefix(ITextViewer viewer, int offset) {
 		int i = offset;
 		IDocument document = viewer.getDocument();
@@ -356,6 +359,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		}
 	}
 
+	@Override
 	protected Template[] getTemplates(String contextTypeId) {
 		Template templates[] = null;
 		TemplateStore store = getTemplateStore();
@@ -365,6 +369,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		return templates;
 	}
 
+	@Override
 	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
 
 		// For now always return the context type for ALL PHP regions
@@ -377,6 +382,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		return type;
 	}
 
+	@Override
 	protected Image getImage(Template template) {
 		return PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_TEMPLATE);
 	}
@@ -393,11 +399,13 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		this.contextTypeId = contextTypeId;
 	}
 
+	@Override
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
 			int relevance) {
 		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
+	@Override
 	protected IInformationControlCreator getInformationControlCreator() {
 		int orientation = Window.getDefaultOrientation();
 		IEditorPart editor = getContext().getEditor();
@@ -412,6 +420,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	 * @seeorg.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#
 	 * getContextTypeId()
 	 */
+	@Override
 	protected String getContextTypeId() {
 		return contextTypeId;
 	}
@@ -421,6 +430,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore
 	 * ()
 	 */
+	@Override
 	protected char[] getIgnore() {
 		return IGNORE;
 	}
@@ -429,6 +439,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	 * @seeorg.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#
 	 * getTemplateAccess()
 	 */
+	@Override
 	protected ScriptTemplateAccess getTemplateAccess() {
 		return PhpTemplateAccess.getInstance();
 	}

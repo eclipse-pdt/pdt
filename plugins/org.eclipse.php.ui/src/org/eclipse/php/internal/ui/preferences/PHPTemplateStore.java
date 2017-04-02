@@ -42,6 +42,7 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 		super(registry, store, key);
 	}
 
+	@Override
 	public void add(TemplatePersistenceData data) {
 		Template template = data.getTemplate();
 		if (template.getName().equals("")) { //$NON-NLS-1$

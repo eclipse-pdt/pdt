@@ -53,6 +53,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
@@ -61,6 +62,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	/*
 	 * @see PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 		Control result = fVariableBlock.createContents(parent);
 		Dialog.applyDialogFont(result);
@@ -71,12 +73,14 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	/*
 	 * @see IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
 	/*
 	 * @see PreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		fVariableBlock.performDefaults();
 		super.performDefaults();
@@ -85,6 +89,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	/*
 	 * @see PreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		try {
 			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
@@ -99,6 +104,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	 * 
 	 * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		// check if the stored settings have changed
 		if (visible) {

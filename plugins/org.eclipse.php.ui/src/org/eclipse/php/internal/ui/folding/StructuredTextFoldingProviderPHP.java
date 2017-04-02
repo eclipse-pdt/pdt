@@ -251,14 +251,17 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			this.document = document;
 		}
 
+		@Override
 		public void resetTo(int start) {
 			this.startElement = start;
 		}
 
+		@Override
 		public int getCurrentCommentStartPosition() {
 			return start;
 		}
 
+		@Override
 		public int computePreviousComment() {
 			start = startElement - 1;
 
@@ -294,6 +297,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			}
 		}
 
+		@Override
 		public int getCurrentCommentEndPosition() {
 			return this.end;
 		}
@@ -344,6 +348,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		/*
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString() {
 			return "PhpProjectionAnnotation:\n" + //$NON-NLS-1$
 					"\telement: \t" + fJavaElement.toString() + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
@@ -373,6 +378,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * Matches comments.
 	 */
 	private static final class CommentFilter implements Filter {
+		@Override
 		public boolean match(PhpProjectionAnnotation annotation) {
 			if (annotation.isComment() && !annotation.isMarkedDeleted()) {
 				return true;
@@ -385,6 +391,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * Matches members.
 	 */
 	private static final class MemberFilter implements Filter {
+		@Override
 		public boolean match(PhpProjectionAnnotation annotation) {
 			if (!annotation.isComment() && !annotation.isMarkedDeleted()) {
 				IModelElement element = annotation.getElement();
@@ -411,6 +418,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			fMatchCollapsed = matchCollapsed;
 		}
 
+		@Override
 		public boolean match(PhpProjectionAnnotation annotation) {
 			boolean stateMatch = fMatchCollapsed == annotation.isCollapsed();
 			if (stateMatch && !annotation.isComment() && !annotation.isMarkedDeleted()) {
@@ -429,6 +437,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(org.
 		 * eclipse .jdt.core.ElementChangedEvent)
 		 */
+		@Override
 		public void elementChanged(ElementChangedEvent e) {
 			IModelElementDelta delta = findElement(fInput, e.getDelta());
 			if (delta != null
@@ -548,6 +557,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeFoldingRegions(org.eclipse.jface.text.IDocument)
 		 */
+		@Override
 		public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
 			DocumentCharacterIterator sequence = new DocumentCharacterIterator(document, offset, offset + length);
 			int prefixEnd = 0;
@@ -610,6 +620,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeCaptionOffset(org.eclipse.jface.text.IDocument)
 		 */
+		@Override
 		public int computeCaptionOffset(IDocument document) {
 			DocumentCharacterIterator sequence = new DocumentCharacterIterator(document, offset, offset + length);
 			return findFirstContent(sequence, 0);
@@ -640,6 +651,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeFoldingRegions(org.eclipse.jface.text.IDocument)
 		 */
+		@Override
 		public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
 			int nameStart = offset;
 			try {
@@ -702,6 +714,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeCaptionOffset(org.eclipse.jface.text.IDocument)
 		 */
+		@Override
 		public int computeCaptionOffset(IDocument document) throws BadLocationException {
 			int nameStart = offset;
 			try {
@@ -751,6 +764,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionListener#
 		 * projectionEnabled()
 		 */
+		@Override
 		public void projectionEnabled() {
 			handleProjectionEnabled();
 		}
@@ -759,6 +773,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionListener#
 		 * projectionDisabled()
 		 */
+		@Override
 		public void projectionDisabled() {
 			handleProjectionDisabled();
 		}
@@ -820,6 +835,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * @param viewer
 	 *            {@inheritDoc}
 	 */
+	@Override
 	public void install(ProjectionViewer viewer) {
 		Assert.isLegal(viewer != null);
 
@@ -844,6 +860,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * Subclasses may extend.
 	 * </p>
 	 */
+	@Override
 	public void uninstall() {
 		internalUninstall();
 	}
@@ -990,6 +1007,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider#initialize
 	 * ()
 	 */
+	@Override
 	public final void initialize() {
 		if (viewer != null) {
 			fDocument = viewer.getDocument();
@@ -1734,6 +1752,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		Comparator comparator = new Comparator() {
+			@Override
 			public int compare(Object o1, Object o2) {
 				return ((Tuple) o1).position.getOffset() - ((Tuple) o2).position.getOffset();
 			}
@@ -1750,6 +1769,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	public final void collapseMembers() {
 		modifyFiltered(fMemberFilter, false);
 	}
@@ -1759,6 +1779,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	public final void collapseComments() {
 		modifyFiltered(fCommentFilter, false);
 	}
@@ -1768,6 +1789,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension
 	 * #collapseElements(org.eclipse.jdt.core.IModelElement[])
 	 */
+	@Override
 	public final void collapseElements(IModelElement[] elements) {
 		Set<IModelElement> set = new HashSet<IModelElement>(Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, false), false);
@@ -1778,6 +1800,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension
 	 * #expandElements(org.eclipse.jdt.core.IModelElement[])
 	 */
+	@Override
 	public final void expandElements(IModelElement[] elements) {
 		Set<IModelElement> set = new HashSet<IModelElement>(Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, true), true);
@@ -1827,6 +1850,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#
 	 * projectionDisabled()
 	 */
+	@Override
 	public void projectionDisabled() {
 		handleProjectionDisabled();
 	}
@@ -1837,6 +1861,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#
 	 * projectionEnabled()
 	 */
+	@Override
 	public void projectionEnabled() {
 		handleProjectionEnabled();
 	}

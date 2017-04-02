@@ -31,11 +31,13 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(Quote quote) {
 			isInQuote = true;
 			return true;
 		}
 
+		@Override
 		public void endVisit(Quote quote) {
 			isInQuote = false;
 		}
@@ -97,6 +99,7 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 0, 192).setItalicByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.ConstantHighlighting_0;
 	}

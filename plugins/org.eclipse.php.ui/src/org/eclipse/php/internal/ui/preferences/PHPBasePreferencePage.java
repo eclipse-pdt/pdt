@@ -61,6 +61,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 	/*
 	 * @see IWorkbenchPreferencePage#init(IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -78,6 +79,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 		return button;
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -104,6 +106,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 	/*
 	 * @see PreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 		for (int i = 0; i < fCheckBoxes.size(); i++) {
@@ -127,6 +130,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 	/*
 	 * @see IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		IPreferenceStore store = getPreferenceStore();
 		for (int i = 0; i < fCheckBoxes.size(); i++) {

@@ -32,6 +32,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 		/**
 		 * skip static call invocation, and add to changes list the global calls
 		 */
+		@Override
 		public boolean visit(FunctionInvocation functionInvocation) {
 			final Expression functionName = functionInvocation.getFunctionName().getName();
 			final int invocationParent = functionInvocation.getParent().getType();
@@ -79,6 +80,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(false).setDefaultTextColor(new RGB(0, 0, 192));
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.InternalFunctionHighlighting_0;
 	}

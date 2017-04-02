@@ -69,6 +69,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		 *      org.eclipse.swt.widgets.Canvas,
 		 *      org.eclipse.swt.graphics.Rectangle)
 		 */
+		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
 			/* workaround for BUG85874 */
 			/*
@@ -97,6 +98,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		 * @seeorg.eclipse.jface.text.source.projection.ProjectionAnnotation#
 		 * markCollapsed()
 		 */
+		@Override
 		public void markCollapsed() {
 			/* workaround for BUG85874 */
 			// do not mark collapsed if annotation is not visible
@@ -175,10 +177,12 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		return anno;
 	}
 
+	@Override
 	public boolean isAdapterForType(Object type) {
 		return type == ProjectionModelNodeAdapterHTML.class;
 	}
 
+	@Override
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue,
 			Object newValue, int pos) {
 		// check if folding is even enabled, if not, just ignore notifyChanged

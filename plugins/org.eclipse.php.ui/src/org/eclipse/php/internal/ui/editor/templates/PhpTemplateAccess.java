@@ -36,6 +36,7 @@ public class PhpTemplateAccess extends ScriptTemplateAccess {
 	 * @see
 	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getPreferenceStore()
 	 */
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
@@ -44,6 +45,7 @@ public class PhpTemplateAccess extends ScriptTemplateAccess {
 	 * @see
 	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getContextTypeId()
 	 */
+	@Override
 	protected String getContextTypeId() {
 		return PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
 	}
@@ -53,6 +55,7 @@ public class PhpTemplateAccess extends ScriptTemplateAccess {
 	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getCustomTemplatesKey
 	 * ()
 	 */
+	@Override
 	protected String getCustomTemplatesKey() {
 		return CUSTOM_TEMPLATES_KEY;
 	}

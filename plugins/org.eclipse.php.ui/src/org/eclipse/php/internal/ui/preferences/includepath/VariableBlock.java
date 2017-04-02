@@ -70,6 +70,7 @@ public class VariableBlock {
 		fVariablesList.enableButton(1, false);
 
 		fVariablesList.setViewerSorter(new ViewerSorter() {
+			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof IPVariableElement && e2 instanceof IPVariableElement) {
 					return ((IPVariableElement) e1).getName().compareTo(((IPVariableElement) e2).getName());
@@ -118,6 +119,7 @@ public class VariableBlock {
 
 		// -------- IListAdapter --------
 
+		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			switch (index) {
 			case 0: /* add */
@@ -130,10 +132,12 @@ public class VariableBlock {
 			}
 		}
 
+		@Override
 		public void selectionChanged(ListDialogField field) {
 			doSelectionChanged(field);
 		}
 
+		@Override
 		public void doubleClicked(ListDialogField field) {
 			if (fInPreferencePage) {
 				List selected = field.getSelectedElements();
@@ -145,6 +149,7 @@ public class VariableBlock {
 
 		// ---------- IDialogFieldListener --------
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 		}
 
@@ -269,6 +274,7 @@ public class VariableBlock {
 			final VariableBlockRunnable runnable = new VariableBlockRunnable(removedVariables, changedElements,
 					unchangedElements, needsBuild);
 			Job buildJob = new Job(PHPUIMessages.VariableBlock_job_description) {
+				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						runnable.setVariables(monitor);
@@ -335,6 +341,7 @@ public class VariableBlock {
 		/*
 		 * @see IRunnableWithProgress#run(IProgressMonitor)
 		 */
+		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			monitor.beginTask(PHPUIMessages.VariableBlock_operation_desc, fDoBuild ? 2 : 1);
 			try {

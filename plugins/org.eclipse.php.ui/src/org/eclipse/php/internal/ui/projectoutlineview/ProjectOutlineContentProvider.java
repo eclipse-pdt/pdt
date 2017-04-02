@@ -62,6 +62,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		fPendingUpdates = null;
 	}
 
+	@Override
 	protected Object getViewerInput() {
 		return fInput;
 	}
@@ -69,6 +70,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	/*
 	 * (non-Javadoc) Method declared on IElementChangedListener.
 	 */
+	@Override
 	public void elementChanged(final ElementChangedEvent event) {
 		final ArrayList runnables = new ArrayList();
 		try {
@@ -105,6 +107,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 					}
 				}
 				ctrl.getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						runPendingUpdates();
 					}
@@ -117,6 +120,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	 * Run all of the runnables that are the widget updates. Must be called in
 	 * the display thread.
 	 */
+	@Override
 	public void runPendingUpdates() {
 		Collection pendingUpdates;
 		synchronized (this) {
@@ -159,6 +163,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		return true;
 	}
 
+	@Override
 	public Object[] getChildren(final Object element) {
 
 		if (element instanceof IScriptProject) {
@@ -201,6 +206,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	/*
 	 * (non-Javadoc) Method declared on IContentProvider.
 	 */
+	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, Object newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
 		if (null != newInput && newInput instanceof Model) {
@@ -258,6 +264,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			if (element instanceof IOpenable) {
 				final IPath removedPath = element.getPath();
 				fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						for (TreeItem node : fViewer.getTree().getItems()) {
 							// iterating on all 1st level (classes, constants,

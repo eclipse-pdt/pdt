@@ -44,6 +44,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		setTitle(PHPUIMessages.PHPFormatterPreferencePage_title);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fConfigurationBlock = getFormatterPreferencesBlock();
@@ -79,6 +80,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		return prefBlock;
 	}
 
+	@Override
 	protected Control createPreferenceContent(Composite composite) {
 		return fConfigurationBlock.createContents(composite);
 	}
@@ -93,18 +95,22 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		return control;
 	}
 
+	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return fConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
+	@Override
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
 
+	@Override
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
 
+	@Override
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
@@ -112,6 +118,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		if (fConfigurationBlock != null) {
@@ -119,6 +126,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		}
 	}
 
+	@Override
 	public boolean performOk() {
 		if (fConfigurationBlock != null && !fConfigurationBlock.performOk()) {
 			return false;
@@ -126,12 +134,14 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		return super.performOk();
 	}
 
+	@Override
 	public void performApply() {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.performApply();
 		}
 	}
 
+	@Override
 	public void dispose() {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.dispose();
@@ -139,6 +149,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		super.dispose();
 	}
 
+	@Override
 	public void setElement(IAdaptable element) {
 		super.setElement(element);
 		setDescription(null); // no description for property page

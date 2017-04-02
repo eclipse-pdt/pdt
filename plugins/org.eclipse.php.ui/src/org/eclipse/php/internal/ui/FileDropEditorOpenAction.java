@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.ui.internal.FileDropAction;
 
 public class FileDropEditorOpenAction extends FileDropAction {
 
+	@Override
 	public boolean run(DropTargetEvent event, IEditorPart targetEditor) {
 
 		if (!(targetEditor instanceof PHPStructuredEditor))
@@ -39,6 +40,7 @@ public class FileDropEditorOpenAction extends FileDropAction {
 
 		// default behavior
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < fileNames.length; ++i) {
 					try {

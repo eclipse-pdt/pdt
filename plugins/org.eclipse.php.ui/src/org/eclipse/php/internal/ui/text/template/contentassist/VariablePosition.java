@@ -43,6 +43,7 @@ public class VariablePosition extends ProposalPosition {
 	 * @see
 	 * org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof VariablePosition && super.equals(o)) {
 			return fGuess.equals(((VariablePosition) o).fGuess);
@@ -53,6 +54,7 @@ public class VariablePosition extends ProposalPosition {
 	/*
 	 * @see org.eclipse.jface.text.link.ProposalPosition#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return super.hashCode() | fGuess.hashCode();
 	}
@@ -60,6 +62,7 @@ public class VariablePosition extends ProposalPosition {
 	/*
 	 * @see org.eclipse.jface.text.link.ProposalPosition#getChoices()
 	 */
+	@Override
 	public ICompletionProposal[] getChoices() {
 		return fGuess.getProposals(fVariable, offset, length);
 	}

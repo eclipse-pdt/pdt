@@ -126,6 +126,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	/**
 	 * This method is called upon plug-in activation
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
@@ -141,12 +142,14 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	void initializeAfterStart(final BundleContext context) {
 		CorrectionCommandInstaller.registerCommands();
 		Job job = new Job("") { //$NON-NLS-1$
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 
 				libraryFolderChangeListener = new LibraryFolderChangeListener();
 				LibraryFolderManager.getInstance().addListener(libraryFolderChangeListener);
 
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						processCommandLine(context);
 					}
@@ -188,6 +191,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 
@@ -416,6 +420,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 				 * @seeorg.eclipse.ui.texteditor.ConfigurationElementSorter#
 				 * getConfigurationElement(java.lang.Object)
 				 */
+				@Override
 				public IConfigurationElement getConfigurationElement(Object object) {
 					return ((PHPEditorTextHoverDescriptor) object).getConfigurationElement();
 				}

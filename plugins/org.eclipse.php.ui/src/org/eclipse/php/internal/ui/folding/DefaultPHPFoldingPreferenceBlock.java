@@ -44,9 +44,11 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	private OverlayKey[] fKeys;
 	private Map fCheckBoxes = new HashMap();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fOverlayStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
@@ -82,6 +84,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	 * 
 	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public Control createControl(Composite composite) {
 		fOverlayStore.load();
 		fOverlayStore.start();
@@ -140,6 +143,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	 * 
 	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#performOk()
 	 */
+	@Override
 	public void performOk() {
 		fOverlayStore.propagate();
 	}
@@ -149,6 +153,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	 * 
 	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#initialize()
 	 */
+	@Override
 	public void initialize() {
 		initializeFields();
 	}
@@ -158,6 +163,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	 * 
 	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#performDefaults()
 	 */
+	@Override
 	public void performDefaults() {
 		fOverlayStore.loadDefaults();
 		initializeFields();
@@ -168,6 +174,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	 * 
 	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#dispose()
 	 */
+	@Override
 	public void dispose() {
 		fOverlayStore.stop();
 	}

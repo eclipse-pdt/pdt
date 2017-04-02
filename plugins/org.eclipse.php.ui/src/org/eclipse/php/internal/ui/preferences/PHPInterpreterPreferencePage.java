@@ -35,6 +35,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 		setTitle(PHPUIMessages.PHPInterpreterPreferencePage_title);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fConfigurationBlock = new PHPVersionConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
@@ -45,22 +46,27 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 
 	}
 
+	@Override
 	protected Control createPreferenceContent(Composite composite) {
 		return fConfigurationBlock.createContents(composite);
 	}
 
+	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return fConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
+	@Override
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
 
+	@Override
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
 
+	@Override
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
@@ -71,6 +77,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		if (fConfigurationBlock != null) {
@@ -81,6 +88,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		if (fConfigurationBlock != null && !fConfigurationBlock.performOk()) {
 			return false;
@@ -91,6 +99,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performApply()
 	 */
+	@Override
 	public void performApply() {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.performApply();
@@ -102,6 +111,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	 * 
 	 * @see org.eclipse.jface.dialogs.DialogPage#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.dispose();
@@ -115,6 +125,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * setElement (org.eclipse.core.runtime.IAdaptable)
 	 */
+	@Override
 	public void setElement(IAdaptable element) {
 		super.setElement(element);
 		setDescription(null); // no description for property page

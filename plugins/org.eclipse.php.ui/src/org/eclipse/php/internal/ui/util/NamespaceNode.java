@@ -31,6 +31,7 @@ public class NamespaceNode extends SourceType {
 		super((ModelElement) modelElement, name);
 	}
 
+	@Override
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
 		List<IModelElement> children = new LinkedList<IModelElement>();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
@@ -42,10 +43,12 @@ public class NamespaceNode extends SourceType {
 		return children.toArray(new IModelElement[children.size()]);
 	}
 
+	@Override
 	public int getFlags() throws ModelException {
 		return Modifiers.AccNameSpace;
 	}
 
+	@Override
 	public boolean exists() {
 		return true;
 	}

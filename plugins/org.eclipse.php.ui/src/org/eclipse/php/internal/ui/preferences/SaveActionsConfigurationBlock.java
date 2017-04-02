@@ -89,6 +89,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		removeTrailingWsCheckbox = new Button(whiteSpacesComposite, SWT.CHECK);
 		removeTrailingWsCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_0);
 		removeTrailingWsCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fRemoveWhitespaces = !fRemoveWhitespaces;
 				updateValues();
@@ -103,6 +104,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		allCheckbox = new Button(removeWhitespacesGroup, SWT.RADIO);
 		allCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_2);
 		allCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fAllLines = true;
 				fIgnoreEmptyLines = false;
@@ -112,6 +114,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		ignoreEmptyCheckbox = new Button(removeWhitespacesGroup, SWT.RADIO);
 		ignoreEmptyCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_3);
 		ignoreEmptyCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fAllLines = false;
 				fIgnoreEmptyLines = true;
@@ -122,6 +125,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		formatOnSaveCheckbox = new Button(whiteSpacesComposite, SWT.CHECK);
 		formatOnSaveCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_1);
 		formatOnSaveCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fFormatOnSave = !fFormatOnSave;
 				updateValues();
@@ -133,6 +137,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		return whiteSpacesComposite;
 	}
 
+	@Override
 	protected void updateControls() {
 		initValues();
 		updateValues();

@@ -50,6 +50,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 		// -------- IListAdapter --------
 
+		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			switch (index) {
 			case IDX_EXTEND: /* extend */
@@ -58,16 +59,19 @@ public class NewVariableEntryDialog extends StatusDialog {
 			}
 		}
 
+		@Override
 		public void selectionChanged(ListDialogField field) {
 			doSelectionChanged();
 		}
 
+		@Override
 		public void doubleClicked(ListDialogField field) {
 			doDoubleClick();
 		}
 
 		// ---------- IDialogFieldListener --------
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			if (field == fConfigButton) {
 				configButtonPressed();
@@ -139,6 +143,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 * 
 	 * @since 3.4
 	 */
+	@Override
 	protected boolean isResizable() {
 		return true;
 	}
@@ -162,6 +167,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 * 
 	 * @see Window#configureShell(Shell)
 	 */
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		// TODO add help for this dialog
@@ -174,6 +180,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
 	 */
+	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
 		return PHPUiPlugin.getDefault()
 				.getDialogSettings()/*
@@ -189,6 +196,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 * org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		initializeDialogUnits(parent);
 

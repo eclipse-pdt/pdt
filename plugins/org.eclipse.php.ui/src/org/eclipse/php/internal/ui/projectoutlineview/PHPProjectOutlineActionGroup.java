@@ -41,6 +41,7 @@ public class PHPProjectOutlineActionGroup extends PHPExplorerActionGroup {
 		fToggleLinkingAction = new ToggleLinkingAction(part);
 	}
 
+	@Override
 	protected void fillToolBar(IToolBarManager toolBar) {
 
 		toolBar.add(new Separator());

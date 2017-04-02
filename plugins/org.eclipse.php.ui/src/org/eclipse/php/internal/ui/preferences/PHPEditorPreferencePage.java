@@ -29,6 +29,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 	private Button useSmartHomeEndCB;
 	private Button useSmartSubWordNavigation;
 
+	@Override
 	protected Control createContents(Composite parent) {
 		// TODO Auto-generated method stub
 		createHeader(parent);
@@ -55,12 +56,14 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 		useSmartSubWordNavigation.setText(PHPUIMessages.PHPEditorPreferencePage_0);
 	}
 
+	@Override
 	protected void performDefaults() {
 		useSmartHomeEndCB.setSelection(true);
 		useSmartSubWordNavigation.setSelection(true);
 		super.performDefaults();
 	}
 
+	@Override
 	public boolean performOk() {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 		store.setValue(PreferenceConstants.USE_SMART_HOME_END, useSmartHomeEndCB.getSelection());
@@ -74,6 +77,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 		Link link = new Link(contents, SWT.NONE);
 		link.setText(text);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(shell, "org.eclipse.ui.preferencePages.GeneralTextEditor", //$NON-NLS-1$
 						null, null);

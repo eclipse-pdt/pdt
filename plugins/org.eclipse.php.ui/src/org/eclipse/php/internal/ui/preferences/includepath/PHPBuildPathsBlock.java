@@ -65,10 +65,12 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			super.dispose();
 		}
 
+		@Override
 		public void elementChanged(ElementChangedEvent event) {
 			PHPBuildPathsBlock.this.updateUI();
 		}
 
+		@Override
 		public void update(boolean changed) {
 			try {
 				configureScriptProject(new NullProgressMonitor());
@@ -96,6 +98,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		return false;
 	}
 
+	@Override
 	public Control createControl(Composite parent) {
 		fSWTWidget = parent;
 		final Composite container = new BuildPathComposite(parent, SWT.NONE);
@@ -125,6 +128,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		return gd;
 	}
 
+	@Override
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		removeEtnries();
 		adaptIncludePath();
@@ -217,6 +221,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		return StatusUtil.getMostSevere(new IStatus[] { fPathStatus, fBuildPathStatus });
 	}
 
+	@Override
 	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
 		fCurrScriptProject = jproject;
 		boolean projectExists = false;

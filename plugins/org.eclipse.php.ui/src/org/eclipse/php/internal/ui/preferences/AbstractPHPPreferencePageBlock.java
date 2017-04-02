@@ -103,10 +103,12 @@ public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePa
 		return null;
 	}
 
+	@Override
 	public void setComparableName(String name) {
 		this.comparableName = name;
 	}
 
+	@Override
 	public String getComparableName() {
 		return comparableName;
 	}

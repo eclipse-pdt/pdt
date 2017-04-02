@@ -83,6 +83,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		jsContentProvider = new StandardJavaScriptElementContentProvider(true);
 	}
 
+	@Override
 	public void setIsFlatLayout(final boolean state) {
 		super.setIsFlatLayout(false);
 	}
@@ -98,6 +99,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return model.getForeignResources();
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IPath) {
 			IPath path = (IPath) parentElement;
@@ -450,10 +452,12 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			fIncludePath = entries;
 		}
 
+		@Override
 		public String getLabel() {
 			return PHPUIMessages.IncludePathExplorerNode_label;
 		}
 
+		@Override
 		public IAdaptable[] getChildren() {
 			return fIncludePath;
 		}
@@ -501,6 +505,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	/**
 	 * This method overrides the
 	 */
+	@Override
 	public void refresh(IProject project) {
 		Collection<Runnable> runnables = new ArrayList<Runnable>();
 		final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(1);
@@ -520,6 +525,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		}
 	}
 
+	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		IJavaScriptElementDelta[] affectedChildren = event.getDelta().getAffectedChildren();
 		final ArrayList<Runnable> runnables = new ArrayList<Runnable>();

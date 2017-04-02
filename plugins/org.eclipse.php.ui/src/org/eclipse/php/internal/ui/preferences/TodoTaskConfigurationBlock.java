@@ -68,6 +68,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		 * @see
 		 * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object element) {
 			return null; // JavaPluginImages.get(JavaPluginImages.IMG_OBJS_REFACTORING_INFO);
 		}
@@ -78,6 +79,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		 * @see
 		 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
+		@Override
 		public String getText(Object element) {
 			return getColumnText(element, 0);
 		}
@@ -89,6 +91,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
@@ -100,6 +103,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			TodoTask task = (TodoTask) element;
 			if (columnIndex == 0) {
@@ -127,6 +131,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		 * @see
 		 * org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
+		@Override
 		public Font getFont(Object element) {
 			if (isDefaultTask((TodoTask) element)) {
 				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
@@ -136,6 +141,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	}
 
 	private static class TodoTaskSorter extends ViewerSorter {
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			return collator.compare(((TodoTask) e1).name, ((TodoTask) e2).name);
 		}
@@ -215,28 +221,33 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 			return selectedElements.size() == 1 && !isDefaultTask((TodoTask) selectedElements.get(0));
 		}
 
+		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			doTodoButtonPressed(index);
 		}
 
+		@Override
 		public void selectionChanged(ListDialogField field) {
 			List selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selectedElements));
 			field.enableButton(IDX_DEFAULT, canSetToDefault(selectedElements));
 		}
 
+		@Override
 		public void doubleClicked(ListDialogField field) {
 			if (canEdit(field.getSelectedElements())) {
 				doTodoButtonPressed(IDX_EDIT);
 			}
 		}
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			updateModel(field);
 		}
 
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		setShell(parent.getShell());
 
@@ -272,6 +283,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		return markersComposite;
 	}
 
+	@Override
 	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		if (!areSettingsEnabled()) {
 			return;
@@ -318,11 +330,13 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		}
 	}
 
+	@Override
 	public void useProjectSpecificSettings(boolean enable) {
 		super.useProjectSpecificSettings(enable);
 		fTodoTasksList.setEnabled(enable);
 	}
 
+	@Override
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		String title = PHPUIMessages.TodoTaskConfigurationBlock_needsbuild_title;
 		String message;
@@ -340,6 +354,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
 	 * updateControls()
 	 */
+	@Override
 	protected void updateControls() {
 		unpackTodoTasks();
 	}

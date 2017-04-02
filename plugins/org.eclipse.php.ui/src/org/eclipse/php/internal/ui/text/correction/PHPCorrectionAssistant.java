@@ -63,14 +63,17 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		setInformationControlCreator(getInformationControlCreator());
 
 		addCompletionListener(new ICompletionListener() {
+			@Override
 			public void assistSessionEnded(ContentAssistEvent event) {
 				fIsCompletionActive = false;
 			}
 
+			@Override
 			public void assistSessionStarted(ContentAssistEvent event) {
 				fIsCompletionActive = true;
 			}
 
+			@Override
 			public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
 			}
 		});
@@ -82,6 +85,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 
 	private IInformationControlCreator getInformationControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				return new DefaultInformationControl(parent, DLTKUIPlugin.getAdditionalInfoAffordanceString());
 			}
@@ -94,6 +98,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistant#install(org.
 	 * eclipse .jface.text.ITextViewer)
 	 */
+	@Override
 	public void install(ISourceViewer sourceViewer) {
 		super.install(sourceViewer);
 		fViewer = sourceViewer;
@@ -110,6 +115,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	 * 
 	 * @see org.eclipse.jface.text.contentassist.ContentAssistant#uninstall()
 	 */
+	@Override
 	public void uninstall() {
 		if (fLightBulbUpdater != null) {
 			fLightBulbUpdater.uninstall();
@@ -133,6 +139,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	 * 
 	 * @see IQuickAssistAssistant#showPossibleQuickAssists()
 	 */
+	@Override
 	public String showPossibleQuickAssists() {
 		boolean isReinvoked = false;
 		fIsProblemLocationAvailable = false;
@@ -334,6 +341,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	 * @seeorg.eclipse.jface.text.contentassist.ContentAssistant#
 	 * possibleCompletionsClosed()
 	 */
+	@Override
 	protected void possibleCompletionsClosed() {
 		super.possibleCompletionsClosed();
 		restorePosition();

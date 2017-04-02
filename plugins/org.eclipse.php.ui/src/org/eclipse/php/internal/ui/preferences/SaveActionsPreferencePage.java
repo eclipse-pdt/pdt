@@ -37,6 +37,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fConfigurationBlock = new SaveActionsConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
@@ -58,6 +59,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * createPreferenceContent(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createPreferenceContent(Composite composite) {
 		return fConfigurationBlock.createContents(composite);
 	}
@@ -68,6 +70,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
+	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return fConfigurationBlock.hasProjectSpecificOptions(project);
 	}
@@ -78,6 +81,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * getPreferencePageID()
 	 */
+	@Override
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
@@ -88,6 +92,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * getPropertyPageID()
 	 */
+	@Override
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
@@ -98,6 +103,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
+	@Override
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
@@ -108,6 +114,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		if (fConfigurationBlock != null) {
@@ -118,6 +125,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		if (fConfigurationBlock != null && !fConfigurationBlock.performOk()) {
 			return false;
@@ -128,6 +136,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performApply()
 	 */
+	@Override
 	public void performApply() {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.performApply();
@@ -139,6 +148,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * 
 	 * @see org.eclipse.jface.dialogs.DialogPage#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fConfigurationBlock != null) {
 			fConfigurationBlock.dispose();
@@ -152,6 +162,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * setElement (org.eclipse.core.runtime.IAdaptable)
 	 */
+	@Override
 	public void setElement(IAdaptable element) {
 		super.setElement(element);
 		setDescription(null); // no description for property page

@@ -73,15 +73,18 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		fTextControls = new ArrayList();
 
 		fSelectionListener = new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				controlChanged(e.widget);
 			}
 		};
 
 		fModifyListener = new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				controlModified(e.widget);
 			}
@@ -92,6 +95,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
@@ -110,6 +114,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * createPreferenceContent(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createPreferenceContent(Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -278,6 +283,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
+	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return false;
 	}
@@ -288,6 +294,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * getPreferencePageID()
 	 */
+	@Override
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
@@ -298,6 +305,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * getPropertyPageID()
 	 */
+	@Override
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
@@ -308,6 +316,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
+	@Override
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
@@ -315,6 +324,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 
@@ -337,6 +347,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		IPreferenceStore store = getPreferenceStore();
 		for (int i = 0; i < fRadioButtons.size(); i++) {
@@ -364,6 +375,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performApply()
 	 */
+	@Override
 	public void performApply() {
 		performOk();
 	}
@@ -374,6 +386,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * setElement (org.eclipse.core.runtime.IAdaptable)
 	 */
+	@Override
 	public void setElement(IAdaptable element) {
 		super.setElement(element);
 		setDescription(null); // no description for property page

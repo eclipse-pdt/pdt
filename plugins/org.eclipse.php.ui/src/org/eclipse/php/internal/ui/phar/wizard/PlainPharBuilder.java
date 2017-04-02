@@ -31,6 +31,7 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getId() {
 		return BUILDER_ID;
 	}
@@ -38,6 +39,7 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStubProvider getStubProvider() {
 		return new StubProvider();
 	}
@@ -45,6 +47,7 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void open(PharPackage jarPackage, Shell displayShell, MultiStatus statusMsg) throws CoreException {
 		super.open(jarPackage, displayShell, statusMsg);
 		fJarPackage = jarPackage;
@@ -99,6 +102,7 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void writeFile(IFile resource, IPath destinationPath) throws CoreException {
 		try {
 			fileExporter.write(resource, destinationPath.toString());
@@ -112,6 +116,7 @@ public class PlainPharBuilder extends PharBuilder {
 	 * 
 	 * @throws IOException
 	 */
+	@Override
 	public void writeStub(IStub stub, IProgressMonitor progressMonitor) throws CoreException {
 		try {
 			fileExporter.writeStub(stub);
@@ -124,6 +129,7 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws CoreException {
 		if (fileExporter != null) {
 			try {
@@ -162,6 +168,7 @@ public class PlainPharBuilder extends PharBuilder {
 		}
 	}
 
+	@Override
 	public void writeSignature(IProgressMonitor monitor) throws CoreException {
 		if (fileExporter != null) {
 			try {
@@ -176,6 +183,7 @@ public class PlainPharBuilder extends PharBuilder {
 
 	}
 
+	@Override
 	public void writeFile(IFolder resource, IPath destinationPath) throws CoreException {
 		try {
 			fileExporter.write(resource, destinationPath.toString());

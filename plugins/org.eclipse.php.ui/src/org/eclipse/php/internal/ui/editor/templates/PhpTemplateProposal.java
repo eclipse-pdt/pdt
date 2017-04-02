@@ -29,11 +29,13 @@ public class PhpTemplateProposal extends TemplateProposal implements ICompletion
 		return super.getTemplate();
 	}
 
+	@Override
 	public String getAdditionalProposalInfo() {
 		String additionalInfo = super.getAdditionalProposalInfo();
 		return StringUtils.convertToHTMLContent(additionalInfo);
 	}
 
+	@Override
 	public boolean isAutoInsertable() {
 		return getTemplate().isAutoInsertable();
 	}

@@ -88,6 +88,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(InstanceOfExpression instanceOfExpression) {
 			Expression name = instanceOfExpression.getClassName().getName();
 			if (name instanceof NamespaceName) {
@@ -127,6 +128,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(TraitUseStatement node) {
 			List<NamespaceName> traitList = node.getTraitList();
 			for (NamespaceName namespaceName : traitList) {
@@ -180,6 +182,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(true).setDefaultTextColor(0, 80, 50);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.ClassHighlighting_0;
 	}

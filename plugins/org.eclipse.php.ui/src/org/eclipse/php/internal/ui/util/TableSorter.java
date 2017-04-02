@@ -54,6 +54,7 @@ public class TableSorter {
 		fComparator = comparator;
 		fSelectionAdapters = new HashMap<TableColumn, SelectionAdapter>();
 		fViewerComparator = new ViewerComparator() {
+			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				return compareElements(e1, e2);
 			}
@@ -146,6 +147,7 @@ public class TableSorter {
 
 	protected void addColumnSelectionListener(TableColumn column) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableColumnClicked((TableColumn) e.widget);
 			}

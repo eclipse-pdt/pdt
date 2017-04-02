@@ -65,10 +65,12 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	// ---- IRefactoringProcessor
 	// ---------------------------------------------------
 
+	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
 	}
 
+	@Override
 	public boolean isApplicable() throws CoreException {
 		if (fElements.length == 0)
 			return false;
@@ -99,14 +101,17 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RefactoringCoreMessages.DeleteRefactoring_7;
 	}
 
+	@Override
 	public Object[] getElements() {
 		return fElements;
 	}
 
+	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants shared)
 			throws CoreException {
 		return fDeleteModifications.loadParticipants(status, this, getAffectedProjectNatures(), shared);
@@ -170,6 +175,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	 * @see org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#
 	 * checkActivation (org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
 		Assert.isNotNull(fDeleteQueries);// must be set before checking
 		// activation
@@ -197,6 +203,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	 * org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
 			throws CoreException {
 		pm.beginTask(RefactoringCoreMessages.DeleteRefactoring_1, 1);
@@ -268,6 +275,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		for (int i = 0; i < fResources.length; i++) {
 			IResource resource = fResources[i];
 			resource.accept(new IResourceVisitor() {
+				@Override
 				public boolean visit(IResource visitedResource) throws CoreException {
 					if (visitedResource instanceof IFile) {
 						checkDirtyFile(result, (IFile) visitedResource);
@@ -384,6 +392,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 		// Move from inner to outer packages
 		Collections.sort(initialPackagesToDelete, new Comparator() {
+			@Override
 			public int compare(Object arg0, Object arg1) {
 				IScriptFolder one = (IScriptFolder) arg0;
 				IScriptFolder two = (IScriptFolder) arg1;
@@ -615,6 +624,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		return (IFile[]) result.toArray(new IFile[result.size()]);
 	}
 
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException {
 		pm.beginTask("", 1); //$NON-NLS-1$
 		pm.done();
@@ -682,14 +692,17 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		return true;
 	}
 
+	@Override
 	public boolean canEnableComment() {
 		return true;
 	}
 
+	@Override
 	public String getComment() {
 		return fComment;
 	}
 
+	@Override
 	public void setComment(String comment) {
 		fComment = comment;
 	}

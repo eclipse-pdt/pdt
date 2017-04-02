@@ -50,6 +50,7 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput im
 		return result + "." + Util.defaultPhpExtension(); //$NON-NLS-1$
 	}
 
+	@Override
 	public URI getURI(Object element) {
 		IPath path = getPath(element);
 		if (path != null) {

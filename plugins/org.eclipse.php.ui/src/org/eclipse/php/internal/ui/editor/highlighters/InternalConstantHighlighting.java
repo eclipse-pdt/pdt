@@ -38,6 +38,7 @@ public class InternalConstantHighlighting extends AbstractSemanticHighlighting {
 				192);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.InternalConstantHighlighting_0;
 	}

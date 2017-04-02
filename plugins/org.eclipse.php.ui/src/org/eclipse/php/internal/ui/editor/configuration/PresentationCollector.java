@@ -40,6 +40,7 @@ public class PresentationCollector extends AbstractCollection {
 	 * 
 	 * @see java.util.Collection#add(java.lang.Object)
 	 */
+	@Override
 	public boolean add(Object o) {
 		StyleRange range = (StyleRange) o;
 		if (lastOffset > range.start) {
@@ -65,6 +66,7 @@ public class PresentationCollector extends AbstractCollection {
 	 * 
 	 * @see java.util.AbstractCollection#iterator()
 	 */
+	@Override
 	public Iterator iterator() {
 		return fPresentation.getNonDefaultStyleRangeIterator();
 	}
@@ -74,6 +76,7 @@ public class PresentationCollector extends AbstractCollection {
 	 * 
 	 * @see java.util.AbstractCollection#size()
 	 */
+	@Override
 	public int size() {
 		throw new UnsupportedOperationException();
 	}

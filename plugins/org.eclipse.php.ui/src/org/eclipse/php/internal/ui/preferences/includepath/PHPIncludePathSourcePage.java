@@ -76,6 +76,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	 * 
 	 */
 	protected class PHPSourceContainerAdapter extends SourceContainerAdapter {
+		@Override
 		public boolean hasChildren(TreeListDialogField field, Object element) {
 			return false;
 		}
@@ -99,6 +100,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		return true;
 	}
 
+	@Override
 	protected boolean canRemove(List selElements) {
 		if (selElements.size() == 0) {
 			return false;
@@ -121,6 +123,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	 * @see org.eclipse.dltk.internal.ui.wizards.buildpath.
 	 * SourceContainerWorkbookPage #initContainerElements()
 	 */
+	@Override
 	protected void initContainerElements() {
 		SourceContainerAdapter adapter = new PHPSourceContainerAdapter();
 
@@ -137,6 +140,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	}
 
+	@Override
 	protected void updateFoldersList() {
 		ArrayList folders = new ArrayList();
 
@@ -163,6 +167,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	/**
 	 * Get the original functionality and add a filter
 	 */
+	@Override
 	public Control getControl(Composite parent) {
 		Control control = super.getControl(parent);
 		addFilter();
@@ -178,22 +183,27 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		});
 	}
 
+	@Override
 	protected int getIDX_ADD() {
 		return IDX_ADD;
 	}
 
+	@Override
 	protected int getIDX_ADD_LINK() {
 		return IDX_ADD_LINK;
 	}
 
+	@Override
 	protected int getIDX_EDIT() {
 		return IDX_EDIT;
 	}
 
+	@Override
 	protected int getIDX_REMOVE() {
 		return IDX_REMOVE;
 	}
 
+	@Override
 	protected void sourcePageCustomButtonPressed(DialogField field, int index) {
 		if (field == fFoldersList) {
 			if (index == IDX_ADD) {
@@ -220,6 +230,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		}
 	}
 
+	@Override
 	protected void refresh(List insertedElements, List removedElements, List modifiedElements) {
 
 		fAddedElements.clear();

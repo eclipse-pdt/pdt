@@ -50,6 +50,7 @@ public class ScrolledCompositeImpl extends ScrolledComposite {
 	 * 
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
+	@Override
 	public void dispose() {
 		fToolkit.dispose();
 		super.dispose();

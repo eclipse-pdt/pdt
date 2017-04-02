@@ -163,6 +163,7 @@ public class ReorgPolicyFactory {
 		private IResource fResourceDestination;
 		private IModelElement fScriptElementDestination;
 
+		@Override
 		public final RefactoringStatus setDestination(IResource destination) throws ModelException {
 			Assert.isNotNull(destination);
 			resetDestinations();
@@ -170,6 +171,7 @@ public class ReorgPolicyFactory {
 			return verifyDestination(destination);
 		}
 
+		@Override
 		public final RefactoringStatus setDestination(IModelElement destination) throws ModelException {
 			Assert.isNotNull(destination);
 			resetDestinations();
@@ -181,18 +183,22 @@ public class ReorgPolicyFactory {
 
 		protected abstract RefactoringStatus verifyDestination(IResource destination) throws ModelException;
 
+		@Override
 		public boolean canChildrenBeDestinations(IModelElement modelElement) {
 			return true;
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IResource resource) {
 			return true;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IModelElement modelElement) {
 			return true;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IResource resource) {
 			return true;
 		}
@@ -202,10 +208,12 @@ public class ReorgPolicyFactory {
 			fResourceDestination = null;
 		}
 
+		@Override
 		public final IResource getResourceDestination() {
 			return fResourceDestination;
 		}
 
+		@Override
 		public final IModelElement getScriptElementDestination() {
 			return fScriptElementDestination;
 		}
@@ -218,6 +226,7 @@ public class ReorgPolicyFactory {
 			return null;
 		}
 
+		@Override
 		public final RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor processor,
 				String[] natures, SharableParticipants shared) throws CoreException {
 			RefactoringModifications modifications = getModifications();
@@ -228,6 +237,7 @@ public class ReorgPolicyFactory {
 			}
 		}
 
+		@Override
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
 			Assert.isNotNull(reorgQueries);
@@ -245,14 +255,17 @@ public class ReorgPolicyFactory {
 			return new RefactoringStatus();
 		}
 
+		@Override
 		public boolean hasAllInputSet() {
 			return fScriptElementDestination != null || fResourceDestination != null;
 		}
 
+		@Override
 		public boolean canUpdateReferences() {
 			return false;
 		}
 
+		@Override
 		public boolean getUpdateReferences() {
 			Assert.isTrue(false);// should not be called if
 			// canUpdateReferences is not overridden and
@@ -260,16 +273,19 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
+		@Override
 		public void setUpdateReferences(boolean update) {
 			Assert.isTrue(false);// should not be called if
 			// canUpdateReferences is not overridden and
 			// returns false
 		}
 
+		@Override
 		public boolean canEnableQualifiedNameUpdating() {
 			return false;
 		}
 
+		@Override
 		public boolean canUpdateQualifiedNames() {
 			Assert.isTrue(false);// should not be called if
 			// canEnableQualifiedNameUpdating is not
@@ -277,6 +293,7 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
+		@Override
 		public String getFilePatterns() {
 			Assert.isTrue(false);// should not be called if
 			// canEnableQualifiedNameUpdating is not
@@ -284,6 +301,7 @@ public class ReorgPolicyFactory {
 			return null;
 		}
 
+		@Override
 		public boolean getUpdateQualifiedNames() {
 			Assert.isTrue(false);// should not be called if
 			// canEnableQualifiedNameUpdating is not
@@ -291,18 +309,21 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
+		@Override
 		public void setFilePatterns(String patterns) {
 			Assert.isTrue(false);// should not be called if
 			// canEnableQualifiedNameUpdating is not
 			// overridden and returns false
 		}
 
+		@Override
 		public void setUpdateQualifiedNames(boolean update) {
 			Assert.isTrue(false);// should not be called if
 			// canEnableQualifiedNameUpdating is not
 			// overridden and returns false
 		}
 
+		@Override
 		public boolean canEnable() throws ModelException {
 			IResource[] resources = getResources();
 			for (int i = 0; i < resources.length; i++) {
@@ -333,6 +354,7 @@ public class ReorgPolicyFactory {
 			fCus = cus;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			Assert.isNotNull(modelElement);
 			if (!modelElement.exists())
@@ -377,6 +399,7 @@ public class ReorgPolicyFactory {
 			return new RefactoringStatus();
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IResource resource) throws ModelException {
 			Assert.isNotNull(resource);
 			if (!resource.exists() || resource.isPhantom())
@@ -405,6 +428,7 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IModelElement modelElement) {
 			switch (modelElement.getElementType()) {
 			case IModelElement.SCRIPT_MODEL:
@@ -416,10 +440,12 @@ public class ReorgPolicyFactory {
 			}
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IResource resource) {
 			return resource instanceof IContainer;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IModelElement modelElement) {
 			switch (modelElement.getElementType()) {
 			case IModelElement.SCRIPT_FOLDER:
@@ -429,6 +455,7 @@ public class ReorgPolicyFactory {
 			}
 		}
 
+		@Override
 		public boolean canElementBeDestination(IResource resource) {
 			return resource instanceof IContainer;
 		}
@@ -494,10 +521,12 @@ public class ReorgPolicyFactory {
 			return null;
 		}
 
+		@Override
 		public final IModelElement[] getScriptElements() {
 			return fCus;
 		}
 
+		@Override
 		public final IResource[] getResources() {
 			return ReorgUtils.union(fFiles, fFolders);
 		}
@@ -519,6 +548,7 @@ public class ReorgPolicyFactory {
 			return fCus;
 		}
 
+		@Override
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
 			RefactoringStatus status = super.checkFinalConditions(pm, context, reorgQueries);
@@ -553,6 +583,7 @@ public class ReorgPolicyFactory {
 			fScriptElements = modelElements;
 		}
 
+		@Override
 		protected final RefactoringStatus verifyDestination(IResource destination) throws ModelException {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_no_resource);
 		}
@@ -563,10 +594,12 @@ public class ReorgPolicyFactory {
 			return (ISourceModule) fScriptElements[0].getAncestor(IModelElement.SOURCE_MODULE);
 		}
 
+		@Override
 		public final IModelElement[] getScriptElements() {
 			return fScriptElements;
 		}
 
+		@Override
 		public final IResource[] getResources() {
 			return new IResource[0];
 		}
@@ -595,6 +628,7 @@ public class ReorgPolicyFactory {
 		// return (IType)destination.getAncestor(IModelElement.TYPE);
 		// }
 
+		@Override
 		public boolean canEnable() throws ModelException {
 			if (!super.canEnable())
 				return false;
@@ -609,6 +643,7 @@ public class ReorgPolicyFactory {
 			return true;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement destination) throws ModelException {
 			return recursiveVerifyDestination(destination);
 		}
@@ -677,10 +712,12 @@ public class ReorgPolicyFactory {
 			return new RefactoringStatus();
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IResource resource) {
 			return false;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IResource resource) {
 			return false;
 		}
@@ -690,10 +727,12 @@ public class ReorgPolicyFactory {
 
 		private IProjectFragment[] fProjectFragments;
 
+		@Override
 		public IModelElement[] getScriptElements() {
 			return fProjectFragments;
 		}
 
+		@Override
 		public IResource[] getResources() {
 			return new IResource[0];
 		}
@@ -707,6 +746,7 @@ public class ReorgPolicyFactory {
 			fProjectFragments = roots;
 		}
 
+		@Override
 		public boolean canEnable() throws ModelException {
 			if (!super.canEnable())
 				return false;
@@ -720,6 +760,7 @@ public class ReorgPolicyFactory {
 			return true;
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IModelElement modelElement) {
 			switch (modelElement.getElementType()) {
 			case IModelElement.SCRIPT_MODEL:
@@ -730,22 +771,27 @@ public class ReorgPolicyFactory {
 			}
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IResource resource) {
 			return false;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IModelElement modelElement) {
 			return modelElement.getElementType() == IModelElement.SCRIPT_PROJECT;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IResource resource) {
 			return false;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IResource resource) {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_src2proj);
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			Assert.isNotNull(modelElement);
 			if (!modelElement.exists())
@@ -781,6 +827,7 @@ public class ReorgPolicyFactory {
 			return fProjectFragments;
 		}
 
+		@Override
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
 			RefactoringStatus status = super.checkFinalConditions(pm, context, reorgQueries);
@@ -800,10 +847,12 @@ public class ReorgPolicyFactory {
 	private static abstract class PackagesReorgPolicy extends ReorgPolicy {
 		private IScriptFolder[] fScriptFolders;
 
+		@Override
 		public IModelElement[] getScriptElements() {
 			return fScriptFolders;
 		}
 
+		@Override
 		public IResource[] getResources() {
 			return new IResource[0];
 		}
@@ -817,6 +866,7 @@ public class ReorgPolicyFactory {
 			fScriptFolders = ScriptFolders;
 		}
 
+		@Override
 		public boolean canEnable() throws ModelException {
 			for (int i = 0; i < fScriptFolders.length; i++) {
 				if (ModelElementUtil.isDefaultPackage(fScriptFolders[i]) || fScriptFolders[i].isReadOnly())
@@ -827,6 +877,7 @@ public class ReorgPolicyFactory {
 			return true;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IResource resource) {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_packages);
 		}
@@ -835,6 +886,7 @@ public class ReorgPolicyFactory {
 			return getDestinationAsProjectFragment(getScriptElementDestination());
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IModelElement modelElement) {
 			switch (modelElement.getElementType()) {
 			case IModelElement.SCRIPT_MODEL:
@@ -847,10 +899,12 @@ public class ReorgPolicyFactory {
 			}
 		}
 
+		@Override
 		public boolean canChildrenBeDestinations(IResource resource) {
 			return false;
 		}
 
+		@Override
 		public boolean canElementBeDestination(IModelElement modelElement) {
 			switch (modelElement.getElementType()) {
 			case IModelElement.SCRIPT_PROJECT:
@@ -861,6 +915,7 @@ public class ReorgPolicyFactory {
 			}
 		}
 
+		@Override
 		public boolean canElementBeDestination(IResource resource) {
 			return false;
 		}
@@ -883,6 +938,7 @@ public class ReorgPolicyFactory {
 			return null;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			Assert.isNotNull(modelElement);
 			if (!modelElement.exists())
@@ -895,6 +951,7 @@ public class ReorgPolicyFactory {
 			return new RefactoringStatus();
 		}
 
+		@Override
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
 			RefactoringStatus refactoringStatus = super.checkFinalConditions(pm, context, reorgQueries);
@@ -919,10 +976,12 @@ public class ReorgPolicyFactory {
 			super(modelElements);
 		}
 
+		@Override
 		public ReorgExecutionLog getReorgExecutionLog() {
 			return fReorgExecutionLog;
 		}
 
+		@Override
 		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
@@ -937,6 +996,7 @@ public class ReorgPolicyFactory {
 			return fModifications;
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) throws ModelException {
 			if (DLTKCore.DEBUG) {
 				System.err.println("ReorgPolicyFactory:createChange return null."); //$NON-NLS-1$
@@ -971,10 +1031,12 @@ public class ReorgPolicyFactory {
 		// return (SourceModule) parser.createAST(null);
 		// }
 
+		@Override
 		public boolean canEnable() throws ModelException {
 			return super.canEnable() && (getSourceCu() != null);
 		}
 
+		@Override
 		public IFile[] getAllModifiedFiles() {
 			return ReorgUtils.getFiles(new IResource[] { ReorgUtils.getResource(getDestinationCu()) });
 		}
@@ -988,10 +1050,12 @@ public class ReorgPolicyFactory {
 			super(files, folders, cus);
 		}
 
+		@Override
 		public ReorgExecutionLog getReorgExecutionLog() {
 			return fReorgExecutionLog;
 		}
 
+		@Override
 		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
@@ -1017,6 +1081,7 @@ public class ReorgPolicyFactory {
 			return getDestinationAsContainer();
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) {
 			IFile[] file = getFiles();
 			IFolder[] folders = getFolders();
@@ -1111,10 +1176,12 @@ public class ReorgPolicyFactory {
 			super(roots);
 		}
 
+		@Override
 		public ReorgExecutionLog getReorgExecutionLog() {
 			return fReorgExecutionLog;
 		}
 
+		@Override
 		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
@@ -1131,6 +1198,7 @@ public class ReorgPolicyFactory {
 			return fModifications;
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) {
 			NewNameProposer nameProposer = new NewNameProposer();
 			IProjectFragment[] roots = getProjectFragments();
@@ -1172,10 +1240,12 @@ public class ReorgPolicyFactory {
 			super(ScriptFolders);
 		}
 
+		@Override
 		public ReorgExecutionLog getReorgExecutionLog() {
 			return fReorgExecutionLog;
 		}
 
+		@Override
 		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
@@ -1192,6 +1262,7 @@ public class ReorgPolicyFactory {
 			return fModifications;
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm, INewNameQueries newNameQueries) throws ModelException {
 			NewNameProposer nameProposer = new NewNameProposer();
 			IScriptFolder[] fragments = getPackages();
@@ -1240,30 +1311,37 @@ public class ReorgPolicyFactory {
 	}
 
 	private static class NoCopyPolicy extends ReorgPolicy implements ICopyPolicy {
+		@Override
 		public boolean canEnable() throws ModelException {
 			return false;
 		}
 
+		@Override
 		public ReorgExecutionLog getReorgExecutionLog() {
 			return null;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IResource resource) throws ModelException {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_noCopying);
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_noCopying);
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) {
 			return new NullChange();
 		}
 
+		@Override
 		public IResource[] getResources() {
 			return new IResource[0];
 		}
 
+		@Override
 		public IModelElement[] getScriptElements() {
 			return new IModelElement[0];
 		}
@@ -1365,6 +1443,7 @@ public class ReorgPolicyFactory {
 			super(roots);
 		}
 
+		@Override
 		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
@@ -1381,6 +1460,7 @@ public class ReorgPolicyFactory {
 			return fModifications;
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm) throws ModelException {
 			IProjectFragment[] roots = getProjectFragments();
 			pm.beginTask("", roots.length); //$NON-NLS-1$
@@ -1397,6 +1477,7 @@ public class ReorgPolicyFactory {
 			return composite;
 		}
 
+		@Override
 		public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
 			return null;
 		}
@@ -1406,6 +1487,7 @@ public class ReorgPolicyFactory {
 			return new MoveProjectFragmentChange(root, destination.getProject(), null);
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			RefactoringStatus superStatus = super.verifyDestination(modelElement);
 			if (superStatus.hasFatalError())
@@ -1425,6 +1507,7 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
+		@Override
 		public boolean canEnable() throws ModelException {
 			if (!super.canEnable())
 				return false;
@@ -1447,6 +1530,7 @@ public class ReorgPolicyFactory {
 			return true;
 		}
 
+		@Override
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
 			try {
@@ -1469,10 +1553,12 @@ public class ReorgPolicyFactory {
 			// operation
 		}
 
+		@Override
 		public ICreateTargetQuery getCreateTargetQuery(ICreateTargetQueries createQueries) {
 			return null;
 		}
 
+		@Override
 		public boolean isTextualMove() {
 			return false;
 		}
@@ -1485,6 +1571,7 @@ public class ReorgPolicyFactory {
 			super(ScriptFolders);
 		}
 
+		@Override
 		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
@@ -1499,6 +1586,7 @@ public class ReorgPolicyFactory {
 			return fModifications;
 		}
 
+		@Override
 		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			RefactoringStatus superStatus = super.verifyDestination(modelElement);
 			if (superStatus.hasFatalError())
@@ -1520,6 +1608,7 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
+		@Override
 		public Change createChange(IProgressMonitor pm) throws ModelException {
 			IScriptFolder[] fragments = getPackages();
 			pm.beginTask("", fragments.length); //$NON-NLS-1$
@@ -1536,6 +1625,7 @@ public class ReorgPolicyFactory {
 			return result;
 		}
 
+		@Override
 		public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
 			return null;
 		}
@@ -1544,6 +1634,7 @@ public class ReorgPolicyFactory {
 			return new MoveScriptFolderChange(pack, destination);
 		}
 
+		@Override
 		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
 				IReorgQueries reorgQueries) throws CoreException {
 			try {
@@ -1566,10 +1657,12 @@ public class ReorgPolicyFactory {
 			// operation
 		}
 
+		@Override
 		public ICreateTargetQuery getCreateTargetQuery(ICreateTargetQueries createQueries) {
 			return null;
 		}
 
+		@Override
 		public boolean isTextualMove() {
 			return false;
 		}

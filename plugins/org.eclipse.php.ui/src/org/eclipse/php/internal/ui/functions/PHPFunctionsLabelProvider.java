@@ -47,6 +47,7 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 		fImageLabelProvider = new ScriptElementImageProvider();
 	}
 
+	@Override
 	public String getText(Object element) {
 		if (element instanceof ConstantNode) {
 			return ((ConstantNode) element).getName();
@@ -54,6 +55,7 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 		return super.getText(element);
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof ConstantNode) {
 			ImageDescriptor descriptor = new ScriptElementImageDescriptor(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP,

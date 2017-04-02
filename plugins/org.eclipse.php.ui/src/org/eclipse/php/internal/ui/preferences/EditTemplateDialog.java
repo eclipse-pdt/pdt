@@ -100,6 +100,7 @@ public class EditTemplateDialog extends StatusDialog {
 		 * 
 		 * @see Action#firePropertyChange(String, Object, Object)
 		 */
+		@Override
 		public void update() {
 			// XXX: workaround for
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=206111
@@ -119,6 +120,7 @@ public class EditTemplateDialog extends StatusDialog {
 		/**
 		 * @see Action#run()
 		 */
+		@Override
 		public void run() {
 			if (fOperationCode != -1 && fOperationTarget != null) {
 				fOperationTarget.doOperation(fOperationCode);
@@ -196,6 +198,7 @@ public class EditTemplateDialog extends StatusDialog {
 	 * 
 	 * @since 3.4
 	 */
+	@Override
 	protected boolean isResizable() {
 		return true;
 	}
@@ -203,6 +206,7 @@ public class EditTemplateDialog extends StatusDialog {
 	/*
 	 * @see org.eclipse.jdt.internal.ui.dialogs.StatusDialog#create()
 	 */
+	@Override
 	public void create() {
 		super.create();
 		updateStatusAndButtons();
@@ -212,6 +216,7 @@ public class EditTemplateDialog extends StatusDialog {
 	/*
 	 * @see Dialog#createDialogArea(Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite ancestor) {
 		Composite parent = new Composite(ancestor, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -225,6 +230,7 @@ public class EditTemplateDialog extends StatusDialog {
 		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		ModifyListener listener = new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				doTextWidgetChanged(e.widget);
 			}
@@ -244,9 +250,11 @@ public class EditTemplateDialog extends StatusDialog {
 			fNameText = createText(composite);
 			fNameText.addFocusListener(new FocusListener() {
 
+				@Override
 				public void focusGained(FocusEvent e) {
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					if (fSuppressError) {
 						fSuppressError = false;
@@ -294,11 +302,13 @@ public class EditTemplateDialog extends StatusDialog {
 		fInsertVariableButton.setLayoutData(getButtonGridData());
 		fInsertVariableButton.setText(PreferencesMessages.EditTemplateDialog_insert_variable);
 		fInsertVariableButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fPatternEditor.getTextWidget().setFocus();
 				fPatternEditor.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -419,6 +429,7 @@ public class EditTemplateDialog extends StatusDialog {
 		control.setLayoutData(data);
 
 		viewer.addTextListener(new ITextListener() {
+			@Override
 			public void textChanged(TextEvent event) {
 				if (event.getDocumentEvent() != null)
 					doSourceChanged(event.getDocumentEvent().getDocument());
@@ -426,6 +437,7 @@ public class EditTemplateDialog extends StatusDialog {
 		});
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateSelectionDependentActions();
 			}
@@ -445,6 +457,7 @@ public class EditTemplateDialog extends StatusDialog {
 	protected SourceViewer createViewer(Composite parent) {
 		SourceViewer viewer = new SourceViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		SourceViewerConfiguration configuration = new SourceViewerConfiguration() {
+			@Override
 			public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 
 				ContentAssistant assistant = new ContentAssistant();
@@ -472,6 +485,7 @@ public class EditTemplateDialog extends StatusDialog {
 		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
 				.getAdapter(IHandlerService.class);
 		getShell().addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				handlerService.deactivateHandlers(handlerActivations);
 			}
@@ -521,6 +535,7 @@ public class EditTemplateDialog extends StatusDialog {
 		MenuManager manager = new MenuManager(null, null);
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager mgr) {
 				fillContextMenu(mgr);
 			}
@@ -577,6 +592,7 @@ public class EditTemplateDialog extends StatusDialog {
 		return -1;
 	}
 
+	@Override
 	protected void okPressed() {
 		String name = fNameText == null ? fTemplate.getName() : fNameText.getText();
 		boolean isAutoInsertable = fAutoInsertCheckbox != null && fAutoInsertCheckbox.getSelection();
@@ -612,6 +628,7 @@ public class EditTemplateDialog extends StatusDialog {
 	/*
 	 * @see org.eclipse.jface.window.Window#configureShell(Shell)
 	 */
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		// FIXME - HELP context :
@@ -644,6 +661,7 @@ public class EditTemplateDialog extends StatusDialog {
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
 		String sectionName = getClass().getName() + "_dialogBounds"; //$NON-NLS-1$
 		IDialogSettings settings = PHPUiPlugin.getDefault().getDialogSettings();

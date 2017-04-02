@@ -39,6 +39,7 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 				new PHPPairMatcher(BRACKETS));
 	}
 
+	@Override
 	public IRegion match(IDocument document, int offset) {
 		if (offset < 0 || offset > document.getLength())
 			return null;

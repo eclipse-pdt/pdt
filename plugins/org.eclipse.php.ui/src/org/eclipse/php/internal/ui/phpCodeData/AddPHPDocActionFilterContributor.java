@@ -15,6 +15,7 @@ import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
 public class AddPHPDocActionFilterContributor implements IActionFilterContributor {
 
+	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		return true;
 		// if (!(target instanceof ISourceModule) && !(target instanceof IType)

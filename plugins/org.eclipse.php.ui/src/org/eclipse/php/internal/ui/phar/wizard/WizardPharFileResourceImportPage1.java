@@ -106,6 +106,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	/**
 	 * (non-Javadoc) Method declared on IDialogPage.
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
@@ -119,6 +120,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * @param parent
 	 *            org.eclipse.swt.widgets.Composite
 	 */
+	@Override
 	protected void createOptionsGroup(Composite parent) {
 
 		// overwrite... checkbox
@@ -201,6 +203,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Answer a boolean indicating whether the specified source currently exists
 	 * and is valid (ie.- proper format)
 	 */
+	@Override
 	protected boolean ensureSourceIsValid() {
 		if (ArchiveFileManipulations.isPharFile(sourceNameField.getText())) {
 			return ensurePharSourceIsValid();
@@ -218,6 +221,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * 
 	 * @return boolean
 	 */
+	@Override
 	public boolean finish() {
 		if (!super.finish()) {
 			return false;
@@ -241,8 +245,10 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Returns a content provider for <code>FileSystemElement</code>s that
 	 * returns only files as children.
 	 */
+	@Override
 	protected ITreeContentProvider getFileProvider() {
 		return new WorkbenchContentProvider() {
+			@Override
 			public Object[] getChildren(Object o) {
 				if (o instanceof MinimizedFileSystemElement) {
 					MinimizedFileSystemElement element = (MinimizedFileSystemElement) o;
@@ -259,6 +265,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * currently-specified .zip file. If this FileSystemElement is not currently
 	 * defined then create and return it.
 	 */
+	@Override
 	protected MinimizedFileSystemElement getFileSystemTree() {
 		disposeStructureProvider();
 		// TODO FOR PHAR
@@ -293,8 +300,10 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Returns a content provider for <code>FileSystemElement</code>s that
 	 * returns only folders as children.
 	 */
+	@Override
 	protected ITreeContentProvider getFolderProvider() {
 		return new WorkbenchContentProvider() {
+			@Override
 			public Object[] getChildren(Object o) {
 				if (o instanceof MinimizedFileSystemElement) {
 					MinimizedFileSystemElement element = (MinimizedFileSystemElement) o;
@@ -304,6 +313,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 				return new Object[0];
 			}
 
+			@Override
 			public boolean hasChildren(Object o) {
 				if (o instanceof MinimizedFileSystemElement) {
 					// MinimizedFileSystemElement element =
@@ -324,6 +334,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Answer the string to display as the label for the source specification
 	 * field
 	 */
+	@Override
 	protected String getSourceLabel() {
 		return PharImportMessages.ArchiveImport_fromFile;
 	}
@@ -394,6 +405,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Open a FileDialog so that the user can specify the source file to import
 	 * from
 	 */
+	@Override
 	protected void handleSourceBrowseButtonPressed() {
 		String selectedFile = queryZipFileToImport();
 
@@ -409,6 +421,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	/**
 	 * Import the resources with extensions as specified by the user
 	 */
+	@Override
 	protected boolean importResources(List fileSystemObjects) {
 		// TODO FOR PHAR
 		ILeveledImportStructureProvider importStructureProvider = null;
@@ -445,6 +458,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	/**
 	 * Initializes the specified operation appropriately.
 	 */
+	@Override
 	protected void initializeOperation(ImportOperation op) {
 		op.setOverwriteResources(overwriteExistingResourcesCheckbox.getSelection());
 	}
@@ -470,6 +484,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	/**
 	 * Repopulate the view based on the currently entered directory.
 	 */
+	@Override
 	protected void resetSelection() {
 
 		super.resetSelection();
@@ -480,6 +495,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Use the dialog store to restore widget values to the values that they
 	 * held last time this wizard was used to completion
 	 */
+	@Override
 	protected void restoreWidgetValues() {
 		IDialogSettings settings = getDialogSettings();
 		if (settings != null) {
@@ -506,6 +522,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * superclass. This is necessary because proper overriding of instance
 	 * variables is not occurring.
 	 */
+	@Override
 	protected void saveWidgetValues() {
 		IDialogSettings settings = getDialogSettings();
 		if (settings != null) {
@@ -532,6 +549,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Answer a boolean indicating whether self's source specification widgets
 	 * currently all contain valid values.
 	 */
+	@Override
 	protected boolean validateSourceGroup() {
 
 		// If there is nothing being provided to the input then there is a

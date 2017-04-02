@@ -44,6 +44,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 		super.setIsFlatLayout(false);
 	}
 
+	@Override
 	public void setIsFlatLayout(boolean state) {
 		super.setIsFlatLayout(false);
 	}

@@ -49,6 +49,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	/*
 	 * (non-Javadoc) Method declared on IWizard.
 	 */
+	@Override
 	public void addPages() {
 		super.addPages();
 		mainPage = new WizardPharFileResourceImportPage1(workbench, selection, getFileImportMask());
@@ -69,6 +70,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	/*
 	 * (non-Javadoc) Method declared on IWorkbenchWizard.
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
 		this.workbench = workbench;
 		this.selection = currentSelection;
@@ -85,6 +87,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	/*
 	 * (non-Javadoc) Method declared on IWizard.
 	 */
+	@Override
 	public boolean performCancel() {
 		return mainPage.cancel();
 	}
@@ -92,6 +95,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	/*
 	 * (non-Javadoc) Method declared on IWizard.
 	 */
+	@Override
 	public boolean performFinish() {
 		return mainPage.finish();
 	}

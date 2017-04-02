@@ -89,10 +89,12 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 			super.dispose();
 		}
 
+		@Override
 		public void refresh(IProject project) {
 			PHPIncludePathsBlock.this.updateUI();
 		}
 
+		@Override
 		public void update(boolean changed) {
 			try {
 				configureScriptProject(new NullProgressMonitor());
@@ -111,6 +113,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
 	}
 
+	@Override
 	protected void initContainerElements() {
 		BuildPathAdapter adapter = new BuildPathAdapter();
 		String[] buttonLabels = new String[] { NewWizardMessages.BuildPathsBlock_buildpath_up_button,
@@ -137,6 +140,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	}
 
 	// -------- UI creation ---------
+	@Override
 	public Control createControl(Composite parent) {
 
 		fSWTWidget = parent;
@@ -198,6 +202,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		folder.setSelection(fPageIndex);
 		fCurrPage = (BuildPathBasePage) folder.getItem(fPageIndex).getData();
 		folder.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tabChanged(e.item);
 			}
@@ -217,6 +222,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		// disable checking for nested folders errors
 	}
 
+	@Override
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		updateBuildPath();
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
@@ -335,6 +341,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	 *            - if the project is an existing script project - the buildpath
 	 *            entries of the existing project
 	 */
+	@Override
 	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
 		fCurrScriptProject = jproject;
 

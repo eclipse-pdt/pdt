@@ -44,6 +44,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	/*
 	 * @see LabelProvider#getImage(java.lang.Object)
 	 */
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IPVariableElement) {
 			IPVariableElement curr = (IPVariableElement) element;
@@ -59,6 +60,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	/*
 	 * @see LabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		if (element instanceof IPVariableElement) {
 			IPVariableElement curr = (IPVariableElement) element;
@@ -89,6 +91,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	 * @see
 	 * org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
+	@Override
 	public Color getForeground(Object element) {
 		return null;
 	}
@@ -99,6 +102,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	 * @see
 	 * org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 	 */
+	@Override
 	public Color getBackground(Object element) {
 		if (element instanceof IPVariableElement) {
 			IPVariableElement curr = (IPVariableElement) element;
@@ -118,6 +122,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	 * 
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
+	@Override
 	public void dispose() {
 		super.dispose();
 	}

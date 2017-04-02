@@ -56,6 +56,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	 * @seeorg.eclipse.search.ui.ISearchQuery#run(org.eclipse.core.runtime.
 	 * IProgressMonitor)
 	 */
+	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		if (fFinder == null) {
 			return new StatusInfo(IStatus.ERROR, org.eclipse.php.internal.ui.search.Messages.OccurrencesSearchQuery_0);
@@ -120,6 +121,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	/*
 	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
 	 */
+	@Override
 	public String getLabel() {
 		return fJobLabel;
 	}
@@ -136,6 +138,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	/*
 	 * @see org.eclipse.search.ui.ISearchQuery#canRerun()
 	 */
+	@Override
 	public boolean canRerun() {
 		return false; // must release finder to not keep AST reference
 	}
@@ -143,6 +146,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	/*
 	 * @see org.eclipse.search.ui.ISearchQuery#canRunInBackground()
 	 */
+	@Override
 	public boolean canRunInBackground() {
 		return true;
 	}
@@ -150,6 +154,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	/*
 	 * @see org.eclipse.search.ui.ISearchQuery#getSearchResult()
 	 */
+	@Override
 	public ISearchResult getSearchResult() {
 		return fResult;
 	}

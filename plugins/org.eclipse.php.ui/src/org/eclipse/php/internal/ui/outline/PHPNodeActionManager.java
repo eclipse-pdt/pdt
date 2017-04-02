@@ -31,6 +31,7 @@ public class PHPNodeActionManager extends HTMLNodeActionManager {
 		super(model, viewer);
 	}
 
+	@Override
 	public void fillContextMenu(IMenuManager menuManager, ISelection selection) {
 		// check the selection type - only if the underlying resource is a
 		// ModelElement

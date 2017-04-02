@@ -25,6 +25,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 
 		private Collection<String> params = new LinkedList<String>();
 
+		@Override
 		public boolean visit(FunctionDeclaration functionDecl) {
 			for (FormalParameter param : functionDecl.formalParameters()) {
 				params.add(param.getParameterNameIdentifier().getName());
@@ -32,6 +33,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 			return true;
 		}
 
+		@Override
 		public void endVisit(Variable variable) {
 			if (variable.getParent().getType() != ASTNode.FIELD_ACCESS
 					|| (variable.getParent().getType() == ASTNode.FIELD_ACCESS
@@ -44,6 +46,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 			}
 		}
 
+		@Override
 		public void endVisit(FunctionDeclaration functionDecl) {
 			params.clear();
 		}
@@ -59,6 +62,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 		getStyle().setEnabledByDefault(true).setUnderlineByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.ParameterVariableHighlighting_0;
 	}

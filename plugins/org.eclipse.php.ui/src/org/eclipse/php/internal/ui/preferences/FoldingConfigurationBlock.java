@@ -62,6 +62,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		 * org.eclipse.jdt.internal.ui.text.folding.IJavaFoldingPreferences#
 		 * createControl(org.eclipse.swt.widgets.Group)
 		 */
+		@Override
 		public Control createControl(Composite composite) {
 			Composite inner = new Composite(composite, SWT.NONE);
 			inner.setLayout(new FillLayout(SWT.VERTICAL));
@@ -72,15 +73,19 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			return inner;
 		}
 
+		@Override
 		public void initialize() {
 		}
 
+		@Override
 		public void performOk() {
 		}
 
+		@Override
 		public void performDefaults() {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
@@ -142,6 +147,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 	 *            the parent composite
 	 * @return the control for the preference page
 	 */
+	@Override
 	public Control createControl(Composite parent) {
 
 		Composite composite = new Composite(parent, SWT.NULL);
@@ -160,12 +166,14 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		fFoldingCheckbox.setLayoutData(gd);
 		fFoldingCheckbox.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fFoldingCheckbox.getSelection();
 				fStore.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, enabled);
 				updateCheckboxDependencies();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -225,6 +233,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			/*
 			 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 			 */
+			@Override
 			public void dispose() {
 			}
 
@@ -233,6 +242,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			 * eclipse .jface.viewers.Viewer, java.lang.Object,
 			 * java.lang.Object)
 			 */
+			@Override
 			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			}
 
@@ -241,6 +251,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements
 			 * (java.lang.Object)
 			 */
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return fProviderDescriptors.values().toArray();
 			}
@@ -251,6 +262,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			 * org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object
 			 * )
 			 */
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
@@ -259,12 +271,14 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			 * @see
 			 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 			 */
+			@Override
 			public String getText(Object element) {
 				return ((PHPFoldingStructureProviderDescriptor) element).getName();
 			}
 		});
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				if (!sel.isEmpty()) {
@@ -326,10 +340,12 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		prefs.initialize();
 	}
 
+	@Override
 	public void initialize() {
 		restoreFromPreferences();
 	}
 
+	@Override
 	public void performOk() {
 		fStore.propagate();
 		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
@@ -343,6 +359,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 				foldingEnabled);
 	}
 
+	@Override
 	public void performDefaults() {
 		restoreFromPreferences();
 		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
@@ -351,6 +368,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
 			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();

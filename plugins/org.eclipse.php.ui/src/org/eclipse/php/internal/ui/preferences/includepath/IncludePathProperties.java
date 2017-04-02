@@ -26,6 +26,7 @@ public class IncludePathProperties extends BuildPathsPropertyPage implements IWo
 	public IncludePathProperties() {
 	}
 
+	@Override
 	protected AbstractIncludepathsBlock createBuildPathBlock(IWorkbenchPreferenceContainer pageContainer) {
 		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), this, getSettings().getInt(INDEX), false,
 				pageContainer);
@@ -37,6 +38,7 @@ public class IncludePathProperties extends BuildPathsPropertyPage implements IWo
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHP_INCLUDE_PATH_PROPERTIES);
 	}
 
+	@Override
 	public IDLTKLanguageToolkit getLanguageToolkit() {
 		return PHPLanguageToolkit.getDefault();
 	}

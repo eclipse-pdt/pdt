@@ -54,6 +54,7 @@ class ProjectionAnnotationModelChanges {
 		return fNode;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ProjectionAnnotationModelChanges) {
 			return ((ProjectionAnnotationModelChanges) obj).getNode().isSameNode(this.getNode());

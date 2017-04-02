@@ -51,6 +51,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
 
 		return new ProjectOutlineContentProvider(showCUChildren) {
+			@Override
 			protected IPreferenceStore getPreferenceStore() {
 				return DLTKUIPlugin.getDefault().getPreferenceStore();
 			}
@@ -144,6 +145,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		return null;
 	}
 
+	@Override
 	public void partActivated(IWorkbenchPart part) {
 		selectProject(part);
 
@@ -182,15 +184,19 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	}
 
+	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
 	}
 
+	@Override
 	public void partClosed(IWorkbenchPart part) {
 	}
 
+	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 	}
 
+	@Override
 	public void partOpened(IWorkbenchPart part) {
 		selectProject(part);
 	}
@@ -198,6 +204,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	/**
 	 * Enable lazy loading for group elements
 	 */
+	@Override
 	protected ProblemTreeViewer createViewer(Composite composite) {
 		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
@@ -211,6 +218,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		/**
 		 * Always return true for elements to reduce model queries
 		 */
+		@Override
 		protected boolean evaluateExpandableWithFilters(Object parent) {
 			return false;
 		}

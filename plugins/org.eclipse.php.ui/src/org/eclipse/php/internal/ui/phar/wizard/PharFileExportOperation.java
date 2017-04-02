@@ -37,6 +37,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		/*
 		 * allows to change the message
 		 */
+		@Override
 		protected void setMessage(String message) {
 			super.setMessage(message);
 		}
@@ -388,6 +389,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 * 
 	 * @return the status of this operation
 	 */
+	@Override
 	public IStatus getStatus() {
 		String message = null;
 		switch (fStatus.getSeverity()) {
@@ -426,6 +428,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 *             thrown when cancelled
 	 * @see #getStatus()
 	 */
+	@Override
 	protected void execute(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		int count = fJarPackages.length;
 		progressMonitor.beginTask("", count); //$NON-NLS-1$

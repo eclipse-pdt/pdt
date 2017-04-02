@@ -410,6 +410,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		applyStyles();
 
 		fStylesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
@@ -422,6 +423,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fForegroundColorEditor.addListener(new IPropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
 					Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
@@ -461,6 +463,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fBackgroundColorEditor.addListener(new IPropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
 					Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
@@ -680,6 +683,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 		fEnabler.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// get current (newly old) style
 				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
@@ -788,25 +792,31 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			}
 		});
 		stylesViewer.setContentProvider(new ITreeContentProvider() {
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				return getStylePreferenceKeys().toArray();
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return getChildren(inputElement);
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				return getStylePreferenceKeys();
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				return false;
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
@@ -1271,6 +1281,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private KeyListener getTextKeyListener() {
 		return new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.widget instanceof StyledText) {
 					int x = ((StyledText) e.widget).getCaretOffset();
@@ -1278,6 +1289,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.widget instanceof StyledText) {
 					int x = ((StyledText) e.widget).getCaretOffset();
@@ -1289,12 +1301,15 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private MouseListener getTextMouseListener() {
 		return new MouseListener() {
+			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseDown(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseUp(MouseEvent e) {
 				if (e.widget instanceof StyledText) {
 					int x = ((StyledText) e.widget).getCaretOffset();
@@ -1306,6 +1321,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private SelectionListener getTextSelectionListener() {
 		return new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				selectColorAtOffset(e.x);
 				if (e.widget instanceof StyledText) {
@@ -1313,6 +1329,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				}
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				selectColorAtOffset(e.x);
 				if (e.widget instanceof StyledText) {
@@ -1327,6 +1344,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			/**
 			 * @see org.eclipse.swt.events.TraverseListener#keyTraversed(TraverseEvent)
 			 */
+			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.widget instanceof StyledText) {
 					if ((e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS))
@@ -1336,6 +1354,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		};
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		setDescription(SSEUIMessages.SyntaxColoring_Description);
 
@@ -1580,6 +1599,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private IPropertyChangeListener fHighlightingChangeListener = new IPropertyChangeListener() {
 
+		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			handleHighlightingPropertyChange(event);
 		}

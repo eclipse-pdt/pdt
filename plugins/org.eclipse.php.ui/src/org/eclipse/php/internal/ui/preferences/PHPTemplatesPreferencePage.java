@@ -63,6 +63,7 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 		protected SourceViewer createViewer(Composite parent) {
 			SourceViewer viewer = new SourceViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 			SourceViewerConfiguration configuration = new SourceViewerConfiguration() {
+				@Override
 				public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 
 					ContentAssistant assistant = new ContentAssistant();

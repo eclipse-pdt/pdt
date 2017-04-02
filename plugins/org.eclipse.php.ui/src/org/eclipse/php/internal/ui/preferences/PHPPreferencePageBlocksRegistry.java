@@ -131,6 +131,7 @@ public class PHPPreferencePageBlocksRegistry {
 		public IPHPPreferencePageBlock createPHPPreferencePageBlock() {
 			SafeRunner.run(new SafeRunnable(
 					PHPUIMessages.PHPPreferencePageBlocksRegistry_0 + PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					try {
 						preferencesPageBlock = (IPHPPreferencePageBlock) element
@@ -146,6 +147,7 @@ public class PHPPreferencePageBlocksRegistry {
 	}
 
 	static class PageBlockComparator implements Comparator {
+		@Override
 		public int compare(Object o1, Object o2) {
 			IPHPPreferencePageBlock firstBlock = (IPHPPreferencePageBlock) o1;
 			IPHPPreferencePageBlock secondBlock = (IPHPPreferencePageBlock) o2;

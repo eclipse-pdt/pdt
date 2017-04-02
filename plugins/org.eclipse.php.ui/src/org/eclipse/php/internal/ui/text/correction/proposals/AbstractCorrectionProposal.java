@@ -78,6 +78,7 @@ abstract public class AbstractCorrectionProposal
 	/**
 	 * @see ICompletionProposal#getContextInformation()
 	 */
+	@Override
 	public IContextInformation getContextInformation() {
 		return null;
 	}
@@ -85,10 +86,12 @@ abstract public class AbstractCorrectionProposal
 	/**
 	 * @see ICompletionProposal#getDisplayString()
 	 */
+	@Override
 	public String getDisplayString() {
 		return CorrectionCommandHandler.appendShortcut(getName(), this.getCommandId());
 	}
 
+	@Override
 	public StyledString getStyledDisplayString() {
 		return CorrectionCommandHandler.styleWithShortcut(getName(), this.getCommandId());
 	}
@@ -105,6 +108,7 @@ abstract public class AbstractCorrectionProposal
 	/*
 	 * @see ICompletionProposal#getImage()
 	 */
+	@Override
 	public Image getImage() {
 		return fImage;
 	}
@@ -112,6 +116,7 @@ abstract public class AbstractCorrectionProposal
 	/*
 	 * @see ICompletionProposal#getSelection(IDocument)
 	 */
+	@Override
 	public Point getSelection(IDocument document) {
 		return null;
 	}
@@ -139,6 +144,7 @@ abstract public class AbstractCorrectionProposal
 		fName = name;
 	}
 
+	@Override
 	public int getRelevance() {
 		return fRelevance;
 	}
@@ -153,6 +159,7 @@ abstract public class AbstractCorrectionProposal
 		fRelevance = relevance;
 	}
 
+	@Override
 	public String getCommandId() {
 		return fCommandId;
 	}

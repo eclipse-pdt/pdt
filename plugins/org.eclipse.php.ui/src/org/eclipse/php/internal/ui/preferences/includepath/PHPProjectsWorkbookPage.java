@@ -74,6 +74,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		fProjectsList.setViewerSorter(new BPListElementSorter());
 	}
 
+	@Override
 	public void init(IScriptProject jproject) {
 		updateProjectsList(jproject);
 	}
@@ -85,6 +86,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	 * org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathBasePage#setTitle
 	 * (java.lang.String)
 	 */
+	@Override
 	public void setTitle(String title) {
 		fProjectsList.setLabelText(title);
 	}
@@ -107,6 +109,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 	// -------- UI creation ---------
 
+	@Override
 	public Control getControl(Composite parent) {
 		PixelConverter converter = new PixelConverter(parent);
 
@@ -149,6 +152,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#getSelection
 	 */
+	@Override
 	public List getSelection() {
 		return fProjectsList.getSelectedElements();
 	}
@@ -156,6 +160,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fProjectsList.selectElements(new StructuredSelection(selElements));
 		if (expand) {
@@ -165,6 +170,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
+	@Override
 	public boolean isEntryKind(int kind) {
 		return kind == IBuildpathEntry.BPE_PROJECT;
 	}
@@ -174,22 +180,27 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		private final Object[] EMPTY_ARR = new Object[0];
 
 		// -------- IListAdapter --------
+		@Override
 		public void customButtonPressed(TreeListDialogField field, int index) {
 			projectPageCustomButtonPressed(field, index);
 		}
 
+		@Override
 		public void selectionChanged(TreeListDialogField field) {
 			projectPageSelectionChanged(field);
 		}
 
+		@Override
 		public void doubleClicked(TreeListDialogField field) {
 			projectPageDoubleClicked(field);
 		}
 
+		@Override
 		public void keyPressed(TreeListDialogField field, KeyEvent event) {
 			projectPageKeyPressed(field, event);
 		}
 
+		@Override
 		public Object[] getChildren(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElement) {
 				return ((BPListElement) element).getChildren();
@@ -197,6 +208,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 			return EMPTY_ARR;
 		}
 
+		@Override
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElementAttribute) {
 				return ((BPListElementAttribute) element).getParent();
@@ -204,12 +216,14 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(TreeListDialogField field, Object element) {
 			return getChildren(field, element).length > 0;
 		}
 
 		// ---------- IDialogFieldListener --------
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			projectPageDialogFieldChanged(field);
 		}

@@ -37,6 +37,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	public static final String ID_MVC = "org.zend.php.framework.ui.views.mvc"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE = "org.eclipse.debug.ui.DebugPerspective"; // $ //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 
 		// Adding the default views for the perspective

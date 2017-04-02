@@ -42,6 +42,7 @@ public class IncludepathRenameIParentParticipant extends IncludepathRenamePartic
 	 * @see org.eclipse.jdt.internal.debug.core.refactoring.
 	 * BreakpointRenameParticipant #accepts(org.eclipse.jdt.core.IModelElement)
 	 */
+	@Override
 	protected boolean accepts(IModelElement element) {
 		return element instanceof IParent;
 	}
@@ -54,6 +55,7 @@ public class IncludepathRenameIParentParticipant extends IncludepathRenamePartic
 	 * #gatherChanges(org.eclipse.core.resources.IMarker[], java.util.List,
 	 * java.lang.String)
 	 */
+	@Override
 	protected void gatherChanges(IResource resource, List changes, String destProjectName)
 			throws CoreException, OperationCanceledException {
 

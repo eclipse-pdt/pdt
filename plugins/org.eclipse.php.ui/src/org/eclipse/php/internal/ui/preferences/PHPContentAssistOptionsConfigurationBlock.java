@@ -44,6 +44,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button fInsertParameterNamesRadioButton;
 	protected Button fPrefixGlobalFunctionCallRadioButton;
 
+	@Override
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_optionsSectionLabel);
 		Composite radioButtonsComposite = new Composite(composite, SWT.NONE);
@@ -78,6 +79,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromOtherFiles,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
 		showVariableFromOtherFilesCheckBox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				showVariableFromReferencedFilesCheckBox.setEnabled(!showVariableFromOtherFilesCheckBox.getSelection());
 			}
@@ -100,6 +102,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 				PHPCoreConstants.CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL, 0);
 	}
 
+	@Override
 	protected void initializeValues() {
 		super.initializeValues();
 		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
@@ -114,10 +117,12 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
 	}
 
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getCorePreferenceStore();
 	}
 
+	@Override
 	protected void storeValues() {
 		super.storeValues();
 		try {

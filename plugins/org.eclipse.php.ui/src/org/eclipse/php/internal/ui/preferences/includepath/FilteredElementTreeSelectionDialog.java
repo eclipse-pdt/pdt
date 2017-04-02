@@ -44,6 +44,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 			fIsDeepFiltering = deepFiltering;
 		}
 
+		@Override
 		public void setPattern(String patternString) {
 			super.setPattern(patternString);
 			fMatchers = null;
@@ -63,6 +64,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 			}
 		}
 
+		@Override
 		protected boolean wordMatches(String text) {
 			if (text != null) {
 				if (fMatchers == null || fMatchers.length == 0) {
@@ -84,6 +86,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 		 * 
 		 * @since 3.5
 		 */
+		@Override
 		public boolean isElementVisible(Viewer viewer, Object element) {
 			boolean hasChildren = ((ITreeContentProvider) ((AbstractTreeViewer) viewer).getContentProvider())
 					.hasChildren(element);
@@ -118,6 +121,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 
 		}
 
+		@Override
 		protected void textChanged() {
 			narrowingDown = previousFilterText == null || getFilterString().startsWith(previousFilterText);
 			previousFilterText = getFilterString();
@@ -125,9 +129,11 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 		}
 
 		// This is a copy of the super method, but without auto-expansion.
+		@Override
 		protected WorkbenchJob doCreateRefreshJob() {
 			return new WorkbenchJob(IncludePathMessages.FilteredElementTreeSelectionDialog_1) {
 
+				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					if (treeViewer.getControl().isDisposed()) {
 						return Status.CANCEL_STATUS;
@@ -209,6 +215,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 		fInitialFilter = initialFilter;
 	}
 
+	@Override
 	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
 		FilteredTree tree = new FilteredTreeWithFilter(parent, style, fInitialFilter, fIsDeepFiltering);
 		tree.setLayoutData(new GridData(GridData.FILL_BOTH));

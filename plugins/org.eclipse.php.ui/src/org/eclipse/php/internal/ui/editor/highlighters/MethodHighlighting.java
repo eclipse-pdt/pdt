@@ -36,6 +36,7 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 		/**
 		 * Mark foo() on: $a->foo();
 		 */
+		@Override
 		public boolean visit(MethodInvocation methodInvocation) {
 			checkDispatch(methodInvocation.getMethod().getFunctionName().getName());
 			return true;
@@ -55,6 +56,7 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 			}
 		}
 
+		@Override
 		public boolean visit(TraitUseStatement node) {
 			ISourceModule sourceModule = getSourceModule();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
@@ -176,6 +178,7 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.MethodHighlighting_0;
 	}

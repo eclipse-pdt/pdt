@@ -42,6 +42,7 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		fRegistry = DLTKUIPlugin.getImageDescriptorRegistry();
 	}
 
+	@Override
 	protected ImageDescriptor getCPListElementBaseImage(BPListElement cpentry) {
 
 		if (cpentry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {

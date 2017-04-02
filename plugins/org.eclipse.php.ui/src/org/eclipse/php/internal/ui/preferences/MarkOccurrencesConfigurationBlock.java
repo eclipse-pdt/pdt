@@ -37,9 +37,11 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 
 	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
@@ -102,6 +104,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 	 *            the parent composite
 	 * @return the control for the preference page
 	 */
+	@Override
 	public Control createControl(final Composite parent) {
 
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -114,6 +117,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		Link link = new Link(composite, SWT.NONE);
 		link.setText(PHPUIMessages.MarkOccurrencesConfigurationBlock_link);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(), e.text, null, null);
 			}
@@ -206,10 +210,12 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		boolean masterState = fStore.getBoolean(masterKey);
 		slave.setEnabled(masterState);
 		SelectionListener listener = new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				slave.setEnabled(master.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		};
@@ -223,6 +229,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		control.setLayoutData(gridData);
 	}
 
+	@Override
 	public void initialize() {
 		initializeFields();
 	}
@@ -240,9 +247,11 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 
 	}
 
+	@Override
 	public void performOk() {
 	}
 
+	@Override
 	public void performDefaults() {
 		restoreFromPreferences();
 		initializeFields();
@@ -265,6 +274,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public void dispose() {
 	}
 }

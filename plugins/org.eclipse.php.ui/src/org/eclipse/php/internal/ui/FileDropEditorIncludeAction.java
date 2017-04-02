@@ -38,6 +38,7 @@ public class FileDropEditorIncludeAction extends FileDropAction {
 	public FileDropEditorIncludeAction() {
 	}
 
+	@Override
 	public boolean run(DropTargetEvent event, IEditorPart targetEditor) {
 
 		if (!(targetEditor instanceof PHPStructuredEditor))

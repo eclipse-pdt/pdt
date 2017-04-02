@@ -44,6 +44,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getParent(Object element) {
 			Object object = fNonExistingFolders.get(element);
 			if (object != null)
@@ -55,6 +56,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object[] getChildren(Object element) {
 			List<Object> result = new ArrayList<>();
 			// all keys with value element
@@ -101,6 +103,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		}
 	}
 
+	@Override
 	public int open() {
 		Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
 		List existingContainers = getExistingContainers(fExistingElements);
@@ -122,6 +125,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		String message = NewWizardMessages.SourceContainerWorkbookPage_ExistingSourceFolderDialog_edit_description;
 
 		MultipleFolderSelectionDialog dialog = new MultipleFolderSelectionDialog(getShell(), lp, cp) {
+			@Override
 			protected Control createDialogArea(Composite parent) {
 				Control result = super.createDialogArea(parent);
 				if (DLTKCore.DEBUG) {
@@ -132,16 +136,19 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 				return result;
 			}
 
+			@Override
 			protected Object createFolder(final IContainer container) {
 				final Object[] result = new Object[1];
 				final BPListElement newElement = new BPListElement(fScriptProject, IBuildpathEntry.BPE_SOURCE, false);
 				final AddSourceFolderWizard wizard = newSourceFolderWizard(newElement, fExistingElements, container);
 				AbstractOpenWizardAction action = new AbstractOpenWizardAction() {
+					@Override
 					protected INewWizard createWizard() throws CoreException {
 						return wizard;
 					}
 				};
 				action.addPropertyChangeListener(new IPropertyChangeListener() {
+					@Override
 					public void propertyChange(PropertyChangeEvent event) {
 						if (event.getProperty().equals(IAction.RESULT)) {
 							if (event.getNewValue().equals(Boolean.TRUE)) {

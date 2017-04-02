@@ -50,6 +50,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * Actually creates an adapter for the parent of target if target is the
 	 * "adapt-able" node
 	 */
+	@Override
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		if ((isActive()) && (target instanceof Node) && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
 			Node node = (Node) target;
@@ -155,6 +156,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		}
 	}
 
+	@Override
 	public void release() {
 		// go through every projectionviewer and call
 		// removeProjectionViewer(viewer);

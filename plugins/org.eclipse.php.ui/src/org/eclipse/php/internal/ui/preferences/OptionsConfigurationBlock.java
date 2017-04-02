@@ -147,6 +147,7 @@ public abstract class OptionsConfigurationBlock {
 			fColor = color;
 		}
 
+		@Override
 		public void paintControl(PaintEvent e) {
 			if (((GridData) fLabelControl.getLayoutData()).exclude) {
 				fParent.removePaintListener(this);
@@ -424,6 +425,7 @@ public abstract class OptionsConfigurationBlock {
 			}
 		});
 		link.addTraverseListener(new TraverseListener() {
+			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_MNEMONIC && e.doit == true) {
 					e.detail = SWT.TRAVERSE_NONE;
@@ -472,10 +474,12 @@ public abstract class OptionsConfigurationBlock {
 
 	private void addHighlight(final Composite parent, final Label labelControl, final Combo comboBox) {
 		comboBox.addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				highlight(parent, labelControl, comboBox, HIGHLIGHT_NONE);
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				highlight(parent, labelControl, comboBox, HIGHLIGHT_FOCUS);
 			}
@@ -504,21 +508,25 @@ public abstract class OptionsConfigurationBlock {
 					highlight(parent, labelControl, comboBox, HIGHLIGHT_NONE);
 			}
 
+			@Override
 			public void mouseMove(MouseEvent e) {
 				int color = comboBox.isEnabled() ? comboBox.isFocusControl() ? HIGHLIGHT_FOCUS
 						: isAroundLabel(e) ? HIGHLIGHT_MOUSE : HIGHLIGHT_NONE : HIGHLIGHT_NONE;
 				highlight(parent, labelControl, comboBox, color);
 			}
 
+			@Override
 			public void mouseDown(MouseEvent e) {
 				if (isAroundLabel(e))
 					comboBox.setFocus();
 			}
 
+			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				// not used
 			}
 
+			@Override
 			public void mouseUp(MouseEvent e) {
 				// not used
 			}
@@ -767,6 +775,7 @@ public abstract class OptionsConfigurationBlock {
 	protected ModifyListener getTextModifyListener() {
 		if (fTextModifyListener == null) {
 			fTextModifyListener = new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					textChanged((Text) e.widget);
 				}

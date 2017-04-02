@@ -682,6 +682,7 @@ public class CodeGeneration {
 		}
 		final List<String> exceptions = new ArrayList<String>();
 		elementAt.accept(new AbstractVisitor() {
+			@Override
 			public boolean visit(ThrowStatement throwStatement) {
 				Expression expression = throwStatement.getExpression();
 				if (expression instanceof ClassInstanceCreation) {

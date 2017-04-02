@@ -178,10 +178,12 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	 * @param event
 	 *            CheckStateChangedEvent
 	 */
+	@Override
 	public void checkStateChanged(final CheckStateChangedEvent event) {
 
 		// Potentially long operation - show a busy cursor
 		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				if (event.getCheckable().equals(fTreeViewer))
 					treeItemChecked(event.getElement(), event.getChecked());
@@ -574,8 +576,10 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	 * @param event
 	 *            ISelection
 	 */
+	@Override
 	public void selectionChanged(final SelectionChangedEvent event) {
 		BusyIndicator.showWhile(getTable().getShell().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				Object selectedElement = selection.getFirstElement();
@@ -600,6 +604,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 
 		// Potentially long operation - show a busy cursor
 		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				setTreeChecked(fRoot, selection);
 				fListViewer.setAllChecked(selection);
@@ -718,6 +723,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	 * 
 	 * @param event
 	 */
+	@Override
 	public void treeCollapsed(TreeExpansionEvent event) {
 		// We don't need to do anything with this
 	}
@@ -727,6 +733,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	 * 
 	 * @param event
 	 */
+	@Override
 	public void treeExpanded(TreeExpansionEvent event) {
 
 		Object item = event.getElement();
@@ -815,6 +822,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 
 		// Potentially long operation - show a busy cursor
 		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				handleUpdateSelection(items);
 			}

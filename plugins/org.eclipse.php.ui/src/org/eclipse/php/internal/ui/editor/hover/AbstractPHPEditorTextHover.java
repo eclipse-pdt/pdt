@@ -30,6 +30,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 
 public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover implements ITextHoverExtension2 {
 
+	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		return getHoverInfo(textViewer, hoverRegion);
 	}
@@ -39,8 +40,10 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover im
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString());
 			}
@@ -55,12 +58,14 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover im
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell shell) {
 				return new DefaultInformationControl(shell, true);
 			}
 		};
 	}
 
+	@Override
 	protected ICodeAssist getCodeAssist() {
 		IEditorPart editor = getEditor();
 		if (editor != null) {

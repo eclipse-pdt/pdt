@@ -30,6 +30,7 @@ abstract class AbstractDeleteChange extends DLTKChange {
 	 * 
 	 * @see IChange#perform(ChangeContext, IProgressMonitor)
 	 */
+	@Override
 	public final Change perform(IProgressMonitor pm) throws CoreException {
 		try {
 			pm.beginTask(RefactoringCoreMessages.AbstractDeleteChange_deleting, 1);

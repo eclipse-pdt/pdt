@@ -86,6 +86,7 @@ public class MultiVariable extends TemplateVariable {
 	 * org.eclipse.jface.text.templates.TemplateVariable#setValues(java.lang
 	 * .String[])
 	 */
+	@Override
 	public void setValues(String[] values) {
 		setChoices(values);
 	}
@@ -99,6 +100,7 @@ public class MultiVariable extends TemplateVariable {
 	 * 
 	 * @since 3.3
 	 */
+	@Override
 	public String getDefaultValue() {
 		return toString(fCurrentChoice);
 	}
@@ -110,6 +112,7 @@ public class MultiVariable extends TemplateVariable {
 	/*
 	 * @see org.eclipse.jface.text.templates.TemplateVariable#getValues()
 	 */
+	@Override
 	public String[] getValues() {
 		Object[] values = getChoices();
 		String[] result = new String[values.length];

@@ -101,6 +101,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public List getChildren(Object element) {
 		if (children == null) {
 			initialize();
@@ -112,6 +113,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public InputStream getContents(Object element) {
 		try {
 			return tarFile.getInputStream((TarEntry) element);
@@ -141,6 +143,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public String getFullPath(Object element) {
 		return stripPath(((TarEntry) element).getName());
 	}
@@ -148,6 +151,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public String getLabel(Object element) {
 		if (element.equals(root)) {
 			return ((TarEntry) element).getName();
@@ -161,6 +165,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	 * 
 	 * @return TarEntry entry
 	 */
+	@Override
 	public Object getRoot() {
 		return root;
 	}
@@ -180,6 +185,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	 * @see org.eclipse.ui.internal.wizards.datatransfer.
 	 * ILeveledImportStructureProvider #closeArchive()
 	 */
+	@Override
 	public boolean closeArchive() {
 		try {
 			getTarFile().close();
@@ -222,6 +228,7 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
+	@Override
 	public boolean isFolder(Object element) {
 		return (((TarEntry) element).getFileType() == TarEntry.DIRECTORY);
 	}
@@ -249,10 +256,12 @@ public class TarLeveledStructureProvider implements ILeveledImportStructureProvi
 		return path;
 	}
 
+	@Override
 	public void setStrip(int level) {
 		stripLevel = level;
 	}
 
+	@Override
 	public int getStrip() {
 		return stripLevel;
 	}

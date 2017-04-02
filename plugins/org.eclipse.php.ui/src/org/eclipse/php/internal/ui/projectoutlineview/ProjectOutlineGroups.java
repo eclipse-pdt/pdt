@@ -81,6 +81,7 @@ public enum ProjectOutlineGroups {
 					IDLTKSearchScope.SOURCES);
 
 			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+				@Override
 				public int compare(IModelElement o1, IModelElement o2) {
 					int res = o1.getElementName().compareTo(o2.getElementName());
 					if (res == 0) {

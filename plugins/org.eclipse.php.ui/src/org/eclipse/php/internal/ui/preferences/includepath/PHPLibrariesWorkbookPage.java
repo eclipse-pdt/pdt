@@ -129,10 +129,12 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	 * org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathBasePage#setTitle
 	 * (java.lang.String)
 	 */
+	@Override
 	public void setTitle(String title) {
 		fLibrariesList.setLabelText(title);
 	}
 
+	@Override
 	public void init(IScriptProject jproject) {
 		fCurrJProject = jproject;
 		updateLibrariesList();
@@ -152,6 +154,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	// -------- UI creation
+	@Override
 	public Control getControl(Composite parent) {
 
 		PixelConverter converter = new PixelConverter(parent);
@@ -176,22 +179,27 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		private final Object[] EMPTY_ARR = new Object[0];
 
 		// -------- IListAdapter --------
+		@Override
 		public void customButtonPressed(TreeListDialogField field, int index) {
 			libaryPageCustomButtonPressed(field, index);
 		}
 
+		@Override
 		public void selectionChanged(TreeListDialogField field) {
 			libaryPageSelectionChanged(field);
 		}
 
+		@Override
 		public void doubleClicked(TreeListDialogField field) {
 			libaryPageDoubleClicked(field);
 		}
 
+		@Override
 		public void keyPressed(TreeListDialogField field, KeyEvent event) {
 			libaryPageKeyPressed(field, event);
 		}
 
+		@Override
 		public Object[] getChildren(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElement) {
 				return ((BPListElement) element).getChildren();
@@ -204,6 +212,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			return EMPTY_ARR;
 		}
 
+		@Override
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof BPListElementAttribute) {
 				return ((BPListElementAttribute) element).getParent();
@@ -211,11 +220,13 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(TreeListDialogField field, Object element) {
 			return getChildren(field, element).length > 0;
 		}
 
 		// ---------- IDialogFieldListener --------
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			libaryPageDialogFieldChanged(field);
 		}
@@ -297,6 +308,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		return null;
 	}
 
+	@Override
 	public void addElement(BPListElement element) {
 		fLibrariesList.addElement(element);
 		fLibrariesList.postSetSelection(new StructuredSelection(element));
@@ -520,6 +532,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			final IScriptProject jproject, final IPath containerPath) {
 		try {
 			IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
 					BuildPathSupport.modifyBuildpathEntry(null, newEntry, changedAttributes, jproject, containerPath,
 							monitor);
@@ -809,6 +822,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		return currEntries;
 	}
 
+	@Override
 	public boolean isEntryKind(int kind) {
 		return kind == IBuildpathEntry.BPE_LIBRARY || kind == IBuildpathEntry.BPE_CONTAINER;
 	}
@@ -816,6 +830,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#getSelection
 	 */
+	@Override
 	public List getSelection() {
 		return fLibrariesList.getSelectedElements();
 	}
@@ -823,6 +838,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fLibrariesList.selectElements(new StructuredSelection(selElements));
 		if (expand) {

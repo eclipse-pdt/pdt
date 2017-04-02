@@ -56,6 +56,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 		 * 
 		 * @see org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate#shouldSpellcheck(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 		 */
+		@Override
 		public boolean shouldSpellcheck(int offset, IStructuredModel model) {
 			if (model instanceof DOMModelForPHP) {
 				IStructuredDocument doc = model.getStructuredDocument();
@@ -105,6 +106,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object,
 	 *      java.lang.Class)
 	 */
+	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		ISpellcheckDelegate decision = null;
 
@@ -120,6 +122,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
 	 */
+	@Override
 	public Class[] getAdapterList() {
 		return ADAPTER_LIST;
 	}

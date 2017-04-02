@@ -34,6 +34,7 @@ public class PHPOutlineLabelProvider extends XMLLabelProvider implements IStyled
 		this.modelElementLabelProvider = modelElementLabelProvider;
 	}
 
+	@Override
 	public Image getImage(Object o) {
 		if (o instanceof IModelElement) {
 			return modelElementLabelProvider.getImage(o);
@@ -41,6 +42,7 @@ public class PHPOutlineLabelProvider extends XMLLabelProvider implements IStyled
 		return super.getImage(o);
 	}
 
+	@Override
 	public String getText(Object o) {
 		if (o instanceof IModelElement) {
 			return modelElementLabelProvider.getText(o);

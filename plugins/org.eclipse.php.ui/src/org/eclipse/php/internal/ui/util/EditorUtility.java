@@ -51,6 +51,7 @@ public class EditorUtility {
 				final ISourceModule unit = (ISourceModule) element;
 				if (unit.getScriptProject() instanceof ExternalScriptProject) {
 					PHPStructuredEditor editorPart = (PHPStructuredEditor) findOpenEditor(new IEditorLookupCondition() {
+						@Override
 						public boolean find(IEditorPart editorPart) {
 							return editorPart instanceof PHPStructuredEditor
 									&& ((PHPStructuredEditor) editorPart).getModelElement().equals(unit);
@@ -87,6 +88,7 @@ public class EditorUtility {
 	public static final PHPStructuredEditor getPHPEditor(final ITextViewer textViewer) {
 
 		return (PHPStructuredEditor) findOpenEditor(new IEditorLookupCondition() {
+			@Override
 			public boolean find(IEditorPart editorPart) {
 				return editorPart instanceof PHPStructuredEditor
 						&& ((PHPStructuredEditor) editorPart).getTextViewer().getDocument() == textViewer.getDocument();

@@ -154,6 +154,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
 		if (fStatusLineLabelProvider == null) {
 			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
+				@Override
 				public String getText(Object element) {
 					if (element == null)
 						return null;
@@ -375,10 +376,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	/*
 	 * @see SourceViewerConfiguration#getTextHover(ISourceViewer, String)
 	 */
+	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
 		return getTextHover(sourceViewer, contentType, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 	}
 
+	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
@@ -390,6 +393,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		if (inheritedDetectors != null) {
 			for (final IHyperlinkDetector detector : inheritedDetectors) {
 				detectors.add(new IHyperlinkDetector() {
+					@Override
 					public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
 							boolean canShowMultipleHyperlinks) {
 						try {
@@ -405,6 +409,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
+	@Override
 	protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 		Map<String, IAdaptable> targets = super.getHyperlinkDetectorTargets(sourceViewer);
 		if (sourceViewer instanceof PHPStructuredTextViewer) {
@@ -414,6 +419,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return targets;
 	}
 
+	@Override
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		IContentFormatter usedFormatter = null;
 
@@ -576,10 +582,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private IInformationControlCreator getHierarchyPresenterControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				int shellStyle = SWT.RESIZE;
 				int treeStyle = SWT.V_SCROLL | SWT.H_SCROLL;
 				return new HierarchyInformationControl(parent, shellStyle, treeStyle) {
+					@Override
 					protected IPreferenceStore getPreferenceStore() {
 						return PHPUiPlugin.getDefault().getPreferenceStore();
 					}
@@ -604,6 +612,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private IInformationControlCreator getOutlinePresenterControlCreator(ISourceViewer sourceViewer,
 			final String commandId) {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				int shellStyle = SWT.RESIZE;
 				int treeStyle = SWT.V_SCROLL | SWT.H_SCROLL;
@@ -616,6 +625,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * @seeorg.eclipse.jface.text.source.SourceViewerConfiguration#
 	 * getQuickAssistAssistant(org.eclipse.jface.text.source.ISourceViewer)
 	 */
+	@Override
 	public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
 		if (fQuickAssistant == null) {
 			IQuickAssistAssistant assistant = new PHPCorrectionAssistant();
@@ -647,14 +657,17 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			fTextHover = hover;
 		}
 
+		@Override
 		public String getInformation(ITextViewer textViewer, IRegion subject) {
 			return (String) getInformation2(textViewer, subject);
 		}
 
+		@Override
 		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 			return fTextHover.getHoverInfo(textViewer, subject);
 		}
 
+		@Override
 		public IInformationControlCreator getInformationPresenterControlCreator() {
 			if (fTextHover instanceof IInformationProviderExtension2)
 				return ((IInformationProviderExtension2) fTextHover).getInformationPresenterControlCreator();
@@ -662,6 +675,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return null;
 		}
 
+		@Override
 		public IRegion getSubject(ITextViewer textViewer, int offset) {
 			return fTextHover.getHoverRegion(textViewer, offset);
 		}
@@ -670,6 +684,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	/**
 	 * @return the associated content assistnat
 	 */
+	@Override
 	protected StructuredContentAssistant getContentAssistant() {
 		return this.fContentAssistant;
 	}
@@ -707,6 +722,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return reconciler;
 	}
 
+	@Override
 	public void setHighlighter(ReconcilerHighlighter highlighter) {
 		fHighlighter = highlighter;
 		super.setHighlighter(highlighter);

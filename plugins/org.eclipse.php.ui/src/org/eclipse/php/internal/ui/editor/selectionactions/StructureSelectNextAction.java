@@ -83,6 +83,7 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 	 * @see StructureSelectionAction#internalGetNewSelectionRange(ISourceRange,
 	 * ICompilationUnit, SelectionAnalyzer)
 	 */
+	@Override
 	public ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange, ISourceReference sr,
 			SelectionAnalyzer selAnalyzer) throws ModelException {
 		if (oldSourceRange.getLength() == 0 && selAnalyzer.getLastCoveringNode() != null) {

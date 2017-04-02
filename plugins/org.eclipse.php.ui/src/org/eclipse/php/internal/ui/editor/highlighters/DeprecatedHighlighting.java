@@ -205,6 +205,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		return 120;
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.DeprecatedHighlighting_0;
 	}

@@ -74,6 +74,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	public PHPFunctionsPart() {
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		fViewer = createViewer(parent);
 		fViewer.setUseHashlookup(true);
@@ -103,9 +104,11 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 		fViewer.getTree().addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				Display.getCurrent().asyncExec(new Runnable() {
 
+					@Override
 					public void run() {
 						if (!fViewer.getTree().isDisposed()
 								&& (shouldRefresh || fViewer.getTree().getItems().length == 0)) {
@@ -117,6 +120,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 				});
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 			}
 
@@ -151,6 +155,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		fContextMenu = menuMgr.createContextMenu(fViewer.getTree());
 		menuMgr.add(showFunctionHelpAction);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager mgr) {
 				ISelection selection = fViewer.getSelection();
 				if (!selection.isEmpty()) {
@@ -268,6 +273,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	private void addMouseTrackListener() {
 		final Tree tree = fViewer.getTree();
 		tree.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
 			public void mouseHover(MouseEvent e) {
 				TreeItem item = tree.getItem(new Point(e.x, e.y));
 				if (item != null) {
@@ -283,6 +289,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 	private void addDoubleClickListener() {
 		fViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IEditorPart editor = EditorUtility.getPHPStructuredEditor(getViewSite().getPage().getActiveEditor());
 				StructuredSelection selection = (StructuredSelection) fViewer.getSelection();
@@ -307,6 +314,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		});
 	}
 
+	@Override
 	public void setFocus() {
 		if (fViewer != null && !fViewer.getTree().isDisposed()) {
 			fViewer.getTree().setFocus();
@@ -326,6 +334,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		getSite().getPage().removePartListener(this);
 		if (fContextMenu != null && !fContextMenu.isDisposed()) {
@@ -340,9 +349,11 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		super.dispose();
 	}
 
+	@Override
 	public void partActivated(IWorkbenchPart part) {
 		if (part.equals(this)) {
 			Display.getCurrent().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					setFocus();
 				}
@@ -356,15 +367,19 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		}
 	}
 
+	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
 	}
 
+	@Override
 	public void partClosed(IWorkbenchPart part) {
 	}
 
+	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 	}
 
+	@Override
 	public void partOpened(IWorkbenchPart part) {
 		if (part.equals(this) && getViewer().getInput() == null) {
 			updateInputForCurrentEditor(null);
@@ -452,6 +467,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 			this.url = url;
 		}
 
+		@Override
 		public void run() {
 			if (url != null) {
 				PHPManualFactory.getManual().showFunctionHelp(url);

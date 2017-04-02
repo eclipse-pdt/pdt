@@ -38,6 +38,7 @@ public class PHPContentTypeFilter extends ViewerFilter implements IExecutableExt
 	 * 
 	 * @return Returns true if element should be included in filtered set
 	 */
+	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IFile) {
 			IFile file = (IFile) element;
@@ -49,6 +50,7 @@ public class PHPContentTypeFilter extends ViewerFilter implements IExecutableExt
 		return true;
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		String pattern = config.getAttribute("pattern"); //$NON-NLS-1$

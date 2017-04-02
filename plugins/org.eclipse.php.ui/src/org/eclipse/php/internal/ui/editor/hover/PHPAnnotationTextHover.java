@@ -20,6 +20,7 @@ public class PHPAnnotationTextHover extends AbstractAnnotationHover implements I
 		super(true);
 	}
 
+	@Override
 	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
 	}

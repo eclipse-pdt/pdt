@@ -56,6 +56,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		fStore = store;
 	}
 
+	@Override
 	public void initialize() {
 		initializeFields();
 	}
@@ -85,13 +86,16 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		StatusUtil.applyToStatusLine(fMainPreferencePage, status);
 	}
 
+	@Override
 	public void performOk() {
 	}
 
+	@Override
 	public void performDefaults() {
 		initializeFields();
 	}
 
+	@Override
 	public void dispose() {
 	}
 
@@ -124,6 +128,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		return keys;
 	}
 
+	@Override
 	public Control createControl(Composite parent) {
 		ScrolledPageContent scrolled = new ScrolledPageContent(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolled.setExpandHorizontal(true);
@@ -290,6 +295,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		Assert.isTrue(slaves.length > 0);
 		indent(slaves[0]);
 		SelectionListener listener = new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean state = master.getSelection();
 				for (int i = 0; i < slaves.length; i++) {
@@ -297,6 +303,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 				}
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		};
@@ -310,9 +317,11 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private final Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
 	private final SelectionListener fCheckBoxListener = new SelectionListener() {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fStore.setValue(fCheckBoxes.get(button), button.getSelection());

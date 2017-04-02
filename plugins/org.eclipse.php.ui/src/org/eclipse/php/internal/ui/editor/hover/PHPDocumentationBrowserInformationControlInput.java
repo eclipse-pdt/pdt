@@ -53,6 +53,7 @@ public class PHPDocumentationBrowserInformationControlInput extends BrowserInfor
 	 * 
 	 * @since 3.4
 	 */
+	@Override
 	public int getLeadingImageWidth() {
 		return fLeadingImageWidth;
 	}
@@ -69,6 +70,7 @@ public class PHPDocumentationBrowserInformationControlInput extends BrowserInfor
 	/*
 	 * @see org.eclipse.jface.internal.text.html.BrowserInput#getHtml()
 	 */
+	@Override
 	public String getHtml() {
 		return fHtml;
 	}
@@ -76,6 +78,7 @@ public class PHPDocumentationBrowserInformationControlInput extends BrowserInfor
 	/*
 	 * @see org.eclipse.jdt.internal.ui.infoviews.BrowserInput#getInputElement()
 	 */
+	@Override
 	public Object getInputElement() {
 		return fElement == null ? (Object) fHtml : fElement;
 	}
@@ -83,6 +86,7 @@ public class PHPDocumentationBrowserInformationControlInput extends BrowserInfor
 	/*
 	 * @see org.eclipse.jdt.internal.ui.infoviews.BrowserInput#getInputName()
 	 */
+	@Override
 	public String getInputName() {
 		return fElement == null ? "" : fElement.getElementName(); //$NON-NLS-1$
 	}

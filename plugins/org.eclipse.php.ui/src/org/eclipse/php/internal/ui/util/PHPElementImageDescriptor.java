@@ -132,10 +132,12 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 		return new Point(fSize.x, fSize.y);
 	}
 
+	@Override
 	protected Point getSize() {
 		return fSize;
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		if (object == null || !PHPElementImageDescriptor.class.equals(object.getClass()))
 			return false;
@@ -144,10 +146,12 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));
 	}
 
+	@Override
 	public int hashCode() {
 		return fBaseImage.hashCode() | fFlags | fSize.hashCode();
 	}
 
+	@Override
 	protected void drawCompositeImage(int width, int height) {
 		ImageData bg = getImageData(fBaseImage);
 

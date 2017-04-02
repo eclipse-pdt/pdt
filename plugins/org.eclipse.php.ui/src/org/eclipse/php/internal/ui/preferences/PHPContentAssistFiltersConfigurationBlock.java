@@ -32,6 +32,7 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 	protected Button caseSensitivityCheckBox;
 	protected Button showStrictOptionsCheckBox;
 
+	@Override
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_filtersSectionLabel);
 		caseSensitivityCheckBox = addCheckBox(composite,
@@ -41,10 +42,12 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0);
 	}
 
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getCorePreferenceStore();
 	}
 
+	@Override
 	protected void storeValues() {
 		super.storeValues();
 		try {

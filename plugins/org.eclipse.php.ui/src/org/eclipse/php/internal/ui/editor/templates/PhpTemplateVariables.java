@@ -41,6 +41,7 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_4);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
 			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
@@ -57,6 +58,7 @@ public class PhpTemplateVariables {
 			return findUnusedName(knownVarsSet);
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -69,10 +71,12 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_17);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			return "dupcia"; //$NON-NLS-1$
 		}
 
+		@Override
 		public void resolve(TemplateVariable variable, TemplateContext context) {
 			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
 			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
@@ -99,6 +103,7 @@ public class PhpTemplateVariables {
 			}
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -111,6 +116,7 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_22);
 		}
 
+		@Override
 		protected String[] resolveAll(TemplateContext context) {
 			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
 			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
@@ -124,6 +130,7 @@ public class PhpTemplateVariables {
 			return requestor.getVariables();
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -136,6 +143,7 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_23);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			String path = null;
 
@@ -154,6 +162,7 @@ public class PhpTemplateVariables {
 			return path;
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -166,6 +175,7 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_24);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			ISourceModule module = getSourceModule(context);
 			if (module == null)
@@ -186,6 +196,7 @@ public class PhpTemplateVariables {
 			return null;
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -198,6 +209,7 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_25);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			ISourceModule module = getSourceModule(context);
 			if (module == null)
@@ -218,6 +230,7 @@ public class PhpTemplateVariables {
 			return null;
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -230,6 +243,7 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_26);
 		}
 
+		@Override
 		protected String[] resolveAll(TemplateContext context) {
 			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
 			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
@@ -253,6 +267,7 @@ public class PhpTemplateVariables {
 					}
 				}
 
+				@Override
 				public ICompletionContext[] createContexts() {
 					return new ICompletionContext[] { new GlobalStatementContext() };
 				}
@@ -266,6 +281,7 @@ public class PhpTemplateVariables {
 			return requestor.getVariables();
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -278,10 +294,12 @@ public class PhpTemplateVariables {
 			super(NAME, Messages.PhpTemplateVariables_27);
 		}
 
+		@Override
 		protected String resolve(TemplateContext context) {
 			return "dupcia"; //$NON-NLS-1$
 		}
 
+		@Override
 		public void resolve(TemplateVariable variable, TemplateContext context) {
 			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
 			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
@@ -300,6 +318,7 @@ public class PhpTemplateVariables {
 			variable.setResolved(true);
 		}
 
+		@Override
 		protected boolean isUnambiguous(TemplateContext context) {
 			return resolve(context) != null;
 		}
@@ -375,6 +394,7 @@ public class PhpTemplateVariables {
 			}
 		}
 
+		@Override
 		public ICompletionContext[] createContexts() {
 			return new ICompletionContext[] { new ClassObjMemberContext(),
 					new GlobalMethodStatementContextForTemplate(), new GlobalStatementContextForTemplate(), };

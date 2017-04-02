@@ -233,11 +233,13 @@ public class PHPSourceViewerInformationControl
 
 		fText.addKeyListener(new KeyListener() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == 0x1B) // ESC
 					fShell.dispose();
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 			}
 		});
@@ -361,6 +363,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setInformation(String)
 	 */
+	@Override
 	public void setInformation(String content) {
 		if (content == null) {
 			fViewer.setInput(null);
@@ -405,6 +408,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setVisible(boolean)
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		fShell.setVisible(visible);
 	}
@@ -414,6 +418,7 @@ public class PHPSourceViewerInformationControl
 	 * 
 	 * @since 3.0
 	 */
+	@Override
 	public void widgetDisposed(DisposeEvent event) {
 		if (fStatusTextFont != null && !fStatusTextFont.isDisposed())
 			fStatusTextFont.dispose();
@@ -426,6 +431,7 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void dispose() {
 		if (fShell != null && !fShell.isDisposed())
 			fShell.dispose();
@@ -436,6 +442,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setSize(int, int)
 	 */
+	@Override
 	public void setSize(int width, int height) {
 
 		if (fStatusField != null) {
@@ -453,6 +460,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setLocation(Point)
 	 */
+	@Override
 	public void setLocation(Point location) {
 		fShell.setLocation(location);
 	}
@@ -460,6 +468,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setSizeConstraints(int, int)
 	 */
+	@Override
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		fMaxWidth = maxWidth;
 		fMaxHeight = maxHeight;
@@ -468,6 +477,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#computeSizeHint()
 	 */
+	@Override
 	public Point computeSizeHint() {
 		// compute the preferred size
 		int x = SWT.DEFAULT;
@@ -489,6 +499,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#addDisposeListener(DisposeListener)
 	 */
+	@Override
 	public void addDisposeListener(DisposeListener listener) {
 		fShell.addDisposeListener(listener);
 	}
@@ -496,6 +507,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#removeDisposeListener(DisposeListener)
 	 */
+	@Override
 	public void removeDisposeListener(DisposeListener listener) {
 		fShell.removeDisposeListener(listener);
 	}
@@ -503,6 +515,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setForegroundColor(Color)
 	 */
+	@Override
 	public void setForegroundColor(Color foreground) {
 		fText.setForeground(foreground);
 	}
@@ -510,6 +523,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setBackgroundColor(Color)
 	 */
+	@Override
 	public void setBackgroundColor(Color background) {
 		fText.setBackground(background);
 	}
@@ -517,6 +531,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#isFocusControl()
 	 */
+	@Override
 	public boolean isFocusControl() {
 		return fText.isFocusControl();
 	}
@@ -524,6 +539,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 		fShell.forceFocus();
 		fText.setFocus();
@@ -532,6 +548,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#addFocusListener(FocusListener)
 	 */
+	@Override
 	public void addFocusListener(FocusListener listener) {
 		fText.addFocusListener(listener);
 	}
@@ -539,6 +556,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControl#removeFocusListener(FocusListener)
 	 */
+	@Override
 	public void removeFocusListener(FocusListener listener) {
 		fText.removeFocusListener(listener);
 	}
@@ -546,6 +564,7 @@ public class PHPSourceViewerInformationControl
 	/*
 	 * @see IInformationControlExtension#hasContents()
 	 */
+	@Override
 	public boolean hasContents() {
 		return fText.getCharCount() > 0;
 	}

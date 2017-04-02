@@ -119,6 +119,7 @@ public class SWTUtil {
 		manager.addToRoot(targetNode);
 		final PreferenceDialog dialog = new PreferenceDialog(DebugUIPlugin.getShell(), manager);
 		BusyIndicator.showWhile(DebugUIPlugin.getStandardDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				dialog.create();
 				dialog.setMessage(targetNode.getLabelText());
@@ -284,6 +285,7 @@ public class SWTUtil {
 	 */
 	public static void setAccessibilityText(Control control, final String text) {
 		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				e.result = text;
 			}

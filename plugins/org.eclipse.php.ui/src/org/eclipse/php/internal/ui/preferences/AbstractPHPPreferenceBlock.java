@@ -224,6 +224,7 @@ public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePa
 	/**
 	 * Creates sub-section group with title
 	 */
+	@Override
 	protected Composite createSubsection(Composite parent, String label) {
 		Group group = new Group(parent, SWT.SHADOW_NONE);
 		group.setText(label);
@@ -238,6 +239,7 @@ public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePa
 	/**
 	 * Create new checkbox and associate a preference key with it
 	 */
+	@Override
 	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
@@ -260,6 +262,7 @@ public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePa
 			this.stringValidator = stringValidator;
 		}
 
+		@Override
 		public void modifyText(ModifyEvent e) {
 			ValidationStatus status = stringValidator.validate(((Text) e.widget).getText());
 			if (!status.isOK()) {
@@ -321,10 +324,12 @@ public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePa
 		return PreferenceConstants.getPreferenceStore();
 	}
 
+	@Override
 	public void performDefaults() {
 		restoreDefaultValues();
 	}
 
+	@Override
 	public boolean performOK(boolean isProjectSpecific) {
 		storeValues();
 		try {
@@ -335,6 +340,7 @@ public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePa
 		return true;
 	}
 
+	@Override
 	public void performApply(boolean isProjectSpecific) {
 		storeValues();
 		try {

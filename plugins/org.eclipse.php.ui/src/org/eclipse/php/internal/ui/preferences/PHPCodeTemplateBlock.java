@@ -65,10 +65,12 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		private final Object[] NO_CHILDREN = new Object[0];
 
+		@Override
 		public void customButtonPressed(TreeListDialogField field, int index) {
 			doButtonPressed(index, field.getSelectedElements());
 		}
 
+		@Override
 		public void selectionChanged(TreeListDialogField field) {
 			List selected = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selected));
@@ -77,6 +79,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 			updateSourceViewerInput(selected);
 		}
 
+		@Override
 		public void doubleClicked(TreeListDialogField field) {
 			List selected = field.getSelectedElements();
 			if (canEdit(selected)) {
@@ -84,6 +87,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 			}
 		}
 
+		@Override
 		public Object[] getChildren(TreeListDialogField field, Object element) {
 			if (element == COMMENT_NODE || element == CODE_NODE) {
 				return getTemplateOfCategory(element == COMMENT_NODE);
@@ -91,6 +95,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 			return NO_CHILDREN;
 		}
 
+		@Override
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof TemplatePersistenceData) {
 				TemplatePersistenceData data = (TemplatePersistenceData) element;
@@ -102,16 +107,19 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(TreeListDialogField field, Object element) {
 			return (element == COMMENT_NODE || element == CODE_NODE);
 		}
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			if (field == fGenerateComments) {
 				setValue(PREF_GENERATE_COMMENTS, fGenerateComments.isSelected());
 			}
 		}
 
+		@Override
 		public void keyPressed(TreeListDialogField field, KeyEvent event) {
 		}
 
@@ -121,6 +129,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		 * @see
 		 * org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
 		 */
+		@Override
 		public int category(Object element) {
 			if (element == COMMENT_NODE) {
 				return 1;
@@ -185,6 +194,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		 * @see
 		 * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object element) {
 			return null;
 
@@ -196,6 +206,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		 * @see
 		 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
+		@Override
 		public String getText(Object element) {
 			if (element == COMMENT_NODE || element == CODE_NODE) {
 				return (String) element;
@@ -316,6 +327,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		fCodeTemplateTree.postSetSelection(new StructuredSelection(element));
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		fPixelConverter = new PixelConverter(parent);
 
@@ -347,6 +359,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
 	 * updateControls()
 	 */
+	@Override
 	protected void updateControls() {
 		fGenerateComments.setSelection(getBooleanValue(PREF_GENERATE_COMMENTS));
 	}
@@ -609,6 +622,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 				PreferencesMessages.PHPCodeTemplateBlock_2);
 	}
 
+	@Override
 	public void performDefaults() {
 		super.performDefaults();
 		fTemplateStore.restoreDefaults();
@@ -663,6 +677,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		MessageDialog.openError(getShell(), title, message);
 	}
 
+	@Override
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		return null;
 	}
@@ -673,6 +688,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
 	 * validateSettings(java.lang.String, java.lang.String)
 	 */
+	@Override
 	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		// no validation here
 	}

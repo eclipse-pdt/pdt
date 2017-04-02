@@ -28,11 +28,13 @@ public abstract class AbstractPHPContentAssistPreferencePageBlock extends Abstra
 
 	private IPreferenceStore preferenceStore;
 
+	@Override
 	public void initializeValues(PreferencePage preferencePage) {
 		this.preferencePage = preferencePage;
 		initializeValues();
 	}
 
+	@Override
 	protected IPreferenceStore getPreferenceStore() {
 		if (preferenceStore == null) {
 			preferenceStore = preferencePage.getPreferenceStore();
@@ -40,6 +42,7 @@ public abstract class AbstractPHPContentAssistPreferencePageBlock extends Abstra
 		return preferenceStore;
 	}
 
+	@Override
 	public boolean performCancel() {
 		return true;
 	}
@@ -47,6 +50,7 @@ public abstract class AbstractPHPContentAssistPreferencePageBlock extends Abstra
 	/**
 	 * Creates sub-section group with title
 	 */
+	@Override
 	protected Composite createSubsection(Composite parent, String label) {
 		Group group = new Group(parent, SWT.SHADOW_NONE);
 		group.setText(label);
@@ -58,6 +62,7 @@ public abstract class AbstractPHPContentAssistPreferencePageBlock extends Abstra
 		return group;
 	}
 
+	@Override
 	protected PreferencePage getPreferencePage() {
 		return preferencePage;
 	}

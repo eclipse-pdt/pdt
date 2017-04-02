@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 public class TodoTaskInputDialog extends StatusDialog {
 
 	private class CompilerTodoTaskInputAdapter implements IDialogFieldListener {
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			doValidation();
 		}
@@ -103,6 +104,7 @@ public class TodoTaskInputDialog extends StatusDialog {
 		return task;
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 
@@ -146,6 +148,7 @@ public class TodoTaskInputDialog extends StatusDialog {
 	/*
 	 * @see org.eclipse.jface.window.Window#configureShell(Shell)
 	 */
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		// TODO - Add the Help contex id

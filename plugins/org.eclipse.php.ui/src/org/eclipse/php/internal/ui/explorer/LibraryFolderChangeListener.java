@@ -30,6 +30,7 @@ import org.eclipse.ui.*;
  */
 public class LibraryFolderChangeListener implements ILibraryFolderChangeListener {
 
+	@Override
 	public void foldersChanged(IFolder[] folders) {
 		try {
 			updatePhpExplorer(folders);
@@ -56,6 +57,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 		// make sure the actual update in the PHP Explorer is executed in the UI
 		// thread
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				PHPExplorerPart phpExplorer = getPhpExplorer();
 				if (phpExplorer != null) {

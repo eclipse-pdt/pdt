@@ -68,6 +68,7 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 		}
 	}
 
+	@Override
 	protected Control createContents(Composite composite) {
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
@@ -84,6 +85,7 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 		return scrolledCompositeImpl;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -93,6 +95,7 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 
 	protected abstract String getPreferencePageID();
 
+	@Override
 	public boolean performCancel() {
 		for (int i = 0; i < fConfigurationBlocks.length; i++) {
 			IPHPPreferencePageBlock block = fConfigurationBlocks[i];
@@ -101,6 +104,7 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 		return super.performCancel();
 	}
 
+	@Override
 	protected void performDefaults() {
 		for (int i = 0; i < fConfigurationBlocks.length; i++) {
 			IPHPPreferencePageBlock block = fConfigurationBlocks[i];
@@ -109,6 +113,7 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 		super.performDefaults();
 	}
 
+	@Override
 	public boolean performOk() {
 		for (int i = 0; i < fConfigurationBlocks.length; i++) {
 			IPHPPreferencePageBlock block = fConfigurationBlocks[i];

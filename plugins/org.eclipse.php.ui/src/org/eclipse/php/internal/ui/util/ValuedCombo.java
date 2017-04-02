@@ -61,6 +61,7 @@ public class ValuedCombo extends Combo {
 		return false;
 	}
 
+	@Override
 	protected void checkSubclass() {
 	}
 

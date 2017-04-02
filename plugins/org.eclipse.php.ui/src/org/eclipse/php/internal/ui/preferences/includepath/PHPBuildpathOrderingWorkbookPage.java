@@ -32,6 +32,7 @@ public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 		fBuildpathList = buildpathList;
 	}
 
+	@Override
 	public Control getControl(Composite parent) {
 		PixelConverter converter = new PixelConverter(parent);
 
@@ -50,6 +51,7 @@ public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#getSelection
 	 */
+	@Override
 	public List getSelection() {
 		return fBuildpathList.getSelectedElements();
 	}
@@ -57,14 +59,17 @@ public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fBuildpathList.selectElements(new StructuredSelection(selElements));
 	}
 
+	@Override
 	public boolean isEntryKind(int kind) {
 		return true;
 	}
 
+	@Override
 	public void init(IScriptProject scriptProject) {
 	}
 

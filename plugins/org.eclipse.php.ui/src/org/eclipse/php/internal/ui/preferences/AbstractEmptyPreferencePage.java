@@ -38,6 +38,7 @@ abstract public class AbstractEmptyPreferencePage extends PropertyAndPreferenceP
 		super();
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 

@@ -49,6 +49,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 		super(provideMembers);
 		fWorkingSetModel = model;
 		fListener = new IPropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				workingSetModelChanged(event);
 			}
@@ -59,6 +60,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 		fWorkingSetModel.removePropertyChangeListener(fListener);
 		super.dispose();
@@ -67,6 +69,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof IWorkingSet)
 			return true;
@@ -76,6 +79,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getChildren(Object element) {
 		Object[] children;
 		if (element instanceof WorkingSetModel) {
@@ -144,6 +148,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public TreePath[] getTreePaths(Object element) {
 		if (element instanceof IWorkingSet) {
 			TreePath path = new TreePath(new Object[] { element });
@@ -191,6 +196,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getParent(Object child) {
 		Object[] parents = fWorkingSetModel.getAllParents(child);
 		if (parents.length == 0)
@@ -199,6 +205,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 		return first;
 	}
 
+	@Override
 	protected void augmentElementToRefresh(List toRefresh, int relation, Object affectedElement) {
 		// we are refreshing the ScriptModel and are in working set mode.
 		if (DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).equals(affectedElement)) {

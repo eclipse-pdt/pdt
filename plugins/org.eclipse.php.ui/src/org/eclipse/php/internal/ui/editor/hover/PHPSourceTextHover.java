@@ -46,6 +46,7 @@ public class PHPSourceTextHover extends ScriptSourceHover
 	 * 
 	 * @since 3.1 This is the format of the window on focus
 	 */
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new AbstractReusableInformationControlCreator() {
@@ -55,6 +56,7 @@ public class PHPSourceTextHover extends ScriptSourceHover
 				 * AbstractReusableInformationControlCreator
 				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
+				@Override
 				public IInformationControl doCreateInformationControl(Shell parent) {
 					int shellStyle = SWT.RESIZE | SWT.TOOL;
 					int style = SWT.V_SCROLL | SWT.H_SCROLL;
@@ -70,6 +72,7 @@ public class PHPSourceTextHover extends ScriptSourceHover
 	 * 
 	 * @since 3.2 - This is the format of the window on hover
 	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fHoverControlCreator == null) {
 			fHoverControlCreator = new AbstractReusableInformationControlCreator() {
@@ -78,6 +81,7 @@ public class PHPSourceTextHover extends ScriptSourceHover
 				 * AbstractReusableInformationControlCreator
 				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
+				@Override
 				public IInformationControl doCreateInformationControl(Shell parent) {
 					return new PHPSourceViewerInformationControl(parent, SWT.NONE,
 							EditorsUI.getTooltipAffordanceString());
@@ -87,6 +91,7 @@ public class PHPSourceTextHover extends ScriptSourceHover
 		return fHoverControlCreator;
 	}
 
+	@Override
 	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
 	}

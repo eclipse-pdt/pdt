@@ -91,6 +91,7 @@ public class VariableCreationDialog extends StatusDialog {
 	/*
 	 * @see Windows#configureShell
 	 */
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
@@ -106,6 +107,7 @@ public class VariableCreationDialog extends StatusDialog {
 	/*
 	 * @see Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 
@@ -143,11 +145,13 @@ public class VariableCreationDialog extends StatusDialog {
 	private class NewVariableAdapter implements IDialogFieldListener, IStringButtonAdapter {
 
 		// -------- IDialogFieldListener
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 			doFieldUpdated(field);
 		}
 
 		// -------- IStringButtonAdapter
+		@Override
 		public void changeControlPressed(DialogField field) {
 			doChangeControlPressed(field);
 		}

@@ -30,6 +30,7 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * @seeorg.eclipse.ui.internal.editors.text.
 	 * AbstractConfigureationBlockPreferencePage#getHelpId()
 	 */
+	@Override
 	protected String getHelpId() {
 		return IPHPHelpContextIds.HOVERS_PREFERENCES;
 	}
@@ -38,6 +39,7 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * @see org.eclipse.ui.internal.editors.text.
 	 * AbstractConfigurationBlockPreferencePage #setDescription()
 	 */
+	@Override
 	protected void setDescription() {
 		String description = PHPUIMessages.PHPEditorPreferencePage_hoverTab_title;
 		setDescription(description);
@@ -47,10 +49,12 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * @seeorg.org.eclipse.ui.internal.editors.text.
 	 * AbstractConfigurationBlockPreferencePage#setPreferenceStore()
 	 */
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 	}
 
+	@Override
 	protected Label createDescriptionLabel(Composite parent) {
 		return null; // no description for new look.
 	}
@@ -61,6 +65,7 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * #createConfigurationBlock(org.eclipse
 	 * .ui.internal.editors.text.OverlayPreferenceStore)
 	 */
+	@Override
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new PHPEditorHoverConfigurationBlock(this, overlayPreferenceStore);
 	}

@@ -19,6 +19,7 @@ public class PositiveIntegerStringValidator extends IntegerStringValidator imple
 		this.notPositiveError = notPositiveError;
 	}
 
+	@Override
 	public ValidationStatus validate(String str) {
 		ValidationStatus status = super.validate(str);
 		if (status.isOK()) {

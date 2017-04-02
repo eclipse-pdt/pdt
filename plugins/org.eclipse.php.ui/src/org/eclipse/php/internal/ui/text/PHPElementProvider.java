@@ -38,6 +38,7 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	/*
 	 * @see IInformationProvider#getSubject(ITextViewer, int)
 	 */
+	@Override
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
 			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
@@ -52,6 +53,7 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	/*
 	 * @see IInformationProvider#getInformation(ITextViewer, IRegion)
 	 */
+	@Override
 	public String getInformation(ITextViewer textViewer, IRegion subject) {
 		return getInformation2(textViewer, subject).toString();
 	}
@@ -59,6 +61,7 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	/*
 	 * @see IInformationProviderExtension#getElement(ITextViewer, IRegion)
 	 */
+	@Override
 	public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 		if (fEditor == null) {
 			return null;

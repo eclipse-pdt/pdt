@@ -198,6 +198,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	 * 
 	 * @see org.eclipse.swt.dnd.DropTargetListener#drop(org.eclipse.swt.dnd.DropTargetEvent)
 	 */
+	@Override
 	public boolean performDrop(final Object data) {
 		alwaysOverwrite = false;
 		if (getCurrentTarget() == null || data == null) {
@@ -242,6 +243,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		// Otherwise the drag source (e.g., Windows Explorer) will be blocked
 		// while the operation executes. Fixes bug 16478.
 		Display.getCurrent().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				getShell().forceActive();
 				CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(getShell());

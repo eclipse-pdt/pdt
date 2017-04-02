@@ -70,6 +70,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	private boolean fNotify = true;
 	private IDocument document;
 
+	@Override
 	public void connect(IDocument document) {
 		this.document = document;
 	}
@@ -92,6 +93,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		final IEditorPart editor[] = new IEditorPart[1];
 		Display.getDefault().syncExec(new Runnable() { // needs UI thread to
 			// retrieve active page
+			@Override
 			public void run() {
 				IWorkbenchPage activePage = DLTKUIPlugin.getActivePage();
 				if (activePage != null) {
@@ -183,10 +185,12 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		return null;
 	}
 
+	@Override
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		validate(null, helper, reporter);
 	}
 
+	@Override
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
 
 		// install editors
@@ -207,10 +211,12 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			final Program ast[] = new Program[1];
 			try {
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void run() throws ModelException {
 						ast[0] = reconcile((ISourceModule) modelElement, true);
 					}
 
+					@Override
 					public void handleException(Throwable ex) {
 						IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK,
 								"Error in php Core during reconcile", ex); //$NON-NLS-1$
@@ -278,9 +284,11 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		fNotify = notify;
 	}
 
+	@Override
 	public void cleanup(IReporter reporter) {
 	}
 
+	@Override
 	public void disconnect(IDocument document) {
 		this.document = null;
 	}

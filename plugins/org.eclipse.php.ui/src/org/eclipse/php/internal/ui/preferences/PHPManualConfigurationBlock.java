@@ -47,6 +47,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 public class PHPManualConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private class PHPManualLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
+		@Override
 		public Font getFont(Object element) {
 			if (isDefault((PHPManualConfig) element)) {
 				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
@@ -54,10 +55,12 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 			return null;
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (columnIndex == 0) {
 				return ((PHPManualConfig) element).getLabel();
@@ -72,6 +75,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 	private class PHPManualSorter extends ViewerSorter {
 
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			return collator.compare(((PHPManualConfig) e1).getLabel(), ((PHPManualConfig) e2).getLabel());
 		}
@@ -96,19 +100,23 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 			return selectedElements.size() == 1 && !isDefault(selectedElements.get(0));
 		}
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 		}
 
+		@Override
 		public void customButtonPressed(ListDialogField<PHPManualConfig> field, int index) {
 			sideButtonPressed(index);
 		}
 
+		@Override
 		public void doubleClicked(ListDialogField<PHPManualConfig> field) {
 			if (canEdit(field.getSelectedElements())) {
 				sideButtonPressed(IDX_EDIT);
 			}
 		}
 
+		@Override
 		public void selectionChanged(ListDialogField<PHPManualConfig> field) {
 			List<PHPManualConfig> selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selectedElements));
@@ -131,11 +139,13 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
 			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
@@ -176,6 +186,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		return keys;
 	}
 
+	@Override
 	public Control createControl(Composite parent) {
 
 		PHPManualAdapter adapter = new PHPManualAdapter();
@@ -285,6 +296,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		StatusUtil.applyToStatusLine(fMainPreferencePage, fPHPManualStatus);
 	}
 
+	@Override
 	public void initialize() {
 		List<PHPManualConfig> configs = new ArrayList<PHPManualConfig>();
 
@@ -362,15 +374,18 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		return null;
 	}
 
+	@Override
 	public void dispose() {
 		// nothing to dispose
 	}
 
+	@Override
 	public void performDefaults() {
 		initialize();
 		updateStatus();
 	}
 
+	@Override
 	public void performOk() {
 		StringBuilder sitesBuffer = new StringBuilder();
 		List<PHPManualConfig> elements = fPHPManualButtonsList.getElements();

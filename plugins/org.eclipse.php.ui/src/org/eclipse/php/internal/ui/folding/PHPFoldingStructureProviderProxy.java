@@ -35,6 +35,7 @@ public class PHPFoldingStructureProviderProxy implements IProjectionListener, IS
 	/**
 	 * Tells this listener that projection has been enabled.
 	 */
+	@Override
 	public void projectionEnabled() {
 		IProjectionListener projectionListener = getProjectionListener();
 		if (projectionListener != null) {
@@ -45,6 +46,7 @@ public class PHPFoldingStructureProviderProxy implements IProjectionListener, IS
 	/**
 	 * Tells this listener that projection has been disabled.
 	 */
+	@Override
 	public void projectionDisabled() {
 		IProjectionListener projectionListener = getProjectionListener();
 		if (projectionListener != null) {
@@ -61,6 +63,7 @@ public class PHPFoldingStructureProviderProxy implements IProjectionListener, IS
 	 *            the projection viewer that displays the annotations created by
 	 *            this structure provider
 	 */
+	@Override
 	public void install(ProjectionViewer viewer) {
 		IStructuredTextFoldingProvider foldingProvider = getFoldingProvider();
 		if (foldingProvider != null) {
@@ -72,6 +75,7 @@ public class PHPFoldingStructureProviderProxy implements IProjectionListener, IS
 	 * Uninstalls this structure provider. Any references to viewers should be
 	 * cleared.
 	 */
+	@Override
 	public void uninstall() {
 		IStructuredTextFoldingProvider foldingProvider = getFoldingProvider();
 		if (foldingProvider != null) {
@@ -83,6 +87,7 @@ public class PHPFoldingStructureProviderProxy implements IProjectionListener, IS
 	 * Initialize this provider with the correct document. Assumes projection is
 	 * enabled. (otherwise, only install would have been called)
 	 */
+	@Override
 	public void initialize() {
 		IStructuredTextFoldingProvider foldingProvider = getFoldingProvider();
 		if (foldingProvider != null) {

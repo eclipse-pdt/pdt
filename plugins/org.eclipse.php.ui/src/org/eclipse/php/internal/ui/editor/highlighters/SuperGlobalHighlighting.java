@@ -22,6 +22,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 	protected class SuperGlobalApply extends AbstractSemanticApply {
 
+		@Override
 		public boolean visit(ArrayAccess n) {
 			if (isSuperGlobal(n.getName())) {
 				highlight(n.getName());
@@ -54,6 +55,7 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setEnabledByDefault(true).setDefaultTextColor(127, 0, 85).setBoldByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.SuperGlobalHighlighting_0;
 	}

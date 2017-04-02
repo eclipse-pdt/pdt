@@ -63,6 +63,7 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 		getStyle().setItalicByDefault(true);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return Messages.StaticMethodHighlighting_0;
 	}

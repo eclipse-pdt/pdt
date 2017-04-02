@@ -18,6 +18,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 
 public class PHPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
+	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
 		EditorsUI.useAnnotationsPreferencePage(store);

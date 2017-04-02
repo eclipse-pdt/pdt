@@ -32,10 +32,12 @@ public class StructureSelectHistoryAction extends Action implements IUpdate {
 		// IJavaHelpContextIds.STRUCTURED_SELECTION_HISTORY_ACTION);
 	}
 
+	@Override
 	public void update() {
 		setEnabled(!fHistory.isEmpty());
 	}
 
+	@Override
 	public void run() {
 		ISourceRange old = fHistory.getLast();
 		if (old != null) {

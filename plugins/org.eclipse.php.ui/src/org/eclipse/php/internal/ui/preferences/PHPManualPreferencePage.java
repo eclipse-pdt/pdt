@@ -17,18 +17,22 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
+	@Override
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new PHPManualConfigurationBlock(this, overlayPreferenceStore);
 	}
 
+	@Override
 	protected String getHelpId() {
 		return IPHPHelpContextIds.PHP_MANUAL_PREFERENCES;
 	}
 
+	@Override
 	protected void setDescription() {
 		setDescription(PHPUIMessages.PHPManualPreferencePage_0);
 	}
 
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 	}

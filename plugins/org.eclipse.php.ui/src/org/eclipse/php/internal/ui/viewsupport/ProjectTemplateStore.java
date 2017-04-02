@@ -51,10 +51,12 @@ public final class ProjectTemplateStore {
 				 * Make sure we keep the id of added code templates - add
 				 * removes it in the usual add() method
 				 */
+				@Override
 				public void add(TemplatePersistenceData data) {
 					internalAdd(data);
 				}
 
+				@Override
 				public void save() throws IOException {
 
 					StringWriter output = new StringWriter();

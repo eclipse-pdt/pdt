@@ -27,6 +27,7 @@ public abstract class PharBuilder implements IPharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void open(PharPackage jarPackage, Shell shell, MultiStatus status) throws CoreException {
 		fStatus = status;
 	}

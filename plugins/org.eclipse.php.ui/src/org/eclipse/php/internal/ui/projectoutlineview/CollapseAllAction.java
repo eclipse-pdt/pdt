@@ -36,6 +36,7 @@ public class CollapseAllAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		fPackageExplorer.collapseAll();
 	}

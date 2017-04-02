@@ -52,6 +52,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 
 	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
 
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IWorkingSet || e2 instanceof IWorkingSet)
 				return 0;
@@ -74,6 +75,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		super.setFlatLayout(false);
 	}
 
+	@Override
 	protected void configWorkingSet() {
 		ScriptExplorerActionGroup actionSet = getActionGroup();
 		WorkingSetModel workingSetModel = getWorkingSetModel();
@@ -99,12 +101,14 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
 		if (getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 			return new PHPExplorerContentProvider(showCUChildren) {
+				@Override
 				protected IPreferenceStore getPreferenceStore() {
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
 			};
 		} else {
 			return new WorkingSetAwarePHPExplorerContentProvider(showCUChildren, getWorkingSetModel()) {
+				@Override
 				protected IPreferenceStore getPreferenceStore() {
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
@@ -167,6 +171,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		viewer.addDropSupport(ops, transfers, adapter);
 	}
 
+	@Override
 	protected void initDrop() {
 		PHPViewerDropSupport dropSupport = new PHPViewerDropSupport(getTreeViewer());
 		dropSupport.addDropTargetListener(new WorkingSetDropAdapter(this));
@@ -184,8 +189,10 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	/**
 	 * Returns the <code>IShowInSource</code> for this view.
 	 */
+	@Override
 	protected IShowInSource getShowInSource() {
 		return new IShowInSource() {
+			@Override
 			public ShowInContext getShowInContext() {
 				return new ShowInContext(getTreeViewer().getInput(), getTreeViewer().getSelection());
 			}
