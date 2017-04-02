@@ -8,7 +8,7 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.formatter.core.profiles;
 
 public interface ICodeFormatterPreferencesInitializer {
 

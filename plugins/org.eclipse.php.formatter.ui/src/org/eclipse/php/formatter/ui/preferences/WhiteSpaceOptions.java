@@ -14,7 +14,7 @@ package org.eclipse.php.formatter.ui.preferences;
 import java.util.*;
 
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 
 /**

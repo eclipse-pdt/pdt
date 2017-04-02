@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.core.format.IProfile;
 import org.eclipse.php.core.format.IProfileManager;
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.internal.formatter.core.FormattingProfile;

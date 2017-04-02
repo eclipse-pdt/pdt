@@ -1,6 +1,6 @@
 package org.eclipse.php.internal.formatter.core;
 
-import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
+import org.eclipse.php.formatter.core.profiles.ICodeFormatterPreferencesInitializer;
 
 public class FormattingProfile {
 

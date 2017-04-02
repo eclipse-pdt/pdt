@@ -14,7 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

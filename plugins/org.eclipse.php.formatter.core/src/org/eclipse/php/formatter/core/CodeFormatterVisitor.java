@@ -26,6 +26,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
@@ -158,11 +159,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		this(document, codeFormatterPreferences, lineSeparator, phpVersion, useShortTags, region, 0);
 	}
 
-	public CodeFormatterVisitor(IDocument document, String lineSeparator, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region) throws Exception {
-		this(document, CodeFormatterPreferences.getDefaultPreferences(), lineSeparator, phpVersion, useShortTags,
-				region, 0);
-	}
+	// public CodeFormatterVisitor(IDocument document, String lineSeparator,
+	// PHPVersion phpVersion, boolean useShortTags,
+	// IRegion region) throws Exception {
+	// this(document, CodeFormatterPreferences.getDefaultPreferences(),
+	// lineSeparator, phpVersion, useShortTags,
+	// region, 0);
+	// }
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
 			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)

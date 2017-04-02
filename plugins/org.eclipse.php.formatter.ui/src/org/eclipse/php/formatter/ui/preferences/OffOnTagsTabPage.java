@@ -13,7 +13,7 @@ package org.eclipse.php.formatter.ui.preferences;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.swt.SWT;

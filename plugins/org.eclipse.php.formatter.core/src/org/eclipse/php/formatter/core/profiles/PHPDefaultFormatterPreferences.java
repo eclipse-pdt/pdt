@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.formatter.core.profiles;
 
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.CodeFormatterVisitor;
-import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
 
 /**
  * Utility class for populating a <code>CodeFormatterPreferences</code> with PHP

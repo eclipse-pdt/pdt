@@ -13,7 +13,7 @@ package org.eclipse.php.formatter.ui.preferences;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

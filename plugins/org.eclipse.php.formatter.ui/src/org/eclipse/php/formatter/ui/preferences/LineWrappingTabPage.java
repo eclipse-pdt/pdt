@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
-import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.formatter.ui.FormatterUIPlugin;
 import org.eclipse.php.internal.ui.util.Messages;

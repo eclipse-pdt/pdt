@@ -7,7 +7,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
+import org.eclipse.php.formatter.core.profiles.ICodeFormatterPreferencesInitializer;
 
 public class FormattingProfileRegistry {
 

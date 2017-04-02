@@ -8,14 +8,14 @@
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.formatter.core;
+package org.eclipse.php.formatter.core.profiles;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
 import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.internal.formatter.core.FormattingProfile;
 import org.eclipse.php.internal.formatter.core.FormattingProfileRegistry;
@@ -886,18 +886,21 @@ public class CodeFormatterPreferences {
 	private boolean getBooleanValue(Map<String, Object> preferences, String key) {
 		return TRUE.equals(preferences.get(key));
 	}
-
-	public static CodeFormatterPreferences getDefaultPreferences() {
-		IEclipsePreferences preferences = DefaultScope.INSTANCE.getNode(FormatterCorePlugin.PLUGIN_ID);
-		String profile = preferences.get(CodeFormatterConstants.FORMATTER_PROFILE, null);
-		if (profile != null) {
-			FormattingProfile formattingProfile = new FormattingProfileRegistry().getProfile(profile);
-			if (formattingProfile != null) {
-				return formattingProfile.getImplementation().initValues();
-			}
-		}
-		return new PHPDefaultFormatterPreferences().initValues();
-	}
+	//
+	// public static CodeFormatterPreferences getDefaultPreferences() {
+	// IEclipsePreferences preferences =
+	// DefaultScope.INSTANCE.getNode(FormatterCorePlugin.PLUGIN_ID);
+	// String profile =
+	// preferences.get(CodeFormatterConstants.FORMATTER_PROFILE, null);
+	// if (profile != null) {
+	// FormattingProfile formattingProfile = new
+	// FormattingProfileRegistry().getProfile(profile);
+	// if (formattingProfile != null) {
+	// return formattingProfile.getImplementation().initValues();
+	// }
+	// }
+	// return new PHPDefaultFormatterPreferences().initValues();
+	// }
 
 	@Override
 	public String toString() {
@@ -1367,6 +1370,18 @@ public class CodeFormatterPreferences {
 				this.use_tags ? CodeFormatterConstants.TRUE : CodeFormatterConstants.FALSE);
 
 		return options;
+	}
+
+	public static CodeFormatterPreferences getDefaultPreferences() {
+		IEclipsePreferences preferences = DefaultScope.INSTANCE.getNode(FormatterCorePlugin.PLUGIN_ID);
+		String profile = preferences.get(CodeFormatterConstants.FORMATTER_PROFILE, null);
+		if (profile != null) {
+			FormattingProfile formattingProfile = new FormattingProfileRegistry().getProfile(profile);
+			if (formattingProfile != null) {
+				return formattingProfile.getImplementation().initValues();
+			}
+		}
+		return new CodeFormatterPreferences();
 	}
 
 }

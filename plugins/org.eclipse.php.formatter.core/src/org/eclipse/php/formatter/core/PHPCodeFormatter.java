@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -27,6 +29,7 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -121,42 +124,6 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 		return codeFormattingProcessor;
 	}
 
-	private CodeFormatterPreferences getPreferences(IProject project) throws Exception {
-		IEclipsePreferences node = null;
-		if (project != null) {
-			ProjectScope scope = new ProjectScope(project);
-			node = scope.getNode(FormatterCorePlugin.PLUGIN_ID);
-		}
-
-		Map<String, Object> p = new HashMap<>(getDefaultPreferenceValues());
-		if (node != null && node.keys().length > 0
-				&& node.get(CodeFormatterConstants.FORMATTER_PROFILE, null) != null) {
-			Set<String> propetiesNames = p.keySet();
-			for (Iterator<String> iter = propetiesNames.iterator(); iter.hasNext();) {
-				String property = iter.next();
-				String value = node.get(property, null);
-				if (value != null) {
-					p.put(property, value);
-				}
-			}
-		} else {
-			IPreferencesService service = Platform.getPreferencesService();
-			String[] lookup = service.getLookupOrder(FormatterCorePlugin.PLUGIN_ID, null);
-			Preferences[] nodes = new Preferences[lookup.length];
-			for (int i = 0; i < lookup.length; i++) {
-				nodes[i] = service.getRootNode().node(lookup[i]).node(FormatterCorePlugin.PLUGIN_ID);
-			}
-			for (String property : p.keySet()) {
-				String value = service.get(property, null, nodes);
-				if (value != null) {
-					p.put(property, value);
-				}
-			}
-		}
-
-		return new CodeFormatterPreferences(p);
-	}
-
 	private IProject getProject(IDocument document) {
 		IProject project = null;
 		IStructuredModel structuredModel = null;
@@ -215,8 +182,43 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 		return null;
 	}
 
-	private Map<String, Object> getDefaultPreferenceValues() {
-		return CodeFormatterPreferences.getDefaultPreferences().getMap();
+	public static CodeFormatterPreferences getPreferences(IProject project) throws Exception {
+		IEclipsePreferences node = null;
+		if (project != null) {
+			ProjectScope scope = new ProjectScope(project);
+			node = scope.getNode(FormatterCorePlugin.PLUGIN_ID);
+		}
+		if (node == null || node.get(CodeFormatterConstants.FORMATTER_PROFILE, null) == null) {
+			IScopeContext context = InstanceScope.INSTANCE;
+			node = context.getNode(FormatterCorePlugin.PLUGIN_ID);
+		}
+
+		Map<String, Object> p = new HashMap<>(CodeFormatterPreferences.getDefaultPreferences().getMap());
+		if (node != null && node.keys().length > 0) {
+			Set<String> propertiesNames = p.keySet();
+			for (Iterator<String> iter = propertiesNames.iterator(); iter.hasNext();) {
+				String property = iter.next();
+				String value = node.get(property, null);
+				if (value != null) {
+					p.put(property, value);
+				}
+			}
+		} else {
+			IPreferencesService service = Platform.getPreferencesService();
+			String[] lookup = service.getLookupOrder(FormatterCorePlugin.PLUGIN_ID, null);
+			Preferences[] nodes = new Preferences[lookup.length];
+			for (int i = 0; i < lookup.length; i++) {
+				nodes[i] = service.getRootNode().node(lookup[i]).node(FormatterCorePlugin.PLUGIN_ID);
+			}
+			for (String property : p.keySet()) {
+				String value = service.get(property, null, nodes);
+				if (value != null) {
+					p.put(property, value);
+				}
+			}
+		}
+
+		return new CodeFormatterPreferences(p);
 	}
 
 }
