@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Dawid Pakula and others.
+ * Copyright (c) 2014,2016 Dawid Pakula and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,3 +49,11 @@ IEclipsePreferences#org-eclipse-php-ui {
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting.bold=true'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting.color=#9a8c7c'
 }
+
+IEclipsePreferences#org-eclipse-ui-editors:org-eclipse-php-ui {
+  preferences: 
+        'PHPReadOccurrenceIndicationColor=27,98,145'
+        'PHPWriteOccurrenceIndicationColor=27,98,145'
+        'overrideIndicatorColorForPHP=78,120,117'
+}
+
