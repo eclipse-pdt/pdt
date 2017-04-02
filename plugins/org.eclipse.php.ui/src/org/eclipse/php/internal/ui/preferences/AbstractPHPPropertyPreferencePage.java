@@ -52,7 +52,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	 */
 	private static final Object DISABLE_LINK = "DISABLE_LINK"; //$NON-NLS-1$
 
-	protected Map fData = null;
+	protected Map<?, ?> fData = null;
 	protected Button fEnableProjectSettings;
 	private Link fProjectSettingsLink;
 	protected IPHPPreferencePageBlock[] projectScopeAddons;
@@ -66,7 +66,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	public final void applyData(Object data) {
 		super.applyData(data);
 		if (data instanceof Map) {
-			fData = (Map) data;
+			fData = (Map<?, ?>) data;
 			updateLinkEnablement();
 		}
 	}
@@ -270,7 +270,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 			Object[] result = dialog.getResult();
 			if (result.length > 0) {
 				IProject project = (IProject) dialog.getResult()[0];
-				Map data = new HashMap();
+				Map<Object, Boolean> data = new HashMap<>();
 				data.put(DISABLE_LINK, Boolean.TRUE);
 				PreferencesUtil.createPropertyDialogOn(getShell(), project, getPropertyPageID(),
 						new String[] { getPropertyPageID() }, data).open();
@@ -279,7 +279,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	}
 
 	void openWorkspaceSettings() {
-		Map data = new HashMap();
+		Map<Object, Boolean> data = new HashMap<>();
 		data.put(DISABLE_LINK, Boolean.TRUE);
 		PreferencesUtil.createPreferenceDialogOn(getShell(), getPreferencePageID(),
 				new String[] { getPreferencePageID() }, data).open();

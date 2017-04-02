@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.preferences;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
@@ -31,8 +32,8 @@ import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -102,24 +103,24 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 	private StackLayout fStackLayout;
 
 	/* the model */
-	private final Map fProviderDescriptors;
-	private final Map fProviderPreferences;
-	private final Map fProviderControls;
+	private final Map<String, PHPFoldingStructureProviderDescriptor> fProviderDescriptors;
+	private final Map<String, IPHPFoldingPreferenceBlock> fProviderPreferences;
+	private final Map<String, Control> fProviderControls;
 
 	public FoldingConfigurationBlock(OverlayPreferenceStore store) {
 		Assert.isNotNull(store);
 		fStore = store;
 		fStore.addKeys(createOverlayStoreKeys());
 		fProviderDescriptors = createListModel();
-		fProviderPreferences = new HashMap();
-		fProviderControls = new HashMap();
+		fProviderPreferences = new HashMap<>();
+		fProviderControls = new HashMap<>();
 	}
 
-	private Map createListModel() {
+	private Map<String, PHPFoldingStructureProviderDescriptor> createListModel() {
 		PHPFoldingStructureProviderRegistry reg = PHPUiPlugin.getDefault().getFoldingStructureProviderRegistry();
 		reg.reloadExtensions();
 		PHPFoldingStructureProviderDescriptor[] descs = reg.getFoldingProviderDescriptors();
-		Map map = new HashMap();
+		Map<String, PHPFoldingStructureProviderDescriptor> map = new HashMap<>();
 		for (PHPFoldingStructureProviderDescriptor element : descs) {
 			map.put(element.getId(), element);
 		}
@@ -128,7 +129,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		ArrayList overlayKeys = new ArrayList();
+		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_ENABLED));
@@ -165,16 +166,12 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		fFoldingCheckbox.setText(PHPUIMessages.FoldingConfigurationBlock_enable);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		fFoldingCheckbox.setLayoutData(gd);
-		fFoldingCheckbox.addSelectionListener(new SelectionListener() {
+		fFoldingCheckbox.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fFoldingCheckbox.getSelection();
 				fStore.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, enabled);
 				updateCheckboxDependencies();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
 
@@ -276,16 +273,12 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 				return ((PHPFoldingStructureProviderDescriptor) element).getName();
 			}
 		});
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				if (!sel.isEmpty()) {
-					fStore.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER,
-							((PHPFoldingStructureProviderDescriptor) sel.getFirstElement()).getId());
-					updateListDependencies();
-				}
+		viewer.addSelectionChangedListener(event -> {
+			IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+			if (!sel.isEmpty()) {
+				fStore.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER,
+						((PHPFoldingStructureProviderDescriptor) sel.getFirstElement()).getId());
+				updateListDependencies();
 			}
 		});
 		viewer.setInput(fProviderDescriptors);
@@ -309,7 +302,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IStatus.OK, message, null));
 			prefs = new ErrorPreferences(message);
 		} else {
-			prefs = (IPHPFoldingPreferenceBlock) fProviderPreferences.get(id);
+			prefs = fProviderPreferences.get(id);
 			if (prefs == null) {
 				try {
 					prefs = desc.createPreferences();
@@ -321,7 +314,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			}
 		}
 
-		Control control = (Control) fProviderControls.get(id);
+		Control control = fProviderControls.get(id);
 		if (control == null) {
 			control = prefs.createControl(fGroup);
 			if (control == null) {
@@ -348,8 +341,8 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 	@Override
 	public void performOk() {
 		fStore.propagate();
-		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();
+		for (Iterator<IPHPFoldingPreferenceBlock> it = fProviderPreferences.values().iterator(); it.hasNext();) {
+			IPHPFoldingPreferenceBlock prefs = it.next();
 			prefs.performOk();
 		}
 		// TODO - Might need a fix after the WST will support code folding
@@ -362,16 +355,16 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 	@Override
 	public void performDefaults() {
 		restoreFromPreferences();
-		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();
+		for (Iterator<IPHPFoldingPreferenceBlock> it = fProviderPreferences.values().iterator(); it.hasNext();) {
+			IPHPFoldingPreferenceBlock prefs = it.next();
 			prefs.performDefaults();
 		}
 	}
 
 	@Override
 	public void dispose() {
-		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();
+		for (Iterator<IPHPFoldingPreferenceBlock> it = fProviderPreferences.values().iterator(); it.hasNext();) {
+			IPHPFoldingPreferenceBlock prefs = it.next();
 			prefs.dispose();
 		}
 	}

@@ -65,6 +65,7 @@ public class UnusedUseStatementProcessor implements IQuickFixProcessor, IQuickFi
 			this.context = context;
 		}
 
+		@Override
 		protected ASTRewrite getRewrite() throws CoreException {
 			ASTNode coveringNode = context.getCoveringNode();
 			ASTRewrite rewrite = ASTRewrite.create(coveringNode.getAST());

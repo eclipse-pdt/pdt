@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.ActiveShellExpression;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -140,8 +141,8 @@ public class EditTemplateDialog extends StatusDialog {
 
 	private StatusInfo fValidationStatus;
 	private boolean fSuppressError = true; // https://bugs.eclipse.org/bugs/show_bug.cgi?id=4354
-	private Map fGlobalActions = new HashMap(10);
-	private List fSelectionActions = new ArrayList(3);
+	private Map<String, TextViewerAction> fGlobalActions = new HashMap<>(10);
+	private List<String> fSelectionActions = new ArrayList<>(3);
 	private String[][] fContextTypes;
 
 	private ContextTypeRegistry fContextTypeRegistry;
@@ -175,15 +176,15 @@ public class EditTemplateDialog extends StatusDialog {
 
 		String delim = new Document().getLegalLineDelimiters()[0];
 
-		List contexts = new ArrayList();
-		for (Iterator it = registry.contextTypes(); it.hasNext();) {
+		List<String[]> contexts = new ArrayList<>();
+		for (Iterator<TemplateContextType> it = registry.contextTypes(); it.hasNext();) {
 			TemplateContextType type = (TemplateContextType) it.next();
 			if (type.getId().equals("javadoc")) //$NON-NLS-1$
 				contexts.add(new String[] { type.getId(), type.getName(), "/**" + delim }); //$NON-NLS-1$
 			else
 				contexts.add(0, new String[] { type.getId(), type.getName(), "" }); //$NON-NLS-1$
 		}
-		fContextTypes = (String[][]) contexts.toArray(new String[contexts.size()][]);
+		fContextTypes = contexts.toArray(new String[contexts.size()][]);
 
 		fValidationStatus = new StatusInfo();
 
@@ -481,15 +482,9 @@ public class EditTemplateDialog extends StatusDialog {
 	}
 
 	private void initializeActions() {
-		final ArrayList handlerActivations = new ArrayList(3);
-		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-				.getAdapter(IHandlerService.class);
-		getShell().addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				handlerService.deactivateHandlers(handlerActivations);
-			}
-		});
+		final List<IHandlerActivation> handlerActivations = new ArrayList<>(3);
+		final IHandlerService handlerService = PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
+		getShell().addDisposeListener(e -> handlerService.deactivateHandlers(handlerActivations));
 
 		Expression expression = new ActiveShellExpression(fPatternEditor.getControl().getShell());
 
@@ -568,15 +563,16 @@ public class EditTemplateDialog extends StatusDialog {
 	}
 
 	protected void updateSelectionDependentActions() {
-		Iterator iterator = fSelectionActions.iterator();
+		Iterator<String> iterator = fSelectionActions.iterator();
 		while (iterator.hasNext())
-			updateAction((String) iterator.next());
+			updateAction(iterator.next());
 	}
 
 	protected void updateAction(String actionId) {
-		IAction action = (IAction) fGlobalActions.get(actionId);
-		if (action instanceof IUpdate)
+		IAction action = fGlobalActions.get(actionId);
+		if (action instanceof IUpdate) {
 			((IUpdate) action).update();
+		}
 	}
 
 	private int getIndex(String contextid) {
