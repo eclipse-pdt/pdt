@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ListIterator;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
@@ -74,8 +75,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		return updatedTokensEnd - updatedTokensStart;
 	}
 
-	private int ST_PHP_LINE_COMMENT = -1;
-	private int ST_PHP_IN_SCRIPTING = -1;
+	private int inScriptingState;
+	private int[] phpQuotesStates;
 
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
@@ -90,14 +91,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// was used on a different project:
 		// phpLexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 
-		try {
-			// we use reflection here since we don't know the constant value of
-			// of this state in specific PHP version lexer
-			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField("ST_PHP_LINE_COMMENT").getInt(phpLexer); //$NON-NLS-1$
-			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer); //$NON-NLS-1$
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
+		// these values are specific to each PHP version lexer
+		inScriptingState = phpLexer.getInScriptingState();
+		phpQuotesStates = phpLexer.getPhpQuotesStates();
+
 		completeReparse(phpLexer);
 	}
 
@@ -142,11 +139,11 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * @see IPhpScriptRegion#isLineComment(int)
+	 * @see IPhpScriptRegion#isPhpQuotesState(int)
 	 */
-	public boolean isLineComment(int offset) throws BadLocationException {
+	public boolean isPhpQuotesState(int offset) throws BadLocationException {
 		final LexerState lexState = tokensContainer.getState(offset);
-		return lexState != null && lexState.getTopState() == ST_PHP_LINE_COMMENT;
+		return lexState != null && ArrayUtils.contains(phpQuotesStates, lexState.getFirstState());
 	}
 
 	/**
@@ -233,14 +230,14 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
 						startState, currentPhpVersion);
 
-				if (phpLexer.isHeredocState(startState.getTopState())) {
+				if (ArrayUtils.contains(phpLexer.getHeredocStates(), startState.getFirstState())) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498525
 					// Fully re-parse when we're in a heredoc/nowdoc section.
 					// NB: it's much easier and safer to use the lexer state to
 					// determine if we're in a heredoc/nowdoc section,
 					// using PHPRegionTypes make us depend on how each PHP
 					// lexer version analyzes the heredoc/nowdoc content.
-					// In the same way, PHPPartitionTypes.isPHPQuotesState(type)
+					// In the same way, PHPPartitionTypes.isPhpQuotesState(type)
 					// cannot be used here because it's not exclusive to
 					// heredoc/nowdoc sections.
 					return null;
@@ -344,12 +341,11 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// function is being called
 		// after the project's PHP version was changed.
 		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null, currentPhpVersion);
-		try {
-			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField("ST_PHP_LINE_COMMENT").getInt(phpLexer); //$NON-NLS-1$
-			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer); //$NON-NLS-1$
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
+
+		// these values are specific to each PHP version lexer
+		inScriptingState = phpLexer.getInScriptingState();
+		phpQuotesStates = phpLexer.getPhpQuotesStates();
+
 		completeReparse(phpLexer);
 	}
 
@@ -377,8 +373,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			this.currentPhpVersion = sRegion.currentPhpVersion;
 			this.updatedTokensStart = sRegion.updatedTokensStart;
 			this.updatedTokensEnd = sRegion.updatedTokensEnd;
-			this.ST_PHP_LINE_COMMENT = sRegion.ST_PHP_LINE_COMMENT;
-			this.ST_PHP_IN_SCRIPTING = sRegion.ST_PHP_IN_SCRIPTING;
+			this.inScriptingState = sRegion.inScriptingState;
+			this.phpQuotesStates = sRegion.phpQuotesStates;
 			this.isFullReparsed = sRegion.isFullReparsed;
 		}
 	}
@@ -441,7 +437,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState, PHPVersion phpVersion) {
 		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream, phpVersion);
-		lexer.initialize(ST_PHP_IN_SCRIPTING);
+		lexer.initialize(inScriptingState);
 
 		// set the wanted state
 		if (startState != null) {
