@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,13 +81,14 @@ public interface IPhpScriptRegion extends ITextRegion {
 	public abstract @NonNull String getPhpTokenType(int offset) throws BadLocationException;
 
 	/**
-	 * Returns true if the given offset is in line comment
+	 * Returns true if the given offset is in a back-quoted string, a
+	 * double-quoted string or a heredoc section
 	 * 
 	 * @param relativeOffset
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public abstract boolean isLineComment(int relativeOffset) throws BadLocationException;
+	public abstract boolean isPhpQuotesState(int relativeOffset) throws BadLocationException;
 
 	/**
 	 * Performs a complete reparse in the document on the given interval

@@ -23,8 +23,7 @@ PHP_LABEL|say_здравствуйте|2
 PHP_TOKEN|(|2
 PHP_TOKEN|)|2
 WHITESPACE| |2
-PHP_CURLY_OPEN|{|2
-WHITESPACE|
+PHP_CURLY_OPEN|{
 |2
 PHP_VARIABLE|$say_здравствуйте|2
 WHITESPACE| |2
@@ -48,12 +47,12 @@ PHP_HEREDOC_TAG|<<<say_здравствуйте
 |14
 PHP_CURLY_OPEN|{|2
 PHP_VARIABLE|$say_здравствуйте|2
-PHP_CURLY_CLOSE|}|12
-PHP_HEREDOC_TAG|
-say_здравствуйте;
-|2
-PHP_CURLY_CLOSE|}|2
+PHP_CURLY_CLOSE|}
+|12
+PHP_HEREDOC_TAG|say_здравствуйте;|2
 WHITESPACE|
+|2
+PHP_CURLY_CLOSE|}
 |2
 PHP_LABEL|say_здравствуйте|2
 PHP_TOKEN|(|2
