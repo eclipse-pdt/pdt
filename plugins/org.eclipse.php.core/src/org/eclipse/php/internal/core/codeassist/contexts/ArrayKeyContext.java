@@ -70,7 +70,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 
 			hasQuotes = false;
 
-			if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
+			if (PHPPartitionTypes.isPhpQuotesState(phpToken.getType())) {
 				hasQuotes = true;
 
 				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
