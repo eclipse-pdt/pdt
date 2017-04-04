@@ -716,7 +716,6 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"}" {
-	/* This is a temporary fix which is dependant on flex and it's implementation */
 	if (!stack.isEmpty()) {
 		popState();
 	}

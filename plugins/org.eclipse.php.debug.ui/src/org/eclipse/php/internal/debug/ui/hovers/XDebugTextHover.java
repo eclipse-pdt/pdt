@@ -70,12 +70,16 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 
 				if (region != null) {
 					String regionType = region.getType();
-					if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_THIS) {
+					if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE
+							|| regionType == PHPRegionTypes.PHP_THIS) {
 						String variable = null;
 						try {
 							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
 							if (variable != null) {
 								variable = variable.trim();
+								if (regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE) {
+									variable = "$" + variable; //$NON-NLS-1$
+								}
 								variable = "<B>" + variable + " = </B>" + getByProperty(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						} catch (BadLocationException e) {
