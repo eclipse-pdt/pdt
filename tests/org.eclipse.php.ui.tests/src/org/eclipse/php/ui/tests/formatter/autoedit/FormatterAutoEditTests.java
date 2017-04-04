@@ -19,10 +19,13 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -32,7 +35,8 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
+import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPTestEditor;
@@ -94,6 +98,9 @@ public class FormatterAutoEditTests {
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("FormatterTests" + phpVersion.name());
 		TestUtils.setProjectPhpVersion(project, phpVersion);
+
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");
+		node.put(CodeFormatterConstants.FORMATTER_PROFILE, PHPDefaultFormatterPreferences.ID);
 	}
 
 	@After

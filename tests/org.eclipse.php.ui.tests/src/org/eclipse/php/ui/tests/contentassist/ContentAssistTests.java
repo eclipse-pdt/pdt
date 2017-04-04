@@ -23,10 +23,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -36,8 +38,9 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
+import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPTestEditor;
@@ -107,6 +110,9 @@ public class ContentAssistTests {
 		 */
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		TestUtils.setProjectPhpVersion(project, phpVersion);
+
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");
+		node.put(CodeFormatterConstants.FORMATTER_PROFILE, PHPDefaultFormatterPreferences.ID);
 	}
 
 	@AfterList

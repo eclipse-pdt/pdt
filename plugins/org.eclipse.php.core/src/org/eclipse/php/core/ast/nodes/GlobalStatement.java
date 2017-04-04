@@ -135,9 +135,7 @@ public class GlobalStatement extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	/*
-	 * (omit javadoc for this method) Method declared on ASTNode.
-	 */
+	@Override
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == VARIABLES_PROPERTY) {
 			return variables();

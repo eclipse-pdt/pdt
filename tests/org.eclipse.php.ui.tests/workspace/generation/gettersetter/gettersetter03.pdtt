@@ -1,0 +1,36 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+class MyClass {
+	
+	/**
+	 *
+	 * @var LogicException
+	 */
+	protected |$field|;
+}
+--EXPECT--
+<?php
+class MyClass {
+	
+	/**
+	 *
+	 * @var LogicException
+	 */
+	protected $field;
+	/**
+	 * @return the $field
+	 */
+	public function getField() {
+		return $this->field;
+	}
+
+	/**
+	 * @param LogicException $field
+	 */
+	public function setField($field) {
+		$this->field = $field;
+	}
+
+}
