@@ -77,7 +77,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 				int varLength = 0;
 
 				String regionType = region.getType();
-				if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_THIS) {
+				if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE
+						|| regionType == PHPRegionTypes.PHP_THIS) {
 					varOffset = hoverRegion.getOffset();
 					varLength = hoverRegion.getLength();
 					try {
@@ -115,6 +116,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 					try {
 						int[] variableRange = getVariableRange(textViewer, varOffset, varLength);
 						variable = textViewer.getDocument().get(variableRange[0], variableRange[1]);
+						if (regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE) {
+							variable = "$" + variable; //$NON-NLS-1$
+						}
 						variable = "<B>" + variable + " = </B>" //$NON-NLS-1$ //$NON-NLS-2$
 								+ getValue(debugTarget, variable);
 					} catch (BadLocationException e) {

@@ -681,9 +681,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return EMPTY;
 			}
 
-			if (elementName.charAt(0) != '$' && elementStart - 2 >= 0 && "${".equals(sDoc.get(elementStart - 2, 2)) //$NON-NLS-1$
-					&& tRegion.getType() == PHPRegionTypes.PHP_LABEL
-					&& phpScriptRegion.isPhpQuotesState(tRegion.getStart())) {
+			if (tRegion.getType() == PHPRegionTypes.PHP_ENCAPSED_VARIABLE) {
 				// Handle the case of variables defined in back-quoted
 				// strings, double-quoted strings or heredoc sections like
 				// "${a}" or "${a[0]}"

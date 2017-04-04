@@ -563,6 +563,16 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_CURLY_OPEN;
 }
 
+<ST_PHP_DOLLAR_CURLY_OPEN>"{"{LABEL} {
+	yypushback(yylength() - 1);
+	return PHP_CURLY_OPEN;
+}
+
+<ST_PHP_DOLLAR_CURLY_OPEN>{LABEL} {
+	yybegin(ST_PHP_IN_SCRIPTING);
+	return PHP_ENCAPSED_VARIABLE;
+}
+
 <ST_PHP_IN_SCRIPTING>"}"{WHITESPACE}? {
 	// Whitespaces are directly appended to the curly before pushState()
 	// is effective or whitespaces would be stored in a separate ContextRegion.
