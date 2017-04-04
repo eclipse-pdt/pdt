@@ -45,6 +45,13 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
  */
 public class OpenRemoteFileExternalRequestor implements IRemoteFileContentRequestor {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.debug.core.zend.communication.
+	 * IRemoteFileContentRequestor#fileContentReceived(byte[], java.lang.String,
+	 * java.lang.String, java.lang.String, int)
+	 */
 	public void fileContentReceived(final byte[] content, final String serverAddress, final String originalURL,
 			final String fileName, final int lineNumber) {
 		final IEditorInput editorInput = getEditorInput(content, serverAddress, originalURL, fileName);
@@ -60,8 +67,8 @@ public class OpenRemoteFileExternalRequestor implements IRemoteFileContentReques
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.zend.php.debug.core.communication.IFileContentRequester#
-	 * requestCompleted(java.lang.Exception)
+	 * @see org.eclipse.php.internal.debug.core.zend.communication.
+	 * IRemoteFileContentRequestor#requestCompleted(java.lang.Exception)
 	 */
 	public void requestCompleted(Exception e) {
 		// ignore

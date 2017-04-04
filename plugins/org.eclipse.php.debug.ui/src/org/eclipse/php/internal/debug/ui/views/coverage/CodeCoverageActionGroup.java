@@ -34,7 +34,7 @@ import org.eclipse.ui.actions.ActionGroup;
  */
 public class CodeCoverageActionGroup extends ActionGroup implements IMenuListener {
 
-	private static final String COVERAGE_VIEW_ID = "com.zend.php.debug.ui.views.CodeCoverageView"; //$NON-NLS-1$
+	private static final String COVERAGE_VIEW_ID = "org.eclipse.php.debug.ui.CodeCoverageView"; //$NON-NLS-1$
 
 	private OpenCoverageAction openCoverageAction;
 

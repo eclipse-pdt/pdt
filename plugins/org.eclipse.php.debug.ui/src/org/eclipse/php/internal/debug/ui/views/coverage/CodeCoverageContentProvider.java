@@ -52,7 +52,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	private static void initializeFilters() {
 		if (filters == null) {
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
-					.getConfigurationElementsFor("com.zend.php.debug.ui.codeCoverageFilter"); //$NON-NLS-1$
+					.getConfigurationElementsFor("org.eclipse.php.debug.ui.phpCodeCoverageFilter"); //$NON-NLS-1$
 			List<ICodeCoverageFilter> filtersList = new LinkedList<ICodeCoverageFilter>();
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("filter")) { //$NON-NLS-1$

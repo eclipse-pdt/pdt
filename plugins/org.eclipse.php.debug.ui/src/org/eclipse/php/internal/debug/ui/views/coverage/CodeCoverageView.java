@@ -40,9 +40,8 @@ public class CodeCoverageView extends ViewPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.zend.license.ui.proxies.LicensedViewPart#createLicensedPartControl
-	 * (org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+	 * widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
 		fSourceViewer = new CodeCoverageTextViewer(parent, SWT.NONE);

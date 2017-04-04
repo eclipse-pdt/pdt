@@ -27,6 +27,8 @@
         schema="schema/phpDebuggerSettingsSectionBuilders.exsd"/>
     <extension-point id="phpDebuggerLaunchSettingsSections" name="PHP Debugger Launch Settings Sections" 
         schema="schema/phpDebuggerLaunchSettingsSections.exsd"/>
+    <extension-point id="phpCodeCoverageFilter" name="PHP Code Coverage Filter" 
+        schema="schema/phpCodeCoverageFilter.exsd"/>
 	
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.eclipse.debug.ui.category.run"
