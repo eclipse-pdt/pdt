@@ -1,0 +1,56 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+
+namespace Bar {
+
+	class TestClass {
+	}
+}
+
+namespace Foo {
+
+	class MyClass {
+		
+		/**
+		 *
+		 * @var \Bar\TestClass
+		 */
+		protected |$field|;
+	}
+}
+--EXPECT--
+<?php
+
+namespace Bar {
+
+	class TestClass {
+	}
+}
+
+namespace Foo {
+
+	class MyClass {
+		
+		/**
+		 *
+		 * @var \Bar\TestClass
+		 */
+		protected $field;
+		/**
+		 * @return the $field
+		 */
+		public function getField() {
+			return $this->field;
+		}
+	
+		/**
+		 * @param \Bar\TestClass $field
+		 */
+		public function setField($field) {
+			$this->field = $field;
+		}
+	
+	}
+}

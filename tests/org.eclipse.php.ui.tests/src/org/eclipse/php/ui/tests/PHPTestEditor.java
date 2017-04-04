@@ -51,6 +51,7 @@ public class PHPTestEditor extends PHPStructuredEditor {
 		// Do not create
 	}
 
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class required) {
 		// Do not connect with outline page
 		if (required == IContentOutlinePage.class) {

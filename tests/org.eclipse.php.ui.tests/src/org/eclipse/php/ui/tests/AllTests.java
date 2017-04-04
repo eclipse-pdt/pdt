@@ -16,6 +16,8 @@ import org.eclipse.php.core.tests.TestAllSuiteWatcher;
 import org.eclipse.php.ui.tests.commands.CommandsTests;
 import org.eclipse.php.ui.tests.contentassist.ContentAssistTests;
 import org.eclipse.php.ui.tests.formatter.autoedit.FormatterAutoEditTests;
+import org.eclipse.php.ui.tests.generation.AddGetterSetterTests;
+import org.eclipse.php.ui.tests.generation.UnimplementMethodsTests;
 import org.eclipse.php.ui.tests.semantic_highlighter.SemanticHighlightingTests;
 import org.junit.ClassRule;
 import org.junit.rules.TestWatcher;
@@ -25,7 +27,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ ContentAssistTests.class, FormatterAutoEditTests.class, SemanticHighlightingTests.class,
-		CommandsTests.class })
+		CommandsTests.class, AddGetterSetterTests.class, UnimplementMethodsTests.class })
 public class AllTests {
 
 	@ClassRule

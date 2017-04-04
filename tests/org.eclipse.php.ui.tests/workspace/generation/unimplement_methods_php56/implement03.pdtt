@@ -1,0 +1,25 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+interface Foo {
+	function bar(&$x, ...$y);
+}
+class |Baz| implements Foo {
+}
+--EXPECT--
+<?php
+interface Foo {
+	function bar(&$x, ...$y);
+}
+class Baz implements Foo {
+	/**
+	 * {@inheritDoc}
+	 * @see Foo::bar()
+	 */
+	public function bar(&$x, ...$y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

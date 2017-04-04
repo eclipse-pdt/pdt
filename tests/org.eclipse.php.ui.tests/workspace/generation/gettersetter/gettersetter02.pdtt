@@ -1,0 +1,38 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+class MyClass {
+    
+    /**
+     * 
+     * @var string
+     */
+    protected |$field|;
+    
+}
+--EXPECT--
+<?php
+class MyClass {
+    
+    /**
+     * 
+     * @var string
+     */
+    protected $field;
+	/**
+	 * @return the $field
+	 */
+	public function getField() {
+		return $this->field;
+	}
+
+	/**
+	 * @param string $field
+	 */
+	public function setField($field) {
+		$this->field = $field;
+	}
+
+    
+}
