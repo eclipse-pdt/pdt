@@ -1,0 +1,40 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+
+class Person
+{
+
+    public $name;
+
+    public function getName(): String
+    {
+        return $this->name;
+    }
+}
+
+class |Child| extends Person
+{
+}
+--EXPECT--
+<?php
+class Person
+{
+    public $name;
+    public function getName(): String
+    {
+        return $this->name;
+    }
+}
+class Child extends Person
+{
+	/**
+	 * {@inheritDoc}
+	 * @see Person::getName()
+	 */
+	public function getName(): String {
+		// TODO Auto-generated method stub
+		return parent::getName ();
+	}
+}

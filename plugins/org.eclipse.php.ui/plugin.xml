@@ -1081,9 +1081,27 @@
 					<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
 				</visibleWhen>
 			</command>
+	   <command
+	         commandId="org.eclipse.php.ui.edit.text.generate.getter.setter"
+	         style="push">
+	      <visibleWhen
+	            checkEnabled="false">
+	         <reference
+	               definitionId="org.eclipse.php.ui.phpContentType.definition">
+	         </reference>
+	      </visibleWhen>
+	   </command>
+	   <command
+	         commandId="org.eclipse.php.ui.edit.text.generate.override.implement"
+	         style="push">
+	      <visibleWhen
+	            checkEnabled="false">
+	         <reference
+	               definitionId="org.eclipse.php.ui.phpContentType.definition">
+	         </reference>
+	      </visibleWhen>
+  	 </command>
 		</menuContribution>
-		
-		
 		  <menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
 			<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
 			         id="ToggleComment"
@@ -1109,6 +1127,26 @@
 					<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
 				</visibleWhen>
 			</command>
+   <command
+         commandId="org.eclipse.php.ui.edit.text.generate.getter.setter"
+         style="push">
+      <visibleWhen
+            checkEnabled="false">
+         <reference
+               definitionId="org.eclipse.php.ui.phpContentType.definition">
+         </reference>
+      </visibleWhen>
+   </command>
+   <command
+         commandId="org.eclipse.php.ui.edit.text.generate.override.implement"
+         style="push">
+      <visibleWhen
+            checkEnabled="false">
+         <reference
+               definitionId="org.eclipse.php.ui.phpContentType.definition">
+         </reference>
+      </visibleWhen>
+   </command>
 		</menuContribution>
 		<menuContribution
 	           locationURI="popup:org.eclipse.php.ui.edit.text.source.quickMenu?after=sourceBegin">
@@ -1381,6 +1419,18 @@
             description="%ActionDefinition.assignToLocalCommand.description"
             categoryId="org.eclipse.php.ui.category.source"
             id="org.eclipse.php.internal.ui.assignToLocal.assist">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
+            defaultHandler="org.eclipse.php.internal.ui.handlers.GettersSettersHandler"
+            id="org.eclipse.php.ui.edit.text.generate.getter.setter"
+            name="Generate Getters and Setters...">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
+            defaultHandler="org.eclipse.php.internal.ui.handlers.OverrideImplementHandler"
+            id="org.eclipse.php.ui.edit.text.generate.override.implement"
+            name="Override/Implement Methods...">
       </command>
 	</extension>
 

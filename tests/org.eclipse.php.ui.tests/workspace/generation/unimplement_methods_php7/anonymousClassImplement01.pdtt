@@ -1,0 +1,55 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+new |class|() implements Iterator {
+};
+--EXPECT--
+<?php
+new class() implements Iterator {
+	/**
+	 * {@inheritDoc}
+	 * @see Iterator::current()
+	 */
+	public function current() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Iterator::next()
+	 */
+	public function next() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Iterator::key()
+	 */
+	public function key() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Iterator::valid()
+	 */
+	public function valid() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Iterator::rewind()
+	 */
+	public function rewind() {
+		// TODO Auto-generated method stub
+		
+	}
+
+};
