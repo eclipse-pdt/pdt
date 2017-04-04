@@ -1,0 +1,373 @@
+--TEST--
+Bug 514572 - Do better variable detection, highlighting and renaming in quoted strings and heredoc sections
+--FILE--
+<?php
+$a(<<<NESTED
+    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+NESTED
+);
+
+$a = 5;
+echo "${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}";
+echo '${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}';
+
+function a()
+{
+    global $a;
+    $a = 10;
+    $b = ${a};
+    echo "${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}";
+    echo `${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}`;
+}
+?>
+--EXPECT--
+<Program start='0' length='370'>
+	<Statements>
+		<ExpressionStatement start='6' length='71'>
+			<FunctionInvocation start='6' length='70'>
+				<FunctionName start='6' length='2'>
+					<Variable start='6' length='2' isDollared='true'>
+						<Identifier start='7' length='1' name='a'/>
+					</Variable>
+				</FunctionName>
+				<Parameters>
+					<Quote start='9' length='65' type='heredoc'>
+						<Scalar start='19' length='4' type='string' value='    '/>
+						<ReflectionVariable start='23' length='11'>
+							<ArrayAccess start='25' length='8' type='array'>
+								<Variable start='25' length='1' isDollared='false'>
+									<Identifier start='25' length='1' name='a'/>
+								</Variable>
+								<Index>
+									<ArrayAccess start='27' length='5' type='array'>
+										<Variable start='27' length='2' isDollared='true'>
+											<Identifier start='28' length='1' name='a'/>
+										</Variable>
+										<Index>
+											<Scalar start='30' length='1' type='int' value='0'/>
+										</Index>
+									</ArrayAccess>
+								</Index>
+							</ArrayAccess>
+						</ReflectionVariable>
+						<Scalar start='34' length='1' type='string' value=' '/>
+						<ReflectionVariable start='35' length='19'>
+							<ArrayAccess start='36' length='17' type='array'>
+								<Variable start='36' length='2' isDollared='true'>
+									<Identifier start='37' length='1' name='a'/>
+								</Variable>
+								<Index>
+									<ArrayAccess start='39' length='13' type='array'>
+										<Variable start='39' length='2' isDollared='true'>
+											<Identifier start='40' length='1' name='a'/>
+										</Variable>
+										<Index>
+											<ArrayAccess start='42' length='9' type='array'>
+												<Variable start='42' length='2' isDollared='true'>
+													<Identifier start='43' length='1' name='a'/>
+												</Variable>
+												<Index>
+													<ArrayAccess start='45' length='5' type='array'>
+														<Variable start='45' length='2' isDollared='true'>
+															<Identifier start='46' length='1' name='a'/>
+														</Variable>
+														<Index>
+															<Scalar start='48' length='1' type='int' value='0'/>
+														</Index>
+													</ArrayAccess>
+												</Index>
+											</ArrayAccess>
+										</Index>
+									</ArrayAccess>
+								</Index>
+							</ArrayAccess>
+						</ReflectionVariable>
+						<Scalar start='54' length='1' type='string' value=' '/>
+						<ReflectionVariable start='55' length='4'>
+							<Variable start='57' length='1' isDollared='false'>
+								<Identifier start='57' length='1' name='a'/>
+							</Variable>
+						</ReflectionVariable>
+						<Scalar start='59' length='1' type='string' value=' '/>
+						<ReflectionVariable start='60' length='7'>
+							<ArrayAccess start='62' length='4' type='array'>
+								<Variable start='62' length='1' isDollared='false'>
+									<Identifier start='62' length='1' name='a'/>
+								</Variable>
+								<Index>
+									<Scalar start='64' length='1' type='int' value='0'/>
+								</Index>
+							</ArrayAccess>
+						</ReflectionVariable>
+						<Scalar start='67' length='6' type='string' value='
+'/>
+					</Quote>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='79' length='7'>
+			<Assignment start='79' length='6' operator='='>
+				<Variable start='79' length='2' isDollared='true'>
+					<Identifier start='80' length='1' name='a'/>
+				</Variable>
+				<Value>
+					<Scalar start='84' length='1' type='int' value='5'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EchoStatement start='87' length='52'>
+			<Quote start='92' length='46' type='quote'>
+				<ReflectionVariable start='93' length='11'>
+					<ArrayAccess start='95' length='8' type='array'>
+						<Variable start='95' length='1' isDollared='false'>
+							<Identifier start='95' length='1' name='a'/>
+						</Variable>
+						<Index>
+							<ArrayAccess start='97' length='5' type='array'>
+								<Variable start='97' length='2' isDollared='true'>
+									<Identifier start='98' length='1' name='a'/>
+								</Variable>
+								<Index>
+									<Scalar start='100' length='1' type='int' value='0'/>
+								</Index>
+							</ArrayAccess>
+						</Index>
+					</ArrayAccess>
+				</ReflectionVariable>
+				<Scalar start='104' length='1' type='string' value=' '/>
+				<ReflectionVariable start='105' length='19'>
+					<ArrayAccess start='106' length='17' type='array'>
+						<Variable start='106' length='2' isDollared='true'>
+							<Identifier start='107' length='1' name='a'/>
+						</Variable>
+						<Index>
+							<ArrayAccess start='109' length='13' type='array'>
+								<Variable start='109' length='2' isDollared='true'>
+									<Identifier start='110' length='1' name='a'/>
+								</Variable>
+								<Index>
+									<ArrayAccess start='112' length='9' type='array'>
+										<Variable start='112' length='2' isDollared='true'>
+											<Identifier start='113' length='1' name='a'/>
+										</Variable>
+										<Index>
+											<ArrayAccess start='115' length='5' type='array'>
+												<Variable start='115' length='2' isDollared='true'>
+													<Identifier start='116' length='1' name='a'/>
+												</Variable>
+												<Index>
+													<Scalar start='118' length='1' type='int' value='0'/>
+												</Index>
+											</ArrayAccess>
+										</Index>
+									</ArrayAccess>
+								</Index>
+							</ArrayAccess>
+						</Index>
+					</ArrayAccess>
+				</ReflectionVariable>
+				<Scalar start='124' length='1' type='string' value=' '/>
+				<ReflectionVariable start='125' length='4'>
+					<Variable start='127' length='1' isDollared='false'>
+						<Identifier start='127' length='1' name='a'/>
+					</Variable>
+				</ReflectionVariable>
+				<Scalar start='129' length='1' type='string' value=' '/>
+				<ReflectionVariable start='130' length='7'>
+					<ArrayAccess start='132' length='4' type='array'>
+						<Variable start='132' length='1' isDollared='false'>
+							<Identifier start='132' length='1' name='a'/>
+						</Variable>
+						<Index>
+							<Scalar start='134' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
+				</ReflectionVariable>
+			</Quote>
+		</EchoStatement>
+		<EchoStatement start='140' length='52'>
+			<Scalar start='145' length='46' type='string' value='&apos;${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}&apos;'/>
+		</EchoStatement>
+		<FunctionDeclaration start='194' length='173' isReference='false'>
+			<FunctionName>
+				<Identifier start='203' length='1' name='a'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='207' length='160' isCurly='true'>
+					<GlobalStatement start='213' length='10'>
+						<Variable start='220' length='2' isDollared='true'>
+							<Identifier start='221' length='1' name='a'/>
+						</Variable>
+					</GlobalStatement>
+					<ExpressionStatement start='228' length='8'>
+						<Assignment start='228' length='7' operator='='>
+							<Variable start='228' length='2' isDollared='true'>
+								<Identifier start='229' length='1' name='a'/>
+							</Variable>
+							<Value>
+								<Scalar start='233' length='2' type='int' value='10'/>
+							</Value>
+						</Assignment>
+					</ExpressionStatement>
+					<ExpressionStatement start='241' length='10'>
+						<Assignment start='241' length='9' operator='='>
+							<Variable start='241' length='2' isDollared='true'>
+								<Identifier start='242' length='1' name='b'/>
+							</Variable>
+							<Value>
+								<ReflectionVariable start='246' length='4'>
+									<Scalar start='248' length='1' type='string' value='a'/>
+								</ReflectionVariable>
+							</Value>
+						</Assignment>
+					</ExpressionStatement>
+					<EchoStatement start='256' length='52'>
+						<Quote start='261' length='46' type='quote'>
+							<ReflectionVariable start='262' length='11'>
+								<ArrayAccess start='264' length='8' type='array'>
+									<Variable start='264' length='1' isDollared='false'>
+										<Identifier start='264' length='1' name='a'/>
+									</Variable>
+									<Index>
+										<ArrayAccess start='266' length='5' type='array'>
+											<Variable start='266' length='2' isDollared='true'>
+												<Identifier start='267' length='1' name='a'/>
+											</Variable>
+											<Index>
+												<Scalar start='269' length='1' type='int' value='0'/>
+											</Index>
+										</ArrayAccess>
+									</Index>
+								</ArrayAccess>
+							</ReflectionVariable>
+							<Scalar start='273' length='1' type='string' value=' '/>
+							<ReflectionVariable start='274' length='19'>
+								<ArrayAccess start='275' length='17' type='array'>
+									<Variable start='275' length='2' isDollared='true'>
+										<Identifier start='276' length='1' name='a'/>
+									</Variable>
+									<Index>
+										<ArrayAccess start='278' length='13' type='array'>
+											<Variable start='278' length='2' isDollared='true'>
+												<Identifier start='279' length='1' name='a'/>
+											</Variable>
+											<Index>
+												<ArrayAccess start='281' length='9' type='array'>
+													<Variable start='281' length='2' isDollared='true'>
+														<Identifier start='282' length='1' name='a'/>
+													</Variable>
+													<Index>
+														<ArrayAccess start='284' length='5' type='array'>
+															<Variable start='284' length='2' isDollared='true'>
+																<Identifier start='285' length='1' name='a'/>
+															</Variable>
+															<Index>
+																<Scalar start='287' length='1' type='int' value='0'/>
+															</Index>
+														</ArrayAccess>
+													</Index>
+												</ArrayAccess>
+											</Index>
+										</ArrayAccess>
+									</Index>
+								</ArrayAccess>
+							</ReflectionVariable>
+							<Scalar start='293' length='1' type='string' value=' '/>
+							<ReflectionVariable start='294' length='4'>
+								<Variable start='296' length='1' isDollared='false'>
+									<Identifier start='296' length='1' name='a'/>
+								</Variable>
+							</ReflectionVariable>
+							<Scalar start='298' length='1' type='string' value=' '/>
+							<ReflectionVariable start='299' length='7'>
+								<ArrayAccess start='301' length='4' type='array'>
+									<Variable start='301' length='1' isDollared='false'>
+										<Identifier start='301' length='1' name='a'/>
+									</Variable>
+									<Index>
+										<Scalar start='303' length='1' type='int' value='0'/>
+									</Index>
+								</ArrayAccess>
+							</ReflectionVariable>
+						</Quote>
+					</EchoStatement>
+					<EchoStatement start='313' length='52'>
+						<BackTickExpression start='318' length='46'>
+							<ReflectionVariable start='319' length='11'>
+								<ArrayAccess start='321' length='8' type='array'>
+									<Variable start='321' length='1' isDollared='false'>
+										<Identifier start='321' length='1' name='a'/>
+									</Variable>
+									<Index>
+										<ArrayAccess start='323' length='5' type='array'>
+											<Variable start='323' length='2' isDollared='true'>
+												<Identifier start='324' length='1' name='a'/>
+											</Variable>
+											<Index>
+												<Scalar start='326' length='1' type='int' value='0'/>
+											</Index>
+										</ArrayAccess>
+									</Index>
+								</ArrayAccess>
+							</ReflectionVariable>
+							<Scalar start='330' length='1' type='string' value=' '/>
+							<ReflectionVariable start='331' length='19'>
+								<ArrayAccess start='332' length='17' type='array'>
+									<Variable start='332' length='2' isDollared='true'>
+										<Identifier start='333' length='1' name='a'/>
+									</Variable>
+									<Index>
+										<ArrayAccess start='335' length='13' type='array'>
+											<Variable start='335' length='2' isDollared='true'>
+												<Identifier start='336' length='1' name='a'/>
+											</Variable>
+											<Index>
+												<ArrayAccess start='338' length='9' type='array'>
+													<Variable start='338' length='2' isDollared='true'>
+														<Identifier start='339' length='1' name='a'/>
+													</Variable>
+													<Index>
+														<ArrayAccess start='341' length='5' type='array'>
+															<Variable start='341' length='2' isDollared='true'>
+																<Identifier start='342' length='1' name='a'/>
+															</Variable>
+															<Index>
+																<Scalar start='344' length='1' type='int' value='0'/>
+															</Index>
+														</ArrayAccess>
+													</Index>
+												</ArrayAccess>
+											</Index>
+										</ArrayAccess>
+									</Index>
+								</ArrayAccess>
+							</ReflectionVariable>
+							<Scalar start='350' length='1' type='string' value=' '/>
+							<ReflectionVariable start='351' length='4'>
+								<Variable start='353' length='1' isDollared='false'>
+									<Identifier start='353' length='1' name='a'/>
+								</Variable>
+							</ReflectionVariable>
+							<Scalar start='355' length='1' type='string' value=' '/>
+							<ReflectionVariable start='356' length='7'>
+								<ArrayAccess start='358' length='4' type='array'>
+									<Variable start='358' length='1' isDollared='false'>
+										<Identifier start='358' length='1' name='a'/>
+									</Variable>
+									<Index>
+										<Scalar start='360' length='1' type='int' value='0'/>
+									</Index>
+								</ArrayAccess>
+							</ReflectionVariable>
+						</BackTickExpression>
+					</EchoStatement>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<EmptyStatement start='368' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -36,8 +36,7 @@ public class RenameLocalVariable extends AbstractRename {
 
 	private boolean searchTextual;
 
-	public RenameLocalVariable(IFile file, String oldName, String newName,
-			boolean searchTextual) {
+	public RenameLocalVariable(IFile file, String oldName, String newName, boolean searchTextual) {
 		super(file, oldName, newName, searchTextual);
 		this.searchTextual = searchTextual;
 	}
@@ -56,12 +55,10 @@ public class RenameLocalVariable extends AbstractRename {
 				PHPDocTag[] tags = doc.getTags();
 				for (PHPDocTag tag : tags) {
 					if (tag.isValidMethodDescriptorTag()
-							&& tag.getVariableReference().getName()
-									.equals("$" + oldName)) { //$NON-NLS-1$
+							&& tag.getVariableReference().getName().equals("$" + oldName)) { //$NON-NLS-1$
 						// add all variable references, even if they are
 						// duplicated in this PHPDocBlock
-						addChange(tag.getVariableReference().sourceStart() + 1,
-								getRenameDescription());
+						addChange(tag.getVariableReference().sourceStart() + 1, getRenameDescription());
 					}
 				}
 			}
@@ -73,11 +70,11 @@ public class RenameLocalVariable extends AbstractRename {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.eclipse
-	 * .php.internal.core.ast.nodes.Variable)
+	 * org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.
+	 * core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {
-		if (isGlobalVariable(variable)) {
+		if (isGlobalVariable(variable, true)) {
 			addChange((Identifier) variable.getName());
 		}
 		return true;
@@ -86,8 +83,9 @@ public class RenameLocalVariable extends AbstractRename {
 	/**
 	 * @param variable
 	 */
-	private boolean isGlobalVariable(Variable variable) {
-		if (variable.isDollared()) {
+	private boolean isGlobalVariable(Variable variable, boolean checkInQuotes) {
+		if (variable.isDollared()
+				|| (checkInQuotes && org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))) {
 			final Expression variableName = variable.getName();
 			if (variableName instanceof Identifier) {
 				Identifier identifier = (Identifier) variableName;
@@ -118,8 +116,9 @@ public class RenameLocalVariable extends AbstractRename {
 	public boolean visit(GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (Variable variable : variables) {
-			if (isGlobalVariable(variable)) {
+			if (isGlobalVariable(variable, false)) {
 				isGlobalScope = true;
+				break;
 			}
 		}
 		return true;

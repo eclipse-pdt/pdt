@@ -680,6 +680,16 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (elementName.isEmpty()) {
 				return EMPTY;
 			}
+
+			if (elementName.charAt(0) != '$' && elementStart - 2 >= 0 && "${".equals(sDoc.get(elementStart - 2, 2)) //$NON-NLS-1$
+					&& tRegion.getType() == PHPRegionTypes.PHP_LABEL
+					&& phpScriptRegion.isPhpQuotesState(tRegion.getStart())) {
+				// Handle the case of variables defined in back-quoted
+				// strings, double-quoted strings or heredoc sections like
+				// "${a}" or "${a[0]}"
+				elementName = "$" + elementName; //$NON-NLS-1$
+			}
+
 			IType containerType = PHPModelUtils.getCurrentType(sourceModule, offset);
 			if (containerType == null) {
 				containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
@@ -758,7 +768,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// If this is variable:
 			if (elementName.charAt(0) == '$' && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
 				// Don't show escaped variables within PHP string:
-				if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
+				if (PHPPartitionTypes.isPhpQuotesState(tRegion.getType())) {
 					try {
 						char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
 						if (charBefore == NamespaceReference.NAMESPACE_SEPARATOR) {

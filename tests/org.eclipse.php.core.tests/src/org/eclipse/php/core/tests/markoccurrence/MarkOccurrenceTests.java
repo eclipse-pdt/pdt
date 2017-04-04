@@ -139,7 +139,7 @@ public class MarkOccurrenceTests {
 		List<Integer> newStarts = new ArrayList<Integer>();
 		for (int i = 0; i < starts.size(); i++) {
 			int oldstart = starts.get(i) - i;
-			if (oldstart > offset) {
+			if (starts.get(i) > offset) {
 				oldstart--;
 			}
 			newStarts.add(oldstart);

@@ -37,7 +37,7 @@ public abstract class PHPPartitionTypes {
 		if (isPHPDocState(type)) {
 			return PHP_DOC;
 		}
-		if (isPHPQuotesState(type)) {
+		if (isPhpQuotesState(type)) {
 			return PHP_QUOTED_STRING;
 		}
 		if (isPHPRegularState(type)) {
@@ -93,13 +93,18 @@ public abstract class PHPPartitionTypes {
 				|| PHPPartitionTypes.isPHPMultiLineCommentEndRegion(type);
 	}
 
-	public static boolean isPHPQuotesState(final String type) {
+	// NB: does not cover variables and special tokens that should be
+	// "interpreted" by PHP inside back-quoted strings, double-quoted strings
+	// and heredoc sections.
+	// For full content coverage, use IPhpScriptRegion#isPhpQuotesState(int
+	// relativeOffset).
+	public static boolean isPhpQuotesState(final String type) {
 		return type == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING || type == PHPRegionTypes.PHP_HEREDOC_TAG
 				|| type == PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE;
 	}
 
 	public static final boolean isPHPRegularState(final String type) {
-		return type != null && !isPHPCommentState(type) && !isPHPQuotesState(type);
+		return type != null && !isPHPCommentState(type) && !isPhpQuotesState(type);
 	}
 
 	/**

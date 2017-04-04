@@ -1,0 +1,32 @@
+--TEST--
+Bug 514572 - Do better variable detection, highlighting and renaming in quoted strings and heredoc sections
+--FILE--
+<?php
+<<<DOC
+{$a(<<<'NESTED'
+    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+NESTED
+)}
+${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+DOC;
+
+$a(<<<NESTED
+    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+NESTED
+);
+
+$a = 5;
+echo "${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}";
+echo '${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}';
+
+function a()
+{
+    global $a;
+    $a = 10;
+    $b = ${a};
+    echo "${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${|a|[0]}";
+    echo `${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}`;
+}
+?>
+--EXPECT--
+field($a)
