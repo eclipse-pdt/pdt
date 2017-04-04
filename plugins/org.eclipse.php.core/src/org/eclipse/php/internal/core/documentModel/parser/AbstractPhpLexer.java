@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.LinkedList;
 
 import javax.swing.text.Segment;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
@@ -50,7 +51,11 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public abstract int yystate();
 
-	public abstract boolean isHeredocState(int state);
+	public abstract int getInScriptingState();
+
+	public abstract int[] getHeredocStates();
+
+	public abstract int[] getPhpQuotesStates();
 
 	public abstract int[] getParameters();
 
@@ -108,7 +113,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		Object state = getLexerStates().get(key);
 		if (state == null) {
 			state = new BasicLexerState(this);
-			if (isHeredocState(getZZLexicalState()))
+			if (ArrayUtils.contains(getHeredocStates(), getZZLexicalState()))
 				state = new HeredocState((BasicLexerState) state, this);
 			getLexerStates().put(key, state);
 		}
@@ -214,6 +219,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		if (bufferedTokens != null) {
 			if (bufferedTokens.isEmpty()) {
 				bufferedTokens = null;
+				bufferedLength = 0;
 			} else {
 				return removeFromBuffer();
 			}
@@ -306,12 +312,23 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			return true;
 		}
 
+		public boolean equalsFirstState(LexerState obj) {
+			return obj != null && obj.getFirstState() == getFirstState();
+		}
+
 		public boolean equalsTop(final LexerState obj) {
 			return obj != null && obj.getTopState() == lexicalState;
 		}
 
 		protected StateStack getActiveStack() {
 			return phpStack;
+		}
+
+		public int getFirstState() {
+			if (phpStack != null && !phpStack.isEmpty()) {
+				return phpStack.get(phpStack.size() - 1);
+			}
+			return lexicalState;
 		}
 
 		public int getTopState() {
@@ -403,8 +420,16 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			return theState.equals(((HeredocState) obj).theState);
 		}
 
+		public boolean equalsFirstState(LexerState obj) {
+			return theState.equalsFirstState(obj);
+		}
+
 		public boolean equalsTop(final LexerState obj) {
 			return theState.equalsTop(obj);
+		}
+
+		public int getFirstState() {
+			return theState.getFirstState();
 		}
 
 		public int getTopState() {
