@@ -577,7 +577,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
-		if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
+		if (PHPPartitionTypes.isPhpQuotesState(phpToken.getType())) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=475671
 			for (int index = offset; index < endOffset; index++) {
 				char charAt = document.getChar(index);

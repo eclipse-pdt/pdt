@@ -1,0 +1,60 @@
+--TEST--
+Bug 514572 - Do better variable detection, highlighting and renaming in quoted strings and heredoc sections
+--FILE--
+FILENAME://TestRenameGlobalVar4.php
+<?php
+<<<DOC
+{$z(<<<'NESTED'
+    ${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}
+NESTED
+)}
+${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}
+DOC;
+
+$z(<<<NESTED
+    ${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}
+NESTED
+);
+
+$z = 5;
+echo "${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}";
+echo '${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}';
+
+function a()
+{
+    global $z;
+    $z| = 10;
+    $b = ${z};
+    echo "${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}";
+    echo `${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}`;
+}
+?>
+--CONFIG--
+newName:newVar
+updateTextualMatches:false
+--EXPECT--
+FILENAME://TestRenameGlobalVar4.php
+<?php
+<<<DOC
+{$newVar(<<<'NESTED'
+    ${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}
+NESTED
+)}
+${newVar[$newVar[0]]} {$newVar[$newVar[$newVar[$newVar[0]]]]} ${newVar} ${newVar[0]}
+DOC;
+$newVar(<<<NESTED
+    ${newVar[$newVar[0]]} {$newVar[$newVar[$newVar[$newVar[0]]]]} ${newVar} ${newVar[0]}
+NESTED
+);
+$newVar = 5;
+echo "${newVar[$newVar[0]]} {$newVar[$newVar[$newVar[$newVar[0]]]]} ${newVar} ${newVar[0]}";
+echo '${z[$z[0]]} {$z[$z[$z[$z[0]]]]} ${z} ${z[0]}';
+function a()
+{
+    global $newVar;
+    $newVar = 10;
+    $b = ${z};
+    echo "${newVar[$newVar[0]]} {$newVar[$newVar[$newVar[$newVar[0]]]]} ${newVar} ${newVar[0]}";
+    echo `${newVar[$newVar[0]]} {$newVar[$newVar[$newVar[$newVar[0]]]]} ${newVar} ${newVar[0]}`;
+}
+?>
