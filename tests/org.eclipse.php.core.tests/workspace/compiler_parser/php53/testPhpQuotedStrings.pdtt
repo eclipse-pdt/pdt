@@ -1,0 +1,260 @@
+--TEST--
+Bug 514572 - Do better variable detection, highlighting and renaming in quoted strings and heredoc sections
+--FILE--
+<?php
+<<<DOC
+{$a(<<<'NESTED'
+    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+NESTED
+)}
+${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+DOC;
+
+$a(<<<NESTED
+    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+NESTED
+);
+
+$a = 5;
+echo "${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}";
+echo '${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}';
+
+function a()
+{
+    global $a;
+    $a = 10;
+    $b = ${a};
+    echo "${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}";
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="447">
+	<ExpressionStatement start="6" end="137">
+		<Quote start="6" end="136" type="heredoc">
+			<ReflectionVariableReference start="13" end="87">
+				<ReflectionCallExpression start="14" end="86">
+					<VariableReference start="14" end="16" name="$a">
+					</VariableReference>
+					<PHPCallArgumentsList start="17" end="85">
+						<Quote start="17" end="84" type="heredoc">
+							<Scalar start="29" end="83" type="string" value="    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+">
+							</Scalar>
+						</Quote>
+					</PHPCallArgumentsList>
+				</ReflectionCallExpression>
+			</ReflectionVariableReference>
+			<Scalar start="87" end="88" type="string" value="
+">
+			</Scalar>
+			<ReflectionVariableReference start="88" end="99">
+				<ArrayVariableReference start="90" end="98" type="array" name="a">
+					<ArrayVariableReference start="92" end="97" type="array" name="$a">
+						<Scalar start="95" end="96" type="int" value="0">
+						</Scalar>
+					</ArrayVariableReference>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="99" end="100" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="100" end="119">
+				<ArrayVariableReference start="101" end="118" type="array" name="$a">
+					<ArrayVariableReference start="104" end="117" type="array" name="$a">
+						<ArrayVariableReference start="107" end="116" type="array" name="$a">
+							<ArrayVariableReference start="110" end="115" type="array" name="$a">
+								<Scalar start="113" end="114" type="int" value="0">
+								</Scalar>
+							</ArrayVariableReference>
+						</ArrayVariableReference>
+					</ArrayVariableReference>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="119" end="120" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="120" end="124">
+				<Scalar start="122" end="123" type="string" value="a">
+				</Scalar>
+			</ReflectionVariableReference>
+			<Scalar start="124" end="125" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="125" end="132">
+				<ArrayVariableReference start="127" end="131" type="array" name="a">
+					<Scalar start="129" end="130" type="int" value="0">
+					</Scalar>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="132" end="135" type="string" value="
+">
+			</Scalar>
+		</Quote>
+	</ExpressionStatement>
+	<ExpressionStatement start="139" end="210">
+		<ReflectionCallExpression start="139" end="209">
+			<VariableReference start="139" end="141" name="$a">
+			</VariableReference>
+			<PHPCallArgumentsList start="142" end="208">
+				<Quote start="142" end="207" type="heredoc">
+					<Scalar start="152" end="156" type="string" value="    ">
+					</Scalar>
+					<ReflectionVariableReference start="156" end="167">
+						<ArrayVariableReference start="158" end="166" type="array" name="a">
+							<ArrayVariableReference start="160" end="165" type="array" name="$a">
+								<Scalar start="163" end="164" type="int" value="0">
+								</Scalar>
+							</ArrayVariableReference>
+						</ArrayVariableReference>
+					</ReflectionVariableReference>
+					<Scalar start="167" end="168" type="string" value=" ">
+					</Scalar>
+					<ReflectionVariableReference start="168" end="187">
+						<ArrayVariableReference start="169" end="186" type="array" name="$a">
+							<ArrayVariableReference start="172" end="185" type="array" name="$a">
+								<ArrayVariableReference start="175" end="184" type="array" name="$a">
+									<ArrayVariableReference start="178" end="183" type="array" name="$a">
+										<Scalar start="181" end="182" type="int" value="0">
+										</Scalar>
+									</ArrayVariableReference>
+								</ArrayVariableReference>
+							</ArrayVariableReference>
+						</ArrayVariableReference>
+					</ReflectionVariableReference>
+					<Scalar start="187" end="188" type="string" value=" ">
+					</Scalar>
+					<ReflectionVariableReference start="188" end="192">
+						<Scalar start="190" end="191" type="string" value="a">
+						</Scalar>
+					</ReflectionVariableReference>
+					<Scalar start="192" end="193" type="string" value=" ">
+					</Scalar>
+					<ReflectionVariableReference start="193" end="200">
+						<ArrayVariableReference start="195" end="199" type="array" name="a">
+							<Scalar start="197" end="198" type="int" value="0">
+							</Scalar>
+						</ArrayVariableReference>
+					</ReflectionVariableReference>
+					<Scalar start="200" end="206" type="string" value="
+">
+					</Scalar>
+				</Quote>
+			</PHPCallArgumentsList>
+		</ReflectionCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="212" end="219">
+		<Assignment start="212" end="218" operator="=">
+			<VariableReference start="212" end="214" name="$a">
+			</VariableReference>
+			<Scalar start="217" end="218" type="int" value="5">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<EchoStatement start="220" end="272">
+		<Quote start="225" end="271" type="quote">
+			<ReflectionVariableReference start="226" end="237">
+				<ArrayVariableReference start="228" end="236" type="array" name="a">
+					<ArrayVariableReference start="230" end="235" type="array" name="$a">
+						<Scalar start="233" end="234" type="int" value="0">
+						</Scalar>
+					</ArrayVariableReference>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="237" end="238" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="238" end="257">
+				<ArrayVariableReference start="239" end="256" type="array" name="$a">
+					<ArrayVariableReference start="242" end="255" type="array" name="$a">
+						<ArrayVariableReference start="245" end="254" type="array" name="$a">
+							<ArrayVariableReference start="248" end="253" type="array" name="$a">
+								<Scalar start="251" end="252" type="int" value="0">
+								</Scalar>
+							</ArrayVariableReference>
+						</ArrayVariableReference>
+					</ArrayVariableReference>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="257" end="258" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="258" end="262">
+				<Scalar start="260" end="261" type="string" value="a">
+				</Scalar>
+			</ReflectionVariableReference>
+			<Scalar start="262" end="263" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="263" end="270">
+				<ArrayVariableReference start="265" end="269" type="array" name="a">
+					<Scalar start="267" end="268" type="int" value="0">
+					</Scalar>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+		</Quote>
+	</EchoStatement>
+	<EchoStatement start="273" end="325">
+		<Scalar start="278" end="324" type="string" value="&apos;${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}&apos;">
+		</Scalar>
+	</EchoStatement>
+	<PHPMethodDeclaration start="327" end="443" modifiers="" name="a">
+		<GlobalStatement start="346" end="356">
+			<VariableReference start="353" end="355" name="$a">
+			</VariableReference>
+		</GlobalStatement>
+		<ExpressionStatement start="361" end="369">
+			<Assignment start="361" end="368" operator="=">
+				<VariableReference start="361" end="363" name="$a">
+				</VariableReference>
+				<Scalar start="366" end="368" type="int" value="10">
+				</Scalar>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start="374" end="384">
+			<Assignment start="374" end="383" operator="=">
+				<VariableReference start="374" end="376" name="$b">
+				</VariableReference>
+				<ReflectionVariableReference start="379" end="383">
+					<Scalar start="381" end="382" type="string" value="a">
+					</Scalar>
+				</ReflectionVariableReference>
+			</Assignment>
+		</ExpressionStatement>
+		<EchoStatement start="389" end="441">
+			<Quote start="394" end="440" type="quote">
+				<ReflectionVariableReference start="395" end="406">
+					<ArrayVariableReference start="397" end="405" type="array" name="a">
+						<ArrayVariableReference start="399" end="404" type="array" name="$a">
+							<Scalar start="402" end="403" type="int" value="0">
+							</Scalar>
+						</ArrayVariableReference>
+					</ArrayVariableReference>
+				</ReflectionVariableReference>
+				<Scalar start="406" end="407" type="string" value=" ">
+				</Scalar>
+				<ReflectionVariableReference start="407" end="426">
+					<ArrayVariableReference start="408" end="425" type="array" name="$a">
+						<ArrayVariableReference start="411" end="424" type="array" name="$a">
+							<ArrayVariableReference start="414" end="423" type="array" name="$a">
+								<ArrayVariableReference start="417" end="422" type="array" name="$a">
+									<Scalar start="420" end="421" type="int" value="0">
+									</Scalar>
+								</ArrayVariableReference>
+							</ArrayVariableReference>
+						</ArrayVariableReference>
+					</ArrayVariableReference>
+				</ReflectionVariableReference>
+				<Scalar start="426" end="427" type="string" value=" ">
+				</Scalar>
+				<ReflectionVariableReference start="427" end="431">
+					<Scalar start="429" end="430" type="string" value="a">
+					</Scalar>
+				</ReflectionVariableReference>
+				<Scalar start="431" end="432" type="string" value=" ">
+				</Scalar>
+				<ReflectionVariableReference start="432" end="439">
+					<ArrayVariableReference start="434" end="438" type="array" name="a">
+						<Scalar start="436" end="437" type="int" value="0">
+						</Scalar>
+					</ArrayVariableReference>
+				</ReflectionVariableReference>
+			</Quote>
+		</EchoStatement>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="444" end="446">
+	</EmptyStatement>
+</ModuleDeclaration>
