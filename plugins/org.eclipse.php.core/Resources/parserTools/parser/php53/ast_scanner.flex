@@ -13,15 +13,16 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Stack;
 
-import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
-import org.eclipse.php.core.ast.nodes.Comment;
-import java_cup.sym;
-import org.eclipse.php.core.ast.nodes.AST;
-import java_cup.runtime.Symbol;
-import org.eclipse.php.internal.core.ast.scanner.StateStack;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.AST;
+import org.eclipse.php.core.ast.nodes.Comment;
+import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
+import org.eclipse.php.internal.core.ast.scanner.StateStack;
+
+import java_cup.sym;
+import java_cup.runtime.Symbol;
 
 %%
 
@@ -59,8 +60,8 @@ import org.eclipse.php.core.PHPVersion;
 %state ST_ONE_LINE_COMMENT
 %{
 	private final LinkedList commentList = new LinkedList();
-	private String heredoc = null;
-	private String nowdoc = null;
+	// XXX: "heredocIds" and "stack" are never reset
+	private Stack<String> heredocIds = new Stack<>();
 	private boolean asp_tags = false;
 	private boolean short_tags_allowed = true;
 	private StateStack stack = new StateStack();
@@ -1006,18 +1007,18 @@ if (parsePHPDoc()) {
 	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
 
 	if (hereOrNowDoc.charAt(0) == '\'') {
-		nowdoc = hereOrNowDoc.substring(1, heredoc_len - 1);
-		sym.value = nowdoc;
+		sym.value = hereOrNowDoc.substring(1, heredoc_len - 1);
+		heredocIds.push((String) sym.value);
 		heredoc_len -= 2;
 		yybegin(ST_START_NOWDOC);
 	} else if (hereOrNowDoc.charAt(0) == '"') {
-		heredoc = hereOrNowDoc.substring(1, heredoc_len - 1);
-		sym.value = heredoc;
+		sym.value = hereOrNowDoc.substring(1, heredoc_len - 1);
+		heredocIds.push((String) sym.value);
 		heredoc_len -= 2;
 		yybegin(ST_START_HEREDOC);
 	} else {
-		heredoc = hereOrNowDoc;
-		sym.value = heredoc;
+		sym.value = hereOrNowDoc;
+		heredocIds.push((String) sym.value);
 		yybegin(ST_START_HEREDOC);
 	}
 	return sym;
@@ -1049,8 +1050,9 @@ if (parsePHPDoc()) {
 		text = text.substring(0, text.length() - 1);
 		yypushback(1);
 	}
+	String heredoc = heredocIds.peek();
 	if (text.equals(heredoc)) {
-		heredoc = null;
+		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
 	} else {
@@ -1069,11 +1071,12 @@ if (parsePHPDoc()) {
 	}
 
 	int textLength = text.length();
+	String heredoc = heredocIds.peek();
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		yypushback(2);
 		yybegin(ST_END_HEREDOC);
-		heredoc = null;
+		heredocIds.pop();
 		// we need to remove the closing label from the symbol value.
 		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 		String value = (String) sym.value;
@@ -1104,8 +1107,9 @@ if (parsePHPDoc()) {
 		text = text.substring(0, text.length() - 1);
 		yypushback(1);
 	}
+	String nowdoc = heredocIds.peek();
 	if (text.equals(nowdoc)) {
-		nowdoc = null;
+		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
 	} else {
@@ -1124,11 +1128,12 @@ if (parsePHPDoc()) {
 	}
 
 	int textLength = text.length();
+	String nowdoc = heredocIds.peek();
 	int nowdocLength = nowdoc.length();
 	if (textLength > nowdocLength && text.substring(textLength - nowdocLength, textLength).equals(nowdoc)) {
 		yypushback(2);
 		yybegin(ST_END_HEREDOC);
-		nowdoc = null;
+		heredocIds.pop();
 		// we need to remove the closing label from the symbol value.
 		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 		String value = (String) sym.value;
