@@ -16,18 +16,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.manipulation.SourceModuleChange;
 import org.eclipse.dltk.ui.editor.saveparticipant.IPostSaveListener;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -87,36 +86,6 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 		return false;
 	}
 
-	protected @NonNull MultiTextEdit computeTextEdit(@NonNull IDocument document) throws BadLocationException {
-		int lineCount = document.getNumberOfLines();
-
-		MultiTextEdit multiEdit = new MultiTextEdit();
-
-		for (int i = 0; i < lineCount; i++) {
-			IRegion region = document.getLineInformation(i);
-			if (region.getLength() == 0) {
-				continue;
-			}
-			int lineStart = region.getOffset();
-			int lineExclusiveEnd = lineStart + region.getLength();
-			int j = lineExclusiveEnd - 1;
-			while (j >= lineStart && Character.isWhitespace(document.getChar(j))) {
-				--j;
-			}
-			++j;
-			// A flag for skipping empty lines, if required
-			if (ignoreEmptyLines && j == lineStart) {
-				continue;
-			}
-			if (j < lineExclusiveEnd) {
-				multiEdit.addChild(new DeleteEdit(j, lineExclusiveEnd - j));
-			}
-		}
-
-		return multiEdit;
-	}
-
-	@Override
 	public void saved(ISourceModule compilationUnit, IRegion[] changedRegions, IProgressMonitor monitor)
 			throws CoreException {
 		IScriptProject project = compilationUnit.getScriptProject();
@@ -128,12 +97,14 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 
 		try {
 			IDocument document = new Document(compilationUnit.getSource());
-			MultiTextEdit edits = computeTextEdit(document);
-			if (edits.hasChildren()) {
+			DeleteEdit[] deletes = FormatterUtils.getTrailingWhitespaces(document, ignoreEmptyLines);
+			if (deletes.length > 0) {
+				MultiTextEdit multiEdit = new MultiTextEdit();
+				multiEdit.addChildren(deletes);
 				final SourceModuleChange change = new SourceModuleChange(
 						"Remove trailing whitespaces from " + compilationUnit.getElementName(), compilationUnit); //$NON-NLS-1$
 				change.setSaveMode(TextFileChange.LEAVE_DIRTY);
-				change.setEdit(edits);
+				change.setEdit(multiEdit);
 				change.perform(monitor);
 			}
 		} catch (Exception e) {
