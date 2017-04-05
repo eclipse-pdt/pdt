@@ -12,7 +12,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 
 /**
  * Code coverage adapter factory.

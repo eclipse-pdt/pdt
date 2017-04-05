@@ -19,7 +19,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -119,7 +119,7 @@ public class CompletionCompanion {
 	 * @throws ModelException
 	 */
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
-		if (!PHPToolkitUtil.isFromPhpProject(type)) {
+		if (!PHPToolkitUtil.isFromPHPProject(type)) {
 			return new FakeTypeHierarchy();
 		}
 		if (!superHierarchyCache.containsKey(type)) {

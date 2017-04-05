@@ -53,10 +53,10 @@ import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
@@ -2246,7 +2246,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (resource != null) {
-			if (PHPToolkitUtil.isPhpFile((IFile) resource)) {
+			if (PHPToolkitUtil.isPHPFile((IFile) resource)) {
 
 				PhpSourceParser.editFile.set(resource);
 

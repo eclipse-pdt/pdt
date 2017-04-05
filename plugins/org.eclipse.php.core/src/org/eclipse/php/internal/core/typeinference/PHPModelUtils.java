@@ -43,6 +43,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.Identifier;
 import org.eclipse.php.core.ast.nodes.NamespaceName;
@@ -1336,7 +1337,7 @@ public class PHPModelUtils {
 	@NonNull
 	public static IType[] getSuperClasses(IType type, ITypeHierarchy hierarchy) throws ModelException {
 		if (hierarchy == null) {
-			if (!PHPToolkitUtil.isFromPhpProject(type)) {
+			if (!PHPToolkitUtil.isFromPHPProject(type)) {
 				return EMPTY_TYPES;
 			} else {
 				hierarchy = type.newSupertypeHierarchy(null);

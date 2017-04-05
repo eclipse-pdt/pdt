@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.AbstractLanguageToolkit;
 import org.eclipse.dltk.core.IArchive;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IDLTKLanguageToolkitExtension;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 

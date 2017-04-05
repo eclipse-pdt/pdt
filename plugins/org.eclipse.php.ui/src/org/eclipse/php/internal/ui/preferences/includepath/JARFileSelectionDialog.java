@@ -15,7 +15,7 @@ import java.io.File;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.swt.graphics.Image;

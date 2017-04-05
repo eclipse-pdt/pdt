@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -70,7 +70,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 					} else if (obj instanceof IAdaptable) {
 						IResource resource = getResource((IAdaptable) obj);
 						if (resource != null && resource.getType() == IResource.FILE) {
-							return PHPToolkitUtil.isPhpFile((IFile) resource);
+							return PHPToolkitUtil.isPHPFile((IFile) resource);
 						}
 						if (resource != null && resource.getType() == IResource.PROJECT) {
 							return isWebPageProjectLaunch(args, (IProject) resource);
@@ -93,7 +93,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 
 	private boolean test(IModelElement modelElement) {
 		return modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE
-				&& PHPToolkitUtil.isPhpElement(modelElement);
+				&& PHPToolkitUtil.isPHPElement(modelElement);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			if (server == null || ServersManager.isNoneServer(server)) {
 				return false;
 			}
-			return PHPToolkitUtil.isPhpProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
+			return PHPToolkitUtil.isPHPProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
 
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);
