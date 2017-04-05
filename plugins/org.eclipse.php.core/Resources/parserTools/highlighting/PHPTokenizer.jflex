@@ -448,13 +448,8 @@ private final String doScanEndPhp(String searchContext, int exitState, int immed
 private AbstractPhpLexer getPhpLexer() {
 	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(zzReader, phpVersion);
 	int[] currentParameters = getParameters();
-	try {
-		// set initial lexer state - we use reflection here since we don't know the constant value of
-		// of this state in specific PHP version lexer
-		currentParameters[6] = lexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(lexer);
-	} catch (Exception e) {
-		Logger.logException(e);
-	}
+	// this value is specific to each PHP version lexer
+	currentParameters[6] = lexer.getInScriptingState();
 	lexer.reset(zzReader, zzBuffer, currentParameters);
 
 	lexer.setAspTags(ProjectOptions.isSupportingASPTags(project));
