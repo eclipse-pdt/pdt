@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core;
+package org.eclipse.php.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,20 +21,17 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharException;
-import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.tar.TarArchiveFile;
 import org.eclipse.php.internal.core.tar.TarException;
 
 public class PHPToolkitUtil {
+
 	public static final String PHAR_EXTENSTION = "phar"; //$NON-NLS-1$
 	public static final String TAR_EXTENSTION = "tar"; //$NON-NLS-1$
 	public static final String BZ2_EXTENSTION = "bz2"; //$NON-NLS-1$
@@ -43,16 +40,16 @@ public class PHPToolkitUtil {
 	public static final String[] PHAR_EXTENSTIONS = new String[] { PHAR_EXTENSTION, TAR_EXTENSTION, BZ2_EXTENSTION,
 			GZ_EXTENSTION, ZIP_EXTENSTION };
 
-	public static boolean isPhpElement(final IModelElement modelElement) {
+	public static boolean isPHPElement(final IModelElement modelElement) {
 		Assert.isNotNull(modelElement);
 		IModelElement sourceModule = modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 		if (sourceModule != null) {
-			return isPhpFile((ISourceModule) sourceModule);
+			return isPHPFile((ISourceModule) sourceModule);
 		}
 		return false;
 	}
 
-	public static boolean isPhpFile(final ISourceModule sourceModule) {
+	public static boolean isPHPFile(final ISourceModule sourceModule) {
 		try {
 			IResource resource = sourceModule.getCorrespondingResource();
 			if (resource instanceof IFile) {
@@ -66,7 +63,25 @@ public class PHPToolkitUtil {
 			}
 		} catch (CoreException e) {
 		}
-		return hasPhpExtention(sourceModule.getElementName());
+		return hasPHPExtention(sourceModule.getElementName());
+	}
+
+	public static boolean isPHPFile(final IFile file) {
+		IContentDescription contentDescription = null;
+		if (!file.exists()) {
+			return hasPHPExtention(file);
+		}
+		try {
+			contentDescription = file.getContentDescription();
+		} catch (final CoreException e) {
+			return hasPHPExtention(file);
+		}
+
+		if (contentDescription == null) {
+			return hasPHPExtention(file);
+		}
+
+		return ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId());
 	}
 
 	public static boolean isPhar(IResource resource) {
@@ -90,25 +105,7 @@ public class PHPToolkitUtil {
 		return extension != null && isPharExtention(extension);
 	}
 
-	public static boolean isPhpFile(final IFile file) {
-		IContentDescription contentDescription = null;
-		if (!file.exists()) {
-			return hasPhpExtention(file);
-		}
-		try {
-			contentDescription = file.getContentDescription();
-		} catch (final CoreException e) {
-			return hasPhpExtention(file);
-		}
-
-		if (contentDescription == null) {
-			return hasPhpExtention(file);
-		}
-
-		return ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId());
-	}
-
-	public static boolean hasPhpExtention(final IFile file) {
+	public static boolean hasPHPExtention(final IFile file) {
 		final String fileName = file.getName();
 		String extension = getExtention(fileName);
 		if (extension == null) {
@@ -134,7 +131,7 @@ public class PHPToolkitUtil {
 		return fileName.substring(index + 1);
 	}
 
-	public static boolean hasPhpExtention(String fileName) {
+	public static boolean hasPHPExtention(String fileName) {
 		if (fileName == null) {
 			throw new IllegalArgumentException();
 		}
@@ -163,11 +160,11 @@ public class PHPToolkitUtil {
 	 * @return true for php IModelElements
 	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=498516
 	 */
-	public static boolean isFromPhpProject(IModelElement element) {
+	public static boolean isFromPHPProject(IModelElement element) {
 		IProject project = element != null && element.getScriptProject() != null
 				? element.getScriptProject().getProject() : null;
 		try {
-			return isPhpProject(project);
+			return isPHPProject(project);
 		} catch (CoreException e) {
 			return false;
 		}
@@ -180,14 +177,8 @@ public class PHPToolkitUtil {
 	 * @return true for php ITypes
 	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=498526
 	 */
-	public static boolean isFromPhpProject(IType type) {
-		IProject project = type != null && type.getScriptProject() != null ? type.getScriptProject().getProject()
-				: null;
-		try {
-			return isPhpProject(project);
-		} catch (CoreException e) {
-			return false;
-		}
+	public static boolean isFromPHPProject(IType type) {
+		return isFromPHPProject(type);
 	}
 
 	/**
@@ -197,7 +188,7 @@ public class PHPToolkitUtil {
 	 * @return true for php projects
 	 * @throws CoreException
 	 */
-	public static boolean isPhpProject(IProject project) throws CoreException {
+	public static boolean isPHPProject(IProject project) throws CoreException {
 		if (project == null || !project.isAccessible()) {
 			return false;
 		}
@@ -236,9 +227,7 @@ public class PHPToolkitUtil {
 	 * @return source module
 	 */
 	public static ISourceModule getSourceModule(IModelElement element) {
-		IModelElement mElement = (IModelElement) element;
-
-		if (mElement.getElementType() == IModelElement.SOURCE_MODULE) {
+		if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 			return (ISourceModule) element;
 		}
 
@@ -283,31 +272,19 @@ public class PHPToolkitUtil {
 				throw new IOException(e.getMessage());
 			}
 			return archive;
-			// return getArchive(localFile,extension);
 		}
 		return null;
 	}
 
 	private static String getExtension(File localFile) {
 		if (localFile.isFile()) {
-			int index = localFile.getName().lastIndexOf("."); //$NON-NLS-1$
+			int index = localFile.getName().lastIndexOf('.');
 			if (localFile.getName().length() > index + 1) {
-				String extension = localFile.getName().substring(index + 1);
-				return extension;
+				return localFile.getName().substring(index + 1);
 			}
 
 		}
 		return null;
-	}
-
-	public static void setProjectVersion(@NonNull IProject project) {
-		String versionName = CorePreferencesSupport.getInstance()
-				.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
-
-		PHPVersion version = PHPVersion.byAlias(versionName);
-		if (version != null && ProjectOptions.getDefaultPHPVersion() != version) {
-			ProjectOptions.setPHPVersion(version, project);
-		}
 	}
 
 }

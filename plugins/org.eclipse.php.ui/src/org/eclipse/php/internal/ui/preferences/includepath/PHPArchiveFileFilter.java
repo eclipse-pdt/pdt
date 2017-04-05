@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 
 public class PHPArchiveFileFilter extends ViewerFilter {
 

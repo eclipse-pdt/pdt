@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.debug.ui.actions.IRunToLineTarget;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -30,11 +30,11 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 
 		if (editorPart instanceof PHPStructuredEditor) {
 			IModelElement modelElement = ((PHPStructuredEditor) editorPart).getModelElement();
-			isPHPFile = modelElement != null && PHPToolkitUtil.isPhpElement(modelElement);
+			isPHPFile = modelElement != null && PHPToolkitUtil.isPHPElement(modelElement);
 		} else {
 			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource instanceof IFile) {
-				isPHPFile = PHPToolkitUtil.isPhpFile((IFile) resource);
+				isPHPFile = PHPToolkitUtil.isPHPFile((IFile) resource);
 			}
 		}
 

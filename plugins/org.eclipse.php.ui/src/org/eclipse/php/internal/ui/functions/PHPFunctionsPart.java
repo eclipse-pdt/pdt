@@ -30,7 +30,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
@@ -251,7 +251,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 				final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 				for (IProject project : projects) {
-					if (PHPToolkitUtil.isPhpProject(project)) {
+					if (PHPToolkitUtil.isPHPProject(project)) {
 						return DLTKCore.create(project);
 					}
 				}

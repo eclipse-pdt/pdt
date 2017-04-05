@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
@@ -278,7 +278,7 @@ public class MoveUtils {
 				getAllPHPFiles(fldChildrens, phpFilesSet);
 			} else if (current instanceof IFile) {
 				IFile file = (IFile) current;
-				if (PHPToolkitUtil.isPhpFile(file)) {
+				if (PHPToolkitUtil.isPHPFile(file)) {
 					phpFilesSet.add(file);
 				}
 			}

@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.ui.IEditorInput;
 
 public class PHPCLILaunchPropertyTester extends PropertyTester {
@@ -60,7 +60,7 @@ public class PHPCLILaunchPropertyTester extends PropertyTester {
 					} else if (obj instanceof IAdaptable) {
 						IResource resource = getResource((IAdaptable) obj);
 						if (resource != null && resource.getType() == IResource.FILE) {
-							return PHPToolkitUtil.isPhpFile((IFile) resource);
+							return PHPToolkitUtil.isPHPFile((IFile) resource);
 						}
 					}
 				}
@@ -80,7 +80,7 @@ public class PHPCLILaunchPropertyTester extends PropertyTester {
 
 	private boolean test(IModelElement modelElement) {
 		return modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE
-				&& PHPToolkitUtil.isPhpElement(modelElement);
+				&& PHPToolkitUtil.isPHPElement(modelElement);
 	}
 
 }

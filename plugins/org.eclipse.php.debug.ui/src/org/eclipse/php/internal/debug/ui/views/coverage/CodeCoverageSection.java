@@ -16,7 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.SWT;

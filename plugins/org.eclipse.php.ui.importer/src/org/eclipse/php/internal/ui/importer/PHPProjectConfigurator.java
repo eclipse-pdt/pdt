@@ -15,9 +15,9 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.ui.wizards.datatransfer.ProjectConfigurator;
 
@@ -61,7 +61,7 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 	@Override
 	public void configure(IProject project, Set<IPath> ignoredPaths, IProgressMonitor monitor) {
 		try {
-			if (PHPToolkitUtil.isPhpProject(project)) {
+			if (PHPToolkitUtil.isPHPProject(project)) {
 				return;
 			}
 			String[] natureIds = new String[] { PHPNature.ID };

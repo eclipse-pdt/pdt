@@ -24,11 +24,11 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ArchiveFolder;
 import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.internal.core.ScriptFolder;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.codeassist.contexts.IncludeStatementContext;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
@@ -291,7 +291,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 					continue;
 				}
 				if (resource.getType() == IResource.FILE) {
-					if (PHPToolkitUtil.isPhpFile((IFile) resource)
+					if (PHPToolkitUtil.isPHPFile((IFile) resource)
 							&& !modelElement.equals(((IncludeStatementContext) context).getSourceModule())) {
 						reporter.reportResource(modelElement, rel, getSuffix(modelElement), replaceRange);
 					}

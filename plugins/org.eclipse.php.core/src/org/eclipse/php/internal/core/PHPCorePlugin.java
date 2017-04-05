@@ -28,6 +28,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -207,7 +208,7 @@ public class PHPCorePlugin extends Plugin {
 			if (!project.isAccessible()) {
 				continue;
 			}
-			if (project.isOpen() && PHPToolkitUtil.isPhpProject(project)) {
+			if (project.isOpen() && PHPToolkitUtil.isPHPProject(project)) {
 				IScriptProject scriptProject = DLTKCore.create(project);
 				IProjectFragment[] projectFragments = scriptProject.getProjectFragments();
 				for (IProjectFragment projectFragment : projectFragments) {
@@ -245,7 +246,7 @@ public class PHPCorePlugin extends Plugin {
 				continue ProjectsIterate;
 			}
 			// verify that the project is a PHP project
-			if (PHPToolkitUtil.isPhpProject(project)) {
+			if (PHPToolkitUtil.isPHPProject(project)) {
 				IProjectDescription projectDescription = project.getDescription();
 				ICommand[] commands = projectDescription.getBuildSpec();
 				// check if the Script Builder is installed
