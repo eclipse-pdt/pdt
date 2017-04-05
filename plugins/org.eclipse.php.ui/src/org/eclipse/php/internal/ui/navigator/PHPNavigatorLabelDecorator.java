@@ -16,8 +16,8 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
@@ -35,7 +35,7 @@ public class PHPNavigatorLabelDecorator implements ILightweightLabelDecorator {
 			IFolder folder = (IFolder) element;
 			IScriptProject project = DLTKCore.create(folder.getProject());
 			try {
-				if (PHPToolkitUtil.isPhpProject(folder.getProject()) && project.isOnBuildpath(folder)) {
+				if (PHPToolkitUtil.isPHPProject(folder.getProject()) && project.isOnBuildpath(folder)) {
 					if (lfm.isInLibraryFolder(folder)) {
 						decoration.addOverlay(PHPPluginImages.DESC_OBJS_PHP_LIBFOLDER, IDecoration.REPLACE);
 					} else {

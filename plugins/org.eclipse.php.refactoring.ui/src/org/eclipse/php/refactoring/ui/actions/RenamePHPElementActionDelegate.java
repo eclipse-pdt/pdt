@@ -25,9 +25,9 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.actions.IPHPActionDelegator;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -161,7 +161,7 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 			}
 			return;
 		} else if (isSourceReference(object) && isModelElement(object)
-				&& PHPToolkitUtil.isFromPhpProject((IModelElement) object)) {
+				&& PHPToolkitUtil.isFromPHPProject((IModelElement) object)) {
 			IModelElement element = (IModelElement) object;
 
 			IModelElement type = element.getPrimaryElement();

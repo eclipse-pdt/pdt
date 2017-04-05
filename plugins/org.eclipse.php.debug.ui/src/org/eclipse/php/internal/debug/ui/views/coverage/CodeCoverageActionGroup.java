@@ -19,7 +19,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.debug.core.zend.communication.IRemoteFileContentRequestor;
 import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;

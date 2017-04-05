@@ -28,10 +28,10 @@ import org.eclipse.dltk.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.preferences.includepath.IncludePathUtils;
 import org.eclipse.php.internal.ui.util.SWTUtil;
@@ -360,7 +360,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		IModelElement codeData = super.getInitialPHPElement(selection);
 
 		// fixed bug 14462 - in case of class insert the class as super class
-		if (codeData != null && PHPToolkitUtil.isPhpElement(codeData)) {
+		if (codeData != null && PHPToolkitUtil.isPHPElement(codeData)) {
 			int type = codeData.getElementType();
 			if (type == IModelElement.TYPE && !PHPFlags.isInterface(type) && !PHPFlags.isNamespace(type)) {
 				superClassData = (IType) codeData;

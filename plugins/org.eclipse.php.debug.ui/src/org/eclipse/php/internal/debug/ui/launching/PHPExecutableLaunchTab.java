@@ -27,8 +27,8 @@ import org.eclipse.debug.ui.StringVariableSelectionDialog;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPRuntime;
@@ -205,12 +205,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				if (FileUtils.resourceExists(phpFile)) {
 					IResource fileToData = ResourcesPlugin.getWorkspace().getRoot().findMember(phpFile);
 					// check if not a file (project, folder etc.)
-					if ((fileToData.getType() != IResource.FILE) || !PHPToolkitUtil.isPhpFile((IFile) fileToData)) {
+					if ((fileToData.getType() != IResource.FILE) || !PHPToolkitUtil.isPHPFile((IFile) fileToData)) {
 						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
 						return false;
 					}
 				} else if (new File(phpFile).exists()) {
-					if (!PHPToolkitUtil.hasPhpExtention(phpFile)) {
+					if (!PHPToolkitUtil.hasPHPExtention(phpFile)) {
 						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
 						return false;
 					}

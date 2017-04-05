@@ -24,10 +24,10 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
@@ -234,7 +234,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		Set<IPath> inUse = new HashSet<IPath>();
 		Set<IPath> toDrop = new HashSet<IPath>();
 		for (IProject project : projects) {
-			if (!PHPToolkitUtil.isPhpProject(project)) {
+			if (!PHPToolkitUtil.isPHPProject(project)) {
 				continue;
 			}
 			IBuildpathContainer container = DLTKCore.getBuildpathContainer(Path.fromPortableString(CONTAINER_PATH),

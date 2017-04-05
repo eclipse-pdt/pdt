@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.ITypeHierarchyChangedListener;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 
 /**
  * TODO : should be in the DLTK ui
@@ -145,7 +145,7 @@ public class SuperTypeHierarchyCache {
 	 * @throws ModelException
 	 */
 	public static ITypeHierarchy getTypeHierarchy(IType type, IProgressMonitor progressMonitor) throws ModelException {
-		if (type == null || !type.exists() || !PHPToolkitUtil.isFromPhpProject(type)) {
+		if (type == null || !type.exists() || !PHPToolkitUtil.isFromPHPProject(type)) {
 			return new FakeTypeHierarchy();
 		}
 		ITypeHierarchy hierarchy = findTypeHierarchyInCache(type);

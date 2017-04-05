@@ -32,12 +32,12 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
@@ -227,7 +227,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 				return;
 			}
 
-			if (context.getFile().getType() != IResource.FILE || !(PHPToolkitUtil.isPhpFile(context.getFile()))) {
+			if (context.getFile().getType() != IResource.FILE || !(PHPToolkitUtil.isPHPFile(context.getFile()))) {
 				// process only PHP files
 				return;
 			}

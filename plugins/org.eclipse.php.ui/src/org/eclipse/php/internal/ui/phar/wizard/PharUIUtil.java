@@ -28,7 +28,7 @@ import org.eclipse.dltk.internal.ui.IDLTKStatusConstants;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.tar.TarArchiveFile;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
