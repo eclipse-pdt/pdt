@@ -133,7 +133,7 @@ EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM}?)
 HNUM="0x"[0-9a-fA-F]+
 BNUM="0b"[01]+
 LABEL=[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*
-WHITESPACE=[ \n\r\t]+
+WHITESPACES=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
 TOKENS=[:,.\[\]()|\^&+-//*=%!~$<>?@]
 CLOSE_EXPRESSION=[;]
@@ -188,7 +188,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_YIELD;
 }
 
-<ST_PHP_IN_SCRIPTING>"yield"{WHITESPACE}"from" {
+<ST_PHP_IN_SCRIPTING>"yield"{WHITESPACES}"from" {
 	return PHP_YIELD;
 }
 
@@ -353,7 +353,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	}
 }
 
-<ST_PHP_IN_SCRIPTING,ST_PHP_LOOKING_FOR_PROPERTY,ST_PHP_IDENTIFIER>{WHITESPACE} {
+<ST_PHP_IN_SCRIPTING,ST_PHP_LOOKING_FOR_PROPERTY,ST_PHP_IDENTIFIER>{WHITESPACES} {
 	return WHITESPACE;
 }
 
@@ -538,7 +538,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_SEMICOLON;
 }
 
-<ST_PHP_IN_SCRIPTING>"{"{WHITESPACE}? {
+<ST_PHP_IN_SCRIPTING>"{"{WHITESPACES}? {
 	// Whitespaces are directly appended to the curly before pushState()
 	// is effective or whitespaces would be stored in a separate ContextRegion.
 	// Method PhpTokenContainer#addLast() will correct the curlies length...
@@ -558,7 +558,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_TOKEN;
 }
 
-<ST_PHP_DOLLAR_CURLY_OPEN>"{"{WHITESPACE}? {
+<ST_PHP_DOLLAR_CURLY_OPEN>"{"{WHITESPACES}? {
 	yybegin(ST_PHP_IN_SCRIPTING);
 	return PHP_CURLY_OPEN;
 }
@@ -573,7 +573,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_ENCAPSED_VARIABLE;
 }
 
-<ST_PHP_IN_SCRIPTING>"}"{WHITESPACE}? {
+<ST_PHP_IN_SCRIPTING>"}"{WHITESPACES}? {
 	// Whitespaces are directly appended to the curly before pushState()
 	// is effective or whitespaces would be stored in a separate ContextRegion.
 	// Method PhpTokenContainer#addLast() will correct the curlies length...
@@ -682,7 +682,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 /*
-<ST_PHP_IN_SCRIPTING>{WHITESPACE} {
+<ST_PHP_IN_SCRIPTING>{WHITESPACES} {
 	return WHITESPACE;
 }
 */
@@ -1095,7 +1095,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    After we find a whitespace we go the the prev state and try again from the next token.
    ============================================ */
 <ST_PHP_HIGHLIGHTING_ERROR> {
-	{WHITESPACE}    {popState();return WHITESPACE;}
+	{WHITESPACES}   {popState();return WHITESPACE;}
 	.               {return UNKNOWN_TOKEN;}
 }
 

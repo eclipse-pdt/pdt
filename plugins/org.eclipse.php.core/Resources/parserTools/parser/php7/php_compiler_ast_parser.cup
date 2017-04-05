@@ -397,7 +397,7 @@ top_statement_list:statementList
 	RESULT = program;
 :}
 ;
-reserved_non_modifiers::=
+reserved_non_modifiers ::=
 T_INCLUDE:v
 {:
 	RESULT = v;
@@ -635,7 +635,7 @@ T_INCLUDE:v
 	RESULT = v.value;
 :}
 ;
-semi_reserved::=
+semi_reserved ::=
 reserved_non_modifiers:v
 {:
 	RESULT = v;
@@ -2172,7 +2172,7 @@ static_var:v
 :}
 ;
 
-static_var::=
+static_var ::=
 T_VARIABLE:var
 {:
 	RESULT = new VariableReference(varleft, varright, var);
@@ -2642,7 +2642,7 @@ class_const_list:list T_COMMA class_const_decl:decl
 :}
 ;
 
-class_const_decl::=
+class_const_decl ::=
 identifier:constName T_EQUAL expr:expr
 {:
 	RESULT = new ASTNode[] { new ConstantReference(constNameleft, constNameright, constName), expr};
@@ -3456,7 +3456,7 @@ callable_variable:var
 :}
 ;
 
-dereferencable::=
+dereferencable ::=
 variable:v
 {:
 	RESULT = v;
@@ -3472,7 +3472,7 @@ variable:v
 :}
 ;
 
-callable_expr::=
+callable_expr ::=
 callable_variable:v
 {:
 	RESULT = v;
@@ -3504,7 +3504,7 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 :}
 ;
 
-callable_variable::=
+callable_variable ::=
 simple_variable:var
 {:
 	RESULT = var;

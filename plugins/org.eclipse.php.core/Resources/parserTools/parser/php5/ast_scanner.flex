@@ -237,7 +237,7 @@ DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+
 LABEL=[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*
-WHITESPACE=[ \n\r\t]+
+WHITESPACES=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
 ANY_CHAR=(.|[\n])
 NEWLINE=("\r"|"\n"|"\r\n")
@@ -744,7 +744,7 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	return createSymbol(ParserConstants.T_INLINE_HTML);
 }
 
-<YYINITIAL>"<?"|"<script"{WHITESPACE}+"language"{WHITESPACE}*"="{WHITESPACE}*("php"|"\"php\""|"\'php\'"){WHITESPACE}*">" {
+<YYINITIAL>"<?"|"<script"{WHITESPACES}"language"{WHITESPACES}?"="{WHITESPACES}?("php"|"\"php\""|"\'php\'"){WHITESPACES}?">" {
 	if (short_tags_allowed || yylength()>2) { /* yyleng>2 means it's not <? but <script> */
 		yybegin(ST_IN_SCRIPTING);
 		//return T_OPEN_TAG;
@@ -846,7 +846,7 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	return createFullSymbol(ParserConstants.T_STRING);
 }
 
-<ST_IN_SCRIPTING>{WHITESPACE} {
+<ST_IN_SCRIPTING>{WHITESPACES} {
 }
 
 <ST_IN_SCRIPTING>"#"|"//" {
@@ -882,12 +882,12 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	}
 }
 
-<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}+"$"{LABEL}{WHITESPACE}+({LABEL}|"["|"]"|"|")+{WHITESPACE}*"*/" {
+<ST_IN_SCRIPTING>"/*"{WHITESPACES}?"@var"{WHITESPACES}"$"{LABEL}{WHITESPACES}({LABEL}|"["|"]"|"|")+{WHITESPACES}?"*/" {
 	handleVarComment();
 	//return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
 
-<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}+({LABEL}|"["|"]"|"|")+{WHITESPACE}+"$"{LABEL}{WHITESPACE}*"*/" {
+<ST_IN_SCRIPTING>"/*"{WHITESPACES}?"@var"{WHITESPACES}({LABEL}|"["|"]"|"|")+{WHITESPACES}"$"{LABEL}{WHITESPACES}?"*/" {
 	handleVarComment();
 	//return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
@@ -944,7 +944,7 @@ if (parsePHPDoc()) {
 	// yymore();
 }
 
-<ST_IN_SCRIPTING>("?>"|"</script"{WHITESPACE}*">") {
+<ST_IN_SCRIPTING>("?>"|"</script"{WHITESPACES}?">") {
 	yybegin(YYINITIAL);
 	return createSymbol(ParserConstants.T_SEMICOLON); /* implicit ';' at php-end tag */
 }

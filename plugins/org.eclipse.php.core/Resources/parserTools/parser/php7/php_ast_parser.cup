@@ -399,7 +399,7 @@ top_statement_list:sList
 :}
 ;
 
-reserved_non_modifiers::=
+reserved_non_modifiers ::=
 T_INCLUDE:v
 {:
 	RESULT = v;
@@ -637,7 +637,7 @@ T_INCLUDE:v
 	RESULT = v;
 :}
 ;
-semi_reserved::=
+semi_reserved ::=
 reserved_non_modifiers:v
 {:
 	RESULT = v;
@@ -1828,7 +1828,7 @@ static_var:v
 :}
 ;
 
-static_var::=
+static_var ::=
 T_VARIABLE:var
 {:
 	RESULT = new Variable(varleft, varright, parser.ast, var);
@@ -2177,7 +2177,7 @@ class_const_list:list T_COMMA class_const_decl:decl
 :}
 ;
 
-class_const_decl::=
+class_const_decl ::=
 identifier:constName T_EQUAL expr:expr
 {:
 	RESULT = new ASTNode[] { new Identifier(constNameleft, constNameright, parser.ast, constName), expr};
@@ -2914,7 +2914,7 @@ callable_variable:var
 :}
 ;
 
-dereferencable::=
+dereferencable ::=
 variable:v
 {:
 	RESULT = v;
@@ -2930,7 +2930,7 @@ variable:v
 :}
 ;
 
-callable_expr::=
+callable_expr ::=
 callable_variable:v
 {:
 	RESULT = v;
@@ -2963,7 +2963,7 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 :}
 ;
 
-callable_variable::=
+callable_variable ::=
 simple_variable:var
 {:
 	RESULT = var;
@@ -3075,7 +3075,7 @@ optional_expr ::=
 ;
 
 
-member_name::=
+member_name ::=
 identifier:varName
 {:
 	RESULT = new Variable(varNameleft, varNameright, parser.ast, varName);
