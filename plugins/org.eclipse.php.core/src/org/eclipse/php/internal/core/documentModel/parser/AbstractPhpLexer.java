@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import javax.swing.text.Segment;
@@ -81,11 +82,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	protected int firstPos = -1; // the first position in the array
 
-	protected String heredoc = null;
-	protected String nowdoc = null;
-	protected int heredoc_len = 0;
-	protected int nowdoc_len = 0;
 	protected StateStack phpStack;
+	protected String[] heredocIds;
 
 	/**
 	 * build a key that represents the current state of the lexer.
@@ -93,12 +91,16 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	private int buildStateKey() {
 		int rv = getZZLexicalState();
 
-		for (int i = 0; i < phpStack.size(); i++)
+		for (int i = 0, len = phpStack.size(); i < len; i++) {
 			rv = 31 * rv + phpStack.get(i);
-		for (int i = 0; i < heredoc_len; i++)
-			rv = 31 * rv + heredoc.charAt(i);
-		for (int i = 0; i < nowdoc_len; i++)
-			rv = 31 * rv + nowdoc.charAt(i);
+		}
+		if (heredocIds != null) {
+			for (int i = 0, len1 = heredocIds.length; i < len1; i++) {
+				for (int j = 0, len2 = heredocIds[i].length(); j < len2; j++) {
+					rv = 31 * rv + heredocIds[i].charAt(j);
+				}
+			}
+		}
 		return rv;
 	}
 
@@ -158,6 +160,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public void initialize(final int state) {
 		phpStack = new StateStack();
+		heredocIds = null;
 		yybegin(state);
 	}
 
@@ -193,6 +196,40 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	protected void pushState(final int state) {
 		phpStack.pushStack(getZZLexicalState());
 		yybegin(state);
+	}
+
+	protected void pushHeredocId(final String heredocId) {
+		if (heredocIds == null) {
+			heredocIds = new String[] { heredocId };
+			return;
+		}
+		assert heredocIds.length != 0;
+		String[] newHeredocIds = new String[heredocIds.length + 1];
+		System.arraycopy(heredocIds, 0, newHeredocIds, 0, heredocIds.length);
+		newHeredocIds[heredocIds.length] = heredocId;
+		heredocIds = newHeredocIds;
+	}
+
+	protected String getHeredocId() {
+		if (heredocIds == null) {
+			return null;
+		}
+		assert heredocIds.length != 0;
+		return heredocIds[heredocIds.length - 1];
+	}
+
+	protected void popHeredocId() {
+		if (heredocIds == null) {
+			return;
+		}
+		assert heredocIds.length != 0;
+		if (heredocIds.length == 1) {
+			heredocIds = null;
+			return;
+		}
+		String[] newHeredocIds = new String[heredocIds.length - 1];
+		System.arraycopy(heredocIds, 0, newHeredocIds, 0, heredocIds.length - 1);
+		heredocIds = newHeredocIds;
 	}
 
 	public void setAspTags(final boolean b) {
@@ -365,21 +402,18 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	private static class HeredocState implements LexerState {
-		private final String myHeredoc;
-		private final String myNowdoc;
+		private final String[] heredocIds;
 		private final BasicLexerState theState;
 
 		public HeredocState(final BasicLexerState state, AbstractPhpLexer lexer) {
 			theState = state;
-			myHeredoc = lexer.heredoc;
-			myNowdoc = lexer.nowdoc;
+			heredocIds = lexer.heredocIds;
 		}
 
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((myHeredoc == null) ? 0 : myHeredoc.hashCode());
-			result = prime * result + ((myNowdoc == null) ? 0 : myNowdoc.hashCode());
+			result = prime * result + ((heredocIds == null) ? 0 : Arrays.hashCode(heredocIds));
 			result = prime * result + ((theState == null) ? 0 : theState.hashCode());
 			return result;
 		}
@@ -392,15 +426,10 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			if (getClass() != obj.getClass())
 				return false;
 			HeredocState other = (HeredocState) obj;
-			if (myHeredoc == null) {
-				if (other.myHeredoc != null)
+			if (heredocIds == null) {
+				if (other.heredocIds != null)
 					return false;
-			} else if (!myHeredoc.equals(other.myHeredoc))
-				return false;
-			if (myNowdoc == null) {
-				if (other.myNowdoc != null)
-					return false;
-			} else if (!myNowdoc.equals(other.myNowdoc))
+			} else if (!Arrays.equals(heredocIds, other.heredocIds))
 				return false;
 			if (theState == null) {
 				if (other.theState != null)
@@ -443,15 +472,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		public void restoreState(final Scanner scanner) {
 			final AbstractPhpLexer lexer = (AbstractPhpLexer) scanner;
 			theState.restoreState(lexer);
-
-			if (myHeredoc != null) {
-				lexer.heredoc = myHeredoc;
-				lexer.heredoc_len = myHeredoc.length();
-			}
-			if (myNowdoc != null) {
-				lexer.nowdoc = myNowdoc;
-				lexer.nowdoc_len = myNowdoc.length();
-			}
+			lexer.heredocIds = heredocIds.length == 0 ? null : heredocIds;
 		}
 	}
 }
