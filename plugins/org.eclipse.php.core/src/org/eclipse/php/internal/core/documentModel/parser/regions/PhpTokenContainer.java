@@ -305,7 +305,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param region
 	 * @param lexerState
 	 */
-	public synchronized void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
+	public synchronized void addLast(String yylex, int start, int yylengthLength, int yylength, LexerState lexerState) {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		if (phpTokens.size() > 0) {
@@ -327,7 +327,7 @@ public class PhpTokenContainer implements Cloneable {
 
 			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
-			lexerStateChanges.addLast(new LexerStateChange((LexerState) lexerState, contextRegion));
+			lexerStateChanges.addLast(new LexerStateChange(lexerState, contextRegion));
 			return;
 		}
 
@@ -414,7 +414,7 @@ public class PhpTokenContainer implements Cloneable {
 			return 31 + ((state == null) ? 0 : state.hashCode());
 		}
 
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			assert state != null && obj.getClass() == LexerState.class;
 
 			if (this.state == obj)

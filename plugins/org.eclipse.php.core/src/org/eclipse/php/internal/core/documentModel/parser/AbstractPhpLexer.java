@@ -13,14 +13,18 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.swing.text.Segment;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.util.collections.IntHashtable;
+import org.eclipse.php.internal.core.util.collections.StateStack;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -61,11 +65,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public abstract int getScriptingState();
 
-	/**
-	 * This character denotes the end of file
-	 */
-	final public static int YYEOF = -1;
-
 	protected static final boolean isLowerCase(final String text) {
 		if (text == null)
 			return false;
@@ -77,67 +76,49 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	protected boolean asp_tags = true;
 
-	protected int defaultReturnValue = -1;
-
-	protected int firstPos = -1; // the first position in the array
-
-	protected String heredoc = null;
-	protected String nowdoc = null;
-	protected int heredoc_len = 0;
-	protected int nowdoc_len = 0;
 	protected StateStack phpStack;
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=514632
+	// stores nested HEREDOC and NOWDOC ids
+	protected String[] heredocIds;
 
 	/**
-	 * build a key that represents the current state of the lexer.
+	 * build a state that represents the current state of the lexer.
 	 */
-	private int buildStateKey() {
-		int rv = getZZLexicalState();
-
-		for (int i = 0; i < phpStack.size(); i++)
-			rv = 31 * rv + phpStack.get(i);
-		for (int i = 0; i < heredoc_len; i++)
-			rv = 31 * rv + heredoc.charAt(i);
-		for (int i = 0; i < nowdoc_len; i++)
-			rv = 31 * rv + nowdoc.charAt(i);
-		return rv;
-	}
-
-	public Object createLexicalStateMemento() {
-		// buffered token state
-		if (bufferedTokens != null && !bufferedTokens.isEmpty()) {
-			return bufferedState;
-		}
-
-		// System.out.println("lexerStates size:" + lexerStates.size());
-		final int key = buildStateKey();
-		Object state = getLexerStates().get(key);
-		if (state == null) {
-			state = new BasicLexerState(this);
-			if (ArrayUtils.contains(getHeredocStates(), getZZLexicalState()))
-				state = new HeredocState((BasicLexerState) state, this);
-			getLexerStates().put(key, state);
+	private LexerState buildLexerState() {
+		LexerState state = new BasicLexerState(this);
+		if (ArrayUtils.contains(getHeredocStates(), getZZLexicalState())) {
+			state = new HeredocState((BasicLexerState) state, this);
 		}
 		return state;
 	}
 
+	@SuppressWarnings("null")
+	public @NonNull LexerState createLexicalStateMemento() {
+		// buffered token state
+		if (bufferedTokens != null && !bufferedTokens.isEmpty()) {
+			assert bufferedState != null;
+			return bufferedState;
+		}
+		LexerState currentState = buildLexerState();
+		LexerState cachedState = getLexerStates().get(currentState);
+		if (cachedState != null) {
+			return cachedState;
+		}
+		getLexerStates().put(currentState, currentState);
+		return currentState;
+	}
+
 	// A pool of states. To avoid creation of a new state on each createMemento.
-	protected abstract IntHashtable getLexerStates();
+	protected abstract Map<LexerState, LexerState> getLexerStates();
 
 	public boolean getAspTags() {
 		return asp_tags;
 	}
 
 	// lex to the EOF. and return the ending state.
-	public Object getEndingState() throws IOException {
+	public @NonNull LexerState getEndingState() throws IOException {
 		lexToEnd();
 		return createLexicalStateMemento();
-	}
-
-	/**
-	 * return the index where start we started to lex.
-	 */
-	public int getFirstIndex() {
-		return firstPos;
 	}
 
 	public int getMarkedPos() {
@@ -158,6 +139,12 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public void initialize(final int state) {
 		phpStack = new StateStack();
+		heredocIds = null;
+
+		bufferedTokens = null;
+		bufferedLength = 0;
+		bufferedState = null;
+
 		yybegin(state);
 	}
 
@@ -167,7 +154,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	 */
 
 	// lex to the end of the stream.
-	public String lexToEnd() throws IOException {
+	public @Nullable String lexToEnd() throws IOException {
 		String curr = yylex();
 		String last = curr;
 		while (curr != null) {
@@ -177,15 +164,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		return last;
 	}
 
-	public String lexToTokenAt(final int offset) throws IOException {
-		if (firstPos + offset < getZZMarkedPos())
-			throw new RuntimeException("Bad offset"); //$NON-NLS-1$
-		String t = yylex();
-		while (getZZMarkedPos() < firstPos + offset && t != null)
-			t = yylex();
-		return t;
-	}
-
 	protected void popState() {
 		yybegin(phpStack.popStack());
 	}
@@ -193,6 +171,40 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	protected void pushState(final int state) {
 		phpStack.pushStack(getZZLexicalState());
 		yybegin(state);
+	}
+
+	protected void pushHeredocId(final String heredocId) {
+		if (heredocIds == null) {
+			heredocIds = new String[] { heredocId };
+			return;
+		}
+		assert heredocIds.length != 0;
+		String[] newHeredocIds = new String[heredocIds.length + 1];
+		System.arraycopy(heredocIds, 0, newHeredocIds, 0, heredocIds.length);
+		newHeredocIds[heredocIds.length] = heredocId;
+		heredocIds = newHeredocIds;
+	}
+
+	protected String getHeredocId() {
+		if (heredocIds == null) {
+			return null;
+		}
+		assert heredocIds.length != 0;
+		return heredocIds[heredocIds.length - 1];
+	}
+
+	protected void popHeredocId() {
+		if (heredocIds == null) {
+			return;
+		}
+		assert heredocIds.length != 0;
+		if (heredocIds.length == 1) {
+			heredocIds = null;
+			return;
+		}
+		String[] newHeredocIds = new String[heredocIds.length - 1];
+		System.arraycopy(heredocIds, 0, newHeredocIds, 0, heredocIds.length - 1);
+		heredocIds = newHeredocIds;
 	}
 
 	public void setAspTags(final boolean b) {
@@ -208,14 +220,14 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	public LinkedList<ITextRegion> bufferedTokens = null;
-	public int bufferedLength;
-	public Object bufferedState;
+	public int bufferedLength = 0;
+	public LexerState bufferedState = null;
 
 	/**
 	 * @return the next token from the php lexer
 	 * @throws IOException
 	 */
-	public String getNextToken() throws IOException {
+	public @Nullable String getNextToken() throws IOException {
 		if (bufferedTokens != null) {
 			if (bufferedTokens.isEmpty()) {
 				bufferedTokens = null;
@@ -280,33 +292,45 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		}
 
 		@Override
-		public boolean equals(final Object o) {
-			if (o == this)
-				return true;
-			if (o == null)
-				return false;
-			if (!(o instanceof BasicLexerState))
-				return false;
-			final BasicLexerState tmp = (BasicLexerState) o;
-			if (tmp.lexicalState != lexicalState)
-				return false;
-			if (phpStack != null && !phpStack.equals(tmp.phpStack))
-				return false;
-			return phpStack == tmp.phpStack;
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + lexicalState;
+			result = prime * result + ((phpStack == null) ? 0 : phpStack.hashCode());
+			return result;
 		}
 
-		public boolean equalsCurrentStack(final LexerState obj) {
-			if (obj == this)
+		@Override
+		public boolean equals(final Object obj) {
+			if (this == obj)
 				return true;
 			if (obj == null)
 				return false;
-			if (!(obj instanceof BasicLexerState))
+			if (getClass() != obj.getClass())
 				return false;
-			final BasicLexerState tmp = (BasicLexerState) obj;
-			if (tmp.lexicalState != lexicalState)
+			BasicLexerState other = (BasicLexerState) obj;
+			if (lexicalState != other.lexicalState)
+				return false;
+			if (phpStack == null) {
+				if (other.phpStack != null)
+					return false;
+			} else if (!phpStack.equals(other.phpStack))
+				return false;
+			return true;
+		}
+
+		public boolean equalsCurrentStack(final LexerState obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			BasicLexerState other = (BasicLexerState) obj;
+			if (lexicalState != other.lexicalState)
 				return false;
 			final StateStack activeStack = getActiveStack();
-			final StateStack otherActiveStack = tmp.getActiveStack();
+			final StateStack otherActiveStack = other.getActiveStack();
 			if (!(activeStack == otherActiveStack || activeStack != null && activeStack.equals(otherActiveStack)))
 				return false;
 			return true;
@@ -320,6 +344,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			return obj != null && obj.getTopState() == lexicalState;
 		}
 
+		// IMPORTANT: do *NOT* modify the active stack once it is stored in an
+		// BasicLexerState object
 		protected StateStack getActiveStack() {
 			return phpStack;
 		}
@@ -365,26 +391,27 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	private static class HeredocState implements LexerState {
-		private final String myHeredoc;
-		private final String myNowdoc;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=514632
+		// stores nested HEREDOC and NOWDOC ids
+		private final String[] heredocIds;
 		private final BasicLexerState theState;
 
 		public HeredocState(final BasicLexerState state, AbstractPhpLexer lexer) {
 			theState = state;
-			myHeredoc = lexer.heredoc;
-			myNowdoc = lexer.nowdoc;
+			heredocIds = lexer.heredocIds;
 		}
 
+		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((myHeredoc == null) ? 0 : myHeredoc.hashCode());
-			result = prime * result + ((myNowdoc == null) ? 0 : myNowdoc.hashCode());
+			result = prime * result + Arrays.hashCode(heredocIds);
 			result = prime * result + ((theState == null) ? 0 : theState.hashCode());
 			return result;
 		}
 
-		public boolean equals(Object obj) {
+		@Override
+		public boolean equals(final Object obj) {
 			if (this == obj)
 				return true;
 			if (obj == null)
@@ -392,15 +419,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			if (getClass() != obj.getClass())
 				return false;
 			HeredocState other = (HeredocState) obj;
-			if (myHeredoc == null) {
-				if (other.myHeredoc != null)
-					return false;
-			} else if (!myHeredoc.equals(other.myHeredoc))
-				return false;
-			if (myNowdoc == null) {
-				if (other.myNowdoc != null)
-					return false;
-			} else if (!myNowdoc.equals(other.myNowdoc))
+			if (!Arrays.equals(heredocIds, other.heredocIds))
 				return false;
 			if (theState == null) {
 				if (other.theState != null)
@@ -411,11 +430,11 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		}
 
 		public boolean equalsCurrentStack(final LexerState obj) {
-			if (obj == this)
+			if (this == obj)
 				return true;
 			if (obj == null)
 				return false;
-			if (!(obj instanceof HeredocState))
+			if (getClass() != obj.getClass())
 				return false;
 			return theState.equals(((HeredocState) obj).theState);
 		}
@@ -443,15 +462,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		public void restoreState(final Scanner scanner) {
 			final AbstractPhpLexer lexer = (AbstractPhpLexer) scanner;
 			theState.restoreState(lexer);
-
-			if (myHeredoc != null) {
-				lexer.heredoc = myHeredoc;
-				lexer.heredoc_len = myHeredoc.length();
-			}
-			if (myNowdoc != null) {
-				lexer.nowdoc = myNowdoc;
-				lexer.nowdoc_len = myNowdoc.length();
-			}
+			lexer.heredocIds = heredocIds.length == 0 ? null : heredocIds;
 		}
 	}
 }

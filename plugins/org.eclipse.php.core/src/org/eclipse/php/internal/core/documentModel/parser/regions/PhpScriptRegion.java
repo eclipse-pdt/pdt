@@ -253,7 +253,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 					return null;
 				}
 
-				Object state = startState;
+				LexerState state = startState;
 				try {
 					String yylex = phpLexer.getNextToken();
 					if (shouldDeprecatedKeyword && PhpTokenContainer.isKeyword(yylex)) {
@@ -462,7 +462,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		this.tokensContainer.getModelForCreation();
 		this.tokensContainer.reset();
 		try {
-			Object state = lexer.createLexicalStateMemento();
+			LexerState state = lexer.createLexicalStateMemento();
 			String yylex = lexer.getNextToken();
 			int yylength = 0;
 			while (yylex != null && yylex != PHPRegionTypes.PHP_CLOSETAG) {
