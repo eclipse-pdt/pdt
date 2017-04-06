@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006, 2017 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,10 @@
 
 package org.eclipse.php.internal.core.documentModel.parser.php54;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
-import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%
 
@@ -117,9 +119,9 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 	}
 
 	// A pool of states. To avoid creation of a new state on each createMemento.
-	private static final IntHashtable lexerStates = new IntHashtable(100);
+	private static final Map<LexerState, LexerState> lexerStates = new HashMap<>();
 
-	protected IntHashtable getLexerStates() {
+	protected Map<LexerState, LexerState> getLexerStates() {
 		return lexerStates;
 	}
 
@@ -815,16 +817,13 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	}
 	String hereOrNowDoc = yytext().substring(startString, hereOrNowDoc_len + startString);
 	if (hereOrNowDoc.charAt(0) == '\'') {
-		nowdoc = hereOrNowDoc.substring(1, hereOrNowDoc_len - 1);
-		nowdoc_len = hereOrNowDoc_len - 2;
+		pushHeredocId(hereOrNowDoc.substring(1, hereOrNowDoc_len - 1));
 		yybegin(ST_PHP_START_NOWDOC);
 	} else if (hereOrNowDoc.charAt(0) == '"') {
-		heredoc = hereOrNowDoc.substring(1, hereOrNowDoc_len - 1);
-		heredoc_len = hereOrNowDoc_len - 2;
+		pushHeredocId(hereOrNowDoc.substring(1, hereOrNowDoc_len - 1));
 		yybegin(ST_PHP_START_HEREDOC);
 	} else {
-		heredoc = hereOrNowDoc;
-		heredoc_len = hereOrNowDoc_len;
+		pushHeredocId(hereOrNowDoc);
 		yybegin(ST_PHP_START_HEREDOC);
 	}
 	return PHP_HEREDOC_TAG;
@@ -847,9 +846,10 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		label_len--;
 	}
 
+	String heredoc = getHeredocId();
+	int heredoc_len = heredoc.length();
 	if (label_len == heredoc_len && yytext().substring(0, label_len).equals(heredoc)) {
-		heredoc = null;
-		heredoc_len = 0;
+		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
@@ -863,6 +863,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	if (yytext().charAt(label_len - 1) == ';') {
 		label_len--;
 	}
+	String heredoc = getHeredocId();
+	int heredoc_len = heredoc.length();
 	if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len, label_len).equals(heredoc)) {
 
 		if ((label_len - heredoc_len - 2) >= 0 && yytext().charAt(label_len - heredoc_len - 2) == '\r') {
@@ -894,11 +896,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		startIndex++;
 	}
 
+	String heredoc = getHeredocId();
+	int heredoc_len = heredoc.length();
 	if (label_len > heredoc_len
 			&& yytext.substring(startIndex, label_len).equals(
 					heredoc)) {
-		heredoc = null;
-		heredoc_len = 0;
+		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
@@ -929,9 +932,10 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		label_len--;
 	}
 
+	String nowdoc = getHeredocId();
+	int nowdoc_len = nowdoc.length();
 	if (label_len == nowdoc_len && yytext().substring(0, label_len).equals(nowdoc)) {
-		nowdoc = null;
-		nowdoc_len = 0;
+		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
@@ -945,12 +949,9 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	if (yytext().charAt(label_len - 1) == ';') {
 		label_len--;
 	}
+	String nowdoc = getHeredocId();
+	int nowdoc_len = nowdoc.length();
 	if (label_len > nowdoc_len && yytext().substring(label_len - nowdoc_len, label_len).equals(nowdoc)) {
-		//nowdoc = null;
-		//nowdoc_len = 0;
-		//yypushback(1);
-		//yybegin(ST_PHP_END_NOWDOC);
-
 		if ((label_len - nowdoc_len - 2) >= 0 && yytext().charAt(label_len - nowdoc_len - 2) == '\r') {
 			label_len = label_len - 2;
 		} else {
@@ -969,8 +970,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_END_NOWDOC>{NEWLINE}{LABEL}";"?[\n\r] {
-	nowdoc = null;
-	nowdoc_len = 0;
+	popHeredocId();
 	yybegin(ST_PHP_IN_SCRIPTING);
 	return PHP_HEREDOC_TAG;
 }
@@ -1010,13 +1010,14 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	if(heredoc != null && yytext().startsWith(heredoc)) {
+	String heredoc = getHeredocId();
+	int heredoc_len = heredoc.length();
+	if (yytext().startsWith(heredoc)) {
 		String text = yytext();
-		if(heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
+		if (heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
 			|| text.charAt(heredoc_len) == '\n' || text.charAt(heredoc_len) == ';')) {
 			yypushback(yylength() - heredoc_len - 1);
-			heredoc = null;
-			heredoc_len = 0;
+			popHeredocId();
 			yybegin(ST_PHP_IN_SCRIPTING);
 			return PHP_HEREDOC_TAG;
 		}

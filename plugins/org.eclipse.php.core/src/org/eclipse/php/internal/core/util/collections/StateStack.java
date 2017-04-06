@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,9 @@
  * Created on May 2, 2000, 12:36 PM
  */
 
-package org.eclipse.php.internal.core.documentModel.parser;
+package org.eclipse.php.internal.core.util.collections;
+
+import java.util.Arrays;
 
 /**
  * @author erez
@@ -77,26 +79,33 @@ public class StateStack implements Cloneable {
 		return rv;
 	}
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return createClone();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + lastIn;
+		result = prime * result + Arrays.hashCode(stack);
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
 			return true;
-		}
-
-		if (obj == null || !(obj instanceof StateStack)) {
+		if (obj == null)
 			return false;
-		}
-
-		StateStack s2 = (StateStack) obj;
-		if (this.lastIn != s2.lastIn) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-
-		for (int i = lastIn; i >= 0; i--) {
-			if (this.stack[i] != s2.stack[i]) {
-				return false;
-			}
-		}
-
+		StateStack other = (StateStack) obj;
+		if (lastIn != other.lastIn)
+			return false;
+		if (!Arrays.equals(stack, other.stack))
+			return false;
 		return true;
 	}
 
