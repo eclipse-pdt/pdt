@@ -28,7 +28,7 @@ public interface Scanner {
 	/**
 	 * Creates new Scanner
 	 */
-	public Object createLexicalStateMemento();
+	public LexerState createLexicalStateMemento();
 
 	public String yylex() throws IOException;
 
@@ -37,7 +37,7 @@ public interface Scanner {
 	 * 
 	 * @throws IOException
 	 */
-	public Object getEndingState() throws IOException;
+	public LexerState getEndingState() throws IOException;
 
 	/**
 	 * lex to the end of the stream.
@@ -46,14 +46,7 @@ public interface Scanner {
 	 */
 	public String lexToEnd() throws IOException;
 
-	public String lexToTokenAt(int offset) throws IOException;
-
 	public int getMarkedPos();
-
-	/**
-	 * return the index where start we started to lex.
-	 */
-	public int getFirstIndex();
 
 	public void getText(int start, int length, Segment s);
 

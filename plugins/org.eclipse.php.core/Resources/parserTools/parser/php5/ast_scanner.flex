@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006, 2017 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,15 +13,16 @@ package org.eclipse.php.internal.core.ast.scanner.php5;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Stack;
 
-import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
-import org.eclipse.php.core.ast.nodes.Comment;
-import java_cup.sym;
-import org.eclipse.php.core.ast.nodes.AST;
-import java_cup.runtime.Symbol;
-import org.eclipse.php.internal.core.ast.scanner.StateStack;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.AST;
+import org.eclipse.php.core.ast.nodes.Comment;
+import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
+import org.eclipse.php.internal.core.util.collections.StateStack;
+
+import java_cup.sym;
+import java_cup.runtime.Symbol;
 
 %%
 
@@ -57,10 +58,15 @@ import org.eclipse.php.core.PHPVersion;
 %state ST_ONE_LINE_COMMENT
 %{
 	private final LinkedList commentList = new LinkedList();
-	private String heredoc = null;
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=514632
+	// stores nested NOWDOC ids
+	// XXX: not really useful for PHP 5 (nested NOWDOCs are impossible),
+	// but let's stay in sync with the AST lexers for all the other PHP versions...
+	private final Stack<String> heredocIds = new Stack<>();
 	private boolean asp_tags = false;
 	private boolean short_tags_allowed = true;
-	private StateStack stack = new StateStack();
+	// XXX: "heredocIds" and "stack" are never reset
+	private final StateStack stack = new StateStack();
 	protected int commentStartPosition;
 
 	private AST ast;
@@ -973,7 +979,7 @@ if (parsePHPDoc()) {
 
 <ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
 	int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
-	heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
+	heredocIds.push(yytext().substring(removeChars).trim());    // for 'b<<<' or '<<<'
 	yybegin(ST_START_HEREDOC);
 	return createSymbol(ParserConstants.T_START_HEREDOC);
 }
@@ -1004,8 +1010,9 @@ if (parsePHPDoc()) {
 		text = text.substring(0, text.length() - 1);
 		yypushback(1);
 	}
+	String heredoc = heredocIds.peek();
 	if (text.equals(heredoc)) {
-		heredoc = null;
+		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
 	} else {
@@ -1024,6 +1031,7 @@ if (parsePHPDoc()) {
 	}
 
 	int textLength = text.length();
+	String heredoc = heredocIds.peek();
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		yypushback(2);
@@ -1039,7 +1047,7 @@ if (parsePHPDoc()) {
 }
 
 <ST_END_HEREDOC>{ANY_CHAR} {
-	heredoc = null;
+	heredocIds.pop();
 	yybegin(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
 }
