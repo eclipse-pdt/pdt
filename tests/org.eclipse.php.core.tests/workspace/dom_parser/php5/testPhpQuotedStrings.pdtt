@@ -99,7 +99,7 @@ function a()
 								</Index>
 							</ArrayAccess>
 						</ReflectionVariable>
-						<Scalar start='67' length='6' type='string' value='
+						<Scalar start='67' length='1' type='string' value='
 '/>
 					</Quote>
 				</Parameters>

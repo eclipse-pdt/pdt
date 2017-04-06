@@ -15,7 +15,7 @@ EOF;
 				</Variable>
 				<Value>
 					<Quote start='14' length='25' type='heredoc'>
-						<Scalar start='21' length='17' type='string' value='test{test}test
+						<Scalar start='21' length='15' type='string' value='test{test}test
 '/>
 					</Quote>
 				</Value>

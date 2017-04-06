@@ -37,7 +37,7 @@ function a()
 					</VariableReference>
 					<PHPCallArgumentsList start="17" end="85">
 						<Quote start="17" end="84" type="heredoc">
-							<Scalar start="29" end="83" type="string" value="    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+							<Scalar start="29" end="78" type="string" value="    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
 ">
 							</Scalar>
 						</Quote>
@@ -83,7 +83,7 @@ function a()
 					</Scalar>
 				</ArrayVariableReference>
 			</ReflectionVariableReference>
-			<Scalar start="132" end="135" type="string" value="
+			<Scalar start="132" end="133" type="string" value="
 ">
 			</Scalar>
 		</Quote>
@@ -132,7 +132,7 @@ function a()
 							</Scalar>
 						</ArrayVariableReference>
 					</ReflectionVariableReference>
-					<Scalar start="200" end="206" type="string" value="
+					<Scalar start="200" end="201" type="string" value="
 ">
 					</Scalar>
 				</Quote>

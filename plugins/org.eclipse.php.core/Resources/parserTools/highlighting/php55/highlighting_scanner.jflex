@@ -1030,7 +1030,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 			return PHP_HEREDOC_TAG;
 		}
 	}
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 /*
@@ -1039,11 +1039,11 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
 	yypushback(1);
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_NOWDOC>{NOWDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES>[\"] {

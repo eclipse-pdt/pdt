@@ -65,7 +65,7 @@ function a()
 							</Scalar>
 						</ArrayVariableReference>
 					</ReflectionVariableReference>
-					<Scalar start="67" end="73" type="string" value="
+					<Scalar start="67" end="68" type="string" value="
 ">
 					</Scalar>
 				</Quote>
