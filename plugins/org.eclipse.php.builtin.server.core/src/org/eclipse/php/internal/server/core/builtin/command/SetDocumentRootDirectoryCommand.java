@@ -37,6 +37,7 @@ public class SetDocumentRootDirectoryCommand extends ServerCommand {
 	/**
 	 * Execute setting the deploy directory
 	 */
+	@Override
 	public void execute() {
 		oldInstanceDir = server.getDocumentRootDirectory();
 		server.setDocumentRootDirectory(instanceDir);
@@ -45,6 +46,7 @@ public class SetDocumentRootDirectoryCommand extends ServerCommand {
 	/**
 	 * Restore prior deploy directory
 	 */
+	@Override
 	public void undo() {
 		server.setDocumentRootDirectory(oldInstanceDir);
 	}

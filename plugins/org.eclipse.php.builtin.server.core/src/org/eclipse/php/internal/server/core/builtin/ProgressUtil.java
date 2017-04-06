@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.core.builtin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+
 /**
  * Progress Monitor utility.
  */
@@ -27,7 +28,8 @@ public class ProgressUtil {
 	/**
 	 * Return a valid progress monitor.
 	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
+	 * @param monitor
+	 *            org.eclipse.core.runtime.IProgressMonitor
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
 	public static IProgressMonitor getMonitorFor(IProgressMonitor monitor) {
@@ -37,11 +39,13 @@ public class ProgressUtil {
 	}
 
 	/**
-	 * Return a sub-progress monitor with the given amount on the
-	 * current progress monitor.
+	 * Return a sub-progress monitor with the given amount on the current
+	 * progress monitor.
 	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @param ticks int
+	 * @param monitor
+	 *            org.eclipse.core.runtime.IProgressMonitor
+	 * @param ticks
+	 *            int
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
 	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks) {
@@ -53,12 +57,15 @@ public class ProgressUtil {
 	}
 
 	/**
-	 * Return a sub-progress monitor with the given amount on the
-	 * current progress monitor.
+	 * Return a sub-progress monitor with the given amount on the current
+	 * progress monitor.
 	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @param ticks a number of ticks
-	 * @param style a style
+	 * @param monitor
+	 *            org.eclipse.core.runtime.IProgressMonitor
+	 * @param ticks
+	 *            a number of ticks
+	 * @param style
+	 *            a style
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
 	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks, int style) {

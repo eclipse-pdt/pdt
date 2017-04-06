@@ -64,6 +64,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 
 	protected void addChangeListener() {
 		listener = new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				if (PHPServerConfiguration.MODIFY_PORT_PROPERTY.equals(event.getPropertyName())) {
 					String id = (String) event.getOldValue();
@@ -104,6 +105,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 	 * @param parent
 	 *            the parent control
 	 */
+	@Override
 	public void createSection(Composite parent) {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
@@ -159,6 +161,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 		viewer.setCellEditors(new CellEditor[] { null, new TextCellEditor(ports) });
 
 		ICellModifier cellModifier = new ICellModifier() {
+			@Override
 			public Object getValue(Object element, String property) {
 				ServerPort sp = (ServerPort) element;
 				if (sp.getPort() < 0)
@@ -166,6 +169,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 				return sp.getPort() + ""; //$NON-NLS-1$
 			}
 
+			@Override
 			public boolean canModify(Object element, String property) {
 				if ("port".equals(property)) //$NON-NLS-1$
 					return true;
@@ -173,6 +177,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 				return false;
 			}
 
+			@Override
 			public void modify(Object element, String property, Object value) {
 				try {
 					Item item = (Item) element;
@@ -190,6 +195,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		if (os != null && os.toLowerCase().indexOf("win") >= 0) {
 			ports.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent event) {
 					try {
 						int n = ports.getSelectionIndex();
@@ -202,6 +208,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		if (fPHPServerConfiguration != null)
 			fPHPServerConfiguration.removePropertyChangeListener(listener);
@@ -210,6 +217,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 	/*
 	 * (non-Javadoc) Initializes the editor part with a site and input.
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 

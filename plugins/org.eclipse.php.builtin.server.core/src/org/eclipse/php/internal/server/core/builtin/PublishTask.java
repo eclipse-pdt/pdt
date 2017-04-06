@@ -21,6 +21,7 @@ import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 @SuppressWarnings("rawtypes")
 public class PublishTask extends PublishTaskDelegate {
 
+	@Override
 	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList) {
 		if (modules == null)
 			return null;

@@ -90,7 +90,7 @@ public class PHPRuntimeComposite extends Composite {
 		if (runtimeWC == null) {
 			ir = null;
 			install.setEnabled(false);
-			installLabel.setText("");
+			installLabel.setText(""); //$NON-NLS-1$
 		} else {
 			ir = ServerPlugin.findInstallableRuntime(runtimeWC.getRuntimeType().getId());
 			if (ir != null) {
@@ -103,6 +103,7 @@ public class PHPRuntimeComposite extends Composite {
 		validate();
 	}
 
+	@Override
 	public void dispose() {
 		super.dispose();
 		if (installRuntimeJob != null) {
@@ -132,6 +133,7 @@ public class PHPRuntimeComposite extends Composite {
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		name.setLayoutData(data);
 		name.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				runtimeWC.setName(name.getText());
 				validate();
@@ -152,6 +154,7 @@ public class PHPRuntimeComposite extends Composite {
 		combo.setLayoutData(data);
 
 		combo.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int sel = combo.getSelectionIndex();
 				PHPexeItem item = (PHPexeItem) installedExecutables.get(sel);
@@ -160,6 +163,7 @@ public class PHPRuntimeComposite extends Composite {
 				validate();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
@@ -167,6 +171,7 @@ public class PHPRuntimeComposite extends Composite {
 
 		Button button = SWTUtil.createButton(this, Messages.installedJREs);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String currentVM = combo.getText();
 				if (showPreferencePage()) {
@@ -225,7 +230,7 @@ public class PHPRuntimeComposite extends Composite {
 		if (runtimeWC.getName() != null)
 			name.setText(runtimeWC.getName());
 		else
-			name.setText("");
+			name.setText(""); //$NON-NLS-1$
 
 		int size = installedExecutables.size();
 		for (int i = 0; i < size; i++) {
@@ -238,7 +243,7 @@ public class PHPRuntimeComposite extends Composite {
 
 	protected void validate() {
 		if (runtime == null) {
-			wizard.setMessage("", IMessageProvider.ERROR);
+			wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
 

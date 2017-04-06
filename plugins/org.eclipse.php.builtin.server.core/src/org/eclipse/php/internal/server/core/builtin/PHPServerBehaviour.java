@@ -83,6 +83,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		terminate();
 	}
 
+	@Override
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor)
 			throws CoreException {
 		workingCopy.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, getServer().getServerConfiguration()
@@ -98,10 +99,12 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 
 	}
 
+	@Override
 	protected IModuleResource[] getResources(IModule[] module) {
 		return super.getResources(module);
 	}
 
+	@Override
 	protected IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		return super.getPublishedResourceDelta(module);
 	}
@@ -162,6 +165,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 			return;
 
 		processListener = new IDebugEventSetListener() {
+			@Override
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
@@ -324,6 +328,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		return getPHPServer().getPHPServerConfiguration();
 	}
 
+	@Override
 	public IPath getTempDirectory() {
 		return super.getTempDirectory(false);
 	}
@@ -395,6 +400,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		setServerRestartState(state);
 	}
 
+	@Override
 	protected void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
 		if (getServer().getRuntime() == null)
 			return;
@@ -432,6 +438,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	/*
 	 * Publishes the given module to the server.
 	 */
+	@Override
 	protected void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor)
 			throws CoreException {
 

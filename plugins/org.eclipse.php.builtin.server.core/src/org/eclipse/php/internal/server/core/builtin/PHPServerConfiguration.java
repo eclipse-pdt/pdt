@@ -44,7 +44,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	public static final String MODIFY_PORT_PROPERTY = "modifyPort"; //$NON-NLS-1$
 	public final static String SERVER_XML_FILENAME = "server.xml"; //$NON-NLS-1$
 	public final static String PHP_INI_FILENAME = "php.ini"; //$NON-NLS-1$
-	
+
 	protected IFolder configPath;
 
 	// property change listeners
@@ -373,6 +373,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public String toString() {
 		return "PHPServerConfiguration[" + getFolder() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}

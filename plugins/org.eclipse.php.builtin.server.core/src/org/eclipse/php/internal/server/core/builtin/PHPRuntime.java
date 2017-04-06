@@ -24,6 +24,7 @@ public class PHPRuntime extends RuntimeDelegate implements IPHPRuntimeWorkingCop
 	protected static final String PROP_EXECUTABLE_INSTALL_NAME = "executable-install-name"; //$NON-NLS-1$
 	private PHPexeItem exeItem;
 
+	@Override
 	public IStatus validate() {
 		IStatus status = super.validate();
 		if (!status.isOK())

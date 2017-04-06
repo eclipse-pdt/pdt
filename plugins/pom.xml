@@ -107,6 +107,8 @@
 		<module>org.eclipse.php.composer.api</module>
 		<module>org.eclipse.php.composer.core</module>
 		<module>org.eclipse.php.composer.ui</module>
+		<module>org.eclipse.php.builtin.server.core</module>
+		<module>org.eclipse.php.builtin.server.ui</module>
 	</modules>
 	
 </project>

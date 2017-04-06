@@ -71,6 +71,7 @@ public class PublishOperation2 extends PublishOperation {
 	/**
 	 * @see PublishOperation#getOrder()
 	 */
+	@Override
 	public int getOrder() {
 		return 0;
 	}
@@ -78,6 +79,7 @@ public class PublishOperation2 extends PublishOperation {
 	/**
 	 * @see PublishOperation#getKind()
 	 */
+	@Override
 	public int getKind() {
 		return REQUIRED;
 	}
@@ -85,6 +87,7 @@ public class PublishOperation2 extends PublishOperation {
 	/**
 	 * @see PublishOperation#execute(IProgressMonitor, IAdaptable)
 	 */
+	@Override
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		List<IStatus> status = new ArrayList<IStatus>();
 		// If parent web module

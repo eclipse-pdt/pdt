@@ -20,7 +20,7 @@ public interface IPHPServerRunner {
 			throws CoreException;
 
 	public void stop();
-	
+
 	public int getServerPort();
 
 }

@@ -48,6 +48,7 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#
 	 * getKnownRuntimes()
 	 */
+	@Override
 	public void searchForRuntimes(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor) {
 
 		final List<File> locations = new ArrayList<File>();

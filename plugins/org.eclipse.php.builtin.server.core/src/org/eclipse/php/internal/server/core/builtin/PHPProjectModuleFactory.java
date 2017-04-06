@@ -30,6 +30,7 @@ public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 		return new PHPProjectModule(module.getProject());
 	}
 
+	@Override
 	protected IModule[] createModules(IProject project) {
 		try {
 			IProjectNature nature = project.getNature(PHPNature.ID);

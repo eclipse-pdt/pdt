@@ -75,7 +75,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 
 	@Override
 	public IModule[] getRootModules(IModule module) throws CoreException {
-		if ("php.web".equals(module.getModuleType().getId())) {
+		if ("php.web".equals(module.getModuleType().getId())) { //$NON-NLS-1$
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
 				throw new CoreException(status);
@@ -129,6 +129,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 
 	}
 
+	@Override
 	public ServerPort[] getServerPorts() {
 		if (getServer().getServerConfiguration() == null)
 			return new ServerPort[0];
@@ -248,6 +249,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 		return tcConfig;
 	}
 
+	@Override
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
 		PHPServerConfiguration tcConfig = configuration;
 		if (tcConfig == null)
@@ -255,6 +257,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 		tcConfig.save(getServer().getServerConfiguration(), monitor);
 	}
 
+	@Override
 	public void configurationChanged() {
 		synchronized (versionLock) {
 			// Alter the current version
@@ -269,6 +272,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	 *            org.eclipse.wst.server.core.model.IModule
 	 * @return java.net.URL
 	 */
+	@Override
 	public URL getModuleRootURL(IModule module) {
 		try {
 			if (module == null)
@@ -300,6 +304,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 		return getAttribute(PROPERTY_DOCUMENT_ROOT_DIR, (String) null);
 	}
 
+	@Override
 	public void setDefaults(IProgressMonitor monitor) {
 		setAttribute("auto-publish-setting", 2); //$NON-NLS-1$
 		setAttribute("auto-publish-time", 1); //$NON-NLS-1$

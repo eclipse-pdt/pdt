@@ -38,6 +38,7 @@ public class WebModule implements IPHPWebModule {
 	 *
 	 * @return java.lang.String
 	 */
+	@Override
 	public String getDocumentBase() {
 		return docBase;
 	}
@@ -47,6 +48,7 @@ public class WebModule implements IPHPWebModule {
 	 *
 	 * @return java.lang.String
 	 */
+	@Override
 	public String getPath() {
 		return path;
 	}
@@ -56,6 +58,7 @@ public class WebModule implements IPHPWebModule {
 	 *
 	 * @return java.lang.String
 	 */
+	@Override
 	public String getMemento() {
 		return memento;
 	}
@@ -63,6 +66,7 @@ public class WebModule implements IPHPWebModule {
 	/**
 	 * @see Object#equals(Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof WebModule))
 			return false;

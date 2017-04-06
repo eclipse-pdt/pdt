@@ -36,6 +36,7 @@ import org.w3c.dom.Text;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 /**
  * Utility class to create and read XML documents.
  */
@@ -48,7 +49,7 @@ public class XMLUtil {
 	public XMLUtil() {
 		super();
 	}
-	
+
 	public static DocumentBuilder getDocumentBuilder() {
 		if (documentBuilder == null)
 			try {
@@ -56,17 +57,20 @@ public class XMLUtil {
 				factory.setValidating(false);
 				factory.setNamespaceAware(false);
 				factory.setExpandEntityReferences(false);
-				// In case we happen to have a Xerces parser, try to set the feature that allows Java encodings to be used
+				// In case we happen to have a Xerces parser, try to set the
+				// feature that allows Java encodings to be used
 				try {
 					factory.setFeature("http://apache.org/xml/features/allow-java-encodings", true); //$NON-NLS-1$
-				}
-				catch (ParserConfigurationException e) {
+				} catch (ParserConfigurationException e) {
 					// Ignore if feature isn't supported
 				}
-				//factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd", new Boolean(false));
+				// factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd",
+				// new Boolean(false));
 				documentBuilder = factory.newDocumentBuilder();
 				documentBuilder.setEntityResolver(new EntityResolver() {
-					public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+					@Override
+					public InputSource resolveEntity(String publicId, String systemId)
+							throws SAXException, IOException {
 						return new InputSource(new ByteArrayInputStream(new byte[0]));
 					}
 				});
@@ -80,10 +84,14 @@ public class XMLUtil {
 	/**
 	 * Create a child of the given node at the given index.
 	 *
-	 * @param doc a document
-	 * @param element an element
-	 * @param index an index
-	 * @param nodeName a node name
+	 * @param doc
+	 *            a document
+	 * @param element
+	 *            an element
+	 * @param index
+	 *            an index
+	 * @param nodeName
+	 *            a node name
 	 * @return org.w3c.dom.Element
 	 */
 	public static Element createChildElement(Document doc, Element element, int index, String nodeName) {
@@ -101,9 +109,12 @@ public class XMLUtil {
 	/**
 	 * Create a child of the given node.
 	 *
-	 * @param doc a document
-	 * @param node a node
-	 * @param nodeName a node name
+	 * @param doc
+	 *            a document
+	 * @param node
+	 *            a node
+	 * @param nodeName
+	 *            a node name
 	 * @return org.w3c.dom.Element
 	 */
 	public static Element createChildElement(Document doc, Node node, String nodeName) {
@@ -122,9 +133,12 @@ public class XMLUtil {
 
 	/**
 	 * Return the attribute value.
+	 * 
 	 * @return java.lang.String
-	 * @param element org.w3c.dom.Element
-	 * @param attr java.lang.String
+	 * @param element
+	 *            org.w3c.dom.Element
+	 * @param attr
+	 *            java.lang.String
 	 */
 	public static String getAttributeValue(Element element, String attr) {
 		return element.getAttributeNode(attr).getValue();
@@ -133,7 +147,7 @@ public class XMLUtil {
 	public static byte[] getContents(Document document) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
-			print(new PrintStream(out, true, "UTF-8"), document);
+			print(new PrintStream(out, true, "UTF-8"), document); //$NON-NLS-1$
 			return out.toByteArray();
 		} catch (Exception ex) {
 			throw new IOException(ex.getLocalizedMessage());
@@ -153,39 +167,44 @@ public class XMLUtil {
 			data += " PUBLIC \"" + doctype.getPublicId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			String systemId = doctype.getSystemId();
 			if (systemId == null)
-				systemId = "";
+				systemId = ""; //$NON-NLS-1$
 			data += " \"" + systemId + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 		} else
 			data += " SYSTEM \"" + doctype.getSystemId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 		return data;
 	}
 
 	/**
 	 * Return an iterator for the subelements.
+	 * 
 	 * @return java.util.Iterator
-	 * @param element org.w3c.dom.Element
-	 * @param name java.lang.String
+	 * @param element
+	 *            org.w3c.dom.Element
+	 * @param name
+	 *            java.lang.String
 	 */
 	public static Iterator getNodeIterator(Element element, String name) {
 		List<Node> list = new ArrayList<Node>();
 		NodeList nodeList = element.getElementsByTagName(name);
-	
+
 		int length = nodeList.getLength();
 		for (int i = 0; i < length; i++)
 			list.add(nodeList.item(i));
-	
+
 		return list.iterator();
 	}
 
 	/**
 	 * Get the value of this node. Will return "" instead of null.
+	 * 
 	 * @return java.lang.String
-	 * @param node org.w3c.dom.Node
+	 * @param node
+	 *            org.w3c.dom.Node
 	 */
 	public static String getNodeValue(Node node) {
 		NodeList nodeList = node.getChildNodes();
-	
+
 		int length = nodeList.getLength();
 		for (int i = 0; i < length; i++) {
 			Node n = nodeList.item(i);
@@ -194,12 +213,12 @@ public class XMLUtil {
 				return t.getNodeValue();
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/*
 	 * Get the value of a subnode.
-
+	 * 
 	 * @return java.lang.String
 	 */
 	public static String getSubNodeValue(Element element, String name) {
@@ -220,31 +239,31 @@ public class XMLUtil {
 		for (int j = 0; j < i; j++) {
 			char c = s.charAt(j);
 			switch (c) {
-				case 60 : /* '<' */
-					stringbuffer.append("&lt;"); //$NON-NLS-1$
-					break;
-	
-				case 62 : /* '>' */
-					stringbuffer.append("&gt;"); //$NON-NLS-1$
-					break;
-	
-				case 38 : /* '&' */
-					stringbuffer.append("&amp;"); //$NON-NLS-1$
-					break;
-	
-				case 34 : /* '"' */
-					stringbuffer.append("&quot;"); //$NON-NLS-1$
-					break;
-	
-				case 10 : /* '\n' */
-				case 13 : /* '\r' */
-				default :
-					stringbuffer.append(c);
-					break;
-	
+			case 60: /* '<' */
+				stringbuffer.append("&lt;"); //$NON-NLS-1$
+				break;
+
+			case 62: /* '>' */
+				stringbuffer.append("&gt;"); //$NON-NLS-1$
+				break;
+
+			case 38: /* '&' */
+				stringbuffer.append("&amp;"); //$NON-NLS-1$
+				break;
+
+			case 34: /* '"' */
+				stringbuffer.append("&quot;"); //$NON-NLS-1$
+				break;
+
+			case 10: /* '\n' */
+			case 13: /* '\r' */
+			default:
+				stringbuffer.append(c);
+				break;
+
 			}
 		}
-	
+
 		return stringbuffer.toString();
 	}
 
@@ -253,98 +272,98 @@ public class XMLUtil {
 			return;
 		short type = node.getNodeType();
 		switch (type) {
-			case Node.DOCUMENT_NODE: {
-				out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
-				//out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+		case Node.DOCUMENT_NODE: {
+			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
+			// out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+			NodeList nodelist = node.getChildNodes();
+			int size = nodelist.getLength();
+			for (int i = 0; i < size; i++)
+				print(out, nodelist.item(i));
+			break;
+		}
+
+		case Node.DOCUMENT_TYPE_NODE: {
+			DocumentType docType = (DocumentType) node;
+			out.print("<!DOCTYPE " + getDocumentTypeData(docType) + ">\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		}
+
+		case Node.ELEMENT_NODE: {
+			out.print('<');
+			out.print(node.getNodeName());
+			NamedNodeMap map = node.getAttributes();
+			if (map != null) {
+				int size = map.getLength();
+				for (int i = 0; i < size; i++) {
+					Attr attr = (Attr) map.item(i);
+					out.print(' ');
+					out.print(attr.getNodeName());
+					out.print("=\""); //$NON-NLS-1$
+					out.print(normalize(attr.getNodeValue()));
+					out.print('"');
+				}
+			}
+
+			if (!node.hasChildNodes())
+				out.print("/>"); //$NON-NLS-1$
+			else {
+				out.print('>');
 				NodeList nodelist = node.getChildNodes();
+				int numChildren = nodelist.getLength();
+				for (int i = 0; i < numChildren; i++)
+					print(out, nodelist.item(i));
+
+				out.print("</"); //$NON-NLS-1$
+				out.print(node.getNodeName());
+				out.print('>');
+			}
+			break;
+		}
+
+		case Node.ENTITY_REFERENCE_NODE: {
+			NodeList nodelist = node.getChildNodes();
+			if (nodelist != null) {
 				int size = nodelist.getLength();
 				for (int i = 0; i < size; i++)
 					print(out, nodelist.item(i));
-				break;
+
 			}
-	
-			case Node.DOCUMENT_TYPE_NODE: {
-				DocumentType docType = (DocumentType) node;
-				out.print("<!DOCTYPE " + getDocumentTypeData(docType) + ">\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				break;
+			break;
+		}
+
+		case Node.CDATA_SECTION_NODE: {
+			out.print(normalize(node.getNodeValue()));
+			break;
+		}
+
+		case Node.TEXT_NODE: {
+			out.print(normalize(node.getNodeValue()));
+			break;
+		}
+
+		case Node.PROCESSING_INSTRUCTION_NODE: {
+			out.print("<?"); //$NON-NLS-1$
+			out.print(node.getNodeName());
+			String s = node.getNodeValue();
+			if (s != null && s.length() > 0) {
+				out.print(' ');
+				out.print(s);
 			}
-	
-			case Node.ELEMENT_NODE: {
-				out.print('<');
-				out.print(node.getNodeName());
-				NamedNodeMap map = node.getAttributes();
-				if (map != null) {
-					int size = map.getLength();
-					for (int i = 0; i < size; i++) {
-						Attr attr = (Attr) map.item(i);
-						out.print(' ');
-						out.print(attr.getNodeName());
-						out.print("=\""); //$NON-NLS-1$
-						out.print(normalize(attr.getNodeValue()));
-						out.print('"');
-					}
-				}
-	
-				if (!node.hasChildNodes())
-					out.print("/>"); //$NON-NLS-1$
-				else {
-					out.print('>');
-					NodeList nodelist = node.getChildNodes();
-					int numChildren = nodelist.getLength();
-					for (int i = 0; i < numChildren; i++)
-						print(out, nodelist.item(i));
-	
-					out.print("</"); //$NON-NLS-1$
-					out.print(node.getNodeName());
-					out.print('>');
-				}
-				break;
-			}
-	
-			case Node.ENTITY_REFERENCE_NODE: {
-				NodeList nodelist = node.getChildNodes();
-				if (nodelist != null) {
-					int size = nodelist.getLength();
-					for (int i = 0; i < size; i++)
-						print(out, nodelist.item(i));
-	
-				}
-				break;
-			}
-	
-			case Node.CDATA_SECTION_NODE: {
-				out.print(normalize(node.getNodeValue()));
-				break;
-			}
-	
-			case Node.TEXT_NODE: {
-				out.print(normalize(node.getNodeValue()));
-				break;
-			}
-	
-			case Node.PROCESSING_INSTRUCTION_NODE: {
-				out.print("<?"); //$NON-NLS-1$
-				out.print(node.getNodeName());
-				String s = node.getNodeValue();
-				if (s != null && s.length() > 0) {
-					out.print(' ');
-					out.print(s);
-				}
-				out.print("?>"); //$NON-NLS-1$
-				break;
-			}
-	
-			case Node.COMMENT_NODE: {
-				out.print("<!--"); //$NON-NLS-1$
-				out.print(node.getNodeValue());
-				out.print("-->"); //$NON-NLS-1$
-				break;
-			}
-	
-			default: {
-				out.print(normalize(node.getNodeValue()));
-				break;
-			}
+			out.print("?>"); //$NON-NLS-1$
+			break;
+		}
+
+		case Node.COMMENT_NODE: {
+			out.print("<!--"); //$NON-NLS-1$
+			out.print(node.getNodeValue());
+			out.print("-->"); //$NON-NLS-1$
+			break;
+		}
+
+		default: {
+			out.print(normalize(node.getNodeValue()));
+			break;
+		}
 		}
 		out.flush();
 	}
@@ -353,7 +372,7 @@ public class XMLUtil {
 		PrintStream out = null;
 		try {
 			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(filename)), true, "UTF-8"); //$NON-NLS-1$
-			//traceNode(document, "");
+			// traceNode(document, "");
 			print(out, document);
 		} catch (Exception ex) {
 			throw new IOException(ex.getLocalizedMessage());
@@ -388,6 +407,7 @@ public class XMLUtil {
 	 * Set the value of the subnode
 	 *
 	 * @param name java.lang.String
+	 * 
 	 * @param value java.lang.String
 	 */
 	public static void setNodeValue(Node node, String name, String value) {

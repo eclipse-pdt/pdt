@@ -85,6 +85,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	 */
 	protected void addChangeListeners() {
 		listener = new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				if (updating)
 					return;
@@ -100,6 +101,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		server.addPropertyChangeListener(listener);
 
 		publishListener = new PublishAdapter() {
+			@Override
 			public void publishFinished(IServer server2, IStatus status) {
 				boolean flag = false;
 				if (status.isOK() && server2.getModules().length == 0)
@@ -108,6 +110,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 					allowRestrictedEditing = flag;
 					// Update the state of the fields
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							boolean customServerDir = false;
 							if (!DocumentRootEditorSection.this.serverDirCustom.isDisposed())
@@ -136,6 +139,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	 * @param parent
 	 *            the parent control
 	 */
+	@Override
 	public void createSection(Composite parent) {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
@@ -166,6 +170,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		data.horizontalSpan = 3;
 		serverDirMetadata.setLayoutData(data);
 		serverDirMetadata.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (updating || !serverDirMetadata.getSelection())
 					return;
@@ -182,6 +187,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		data.horizontalSpan = 3;
 		serverDirCustom.setLayoutData(data);
 		serverDirCustom.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (updating || !serverDirCustom.getSelection())
 					return;
@@ -203,6 +209,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		data.widthHint = 75;
 		serverDir.setLayoutData(data);
 		serverDir.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (updating)
 					return;
@@ -215,6 +222,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 
 		serverDirBrowse = toolkit.createButton(composite, Messages.editorBrowse, SWT.PUSH);
 		serverDirBrowse.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent se) {
 				DirectoryDialog dialog = new DirectoryDialog(serverDir.getShell());
 				dialog.setMessage(Messages.serverEditorBrowseDeployMessage);
@@ -251,6 +259,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (server != null) {
 			server.removePropertyChangeListener(listener);
@@ -262,6 +271,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#init(IEditorSite, IEditorInput)
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 
@@ -357,7 +367,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	protected void updateServerDir() {
 		IPath path = phpServer.getRuntimeBaseDirectory();
 		if (path == null)
-			serverDir.setText("");
+			serverDir.setText(""); //$NON-NLS-1$
 		else if (workspacePath.isPrefixOf(path)) {
 			int cnt = path.matchingFirstSegments(workspacePath);
 			path = path.removeFirstSegments(cnt).setDevice(null);
@@ -374,6 +384,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#getSaveStatus()
 	 */
+	@Override
 	public IStatus[] getSaveStatus() {
 		if (phpServer != null) {
 			// Check the instance directory
@@ -397,7 +408,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 				} else if (path.equals(installDirPath))
 					return new IStatus[] { new Status(IStatus.ERROR, PHPServerUIPlugin.PLUGIN_ID,
 							NLS.bind(Messages.errorServerDirCustomNotInstall,
-									NLS.bind(Messages.serverEditorServerDirInstall, "").trim())) };
+									NLS.bind(Messages.serverEditorServerDirInstall, "").trim())) }; //$NON-NLS-1$
 			} else {
 				IPath path = phpServer.getRuntimeBaseDirectory();
 				// If non-custom instance dir is not the install and metadata
@@ -405,7 +416,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 				if (!path.equals(installDirPath) && !serverDirMetadata.getSelection()) {
 					return new IStatus[] { new Status(IStatus.ERROR, PHPServerUIPlugin.PLUGIN_ID,
 							NLS.bind(Messages.errorServerDirCustomNotMetadata,
-									NLS.bind(Messages.serverEditorServerDirMetadata, "").trim())) };
+									NLS.bind(Messages.serverEditorServerDirMetadata, "").trim())) }; //$NON-NLS-1$
 				}
 			}
 
@@ -436,7 +447,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 					}
 				} else if (path.equals(installDirPath)) {
 					setErrorMessage(NLS.bind(Messages.errorServerDirCustomNotInstall,
-							NLS.bind(Messages.serverEditorServerDirInstall, "").trim()));
+							NLS.bind(Messages.serverEditorServerDirInstall, "").trim())); //$NON-NLS-1$
 					return;
 				}
 			} else {
@@ -445,7 +456,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 				// isn't the selection, return error
 				if (path != null && !path.equals(installDirPath) && !serverDirMetadata.getSelection()) {
 					setErrorMessage(NLS.bind(Messages.errorServerDirCustomNotMetadata,
-							NLS.bind(Messages.serverEditorServerDirMetadata, "").trim()));
+							NLS.bind(Messages.serverEditorServerDirMetadata, "").trim())); //$NON-NLS-1$
 				}
 			}
 

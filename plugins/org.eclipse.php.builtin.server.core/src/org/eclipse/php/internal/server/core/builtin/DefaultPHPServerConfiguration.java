@@ -42,8 +42,7 @@ import org.eclipse.wst.server.core.ServerPort;
 @SuppressWarnings("restriction")
 public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
-	private final static String DEFAULT_SERVER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<Server>\n"
-			+ "\t<Port name=\"HTTP/1.1\" protocol=\"HTTP\">80</Port>\n" + "</Server>"; //$NON-NLS-1$
+	private final static String DEFAULT_SERVER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Server>\n\t<Port name=\"HTTP/1.1\" protocol=\"HTTP\">80</Port>\n</Server>"; //$NON-NLS-1$
 
 	protected String fPhpIniFile;
 	protected Server server;
@@ -110,7 +109,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 			// save server.xml
 			byte[] data = serverFactory.getContents();
 			InputStream in = new ByteArrayInputStream(data);
-			IFile file = folder.getFile(SERVER_XML_FILENAME); //$NON-NLS-1$
+			IFile file = folder.getFile(SERVER_XML_FILENAME); // $NON-NLS-1$
 			if (file.exists()) {
 				if (isServerDirty)
 					file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
@@ -122,10 +121,10 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
 			// save php.ini
 			if (fPhpIniFile == null) {
-				fPhpIniFile = "";
+				fPhpIniFile = ""; //$NON-NLS-1$
 			}
 			in = new ByteArrayInputStream(fPhpIniFile.getBytes());
-			file = folder.getFile(PHP_INI_FILENAME); //$NON-NLS-1$
+			file = folder.getFile(PHP_INI_FILENAME); // $NON-NLS-1$
 			if (file.exists())
 				monitor.worked(200);
 			else

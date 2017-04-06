@@ -38,12 +38,14 @@ public abstract class ServerCommand extends AbstractOperation {
 		this.server = (PHPServer) server;
 	}
 
+	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		return execute(monitor, info);
 	}
 
 	public abstract void execute();
 
+	@Override
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		execute();
 		return null;
@@ -51,6 +53,7 @@ public abstract class ServerCommand extends AbstractOperation {
 
 	public abstract void undo();
 
+	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		undo();
 		return null;

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.wst.server.core.IServer;
+
 /**
  * Thread used to ping server to test when it is started.
  */
@@ -39,7 +40,9 @@ public class PingThread {
 	 * 
 	 * @param server
 	 * @param url
-	 * @param maxPings the maximum number of times to try pinging, or -1 to continue forever
+	 * @param maxPings
+	 *            the maximum number of times to try pinging, or -1 to continue
+	 *            forever
 	 * @param behaviour
 	 */
 	public PingThread(IServer server, String url, int maxPings, PHPServerBehaviour behaviour) {
@@ -49,6 +52,7 @@ public class PingThread {
 		this.maxPings = maxPings;
 		this.behaviour = behaviour;
 		Thread t = new Thread("PHP Server Ping Thread") { //$NON-NLS-1$
+			@Override
 			public void run() {
 				ping();
 			}
@@ -58,8 +62,8 @@ public class PingThread {
 	}
 
 	/**
-	 * Ping the server until it is started. Then set the server
-	 * state to STATE_STARTED.
+	 * Ping the server until it is started. Then set the server state to
+	 * STATE_STARTED.
 	 */
 	protected void ping() {
 		int count = 0;
@@ -80,13 +84,13 @@ public class PingThread {
 					break;
 				}
 				count++;
-				
+
 				Trace.trace(Trace.FINEST, "Ping: pinging " + count); //$NON-NLS-1$
 				URL pingUrl = new URL(url);
 				URLConnection conn = pingUrl.openConnection();
-				((HttpURLConnection)conn).setInstanceFollowRedirects(false);
-				((HttpURLConnection)conn).getResponseCode();
-	
+				((HttpURLConnection) conn).setInstanceFollowRedirects(false);
+				((HttpURLConnection) conn).getResponseCode();
+
 				// ping worked - server is up
 				if (!stop) {
 					Trace.trace(Trace.FINEST, "Ping: success"); //$NON-NLS-1$

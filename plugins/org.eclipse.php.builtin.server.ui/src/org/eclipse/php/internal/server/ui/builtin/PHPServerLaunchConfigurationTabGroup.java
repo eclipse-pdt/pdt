@@ -26,6 +26,7 @@ public class PHPServerLaunchConfigurationTabGroup extends AbstractLaunchConfigur
 	 * @see ILaunchConfigurationTabGroup#createTabs(ILaunchConfigurationDialog,
 	 * String)
 	 */
+	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[4];
 		tabs[0] = new ServerLaunchConfigurationTab(new String[] { "org.eclipse.php.server.builtin" }); //$NON-NLS-1$

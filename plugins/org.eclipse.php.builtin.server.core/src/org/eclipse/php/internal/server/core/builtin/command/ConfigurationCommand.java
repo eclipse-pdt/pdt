@@ -36,12 +36,14 @@ public abstract class ConfigurationCommand extends AbstractOperation {
 		this.configuration = configuration;
 	}
 
+	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		return execute(monitor, info);
 	}
 
 	public abstract void execute();
 
+	@Override
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		execute();
 		return null;
@@ -49,6 +51,7 @@ public abstract class ConfigurationCommand extends AbstractOperation {
 
 	public abstract void undo();
 
+	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		undo();
 		return null;

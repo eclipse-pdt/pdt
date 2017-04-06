@@ -27,10 +27,12 @@ public class PHPRuntimeWizardFragment extends WizardFragment {
 		// do nothing
 	}
 
+	@Override
 	public boolean hasComposite() {
 		return true;
 	}
 
+	@Override
 	public boolean isComplete() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 
@@ -45,11 +47,13 @@ public class PHPRuntimeWizardFragment extends WizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
 	 */
+	@Override
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		comp = new PHPRuntimeComposite(parent, wizard);
 		return comp;
 	}
 
+	@Override
 	public void enter() {
 		if (comp != null) {
 			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);

@@ -14,9 +14,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This class represents an instance of a PHP Server, server as
- * defined by a specific Service, Engine, and Host defined in a server.xml
- * configuration file.
+ * This class represents an instance of a PHP Server, server as defined by a
+ * specific Service, Engine, and Host defined in a server.xml configuration
+ * file.
  */
 public class ServerInstance {
 

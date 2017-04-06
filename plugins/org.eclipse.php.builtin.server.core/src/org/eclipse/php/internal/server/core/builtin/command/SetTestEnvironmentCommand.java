@@ -35,6 +35,7 @@ public class SetTestEnvironmentCommand extends ServerCommand {
 	/**
 	 * Execute the command.
 	 */
+	@Override
 	public void execute() {
 		// save old instance directory
 		oldInstanceDir = server.getDocumentRootDirectory();
@@ -45,6 +46,7 @@ public class SetTestEnvironmentCommand extends ServerCommand {
 	/**
 	 * Undo the command.
 	 */
+	@Override
 	public void undo() {
 		server.setDocumentRootDirectory(oldInstanceDir);
 	}

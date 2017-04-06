@@ -55,6 +55,7 @@ public class PHPProjectModule extends ProjectModule {
 	 * @return an array of module resources
 	 * @throws CoreException
 	 */
+	@Override
 	protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
 		return internalGetModuleResources(path, container);
 	}

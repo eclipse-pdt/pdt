@@ -43,6 +43,7 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	/**
 	 * Execute the command.
 	 */
+	@Override
 	public void execute() {
 		// find old port number
 		Iterator<ServerPort> iterator = configuration.getServerPorts().iterator();
@@ -59,6 +60,7 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	/**
 	 * Undo the command.
 	 */
+	@Override
 	public void undo() {
 		configuration.modifyServerPort(id, oldPort);
 	}

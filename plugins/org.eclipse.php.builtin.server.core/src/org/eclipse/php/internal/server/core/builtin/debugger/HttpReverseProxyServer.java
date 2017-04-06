@@ -84,6 +84,7 @@ public class HttpReverseProxyServer {
 
 		private IHttpRequestHandler fHttpRequestHandler;
 
+		@Override
 		public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context)
 				throws HttpException, IOException {
 			if (fHttpRequestHandler != null) {
