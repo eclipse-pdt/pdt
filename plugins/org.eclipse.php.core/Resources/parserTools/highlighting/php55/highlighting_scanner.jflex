@@ -861,7 +861,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
@@ -888,7 +888,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	// especially when the parsed document has Windows newlines.
 	// In those cases, ignore this rule and try next one...
 	if (yylength() > 0) {
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
@@ -914,18 +914,18 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		return PHP_HEREDOC_TAG;
 	} else {
 		yybegin(ST_PHP_HEREDOC);
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
 <ST_PHP_END_HEREDOC>{NEWLINE}*{LABEL}({TABS_AND_SPACES}[^\n\r])+";"?[\n\r] {
 	yybegin(ST_PHP_HEREDOC);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
 <ST_PHP_END_HEREDOC>{NEWLINE}*({TABS_AND_SPACES}[^\n\r])+{LABEL}";"?[\n\r] {
 	yybegin(ST_PHP_HEREDOC);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
 <ST_PHP_START_NOWDOC>{ANY_CHAR} {
@@ -1043,7 +1043,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_NOWDOC>{NOWDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES>[\"] {

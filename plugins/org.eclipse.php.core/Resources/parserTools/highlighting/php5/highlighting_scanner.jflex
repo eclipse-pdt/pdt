@@ -796,7 +796,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
@@ -823,7 +823,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	// especially when the parsed document has Windows newlines.
 	// In those cases, ignore this rule and try next one...
 	if (yylength() > 0) {
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
@@ -849,7 +849,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		return PHP_HEREDOC_TAG;
 	} else {
 		yybegin(ST_PHP_HEREDOC);
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 

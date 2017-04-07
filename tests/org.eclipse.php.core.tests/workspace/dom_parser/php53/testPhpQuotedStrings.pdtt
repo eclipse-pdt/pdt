@@ -42,7 +42,7 @@ function a()
 						</FunctionName>
 						<Parameters>
 							<Quote start='17' length='67' type='heredoc'>
-								<Scalar start='29' length='54' type='string' value='    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
+								<Scalar start='29' length='49' type='string' value='    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
 '/>
 							</Quote>
 						</Parameters>
@@ -116,7 +116,7 @@ function a()
 						</Index>
 					</ArrayAccess>
 				</ReflectionVariable>
-				<Scalar start='132' length='3' type='string' value='
+				<Scalar start='132' length='1' type='string' value='
 '/>
 			</Quote>
 		</ExpressionStatement>
@@ -196,7 +196,7 @@ function a()
 								</Index>
 							</ArrayAccess>
 						</ReflectionVariable>
-						<Scalar start='200' length='6' type='string' value='
+						<Scalar start='200' length='1' type='string' value='
 '/>
 					</Quote>
 				</Parameters>
