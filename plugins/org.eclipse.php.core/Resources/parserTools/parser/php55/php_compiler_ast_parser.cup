@@ -1841,20 +1841,25 @@ method_body:body
 	methodDeclaration.setDeclaringTypeName(type.getName());
 	if (body instanceof EmptyStatement) { /* method without body part */
 		if (type instanceof ClassDeclaration) {
-			if (((ClassDeclaration) type).getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) { /* handle traits */
+			ClassDeclaration classDeclaration = (ClassDeclaration) type;
+			if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) { /* handle traits */
 				if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
-					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract method must contain body");
+					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.MethodRequiresBody), Messages.MethodRequiresBody);
 				}
 			} else { /* handle classes */
-				if ((((ClassDeclaration) type).getModifiers() & Modifiers.AccAbstract) != 0) {
+				if ((classDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {
 					if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
-						parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract method must contain body");
+						parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.MethodRequiresBody), Messages.MethodRequiresBody);
 					}
 				} else {
 					if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
-						parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract method must contain body");
+						parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.MethodRequiresBody), Messages.MethodRequiresBody);
 					} else {
-						parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "non-abstract class cannot have abstract methods");
+						String message = Messages.getString("AbstractMethodInAbstractClass", classDeclaration.getName());
+						parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.AbstractMethodInAbstractClass), message);
+
+						message = Messages.getString("AbstractMethodsInConcreteClass", classDeclaration.getName());
+						parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd(), PhpProblemIdentifier.AbstractMethodsInConcreteClass), message);
 					}
 				}
 			}
@@ -1862,8 +1867,10 @@ method_body:body
 	} else if (body == null) { /* method with body part */
 		if (type instanceof ClassDeclaration) { /* handle classes and traits */
 			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {
-				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd()), "abstract method cannot contain body");
+				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
 			}
+		} else if(type instanceof InterfaceDeclaration) {
+			parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
 		}
 	}
 :}
