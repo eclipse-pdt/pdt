@@ -10,7 +10,7 @@ Heredoc;
 	<Statements>
 		<ExpressionStatement start='6' length='45'>
 			<Quote start='6' length='44' type='heredoc'>
-				<Scalar start='17' length='32' type='string' value='  This is here documents 
+				<Scalar start='17' length='26' type='string' value='  This is here documents 
 '/>
 			</Quote>
 		</ExpressionStatement>

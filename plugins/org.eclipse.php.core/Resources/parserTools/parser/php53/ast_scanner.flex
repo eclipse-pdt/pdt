@@ -1043,52 +1043,64 @@ if (parsePHPDoc()) {
 
 <ST_START_HEREDOC>{LABEL}";"?[\n\r] {
 	String text = yytext();
-	int length = text.length() - 1;
-	text = text.trim();
-
-	yypushback(1);
-
-	if (text.endsWith(";")) {
+	int nb_pushback;
+	if (text.charAt(text.length() - 2) == ';') {
+		text = text.substring(0, text.length() - 2);
+		nb_pushback = 2;
+	} else {
 		text = text.substring(0, text.length() - 1);
-		yypushback(1);
+		nb_pushback = 1;
 	}
 	String heredoc = heredocIds.peek();
 	if (text.equals(heredoc)) {
+		yypushback(nb_pushback);
 		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
 	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		yybegin(ST_HEREDOC);
 	}
 }
 
 <ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
 	String text = yytext();
-
+	int nb_pushback;
 	if (text.charAt(text.length() - 2) == ';') {
 		text = text.substring(0, text.length() - 2);
-		yypushback(1);
+		nb_pushback = 2;
 	} else {
 		text = text.substring(0, text.length() - 1);
+		nb_pushback = 1;
 	}
-
 	int textLength = text.length();
 	String heredoc = heredocIds.peek();
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
-		yypushback(2);
-		yybegin(ST_END_HEREDOC);
-		heredocIds.pop();
+		nb_pushback += heredocLength;
 		// we need to remove the closing label from the symbol value.
-		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-		String value = (String) sym.value;
-		sym.value = value.substring(0, value.length() - heredocLength + 1);
-		return sym;
+		yypushback(nb_pushback);
+		yybegin(ST_END_HEREDOC);
+		return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 	}
+	// we must (at least) push the newline character back
 	yypushback(1);
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_END_HEREDOC>{ANY_CHAR} {
+<ST_END_HEREDOC>{LABEL}";"?[\n\r] {
+	String text = yytext();
+	int nb_pushback;
+	if (text.charAt(text.length() - 2) == ';') {
+		text = text.substring(0, text.length() - 2);
+		nb_pushback = 2;
+	} else {
+		text = text.substring(0, text.length() - 1);
+		nb_pushback = 1;
+	}
+	yypushback(nb_pushback);
+	heredocIds.pop();
 	yybegin(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
 }
@@ -1100,49 +1112,50 @@ if (parsePHPDoc()) {
 
 <ST_START_NOWDOC>{LABEL}";"?[\n\r] {
 	String text = yytext();
-	int length = text.length() - 1;
-	text = text.trim();
-
-	yypushback(1);
-
-	if (text.endsWith(";")) {
+	int nb_pushback;
+	if (text.charAt(text.length() - 2) == ';') {
+		text = text.substring(0, text.length() - 2);
+		nb_pushback = 2;
+	} else {
 		text = text.substring(0, text.length() - 1);
-		yypushback(1);
+		nb_pushback = 1;
 	}
 	String nowdoc = heredocIds.peek();
 	if (text.equals(nowdoc)) {
+		yypushback(nb_pushback);
 		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
 	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		yybegin(ST_NOWDOC);
 	}
 }
 
 <ST_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
 	String text = yytext();
-
+	int nb_pushback;
 	if (text.charAt(text.length() - 2) == ';') {
 		text = text.substring(0, text.length() - 2);
-		yypushback(1);
+		nb_pushback = 2;
 	} else {
 		text = text.substring(0, text.length() - 1);
+		nb_pushback = 1;
 	}
-
 	int textLength = text.length();
 	String nowdoc = heredocIds.peek();
 	int nowdocLength = nowdoc.length();
 	if (textLength > nowdocLength && text.substring(textLength - nowdocLength, textLength).equals(nowdoc)) {
-		yypushback(2);
-		yybegin(ST_END_HEREDOC);
-		heredocIds.pop();
+		nb_pushback += nowdocLength;
 		// we need to remove the closing label from the symbol value.
-		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-		String value = (String) sym.value;
-		sym.value = value.substring(0, value.length() - nowdocLength + 1);
-		return sym;
+		yypushback(nb_pushback);
+		yybegin(ST_END_HEREDOC);
+		return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 	}
+	// we must (at least) push the newline character back
 	yypushback(1);
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {

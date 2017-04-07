@@ -59,9 +59,7 @@ import java_cup.runtime.Symbol;
 %{
 	private final LinkedList commentList = new LinkedList();
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=514632
-	// stores nested NOWDOC ids
-	// XXX: not really useful for PHP 5 (nested NOWDOCs are impossible),
-	// but let's stay in sync with the AST lexers for all the other PHP versions...
+	// stores nested HEREDOC ids
 	private final Stack<String> heredocIds = new Stack<>();
 	private boolean asp_tags = false;
 	private boolean short_tags_allowed = true;
@@ -239,13 +237,13 @@ import java_cup.runtime.Symbol;
 %}
 
 LNUM=[0-9]+
-DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
+DNUM=([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+
 LABEL=[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*
 WHITESPACES=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
-ANY_CHAR=(.|[\n])
+ANY_CHAR=[^]
 NEWLINE=("\r"|"\n"|"\r\n")
 DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u007f-\uffff$\"\\{]|("\\"{ANY_CHAR})))
 BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u007f-\uffff$`\\{]|("\\"{ANY_CHAR})))
@@ -714,7 +712,7 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
-<ST_VAR_OFFSET>0|([1-9][0-9]*) {
+<ST_VAR_OFFSET>[0]|([1-9][0-9]*) {
 	return createFullSymbol(ParserConstants.T_NUM_STRING);
 }
 
@@ -979,9 +977,12 @@ if (parsePHPDoc()) {
 
 <ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
 	int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
-	heredocIds.push(yytext().substring(removeChars).trim());    // for 'b<<<' or '<<<'
+	String text = yytext().substring(removeChars).trim(); // for 'b<<<' or '<<<'
+	heredocIds.push(text);
 	yybegin(ST_START_HEREDOC);
-	return createSymbol(ParserConstants.T_START_HEREDOC);
+	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
+	sym.value = text;
+	return sym;
 }
 
 <ST_IN_SCRIPTING>[`] {
@@ -1001,52 +1002,63 @@ if (parsePHPDoc()) {
 
 <ST_START_HEREDOC>{LABEL}";"?[\n\r] {
 	String text = yytext();
-	int length = text.length() - 1;
-	text = text.trim();
-
-	yypushback(1);
-
-	if (text.endsWith(";")) {
+	int nb_pushback;
+	if (text.charAt(text.length() - 2) == ';') {
+		text = text.substring(0, text.length() - 2);
+		nb_pushback = 2;
+	} else {
 		text = text.substring(0, text.length() - 1);
-		yypushback(1);
+		nb_pushback = 1;
 	}
 	String heredoc = heredocIds.peek();
 	if (text.equals(heredoc)) {
+		yypushback(nb_pushback);
 		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_END_HEREDOC);
 	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		yybegin(ST_HEREDOC);
 	}
 }
 
 <ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
 	String text = yytext();
-
+	int nb_pushback;
 	if (text.charAt(text.length() - 2) == ';') {
 		text = text.substring(0, text.length() - 2);
-		yypushback(1);
+		nb_pushback = 2;
 	} else {
 		text = text.substring(0, text.length() - 1);
+		nb_pushback = 1;
 	}
-
 	int textLength = text.length();
 	String heredoc = heredocIds.peek();
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
-		yypushback(2);
-		yybegin(ST_END_HEREDOC);
+		nb_pushback += heredocLength;
 		// we need to remove the closing label from the symbol value.
-		Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-		String value = (String) sym.value;
-		sym.value = value.substring(0, value.length() - heredocLength + 1);
-		return sym;
+		yypushback(nb_pushback);
+		yybegin(ST_END_HEREDOC);
+		return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 	}
+	// we must (at least) push the newline character back
 	yypushback(1);
-
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_END_HEREDOC>{ANY_CHAR} {
+<ST_END_HEREDOC>{LABEL}";"?[\n\r] {
+	String text = yytext();
+	int nb_pushback;
+	if (text.charAt(text.length() - 2) == ';') {
+		text = text.substring(0, text.length() - 2);
+		nb_pushback = 2;
+	} else {
+		text = text.substring(0, text.length() - 1);
+		nb_pushback = 1;
+	}
+	yypushback(nb_pushback);
 	heredocIds.pop();
 	yybegin(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
