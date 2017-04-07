@@ -11,10 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.core.compiler.ast.parser.messages"; //$NON-NLS-1$
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	public static String AbstractASTParser_0;
 	public static String AbstractASTParser_1;
 	public static String AbstractASTParser_4;
@@ -29,11 +34,32 @@ public class Messages extends NLS {
 	public static String AbstractASTParser_MultipleFinalModifierError;
 	public static String AbstractASTParser_MultipleStaticModifiersError;
 
+	public static String AbstractMethodInAbstractClass;
+	public static String BodyForAbstractMethod;
+	public static String MethodRequiresBody;
+	public static String AbstractMethodsInConcreteClass;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
 	private Messages() {
+	}
+
+	public static String getString(String key) {
+		try {
+			return RESOURCE_BUNDLE.getString(key);
+		} catch (MissingResourceException e) {
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	public static String getString(String key, String... args) {
+		try {
+			return MessageFormat.format(RESOURCE_BUNDLE.getString(key), (Object[]) args);
+		} catch (MissingResourceException e) {
+			return ""; //$NON-NLS-1$
+		}
 	}
 }

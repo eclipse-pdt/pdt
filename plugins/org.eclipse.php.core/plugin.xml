@@ -108,7 +108,7 @@
 
 	<extension
 		id="phpproblemmarker"
-		name="PHP Syntax Error"
+		name="PHP Problem"
 		point="org.eclipse.core.resources.markers">
 		<persistent
 			value="true" />
