@@ -19,9 +19,9 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * 
  * @author Michal Niewrzal
  */
-public enum PhpProblemIdentifier implements IProblemIdentifier,IProblemIdentifierExtension {
+public enum PhpProblemIdentifier implements IProblemIdentifier, IProblemIdentifierExtension {
 
-	SYNTAX, USE_STATEMENTS;
+	SYNTAX, USE_STATEMENTS, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass;
 
 	public static final String MARKER_TYPE_ID = "org.eclipse.php.core.phpproblemmarker"; //$NON-NLS-1$
 
