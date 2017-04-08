@@ -34,18 +34,9 @@ abstract class MyClass2 {
     	$a = 0;
     }
 }
-
-interface MyInterface1 {
-
-    function foo1();
-    
-    function foo2() {
-        $a = 0;
-    }
-}
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="530">
+<ModuleDeclaration start="0" end="431">
 	<TraitDeclaration start="7" end="169" modifiers="" name="Trait1">
 		<PHPMethodDeclaration start="26" end="42" modifiers="public" name="foo1">
 		</PHPMethodDeclaration>
@@ -100,21 +91,7 @@ interface MyInterface1 {
 			</ExpressionStatement>
 		</PHPMethodDeclaration>
 	</ClassDeclaration>
-	<InterfaceDeclaration start="429" end="526" modifiers="" name="MyInterface1">
-		<PHPMethodDeclaration start="459" end="475" modifiers="public" name="foo1">
-		</PHPMethodDeclaration>
-		<PHPMethodDeclaration start="485" end="524" modifiers="public" name="foo2">
-			<ExpressionStatement start="511" end="518">
-				<Assignment start="511" end="517" operator="=">
-					<VariableReference start="511" end="513" name="$a">
-					</VariableReference>
-					<Scalar start="516" end="517" type="int" value="0">
-					</Scalar>
-				</Assignment>
-			</ExpressionStatement>
-		</PHPMethodDeclaration>
-	</InterfaceDeclaration>
-	<EmptyStatement start="527" end="529">
+	<EmptyStatement start="428" end="430">
 	</EmptyStatement>
 	<Errors>
 		<ASTError start="35" end="39">
@@ -125,15 +102,11 @@ interface MyInterface1 {
 		</ASTError>
 		<ASTError start="249" end="253">
 		</ASTError>
-		<ASTError start="177" end="185">
-		</ASTError>
 		<ASTError start="280" end="284">
 		</ASTError>
 		<ASTError start="367" end="371">
 		</ASTError>
 		<ASTError start="398" end="402">
-		</ASTError>
-		<ASTError start="494" end="498">
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>

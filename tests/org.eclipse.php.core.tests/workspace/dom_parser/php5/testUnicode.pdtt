@@ -49,7 +49,7 @@ say_здравствуйте();
 									<Identifier start='143' length='16' name='say_здравствуйте'/>
 								</Variable>
 							</ReflectionVariable>
-							<Scalar start='160' length='16' type='string' value='
+							<Scalar start='160' length='1' type='string' value='
 '/>
 						</Quote>
 					</EchoStatement>
