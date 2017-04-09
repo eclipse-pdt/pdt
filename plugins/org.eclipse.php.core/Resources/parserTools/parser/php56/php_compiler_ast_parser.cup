@@ -1971,7 +1971,18 @@ method_body:body
 	} else if (body == null) { /* method with body part */
 		if (type instanceof ClassDeclaration) { /* handle classes and traits */
 			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {
+				ClassDeclaration classDeclaration = (ClassDeclaration) type;
 				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
+
+				if ((classDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
+					String message = Messages.getString("AbstractMethodInAbstractClass", classDeclaration.getName());
+					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.AbstractMethodInAbstractClass), message);
+
+					if (!(classDeclaration instanceof TraitDeclaration)) {
+						message = Messages.getString("AbstractMethodsInConcreteClass", classDeclaration.getName());
+						parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd(), PhpProblemIdentifier.AbstractMethodsInConcreteClass), message);
+					}
+				}
 			}
 		} else if (type instanceof InterfaceDeclaration) {
 			parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
