@@ -29,7 +29,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 
 
 %state ST_PHP_IN_SCRIPTING
-%state ST_PHP_DOUBLE_QUOTES
+%state ST_PHP_DOUBLE_QUOTE
 %state ST_PHP_SINGLE_QUOTE
 %state ST_PHP_BACKQUOTE
 %state ST_PHP_QUOTES_AFTER_VARIABLE
@@ -76,7 +76,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 		return heredocStates;
 	}
 
-	private static final int[] phpQuotesStates = new int[] { ST_PHP_DOUBLE_QUOTES, ST_PHP_BACKQUOTE, ST_PHP_HEREDOC, ST_PHP_NOWDOC, ST_PHP_START_HEREDOC, ST_PHP_START_NOWDOC, ST_PHP_END_HEREDOC, ST_PHP_END_NOWDOC };
+	private static final int[] phpQuotesStates = new int[] { ST_PHP_DOUBLE_QUOTE, ST_PHP_SINGLE_QUOTE, ST_PHP_BACKQUOTE, ST_PHP_HEREDOC, ST_PHP_NOWDOC, ST_PHP_START_HEREDOC, ST_PHP_START_NOWDOC, ST_PHP_END_HEREDOC, ST_PHP_END_NOWDOC };
 
 	public int[] getPhpQuotesStates() {
 		return phpQuotesStates;
@@ -526,7 +526,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_CURLY_OPEN;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"${" {
+<ST_PHP_DOUBLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"${" {
 	// We can have nested curlies after applying this rule,
 	// so we have to count all curlies...
 	yypushback(1);
@@ -625,12 +625,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_VARIABLE;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_VAR_OFFSET>"$"{LABEL} {
+<ST_PHP_DOUBLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_VAR_OFFSET>"$"{LABEL} {
 	pushState(ST_PHP_QUOTES_AFTER_VARIABLE);
 	return PHP_VARIABLE;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_HEREDOC,ST_PHP_BACKQUOTE>"$"{LABEL}"[" {
+<ST_PHP_DOUBLE_QUOTE,ST_PHP_HEREDOC,ST_PHP_BACKQUOTE>"$"{LABEL}"[" {
 	yypushback(1);
 	pushState(ST_PHP_VAR_OFFSET);
 	return PHP_VARIABLE;
@@ -787,7 +787,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_IN_SCRIPTING>b?[\"] {
-	pushState(ST_PHP_DOUBLE_QUOTES);
+	pushState(ST_PHP_DOUBLE_QUOTE);
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
@@ -1017,7 +1017,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_HEREDOC_TAG;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
+<ST_PHP_DOUBLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
 	// We can have nested curlies after applying rule below for "${",
 	// so we have to count all curlies...
 	yypushback(1);
@@ -1025,7 +1025,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_CURLY_OPEN;
 }
 
-<ST_PHP_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}+ {
+<ST_PHP_DOUBLE_QUOTE>{DOUBLE_QUOTES_CHARS}+ {
 	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
@@ -1033,7 +1033,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 The original parsing rule was {DOUBLE_QUOTES_CHARS}*("{"{2,}|"$"{2,}|(("{"+|"$"+)[\"]))
 but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
-<ST_PHP_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[\"])) {
+<ST_PHP_DOUBLE_QUOTE>{DOUBLE_QUOTES_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[\"])) {
 	yypushback(1);
 	return PHP_ENCAPSED_AND_WHITESPACE;
 }
@@ -1068,7 +1068,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_DOUBLE_QUOTES>[\"] {
+<ST_PHP_DOUBLE_QUOTE>[\"] {
 	popState();
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
@@ -1083,7 +1083,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_DOUBLE_QUOTES>. {
+<ST_PHP_DOUBLE_QUOTE>. {
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
@@ -1108,7 +1108,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_SINGLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_START_NOWDOC,ST_PHP_END_NOWDOC,ST_PHP_NOWDOC,ST_PHP_DOLLAR_CURLY_OPEN>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTE,ST_PHP_VAR_OFFSET,ST_PHP_SINGLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_START_NOWDOC,ST_PHP_END_NOWDOC,ST_PHP_NOWDOC,ST_PHP_DOLLAR_CURLY_OPEN>. {
 	yypushback(1);
 	pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }
