@@ -73,7 +73,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 		return heredocStates;
 	}
 
-	private static final int[] phpQuotesStates = new int[] { ST_PHP_DOUBLE_QUOTES, ST_PHP_BACKQUOTE, ST_PHP_HEREDOC, ST_PHP_START_HEREDOC, ST_PHP_END_HEREDOC };
+	private static final int[] phpQuotesStates = new int[] { ST_PHP_DOUBLE_QUOTES, ST_PHP_SINGLE_QUOTE, ST_PHP_BACKQUOTE, ST_PHP_HEREDOC, ST_PHP_START_HEREDOC, ST_PHP_END_HEREDOC };
 
 	public int[] getPhpQuotesStates() {
 		return phpQuotesStates;

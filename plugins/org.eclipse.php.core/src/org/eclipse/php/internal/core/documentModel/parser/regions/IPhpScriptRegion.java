@@ -82,7 +82,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 
 	/**
 	 * Returns true if the given offset is in a back-quoted string, a
-	 * double-quoted string or a heredoc section
+	 * single-quoted string, a double-quoted string or a heredoc/nowdoc section
 	 * 
 	 * @param relativeOffset
 	 * @return
