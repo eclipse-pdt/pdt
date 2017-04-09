@@ -121,6 +121,8 @@ interface MyInterface1 {
 		</ASTError>
 		<ASTError start="140" end="144">
 		</ASTError>
+		<ASTError start="140" end="144">
+		</ASTError>
 		<ASTError start="218" end="222">
 		</ASTError>
 		<ASTError start="249" end="253">
@@ -128,6 +130,10 @@ interface MyInterface1 {
 		<ASTError start="177" end="185">
 		</ASTError>
 		<ASTError start="280" end="284">
+		</ASTError>
+		<ASTError start="280" end="284">
+		</ASTError>
+		<ASTError start="177" end="185">
 		</ASTError>
 		<ASTError start="367" end="371">
 		</ASTError>

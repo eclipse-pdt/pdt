@@ -210,7 +210,8 @@ public class ModifierCorrectionSubProcessor {
 			proposals.add(proposal2);
 		}
 
-		if (id == PhpProblemIdentifier.AbstractMethodInAbstractClass && parentTypeDecl != null) {
+		if (id == PhpProblemIdentifier.AbstractMethodInAbstractClass && parentTypeDecl != null
+				&& !(parentTypeDecl instanceof TraitDeclaration)) {
 			addMakeTypeAbstractProposal(context, parentTypeDecl, proposals, cu);
 		}
 

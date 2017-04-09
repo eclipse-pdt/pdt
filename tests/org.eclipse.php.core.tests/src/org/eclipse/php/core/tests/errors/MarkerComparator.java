@@ -23,6 +23,9 @@ public class MarkerComparator implements Comparator<IMarker> {
 			res = compareInt(o1.getAttribute(IMarker.CHAR_START, -1), o2.getAttribute(IMarker.CHAR_START, -1));
 			if (res == 0) {
 				res = compareInt(o1.getAttribute(IMarker.CHAR_END, -1), o2.getAttribute(IMarker.CHAR_END, -1));
+				if (res == 0) {
+					res = compareString(o1.getAttribute(IMarker.MESSAGE, ""), o2.getAttribute(IMarker.MESSAGE, ""));
+				}
 			}
 		}
 
@@ -31,6 +34,10 @@ public class MarkerComparator implements Comparator<IMarker> {
 
 	private int compareInt(int l, int r) {
 		return l < r ? -1 : (l == r ? 0 : 1);
+	}
+
+	private int compareString(String l, String r) {
+		return l.compareTo(r);
 	}
 
 }

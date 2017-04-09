@@ -2289,7 +2289,18 @@ method_body:body
 		Statement statement = parser.declarations.peek();
 		if (statement instanceof ClassDeclaration) { /* handle classes and traits */
 			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {
+				ClassDeclaration classDeclaration = (ClassDeclaration) statement;
 				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
+
+				if ((classDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
+					String message = Messages.getString("AbstractMethodInAbstractClass", methodDeclaration.getName(), classDeclaration.getName());
+					parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.AbstractMethodInAbstractClass), message);
+
+					if (!(classDeclaration instanceof TraitDeclaration)) {
+						message = Messages.getString("AbstractMethodsInConcreteClass", classDeclaration.getName());
+						parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd(), PhpProblemIdentifier.AbstractMethodsInConcreteClass), message);
+					}
+				}
 			}
 		} else if (statement instanceof InterfaceDeclaration) {
 			parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
