@@ -956,10 +956,10 @@ public class DebugConnection {
 		 */
 		if (!isProfile) {
 			DebugUITools.setLaunchPerspective(lcType, "debug", //$NON-NLS-1$
-					"org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
+					"org.eclipse.debug.ui.DebugPerspective"); // $NON-NLS-1$
 		} else {
-			// DebugUITools.setLaunchPerspective(lcType, "profile",
-			// TODO - set up PHP profile perspective
+			DebugUITools.setLaunchPerspective(lcType, "profile", //$NON-NLS-1$
+					"org.eclipse.php.profile.ui.perspective"); // $NON-NLS-1$
 		}
 		ILaunchConfigurationWorkingCopy wc = lcType.newInstance(null,
 				(isProfile) ? SERVER_PROFILE_NAME : SERVER_DEBUG_NAME);

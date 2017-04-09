@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2017 Rogue Wave Software Inc. and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+        Rogue Wave Software Inc. - initial implementation
+ -->
+<plugin>
+   <extension-point id="phpProfilerExecutionStatisticsFilters" name="Execution Statistics Filter" schema="schema/phpProfilerExecutionStatisticsFilters.exsd"/>
+   <extension-point id="phpProfilerLaunchSettingsSections" name="PHP Profiler Launch Settings Sections" schema="schema/phpProfilerLaunchSettingsSections.exsd"/>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.eclipse.php.profile.ui.launcher.ProfilePHPExecutableTabGroup"
+            id="org.eclipse.php.profile.ui.launcher.ProfilePHPProgramTabGroup"
+            type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+         <launchMode mode="profile"/>
+      </launchConfigurationTabGroup>
+      <launchConfigurationTabGroup
+            class="org.eclipse.php.profile.ui.launcher.ProfilePHPWebServerTabGroup"
+            id="org.eclipse.php.profile.ui.launcher.ProfilePHPWebServerTabGroup"
+            type="org.eclipse.php.debug.core.launching.webPageLaunch">
+         <launchMode mode="profile"/>
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.eclipse.php.perspective">
+         <actionSet id="org.eclipse.debug.ui.profileActionSet"/>
+      </perspectiveExtension>
+      <perspectiveExtension targetID="org.eclipse.php.profile.ui.perspective">
+         <actionSet id="org.eclipse.debug.ui.profileActionSet"/>
+         <showInPart
+                id="org.eclipse.php.ui.explorer">
+         </showInPart>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.php.profile.ui.PHPProfilePerspectiveFactory"
+            icon="icons/full/obj16/profile_persp.png"
+            id="org.eclipse.php.profile.ui.perspective"
+            name="%perspectiveLabel"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.php.profile.ui.preferences.PreferenceInitializer"/>
+   </extension>
+   <!--
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            class="org.eclipse.php.profile.ui.preferences.ProfilePreferencePage"
+            id="org.eclipse.php.profile.ui.profilePreferencePage"
+            name="%preferencePageLabel"/>
+   </extension>
+   -->
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.eclipse.php.profile.ui.views"
+            name="%profilerViewsCategoryLabel"/>
+      <view
+            category="org.eclipse.php.profile.ui.views"
+            class="org.eclipse.php.profile.ui.views.ExecutionStatisticsView"
+            icon="icons/full/obj16/exec_statistic_view.png"
+            id="org.eclipse.php.profile.ui.views.ExecutionStatisticsView"
+            name="%executionStatisticsViewLabel"/>
+      <view
+            category="org.eclipse.php.profile.ui.views"
+            class="org.eclipse.php.profile.ui.views.ProfilingMonitorView"
+            icon="icons/full/obj16/profiling_monitor.png"
+            id="org.eclipse.php.profile.ui.views.ProfilingMonitorView"
+            name="%profilingMonitorLabel"/>
+      <view
+            category="org.eclipse.php.profile.ui.views"
+            class="org.eclipse.php.profile.ui.views.ProfilerInformationView"
+            icon="icons/full/obj16/general_view.png"
+            id="org.eclipse.php.profile.ui.views.ProfilerInformationView"
+            name="%profilerInformationLabel"/>
+      <view
+            category="org.eclipse.php.profile.ui.views"
+            class="org.eclipse.php.profile.ui.views.CodeCoverageSummaryView"
+            icon="icons/full/elcl16/cov_statistic_co.png"
+            id="org.eclipse.php.profile.ui.views.CodeCoverageSummaryView"
+            name="%codeCoverageSummaryLabel"/>
+      <view
+            category="org.eclipse.php.profile.ui.views"
+            class="org.eclipse.php.profile.ui.views.ExecutionFlowView"
+            icon="icons/full/obj16/exec_flow_view.png"
+            id="org.eclipse.php.profile.ui.views.ExecutionFlowView"
+            name="%executionFlowLabel"/>
+      <view
+            allowMultiple="true"
+            category="org.eclipse.php.profile.ui.views"
+            class="org.eclipse.php.profile.ui.views.FunctionInvocationStatisticsView"
+            icon="icons/full/obj16/functionstatistics_view.png"
+            id="org.eclipse.php.profile.ui.views.FunctionInvocationStatisticsView"
+            name="%functionInvocationStatisticsLabel"/>
+   </extension>
+   <extension
+         point="org.eclipse.php.profile.ui.phpProfilerExecutionStatisticsFilters">
+      <filter
+            id="org.eclipse.php.profile.ui.filter.highest10BaseTime"
+            name="Highest 10 own time">
+         <standardFilter>
+            <fieldFilter
+                  descriptor="Highest"
+                  field="Own Time"
+                  number="10"/>
+         </standardFilter>
+      </filter>
+      <filter
+            id="org.eclipse.php.profile.ui.filter.highest10Calls"
+            name="Highest 10 calls">
+         <standardFilter>
+            <fieldFilter
+                  descriptor="Highest"
+                  field="Calls Count"
+                  number="10"/>
+         </standardFilter>
+      </filter>
+      <filter
+            id="org.eclipse.php.profile.ui.filter.highest10TotalTime"
+            name="Highest 10 total time">
+         <standardFilter>
+            <fieldFilter
+                  descriptor="Highest"
+                  field="Total Time"
+                  number="10"/>
+         </standardFilter>
+      </filter>
+      <filter
+            id="org.eclipse.php.profile.ui.filter.highest10AverageTime"
+            name="Highest 10 average time">
+         <standardFilter>
+            <fieldFilter
+                  descriptor="Highest"
+                  field="Average Own Time"
+                  number="10"/>
+         </standardFilter>
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.eclipse.php.profile.ui.exportWizards"
+            name="%phpProfilerWizardsCategoryLabel"/>
+      <wizard
+            category="org.eclipse.php.profile.ui.exportWizards"
+            class="org.eclipse.php.profile.ui.wizards.ExportSessionWizard"
+            icon="/icons/full/obj16/process_obj.png"
+            id="org.eclipse.php.profile.ui.wizards.ExportSessionWizard"
+            name="%profileSessionWizardLabel"/>
+      <wizard
+            category="org.eclipse.php.profile.ui.exportWizards"
+            class="org.eclipse.php.profile.ui.wizards.HTMLReportWizard"
+            icon="/icons/full/obj16/report_obj.png"
+            id="org.eclipse.php.profile.ui.wizards.HTMLReportWizard"
+            name="%htmlReportWizardLabel"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <category
+            id="org.eclipse.php.profile.ui.importWizards"
+            name="%phpProfilerWizardsCategoryLabel"/>
+      <wizard
+            category="org.eclipse.php.profile.ui.importWizards"
+            class="org.eclipse.php.profile.ui.wizards.ImportSessionWizard"
+            icon="/icons/full/obj16/process_obj.png"
+            id="org.eclipse.php.profile.ui.wizards.ImportSessionWizard"
+            name="%profileSessionWizardLabel"/>
+   </extension>
+     <extension
+           point="org.eclipse.php.profile.ui.phpProfilerLaunchSettingsSections">
+        <phpProfilerLaunchSettingsSection
+              id="org.eclipse.php.profile.ui.zendDebuggerProfilerWebLaunchSettings"
+              launchTypeId="org.eclipse.php.debug.core.launching.webPageLaunch"
+              name="Zend Debugger Profiler Web Launch Settings"
+              profilerId="org.eclipse.php.debug.core.zendDebugger"
+              section="org.eclipse.php.profile.ui.launcher.ZendDebuggerProfileWebLaunchSettingsSection">
+        </phpProfilerLaunchSettingsSection>
+        <phpProfilerLaunchSettingsSection
+              id="org.eclipse.php.porg.eclipse.php.profile.ui.zendDebuggerProfilerWebLaunchSettings"
+              launchTypeId="org.eclipse.php.debug.core.launching.webPageLaunch"
+              name="XDebug Profiler Web Launch Settings"
+              profilerId="org.eclipse.php.debug.core.xdebugDebugger"
+              section="org.eclipse.php.profile.ui.launcher.ZendDebuggerProfileWebLaunchSettingsSection">
+        </phpProfilerLaunchSettingsSection>
+        <phpProfilerLaunchSettingsSection
+              id="org.eclipse.php.profile.ui.zendDebuggerProfilerExeLaunchSettings"
+              launchTypeId="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+              name="Zend Debugger Profiler Exe Launch Settings"
+              profilerId="org.eclipse.php.debug.core.zendDebugger"
+              section="org.eclipse.php.profile.ui.launcher.ZendDebuggerProfileExeLaunchSettingsSection">
+        </phpProfilerLaunchSettingsSection>
+        <phpProfilerLaunchSettingsSection
+              id="org.eclipse.php.profile.ui.xDebugProfilerExeLaunchSettings"
+              launchTypeId="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+              name="XDebug Profiler Exe Launch Settings"
+              profilerId="org.eclipse.php.debug.core.xdebugDebugger"
+              section="org.eclipse.php.profile.ui.launcher.XDebugProfileExeLaunchSettingsSection">
+        </phpProfilerLaunchSettingsSection>
+     </extension>
+</plugin>
