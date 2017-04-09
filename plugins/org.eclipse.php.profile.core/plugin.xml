@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2017 Rogue Wave Software Inc. and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+        Rogue Wave Software Inc. - initial implementation
+ -->
+<plugin>
+   <extension
+         point="org.eclipse.php.debug.core.phpDebugMessages">
+      <message
+            class="org.eclipse.php.profile.core.messages.GetProfilerCallTraceRequest"
+            id="org.eclipse.php.profile.core.messages.GetProfilerCallTraceRequest"
+            name="Get Profiler Call Trace Request"/>
+      <message
+            class="org.eclipse.php.profile.core.messages.GetProfilerCallTraceResponse"
+            id="org.eclipse.php.profile.core.messages.GetProfilerCallTraceResponse"
+            name="Get Profiler Call Trace Response"/>
+      <message
+            class="org.eclipse.php.profile.core.messages.GetProfilerFileRequest"
+            id="org.eclipse.php.profile.core.messages.GetProfilerFileRequest"
+            name="Get Profiler File Request"/>
+      <message
+            class="org.eclipse.php.profile.core.messages.GetProfilerFileResponse"
+            id="org.eclipse.php.profile.core.messages.GetProfilerFileResponse"
+            name="Get Profiler File Response"/>
+      <message
+            class="org.eclipse.php.profile.core.messages.GetProfilerRequest"
+            id="org.eclipse.php.profile.core.messages.GetProfilerRequest"
+            name="Get Profiler Request"/>
+      <message
+            class="org.eclipse.php.profile.core.messages.GetProfilerResponse"
+            id="org.eclipse.php.profile.core.messages.GetProfilerResponse"
+            name="Get Profiler Response"/>
+   </extension>
+   <extension
+         point="org.eclipse.php.debug.core.phpDebugHandlers">
+      <handler
+            class="org.eclipse.php.profile.core.engine.ZProfiler"
+            id="org.eclipse.php.profile.core.engine.ZProfiler"
+            name="Zend Profiler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.php.debug.core.phpDebugParametersInitializers">
+      <initializer
+            class="org.eclipse.php.profile.core.engine.ProfileParametersInitializer"
+            handler="org.eclipse.php.profile.core.engine.ZProfiler"
+            id="org.eclipse.php.profile.core.engine.ProfileParametersInitializer"
+            mode="profile"
+            name="Profile Parameters Initializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchDelegates">
+      <launchDelegate
+            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
+            id="org.eclipse.php.debug.core.launching.launchDelegate.phpExeProfile"
+            modes="profile"
+            name="%PHPPDTLaunchDelegate.profile.label"
+            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+            type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+         <modeCombination
+               modes="profile"
+               perspective="org.eclipse.profile.ui.ProfilePerspective">
+         </modeCombination>
+      </launchDelegate>
+      <launchDelegate
+            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
+            id="org.eclipse.php.debug.core.launching.launchDelegate.phpWebProfile"
+            modes="profile"
+            name="%PHPPDTLaunchDelegate.profile.label"
+            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+            type="org.eclipse.php.debug.core.launching.webPageLaunch">
+         <modeCombination
+               modes="profile"
+               perspective="org.eclipse.profile.ui.ProfilePerspective">
+         </modeCombination>
+      </launchDelegate>
+      <launchDelegate
+            delegate="org.eclipse.php.internal.debug.core.launching.PHPRemoteLaunchConfigurationDelegate"
+            id="org.eclipse.php.debug.core.launching.launchDelegate.remotePHPProfile"
+            modes="profile"
+            name="%PHPPDTLaunchDelegate.profile.label"
+            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+            type="org.eclipse.php.debug.core.remotePHPLaunchConfigurationType">
+         <modeCombination
+               modes="profile"
+               perspective="org.eclipse.profile.ui.ProfilePerspective">
+         </modeCombination>
+      </launchDelegate>
+   </extension>
+
+</plugin>

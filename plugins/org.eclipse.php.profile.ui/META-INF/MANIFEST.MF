@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Profiler UI Plug-in
+Bundle-SymbolicName: org.eclipse.php.profile.ui;singleton:=true
+Bundle-Version: 5.0.0.qualifier
+Bundle-Activator: org.eclipse.php.profile.ui.ProfilerUiPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.debug.core,
+ org.eclipse.php.profile.core,
+ org.eclipse.ui,
+ org.eclipse.php.debug.ui,
+ org.eclipse.debug.ui,
+ org.eclipse.php.core,
+ org.eclipse.php.ui,
+ org.eclipse.php.debug.core,
+ org.eclipse.equinox.security,
+ org.eclipse.php.server.core,
+ org.eclipse.php.server.ui,
+ org.eclipse.core.filesystem,
+ org.eclipse.dltk.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.birt.chart.engine,
+ org.eclipse.birt.chart.engine.extension,
+ org.eclipse.birt.chart.device.swt
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Eclipse PDT
+Export-Package: org.eclipse.php.profile.ui,
+ org.eclipse.php.profile.ui.launcher

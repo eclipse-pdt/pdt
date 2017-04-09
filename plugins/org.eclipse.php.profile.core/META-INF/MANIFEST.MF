@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Profiler Core Plug-in
+Bundle-SymbolicName: org.eclipse.php.profile.core;singleton:=true
+Bundle-Version: 5.0.0.qualifier
+Bundle-Activator: org.eclipse.php.profile.core.PHPProfileCorePlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.debug.core,
+ org.eclipse.php.core,
+ org.eclipse.php.debug.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Eclipse PDT
+Export-Package: org.eclipse.php.profile.core,
+ org.eclipse.php.profile.core.data,
+ org.eclipse.php.profile.core.engine,
+ org.eclipse.php.profile.core.messages
