@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.php.profile.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.php.profile.ui" id="phpProfilerExecutionStatisticsFilters" name="Execution Statistics Filter"/>
+      </appInfo>
+      <documentation>
+         This extension point allows contributors to register filters for execution statistics.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="filter" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="filter">
+      <complexType>
+         <sequence>
+            <element ref="standardFilter" minOccurs="0" maxOccurs="1"/>
+            <element ref="advancedFilter" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="standardFilter">
+      <complexType>
+         <sequence>
+            <element ref="filterString" minOccurs="0" maxOccurs="1"/>
+            <element ref="fieldFilter" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="filterString">
+      <complexType>
+         <attribute name="string" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="caseSensitive" type="boolean" use="default" value="true">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="filterBy" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="File name">
+                  </enumeration>
+                  <enumeration value="Class name">
+                  </enumeration>
+                  <enumeration value="Function name">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="fieldFilter">
+      <complexType>
+         <attribute name="descriptor" use="default" value="Highest">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Highest">
+                  </enumeration>
+                  <enumeration value="Lowest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="number" type="string" use="default" value="10">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="field" use="default" value="Own Time">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Calls Count">
+                  </enumeration>
+                  <enumeration value="Average Own Time">
+                  </enumeration>
+                  <enumeration value="Own Time">
+                  </enumeration>
+                  <enumeration value="Others Time">
+                  </enumeration>
+                  <enumeration value="Total Time">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="advancedFilter">
+      <complexType>
+         <sequence>
+            <element ref="condition" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="condition">
+      <complexType>
+         <attribute name="attribute" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="File Name">
+                  </enumeration>
+                  <enumeration value="Class Name">
+                  </enumeration>
+                  <enumeration value="Function Name">
+                  </enumeration>
+                  <enumeration value="File Total Time">
+                  </enumeration>
+                  <enumeration value="Class Total Time">
+                  </enumeration>
+                  <enumeration value="Function Total Time">
+                  </enumeration>
+                  <enumeration value="Function Average Own Time">
+                  </enumeration>
+                  <enumeration value="Function Own Time">
+                  </enumeration>
+                  <enumeration value="Function Others Time">
+                  </enumeration>
+                  <enumeration value="Function Calls Count">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="operator" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="equals">
+                  </enumeration>
+                  <enumeration value="not equals">
+                  </enumeration>
+                  <enumeration value="matches">
+                  </enumeration>
+                  <enumeration value="doesn't match">
+                  </enumeration>
+                  <enumeration value="less than">
+                  </enumeration>
+                  <enumeration value="more than">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         5.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+&lt;pre&gt;  
+&lt;extension
+	point=&quot;org.eclipse.php.profile.ui.phpProfilerExecutionStatisticsFilters&quot;&gt;
+	&lt;filter
+		id=&quot;org.eclipse.php.profile.ui.filter.highest10BaseTime&quot;
+		name=&quot;Highest 10 own time&quot;&gt;
+		&lt;standardFilter&gt;
+			&lt;fieldFilter
+				descriptor=&quot;Highest&quot;
+				field=&quot;Own Time&quot;
+				number=&quot;10&quot;/&gt;
+		&lt;/standardFilter&gt;
+	&lt;/filter&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         No API information for this extension point.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         No default implementation for this extension point.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2017 Rogue Wave Software Inc. and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>
