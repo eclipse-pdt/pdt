@@ -183,7 +183,7 @@ import java_cup.runtime.Symbol;
 	 */
 	protected boolean parsePHPDoc() {
 		final IDocumentorLexer documentorLexer = getDocumentorLexer(zzReader);
-		if(documentorLexer == null) {
+		if (documentorLexer == null) {
 			return false;
 		}
 		yypushback(zzMarkedPos - zzStartRead);
@@ -758,9 +758,9 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 }
 
 <YYINITIAL>"<%="|"<?=" {
-	String text = yytext();
-	if ((text.charAt(1) == '%' && asp_tags)
-		|| (text.charAt(1) == '?' && short_tags_allowed)) {
+	String yytext = yytext();
+	if ((yytext.charAt(1) == '%' && asp_tags)
+		|| (yytext.charAt(1) == '?' && short_tags_allowed)) {
 		yybegin(ST_IN_SCRIPTING);
 		return createSymbol(ParserConstants.T_OPEN_TAG_WITH_ECHO);
 	} else {
@@ -976,12 +976,13 @@ if (parsePHPDoc()) {
 }
 
 <ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
-	int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
-	String text = yytext().substring(removeChars).trim(); // for 'b<<<' or '<<<'
-	heredocIds.push(text);
+	String yytext = yytext();
+	int removeChars = (yytext.charAt(0) == 'b') ? 4 : 3;
+	yytext = yytext.substring(removeChars).trim();    // for 'b<<<' or '<<<'
+	heredocIds.push(yytext);
 	yybegin(ST_START_HEREDOC);
 	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
-	sym.value = text;
+	sym.value = yytext;
 	return sym;
 }
 
@@ -1001,17 +1002,17 @@ if (parsePHPDoc()) {
 }
 
 <ST_START_HEREDOC>{LABEL}";"?[\n\r] {
-	String text = yytext();
+	String yytext = yytext();
 	int nb_pushback;
-	if (text.charAt(text.length() - 2) == ';') {
-		text = text.substring(0, text.length() - 2);
+	if (yytext.charAt(yytext.length() - 2) == ';') {
+		yytext = yytext.substring(0, yytext.length() - 2);
 		nb_pushback = 2;
 	} else {
-		text = text.substring(0, text.length() - 1);
+		yytext = yytext.substring(0, yytext.length() - 1);
 		nb_pushback = 1;
 	}
 	String heredoc = heredocIds.peek();
-	if (text.equals(heredoc)) {
+	if (yytext.equals(heredoc)) {
 		yypushback(nb_pushback);
 		heredocIds.pop();
 		yybegin(ST_IN_SCRIPTING);
@@ -1024,19 +1025,19 @@ if (parsePHPDoc()) {
 }
 
 <ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
-	String text = yytext();
+	String yytext = yytext();
 	int nb_pushback;
-	if (text.charAt(text.length() - 2) == ';') {
-		text = text.substring(0, text.length() - 2);
+	if (yytext.charAt(yytext.length() - 2) == ';') {
+		yytext = yytext.substring(0, yytext.length() - 2);
 		nb_pushback = 2;
 	} else {
-		text = text.substring(0, text.length() - 1);
+		yytext = yytext.substring(0, yytext.length() - 1);
 		nb_pushback = 1;
 	}
-	int textLength = text.length();
+	int textLength = yytext.length();
 	String heredoc = heredocIds.peek();
 	int heredocLength = heredoc.length();
-	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
+	if (textLength > heredocLength && yytext.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		nb_pushback += heredocLength;
 		// we need to remove the closing label from the symbol value
 		yypushback(nb_pushback);
@@ -1049,13 +1050,13 @@ if (parsePHPDoc()) {
 }
 
 <ST_END_HEREDOC>{LABEL}";"?[\n\r] {
-	String text = yytext();
+	String yytext = yytext();
 	int nb_pushback;
-	if (text.charAt(text.length() - 2) == ';') {
-		text = text.substring(0, text.length() - 2);
+	if (yytext.charAt(yytext.length() - 2) == ';') {
+		yytext = yytext.substring(0, yytext.length() - 2);
 		nb_pushback = 2;
 	} else {
-		text = text.substring(0, text.length() - 1);
+		yytext = yytext.substring(0, yytext.length() - 1);
 		nb_pushback = 1;
 	}
 	yypushback(nb_pushback);
