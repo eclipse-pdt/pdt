@@ -542,6 +542,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	// Method PhpTokenContainer#addLast() will correct the curlies length...
 	if (!phpStack.isEmpty()) {
 		popState();
+		// If new state is not ST_PHP_IN_SCRIPTING then some blanks are signifiant (like newlines
+		// after the closing curly and before an ending heredoc tag), so don't append them...
+		// See rule <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?
+		if (getZZLexicalState() != ST_PHP_IN_SCRIPTING) {
+			yypushback(yylength() - 1);
+		}
 	}
 	return PHP_CURLY_CLOSE;
 }
@@ -790,15 +796,16 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
-	int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
+	String yytext = yytext();
+	int bprefix = (yytext.charAt(0) != '<') ? 1 : 0;
 	int startString = 3 + bprefix;
 
-	int hereOrNowDoc_len = yylength() - bprefix - 3 - 1 - (yytext().charAt(yylength() - 2) == '\r' ? 1 : 0);
-	while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
+	int hereOrNowDoc_len = yylength() - bprefix - 3 - 1 - (yytext.charAt(yylength() - 2) == '\r' ? 1 : 0);
+	while ((yytext.charAt(startString) == ' ') || (yytext.charAt(startString) == '\t')) {
 		startString++;
 		hereOrNowDoc_len--;
 	}
-	String hereOrNowDoc = yytext().substring(startString, hereOrNowDoc_len + startString);
+	String hereOrNowDoc = yytext.substring(startString, hereOrNowDoc_len + startString);
 	if (hereOrNowDoc.charAt(0) == '\'') {
 		pushHeredocId(hereOrNowDoc.substring(1, hereOrNowDoc_len - 1));
 		yybegin(ST_PHP_START_NOWDOC);
@@ -823,54 +830,66 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_START_HEREDOC>{LABEL}";"?[\n\r] {
+	String yytext = yytext();
 	int label_len = yylength() - 1;
 
-	if (yytext().charAt(label_len - 1) == ';') {
+	if (yytext.charAt(label_len - 1) == ';') {
 		label_len--;
 	}
 
 	String heredoc = getHeredocId();
 	int heredoc_len = heredoc.length();
-	if (label_len == heredoc_len && yytext().substring(0, label_len).equals(heredoc)) {
+	if (label_len == heredoc_len && yytext.substring(0, label_len).equals(heredoc)) {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		// we must (at least) push the newline character back
+		yypushback(1);
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
+	String yytext = yytext();
 	int label_len = yylength() - 1;
 
-	if (yytext().charAt(label_len - 1) == ';') {
+	if (yytext.charAt(label_len - 1) == ';') {
 		label_len--;
 	}
 	String heredoc = getHeredocId();
 	int heredoc_len = heredoc.length();
-	if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len, label_len).equals(heredoc)) {
+	int startIndex = label_len - heredoc_len;
+	if (startIndex > 0 && yytext.substring(startIndex, label_len).equals(heredoc)) {
 
-		if ((label_len - heredoc_len - 2) >= 0 && yytext().charAt(label_len - heredoc_len - 2) == '\r') {
-			label_len = label_len - 2;
+		if (startIndex - 2 >= 0
+			&& yytext.charAt(startIndex - 2) == '\r'
+			&& yytext.charAt(startIndex - 1) == '\n') {
+			startIndex-= 2;
 		} else {
-			label_len--;
+			startIndex--;
 		}
-		yypushback(heredoc_len + (yylength() - label_len));
+		yypushback(yylength() - startIndex);
 
 		yybegin(ST_PHP_END_HEREDOC);
+	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 	}
 	// In some cases, all text is pushed back (using yypushback()),
 	// especially when the parsed document has Windows newlines.
 	// In those cases, ignore this rule and try next one...
 	if (yylength() > 0) {
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
 <ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r] {
+	String yytext = yytext();
 	int label_len = yylength() - 1;
 	int startIndex = 0;
-	String yytext = yytext();
 	if (yytext.charAt(label_len - 1) == ';') {
 		label_len--;
 	}
@@ -884,23 +903,31 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	if (label_len > heredoc_len
 			&& yytext.substring(startIndex, label_len).equals(
 					heredoc)) {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		yybegin(ST_PHP_HEREDOC);
-		return PHP_CONSTANT_ENCAPSED_STRING;
+		return PHP_ENCAPSED_AND_WHITESPACE;
 	}
 }
 
 <ST_PHP_END_HEREDOC>{NEWLINE}*{LABEL}({TABS_AND_SPACES}[^\n\r])+";"?[\n\r] {
+	// we must (at least) push the newline character back
+	yypushback(1);
 	yybegin(ST_PHP_HEREDOC);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
 <ST_PHP_END_HEREDOC>{NEWLINE}*({TABS_AND_SPACES}[^\n\r])+{LABEL}";"?[\n\r] {
+	// we must (at least) push the newline character back
+	yypushback(1);
 	yybegin(ST_PHP_HEREDOC);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
 <ST_PHP_START_NOWDOC>{ANY_CHAR} {
@@ -909,40 +936,53 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_START_NOWDOC>{LABEL}";"?[\n\r] {
+	String yytext = yytext();
 	int label_len = yylength() - 1;
 
-	if (yytext().charAt(label_len - 1) == ';') {
+	if (yytext.charAt(label_len - 1) == ';') {
 		label_len--;
 	}
 
 	String nowdoc = getHeredocId();
 	int nowdoc_len = nowdoc.length();
-	if (label_len == nowdoc_len && yytext().substring(0, label_len).equals(nowdoc)) {
+	if (label_len == nowdoc_len && yytext.substring(0, label_len).equals(nowdoc)) {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
 		return PHP_HEREDOC_TAG;
 	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 		return PHP_CONSTANT_ENCAPSED_STRING;
 	}
 }
 
 <ST_PHP_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
+	String yytext = yytext();
 	int label_len = yylength() - 1;
 
-	if (yytext().charAt(label_len - 1) == ';') {
+	if (yytext.charAt(label_len - 1) == ';') {
 		label_len--;
 	}
 	String nowdoc = getHeredocId();
 	int nowdoc_len = nowdoc.length();
-	if (label_len > nowdoc_len && yytext().substring(label_len - nowdoc_len, label_len).equals(nowdoc)) {
-		if ((label_len - nowdoc_len - 2) >= 0 && yytext().charAt(label_len - nowdoc_len - 2) == '\r') {
-			label_len = label_len - 2;
+	int startIndex = label_len - nowdoc_len;
+	if (startIndex > 0 && yytext.substring(startIndex, label_len).equals(nowdoc)) {
+
+		if (startIndex - 2 >= 0
+			&& yytext.charAt(startIndex - 2) == '\r'
+			&& yytext.charAt(startIndex - 1) == '\n') {
+			startIndex-= 2;
 		} else {
-			label_len--;
+			startIndex--;
 		}
-		yypushback(nowdoc_len + (yylength() - label_len));
+		yypushback(yylength() - startIndex);
 
 		yybegin(ST_PHP_END_NOWDOC);
+	} else {
+		// we must (at least) push the newline character back
+		yypushback(1);
 	}
 	// In some cases, all text is pushed back (using yypushback()),
 	// especially when the parsed document has Windows newlines.
@@ -953,6 +993,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_END_NOWDOC>{NEWLINE}{LABEL}";"?[\n\r] {
+	// we must (at least) push the newline character back
+	yypushback(1);
 	popHeredocId();
 	yybegin(ST_PHP_IN_SCRIPTING);
 	return PHP_HEREDOC_TAG;
@@ -993,18 +1035,6 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	String heredoc = getHeredocId();
-	int heredoc_len = heredoc.length();
-	if (yytext().startsWith(heredoc)) {
-		String text = yytext();
-		if (heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
-			|| text.charAt(heredoc_len) == '\n' || text.charAt(heredoc_len) == ';')) {
-			yypushback(yylength() - heredoc_len - 1);
-			popHeredocId();
-			yybegin(ST_PHP_IN_SCRIPTING);
-			return PHP_HEREDOC_TAG;
-		}
-	}
 	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
@@ -1018,7 +1048,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_NOWDOC>{NOWDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES>[\"] {
