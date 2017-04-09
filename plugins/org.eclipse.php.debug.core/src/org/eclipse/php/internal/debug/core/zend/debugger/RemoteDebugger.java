@@ -880,8 +880,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 
-		detectPHPVersion();
-
 		try {
 			debugHandler.getDebugTarget().installDeferredBreakpoints();
 		} catch (CoreException ce) {
@@ -909,8 +907,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!detectProtocolID()) {
 			return false;
 		}
-
-		detectPHPVersion();
 
 		StartRequest request = new StartRequest();
 		try {
@@ -1566,6 +1562,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	@Override
 	public String getPHPVersion() {
+		if (phpVersion == null) {
+			detectPHPVersion();
+		}
 		return phpVersion;
 	}
 
