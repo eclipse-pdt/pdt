@@ -49,7 +49,7 @@ parser code {:
 			return variable;
 		}
 		for (DimList.Element el : list) {
-			if(variable.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
+			if (variable.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
 				variable = new ArrayVariableReference(variable.start(), el.right, ((SimpleReference) variable).getName(), el.index, el.type);
 			} else {
 				variable = new ReflectionArrayVariableReference(variable.start(), el.right, variable, el.index, el.type);
@@ -456,14 +456,14 @@ namespace_name_list:list T_NS_SEPARATOR string_st:name
 top_statement_list ::=
 top_statement_list:statementList top_statement:statement
 {:
-	if(statement != null) {
+	if (statement != null) {
 		parser.addStatement(statement);
-		if(parser.pendingStatement != null) {
+		if (parser.pendingStatement != null) {
 			parser.addStatement(parser.pendingStatement);
 			parser.pendingStatement = null;
 		}
 	}
-	while(!parser.declarations.isEmpty()) {
+	while (!parser.declarations.isEmpty()) {
 		parser.addStatement(parser.declarations.pop());
 	}
 :}
@@ -475,18 +475,18 @@ namespace_statement_list ::=
 namespace_statement_list:statementList top_statement:statement
 {:
 	// Ignore null statements
-	if(statement != null) {
+	if (statement != null) {
 		statementList.add(statement);
-		if(statement.getKind() == ASTNodeKinds.AST_ERROR) {
-			if(!parser.declarations.isEmpty()) {
+		if (statement.getKind() == ASTNodeKinds.AST_ERROR) {
+			if (!parser.declarations.isEmpty()) {
 				Statement node = parser.declarations.peek();
-				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
+				if (node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
 					statementList.add(parser.declarations.pop());
 				}
 			}
 		}
 	}
-	if(!(parser.declarations.peek() instanceof NamespaceDeclaration)) {
+	if (!(parser.declarations.peek() instanceof NamespaceDeclaration)) {
 		statementList.add(parser.declarations.pop());
 	}
 	RESULT = statementList;
@@ -677,12 +677,12 @@ inner_statement_list ::=
 inner_statement_list:statementList inner_statement:statement
 {:
 	// Ignore null statements
-	if(statement != null) {
+	if (statement != null) {
 		statementList.add(statement);
-		if(statement.getKind() == ASTNodeKinds.AST_ERROR) {
-			if(!parser.declarations.isEmpty()) {
+		if (statement.getKind() == ASTNodeKinds.AST_ERROR) {
+			if (!parser.declarations.isEmpty()) {
 				Statement node = parser.declarations.peek();
-				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
+				if (node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
 					statementList.add(parser.declarations.pop());
 				}
 			}
@@ -1110,7 +1110,7 @@ unticked_class_declaration_statement ::=
 class_entry_type:modifier T_STRING:className
 {:
 	ClassDeclaration classDeclaration;
-	if(modifier.modifier == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
+	if (modifier.modifier == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
 		classDeclaration = new TraitDeclaration(modifierleft, classNameright,
 			classNameleft, classNameright, modifier.modifier, className, null, null,
 			new Block(classNameright, classNameright, null), modifier.doc);
@@ -1147,7 +1147,7 @@ extends_from:superClass errorOrNot implements_list:interfaces
 :}
 T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
 {:
-	if(blockEnd != null) {
+	if (blockEnd != null) {
 		parser.reportError(new ASTError(statementListright - 1, statementListright), "syntax error, unfinished class declaration");
 		parser.pendingStatement = blockEnd;
 	}
@@ -1169,7 +1169,7 @@ interface_extends_list:interfaces
 :}
 T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
 {:
-	if(blockEnd != null) {
+	if (blockEnd != null) {
 		parser.reportError(new ASTError(statementListright - 1, statementListright), "syntax error, unfinished class declaration");
 		parser.pendingStatement = blockEnd;
 	}
@@ -1278,7 +1278,7 @@ interface_list ::=
 fully_qualified_class_name:className
 {:
 	List list = new LinkedList();
-	if(className != null) {
+	if (className != null) {
 		list.add(className);
 	}
 	RESULT = list;
@@ -1562,7 +1562,7 @@ non_empty_parameter_list ::=
 parameter:parameter
 {:
 	List list = new LinkedList();
-	if(parameter != null) {
+	if (parameter != null) {
 		list.add(parameter);
 	}
 	RESULT = list;
@@ -1570,7 +1570,7 @@ parameter:parameter
 
 | non_empty_parameter_list:list T_COMMA parameter:parameter
 {:
-	if(parameter != null) {
+	if (parameter != null) {
 		list.add(parameter);
 	}
 	RESULT = list;
@@ -1773,7 +1773,7 @@ static_var_list:list T_COMMA T_VARIABLE:var
 class_statement_list ::=
 class_statement_list:list class_statement:classStatement
 {:
-	if(!(parser.declarations.peek() instanceof TypeDeclaration)) {
+	if (!(parser.declarations.peek() instanceof TypeDeclaration)) {
 		parser.declarations.pop();
 	}
 :}
@@ -1834,7 +1834,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:closeParenthese
 method_body:body
 {:
 	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) parser.declarations.pop();
-	if(body instanceof ASTError) {
+	if (body instanceof ASTError) {
 		parser.reportError(new ASTError(methodDeclaration.sourceEnd() - 1, methodDeclaration.sourceEnd()), "syntax error, unfinished method declaration");
 	}
 	TypeDeclaration type = (TypeDeclaration) parser.declarations.peek();
@@ -1869,7 +1869,7 @@ method_body:body
 			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {
 				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
 			}
-		} else if(type instanceof InterfaceDeclaration) {
+		} else if (type instanceof InterfaceDeclaration) {
 			parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PhpProblemIdentifier.BodyForAbstractMethod), Messages.BodyForAbstractMethod);
 		}
 	}
@@ -2854,7 +2854,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
 	SimpleReference name;
-	if(functionName instanceof SimpleReference) {
+	if (functionName instanceof SimpleReference) {
 		name = (SimpleReference) functionName;
 	}else{
 		name = new SimpleReference(functionNameleft, functionNameleft, "");
@@ -2892,7 +2892,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
 	SimpleReference name;
-	if(functionName instanceof SimpleReference) {
+	if (functionName instanceof SimpleReference) {
 		name = (SimpleReference) functionName;
 	}else{
 		name = new SimpleReference(functionNameleft, functionNameleft, "");
@@ -2909,7 +2909,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 
 | function_call:varName T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
 {:
-	if(varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
+	if (varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
 		RESULT = new ArrayVariableReference(varNameleft, endright, ((SimpleReference) varName).getName(), index, ArrayVariableReference.VARIABLE_ARRAY);
 	} else {
 		RESULT = new ReflectionArrayVariableReference(varNameleft, endright, varName, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
@@ -3588,7 +3588,7 @@ reference_variable ::=
 reference_variable:varName T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
 {:
 	Expression var;
-	if(varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
+	if (varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
 		var = new ArrayVariableReference(varNameleft, endright, ((SimpleReference) varName).getName(), index, ArrayVariableReference.VARIABLE_ARRAY);
 	} else {
 		var = new ReflectionArrayVariableReference(varNameleft, endright, varName, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
@@ -3599,7 +3599,7 @@ reference_variable:varName T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
 | reference_variable:varName T_CURLY_OPEN expr:index T_CURLY_CLOSE:end
 {:
 	Expression var;
-	if(varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
+	if (varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
 		var = new ArrayVariableReference(varNameleft, endright, ((SimpleReference) varName).getName(), index, ArrayVariableReference.VARIABLE_HASHTABLE);
 	} else {
 		var = new ReflectionArrayVariableReference(varNameleft, endright, varName, index, ReflectionArrayVariableReference.VARIABLE_HASHTABLE);

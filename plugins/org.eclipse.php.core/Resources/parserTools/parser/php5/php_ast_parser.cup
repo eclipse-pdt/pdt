@@ -349,7 +349,7 @@ top_statement_list:statementList
 top_statement_list ::=
 top_statement_list:statementList top_statement:statement
 {:
-	if(statement != null) {
+	if (statement != null) {
 		statementList.add(statement);
 	}
 	RESULT = statementList;
@@ -388,7 +388,7 @@ inner_statement_list ::=
 inner_statement_list:statementList inner_statement:statement
 {:
 	// Ignore null statements
-	if(statement != null) {
+	if (statement != null) {
 		statementList.add(statement);
 	}
 	RESULT = statementList;

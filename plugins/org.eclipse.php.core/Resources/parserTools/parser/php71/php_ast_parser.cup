@@ -711,7 +711,7 @@ namespace_name:list
 top_statement_list ::=
 top_statement_list:sList top_statement:statement
 {:
-	if(statement != null) {
+	if (statement != null) {
 		if (!(statement instanceof NamespaceDeclaration) && sList.size() > 0) {
 			Statement lastStatement = (Statement) ((LinkedList) sList).getLast();
 			// EmptyStatement length == 2 means it is "?>",
@@ -910,7 +910,7 @@ inner_statement_list ::=
 inner_statement_list:sList inner_statement:statement
 {:
 	// Ignore null statements
-	if(statement != null) {
+	if (statement != null) {
 		sList.add(statement);
 	}
 	RESULT = sList;
@@ -1288,7 +1288,7 @@ class_entry_type:modifier T_STRING:className
 extends_from:superClass implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
-	if(modifier.intValue() == ClassDeclaration.MODIFIER_TRAIT) {
+	if (modifier.intValue() == ClassDeclaration.MODIFIER_TRAIT) {
 		RESULT = new TraitDeclaration(modifierleft, blockEndright, parser.ast, ClassDeclaration.MODIFIER_NONE,
 			new Identifier(classNameleft, classNameright, parser.ast, className), superClass, interfaces,
 			new Block(blockStartleft, blockEndright, parser.ast, sList));
