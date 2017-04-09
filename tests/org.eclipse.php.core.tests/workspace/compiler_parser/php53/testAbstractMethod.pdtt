@@ -86,6 +86,10 @@ interface MyInterface1 {
 		</ASTError>
 		<ASTError start="99" end="103">
 		</ASTError>
+		<ASTError start="99" end="103">
+		</ASTError>
+		<ASTError start="13" end="21">
+		</ASTError>
 		<ASTError start="169" end="173">
 		</ASTError>
 		<ASTError start="200" end="204">
