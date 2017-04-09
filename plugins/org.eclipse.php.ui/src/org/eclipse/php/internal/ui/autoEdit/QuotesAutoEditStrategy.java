@@ -250,7 +250,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
-				if (tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+				if (tRegion.getType() != PHPRegionTypes.PHP_STRING) {
 					return;
 				}
 

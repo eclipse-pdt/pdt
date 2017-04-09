@@ -1,5 +1,5 @@
 --TEST--
-Check that the lexer doesn't return an empty PHP_CONSTANT_ENCAPSED_STRING token
+Check that the lexer doesn't return an empty PHP_STRING token
 from inside a heredoc (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=450875).
 This test is only useful if this file has Windows newlines.
 --FILE--
@@ -25,7 +25,7 @@ PHP_CURLY_OPEN|{
 |2
 PHP_HEREDOC_TAG|<<<FOO
 |16
-PHP_ENCAPSED_AND_WHITESPACE|test|16
+PHP_STRING|test|16
 PHP_HEREDOC_TAG|
 FOO;|2
 WHITESPACE|

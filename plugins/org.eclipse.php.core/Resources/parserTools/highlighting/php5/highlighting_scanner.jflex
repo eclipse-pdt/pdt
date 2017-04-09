@@ -607,7 +607,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 <ST_PHP_VAR_OFFSET>[ \n\r\t\\'#] {
 	yypushback(1);
 	popState();
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>"null" {
@@ -736,33 +736,33 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_IN_SCRIPTING>(b?[\"]{DOUBLE_QUOTES_CHARS}*("{"*|"$"*)[\"]) {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING>b?[\"] {
 	pushState(ST_PHP_DOUBLE_QUOTES);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING>(b?[']([^'\\]|("\\"{ANY_CHAR}))*[']) {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING>b?['] {
 	pushState(ST_PHP_SINGLE_QUOTE);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_SINGLE_QUOTE>"\\'" {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_SINGLE_QUOTE>"\\\\" {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
@@ -776,12 +776,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	}
 	pushHeredocId(yytext.substring(startString, heredoc_len + startString));
 	yybegin(ST_PHP_START_HEREDOC);
-	return PHP_HEREDOC_TAG;
+	return PHP_HEREDOC_START_TAG;
 }
 
 <ST_PHP_IN_SCRIPTING>[`] {
 	pushState(ST_PHP_BACKQUOTE);
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_START_HEREDOC>{ANY_CHAR} {
@@ -804,11 +804,11 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		yypushback(1);
 		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		return PHP_HEREDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
-		return PHP_ENCAPSED_AND_WHITESPACE;
+		return PHP_STRING;
 	}
 }
 
@@ -842,7 +842,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	// especially when the parsed document has Windows newlines.
 	// In those cases, ignore this rule and try next one...
 	if (yylength() > 0) {
-		return PHP_ENCAPSED_AND_WHITESPACE;
+		return PHP_STRING;
 	}
 }
 
@@ -867,12 +867,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		yypushback(1);
 		popHeredocId();
 		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		return PHP_HEREDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
 		yybegin(ST_PHP_HEREDOC);
-		return PHP_ENCAPSED_AND_WHITESPACE;
+		return PHP_STRING;
 	}
 }
 
@@ -885,7 +885,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}+ {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 /*
@@ -894,11 +894,11 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_PHP_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[\"])) {
 	yypushback(1);
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 <ST_PHP_BACKQUOTE>{BACKQUOTE_CHARS}+ {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 /*
@@ -907,11 +907,11 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_PHP_BACKQUOTE>{BACKQUOTE_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[`])) {
 	yypushback(1);
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 /*
@@ -920,34 +920,34 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
 	yypushback(1);
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	return PHP_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES>[\"] {
 	popState();
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_SINGLE_QUOTE>['] {
 	popState();
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_BACKQUOTE>[`] {
 	popState();
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES>. {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_SINGLE_QUOTE>. {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 <ST_PHP_BACKQUOTE>. {
-	return PHP_CONSTANT_ENCAPSED_STRING;
+	return PHP_STRING;
 }
 
 /* ============================================

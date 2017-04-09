@@ -99,8 +99,9 @@ public abstract class PHPPartitionTypes {
 	// For full content coverage, use IPhpScriptRegion#isPhpQuotesState(int
 	// relativeOffset).
 	public static boolean isPhpQuotesState(final String type) {
-		return type == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING || type == PHPRegionTypes.PHP_HEREDOC_TAG
-				|| type == PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE;
+		return type == PHPRegionTypes.PHP_STRING || type == PHPRegionTypes.PHP_HEREDOC_START_TAG
+				|| type == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG || type == PHPRegionTypes.PHP_NOWDOC_START_TAG
+				|| type == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG;
 	}
 
 	public static final boolean isPHPRegularState(final String type) {

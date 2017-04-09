@@ -463,7 +463,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return -1;
 			String tokenType = token.getType();
 
-			if (tokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+			if (tokenType == PHPRegionTypes.PHP_STRING) {
 				int startLine = document.getLineOfOffset(token.getStart());
 				if (enterKeyPressed && startLine <= lineNumber || !enterKeyPressed && startLine < lineNumber) {
 					return startLine;
@@ -483,8 +483,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return true;
 			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON || token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
 				return true;
-			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_TAG
-					&& document.get(lineInfo.getOffset(), lineInfo.getLength()).trim().endsWith(";")) { //$NON-NLS-1$
+			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
+					|| token.getType() == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG) {
 				return true;
 			}
 		} catch (final BadLocationException e) {
@@ -522,7 +522,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (scriptRegion instanceof IPhpScriptRegion) {
 				if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(regionStart + token.getStart()) == '.') {
 					token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
-					if (token.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+					if (token.getType() == PHPRegionTypes.PHP_STRING) {
 						boolean isToken = true;
 						int currentOffset = regionStart + token.getStart() - 1;
 						while (currentOffset >= lineInfo.getOffset()) {
@@ -531,7 +531,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 							if (isToken
 									&& (tokenType == PHPRegionTypes.PHP_TOKEN
 											&& document.getChar(regionStart + token.getStart()) == '.')
-									|| !isToken && tokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+									|| !isToken && tokenType == PHPRegionTypes.PHP_STRING) {
 								currentOffset = regionStart + token.getStart() - 1;
 							} else {
 								break;

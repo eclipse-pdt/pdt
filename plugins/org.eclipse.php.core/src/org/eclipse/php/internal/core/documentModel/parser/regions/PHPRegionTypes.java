@@ -87,7 +87,13 @@ public interface PHPRegionTypes {
 
 	// static final String PHP_DIV = "PHP_DIV";
 
-	// static final String PHP_START_HEREDOC = "PHP_START_HEREDOC";
+	static final String PHP_HEREDOC_START_TAG = "PHP_HEREDOC_START_TAG";
+
+	static final String PHP_HEREDOC_CLOSE_TAG = "PHP_HEREDOC_CLOSE_TAG";
+
+	static final String PHP_NOWDOC_START_TAG = "PHP_NOWDOC_START_TAG";
+
+	static final String PHP_NOWDOC_CLOSE_TAG = "PHP_NOWDOC_CLOSE_TAG";
 
 	// static final String PHP_AT = "PHP_AT";
 
@@ -265,9 +271,7 @@ public interface PHPRegionTypes {
 
 	// static final String PHP_ARRAY_CAST = "PHP_ARRAY_CAST";
 
-	static final String PHP_CONSTANT_ENCAPSED_STRING = "PHP_CONSTANT_ENCAPSED_STRING"; //$NON-NLS-1$
-
-	static final String PHP_ENCAPSED_AND_WHITESPACE = "PHP_ENCAPSED_AND_WHITESPACE"; //$NON-NLS-1$
+	static final String PHP_STRING = "PHP_STRING"; //$NON-NLS-1$
 
 	static final String WHITESPACE = "WHITESPACE"; //$NON-NLS-1$
 
@@ -362,7 +366,7 @@ public interface PHPRegionTypes {
 
 	static final String UNKNOWN_TOKEN = "UNKNOWN_TOKEN"; //$NON-NLS-1$
 
-	static final String PHP_HEREDOC_TAG = "PHP_HEREDOC_TAG"; //$NON-NLS-1$
+	// static final String PHP_HEREDOC_TAG = "PHP_HEREDOC_TAG"; //$NON-NLS-1$
 
 	static final String PHP_TOKEN = "PHP_TOKEN"; //$NON-NLS-1$
 

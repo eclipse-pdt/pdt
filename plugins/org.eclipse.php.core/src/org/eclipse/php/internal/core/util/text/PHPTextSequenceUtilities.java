@@ -724,7 +724,7 @@ public class PHPTextSequenceUtilities {
 							} else if (level == 0 && text.equals(COMMA)) {
 								argIndex++;
 							}
-						} else if (level == 0 && symbol.equals(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
+						} else if (level == 0 && symbol.equals(PHPRegionTypes.PHP_STRING)) {
 							if (args.size() < argIndex + 1) {
 								args.add(text.toString());
 							}
