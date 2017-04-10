@@ -52,23 +52,24 @@ public class PHPUnitSearchEngine {
 		this.project = project;
 	}
 
-	public IType[] findTestCaseBaseClasses(IModelElement elementContainer, boolean listAbstract,
+	public List<IType> findTestCaseBaseClasses(IModelElement elementContainer, boolean listAbstract,
 			IProgressMonitor monitor) {
 		return findPHPUnitClassesBySupertype(elementContainer, getTestCase(), listAbstract, false, monitor);
 	}
 
-	public IType[] findTestSuiteBaseClasses(IModelElement elementContainer, boolean listAbstract,
+	public List<IType> findTestSuiteBaseClasses(IModelElement elementContainer, boolean listAbstract,
 			IProgressMonitor monitor) {
 		return findPHPUnitClassesBySupertype(elementContainer, getTestSuite(), listAbstract, false, monitor);
 	}
 
-	public IType[] findTestCaseBaseClasses(IModelElement elementContainer, IType baseClass, boolean listAbstract,
+	public List<IType> findTestCaseBaseClasses(IModelElement elementContainer, IType baseClass, boolean listAbstract,
 			IProgressMonitor monitor) {
 		return findPHPUnitClassesBySupertype(elementContainer, baseClass, listAbstract, false, monitor);
 	}
 
-	public IType[] findAllTestCasesAndSuites(IModelElement element, boolean listAbstract, IProgressMonitor monitor) {
-		List<IType> result = new LinkedList<IType>();
+	public List<IType> findAllTestCasesAndSuites(IModelElement element, boolean listAbstract,
+			IProgressMonitor monitor) {
+		List<IType> result = new LinkedList<>();
 
 		if (typeHierarchyCache.isEmpty()) {
 			findPHPUnitClassesBySupertype(element, getTestCase(), listAbstract, false, monitor);
@@ -83,28 +84,25 @@ public class PHPUnitSearchEngine {
 			}
 		}
 
-		return result.toArray(new IType[result.size()]);
+		return result;
 	}
 
-	public IType[] findPHPUnitClassesByTestCase(IModelElement elementContainer, boolean listAbstract, boolean isFirst,
-			IProgressMonitor monitor) {
+	public List<IType> findPHPUnitClassesByTestCase(IModelElement elementContainer, boolean listAbstract,
+			boolean isFirst, IProgressMonitor monitor) {
 		return findPHPUnitClassesBySupertype(elementContainer, getTestCase(), listAbstract, isFirst, monitor);
 	}
 
-	public IType[] findPHPUnitClassesByTestSuite(IModelElement elementContainer, boolean listAbstract, boolean isFirst,
-			IProgressMonitor monitor) {
+	public List<IType> findPHPUnitClassesByTestSuite(IModelElement elementContainer, boolean listAbstract,
+			boolean isFirst, IProgressMonitor monitor) {
 		return findPHPUnitClassesBySupertype(elementContainer, getTestSuite(), listAbstract, isFirst, monitor);
 	}
 
-	public IType[] findPHPUnitClassesBySupertype(IModelElement elementContainer, IType superClass, boolean listAbstract,
-			boolean isFirst, IProgressMonitor monitor) {
-
-		IType[] subtypes = null;
-
+	public List<IType> findPHPUnitClassesBySupertype(IModelElement elementContainer, IType superClass,
+			boolean listAbstract, boolean isFirst, IProgressMonitor monitor) {
 		if (superClass == null || elementContainer == null) {
-			return subtypes;
+			return Collections.emptyList();
 		}
-
+		List<IType> subtypes = Collections.emptyList();
 		IPath parentPath = elementContainer.getPath();
 		List<IType> result = new LinkedList<>();
 		try {
@@ -120,7 +118,7 @@ public class PHPUnitSearchEngine {
 						ITypeHierarchy hierarchy = baseClass.newTypeHierarchy(scriptProject, monitor);
 
 						if (monitor != null && monitor.isCanceled()) {
-							return null;
+							return Collections.emptyList();
 						}
 
 						IType testCase = getTestCase();
@@ -153,7 +151,7 @@ public class PHPUnitSearchEngine {
 							if (parentPath.isPrefixOf(type.getPath())) {
 								result.add(type);
 								if (isFirst) {
-									subtypes = result.toArray(new IType[result.size()]);
+									subtypes = result;
 									return subtypes;
 								}
 								continue first;
@@ -174,7 +172,7 @@ public class PHPUnitSearchEngine {
 					if (listAbstract) {
 						result.add(superClass);
 					}
-					subtypes = result.toArray(new IType[result.size()]);
+					subtypes = result;
 				} catch (ModelException e) {
 					PHPUnitPlugin.log(e);
 				}
@@ -186,7 +184,6 @@ public class PHPUnitSearchEngine {
 	}
 
 	public Set<IType> findTestCaseBaseClassesInWorkspace(final IProgressMonitor monitor) {
-
 		final Set<IType> cache = new HashSet<>();
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for (IProject project : projects) {
@@ -199,27 +196,25 @@ public class PHPUnitSearchEngine {
 					PHPUnitPlugin.log(e);
 				}
 				if (scriptProject != null && scriptProject.isOpen() && hasNature) {
-					IType[] foundTestCases = findTestCaseBaseClasses(scriptProject, getTestCase(), false, monitor);
-					if (foundTestCases.length > 0) {
-						cache.addAll(Arrays.asList(foundTestCases));
-					}
+					List<IType> foundTestCases = findTestCaseBaseClasses(scriptProject, getTestCase(), false, monitor);
+					cache.addAll(foundTestCases);
 				}
 			}
 		}
 		return cache;
 	}
 
-	public IType[] findTestCases(IModelElement elementContainer, IProgressMonitor monitor) {
+	public List<IType> findTestCases(IModelElement elementContainer, IProgressMonitor monitor) {
 		return findTestCaseBaseClasses(elementContainer, getTestCase(), true, monitor);
 	}
 
-	public IType[] findTestSuites(IModelElement elementContainer, IProgressMonitor monitor) {
+	public List<IType> findTestSuites(IModelElement elementContainer, IProgressMonitor monitor) {
 		return findTestCaseBaseClasses(elementContainer, getTestSuite(), true, monitor);
 	}
 
 	public boolean hasCasesOrSuites(IModelElement element, IProgressMonitor monitor) {
-		return findPHPUnitClassesBySupertype(element, getTestCase(), false, true, monitor).length > 0
-				|| findPHPUnitClassesBySupertype(element, getTestSuite(), false, true, monitor).length > 0;
+		return !findPHPUnitClassesBySupertype(element, getTestCase(), false, true, monitor).isEmpty()
+				|| !findPHPUnitClassesBySupertype(element, getTestSuite(), false, true, monitor).isEmpty();
 	}
 
 	private void collectElements(final Object parent, final IProgressMonitor pm, final Set result, final int flags) {
@@ -236,15 +231,12 @@ public class PHPUnitSearchEngine {
 			return collectFromModelElement((IModelElement) parent, pm, result, flags);
 		if (parent instanceof IProject)
 			return collectFromProject((IProject) parent, pm, result, flags);
-		// if (parent instanceof IScriptFolder)
-		// return collectFromScriptFolder((IScriptFolder) parent, pm, result,
-		// flags);
 		if (parent instanceof IContainer)
 			return collectFromContainer((IContainer) parent, pm, result, flags);
 		if (parent instanceof IFile)
 			return collectFromFile((IFile) parent, pm, result, flags);
 		if (parent instanceof IAdaptable) {
-			IResource resource = (IResource) ((IAdaptable) parent).getAdapter(IResource.class);
+			IResource resource = ((IAdaptable) parent).getAdapter(IResource.class);
 			if (resource != null && resource instanceof IFile) {
 				return collectFromFile((IFile) resource, pm, result, flags);
 			}
@@ -258,17 +250,19 @@ public class PHPUnitSearchEngine {
 			isFirts = true;
 		}
 		if ((flags & FIND_ELEMENT_PHPUNIT_CASE) > 0) {
-			IType[] findPHPUnitClassesBySupertype1 = findPHPUnitClassesBySupertype(parent, getTestCase(), false,
+			List<IType> findPHPUnitClassesBySupertype1 = findPHPUnitClassesBySupertype(parent, getTestCase(), false,
 					isFirts, new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
-			if (findPHPUnitClassesBySupertype1 != null)
-				result.addAll(Arrays.asList(findPHPUnitClassesBySupertype1));
+			if (findPHPUnitClassesBySupertype1 != null) {
+				result.addAll(findPHPUnitClassesBySupertype1);
+			}
 		}
 
 		if ((flags & FIND_ELEMENT_PHPUNIT_SUITE) > 0) {
-			IType[] findPHPUnitClassesBySupertype2 = findPHPUnitClassesBySupertype(parent, getTestSuite(), false,
+			List<IType> findPHPUnitClassesBySupertype2 = findPHPUnitClassesBySupertype(parent, getTestSuite(), false,
 					isFirts, new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
-			if (findPHPUnitClassesBySupertype2 != null)
-				result.addAll(Arrays.asList(findPHPUnitClassesBySupertype2));
+			if (findPHPUnitClassesBySupertype2 != null) {
+				result.addAll(findPHPUnitClassesBySupertype2);
+			}
 		}
 		return false;
 
@@ -286,7 +280,6 @@ public class PHPUnitSearchEngine {
 
 	private boolean collectFromObject(final Object[] items, final IProgressMonitor pm, final Set result,
 			final int flags) {
-
 		if (items == null || items.length == 0) {
 			return false;
 		}
@@ -296,8 +289,9 @@ public class PHPUnitSearchEngine {
 		boolean r = false;
 		for (int i = 0; i < nItems; ++i) {
 			r |= collectElementsRecursive(items[i], ipm, result, flags);
-			if ((flags & FIND_OPTION_FIRST_ONLY) > 0 && r)
+			if ((flags & FIND_OPTION_FIRST_ONLY) > 0 && r) {
 				return true;
+			}
 		}
 		return r;
 	}
@@ -311,11 +305,10 @@ public class PHPUnitSearchEngine {
 			final int flags) {
 
 		if (parents != null && parents.length > 0) {
-			for (int i = 0; i < parents.length; i++) {
-				collectElements(parents[i], pm, result, flags);
+			for (Object parent : parents) {
+				collectElements(parent, pm, result, flags);
 			}
 		}
-
 	}
 
 	public IType[] findElements(final Object[] parents, final int flags, IProgressMonitor pm)
@@ -387,11 +380,6 @@ public class PHPUnitSearchEngine {
 		return null;
 	}
 
-	/**
-	 * @param classData
-	 * @param superClass
-	 * @return
-	 */
 	private boolean isSubOf(final IType classData, IType superClass) {
 		if (classData == null || superClass == null) {
 			return false;

@@ -23,11 +23,7 @@ import org.eclipse.swt.widgets.Display;
 public class PHPUnitConnection {
 	protected static PHPUnitConnection instance = null;
 	private PHPUnitConnectionListener listener;
-	private boolean autoRefresh = true;
 
-	/**
-	 * @return Singleton
-	 */
 	public static PHPUnitConnection getInstance() {
 		if (instance == null) {
 			instance = new PHPUnitConnection();
@@ -49,7 +45,7 @@ public class PHPUnitConnection {
 									0, PHPUnitMessages.PHPUnitConnection_Previous_session_exists, null)));
 			return false;
 		}
-		listener = new PHPUnitConnectionListener(port, launch, autoRefresh);
+		listener = new PHPUnitConnectionListener(port, launch);
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(listener);
 		PHPUnitView.getDefault().startRunning(launch, listener);
 
@@ -61,7 +57,4 @@ public class PHPUnitConnection {
 		return listener;
 	}
 
-	public void setAutoRefresh(boolean autoRefresh) {
-		this.autoRefresh = autoRefresh;
-	}
 }

@@ -117,22 +117,22 @@ public class PHPUnitMessageParser {
 	}
 
 	private void parseGroupStart(final TestViewer viewer, final String event, final Map<?, ?> mTest) {
-		if (event.equals(TAG_START)) {
-			final PHPUnitTestGroup group = new PHPUnitTestGroup(mTest, currentGroup, remoteDebugger);
-			mapTest(group);
-			if (currentGroup.getTotalCount() > 0) {
-				currentGroup.addChild(group, false);
-				viewer.registerViewerUpdate(currentGroup);
-				viewer.registerTestAdded();
-				group.setParent(currentGroup);
-			}
-			currentGroup = group;
-			currentTestCase = null;
-			if (currentGroup.getTotalCount() > 0
-					&& PHPUnitElementManager.getInstance().getRoot().getTotalCount() == 0) {
-				PHPUnitElementManager.getInstance().setRoot(currentGroup);
-				viewer.registerTestAdded();
-			}
+		if (!event.equals(TAG_START)) {
+			return;
+		}
+		final PHPUnitTestGroup group = new PHPUnitTestGroup(mTest, currentGroup, remoteDebugger);
+		mapTest(group);
+		if (currentGroup.getTotalCount() > 0) {
+			currentGroup.addChild(group, false);
+			viewer.registerViewerUpdate(currentGroup);
+			viewer.registerTestAdded();
+			group.setParent(currentGroup);
+		}
+		currentGroup = group;
+		currentTestCase = null;
+		if (currentGroup.getTotalCount() > 0 && PHPUnitElementManager.getInstance().getRoot().getTotalCount() == 0) {
+			PHPUnitElementManager.getInstance().setRoot(currentGroup);
+			viewer.registerTestAdded();
 		}
 	}
 
@@ -148,11 +148,13 @@ public class PHPUnitMessageParser {
 		final PHPUnitTestCase testCase = currentTestCase;
 		testCase.updateStatus(event);
 		final Map exception = (Map) message.get(ELEMENT_EXCEPTION);
-		if (exception != null)
+		if (exception != null) {
 			mapException(testCase, exception);
+		}
 		final Map warnings = (Map) message.get(ELEMENT_WARNINGS);
-		if (warnings != null)
+		if (warnings != null) {
 			mapWarnings(testCase, warnings);
+		}
 		currentGroup.addChild(testCase, true);
 		viewer.registerTestAdded();
 		if (testCase.getStatus() > PHPUnitTest.STATUS_PASS) {
@@ -207,9 +209,6 @@ public class PHPUnitMessageParser {
 		this.inProgress = inProgress;
 	}
 
-	/**
-	 * @param debugTarget2
-	 */
 	public void setDebugTarget(IDebugTarget debugTarget) {
 		if (debugTarget instanceof PHPDebugTarget) {
 			PHPDebugTarget phpDebugTarget = (PHPDebugTarget) debugTarget;

@@ -46,8 +46,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -401,16 +399,6 @@ public class PHPUnitView extends ViewPart {
 		running = false;
 	}
 
-	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		super.init(site, memento);
-	}
-
-	@Override
-	public void saveState(IMemento memento) {
-		super.saveState(memento);
-	}
-
 	void computeOrientation() {
 		if (fOrientation != VIEW_ORIENTATION_AUTOMATIC) {
 			fCurrentOrientation = fOrientation;
@@ -471,12 +459,7 @@ public class PHPUnitView extends ViewPart {
 		codeCoverageTab.setImage(fCodeCoverageIcon);
 		final ViewForm codeCoverageForm = createCodeCoverageForm(parent);
 		codeCoverageTab.setControl(codeCoverageForm);
-		codeCoverageTab.addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				fCodeCoverageSection.dispose();
-			}
-		});
+		codeCoverageTab.addDisposeListener(e -> fCodeCoverageSection.dispose());
 		return codeCoverageTab;
 	}
 
@@ -568,8 +551,9 @@ public class PHPUnitView extends ViewPart {
 		viewMenu.add(new Separator());
 
 		final MenuManager layoutSubMenu = new MenuManager(PHPUnitMessages.PHPUnitView_Layout);
-		for (int i = 0; i < fToggleOrientationActions.length; ++i)
-			layoutSubMenu.add(fToggleOrientationActions[i]);
+		for (ToggleOrientationAction fToggleOrientationAction : fToggleOrientationActions) {
+			layoutSubMenu.add(fToggleOrientationAction);
+		}
 		viewMenu.add(layoutSubMenu);
 		viewMenu.add(new Separator());
 
@@ -741,17 +725,19 @@ public class PHPUnitView extends ViewPart {
 
 		@Override
 		public void run() {
-			if (fConfiguration != null && fConfiguration != null)
+			if (fConfiguration != null) {
 				DebugUITools.launch(fConfiguration, fMode);
-			if (fParent != null)
+			}
+			if (fParent != null) {
 				fParent.setEnabled(false);
+			}
 		}
 
 	}
 
 	private class RerunLastAction extends RerunAction {
 		private static final int HISTORY_DEPTH = 10;
-		java.util.List<RerunAction> previousLaunches = new ArrayList<RerunAction>();
+		java.util.List<RerunAction> previousLaunches = new ArrayList<>();
 
 		public RerunLastAction() {
 			super(null, null);

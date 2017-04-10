@@ -21,9 +21,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.ui.IFileEditorInput;
 
 public class PHPUnitPropertyTester extends PropertyTester {
@@ -47,9 +46,8 @@ public class PHPUnitPropertyTester extends PropertyTester {
 		IResource res = getReceiverResource(receiver);
 
 		if (res instanceof IProject) {
-			IProject project = (IProject) res;
 			try {
-				return project.hasNature(PHPNature.ID);
+				return PHPToolkitUtil.isPHPProject((IProject) res);
 			} catch (CoreException e) {
 				return false;
 			}
@@ -111,12 +109,12 @@ public class PHPUnitPropertyTester extends PropertyTester {
 				if (!(item instanceof IModelElement)) {
 					if (item instanceof IFileEditorInput) {
 						IFileEditorInput fileEditorInput = (IFileEditorInput) item;
-						return PHPToolkitUtil.isPhpFile(fileEditorInput.getFile());
+						return PHPToolkitUtil.isPHPFile(fileEditorInput.getFile());
 					} else if (item instanceof IResource) {
 						IResource folder = (IResource) item;
 						IProject project = folder.getProject();
 						try {
-							return PHPToolkitUtil.isPhpProject(project);
+							return PHPToolkitUtil.isPHPProject(project);
 						} catch (CoreException e) {
 							PHPCorePlugin.log(e);
 						}

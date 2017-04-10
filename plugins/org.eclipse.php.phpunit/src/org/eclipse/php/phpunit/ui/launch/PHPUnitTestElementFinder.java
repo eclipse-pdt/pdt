@@ -34,26 +34,22 @@ public class PHPUnitTestElementFinder {
 
 			pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
 			if (PHP_UNIT_CASE_CACHED == null) {
-				IType[] cases = searchEngine.findTestCaseBaseClasses(phpProject, false,
+				List<IType> cases = searchEngine.findTestCaseBaseClasses(phpProject, false,
 						new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
-				if (cases != null) {
-					updateCasesCache(cases);
-				}
+				updateCasesCache(cases);
 			}
 			if (PHP_UNIT_SUITE_CACHED == null) {
-				IType[] suites = searchEngine.findTestSuiteBaseClasses(phpProject, false,
+				List<IType> suites = searchEngine.findTestSuiteBaseClasses(phpProject, false,
 						new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
-				if (suites != null) {
-					updateSuitesCache(suites);
-				}
+				updateSuitesCache(suites);
 			}
 			pm.done();
 		};
 	}
 
-	private void updateCasesCache(IType[] types) {
+	private void updateCasesCache(List<IType> types) {
 		if (PHP_UNIT_CASE_CACHED == null) {
-			PHP_UNIT_CASE_CACHED = types;
+			PHP_UNIT_CASE_CACHED = types.toArray(new IType[0]);
 			List<IType> casesList = Arrays.asList(PHP_UNIT_CASE_CACHED);
 			List<IType> casesAndSuitesList = new ArrayList<>();
 			if (PHP_UNIT_SUITE_CACHED != null) {
@@ -65,9 +61,9 @@ public class PHPUnitTestElementFinder {
 		}
 	}
 
-	private void updateSuitesCache(IType[] types) {
+	private void updateSuitesCache(List<IType> types) {
 		if (PHP_UNIT_SUITE_CACHED == null) {
-			PHP_UNIT_SUITE_CACHED = types;
+			PHP_UNIT_SUITE_CACHED = types.toArray(new IType[0]);
 			List<IType> suitesList = Arrays.asList(PHP_UNIT_SUITE_CACHED);
 			List<IType> casesAndSuitesList = new ArrayList<>();
 			if (PHP_UNIT_CASE_CACHED != null) {

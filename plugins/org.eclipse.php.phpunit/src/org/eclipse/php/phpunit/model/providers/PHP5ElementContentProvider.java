@@ -19,7 +19,7 @@ import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 
 public class PHP5ElementContentProvider extends StandardModelElementContentProvider {
 
@@ -35,11 +35,11 @@ public class PHP5ElementContentProvider extends StandardModelElementContentProvi
 	@Override
 	protected Object[] getScriptProjects(IScriptModel jm) throws ModelException {
 		IScriptProject[] scriptProjects = jm.getScriptProjects();
-		final List<IProject> projectList = new ArrayList<IProject>(scriptProjects.length);
+		final List<IProject> projectList = new ArrayList<>(scriptProjects.length);
 		for (IScriptProject scriptProject : scriptProjects) {
 			try {
 				IProject project = scriptProject.getProject();
-				if (PHPToolkitUtil.isPhpProject(project)) {
+				if (PHPToolkitUtil.isPHPProject(project)) {
 					projectList.add(project);
 				}
 			} catch (CoreException e) {

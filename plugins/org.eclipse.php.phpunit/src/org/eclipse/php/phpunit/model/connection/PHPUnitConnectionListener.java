@@ -29,6 +29,7 @@ import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 
 public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
@@ -38,65 +39,65 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 
 	protected Socket socket;
 	private Thread listenThread;
-	private boolean autoRefresh;
 	private Gson gson = new GsonBuilder().create();
 
-	public PHPUnitConnectionListener(final int port, final ILaunch launch, boolean autoRefresh) {
+	public PHPUnitConnectionListener(final int port, final ILaunch launch) {
 		this.port = port;
 		this.launch = launch;
-		this.autoRefresh = autoRefresh;
 	}
 
 	protected void handleReport(final Socket socket) {
-		if (PHPUnitView.getDefault().isRunning()) {
-			try {
-				final PHPUnitMessageParser parser = PHPUnitMessageParser.getInstance();
-				parser.setDebugTarget(PHPUnitView.getDefault().getLaunch().getDebugTarget());
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				String line;
-				Map<?, ?> value = null;
-				parser.setInProgress(true);
-				while ((line = reader.readLine()) != null && PHPUnitView.getDefault().isRunning()
-						&& parser.isInProgress()) {
-					try {
-						value = gson.fromJson(line, LinkedTreeMap.class);
-					} catch (final Throwable e) {
-						value = null;
-					}
-					parser.parseMessage((Map<?, ?>) value, PHPUnitView.getDefault().getViewer());
-					if (autoRefresh) {
-						PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
-					}
+		if (!PHPUnitView.getDefault().isRunning()) {
+			return;
+		}
+		try {
+			final PHPUnitMessageParser parser = PHPUnitMessageParser.getInstance();
+			parser.clean();
+			parser.setDebugTarget(PHPUnitView.getDefault().getLaunch().getDebugTarget());
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String line;
+			parser.setInProgress(true);
+			while ((line = reader.readLine()) != null && PHPUnitView.getDefault().isRunning()
+					&& parser.isInProgress()) {
+				System.out.println(line);
+				try {
+					Map<?, ?> value = gson.fromJson(line, LinkedTreeMap.class);
+					parser.parseMessage(value, PHPUnitView.getDefault().getViewer());
+					PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
+				} catch (JsonSyntaxException e) {
+					PHPUnitPlugin.log(e);
 				}
 
-			} catch (final IOException e) {
-				PHPUnitPlugin.log(e);
 			}
+		} catch (final IOException e) {
+			PHPUnitPlugin.log(e);
 		}
 	}
 
 	@Override
 	public void launchesAdded(final ILaunch[] launches) {
+		// ignore
 	}
 
 	@Override
 	public void launchesChanged(final ILaunch[] launches) {
+		// ignore
 	}
 
 	@Override
 	public void launchesRemoved(final ILaunch[] launches) {
+		// ignore
 	}
 
 	@Override
 	public void launchesTerminated(final ILaunch[] launches) {
 		for (int i = 0; i < launches.length; ++i)
-			if (launches[i] == launch)
-				if (launches[i].isTerminated()) {
-					if (!PHPUnitMessageParser.getInstance().isInProgress()) {
-						PHPUnitView.getDefault().stopRunning(true);
-					}
-					DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
+			if (launches[i] == launch && launches[i].isTerminated()) {
+				if (!PHPUnitMessageParser.getInstance().isInProgress()) {
+					PHPUnitView.getDefault().stopRunning(true);
 				}
+				DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
+			}
 	}
 
 	@Override
@@ -126,20 +127,23 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 
 	public void shutdown(boolean terminateLaunch) {
 		try {
-			if (socket != null && !socket.isClosed())
+			if (socket != null && !socket.isClosed()) {
 				socket.close();
+			}
 		} catch (final Exception e) {
 		}
 		try {
-			if (serverSocket != null && !serverSocket.isClosed())
+			if (serverSocket != null && !serverSocket.isClosed()) {
 				serverSocket.close();
+			}
 		} catch (final IOException e) {
 		}
-		if (terminateLaunch && launch != null && !launch.isTerminated())
+		if (terminateLaunch && launch != null && !launch.isTerminated()) {
 			try {
 				launch.terminate();
 			} catch (final DebugException e) {
 			}
+		}
 
 		PHPUnitMessageParser.getInstance().setInProgress(false);
 	}

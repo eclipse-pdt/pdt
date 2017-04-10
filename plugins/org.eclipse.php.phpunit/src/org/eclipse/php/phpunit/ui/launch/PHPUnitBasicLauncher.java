@@ -99,12 +99,12 @@ public class PHPUnitBasicLauncher {
 		}
 		// Detect PHP SAPI type:
 		String sapiType = null;
-		String phpV = null;
+		// String phpV = null;
 		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 		for (PHPexeItem item : items) {
 			if (item.getExecutable().equals(phpExeFile)) {
 				sapiType = item.getSapiType();
-				phpV = item.getVersion();
+				// phpV = item.getVersion();
 				break;
 			}
 		}
@@ -124,7 +124,7 @@ public class PHPUnitBasicLauncher {
 		if (monitor.isCanceled()) {
 			return;
 		}
-		List<String> allArgs = new ArrayList<String>();
+		List<String> allArgs = new ArrayList<>();
 		allArgs.addAll(Arrays.asList(cmdLine));
 		allArgs.addAll(optionsList.getList());
 		cmdLine = allArgs.toArray(new String[0]);
@@ -133,6 +133,7 @@ public class PHPUnitBasicLauncher {
 			System.out.println("Process environment: " //$NON-NLS-1$
 					+ Arrays.toString(envp));
 		}
+		System.out.println(Arrays.toString(cmdLine));
 		Process p = workingDir.exists() ? DebugPlugin.exec(cmdLine, workingDir, envp)
 				: DebugPlugin.exec(cmdLine, null, envp);
 		// Attach a crash detector

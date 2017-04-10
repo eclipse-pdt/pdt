@@ -30,7 +30,7 @@ public abstract class PHPUnitTestEvent extends PHPUnitElement {
 		final Map<?, ?> mTrace = (Map<?, ?>) event.get(PHPUnitMessageParser.PROPERTY_TRACE);
 		if (mTrace == null || mTrace.isEmpty())
 			return;
-		trace = new ArrayList<PHPUnitTraceFrame>(mTrace.size());
+		trace = new ArrayList<>(mTrace.size());
 		for (int i = 0; i < mTrace.size(); ++i) {
 			trace.add(new PHPUnitTraceFrame((Map<?, ?>) mTrace.get(String.valueOf(i)), this, remoteDebugger));
 		}

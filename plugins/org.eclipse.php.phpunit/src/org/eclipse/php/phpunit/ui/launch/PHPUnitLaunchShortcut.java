@@ -30,7 +30,7 @@ import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.ui.launching.PHPExecutableLaunchTab;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -138,7 +138,7 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 
 			if (resource.getType() == IResource.FILE) {
 				final IFile file = (IFile) selectedElement;
-				if (PHPToolkitUtil.hasPhpExtention(file)) {
+				if (PHPToolkitUtil.hasPHPExtention(file)) {
 					selectedElement = DLTKCore.create(file);
 				} else if (CONFIG_FILES.contains(file.getName())) {
 					config.setAttribute(ATTRIBUTE_PHPUNIT_CFG, file.getProjectRelativePath().toString());

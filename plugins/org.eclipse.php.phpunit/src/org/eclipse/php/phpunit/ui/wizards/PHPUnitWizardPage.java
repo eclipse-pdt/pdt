@@ -20,8 +20,8 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.StatusUtil;
@@ -424,7 +424,7 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 				modelElement = (IType) obj;
 			} else if (obj instanceof IFile) {
 				IFile file = (IFile) obj;
-				boolean isPhpFile = PHPToolkitUtil.isPhpFile(file);
+				boolean isPhpFile = PHPToolkitUtil.isPHPFile(file);
 				if (isPhpFile) {
 					modelElement = DLTKCore.create((IFile) obj);
 				} else {

@@ -192,14 +192,12 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 			if (getControl() != null) {
 				container.run(true, true, pm -> {
 					pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
-					IType[] elements = searchEngine.findPHPUnitClassesByTestSuite(scriptProject, true, false,
+					List<IType> elements = searchEngine.findPHPUnitClassesByTestSuite(scriptProject, true, false,
 							new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
 					if (pm.isCanceled()) {
 						return;
 					}
-					if (elements != null && elements.length > 0) {
-						elementsList.addAll(Arrays.asList(elements));
-					}
+					elementsList.addAll(elements);
 					pm.done();
 				});
 				if (!elementsList.isEmpty()) {
@@ -218,31 +216,30 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 	 * @param scriptProject
 	 */
 	private void findAllNonAbstractSuitesAndCases(final IScriptProject scriptProject) {
-		if (PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE == null) {
-			final PHPUnitSearchEngine searchEngine = new PHPUnitSearchEngine(scriptProject);
-			final List<IType> elementsList = new ArrayList<IType>();
-			try {
-				if (getContainer() != null && getContainer().getCurrentPage() != null) {
-					getContainer().run(true, true, pm -> {
-						pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
-						IType[] elements = searchEngine.findAllTestCasesAndSuites(scriptProject, false,
-								new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
-						if (pm.isCanceled()) {
-							return;
-						}
-						if (elements != null && elements.length > 0) {
-							elementsList.addAll(Arrays.asList(elements));
-						}
-						pm.done();
-					});
-					if (!elementsList.isEmpty()) {
-						PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE = (IType[]) elementsList
-								.toArray(new IType[elementsList.size()]);
+		if (PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE != null) {
+			return;
+		}
+		final PHPUnitSearchEngine searchEngine = new PHPUnitSearchEngine(scriptProject);
+		final List<IType> elementsList = new ArrayList<>();
+		try {
+			if (getContainer() != null && getContainer().getCurrentPage() != null) {
+				getContainer().run(true, true, pm -> {
+					pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
+					List<IType> elements = searchEngine.findAllTestCasesAndSuites(scriptProject, false,
+							new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+					if (pm.isCanceled()) {
+						return;
 					}
+					elementsList.addAll(elements);
+					pm.done();
+				});
+				if (!elementsList.isEmpty()) {
+					PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE = (IType[]) elementsList
+							.toArray(new IType[elementsList.size()]);
 				}
-			} catch (InvocationTargetException | InterruptedException e) {
-				PHPUnitPlugin.log(e);
 			}
+		} catch (InvocationTargetException | InterruptedException e) {
+			PHPUnitPlugin.log(e);
 		}
 	}
 

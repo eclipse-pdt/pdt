@@ -197,14 +197,12 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 				if (container != null && getControl() != null) {
 					getWizard().getContainer().run(true, true, pm -> {
 						pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
-						IType[] elements = searchEngine.findPHPUnitClassesByTestCase(scriptProject, true, false,
+						List<IType> elements = searchEngine.findPHPUnitClassesByTestCase(scriptProject, true, false,
 								new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
-						if (elements != null && elements.length > 0) {
-							elementsList.addAll(Arrays.asList(elements));
-						}
+						elementsList.addAll(elements);
 						pm.done();
 					});
-					if (elementsList != null && !elementsList.isEmpty()) {
+					if (!elementsList.isEmpty()) {
 						PHP_UNIT_CASE_BASE_CLASS_CACHE = elementsList.toArray(new IType[elementsList.size()]);
 					}
 				}

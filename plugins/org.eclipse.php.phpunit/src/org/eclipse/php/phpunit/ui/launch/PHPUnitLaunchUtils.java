@@ -26,7 +26,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
