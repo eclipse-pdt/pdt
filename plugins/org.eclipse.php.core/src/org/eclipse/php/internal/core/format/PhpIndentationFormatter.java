@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -44,8 +41,6 @@ public class PhpIndentationFormatter {
 	private final StringBuffer resultBuffer = new StringBuffer();
 	private final StringBuffer lastEmptyLineIndentationBuffer = new StringBuffer();
 	private int lastEmptyLineNumber;
-	private boolean isInHeredoc;
-	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
 	public PhpIndentationFormatter(int start, int length, IndentationObject indentationObject) {
 		this.start = start;
@@ -63,7 +58,6 @@ public class PhpIndentationFormatter {
 		resultBuffer.setLength(0);
 		lastEmptyLineIndentationBuffer.setLength(0);
 		lastEmptyLineNumber = -1;
-		isInHeredoc = false;
 	}
 
 	public void format(IStructuredDocumentRegion sdRegion) {
@@ -177,6 +171,12 @@ public class PhpIndentationFormatter {
 					doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, 0);
 					return;
 				}
+				if (scriptRegion.isPhpQuotesState(formattedLineStart - regionStart)
+						&& (formattedLineStart - regionStart == 0
+								|| scriptRegion.isPhpQuotesState(formattedLineStart - regionStart - 1))) {
+					// do never indent the content of php strings
+					return;
+				}
 				scriptRegionPos = regionStart;
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
 				if (regionStart + firstTokenInLine.getStart() < originalLineStart
@@ -201,24 +201,6 @@ public class PhpIndentationFormatter {
 
 			String firstTokenType = firstTokenInLine.getType();
 
-			boolean formatThisLine = !isInHeredoc;
-			if (firstTokenType == PHPRegionTypes.PHP_HEREDOC_TAG
-					|| (lastTokenInLine != null && lastTokenInLine.getType() == PHPRegionTypes.PHP_HEREDOC_TAG)) {
-				isInHeredoc = !isInHeredoc;
-			}
-
-			if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-				int startLine = document.getLineOfOffset(scriptRegionPos + firstTokenInLine.getStart());
-				if (startLine < lineNumber) {
-					ignoreLines.add(lineNumber);
-					return;
-				}
-			}
-
-			if (!formatThisLine) {
-				ignoreLines.add(lineNumber);
-				return;
-			}
 			if (firstTokenType == PHPRegionTypes.PHP_CASE || firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
 				insertionStrategy = caseDefaultIndentationStrategy;
 			} else if (isInsideOfPHPCommentRegion(firstTokenType)) {

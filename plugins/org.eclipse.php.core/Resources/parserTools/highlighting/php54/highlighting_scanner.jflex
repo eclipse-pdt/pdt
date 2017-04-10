@@ -825,15 +825,17 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	String hereOrNowDoc = yytext.substring(startString, hereOrNowDoc_len + startString);
 	if (hereOrNowDoc.charAt(0) == '\'') {
 		pushHeredocId(hereOrNowDoc.substring(1, hereOrNowDoc_len - 1));
-		yybegin(ST_PHP_START_NOWDOC);
+		pushState(ST_PHP_START_NOWDOC);
+		return PHP_NOWDOC_START_TAG;
 	} else if (hereOrNowDoc.charAt(0) == '"') {
 		pushHeredocId(hereOrNowDoc.substring(1, hereOrNowDoc_len - 1));
-		yybegin(ST_PHP_START_HEREDOC);
+		pushState(ST_PHP_START_HEREDOC);
+		return PHP_HEREDOC_START_TAG;
 	} else {
 		pushHeredocId(hereOrNowDoc);
-		yybegin(ST_PHP_START_HEREDOC);
+		pushState(ST_PHP_START_HEREDOC);
+		return PHP_HEREDOC_START_TAG;
 	}
-	return PHP_HEREDOC_TAG;
 }
 
 <ST_PHP_IN_SCRIPTING>[`] {
@@ -860,8 +862,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		// we must (at least) push the newline character back
 		yypushback(1);
 		popHeredocId();
-		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		popState();
+		return PHP_HEREDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
@@ -923,8 +925,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		// we must (at least) push the newline character back
 		yypushback(1);
 		popHeredocId();
-		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		popState();
+		return PHP_HEREDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
@@ -966,8 +968,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		// we must (at least) push the newline character back
 		yypushback(1);
 		popHeredocId();
-		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		popState();
+		return PHP_NOWDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
@@ -1013,8 +1015,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	// we must (at least) push the newline character back
 	yypushback(1);
 	popHeredocId();
-	yybegin(ST_PHP_IN_SCRIPTING);
-	return PHP_HEREDOC_TAG;
+	popState();
+	return PHP_NOWDOC_CLOSE_TAG;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {

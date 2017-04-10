@@ -155,8 +155,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		// Numbers
 		fColorTypes.put(PHPRegionTypes.PHP_NUMBER, PreferenceConstants.EDITOR_NUMBER_COLOR);
 
-		// Heredocs
-		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
+		// Heredocs/nowdocs
+		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_START_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NOWDOC_START_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
 
 		// PHPDoc
 		// fColorTypes.put(PHPRegionTypes.PHPDOC_TODO,

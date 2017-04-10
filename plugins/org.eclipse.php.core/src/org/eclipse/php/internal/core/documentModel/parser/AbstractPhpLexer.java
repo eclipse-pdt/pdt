@@ -336,10 +336,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			return true;
 		}
 
-		public boolean equalsFirstState(LexerState obj) {
-			return obj != null && obj.getFirstState() == getFirstState();
-		}
-
 		public boolean equalsTop(final LexerState obj) {
 			return obj != null && obj.getTopState() == lexicalState;
 		}
@@ -348,13 +344,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		// BasicLexerState object
 		protected StateStack getActiveStack() {
 			return phpStack;
-		}
-
-		public int getFirstState() {
-			if (phpStack != null && !phpStack.isEmpty()) {
-				return phpStack.get(phpStack.size() - 1);
-			}
-			return lexicalState;
 		}
 
 		public int getTopState() {
@@ -439,16 +428,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			return theState.equals(((HeredocState) obj).theState);
 		}
 
-		public boolean equalsFirstState(LexerState obj) {
-			return theState.equalsFirstState(obj);
-		}
-
 		public boolean equalsTop(final LexerState obj) {
 			return theState.equalsTop(obj);
-		}
-
-		public int getFirstState() {
-			return theState.getFirstState();
 		}
 
 		public int getTopState() {
