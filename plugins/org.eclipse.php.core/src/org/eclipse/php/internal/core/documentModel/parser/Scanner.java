@@ -60,11 +60,7 @@ public interface Scanner {
 
 		public void restoreState(Scanner scanner);
 
-		public int getFirstState();
-
 		public int getTopState();
-
-		public boolean equalsFirstState(LexerState obj);
 
 		public boolean equalsTop(LexerState obj);
 
