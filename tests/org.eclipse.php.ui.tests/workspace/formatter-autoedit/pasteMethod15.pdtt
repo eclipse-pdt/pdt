@@ -1,0 +1,31 @@
+--TEST--
+No bug - do not auto-indent when copying&pasting nested heredoc sections
+--FILE--
+<?php
+|
+--OTHER--
+<<<DOC
+{$a(<<<'NESTED'
+$a
+{$a(<<<NESTED
+$a
+NESTED
+)}
+NESTED $a do
+)}
+$a
+DOC;
+
+--EXPECT--
+<?php
+<<<DOC
+{$a(<<<'NESTED'
+$a
+{$a(<<<NESTED
+$a
+NESTED
+)}
+NESTED $a do
+)}
+$a
+DOC;

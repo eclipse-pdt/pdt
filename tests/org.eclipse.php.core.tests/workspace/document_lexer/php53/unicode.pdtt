@@ -43,12 +43,12 @@ WHITESPACE|
 |2
 PHP_ECHO|echo|2
 WHITESPACE| |2
-PHP_HEREDOC_TAG|<<<say_здравствуйте
+PHP_HEREDOC_START_TAG|<<<say_здравствуйте
 |16
 PHP_CURLY_OPEN|{|2
 PHP_VARIABLE|$say_здравствуйте|2
 PHP_CURLY_CLOSE|}|12
-PHP_HEREDOC_TAG|
+PHP_HEREDOC_CLOSE_TAG|
 say_здравствуйте;|2
 WHITESPACE|
 |2

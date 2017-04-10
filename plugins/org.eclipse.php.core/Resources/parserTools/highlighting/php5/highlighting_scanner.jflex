@@ -775,8 +775,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		heredoc_len--;
 	}
 	pushHeredocId(yytext.substring(startString, heredoc_len + startString));
-	yybegin(ST_PHP_START_HEREDOC);
-	return PHP_HEREDOC_TAG;
+	pushState(ST_PHP_START_HEREDOC);
+	return PHP_HEREDOC_START_TAG;
 }
 
 <ST_PHP_IN_SCRIPTING>[`] {
@@ -803,8 +803,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		// we must (at least) push the newline character back
 		yypushback(1);
 		popHeredocId();
-		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		popState();
+		return PHP_HEREDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
@@ -866,8 +866,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		// we must (at least) push the newline character back
 		yypushback(1);
 		popHeredocId();
-		yybegin(ST_PHP_IN_SCRIPTING);
-		return PHP_HEREDOC_TAG;
+		popState();
+		return PHP_HEREDOC_CLOSE_TAG;
 	} else {
 		// we must (at least) push the newline character back
 		yypushback(1);
