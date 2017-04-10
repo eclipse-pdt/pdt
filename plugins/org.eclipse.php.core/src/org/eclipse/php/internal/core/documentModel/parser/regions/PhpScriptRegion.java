@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ListIterator;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
@@ -77,6 +76,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private int inScriptingState;
 	private int[] phpQuotesStates;
+	private int[] heredocStates;
 
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
@@ -94,6 +94,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// these values are specific to each PHP version lexer
 		inScriptingState = phpLexer.getInScriptingState();
 		phpQuotesStates = phpLexer.getPhpQuotesStates();
+		heredocStates = phpLexer.getHeredocStates();
 
 		completeReparse(phpLexer);
 	}
@@ -138,12 +139,58 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		return tokensContainer.getPartitionType(offset);
 	}
 
+	protected boolean isHeredocState(int offset) throws BadLocationException {
+		String type = getPhpTokenType(offset);
+		// First, check if current type is a known "heredoc/nowdoc" type.
+		if (type == PHPRegionTypes.PHP_HEREDOC_START_TAG || type == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
+				|| type == PHPRegionTypes.PHP_NOWDOC_START_TAG || type == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG) {
+			return true;
+		}
+		// If not, it means that maybe we are "deeper" in the stack, in an
+		// encapsed variable for example, or maybe simply in the "text" part of
+		// a heredoc/nowdoc section.
+		// Also note that the states PHP_HEREDOC_START_TAG and
+		// PHP_NOWDOC_START_TAG are NOT put on the lexer substates stack
+		// (because the way the lexers actually work), but previous type tests
+		// will be enough to catch them.
+		LexerState lexState = tokensContainer.getState(offset);
+		if (lexState == null) {
+			return false;
+		}
+		for (int state : heredocStates) {
+			if (lexState.isSubstateOf(state)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * @see IPhpScriptRegion#isPhpQuotesState(int)
 	 */
 	public boolean isPhpQuotesState(int offset) throws BadLocationException {
-		final LexerState lexState = tokensContainer.getState(offset);
-		return lexState != null && ArrayUtils.contains(phpQuotesStates, lexState.getFirstState());
+		String type = getPhpTokenType(offset);
+		// First, check if current type is a known "quoted" type.
+		if (PHPPartitionTypes.isPhpQuotesState(type)) {
+			return true;
+		}
+		// If not, it means that maybe we are "deeper" in the stack, in an
+		// encapsed variable for example.
+		// Also note that the states PHP_HEREDOC_START_TAG and
+		// PHP_NOWDOC_START_TAG are NOT put on the lexer substates stack
+		// (because the way the lexers actually work), but
+		// PHPPartitionTypes.isPhpQuotesState(type) will be enough to catch
+		// them.
+		LexerState lexState = tokensContainer.getState(offset);
+		if (lexState == null) {
+			return false;
+		}
+		for (int state : phpQuotesStates) {
+			if (lexState.isSubstateOf(state)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -225,12 +272,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				final LexerState startState = tokensContainer.getState(newTokenOffset);
 				final LexerState endState = tokensContainer.getState(tokenEnd.getEnd());
 
-				final PhpTokenContainer newContainer = new PhpTokenContainer();
-				final AbstractPhpLexer phpLexer = getPhpLexer(
-						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
-						startState, currentPhpVersion);
+				assert startState != null && endState != null;
 
-				if (ArrayUtils.contains(phpLexer.getHeredocStates(), startState.getFirstState())) {
+				if (isHeredocState(newTokenOffset)) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=498525
 					// Fully re-parse when we're in a heredoc/nowdoc section.
 					// NB: it's much easier and safer to use the lexer state to
@@ -252,6 +296,11 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 					// highlight opening and closing heredoc/nowdoc tags asap.
 					return null;
 				}
+
+				final PhpTokenContainer newContainer = new PhpTokenContainer();
+				final AbstractPhpLexer phpLexer = getPhpLexer(
+						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
+						startState, currentPhpVersion);
 
 				LexerState state = startState;
 				try {
@@ -288,7 +337,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				final int size = length - lengthToReplace;
 				final int end = newContainer.getLastToken().getEnd();
 
-				if (!state.equals(endState) || tokenEnd.getEnd() + size != end) {
+				if ((state != null && !state.equals(endState)) || tokenEnd.getEnd() + size != end) {
 					return null;
 				}
 
@@ -345,6 +394,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// these values are specific to each PHP version lexer
 		inScriptingState = phpLexer.getInScriptingState();
 		phpQuotesStates = phpLexer.getPhpQuotesStates();
+		heredocStates = phpLexer.getHeredocStates();
 
 		completeReparse(phpLexer);
 	}
@@ -375,6 +425,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			this.updatedTokensEnd = sRegion.updatedTokensEnd;
 			this.inScriptingState = sRegion.inScriptingState;
 			this.phpQuotesStates = sRegion.phpQuotesStates;
+			this.heredocStates = sRegion.heredocStates;
 			this.isFullReparsed = sRegion.isFullReparsed;
 		}
 	}

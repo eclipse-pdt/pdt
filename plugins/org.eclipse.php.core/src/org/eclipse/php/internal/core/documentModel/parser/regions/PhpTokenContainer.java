@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.documentModel.parser.regions;
 
 import java.util.*;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
@@ -132,7 +133,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @param offset
 	 * @return the lexer state at the given offset
 	 */
-	public synchronized LexerState getState(int offset) {
+	public synchronized @Nullable LexerState getState(int offset) {
 		Iterator<LexerStateChange> iter = lexerStateChanges.iterator();
 		assert iter.hasNext();
 

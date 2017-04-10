@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,6 +78,14 @@ public interface PHPRegionTypes {
 	static final String PHP_INSTEADOF = "PHP_INSTEADOF"; //$NON-NLS-1$
 
 	static final String PHP_CALLABLE = "PHP_CALLABLE"; //$NON-NLS-1$
+
+	static final String PHP_HEREDOC_START_TAG = "PHP_HEREDOC_START_TAG"; //$NON-NLS-1$
+
+	static final String PHP_HEREDOC_CLOSE_TAG = "PHP_HEREDOC_CLOSE_TAG"; //$NON-NLS-1$
+
+	static final String PHP_NOWDOC_START_TAG = "PHP_NOWDOC_START_TAG"; //$NON-NLS-1$
+
+	static final String PHP_NOWDOC_CLOSE_TAG = "PHP_NOWDOC_CLOSE_TAG"; //$NON-NLS-1$
 
 	// static final String PHP_END_HEREDOC = "PHP_END_HEREDOC";
 
@@ -362,7 +370,7 @@ public interface PHPRegionTypes {
 
 	static final String UNKNOWN_TOKEN = "UNKNOWN_TOKEN"; //$NON-NLS-1$
 
-	static final String PHP_HEREDOC_TAG = "PHP_HEREDOC_TAG"; //$NON-NLS-1$
+	// static final String PHP_HEREDOC_TAG = "PHP_HEREDOC_TAG"; //$NON-NLS-1$
 
 	static final String PHP_TOKEN = "PHP_TOKEN"; //$NON-NLS-1$
 
