@@ -483,8 +483,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return true;
 			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON || token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
 				return true;
-			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_TAG
-					&& document.get(lineInfo.getOffset(), lineInfo.getLength()).trim().endsWith(";")) { //$NON-NLS-1$
+			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
+					|| token.getType() == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG) {
 				return true;
 			}
 		} catch (final BadLocationException e) {
