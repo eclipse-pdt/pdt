@@ -44,6 +44,7 @@
 	<modules>
 		<module>org.eclipse.php-feature</module>
 		<module>org.eclipse.php.composer-feature</module>
+		<module>org.eclipse.php.phpunit-feature</module>
 		<module>org.eclipse.php.mylyn-feature</module>
 		<module>org.eclipse.php.source-feature</module>
 		<module>org.eclipse.php.test-feature</module>
