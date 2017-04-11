@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.dltk.core.*;
@@ -150,6 +151,16 @@ public class PHPUnitLaunchUtils {
 			}
 		} catch (CoreException e) {
 			PHPUnitPlugin.log(e);
+		}
+		return false;
+	}
+
+	public static boolean isPHPUnitRunning() {
+		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
+		for (ILaunch launch : launches) {
+			if (launch.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_PHPUNIT_LAUNCH) != null) {
+				return true;
+			}
 		}
 		return false;
 	}

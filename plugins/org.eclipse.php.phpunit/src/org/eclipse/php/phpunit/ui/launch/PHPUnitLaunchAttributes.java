@@ -14,6 +14,7 @@ import org.eclipse.php.phpunit.PHPUnitPlugin;
 
 public interface PHPUnitLaunchAttributes {
 
+	String ATTRIBUTE_PHPUNIT_LAUNCH = PHPUnitPlugin.ID + ".phpUnitLaunch"; //$NON-NLS-1$
 	String ATTRIBUTE_EXECUTION_TYPE = PHPUnitPlugin.ID + ".runType"; //$NON-NLS-1$
 	/**
 	 * Possible values for ATTRIBUTE_EXECUTION_TYPE

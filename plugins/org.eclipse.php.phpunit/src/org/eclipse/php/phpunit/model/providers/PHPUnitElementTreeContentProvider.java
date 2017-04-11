@@ -15,13 +15,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.phpunit.model.elements.PHPUnitElement;
 import org.eclipse.php.phpunit.model.elements.PHPUnitTest;
 import org.eclipse.php.phpunit.model.elements.PHPUnitTestGroup;
 
-public class PHPUnitElementTreeContentProvider implements ITreeContentProvider {
+public class PHPUnitElementTreeContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(final Object parentElement) {
@@ -56,17 +56,9 @@ public class PHPUnitElementTreeContentProvider implements ITreeContentProvider {
 		if (element instanceof PHPUnitTestGroup) {
 			final PHPUnitTestGroup testGroup = (PHPUnitTestGroup) element;
 			final Set<PHPUnitTest> children = testGroup.getChildren();
-			return children != null && children.size() > 0;
+			return children != null && !children.isEmpty();
 		}
 		return false;
-	}
-
-	@Override
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-	}
-
-	@Override
-	public void dispose() {
 	}
 
 }

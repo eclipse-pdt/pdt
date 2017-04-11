@@ -90,10 +90,10 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 				IModelElement me = (IModelElement) selectedElement;
 				osString = me.getPath().toOSString();
 				configName = me.getElementName();
-			} else if (selectedElement instanceof IFile) {
-				final IFile iFile = (IFile) selectedElement;
-				osString = iFile.getFullPath().toOSString();
-				configName = iFile.getName();
+			} else if (selectedElement instanceof IResource) {
+				final IResource resource = (IResource) selectedElement;
+				osString = resource.getFullPath().toOSString();
+				configName = resource.getName();
 			} else {
 				configName = PHPUnitMessages.PHPUnitLaunchShortcut_New_Configuration;
 			}

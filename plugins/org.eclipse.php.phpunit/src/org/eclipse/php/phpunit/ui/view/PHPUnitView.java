@@ -247,7 +247,7 @@ public class PHPUnitView extends ViewPart {
 	public void refresh(final PHPUnitTestGroup root) {
 		activateView(false);
 		setInput(root);
-		getDefault().getDisplay().asyncExec(() -> {
+		getSite().getShell().getDisplay().asyncExec(() -> {
 			final PHPUnitView view = getDefault();
 			view.processChangesInUI();
 		});
@@ -354,7 +354,7 @@ public class PHPUnitView extends ViewPart {
 
 	public void showCodeCoverage(final CodeCoverageData[] coveredFiles) {
 		if (codeCoverageTabVisibile) {
-			getDefault().getDisplay().asyncExec(() -> fCodeCoverageSection.showCodeCoverage(coveredFiles));
+			getSite().getShell().getDisplay().asyncExec(() -> fCodeCoverageSection.showCodeCoverage(coveredFiles));
 		}
 	}
 
@@ -619,15 +619,17 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	private void postSyncRunnable(final Runnable r) {
-		if (!isDisposed())
-			getDisplay().syncExec(r);
+		if (!isDisposed()) {
+			getSite().getShell().getDisplay().syncExec(r);
+		}
 	}
 
 	private void setCounterColumns(final GridLayout layout) {
-		if (fCurrentOrientation == VIEW_ORIENTATION_HORIZONTAL)
+		if (fCurrentOrientation == VIEW_ORIENTATION_HORIZONTAL) {
 			layout.numColumns = 2;
-		else
+		} else {
 			layout.numColumns = 1;
+		}
 	}
 
 	private void setFilterAndLayout(final boolean failuresOnly) {
@@ -640,8 +642,9 @@ public class PHPUnitView extends ViewPart {
 			return;
 		final boolean horizontal = orientation == VIEW_ORIENTATION_HORIZONTAL;
 		fSashForm.setOrientation(horizontal ? SWT.HORIZONTAL : SWT.VERTICAL);
-		for (int i = 0; i < fToggleOrientationActions.length; ++i)
-			fToggleOrientationActions[i].setChecked(fOrientation == fToggleOrientationActions[i].getOrientation());
+		for (ToggleOrientationAction fToggleOrientationAction : fToggleOrientationActions) {
+			fToggleOrientationAction.setChecked(fOrientation == fToggleOrientationAction.getOrientation());
+		}
 		fCurrentOrientation = orientation;
 		final GridLayout layout = (GridLayout) fCounterComposite.getLayout();
 		setCounterColumns(layout);
@@ -775,14 +778,16 @@ public class PHPUnitView extends ViewPart {
 			fConfiguration = launch.getLaunchConfiguration();
 			fMode = launch.getLaunchMode();
 			int i;
-			for (i = 0; i < previousLaunches.size(); i++)
+			for (i = 0; i < previousLaunches.size(); i++) {
 				if (previousLaunches.get(i).fConfiguration.equals(fConfiguration)) {
 					previousLaunches.remove(i);
 					break;
 				}
+			}
 			previousLaunches.add(0, new RerunAction(launch, this));
-			for (i = HISTORY_DEPTH; i < previousLaunches.size(); ++i)
+			for (i = HISTORY_DEPTH; i < previousLaunches.size(); ++i) {
 				previousLaunches.remove(i);
+			}
 		}
 	}
 
@@ -843,8 +848,9 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	public PHPUnitElement getTestElement(final int testId) {
-		if (testId != 0)
+		if (testId != 0) {
 			return null;
+		}
 		return PHPUnitElementManager.getInstance().findTest(testId);
 	}
 
@@ -858,14 +864,6 @@ public class PHPUnitView extends ViewPart {
 
 	public boolean isDisposed() {
 		return fIsDisposed || fCounterPanel.isDisposed();
-	}
-
-	public boolean isRunning() {
-		return running;
-	}
-
-	public Display getDisplay() {
-		return getViewSite().getShell().getDisplay();
 	}
 
 	public PHPUnitTestGroup getInput() {

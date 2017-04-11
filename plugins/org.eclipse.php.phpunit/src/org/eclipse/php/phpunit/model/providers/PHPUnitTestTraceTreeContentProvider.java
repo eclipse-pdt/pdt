@@ -11,14 +11,13 @@
 package org.eclipse.php.phpunit.model.providers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.phpunit.model.elements.*;
 
-public class PHPUnitTestTraceTreeContentProvider implements ITreeContentProvider {
+public class PHPUnitTestTraceTreeContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
 	private boolean filter;
 
@@ -49,15 +48,16 @@ public class PHPUnitTestTraceTreeContentProvider implements ITreeContentProvider
 			results.add(testCase.getException());
 		}
 		final List<PHPUnitElement> warnings = testCase.getWarnings();
-		if (warnings != null && !warnings.isEmpty()) {
-			if (!filter) {
-				results.addAll(warnings);
-			} else {
-				for (final Iterator<PHPUnitElement> i = warnings.iterator(); i.hasNext();) {
-					final PHPUnitTestWarning warning = (PHPUnitTestWarning) i.next();
-					if (!warning.isFiltered()) {
-						results.add(warning);
-					}
+		if (warnings == null || warnings.isEmpty()) {
+			return;
+		}
+
+		if (!filter) {
+			results.addAll(warnings);
+		} else {
+			for (PHPUnitElement warning : warnings) {
+				if (!warning.isFiltered()) {
+					results.add(warning);
 				}
 			}
 		}
@@ -65,18 +65,18 @@ public class PHPUnitTestTraceTreeContentProvider implements ITreeContentProvider
 
 	private void getEventChildren(final PHPUnitTestEvent testEvent, final List<PHPUnitElement> results) {
 		List<? extends PHPUnitElement> trace = testEvent.getTrace();
-		if (trace != null && !trace.isEmpty())
-			if (!filter) {
-				results.addAll(trace);
-			} else {
-				PHPUnitTraceFrame frame;
-				for (final Iterator<? extends PHPUnitElement> i = trace.iterator(); i.hasNext();) {
-					frame = (PHPUnitTraceFrame) i.next();
-					if (!frame.isFiltered()) {
-						results.add(frame);
-					}
+		if (trace == null || trace.isEmpty()) {
+			return;
+		}
+		if (!filter) {
+			results.addAll(trace);
+		} else {
+			for (PHPUnitElement frame : trace) {
+				if (!frame.isFiltered()) {
+					results.add(frame);
 				}
 			}
+		}
 	}
 
 	@Override
@@ -115,14 +115,6 @@ public class PHPUnitTestTraceTreeContentProvider implements ITreeContentProvider
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-	}
-
-	@Override
-	public void dispose() {
 	}
 
 }

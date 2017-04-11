@@ -28,7 +28,7 @@ public class PHPUnitTestDiffTreeContentProvider extends ArrayContentProvider imp
 		if (parentElement instanceof DiffLine) {
 			return ((DiffLine) parentElement).getChildren().toArray();
 		} else {
-			final List<DiffLine> results = new ArrayList<DiffLine>();
+			final List<DiffLine> results = new ArrayList<>();
 			if (parentElement instanceof PHPUnitTestCase) {
 				getCaseChildren((PHPUnitTestCase) parentElement, results);
 			}
@@ -38,11 +38,10 @@ public class PHPUnitTestDiffTreeContentProvider extends ArrayContentProvider imp
 
 	private void getCaseChildren(final PHPUnitTestCase testCase, final List<DiffLine> results) {
 		final PHPUnitTestException exception = testCase.getException();
-		String[] children = null;
 		if (hasChildren(testCase)) {
 			final DiffLine testDiffLine = new DiffLine(exception.getMessage(), null);
 			results.add(testDiffLine);
-			children = exception.getDiff().split("\n"); //$NON-NLS-1$
+			String[] children = exception.getDiff().split("\n"); //$NON-NLS-1$
 			Stack<DiffLine> parentStack = new Stack<>();
 			parentStack.push(testDiffLine);
 			DiffLine diffLine;
@@ -78,7 +77,7 @@ public class PHPUnitTestDiffTreeContentProvider extends ArrayContentProvider imp
 				return false;
 			}
 			diff = exception.getDiff();
-			return (diff != null && !diff.isEmpty());
+			return diff != null && !diff.isEmpty();
 		} else if (element instanceof DiffLine) {
 			return !((DiffLine) element).getChildren().isEmpty();
 

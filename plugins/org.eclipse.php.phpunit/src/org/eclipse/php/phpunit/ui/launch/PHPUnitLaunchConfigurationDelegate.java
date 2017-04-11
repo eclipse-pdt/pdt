@@ -24,7 +24,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,9 +44,8 @@ import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicat
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
-import org.eclipse.php.phpunit.model.connection.PHPUnitConnectionListener;
+import org.eclipse.php.phpunit.model.connection.PHPUnitConnection;
 import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
-import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDelegate {
@@ -113,12 +115,17 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			workingDirectory = workingDirectory.getParentFile();
 		}
 
-		if (PHPUnitView.getDefault().isRunning()) {
+		if (PHPUnitLaunchUtils.isPHPUnitRunning()) {
 			Display.getDefault()
 					.syncExec(() -> ErrorDialog.openError(Display.getCurrent().getActiveShell(),
 							PHPUnitMessages.PHPUnitConnection_Launching,
 							PHPUnitMessages.PHPUnitConnection_Unable_to_run, new Status(IStatus.ERROR, PHPUnitPlugin.ID,
 									0, PHPUnitMessages.PHPUnitConnection_Previous_session_exists, null)));
+			return;
+		}
+
+		final int port = Integer.parseInt(envVariables.get(ENV_PORT));
+		if (!PHPUnitConnection.getInstance().listen(port, launch)) {
 			return;
 		}
 
@@ -152,6 +159,8 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			} else if (DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID.equals(execItem.getDebuggerID())) {
 				launcher = new PHPUnitZDLauncher(config, launch, phpUnitOptionsList);
 			}
+
+			launch.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_PHPUNIT_LAUNCH, Boolean.TRUE.toString());
 			launcher.launch(mode, project, workingDirectory, envVariables, monitor);
 		} else {
 			displayErrorMessage(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_4);

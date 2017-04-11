@@ -25,6 +25,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.elements.PHPUnitElementManager;
+import org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchUtils;
 import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 
 import com.google.gson.Gson;
@@ -47,7 +48,7 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 	}
 
 	protected void handleReport(final Socket socket) {
-		if (!PHPUnitView.getDefault().isRunning()) {
+		if (!PHPUnitLaunchUtils.isPHPUnitRunning()) {
 			return;
 		}
 		try {
@@ -57,9 +58,7 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;
 			parser.setInProgress(true);
-			while ((line = reader.readLine()) != null && PHPUnitView.getDefault().isRunning()
-					&& parser.isInProgress()) {
-				System.out.println(line);
+			while ((line = reader.readLine()) != null && parser.isInProgress()) {
 				try {
 					Map<?, ?> value = gson.fromJson(line, LinkedTreeMap.class);
 					parser.parseMessage(value, PHPUnitView.getDefault().getViewer());
