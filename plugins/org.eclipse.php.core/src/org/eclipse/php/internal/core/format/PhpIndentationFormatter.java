@@ -38,8 +38,8 @@ public class PhpIndentationFormatter {
 	private static final byte CHAR_TAB = '\t';
 	private static final byte CHAR_SPACE = ' ';
 
-	private final StringBuffer resultBuffer = new StringBuffer();
-	private final StringBuffer lastEmptyLineIndentationBuffer = new StringBuffer();
+	private final StringBuilder resultBuffer = new StringBuilder();
+	private final StringBuilder lastEmptyLineIndentationBuffer = new StringBuilder();
 	private int lastEmptyLineNumber;
 
 	public PhpIndentationFormatter(int start, int length, IndentationObject indentationObject) {
@@ -90,7 +90,7 @@ public class PhpIndentationFormatter {
 		reset();
 	}
 
-	private void doEmptyLineIndentation(IStructuredDocument document, StringBuffer result, int lineNumber,
+	private void doEmptyLineIndentation(IStructuredDocument document, StringBuilder result, int lineNumber,
 			int forOffset, int forLength) throws BadLocationException {
 		if (lastEmptyLineNumber >= 0 && lastEmptyLineNumber == lineNumber - 1) {
 			// re-use previous line indentation if previous line was also an

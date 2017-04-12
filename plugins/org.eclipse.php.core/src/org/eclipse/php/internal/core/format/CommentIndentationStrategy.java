@@ -39,7 +39,7 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 	 * comment start (meaning the first line), this line will be indented.
 	 */
 	@Override
-	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset)
+	public void placeMatchingBlanks(IStructuredDocument document, StringBuilder result, int lineNumber, int forOffset)
 			throws BadLocationException {
 
 		if (lineNumber == 0) {

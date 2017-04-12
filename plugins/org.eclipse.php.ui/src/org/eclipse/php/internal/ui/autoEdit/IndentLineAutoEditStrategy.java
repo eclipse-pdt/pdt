@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy implements IAutoEditStrategy {
 
 	private final CurlyCloseAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
-	private final StringBuffer helpBuffer = new StringBuffer();
+	private final StringBuilder helpBuffer = new StringBuilder();
 
 	IAfterNewLineAutoEditStrategy pairCurlyBracketAutoEditStrategy = new PairCurlyBracketAutoEditStrategy();
 
@@ -206,8 +206,8 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		}
 	}
 
-	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuffer result, final int lineNumber,
-			final DocumentCommand command) throws BadLocationException {
+	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuilder result,
+			final int lineNumber, final DocumentCommand command) throws BadLocationException {
 		final int forOffset = command.offset;
 		final IRegion endLineInfo = document.getLineInformationOfOffset(forOffset + command.length);
 		// read the rest of the line

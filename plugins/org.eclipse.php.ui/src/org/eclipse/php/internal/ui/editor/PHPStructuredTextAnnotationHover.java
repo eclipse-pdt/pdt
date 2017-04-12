@@ -55,7 +55,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		HTMLPrinter() {
 		}
 
-		void addBullet(StringBuffer buffer, String bullet) {
+		void addBullet(StringBuilder buffer, String bullet) {
 			if (bullet != null) {
 				buffer.append("<li>"); //$NON-NLS-1$
 				buffer.append(bullet);
@@ -63,27 +63,27 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			}
 		}
 
-		void addPageEpilog(StringBuffer buffer) {
+		void addPageEpilog(StringBuilder buffer) {
 			buffer.append("</font></body></html>"); //$NON-NLS-1$
 		}
 
-		void addPageProlog(StringBuffer buffer) {
+		void addPageProlog(StringBuilder buffer) {
 			insertPageProlog(buffer, buffer.length());
 		}
 
-		void addParagraph(StringBuffer buffer, Reader paragraphReader) {
+		void addParagraph(StringBuilder buffer, Reader paragraphReader) {
 			if (paragraphReader != null)
 				addParagraph(buffer, read(paragraphReader));
 		}
 
-		void addParagraph(StringBuffer buffer, String paragraph) {
+		void addParagraph(StringBuilder buffer, String paragraph) {
 			if (paragraph != null) {
 				buffer.append("<p>"); //$NON-NLS-1$
 				buffer.append(paragraph);
 			}
 		}
 
-		void addSmallHeader(StringBuffer buffer, String header) {
+		void addSmallHeader(StringBuilder buffer, String header) {
 			if (header != null) {
 				buffer.append("<h5>"); //$NON-NLS-1$
 				buffer.append(header);
@@ -96,11 +96,11 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			return replace(content, '>', "&gt;"); //$NON-NLS-1$
 		}
 
-		void endBulletList(StringBuffer buffer) {
+		void endBulletList(StringBuilder buffer) {
 			buffer.append("</ul>"); //$NON-NLS-1$
 		}
 
-		void insertPageProlog(StringBuffer buffer, int position) {
+		void insertPageProlog(StringBuilder buffer, int position) {
 			buffer.insert(position, "<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1>"); //$NON-NLS-1$
 		}
 
@@ -142,7 +142,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			return buffer.toString();
 		}
 
-		void startBulletList(StringBuffer buffer) {
+		void startBulletList(StringBuilder buffer) {
 			buffer.append("<ul>"); //$NON-NLS-1$
 		}
 	}
@@ -217,7 +217,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	 */
 	private String formatMultipleHoverText(List<String> messages) {
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		printer.addPageProlog(buffer);
 		printer.addParagraph(buffer, SSEUIMessages.Multiple_errors); // $NON-NLS-1$
 

@@ -129,10 +129,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		return null;
 	}
 
-	private static StringBuffer getInfoText(IMember member) {
+	private static StringBuilder getInfoText(IMember member) {
 		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
 		String label = PHPElementLabels.getDefault().getElementLabel(member, flags);
-		return new StringBuffer(label);
+		return new StringBuilder(label);
 	}
 
 	protected static Reader getHTMLContent(IMember curr) throws ModelException {
@@ -144,7 +144,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 
 	private static String getInfoText(IMember element, String constantValue, boolean allowImage) {
-		StringBuffer label = getInfoText(element);
+		StringBuilder label = getInfoText(element);
 		if (element.getElementType() == IModelElement.FIELD) {
 			if (constantValue != null) {
 				label.append(' ');
@@ -199,7 +199,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			BufferedReader reader = null;
 			try {
 				reader = new BufferedReader(new InputStreamReader(styleSheetURL.openStream()));
-				StringBuffer buffer = new StringBuffer(1500);
+				StringBuilder buffer = new StringBuilder(1500);
 				String line = reader.readLine();
 				while (line != null) {
 					buffer.append(line);
@@ -235,7 +235,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			if (callExpression != null) {
 				CallArgumentsList args = callExpression.getArgs();
 				if (args != null && args.getChilds() != null && args.getChilds().size() >= 2) {
-					ASTNode argument = (ASTNode) args.getChilds().get(1);
+					ASTNode argument = args.getChilds().get(1);
 					if (argument instanceof Scalar) {
 						String value = ASTUtils.stripQuotes(((Scalar) argument).getValue());
 						return value;

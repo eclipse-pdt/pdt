@@ -333,7 +333,7 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		if (urlString.equals("")) { //$NON-NLS-1$
 			urlString = "http://localhost"; //$NON-NLS-1$
 		}
-		StringBuffer url = new StringBuffer(urlString);
+		StringBuilder url = new StringBuilder(urlString);
 		if (!fileName.equals("")) { //$NON-NLS-1$
 			url.append(fileName);
 		}

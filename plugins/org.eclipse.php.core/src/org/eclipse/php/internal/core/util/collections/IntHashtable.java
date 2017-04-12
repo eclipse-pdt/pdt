@@ -433,7 +433,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	public synchronized String toString() {
 		int max = size() - 1;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		Iterator it = entrySet().iterator();
 
 		buf.append("{"); //$NON-NLS-1$

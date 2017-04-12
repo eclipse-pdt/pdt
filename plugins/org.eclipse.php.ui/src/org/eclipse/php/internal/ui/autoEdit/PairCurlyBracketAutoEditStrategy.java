@@ -73,7 +73,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	}
 
 	@Override
-	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
+	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuilder buffer) {
 		try {
 
 			boolean isClosingParen = isClosingParen(document, command);
@@ -205,7 +205,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	 * 
 	 * @return The number of characters the caret should be advanced at
 	 */
-	private int copyRestOfLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer)
+	private int copyRestOfLine(IStructuredDocument document, DocumentCommand command, StringBuilder buffer)
 			throws BadLocationException {
 
 		int documentLength = document.getLength();
@@ -304,7 +304,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 
 	private final CurlyCloseIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 
-	private void addCurlyCloseBracket(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
+	private void addCurlyCloseBracket(IStructuredDocument document, DocumentCommand command, StringBuilder buffer) {
 
 		buffer.append(document.getLineDelimiter());
 		int lineIndex = document.getLineOfOffset(command.offset);

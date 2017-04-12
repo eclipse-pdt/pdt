@@ -63,7 +63,7 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 		}
 	}
 
-	private StringBuffer buffer = new StringBuffer();
+	private StringBuilder buffer = new StringBuilder();
 	private boolean applied = false;
 
 	@Override

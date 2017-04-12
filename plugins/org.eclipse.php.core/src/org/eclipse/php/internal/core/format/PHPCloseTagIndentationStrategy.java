@@ -31,8 +31,8 @@ public class PHPCloseTagIndentationStrategy extends DefaultIndentationStrategy {
 		setIndentationObject(indentationObject);
 	}
 
-	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuffer result, final int lineNumber,
-			final int forOffset) {
+	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuilder result,
+			final int lineNumber, final int forOffset) {
 		// Ignore default behavior (don't add previous line's blanks)
 	}
 

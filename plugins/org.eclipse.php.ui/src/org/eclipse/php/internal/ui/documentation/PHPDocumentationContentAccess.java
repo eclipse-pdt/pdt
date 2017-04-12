@@ -468,12 +468,12 @@ public class PHPDocumentationContentAccess {
 	private final PHPDocBlock fJavadoc;
 	private final JavadocLookup fJavadocLookup;
 
-	private StringBuffer fBuf;
-	private StringBuffer fMainDescription;
-	private StringBuffer fReturnDescription;
-	private StringBuffer[] fParamDescriptions;
-	private StringBuffer[] fParamTypes;
-	private HashMap<String, StringBuffer> fExceptionDescriptions;
+	private StringBuilder fBuf;
+	private StringBuilder fMainDescription;
+	private StringBuilder fReturnDescription;
+	private StringBuilder[] fParamDescriptions;
+	private StringBuilder[] fParamTypes;
+	private HashMap<String, StringBuilder> fExceptionDescriptions;
 	private List<PHPDocTag> fExceptions;
 
 	private PHPDocumentationContentAccess(IMethod method, PHPDocBlock javadoc, JavadocLookup lookup) {
@@ -511,7 +511,7 @@ public class PHPDocumentationContentAccess {
 		return getHTMLContentFromSource(member);
 	}
 
-	private static StringBuffer createSuperMethodReferences(final IMethod method) throws ModelException {
+	private static StringBuilder createSuperMethodReferences(final IMethod method) throws ModelException {
 		IType type = method.getDeclaringType();
 		ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(type);
 		final MethodOverrideTester tester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
@@ -538,7 +538,7 @@ public class PHPDocumentationContentAccess {
 		if (!hasSuperInterfaceMethods && superClassMethod[0] == null)
 			return null;
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("<div>"); //$NON-NLS-1$
 		if (hasSuperInterfaceMethods) {
 			buf.append("<b>"); //$NON-NLS-1$
@@ -634,7 +634,7 @@ public class PHPDocumentationContentAccess {
 
 	private static String getHTMLForMagicMember(IMember member, MagicMember magicMember) {
 
-		StringBuffer fBuf = new StringBuffer();
+		StringBuilder fBuf = new StringBuilder();
 
 		if (appendBuiltinDoc(member, fBuf)) {
 			return fBuf.toString();
@@ -777,7 +777,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private String toHTML() {
-		fBuf = new StringBuffer();
+		fBuf = new StringBuilder();
 
 		if (appendBuiltinDoc(fMember, fBuf)) {
 			return fBuf.toString();
@@ -957,7 +957,7 @@ public class PHPDocumentationContentAccess {
 	private void handleSuperMethodReferences() {
 		if (fMethod != null && fMethod.getDeclaringType() != null) {
 			try {
-				StringBuffer superMethodReferences = createSuperMethodReferences(fMethod);
+				StringBuilder superMethodReferences = createSuperMethodReferences(fMethod);
 				if (superMethodReferences != null)
 					fBuf.append(superMethodReferences);
 			} catch (ModelException e) {
@@ -1021,7 +1021,7 @@ public class PHPDocumentationContentAccess {
 
 	CharSequence getMainDescription() {
 		if (fMainDescription == null) {
-			fMainDescription = new StringBuffer();
+			fMainDescription = new StringBuilder();
 			fBuf = fMainDescription;
 
 			String shortDescription = fJavadoc.getShortDescription();
@@ -1035,7 +1035,7 @@ public class PHPDocumentationContentAccess {
 
 	CharSequence getReturnDescription() {
 		if (fReturnDescription == null) {
-			fReturnDescription = new StringBuffer();
+			fReturnDescription = new StringBuilder();
 			fBuf = fReturnDescription;
 
 			for (PHPDocTag tag : fJavadoc.getTags(TagKind.RETURN)) {
@@ -1055,15 +1055,15 @@ public class PHPDocumentationContentAccess {
 				return null;
 			}
 			if (fParamDescriptions == null) {
-				fParamDescriptions = new StringBuffer[parameterNames.length];
+				fParamDescriptions = new StringBuilder[parameterNames.length];
 			} else {
-				StringBuffer description = fParamDescriptions[paramIndex];
+				StringBuilder description = fParamDescriptions[paramIndex];
 				if (description != null) {
 					return description.length() > 0 ? description : null;
 				}
 			}
 
-			StringBuffer description = new StringBuffer();
+			StringBuilder description = new StringBuilder();
 			fParamDescriptions[paramIndex] = description;
 			fBuf = description;
 
@@ -1084,15 +1084,15 @@ public class PHPDocumentationContentAccess {
 				return null;
 			}
 			if (fParamTypes == null) {
-				fParamTypes = new StringBuffer[parameterNames.length];
+				fParamTypes = new StringBuilder[parameterNames.length];
 			} else {
-				StringBuffer typeName = fParamTypes[paramIndex];
+				StringBuilder typeName = fParamTypes[paramIndex];
 				if (typeName != null) {
 					return typeName.length() > 0 ? typeName : null;
 				}
 			}
 
-			StringBuffer typeName = new StringBuffer();
+			StringBuilder typeName = new StringBuilder();
 			fParamTypes[paramIndex] = typeName;
 			fBuf = typeName;
 
@@ -1111,7 +1111,7 @@ public class PHPDocumentationContentAccess {
 		if (fMethod != null) {
 			cacheAllNewExceptionsAndDescriptions();
 
-			StringBuffer description = fExceptionDescriptions.get(simpleName);
+			StringBuilder description = fExceptionDescriptions.get(simpleName);
 			return description != null && description.length() > 0 ? description : null;
 		}
 		return null;
@@ -1130,8 +1130,8 @@ public class PHPDocumentationContentAccess {
 		if (fExceptionDescriptions != null) {
 			return;
 		}
-		fExceptionDescriptions = new HashMap<String, StringBuffer>();
-		fExceptions = new ArrayList<PHPDocTag>();
+		fExceptionDescriptions = new HashMap<>();
+		fExceptions = new ArrayList<>();
 
 		List tags = Arrays.asList(fJavadoc.getTags(TagKind.THROWS));
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
@@ -1142,7 +1142,7 @@ public class PHPDocumentationContentAccess {
 				String name = fragments.get(0).getName();
 				// keep the first found match
 				if (!fExceptionDescriptions.containsKey(name)) {
-					StringBuffer description = new StringBuffer();
+					StringBuilder description = new StringBuilder();
 					fExceptionDescriptions.put(name, description);
 					fBuf = description;
 					handleContentElements(tag);
@@ -1416,8 +1416,8 @@ public class PHPDocumentationContentAccess {
 		fBuf.append(handleLinks(tag.getTypeReferences()));
 	}
 
-	private StringBuffer handleLinks(List<? extends TypeReference> fragments) {
-		StringBuffer sb = new StringBuffer();
+	private StringBuilder handleLinks(List<? extends TypeReference> fragments) {
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < fragments.size(); i++) {
 			TypeReference reference = fragments.get(i);
 			sb.append(handleLink(reference));
@@ -1428,8 +1428,8 @@ public class PHPDocumentationContentAccess {
 		return sb;
 	}
 
-	private StringBuffer handleLink(TypeReference type) {
-		StringBuffer sb = new StringBuffer();
+	private StringBuilder handleLink(TypeReference type) {
+		StringBuilder sb = new StringBuilder();
 
 		String refTypeName = null;
 		String refMemberName = null;
@@ -1553,7 +1553,7 @@ public class PHPDocumentationContentAccess {
 		return null;
 	}
 
-	private static boolean appendBuiltinDoc(IMember element, StringBuffer buf) {
+	private static boolean appendBuiltinDoc(IMember element, StringBuilder buf) {
 		String builtinDoc = BuiltinDoc.getString(element.getElementName());
 		if (builtinDoc.length() > 0) {
 			buf.append(builtinDoc);

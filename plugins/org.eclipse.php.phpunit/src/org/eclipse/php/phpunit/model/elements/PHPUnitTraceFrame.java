@@ -42,7 +42,7 @@ public class PHPUnitTraceFrame extends PHPUnitElement {
 
 	@Override
 	public String toString() {
-		final StringBuffer result = new StringBuffer(1);
+		final StringBuilder result = new StringBuilder(1);
 		if (traceClass != null)
 			result.append(traceClass);
 		if (traceType != null)

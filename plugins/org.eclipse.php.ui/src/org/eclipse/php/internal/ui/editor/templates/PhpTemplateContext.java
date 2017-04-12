@@ -54,7 +54,7 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 		boolean useTab = prefs.useTab(getDocument());
 		if (!useTab) {
 			int length = prefs.getIndentationSize(getDocument());
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < length; i++) {
 				sb.append(prefs.getIndentationChar(getDocument())); // $NON-NLS-1$
 			}
