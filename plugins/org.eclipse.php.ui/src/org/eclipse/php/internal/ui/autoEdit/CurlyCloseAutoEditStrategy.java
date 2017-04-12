@@ -31,7 +31,7 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy im
 		}
 	}
 
-	private StringBuffer helpBuffer = new StringBuffer();
+	private StringBuilder helpBuffer = new StringBuilder();
 
 	private void autoIndentAfterCurlyClose(IStructuredDocument document, DocumentCommand command) {
 		helpBuffer.setLength(0);
@@ -53,37 +53,6 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy im
 		}
 
 		command.text = helpBuffer.toString() + command.text;
-		// JobSafeStructuredDocument newdocument = new
-		// JobSafeStructuredDocument(
-		// new PhpSourceParser());
-		// String start = "<?php";
-		// newdocument.set(start + command.text);
-		// PhpFormatter formatter = new PhpFormatter(0,
-		// newdocument.getLength());
-		// formatter.format(newdocument.getFirstStructuredDocumentRegion());
-		//
-		// Reader reader = new StringReader(newdocument.get());
-		// BufferedReader br = new BufferedReader(reader);
-		// List<String> list = new ArrayList<String>();
-		// String line = null;
-		// try {
-		// while ((line = br.readLine()) != null) {
-		// if (list.isEmpty()) {
-		// line = line.substring(start.length()).trim();
-		// }
-		// list.add(line);
-		// }
-		// } catch (IOException e) {
-		// }
-		// String newline = newdocument.getLineDelimiter();
-		// StringBuffer sb = new StringBuffer();
-		// for (int i = 0; i < list.size(); i++) {
-		// sb.append(helpBuffer.toString()).append(list.get(i));
-		// if (i != list.size() - 1) {
-		// sb.append(newline);
-		// }
-		// }
-		// command.text = sb.toString();
 	}
 
 	protected static boolean isBlanks(IStructuredDocument document, int startOffset, int endOffset)

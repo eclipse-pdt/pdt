@@ -1,0 +1,3738 @@
+From 6549ab3dec00bc279315f480e1fd7bb300627b80 Mon Sep 17 00:00:00 2001
+From: ibazzi <ibazzi@qq.com>
+Date: Mon, 27 Mar 2017 15:00:00 +0800
+Subject: [PATCH 1/1] Bug 514220 - Text hover improvement when debugging
+
+Change-Id: I09ea9a6d471301c97eea403f13f62bba7d979aef
+Signed-off-by: ibazzi <ibazzi@qq.com>
+---
+ .../internal/debug/core/model/IVariableFacet.java  |   7 +-
+ .../core/xdebug/dbgp/model/AbstractDBGpValue.java  | 442 +++++------
+ .../core/xdebug/dbgp/model/DBGpArrayValue.java     | 240 +++---
+ .../core/xdebug/dbgp/model/DBGpObjectValue.java    | 239 +++---
+ .../core/xdebug/dbgp/model/DBGpStackFrame.java     |  52 +-
+ .../core/zend/debugger/DefaultExpression.java      |  23 +-
+ .../zend/debugger/DefaultExpressionsManager.java   |   8 +-
+ .../debug/core/zend/debugger/ExpressionsUtil.java  | 149 +++-
+ .../debugger/ExpressionsValueDeserializer.java     |  16 +-
+ .../debug/core/zend/model/PHPStackFrame.java       | 813 +++++++++++----------
+ .../internal/debug/core/zend/model/PHPValue.java   |   6 +
+ .../ExpressionInformationControlCreator.java       | 563 ++++++++++++++
+ .../debug/ui/hovers/PHPDebugTextHover.java         | 419 ++++++-----
+ .../internal/debug/ui/hovers/XDebugTextHover.java  | 297 +++++---
+ .../ui/presentation/PHPModelPresentation.java      |  18 +-
+ 15 files changed, 2164 insertions(+), 1128 deletions(-)
+ create mode 100644 plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/ExpressionInformationControlCreator.java
+
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/model/IVariableFacet.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/model/IVariableFacet.java
+index 222932d..b5777a1 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/model/IVariableFacet.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/model/IVariableFacet.java
+@@ -45,6 +45,10 @@ public interface IVariableFacet {
+ 		 */
+ 		KIND_ARRAY_MEMBER,
+ 		/**
++		 * Facet indicating that corresponding element is constant.
++		 */
++		KIND_CONSTANT,
++		/**
+ 		 * Facet indicating that corresponding element is resource.
+ 		 */
+ 		KIND_RESOURCE,
+@@ -81,7 +85,8 @@ public interface IVariableFacet {
+ 		 */
+ 		VIRTUAL_UNINIT,
+ 		/**
+-		 * Facet indicating that corresponding element is 'virtual array' member.
++		 * Facet indicating that corresponding element is 'virtual array'
++		 * member.
+ 		 */
+ 		VIRTUAL_ARRAY_MEMBER;
+ 
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/AbstractDBGpValue.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/AbstractDBGpValue.java
+index 2ab0792..cc32384 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/AbstractDBGpValue.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/AbstractDBGpValue.java
+@@ -1,219 +1,223 @@
+-/*******************************************************************************
+- * Copyright (c) 2016 Zend Technologies and others.
+- * All rights reserved. This program and the accompanying materials
+- * are made available under the terms of the Eclipse Public License v1.0
+- * which accompanies this distribution, and is available at
+- * http://www.eclipse.org/legal/epl-v10.html
+- * 
+- * Contributors:
+- *     Zend Technologies - initial API and implementation
+- *******************************************************************************/
+-package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
+-
+-import java.io.UnsupportedEncodingException;
+-
+-import org.eclipse.debug.core.DebugException;
+-import org.eclipse.debug.core.model.IValue;
+-import org.eclipse.debug.core.model.IVariable;
+-import org.eclipse.php.internal.debug.core.model.IPHPDataType;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+-import org.w3c.dom.Node;
+-
+-/**
+- * Abstract base class for DBGp values.
+- * 
+- * @author Bartlomiej Laczkowski
+- */
+-public abstract class AbstractDBGpValue extends DBGpElement implements IValue, IPHPDataType {
+-
+-	/**
+-	 * DBGp value data decoder.
+-	 */
+-	protected class DBGpValueData {
+-
+-		private static final String ENCODING_BASE64 = "base64"; //$NON-NLS-1$
+-
+-		private byte[] fValueBytes = null;
+-		private String fValueString;
+-
+-		protected DBGpValueData(Node property) {
+-			decode(property);
+-		}
+-
+-		private void decode(Node property) {
+-			String encoding = DBGpResponse.getAttribute(property, "encoding"); //$NON-NLS-1$
+-			Node Child = property.getFirstChild();
+-			if (Child != null) {
+-				String valueData = Child.getNodeValue();
+-				fValueString = valueData;
+-				if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
+-					if (valueData != null && valueData.trim().length() != 0) {
+-						DBGpTarget target = (DBGpTarget) getDebugTarget();
+-						fValueBytes = Base64.decode(valueData.trim());
+-						try {
+-							fValueString = new String(fValueBytes, target.getBinaryEncoding());
+-						} catch (UnsupportedEncodingException e) {
+-							DBGpLogger.logException("Unexpected encoding problem", //$NON-NLS-1$
+-									this, e);
+-							fValueString = new String(fValueBytes);
+-						}
+-					}
+-				}
+-			}
+-		}
+-
+-		public byte[] getValueBytes() {
+-			return fValueBytes;
+-		}
+-
+-		public String getValueString() {
+-			return fValueString;
+-		}
+-
+-	}
+-
+-	protected DataType fDataType;
+-	protected boolean fHasVariables = false;
+-	protected DBGpVariable fOwner;
+-	protected String fValueString = ""; //$NON-NLS-1$
+-	protected Node fDescriptor;
+-
+-	/**
+-	 * Creates new DBGp value.
+-	 * 
+-	 * @param owner
+-	 */
+-	public AbstractDBGpValue(DBGpVariable owner) {
+-		super(owner.getDebugTarget());
+-		this.fOwner = owner;
+-		update(fOwner.getDescriptor());
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.php.internal.debug.core.model.IPHPDataType#getDataType()
+-	 */
+-	public DataType getDataType() {
+-		return fDataType;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
+-	 */
+-	@Override
+-	public String getReferenceTypeName() throws DebugException {
+-		return fDataType.getText();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IValue#getValueString()
+-	 */
+-	@Override
+-	public String getValueString() throws DebugException {
+-		return fValueString;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IValue#isAllocated()
+-	 */
+-	@Override
+-	public boolean isAllocated() throws DebugException {
+-		return true;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IValue#getVariables()
+-	 */
+-	@Override
+-	public IVariable[] getVariables() throws DebugException {
+-		return new IVariable[] {};
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
+-	 */
+-	@Override
+-	public boolean hasVariables() throws DebugException {
+-		return fHasVariables;
+-	}
+-
+-	/**
+-	 * Generates and returns related value string.
+-	 * 
+-	 * @param valueData
+-	 * @return value string
+-	 */
+-	protected abstract String createValueString(DBGpValueData valueData);
+-
+-	/**
+-	 * Checks if value modification is supported.
+-	 * 
+-	 * @return <code>true</code> if modification is supported,
+-	 *         <code>false</code> otherwise
+-	 */
+-	protected abstract boolean supportsValueModification();
+-
+-	/**
+-	 * Checks if provided value expression is valid.
+-	 * 
+-	 * @param expression
+-	 * @return <code>true</code> if provided value expression is valid,
+-	 *         <code>false</code> otherwise
+-	 */
+-	protected abstract boolean verifyValue(String expression);
+-
+-	/**
+-	 * Sets new value string.
+-	 * 
+-	 * @param value
+-	 */
+-	protected void setValue(String value) {
+-		fValueString = value;
+-	}
+-
+-	/**
+-	 * Returns variable that is owner of this value.
+-	 * 
+-	 * @return variable that is owner of this value
+-	 */
+-	protected DBGpVariable getOwner() {
+-		return fOwner;
+-	}
+-
+-	/**
+-	 * Returns related descriptor.
+-	 * 
+-	 * @return related descriptor
+-	 */
+-	protected Node getDescriptor() {
+-		return fDescriptor;
+-	}
+-
+-	/**
+-	 * Updates value state with the provided descriptor.
+-	 * 
+-	 * @param descriptor
+-	 */
+-	protected void update(Node descriptor) {
+-		// Reset state
+-		fDescriptor = descriptor;
+-		// Set up type
+-		String t = DBGpResponse.getAttribute(fDescriptor, "type"); //$NON-NLS-1$
+-		fDataType = DataType.find(t);
+-		fValueString = createValueString(new DBGpValueData(fDescriptor));
+-	}
+-
+-}
++/*******************************************************************************
++ * Copyright (c) 2016 Zend Technologies and others.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ * 
++ * Contributors:
++ *     Zend Technologies - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
++
++import java.io.UnsupportedEncodingException;
++
++import org.eclipse.debug.core.DebugException;
++import org.eclipse.debug.core.model.IValue;
++import org.eclipse.debug.core.model.IVariable;
++import org.eclipse.php.internal.debug.core.model.IPHPDataType;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
++import org.w3c.dom.Node;
++
++/**
++ * Abstract base class for DBGp values.
++ * 
++ * @author Bartlomiej Laczkowski
++ */
++public abstract class AbstractDBGpValue extends DBGpElement implements IValue, IPHPDataType {
++
++	/**
++	 * DBGp value data decoder.
++	 */
++	protected class DBGpValueData {
++
++		private static final String ENCODING_BASE64 = "base64"; //$NON-NLS-1$
++
++		private byte[] fValueBytes = null;
++		private String fValueString;
++
++		protected DBGpValueData(Node property) {
++			decode(property);
++		}
++
++		private void decode(Node property) {
++			String encoding = DBGpResponse.getAttribute(property, "encoding"); //$NON-NLS-1$
++			Node Child = property.getFirstChild();
++			if (Child != null) {
++				String valueData = Child.getNodeValue();
++				fValueString = valueData;
++				if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
++					if (valueData != null && valueData.trim().length() != 0) {
++						DBGpTarget target = (DBGpTarget) getDebugTarget();
++						fValueBytes = Base64.decode(valueData.trim());
++						try {
++							fValueString = new String(fValueBytes, target.getBinaryEncoding());
++						} catch (UnsupportedEncodingException e) {
++							DBGpLogger.logException("Unexpected encoding problem", //$NON-NLS-1$
++									this, e);
++							fValueString = new String(fValueBytes);
++						}
++					}
++				}
++			}
++		}
++
++		public byte[] getValueBytes() {
++			return fValueBytes;
++		}
++
++		public String getValueString() {
++			return fValueString;
++		}
++
++	}
++
++	protected DataType fDataType;
++	protected boolean fHasVariables = false;
++	protected DBGpVariable fOwner;
++	protected String fValueString = ""; //$NON-NLS-1$
++	protected Node fDescriptor;
++
++	/**
++	 * Creates new DBGp value.
++	 * 
++	 * @param owner
++	 */
++	public AbstractDBGpValue(DBGpVariable owner) {
++		super(owner.getDebugTarget());
++		this.fOwner = owner;
++		update(fOwner.getDescriptor());
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.php.internal.debug.core.model.IPHPDataType#getDataType()
++	 */
++	public DataType getDataType() {
++		return fDataType;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
++	 */
++	@Override
++	public String getReferenceTypeName() throws DebugException {
++		return fDataType.getText();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IValue#getValueString()
++	 */
++	@Override
++	public String getValueString() throws DebugException {
++		return fValueString;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IValue#isAllocated()
++	 */
++	@Override
++	public boolean isAllocated() throws DebugException {
++		return true;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IValue#getVariables()
++	 */
++	@Override
++	public IVariable[] getVariables() throws DebugException {
++		return new IVariable[] {};
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
++	 */
++	@Override
++	public boolean hasVariables() throws DebugException {
++		return fHasVariables;
++	}
++
++	public String getValueDetail() throws DebugException {
++		return getValueString();
++	}
++
++	/**
++	 * Generates and returns related value string.
++	 * 
++	 * @param valueData
++	 * @return value string
++	 */
++	protected abstract String createValueString(DBGpValueData valueData);
++
++	/**
++	 * Checks if value modification is supported.
++	 * 
++	 * @return <code>true</code> if modification is supported,
++	 *         <code>false</code> otherwise
++	 */
++	protected abstract boolean supportsValueModification();
++
++	/**
++	 * Checks if provided value expression is valid.
++	 * 
++	 * @param expression
++	 * @return <code>true</code> if provided value expression is valid,
++	 *         <code>false</code> otherwise
++	 */
++	protected abstract boolean verifyValue(String expression);
++
++	/**
++	 * Sets new value string.
++	 * 
++	 * @param value
++	 */
++	protected void setValue(String value) {
++		fValueString = value;
++	}
++
++	/**
++	 * Returns variable that is owner of this value.
++	 * 
++	 * @return variable that is owner of this value
++	 */
++	protected DBGpVariable getOwner() {
++		return fOwner;
++	}
++
++	/**
++	 * Returns related descriptor.
++	 * 
++	 * @return related descriptor
++	 */
++	protected Node getDescriptor() {
++		return fDescriptor;
++	}
++
++	/**
++	 * Updates value state with the provided descriptor.
++	 * 
++	 * @param descriptor
++	 */
++	protected void update(Node descriptor) {
++		// Reset state
++		fDescriptor = descriptor;
++		// Set up type
++		String t = DBGpResponse.getAttribute(fDescriptor, "type"); //$NON-NLS-1$
++		fDataType = DataType.find(t);
++		fValueString = createValueString(new DBGpValueData(fDescriptor));
++	}
++
++}
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpArrayValue.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpArrayValue.java
+index 2adb82a..b1b5f87 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpArrayValue.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpArrayValue.java
+@@ -1,109 +1,131 @@
+-/*******************************************************************************
+- * Copyright (c) 2016 Zend Technologies and others.
+- * All rights reserved. This program and the accompanying materials
+- * are made available under the terms of the Eclipse Public License v1.0
+- * which accompanies this distribution, and is available at
+- * http://www.eclipse.org/legal/epl-v10.html
+- * 
+- * Contributors:
+- *     Zend Technologies - initial API and implementation
+- *******************************************************************************/
+-package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
+-
+-import java.text.MessageFormat;
+-
+-import org.eclipse.debug.core.model.IVariable;
+-import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+-import org.w3c.dom.Node;
+-
+-/**
+- * DBGp array value.
+- * 
+- * @author Bartlomiej Laczkowski
+- */
+-public class DBGpArrayValue extends AbstractDBGpContainerValue {
+-
+-	private static final String NAME_FORMAT = "Array [{0}]"; //$NON-NLS-1$
+-
+-	/**
+-	 * Creates new DBGp array value.
+-	 * 
+-	 * @param owner
+-	 */
+-	public DBGpArrayValue(DBGpVariable owner) {
+-		super(owner);
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+-	 * AbstractDBGpContainerValue#createVariable(org.w3c.dom.Node)
+-	 */
+-	@Override
+-	protected IVariable createVariable(Node descriptor) {
+-		switch (getOwner().getKind()) {
+-		case EVAL: {
+-			return createEvalVariable(descriptor);
+-		}
+-		default:
+-			return createStackVariable(descriptor);
+-		}
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see
+-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+-	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+-	 * AbstractDBGpValue.DBGpValueData)
+-	 */
+-	@Override
+-	protected String createValueString(DBGpValueData valueData) {
+-		String numChildStr = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
+-		return MessageFormat.format(NAME_FORMAT, numChildStr);
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see
+-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+-	 * supportsValueModification()
+-	 */
+-	@Override
+-	protected boolean supportsValueModification() {
+-		return false;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see
+-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+-	 * verifyValue(java.lang.String)
+-	 */
+-	@Override
+-	protected boolean verifyValue(String expression) {
+-		return false;
+-	}
+-
+-	protected IVariable createStackVariable(Node descriptor) {
+-		return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
+-				Facet.KIND_ARRAY_MEMBER);
+-	}
+-
+-	protected IVariable createEvalVariable(Node descriptor) {
+-		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
+-				Facet.KIND_ARRAY_MEMBER);
+-		String arrayKey = variable.fName.substring(1, variable.fName.length() - 1);
+-		if (!arrayKey.matches("\\d+")) { //$NON-NLS-1$
+-			arrayKey = '\'' + arrayKey + '\'';
+-		}
+-		variable.fFullName = getOwner().getFullName() + '[' + arrayKey + ']';
+-		return variable;
+-	}
+-
+-}
++/*******************************************************************************
++ * Copyright (c) 2016 Zend Technologies and others.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ * 
++ * Contributors:
++ *     Zend Technologies - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
++
++import java.text.MessageFormat;
++
++import org.eclipse.debug.core.DebugException;
++import org.eclipse.debug.core.model.IVariable;
++import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
++import org.w3c.dom.Node;
++
++/**
++ * DBGp array value.
++ * 
++ * @author Bartlomiej Laczkowski
++ */
++public class DBGpArrayValue extends AbstractDBGpContainerValue {
++
++	private static final String NAME_FORMAT = "Array [{0}]"; //$NON-NLS-1$
++
++	/**
++	 * Creates new DBGp array value.
++	 * 
++	 * @param owner
++	 */
++	public DBGpArrayValue(DBGpVariable owner) {
++		super(owner);
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
++	 * AbstractDBGpContainerValue#createVariable(org.w3c.dom.Node)
++	 */
++	@Override
++	protected IVariable createVariable(Node descriptor) {
++		switch (getOwner().getKind()) {
++		case EVAL: {
++			return createEvalVariable(descriptor);
++		}
++		default:
++			return createStackVariable(descriptor);
++		}
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see
++	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
++	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
++	 * AbstractDBGpValue.DBGpValueData)
++	 */
++	@Override
++	protected String createValueString(DBGpValueData valueData) {
++		String numChildStr = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
++		return MessageFormat.format(NAME_FORMAT, numChildStr);
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see
++	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
++	 * supportsValueModification()
++	 */
++	@Override
++	protected boolean supportsValueModification() {
++		return false;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see
++	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
++	 * verifyValue(java.lang.String)
++	 */
++	@Override
++	protected boolean verifyValue(String expression) {
++		return false;
++	}
++
++	protected IVariable createStackVariable(Node descriptor) {
++		return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
++				Facet.KIND_ARRAY_MEMBER);
++	}
++
++	protected IVariable createEvalVariable(Node descriptor) {
++		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
++				Facet.KIND_ARRAY_MEMBER);
++		String arrayKey = variable.fName.substring(1, variable.fName.length() - 1);
++		if (!arrayKey.matches("\\d+")) { //$NON-NLS-1$
++			arrayKey = '\'' + arrayKey + '\'';
++		}
++		variable.fFullName = getOwner().getFullName() + '[' + arrayKey + ']';
++		return variable;
++	}
++
++	public String getValueDetail() throws DebugException {
++		StringBuffer result = new StringBuffer("["); //$NON-NLS-1$
++		IVariable[] variables = getVariables();
++		for (int i = 0; i < variables.length; i++) {
++			IVariable child = variables[i];
++			if (i > 0) {
++				result.append(","); //$NON-NLS-1$
++				result.append(" "); //$NON-NLS-1$
++			}
++			result.append(child.getName());
++			result.append(" => "); //$NON-NLS-1$
++			if (child.getValue() instanceof AbstractDBGpValue) {
++				result.append(((AbstractDBGpValue) child.getValue()).getValueDetail());
++			} else {
++				result.append(child.getValue().getValueString());
++			}
++		}
++		result.append("]"); //$NON-NLS-1$
++		return result.toString();
++	}
++
++}
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpObjectValue.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpObjectValue.java
+index 259c564..d2a9373 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpObjectValue.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpObjectValue.java
+@@ -1,114 +1,125 @@
+-/*******************************************************************************
+- * Copyright (c) 2016 Zend Technologies and others.
+- * All rights reserved. This program and the accompanying materials
+- * are made available under the terms of the Eclipse Public License v1.0
+- * which accompanies this distribution, and is available at
+- * http://www.eclipse.org/legal/epl-v10.html
+- * 
+- * Contributors:
+- *     Zend Technologies - initial API and implementation
+- *******************************************************************************/
+-package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
+-
+-import org.eclipse.debug.core.model.IVariable;
+-import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
+-import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+-import org.w3c.dom.Node;
+-
+-/**
+- * DBGp object value.
+- * 
+- * @author Bartlomiej Laczkowski
+- */
+-public class DBGpObjectValue extends AbstractDBGpContainerValue {
+-
+-	/**
+-	 * Creates new DBGp object value.
+-	 * 
+-	 * @param owner
+-	 */
+-	public DBGpObjectValue(DBGpVariable owner) {
+-		super(owner);
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+-	 * AbstractDBGpContainerValue#fetchVariables()
+-	 */
+-	@Override
+-	protected void fetchVariables() {
+-		super.fetchVariables();
+-		// Sort members by name
+-		VariablesUtil.sortObjectMembers(fCurrentVariables);
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+-	 * AbstractDBGpContainerValue#createVariable(org.w3c.dom.Node)
+-	 */
+-	@Override
+-	protected IVariable createVariable(Node descriptor) {
+-		switch (getOwner().getKind()) {
+-		case EVAL: {
+-			return createEvalVariable(descriptor);
+-		}
+-		default:
+-			return createStackVariable(descriptor);
+-		}
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see
+-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+-	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
+-	 * AbstractDBGpValue.DBGpValueData)
+-	 */
+-	@Override
+-	protected String createValueString(DBGpValueData valueData) {
+-		return DBGpResponse.getAttribute(fDescriptor, "classname"); //$NON-NLS-1$
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see
+-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+-	 * supportsValueModification()
+-	 */
+-	@Override
+-	protected boolean supportsValueModification() {
+-		return false;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see
+-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+-	 * verifyValue(java.lang.String)
+-	 */
+-	@Override
+-	protected boolean verifyValue(String expression) {
+-		return false;
+-	}
+-
+-	protected IVariable createStackVariable(Node descriptor) {
+-		return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
+-				Facet.KIND_OBJECT_MEMBER);
+-	}
+-
+-	protected IVariable createEvalVariable(Node descriptor) {
+-		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
+-				Facet.KIND_OBJECT_MEMBER);
+-		variable.fFullName = getOwner().getFullName() + "->" + variable.fName; //$NON-NLS-1$
+-		return variable;
+-	}
+-
+-}
++/*******************************************************************************
++ * Copyright (c) 2016 Zend Technologies and others.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ * 
++ * Contributors:
++ *     Zend Technologies - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
++
++import org.eclipse.debug.core.DebugException;
++import org.eclipse.debug.core.model.IVariable;
++import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
++import org.eclipse.php.internal.debug.core.model.VariablesUtil;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
++import org.w3c.dom.Node;
++
++/**
++ * DBGp object value.
++ * 
++ * @author Bartlomiej Laczkowski
++ */
++public class DBGpObjectValue extends AbstractDBGpContainerValue {
++
++	/**
++	 * Creates new DBGp object value.
++	 * 
++	 * @param owner
++	 */
++	public DBGpObjectValue(DBGpVariable owner) {
++		super(owner);
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
++	 * AbstractDBGpContainerValue#fetchVariables()
++	 */
++	@Override
++	protected void fetchVariables() {
++		super.fetchVariables();
++		// Sort members by name
++		VariablesUtil.sortObjectMembers(fCurrentVariables);
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
++	 * AbstractDBGpContainerValue#createVariable(org.w3c.dom.Node)
++	 */
++	@Override
++	protected IVariable createVariable(Node descriptor) {
++		switch (getOwner().getKind()) {
++		case EVAL: {
++			return createEvalVariable(descriptor);
++		}
++		default:
++			return createStackVariable(descriptor);
++		}
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see
++	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
++	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
++	 * AbstractDBGpValue.DBGpValueData)
++	 */
++	@Override
++	protected String createValueString(DBGpValueData valueData) {
++		return DBGpResponse.getAttribute(fDescriptor, "classname"); //$NON-NLS-1$
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see
++	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
++	 * supportsValueModification()
++	 */
++	@Override
++	protected boolean supportsValueModification() {
++		return false;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see
++	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
++	 * verifyValue(java.lang.String)
++	 */
++	@Override
++	protected boolean verifyValue(String expression) {
++		return false;
++	}
++
++	protected IVariable createStackVariable(Node descriptor) {
++		return new DBGpStackVariable((DBGpTarget) getDebugTarget(), descriptor, getOwner().getStackLevel(),
++				Facet.KIND_OBJECT_MEMBER);
++	}
++
++	protected IVariable createEvalVariable(Node descriptor) {
++		DBGpVariable variable = new DBGpEvalVariable((DBGpTarget) getDebugTarget(), descriptor,
++				Facet.KIND_OBJECT_MEMBER);
++		variable.fFullName = getOwner().getFullName() + "->" + variable.fName; //$NON-NLS-1$
++		return variable;
++	}
++
++	public String getValueDetail() throws DebugException {
++		String toString = this.fOwner.getFullName() + "->__toString()"; //$NON-NLS-1$
++		Node resp = ((DBGpTarget) fOwner.getDebugTarget()).eval(toString);
++		if (resp == null) {
++			return super.getValueDetail();
++		}
++		DBGpEvalVariable variable = new DBGpEvalVariable(fOwner.getDebugTarget(), toString, resp);
++		return variable.getValue().getValueString();
++	}
++
++}
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpStackFrame.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpStackFrame.java
+index 98372c9..82affcf 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpStackFrame.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/xdebug/dbgp/model/DBGpStackFrame.java
+@@ -26,6 +26,35 @@ import org.w3c.dom.Node;
+ 
+ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
+ 
++	private static class DBGpVariableContainer {
++		IVariable[] locals = null;
++
++		/**
++		 * @param varName
++		 * @return
++		 * @throws DebugException
++		 */
++		public IVariable findVariable(String varName) throws DebugException {
++			if (locals != null) {
++				final IVariable variable = findVariable(varName, locals);
++				if (variable != null) {
++					return variable;
++				}
++			}
++			return null;
++		}
++
++		private static IVariable findVariable(String varName, IVariable[] vars) throws DebugException {
++			for (int i = 0; i < vars.length; i++) {
++				final IVariable var = vars[i];
++				if (var.getName().equals(varName)) {
++					return var;
++				}
++			}
++			return null;
++		}
++	}
++
+ 	private DBGpThread owningThread;
+ 	private String qualifiedFile = ""; // fully qualified name of //$NON-NLS-1$
+ 										// the file this stack frame is in
+@@ -35,8 +64,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
+ 	private int lineNo; // line within the file of this stack frame
+ 	private String name = ""; // string to display in debugger for //$NON-NLS-1$
+ 								// this stack frame
+-	private IVariable[] currentVariables;
+-	private IVariable[] previousVariables;
++	private DBGpVariableContainer currentVariables;
++	private DBGpVariableContainer previousVariables;
+ 	private Node descriptor;
+ 
+ 	// private IVariable[] variables; // variables exposed to this stack frame
+@@ -120,15 +149,16 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
+ 	public synchronized IVariable[] getVariables() throws DebugException {
+ 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
+ 		if (currentVariables == null) {
++			currentVariables = new DBGpVariableContainer();
+ 			// fetch new set of variables
+ 			IVariable[] incoming = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
+-			currentVariables = new IVariable[incoming.length];
++			currentVariables.locals = new IVariable[incoming.length];
+ 			for (int i = 0; i < incoming.length; i++) {
+ 				DBGpVariable variable = ((DBGpVariable) incoming[i]);
+-				currentVariables[i] = merge(variable);
++				currentVariables.locals[i] = merge(variable);
+ 			}
+ 		}
+-		return currentVariables;
++		return currentVariables.locals;
+ 	}
+ 
+ 	/*
+@@ -391,7 +421,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
+ 		DBGpVariable incoming = (DBGpVariable) variable;
+ 		if (incoming.getFullName().isEmpty())
+ 			return incoming;
+-		for (IVariable stored : previousVariables) {
++		for (IVariable stored : previousVariables.locals) {
+ 			if (stored instanceof DBGpVariable) {
+ 				DBGpVariable previous = (DBGpVariable) stored;
+ 				if (previous.getFullName().equals(incoming.getFullName())) {
+@@ -403,4 +433,14 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
+ 		return variable;
+ 	}
+ 
++	public synchronized IVariable findVariable(String varName) throws DebugException {
++		if (currentVariables == null) {
++			getVariables();
++		}
++		if (currentVariables != null) {
++			return (IVariable) currentVariables.findVariable(varName);
++		}
++		return null;
++	}
++
+ }
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpression.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpression.java
+index 071ee17..7406a6f 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpression.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpression.java
+@@ -29,8 +29,17 @@ public class DefaultExpression implements Expression {
+ 	 * @param expression
+ 	 */
+ 	public DefaultExpression(String expression) {
++		this(expression, expression);
++	}
++
++	/**
++	 * Creates new default expression.
++	 * 
++	 * @param expression
++	 */
++	public DefaultExpression(String expression, String fullName) {
+ 		name = new String[] { expression.trim() };
+-		fullName = expression;
++		this.fullName = fullName;
+ 		setValue(null);
+ 	}
+ 
+@@ -41,8 +50,18 @@ public class DefaultExpression implements Expression {
+ 	 * @param facets
+ 	 */
+ 	public DefaultExpression(String expression, Facet... facets) {
++		this(expression, expression, facets);
++	}
++
++	/**
++	 * Creates new default expression.
++	 * 
++	 * @param expression
++	 * @param facets
++	 */
++	public DefaultExpression(String expression, String fullName, Facet... facets) {
+ 		name = new String[] { expression.trim() };
+-		fullName = expression;
++		this.fullName = fullName;
+ 		setValue(null);
+ 		addFacets(facets);
+ 	}
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpressionsManager.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpressionsManager.java
+index 857e8f1..7c6c226 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpressionsManager.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/DefaultExpressionsManager.java
+@@ -31,6 +31,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
+ 	private Map<String, Object> hashResultDepthOne = new HashMap<String, Object>();
+ 	private Map<String, byte[]> hashResultDepthZero = new HashMap<String, byte[]>();
+ 	private ExpressionsValueDeserializer expressionValueDeserializer;
++	private ExpressionsUtil fExpressionsUtil;
+ 
+ 	/**
+ 	 * Creates new DefaultExpressionsManager
+@@ -38,6 +39,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
+ 	public DefaultExpressionsManager(Debugger debugger, String transferEncoding) {
+ 		this.debugger = debugger;
+ 		expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
++		fExpressionsUtil = ExpressionsUtil.getInstance(this);
+ 	}
+ 
+ 	public byte[] getExpressionValue(Expression expression, int depth) {
+@@ -94,7 +96,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
+ 		String className = (String) dummyClass.getValue().getValue();
+ 		// Check if we are in static context
+ 		if (!hasThis && !"0".equals(className)) { //$NON-NLS-1$
+-			Expression staticClassContext = ExpressionsUtil.fetchStaticContext(className, this);
++			Expression staticClassContext = fExpressionsUtil.fetchStaticContext(className);
+ 			if (staticClassContext != null)
+ 				currentVariables.add(staticClassContext);
+ 		}
+@@ -116,8 +118,8 @@ public class DefaultExpressionsManager implements ExpressionsManager {
+ 		ExpressionValue expressionValue = expressionValueDeserializer.deserializer(expression, value);
+ 		// Workaround for fetching static members for objects
+ 		if (expressionValue.getDataType() == PHP_OBJECT && CurrentContextExpression.supportsStaticContext(debugger)) {
+-			Expression[] expressionStaticNodes = ExpressionsUtil.fetchStaticMembers((String) expressionValue.getValue(),
+-					this);
++			Expression[] expressionStaticNodes = fExpressionsUtil
++					.fetchStaticMembers((String) expressionValue.getValue());
+ 			List<Expression> allNodes = new ArrayList<Expression>();
+ 			allNodes.addAll(Arrays.asList(expressionStaticNodes));
+ 			allNodes.addAll(Arrays.asList(expressionValue.getChildren()));
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsUtil.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsUtil.java
+index 334b531..10d3c9c 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsUtil.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsUtil.java
+@@ -11,6 +11,7 @@
+ package org.eclipse.php.internal.debug.core.zend.debugger;
+ 
+ import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.PHP_VIRTUAL_CLASS;
++import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_CONSTANT;
+ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_OBJECT_MEMBER;
+ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.MOD_STATIC;
+ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
+@@ -19,6 +20,7 @@ import java.text.MessageFormat;
+ import java.util.Map;
+ import java.util.WeakHashMap;
+ 
++import org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType;
+ import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
+ import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+ 
+@@ -29,17 +31,44 @@ import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+  */
+ public class ExpressionsUtil {
+ 
++	private static final String CHECK_CLASS_METHOD_EXISTS = "eval(''if (class_exists(\\''ReflectionClass\\'')) return (new ReflectionClass({0}))->hasMethod(\\''{1}\\''); else return false;'');"; //$NON-NLS-1$
++
+ 	private static final class FetchStaticsExpression extends DefaultExpression {
+ 
+ 		static final String FETCH_STATIC_MEMBERS = "eval(''if (class_exists(\\''ReflectionClass\\'') && class_exists(\\''{0}\\'')) return (new ReflectionClass(\\''{0}\\''))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
+ 
+ 		public FetchStaticsExpression(String className) {
+-			super(MessageFormat.format(FETCH_STATIC_MEMBERS, className));
++			super(MessageFormat.format(FETCH_STATIC_MEMBERS, className), className);
++		}
++
++		@Override
++		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
++			return new DefaultExpression(this, endName, "::$" + endName, KIND_OBJECT_MEMBER, MOD_STATIC); //$NON-NLS-1$
++		}
++
++	}
++
++	private static final class FetchClassConstantsExpression extends DefaultExpression {
++
++		static final String FETCH_CONSTANTS = "eval(''if (class_exists(\\''ReflectionClass\\'') && class_exists(\\''{0}\\'')) return (new ReflectionClass(\\''{0}\\''))->getConstants(); else return array();'');"; //$NON-NLS-1$
++
++		public FetchClassConstantsExpression(String className) {
++			super(MessageFormat.format(FETCH_CONSTANTS, className), className);
+ 		}
+ 
+ 		@Override
+ 		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
+-			return new DefaultExpression(this, endName, endRepresentation, KIND_OBJECT_MEMBER, MOD_STATIC);
++			return new DefaultExpression(this, endName, "::" + endName, KIND_CONSTANT); //$NON-NLS-1$
++		}
++
++	}
++
++	private static final class FetchConstantExpression extends DefaultExpression {
++
++		static final String FETCH_CONSTANT = "eval(''return constant(\\''{0}\\'');'');"; //$NON-NLS-1$
++
++		public FetchConstantExpression(String constantName) {
++			super(MessageFormat.format(FETCH_CONSTANT, constantName), constantName);
+ 		}
+ 
+ 	}
+@@ -61,11 +90,22 @@ public class ExpressionsUtil {
+ 
+ 	private static final Map<Expression, String> staticMemberClassNames = new WeakHashMap<Expression, String>();
+ 
++	private static Map<ExpressionsManager, ExpressionsUtil> fInstance = new WeakHashMap<>();
++
++	private ExpressionsManager fExpressionsManager;
++
+ 	/**
+ 	 * 
+ 	 */
+-	private ExpressionsUtil() {
+-		// Utility class - no public constructor
++	private ExpressionsUtil(ExpressionsManager expressionsManager) {
++		fExpressionsManager = expressionsManager;
++	}
++
++	public static ExpressionsUtil getInstance(ExpressionsManager expressionsManager) {
++		if (fInstance.get(expressionsManager) == null) {
++			fInstance.put(expressionsManager, new ExpressionsUtil(expressionsManager));
++		}
++		return fInstance.get(expressionsManager);
+ 	}
+ 
+ 	/**
+@@ -75,14 +115,14 @@ public class ExpressionsUtil {
+ 	 * @param expressionsManager
+ 	 * @return expressions of static members for given class
+ 	 */
+-	public static Expression[] fetchStaticMembers(String className, ExpressionsManager expressionsManager) {
++	public Expression[] fetchStaticMembers(String className) {
+ 		Expression staticMembers = new FetchStaticsExpression(className);
+-		expressionsManager.update(staticMembers, 1);
++		fExpressionsManager.update(staticMembers, 1);
+ 		Expression[] members = staticMembers.getValue().getChildren();
+ 		// Possibly interrupted, crash, etc.
+ 		if (members == null)
+ 			return new Expression[0];
+-		int[] mods = fetchStaticMembersVisibility(className, members, expressionsManager);
++		int[] mods = fetchStaticMembersVisibility(className, members);
+ 		// Possibly interrupted, crash, etc.
+ 		if (mods == null)
+ 			return new Expression[0];
+@@ -102,6 +142,41 @@ public class ExpressionsUtil {
+ 		return new Expression[0];
+ 	}
+ 
++	public Expression[] fetchClassConstants(String className) {
++		Expression constants = new FetchClassConstantsExpression(className);
++		fExpressionsManager.update(constants, 1);
++		Expression[] members = constants.getValue().getChildren();
++
++		if (members == null)
++			return new Expression[0];
++		for (Expression e : members) {
++			e.addFacets(Facet.MOD_PUBLIC);
++		}
++		return members;
++	}
++
++	public Expression fetchConstant(String constantName) {
++		Expression constant = new FetchConstantExpression(constantName);
++		fExpressionsManager.update(constant, 1);
++		Expression newExpression = new DefaultExpression(constantName, KIND_CONSTANT, Facet.MOD_PUBLIC);
++		newExpression.setValue(constant.getValue());
++		return newExpression;
++	}
++
++	private boolean invokeMethod(String object, String method, StringBuffer result) {
++		Expression e = new DefaultExpression(MessageFormat.format(CHECK_CLASS_METHOD_EXISTS, object, method));
++		fExpressionsManager.update(e, 1);
++		if (e.getValue().getValue() != null && e.getValue().getValue().equals("1")) {
++			String expression = object + "->" + method + "()"; //$NON-NLS-1$ //$NON-NLS-2$
++			e = new DefaultExpression(expression);
++			fExpressionsManager.getExpressionValue(e, 1);
++			fExpressionsManager.update(e, 1);
++			result.append(e.getValue().getValue());
++			return true;
++		}
++		return false;
++	}
++
+ 	/**
+ 	 * Return class name for corresponding static member expression.
+ 	 * 
+@@ -119,8 +194,8 @@ public class ExpressionsUtil {
+ 	 * @param expressionsManager
+ 	 * @return "virtual class" expression with child static members
+ 	 */
+-	public static Expression fetchStaticContext(String className, ExpressionsManager expressionsManager) {
+-		Expression[] staticMembers = fetchStaticMembers(className, expressionsManager);
++	public Expression fetchStaticContext(String className) {
++		Expression[] staticMembers = fetchStaticMembers(className);
+ 		if (staticMembers.length == 0)
+ 			return null;
+ 		Expression classStaticContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
+@@ -130,8 +205,7 @@ public class ExpressionsUtil {
+ 		return classStaticContext;
+ 	}
+ 
+-	private static int[] fetchStaticMembersVisibility(String className, Expression[] members,
+-			ExpressionsManager expressionsManager) {
++	private int[] fetchStaticMembersVisibility(String className, Expression[] members) {
+ 		StringBuilder tuple = new StringBuilder();
+ 		for (int i = 0; i < members.length; i++) {
+ 			tuple.append(MessageFormat.format(FetchStaticsVisibilityExpression.TUPLE_ELEMENT, className,
+@@ -140,7 +214,7 @@ public class ExpressionsUtil {
+ 				tuple.append(',');
+ 		}
+ 		Expression fetchModifiersExpression = new FetchStaticsVisibilityExpression(tuple.toString());
+-		expressionsManager.update(fetchModifiersExpression, 1);
++		fExpressionsManager.update(fetchModifiersExpression, 1);
+ 		Expression[] computed = fetchModifiersExpression.getValue().getOriChildren();
+ 		if (computed == null)
+ 			return null;
+@@ -150,4 +224,55 @@ public class ExpressionsUtil {
+ 		return mods;
+ 	}
+ 
++	public Expression fetchClassContext(String className) {
++		Expression classContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
++		ExpressionValue classStaticContextValue = new ExpressionValue(PHP_VIRTUAL_CLASS, className, className, null);
++		classContext.setValue(classStaticContextValue);
++		return classContext;
++	}
++
++	public String getValueDetail(Expression expression) {
++		ExpressionValue value = expression.getValue();
++		if (value.getDataType() == DataType.PHP_OBJECT) {
++			StringBuffer result = new StringBuffer();
++			boolean exists = invokeMethod(expression.getFullName(), "__toString", result); //$NON-NLS-1$
++			if (exists)
++				return result.toString();
++		} else if (value.getDataType() == DataType.PHP_ARRAY) {
++			fExpressionsManager.update(expression, 1);
++			StringBuffer result = new StringBuffer("["); //$NON-NLS-1$
++			for (int i = 0; i < expression.getValue().getChildren().length; i++) {
++				Expression child = expression.getValue().getChildren()[i];
++				if (i > 0) {
++					result.append(","); //$NON-NLS-1$
++					result.append(" "); //$NON-NLS-1$
++				}
++				result.append(child.getLastName());
++				result.append(" => "); //$NON-NLS-1$
++				result.append(getValueDetail(child));
++			}
++			result.append("]"); //$NON-NLS-1$
++			return result.toString();
++		} else if (value.getDataType() == DataType.PHP_STRING) {
++			String result = expression.getValue().getValueAsString();
++			int length = result.length();
++			return result.substring(1, length - 1);
++		}
++		return expression.getValue().getValueAsString();
++	}
++
++	/**
++	 * Returns the variable value.
++	 * 
++	 * @param variable
++	 *            The variable name
++	 * @return
++	 */
++	public Expression buildExpression(String variable) {
++		Expression expression = fExpressionsManager.buildExpression(variable);
++		fExpressionsManager.getExpressionValue(expression, 1);
++		fExpressionsManager.update(expression, 1);
++		return expression;
++	}
++
+ }
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsValueDeserializer.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsValueDeserializer.java
+index 4679fea..a43ba38 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsValueDeserializer.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/debugger/ExpressionsValueDeserializer.java
+@@ -12,11 +12,14 @@
+ package org.eclipse.php.internal.debug.core.zend.debugger;
+ 
+ import static org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType.*;
+-import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
++import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_ARRAY_MEMBER;
++import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_OBJECT_MEMBER;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.UnsupportedEncodingException;
+ 
++import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
++
+ public class ExpressionsValueDeserializer {
+ 
+ 	private String fEncoding;
+@@ -65,26 +68,25 @@ public class ExpressionsValueDeserializer {
+ 
+ 	private ExpressionValue buildIntType(VariableReader reader) {
+ 		String value = reader.readToken();
+-		String valueAsString = "(int) " + value; //$NON-NLS-1$
++		String valueAsString = value; // $NON-NLS-1$
+ 		return new ExpressionValue(PHP_INT, value, valueAsString, null);
+ 	}
+ 
+ 	private ExpressionValue buildFloatType(VariableReader reader) {
+ 		String value = reader.readToken();
+-		String valueAsString = "(float) " + value; //$NON-NLS-1$
++		String valueAsString = value; // $NON-NLS-1$
+ 		return new ExpressionValue(PHP_FLOAT, value, valueAsString, null);
+ 	}
+ 
+ 	private ExpressionValue buildSringType(VariableReader reader) {
+ 		String value = reader.readString();
+-		String valueAsString = "(string:" + value.length() + ") " + value; //$NON-NLS-1$ //$NON-NLS-2$
++		String valueAsString = "\"" + value + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+ 		return new ExpressionValue(PHP_STRING, value, valueAsString, null);
+ 	}
+ 
+ 	private ExpressionValue buildBooleanType(VariableReader reader) {
+ 		String value = reader.readToken();
+-		String valueAsString = "(boolean) " //$NON-NLS-1$
+-				+ ((value.equals("0")) ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
++		String valueAsString = ((value.equals("0")) ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+ 		return new ExpressionValue(PHP_BOOL, value, valueAsString, null);
+ 	}
+ 
+@@ -155,7 +157,7 @@ public class ExpressionsValueDeserializer {
+ 			}
+ 			expressionNodes[i].setValue(build(expression, reader));
+ 		}
+-		String valueAsString = "Object of: " + className; //$NON-NLS-1$
++		String valueAsString = "Object of: " + PHPModelUtils.extractElementName(className); //$NON-NLS-1$
+ 		return new ExpressionValue(PHP_OBJECT, className, valueAsString, expressionNodes, originalLength);
+ 	}
+ 
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPStackFrame.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPStackFrame.java
+index 0aa3abf..53d713f 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPStackFrame.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPStackFrame.java
+@@ -1,388 +1,425 @@
+-/*******************************************************************************
+- * Copyright (c) 2009 IBM Corporation and others.
+- * All rights reserved. This program and the accompanying materials
+- * are made available under the terms of the Eclipse Public License v1.0
+- * which accompanies this distribution, and is available at
+- * http://www.eclipse.org/legal/epl-v10.html
+- * 
+- * Contributors:
+- *     IBM Corporation - initial API and implementation
+- *     Zend Technologies
+- *******************************************************************************/
+-package org.eclipse.php.internal.debug.core.zend.model;
+-
+-import java.util.regex.Matcher;
+-import java.util.regex.Pattern;
+-
+-import org.eclipse.debug.core.DebugException;
+-import org.eclipse.debug.core.model.IRegisterGroup;
+-import org.eclipse.debug.core.model.IStackFrame;
+-import org.eclipse.debug.core.model.IThread;
+-import org.eclipse.debug.core.model.IVariable;
+-import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
+-import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+-import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
+-
+-/**
+- * PHP stack frame.
+- */
+-public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
+-
+-	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
+-
+-	private PHPThread fThread;
+-	private String fFunctionName;
+-	private String fFileName;
+-	private String fResolvedFileName;
+-	private int fLineNumber;
+-	private int fDepth;
+-	private Expression[] fLocalVariables;
+-	private IVariable[] fCurrentVariables;
+-	private IVariable[] fPreviousVariables;
+-
+-	/**
+-	 * Create new PHP stack frame
+-	 * 
+-	 * @param thread
+-	 *            Debug thread
+-	 * @param fileName
+-	 *            Current file name
+-	 * @param funcName
+-	 *            Current function name
+-	 * @param lineNumber
+-	 *            Current line number
+-	 * @param depth
+-	 *            Stack layer depth
+-	 * @param resolvedFileName
+-	 *            Resolved file name
+-	 * @param localVariables
+-	 *            All local function variables
+-	 */
+-	public PHPStackFrame(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
+-			int depth, Expression[] localVariables) {
+-		super((PHPDebugTarget) thread.getDebugTarget());
+-
+-		baseInit(thread, fileName, resolvedFileName, funcName, lineNumber, depth, localVariables);
+-	}
+-
+-	private void baseInit(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
+-			int depth, Expression[] localVariables) {
+-
+-		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
+-		if (matcher.matches()) {
+-			fileName = matcher.group(1);
+-			lineNumber = Integer.parseInt(matcher.group(2));
+-		}
+-
+-		fFunctionName = funcName;
+-		fFileName = fileName;
+-		fResolvedFileName = resolvedFileName;
+-		fLineNumber = lineNumber;
+-		fDepth = depth;
+-		fThread = (PHPThread) thread;
+-		fLocalVariables = localVariables;
+-	}
+-
+-	protected void update(int lineNumber, Expression[] localVariables) throws DebugException {
+-		this.fLineNumber = lineNumber;
+-		// Reset state
+-		this.fPreviousVariables = fCurrentVariables;
+-		this.fCurrentVariables = null;
+-		// Set new locals
+-		this.fLocalVariables = localVariables;
+-	}
+-
+-	/**
+-	 * Merges incoming variable. Merge is done by means of checking if related
+-	 * child variable existed in "one step back" state of a frame. If related
+-	 * variable existed, it is updated with the use of the most recent
+-	 * descriptor and returned instead of the incoming one.
+-	 * 
+-	 * @param variable
+-	 * @param descriptor
+-	 * @return merged variable
+-	 */
+-	protected IVariable merge(IVariable variable) {
+-		if (fPreviousVariables == null)
+-			return variable;
+-		if (!(variable instanceof PHPVariable))
+-			return variable;
+-		PHPVariable incoming = (PHPVariable) variable;
+-		if (incoming.getFullName().isEmpty())
+-			return incoming;
+-		for (IVariable stored : fPreviousVariables) {
+-			if (stored instanceof PHPVariable) {
+-				PHPVariable previous = (PHPVariable) stored;
+-				if (previous.getFullName().equals(incoming.getFullName())) {
+-					((PHPVariable) stored).update(incoming.getExpression());
+-					return stored;
+-				}
+-			}
+-		}
+-		return variable;
+-	}
+-
+-	/**
+-	 * Returns this stack frame's unique identifier within its thread
+-	 * 
+-	 * @return this stack frame's unique identifier within its thread
+-	 */
+-	protected int getDepth() {
+-		return fDepth;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getThread()
+-	 */
+-	public IThread getThread() {
+-		return fThread;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
+-	 */
+-	public synchronized IVariable[] getVariables() throws DebugException {
+-		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
+-		if (fCurrentVariables == null) {
+-			fCurrentVariables = new PHPVariable[localVariables.length];
+-			for (int i = 0; i < localVariables.length; i++) {
+-				PHPVariable incoming = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i]);
+-				fCurrentVariables[i] = merge(incoming);
+-			}
+-		}
+-		return fCurrentVariables;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
+-	 */
+-	public boolean hasVariables() throws DebugException {
+-		return ((PHPDebugTarget) getDebugTarget()).getVariables(this).length > 0;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
+-	 */
+-	public int getLineNumber() throws DebugException {
+-		return fLineNumber;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
+-	 */
+-	public int getCharStart() throws DebugException {
+-		return -1;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
+-	 */
+-	public int getCharEnd() throws DebugException {
+-		return -1;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
+-	 */
+-	public String getName() throws DebugException {
+-		return fFunctionName;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
+-	 */
+-	public IRegisterGroup[] getRegisterGroups() throws DebugException {
+-		return new IRegisterGroup[0];
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
+-	 */
+-	public boolean hasRegisterGroups() throws DebugException {
+-		return false;
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
+-	 */
+-	public boolean canStepInto() {
+-		return getThread().canStepInto();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
+-	 */
+-	public boolean canStepOver() {
+-		return getThread().canStepOver();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
+-	 */
+-	public boolean canStepReturn() {
+-		return getThread().canStepReturn();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#isStepping()
+-	 */
+-	public boolean isStepping() {
+-		return getThread().isStepping();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#stepInto()
+-	 */
+-	public void stepInto() throws DebugException {
+-		getThread().stepInto();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#stepOver()
+-	 */
+-	public void stepOver() throws DebugException {
+-		getThread().stepOver();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
+-	 */
+-	public void stepReturn() throws DebugException {
+-		getThread().stepReturn();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
+-	 */
+-	public boolean canResume() {
+-		return getThread().canResume();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
+-	 */
+-	public boolean canSuspend() {
+-		return getThread().canSuspend();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
+-	 */
+-	public boolean isSuspended() {
+-		return getThread().isSuspended();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
+-	 */
+-	public void resume() throws DebugException {
+-		getThread().resume();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
+-	 */
+-	public void suspend() throws DebugException {
+-		getThread().suspend();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
+-	 */
+-	public boolean canTerminate() {
+-		return getThread().canTerminate();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
+-	 */
+-	public boolean isTerminated() {
+-		return getThread().isTerminated();
+-	}
+-
+-	/*
+-	 * (non-Javadoc)
+-	 * 
+-	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
+-	 */
+-	public void terminate() throws DebugException {
+-		getThread().terminate();
+-	}
+-
+-	public int checkLineNumber() throws DebugException {
+-		return fLineNumber;
+-	}
+-
+-	/**
+-	 * Returns the name of the source file this stack frame is associated with.
+-	 * 
+-	 * @return the name of the source file this stack frame is associated with
+-	 */
+-	public String getSourceName() {
+-		return fResolvedFileName;
+-	}
+-
+-	/**
+-	 * Returns the file name with full path.
+-	 * 
+-	 * @return the file name with full path
+-	 */
+-	public String getAbsoluteFileName() {
+-		return fFileName;
+-	}
+-
+-	public Expression[] getStackVariables() {
+-		return fLocalVariables;
+-	}
+-
+-	public void setStackVariables(Expression[] variables) {
+-		fLocalVariables = variables;
+-	}
+-
+-}
++/*******************************************************************************
++ * Copyright (c) 2009 IBM Corporation and others.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ * 
++ * Contributors:
++ *     IBM Corporation - initial API and implementation
++ *     Zend Technologies
++ *******************************************************************************/
++package org.eclipse.php.internal.debug.core.zend.model;
++
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++import org.eclipse.debug.core.DebugException;
++import org.eclipse.debug.core.model.*;
++import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
++import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
++import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
++
++/**
++ * PHP stack frame.
++ */
++public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
++
++	private static class PHPVariableContainer {
++		IVariable[] locals = null;
++
++		/**
++		 * @param varName
++		 * @return
++		 * @throws DebugException
++		 */
++		public IVariable findVariable(String varName) throws DebugException {
++			if (locals != null) {
++				final IVariable variable = findVariable(varName, locals);
++				if (variable != null) {
++					return variable;
++				}
++			}
++			return null;
++		}
++
++		private static IVariable findVariable(String varName, IVariable[] vars) throws DebugException {
++			for (int i = 0; i < vars.length; i++) {
++				final IVariable var = vars[i];
++				if (var.getName().equals(varName)) {
++					return var;
++				}
++			}
++			return null;
++		}
++	}
++
++	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
++
++	private PHPThread fThread;
++	private String fFunctionName;
++	private String fFileName;
++	private String fResolvedFileName;
++	private int fLineNumber;
++	private int fDepth;
++	private Expression[] fLocalVariables;
++	private PHPVariableContainer fCurrentVariables;
++	private PHPVariableContainer fPreviousVariables;
++
++	/**
++	 * Create new PHP stack frame
++	 * 
++	 * @param thread
++	 *            Debug thread
++	 * @param fileName
++	 *            Current file name
++	 * @param funcName
++	 *            Current function name
++	 * @param lineNumber
++	 *            Current line number
++	 * @param depth
++	 *            Stack layer depth
++	 * @param resolvedFileName
++	 *            Resolved file name
++	 * @param localVariables
++	 *            All local function variables
++	 */
++	public PHPStackFrame(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
++			int depth, Expression[] localVariables) {
++		super((PHPDebugTarget) thread.getDebugTarget());
++
++		baseInit(thread, fileName, resolvedFileName, funcName, lineNumber, depth, localVariables);
++	}
++
++	private void baseInit(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
++			int depth, Expression[] localVariables) {
++
++		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
++		if (matcher.matches()) {
++			fileName = matcher.group(1);
++			lineNumber = Integer.parseInt(matcher.group(2));
++		}
++
++		fFunctionName = funcName;
++		fFileName = fileName;
++		fResolvedFileName = resolvedFileName;
++		fLineNumber = lineNumber;
++		fDepth = depth;
++		fThread = (PHPThread) thread;
++		fLocalVariables = localVariables;
++	}
++
++	protected void update(int lineNumber, Expression[] localVariables) throws DebugException {
++		this.fLineNumber = lineNumber;
++		// Reset state
++		this.fPreviousVariables = fCurrentVariables;
++		this.fCurrentVariables = null;
++		// Set new locals
++		this.fLocalVariables = localVariables;
++	}
++
++	/**
++	 * Merges incoming variable. Merge is done by means of checking if related
++	 * child variable existed in "one step back" state of a frame. If related
++	 * variable existed, it is updated with the use of the most recent
++	 * descriptor and returned instead of the incoming one.
++	 * 
++	 * @param variable
++	 * @param descriptor
++	 * @return merged variable
++	 */
++	protected IVariable merge(IVariable variable) {
++		if (fPreviousVariables == null)
++			return variable;
++		if (!(variable instanceof PHPVariable))
++			return variable;
++		PHPVariable incoming = (PHPVariable) variable;
++		if (incoming.getFullName().isEmpty())
++			return incoming;
++		for (IVariable stored : fPreviousVariables.locals) {
++			if (stored instanceof PHPVariable) {
++				PHPVariable previous = (PHPVariable) stored;
++				if (previous.getFullName().equals(incoming.getFullName())) {
++					((PHPVariable) stored).update(incoming.getExpression());
++					return stored;
++				}
++			}
++		}
++		return variable;
++	}
++
++	/**
++	 * Returns this stack frame's unique identifier within its thread
++	 * 
++	 * @return this stack frame's unique identifier within its thread
++	 */
++	protected int getDepth() {
++		return fDepth;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getThread()
++	 */
++	public IThread getThread() {
++		return fThread;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
++	 */
++	public synchronized IVariable[] getVariables() throws DebugException {
++		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
++		if (fCurrentVariables == null) {
++			fCurrentVariables = new PHPVariableContainer();
++			fCurrentVariables.locals = new PHPVariable[localVariables.length];
++			for (int i = 0; i < localVariables.length; i++) {
++				PHPVariable incoming = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i]);
++				fCurrentVariables.locals[i] = merge(incoming);
++			}
++		}
++		return fCurrentVariables.locals;
++	}
++
++	public synchronized IVariable findVariable(String varName) throws DebugException {
++		if (fCurrentVariables == null) {
++			getVariables();
++		}
++		if (fCurrentVariables != null) {
++			return (IVariable) fCurrentVariables.findVariable(varName);
++		}
++		return null;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
++	 */
++	public boolean hasVariables() throws DebugException {
++		return ((PHPDebugTarget) getDebugTarget()).getVariables(this).length > 0;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
++	 */
++	public int getLineNumber() throws DebugException {
++		return fLineNumber;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
++	 */
++	public int getCharStart() throws DebugException {
++		return -1;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
++	 */
++	public int getCharEnd() throws DebugException {
++		return -1;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
++	 */
++	public String getName() throws DebugException {
++		return fFunctionName;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
++	 */
++	public IRegisterGroup[] getRegisterGroups() throws DebugException {
++		return new IRegisterGroup[0];
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
++	 */
++	public boolean hasRegisterGroups() throws DebugException {
++		return false;
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
++	 */
++	public boolean canStepInto() {
++		return getThread().canStepInto();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
++	 */
++	public boolean canStepOver() {
++		return getThread().canStepOver();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
++	 */
++	public boolean canStepReturn() {
++		return getThread().canStepReturn();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#isStepping()
++	 */
++	public boolean isStepping() {
++		return getThread().isStepping();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#stepInto()
++	 */
++	public void stepInto() throws DebugException {
++		getThread().stepInto();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#stepOver()
++	 */
++	public void stepOver() throws DebugException {
++		getThread().stepOver();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
++	 */
++	public void stepReturn() throws DebugException {
++		getThread().stepReturn();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
++	 */
++	public boolean canResume() {
++		return getThread().canResume();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
++	 */
++	public boolean canSuspend() {
++		return getThread().canSuspend();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
++	 */
++	public boolean isSuspended() {
++		return getThread().isSuspended();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
++	 */
++	public void resume() throws DebugException {
++		getThread().resume();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
++	 */
++	public void suspend() throws DebugException {
++		getThread().suspend();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
++	 */
++	public boolean canTerminate() {
++		return getThread().canTerminate();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
++	 */
++	public boolean isTerminated() {
++		return getThread().isTerminated();
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
++	 */
++	public void terminate() throws DebugException {
++		getThread().terminate();
++	}
++
++	public int checkLineNumber() throws DebugException {
++		return fLineNumber;
++	}
++
++	/**
++	 * Returns the name of the source file this stack frame is associated with.
++	 * 
++	 * @return the name of the source file this stack frame is associated with
++	 */
++	public String getSourceName() {
++		return fResolvedFileName;
++	}
++
++	/**
++	 * Returns the file name with full path.
++	 * 
++	 * @return the file name with full path
++	 */
++	public String getAbsoluteFileName() {
++		return fFileName;
++	}
++
++	public Expression[] getStackVariables() {
++		return fLocalVariables;
++	}
++
++	public void setStackVariables(Expression[] variables) {
++		fLocalVariables = variables;
++	}
++
++}
+diff --git a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPValue.java b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPValue.java
+index 9c44c1d..36762e1 100644
+--- a/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPValue.java
++++ b/plugins/org.eclipse.php.debug.core/src/org/eclipse/php/internal/debug/core/zend/model/PHPValue.java
+@@ -26,6 +26,7 @@ import org.eclipse.php.internal.debug.core.model.VirtualPartition;
+ import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
+ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
++import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsUtil;
+ 
+ /**
+  * Value of a PHP variable.
+@@ -95,6 +96,11 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
+ 		return fExpressionValue.getValueAsString();
+ 	}
+ 
++	public String getValueDetail() throws DebugException {
++		return ExpressionsUtil.getInstance(((PHPDebugTarget) getDebugTarget()).getExpressionManager())
++				.getValueDetail(fExpression);
++	}
++
+ 	/*
+ 	 * (non-Javadoc)
+ 	 * 
+diff --git a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/ExpressionInformationControlCreator.java b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/ExpressionInformationControlCreator.java
+new file mode 100644
+index 0000000..1694a36
+--- /dev/null
++++ b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/ExpressionInformationControlCreator.java
+@@ -0,0 +1,563 @@
++/*******************************************************************************
++ * Copyright (c) 2017 Alex Xu and others.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ * 
++ * Contributors:
++ *     Alex Xu - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.php.internal.debug.ui.hovers;
++
++import org.eclipse.core.runtime.CoreException;
++import org.eclipse.debug.core.model.IVariable;
++import org.eclipse.debug.internal.ui.SWTFactory;
++import org.eclipse.debug.internal.ui.model.elements.ElementContentProvider;
++import org.eclipse.debug.internal.ui.viewers.model.provisional.*;
++import org.eclipse.debug.internal.ui.views.variables.details.DefaultDetailPane;
++import org.eclipse.debug.internal.ui.views.variables.details.DetailPaneProxy;
++import org.eclipse.debug.internal.ui.views.variables.details.IDetailPaneContainer;
++import org.eclipse.debug.ui.AbstractDebugView;
++import org.eclipse.debug.ui.IDebugUIConstants;
++import org.eclipse.jface.dialogs.IDialogSettings;
++import org.eclipse.jface.text.AbstractInformationControl;
++import org.eclipse.jface.text.IInformationControl;
++import org.eclipse.jface.text.IInformationControlCreator;
++import org.eclipse.jface.text.IInformationControlExtension2;
++import org.eclipse.jface.viewers.*;
++import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
++import org.eclipse.swt.SWT;
++import org.eclipse.swt.custom.SashForm;
++import org.eclipse.swt.events.SelectionEvent;
++import org.eclipse.swt.events.SelectionListener;
++import org.eclipse.swt.graphics.Color;
++import org.eclipse.swt.graphics.Point;
++import org.eclipse.swt.layout.GridData;
++import org.eclipse.swt.layout.GridLayout;
++import org.eclipse.swt.widgets.Composite;
++import org.eclipse.swt.widgets.Layout;
++import org.eclipse.swt.widgets.Shell;
++import org.eclipse.swt.widgets.Tree;
++import org.eclipse.ui.IWorkbenchPage;
++import org.eclipse.ui.IWorkbenchPartSite;
++
++/**
++ * Creates an information control to display an expression in a hover control.
++ * 
++ * @noextend This class is not intended to be subclassed by clients.
++ * 
++ */
++public class ExpressionInformationControlCreator implements IInformationControlCreator {
++
++	class ExpressionInformationControl extends AbstractInformationControl implements IInformationControlExtension2 {
++
++		/**
++		 * Dialog setting key for height
++		 */
++		private static final String HEIGHT = "HEIGHT"; //$NON-NLS-1$
++
++		/**
++		 * Dialog setting key for width.
++		 */
++		private static final String WIDTH = "WIDTH"; //$NON-NLS-1$
++
++		/**
++		 * Dialog setting key for tree sash weight
++		 */
++		private static final String SASH_WEIGHT_TREE = "SashWeightTree"; //$NON-NLS-1$
++
++		/**
++		 * Dialog setting key for details sash weight
++		 */
++		private static final String SASH_WEIGHT_DETAILS = "SashWeightDetails"; //$NON-NLS-1$
++
++		/**
++		 * Variable to display.
++		 */
++		private IVariable fVariable;
++
++		private IPresentationContext fContext;
++		private TreeModelViewer fViewer;
++		private SashForm fSashForm;
++		private Composite fDetailPaneComposite;
++		private DetailPaneProxy fDetailPane;
++		private Tree fTree;
++
++		/**
++		 * Creates the content for the root element of the tree viewer in the
++		 * hover
++		 */
++		private class TreeRoot extends ElementContentProvider {
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see
++			 * org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
++			 * ElementContentProvider#getChildCount(java.lang.Object,
++			 * org.eclipse.debug.internal.ui.viewers.provisional.
++			 * IPresentationContext)
++			 */
++			@Override
++			protected int getChildCount(Object element, IPresentationContext context, IViewerUpdate monitor)
++					throws CoreException {
++				return 1;
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see
++			 * org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
++			 * ElementContentProvider#getChildren(java.lang.Object, int, int,
++			 * org.eclipse.debug.internal.ui.viewers.provisional.
++			 * IPresentationContext)
++			 */
++			@Override
++			protected Object[] getChildren(Object parent, int index, int length, IPresentationContext context,
++					IViewerUpdate monitor) throws CoreException {
++				return new Object[] { fVariable };
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see
++			 * org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
++			 * ElementContentProvider#supportsContextId(java.lang.String)
++			 */
++			@Override
++			protected boolean supportsContextId(String id) {
++				return true;
++			}
++		}
++
++		/**
++		 * Inner class implementing IDetailPaneContainer methods. Handles
++		 * changes to detail pane and provides limited access to the detail pane
++		 * proxy.
++		 */
++		private class DetailPaneContainer implements IDetailPaneContainer {
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see org.eclipse.debug.internal.ui.views.variables.details.
++			 * IDetailPaneContainer#getCurrentPaneID()
++			 */
++			@Override
++			public String getCurrentPaneID() {
++				return fDetailPane.getCurrentPaneID();
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see org.eclipse.debug.internal.ui.views.variables.details.
++			 * IDetailPaneContainer#getCurrentSelection()
++			 */
++			@Override
++			public IStructuredSelection getCurrentSelection() {
++				return (IStructuredSelection) fViewer.getSelection();
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see org.eclipse.debug.internal.ui.views.variables.details.
++			 * IDetailPaneContainer#refreshDetailPaneContents()
++			 */
++			@Override
++			public void refreshDetailPaneContents() {
++				fDetailPane.display(getCurrentSelection());
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see org.eclipse.debug.internal.ui.views.variables.details.
++			 * IDetailPaneContainer#getParentComposite()
++			 */
++			@Override
++			public Composite getParentComposite() {
++				return fDetailPaneComposite;
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see org.eclipse.debug.internal.ui.views.variables.details.
++			 * IDetailPaneContainer#getWorkbenchPartSite()
++			 */
++			@Override
++			public IWorkbenchPartSite getWorkbenchPartSite() {
++				return null;
++			}
++
++			/*
++			 * (non-Javadoc)
++			 * 
++			 * @see org.eclipse.debug.internal.ui.views.variables.details.
++			 * IDetailPaneContainer#paneChanged(java.lang.String)
++			 */
++			@Override
++			public void paneChanged(String newPaneID) {
++				if (newPaneID.equals(DefaultDetailPane.ID)) {
++					fDetailPane.getCurrentControl()
++							.setForeground(getShell().getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
++					fDetailPane.getCurrentControl()
++							.setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
++				}
++			}
++
++		}
++
++		/**
++		 * Constructs a new control in the given shell.
++		 * 
++		 * @param parentShell
++		 *            shell
++		 * @param resize
++		 *            whether resize is supported
++		 */
++		ExpressionInformationControl(Shell parentShell, boolean resize) {
++			super(parentShell, resize);
++			create();
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.AbstractInformationControl#computeSizeHint()
++		 */
++		@Override
++		public Point computeSizeHint() {
++			IDialogSettings settings = getDialogSettings(false);
++			if (settings != null) {
++				int x = getIntSetting(settings, WIDTH);
++				if (x > 0) {
++					int y = getIntSetting(settings, HEIGHT);
++					if (y > 0) {
++						return new Point(x, y);
++					}
++				}
++			}
++			return super.computeSizeHint();
++		}
++
++		/**
++		 * Returns the dialog settings for this hover or <code>null</code> if
++		 * none
++		 * 
++		 * @param create
++		 *            whether to create the settings
++		 */
++		private IDialogSettings getDialogSettings(boolean create) {
++			IDialogSettings settings = PHPDebugUIPlugin.getDefault().getDialogSettings();
++			IDialogSettings section = settings.getSection(this.getClass().getName());
++			if (section == null & create) {
++				section = settings.addNewSection(this.getClass().getName());
++			}
++			return section;
++		}
++
++		/**
++		 * Returns an integer value in the given dialog settings or -1 if none.
++		 * 
++		 * @param settings
++		 *            dialog settings
++		 * @param key
++		 *            key
++		 * @return value or -1 if not present
++		 */
++		private int getIntSetting(IDialogSettings settings, String key) {
++			try {
++				return settings.getInt(key);
++			} catch (NumberFormatException e) {
++				return -1;
++			}
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see org.eclipse.jface.text.AbstractInformationControl#dispose()
++		 */
++		@Override
++		public void dispose() {
++			persistSettings(getShell());
++			fContext.dispose();
++			super.dispose();
++		}
++
++		/**
++		 * Persists dialog settings.
++		 * 
++		 * @param shell
++		 */
++		private void persistSettings(Shell shell) {
++			if (shell != null && !shell.isDisposed()) {
++				if (isResizable()) {
++					IDialogSettings settings = getDialogSettings(true);
++					Point size = shell.getSize();
++					settings.put(WIDTH, size.x);
++					settings.put(HEIGHT, size.y);
++					int[] weights = fSashForm.getWeights();
++					settings.put(SASH_WEIGHT_TREE, weights[0]);
++					settings.put(SASH_WEIGHT_DETAILS, weights[1]);
++				}
++			}
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.AbstractInformationControl#setVisible(boolean)
++		 */
++		@Override
++		public void setVisible(boolean visible) {
++			if (!visible) {
++				persistSettings(getShell());
++			}
++			super.setVisible(visible);
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.
++		 * eclipse.swt.widgets.Composite)
++		 */
++		@Override
++		protected void createContent(Composite parent) {
++
++			fSashForm = new SashForm(parent, parent.getStyle());
++			fSashForm.setOrientation(SWT.VERTICAL);
++
++			// update presentation context
++			AbstractDebugView view = getViewToEmulate();
++			fContext = new PresentationContext(IDebugUIConstants.ID_VARIABLE_VIEW);
++			if (view != null) {
++				// copy over properties
++				IPresentationContext copy = ((TreeModelViewer) view.getViewer()).getPresentationContext();
++				String[] properties = copy.getProperties();
++				for (int i = 0; i < properties.length; i++) {
++					String key = properties[i];
++					fContext.setProperty(key, copy.getProperty(key));
++				}
++			}
++
++			fViewer = new TreeModelViewer(fSashForm, SWT.NO_TRIM | SWT.MULTI | SWT.VIRTUAL, fContext);
++			fViewer.setAutoExpandLevel(1);
++
++			if (view != null) {
++				// copy over filters
++				StructuredViewer structuredViewer = (StructuredViewer) view.getViewer();
++				if (structuredViewer != null) {
++					ViewerFilter[] filters = structuredViewer.getFilters();
++					for (int i = 0; i < filters.length; i++) {
++						fViewer.addFilter(filters[i]);
++					}
++				}
++			}
++
++			fDetailPaneComposite = SWTFactory.createComposite(fSashForm, 1, 1, GridData.FILL_BOTH);
++			Layout layout = fDetailPaneComposite.getLayout();
++			if (layout instanceof GridLayout) {
++				GridLayout gl = (GridLayout) layout;
++				gl.marginHeight = 0;
++				gl.marginWidth = 0;
++			}
++
++			fDetailPane = new DetailPaneProxy(new DetailPaneContainer());
++			fDetailPane.display(null); // Bring up the default pane so the user
++										// doesn't see an empty composite
++
++			fTree = fViewer.getTree();
++			fTree.addSelectionListener(new SelectionListener() {
++				@Override
++				public void widgetSelected(SelectionEvent e) {
++					fDetailPane.display((IStructuredSelection) fViewer.getSelection());
++				}
++
++				@Override
++				public void widgetDefaultSelected(SelectionEvent e) {
++				}
++			});
++
++			initSashWeights();
++
++			// add update listener to auto-select and display details of root
++			// expression
++			fViewer.addViewerUpdateListener(new IViewerUpdateListener() {
++				@Override
++				public void viewerUpdatesComplete() {
++				}
++
++				@Override
++				public void viewerUpdatesBegin() {
++				}
++
++				@Override
++				public void updateStarted(IViewerUpdate update) {
++				}
++
++				@Override
++				public void updateComplete(IViewerUpdate update) {
++					if (update instanceof IChildrenUpdate) {
++						TreeSelection selection = new TreeSelection(new TreePath(new Object[] { fVariable }));
++						fViewer.setSelection(selection);
++						fDetailPane.display(selection);
++						fViewer.removeViewerUpdateListener(this);
++					}
++				}
++			});
++
++			setForegroundColor(getShell().getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
++			setBackgroundColor(getShell().getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
++		}
++
++		/**
++		 * Attempts to find an appropriate view to emulate, this will either be
++		 * the variables view or the expressions view.
++		 * 
++		 * @return a view to emulate or <code>null</code>
++		 */
++		private AbstractDebugView getViewToEmulate() {
++			IWorkbenchPage page = PHPDebugUIPlugin.getActiveWorkbenchWindow().getActivePage();
++			AbstractDebugView expressionsView = (AbstractDebugView) page.findView(IDebugUIConstants.ID_EXPRESSION_VIEW);
++			if (expressionsView != null && expressionsView.isVisible()) {
++				return expressionsView;
++			}
++			AbstractDebugView variablesView = (AbstractDebugView) page.findView(IDebugUIConstants.ID_VARIABLE_VIEW);
++			if (variablesView != null && variablesView.isVisible()) {
++				return variablesView;
++			}
++			if (expressionsView != null) {
++				return expressionsView;
++			}
++			return variablesView;
++		}
++
++		/**
++		 * Initializes the sash form weights from the preference store (using
++		 * default values if no sash weights were stored previously).
++		 */
++		protected void initSashWeights() {
++			IDialogSettings settings = getDialogSettings(false);
++			if (settings != null) {
++				int tree = getIntSetting(settings, SASH_WEIGHT_TREE);
++				if (tree > 0) {
++					int details = getIntSetting(settings, SASH_WEIGHT_DETAILS);
++					if (details > 0) {
++						fSashForm.setWeights(new int[] { tree, details });
++					}
++				}
++			}
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.AbstractInformationControl#setForegroundColor(
++		 * org.eclipse.swt.graphics.Color)
++		 */
++		@Override
++		public void setForegroundColor(Color foreground) {
++			super.setForegroundColor(foreground);
++			fDetailPaneComposite.setForeground(foreground);
++			fTree.setForeground(foreground);
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.AbstractInformationControl#setBackgroundColor(
++		 * org.eclipse.swt.graphics.Color)
++		 */
++		@Override
++		public void setBackgroundColor(Color background) {
++			super.setBackgroundColor(background);
++			fDetailPaneComposite.setBackground(background);
++			fTree.setBackground(background);
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see org.eclipse.jface.text.AbstractInformationControl#setFocus()
++		 */
++		@Override
++		public void setFocus() {
++			super.setFocus();
++			fTree.setFocus();
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.IInformationControlExtension#hasContents()
++		 */
++		@Override
++		public boolean hasContents() {
++			return fVariable != null;
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see
++		 * org.eclipse.jface.text.IInformationControlExtension2#setInput(java.
++		 * lang.Object)
++		 */
++		@Override
++		public void setInput(Object input) {
++			if (input instanceof IVariable) {
++				fVariable = (IVariable) input;
++				fViewer.setInput(new TreeRoot());
++			}
++		}
++
++		/*
++		 * (non-Javadoc)
++		 * 
++		 * @see org.eclipse.jface.text.AbstractInformationControl#
++		 * getInformationPresenterControlCreator()
++		 */
++		@Override
++		public IInformationControlCreator getInformationPresenterControlCreator() {
++			return new ExpressionInformationControlCreator() {
++
++				/*
++				 * (non-Javadoc)
++				 * 
++				 * @see org.eclipse.php.internal.debug.ui.hovers.
++				 * ExpressionInformationControlCreator#createInformationControl(
++				 * org.eclipse.swt.widgets.Shell)
++				 */
++				@Override
++				public IInformationControl createInformationControl(Shell shell) {
++					return new ExpressionInformationControl(shell, true);
++				}
++			};
++		}
++	}
++
++	/*
++	 * (non-Javadoc)
++	 * 
++	 * @see org.eclipse.jface.text.IInformationControlCreator#
++	 * createInformationControl(org.eclipse.swt.widgets.Shell)
++	 */
++	@Override
++	public IInformationControl createInformationControl(Shell parent) {
++		return new ExpressionInformationControl(parent, false);
++	}
++
++}
+diff --git a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/PHPDebugTextHover.java b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/PHPDebugTextHover.java
+index 372e486..af5927a 100644
+--- a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/PHPDebugTextHover.java
++++ b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/PHPDebugTextHover.java
+@@ -12,123 +12,40 @@
+ package org.eclipse.php.internal.debug.ui.hovers;
+ 
+ import org.eclipse.core.runtime.IAdaptable;
++import org.eclipse.debug.core.model.IStackFrame;
++import org.eclipse.debug.core.model.IVariable;
+ import org.eclipse.debug.ui.DebugUITools;
++import org.eclipse.dltk.core.IField;
++import org.eclipse.dltk.core.ISourceModule;
++import org.eclipse.dltk.core.IType;
+ import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
+-import org.eclipse.jface.text.BadLocationException;
+-import org.eclipse.jface.text.IRegion;
+-import org.eclipse.jface.text.ITextViewer;
+-import org.eclipse.jface.text.TextSelection;
+-import org.eclipse.php.internal.core.Logger;
+-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
++import org.eclipse.jface.text.*;
++import org.eclipse.php.core.ast.nodes.*;
++import org.eclipse.php.core.ast.visitor.AbstractVisitor;
++import org.eclipse.php.core.compiler.PHPFlags;
++import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
++import org.eclipse.php.internal.core.corext.dom.NodeFinder;
++import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+ import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
++import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsUtil;
+ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+ import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
+-import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
++import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
++import org.eclipse.php.ui.editor.SharedASTProvider;
+ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
+ import org.eclipse.php.ui.editor.hover.IPHPTextHover;
+-import org.eclipse.swt.widgets.Display;
+ import org.eclipse.ui.IEditorInput;
+ import org.eclipse.ui.part.FileEditorInput;
+-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+ 
+-@SuppressWarnings("restriction")
+-public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
++public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover, ITextHoverExtension2 {
+ 
+-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+-		if (textViewer == null || textViewer.getDocument() == null) {
+-			return null;
+-		}
+-		if (textViewer instanceof PHPStructuredTextViewer) {
+-			setEditor(((PHPStructuredTextViewer) textViewer).getTextEditor());
+-		}
+-
+-		PHPDebugTarget debugTarget = getDebugTarget();
+-		if (debugTarget == null) {
+-			return null;
+-		}
++	private ExpressionsUtil expressionsUtil;
+ 
+-		int offset = hoverRegion.getOffset();
+-		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument())
+-				.getRegionAtCharacterOffset(offset);
+-		ITextRegion region = null;
+-		if (flatNode != null) {
+-			region = flatNode.getRegionAtCharacterOffset(offset);
+-		}
+-
+-		ITextRegionCollection container = flatNode;
+-		if (region instanceof ITextRegionContainer) {
+-			container = (ITextRegionContainer) region;
+-			region = container.getRegionAtCharacterOffset(offset);
+-		}
+-		IPhpScriptRegion phpScriptRegion = null;
+-		if (region != null && container != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
+-			phpScriptRegion = (IPhpScriptRegion) region;
+-			try {
+-				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
+-			} catch (BadLocationException e) {
+-				region = null;
+-			}
+-
+-			if (region != null) {
+-				int varOffset = 0;
+-				int varLength = 0;
+-
+-				String regionType = region.getType();
+-				if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE
+-						|| regionType == PHPRegionTypes.PHP_THIS) {
+-					varOffset = hoverRegion.getOffset();
+-					varLength = hoverRegion.getLength();
+-					try {
+-						ITextRegion prevPhpToken = phpScriptRegion.getPhpToken(region.getStart() - 1);
+-						if (prevPhpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
+-							prevPhpToken = phpScriptRegion.getPhpToken(prevPhpToken.getStart() - 1);
+-							varLength += varOffset - prevPhpToken.getStart();
+-							varOffset = prevPhpToken.getStart();
+-						}
+-					} catch (BadLocationException e) {
+-						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
+-					}
+-				} else if (regionType == PHPRegionTypes.PHP_LABEL) {
+-					try {
+-						ITextRegion nextRegion = phpScriptRegion.getPhpToken(region.getEnd());
+-						ITextRegion prevRegion = phpScriptRegion.getPhpToken(region.getStart() - 1);
+-						if (prevRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR) {
+-							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
+-							if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+-								String nextTokenString = textViewer.getDocument().get(
+-										phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getLength());
+-								if (!"(".equals(nextTokenString)) { //$NON-NLS-1$
+-									varOffset = phpScriptRegion.getStart() + prevRegion.getStart();
+-									varLength = region.getEnd() - prevRegion.getStart();
+-								}
+-							}
+-						}
+-					} catch (BadLocationException e) {
+-						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
+-					}
+-				}
++	public PHPDebugTextHover() {
++	}
+ 
+-				if (varLength > 0) {
+-					String variable = null;
+-					try {
+-						int[] variableRange = getVariableRange(textViewer, varOffset, varLength);
+-						variable = textViewer.getDocument().get(variableRange[0], variableRange[1]);
+-						if (regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE) {
+-							variable = "$" + variable; //$NON-NLS-1$
+-						}
+-						variable = "<B>" + variable + " = </B>" //$NON-NLS-1$ //$NON-NLS-2$
+-								+ getValue(debugTarget, variable);
+-					} catch (BadLocationException e) {
+-						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
+-					}
+-					return variable;
+-				}
+-			}
+-		}
+-		return null;
++	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
++		return getHoverInfo2(textViewer, hoverRegion).toString();
+ 	}
+ 
+ 	public IHoverMessageDecorator getMessageDecorator() {
+@@ -136,73 +53,22 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
+ 	}
+ 
+ 	/**
+-	 * In case the user selected a text in the document and then hover over it,
+-	 * we would like to evaluate the selected text and not only the hover region
+-	 * that is under the mouse pointer. In this case a we check for the selected
+-	 * text area and if the hover region contains in the selection, we evaluate
+-	 * the entire selection. In case that we hover over a different code area,
+-	 * the original hover region is used for the evaluation.
++	 * Returns the stack frame in which to search for variables, or
++	 * <code>null</code> if none.
+ 	 * 
+-	 * Note that this kind of behavior allows evaluation of arrays content such
+-	 * as $array[0] evaluation.
+-	 * 
+-	 * @param textViewer
+-	 * @param offset
+-	 *            The original hover region offset.
+-	 * @param length
+-	 *            The original hover region length.
+-	 * @return An array of integers that contains the offset and the length of
+-	 *         the evaluation request.
++	 * @return the stack frame in which to search for variables, or
++	 *         <code>null</code> if none
+ 	 */
+-	protected int[] getVariableRange(final ITextViewer textViewer, final int offset, final int length) {
+-		final int[] variableRange = new int[] { offset, length };
+-		Display.getDefault().syncExec(new Runnable() {
+-			public void run() {
+-				TextSelection selection = (TextSelection) textViewer.getSelectionProvider().getSelection();
+-				if (selection.isEmpty()) {
+-					return;
+-				}
+-				// Check if the selection contains the hover region
+-				int selectionStart = selection.getOffset();
+-				int selectionEnd = selectionStart + selection.getLength();
+-				int hoverRegionEnd = offset + length;
+-				if (offset >= selectionStart && offset < selectionEnd && hoverRegionEnd <= selectionEnd) {
+-					variableRange[0] = selection.getOffset();
+-					variableRange[1] = selection.getLength();
+-				}
+-			}
+-		});
+-		return variableRange;
+-	}
+-
+-	/**
+-	 * Returns the variable value.
+-	 * 
+-	 * @param variable
+-	 *            The variable name
+-	 * @return
+-	 */
+-	protected String getValue(PHPDebugTarget debugTarget, String variable) {
+-		DefaultExpressionsManager expressionManager = debugTarget.getExpressionManager();
+-		Expression expression = expressionManager.buildExpression(variable);
+-
+-		// Get the value from the debugger
+-		debugTarget.getExpressionManager().getExpressionValue(expression, 1);
+-		expressionManager.update(expression, 1);
+-		String value = expression.getValue().getValueAsString();
+-
+-		if (value != null && value.length() == 0) {
+-			value = "Empty"; //$NON-NLS-1$
+-			return value;
+-		}
+-
+-		if (value != null) {
+-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+-			// value = value.replaceAll("\n", "<br>");
++	protected IStackFrame getFrame() {
++		IAdaptable adaptable = DebugUITools.getDebugContext();
++		if (adaptable != null) {
++			return adaptable.getAdapter(PHPStackFrame.class);
+ 		}
++		return null;
++	}
+ 
+-		return value;
++	public IInformationControlCreator getHoverControlCreator() {
++		return new ExpressionInformationControlCreator();
+ 	}
+ 
+ 	// Returns the php debug target that is in contex.
+@@ -232,4 +98,223 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
+ 		return null;
+ 	}
+ 
++	@Override
++	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
++		PHPStackFrame frame = (PHPStackFrame) getFrame();
++		if (frame == null)
++			return null;
++
++		expressionsUtil = ExpressionsUtil.getInstance(getDebugTarget().getExpressionManager());
++
++		IVariable variable = null;
++		try {
++			ISourceModule sourceModule = getEditorInputModelElement();
++			ASTNode root = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
++			if (root == null) {
++				ASTParser parser = ASTParser.newParser(sourceModule);
++				root = parser.createAST(null);
++			}
++			ASTNode node = NodeFinder.perform(root, hoverRegion.getOffset(), hoverRegion.getLength());
++
++			if (node instanceof Scalar) {
++				Scalar scalar = (Scalar) node;
++				if (node.getParent() instanceof ArrayAccess) {
++					ArrayAccess access = (ArrayAccess) node.getParent();
++					Expression expression = expressionsUtil.buildExpression(computeExpression(access.getName()));
++					Expression[] children = expression.getValue().getOriChildren();
++					if (children != null && children.length > 0) {
++						for (Expression child : children) {
++							String name = child.getLastName();
++							if (scalar.getScalarType() == Scalar.TYPE_STRING) {
++								name = "\"" + name + "\""; //$NON-NLS-1$ //$NON-NLS-2$
++							}
++							if (name.equals(scalar.getStringValue())) {
++								variable = new PHPVariable(getDebugTarget(), child);
++							}
++						}
++					}
++				} else if (!(scalar.getParent() instanceof Include) && scalar.getScalarType() == Scalar.TYPE_STRING) {
++					if (!(scalar.getStringValue().startsWith("\"") && scalar.getStringValue().endsWith("\""))) { //$NON-NLS-1$ //$NON-NLS-2$
++						if (!scalar.getStringValue().trim().equals("")) {
++							Expression constant = expressionsUtil.fetchConstant(scalar.getStringValue());
++							variable = new PHPVariable(getDebugTarget(), constant);
++						}
++					}
++				}
++			} else if (node.getParent() instanceof Variable && node.getParent().getParent() instanceof FieldAccess) {
++				String nodeName = ((Identifier) node).getName();
++				String expression = computeExpression(((FieldAccess) node.getParent().getParent()).getDispatcher());
++				variable = fetchClassMember(expression, nodeName);
++			} else if (node.getParent() instanceof StaticConstantAccess) {
++				String nodeName = ((Identifier) node).getName();
++				StaticConstantAccess staticAccess = (StaticConstantAccess) node.getParent();
++				String className = resolveTypeName((Identifier) staticAccess.getClassName());
++				if (className != null) {
++					if (nodeName.equals("class")) { //$NON-NLS-1$
++						variable = new PHPVariable(getDebugTarget(), expressionsUtil.fetchClassContext(className));
++					} else {
++						variable = fetchClassConstant(className, nodeName);
++					}
++				}
++			} else if (node.getParent() instanceof StaticFieldAccess) {
++				Variable var = (Variable) node;
++				String nodeName = ((Identifier) var.getName()).getName();
++				StaticFieldAccess staticAccess = (StaticFieldAccess) node.getParent();
++				Identifier identifier = null;
++				if (staticAccess.getClassName() instanceof Identifier) {
++					identifier = (Identifier) staticAccess.getClassName();
++				} else if (staticAccess.getClassName() instanceof VariableBase) {
++					identifier = (Identifier) var.getName();
++				}
++				variable = fetchStaticMember(identifier, nodeName);
++			} else if (node.getParent() instanceof ConstantDeclaration) {
++				String nodeName = ((Identifier) node).getName();
++				IField field = (IField) sourceModule.getElementAt(node.getStart());
++				if (field.getParent() instanceof IType) {
++					IType type = (IType) field.getParent();
++					String typeName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
++					if (!PHPFlags.isNamespace(type.getFlags())) {
++						variable = fetchClassConstant(typeName, nodeName);
++					} else {
++						Expression constant = expressionsUtil
++								.fetchConstant(typeName + NamespaceReference.NAMESPACE_DELIMITER + nodeName);
++						variable = new PHPVariable(getDebugTarget(), constant);
++					}
++				}
++			} else if (node.getParent() instanceof SingleFieldDeclaration) {
++				IField field = (IField) sourceModule.getElementAt(node.getStart());
++				String typeName = "";
++				boolean isAnonymous = false;
++				if (field.getParent() instanceof IType) {
++					IType type = (IType) field.getParent();
++					typeName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
++					isAnonymous = PHPFlags.isAnonymous(type.getFlags());
++				}
++				Variable var = (Variable) node;
++				String nodeName = ((Identifier) var.getName()).getName();
++				if (!PHPFlags.isStatic(field.getFlags())) {
++					Expression e = expressionsUtil.buildExpression("$this"); //$NON-NLS-1$
++					if (isAnonymous || typeName.equals(e.getValue().getValue().toString())) {
++						variable = fetchClassMember(e, nodeName);
++					}
++				} else {
++					variable = fetchStaticMember(typeName, nodeName);
++				}
++			} else {
++				// local variables
++				String variableName = null;
++				// ${a}
++				if (node instanceof Identifier && node.getParent() instanceof Variable
++						&& !((Variable) node.getParent()).isDollared()) {
++					variableName = "$" + ((Identifier) node).getName(); //$NON-NLS-1$
++				} else {
++					IDocument document = textViewer.getDocument();
++					if (document != null) {
++						// $$a
++						if (node instanceof ReflectionVariable) {
++							variableName = document.get(((ReflectionVariable) node).getName().getStart(),
++									((ReflectionVariable) node).getName().getLength());
++						} else {
++							// $a
++							variableName = document.get(hoverRegion.getOffset(), hoverRegion.getLength());
++						}
++					}
++				}
++				variable = frame.findVariable(variableName);
++			}
++		} catch (Exception e) {
++			PHPDebugPlugin.log(e);
++		}
++		return variable;
++	}
++
++	protected String computeExpression(VariableBase node) {
++		final StringBuffer dispatcher = new StringBuffer();
++		node.accept(new AbstractVisitor() {
++			private boolean isFirstVariable = true;
++
++			public boolean visit(Identifier identifier) {
++				if (identifier.getParent() instanceof Identifier) {
++					String typeName = resolveTypeName((Identifier) identifier.getParent());
++					if (typeName != null)
++						dispatcher.append(typeName);
++				} else if (identifier.getParent() instanceof Variable) {
++					Variable variable = (Variable) identifier.getParent();
++					if (variable.isDollared()) {
++						if (!isFirstVariable) {
++							dispatcher.append("::"); //$NON-NLS-1$
++						}
++						dispatcher.append("$"); //$NON-NLS-1$
++					} else {
++						if (!isFirstVariable) {
++							dispatcher.append("->"); //$NON-NLS-1$
++						}
++					}
++					dispatcher.append(((Identifier) variable.getName()).getName());
++				}
++
++				isFirstVariable = false;
++				return false;
++			};
++		});
++		return dispatcher.toString();
++	}
++
++	private PHPVariable fetchClassMember(String expression, String fieldName) {
++		return fetchClassMember(expressionsUtil.buildExpression(expression), fieldName);
++	}
++
++	private PHPVariable fetchClassMember(Expression expression, String fieldName) {
++		if (expression.getValue().getOriChildren() == null)
++			return null;
++		for (Expression child : expression.getValue().getOriChildren()) {
++			if (child.getLastName().endsWith(fieldName)) {
++				return new PHPVariable(getDebugTarget(), child);
++			}
++		}
++		return null;
++	}
++
++	private PHPVariable fetchStaticMember(String className, String fieldName) {
++		Expression[] staticMembers = expressionsUtil.fetchStaticMembers(className);
++		for (Expression child : staticMembers) {
++			if (child.getLastName().endsWith(fieldName)) {
++				return new PHPVariable(getDebugTarget(), child);
++			}
++		}
++		return null;
++	}
++
++	private PHPVariable fetchStaticMember(Identifier type, String fieldName) {
++		String className = resolveTypeName(type);
++		if (className != null) {
++			return fetchStaticMember(className, fieldName);
++		}
++		return null;
++	}
++
++	private PHPVariable fetchClassConstant(String className, String constantName) {
++		Expression[] constants = expressionsUtil.fetchClassConstants(className);
++		for (Expression child : constants) {
++			if (child.getLastName().equals(constantName)) {
++				return new PHPVariable(getDebugTarget(), child);
++			}
++		}
++		return null;
++	}
++
++	protected String resolveTypeName(Identifier type) {
++		ITypeBinding typeBinding = type.resolveTypeBinding();
++		String className = null;
++		if (typeBinding != null) {
++			className = typeBinding.getName();
++			if (className.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
++				className = className.substring(1);
++			}
++		} else {
++			className = type.getName();
++		}
++		return className;
++	}
++
+ }
+diff --git a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/XDebugTextHover.java b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/XDebugTextHover.java
+index ef468af..2476b59 100644
+--- a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/XDebugTextHover.java
++++ b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/hovers/XDebugTextHover.java
+@@ -11,92 +11,200 @@
+  *******************************************************************************/
+ package org.eclipse.php.internal.debug.ui.hovers;
+ 
++import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
++
+ import org.eclipse.core.runtime.IAdaptable;
+ import org.eclipse.debug.core.DebugException;
+-import org.eclipse.debug.core.model.IValue;
++import org.eclipse.debug.core.model.IStackFrame;
+ import org.eclipse.debug.core.model.IVariable;
+ import org.eclipse.debug.ui.DebugUITools;
+-import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
+-import org.eclipse.jface.text.BadLocationException;
++import org.eclipse.dltk.core.IField;
++import org.eclipse.dltk.core.ISourceModule;
++import org.eclipse.dltk.core.ISourceRange;
++import org.eclipse.dltk.core.IType;
++import org.eclipse.jface.text.IDocument;
+ import org.eclipse.jface.text.IRegion;
+ import org.eclipse.jface.text.ITextViewer;
+-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpEvalVariable;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackVariable;
+-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
++import org.eclipse.php.core.ast.nodes.*;
++import org.eclipse.php.core.compiler.PHPFlags;
++import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
++import org.eclipse.php.internal.core.corext.dom.NodeFinder;
++import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
++import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
++import org.eclipse.php.internal.debug.core.model.VariablesUtil;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.*;
+ import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+-import org.eclipse.php.internal.debug.ui.Logger;
+-import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+-import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
+-import org.eclipse.php.ui.editor.hover.IPHPTextHover;
+-import org.eclipse.wst.sse.core.internal.provisional.text.*;
++import org.eclipse.php.ui.editor.SharedASTProvider;
+ import org.w3c.dom.Node;
+ 
+-public class XDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
++public class XDebugTextHover extends PHPDebugTextHover {
+ 
+-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+-		if (hoverRegion == null || textViewer == null || textViewer.getDocument() == null) {
++	@Override
++	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
++		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
++		if (frame == null)
+ 			return null;
+-		}
+-
+-		IAdaptable adaptable = DebugUITools.getDebugContext();
+-		if (adaptable instanceof DBGpStackFrame) {
+-			DBGpStackFrame context = (DBGpStackFrame) adaptable;
+-
+-			int offset = hoverRegion.getOffset();
+-			IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument())
+-					.getRegionAtCharacterOffset(offset);
+-			ITextRegion region = null;
+-			if (flatNode != null) {
+-				region = flatNode.getRegionAtCharacterOffset(offset);
+-			}
+ 
+-			ITextRegionCollection container = flatNode;
+-			if (region instanceof ITextRegionContainer) {
+-				container = (ITextRegionContainer) region;
+-				region = container.getRegionAtCharacterOffset(offset);
++		DBGpVariable variable = null;
++		try {
++			ISourceModule sourceModule = getEditorInputModelElement();
++			ASTNode root = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
++			if (root == null) {
++				ASTParser parser = ASTParser.newParser(sourceModule);
++				root = parser.createAST(null);
+ 			}
++			ASTNode node = NodeFinder.perform(root, hoverRegion.getOffset(), hoverRegion.getLength());
+ 
+-			if (region != null && container != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
+-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
+-				try {
+-					region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
+-				} catch (BadLocationException e) {
+-					region = null;
++			if (node instanceof Scalar) {
++				Scalar scalar = (Scalar) node;
++				if (node.getParent() instanceof ArrayAccess) {
++					ArrayAccess access = (ArrayAccess) node.getParent();
++					DBGpVariable var = getVariable(computeExpression(access.getName()));
++					String arrayAccessKey = scalar.getStringValue();
++					if (scalar.getScalarType() == Scalar.TYPE_STRING) {
++						arrayAccessKey = arrayAccessKey.replace("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
++					}
++					arrayAccessKey = "[" + arrayAccessKey + "]"; //$NON-NLS-1$ //$NON-NLS-2$
++					variable = fetchMember(var, arrayAccessKey);
++				} else if (!(scalar.getParent() instanceof Include) && scalar.getScalarType() == Scalar.TYPE_STRING) {
++					if (!(scalar.getStringValue().startsWith("\"") && scalar.getStringValue().endsWith("\""))) { //$NON-NLS-1$ //$NON-NLS-2$
++						variable = getVariable(scalar.getStringValue());
++						variable.addFacets(KIND_CONSTANT);
++						variable.addFacets(MOD_PUBLIC);
++					}
+ 				}
+-
+-				if (region != null) {
+-					String regionType = region.getType();
+-					if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE
+-							|| regionType == PHPRegionTypes.PHP_THIS) {
+-						String variable = null;
+-						try {
+-							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
+-							if (variable != null) {
+-								variable = variable.trim();
+-								if (regionType == PHPRegionTypes.PHP_ENCAPSED_VARIABLE) {
+-									variable = "$" + variable; //$NON-NLS-1$
+-								}
+-								variable = "<B>" + variable + " = </B>" + getByProperty(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
+-							}
+-						} catch (BadLocationException e) {
+-							Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
++			} else if (node.getParent() instanceof Variable && node.getParent().getParent() instanceof FieldAccess) {
++				String nodeName = ((Identifier) node).getName();
++				String expression = computeExpression(((FieldAccess) node.getParent().getParent()).getDispatcher());
++				DBGpVariable var = getVariable(expression);
++				variable = fetchMember(var, nodeName);
++			} else if (node.getParent() instanceof StaticConstantAccess) {
++				String nodeName = ((Identifier) node).getName();
++				StaticConstantAccess staticAccess = (StaticConstantAccess) node.getParent();
++				String className = resolveTypeName((Identifier) staticAccess.getClassName());
++				if (className != null) {
++					String name = className + "::" + nodeName; //$NON-NLS-1$
++					variable = getVariable(name);
++					if (nodeName.equals("class")) { //$NON-NLS-1$
++						variable.addFacets(VIRTUAL_CLASS);
++					} else {
++						variable.addFacets(KIND_CONSTANT);
++						variable.addFacets(MOD_PUBLIC);
++					}
++				}
++			} else if (node.getParent() instanceof StaticFieldAccess) {
++				Variable var = (Variable) node;
++				String nodeName = ((Identifier) var.getName()).getName();
++				StaticFieldAccess staticAccess = (StaticFieldAccess) node.getParent();
++				Identifier identifier = null;
++				if (staticAccess.getClassName() instanceof Identifier) {
++					identifier = (Identifier) staticAccess.getClassName();
++				} else if (staticAccess.getClassName() instanceof VariableBase) {
++					identifier = (Identifier) var.getName();
++				}
++				String className = resolveTypeName(identifier);
++				String name = className + "::$" + nodeName; //$NON-NLS-1$
++				variable = getVariable(name);
++			} else if (node.getParent() instanceof ConstantDeclaration) {
++				String nodeName = ((Identifier) node).getName();
++				IField field = (IField) sourceModule.getElementAt(node.getStart());
++				if (field.getParent() instanceof IType) {
++					IType type = (IType) field.getParent();
++					String typeName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
++					if (!PHPFlags.isNamespace(type.getFlags())) {
++						variable = getVariable(typeName + "::" + nodeName); //$NON-NLS-1$
++					} else {
++						variable = getVariable(typeName + NamespaceReference.NAMESPACE_DELIMITER + nodeName);
++					}
++					variable.addFacets(KIND_CONSTANT);
++					variable.addFacets(MOD_PUBLIC);
++				}
++			} else if (node.getParent() instanceof SingleFieldDeclaration) {
++				IField field = (IField) sourceModule.getElementAt(node.getStart());
++				String typeName = "";
++				boolean isAnonymous = false;
++				if (field.getParent() instanceof IType) {
++					IType type = (IType) field.getParent();
++					typeName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
++					isAnonymous = PHPFlags.isAnonymous(type.getFlags());
++				}
++				Variable var = (Variable) node;
++				String nodeName = ((Identifier) var.getName()).getName();
++				if (!PHPFlags.isStatic(field.getFlags())) {
++					DBGpVariable varThis = getVariable("$this"); //$NON-NLS-1$
++					if (isAnonymous || typeName.equals(varThis.getValue().getValueString())) {
++						variable = fetchMember(varThis, nodeName);
++					}
++				} else {
++					variable = getVariable(typeName + "::$" + nodeName); //$NON-NLS-1$
++				}
++			} else {
++				// local variables
++				String variableName = null;
++				// ${a}
++				if (node instanceof Identifier && node.getParent() instanceof Variable
++						&& !((Variable) node.getParent()).isDollared()) {
++					variableName = "$" + ((Identifier) node).getName(); //$NON-NLS-1$
++				} else {
++					IDocument document = textViewer.getDocument();
++					if (document != null) {
++						// $$a
++						if (node instanceof ReflectionVariable) {
++							variableName = document.get(((ReflectionVariable) node).getName().getStart(),
++									((ReflectionVariable) node).getName().getLength());
++						} else {
++							// $a
++							variableName = document.get(hoverRegion.getOffset(), hoverRegion.getLength());
+ 						}
+-						return variable;
+ 					}
+ 				}
++				variable = (DBGpVariable) frame.findVariable(variableName);
+ 			}
++		} catch (Exception e) {
++			PHPDebugPlugin.log(e);
+ 		}
+-		return null;
++		return variable;
++
+ 	}
+ 
+-	public IHoverMessageDecorator getMessageDecorator() {
++	protected IStackFrame getFrame() {
++		IAdaptable adaptable = DebugUITools.getDebugContext();
++		if (adaptable != null) {
++			return adaptable.getAdapter(DBGpStackFrame.class);
++		}
+ 		return null;
+ 	}
+ 
++	protected DBGpVariable getVariable(String expression) {
++		DBGpVariable variable = null;
++		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
++		if (isStack(expression)) {
++			variable = getByProperty(frame, expression);
++		} else {
++			variable = getByEval(frame, expression);
++		}
++		return variable;
++	}
++
++	private void setContextFacets(IVariable variable) {
++		if (variable instanceof DBGpVariable) {
++			DBGpVariable dbgpVariable = (DBGpVariable) variable;
++			try {
++				String endName = dbgpVariable.getName();
++				if (VariablesUtil.isThis(endName))
++					dbgpVariable.addFacets(KIND_THIS);
++				else if (VariablesUtil.isSuperGlobal(endName))
++					dbgpVariable.addFacets(KIND_SUPER_GLOBAL);
++				else if (VariablesUtil.isClassIndicator(endName))
++					dbgpVariable.addFacets(VIRTUAL_CLASS);
++				else
++					dbgpVariable.addFacets(KIND_LOCAL);
++			} catch (DebugException e) {
++				// should not happen
++			}
++		}
++	}
++
+ 	/**
+ 	 * Returns the variable value.
+ 	 * 
+@@ -104,34 +212,16 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
+ 	 *            The variable name
+ 	 * @return
+ 	 */
+-	protected String getByEval(DBGpTarget debugTarget, String expression) {
+-		String value = null;
++	protected DBGpVariable getByEval(DBGpStackFrame context, String expression) {
++		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
+ 		Node resp = debugTarget.eval(expression);
+ 		if (resp == null) {
+-			return ""; //$NON-NLS-1$
+-		}
+-		IVariable tempVar = new DBGpEvalVariable(debugTarget, expression, resp);
+-		IValue val = null;
+-		try {
+-			val = tempVar.getValue();
+-			if (val != null) {
+-				value = val.getValueString();
+-			}
+-		} catch (DebugException e) {
+-		}
+-		if (value != null && value.length() == 0) {
+-			value = PHPDebugUIMessages.XDebugHover_empty;
+-			return value;
++			return null; // $NON-NLS-1$
+ 		}
+-		if (value != null) {
+-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+-		}
+-		return value;
++		return new DBGpEvalVariable(debugTarget, expression, resp);
+ 	}
+ 
+-	protected String getByProperty(DBGpStackFrame context, String variable) {
+-		String value = null;
++	protected DBGpVariable getByProperty(DBGpStackFrame context, String variable) {
+ 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
+ 		String stackLevel = context.getStackLevel();
+ 		Node resp = debugTarget.getProperty(variable, stackLevel, 0);
+@@ -141,26 +231,35 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
+ 			resp = debugTarget.getProperty(variable, stackLevel, 0);
+ 		}
+ 		if (resp == null) {
+-			return ""; //$NON-NLS-1$
++			return null; // $NON-NLS-1$
++		}
++		DBGpVariable var = new DBGpStackVariable(debugTarget, resp, Integer.valueOf(stackLevel));
++		setContextFacets(var);
++		return var;
++	}
++
++	private boolean isStack(String expression) {
++		if (expression.startsWith("$")) {//$NON-NLS-1$
++			ISourceRange enclosingIdentifier = PHPTextSequenceUtilities.getEnclosingIdentifier(expression, 0);
++			if (enclosingIdentifier != null && enclosingIdentifier.getLength() == expression.length() + 1) {
++				return true;
++			}
+ 		}
+-		IVariable tempVar = new DBGpStackVariable(debugTarget, resp, Integer.valueOf(stackLevel));
+-		IValue val = null;
++		return false;
++	}
++
++	private DBGpVariable fetchMember(DBGpVariable variable, String memberName) {
+ 		try {
+-			val = tempVar.getValue();
+-			if (val != null) {
+-				value = val.getValueString();
++			if (variable.getValue() == null || variable.getValue().getVariables() == null)
++				return null;
++			for (IVariable child : variable.getValue().getVariables()) {
++				if (child.getName().equals(memberName) && child instanceof DBGpVariable) {
++					return (DBGpVariable) child;
++				}
+ 			}
+ 		} catch (DebugException e) {
+ 		}
+-		if (value != null && value.length() == 0) {
+-			value = PHPDebugUIMessages.XDebugHover_empty;
+-			return value;
+-		}
+-		if (value != null) {
+-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+-		}
+-		return value;
++		return null;
+ 	}
+ 
+ }
+diff --git a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/presentation/PHPModelPresentation.java b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/presentation/PHPModelPresentation.java
+index 0500589..a86a060 100644
+--- a/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/presentation/PHPModelPresentation.java
++++ b/plugins/org.eclipse.php.debug.ui/src/org/eclipse/php/internal/debug/ui/presentation/PHPModelPresentation.java
+@@ -52,8 +52,10 @@ import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
+ import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+ import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
+ import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
++import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue;
+ import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
+ import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
++import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
+ import org.eclipse.php.internal.debug.ui.*;
+ import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
+ import org.eclipse.php.internal.debug.ui.breakpoint.PHPExceptionBreakpointAnnotation;
+@@ -95,7 +97,13 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
+ 	public void computeDetail(IValue value, IValueDetailListener listener) {
+ 		String detail = ""; //$NON-NLS-1$
+ 		try {
+-			detail = value.getValueString();
++			if (value instanceof PHPValue) {
++				detail = ((PHPValue) value).getValueDetail();
++			} else if (value instanceof AbstractDBGpValue) {
++				detail = ((AbstractDBGpValue) value).getValueDetail();
++			} else {
++				detail = value.getValueString();
++			}
+ 		} catch (DebugException e) {
+ 		}
+ 		listener.detailComputed(value, detail);
+@@ -267,6 +275,14 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
+ 		if (facetOwner.hasFacet(KIND_ARRAY_MEMBER)) {
+ 			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_ARRAY);
+ 		}
++		if (facetOwner.hasFacet(KIND_CONSTANT)) {
++			if (facetOwner.hasFacet(Facet.MOD_PUBLIC)) {
++				return getDebugImageRegistry().get(new PHPDebugUICompositeImageDescriptor(
++						PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS),
++						PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_CONSTANT),
++						PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
++			}
++		}
+ 		if (facetOwner.hasFacet(KIND_OBJECT_MEMBER)) {
+ 			if (facetOwner.hasFacet(Facet.MOD_PUBLIC)) {
+ 				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+-- 
+2.9.3
+

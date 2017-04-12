@@ -27,6 +27,6 @@ public interface IAfterNewLineAutoEditStrategy {
 	 * @return the position the caret should be at in the end of the command
 	 *         execution. return -1 if no need to change the caret location
 	 */
-	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer);
+	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuilder buffer);
 
 }

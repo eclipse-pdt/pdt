@@ -63,7 +63,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	 * @param buf
 	 *            The <code>StringBuffer</code> to write the result to.
 	 */
-	public static void printModifiers(int modifiers, StringBuffer buf) {
+	public static void printModifiers(int modifiers, StringBuilder buf) {
 		if (PHPFlags.isPublic(modifiers)) {
 			buf.append("public "); //$NON-NLS-1$
 		}
@@ -139,8 +139,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
-	 * eclipse .php.internal.core.ast.nodes.ArrayAccess)
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
+	 * .php.internal.core.ast.nodes.ArrayAccess)
 	 */
 	public boolean visit(ArrayAccess arrayAccess) {
 		if (arrayAccess.getName() != null) {

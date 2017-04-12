@@ -210,7 +210,7 @@ public class ASTNodeLabels {
 	 * Returns the label for a PHP element. Flags as defined above.
 	 */
 	public static String getElementLabel(Object element, long flags) {
-		StringBuffer buf = new StringBuffer(60);
+		StringBuilder buf = new StringBuilder(60);
 		getElementLabel(element, flags, buf);
 		return buf.toString();
 	}
@@ -218,13 +218,13 @@ public class ASTNodeLabels {
 	/**
 	 * Returns the label for a PHP element. Flags as defined above.
 	 */
-	public static void getElementLabel(Object element, long flags, StringBuffer buf) {
+	public static void getElementLabel(Object element, long flags, StringBuilder buf) {
 		if (element instanceof ASTNode) {
 			printNodeLabel((ASTNode) element, flags, buf);
 		}
 	}
 
-	private static void printNodeLabel(ASTNode node, long flags, StringBuffer buf) {
+	private static void printNodeLabel(ASTNode node, long flags, StringBuilder buf) {
 		final int type = node.getType();
 
 		switch (type) {
@@ -247,7 +247,7 @@ public class ASTNodeLabels {
 		}
 	}
 
-	private static void getFunctionLabel(FunctionDeclaration declaration, long flags, StringBuffer buf) {
+	private static void getFunctionLabel(FunctionDeclaration declaration, long flags, StringBuilder buf) {
 		buf.append(declaration.getFunctionName().getName());
 
 		// parameters
@@ -287,7 +287,7 @@ public class ASTNodeLabels {
 		return (flags & flag) != 0;
 	}
 
-	public static void getMethodLabel(MethodDeclaration method, long flags, StringBuffer buf) {
+	public static void getMethodLabel(MethodDeclaration method, long flags, StringBuilder buf) {
 		// qualification
 		if (getFlag(flags, M_FULLY_QUALIFIED)) {
 			final ASTNode parent = method.getParent().getParent();
@@ -315,7 +315,7 @@ public class ASTNodeLabels {
 
 	}
 
-	public static void getTypeLabel(TypeDeclaration type, long flags, StringBuffer buf) {
+	public static void getTypeLabel(TypeDeclaration type, long flags, StringBuilder buf) {
 		if (type == null)
 			return;
 
@@ -323,7 +323,7 @@ public class ASTNodeLabels {
 		buf.append(typeName);
 	}
 
-	public static void getFieldLabel(FieldsDeclaration field, long flags, StringBuffer buf) {
+	public static void getFieldLabel(FieldsDeclaration field, long flags, StringBuilder buf) {
 
 		final Variable[] variableNames = field.getVariableNames();
 		for (int i = 0; i < variableNames.length; i++) {
@@ -348,7 +348,7 @@ public class ASTNodeLabels {
 
 	}
 
-	public static void getProgramLabel(Program program, long flags, StringBuffer buf) {
+	public static void getProgramLabel(Program program, long flags, StringBuilder buf) {
 		buf.append("Program"); //$NON-NLS-1$
 	}
 
@@ -356,7 +356,7 @@ public class ASTNodeLabels {
 	 * Returns the tooltip text for a PHP element.
 	 */
 	public static String getElementTooltipText(Object element) {
-		StringBuffer buf = new StringBuffer(60);
+		StringBuilder buf = new StringBuilder(60);
 
 		if (element instanceof ASTNode) {
 			ASTNode node = (ASTNode) element;
@@ -386,7 +386,7 @@ public class ASTNodeLabels {
 	// }
 	// }
 
-	public static void getMethodTooltipText(FunctionDeclaration function, StringBuffer buf) {
+	public static void getMethodTooltipText(FunctionDeclaration function, StringBuilder buf) {
 		buf.append(function.getFunctionName().getName());
 		// parameters
 		buf.append('(');

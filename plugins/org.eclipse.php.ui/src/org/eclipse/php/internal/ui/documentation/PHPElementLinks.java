@@ -266,7 +266,7 @@ public class PHPElementLinks {
 		 * encodes #)).
 		 */
 
-		StringBuffer ssp = new StringBuffer(60);
+		StringBuilder ssp = new StringBuilder(60);
 		ssp.append(LINK_SEPARATOR); // make sure first character is not a /
 									// (would be hierarchical URI)
 

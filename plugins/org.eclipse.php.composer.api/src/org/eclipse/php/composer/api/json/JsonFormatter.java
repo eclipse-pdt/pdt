@@ -124,7 +124,7 @@ public class JsonFormatter {
 			if (s == null || s.isEmpty()) {
 				return ""; //$NON-NLS-1$
 			}
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
 			for (int i = 0; i < s.length(); i++) {
 				char ch = s.charAt(i);

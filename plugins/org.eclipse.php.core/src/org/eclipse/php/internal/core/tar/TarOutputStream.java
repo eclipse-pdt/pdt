@@ -120,7 +120,7 @@ public class TarOutputStream extends FilterOutputStream {
 		pos += 100;
 
 		/* File mode. */
-		StringBuffer mode = new StringBuffer(Long.toOctalString(e.getMode()));
+		StringBuilder mode = new StringBuilder(Long.toOctalString(e.getMode()));
 		while (mode.length() < 7) {
 			mode.insert(0, '0');
 		}

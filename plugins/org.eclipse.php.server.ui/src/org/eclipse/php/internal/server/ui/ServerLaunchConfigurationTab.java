@@ -469,7 +469,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		if (urlString.equals("")) { //$NON-NLS-1$
 			urlString = "http://localhost"; //$NON-NLS-1$
 		}
-		StringBuffer url = new StringBuffer(urlString);
+		StringBuilder url = new StringBuilder(urlString);
 		if (!fileName.equals("")) { //$NON-NLS-1$
 			url.append(fileName);
 		}
@@ -704,7 +704,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	public void addControlAccessibleListener(Control control, String controlName) {
 		// strip mnemonic (&)
 		String[] strs = controlName.split("&"); //$NON-NLS-1$
-		StringBuffer stripped = new StringBuffer();
+		StringBuilder stripped = new StringBuilder();
 		for (String element : strs) {
 			stripped.append(element);
 		}

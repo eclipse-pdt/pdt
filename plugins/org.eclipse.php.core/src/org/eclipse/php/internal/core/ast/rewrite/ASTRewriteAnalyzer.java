@@ -1305,13 +1305,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					int visibilityModifiers = addedModifiers
 							& (Modifiers.AccPublic | Modifiers.AccPrivate | Modifiers.AccProtected);
 					if (visibilityModifiers != 0) {
-						StringBuffer buf = new StringBuffer();
+						StringBuilder buf = new StringBuilder();
 						ASTRewriteFlattener.printModifiers(visibilityModifiers, buf);
 						doTextInsert(startPos, buf.toString(), editGroup);
 						addedModifiers &= ~visibilityModifiers;
 					}
 				}
-				StringBuffer buf = new StringBuffer();
+				StringBuilder buf = new StringBuilder();
 				ASTRewriteFlattener.printModifiers(addedModifiers, buf);
 				doTextInsert(nextStart, buf.toString(), editGroup);
 			}

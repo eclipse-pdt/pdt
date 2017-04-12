@@ -45,7 +45,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implem
 		}
 	}
 
-	private StringBuffer helpBuffer = new StringBuffer();
+	private StringBuilder helpBuffer = new StringBuilder();
 
 	private void autoIndentBeforeCurlyOpen(IStructuredDocument document, DocumentCommand command) {
 

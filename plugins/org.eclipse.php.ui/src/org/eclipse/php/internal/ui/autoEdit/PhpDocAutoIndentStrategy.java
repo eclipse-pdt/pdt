@@ -97,7 +97,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			int firstNonWS = findEndOfWhiteSpace(d, lineOffset, offset);
 			Assert.isTrue(firstNonWS >= lineOffset, "indentation must not be negative"); //$NON-NLS-1$
 
-			StringBuffer buf = new StringBuffer(c.text);
+			StringBuilder buf = new StringBuilder(c.text);
 			IRegion prefix = findPrefixRange(d, line);
 			String indentation = d.get(prefix.getOffset(), prefix.getLength());
 			int lengthToAdd = Math.min(offset - prefix.getOffset(), prefix.getLength());
@@ -618,7 +618,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 									// get the line region
 									IRegion line = document.getLineInformationOfOffset(region.getStart());
-									StringBuffer buf = new StringBuffer(command.text);
+									StringBuilder buf = new StringBuilder(command.text);
 									// extract indentation from the found line
 									IRegion prefix = findCommentBlockStartPrefixRange(document, line);
 									// build indentation based on the prefix

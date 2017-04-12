@@ -215,7 +215,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	protected static String renderCommandLine(String[] commandLine, String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return ""; //$NON-NLS-1$
-		StringBuffer buf = new StringBuffer(commandLine[0]);
+		StringBuilder buf = new StringBuilder(commandLine[0]);
 		for (int i = 1; i < commandLine.length; i++) {
 			buf.append(separator);
 			buf.append(commandLine[i]);

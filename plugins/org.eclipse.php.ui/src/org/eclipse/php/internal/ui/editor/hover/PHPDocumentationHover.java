@@ -690,7 +690,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			return null;
 
 		if (constantValue instanceof String) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			String stringConstant = (String) constantValue;
 			if (stringConstant.length() > 80) {
 				result.append(stringConstant.substring(0, 80));

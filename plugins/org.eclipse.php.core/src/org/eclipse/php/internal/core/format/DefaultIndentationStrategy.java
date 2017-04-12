@@ -104,18 +104,19 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return null;
 	}
 
-	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuffer result, final int lineNumber,
-			final int forOffset) throws BadLocationException {
+	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuilder result,
+			final int lineNumber, final int forOffset) throws BadLocationException {
 		placeMatchingBlanksForStructuredDocument(document, result, lineNumber, forOffset, getCommandText());
 	}
 
-	public void placeMatchingBlanksForStructuredDocument(final IStructuredDocument document, final StringBuffer result,
+	public void placeMatchingBlanksForStructuredDocument(final IStructuredDocument document, final StringBuilder result,
 			final int lineNumber, final int forOffset) throws BadLocationException {
 		placeMatchingBlanksForStructuredDocument(document, result, lineNumber, forOffset, BLANK);
 	}
 
-	private void placeMatchingBlanksForStructuredDocument(final IStructuredDocument document, final StringBuffer result,
-			final int lineNumber, final int forOffset, String commandText) throws BadLocationException {
+	private void placeMatchingBlanksForStructuredDocument(final IStructuredDocument document,
+			final StringBuilder result, final int lineNumber, final int forOffset, String commandText)
+			throws BadLocationException {
 		if (forOffset == 0) {
 			return;
 		}
@@ -262,7 +263,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 	}
 
-	private static void indent(final IStructuredDocument document, final StringBuffer result, int indentationChar,
+	private static void indent(final IStructuredDocument document, final StringBuilder result, int indentationChar,
 			int indentationSize) {
 		for (int i = 0; i < indentationSize; i++) {
 			result.append((char) indentationChar);
@@ -270,7 +271,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	}
 
 	private static boolean indentMultiLineCase(IStructuredDocument document, int lineNumber, int offset,
-			boolean enterKeyPressed, StringBuffer result, String blanks, String commandText,
+			boolean enterKeyPressed, StringBuilder result, String blanks, String commandText,
 			IndentationObject indentationObject) {
 		// LineState lineState = new LineState();
 		try {
@@ -342,7 +343,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 					String newblanks = FormatterUtils.getLineBlanks(document,
 							document.getLineInformationOfOffset(peer));
-					StringBuffer newBuffer = new StringBuffer(newblanks);
+					StringBuilder newBuffer = new StringBuilder(newblanks);
 					pairArrayParen = false;
 
 					if (isArray) {
@@ -387,7 +388,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				int baseLine = inMultiLineString(document, offset, lineNumber, enterKeyPressed);
 				if (baseLine >= 0) {
 					String newblanks = FormatterUtils.getLineBlanks(document, document.getLineInformation(baseLine));
-					StringBuffer newBuffer = new StringBuffer(newblanks);
+					StringBuilder newBuffer = new StringBuilder(newblanks);
 					indent(document, newBuffer, indentationObject.getIndentationWrappedLineSize(),
 							indentationObject.getIndentationChar(), indentationObject.getIndentationSize());
 					result.setLength(result.length() - blanks.length());
@@ -400,7 +401,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return false;
 	}
 
-	private static void indent(IStructuredDocument document, StringBuffer indent, int times, int indentationChar,
+	private static void indent(IStructuredDocument document, StringBuilder indent, int times, int indentationChar,
 			int indentationSize) {
 		for (int i = 0; i < times; i++) {
 			indent(document, indent, indentationChar, indentationSize);
@@ -492,7 +493,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return false;
 	}
 
-	private static void placeStringIndentation(final IStructuredDocument document, int lineNumber, StringBuffer result,
+	private static void placeStringIndentation(final IStructuredDocument document, int lineNumber, StringBuilder result,
 			IndentationObject indentationObject) {
 		try {
 
