@@ -105,9 +105,9 @@ public class PHPTextSequenceUtilities {
 				// PhpScriptRegion):
 				ITextRegion startTokenRegion;
 				if (documentOffset == startOffset) {
-					startTokenRegion = phpScriptRegion.getPhpToken(0);
+					startTokenRegion = phpScriptRegion.getPHPToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
 				}
 
 				List<IRegion> comments = new ArrayList<IRegion>();
@@ -132,7 +132,7 @@ public class PHPTextSequenceUtilities {
 						startOffset += startTokenRegion.getEnd();
 						break;
 					}
-					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(startTokenRegion.getStart() - 1);
 				}
 				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset,
 						offset - startOffset);

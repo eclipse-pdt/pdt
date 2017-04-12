@@ -997,7 +997,7 @@ public final class PHPHeuristicScanner implements Symbols {
 					if (textRegion instanceof IPhpScriptRegion) {
 						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 						startRegion += phpScriptRegion.getStart();
-						textRegion = phpScriptRegion.getPhpToken(position - startRegion);
+						textRegion = phpScriptRegion.getPHPToken(position - startRegion);
 						startRegion += textRegion.getStart();
 
 						String partitionType = PHPPartitionTypes.getPartitionType(textRegion.getType());
@@ -1035,7 +1035,7 @@ public final class PHPHeuristicScanner implements Symbols {
 					if (textRegion instanceof IPhpScriptRegion) {
 						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 						startRegion += phpScriptRegion.getStart();
-						textRegion = phpScriptRegion.getPhpToken(position - startRegion);
+						textRegion = phpScriptRegion.getPHPToken(position - startRegion);
 						return textRegion;
 					}
 				}

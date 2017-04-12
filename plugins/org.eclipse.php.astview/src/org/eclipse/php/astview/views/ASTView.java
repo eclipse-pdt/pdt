@@ -430,7 +430,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fRoot = null;
 
 		if (editor != null) {
-			ISourceModule typeRoot = EditorUtility.getPhpInput(editor);
+			ISourceModule typeRoot = EditorUtility.getPHPInput(editor);
 			if (typeRoot == null) {
 				throw new CoreException(getErrorStatus("Editor not showing a CU or class file", null)); //$NON-NLS-1$
 			}
@@ -1029,7 +1029,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 			return;
 		}
 		if (fRoot == null || part != fEditor) {
-			if (part instanceof ITextEditor && (EditorUtility.getPhpInput((ITextEditor) part) != null)) {
+			if (part instanceof ITextEditor && (EditorUtility.getPHPInput((ITextEditor) part) != null)) {
 				try {
 					setInput((ITextEditor) part);
 				} catch (CoreException e) {
@@ -1303,7 +1303,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		} else if (obj instanceof PhpElement) {
 			// TODO : complete this task for open in edtior
 			/*
-			 * ISourceModule phpElement= ((PhpElement) obj).getPhpElement(); if (phpElement instanceof IPackageFragment)
+			 * ISourceModule phpElement= ((PhpElement) obj).getPHPElement(); if (phpElement instanceof IPackageFragment)
 			 * { ShowInPackageViewAction showInPackageViewAction= new ShowInPackageViewAction(getViewSite());
 			 * showInPackageViewAction.run(phpElement); } else { try { IEditorPart editorPart=
 			 * JavaUI.openInEditor(phpElement); if (editorPart != null) JavaUI.revealInEditor(editorPart, phpElement); }
@@ -1374,7 +1374,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		if (attribute instanceof Binding) {
 			return ((Binding) attribute).getBinding();
 		} else if (attribute instanceof PhpElement) {
-			return ((PhpElement) attribute).getPhpElement();
+			return ((PhpElement) attribute).getPHPElement();
 		} else if (attribute instanceof ASTNode) {
 			return attribute;
 		} else {

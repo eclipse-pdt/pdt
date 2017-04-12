@@ -171,24 +171,24 @@ public class PhpIndentationFormatter {
 					doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, 0);
 					return;
 				}
-				if (scriptRegion.isPhpQuotesState(formattedLineStart - regionStart)
+				if (scriptRegion.isPHPQuotesState(formattedLineStart - regionStart)
 						&& (formattedLineStart - regionStart == 0
-								|| scriptRegion.isPhpQuotesState(formattedLineStart - regionStart - 1))) {
+								|| scriptRegion.isPHPQuotesState(formattedLineStart - regionStart - 1))) {
 					// do never indent the content of php strings
 					return;
 				}
 				scriptRegionPos = regionStart;
-				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
+				firstTokenInLine = scriptRegion.getPHPToken(formattedLineStart - regionStart);
 				if (regionStart + firstTokenInLine.getStart() < originalLineStart
 						&& firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
-					firstTokenInLine = scriptRegion.getPhpToken(firstTokenInLine.getEnd());
+					firstTokenInLine = scriptRegion.getPHPToken(firstTokenInLine.getEnd());
 				}
 				if (formattedTextEnd <= regionStart + scriptRegion.getEnd()) {
-					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd - regionStart - 1);
+					lastTokenInLine = scriptRegion.getPHPToken(formattedTextEnd - regionStart - 1);
 					if (regionStart + lastTokenInLine.getEnd() > originalLineStart + originalLineLength
 							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE
 							&& lastTokenInLine.getStart() > 0) {
-						lastTokenInLine = scriptRegion.getPhpToken(lastTokenInLine.getStart() - 1);
+						lastTokenInLine = scriptRegion.getPHPToken(lastTokenInLine.getStart() - 1);
 					}
 				}
 			}

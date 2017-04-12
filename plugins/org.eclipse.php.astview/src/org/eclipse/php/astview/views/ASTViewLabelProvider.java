@@ -135,7 +135,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 			return fBlue;
 		} else if (element instanceof PhpElement) {
 			PhpElement javaElement= (PhpElement) element;
-			if (javaElement.getPhpElement() == null || ! javaElement.getPhpElement().exists()) {
+			if (javaElement.getPHPElement() == null || ! javaElement.getPHPElement().exists()) {
 				return fRed;
 			}
 			return fDarkGreen;

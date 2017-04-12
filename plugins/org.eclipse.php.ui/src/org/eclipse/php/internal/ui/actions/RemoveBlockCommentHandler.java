@@ -133,7 +133,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 						int textRegionOffset = textRegion.getStart();
 						int normelizedOffset = textRegionOffset + docRegionOffset;
 						ITextRegion[] phpTokens = ((PhpScriptRegion) textRegion)
-								.getPhpTokens(selectionOffset - normelizedOffset, selectionLength);
+								.getPHPTokens(selectionOffset - normelizedOffset, selectionLength);
 
 						int lastOffsetParsed = -1;
 
@@ -200,7 +200,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 		if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(token.getType())) {
 			return token;
 		}
-		ITextRegion previousToken = phpScriptRegion.getPhpToken(token.getStart() - 1);
+		ITextRegion previousToken = phpScriptRegion.getPHPToken(token.getStart() - 1);
 		return findCommentStartToken(previousToken, phpScriptRegion);
 
 	}
@@ -212,7 +212,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 		if (PHPPartitionTypes.isPHPMultiLineCommentEndRegion(token.getType())) {
 			return token;
 		}
-		ITextRegion nextToken = phpScriptRegion.getPhpToken(token.getEnd());
+		ITextRegion nextToken = phpScriptRegion.getPHPToken(token.getEnd());
 		return findCommentEndToken(nextToken, phpScriptRegion);
 
 	}

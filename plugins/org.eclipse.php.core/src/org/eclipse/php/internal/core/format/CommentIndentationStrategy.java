@@ -65,10 +65,10 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 
 		if (tRegion instanceof IPhpScriptRegion) {
 			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(previousLine.getOffset() - regionStart);
+			tRegion = scriptRegion.getPHPToken(previousLine.getOffset() - regionStart);
 			if (regionStart + tRegion.getTextEnd() <= previousLine.getOffset()) {
 				// blanks at previousLine.getOffset() belong to previous token
-				tRegion = scriptRegion.getPhpToken(tRegion.getEnd());
+				tRegion = scriptRegion.getPHPToken(tRegion.getEnd());
 			}
 		}
 

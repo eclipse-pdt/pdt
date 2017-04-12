@@ -64,7 +64,7 @@ public class FormatterUtils {
 				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					int regionOffset = offset - regionStart;
-					ITextRegion innerRegion = scriptRegion.getPhpToken(regionOffset);
+					ITextRegion innerRegion = scriptRegion.getPHPToken(regionOffset);
 					return innerRegion.getType();
 				}
 			}
@@ -105,8 +105,8 @@ public class FormatterUtils {
 			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				if (preferNonWhitespacePartitions
-						&& scriptRegion.getPhpToken(offset - regionStart).getTextEnd() <= offset - regionStart) {
-					return scriptRegion.getPartition(scriptRegion.getPhpToken(offset - regionStart).getEnd());
+						&& scriptRegion.getPHPToken(offset - regionStart).getTextEnd() <= offset - regionStart) {
+					return scriptRegion.getPartition(scriptRegion.getPHPToken(offset - regionStart).getEnd());
 				}
 				return scriptRegion.getPartition(offset - regionStart);
 			}

@@ -180,7 +180,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 				try {
 					tRegion = phpScriptRegion
-							.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+							.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 				} catch (BadLocationException e) {
 					tRegion = null;
 				}
@@ -255,7 +255,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		// boolean inDocBlock=false;
 		if (parsedUnit instanceof PHPModuleDeclaration) {
 			PHPModuleDeclaration phpModuleDeclaration = (PHPModuleDeclaration) parsedUnit;
-			List<PHPDocBlock> phpBlocks = phpModuleDeclaration.getPhpDocBlocks();
+			List<PHPDocBlock> phpBlocks = phpModuleDeclaration.getPHPDocBlocks();
 			for (PHPDocBlock phpDocBlock : phpBlocks) {
 				int realStart = phpDocBlock.sourceStart();
 				int realEnd = phpDocBlock.sourceEnd();
@@ -643,7 +643,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+			tRegion = phpScriptRegion.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 			// Determine element name:
 			int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
 			TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion,
@@ -667,7 +667,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// Determine next word:
 			ITextRegion nextRegion = tRegion;
 			do {
-				nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
+				nextRegion = phpScriptRegion.getPHPToken(nextRegion.getEnd());
 				if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType())
 						&& nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
 					break;
@@ -766,7 +766,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// If this is variable:
 			if (elementName.charAt(0) == '$' && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
 				// Don't show escaped variables within PHP string:
-				if (PHPPartitionTypes.isPhpQuotesState(tRegion.getType())) {
+				if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
 					try {
 						char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
 						if (charBefore == NamespaceReference.NAMESPACE_SEPARATOR) {

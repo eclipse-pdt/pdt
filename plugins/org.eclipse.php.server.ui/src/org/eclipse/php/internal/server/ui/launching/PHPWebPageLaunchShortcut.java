@@ -124,7 +124,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 					final int open = dialog.open();
 					if (open == PHPWebPageLaunchDialog.OK) {
 						defaultServer = dialog.getServer();
-						selectedURL = dialog.getPhpPathString();
+						selectedURL = dialog.getPHPPathString();
 						phpPathString = dialog.getFilename();
 						breakAtFirstLine = dialog.isBreakAtFirstLine();
 						showDebugDialog = false;

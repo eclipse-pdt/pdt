@@ -197,7 +197,7 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 			return true;
 		}
 
-		if (structuredDocumentRegions.length == 1 && isPhpDocumentRegion(structuredDocumentRegions[0])) {
+		if (structuredDocumentRegions.length == 1 && isPHPDocumentRegion(structuredDocumentRegions[0])) {
 			// single PHP element and the selection is inside the element
 			// boundaries
 			return false;
@@ -207,7 +207,7 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 		// if we encounter PHP open/close Tag - it means we are not only within
 		// HTML context
 		for (IStructuredDocumentRegion structuredDocumentRegion : structuredDocumentRegions) {
-			if (isPhpDocumentRegion(structuredDocumentRegion)) {
+			if (isPHPDocumentRegion(structuredDocumentRegion)) {
 				return true;
 			}
 		}
@@ -216,7 +216,7 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 		return false;
 	}
 
-	private boolean isPhpDocumentRegion(IStructuredDocumentRegion structuredDocumentRegion) {
+	private boolean isPHPDocumentRegion(IStructuredDocumentRegion structuredDocumentRegion) {
 		return structuredDocumentRegion.getFirstRegion().getType() == PHPRegionContext.PHP_OPEN;
 	}
 

@@ -63,7 +63,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 			if (region != null && container != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 				try {
-					region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
+					region = phpScriptRegion.getPHPToken(offset - container.getStartOffset() - region.getStart());
 				} catch (BadLocationException e) {
 					region = null;
 				}

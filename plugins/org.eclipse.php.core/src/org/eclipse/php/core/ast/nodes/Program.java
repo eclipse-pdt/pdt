@@ -20,10 +20,10 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.text.edits.TextEdit;
@@ -113,8 +113,8 @@ public class Program extends ASTNode {
 	 * source text, it is problematic to locate comments in relation to the
 	 * structure of an AST. The one exception is doc comments which, by
 	 * convention, immediately precede type, field, and method declarations;
-	 * these comments are located in the AST by {@link BodyDeclaration#getPhpdoc
-	 * BodyDeclaration.getPhpdoc}. Other comments do not show up in the AST. The
+	 * these comments are located in the AST by {@link BodyDeclaration#getPHPdoc
+	 * BodyDeclaration.getPHPdoc}. Other comments do not show up in the AST. The
 	 * table of comments is provided for clients that need to find the source
 	 * ranges of all comments in the original source string. It includes entries
 	 * for comments of all kinds (line, block, and doc), arranged in order of

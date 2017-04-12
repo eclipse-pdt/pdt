@@ -32,7 +32,7 @@ public class PhpElement extends ASTAttribute {
 		fPhpElement= javaElement;
 	}
 	
-	public ISourceModule getPhpElement() {
+	public ISourceModule getPHPElement() {
 		return fPhpElement;
 	}
 	

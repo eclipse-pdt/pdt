@@ -85,7 +85,7 @@ public class EclipsePHPPackage implements NamespaceResolverInterface, Installabl
 		return path;
 	}
 
-	public ComposerPackage getPhpPackage() {
+	public ComposerPackage getPHPPackage() {
 		return phpPackage;
 	}
 

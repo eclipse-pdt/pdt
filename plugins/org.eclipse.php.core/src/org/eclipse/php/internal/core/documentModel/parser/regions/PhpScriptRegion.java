@@ -93,31 +93,31 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 		// these values are specific to each PHP version lexer
 		inScriptingState = phpLexer.getInScriptingState();
-		phpQuotesStates = phpLexer.getPhpQuotesStates();
+		phpQuotesStates = phpLexer.getPHPQuotesStates();
 		heredocStates = phpLexer.getHeredocStates();
 
 		completeReparse(phpLexer);
 	}
 
 	/**
-	 * @see IPhpScriptRegion#getPhpTokenType(int)
+	 * @see IPhpScriptRegion#getPHPTokenType(int)
 	 */
-	public final @NonNull String getPhpTokenType(int offset) throws BadLocationException {
-		final ITextRegion tokenForOffset = getPhpToken(offset);
+	public final @NonNull String getPHPTokenType(int offset) throws BadLocationException {
+		final ITextRegion tokenForOffset = getPHPToken(offset);
 		return tokenForOffset.getType();
 	}
 
 	/**
-	 * @see IPhpScriptRegion#getPhpToken(int)
+	 * @see IPhpScriptRegion#getPHPToken(int)
 	 */
-	public final @NonNull ITextRegion getPhpToken(int offset) throws BadLocationException {
+	public final @NonNull ITextRegion getPHPToken(int offset) throws BadLocationException {
 		return tokensContainer.getToken(offset);
 	}
 
 	/**
-	 * @see IPhpScriptRegion#getPhpTokens(int, int)
+	 * @see IPhpScriptRegion#getPHPTokens(int, int)
 	 */
-	public final @NonNull ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
+	public final @NonNull ITextRegion[] getPHPTokens(int offset, int length) throws BadLocationException {
 		return tokensContainer.getTokens(offset, length);
 	}
 
@@ -140,7 +140,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	protected boolean isHeredocState(int offset) throws BadLocationException {
-		String type = getPhpTokenType(offset);
+		String type = getPHPTokenType(offset);
 		// First, check if current type is a known "heredoc/nowdoc" type.
 		if (type == PHPRegionTypes.PHP_HEREDOC_START_TAG || type == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
 				|| type == PHPRegionTypes.PHP_NOWDOC_START_TAG || type == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG) {
@@ -166,12 +166,12 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * @see IPhpScriptRegion#isPhpQuotesState(int)
+	 * @see IPhpScriptRegion#isPHPQuotesState(int)
 	 */
-	public boolean isPhpQuotesState(int offset) throws BadLocationException {
-		String type = getPhpTokenType(offset);
+	public boolean isPHPQuotesState(int offset) throws BadLocationException {
+		String type = getPHPTokenType(offset);
 		// First, check if current type is a known "quoted" type.
-		if (PHPPartitionTypes.isPhpQuotesState(type)) {
+		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return true;
 		}
 		// If not, it means that maybe we are "deeper" in the stack, in an
@@ -179,7 +179,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// Also note that the states PHP_HEREDOC_START_TAG and
 		// PHP_NOWDOC_START_TAG are NOT put on the lexer substates stack
 		// (because the way the lexers actually work), but
-		// PHPPartitionTypes.isPhpQuotesState(type) will be enough to catch
+		// PHPPartitionTypes.isPHPQuotesState(type) will be enough to catch
 		// them.
 		LexerState lexState = tokensContainer.getState(offset);
 		if (lexState == null) {
@@ -254,7 +254,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 					// determine if we're in a heredoc/nowdoc section,
 					// using PHPRegionTypes make us depend on how each PHP
 					// lexer version analyzes the heredoc/nowdoc content.
-					// In the same way, PHPPartitionTypes.isPhpQuotesState(type)
+					// In the same way, PHPPartitionTypes.isPHPQuotesState(type)
 					// cannot be used here because it's not exclusive to
 					// heredoc/nowdoc sections.
 					return null;
@@ -297,7 +297,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				assert startState != null && endState != null;
 
 				final PhpTokenContainer newContainer = new PhpTokenContainer();
-				final AbstractPhpLexer phpLexer = getPhpLexer(
+				final AbstractPhpLexer phpLexer = getPHPLexer(
 						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
 						startState, currentPhpVersion);
 
@@ -343,7 +343,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				// 1. replace the regions
 				final ListIterator oldIterator = tokensContainer.removeTokensSubList(tokenStart, tokenEnd);
 
-				ITextRegion[] newTokens = newContainer.getPhpTokens(); // now,
+				ITextRegion[] newTokens = newContainer.getPHPTokens(); // now,
 																		// add
 				// the new
 				// ones
@@ -388,11 +388,11 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// bug fix for 225118 we need to refresh the constants since this
 		// function is being called
 		// after the project's PHP version was changed.
-		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null, currentPhpVersion);
+		AbstractPhpLexer phpLexer = getPHPLexer(new BlockDocumentReader(doc, start, length), null, currentPhpVersion);
 
 		// these values are specific to each PHP version lexer
 		inScriptingState = phpLexer.getInScriptingState();
-		phpQuotesStates = phpLexer.getPhpQuotesStates();
+		phpQuotesStates = phpLexer.getPHPQuotesStates();
 		heredocStates = phpLexer.getHeredocStates();
 
 		completeReparse(phpLexer);
@@ -475,7 +475,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param newText
 	 */
 	private void completeReparse(@NonNull AbstractPhpLexer lexer) {
-		setPhpTokens(lexer);
+		setPHPTokens(lexer);
 	}
 
 	/**
@@ -485,7 +485,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param phpVersion
 	 * @return a new lexer for the given php version with the given stream
 	 */
-	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState, PHPVersion phpVersion) {
+	private AbstractPhpLexer getPHPLexer(Reader stream, LexerState startState, PHPVersion phpVersion) {
 		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream, phpVersion);
 		lexer.initialize(inScriptingState);
 
@@ -501,7 +501,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param script
 	 * @return a list of php tokens
 	 */
-	private synchronized void setPhpTokens(AbstractPhpLexer lexer) {
+	private synchronized void setPHPTokens(AbstractPhpLexer lexer) {
 		setLength(0);
 		setTextLength(0);
 

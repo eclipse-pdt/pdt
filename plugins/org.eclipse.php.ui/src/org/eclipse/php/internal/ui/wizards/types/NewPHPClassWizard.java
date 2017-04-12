@@ -98,7 +98,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 
 	// populate data object that is passed to the template engine
 	private NewPHPElementData populatePHPElementData() {
-		PHPVersion phpVersion = page.getPhpVersion();
+		PHPVersion phpVersion = page.getPHPVersion();
 		NewPHPClassPage page = (NewPHPClassPage) this.page;
 		NewPHPElementData data = new NewPHPElementData();
 		data.phpVersion = phpVersion;

@@ -47,7 +47,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	 * @param offset
 	 * @return
 	 */
-	private ITextRegion getPhpToken(IStructuredDocumentRegion sdRegion, int offset) {
+	private ITextRegion getPHPToken(IStructuredDocumentRegion sdRegion, int offset) {
 		try {
 			// get the ITextRegionContainer region or PhpScriptRegion region
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
@@ -63,7 +63,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			// find the specified php token in the PhpScriptRegion
 			if (tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - regionStart);
+				tRegion = scriptRegion.getPHPToken(offset - regionStart);
 
 				return tRegion;
 			}
@@ -100,12 +100,12 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			while (indexInText >= 0) {
 				char currChar = text.charAt(indexInText);
 				if (currChar == CURLY_CLOSE) {
-					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
+					tRegion = getPHPToken(sdRegion, regionStart + indexInText);
 					if (tRegion == null || tRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
 						curlyCloseCounter++;
 					}
 				} else if (currChar == CURLY_OPEN) {
-					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
+					tRegion = getPHPToken(sdRegion, regionStart + indexInText);
 					boolean found = false;
 					if (tRegion != null) {
 						if (tRegion.getType().equals(PHPRegionTypes.PHP_CURLY_OPEN)) {

@@ -37,7 +37,7 @@ public abstract class PHPPartitionTypes {
 		if (isPHPDocState(type)) {
 			return PHP_DOC;
 		}
-		if (isPhpQuotesState(type)) {
+		if (isPHPQuotesState(type)) {
 			return PHP_QUOTED_STRING;
 		}
 		if (isPHPRegularState(type)) {
@@ -96,16 +96,16 @@ public abstract class PHPPartitionTypes {
 	// NB: does not cover variables and special tokens that should be
 	// "interpreted" by PHP inside back-quoted strings, double-quoted strings
 	// and heredoc sections.
-	// For full content coverage, use IPhpScriptRegion#isPhpQuotesState(int
+	// For full content coverage, use IPhpScriptRegion#isPHPQuotesState(int
 	// relativeOffset).
-	public static boolean isPhpQuotesState(final String type) {
+	public static boolean isPHPQuotesState(final String type) {
 		return type == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING || type == PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE
 				|| type == PHPRegionTypes.PHP_HEREDOC_START_TAG || type == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
 				|| type == PHPRegionTypes.PHP_NOWDOC_START_TAG || type == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG;
 	}
 
 	public static final boolean isPHPRegularState(final String type) {
-		return type != null && !isPHPCommentState(type) && !isPhpQuotesState(type);
+		return type != null && !isPHPCommentState(type) && !isPHPQuotesState(type);
 	}
 
 	/**
@@ -121,10 +121,10 @@ public abstract class PHPPartitionTypes {
 	public static final ITextRegion getPartitionStartRegion(IPhpScriptRegion region, int offset)
 			throws BadLocationException {
 		String partitionType = region.getPartition(offset);
-		ITextRegion internalRegion = region.getPhpToken(offset);
+		ITextRegion internalRegion = region.getPHPToken(offset);
 		ITextRegion startRegion = internalRegion;
 		while (internalRegion.getStart() != 0) {
-			internalRegion = region.getPhpToken(internalRegion.getStart() - 1);
+			internalRegion = region.getPHPToken(internalRegion.getStart() - 1);
 			if (region.getPartition(internalRegion.getStart()) != partitionType) {
 				break;
 			}
@@ -161,10 +161,10 @@ public abstract class PHPPartitionTypes {
 	public static final ITextRegion getPartitionEndRegion(IPhpScriptRegion region, int offset)
 			throws BadLocationException {
 		String partitionType = region.getPartition(offset);
-		ITextRegion internalRegion = region.getPhpToken(offset);
+		ITextRegion internalRegion = region.getPHPToken(offset);
 		ITextRegion endRegion = internalRegion;
 		while (internalRegion.getEnd() != region.getLength()) {
-			internalRegion = region.getPhpToken(internalRegion.getEnd());
+			internalRegion = region.getPHPToken(internalRegion.getEnd());
 			if (region.getPartition(internalRegion.getStart()) != partitionType) {
 				break;
 			}
