@@ -232,7 +232,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * 
 	 * @return
 	 */
-	public boolean hasPhpSourceFolder() {
+	public boolean hasPHPSourceFolder() {
 		return fLayoutGroup != null && fLayoutGroup.isDetailedLayout();
 	}
 

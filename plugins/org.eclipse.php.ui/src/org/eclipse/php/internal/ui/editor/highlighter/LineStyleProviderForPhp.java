@@ -546,7 +546,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				}
 				// if length < 0 (i.e. when partitionLength < 0), we'll throw a
 				// BadLocationException
-				phpTokens = region.getPhpTokens(from, length);
+				phpTokens = region.getPHPTokens(from, length);
 			}
 
 			for (int i = 0; i < phpTokens.length; i++) {

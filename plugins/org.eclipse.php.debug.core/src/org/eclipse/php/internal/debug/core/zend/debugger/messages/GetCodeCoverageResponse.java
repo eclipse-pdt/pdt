@@ -78,7 +78,7 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 			int numberOfPhpLines = in.readInt();
 			if (isDebugMode)
 				System.out.println("Number of php lines: " + numberOfPhpLines); //$NON-NLS-1$
-			fCodeCoverageData[i].setPhpLinesNum(numberOfPhpLines);
+			fCodeCoverageData[i].setPHPLinesNum(numberOfPhpLines);
 		}
 	}
 

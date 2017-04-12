@@ -106,7 +106,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		}
 
 		if (showPhpVariables) {
-			PHPVersion phpVersion = abstractContext.getPhpVersion();
+			PHPVersion phpVersion = abstractContext.getPHPVersion();
 			for (String variable : PHPVariables.getVariables(phpVersion)) {
 				if (variable.startsWith(prefix)) {
 					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {

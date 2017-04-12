@@ -389,7 +389,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return result;
 	}
 
-	private byte getPhpStartTag(int offset) {
+	private byte getPHPStartTag(int offset) {
 		try {
 			// 6 = "<?php".length() + 1
 			String text = document.get(offset, Math.min(6, document.getLength() - offset)).toLowerCase();
@@ -422,7 +422,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return -1;
 	}
 
-	private int getPhpTagIndentationLevel(int offset) {
+	private int getPHPTagIndentationLevel(int offset) {
 		try {
 			final int line = document.getLineOfOffset(offset);
 			final int startLineOffset = document.getLineOffset(line);
@@ -2001,7 +2001,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void handleSplittedPhpBlock(int offset, int end) throws BadLocationException {
 		IRegion lineRegion = document.getLineInformationOfOffset(offset);
-		switch (getPhpStartTag(offset)) {
+		switch (getPHPStartTag(offset)) {
 		case PHP_OPEN_ASP_TAG:
 		case PHP_OPEN_SHORT_TAG:
 			if (document.get(offset + 2, lineRegion.getOffset() + lineRegion.getLength() - (offset + 2)).trim()
@@ -2422,13 +2422,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			} else {
 				if (isPhpMode && !isHtmlStatement) {
 					// PHP -> PHP
-					if (!isStatementAfterError && getPhpStartTag(lastStatementEndOffset) != -1) {
+					if (!isStatementAfterError && getPHPStartTag(lastStatementEndOffset) != -1) {
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489361
 						// if previous statement was in a <?= ?> section and
 						// now we have a statement in a <?php ?> section,
 						// we're still in the PHP -> PHP case, but
 						// isPhpEqualTag is outdated
-						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+						isPhpEqualTag = getPHPStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 						insertNewLine();
 					}
 					if (isThrowOrReturnFormatCase(statements)) {
@@ -2448,7 +2448,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else if (!isPhpMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
-						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+						isPhpEqualTag = getPHPStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 						insertNewLines(statements[i]);
 						indent();
 					}
@@ -4386,7 +4386,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (isPhpMode && !isHtmlStatement) {
 					// PHP -> PHP
 					if (lastStatementEndOffset > 0) {
-						if (!isStatementAfterError && getPhpStartTag(lastStatementEndOffset) != -1) {
+						if (!isStatementAfterError && getPHPStartTag(lastStatementEndOffset) != -1) {
 							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489361
 							// if previous statement was in a <?= ?> section and
 							// now we have a statement in a <?php ?> section,
@@ -4397,9 +4397,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 								// previous statement was in a <?php ?> section
 								// (i.e. previous value of isPhpEqualTag was
 								// false)
-								indentationLevel = getPhpTagIndentationLevel(lastStatementEndOffset);
+								indentationLevel = getPHPTagIndentationLevel(lastStatementEndOffset);
 							}
-							isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+							isPhpEqualTag = getPHPStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 							insertNewLine();
 						}
 						if (!isStatementAfterError) {
@@ -4421,8 +4421,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else if (!isPhpMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
-						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
-						indentationLevel = getPhpTagIndentationLevel(lastStatementEndOffset);
+						isPhpEqualTag = getPHPStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+						indentationLevel = getPHPTagIndentationLevel(lastStatementEndOffset);
 						insertNewLines(statements[i]);
 						indent();
 					}
@@ -5223,7 +5223,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				ITypedRegion partition = partitions[i];
 				if (PHPPartitionTypes.PHP_DEFAULT.equals(partition.getType())) {
 					for (IRegion phpRegion : getAllPhpRegionsInPhpPartition(partition)) {
-						if (isPhpRegionOnSingleLine(phpRegion.getOffset(), phpRegion.getLength())) {
+						if (isPHPRegionOnSingleLine(phpRegion.getOffset(), phpRegion.getLength())) {
 							result.add(phpRegion);
 						}
 					}
@@ -5233,7 +5233,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return result.toArray(new IRegion[result.size()]);
 	}
 
-	private boolean isPhpRegionOnSingleLine(int start, int length) throws BadLocationException {
+	private boolean isPHPRegionOnSingleLine(int start, int length) throws BadLocationException {
 		assert length >= 0;
 		int endTagLength = "?>".length(); //$NON-NLS-1$
 		if (length < endTagLength || document.getLineOfOffset(start) != document.getLineOfOffset(start + length - 1)) {

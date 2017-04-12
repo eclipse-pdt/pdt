@@ -202,7 +202,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		getProject().refreshLocal(0, monitor);
 	}
 
-	protected void setPhpLangOptions() {
+	protected void setPHPLangOptions() {
 		boolean useASPTags = false;
 		PHPVersion phpVersion = firstPage.versionGroup.fConfigurationBlock.getPHPVersionValue();
 		ProjectOptions.setSupportingASPTags(useASPTags, getProject());
@@ -296,7 +296,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 			}
 
 			init(DLTKCore.create(getProject()), buildpathEntries, false);
-			setPhpLangOptions();
+			setPHPLangOptions();
 			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
 			// adding build paths, and language-Container:

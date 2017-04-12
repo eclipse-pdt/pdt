@@ -265,7 +265,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public synchronized ListIterator<ContextRegion> getPhpTokensIterator(final int offset) throws BadLocationException {
+	public synchronized ListIterator<ContextRegion> getPHPTokensIterator(final int offset) throws BadLocationException {
 		// fast results for empty lists
 		if (phpTokens.isEmpty()) {
 			return tokensIterator;
@@ -281,7 +281,7 @@ public class PhpTokenContainer implements Cloneable {
 	/**
 	 * @return the whole tokens as an array
 	 */
-	public synchronized ITextRegion[] getPhpTokens() {
+	public synchronized ITextRegion[] getPHPTokens() {
 		return phpTokens.toArray(new ITextRegion[phpTokens.size()]);
 	}
 

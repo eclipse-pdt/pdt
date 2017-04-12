@@ -193,7 +193,7 @@ abstract public class AbstractWizardFirstPage extends WizardPage implements IPHP
 		return detectGroup.mustDetect();
 	}
 
-	public boolean hasPhpSourceFolder() {
+	public boolean hasPHPSourceFolder() {
 		return true;
 	}
 

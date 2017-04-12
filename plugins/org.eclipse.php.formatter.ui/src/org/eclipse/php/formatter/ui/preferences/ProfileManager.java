@@ -490,7 +490,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 		String builtinPostFix = FormatterMessages.ProfileManager_built_in_postfix;
 		// final Profile phpProfile = new BuiltInProfile(PHP_PROFILE,
 		// FormatterMessages.ProfileManager_php_conventions_profile_name +
-		// builtinPostFix, getPhpSettings(),
+		// builtinPostFix, getPHPSettings(),
 		// order);
 		// profiles.put(phpProfile.getID(), phpProfile);
 		// profilesByName.add(phpProfile);
@@ -508,7 +508,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	/**
 	 * @return Returns the settings for the PHP Conventions profile.
 	 */
-	public static Map<String, Object> getPhpSettings() {
+	public static Map<String, Object> getPHPSettings() {
 		final Map<String, Object> options = CodeFormatterPreferences.getDefaultPreferences().getMap();
 
 		return options;
@@ -518,7 +518,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * @return Returns the default settings.
 	 */
 	public static Map<String, Object> getDefaultSettings() {
-		return getPhpSettings();
+		return getPHPSettings();
 	}
 
 	/**

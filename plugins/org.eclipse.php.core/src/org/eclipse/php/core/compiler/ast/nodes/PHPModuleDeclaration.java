@@ -142,7 +142,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 		return varComments;
 	}
 
-	public List<PHPDocBlock> getPhpDocBlocks() {
+	public List<PHPDocBlock> getPHPDocBlocks() {
 		return phpDocBlocks;
 	}
 

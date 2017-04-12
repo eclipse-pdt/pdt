@@ -39,7 +39,7 @@ public class EditorUtility {
 		return null;
 	}
 	
-	public static ISourceModule getPhpInput(IEditorPart part) {
+	public static ISourceModule getPHPInput(IEditorPart part) {
 		IEditorInput editorInput= part.getEditorInput();
 		if (editorInput != null) {
 			ISourceModule input= (ISourceModule) DLTKUIPlugin.getEditorInputModelElement(editorInput);

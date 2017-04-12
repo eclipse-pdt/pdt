@@ -419,7 +419,7 @@ top_statement_list:statementList
 		if (c instanceof VarComment) {
 			program.getVarComments().add((VarComment) c);
 		} else if (c instanceof PHPDocBlock) {
-			program.getPhpDocBlocks().add((PHPDocBlock) c);
+			program.getPHPDocBlocks().add((PHPDocBlock) c);
 		}
 		if (c instanceof Comment) {
 			program.getCommentList().add((Comment) c);

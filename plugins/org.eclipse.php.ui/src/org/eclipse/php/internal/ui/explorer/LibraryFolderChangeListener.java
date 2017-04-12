@@ -59,7 +59,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				PHPExplorerPart phpExplorer = getPhpExplorer();
+				PHPExplorerPart phpExplorer = getPHPExplorer();
 				if (phpExplorer != null) {
 					TreeViewer tree = phpExplorer.getTreeViewer();
 					for (IFolder subfolder : subfolders) {
@@ -79,7 +79,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	 * @return a reference to {@link PHPExplorerPart}, or <code>null</code> if
 	 *         none is available in the active workbench page
 	 */
-	private PHPExplorerPart getPhpExplorer() {
+	private PHPExplorerPart getPHPExplorer() {
 		// find the active workbench window
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)

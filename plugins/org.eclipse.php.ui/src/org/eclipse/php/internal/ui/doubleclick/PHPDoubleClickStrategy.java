@@ -73,7 +73,7 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 									int offset = caretPosition - container.getStartOffset()
 											- phpScriptRegion.getStart();
-									tRegion = phpScriptRegion.getPhpToken(offset);
+									tRegion = phpScriptRegion.getPHPToken(offset);
 
 									// Handle double-click on PHPDoc tags:
 									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE
@@ -105,7 +105,7 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									// previous character is still in comment.
 									if (PHPPartitionTypes.isPHPCommentState(tRegion.getType()) && offset > 0
 											&& PHPPartitionTypes.isPHPCommentState(
-													phpScriptRegion.getPhpToken(offset - 1).getType())) {
+													phpScriptRegion.getPHPToken(offset - 1).getType())) {
 										resetVariableSelectionRangeInComments(textViewer, structuredTextViewer);
 										return;
 									}

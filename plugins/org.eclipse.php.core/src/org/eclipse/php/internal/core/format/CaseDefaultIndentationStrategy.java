@@ -71,7 +71,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 
 		if (tRegion instanceof IPhpScriptRegion) {
 			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(offset - regionStart - 1);
+			tRegion = scriptRegion.getPHPToken(offset - regionStart - 1);
 
 			// go backward over the region to find a 'case' or 'default' region
 			// in this case is the same indentation
@@ -95,7 +95,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 					break;
 				}
 				if (tRegion.getStart() > 0) {
-					tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+					tRegion = scriptRegion.getPHPToken(tRegion.getStart() - 1);
 				} else {
 					break;
 				}

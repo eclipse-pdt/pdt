@@ -398,7 +398,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					offset = 0;
 				} else if (phpScriptRegion != null && sdRegion != null) {
 					// File's content starts with '<?php' tag
-					textRegion = phpScriptRegion.getPhpToken(0);
+					textRegion = phpScriptRegion.getPHPToken(0);
 					String lineDelimiter = document.getLineDelimiter(document.getLineOfOffset(textRegion.getStart()));
 					if (lineDelimiter == null) {
 						// XXX : should we add a newline before inserting

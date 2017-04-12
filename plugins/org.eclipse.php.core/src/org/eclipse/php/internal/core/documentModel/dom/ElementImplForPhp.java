@@ -77,20 +77,20 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 	}
 
 	public boolean isGlobalTag() {
-		return isPhpTag() ? false : super.isGlobalTag();
+		return isPHPTag() ? false : super.isGlobalTag();
 	}
 
 	/**
 	 * @return true if it is a php element
 	 */
-	public boolean isPhpTag() {
+	public boolean isPHPTag() {
 		return PHPDOMModelParser.PHP_TAG_NAME.equals(getNodeName());
 	}
 
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
-		if (isPhpTag() && type instanceof Class && ValidationAdapter.class.isAssignableFrom((Class) type)) {
+		if (isPHPTag() && type instanceof Class && ValidationAdapter.class.isAssignableFrom((Class) type)) {
 			return nullValidator;
 		}
 		return super.getExistingAdapter(type);
@@ -100,7 +100,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 
 	public String getPrefix() {
 		final String prefix = super.getPrefix();
-		if (prefix == null && isPhpTag()) {
+		if (prefix == null && isPHPTag()) {
 			return ""; //$NON-NLS-1$
 		}
 		return prefix;
@@ -116,6 +116,6 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 
 	@Override
 	public boolean isStartTagClosed() {
-		return isPhpTag() ? true : super.isStartTagClosed();
+		return isPHPTag() ? true : super.isStartTagClosed();
 	}
 }

@@ -165,9 +165,9 @@ public class IndentationBaseDetector {
 				// the region we are trying to check if it is the indent base
 				// for the line we need to format
 				ContextRegion checkedRegion = (ContextRegion) scriptRegion
-						.getPhpToken(lineStartOffset - phpContentStartOffset);
+						.getPHPToken(lineStartOffset - phpContentStartOffset);
 				// the current region we need to format
-				ContextRegion currentRegion = (ContextRegion) scriptRegion.getPhpToken(offset - phpContentStartOffset);
+				ContextRegion currentRegion = (ContextRegion) scriptRegion.getPHPToken(offset - phpContentStartOffset);
 				String checkedType = checkedRegion.getType();
 				String currentType = currentRegion.getType();
 				// if we are in the beginning of a comment (DOC or Multi
@@ -235,7 +235,7 @@ public class IndentationBaseDetector {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
 					ITextRegion[] tokens = null;
 					try {
-						tokens = scriptRegion.getPhpTokens(Math.min(lineStartOffset - 1, scriptRegion.getEnd()),
+						tokens = scriptRegion.getPHPTokens(Math.min(lineStartOffset - 1, scriptRegion.getEnd()),
 								biggest - lineStartOffset + 1);
 					} catch (BadLocationException e) {
 						// ignore it, scriptRegion.getEnd() is greater than last

@@ -67,7 +67,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 		if (region != null && container != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 			phpScriptRegion = (IPhpScriptRegion) region;
 			try {
-				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
+				region = phpScriptRegion.getPHPToken(offset - container.getStartOffset() - region.getStart());
 			} catch (BadLocationException e) {
 				region = null;
 			}
@@ -82,9 +82,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 					varOffset = hoverRegion.getOffset();
 					varLength = hoverRegion.getLength();
 					try {
-						ITextRegion prevPhpToken = phpScriptRegion.getPhpToken(region.getStart() - 1);
+						ITextRegion prevPhpToken = phpScriptRegion.getPHPToken(region.getStart() - 1);
 						if (prevPhpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
-							prevPhpToken = phpScriptRegion.getPhpToken(prevPhpToken.getStart() - 1);
+							prevPhpToken = phpScriptRegion.getPHPToken(prevPhpToken.getStart() - 1);
 							varLength += varOffset - prevPhpToken.getStart();
 							varOffset = prevPhpToken.getStart();
 						}
@@ -93,10 +93,10 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 					}
 				} else if (regionType == PHPRegionTypes.PHP_LABEL) {
 					try {
-						ITextRegion nextRegion = phpScriptRegion.getPhpToken(region.getEnd());
-						ITextRegion prevRegion = phpScriptRegion.getPhpToken(region.getStart() - 1);
+						ITextRegion nextRegion = phpScriptRegion.getPHPToken(region.getEnd());
+						ITextRegion prevRegion = phpScriptRegion.getPHPToken(region.getStart() - 1);
 						if (prevRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR) {
-							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
+							prevRegion = phpScriptRegion.getPHPToken(prevRegion.getStart() - 1);
 							if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
 								String nextTokenString = textViewer.getDocument().get(
 										phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getLength());

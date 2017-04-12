@@ -87,7 +87,7 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 						IPhpScriptRegion scriptRegion = (IPhpScriptRegion) currentTextRegion;
 						try {
 							currentTextRegion = scriptRegion
-									.getPhpToken(offset - docRegion.getStartOffset(scriptRegion));
+									.getPHPToken(offset - docRegion.getStartOffset(scriptRegion));
 
 							if (currentTextRegion.getTextLength() > 1) {
 								int offsetAtNearEdge = offset;

@@ -137,7 +137,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String selectedValue = versionCombo.getSelectionValue();
-				setPhpVersionValue(selectedValue);
+				setPHPVersionValue(selectedValue);
 			}
 
 			@Override
@@ -222,7 +222,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		}
 	}
 
-	private void setPhpVersionValue(String value) {
+	private void setPHPVersionValue(String value) {
 		for (PHPVersion version : PHPVersion.supportedVersions()) {
 			if (version.getAlias().equals(value)) {
 				setValue(PREF_PHP_VERSION, version.getAlias());
@@ -268,7 +268,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 			// invalid or an obsolete PHP version), we force the selection
 			// of the top-most value of versionCombo, so it will later
 			// trigger a project rebuild if the user validates this value.
-			setPhpVersionValue(versionCombo.getEntryList().get(0).getValue());
+			setPHPVersionValue(versionCombo.getEntryList().get(0).getValue());
 		}
 	}
 

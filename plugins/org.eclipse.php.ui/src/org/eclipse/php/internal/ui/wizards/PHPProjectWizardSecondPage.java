@@ -163,7 +163,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 				} else {
 					monitor.worked(20);
 				}
-			} else if (fFirstPage.hasPhpSourceFolder()) {
+			} else if (fFirstPage.hasPHPSourceFolder()) {
 				// need to create sub-folders and set special build/include
 				// paths
 				IPreferenceStore store = getPreferenceStore();
@@ -212,7 +212,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			init(DLTKCore.create(getProject()), buildpathEntries, false);
 
 			// setting PHP4/5 and ASP-Tags :
-			setPhpLangOptions();
+			setPHPLangOptions();
 
 			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
@@ -449,7 +449,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		}
 	}
 
-	protected void setPhpLangOptions() {
+	protected void setPHPLangOptions() {
 		if (fFirstPage.fVersionGroup.fDefaultValues.isSelected()) {
 			return;
 		}

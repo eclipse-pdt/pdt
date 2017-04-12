@@ -47,7 +47,7 @@ public class DefineMethodUtils {
 				return null;
 			}
 			PHPModuleDeclaration phpModule = (PHPModuleDeclaration) module;
-			List<PHPDocBlock> phpDocBlocks = phpModule.getPhpDocBlocks();
+			List<PHPDocBlock> phpDocBlocks = phpModule.getPHPDocBlocks();
 			if (phpDocBlocks != null && !phpDocBlocks.isEmpty()) {
 				List statements = phpModule.getStatements();
 				ISourceRange sourceRange = field.getNameRange();
