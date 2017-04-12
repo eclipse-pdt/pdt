@@ -119,7 +119,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				}
 			}
 
-			PHPVersion phpVersion = arrayContext.getPhpVersion();
+			PHPVersion phpVersion = arrayContext.getPHPVersion();
 			reportVariables(reporter, arrayContext, PHPVariables.getVariables(phpVersion), prefix, true, extraObject);
 		}
 	}

@@ -21,12 +21,12 @@ import org.eclipse.dltk.compiler.util.ScannerHelper;
  * Provides methods for encoding and decoding type and method signature strings.
  * <p>
  * Signatures obtained from parsing source files (i.e. files with one of the
- * {@link JavaCore#getPhpLikeExtensions() Java-like extensions}) differ subtly
- * from ones obtained from pre-compiled binary (".class") files in class names
- * are usually left unresolved in the former. For example, the normal resolved
- * form of the type "String" embeds the class's package name
- * ("Ljava.lang.String;" or "Ljava/lang/String;"), whereas the unresolved form
- * contains only what is written "QString;".
+ * {@link Util#getPHPLikeExtensions() Java-like extensions}) differ subtly from
+ * ones obtained from pre-compiled binary (".class") files in class names are
+ * usually left unresolved in the former. For example, the normal resolved form
+ * of the type "String" embeds the class's package name ("Ljava.lang.String;" or
+ * "Ljava/lang/String;"), whereas the unresolved form contains only what is
+ * written "QString;".
  * </p>
  * <p>
  * Generic types introduce to the Java language in J2SE 1.5 add three new facets

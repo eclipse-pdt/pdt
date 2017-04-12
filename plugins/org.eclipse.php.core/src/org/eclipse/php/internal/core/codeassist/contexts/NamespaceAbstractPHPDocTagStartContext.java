@@ -195,8 +195,8 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 				// after the namespace separator, otherwise there's no reason
 				// to retrieve the next region.
 				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER.length()) {
-			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			IPhpScriptRegion phpScriptRegion = getPHPScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPHPToken(phpToken.getEnd());
 			// Also check that we only retrieve PHP labels.
 			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();

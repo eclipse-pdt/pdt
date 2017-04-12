@@ -461,10 +461,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return strategies.toArray(new IAutoEditStrategy[strategies.size()]);
 		}
 
-		return getPhpAutoEditStrategy(sourceViewer, contentType);
+		return getPHPAutoEditStrategy(sourceViewer, contentType);
 	}
 
-	private final IAutoEditStrategy[] getPhpAutoEditStrategy(ISourceViewer sourceViewer, String contentType) {
+	private final IAutoEditStrategy[] getPHPAutoEditStrategy(ISourceViewer sourceViewer, String contentType) {
 		final IAutoEditStrategy[] autoEditStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		final int length = autoEditStrategies.length;
 		final IAutoEditStrategy[] augAutoEditStrategies = new IAutoEditStrategy[length + 1];

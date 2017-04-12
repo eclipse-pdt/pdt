@@ -223,7 +223,7 @@ public class Binding extends ASTAttribute {
 				ASTViewPlugin.log("Exception thrown in IBinding#getAnnotations() for \"" + fBinding.getKey() + "\"", e);
 			}*/
 			/*try {
-				IJavaElement javaElement= fBinding.getPhpElement();
+				IJavaElement javaElement= fBinding.getPHPElement();
 				res.add(new PhpElement(this, javaElement));
 			} catch (RuntimeException e) {
 				String label= ">java element: " + e.getClass().getName() + " for \"" + fBinding.getKey() + "\"";  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$

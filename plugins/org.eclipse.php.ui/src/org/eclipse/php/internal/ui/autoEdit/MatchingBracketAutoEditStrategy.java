@@ -165,7 +165,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				// This text region must be of type PhpScriptRegion:
 				if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-					tRegion = scriptRegion.getPhpToken(currOffset - regionStart);
+					tRegion = scriptRegion.getPHPToken(currOffset - regionStart);
 
 					while (true) {
 						String regionType = tRegion.getType();
@@ -183,7 +183,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 							return MATCHING_BRACKET_NOT_NEEDED;
 						}
 						if (tRegion.getStart() > 0) {
-							tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+							tRegion = scriptRegion.getPHPToken(tRegion.getStart() - 1);
 						} else {
 							break;
 						}
@@ -249,7 +249,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 
 			if (tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - sdRegion.getStartOffset(scriptRegion));
+				tRegion = scriptRegion.getPHPToken(offset - sdRegion.getStartOffset(scriptRegion));
 
 				if (tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {
 					return;

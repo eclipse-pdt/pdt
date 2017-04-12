@@ -95,7 +95,7 @@ public class FileUtils {
 	// IProjectDescription desc = project.getDescription();
 	// desc.setNatureIds(new String[] { PHPNature.ID });
 	// project.setDescription(desc, null);
-	// ProjectOptions.setPhpVersion(version, project);
+	// ProjectOptions.setPHPVersion(version, project);
 	// }
 	// } catch (CoreException e) {
 	// // TODO Auto-generated catch block

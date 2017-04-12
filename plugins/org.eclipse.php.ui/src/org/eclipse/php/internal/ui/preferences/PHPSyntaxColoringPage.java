@@ -956,7 +956,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				IPhpScriptRegion phpScript = (IPhpScriptRegion) interest;
 				try {
 					regionContext = phpScript
-							.getPhpTokenType(offset - container.getStartOffset() - phpScript.getStart());
+							.getPHPTokenType(offset - container.getStartOffset() - phpScript.getStart());
 				} catch (BadLocationException e) {
 					assert false;
 					return null;

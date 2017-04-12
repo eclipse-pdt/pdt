@@ -96,9 +96,9 @@ public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 						textRegion = phpScriptRegion
-								.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+								.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 						String type = textRegion.getType();
-						if (PHPPartitionTypes.isPHPCommentState(type) || PHPPartitionTypes.isPhpQuotesState(type)) {
+						if (PHPPartitionTypes.isPHPCommentState(type) || PHPPartitionTypes.isPHPQuotesState(type)) {
 							return true;
 						}
 					}

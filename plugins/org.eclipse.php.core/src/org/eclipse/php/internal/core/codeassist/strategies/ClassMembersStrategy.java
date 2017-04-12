@@ -56,7 +56,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	protected boolean showStaticMembers(ClassMemberContext context) {
-		return context.getTriggerType() == Trigger.CLASS || context.getPhpVersion().isGreaterThan(PHPVersion.PHP5);
+		return context.getTriggerType() == Trigger.CLASS || context.getPHPVersion().isGreaterThan(PHPVersion.PHP5);
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
@@ -127,7 +127,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		if (PHPFlags.isConstant(member.getFlags())) {
 			if (context.getTriggerType() == Trigger.CLASS) {
 				if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-						&& !isTraitMember(context.getPhpVersion(), type, member))) {
+						&& !isTraitMember(context.getPHPVersion(), type, member))) {
 					if (isParent(context)) { // is Parent
 						return true; // 1:1
 					} else if (isSelfKeyword(context)) {
@@ -161,7 +161,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					/* check 5 */
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isParent(context)) { // is Parent
 							return true; // 1:1
 						} else if (isSelfKeyword(context)) {
@@ -187,7 +187,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context) && showStrictOptions()) {
 							return false; // 1:5
 						} else if (isIndirectThis(context)) {
@@ -217,7 +217,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			} else if (member instanceof IMethod) {
 				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isParent(context)) {
 							return true; // 5:1
 						} else if (isSelfCall(context)) {
@@ -260,7 +260,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 5:5
 						} else if (isIndirectThis(context)) {
@@ -302,7 +302,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					return true; // 9:1 - 12:4
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 9:5
 						} else if (isIndirectThis(context)) {
@@ -332,7 +332,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			} else if (member instanceof IMethod) {
 				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isParent(context)) {
 							return true; // 13:1
 						} else if (isSelfKeyword(context)) {
@@ -375,7 +375,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPhpVersion(), type, member))) {
+							|| isTraitMember(context.getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 13:5
 						} else if (isIndirectThis(context)) {

@@ -1808,7 +1808,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				existingFileStatus, interfacesStatus, namespaceStatus });
 	}
 
-	public PHPVersion getPhpVersion() {
+	public PHPVersion getPHPVersion() {
 		return phpVersion;
 	}
 

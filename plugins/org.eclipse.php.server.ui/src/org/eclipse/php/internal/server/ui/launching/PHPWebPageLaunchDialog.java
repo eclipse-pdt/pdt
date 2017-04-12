@@ -265,7 +265,7 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		return this.server;
 	}
 
-	public String getPhpPathString() {
+	public String getPHPPathString() {
 		return this.pathString;
 	}
 

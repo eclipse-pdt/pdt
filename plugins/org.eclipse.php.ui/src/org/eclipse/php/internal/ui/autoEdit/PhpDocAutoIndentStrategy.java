@@ -458,12 +458,12 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					regionOffset -= scriptRegion.getStart();
 
-					ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
+					ITextRegion commentRegion = scriptRegion.getPHPToken(regionOffset);
 					int phpScriptEndOffset = scriptRegion.getLength();
 					boolean isSpaceDeletionNeeded = false;
 					do {
 						int currentRegionEndOffset = commentRegion.getEnd();
-						commentRegion = scriptRegion.getPhpToken(currentRegionEndOffset);
+						commentRegion = scriptRegion.getPHPToken(currentRegionEndOffset);
 						String tokenType = commentRegion.getType();
 						if (PHPPartitionTypes.isPHPMultiLineCommentEndRegion(tokenType)
 								|| PHPPartitionTypes.isPHPDocEndRegion(tokenType)) {
@@ -587,7 +587,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 								// phpdoc region later
 								regionOffset -= scriptRegion.getStart();
 
-								ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
+								ITextRegion commentRegion = scriptRegion.getPHPToken(regionOffset);
 
 								String tokenType = commentRegion.getType();
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=509024
@@ -612,7 +612,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 										}
 										// get previous region
 										region = scriptRegion
-												.getPhpToken(region.getStart() - lineDelimiters[index].length());
+												.getPHPToken(region.getStart() - lineDelimiters[index].length());
 
 									} while (true);
 

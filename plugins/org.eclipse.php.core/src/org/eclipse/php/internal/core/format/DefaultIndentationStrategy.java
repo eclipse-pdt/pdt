@@ -78,7 +78,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 		if (tRegion instanceof IPhpScriptRegion) {
 			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(offset - regionStart);
+			tRegion = scriptRegion.getPHPToken(offset - regionStart);
 
 			// go backward over the region to find a region (not comment nor
 			// whitespace)
@@ -94,7 +94,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					return tRegion;
 				}
 				if (tRegion.getStart() >= 1) {
-					tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+					tRegion = scriptRegion.getPHPToken(tRegion.getStart() - 1);
 				} else {
 					tRegion = null;
 				}
@@ -521,12 +521,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			}
 			if (scriptRegion instanceof IPhpScriptRegion) {
 				if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(regionStart + token.getStart()) == '.') {
-					token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
+					token = ((IPhpScriptRegion) scriptRegion).getPHPToken(token.getStart() - 1);
 					if (token.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 						boolean isToken = true;
 						int currentOffset = regionStart + token.getStart() - 1;
 						while (currentOffset >= lineInfo.getOffset()) {
-							token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
+							token = ((IPhpScriptRegion) scriptRegion).getPHPToken(token.getStart() - 1);
 							tokenType = token.getType();
 							if (isToken
 									&& (tokenType == PHPRegionTypes.PHP_TOKEN
@@ -576,7 +576,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					// checking if the line starts with "case" or "default"
 					int currentOffset = regionStart + token.getStart() - 1;
 					while (currentOffset >= lineInfo.getOffset()) {
-						token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
+						token = ((IPhpScriptRegion) scriptRegion).getPHPToken(token.getStart() - 1);
 						tokenType = token.getType();
 						if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT)
 							return true;

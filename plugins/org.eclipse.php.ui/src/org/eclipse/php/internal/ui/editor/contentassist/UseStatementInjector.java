@@ -521,7 +521,7 @@ public class UseStatementInjector {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 				try {
 					tRegion = phpScriptRegion
-							.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+							.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 				} catch (BadLocationException e) {
 					return null;
 				}

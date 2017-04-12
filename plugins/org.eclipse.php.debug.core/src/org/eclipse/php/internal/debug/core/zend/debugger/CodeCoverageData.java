@@ -53,7 +53,7 @@ public class CodeCoverageData implements IAdaptable {
 		return fLinesNum;
 	}
 
-	public int getPhpLinesNum() {
+	public int getPHPLinesNum() {
 		return fPhpLinesNum;
 	}
 
@@ -85,7 +85,7 @@ public class CodeCoverageData implements IAdaptable {
 		fCoverageBitmask = coverageBitmask;
 	}
 
-	public void setPhpLinesNum(int phpLinesNum) {
+	public void setPHPLinesNum(int phpLinesNum) {
 		fPhpLinesNum = phpLinesNum;
 	}
 

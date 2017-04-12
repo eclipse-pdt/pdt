@@ -36,7 +36,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @throws BadLocationException
 	 *             when "from" is an invalid offset or when "length" is < 0
 	 */
-	public abstract @NonNull ITextRegion[] getPhpTokens(int from, int length) throws BadLocationException;
+	public abstract @NonNull ITextRegion[] getPHPTokens(int from, int length) throws BadLocationException;
 
 	public abstract @NonNull ITextRegion[] getUpdatedPhpTokens() throws BadLocationException;
 
@@ -52,7 +52,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return region (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract @NonNull ITextRegion getPhpToken(int offset) throws BadLocationException;
+	public abstract @NonNull ITextRegion getPHPToken(int offset) throws BadLocationException;
 
 	/**
 	 * returns the php partition type of the token that lay in the given offset
@@ -78,7 +78,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return php token type (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract @NonNull String getPhpTokenType(int offset) throws BadLocationException;
+	public abstract @NonNull String getPHPTokenType(int offset) throws BadLocationException;
 
 	/**
 	 * Returns true if the given offset is in a back-quoted string, a
@@ -88,7 +88,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public abstract boolean isPhpQuotesState(int relativeOffset) throws BadLocationException;
+	public abstract boolean isPHPQuotesState(int relativeOffset) throws BadLocationException;
 
 	/**
 	 * Performs a complete reparse in the document on the given interval

@@ -29,7 +29,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 	private boolean isGlobal;
 
 	protected boolean validateNamespace(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
-		if (getPhpVersion().isLessThan(PHPVersion.PHP5_3)) {
+		if (getPHPVersion().isLessThan(PHPVersion.PHP5_3)) {
 			return false;
 		}
 
@@ -122,8 +122,8 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 				// after the namespace separator, otherwise there's no reason
 				// to retrieve the next region.
 				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER.length()) {
-			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			IPhpScriptRegion phpScriptRegion = getPHPScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPHPToken(phpToken.getEnd());
 			// Also check that we only retrieve PHP labels.
 			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();

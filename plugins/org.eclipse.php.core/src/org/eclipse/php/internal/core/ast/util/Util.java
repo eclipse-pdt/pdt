@@ -685,7 +685,7 @@ public class Util {
 	// IResource member = members[i];
 	// if (member.getType() == IResource.FOLDER) {
 	// return findFirstClassFile((IFolder) member);
-	// } else if (PHPToolkitUtil.hasPhpExtention(member.getName())) {
+	// } else if (PHPToolkitUtil.hasPHPExtention(member.getName())) {
 	// return (IFile) member;
 	// }
 	// }
@@ -750,7 +750,7 @@ public class Util {
 	/**
 	 * Returns the registered Java like extensions.
 	 */
-	public static char[][] getPhpLikeExtensions() {
+	public static char[][] getPHPLikeExtensions() {
 		if (PHP_LIKE_EXTENSIONS == null) {
 			// TODO (jerome) reenable once JDT UI supports other file extensions
 			// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=71460)
@@ -1184,7 +1184,7 @@ public class Util {
 	 */
 	public static int indexOfJavaLikeExtension(String fileName) {
 		int fileNameLength = fileName.length();
-		char[][] javaLikeExtensions = getPhpLikeExtensions();
+		char[][] javaLikeExtensions = getPHPLikeExtensions();
 		extensions: for (int i = 0, length = javaLikeExtensions.length; i < length; i++) {
 			char[] extension = javaLikeExtensions[i];
 			int extensionLength = extension.length;
@@ -2338,7 +2338,7 @@ public class Util {
 		if (fileName == null)
 			return false;
 		int fileNameLength = fileName.length;
-		char[][] javaLikeExtensions = getPhpLikeExtensions();
+		char[][] javaLikeExtensions = getPHPLikeExtensions();
 		extensions: for (int i = 0, length = javaLikeExtensions.length; i < length; i++) {
 			char[] extension = javaLikeExtensions[i];
 			int extensionLength = extension.length;
