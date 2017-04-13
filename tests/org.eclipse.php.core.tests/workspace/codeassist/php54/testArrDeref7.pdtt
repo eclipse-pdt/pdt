@@ -10,7 +10,7 @@ class myClass{
 	}
 } 
 /**
- * @return multitype:myClass
+ * @return myClass[]
  */
 function foo() {
       return [new Exception()];
