@@ -1,0 +1,18 @@
+--TEST--
+Test Trait selection in use statement
+--FILE--
+<?php
+namespace NS;
+
+use name\ns2\|Foo|;
+
+class Foo {
+    use Foo;
+}
+
+namespace name\ns2;
+
+trait Foo {
+}
+--EXPECT--
+type(Foo)
