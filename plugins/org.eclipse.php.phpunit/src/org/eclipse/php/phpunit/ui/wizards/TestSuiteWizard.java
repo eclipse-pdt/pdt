@@ -24,7 +24,7 @@ public class TestSuiteWizard extends PHPUnitWizard {
 	public TestSuiteWizard() {
 		super();
 		setWindowTitle(PHPUnitMessages.TestSuiteWizard_0);
-		setDefaultPageImageDescriptor(PHPUnitPlugin.getImageDescriptor("wizban/newsuite_wiz.gif")); //$NON-NLS-1$
+		setDefaultPageImageDescriptor(PHPUnitPlugin.getImageDescriptor("wizban/newsuite_wiz.png")); //$NON-NLS-1$
 	}
 
 	@Override

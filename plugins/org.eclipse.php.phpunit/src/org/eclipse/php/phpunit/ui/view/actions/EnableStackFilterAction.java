@@ -30,9 +30,9 @@ public class EnableStackFilterAction extends Action {
 		setDescription(PHPUnitMessages.EnableStackFilterAction_Description);
 		setToolTipText(PHPUnitMessages.EnableStackFilterAction_Description);
 
-		setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/cfilter.gif")); //$NON-NLS-1$
-		setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/cfilter.gif")); //$NON-NLS-1$
-		setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/cfilter.gif")); //$NON-NLS-1$
+		setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/cfilter.png")); //$NON-NLS-1$
+		setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/cfilter.png")); //$NON-NLS-1$
+		setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/cfilter.png")); //$NON-NLS-1$
 
 		setChecked(PHPUnitPreferenceKeys.getFilterStack());
 	}

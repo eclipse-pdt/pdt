@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
  * A panel with counters for the number of Runs, Errors and Failures.
  */
 public class CounterPanel extends Composite {
-	private final Image fErrorIcon = PHPUnitPlugin.createImage("ovr16/error_ovr.gif"); //$NON-NLS-1$
-	private final Image fFailureIcon = PHPUnitPlugin.createImage("ovr16/failed_ovr.gif"); //$NON-NLS-1$
+	private final Image fErrorIcon = PHPUnitPlugin.createImage("ovr16/error_ovr.png"); //$NON-NLS-1$
+	private final Image fFailureIcon = PHPUnitPlugin.createImage("ovr16/failed_ovr.png"); //$NON-NLS-1$
 	protected Text fNumberOfErrors;
 	protected Text fNumberOfFailures;
 

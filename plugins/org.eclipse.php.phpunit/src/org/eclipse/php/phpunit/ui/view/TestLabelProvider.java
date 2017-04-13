@@ -35,10 +35,10 @@ public class TestLabelProvider extends LabelProvider {
 	private final Image fStaticFunctionIcon = PHPUiPlugin.getImageDescriptorRegistry()
 			.get(new PHPElementImageDescriptor(PHPPluginImages.DESC_MISC_PUBLIC, PHPElementImageDescriptor.STATIC,
 					PHPElementImageDescriptor.SMALL_SIZE));
-	private final Image fSuiteErrorIcon = PHPUnitPlugin.createImage("obj16/tsuiteerror.gif"); //$NON-NLS-1$
-	private final Image fSuiteFailIcon = PHPUnitPlugin.createImage("obj16/tsuitefail.gif"); //$NON-NLS-1$
-	private final Image fSuiteOkIcon = PHPUnitPlugin.createImage("obj16/tsuiteok.gif"); //$NON-NLS-1$
-	private final Image fSuiteRunningIcon = PHPUnitPlugin.createImage("obj16/tsuiterun.gif"); //$NON-NLS-1$
+	private final Image fSuiteErrorIcon = PHPUnitPlugin.createImage("obj16/tsuiteerror.png"); //$NON-NLS-1$
+	private final Image fSuiteFailIcon = PHPUnitPlugin.createImage("obj16/tsuitefail.png"); //$NON-NLS-1$
+	private final Image fSuiteOkIcon = PHPUnitPlugin.createImage("obj16/tsuiteok.png"); //$NON-NLS-1$
+	private final Image fSuiteRunningIcon = PHPUnitPlugin.createImage("obj16/tsuiterun.png"); //$NON-NLS-1$
 	private final Image fSuiteWarningIcon;
 
 	private final Image fOkIcon;
@@ -51,14 +51,14 @@ public class TestLabelProvider extends LabelProvider {
 
 	public TestLabelProvider(final PHPUnitView view) {
 		this.view = view;
-		Image image = PHPUnitPlugin.createImage("obj16/test.gif"); //$NON-NLS-1$
-		Image testSuiteImage = PHPUnitPlugin.createImage("obj16/tsuite.gif"); //$NON-NLS-1$
+		Image image = PHPUnitPlugin.createImage("obj16/test.png"); //$NON-NLS-1$
+		Image testSuiteImage = PHPUnitPlugin.createImage("obj16/tsuite.png"); //$NON-NLS-1$
 
-		this.fOkIcon = PHPUnitPlugin.createImage("obj16/testok.gif"); //$NON-NLS-1$
-		this.fErrorIcon = PHPUnitPlugin.createImage("obj16/testerr.gif"); //$NON-NLS-1$
-		this.fFailureIcon = PHPUnitPlugin.createImage("obj16/testfail.gif"); //$NON-NLS-1$
+		this.fOkIcon = PHPUnitPlugin.createImage("obj16/testok.png"); //$NON-NLS-1$
+		this.fErrorIcon = PHPUnitPlugin.createImage("obj16/testerr.png"); //$NON-NLS-1$
+		this.fFailureIcon = PHPUnitPlugin.createImage("obj16/testfail.png"); //$NON-NLS-1$
 		this.fWarningIcon = createOverlay(image, ISharedImages.IMG_DEC_FIELD_WARNING);
-		this.fTestRunningIcon = PHPUnitPlugin.createImage("obj16/tcaserun.gif"); //$NON-NLS-1$
+		this.fTestRunningIcon = PHPUnitPlugin.createImage("obj16/tcaserun.png"); //$NON-NLS-1$
 
 		this.fSuiteWarningIcon = createOverlay(testSuiteImage, ISharedImages.IMG_DEC_FIELD_WARNING);
 

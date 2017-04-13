@@ -102,7 +102,7 @@ public class TestViewer {
 	public TestViewer(final Composite parent, final PHPUnitView runner) {
 		view = runner;
 
-		fHierarchyIcon = PHPUnitPlugin.createImage("obj16/testhier.gif"); //$NON-NLS-1$
+		fHierarchyIcon = PHPUnitPlugin.createImage("obj16/testhier.png"); //$NON-NLS-1$
 		parent.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {

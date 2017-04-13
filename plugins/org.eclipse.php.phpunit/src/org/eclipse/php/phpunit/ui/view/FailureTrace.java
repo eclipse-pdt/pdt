@@ -47,10 +47,8 @@ public class FailureTrace implements IMenuListener {
 		}
 	}
 
-	private final Image fExceptionIcon = PHPUnitPlugin.createImage("obj16/exc_catch.gif"); //$NON-NLS-1$
-
 	private PHPUnitElement fInput;
-	private final Image fStackIcon = PHPUnitPlugin.createImage("obj16/stkfrm_obj.gif"); //$NON-NLS-1$
+	private final Image fStackIcon = PHPUnitPlugin.createImage("obj16/stkfrm_obj.png"); //$NON-NLS-1$
 	private PHPUnitView fTestRunner;
 
 	private TreeViewer fTreeViewer;
@@ -75,8 +73,6 @@ public class FailureTrace implements IMenuListener {
 	}
 
 	private void disposeIcons() {
-		if (fExceptionIcon != null && !fExceptionIcon.isDisposed())
-			fExceptionIcon.dispose();
 		if (fStackIcon != null && !fStackIcon.isDisposed())
 			fStackIcon.dispose();
 	}
