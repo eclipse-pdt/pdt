@@ -8,7 +8,7 @@ class Test {
 	}
 }
 /**
- * @return multitype:Test
+ * @return Test[]
  */
 function fn() {return new Exception();}
 $arr = fn();

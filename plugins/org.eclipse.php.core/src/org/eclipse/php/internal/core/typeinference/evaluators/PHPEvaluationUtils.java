@@ -35,26 +35,24 @@ public class PHPEvaluationUtils {
 
 	public static final String BRACKETS = "[]"; //$NON-NLS-1$
 
-	public final static Pattern ARRAY_TYPE_PATTERN = Pattern.compile("array\\[.*\\]"); //$NON-NLS-1$
+	public static final Pattern ARRAY_TYPE_PATTERN = Pattern.compile("array\\[.*\\]"); //$NON-NLS-1$
 
-	private final static Pattern MULTITYPE_PATTERN = Pattern.compile("^multitype:(.+)$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
 
-	private final static String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
+	private static final String STATIC_RETURN_TYPE = "static"; //$NON-NLS-1$
 
-	private final static String STATIC_RETURN_TYPE = "static"; //$NON-NLS-1$
+	private static final String THIS_RETURN_TYPE = "$this"; //$NON-NLS-1$
 
-	private final static String THIS_RETURN_TYPE = "$this"; //$NON-NLS-1$
+	public static final String BRACKETS_PATTERN = "\\[.*\\]"; //$NON-NLS-1$
 
-	public final static String BRACKETS_PATTERN = "\\[.*\\]"; //$NON-NLS-1$
-
-	private final static IEvaluatedType[] EMPTY_LIST = new IEvaluatedType[0];
+	private static final IEvaluatedType[] EMPTY_LIST = new IEvaluatedType[0];
 
 	// XXX: handle nested array[] types?
 	public static String extractArrayType(String typeName) {
 		Matcher m = PHPEvaluationUtils.ARRAY_TYPE_PATTERN.matcher(typeName);
 		if (m.find()) {
-			int beginIndex = typeName.indexOf("[") + 1; //$NON-NLS-1$
-			int endIndex = typeName.lastIndexOf("]"); //$NON-NLS-1$
+			int beginIndex = typeName.indexOf('[') + 1;
+			int endIndex = typeName.lastIndexOf(']');
 			if (endIndex != -1) {
 				return typeName.substring(beginIndex, endIndex);
 			}
@@ -67,9 +65,7 @@ public class PHPEvaluationUtils {
 			return false;
 		}
 		Matcher m = PHPEvaluationUtils.ARRAY_TYPE_PATTERN.matcher(typeName);
-		if (m.find()) {
-			return true;
-		} else if (typeName.endsWith(PHPEvaluationUtils.BRACKETS) && typeName.length() > 2) {
+		if (m.find() || (typeName.endsWith(PHPEvaluationUtils.BRACKETS) && typeName.length() > 2)) {
 			return true;
 		}
 		return false;
@@ -90,8 +86,8 @@ public class PHPEvaluationUtils {
 	}
 
 	public static MultiTypeType getArrayType(String type, IType currentNamespace, int offset) {
-		int beginIndex = type.indexOf("[") + 1; //$NON-NLS-1$
-		int endIndex = type.lastIndexOf("]"); //$NON-NLS-1$
+		int beginIndex = type.indexOf('[') + 1;
+		int endIndex = type.lastIndexOf(']');
 		if (endIndex != -1) {
 			type = type.substring(beginIndex, endIndex);
 		}
@@ -199,7 +195,7 @@ public class PHPEvaluationUtils {
 	}
 
 	private static class ClassFinder implements IModelElementVisitor {
-		final private String search;
+		private final String search;
 		public boolean found = false;
 
 		public ClassFinder(String name) {
@@ -227,13 +223,11 @@ public class PHPEvaluationUtils {
 	 */
 	public static IEvaluatedType[] evaluatePHPDocType(String[] typeNames, IModelElement space, int offset,
 			IType[] types) {
-
 		ISourceModule sourceModule = space.getAncestor(ISourceModule.class);
 		IType currentNamespace = space instanceof IType ? (IType) space : null;
-		MultiTypeType evalMultiType = null;
-		List<IEvaluatedType> res = new LinkedList<IEvaluatedType>();
+		List<IEvaluatedType> res = new LinkedList<>();
 		for (String typeName : typeNames) {
-			List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+			List<IEvaluatedType> evaluated = new LinkedList<>();
 			if (StringUtils.isBlank(typeName)) {
 				continue;
 			}
@@ -241,13 +235,6 @@ public class PHPEvaluationUtils {
 			if (evaluatedType != null) {
 				evaluated.add(evaluatedType);
 			} else {
-				boolean isMulti = false;
-				// XXX: also treat AmbiguousType?
-				Matcher multi = MULTITYPE_PATTERN.matcher(typeName);
-				if (multi.find()) {
-					isMulti = true;
-					typeName = multi.group(1);
-				}
 				if (PHPSimpleTypes.isSimpleTypeCS(typeName)) {
 					ClassFinder classFinder = new ClassFinder(typeName);
 					try {
@@ -304,20 +291,8 @@ public class PHPEvaluationUtils {
 						evaluated.add(type);
 					}
 				}
-				if (isMulti) {
-					if (evalMultiType == null) {
-						evalMultiType = new MultiTypeType();
-					}
-					for (IEvaluatedType t : evaluated) {
-						evalMultiType.addType(t);
-					}
-					continue;
-				}
 			}
 			res.addAll(evaluated);
-		}
-		if (evalMultiType != null) {
-			res.add(evalMultiType);
 		}
 		if (res.isEmpty()) {
 			return EMPTY_LIST;
