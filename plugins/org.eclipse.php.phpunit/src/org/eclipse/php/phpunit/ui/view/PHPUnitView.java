@@ -102,13 +102,9 @@ public class PHPUnitView extends ViewPart {
 
 	Image fOriginalViewImage;
 
-	final Image fStackViewIcon = PHPUnitPlugin.createImage("eview16/stackframe.gif");//$NON-NLS-1$
+	final Image fStackViewIcon = PHPUnitPlugin.createImage("eview16/stackframe.png");//$NON-NLS-1$
 
 	final Image fDiffViewIcon = PHPUnitPlugin.createImage("eview16/diff.png");//$NON-NLS-1$
-
-	final Image fTestRunFailIcon = PHPUnitPlugin.createImage("eview16/juniterr.gif"); //$NON-NLS-1$
-
-	final Image fTestRunOKIcon = PHPUnitPlugin.createImage("eview16/junitsucc.gif"); //$NON-NLS-1$
 
 	boolean running = false;
 
@@ -612,8 +608,6 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	private void disposeImages() {
-		fTestRunOKIcon.dispose();
-		fTestRunFailIcon.dispose();
 		fStackViewIcon.dispose();
 		fCodeCoverageIcon.dispose();
 	}
@@ -685,9 +679,9 @@ public class PHPUnitView extends ViewPart {
 		public ExpandAllAction() {
 			setText(PHPUnitMessages.PHPUnitView_Expand_Name);
 			setToolTipText(PHPUnitMessages.PHPUnitView_Expand_ToolTip);
-			setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/expandall.gif")); //$NON-NLS-1$
-			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/expandall.gif")); //$NON-NLS-1$
-			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/expandall.gif")); //$NON-NLS-1$
+			setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/expandall.png")); //$NON-NLS-1$
+			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/expandall.png")); //$NON-NLS-1$
+			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/expandall.png")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -700,7 +694,7 @@ public class PHPUnitView extends ViewPart {
 		public FailuresOnlyFilterAction() {
 			super(PHPUnitMessages.PHPUnitView_Failures_Name, AS_CHECK_BOX);
 			setToolTipText(PHPUnitMessages.PHPUnitView_Failures_Tooltip);
-			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("obj16/failures.gif")); //$NON-NLS-1$
+			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("obj16/failures.png")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -815,13 +809,13 @@ public class PHPUnitView extends ViewPart {
 			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
 			if (orientation == PHPUnitView.VIEW_ORIENTATION_HORIZONTAL) {
 				setText(PHPUnitMessages.PHPUnitView_Orient_Horizont);
-				setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/th_horizontal.gif")); //$NON-NLS-1$
+				setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/th_horizontal.png")); //$NON-NLS-1$
 			} else if (orientation == PHPUnitView.VIEW_ORIENTATION_VERTICAL) {
 				setText(PHPUnitMessages.PHPUnitView_Orient_Vertical);
-				setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/th_vertical.gif")); //$NON-NLS-1$
+				setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/th_vertical.png")); //$NON-NLS-1$
 			} else if (orientation == PHPUnitView.VIEW_ORIENTATION_AUTOMATIC) {
 				setText(PHPUnitMessages.PHPUnitView_Orient_Auto);
-				setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/th_automatic.gif")); //$NON-NLS-1$
+				setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/th_automatic.png")); //$NON-NLS-1$
 			}
 			fActionOrientation = orientation;
 		}

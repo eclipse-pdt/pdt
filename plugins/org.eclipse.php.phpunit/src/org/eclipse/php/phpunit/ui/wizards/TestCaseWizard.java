@@ -27,7 +27,7 @@ public class TestCaseWizard extends PHPUnitWizard {
 	public TestCaseWizard() {
 		super();
 		setWindowTitle(PHPUnitMessages.TestCaseWizard_0);
-		setDefaultPageImageDescriptor(PHPUnitPlugin.getImageDescriptor("wizban/newtest_wiz.gif")); //$NON-NLS-1$
+		setDefaultPageImageDescriptor(PHPUnitPlugin.getImageDescriptor("wizban/newtest_wiz.png")); //$NON-NLS-1$
 	}
 
 	@Override

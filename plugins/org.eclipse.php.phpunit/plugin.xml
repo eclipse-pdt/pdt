@@ -71,10 +71,10 @@
 		<category id="org.eclipse.php.phpunit" name="%name"
 			parentCategory="org.eclipse.php.project.ui" />
 		<wizard category="org.eclipse.php.project.ui/org.eclipse.php.phpunit"
-			class="org.eclipse.php.phpunit.ui.wizards.TestCaseWizard" icon="icons/full/etool16/new_testcase.gif"
+			class="org.eclipse.php.phpunit.ui.wizards.TestCaseWizard" icon="icons/full/etool16/new_testcase.png"
 			id="org.eclipse.php.phpunit.wizards.TestCaseWizard" name="%case" />
 		<wizard category="org.eclipse.php.project.ui/org.eclipse.php.phpunit"
-			class="org.eclipse.php.phpunit.ui.wizards.TestSuiteWizard" icon="icons/full/etool16/new_testsuite.gif"
+			class="org.eclipse.php.phpunit.ui.wizards.TestSuiteWizard" icon="icons/full/etool16/new_testsuite.png"
 			id="org.eclipse.php.phpunit.wizards.TestSuiteWizard" name="%suite" />
 	</extension>
 	<extension point="org.eclipse.ui.commands">

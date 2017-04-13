@@ -21,9 +21,9 @@ public class ShowNextFailureAction extends Action {
 
 	public ShowNextFailureAction(final PHPUnitView view) {
 		super(PHPUnitMessages.ShowNextFailureAction_Name);
-		setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/select_next.gif")); //$NON-NLS-1$
-		setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/select_next.gif")); //$NON-NLS-1$
-		setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/select_next.gif")); //$NON-NLS-1$
+		setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/select_next.png")); //$NON-NLS-1$
+		setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/select_next.png")); //$NON-NLS-1$
+		setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/select_next.png")); //$NON-NLS-1$
 		setToolTipText(PHPUnitMessages.ShowNextFailureAction_ToolTip);
 		fView = view;
 	}

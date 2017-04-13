@@ -22,9 +22,9 @@ public class ScrollLockAction extends Action {
 		super(PHPUnitMessages.ScrollLockAction_Name);
 		fRunnerView = viewer;
 		setToolTipText(PHPUnitMessages.ScrollLockAction_ToolTip);
-		setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/lock.gif")); //$NON-NLS-1$
-		setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/lock.gif")); //$NON-NLS-1$
-		setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/lock.gif")); //$NON-NLS-1$
+		setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/lock.png")); //$NON-NLS-1$
+		setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/lock.png")); //$NON-NLS-1$
+		setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/lock.png")); //$NON-NLS-1$
 		setChecked(false);
 	}
 
