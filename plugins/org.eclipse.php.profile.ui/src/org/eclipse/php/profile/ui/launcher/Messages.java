@@ -52,6 +52,8 @@ public class Messages extends NLS {
 	public static String XDebugProfileLaunchSettingsSection_Profiling_is_not_supported;
 	public static String ZendDebuggerProfileExeLaunchSettingsSection_General_group_name;
 	public static String ZendDebuggerProfileExeLaunchSettingsSection_Show_code_coverage;
+	public static String ZendDebuggerProfileWebLaunchSettingsSection_Browser;
+	public static String ZendDebuggerProfileWebLaunchSettingsSection_Open_in_browser;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
