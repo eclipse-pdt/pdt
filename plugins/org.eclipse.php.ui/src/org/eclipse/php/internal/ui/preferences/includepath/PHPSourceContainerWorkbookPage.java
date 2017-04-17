@@ -172,7 +172,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		fFoldersList.setDialogFieldListener(adapter);
 		fFoldersList.setLabelText(NewWizardMessages.SourceContainerWorkbookPage_folders_label);
 
-		fFoldersList.setViewerSorter(new BPListElementSorter());
+		fFoldersList.setViewerComparator(new BPListElementSorter());
 		fFoldersList.enableButton(getIDX_EDIT(), false);
 	}
 

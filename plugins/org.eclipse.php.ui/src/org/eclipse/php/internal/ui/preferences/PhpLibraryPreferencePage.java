@@ -394,7 +394,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 		}
 		fLibraryList.setElements(elements);
-		fLibraryList.setViewerSorter(new BPListElementSorter());
+		fLibraryList.setViewerComparator(new BPListElementSorter());
 
 		doSelectionChanged(fLibraryList); // update button enable state
 	}

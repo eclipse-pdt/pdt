@@ -34,7 +34,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	private List<PHPDocBlock> phpDocBlocks = new LinkedList<PHPDocBlock>();
 	private List<Comment> commentList = new LinkedList<Comment>();
 
-	public PHPModuleDeclaration(int start, int end, List<Statement> statements, List<ASTError> errors,
+	public PHPModuleDeclaration(int start, int end, List<ASTNode> statements, List<ASTError> errors,
 			List<VarComment> varComments) {
 		super(end - start, true);
 		setStatements(statements);

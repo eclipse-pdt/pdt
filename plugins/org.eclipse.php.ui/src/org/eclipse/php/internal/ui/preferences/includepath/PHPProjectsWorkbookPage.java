@@ -71,7 +71,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		fProjectsList.enableButton(IDX_REMOVE, false);
 		fProjectsList.enableButton(IDX_EDIT, false);
 
-		fProjectsList.setViewerSorter(new BPListElementSorter());
+		fProjectsList.setViewerComparator(new BPListElementSorter());
 	}
 
 	@Override
