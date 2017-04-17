@@ -118,7 +118,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		if (fWithZip) {
 			fLibrariesList.enableButton(IDX_REPLACE + IDX_ADD, false);
 		}
-		fLibrariesList.setViewerSorter(new BPListElementSorter());
+		fLibrariesList.setViewerComparator(new BPListElementSorter());
 
 	}
 

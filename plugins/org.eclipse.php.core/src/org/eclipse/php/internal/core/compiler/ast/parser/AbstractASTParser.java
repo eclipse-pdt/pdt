@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
@@ -34,7 +35,7 @@ import java_cup.runtime.lr_parser;
 
 abstract public class AbstractASTParser extends lr_parser {
 
-	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<Statement>(),
+	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<ASTNode>(),
 			new LinkedList<ASTError>(), new LinkedList<VarComment>());
 	private IProblemReporter problemReporter;
 	private String fileName;
@@ -160,7 +161,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		int end = 0;
 		Object value = cur_token.value;
 		PHPModuleDeclaration program = getModuleDeclaration();
-		List<Statement> statements = program.getStatements();
+		List<ASTNode> statements = program.getStatements();
 		if (value instanceof List) {
 			statements.addAll((List) value);
 		}
@@ -184,7 +185,7 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		// Set end offset of recovered class/interface node to the end of file
 		if (statements.size() > 0) {
-			Statement lastStatement = statements.get(statements.size() - 1);
+			ASTNode lastStatement = statements.get(statements.size() - 1);
 			if (lastStatement instanceof IRecoverable) {
 				IRecoverable recoverable = (IRecoverable) lastStatement;
 				if (recoverable.isRecovered()) {

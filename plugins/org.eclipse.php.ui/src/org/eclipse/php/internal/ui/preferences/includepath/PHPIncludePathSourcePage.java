@@ -136,7 +136,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		fFoldersList.setDialogFieldListener(adapter);
 		fFoldersList.setLabelText(PHPUIMessages.IncludePathSourcePage_Folders_Label);
 
-		fFoldersList.setViewerSorter(new BPListElementSorter());
+		fFoldersList.setViewerComparator(new BPListElementSorter());
 
 	}
 
