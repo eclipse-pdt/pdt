@@ -41,7 +41,7 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 		// handle the project fragment used for containing the language model
 		if (element instanceof IProjectFragment[]) {
 			IProjectFragment[] fragments = (IProjectFragment[]) element;
-			List<Object> children = new ArrayList<Object>();
+			List<Object> children = new ArrayList<>();
 
 			// Create the constant node that will aggregate all of the
 			// PHP
@@ -87,7 +87,7 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 	 * @return
 	 */
 	private IModelElement[] filterConstants(IModelElement[] externalSourceModuleChildren) {
-		List<IModelElement> filteredList = new ArrayList<IModelElement>();
+		List<IModelElement> filteredList = new ArrayList<>();
 		for (IModelElement modelElement : externalSourceModuleChildren) {
 			if (!ConstantNode.isConstant(modelElement)) {
 				filteredList.add(modelElement);

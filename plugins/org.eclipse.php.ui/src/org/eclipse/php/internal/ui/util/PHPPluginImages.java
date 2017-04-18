@@ -225,7 +225,7 @@ public class PHPPluginImages {
 				result = new PHPElementImageDescriptor(result, flags, size);
 			}
 			if (fgAvoidSWTErrorMap == null) {
-				fgAvoidSWTErrorMap = new HashMap<String, ImageDescriptor>();
+				fgAvoidSWTErrorMap = new HashMap<>();
 			}
 			fgAvoidSWTErrorMap.put(name, result);
 			if (fgImageRegistry != null) {

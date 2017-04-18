@@ -65,8 +65,8 @@ public class IncludepathRenameIParentParticipant extends IncludepathRenamePartic
 				continue;
 			}
 
-			List<IncludePath> newIncludePathEntryList = new ArrayList<IncludePath>();
-			Set<IBuildpathEntry> newBuildPathEntryList = new HashSet<IBuildpathEntry>();
+			List<IncludePath> newIncludePathEntryList = new ArrayList<>();
+			Set<IBuildpathEntry> newBuildPathEntryList = new HashSet<>();
 			getNewIncludePaths(projects[i], newIncludePathEntryList, newBuildPathEntryList, resource, destProjectName);
 			IProject newProject = projects[i];
 			if (projects[i].equals(resource)) {

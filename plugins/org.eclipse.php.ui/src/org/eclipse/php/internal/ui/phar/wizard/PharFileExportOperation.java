@@ -48,7 +48,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	private PharPackage[] fJarPackages;
 	private Shell fParentShell;
 	private MessageMultiStatus fStatus;
-	private Set<IResource> resourceSet = new HashSet<IResource>();
+	private Set<IResource> resourceSet = new HashSet<>();
 
 	/**
 	 * Creates an instance of this class.

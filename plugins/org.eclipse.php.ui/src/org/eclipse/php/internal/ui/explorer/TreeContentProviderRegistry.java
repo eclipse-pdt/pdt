@@ -34,8 +34,8 @@ public class TreeContentProviderRegistry {
 	private static final String CONTENT_PROVIDER = "contentProvider"; //$NON-NLS-1$
 
 	private static TreeContentProviderRegistry instance;
-	private List<ITreeContentProvider> contentProviders = new ArrayList<ITreeContentProvider>();
-	private List<ILabelProvider> labelProviders = new ArrayList<ILabelProvider>();
+	private List<ITreeContentProvider> contentProviders = new ArrayList<>();
+	private List<ILabelProvider> labelProviders = new ArrayList<>();
 
 	private TreeContentProviderRegistry() {
 

@@ -30,7 +30,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 public class AbstractSemanticApplyWithNS extends AbstractSemanticApply {
 	private ISourceModule sourceModule = null;
 	protected NamespaceDeclaration fCurrentNamespace;
-	protected Map<String, UseStatementPart> fLastUseParts = new HashMap<String, UseStatementPart>();
+	protected Map<String, UseStatementPart> fLastUseParts = new HashMap<>();
 
 	public AbstractSemanticApplyWithNS(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;

@@ -33,7 +33,7 @@ public class NamespaceNode extends SourceType {
 
 	@Override
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
-		List<IModelElement> children = new LinkedList<IModelElement>();
+		List<IModelElement> children = new LinkedList<>();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
 		PhpModelAccess modelAccess = PhpModelAccess.getDefault();
 		children.addAll(Arrays.asList(modelAccess.findTypes(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));

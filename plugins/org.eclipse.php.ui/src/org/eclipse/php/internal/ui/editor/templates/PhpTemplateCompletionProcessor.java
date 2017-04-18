@@ -58,7 +58,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	private boolean explicit;
 	private boolean isSelection;
 	/** Positions created on the key documents to remove in reset. */
-	private final Map<IDocument, Position> fPositions = new HashMap<IDocument, Position>();
+	private final Map<IDocument, Position> fPositions = new HashMap<>();
 
 	private IMethod enclosingMethod;
 	private IType enclosingType;
@@ -87,7 +87,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		if (sourceModule == null) {
 			return EMPTY;
 		}
-		List<String> contextIds = new ArrayList<String>();
+		List<String> contextIds = new ArrayList<>();
 		contextIds.add(contextTypeId);
 		// check whether enclosing element is a method
 		try {
@@ -170,7 +170,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 
 			boolean multipleLinesSelected = areMultipleLinesSelected(viewer);
 
-			List<TemplateProposal> matches = new ArrayList<TemplateProposal>();
+			List<TemplateProposal> matches = new ArrayList<>();
 			Template[] templates = getTemplates(contextIds);
 			for (int i = 0; i != templates.length; i++) {
 				Template template = templates[i];
@@ -197,7 +197,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		// name of the selection variables {line, word}_selection
 		context.setVariable("selection", selection.getText()); //$NON-NLS-1$
 
-		List<TemplateProposal> matches = new ArrayList<TemplateProposal>();
+		List<TemplateProposal> matches = new ArrayList<>();
 
 		Template[] templates = getTemplates(contextIds);
 		for (int i = 0; i < templates.length; i++) {
@@ -217,7 +217,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			proposal.setInformationControlCreator(controlCreator);
 		}
 
-		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
+		List<ICompletionProposal> result = new ArrayList<>();
 		for (int i = 0; i < selectionProposal.length; i++) {
 			result.add(selectionProposal[i]);
 		}
@@ -229,7 +229,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	}
 
 	private Template[] getTemplates(List<String> contextIds) {
-		List<Template> result = new ArrayList<Template>();
+		List<Template> result = new ArrayList<>();
 		for (String id : contextIds) {
 			Template[] templates = getTemplates(id);
 			result.addAll(Arrays.asList(templates));

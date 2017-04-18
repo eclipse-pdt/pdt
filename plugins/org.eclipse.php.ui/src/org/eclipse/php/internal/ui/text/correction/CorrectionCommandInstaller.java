@@ -20,7 +20,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 public class CorrectionCommandInstaller {
 
-	private static Map<String, IHandlerActivation> fActivations = new HashMap<String, IHandlerActivation>();
+	private static Map<String, IHandlerActivation> fActivations = new HashMap<>();
 
 	private CorrectionCommandInstaller() {
 	}

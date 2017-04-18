@@ -29,7 +29,7 @@ public class PHPActionDelegatorRegistry {
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PRIORITY_ATTRIBUTE = "priority"; //$NON-NLS-1$
 
-	private Map actionDelegators = new HashMap();
+	private Map<String, List<IConfigurationElement>> actionDelegators = new HashMap<>();
 	private static PHPActionDelegatorRegistry instance = new PHPActionDelegatorRegistry();
 
 	private PHPActionDelegatorRegistry() {
@@ -38,9 +38,9 @@ public class PHPActionDelegatorRegistry {
 			IConfigurationElement element = elements[i];
 			if (ACTION_ELEMENT.equals(element.getName())) {
 				String actionId = element.getAttribute(ACTION_ID_ATTRIBUTE);
-				List elementsList = (List) actionDelegators.get(actionId);
+				List<IConfigurationElement> elementsList = actionDelegators.get(actionId);
 				if (elementsList == null) {
-					elementsList = new LinkedList();
+					elementsList = new LinkedList<>();
 				}
 				elementsList.add(element);
 				actionDelegators.put(actionId, elementsList);
@@ -59,13 +59,13 @@ public class PHPActionDelegatorRegistry {
 	 *         priority, or <code>null</code> if no pages where contributed.
 	 */
 	public static IPHPActionDelegator getActionDelegator(String id) {
-		final List elementsList = (List) instance.actionDelegators.get(id);
+		final List<IConfigurationElement> elementsList = instance.actionDelegators.get(id);
 		IPHPActionDelegator action = null;
 		if (elementsList != null) {
 			int topPriority = 0;
-			Iterator i = elementsList.iterator();
+			Iterator<IConfigurationElement> i = elementsList.iterator();
 			while (i.hasNext()) {
-				IConfigurationElement element = (IConfigurationElement) i.next();
+				IConfigurationElement element = i.next();
 				int currentPriority = Integer.valueOf(element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				// the final action should be the one with the highest priority
 				if (currentPriority > topPriority) {
@@ -94,13 +94,13 @@ public class PHPActionDelegatorRegistry {
 	 *         or <code>null</code> if no pages where contributed.
 	 */
 	public static IRenamePHPElementActionFactory getActionDelegatorFactory(String id) {
-		final List elementsList = (List) instance.actionDelegators.get(id);
+		final List<IConfigurationElement> elementsList = instance.actionDelegators.get(id);
 		IRenamePHPElementActionFactory action = null;
 		if (elementsList != null) {
 			int topPriority = 0;
-			Iterator i = elementsList.iterator();
+			Iterator<IConfigurationElement> i = elementsList.iterator();
 			while (i.hasNext()) {
-				IConfigurationElement element = (IConfigurationElement) i.next();
+				IConfigurationElement element = i.next();
 				int currentPriority = Integer.valueOf(element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				// the final action should be the one with the highest priority
 				if (currentPriority > topPriority) {
