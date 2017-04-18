@@ -516,7 +516,7 @@ public class PHPDocumentationContentAccess {
 		ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(type);
 		final MethodOverrideTester tester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
 
-		final ArrayList<IMethod> superInterfaceMethods = new ArrayList<IMethod>();
+		final ArrayList<IMethod> superInterfaceMethods = new ArrayList<>();
 		final IMethod[] superClassMethod = { null };
 		new InheritDocVisitor() {
 			@Override
@@ -786,18 +786,18 @@ public class PHPDocumentationContentAccess {
 		// After first loop, non-null entries in the following two lists are
 		// missing and need to be inherited:
 		List<String> parameterNames = initParameterNames();
-		List<String> exceptionNames = new ArrayList<String>();
+		List<String> exceptionNames = new ArrayList<>();
 
 		PHPDocTag deprecatedTag = null;
 		PHPDocTag returnTag = null;
 		PHPDocTag namespaceTag = null;
-		List<PHPDocTag> parameters = new ArrayList<PHPDocTag>();
-		List<PHPDocTag> exceptions = new ArrayList<PHPDocTag>();
-		List<PHPDocTag> versions = new ArrayList<PHPDocTag>();
-		List<PHPDocTag> authors = new ArrayList<PHPDocTag>();
-		List<PHPDocTag> sees = new ArrayList<PHPDocTag>();
-		List<PHPDocTag> since = new ArrayList<PHPDocTag>();
-		List<PHPDocTag> rest = new ArrayList<PHPDocTag>();
+		List<PHPDocTag> parameters = new ArrayList<>();
+		List<PHPDocTag> exceptions = new ArrayList<>();
+		List<PHPDocTag> versions = new ArrayList<>();
+		List<PHPDocTag> authors = new ArrayList<>();
+		List<PHPDocTag> sees = new ArrayList<>();
+		List<PHPDocTag> since = new ArrayList<>();
+		List<PHPDocTag> rest = new ArrayList<>();
 		String shortDescription = fJavadoc.getShortDescription();
 		String longDescription = fJavadoc.getLongDescription();
 		PHPDocTag[] tags = fJavadoc.getTags();
@@ -913,7 +913,7 @@ public class PHPDocumentationContentAccess {
 
 	private void handleInlineLinks() {
 		Matcher m = INLINE_LINK_PATTERN.matcher(fBuf);
-		List<ReplaceEdit> replaceLinks = new ArrayList<ReplaceEdit>();
+		List<ReplaceEdit> replaceLinks = new ArrayList<>();
 		while (m.find()) {
 			String[] strs = m.group().split("[\\p{javaWhitespace}]+", 3); //$NON-NLS-1$
 			String url = removeLastRightCurlyBrace(strs[1]);
@@ -969,7 +969,7 @@ public class PHPDocumentationContentAccess {
 	private List<String> initParameterNames() {
 		if (fMethod != null) {
 			try {
-				List<String> list = new ArrayList<String>(Arrays.asList(fMethod.getParameterNames()));
+				List<String> list = new ArrayList<>(Arrays.asList(fMethod.getParameterNames()));
 				if (PHPFlags.isVariadic(fMethod.getFlags()) && !list.isEmpty()) {
 					int lastIndex = list.size() - 1;
 					String name = list.get(lastIndex);
@@ -1282,7 +1282,7 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_throws_section);
 
-		ArrayList<String> descList = new ArrayList<String>();
+		ArrayList<String> descList = new ArrayList<>();
 
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
@@ -1457,7 +1457,7 @@ public class PHPDocumentationContentAccess {
 					refMethodParamTypes = new String[0];
 				} else {
 					String argsList = name.substring(argsListStart + ")".length(), argsListEnd); //$NON-NLS-1$
-					List<String> args = new ArrayList<String>();
+					List<String> args = new ArrayList<>();
 					StringTokenizer tokenizer = new StringTokenizer(argsList, ","); //$NON-NLS-1$
 					while (tokenizer.hasMoreElements()) {
 						args.add(tokenizer.nextToken().trim());

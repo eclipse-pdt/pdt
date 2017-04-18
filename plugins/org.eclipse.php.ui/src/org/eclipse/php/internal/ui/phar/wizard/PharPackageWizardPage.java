@@ -193,7 +193,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 			label.setText(PharPackagerMessages.JarPackageWizardPage_Signature_Type);
 			label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER, false, false,
 					Digest.DIGEST_MAP.size(), 1));
-			signatureButtons = new ArrayList<Button>();
+			signatureButtons = new ArrayList<>();
 			for (Iterator<String> iterator = Digest.DIGEST_MAP.keySet().iterator(); iterator.hasNext();) {
 				final String type = (String) iterator.next();
 				Button signatureButton = new Button(signatureTypeGroup, SWT.RADIO | SWT.LEFT);

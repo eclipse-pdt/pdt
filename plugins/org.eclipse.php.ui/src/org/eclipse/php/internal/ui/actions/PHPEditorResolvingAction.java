@@ -108,7 +108,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 		if (elements == null)
 			return null;
 
-		Map<IModelElement, IModelElement> uniqueElements = new HashMap<IModelElement, IModelElement>();
+		Map<IModelElement, IModelElement> uniqueElements = new HashMap<>();
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement element = elements[i];
 			IModelElement module = element.getAncestor(IModelElement.SOURCE_MODULE);

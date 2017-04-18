@@ -49,8 +49,8 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	private void installTextHovers() {
 
 		// initialize lists - indicates that the initialization happened
-		fTextHoverSpecifications = new ArrayList<PHPEditorTextHoverDescriptor>(2);
-		fInstantiatedTextHovers = new ArrayList<ITextHover>(2);
+		fTextHoverSpecifications = new ArrayList<>(2);
+		fInstantiatedTextHovers = new ArrayList<>(2);
 
 		// populate list
 		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
@@ -65,7 +65,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 		if (fTextHoverSpecifications.size() == 0)
 			return;
 
-		for (Iterator<PHPEditorTextHoverDescriptor> iterator = new ArrayList<PHPEditorTextHoverDescriptor>(
+		for (Iterator<PHPEditorTextHoverDescriptor> iterator = new ArrayList<>(
 				fTextHoverSpecifications).iterator(); iterator.hasNext();) {
 			PHPEditorTextHoverDescriptor spec = iterator.next();
 
