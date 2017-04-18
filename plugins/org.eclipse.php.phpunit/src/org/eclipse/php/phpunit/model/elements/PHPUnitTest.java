@@ -29,10 +29,11 @@ public class PHPUnitTest extends PHPUnitElement {
 
 	public PHPUnitTest(final Map<?, ?> test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
-		if (test == null)
+		if (test == null) {
 			name = ""; //$NON-NLS-1$
-		else
+		} else {
 			name = (String) test.get(PHPUnitMessageParser.PROPERTY_NAME);
+		}
 	}
 
 	public String getName() {

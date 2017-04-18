@@ -31,7 +31,7 @@ import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
- * Open a test in the Java editor and reveal a given line
+ * Open a test in the PHP editor and reveal a given line
  */
 public class OpenEditorAtLineAction extends OpenEditorAction {
 

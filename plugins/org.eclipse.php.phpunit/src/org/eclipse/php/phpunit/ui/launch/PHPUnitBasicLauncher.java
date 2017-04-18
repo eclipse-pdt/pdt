@@ -133,7 +133,6 @@ public class PHPUnitBasicLauncher {
 			System.out.println("Process environment: " //$NON-NLS-1$
 					+ Arrays.toString(envp));
 		}
-		System.out.println(Arrays.toString(cmdLine));
 		Process p = workingDir.exists() ? DebugPlugin.exec(cmdLine, workingDir, envp)
 				: DebugPlugin.exec(cmdLine, null, envp);
 		// Attach a crash detector
