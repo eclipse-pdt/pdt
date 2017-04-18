@@ -21,8 +21,8 @@ abstract public class PHPUnitElement {
 	protected static final String SEPARATOR_MESSAGE = "!"; //$NON-NLS-1$
 	protected static final String SEPARATOR_NAME = "$"; //$NON-NLS-1$
 
-	protected String file = ""; //$NON-NLS-1$
-	protected String localFile = ""; //$NON-NLS-1$
+	protected String file = null;
+	protected String localFile = null;
 	protected boolean isFiltered = false;
 	protected int line = 0;
 	protected PHPUnitElement parent;
@@ -74,7 +74,7 @@ abstract public class PHPUnitElement {
 	private void parseFrame(final Map<?, ?> test, RemoteDebugger remoteDebugger) {
 		final String sFile = (String) test.get(PHPUnitMessageParser.PROPERTY_FILE);
 		if (sFile != null) {
-			file = (String) test.get(PHPUnitMessageParser.PROPERTY_FILE);
+			file = sFile;
 			if (remoteDebugger != null) {
 				localFile = remoteDebugger.convertToLocalFilename(file, null, null);
 			}

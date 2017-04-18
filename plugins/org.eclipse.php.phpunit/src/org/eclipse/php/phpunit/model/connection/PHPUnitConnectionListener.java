@@ -17,6 +17,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -60,9 +61,7 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 			parser.setInProgress(true);
 			while ((line = reader.readLine()) != null && parser.isInProgress()) {
 				try {
-					Map<?, ?> value = gson.fromJson(line, LinkedTreeMap.class);
-					parser.parseMessage(value, PHPUnitView.getDefault().getViewer());
-					PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
+					processLine(line, parser);
 				} catch (JsonSyntaxException e) {
 					PHPUnitPlugin.log(e);
 				}
@@ -71,6 +70,15 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 		} catch (final IOException e) {
 			PHPUnitPlugin.log(e);
 		}
+	}
+
+	private void processLine(String line, PHPUnitMessageParser parser) throws JsonSyntaxException {
+		if (StringUtils.isEmpty(line) || line.charAt(0) != '{') {
+			return;
+		}
+		Map<?, ?> value = gson.fromJson(line, LinkedTreeMap.class);
+		parser.parseMessage(value, PHPUnitView.getDefault().getViewer());
+		PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
 	}
 
 	@Override
@@ -90,8 +98,8 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 
 	@Override
 	public void launchesTerminated(final ILaunch[] launches) {
-		for (int i = 0; i < launches.length; ++i)
-			if (launches[i] == launch && launches[i].isTerminated()) {
+		for (ILaunch launche : launches)
+			if (launche == launch && launche.isTerminated()) {
 				if (!PHPUnitMessageParser.getInstance().isInProgress()) {
 					PHPUnitView.getDefault().stopRunning(true);
 				}

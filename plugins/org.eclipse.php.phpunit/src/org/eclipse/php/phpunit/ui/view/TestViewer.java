@@ -19,7 +19,6 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ui.viewsupport.SelectionProviderMediator;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -31,10 +30,6 @@ import org.eclipse.php.phpunit.model.providers.PHPUnitElementTreeContentProvider
 import org.eclipse.php.phpunit.ui.view.actions.OpenTestAction;
 import org.eclipse.php.phpunit.ui.view.actions.RerunAction;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -52,9 +47,9 @@ public class TestViewer {
 				if (testInfo == PHPUnitElementManager.getInstance().getRoot())
 					return true;
 			}
-			if (testInfo instanceof PHPUnitTest)
-				if (((PHPUnitTest) testInfo).getStatus() >= PHPUnitTest.STATUS_FAIL)
-					return true;
+			if (testInfo instanceof PHPUnitTest && ((PHPUnitTest) testInfo).getStatus() >= PHPUnitTest.STATUS_FAIL) {
+				return true;
+			}
 			return false;
 		}
 
@@ -64,17 +59,19 @@ public class TestViewer {
 		}
 	}
 
-	private final class TestOpenListener extends SelectionAdapter {
-		@Override
-		public void widgetDefaultSelected(final SelectionEvent e) {
-			handleDefaultSelected();
-		}
-	}
-
 	private final class TestSelectionListener implements ISelectionChangedListener {
 		@Override
 		public void selectionChanged(final SelectionChangedEvent event) {
 			handleSelected();
+		}
+
+		private void handleSelected() {
+			final IStructuredSelection selection = (IStructuredSelection) fSelectionProvider.getSelection();
+			PHPUnitElement test = null;
+			if (selection.size() == 1) {
+				test = (PHPUnitElement) selection.getFirstElement();
+			}
+			view.handleTestSelected(test);
 		}
 	}
 
@@ -103,15 +100,9 @@ public class TestViewer {
 		view = runner;
 
 		fHierarchyIcon = PHPUnitPlugin.createImage("obj16/testhier.png"); //$NON-NLS-1$
-		parent.addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				disposeIcons();
-			}
-		});
+		parent.addDisposeListener(e -> disposeIcons());
 
 		createTestViewers(parent);
-
 		registerViewersRefresh();
 
 		initContextMenu();
@@ -157,8 +148,9 @@ public class TestViewer {
 				parent = (PHPUnitTestGroup) fTreeContentProvider.getParent(parent);
 			}
 		}
-		if (current != null)
+		if (current != null) {
 			fTreeViewer.reveal(current);
+		}
 	}
 
 	private synchronized void clearAutoExpand() {
@@ -166,7 +158,7 @@ public class TestViewer {
 	}
 
 	private void clearUpdateAndExpansion() {
-		fNeedUpdate = new LinkedHashSet<PHPUnitElement>();
+		fNeedUpdate = new LinkedHashSet<>();
 		fAutoClose = new LinkedList<>();
 		fAutoExpand = new HashSet<>();
 	}
@@ -187,8 +179,7 @@ public class TestViewer {
 
 		fSelectionProvider = new SelectionProviderMediator(new StructuredViewer[] { fTreeViewer }, fTreeViewer);
 		fSelectionProvider.addSelectionChangedListener(new TestSelectionListener());
-		final TestOpenListener testOpenListener = new TestOpenListener();
-		fTreeViewer.getTree().addSelectionListener(testOpenListener);
+		fTreeViewer.addDoubleClickListener(event -> handleDefaultSelected((IStructuredSelection) event.getSelection()));
 
 		fViewerbook.showPage(fTreeViewer.getTree());
 	}
@@ -229,13 +220,14 @@ public class TestViewer {
 
 	private PHPUnitTestCase getNextChildFailure(final PHPUnitTestGroup root, boolean showNext) {
 		List<PHPUnitTest> children = new ArrayList<>(root.getChildren());
-		if (!showNext)
+		if (!showNext) {
 			Collections.reverse(children);
-		for (int i = 0; i < children.size(); i++) {
-			final PHPUnitTest child = (PHPUnitTest) children.get(i);
+		}
+		for (PHPUnitTest child : children) {
 			if (child.getStatus() > PHPUnitTest.STATUS_PASS) {
-				if (child instanceof PHPUnitTestCase)
+				if (child instanceof PHPUnitTestCase) {
 					return (PHPUnitTestCase) child;
+				}
 				return getNextChildFailure((PHPUnitTestGroup) child, showNext);
 			}
 		}
@@ -245,16 +237,18 @@ public class TestViewer {
 	private PHPUnitElement getNextFailure(final PHPUnitElement selected, final boolean showNext) {
 		if (selected instanceof PHPUnitTestGroup) {
 			final PHPUnitElement nextChild = getNextChildFailure((PHPUnitTestGroup) selected, showNext);
-			if (nextChild != null)
+			if (nextChild != null) {
 				return nextChild;
+			}
 		}
 		return getNextFailureSibling(selected, showNext);
 	}
 
 	private PHPUnitTestCase getNextFailureSibling(final PHPUnitElement current, boolean showNext) {
 		final PHPUnitTestGroup parent = (PHPUnitTestGroup) current.getParent();
-		if (parent == null)
+		if (parent == null) {
 			return null;
+		}
 
 		Set<PHPUnitTest> children = parent.getChildren();
 		if (children == null) {
@@ -267,7 +261,7 @@ public class TestViewer {
 
 		final int nextIndex = siblings.indexOf(current) + 1;
 		for (int i = nextIndex; i < siblings.size(); i++) {
-			final PHPUnitTest sibling = (PHPUnitTest) siblings.get(i);
+			final PHPUnitTest sibling = siblings.get(i);
 			if (sibling.getStatus() > PHPUnitTest.STATUS_PASS) {
 				if (sibling instanceof PHPUnitTestCase)
 					return (PHPUnitTestCase) sibling;
@@ -281,10 +275,10 @@ public class TestViewer {
 		return fViewerbook;
 	}
 
-	void handleDefaultSelected() {
-		final IStructuredSelection selection = (IStructuredSelection) fSelectionProvider.getSelection();
-		if (selection.size() != 1)
+	void handleDefaultSelected(IStructuredSelection selection) {
+		if (selection.isEmpty()) {
 			return;
+		}
 
 		final PHPUnitTest test = (PHPUnitTest) selection.getFirstElement();
 
@@ -298,8 +292,9 @@ public class TestViewer {
 		} else
 			throw new IllegalStateException(String.valueOf(test));
 
-		if (action.isEnabled())
+		if (action.isEnabled()) {
 			action.run();
+		}
 	}
 
 	void handleMenuAboutToShow(final IMenuManager manager) {
@@ -336,23 +331,10 @@ public class TestViewer {
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS + "-end")); //$NON-NLS-1$
 	}
 
-	private void handleSelected() {
-		final IStructuredSelection selection = (IStructuredSelection) fSelectionProvider.getSelection();
-		PHPUnitElement test = null;
-		if (selection.size() == 1)
-			test = (PHPUnitElement) selection.getFirstElement();
-		view.handleTestSelected(test);
-	}
-
 	private void initContextMenu() {
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(final IMenuManager manager) {
-				handleMenuAboutToShow(manager);
-			}
-		});
+		menuMgr.addMenuListener(manager -> handleMenuAboutToShow(manager));
 		view.getSite().registerContextMenu(menuMgr, fSelectionProvider);
 		final Menu menu = menuMgr.createContextMenu(fViewerbook);
 		fTreeViewer.getTree().setMenu(menu);
@@ -366,19 +348,20 @@ public class TestViewer {
 	 * To be called periodically by the PHPUnitView (in the UI thread).
 	 */
 	public void processChangesInUI() {
-		if (view.isDisposed())
+		if (view.isDisposed()) {
 			return;
+		}
 		if (testRoot == null) {
 			registerViewersRefresh();
 			fTreeNeedsRefresh = false;
 			fTreeViewer.setInput(null);
-			// fTableViewer.setInput(null);
 			return;
 		}
 
 		final StructuredViewer viewer = getActiveViewer();
-		if (viewer.getInput() != testRoot)
+		if (viewer.getInput() != testRoot) {
 			viewer.setInput(testRoot);
+		}
 		viewer.refresh();
 
 		if (getActiveViewerNeedsRefresh()) {
@@ -426,8 +409,9 @@ public class TestViewer {
 
 	public synchronized void registerFailedForAutoScroll(final PHPUnitElement testRunInfo) {
 		final Object parent = fTreeContentProvider.getParent(testRunInfo);
-		if (parent != null)
+		if (parent != null) {
 			fAutoExpand.add(parent);
+		}
 	}
 
 	public synchronized void registerTestAdded() {
@@ -451,13 +435,15 @@ public class TestViewer {
 		final PHPUnitElement selected = (PHPUnitElement) selection.getFirstElement();
 		PHPUnitElement next;
 
-		if (selected == null)
+		if (selected == null) {
 			next = getNextChildFailure(testRoot, showNext);
-		else
+		} else {
 			next = getNextFailure(selected, showNext);
+		}
 
-		if (next != null)
+		if (next != null) {
 			getActiveViewer().setSelection(new StructuredSelection(next), true);
+		}
 	}
 
 	public void selectFirstFailure() {
@@ -519,12 +505,14 @@ public class TestViewer {
 	}
 
 	private void updateShownElementInTree(final PHPUnitElement test) {
-		if (test == null || test == testRoot) // paranoia null check
+		if (test == null || test == testRoot) { // paranoia null check
 			return;
+		}
 
 		final PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
-		if (parent == null)
+		if (parent == null) {
 			return;
+		}
 		updateShownElementInTree(parent); // make sure parent is shown and
 		// up-to-date
 

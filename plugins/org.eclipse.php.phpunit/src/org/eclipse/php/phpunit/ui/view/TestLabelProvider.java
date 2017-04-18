@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.ui.view;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -120,24 +121,27 @@ public class TestLabelProvider extends LabelProvider {
 	public String getText(final Object element) {
 		final PHPUnitElement test = (PHPUnitElement) element;
 		String fileName = test.getLocalFile();
-		if (!fileName.equals("")) { //$NON-NLS-1$
+		if (StringUtils.isNotEmpty(fileName)) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
-			if (file == null)
+			if (file == null) {
 				file = view.getProject().getFile(fileName);
-			if (file != null)
+			}
+			if (file != null) {
 				fileName = file.getProjectRelativePath().toString();
+			}
 		}
 
 		final int line = test.getLine();
 		if (test instanceof PHPUnitTest) {
 			String name = ((PHPUnitTest) test).getName();
-			if (name.equals("")) //$NON-NLS-1$
+			if (StringUtils.isEmpty(name)) {
 				name = fileName + ":" + line; //$NON-NLS-1$
+			}
 			if (test instanceof PHPUnitTestCase) {
 				final PHPUnitTestException exception = ((PHPUnitTestCase) test).getException();
-				if (exception != null && exception.getMessage() != null && !exception.getMessage().equals("")) {//$NON-NLS-1$
+				if (exception != null && StringUtils.isNotEmpty(exception.getMessage())) {
 					name += ": " + exception.getMessage(); //$NON-NLS-1$
-					if (exception.getDiff() != null && !exception.getDiff().isEmpty()) {
+					if (StringUtils.isNotEmpty(exception.getDiff())) {
 						name += " (see Object Diff tab ->)";//$NON-NLS-1$
 					}
 				}
@@ -146,17 +150,20 @@ public class TestLabelProvider extends LabelProvider {
 		}
 		if (test instanceof PHPUnitTestEvent) {
 			final String message = ((PHPUnitTestEvent) test).getMessage();
-			String prefix = ""; //$NON-NLS-1$
-			if (test instanceof PHPUnitTestException)
+			String prefix = StringUtils.EMPTY;
+			if (test instanceof PHPUnitTestException) {
 				prefix = ((PHPUnitTestException) test).getExceptionClass();
-			else if (test instanceof PHPUnitTestWarning)
+			} else if (test instanceof PHPUnitTestWarning) {
 				prefix = ((PHPUnitTestWarning) test).getCode();
-			if (!message.equals("") && message != null) //$NON-NLS-1$
+			}
+			if (StringUtils.isNotEmpty(message)) {
 				return prefix + ": " + message; //$NON-NLS-1$
+			}
 			return prefix;
 		}
-		if (test instanceof PHPUnitTraceFrame)
+		if (test instanceof PHPUnitTraceFrame) {
 			return test.toString() + "()"; //$NON-NLS-1$
+		}
 		return test.toString();
 	}
 

@@ -21,8 +21,9 @@ public class PHPUnitElementManager {
 	 * @return Singleton
 	 */
 	public static PHPUnitElementManager getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new PHPUnitElementManager();
+		}
 		return instance;
 	}
 
@@ -47,10 +48,11 @@ public class PHPUnitElementManager {
 	}
 
 	public void initialize() {
-		if (testMap == null)
-			testMap = new HashMap();
-		else
+		if (testMap == null) {
+			testMap = new HashMap<>();
+		} else {
 			testMap.clear();
+		}
 		testMap.clear();
 		root = new PHPUnitTestGroup(null, null, null);
 	}

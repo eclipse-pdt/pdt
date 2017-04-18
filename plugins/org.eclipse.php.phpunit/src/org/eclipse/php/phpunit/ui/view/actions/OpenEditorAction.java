@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.ui.view.actions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -22,6 +23,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.phpunit.PHPUnitMessages;
+import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -56,20 +58,18 @@ public abstract class OpenEditorAction extends Action {
 	protected IType findClass(final IProject project, String className, final String fileName) {
 		ISourceModule element = null;
 
-		if (fileName != null && fileName.length() > 0) {
+		if (fileName != null && !fileName.isEmpty()) {
 			Path path = new Path(fileName);
-			IFile iFile = null;
-			if (path.isAbsolute() && path.getDevice() != null) {
+			IFile iFile;
+			if (path.isAbsolute()) {
 				iFile = project.getWorkspace().getRoot().getFileForLocation(path);
 			} else {
 				iFile = project.getWorkspace().getRoot().getFile(path);
 			}
-			if (iFile != null) {
-				element = DLTKCore.createSourceModuleFrom(iFile);
-			}
+
+			element = DLTKCore.createSourceModuleFrom(iFile);
 		}
 		if (element == null) {
-
 			IType[] classes = PhpModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0, 0,
 					SearchEngine.createSearchScope(DLTKCore.create(project)), null);
 
@@ -78,12 +78,11 @@ public abstract class OpenEditorAction extends Action {
 			}
 		}
 
-		if (element != null && element.getElementType() == IModelElement.SOURCE_MODULE) {
-			ISourceModule module = (ISourceModule) element;
+		if (element != null) {
 			if (className.contains("\\")) { //$NON-NLS-1$
 				className = className.substring(1 + className.lastIndexOf("\\")); //$NON-NLS-1$
 				try {
-					final IType[] allTypes = module.getAllTypes();
+					final IType[] allTypes = element.getAllTypes();
 					for (IType t : allTypes) {
 						if (t.getElementName().equals(className)) {
 							return t;
@@ -93,7 +92,7 @@ public abstract class OpenEditorAction extends Action {
 					// will happen when data provider test case is given
 				}
 			}
-			return module.getType(className);
+			return element.getType(className);
 		}
 
 		return null;
@@ -104,9 +103,9 @@ public abstract class OpenEditorAction extends Action {
 
 	protected IMethod findFunction(final IProject project, final String functionName, final String fileName) {
 		IModelElement element = null;
-		if (fileName != null && fileName.length() > 0) {
+		if (fileName != null && !fileName.isEmpty()) {
 			Path path = new Path(fileName);
-			IFile iFile = null;
+			IFile iFile;
 			if (path.isAbsolute() && path.getDevice() != null) {
 				iFile = project.getWorkspace().getRoot().getFileForLocation(path);
 			} else {
@@ -156,15 +155,20 @@ public abstract class OpenEditorAction extends Action {
 				textEditor = (ITextEditor) org.eclipse.dltk.internal.ui.editor.EditorUtility.openInEditor(element);
 			} else if (fFileName != null) {
 				textEditor = (ITextEditor) EditorUtility.openLocalFile(fFileName, fLineNumber);
-			} else
-				return;
+			}
+
+			if (textEditor != null) {
+				reveal(textEditor);
+			}
+		} catch (ModelException e) {
+			PHPUnitPlugin.log(e);
+			new OpenEditorAtLineAction(StringUtils.EMPTY, fTestRunner, fFileName, fLineNumber, null).run();
 		} catch (final CoreException e) {
-			e.printStackTrace();
+			PHPUnitPlugin.log(e);
 			ErrorDialog.openError(getShell(), PHPUnitMessages.OpenEditorAction_Error,
 					PHPUnitMessages.OpenEditorAction_Cant_Open, e.getStatus());
 			return;
 		}
-		if (textEditor != null)
-			reveal(textEditor);
+
 	}
 }

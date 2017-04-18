@@ -27,7 +27,8 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.icu,
  com.google.gson,
  org.eclipse.ui.console,
- org.apache.commons.io
+ org.apache.commons.io,
+ org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy
 Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
