@@ -1167,6 +1167,12 @@
 				</command>
 				<separator name="format" visible="true"></separator>
 				<command
+					commandId="org.eclipse.php.ui.edit.text.generate.getter.setter" style="push">
+				</command>
+				<command
+					commandId="org.eclipse.php.ui.edit.text.generate.override.implement" style="push">
+				</command>
+				<command
 		              commandId="org.eclipse.php.ui.editor.organize.use.statements"
 		              label="%ActionDefinition.organizeUseStatements.name"
 		              style="push">
