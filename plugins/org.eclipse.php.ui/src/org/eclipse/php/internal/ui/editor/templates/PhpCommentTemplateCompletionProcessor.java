@@ -119,7 +119,7 @@ public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 			// no prefix.
 			return EMPTY_ICOMPLETION_PROPOSAL;
 		}
-		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
+		List<PhpTemplateProposal> matches = new ArrayList<>();
 		for (int i = 0; i < completionProposals.length; i++) {
 			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal) completionProposals[i];
 			Template template = phpTemplateProposal.getTemplateNew();

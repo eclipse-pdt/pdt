@@ -57,7 +57,7 @@ public class StubUtility {
 	private static final Set<String> VALID_TYPE_BODY_TEMPLATES;
 
 	static {
-		VALID_TYPE_BODY_TEMPLATES = new HashSet<String>();
+		VALID_TYPE_BODY_TEMPLATES = new HashSet<>();
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.CLASSBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.INTERFACEBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.ENUMBODY_ID);
@@ -456,7 +456,7 @@ public class StubUtility {
 		IDocument doc = new Document(buffer.getString());
 		int nLines = doc.getNumberOfLines();
 		MultiTextEdit edit = new MultiTextEdit();
-		HashSet<Integer> removedLines = new HashSet<Integer>();
+		HashSet<Integer> removedLines = new HashSet<>();
 		for (int i = 0; i < variables.length; i++) {
 			TemplateVariable position = findVariable(buffer, variables[i]); // look
 			// if

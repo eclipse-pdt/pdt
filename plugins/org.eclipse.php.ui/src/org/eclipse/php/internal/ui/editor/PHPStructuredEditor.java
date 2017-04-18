@@ -887,7 +887,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 			// Add occurrence annotations
 			int length = fLocations.length;
-			Map<Annotation, Position> annotationMap = new HashMap<Annotation, Position>(length);
+			Map<Annotation, Position> annotationMap = new HashMap<>(length);
 			for (int i = 0; i < length; i++) {
 
 				if (isCanceled(progressMonitor))
@@ -1066,7 +1066,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	/** Cursor dependent actions. */
-	private final List<String> fCursorActions = new ArrayList<String>(5);
+	private final List<String> fCursorActions = new ArrayList<>(5);
 
 	/** The information presenter. */
 	protected InformationPresenter fInformationPresenter;

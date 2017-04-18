@@ -81,7 +81,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 		private IModelElement fFirstElement;
 		private boolean fHasHeaderComment;
-		private LinkedHashMap<Object, Position> fMap = new LinkedHashMap<Object, Position>();
+		private LinkedHashMap<Object, Position> fMap = new LinkedHashMap<>();
 		private ICommentScanner fScanner;
 		private boolean headerChecked = false;
 
@@ -1196,9 +1196,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		if (ctx == null)
 			return;
 
-		Map<PhpProjectionAnnotation, Position> additions = new HashMap<PhpProjectionAnnotation, Position>();
-		List<PhpProjectionAnnotation> deletions = new ArrayList<PhpProjectionAnnotation>();
-		List<PhpProjectionAnnotation> updates = new ArrayList<PhpProjectionAnnotation>();
+		Map<PhpProjectionAnnotation, Position> additions = new HashMap<>();
+		List<PhpProjectionAnnotation> deletions = new ArrayList<>();
+		List<PhpProjectionAnnotation> updates = new ArrayList<>();
 
 		computeFoldingStructure(ctx);
 		Map<Object, Position> newStructure = ctx.fMap;
@@ -1354,7 +1354,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			// iamge,this is because there are two ProjectionAnnotations for one
 			// comment,and the second ProjectionAnnotation's image overide the
 			// header one
-			Set<IRegion> regionSet = new HashSet<IRegion>();
+			Set<IRegion> regionSet = new HashSet<>();
 			for (int i = 0; i < regions.length - 1; i++) {
 				IRegion normalized = alignRegion(regions[i], ctx);
 				if (normalized != null && regionSet.add(normalized)) {
@@ -1406,7 +1406,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			ISourceRange range = reference.getSourceRange();
 			if (!SourceRange.isAvailable(range))
 				return new IRegion[0];
-			List<IRegion> regions = new ArrayList<IRegion>();
+			List<IRegion> regions = new ArrayList<>();
 			if (!ctx.isHeaderChecked() && reference instanceof IModelElement) {
 				ctx.setFirstElement((IModelElement) reference);
 				ctx.setHeaderChecked();
@@ -1645,8 +1645,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		if (deletions.isEmpty() || (additions.isEmpty() && changes.isEmpty()))
 			return;
 
-		List<PhpProjectionAnnotation> newDeletions = new ArrayList<PhpProjectionAnnotation>();
-		List<PhpProjectionAnnotation> newChanges = new ArrayList<PhpProjectionAnnotation>();
+		List<PhpProjectionAnnotation> newDeletions = new ArrayList<>();
+		List<PhpProjectionAnnotation> newChanges = new ArrayList<>();
 
 		Iterator<PhpProjectionAnnotation> deletionIterator = deletions.iterator();
 		while (deletionIterator.hasNext()) {
@@ -1733,7 +1733,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	private Map<IModelElement, Object> computeCurrentStructure(FoldingStructureComputationContext ctx) {
-		Map<IModelElement, Object> map = new HashMap<IModelElement, Object>();
+		Map<IModelElement, Object> map = new HashMap<>();
 		ProjectionAnnotationModel model = ctx.getModel();
 		Iterator e = model.getAnnotationIterator();
 		while (e.hasNext()) {
@@ -1744,7 +1744,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				Assert.isNotNull(position);
 				List<Tuple> list = (List<Tuple>) map.get(java.getElement());
 				if (list == null) {
-					list = new ArrayList<Tuple>(2);
+					list = new ArrayList<>(2);
 					map.put(java.getElement(), list);
 				}
 				list.add(new Tuple(java, position));
@@ -1791,7 +1791,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 */
 	@Override
 	public final void collapseElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(Arrays.asList(elements));
+		Set<IModelElement> set = new HashSet<>(Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, false), false);
 	}
 
@@ -1802,7 +1802,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 */
 	@Override
 	public final void expandElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(Arrays.asList(elements));
+		Set<IModelElement> set = new HashSet<>(Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, true), true);
 	}
 
@@ -1823,7 +1823,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		if (model == null)
 			return;
 
-		List<PhpProjectionAnnotation> modified = new ArrayList<PhpProjectionAnnotation>();
+		List<PhpProjectionAnnotation> modified = new ArrayList<>();
 		Iterator iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
 			Object annotation = iter.next();

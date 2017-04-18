@@ -259,14 +259,14 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	}
 
 	private List<String> dropDuplicateMessages(List<String> messages) {
-		Set<String> rt = new HashSet<String>();
+		Set<String> rt = new HashSet<>();
 		for (Iterator<String> i = messages.iterator(); i.hasNext();) {
 			String message = i.next();
 			if (!rt.contains(message)) {
 				rt.add(message);
 			}
 		}
-		return new ArrayList<String>(rt);
+		return new ArrayList<>(rt);
 	}
 
 	private int getHoverWidth(Display display) {
@@ -286,7 +286,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 		IDocument document = viewer.getDocument();
 		IAnnotationModel model = getAnnotationModel(viewer);
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 
 		if (model == null) {
 			return messages;
@@ -348,7 +348,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		if (model == null)
 			return null;
 
-		List<ITemporaryAnnotation> annotations = new ArrayList<ITemporaryAnnotation>();
+		List<ITemporaryAnnotation> annotations = new ArrayList<>();
 
 		Iterator e = model.getAnnotationIterator();
 		while (e.hasNext()) {

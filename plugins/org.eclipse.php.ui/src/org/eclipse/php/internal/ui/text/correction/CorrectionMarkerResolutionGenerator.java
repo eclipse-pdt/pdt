@@ -150,7 +150,7 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 
 					IInvocationContext context = new AssistContext(cu, location.getOffset(), location.getLength());
 
-					List<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
+					List<IScriptCompletionProposal> proposals = new ArrayList<>();
 					PHPCorrectionProcessor.collectCorrections(context, new IProblemLocation[] { location }, proposals);
 					Collections.sort(proposals, new CompletionProposalComparator());
 

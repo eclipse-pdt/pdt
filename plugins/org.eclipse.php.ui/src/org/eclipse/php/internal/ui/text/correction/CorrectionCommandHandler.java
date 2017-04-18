@@ -57,7 +57,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 		final ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 
 		final StructuredTextInvocationContext assistInvocation = new StructuredTextInvocationContext(editor.getViewer(),
-				selection.getOffset(), selection.getLength(), new HashMap<Object, Object>());
+				selection.getOffset(), selection.getLength(), new HashMap<>());
 
 		final ICompletionProposal[] proposals = phpCorrectionProcessor.computeQuickAssistProposals(assistInvocation);
 

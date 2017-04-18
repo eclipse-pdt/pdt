@@ -111,7 +111,7 @@ public final class ProjectTemplateStore {
 		if (fProjectStore != null) {
 			fProjectStore.load();
 
-			Set<String> datas = new HashSet<String>();
+			Set<String> datas = new HashSet<>();
 			TemplatePersistenceData[] data = fProjectStore.getTemplateData(false);
 			for (int i = 0; i < data.length; i++) {
 				datas.add(data[i].getId());
