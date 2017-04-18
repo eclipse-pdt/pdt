@@ -40,7 +40,7 @@ public class version {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Full title of the system */
-  public static final String title_str = "CUP " + "v0.11b 20150326";
+  public static final String title_str = "CUP " + "v0.11b 20160615";
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
