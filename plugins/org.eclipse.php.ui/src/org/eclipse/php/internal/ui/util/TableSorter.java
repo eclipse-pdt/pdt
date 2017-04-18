@@ -52,7 +52,7 @@ public class TableSorter {
 	 */
 	public TableSorter(Comparator<Object> comparator) {
 		fComparator = comparator;
-		fSelectionAdapters = new HashMap<TableColumn, SelectionAdapter>();
+		fSelectionAdapters = new HashMap<>();
 		fViewerComparator = new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {

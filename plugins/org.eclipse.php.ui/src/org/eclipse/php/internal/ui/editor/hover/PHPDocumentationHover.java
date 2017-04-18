@@ -464,7 +464,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		if (elements == null || elements.length == 0)
 			return null;
 		// filter the same namespace
-		Set<IModelElement> elementSet = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+		Set<IModelElement> elementSet = new TreeSet<>(new Comparator<IModelElement>() {
 
 			@Override
 			public int compare(IModelElement o1, IModelElement o2) {
@@ -483,7 +483,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			}
 
 		});
-		List<IModelElement> elementList = new ArrayList<IModelElement>();
+		List<IModelElement> elementList = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			if (!elementSet.contains(elements[i])) {
 				elementSet.add(elements[i]);

@@ -29,7 +29,7 @@ public class SelectionHistory {
 	public SelectionHistory(PHPStructuredEditor editor) {
 		Assert.isNotNull(editor);
 		fEditor = editor;
-		fHistory = new ArrayList<ISourceRange>(3);
+		fHistory = new ArrayList<>(3);
 		fSelectionListener = new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {

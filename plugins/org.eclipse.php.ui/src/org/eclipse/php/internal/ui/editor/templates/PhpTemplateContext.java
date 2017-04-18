@@ -100,7 +100,7 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 		// merge ${dollar}${variable} to single $variable to solve bug 300533
 		TemplateVariable[] variables = result.getVariables();
 		TemplateVariable dollarVariable = null;
-		List<TemplateVariable> nonDollarVariables = new ArrayList<TemplateVariable>();
+		List<TemplateVariable> nonDollarVariables = new ArrayList<>();
 		for (int i = 0; i < variables.length; i++) {
 			if (isDollar(variables[i])) {
 				dollarVariable = variables[i];
@@ -108,9 +108,9 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 				nonDollarVariables.add(variables[i]);
 			}
 		}
-		List<TemplateVariable> templateVariables = new ArrayList<TemplateVariable>();
+		List<TemplateVariable> templateVariables = new ArrayList<>();
 		if (dollarVariable != null) {
-			Set<Integer> dollarOffsetSet = new HashSet<Integer>();
+			Set<Integer> dollarOffsetSet = new HashSet<>();
 			for (int i = 0; i < dollarVariable.getOffsets().length; i++) {
 				dollarOffsetSet.add(dollarVariable.getOffsets()[i]);
 			}

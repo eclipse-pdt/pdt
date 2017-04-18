@@ -161,7 +161,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					|| parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
 					IResource[] members = ((IFolder) parentElement).members();
-					ArrayList<Object> returnChlidren = new ArrayList<Object>();
+					ArrayList<Object> returnChlidren = new ArrayList<>();
 					for (IResource resource2 : members) {
 						IModelElement modelElement = DLTKCore.create(resource2);
 						if (modelElement != null && isSourceFolder(modelElement)) {
@@ -197,7 +197,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						return NO_CHILDREN;
 					}
 
-					ArrayList<Object> returnChildren = new ArrayList<Object>();
+					ArrayList<Object> returnChildren = new ArrayList<>();
 
 					boolean groupByNamespace = PHPUiPlugin.getDefault().getPreferenceStore()
 							.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES);
@@ -257,7 +257,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	}
 
 	protected List<Object> getScriptProjectContent(IScriptProject scriptProject) {
-		List<Object> returnChildren = new ArrayList<Object>();
+		List<Object> returnChildren = new ArrayList<>();
 		IProject project = scriptProject.getProject();
 
 		// Add include path node
@@ -289,7 +289,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 			Object[] providerChildren = provider.getChildren(scriptProject);
 			if (providerChildren != null) {
-				returnChildren.addAll(new ArrayList<Object>(Arrays.asList(providerChildren)));
+				returnChildren.addAll(new ArrayList<>(Arrays.asList(providerChildren)));
 			}
 		}
 
@@ -360,7 +360,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(create, IDLTKSearchScope.SOURCES);
 
-		final Set<String> names = new HashSet<String>();
+		final Set<String> names = new HashSet<>();
 		ISearchEngine searchEngine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
 		searchEngine.search(IModelElement.PACKAGE_DECLARATION, null, null, 0, 0, 0, SearchFor.DECLARATIONS,
 				MatchRule.PREFIX, scope, new ISearchRequestor() {
@@ -373,7 +373,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					}
 				}, null);
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		for (String entry : names) {
 			result.add(new NamespaceNode(create, entry));
 		}
@@ -387,8 +387,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		if (children == null)
 			return new Object[0];
 
-		ArrayList<IJavaScriptElement> allChildren = new ArrayList<IJavaScriptElement>();
-		ArrayList<Object> expanded = new ArrayList<Object>();
+		ArrayList<IJavaScriptElement> allChildren = new ArrayList<>();
+		ArrayList<Object> expanded = new ArrayList<>();
 		expanded.addAll(Arrays.asList(children));
 
 		if (expanded == null || expanded.size() < 1)
@@ -433,7 +433,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	private Object[] getBuildPathEntryChildren(Object parentElement, Object entry) {
 		IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
 		IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
-		List<Object> children = new LinkedList<Object>();
+		List<Object> children = new LinkedList<>();
 		for (IProjectFragment projectFragment : findProjectFragments) {
 			Object[] fragmentChildren = getChildren(projectFragment);
 			children.addAll(Arrays.asList(fragmentChildren));
@@ -507,8 +507,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	 */
 	@Override
 	public void refresh(IProject project) {
-		Collection<Runnable> runnables = new ArrayList<Runnable>();
-		final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(1);
+		Collection<Runnable> runnables = new ArrayList<>();
+		final ArrayList<IScriptProject> resources = new ArrayList<>(1);
 		resources.add(DLTKCore.create(project));
 
 		postRefresh(resources, true, runnables);
@@ -528,7 +528,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		IJavaScriptElementDelta[] affectedChildren = event.getDelta().getAffectedChildren();
-		final ArrayList<Runnable> runnables = new ArrayList<Runnable>();
+		final ArrayList<Runnable> runnables = new ArrayList<>();
 		for (int i = 0; i < affectedChildren.length; i++) {
 			if (processDelta(affectedChildren[i], runnables)) {
 				return; // early return, element got refreshed
@@ -553,7 +553,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			// if the raw class path has changed we refresh the entire project
 			if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
 
-				final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(1);
+				final ArrayList<IScriptProject> resources = new ArrayList<>(1);
 				IProject project = ((IJavaScriptProject) element).getProject();
 				resources.add(DLTKCore.create(project));
 				postRefresh(resources, true, runnables);

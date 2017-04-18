@@ -44,7 +44,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	private IPreferenceStore fColorPreferences;
 
 	/** Contains region to style mapping */
-	protected static final Map<String, String> fColorTypes = new HashMap<String, String>(); // String
+	protected static final Map<String, String> fColorTypes = new HashMap<>(); // String
 	// (token
 	// type),
 	// String

@@ -79,7 +79,7 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 			IInvocationContext context = new AssistContext(cu, sourceViewer, location.getOffset(), location.getLength(),
 					SharedASTProvider.WAIT_ACTIVE_ONLY);
 
-			ArrayList<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
+			ArrayList<IScriptCompletionProposal> proposals = new ArrayList<>();
 			PHPCorrectionProcessor.collectCorrections(context, new IProblemLocation[] { location }, proposals);
 			Collections.sort(proposals, new CompletionProposalComparator());
 
@@ -110,7 +110,7 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 
 			AssistContext context = new AssistContext(cu, sourceViewer, position.getOffset(), position.getLength());
 
-			ArrayList<IScriptCompletionProposal> proposals = new ArrayList<IScriptCompletionProposal>();
+			ArrayList<IScriptCompletionProposal> proposals = new ArrayList<>();
 			PHPCorrectionProcessor.collectProposals(context, model, new Annotation[] { markerAnnotation }, true, false,
 					proposals);
 

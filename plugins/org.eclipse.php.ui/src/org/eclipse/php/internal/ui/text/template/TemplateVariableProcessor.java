@@ -61,7 +61,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 		if (fContextType == null)
 			return null;
 
-		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		List<ICompletionProposal> proposals = new ArrayList<>();
 
 		String text = viewer.getDocument().get();
 		int start = getStart(text, documentOffset);

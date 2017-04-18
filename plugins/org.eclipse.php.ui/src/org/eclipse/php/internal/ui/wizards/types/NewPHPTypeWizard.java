@@ -155,14 +155,14 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	 * @author yaronm
 	 */
 	class PostFinishValidator {
-		private ArrayList<String> warnings = new ArrayList<String>();
+		private ArrayList<String> warnings = new ArrayList<>();
 
 		public void addWarning(String warning) {
 			warnings.add(warning);
 		}
 
 		public boolean hasWarnings() {
-			return warnings.size() > 0;
+			return !warnings.isEmpty();
 		}
 
 		public String[] getWarnings() {

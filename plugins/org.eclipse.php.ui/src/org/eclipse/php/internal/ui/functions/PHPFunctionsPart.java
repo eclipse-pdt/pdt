@@ -204,7 +204,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 							return Status.CANCEL_STATUS;
 						}
 						IBuildpathEntry[] buildpathEntries = languageContainer.getBuildpathEntries();
-						List<IProjectFragment> fragments = new LinkedList<IProjectFragment>();
+						List<IProjectFragment> fragments = new LinkedList<>();
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
 							IProjectFragment fragment = ((ScriptProject) scriptProject)
 									.getProjectFragment(buildpathEntry.getPath());

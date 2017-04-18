@@ -55,7 +55,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		private ArrayList<GrayedCheckedModelElement> fElements;
 
 		public GrayedCheckedModel(GrayedCheckedModelElement[] elements) {
-			fElements = new ArrayList<GrayedCheckedModelElement>(Arrays.asList(elements));
+			fElements = new ArrayList<>(Arrays.asList(elements));
 		}
 
 		public void addElement(GrayedCheckedModelElement element) {
@@ -67,7 +67,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		}
 
 		public GrayedCheckedModelElement[] getChecked() {
-			ArrayList<GrayedCheckedModelElement> result = new ArrayList<GrayedCheckedModelElement>();
+			ArrayList<GrayedCheckedModelElement> result = new ArrayList<>();
 			for (int i = 0; i < fElements.size(); i++) {
 				if (fElements.get(i).isChecked())
 					result.add(fElements.get(i));
@@ -76,7 +76,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		}
 
 		public GrayedCheckedModelElement[] getGrayed() {
-			ArrayList<GrayedCheckedModelElement> result = new ArrayList<GrayedCheckedModelElement>();
+			ArrayList<GrayedCheckedModelElement> result = new ArrayList<>();
 			for (int i = 0; i < fElements.size(); i++) {
 				if (fElements.get(i).isGrayed())
 					result.add(fElements.get(i));
@@ -174,7 +174,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		private Map<ImageDescriptor, Image> fIcons;
 
 		public GrayedCheckedModelLabelProvider() {
-			fIcons = new Hashtable<ImageDescriptor, Image>();
+			fIcons = new Hashtable<>();
 		}
 
 		@Override
@@ -287,7 +287,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 			setTitle(WorkingSetMessages.ConfigureWorkingSetAssignementAction_WorkingSetAssignments_title);
 			fModel = model;
 			fElements = elements;
-			fCreatedWorkingSets = new ArrayList<IWorkingSet>();
+			fCreatedWorkingSets = new ArrayList<>();
 			fSettings = DLTKUIPlugin.getDefault().getDialogSettingsSection(DIALOG_SETTINGS_SECTION);
 			if (fSettings.get(SETTINGS_SHOW_VISIBLE_ONLY) == null) {
 				fSettings.put(SETTINGS_SHOW_VISIBLE_ONLY, true);
@@ -501,9 +501,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 
-					List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>(
+					List<IWorkingSet> workingSets = new ArrayList<>(
 							Arrays.asList(fWorkingSetModel.getAllWorkingSets()));
-					List<IWorkingSet> activeWorkingSets = new ArrayList<IWorkingSet>(
+					List<IWorkingSet> activeWorkingSets = new ArrayList<>(
 							Arrays.asList(fWorkingSetModel.getActiveWorkingSets()));
 					WorkingSetConfigurationDialog dialog = new WorkingSetConfigurationDialog(getShell(),
 							workingSets.toArray(new IWorkingSet[workingSets.size()]),
@@ -531,7 +531,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		}
 
 		private void recalculateCheckedState(List<IWorkingSet> addedWorkingSets) {
-			Set<IWorkingSet> checkedWorkingSets = new HashSet<IWorkingSet>();
+			Set<IWorkingSet> checkedWorkingSets = new HashSet<>();
 			GrayedCheckedModelElement[] elements = fModel.getChecked();
 			for (int i = 0; i < elements.length; i++)
 				checkedWorkingSets.add(elements[i].getWorkingSet());
@@ -600,7 +600,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 	}
 
 	private IAdaptable[] getSelectedElements(IStructuredSelection selection) {
-		ArrayList<Object> result = new ArrayList<Object>();
+		ArrayList<Object> result = new ArrayList<>();
 
 		List<?> list = selection.toList();
 		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
@@ -668,8 +668,8 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 
 	private void updateWorkingSets(IWorkingSet[] newWorkingSets, IWorkingSet[] grayedWorkingSets,
 			IAdaptable[] elements) {
-		HashSet<IWorkingSet> selectedSets = new HashSet<IWorkingSet>(Arrays.asList(newWorkingSets));
-		HashSet<IWorkingSet> grayedSets = new HashSet<IWorkingSet>(Arrays.asList(grayedWorkingSets));
+		HashSet<IWorkingSet> selectedSets = new HashSet<>(Arrays.asList(newWorkingSets));
+		HashSet<IWorkingSet> grayedSets = new HashSet<>(Arrays.asList(grayedWorkingSets));
 		IWorkingSet[] workingSets = getAllWorkingSets();
 
 		for (int i = 0; i < workingSets.length; i++) {
@@ -699,7 +699,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 				if (checkForYetHiddenWorkingSet) {
 					IWorkingSet[] activeSets = getActiveWorkingSets();
 					if (activeSets != null) {
-						List<IWorkingSet> activeWorkingSets = new ArrayList<IWorkingSet>(Arrays.asList(activeSets));
+						List<IWorkingSet> activeWorkingSets = new ArrayList<>(Arrays.asList(activeSets));
 						if (!activeWorkingSets.contains(set))
 							activateWorkingSet(set);
 					}
@@ -798,7 +798,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 	}
 
 	private static void remove(IWorkingSet workingSet, IAdaptable adaptedElement) {
-		HashSet<IAdaptable> set = new HashSet<IAdaptable>(Arrays.asList(workingSet.getElements()));
+		HashSet<IAdaptable> set = new HashSet<>(Arrays.asList(workingSet.getElements()));
 		set.remove(adaptedElement);
 		workingSet.setElements(set.toArray(new IAdaptable[set.size()]));
 	}

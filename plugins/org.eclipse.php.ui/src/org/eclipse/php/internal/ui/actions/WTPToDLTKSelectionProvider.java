@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.*;
  * @author zulus
  */
 public class WTPToDLTKSelectionProvider implements ISelectionProvider, ISelectionChangedListener {
-	Set<ISelectionChangedListener> listeners = new HashSet<ISelectionChangedListener>();
+	Set<ISelectionChangedListener> listeners = new HashSet<>();
 	private ISelectionProvider parentProvider;
 
 	public WTPToDLTKSelectionProvider(ISelectionProvider parentProvider) {

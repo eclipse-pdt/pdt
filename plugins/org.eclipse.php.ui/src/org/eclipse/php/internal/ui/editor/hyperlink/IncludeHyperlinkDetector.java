@@ -66,7 +66,7 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 				return null;
 			}
 
-			Set<String> set = new HashSet<String>();
+			Set<String> set = new HashSet<>();
 			IResource resource = sourceModule.getResource();
 			if (resource != null && resource.getLocation() != null) {
 				set.add(resource.getLocation().toOSString());
