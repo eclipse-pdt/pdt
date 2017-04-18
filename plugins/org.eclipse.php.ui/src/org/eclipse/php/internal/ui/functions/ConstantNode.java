@@ -34,10 +34,10 @@ public class ConstantNode {
 	public ConstantNode() {
 	}
 
-	List<IModelElement> modules = new ArrayList<IModelElement>();
+	List<IModelElement> modules = new ArrayList<>();
 
 	public Object[] getChildren() {
-		List<IField> children = new ArrayList<IField>();
+		List<IField> children = new ArrayList<>();
 		// only the constants should be shown under this node
 		for (IModelElement element : modules) {
 			if (isConstant(element)) {

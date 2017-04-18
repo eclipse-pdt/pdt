@@ -76,7 +76,7 @@ public class UseAsSourceFolderAction extends Action {
 	@Override
 	public void run() {
 		boolean askForConfirmation = false;
-		Collection<IResource> explicitlyDisabledFolders = new HashSet<IResource>();
+		Collection<IResource> explicitlyDisabledFolders = new HashSet<>();
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 
 		// check if any of the selected library folders is an explicitly

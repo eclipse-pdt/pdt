@@ -65,7 +65,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	private void removeWrongWorkingSetFilter(ScriptExplorerPart part) {
 		ViewerFilter filter = super.getWorkingSetActionGroup().getFilterGroup().getWorkingSetFilter();
 		ViewerFilter[] filters = part.getTreeViewer().getFilters();
-		List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+		List<ViewerFilter> filterList = new ArrayList<>();
 		for (int i = 0; i < filters.length; i++) {
 			ViewerFilter viewerFilter = filters[i];
 			if (viewerFilter != filter) {
@@ -85,7 +85,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	@Override
 	protected void setGroups(ActionGroup[] groups) {
 		// aggregate the PHP Explorer actions
-		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(groups.length - 1);
+		final ArrayList<ActionGroup> filtered = new ArrayList<>(groups.length - 1);
 		for (int i = 0; i < groups.length; i++) {
 			if (groups[i] instanceof NewWizardsActionGroup) {
 				filtered.add(new PHPNewWizardsActionGroup(getPart().getSite()));

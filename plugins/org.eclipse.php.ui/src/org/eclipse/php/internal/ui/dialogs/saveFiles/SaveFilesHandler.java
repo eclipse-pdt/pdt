@@ -32,8 +32,8 @@ public class SaveFilesHandler {
 	public static SaveFilesResult handle(IProject project, boolean autoSave, boolean promptAutoSave,
 			IProgressMonitor monitor) {
 		SaveFilesResult result = new SaveFilesResult();
-		List dirtyEditors = getDirtyEditors(project);
-		if (dirtyEditors == null || dirtyEditors.size() == 0) {
+		List<IEditorPart> dirtyEditors = getDirtyEditors(project);
+		if (dirtyEditors.isEmpty()) {
 			result.setAccepted(true);
 			return result;
 		}
@@ -76,7 +76,7 @@ public class SaveFilesHandler {
 					if (input instanceof IFileEditorInput) {
 						IFileEditorInput fileInput = (IFileEditorInput) input;
 						IFile file = fileInput.getFile();
-						if (project != null && !(file.getProject() == project)) {
+						if (project != null && file.getProject() != project) {
 							continue;
 						}
 						result.add(ep);
@@ -88,10 +88,10 @@ public class SaveFilesHandler {
 	}
 
 	protected static class SaveFilesRunnable implements Runnable {
-		List dirtyEditors;
+		List<IEditorPart> dirtyEditors;
 		IProgressMonitor monitor;
 
-		public SaveFilesRunnable(List dirtyEditors, IProgressMonitor monitor) {
+		public SaveFilesRunnable(List<IEditorPart> dirtyEditors, IProgressMonitor monitor) {
 			this.dirtyEditors = dirtyEditors;
 			this.monitor = monitor;
 		}
@@ -99,11 +99,11 @@ public class SaveFilesHandler {
 		@Override
 		public void run() {
 			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors.size());
-			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
+			for (Iterator<IEditorPart> i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;
 				}
-				((IEditorPart) i.next()).doSave(monitor);
+				(i.next()).doSave(monitor);
 				monitor.worked(1);
 			}
 			monitor.done();
@@ -111,11 +111,11 @@ public class SaveFilesHandler {
 	}
 
 	protected static class SaveFilesDialogRunnable implements Runnable {
-		List dirtyEditors;
+		List<IEditorPart> dirtyEditors;
 		SaveFilesResult result;
 		boolean promptAutoSave;
 
-		public SaveFilesDialogRunnable(List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
+		public SaveFilesDialogRunnable(List<IEditorPart> dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
 			this.dirtyEditors = dirtyEditors;
 			this.result = result;
 			this.promptAutoSave = promptAutoSave;
@@ -136,7 +136,7 @@ public class SaveFilesHandler {
 	public static class SaveFilesResult {
 		boolean autoSave;
 		boolean accepted;
-		List saved = new ArrayList();
+		List<?> saved = new ArrayList<>();
 
 		public boolean isAutoSave() {
 			return autoSave;
@@ -146,7 +146,7 @@ public class SaveFilesHandler {
 			this.autoSave = autoSave;
 		}
 
-		public void setSaved(List saved) {
+		public void setSaved(List<?> saved) {
 			this.saved = saved;
 		}
 
@@ -158,14 +158,14 @@ public class SaveFilesHandler {
 			return accepted;
 		}
 
-		public List getSaved() {
+		public List<?> getSaved() {
 			return saved;
 		}
 
 		public SaveFilesResult() {
 		}
 
-		public SaveFilesResult(List saved, boolean accepted) {
+		public SaveFilesResult(List<?> saved, boolean accepted) {
 			this();
 			setSaved(saved);
 			setAccepted(accepted);

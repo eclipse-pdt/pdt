@@ -47,7 +47,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		private Map<ImageDescriptor, Image> fIcons;
 
 		public WorkingSetLabelProvider() {
-			fIcons = new Hashtable<ImageDescriptor, Image>();
+			fIcons = new Hashtable<>();
 		}
 
 		@Override
@@ -137,7 +137,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		super(parentShell);
 		setTitle(WorkingSetMessages.WorkingSetConfigurationDialog_title);
 		setMessage(WorkingSetMessages.WorkingSetConfigurationDialog_message);
-		fAllWorkingSets = new ArrayList<IWorkingSet>(allWorkingSets.length);
+		fAllWorkingSets = new ArrayList<>(allWorkingSets.length);
 		fActiveWorkingSets = Arrays.asList(activeWorkingSets);
 		Filter filter = new Filter();
 		for (int i = 0; i < allWorkingSets.length; i++) {
@@ -348,7 +348,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	}
 
 	private List<IWorkingSet> getResultWorkingSets() {
-		List<IWorkingSet> result = new LinkedList<IWorkingSet>();
+		List<IWorkingSet> result = new LinkedList<>();
 		for (Object o : fTableViewer.getCheckedElements()) {
 			if (o instanceof IWorkingSet) {
 				result.add((IWorkingSet) o);
@@ -439,10 +439,10 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	 */
 	@Override
 	public int open() {
-		fAddedWorkingSets = new ArrayList<IWorkingSet>();
-		fRemovedWorkingSets = new ArrayList<IWorkingSet>();
-		fEditedWorkingSets = new HashMap<IWorkingSet, IWorkingSet>();
-		fRemovedMRUWorkingSets = new ArrayList<IWorkingSet>();
+		fAddedWorkingSets = new ArrayList<>();
+		fRemovedWorkingSets = new ArrayList<>();
+		fEditedWorkingSets = new HashMap<>();
+		fRemovedMRUWorkingSets = new ArrayList<>();
 		return super.open();
 	}
 
@@ -542,7 +542,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	}
 
 	private boolean areAllGlobalWorkingSets(IStructuredSelection selection) {
-		Set<IWorkingSet> globals = new HashSet<IWorkingSet>(
+		Set<IWorkingSet> globals = new HashSet<>(
 				Arrays.asList(PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets()));
 		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			if (!globals.contains(iter.next()))
@@ -573,7 +573,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	private List<IWorkingSet> moveUp(List<IWorkingSet> elements, List<IWorkingSet> move) {
 		int nElements = elements.size();
-		List<IWorkingSet> res = new ArrayList<IWorkingSet>(nElements);
+		List<IWorkingSet> res = new ArrayList<>(nElements);
 		IWorkingSet floating = null;
 		for (int i = 0; i < nElements; i++) {
 			IWorkingSet curr = elements.get(i);
@@ -593,7 +593,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	}
 
 	private List<IWorkingSet> reverse(List<IWorkingSet> p) {
-		List<IWorkingSet> reverse = new ArrayList<IWorkingSet>(p.size());
+		List<IWorkingSet> reverse = new ArrayList<>(p.size());
 		for (int i = p.size() - 1; i >= 0; i--) {
 			reverse.add(p.get(i));
 		}

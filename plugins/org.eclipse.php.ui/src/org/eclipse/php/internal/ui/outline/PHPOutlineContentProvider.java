@@ -227,7 +227,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			}
 
 			// filter event from different source module
-			Set<ISourceModule> eventSources = new HashSet<ISourceModule>();
+			Set<ISourceModule> eventSources = new HashSet<>();
 			collectSourceModules(e.getDelta(), eventSources);
 			if (fInput == null || !eventSources.contains(fInput)) {
 				return;
@@ -385,7 +385,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	private class ProblemChangedCollector implements IResourceDeltaVisitor {
-		public Set<Object> toUpdate = new HashSet<Object>();
+		public Set<Object> toUpdate = new HashSet<>();
 
 		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
@@ -581,7 +581,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			return new IModelElement[0];
 		}
 
-		final List<IModelElement> elements = new LinkedList<IModelElement>();
+		final List<IModelElement> elements = new LinkedList<>();
 		try {
 			sourceModule.accept(new ImportDeclarationVisitor() {
 
