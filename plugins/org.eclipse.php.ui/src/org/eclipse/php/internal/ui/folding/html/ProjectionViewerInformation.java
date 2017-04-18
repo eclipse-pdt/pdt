@@ -155,7 +155,7 @@ class ProjectionViewerInformation {
 	 * annotation model.
 	 */
 	void applyAnnotationModelChanges() {
-		List<ProjectionAnnotationModelChanges> changesToApply = new ArrayList<ProjectionAnnotationModelChanges>();
+		List<ProjectionAnnotationModelChanges> changesToApply = new ArrayList<>();
 
 		List<ProjectionAnnotationModelChanges> queuedChanges = getQueuedAnnotationChanges();
 		// Copy of changes to apply. Original list is cleared.
@@ -169,9 +169,9 @@ class ProjectionViewerInformation {
 		// the projection annotation model
 
 		if (changesToApply.size() > 1) {
-			Set<Annotation> deletions = new HashSet<Annotation>();
-			Map<Annotation, Position> additions = new HashMap<Annotation, Position>();
-			Set<Annotation> modifications = new HashSet<Annotation>();
+			Set<Annotation> deletions = new HashSet<>();
+			Map<Annotation, Position> additions = new HashMap<>();
+			Set<Annotation> modifications = new HashSet<>();
 			while (!changesToApply.isEmpty()) {
 				ProjectionAnnotationModelChanges changes = changesToApply.remove(0);
 				if (changes.getDeletions() != null) {

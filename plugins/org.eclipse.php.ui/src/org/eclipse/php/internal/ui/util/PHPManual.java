@@ -72,7 +72,7 @@ public class PHPManual {
 
 	private synchronized Map<String, String> getPHPEntityPathMap() {
 		if (phpEntityPathMap == null) {
-			phpEntityPathMap = new HashMap<String, String>();
+			phpEntityPathMap = new HashMap<>();
 			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
 			if (url != null) {
 				try {

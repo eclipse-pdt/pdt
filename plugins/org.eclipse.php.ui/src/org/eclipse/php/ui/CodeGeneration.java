@@ -680,7 +680,7 @@ public class CodeGeneration {
 				}
 			}
 		}
-		final List<String> exceptions = new ArrayList<String>();
+		final List<String> exceptions = new ArrayList<>();
 		elementAt.accept(new AbstractVisitor() {
 			@Override
 			public boolean visit(ThrowStatement throwStatement) {
@@ -702,8 +702,8 @@ public class CodeGeneration {
 				return true;
 			}
 		});
-		final List<String> newExceptions = new ArrayList<String>();
-		final Set<String> exceptionSet = new HashSet<String>();
+		final List<String> newExceptions = new ArrayList<>();
+		final Set<String> exceptionSet = new HashSet<>();
 		for (Iterator<String> iterator = exceptions.iterator(); iterator.hasNext();) {
 			String exception = iterator.next();
 			if (!exceptionSet.contains(exception)) {
@@ -834,7 +834,7 @@ public class CodeGeneration {
 
 	private static List<ITypeBinding> removeDuplicateTypes(ITypeBinding[] returnTypes) {
 
-		List<ITypeBinding> types = new ArrayList<ITypeBinding>();
+		List<ITypeBinding> types = new ArrayList<>();
 
 		for (ITypeBinding type : returnTypes) {
 			if (!types.contains(type)) {
@@ -858,7 +858,7 @@ public class CodeGeneration {
 	 * @return true if "type" is a type container object, false otherwise
 	 */
 	private static boolean appendAllPossibleTypes(IEvaluatedType type, StringBuilder buffer) {
-		List<String> foundTypes = new ArrayList<String>();
+		List<String> foundTypes = new ArrayList<>();
 		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
 				buffer.append(foundType).append(Constants.TYPE_SEPERATOR_CHAR);

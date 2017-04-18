@@ -134,7 +134,7 @@ public abstract class ModelUtils {
 	}
 
 	static public Collection<ISourceRange> getDeprecatedElements(IModelElement element) {
-		Collection<ISourceRange> elements = new LinkedList<ISourceRange>();
+		Collection<ISourceRange> elements = new LinkedList<>();
 		try {
 			if (ModelUtils.isDeprecated(element)) {
 				elements.add(((IMember) element).getNameRange());

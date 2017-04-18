@@ -23,7 +23,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 
 	protected class ParameterVariableApply extends AbstractSemanticApply {
 
-		private Collection<String> params = new LinkedList<String>();
+		private Collection<String> params = new LinkedList<>();
 
 		@Override
 		public boolean visit(FunctionDeclaration functionDecl) {

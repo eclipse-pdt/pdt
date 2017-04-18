@@ -25,9 +25,9 @@ public class SemanticHighlightingManager {
 
 	private static SemanticHighlightingManager instance;
 
-	private List<AbstractSemanticHighlighting> rules = new LinkedList<AbstractSemanticHighlighting>();
+	private List<AbstractSemanticHighlighting> rules = new LinkedList<>();
 
-	private Map<String, AbstractSemanticHighlighting> highlightings = new LinkedHashMap<String, AbstractSemanticHighlighting>();
+	private Map<String, AbstractSemanticHighlighting> highlightings = new LinkedHashMap<>();
 
 	public synchronized static SemanticHighlightingManager getInstance() {
 		if (instance == null) {

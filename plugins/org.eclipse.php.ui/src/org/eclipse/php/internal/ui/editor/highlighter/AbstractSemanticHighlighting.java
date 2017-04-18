@@ -92,7 +92,7 @@ public abstract class AbstractSemanticHighlighting
 	public Position[] consumes(Program program) {
 		if (program != null) {
 			program.getAST().getBindingResolver().startBindingSession();
-			list = new ArrayList<Position>();
+			list = new ArrayList<>();
 			sourceModule = program.getSourceModule();
 			AbstractSemanticApply apply = getSemanticApply();
 			program.accept(apply);

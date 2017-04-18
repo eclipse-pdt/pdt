@@ -421,7 +421,7 @@ public class UseStatementInjector {
 
 	private Collection<Identifier> createIdentifiers(AST ast, String namespaceName) {
 		String[] split = namespaceName.split("\\\\"); //$NON-NLS-1$
-		List<Identifier> identifiers = new ArrayList<Identifier>(split.length);
+		List<Identifier> identifiers = new ArrayList<>(split.length);
 		for (String s : split) {
 			identifiers.add(ast.newIdentifier(s));
 		}
@@ -567,7 +567,7 @@ public class UseStatementInjector {
 	private List<String> getImportedTypeName(ModuleDeclaration moduleDeclaration, final int offset) {
 		org.eclipse.php.core.compiler.ast.nodes.UseStatement[] useStatements = ASTUtils
 				.getUseStatements(moduleDeclaration, offset);
-		List<String> importedClass = new ArrayList<String>();
+		List<String> importedClass = new ArrayList<>();
 		for (org.eclipse.php.core.compiler.ast.nodes.UseStatement statement : useStatements) {
 			for (UsePart usePart : statement.getParts()) {
 				String name;
@@ -632,7 +632,7 @@ public class UseStatementInjector {
 	}
 
 	private Map<Object, Object> createOptions(IModelElement modelElement) {
-		Map<Object, Object> options = new HashMap<Object, Object>(PHPCorePlugin.getOptions());
+		Map<Object, Object> options = new HashMap<>(PHPCorePlugin.getOptions());
 
 		if (modelElement == null || modelElement.getScriptProject() == null) {
 			return options;
