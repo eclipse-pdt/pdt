@@ -21,7 +21,7 @@
 		<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
 			<view id="org.eclipse.php.phpunit.PHPUnitView" relative="org.eclipse.ui.console.ConsoleView"
 				relationship="stack" visible="false" />
-			<view id="com.zend.php.debug.ui.views.CodeCoverageView"
+			<view id="org.eclipse.php.debug.ui.CodeCoverageView"
 				relationship="stack" relative="org.eclipse.ui.console.ConsoleView"
 				visible="false" />
 		</perspectiveExtension>
