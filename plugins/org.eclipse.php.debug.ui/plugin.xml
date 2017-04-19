@@ -388,7 +388,7 @@
 		         relative="org.eclipse.ui.console.ConsoleView">
 		   </view>
 		   <showInPart
-		         id="org.eclipse.ui.views.ResourceNavigator">
+		         id="org.eclipse.ui.navigator.ProjectExplorer">
 		   </showInPart>
 		   <view
 		         id="org.eclipse.debug.ui.PHPBrowserOutput"
