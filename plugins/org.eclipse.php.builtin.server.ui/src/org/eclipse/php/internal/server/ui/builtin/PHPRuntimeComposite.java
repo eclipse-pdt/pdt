@@ -27,8 +27,6 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.server.core.builtin.IPHPRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -103,25 +101,13 @@ public class PHPRuntimeComposite extends Composite {
 		validate();
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (installRuntimeJob != null) {
-			installRuntimeJob.removeJobChangeListener(jobListener);
-		}
-	}
-
 	/**
 	 * Provide a wizard page to change the PHP executable installation
 	 * directory.
 	 */
 	protected void createControl() {
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		setLayout(layout);
-		setLayoutData(new GridData(GridData.FILL_BOTH));
-		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
-		// ContextIds.RUNTIME_COMPOSITE);
+		setLayout(new GridLayout(2, false));
+		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Label label = new Label(this, SWT.NONE);
 		label.setText(Messages.runtimeName);
@@ -132,12 +118,9 @@ public class PHPRuntimeComposite extends Composite {
 		name = new Text(this, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		name.setLayoutData(data);
-		name.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				runtimeWC.setName(name.getText());
-				validate();
-			}
+		name.addModifyListener(e -> {
+			runtimeWC.setName(name.getText());
+			validate();
 		});
 
 		updateExecutables();
@@ -157,7 +140,7 @@ public class PHPRuntimeComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int sel = combo.getSelectionIndex();
-				PHPexeItem item = (PHPexeItem) installedExecutables.get(sel);
+				PHPexeItem item = installedExecutables.get(sel);
 				runtime.setExecutableInstall(item);
 				runtimeWC.setLocation(new Path(item.getExecutable().getParent()));
 				validate();
@@ -178,8 +161,9 @@ public class PHPRuntimeComposite extends Composite {
 					updateExecutables();
 					combo.setItems(executableNames);
 					combo.setText(currentVM);
-					if (combo.getSelectionIndex() == -1)
+					if (combo.getSelectionIndex() == -1) {
 						combo.select(0);
+					}
 					validate();
 				}
 			}
@@ -206,7 +190,7 @@ public class PHPRuntimeComposite extends Composite {
 		size = installedExecutables.size();
 		executableNames = new String[size];
 		for (int i = 0; i < size; i++) {
-			PHPexeItem vmInstall = (PHPexeItem) installedExecutables.get(i);
+			PHPexeItem vmInstall = installedExecutables.get(i);
 			executableNames[i] = vmInstall.getName();
 		}
 	}
@@ -220,21 +204,23 @@ public class PHPRuntimeComposite extends Composite {
 		manager2.addToRoot(node);
 		PreferenceDialog dialog = new PreferenceDialog(getShell(), manager2);
 		dialog.create();
-		return (dialog.open() == Window.OK);
+		return dialog.open() == Window.OK;
 	}
 
 	protected void init() {
-		if (name == null || runtime == null)
+		if (name == null || runtime == null) {
 			return;
+		}
 
-		if (runtimeWC.getName() != null)
+		if (runtimeWC.getName() != null) {
 			name.setText(runtimeWC.getName());
-		else
+		} else {
 			name.setText(""); //$NON-NLS-1$
+		}
 
 		int size = installedExecutables.size();
 		for (int i = 0; i < size; i++) {
-			PHPexeItem item = (PHPexeItem) installedExecutables.get(i);
+			PHPexeItem item = installedExecutables.get(i);
 			if (item.equals(runtime.getExecutableInstall())) {
 				combo.select(i);
 			}
@@ -248,12 +234,21 @@ public class PHPRuntimeComposite extends Composite {
 		}
 
 		IStatus status = runtimeWC.validate(null);
-		if (status == null || status.isOK())
+		if (status == null || status.isOK()) {
 			wizard.setMessage(null, IMessageProvider.NONE);
-		else if (status.getSeverity() == IStatus.WARNING)
+		} else if (status.getSeverity() == IStatus.WARNING) {
 			wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-		else
+		} else {
 			wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+		}
 		wizard.update();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (installRuntimeJob != null) {
+			installRuntimeJob.removeJobChangeListener(jobListener);
+		}
 	}
 }

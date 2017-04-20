@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.server.ui.builtin;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
@@ -36,20 +37,17 @@ public class PHPRuntimeWizardFragment extends WizardFragment {
 	public boolean isComplete() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 
-		if (runtime == null)
+		if (runtime == null) {
 			return false;
+		}
 		IStatus status = runtime.validate(null);
-		return (status == null || status.getSeverity() != IStatus.ERROR);
+		return status == null || status.getSeverity() != IStatus.ERROR;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
-	 */
 	@Override
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new PHPRuntimeComposite(parent, wizard);
+		parent.setBackgroundMode(SWT.INHERIT_FORCE);
+		this.comp = new PHPRuntimeComposite(parent, wizard);
 		return comp;
 	}
 
