@@ -1,3 +1,13 @@
+CUP version 0.11b 20151001 is a feature release.
+
+Implemented a generic pre-/post DFS search with visitor support
+Also added fragments of XPath 1.0 query support on parse trees
+Fixed the visibility of children and the variant attribute of XMLElement
+
+M. Petter
+Technische Universität München
+2015/10/01
+------------------------------------------------------------------------
 CUP version 0.11b 20150326 is a bugfix release.
 
 Fixed an issue with empty productions having non-empty location information
