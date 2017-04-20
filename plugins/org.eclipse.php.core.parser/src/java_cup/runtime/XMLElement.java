@@ -72,16 +72,12 @@ public abstract class XMLElement {
 		writer.close();
 	}
 	protected String tagname;
-        public String getTagname() { return tagname; }
 	public abstract Location right();
 	public abstract Location left();
 	protected abstract void dump(XMLStreamWriter writer) throws XMLStreamException;
-        public List<XMLElement> getChildren() {return new LinkedList<XMLElement>(); };
-        public boolean hasChildren() { return false; };
+
 	public static class NonTerminal extends XMLElement {
-	    public boolean hasChildren()  { return !list.isEmpty(); }
-	    public List<XMLElement> getChildren()  { return list; }
-	    @Override
+		@Override
 		public List<XMLElement> selectById(String s) {
 			LinkedList<XMLElement> response= new LinkedList<XMLElement>();
 			if (tagname.equals(s))
@@ -93,9 +89,6 @@ public abstract class XMLElement {
 			return response;
 		}
 		private int variant;
-	    public int getVariant() {
-		return variant;
-	    }
 		LinkedList<XMLElement> list;
 		public NonTerminal(String tagname, int variant, XMLElement... l) {
 			this.tagname=tagname;
@@ -112,7 +105,7 @@ public abstract class XMLElement {
 		}
 		public Location right() {
 			for (Iterator<XMLElement> it = list.descendingIterator();it.hasNext();){
-				 Location loc = it.next().right();
+				 Location loc = it.next().left();
 				 if (loc!=null) return loc;
 			}
 			return null;
@@ -146,8 +139,7 @@ public abstract class XMLElement {
 	}
 
 	public static class Error extends XMLElement {
-	    public boolean hasChildren()  { return false; }
-	    @Override
+		@Override
 		public List<XMLElement> selectById(String s) {
 			return new LinkedList<XMLElement>();
 		}
@@ -172,8 +164,7 @@ public abstract class XMLElement {
 	}
 	
 	public static class Terminal extends XMLElement {
-	    public boolean hasChildren()  { return false; }
-	    public List<XMLElement> selectById(String s) {
+		public List<XMLElement> selectById(String s) {
 			List<XMLElement> ret = new LinkedList<XMLElement>();
 			if (tagname.equals(s)) { ret.add(this);	}
 			return ret;

@@ -2,7 +2,7 @@
   Modified build.xml (taken from Cup's sources tar file)
   for better integration with Eclipse PDT.
 -->
-<project name="cup" default ="dist" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
+<project name="emugen" default ="dist" basedir=".">
   <property name="etc"       location="etc"       />
   <!-- XXX : changed location from "bin" to "cup-bin" -->
   <property name="bin"       location="cup-bin"   />
@@ -24,28 +24,18 @@
     <mkdir dir="${java}" />
     <mkdir dir="${classes}" />
     <mkdir dir="${dist}" />
-    <loadfile property="cupversion" srcFile="version.txt" failonerror="false" />
-    <property name="cupversion" value="custombuild" unless:set="cupversion"/>
-    <exec executable="git" outputproperty="gitversion">
-      <arg value="log"/>
-      <arg value="-1"/>
-      <arg value="- -format=%h"/>
-    </exec>
-    <exec executable="git" outputproperty="changed">
-      <arg value="status"/>
-      <arg value="- -porcelain"/>
+    <loadfile property="cupversion" srcFile="version.txt"/>
+    <exec executable="svn" outputproperty="svnversion">
+      <arg value="info"/>
       <redirector>
 	<outputfilterchain>
-	<linecontainsregexp>
-	  <regexp pattern='^M.*'/>
-	</linecontainsregexp>
-	<tokenfilter>
-	  <replaceregex pattern=".*" replace="modifications based on "/>
-	</tokenfilter>
-	</outputfilterchain>
-	</redirector>
+	  <linecontains>
+	    <contains value="Revision"/>
+	  </linecontains>
+	  <deletecharacters chars="Revision: "/>
+        </outputfilterchain>
+      </redirector>
     </exec>
-    <property name="svnversion">${changed}${gitversion}</property>
   </target>
 -->
   <target name="init">
@@ -100,7 +90,7 @@
     <copy todir="${java}"><fileset dir="${src}"></fileset></copy>
     <replace file="${java}/java_cup/version.java"
        token="+ version_str"
-       value='+ "v0.11b ${cupversion} (GIT ${svnversion})"'>
+       value='+ "v0.11b ${cupversion} (SVN rev ${svnversion})"'>
     </replace>
     <javac srcdir="${java}" destdir="${classes}" verbose="off" listfiles="off" debug="on" source="1.5" target="1.5">
       <classpath refid="libraries"/>
@@ -117,7 +107,7 @@
        token="+ version_str"
        value='+ "v0.11b ${cupversion}"'>
     </replace>
-    <javac srcdir="${java}" destdir="${classes}" verbose="off" listfiles="off" debug="on" source="1.8" target="1.8">
+    <javac srcdir="${java}" destdir="${classes}" verbose="off" listfiles="off" debug="on" source="1.5" target="1.5">
       <classpath refid="libraries"/>
     </javac>
   </target>
