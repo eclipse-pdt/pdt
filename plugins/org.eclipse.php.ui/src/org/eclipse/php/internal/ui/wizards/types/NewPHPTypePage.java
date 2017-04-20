@@ -488,25 +488,15 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	private int firstSegmentsToRemoveForNamespace(IPath sourcePath) {
-		int lastSegmentIndex = sourcePath.segmentCount() - 1;
-		int segments = sourcePath.segmentCount();
-		for (int i = lastSegmentIndex; i > 0; i--) {
-			if (Character.isLowerCase(sourcePath.segment(i).charAt(0))) {
-				break;
+		try {
+			for (IProjectFragment projectFragment : getProject().getProjectFragments()) {
+				int matching = projectFragment.getPath().matchingFirstSegments(sourcePath);
+				if (matching > 1) {
+					return matching;
+				}
 			}
-			segments--;
-		}
-		if (segments != sourcePath.segmentCount()) {
-			return segments;
-		}
-		for (int i = lastSegmentIndex; i > 0; i--) {
-			if (sourcePath.segment(i).equalsIgnoreCase("src")) { //$NON-NLS-1$
-				return segments;
-			}
-			segments--;
-		}
-		if (sourcePath.segmentCount() > 1) {
-			return 2;
+		} catch (ModelException e) {
+			PHPUiPlugin.log(e);
 		}
 		return 1;
 	}
