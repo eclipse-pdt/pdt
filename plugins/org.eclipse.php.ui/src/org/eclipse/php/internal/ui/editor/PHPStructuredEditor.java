@@ -97,6 +97,7 @@ import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -321,6 +322,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	/** The selection history of the editor */
 	private SelectionHistory fSelectionHistory;
+
+	private PHPEditorErrorTickUpdater fPHPEditorErrorTickUpdater;
 
 	/**
 	 * Internal implementation class for a change listener.
@@ -1084,6 +1087,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		SSEUIPlugin.getDefault().getPreferenceStore().setValue(AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
 				foldingEnabled);
 		setDocumentProvider(DLTKUIPlugin.getDocumentProvider());
+		fPHPEditorErrorTickUpdater = new PHPEditorErrorTickUpdater(this);
 	}
 
 	// added by zhaozw,or there will be a exception for files in the phar
@@ -1205,6 +1209,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (fProjectionModelUpdater != null) {
 			fProjectionModelUpdater.uninstall();
 			fProjectionModelUpdater = null;
+		}
+
+		if (fPHPEditorErrorTickUpdater != null) {
+			fPHPEditorErrorTickUpdater.dispose();
+			fPHPEditorErrorTickUpdater = null;
 		}
 		super.dispose();
 	}
@@ -2275,6 +2284,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		if (fProjectionModelUpdater != null)
 			updateProjectionSupport();
+
+		if (fPHPEditorErrorTickUpdater != null)
+			fPHPEditorErrorTickUpdater.updateEditorImage(getModelElement());
 	}
 
 	/**
@@ -3712,6 +3724,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	@Override
 	protected void uninstallTabsToSpacesConverter() {
+	}
+
+	public void updatedTitleImage(Image image) {
+		setTitleImage(image);
 	}
 
 }
