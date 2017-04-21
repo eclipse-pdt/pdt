@@ -112,7 +112,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	}
 
 	private boolean visit(TypeReference node, ProblemSeverity severity) throws Exception {
-		if (PHPSimpleTypes.isSimpleTypeCS(node.getName()) || TYPE_SKIP.contains(node.getName())) {
+		if (PHPSimpleTypes.isSimpleType(node.getName()) || TYPE_SKIP.contains(node.getName())) {
 			return true;
 		}
 		TypeReferenceInfo tri = new TypeReferenceInfo(node, false);

@@ -1,0 +1,12 @@
+--TEST--
+Test type reference error check
+--FILE--
+<?php
+/**
+ * @return NULL
+ */
+function foo()
+{
+    return NULL;
+}
+--EXPECT--

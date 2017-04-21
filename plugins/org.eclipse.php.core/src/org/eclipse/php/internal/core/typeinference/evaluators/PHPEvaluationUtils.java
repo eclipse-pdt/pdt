@@ -235,7 +235,7 @@ public class PHPEvaluationUtils {
 			if (evaluatedType != null) {
 				evaluated.add(evaluatedType);
 			} else {
-				if (PHPSimpleTypes.isSimpleTypeCS(typeName)) {
+				if (PHPSimpleTypes.isSimpleType(typeName)) {
 					ClassFinder classFinder = new ClassFinder(typeName);
 					try {
 						space.accept(classFinder);
@@ -245,7 +245,7 @@ public class PHPEvaluationUtils {
 					if (classFinder.found) {
 						evaluated.add(PHPEvaluationUtils.getEvaluatedType(typeName, currentNamespace));
 					} else {
-						evaluated.add(PHPSimpleTypes.fromStringCS(typeName));
+						evaluated.add(PHPSimpleTypes.fromString(typeName));
 					}
 				} else if ((typeName.equals(SELF_RETURN_TYPE) || typeName.equals(THIS_RETURN_TYPE)
 						|| typeName.equals(STATIC_RETURN_TYPE)) && types != null) {
