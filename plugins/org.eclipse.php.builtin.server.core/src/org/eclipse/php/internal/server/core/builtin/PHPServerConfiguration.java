@@ -79,29 +79,8 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 * @return result of operation
 	 */
 	protected IStatus backupAndPublish(IPath phpServerDir, boolean doBackup, IProgressMonitor monitor) {
-		MultiStatus ms = new MultiStatus(PHPServerPlugin.PLUGIN_ID, 0, Messages.publishConfigurationTask, null);
-		if (Trace.isTraceEnabled())
-			Trace.trace(Trace.FINER, "Backup and publish"); //$NON-NLS-1$
-		monitor = ProgressUtil.getMonitorFor(monitor);
-
-		try {
-			IPath backup = null;
-			if (doBackup) {
-				// create backup directory
-				backup = phpServerDir.append("backup"); //$NON-NLS-1$
-				if (!backup.toFile().exists())
-					backup.toFile().mkdir();
-			}
-			backupFolder(getFolder(), phpServerDir, backup, ms, monitor);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "backupAndPublish() error", e); //$NON-NLS-1$
-			IStatus s = new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
-					NLS.bind(Messages.errorPublishConfiguration, new String[] { e.getLocalizedMessage() }), e);
-			ms.add(s);
-		}
-
-		monitor.done();
-		return ms;
+		// Default implementation assumes nothing to do
+		return Status.OK_STATUS;
 	}
 
 	protected void backupFolder(IFolder folder, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor)
