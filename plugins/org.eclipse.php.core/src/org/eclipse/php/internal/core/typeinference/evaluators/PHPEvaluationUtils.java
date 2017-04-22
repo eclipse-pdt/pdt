@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2014, 2015, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,7 @@ public class PHPEvaluationUtils {
 
 	public static final String BRACKETS = "[]"; //$NON-NLS-1$
 
-	public static final Pattern ARRAY_TYPE_PATTERN = Pattern.compile("array\\[.*\\]"); //$NON-NLS-1$
+	public static final Pattern ARRAY_TYPE_PATTERN = Pattern.compile("array\\[.*\\]", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private static final String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
 
@@ -43,13 +43,16 @@ public class PHPEvaluationUtils {
 
 	private static final String THIS_RETURN_TYPE = "$this"; //$NON-NLS-1$
 
-	public static final String BRACKETS_PATTERN = "\\[.*\\]"; //$NON-NLS-1$
+	public static final String BRACKETS_REGEX = "\\[.*\\]"; //$NON-NLS-1$
+
+	// Matches all type separators used by method getArrayType()
+	public static final Pattern TYPE_DELIMS_PATTERN = Pattern.compile("([,\\[\\]]+)"); //$NON-NLS-1$
 
 	private static final IEvaluatedType[] EMPTY_LIST = new IEvaluatedType[0];
 
 	// XXX: handle nested array[] types?
 	public static String extractArrayType(String typeName) {
-		Matcher m = PHPEvaluationUtils.ARRAY_TYPE_PATTERN.matcher(typeName);
+		Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
 		if (m.find()) {
 			int beginIndex = typeName.indexOf('[') + 1;
 			int endIndex = typeName.lastIndexOf(']');
@@ -64,8 +67,8 @@ public class PHPEvaluationUtils {
 		if (typeName == null || typeName.isEmpty()) {
 			return false;
 		}
-		Matcher m = PHPEvaluationUtils.ARRAY_TYPE_PATTERN.matcher(typeName);
-		if (m.find() || (typeName.endsWith(PHPEvaluationUtils.BRACKETS) && typeName.length() > 2)) {
+		Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
+		if (m.find() || (typeName.endsWith(BRACKETS) && typeName.length() > 2)) {
 			return true;
 		}
 		return false;
@@ -75,12 +78,11 @@ public class PHPEvaluationUtils {
 		if (typeName == null || typeName.isEmpty()) {
 			return null;
 		}
-		Matcher m = PHPEvaluationUtils.ARRAY_TYPE_PATTERN.matcher(typeName);
+		Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
 		if (m.find()) {
-			return PHPEvaluationUtils.getArrayType(m.group(), currentNamespace, offset);
-		} else if (typeName.endsWith(PHPEvaluationUtils.BRACKETS) && typeName.length() > 2) {
-			return PHPEvaluationUtils.getArrayType(typeName.substring(0, typeName.length() - 2), currentNamespace,
-					offset);
+			return getArrayType(m.group(), currentNamespace, offset);
+		} else if (typeName.endsWith(BRACKETS) && typeName.length() > 2) {
+			return getArrayType(typeName.substring(0, typeName.length() - 2), currentNamespace, offset);
 		}
 		return null;
 	}
@@ -191,7 +193,7 @@ public class PHPEvaluationUtils {
 	}
 
 	public static String removeArrayBrackets(String variableName) {
-		return variableName.replaceAll(BRACKETS_PATTERN, "");
+		return variableName.replaceAll(BRACKETS_REGEX, ""); //$NON-NLS-1$
 	}
 
 	private static class ClassFinder implements IModelElementVisitor {
@@ -231,7 +233,7 @@ public class PHPEvaluationUtils {
 			if (StringUtils.isBlank(typeName)) {
 				continue;
 			}
-			IEvaluatedType evaluatedType = PHPEvaluationUtils.extractArrayType(typeName, currentNamespace, offset);
+			IEvaluatedType evaluatedType = extractArrayType(typeName, currentNamespace, offset);
 			if (evaluatedType != null) {
 				evaluated.add(evaluatedType);
 			} else {
@@ -243,14 +245,14 @@ public class PHPEvaluationUtils {
 						Logger.logException(e);
 					}
 					if (classFinder.found) {
-						evaluated.add(PHPEvaluationUtils.getEvaluatedType(typeName, currentNamespace));
+						evaluated.add(getEvaluatedType(typeName, currentNamespace));
 					} else {
 						evaluated.add(PHPSimpleTypes.fromString(typeName));
 					}
 				} else if ((typeName.equals(SELF_RETURN_TYPE) || typeName.equals(THIS_RETURN_TYPE)
 						|| typeName.equals(STATIC_RETURN_TYPE)) && types != null) {
 					for (IType t : types) {
-						IEvaluatedType type = PHPEvaluationUtils.getEvaluatedType(PHPModelUtils.getFullName(t), null);
+						IEvaluatedType type = getEvaluatedType(PHPModelUtils.getFullName(t), null);
 						if (type != null) {
 							evaluated.add(type);
 						}
@@ -286,7 +288,7 @@ public class PHPEvaluationUtils {
 							}
 						}
 					}
-					IEvaluatedType type = PHPEvaluationUtils.getEvaluatedType(typeName, currentNamespace);
+					IEvaluatedType type = getEvaluatedType(typeName, currentNamespace);
 					if (type != null) {
 						evaluated.add(type);
 					}
