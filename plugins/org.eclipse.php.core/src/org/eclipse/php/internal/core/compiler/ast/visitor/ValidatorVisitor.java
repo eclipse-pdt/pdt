@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.regex.Matcher;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -29,6 +30,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 
 public class ValidatorVisitor extends PHPASTVisitor {
 
@@ -231,15 +233,30 @@ public class ValidatorVisitor extends PHPASTVisitor {
 
 	@Override
 	public boolean visit(PHPDocTag phpDocTag) throws Exception {
-		for (TypeReference simpleReference : phpDocTag.getTypeReferences()) {
-			TypeReference typeReference = (TypeReference) simpleReference;
+		for (TypeReference typeReference : phpDocTag.getTypeReferences()) {
 			String typeName = typeReference.getName();
-			if (typeName.endsWith("[]")) { //$NON-NLS-1$
-				typeName = typeName.substring(0, typeName.length() - 2);
-				typeReference.setName(typeName);
-				typeReference.setEnd(typeReference.end() - 2);
+			// look for any types inside typeName by removing all type
+			// delimiters, regardless if typeName's content respects PHPDoc
+			// standards or not
+			Matcher matcher = PHPEvaluationUtils.TYPE_DELIMS_PATTERN.matcher(typeName);
+			int start = 0;
+			while (matcher.find()) {
+				if (matcher.start() != start) {
+					String subTypeName = typeName.substring(start, matcher.start());
+					TypeReference subTypeReference = new TypeReference(typeReference.start() + start,
+							typeReference.start() + start + subTypeName.length(), subTypeName);
+					visit(subTypeReference, ProblemSeverities.Warning);
+				}
+				start = matcher.end();
 			}
-			visit(typeReference, ProblemSeverities.Warning);
+			if (start == 0) {
+				visit(typeReference, ProblemSeverities.Warning);
+			} else if (start != typeName.length()) {
+				String subTypeName = typeName.substring(start);
+				TypeReference subTypeReference = new TypeReference(typeReference.start() + start,
+						typeReference.start() + start + subTypeName.length(), subTypeName);
+				visit(subTypeReference, ProblemSeverities.Warning);
+			}
 		}
 		return false;
 	}

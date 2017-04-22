@@ -1,0 +1,23 @@
+--TEST--
+Test type reference error check
+--FILE--
+<?php
+
+class MyClass
+{
+}
+
+/**
+ *
+ * @param MyClass[] $a
+ *            valid definition
+ * @param array[MyClass] $b
+ *            valid definition
+ * @param MyClass|array[MyClass]|[MyClass,MyClass][MyClass]|[]|MyClass]|[MyClass $c
+ *            buggy definition
+ */
+function foo($a, $b, $c)
+{
+}
+?>
+--EXPECT--
