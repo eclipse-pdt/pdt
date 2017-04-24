@@ -49,7 +49,6 @@ public class DependencySearchPart extends PackageSearchPart {
 		toggleBox.setLayout(new GridLayout());
 		toggleBox.setBackground(getBackgroundColor());
 		toggle = new Twistie(toggleBox, SWT.NO_FOCUS);
-		toggle.setBackground(getBackgroundColor());
 		toggle.setData(this);
 
 		// package
