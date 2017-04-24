@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -63,7 +64,10 @@ public class PHPUnitLaunchUtils {
 		}
 	}
 
-	public static String findComposerExecutionFile(IProject project) {
+	public static String findComposerExecutionFile(@Nullable IProject project) {
+		if (project == null) {
+			return null;
+		}
 		IPath startScriptDirectory = project.getLocation().append(START_SCRIPT_PATH);
 
 		IPath startScriptPath = startScriptDirectory.append(START_SCRIPT_NAME);

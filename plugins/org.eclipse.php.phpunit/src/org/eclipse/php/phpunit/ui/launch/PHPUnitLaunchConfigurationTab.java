@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -38,15 +39,14 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.filters.RSEProjectFilter;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
@@ -163,15 +163,15 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	public void initializeFrom(final ILaunchConfiguration config) {
 		try {
 			boolean isContainer = config.getAttribute(ATTRIBUTE_RUN_CONTAINER, false);
-			String container = config.getAttribute(ATTRIBUTE_CONTAINER, ""); //$NON-NLS-1$
-			String containerTypeName = config.getAttribute(ATTRIBUTE_CONTAINER_TYPE, ""); //$NON-NLS-1$
-			String projectName = config.getAttribute(ATTRIBUTE_PROJECT, ""); //$NON-NLS-1$
-			String testClassName = config.getAttribute(ATTRIBUTE_CLASS, ""); //$NON-NLS-1$
-			String testFileName = config.getAttribute(ATTRIBUTE_FILE, ""); //$NON-NLS-1$
+			String container = config.getAttribute(ATTRIBUTE_CONTAINER, StringUtils.EMPTY);
+			String containerTypeName = config.getAttribute(ATTRIBUTE_CONTAINER_TYPE, StringUtils.EMPTY);
+			String projectName = config.getAttribute(ATTRIBUTE_PROJECT, StringUtils.EMPTY);
+			String testClassName = config.getAttribute(ATTRIBUTE_CLASS, StringUtils.EMPTY);
+			String testFileName = config.getAttribute(ATTRIBUTE_FILE, StringUtils.EMPTY);
 
 			boolean codeCoverage = config.getAttribute(ATTRIBUTE_CODE_COVERAGE, false);
 			boolean xmlReporting = config.getAttribute(ATTRIBUTE_LOG_XML, false);
-			String xmlUnitConfig = config.getAttribute(ATTRIBUTE_PHPUNIT_CFG, ""); //$NON-NLS-1$
+			String xmlUnitConfig = config.getAttribute(ATTRIBUTE_PHPUNIT_CFG, StringUtils.EMPTY);
 
 			String executionType = config.getAttribute(ATTRIBUTE_EXECUTION_TYPE, PHAR_EXECUTION_TYPE);
 
@@ -198,25 +198,22 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 				if (PROJECT_CONTAINER.equals(containerTypeName)) {
 					containerElement = project;
 				}
-				// }
 
 				if (containerElement != null) {
 					fContainerElement = containerElement;
 					fContainerText.setText(fContainerElement.getFullPath().toPortableString());
 				}
 
-				if (fContainerElement != null) {
-
-				} else {
+				if (fContainerElement == null) {
 					testModeChanged();
 				}
-				fTestText.setText(""); //$NON-NLS-1$
-				fTestFileLabel.setText(""); //$NON-NLS-1$
+				fTestText.setText(StringUtils.EMPTY);
+				fTestFileLabel.setText(StringUtils.EMPTY);
 			} else {
 				fProjText.setText(projectName);
 				fTestText.setText(testClassName);
 				fTestFileLabel.setText(testFileName);
-				fContainerText.setText(""); //$NON-NLS-1$
+				fContainerText.setText(StringUtils.EMPTY);
 			}
 
 			fPhpunitConfigPath.setText(xmlUnitConfig);
@@ -238,7 +235,6 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		createElementGroup(comp);
 		createAdditionalGroup(comp);
 		createExecutionGroup(comp);
-		// validatePage();
 	}
 
 	private String choosePhpUnitConfig() {
@@ -249,7 +245,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 				PHPUnitMessages.PHPUnitLaunchConfigurationTab_3, initialPath);
 
 		if (pathStr == null) {
-			return ""; //$NON-NLS-1$
+			return StringUtils.EMPTY;
 		}
 
 		IPath path = new Path(pathStr);
@@ -485,8 +481,9 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		fSingleTestRadioButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (fSingleTestRadioButton.getSelection())
+				if (fSingleTestRadioButton.getSelection()) {
 					testModeChanged();
+				}
 			}
 		});
 	}
@@ -535,7 +532,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fProjText.getText());
 		try {
-			if (project != null && project.isAccessible() && project.hasNature(PHPNature.ID)) {
+			if (PHPToolkitUtil.isPHPProject(project)) {
 				return DLTKCore.create(project);
 			}
 		} catch (CoreException e) {
@@ -546,7 +543,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 
 	private String getProjectRelativePath(final IResource element) {
 		if (element instanceof IProject) {
-			return ""; //$NON-NLS-1$
+			return StringUtils.EMPTY;
 		}
 		return element.getFullPath().makeRelativeTo(element.getProject().getFullPath()).toOSString();
 	}
@@ -673,7 +670,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 				IPath relativePath = typResource.getFullPath().makeRelativeTo(typResource.getProject().getFullPath());
 				fTestFileLabel.setText(relativePath.toPortableString());
 			} else {
-				fTestFileLabel.setText(""); //$NON-NLS-1$
+				fTestFileLabel.setText(StringUtils.EMPTY);
 			}
 			validatePhpProject(typResource.getProject());
 		}
@@ -767,9 +764,9 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			config.setAttribute(ATTRIBUTE_FILE, fTestFileLabel.getText());
 			config.setAttribute(ATTRIBUTE_CONTAINER_TYPE, SOURCE_CONTAINER);
 		}
-		if (fElementPath != null && !fElementPath.isEmpty()) {
+		if (StringUtils.isNotEmpty(fElementPath)) {
 			config.setAttribute(PHPUnitPlugin.ELEMENT_PATH_ATTR, fElementPath);
-			fElementPath = ""; //$NON-NLS-1$
+			fElementPath = StringUtils.EMPTY;
 		}
 
 		config.setAttribute(ATTRIBUTE_CODE_COVERAGE, fCodeCoverageButton.getSelection());
@@ -786,7 +783,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			// Don't stop on a first breakpoint if in debug mode
 			config.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
 			projectName = config.getAttribute(ATTRIBUTE_PROJECT, ""); //$NON-NLS-1$
-			if (projectName != null && !projectName.isEmpty()) {
+			if (StringUtils.isNotEmpty(projectName)) {
 				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 				config.setAttribute(IPHPDebugConstants.PHP_Project, project.getName());
 				String fileToExecute = findFileToExecute(config, project);
@@ -794,7 +791,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 				config.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, fileToExecute);
 			}
 		} catch (CoreException e) {
-			Logger.logException(e);
+			PHPUnitPlugin.log(e);
 		}
 
 	}
@@ -817,7 +814,6 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	private void setButtonGridData(final Button button) {
 		final GridData gridData = new GridData();
 		button.setLayoutData(gridData);
-		SWTUtil.setButtonDimensionHint(button);
 	}
 
 	private void setContainerElement(final IResource container) {
@@ -855,10 +851,11 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		boolean isSingleTestMode = fSingleTestRadioButton.getSelection();
 		setEnableSingleTestGroup(isSingleTestMode);
 		setEnableContainerTestGroup(!isSingleTestMode);
-		if (!isSingleTestMode && fContainerText.getText().length() == 0) {
+		if (!isSingleTestMode && StringUtils.isEmpty(fContainerText.getText())) {
 			final IScriptProject phpProject = getPhpProject();
-			if (phpProject != null)
+			if (phpProject != null) {
 				setContainerElement(phpProject.getProject());
+			}
 
 		}
 		validatePage();
@@ -895,7 +892,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			}
 
 			try {
-				if (!project.hasNature(PHPNature.ID)) {
+				if (PHPToolkitUtil.isPHPProject(project)) {
 					setErrorMessage(PHPUnitMessages.PHPUnitLaunchConfigurationTab_Project_Not_PHP);
 					testElementFinder.cleareCaches();
 					return;

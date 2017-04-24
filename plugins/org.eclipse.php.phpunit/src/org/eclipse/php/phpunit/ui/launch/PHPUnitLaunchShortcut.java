@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -28,6 +29,7 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.dltk.core.*;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.core.PHPToolkitUtil;
@@ -38,7 +40,6 @@ import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 
@@ -61,7 +62,7 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 		final ISourceReference highlighted = ((PHPStructuredEditor) editor).computeHighlightRangeSourceReference();
 		if (highlighted instanceof IMethod) {
 			final String elementName = ((IMethod) highlighted).getElementName();
-			final StructuredTextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
+			final TextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
 			final StyledText textWidget = textViewer == null ? null : textViewer.getTextWidget();
 			String selectionText = textWidget == null ? null : textWidget.getSelectionText();
 			if (selectionText != null && selectionText.equals(elementName) && selectionText.startsWith("test")) { //$NON-NLS-1$
@@ -85,7 +86,7 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 	private void launch(Object selectedElement, final String mode) {
 		try {
 			String osString = null;
-			String configName = null;
+			String configName;
 			if (selectedElement instanceof IModelElement) {
 				IModelElement me = (IModelElement) selectedElement;
 				osString = me.getPath().toOSString();
@@ -144,7 +145,9 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 					config.setAttribute(ATTRIBUTE_PHPUNIT_CFG, file.getProjectRelativePath().toString());
 					selectedElement = DLTKCore.create(file.getParent());
 				}
-
+			} else {
+				config.setAttribute(ATTRIBUTE_CONTAINER, resource.getProjectRelativePath().toString());
+				config.setAttribute(ATTRIBUTE_RUN_CONTAINER, true);
 			}
 			project = resource.getProject();
 		}
@@ -173,25 +176,24 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 				config.setAttribute(ATTRIBUTE_RUN_CONTAINER, true);
 				config.setAttribute(ATTRIBUTE_PROJECT, project.getName());
 				config.setAttribute(ATTRIBUTE_CONTAINER, getProjectRelativePath(fContainerElement));
-				String typeName = getContainerType(fContainerElement);
-				config.setAttribute(ATTRIBUTE_CONTAINER_TYPE, typeName);
-
 			}
 		}
+		String typeName = getContainerType(selectedElement);
+		config.setAttribute(ATTRIBUTE_CONTAINER_TYPE, typeName);
 
-		if (project != null && PHPUnitLaunchUtils.findComposerExecutionFile(project) != null) {
+		if (PHPUnitLaunchUtils.findComposerExecutionFile(project) != null) {
 			config.setAttribute(ATTRIBUTE_EXECUTION_TYPE, COMPOSER_EXECUTION_TYPE);
 		}
 	}
 
-	private String getContainerType(IModelElement container) {
-		if (container instanceof IScriptProject) {
+	private String getContainerType(Object container) {
+		if (container instanceof IScriptProject || container instanceof IProject) {
 			return PROJECT_CONTAINER;
 		}
-		if (container instanceof IScriptFolder || container instanceof IProjectFragment) {
+		if (container instanceof IScriptFolder || container instanceof IProjectFragment
+				|| container instanceof IFolder) {
 			return FOLDER_CONTAINER;
 		}
-
 		if (container instanceof ISourceModule) {
 			return SOURCE_CONTAINER;
 		}
