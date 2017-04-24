@@ -135,7 +135,13 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 		prepareDetailedVersions();
 
 		if (majors.size() > 0) {
-			return majors.firstKey();
+			return Collections.max(majors.keySet(), new Comparator<String>() {
+
+				@Override
+				public int compare(String o1, String o2) {
+					return Integer.compare(Integer.parseInt(o1), Integer.parseInt(o2));
+				}
+			});
 		}
 
 		return null;
