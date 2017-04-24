@@ -102,18 +102,30 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				int lineEndOffset = region.getOffset() + region.getLength();
 				for (; i < lineEndOffset && (document.getChar(i) == ' ' || document.getChar(i) == '\t'); i++) {
 				}
-				// adjust the length to include the blank characters
-				command.length += i - selectionEndOffset;
 				if (i < lineEndOffset) {
 					int j = i + 1;
 					for (; j < lineEndOffset && !(document.getChar(j) == ' ' || document.getChar(j) == '\t'); j++) {
 					}
-					// We need later to add (at least) first non-blank line
-					// character to the command selection so we can correctly
-					// calculate last line indentation. It's even better to have
-					// all consecutive non-blank characters to handle correctly
-					// special PHP keywords like "case" or "default".
-					fakeFirstCharsAfterCommandText = document.get(i, j - i);
+					Document tempdocument = new Document(command.text);
+					int lines = tempdocument.getNumberOfLines();
+					// process blanks after command text only if the command
+					// text has more than one line (to avoid removing blanks
+					// between future cursor position and first non-blank
+					// characters)
+					if (lines > 1) {
+						// adjust the length to include the blank characters
+						command.length += i - selectionEndOffset;
+						// We need later to add (at least) first non-blank line
+						// character to the command selection so we can
+						// correctly calculate last line indentation. It's even
+						// better to have all consecutive non-blank characters
+						// to handle correctly special PHP keywords like "case"
+						// or "default".
+						fakeFirstCharsAfterCommandText = document.get(i, j - i);
+					}
+				} else {
+					// adjust the length to include the blank characters
+					command.length += i - selectionEndOffset;
 				}
 			}
 
