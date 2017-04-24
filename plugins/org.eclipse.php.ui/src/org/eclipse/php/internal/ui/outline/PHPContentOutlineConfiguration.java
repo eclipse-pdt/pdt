@@ -256,11 +256,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	@Override
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
-		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=493711
-		if (viewer.getInput() == null) {
-			viewer.setUseHashlookup(true);
-		}
-
 		if (fLabelProvider == null) {
 			fLabelProvider = new PHPAppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
 					| ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY,
