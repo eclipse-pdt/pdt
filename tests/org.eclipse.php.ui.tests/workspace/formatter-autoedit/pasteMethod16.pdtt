@@ -1,0 +1,15 @@
+--TEST--
+Bug 513109 - handle some more autoedit scenarios
+Tweak PHPAutoIndentStrategy to keep blanks after cursor position when command text is on a single line
+--FILE--
+<?php
+if (true) {
+      |$var| = 5;
+}
+--OTHER--
+$myVar
+--EXPECT--
+<?php
+if (true) {
+	$myVar = 5;
+}
