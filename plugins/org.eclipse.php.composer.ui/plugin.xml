@@ -226,7 +226,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            category="org.eclipse.php.ui.preferences.PHPToolsPreferencePage"
             class="org.eclipse.php.composer.ui.preferences.ComposerPreferencePage"
             id="org.eclipse.php.composer.ui.preferences.composer"
             name="%composer.page.name">

@@ -483,7 +483,7 @@
             <filter name="nature" value="org.eclipse.php.core.PHPNature" />
         </page>
         <page name="%validationPage.name"
-            class="org.eclipse.php.internal.ui.preferences.ValidationPreferenceEmptyPage"
+            class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
             id="org.eclipse.php.ui.propertyPages.ValidationPreferencePage"
             category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage">
             <enabledWhen>
@@ -493,17 +493,6 @@
             <filter name="nature" value="org.eclipse.php.core.PHPNature" />
         </page>
 		<!-- PHP default versions and ASP tags option-->
-		<page
-			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
-			category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
-			id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
-			name="%phpInterpreterPreferenceName">
-			<enabledWhen>
-				<adapt type="org.eclipse.core.resources.IProject">
-				</adapt>
-			</enabledWhen>
-			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
-		</page>
 		<!-- CodeStyle subtree pages-->
 		<page name="%codeStylePreferencePageName"
 			class="org.eclipse.php.internal.ui.preferences.CodeStylePreferencePage"
@@ -551,7 +540,7 @@
 
 		<page name="%page.name.0"
 			class="org.eclipse.php.internal.ui.preferences.includepath.BuildpathProperties"
-			category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
+			category="org.eclipse.php.ui.propertyPages.PHPSourcePathsPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.BuildpathProperties">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
@@ -563,7 +552,7 @@
 		
 		<page name="%includepath.page.name.0"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathProperties"
-			category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
+			category="org.eclipse.php.ui.propertyPages.PHPSourcePathsPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.IncludepathProperties">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
@@ -583,6 +572,21 @@
 			</enabledWhen>
 			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
 		</page>
+  <page
+        category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
+        class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
+        id="org.eclipse.php.ui.propertyPages.PHPSourcePathsPreferencePage"
+        name="%SourcePathsPage.name">
+     <enabledWhen>
+        <adapt
+              type="org.eclipse.core.resources.IProject">
+        </adapt>
+     </enabledWhen>
+     <filter
+           name="nature"
+           value="org.eclipse.php.core.PHPNature">
+     </filter>
+  </page>
 	</extension>
 	<extension point="org.eclipse.dltk.ui.dltkElementFilters">
 		<!-- Script Explorer -->
@@ -1704,11 +1708,6 @@
 			<keywordReference id="org.eclipse.php.ui.templates" />
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
-			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
-			id="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
-			name="%phpInterpreterPreferenceName">
-		</page>
-		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPProjectLayoutPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPProjectLayoutPreferencePage"
 			name="%phpBuildPreferenceName">
@@ -1738,7 +1737,7 @@
 			id="org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage"
 			name="%editorMarkOccurrencesPageName">
 		</page>
-		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+		<page category="org.eclipse.php.ui.preferences.PHPSourcePathsPreferencePage"
 			class="org.eclipse.dltk.ui.preferences.BuildpathVariablesPreferencePage"
 			id="org.eclipse.dltk.ui.preferences.BuildpathVariablesPreferencePage"
 			name="%includePathVariables">
@@ -1748,7 +1747,7 @@
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathVarsPreferencePage"
 			id="org.eclipse.php.ui.preferences.IncludePathVariables" name="%includePathVariables" />-->
-		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+		<page category="org.eclipse.php.ui.preferences.PHPToolsPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPManualPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPManualPreferencePage" name="%functionsManualPageName">
 			<keywordReference id="org.eclipse.php.ui.functionsManual" />
@@ -1775,7 +1774,7 @@
 			name="%saveActionsPreferencePageName">
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
-		  class="org.eclipse.php.internal.ui.preferences.ValidationPreferenceEmptyPage"
+		  class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 		  id="org.eclipse.php.ui.preferences.ValidationPreferencePage"
 		  name="%validationPage.name">
 		</page>
@@ -1789,10 +1788,22 @@
        </page>
 	   <page
 		    name="%PhpLibraryPreferencePage.name"
-		    category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+		    category="org.eclipse.php.ui.preferences.PHPSourcePathsPreferencePage"
 		    class="org.eclipse.php.internal.ui.preferences.PhpLibraryPreferencePage"
 		    id="org.eclipse.dltk.php.preferences.UserLibraryPreferencePage">
 	   </page>
+    <page
+          category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+          class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
+          id="org.eclipse.php.ui.preferences.PHPToolsPreferencePage"
+          name="%ToolsPage.name">
+    </page>
+    <page
+          category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+          class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
+          id="org.eclipse.php.ui.preferences.PHPSourcePathsPreferencePage"
+          name="%SourcePathsPage.name">
+    </page>
 	</extension>
 
 	<extension point="org.eclipse.ui.keywords">

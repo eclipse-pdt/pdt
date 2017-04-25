@@ -27,7 +27,7 @@
 		</perspectiveExtension>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
-		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+		<page category="org.eclipse.php.ui.preferences.PHPToolsPreferencePage"
 			class="org.eclipse.php.phpunit.ui.preference.PHPUnitPreferencePage"
 			id="org.eclipse.php.phpunit.preferences" name="%name">
 			<keywordReference id="org.eclipse.php.phpunit.PHPUnit" />
