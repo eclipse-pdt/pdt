@@ -116,7 +116,7 @@ public class PhpTokenContainer implements Cloneable {
 			result.add(token);
 		}
 
-		while (tokensIterator.hasNext() && token != null && token.getEnd() <= offset + length) {
+		while (tokensIterator.hasNext() && token != null && token.getEnd() < offset + length) {
 			token = tokensIterator.next();
 			assert token != null;
 			result.add(token);

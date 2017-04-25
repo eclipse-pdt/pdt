@@ -103,9 +103,6 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				for (; i < lineEndOffset && (document.getChar(i) == ' ' || document.getChar(i) == '\t'); i++) {
 				}
 				if (i < lineEndOffset) {
-					int j = i + 1;
-					for (; j < lineEndOffset && !(document.getChar(j) == ' ' || document.getChar(j) == '\t'); j++) {
-					}
 					Document tempdocument = new Document(command.text);
 					int lines = tempdocument.getNumberOfLines();
 					// process blanks after command text only if the command
@@ -113,6 +110,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 					// between future cursor position and first non-blank
 					// characters)
 					if (lines > 1) {
+						int j = i + 1;
+						for (; j < lineEndOffset && !(document.getChar(j) == ' ' || document.getChar(j) == '\t'); j++) {
+						}
 						// adjust the length to include the blank characters
 						command.length += i - selectionEndOffset;
 						// We need later to add (at least) first non-blank line
