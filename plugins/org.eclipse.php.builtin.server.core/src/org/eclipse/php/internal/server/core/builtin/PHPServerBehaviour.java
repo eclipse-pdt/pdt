@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -51,6 +52,7 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.Mapping
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.server.core.Server;
@@ -86,10 +88,15 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	@Override
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor)
 			throws CoreException {
-		workingCopy.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, getServer().getServerConfiguration()
-				.getRawLocation().append(PHPServerConfiguration.PHP_INI_FILENAME).toOSString());
-		workingCopy.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
-				getPHPRuntime().getExecutableInstall().getExecutable().getAbsolutePath());
+		PHPexeItem item = getPHPRuntime().getExecutableInstall();
+		workingCopy.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item.getExecutable().getAbsolutePath());
+
+		if (item.getINILocation() != null) {
+			workingCopy.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, item.getINILocation().getAbsolutePath());
+		} else {
+			workingCopy.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, StringUtils.EMPTY);
+		}
+
 		workingCopy.setAttribute(Server.NAME, getServer().getName());
 		workingCopy.setAttribute(Server.BASE_URL, getPHPServer().getRootUrl().toString());
 		workingCopy.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING,
@@ -237,7 +244,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		Iterator<ServerPort> iterator = configuration.getServerPorts().iterator();
 		List<ServerPort> usedPorts = new ArrayList<ServerPort>();
 		while (iterator.hasNext()) {
-			ServerPort sp = (ServerPort) iterator.next();
+			ServerPort sp = iterator.next();
 			if (sp.getPort() < 0)
 				throw new CoreException(
 						new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, Messages.errorPortInvalid, null));
