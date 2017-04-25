@@ -113,15 +113,15 @@ public abstract class PHPPartitionTypes {
 	 * 
 	 * @param region
 	 *            Region containing current offset
-	 * @param offset
+	 * @param relativeOffset
 	 *            Current position relative to the containing region
 	 * @return Starting region of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final ITextRegion getPartitionStartRegion(IPhpScriptRegion region, int offset)
+	public static final ITextRegion getPartitionStartRegion(IPhpScriptRegion region, int relativeOffset)
 			throws BadLocationException {
-		String partitionType = region.getPartition(offset);
-		ITextRegion internalRegion = region.getPhpToken(offset);
+		String partitionType = region.getPartition(relativeOffset);
+		ITextRegion internalRegion = region.getPhpToken(relativeOffset);
 		ITextRegion startRegion = internalRegion;
 		while (internalRegion.getStart() != 0) {
 			internalRegion = region.getPhpToken(internalRegion.getStart() - 1);
@@ -138,13 +138,13 @@ public abstract class PHPPartitionTypes {
 	 * 
 	 * @param region
 	 *            Region containing current offset
-	 * @param offset
+	 * @param relativeOffset
 	 *            Current position relative to the containing region
 	 * @return Starting offset of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final int getPartitionStart(IPhpScriptRegion region, int offset) throws BadLocationException {
-		ITextRegion startRegion = getPartitionStartRegion(region, offset);
+	public static final int getPartitionStart(IPhpScriptRegion region, int relativeOffset) throws BadLocationException {
+		ITextRegion startRegion = getPartitionStartRegion(region, relativeOffset);
 		return startRegion.getStart();
 	}
 
@@ -153,15 +153,15 @@ public abstract class PHPPartitionTypes {
 	 * 
 	 * @param region
 	 *            Region containing current offset
-	 * @param offset
+	 * @param relativeOffset
 	 *            Current position relative to the containing region
 	 * @return Ending region of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final ITextRegion getPartitionEndRegion(IPhpScriptRegion region, int offset)
+	public static final ITextRegion getPartitionEndRegion(IPhpScriptRegion region, int relativeOffset)
 			throws BadLocationException {
-		String partitionType = region.getPartition(offset);
-		ITextRegion internalRegion = region.getPhpToken(offset);
+		String partitionType = region.getPartition(relativeOffset);
+		ITextRegion internalRegion = region.getPhpToken(relativeOffset);
 		ITextRegion endRegion = internalRegion;
 		while (internalRegion.getEnd() != region.getLength()) {
 			internalRegion = region.getPhpToken(internalRegion.getEnd());
@@ -178,13 +178,13 @@ public abstract class PHPPartitionTypes {
 	 * 
 	 * @param region
 	 *            Region containing current offset
-	 * @param offset
+	 * @param relativeOffset
 	 *            Current position relative to the containing region
 	 * @return Ending offset of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final int getPartitionEnd(IPhpScriptRegion region, int offset) throws BadLocationException {
-		ITextRegion endRegion = getPartitionEndRegion(region, offset);
+	public static final int getPartitionEnd(IPhpScriptRegion region, int relativeOffset) throws BadLocationException {
+		ITextRegion endRegion = getPartitionEndRegion(region, relativeOffset);
 		return endRegion.getEnd();
 	}
 
@@ -193,15 +193,15 @@ public abstract class PHPPartitionTypes {
 	 * 
 	 * @param region
 	 *            Region containing current offset
-	 * @param offset
+	 * @param relativeOffset
 	 *            Current position relative to the containing region
 	 * @return typed region containing partition
 	 * @throws BadLocationException
 	 */
-	public static final ITypedRegion getPartition(IPhpScriptRegion region, int offset) throws BadLocationException {
-		String partitionType = region.getPartition(offset);
-		int startOffset = getPartitionStart(region, offset);
-		int endOffset = getPartitionEnd(region, offset);
+	public static final ITypedRegion getPartition(IPhpScriptRegion region, int relativeOffset) throws BadLocationException {
+		String partitionType = region.getPartition(relativeOffset);
+		int startOffset = getPartitionStart(region, relativeOffset);
+		int endOffset = getPartitionEnd(region, relativeOffset);
 		return new TypedRegion(startOffset, endOffset - startOffset, partitionType);
 	}
 

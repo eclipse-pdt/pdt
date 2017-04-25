@@ -224,22 +224,22 @@ public class IndentationBaseDetector {
 				// the whole document
 				final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineStartOffset);
 				// the whole PHP script
-				ITextRegion phpScriptRegion = sdRegion.getRegionAtCharacterOffset(lineStartOffset);
+				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(lineStartOffset);
+				int regionStart = sdRegion.getStartOffset(tRegion);
 
-				if (phpScriptRegion instanceof ITextRegionContainer) {
-					ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
-					phpScriptRegion = container.getRegionAtCharacterOffset(lineStartOffset);
+				if (tRegion instanceof ITextRegionContainer) {
+					ITextRegionContainer container = (ITextRegionContainer) tRegion;
+					tRegion = container.getRegionAtCharacterOffset(lineStartOffset);
+					regionStart += tRegion.getStart();
 				}
 
-				if (phpScriptRegion instanceof IPhpScriptRegion && lineStartOffset <= phpScriptRegion.getEnd()) {
-					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
+				if (tRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					ITextRegion[] tokens = null;
 					try {
-						tokens = scriptRegion.getPhpTokens(Math.min(lineStartOffset - 1, scriptRegion.getEnd()),
-								biggest - lineStartOffset + 1);
+						tokens = scriptRegion.getPhpTokens(lineStartOffset - regionStart,
+								biggest - lineStartOffset - 1);
 					} catch (BadLocationException e) {
-						// ignore it, scriptRegion.getEnd() is greater than last
-						// phpToken
 					}
 
 					if (tokens != null && tokens.length > 0) {

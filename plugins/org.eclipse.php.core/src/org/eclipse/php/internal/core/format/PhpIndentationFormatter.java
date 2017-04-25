@@ -154,30 +154,27 @@ public class PhpIndentationFormatter {
 			final int endingWhiteSpaces = formattedLineStart - originalLineStart;
 			final IIndentationStrategy insertionStrategy;
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
-			int scriptRegionPos = sdRegion.getStartOffset();
+			// int scriptRegionPos = sdRegion.getStartOffset();
 			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion lastTokenInLine = null;
 			int regionStart = firstTokenInLine != null ? sdRegion.getStartOffset(firstTokenInLine) : 0;
 			if (firstTokenInLine instanceof ITextRegionContainer) {
-				scriptRegionPos = regionStart;
+				// scriptRegionPos = regionStart;
 				ITextRegionContainer container = (ITextRegionContainer) firstTokenInLine;
 				firstTokenInLine = container.getRegionAtCharacterOffset(formattedLineStart);
 				regionStart += firstTokenInLine.getStart();
 			}
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
-				if (regionStart + scriptRegion.getEnd() <= formattedLineStart) {
-					// XXX: should never happen
-					doEmptyLineIndentation(document, resultBuffer, lineNumber, originalLineStart, 0);
-					return;
-				}
+				assert regionStart + scriptRegion.getEnd() > formattedLineStart;
+
 				if (scriptRegion.isPhpQuotesState(formattedLineStart - regionStart)
 						&& (formattedLineStart - regionStart == 0
 								|| scriptRegion.isPhpQuotesState(formattedLineStart - regionStart - 1))) {
 					// do never indent the content of php strings
 					return;
 				}
-				scriptRegionPos = regionStart;
+				// scriptRegionPos = regionStart;
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
 				if (regionStart + firstTokenInLine.getStart() < originalLineStart
 						&& firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
@@ -211,9 +208,6 @@ public class PhpIndentationFormatter {
 				insertionStrategy = getIndentationStrategy(lineText.charAt(endingWhiteSpaces));
 			}
 
-			// Fill the buffer with blanks as if we added a "\n" to the end of
-			// the prev element.
-			// insertionStrategy.placeMatchingBlanks(editor,doc,insertionStrtegyKey,resultBuffer,startOffset-1);
 			insertionStrategy.placeMatchingBlanks(document, resultBuffer, lineNumber, originalLineStart);
 
 			// replace the starting spaces
