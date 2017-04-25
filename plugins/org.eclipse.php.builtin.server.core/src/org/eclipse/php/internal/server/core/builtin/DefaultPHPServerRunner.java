@@ -13,8 +13,11 @@ package org.eclipse.php.internal.server.core.builtin;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,8 +28,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.osgi.util.NLS;
 
 public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
-
-	protected static final String PHP_SERVER_CMD_LINE = "{0}|-S|0.0.0.0:{1}|-t|{2}|-c|{3}"; //$NON-NLS-1$
 
 	private int fPort;
 
@@ -90,13 +91,19 @@ public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
 	}
 
 	protected String[] fetchCmdLineFromConf(PHPServerRunnerConfiguration configuration) {
-		String phpExeFile = configuration.getExeFilePath();
 		String phpIniFile = configuration.getIniFilePath();
-		String workingDirectory = configuration.getWorkingDirectory();
-		int port = getServerPort();
-		String cmdLine = MessageFormat.format(PHP_SERVER_CMD_LINE, phpExeFile, String.valueOf(port), workingDirectory,
-				phpIniFile);
-		return cmdLine.split("\\|"); //$NON-NLS-1$
+
+		List<String> commands = new ArrayList<>();
+		commands.add(configuration.getExeFilePath());
+		commands.add("-S"); //$NON-NLS-1$
+		commands.add(configuration.getHost() + ':' + getServerPort());
+		commands.add("-t"); //$NON-NLS-1$
+		commands.add(configuration.getWorkingDirectory());
+		if (StringUtils.isNotEmpty(phpIniFile)) {
+			commands.add("-c"); //$NON-NLS-1$
+			commands.add(phpIniFile);
+		}
+		return commands.toArray(new String[0]);
 	}
 
 	/**

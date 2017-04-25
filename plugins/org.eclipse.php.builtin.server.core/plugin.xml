@@ -94,7 +94,7 @@
             runtimeTypeId="org.eclipse.php.server.runtime.54"
             startTimeout="30000"
             stopTimeout="15000"
-            supportsRemoteHosts="false">
+            supportsRemoteHosts="true">
       </serverType>
       <serverType
             behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
@@ -109,7 +109,7 @@
             runtimeTypeId="org.eclipse.php.server.runtime.55"
             startTimeout="30000"
             stopTimeout="15000"
-            supportsRemoteHosts="false">
+            supportsRemoteHosts="true">
       </serverType>
       <serverType
             behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
@@ -124,7 +124,7 @@
             runtimeTypeId="org.eclipse.php.server.runtime.56"
             startTimeout="30000"
             stopTimeout="15000"
-            supportsRemoteHosts="false">
+            supportsRemoteHosts="true">
       </serverType>
       <serverType
             behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
@@ -139,7 +139,7 @@
             runtimeTypeId="org.eclipse.php.server.runtime.70"
             startTimeout="30000"
             stopTimeout="15000"
-            supportsRemoteHosts="false">
+            supportsRemoteHosts="true">
       </serverType>
       <serverType
             behaviourClass="org.eclipse.php.internal.server.core.builtin.PHPServerBehaviour"
@@ -154,7 +154,7 @@
             runtimeTypeId="org.eclipse.php.server.runtime.71"
             startTimeout="30000"
             stopTimeout="15000"
-            supportsRemoteHosts="false">
+            supportsRemoteHosts="true">
       </serverType>
    </extension>
    <extension

@@ -26,9 +26,10 @@ public class PHPServerRunnerConfiguration {
 	private String fIniFilePath;
 	private String fWorkingDirectory;
 
-	public PHPServerRunnerConfiguration(String exeFilePath, int port) {
-		fExeFilePath = exeFilePath;
-		fPort = port;
+	public PHPServerRunnerConfiguration(String exeFilePath, String host, int port) {
+		setExeFilePath(exeFilePath);
+		setHost(host);
+		setPort(port);
 	}
 
 	public String getExeFilePath() {
