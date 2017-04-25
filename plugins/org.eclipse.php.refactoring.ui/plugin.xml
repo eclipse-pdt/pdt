@@ -126,7 +126,7 @@
       <extension
             point="org.eclipse.ui.preferencePages">
          <page
-               category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+               category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
                class="org.eclipse.php.refactoring.ui.prefereces.PHPCodeRefactorPreferencePage"
                id="org.eclipse.php.refactoring.ui.preferencePage"
                name="%refactor.name">
