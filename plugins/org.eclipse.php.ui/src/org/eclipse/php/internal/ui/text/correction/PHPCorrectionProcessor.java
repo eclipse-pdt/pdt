@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
@@ -40,7 +43,10 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.text.correction.proposals.ChangeCorrectionProposal;
 import org.eclipse.php.ui.editor.SharedASTProvider;
-import org.eclipse.php.ui.text.correction.*;
+import org.eclipse.php.ui.text.correction.IInvocationContext;
+import org.eclipse.php.ui.text.correction.IProblemLocation;
+import org.eclipse.php.ui.text.correction.IQuickAssistProcessor;
+import org.eclipse.php.ui.text.correction.IQuickFixProcessor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMarkerHelpRegistry;
 import org.eclipse.ui.IMarkerResolution;
@@ -462,19 +468,11 @@ public class PHPCorrectionProcessor
 
 	private static class SafeHasCorrections extends SafeCorrectionProcessorAccess {
 		private final ISourceModule fCu;
-		private final int fProblemId;
 		private final IProblemIdentifier fIdentifier;
 		private boolean fHasCorrections;
 
 		public SafeHasCorrections(@NonNull ISourceModule cu, @NonNull IProblemIdentifier identifier) {
 			fCu = cu;
-			Scanner problemScanner = new Scanner(identifier.name());
-			if (problemScanner.hasNextInt()) {
-				fProblemId = problemScanner.nextInt();
-			} else {
-				fProblemId = -1;
-			}
-			problemScanner.close();
 			this.fIdentifier = identifier;
 
 			fHasCorrections = false;
@@ -487,10 +485,7 @@ public class PHPCorrectionProcessor
 		@Override
 		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
 			IQuickFixProcessor processor = (IQuickFixProcessor) desc.getProcessor(fCu, IQuickFixProcessor.class);
-			if (processor != null && processor.hasCorrections(fCu, fProblemId)) {
-				fHasCorrections = true;
-			} else if (processor != null && processor instanceof IQuickFixProcessorExtension
-					&& ((IQuickFixProcessorExtension) processor).hasCorrections(fCu, fIdentifier)) {
+			if (processor.hasCorrections(fCu, fIdentifier)) {
 				fHasCorrections = true;
 			}
 		}

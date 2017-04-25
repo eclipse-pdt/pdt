@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [515715]
  *******************************************************************************/
 package org.eclipse.php.ui.text.correction;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 
@@ -20,7 +22,7 @@ import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
  * <code>org.eclipse.php.ui.quickFixProcessors</code>.
  * <p>
  * Since 3.2, each extension specifies the marker types it can handle, and
- * {@link #hasCorrections(ISourceModule, int)} and
+ * {@link #hasCorrections(ISourceModule, IProblemIdentifier)} and
  * {@link #getCorrections(IInvocationContext, IProblemLocation[])} are called if
  * (and only if) quick fix is required for a problem of these types.
  * </p>
@@ -42,13 +44,14 @@ public interface IQuickFixProcessor {
 	 * 
 	 * @param unit
 	 *            the compilation unit
-	 * @param problemId
+	 * @param identifier
 	 *            the problem Id. The id is of a problem of the problem type(s)
 	 *            this processor specified in the extension point.
 	 * @return <code>true</code> if the processor has proposals for the given
 	 *         problem
+	 * @since 5.0
 	 */
-	boolean hasCorrections(ISourceModule unit, int problemId);
+	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier);
 
 	/**
 	 * Collects corrections or code manipulations for the given context.

@@ -27,10 +27,9 @@ import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionP
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.php.ui.text.correction.IQuickFixProcessor;
-import org.eclipse.php.ui.text.correction.IQuickFixProcessorExtension;
 import org.eclipse.text.edits.TextEditGroup;
 
-public class UnusedUseStatementProcessor implements IQuickFixProcessor, IQuickFixProcessorExtension {
+public class UnusedUseStatementProcessor implements IQuickFixProcessor {
 	private final static String ORGANIZE_USE_STATEMENTS_ID = "org.eclipse.php.ui.editor.organize.use.statements"; //$NON-NLS-1$
 
 	private class OrganizeUseStatementsProposal extends AbstractCorrectionProposal {
@@ -95,11 +94,6 @@ public class UnusedUseStatementProcessor implements IQuickFixProcessor, IQuickFi
 	@Override
 	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier) {
 		return identifier == PhpProblemIdentifier.USE_STATEMENTS;
-	}
-
-	@Override
-	public boolean hasCorrections(ISourceModule unit, int problemId) {
-		return false;
 	}
 
 	@Override

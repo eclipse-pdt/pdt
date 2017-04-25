@@ -23,9 +23,8 @@ import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionP
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.php.ui.text.correction.IQuickFixProcessor;
-import org.eclipse.php.ui.text.correction.IQuickFixProcessorExtension;
 
-public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessorExtension {
+public class QuickFixProcessor implements IQuickFixProcessor {
 
 	@Override
 	public IScriptCompletionProposal[] getCorrections(IInvocationContext context, IProblemLocation[] locations)
@@ -45,11 +44,6 @@ public class QuickFixProcessor implements IQuickFixProcessor, IQuickFixProcessor
 		}
 		return (IScriptCompletionProposal[]) resultingCollections
 				.toArray(new IScriptCompletionProposal[resultingCollections.size()]);
-	}
-
-	@Override
-	public boolean hasCorrections(ISourceModule unit, int problemId) {
-		return false;
 	}
 
 	private void process(IInvocationContext context, IProblemLocation problem,
