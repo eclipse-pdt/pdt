@@ -29,14 +29,16 @@ public interface IPhpScriptRegion extends ITextRegion {
 
 	/**
 	 * Returns an array of php tokens that intersects with the interval [from,
-	 * from + length]
+	 * from + length - 1] and that includes (at least) value of
+	 * getPhpToken(relativeOffset)
 	 * 
-	 * @param from
-	 * @param min
+	 * @param relativeOffset
+	 * @param length
 	 * @throws BadLocationException
-	 *             when "from" is an invalid offset or when "length" is < 0
+	 *             when "relativeOffset" is an invalid offset or when "length"
+	 *             is < 0
 	 */
-	public abstract @NonNull ITextRegion[] getPhpTokens(int from, int length) throws BadLocationException;
+	public abstract @NonNull ITextRegion[] getPhpTokens(int relativeOffset, int length) throws BadLocationException;
 
 	public abstract @NonNull ITextRegion[] getUpdatedPhpTokens() throws BadLocationException;
 
@@ -48,11 +50,11 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * Returns a single php token that lay in the given offset. If offset is
 	 * equal to getEnd(), the last php token from the region will be returned.
 	 * 
-	 * @param offset
+	 * @param relativeOffset
 	 * @return region (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract @NonNull ITextRegion getPhpToken(int offset) throws BadLocationException;
+	public abstract @NonNull ITextRegion getPhpToken(int relativeOffset) throws BadLocationException;
 
 	/**
 	 * returns the php partition type of the token that lay in the given offset
@@ -65,20 +67,20 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * PHP_DOC - {@link PHPPartitionTypes#PHP_DOC}<br>
 	 * PHP_QUOTED_STRING - {@link PHPPartitionTypes#PHP_QUOTED_STRING}<br>
 	 * 
-	 * @param offset
+	 * @param relativeOffset
 	 * @throws BadLocationException
 	 */
-	public abstract @NonNull String getPartition(int offset) throws BadLocationException;
+	public abstract @NonNull String getPartition(int relativeOffset) throws BadLocationException;
 
 	/**
 	 * returns the php token type of the token that lays in the given offset
 	 * Please refer {@link PHPRegionTypes} for list of php token types
 	 * 
-	 * @param offset
+	 * @param relativeOffset
 	 * @return php token type (will never be null)
 	 * @throws BadLocationException
 	 */
-	public abstract @NonNull String getPhpTokenType(int offset) throws BadLocationException;
+	public abstract @NonNull String getPhpTokenType(int relativeOffset) throws BadLocationException;
 
 	/**
 	 * Returns true if the given offset is in a back-quoted string, a

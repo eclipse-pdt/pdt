@@ -102,23 +102,23 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#getPhpTokenType(int)
 	 */
-	public final @NonNull String getPhpTokenType(int offset) throws BadLocationException {
-		final ITextRegion tokenForOffset = getPhpToken(offset);
+	public final @NonNull String getPhpTokenType(int relativeOffset) throws BadLocationException {
+		final ITextRegion tokenForOffset = getPhpToken(relativeOffset);
 		return tokenForOffset.getType();
 	}
 
 	/**
 	 * @see IPhpScriptRegion#getPhpToken(int)
 	 */
-	public final @NonNull ITextRegion getPhpToken(int offset) throws BadLocationException {
-		return tokensContainer.getToken(offset);
+	public final @NonNull ITextRegion getPhpToken(int relativeOffset) throws BadLocationException {
+		return tokensContainer.getToken(relativeOffset);
 	}
 
 	/**
 	 * @see IPhpScriptRegion#getPhpTokens(int, int)
 	 */
-	public final @NonNull ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
-		return tokensContainer.getTokens(offset, length);
+	public final @NonNull ITextRegion[] getPhpTokens(int relativeOffset, int length) throws BadLocationException {
+		return tokensContainer.getTokens(relativeOffset, length);
 	}
 
 	/**
@@ -135,12 +135,12 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#getPartition(int)
 	 */
-	public @NonNull String getPartition(int offset) throws BadLocationException {
-		return tokensContainer.getPartitionType(offset);
+	public @NonNull String getPartition(int relativeOffset) throws BadLocationException {
+		return tokensContainer.getPartitionType(relativeOffset);
 	}
 
-	protected boolean isHeredocState(int offset) throws BadLocationException {
-		String type = getPhpTokenType(offset);
+	protected boolean isHeredocState(int relativeOffset) throws BadLocationException {
+		String type = getPhpTokenType(relativeOffset);
 		// First, check if current type is a known "heredoc/nowdoc" type.
 		if (type == PHPRegionTypes.PHP_HEREDOC_START_TAG || type == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
 				|| type == PHPRegionTypes.PHP_NOWDOC_START_TAG || type == PHPRegionTypes.PHP_NOWDOC_CLOSE_TAG) {
@@ -153,7 +153,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// PHP_NOWDOC_START_TAG are NOT put on the lexer substates stack
 		// (because the way the lexers actually work), but previous type tests
 		// will be enough to catch them.
-		LexerState lexState = tokensContainer.getState(offset);
+		LexerState lexState = tokensContainer.getState(relativeOffset);
 		if (lexState == null) {
 			return false;
 		}
@@ -168,8 +168,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#isPhpQuotesState(int)
 	 */
-	public boolean isPhpQuotesState(int offset) throws BadLocationException {
-		String type = getPhpTokenType(offset);
+	public boolean isPhpQuotesState(int relativeOffset) throws BadLocationException {
+		String type = getPhpTokenType(relativeOffset);
 		// First, check if current type is a known "quoted" type.
 		if (PHPPartitionTypes.isPhpQuotesState(type)) {
 			return true;
@@ -181,7 +181,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		// (because the way the lexers actually work), but
 		// PHPPartitionTypes.isPhpQuotesState(type) will be enough to catch
 		// them.
-		LexerState lexState = tokensContainer.getState(offset);
+		LexerState lexState = tokensContainer.getState(relativeOffset);
 		if (lexState == null) {
 			return false;
 		}
