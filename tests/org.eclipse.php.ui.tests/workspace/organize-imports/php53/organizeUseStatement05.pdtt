@@ -1,0 +1,24 @@
+--TEST--
+Test for import type with same namespace as alias
+--FILE--
+<?php
+namespace name;
+
+use name\Foo as A;
+
+class Foo {
+
+}
+
+new A();
+--EXPECT--
+<?php
+namespace name;
+
+use name\Foo as A;
+
+class Foo {
+
+}
+
+new A();

@@ -244,7 +244,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			info.isProblemReported = true;
 			reportProblem(tri.getTypeReference(), Messages.DuplicateImport, PhpProblemIdentifier.DuplicateImport,
 					new String[] { name, info.getRealName() }, ProblemSeverities.Error);
-		} else if (info.getNamespaceName().equals(currentNamespaceName)) {
+		} else if (!info.isAlias && info.getNamespaceName().equals(currentNamespaceName)) {
 			info.isProblemReported = true;
 			reportProblem(tri.getTypeReference(), Messages.UnnecessaryImport, PhpProblemIdentifier.UnnecessaryImport,
 					new String[] { name }, ProblemSeverities.Warning);
