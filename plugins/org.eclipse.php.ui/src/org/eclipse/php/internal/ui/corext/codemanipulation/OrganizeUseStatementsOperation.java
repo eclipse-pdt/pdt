@@ -593,7 +593,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				}
 				if (undoChange != null) {
 					undoChange.initializeValidationData(new NullProgressMonitor());
-					manager.addUndo("OrganizeUseStatements", undoChange); //$NON-NLS-1$
+					manager.addUndo("OrganizeUseStatements", undoChange); // $NON-NLS-1$
 				}
 			}
 		} catch (MalformedTreeException | IOException e) {

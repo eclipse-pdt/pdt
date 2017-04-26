@@ -49,7 +49,9 @@ public class Messages extends NLS {
 	public static String CannotInstantiateType;
 	public static String SuperclassMustBeAClass;
 	public static String SuperInterfaceMustBeAnInterface;
-	
+	public static String UnexpectedNamespaceDeclaration;
+	public static String FirstTypeMustMatchFileName;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
