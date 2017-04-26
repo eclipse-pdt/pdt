@@ -167,18 +167,26 @@ public class PHPModelUtils {
 	 * original name from its alias
 	 * 
 	 * @param elementName
+	 * @param namespace
+	 *            must have been retrieved using
+	 *            PHPModelUtils.extractNamespaceName()
 	 * @param sourceModule
 	 * @param offset
 	 * @param defaultClassName
 	 * @return
 	 */
-	public static String getRealName(String elementName, ISourceModule sourceModule, final int offset,
-			String defaultClassName) {
+	public static String getRealName(String elementName, @Nullable String namespace, ISourceModule sourceModule,
+			final int offset, String defaultClassName) {
 
 		// Check class name aliasing:
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, elementName, offset);
-		if (usePart != null) {
+		if (namespace != null && namespace.length() > 0
+				&& namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+			namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
+		}
+		if (usePart != null
+				&& (namespace == null || namespace.equalsIgnoreCase(usePart.getNamespace().getNamespace().getName()))) {
 			elementName = usePart.getNamespace().getFullyQualifiedName();
 			int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 			if (nsIndex != -1) {
@@ -1783,7 +1791,7 @@ public class PHPModelUtils {
 			typeName = extractElementName(typeName);
 			if (namespace != null) {
 				if (namespace.length() > 0) {
-					typeName = getRealName(typeName, sourceModule, offset, typeName);
+					typeName = getRealName(typeName, namespace, sourceModule, offset, typeName);
 
 					IType[] types = getNamespaceType(namespace, typeName, true, sourceModule, cache, monitor, isType);
 					if (types.length > 0) {
@@ -2237,7 +2245,7 @@ public class PHPModelUtils {
 		String elementName = extractElementName(typeName);
 		if (namespace != null) {
 			if (namespace.length() > 0) {
-				elementName = getRealName(elementName, sourceModule, offset, elementName);
+				elementName = getRealName(elementName, namespace, sourceModule, offset, elementName);
 				elementName = namespace + NamespaceReference.NAMESPACE_SEPARATOR + elementName;
 			}
 		} else {
