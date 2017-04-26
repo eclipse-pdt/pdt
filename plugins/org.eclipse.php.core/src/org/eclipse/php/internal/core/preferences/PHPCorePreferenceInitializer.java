@@ -83,6 +83,10 @@ public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.UnusedVariable, ProblemSeverity.WARNING,
 				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.UnexpectedNamespaceDeclaration, ProblemSeverity.WARNING,
+				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.FirstClassMustMatchFileName, ProblemSeverity.WARNING,
+				DefaultScope.INSTANCE);
 
 	}
 

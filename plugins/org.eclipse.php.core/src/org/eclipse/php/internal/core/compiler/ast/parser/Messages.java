@@ -64,6 +64,8 @@ public class Messages extends NLS {
 	public static String HeredocMixedIndentation;
 	public static String HeredocInvalidIndentation;
 	public static String CannotUseReservedWord;
+	public static String UnexpectedNamespaceDeclaration;
+	public static String FirstTypeMustMatchFileName;
 
 	static {
 		// initialize resource bundle

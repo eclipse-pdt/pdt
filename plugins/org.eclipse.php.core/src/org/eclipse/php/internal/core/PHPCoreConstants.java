@@ -64,6 +64,7 @@ public interface PHPCoreConstants {
 	String RESERVED_INCLUDE_PATH_VARIABLE_PATHS = PLUGIN_ID + ".includePathReservedVariablePaths"; //$NON-NLS-1$
 
 	String PHP_OPTIONS_PHP_VERSION = "phpVersion"; //$NON-NLS-1$
+	String PHP_OPTIONS_PHP_ROOT_CONTEXT = "phpRootContext"; //$NON-NLS-1$
 
 	// XXX: correct all misspelled "Foramtter" constants
 	String FORMATTER_USE_TABS = PLUGIN_ID + ".phpForamtterUseTabs"; //$NON-NLS-1$
