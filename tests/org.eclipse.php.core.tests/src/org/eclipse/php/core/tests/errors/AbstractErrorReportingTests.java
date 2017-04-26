@@ -26,13 +26,18 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.validation.IProblemPreferences;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.junit.Test;
 
@@ -50,7 +55,6 @@ abstract public class AbstractErrorReportingTests {
 	@Test
 	public void errors(String fileName) throws Exception {
 		IFile file = files.get(fileName);
-
 		StringBuilder buf = new StringBuilder();
 
 		IMarker[] markers = file.findMarkers(getMarkerType(), true, IResource.DEPTH_ZERO);
@@ -80,6 +84,16 @@ abstract public class AbstractErrorReportingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		IProblemPreferences problemPreferences = PHPCorePlugin.getDefault().getProblemPreferences();
+		for (PHPProblemIdentifier ident : PHPProblemIdentifier.values()) {
+			InstanceScope.INSTANCE.getNode(problemPreferences.getPreferenceQualifier(ident))
+					.put(PHPCoreConstants.SEVERITY, ProblemSeverity.WARNING.name());
+		}
+		// disable
+		problemPreferences.setSeverity(PHPProblemIdentifier.UnexpectedNamespaceDeclaration, ProblemSeverity.IGNORE,
+				InstanceScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.FirstClassMustMatchFileName, ProblemSeverity.IGNORE,
+				InstanceScope.INSTANCE);
 		ResourcesPlugin.getWorkspace().run((m) -> {
 			project = TestUtils.createProject("ErrorReportingTests");
 			TestUtils.setProjectPHPVersion(project, getPHPVersion());
@@ -107,4 +121,5 @@ abstract public class AbstractErrorReportingTests {
 	protected String getMarkerType() {
 		return PHPProblemIdentifier.MARKER_TYPE_ID;
 	}
+
 }
