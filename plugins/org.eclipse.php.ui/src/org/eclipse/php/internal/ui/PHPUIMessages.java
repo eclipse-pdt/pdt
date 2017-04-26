@@ -1006,6 +1006,13 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeAssistPreferencePage_showVariablesFromReferencedFiles;
 	public static String CodeAssistPreferencePage_insertGlobalPrefixForFunctionCallInsideNamespace;
 
+	public static String validationPage_validator_options_title;
+	public static String validationPage_validator_options_bindNamespace;
+	public static String validationPage_validator_options_bindTypeName;
+	public static String validationPage_needsbuild_title;
+	public static String validationPage_needsfullbuild_message;
+	public static String validationPage_needsprojectbuild_message;
+
 	public static String PHPUiPlugin_4;
 	public static String PHPUiPlugin_5;
 

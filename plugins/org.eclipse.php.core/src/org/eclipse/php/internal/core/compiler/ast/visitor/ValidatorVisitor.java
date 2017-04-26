@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -28,10 +29,12 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
@@ -39,6 +42,7 @@ import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
 public class ValidatorVisitor extends PHPASTVisitor {
 
+	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<String>();
 	private static final List<String> PHPDOC_TYPE_SKIP = new ArrayList<String>();
@@ -57,6 +61,11 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	private NamespaceDeclaration currentNamespace;
 	private Set<String> typeDeclared = new HashSet<>();
 	private boolean hasNamespace;
+	private String expectedNamespace;
+	private String expectedTypeName;
+	private boolean isFirstType = true;
+	private boolean bindNamespaceEnabled = false;
+	private boolean bindTypeNameEnabled = false;
 	private ISourceModule sourceModule;
 	private PHPVersion version;
 	private IBuildContext context;
@@ -66,12 +75,31 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		this.context = context;
 		this.sourceModule = context.getSourceModule();
 		this.version = ProjectOptions.getPHPVersion(sourceModule);
+		IProject project = sourceModule.getScriptProject().getProject();
+		CorePreferencesSupport prefSupport = CorePreferencesSupport.getInstance();
+		this.bindNamespaceEnabled = Boolean.parseBoolean(
+				prefSupport.getPreferencesValue(PHPCoreConstants.VALIDATION_BIND_NAMESPACE, null, project));
+		this.bindTypeNameEnabled = Boolean.parseBoolean(
+				prefSupport.getPreferencesValue(PHPCoreConstants.VALIDATION_BIND_TYPENAME, null, project));
+
+	}
+
+	@Override
+	public boolean visit(ModuleDeclaration s) throws Exception {
+		expectedNamespace = PHPModelUtils.getNamespaceNameByLocation(sourceModule);
+		expectedTypeName = PHPModelUtils.getTypeNameByFileName(sourceModule);
+		return true;
 	}
 
 	@Override
 	public boolean endvisit(ModuleDeclaration s) throws Exception {
 		if (!hasNamespace) {
 			checkUnusedImport();
+		}
+		if (bindNamespaceEnabled && !expectedNamespace.equals(EMPTY) && !hasNamespace) {
+			reportProblem(null, Messages.UnexpectedNamespaceDeclaration,
+					PhpProblemIdentifier.UnexpectedNamespaceDeclaration, new String[] { EMPTY, expectedNamespace },
+					ProblemSeverities.Error);
 		}
 		return super.endvisit(s);
 	}
@@ -80,6 +108,11 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(NamespaceDeclaration s) throws Exception {
 		hasNamespace = true;
 		currentNamespace = s;
+		if (bindNamespaceEnabled && !s.getName().equals(expectedNamespace)) {
+			reportProblem(s.getRef(), Messages.UnexpectedNamespaceDeclaration,
+					PhpProblemIdentifier.UnexpectedNamespaceDeclaration,
+					new String[] { s.getName(), expectedNamespace }, ProblemSeverities.Error);
+		}
 		return true;
 	}
 
@@ -221,6 +254,10 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(TypeDeclaration s) throws Exception {
 		if (!(s instanceof NamespaceDeclaration)) {
 			checkDuplicateTypeDeclaration(s);
+			if (bindTypeNameEnabled && isFirstType) {
+				checkTypeName(s);
+				isFirstType = false;
+			}
 		}
 		return super.visit(s);
 	}
@@ -231,7 +268,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		String name = tri.getTypeName();
 		String currentNamespaceName;
 		if (currentNamespace == null) {
-			currentNamespaceName = ""; //$NON-NLS-1$
+			currentNamespaceName = EMPTY;
 		} else {
 			currentNamespaceName = currentNamespace.getName();
 		}
@@ -312,6 +349,22 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			}
 		}
 		return false;
+	}
+
+	private void checkTypeName(TypeDeclaration s) {
+		if (!s.getName().equals(expectedTypeName)) {
+			String type = null;
+			if (s instanceof ClassDeclaration) {
+				type = "class"; //$NON-NLS-1$
+			} else if (s instanceof InterfaceDeclaration) {
+				type = "interface"; //$NON-NLS-1$
+			} else if (s instanceof TraitDeclaration) {
+				type = "trait"; //$NON-NLS-1$
+			}
+			reportProblem(s.getRef(), Messages.FirstTypeMustMatchFileName,
+					PhpProblemIdentifier.FirstClassMustMatchFileName,
+					new String[] { type, s.getName(), expectedTypeName }, ProblemSeverities.Error);
+		}
 	}
 
 	private void checkDuplicateTypeDeclaration(TypeDeclaration node) {
@@ -471,7 +524,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				}
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return EMPTY;
 	}
 
 	private class UsePartInfo {
@@ -546,7 +599,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		private TypeReference typeReference;
 		private boolean isGlobal = false;
 		private boolean hasNamespace = false;
-		private String namespaceName = ""; //$NON-NLS-1$
+		private String namespaceName = EMPTY;
 		private String typeName;
 		private String fullyQualifiedName;
 		private boolean isUseStatement;

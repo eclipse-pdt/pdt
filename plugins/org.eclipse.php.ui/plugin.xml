@@ -483,7 +483,7 @@
             <filter name="nature" value="org.eclipse.php.core.PHPNature" />
         </page>
         <page name="%validationPage.name"
-            class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+            class="org.eclipse.php.internal.ui.preferences.PHPValidationPreferencePage"
             id="org.eclipse.php.ui.propertyPages.ValidationPreferencePage"
             category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage">
             <enabledWhen>
@@ -493,6 +493,17 @@
             <filter name="nature" value="org.eclipse.php.core.PHPNature" />
         </page>
 		<!-- PHP default versions and ASP tags option-->
+		<page
+			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+			category="org.eclipse.php.ui.propertyPages.ValidationPreferencePage"
+			id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
+			name="%phpInterpreterPreferenceName">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+				</adapt>
+			</enabledWhen>
+			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
+		</page>
 		<!-- CodeStyle subtree pages-->
 		<page name="%codeStylePreferencePageName"
 			class="org.eclipse.php.internal.ui.preferences.CodeStylePreferencePage"
@@ -1769,9 +1780,14 @@
 			name="%saveActionsPreferencePageName">
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
-		  class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+		  class="org.eclipse.php.internal.ui.preferences.PHPValidationPreferencePage"
 		  id="org.eclipse.php.ui.preferences.ValidationPreferencePage"
 		  name="%validationPage.name">
+		</page>
+		<page category="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+			id="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
+			name="%phpInterpreterPreferenceName">
 		</page>
    		<page category="org.eclipse.php.ui.preferences.ValidationPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"

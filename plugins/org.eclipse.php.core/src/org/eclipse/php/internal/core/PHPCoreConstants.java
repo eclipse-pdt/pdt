@@ -40,6 +40,8 @@ public interface PHPCoreConstants {
 	public static final String PHPOPTION_INCLUDE_PATH = PLUGIN_ID + ".includePath"; //$NON-NLS-1$
 
 	public static final String ADD_JS_NATURE = PLUGIN_ID + ".addJsNature"; //$NON-NLS-1$
+	public static final String VALIDATION_BIND_NAMESPACE = PLUGIN_ID + ".validator.bindNamespace"; //$NON-NLS-1$
+	public static final String VALIDATION_BIND_TYPENAME = PLUGIN_ID + ".validator.bindTypeName"; //$NON-NLS-1$
 	public static final String TASK_PRIORITIES = PLUGIN_ID + ".taskPriorities"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_HIGH = "HIGH"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_LOW = "LOW"; //$NON-NLS-1$

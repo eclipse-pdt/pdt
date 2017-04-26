@@ -18,9 +18,7 @@ import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.annotations.NonNull;
@@ -2387,6 +2385,43 @@ public class PHPModelUtils {
 
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
+		}
+	}
+
+	public static String getTypeNameByFileName(ISourceModule module) {
+		IPath path = new Path(module.getElementName());
+		return path.removeFileExtension().toString();
+	}
+
+	public static String getNamespaceNameByLocation(ISourceModule module) {
+		IScriptFolder folder = (IScriptFolder) module.getParent();
+		if (folder.isRootFolder()) {
+			return ""; //$NON-NLS-1$
+		}
+		return getNamespaceNameByLocation(folder.getElementName());
+	}
+
+	public static String getNamespaceNameByLocation(String location) {
+		return location.replace(IScriptFolder.PACKAGE_DELIMITER, NamespaceReference.NAMESPACE_SEPARATOR);
+	}
+
+	/**
+	 * Compute a new name for a source module, given the name of the new main
+	 * type. This query tries to maintain the existing extension (e.g. ".php").
+	 *
+	 * @param module
+	 *            a source module
+	 * @param newMainName
+	 *            the new name of the module's main type (without extension)
+	 * @return the new name for the source module
+	 */
+	public static String getRenamedSouceModuleName(ISourceModule module, String newMainName) {
+		String oldName = module.getElementName();
+		int i = oldName.lastIndexOf('.');
+		if (i != -1) {
+			return newMainName + oldName.substring(i);
+		} else {
+			return newMainName;
 		}
 	}
 

@@ -61,6 +61,12 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 		case ImportNotFound:
 			ReorgCorrectionsSubProcessor.removeImportStatementProposals(context, problem, proposals);
 			break;
+		case FirstClassMustMatchFileName:
+			ReorgCorrectionsSubProcessor.getWrongTypeNameProposals(context, problem, proposals);
+			break;
+		case UnexpectedNamespaceDeclaration:
+			ReorgCorrectionsSubProcessor.getWrongNamespaceDeclNameProposals(context, problem, proposals);
+			break;
 		case ClassExtendFinalClass:
 			ModifierCorrectionSubProcessor.addNonAccessibleReferenceProposal(context, problem, proposals,
 					ModifierCorrectionSubProcessor.TO_NON_FINAL, IProposalRelevance.REMOVE_FINAL_MODIFIER);
@@ -95,6 +101,8 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 			return false;
 		PhpProblemIdentifier problem = (PhpProblemIdentifier) identifier;
 		switch (problem) {
+		case FirstClassMustMatchFileName:
+		case UnexpectedNamespaceDeclaration:
 		case AbstractMethodInAbstractClass:
 		case AbstractMethodsInConcreteClass:
 		case BodyForAbstractMethod:
