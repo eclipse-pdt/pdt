@@ -269,7 +269,7 @@ public class PhpElementConciliator {
 		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION
 				|| parentType == ASTNode.INTERFACE_DECLARATION || parentType == ASTNode.CATCH_CLAUSE
 				|| parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.USE_STATEMENT_PART
-				|| parentType == ASTNode.RETURN_TYPE) {
+				|| parentType == ASTNode.RETURN_TYPE || parentType == ASTNode.ANONYMOUS_CLASS_DECLARATION) {
 			return true;
 		}
 

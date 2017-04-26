@@ -141,6 +141,7 @@ public final class ImportRewrite {
 	public static final String ENCLOSING_TYPE_SEPARATOR = NamespaceReference.NAMESPACE_DELIMITER;
 	private static final char STATIC_PREFIX = 's';
 	private static final char NORMAL_PREFIX = 'n';
+	private static final char ALIAS_PREFIX = 'a';
 
 	private final ImportRewriteContext defaultContext;
 
@@ -198,10 +199,11 @@ public final class ImportRewrite {
 				for (UseStatement useStatement : entry.getValue()) {
 					for (UseStatementPart part : useStatement.parts()) {
 						StringBuilder buf = new StringBuilder();
-						buf.append(NORMAL_PREFIX);
 						if (part.getAlias() != null) {
+							buf.append(ALIAS_PREFIX);
 							buf.append(part.getAlias().getName());
 						} else {
+							buf.append(NORMAL_PREFIX);
 							buf.append(part.getName().getName());
 						}
 						imports.add(buf.toString());
@@ -309,6 +311,10 @@ public final class ImportRewrite {
 	}
 
 	private static int compareImport(char prefix, String qualifier, String name, String curr) {
+		if (curr.charAt(0) == ALIAS_PREFIX && curr.endsWith(name)) {
+			return ImportRewriteContext.RES_NAME_CONFLICT;
+		}
+
 		if (curr.charAt(0) != prefix || !curr.endsWith(name)) {
 			return ImportRewriteContext.RES_NAME_UNKNOWN;
 		}
@@ -426,23 +432,10 @@ public final class ImportRewrite {
 		String typeContainerName, typeName;
 		if (idx != -1) {
 			typeContainerName = fullTypeName.substring(0, idx);
-			if (typeContainerName.length() == 0) {
-				typeContainerName = ENCLOSING_TYPE_SEPARATOR;
-			}
 			typeName = fullTypeName.substring(idx + 1);
 		} else {
-			typeContainerName = ENCLOSING_TYPE_SEPARATOR;
+			typeContainerName = ""; //$NON-NLS-1$
 			typeName = fullTypeName;
-		}
-
-		if (typeContainerName.length() == 0) {
-			if (alias != null) {
-				return alias;
-			}
-			if (fullTypeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-				fullTypeName = NamespaceReference.NAMESPACE_SEPARATOR + fullTypeName;
-			}
-			return fullTypeName;
 		}
 
 		if (context == null)

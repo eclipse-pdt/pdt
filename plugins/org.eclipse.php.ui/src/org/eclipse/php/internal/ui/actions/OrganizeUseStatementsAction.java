@@ -141,7 +141,7 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 	public void run(ISourceModule sourceModule) {
 		try {
 			Program astRoot = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_ACTIVE_ONLY, null);
-			OrganizeUseStatementsOperation op = new OrganizeUseStatementsOperation(sourceModule, astRoot, true,
+			OrganizeUseStatementsOperation op = new OrganizeUseStatementsOperation(sourceModule, astRoot,
 					createChooseImportQuery(fEditor));
 			IRewriteTarget target = (IRewriteTarget) fEditor.getAdapter(IRewriteTarget.class);
 			if (target != null) {

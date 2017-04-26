@@ -81,22 +81,17 @@ public class UnresolvedElementsSubProcessor {
 	private static CUCorrectionProposal createTypeRefChangeProposal(ISourceModule cu, String fullName, Identifier node,
 			int relevance, int maxProposals) {
 		ImportRewrite importRewrite = null;
-		String simpleName = PHPModelUtils.extractElementName(fullName);
 		String packName = PHPModelUtils.extractNameSpaceName(fullName);
 		if (packName == null) {
-			packName = ""; //$NON-NLS-1$
-		}
-		if (packName.endsWith(SimilarElementsRequestor.ENCLOSING_TYPE_SEPARATOR)) {
-			packName = packName.substring(0, packName.length() - 1);
-		}
-		if (packName.equals("")) { //$NON-NLS-1$
 			packName = "global namespace"; //$NON-NLS-1$
+		} else if (packName.endsWith(SimilarElementsRequestor.ENCLOSING_TYPE_SEPARATOR)) {
+			packName = packName.substring(0, packName.length() - 1);
 		}
 		// variables
 		Program root = (Program) node.getRoot();
 		NamespaceDeclaration namespace = root.getNamespaceDeclaration(node.getStart());
 		importRewrite = ImportRewrite.create((Program) node.getRoot(), true);
-		simpleName = PHPModelUtils.extractElementName(importRewrite.addImport(namespace, fullName));
+		String simpleName = importRewrite.addImport(namespace, fullName);
 
 		if (simpleName == null)
 			return null;
@@ -115,15 +110,10 @@ public class UnresolvedElementsSubProcessor {
 			proposal = new AddImportCorrectionProposal(label, cu, relevance + 100 + boost, image, packName, simpleName,
 					(Identifier) node);
 		} else {
-			String label;
-			if (packName.length() == 0) {
-				label = Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_changetype_nopack_description,
-						BasicElementLabels.getJavaElementName(simpleName));
-			} else {
-				String[] arg = { BasicElementLabels.getJavaElementName(simpleName),
-						BasicElementLabels.getJavaElementName(packName) };
-				label = Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_changetype_description, arg);
-			}
+			String[] arg = { BasicElementLabels.getJavaElementName(simpleName),
+					BasicElementLabels.getJavaElementName(packName) };
+			String label = Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_changetype_description,
+					arg);
 			ASTRewrite rewrite = ASTRewrite.create(node.getAST());
 			rewrite.replace(node, rewrite.createStringPlaceholder(simpleName, ASTNode.IDENTIFIER), null);
 			Image image = DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_CHANGE);

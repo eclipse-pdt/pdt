@@ -64,4 +64,20 @@ public class PhpElementConciliatorV7Test extends PhpElementConciliatorV5_6Test {
 		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 	}
 
+	@Test
+	public void concileAnonymousClassDeclaration() {
+		setFileContent("<?php $clazz = new class() extends DateTime {};?>");
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the class name.
+		int start = 40;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
+	}
+
 }

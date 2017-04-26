@@ -464,9 +464,9 @@ public final class ImportRewriteAnalyzer {
 			if (endLine > 0) {
 				int nextLinePos = getPostion(root, endLine + 1);
 				if (nextLinePos >= 0) {
-					int firstTypePos = getFirstTypeBeginPos(root, namespace);
-					if (firstTypePos != -1 && firstTypePos < nextLinePos) {
-						endPos = firstTypePos;
+					int firstStatementPos = getFirstStatementBeginPos(root, namespace);
+					if (firstStatementPos != -1 && firstStatementPos < nextLinePos) {
+						endPos = firstStatementPos;
 					} else {
 						endPos = nextLinePos;
 					}
@@ -474,7 +474,7 @@ public final class ImportRewriteAnalyzer {
 			}
 			return new Region(startPos, endPos - startPos);
 		} else {
-			int start = getPackageStatementEndPos(root, namespace);
+			int start = getNamespaceNameEndPos(root, namespace);
 			return new Region(start, 0);
 		}
 	}
@@ -625,7 +625,7 @@ public final class ImportRewriteAnalyzer {
 		return buf.toString();
 	}
 
-	private int getFirstTypeBeginPos(Program root, NamespaceDeclaration namespace) {
+	private int getFirstStatementBeginPos(Program root, NamespaceDeclaration namespace) {
 		List<Statement> statements;
 		if (namespace == null) {
 			statements = root.statements();
@@ -648,12 +648,14 @@ public final class ImportRewriteAnalyzer {
 					break;
 				}
 			}
-			return root.getExtendedStartPosition(node);
+			if (node != null) {
+				return root.getExtendedStartPosition(node);
+			}
 		}
 		return -1;
 	}
 
-	private int getPackageStatementEndPos(Program root, NamespaceDeclaration namespace) {
+	private int getNamespaceNameEndPos(Program root, NamespaceDeclaration namespace) {
 		int flags = this.flags.get(namespace);
 		if (namespace != null) {
 			NamespaceName packDecl = namespace.getName();
@@ -668,15 +670,15 @@ public final class ImportRewriteAnalyzer {
 				this.flags.put(namespace, flags);
 				return packDecl.getStart() + packDecl.getLength();
 			}
-			int firstTypePos = getFirstTypeBeginPos(root, namespace);
-			if (firstTypePos != -1 && firstTypePos <= afterPackageStatementPos) {
-				if (firstTypePos <= afterPackageStatementPos) {
+			int firstStatementPos = getFirstStatementBeginPos(root, namespace);
+			if (firstStatementPos != -1 && firstStatementPos <= afterPackageStatementPos) {
+				if (firstStatementPos <= afterPackageStatementPos) {
 					flags |= F_NEEDS_TRAILING_DELIM;
-					if (firstTypePos == afterPackageStatementPos) {
+					if (firstStatementPos == afterPackageStatementPos) {
 						flags |= F_NEEDS_LEADING_DELIM;
 					}
 					this.flags.put(namespace, flags);
-					return firstTypePos;
+					return firstStatementPos;
 				}
 			}
 			flags |= F_NEEDS_LEADING_DELIM;
@@ -720,10 +722,14 @@ public final class ImportRewriteAnalyzer {
 	private static final class ImportDeclEntry {
 
 		private String elementName;
+		private boolean isAlias;
 		private IRegion sourceRange;
 
 		public ImportDeclEntry(String elementName, IRegion sourceRange) {
 			this.elementName = elementName;
+			if (elementName.toLowerCase().contains(" as ")) { //$NON-NLS-1$
+				isAlias = true;
+			}
 			this.sourceRange = sourceRange;
 		}
 
@@ -745,6 +751,10 @@ public final class ImportRewriteAnalyzer {
 
 		public boolean isComment() {
 			return this.elementName == null;
+		}
+
+		public boolean isAlias() {
+			return isAlias;
 		}
 
 		public IRegion getSourceRange() {
@@ -829,7 +839,7 @@ public final class ImportRewriteAnalyzer {
 			int nInports = this.importEntries.size();
 			for (int i = nInports - 1; i >= 0; i--) {
 				ImportDeclEntry curr = getImportAt(i);
-				if (curr.isNew()) {
+				if (!curr.isAlias() && curr.isNew()) {
 					this.importEntries.remove(i);
 				}
 			}
