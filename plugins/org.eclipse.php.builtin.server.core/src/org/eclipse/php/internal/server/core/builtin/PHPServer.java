@@ -30,6 +30,7 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.osgi.framework.Version;
 
 @SuppressWarnings("restriction")
 public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerWorkingCopy {
@@ -49,22 +50,36 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 
 	@Override
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
-		if (add != null) {
-			int size = add.length;
-			for (int i = 0; i < size; i++) {
-				IModule module = add[i];
-				if (!PHPProjectModule.PHP_MODULE_TYPE_ID.equals(module.getModuleType().getId()))
-					return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
-
-				// if (module.getProject() != null) {
-				// IStatus status = FacetUtil.verifyFacets(module.getProject(),
-				// getServer());
-				// if (status != null && !status.isOK())
-				// return status;
-				// }
-			}
+		if (add == null || add.length == 0) {
+			return Status.OK_STATUS;
 		}
 
+		PHPRuntime phpRuntime = getPHPRuntime();
+		Version runtimeVersion = null;
+		if (phpRuntime != null) {
+			runtimeVersion = Version.parseVersion(phpRuntime.getExecutableInstall().getVersion());
+		}
+
+		for (IModule element : add) {
+			IModule module = element;
+
+			Version moduleVersion = Version.parseVersion(module.getModuleType().getVersion());
+			if (runtimeVersion != null && runtimeVersion.compareTo(moduleVersion) < 0) {
+				String message = String.format("Module '%s' version (%s) is higher then runtime PHP version (%s)",
+						module.getName(), runtimeVersion, moduleVersion);
+				return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, message, null);
+			}
+
+			if (!PHPProjectModule.PHP_MODULE_TYPE_ID.equals(module.getModuleType().getId()))
+				return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
+
+			// if (module.getProject() != null) {
+			// IStatus status = FacetUtil.verifyFacets(module.getProject(),
+			// getServer());
+			// if (status != null && !status.isOK())
+			// return status;
+			// }
+		}
 		return Status.OK_STATUS;
 	}
 
