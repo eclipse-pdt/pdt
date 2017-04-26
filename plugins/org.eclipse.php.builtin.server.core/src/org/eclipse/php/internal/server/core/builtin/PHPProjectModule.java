@@ -66,8 +66,13 @@ public class PHPProjectModule extends ProjectModule {
 			List<IResource> list = new ArrayList<IResource>();
 			IProjectFragment[] projectFragments = fScriptProject.getAllProjectFragments();
 			for (IProjectFragment fragment : projectFragments) {
-				if (!fragment.isExternal()) {
+				if (!fragment.isExternal() && !fragment.isArchive()) {
 					list.addAll(Arrays.asList(((IContainer) fragment.getResource()).members()));
+				}
+			}
+			for (IResource member : container.members()) {
+				if (!list.contains(member)) {
+					list.add(member);
 				}
 			}
 			resources = list.toArray(new IResource[list.size()]);
