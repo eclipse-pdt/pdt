@@ -1039,7 +1039,7 @@ public class PHPDocumentationContentAccess {
 			fBuf = fReturnDescription;
 
 			for (PHPDocTag tag : fJavadoc.getTags(TagKind.RETURN)) {
-				handleContentElements(tag);
+				handleReturnTag(tag);
 				break;
 			}
 
@@ -1193,6 +1193,19 @@ public class PHPDocumentationContentAccess {
 		}
 	}
 
+	private void handleReturnTag(PHPDocTag tag) {
+		String returnType = getReturnInfo(tag, RETURN_TYPE_TYPE);
+		String description = getReturnInfo(tag, RETURN_DESCRIPTION_TYPE);
+		if (returnType != null) {
+			fBuf.append(PARAM_RETURN_START);
+			fBuf.append(returnType);
+			fBuf.append(PARAM_RETURN_END);
+		}
+		if (description != null) {
+			fBuf.append(description);
+		}
+	}
+
 	private void handleReturnTag(PHPDocTag tag, CharSequence returnDescription) {
 		if (tag == null && returnDescription == null)
 			return;
@@ -1200,16 +1213,7 @@ public class PHPDocumentationContentAccess {
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
 		if (tag != null) {
-			String returnType = getReturnInfo(tag, RETURN_TYPE_TYPE);
-			String description = getReturnInfo(tag, RETURN_DESCRIPTION_TYPE);
-			if (returnType != null) {
-				fBuf.append(PARAM_RETURN_START);
-				fBuf.append(returnType);
-				fBuf.append(PARAM_RETURN_END);
-			}
-			if (description != null) {
-				fBuf.append(description);
-			}
+			handleReturnTag(tag);
 		} else {
 			fBuf.append(returnDescription);
 		}
