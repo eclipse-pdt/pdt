@@ -104,6 +104,7 @@ public class Messages extends NLS {
 	public static String PHPRuntimeLocator_Searching_with_found;
 	public static String PHPRuntimeLocator_Fetching_php_exe_info;
 	public static String PHPRuntimeLocator_14;
+	public static String PHPServer_incompatible_version;
 
 	static {
 		NLS.initializeMessages("org.eclipse.php.internal.server.core.builtin.Messages", Messages.class); //$NON-NLS-1$

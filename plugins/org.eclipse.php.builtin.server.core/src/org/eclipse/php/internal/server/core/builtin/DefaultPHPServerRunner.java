@@ -12,7 +12,6 @@ package org.eclipse.php.internal.server.core.builtin;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
