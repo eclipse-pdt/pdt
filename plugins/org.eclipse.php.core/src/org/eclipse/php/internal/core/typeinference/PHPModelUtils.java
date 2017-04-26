@@ -1779,11 +1779,18 @@ public class PHPModelUtils {
 		}
 
 		if (!isGlobal) {
+			String fullTypeName = typeName;
 			String namespace = extractNamespaceName(typeName, sourceModule, offset);
 			typeName = extractElementName(typeName);
 			if (namespace != null) {
 				if (namespace.length() > 0) {
-					typeName = getRealName(typeName, sourceModule, offset, typeName);
+					String typeNameSpaceName = extractNameSpaceName(fullTypeName);
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
+					// only look for aliases when there is no namespace
+					// separator in the type name
+					if (typeNameSpaceName == null) {
+						typeName = getRealName(typeName, sourceModule, offset, typeName);
+					}
 
 					IType[] types = getNamespaceType(namespace, typeName, true, sourceModule, cache, monitor, isType);
 					if (types.length > 0) {
