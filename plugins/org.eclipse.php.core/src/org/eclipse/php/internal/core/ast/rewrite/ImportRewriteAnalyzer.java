@@ -549,7 +549,7 @@ public final class ImportRewriteAnalyzer {
 					if ((this.flags.get(namespace) & F_NEEDS_TRAILING_DELIM) != 0) {
 						resEdit.addChild(new InsertEdit(currPos, lineDelim));
 					}
-				} else {
+				} else if (resEdit.getChildrenSize() > 0) {
 					resEdit.removeChild(resEdit.getChildrenSize() - 1);
 				}
 			}
