@@ -1783,8 +1783,6 @@ public class PHPModelUtils {
 			typeName = extractElementName(typeName);
 			if (namespace != null) {
 				if (namespace.length() > 0) {
-					typeName = getRealName(typeName, sourceModule, offset, typeName);
-
 					IType[] types = getNamespaceType(namespace, typeName, true, sourceModule, cache, monitor, isType);
 					if (types.length > 0) {
 						return types;
