@@ -11,16 +11,14 @@
 package org.eclipse.php.internal.server.core.builtin;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
 
-@SuppressWarnings("restriction")
 public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 
 	private static final IModule[] EMPTY_MODULE = new IModule[0];
@@ -33,9 +31,9 @@ public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 	@Override
 	protected IModule[] createModules(IProject project) {
 		try {
-			IProjectNature nature = project.getNature(PHPNature.ID);
-			if (nature == null)
+			if (!PHPToolkitUtil.isPHPProject(project)) {
 				return EMPTY_MODULE;
+			}
 		} catch (CoreException e) {
 			return EMPTY_MODULE;
 		}
@@ -49,7 +47,6 @@ public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 		String name = project.getName();
 		IModule module = createModule(id, name, PHPProjectModule.PHP_MODULE_TYPE_ID, moduleVersion, project);
 		return new IModule[] { module };
-
 	}
 
 	private String getModuleVersion(PHPVersion phpVersion) {
