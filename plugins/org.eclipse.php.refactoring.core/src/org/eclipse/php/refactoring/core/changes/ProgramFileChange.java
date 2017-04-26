@@ -60,12 +60,10 @@ public class ProgramFileChange extends TextFileChange {
 	 *      boolean, int, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public String getCurrentContent(IRegion region,
-			boolean expandRegionToFullLine, int surroundingLines,
+	public String getCurrentContent(IRegion region, boolean expandRegionToFullLine, int surroundingLines,
 			IProgressMonitor pm) throws CoreException {
 		IRegion fixed = new Region(0, region.getOffset() + region.getLength());
-		return super.getCurrentContent(fixed, expandRegionToFullLine,
-				surroundingLines, pm);
+		return super.getCurrentContent(fixed, expandRegionToFullLine, surroundingLines, pm);
 	}
 
 	/**
@@ -77,24 +75,20 @@ public class ProgramFileChange extends TextFileChange {
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public String getPreviewContent(TextEditBasedChangeGroup[] changeGroups,
-			IRegion region, boolean expandRegionToFullLine,
-			int surroundingLines, IProgressMonitor pm) throws CoreException {
+	public String getPreviewContent(TextEditBasedChangeGroup[] changeGroups, IRegion region,
+			boolean expandRegionToFullLine, int surroundingLines, IProgressMonitor pm) throws CoreException {
 		IRegion fixed = new Region(0, region.getOffset() + region.getLength());
-		return super.getPreviewContent(changeGroups, fixed,
-				expandRegionToFullLine, surroundingLines, pm);
+		return super.getPreviewContent(changeGroups, fixed, expandRegionToFullLine, surroundingLines, pm);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.TextFileChange#acquireDocument(org.eclipse
-	 * .core.runtime.IProgressMonitor)
+	 * @see org.eclipse.ltk.core.refactoring.TextFileChange#acquireDocument(org.
+	 * eclipse .core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected IDocument acquireDocument(IProgressMonitor pm)
-			throws CoreException {
+	protected IDocument acquireDocument(IProgressMonitor pm) throws CoreException {
 		// IFile file = getFile();
 		// if (file instanceof ExternalFileWrapper) {
 		// documentModel =
@@ -107,13 +101,11 @@ public class ProgramFileChange extends TextFileChange {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.TextFileChange#releaseDocument(org.eclipse
-	 * .jface.text.IDocument, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.ltk.core.refactoring.TextFileChange#releaseDocument(org.
+	 * eclipse .jface.text.IDocument, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void releaseDocument(IDocument document, IProgressMonitor pm)
-			throws CoreException {
+	protected void releaseDocument(IDocument document, IProgressMonitor pm) throws CoreException {
 		// IFile file = getFile();
 		// if (file instanceof ExternalFileWrapper) {
 		// documentModel.releaseFromEdit();
@@ -127,9 +119,10 @@ public class ProgramFileChange extends TextFileChange {
 		if (isModified && !isDocumentAcquired()) {
 			if (sm.isWorkingCopy())
 				sm.reconcile(false /* don't force problem detection */,
-						null /* use primary owner */, null /*
-														 * no progress monitor
-														 */);
+						null /* use primary owner */,
+						null /*
+								 * no progress monitor
+								 */);
 
 			else
 				sm.makeConsistent(pm);
@@ -144,8 +137,7 @@ public class ProgramFileChange extends TextFileChange {
 	 * .text.IDocument, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void commit(IDocument document, IProgressMonitor pm)
-			throws CoreException {
+	protected void commit(IDocument document, IProgressMonitor pm) throws CoreException {
 		// if (getFile() instanceof ExternalFileWrapper) {
 		// try {
 		// documentModel.save();

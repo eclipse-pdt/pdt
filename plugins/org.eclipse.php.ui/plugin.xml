@@ -483,8 +483,8 @@
             <filter name="nature" value="org.eclipse.php.core.PHPNature" />
         </page>
         <page name="%validationPage.name"
-            class="org.eclipse.php.internal.ui.preferences.ValidationPreferenceEmptyPage"
-            id="org.eclipse.php.ui.propertyPages.ValidationPreferencePage"
+            class="org.eclipse.php.internal.ui.preferences.PHPValidationPreferencePage"
+            id="org.eclipse.php.ui.propertyPages.PHPValidationPreferencePage"
             category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage">
             <enabledWhen>
                 <adapt type="org.eclipse.core.resources.IProject">
@@ -1770,11 +1770,11 @@
 			name="%saveActionsPreferencePageName">
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
-		  class="org.eclipse.php.internal.ui.preferences.ValidationPreferenceEmptyPage"
-		  id="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+		  class="org.eclipse.php.internal.ui.preferences.PHPValidationPreferencePage"
+		  id="org.eclipse.php.ui.preferences.PHPValidationPreferencePage"
 		  name="%validationPage.name">
 		</page>
-   		<page category="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+   		<page category="org.eclipse.php.ui.preferences.PHPValidationPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
 			id="org.eclipse.php.ui.preferences.TodoTaskPreferencePage" 
 			name="%todoTaskPrefName">

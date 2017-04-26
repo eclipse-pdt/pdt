@@ -38,7 +38,7 @@ public class TraitUseStatement extends Statement {
 		super(start, end);
 
 		assert traitList != null;
-		assert tsList != null;
+		// assert tsList != null;
 		this.traitList = traitList;
 		this.tsList = tsList;
 	}
