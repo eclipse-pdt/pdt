@@ -30,8 +30,6 @@ public class PHPRuntime extends RuntimeDelegate implements IPHPRuntimeWorkingCop
 		if (!status.isOK())
 			return status;
 
-		String id = getRuntime().getRuntimeType().getId();
-
 		File f = getRuntime().getLocation().toFile();
 		if (!f.canRead())
 			return new Status(IStatus.WARNING, PHPServerPlugin.PLUGIN_ID, 0, Messages.warningCantReadDirectory, null);
@@ -40,13 +38,6 @@ public class PHPRuntime extends RuntimeDelegate implements IPHPRuntimeWorkingCop
 		if (!installedItem.getSapiType().equals("CLI")) { //$NON-NLS-1$
 			return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
 					"Only the CLI SAPI provides a built-in web server", null); //$NON-NLS-1$
-		}
-
-		String[] splitVersion = installedItem.getVersion().split("\\.", 3); //$NON-NLS-1$
-		String mainVersion = splitVersion[0] + splitVersion[1];
-		if (!id.endsWith(mainVersion)) {
-			return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
-					"Selected PHP executable does not match the target PHP version", null); //$NON-NLS-1$
 		}
 
 		return Status.OK_STATUS;
