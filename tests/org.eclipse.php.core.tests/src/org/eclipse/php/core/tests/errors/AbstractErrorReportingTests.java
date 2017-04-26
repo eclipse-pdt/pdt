@@ -26,14 +26,19 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.validation.IProblemPreferences;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
+import org.eclipse.php.internal.core.preferences.PHPCorePreferenceInitializer;
 import org.junit.Test;
 
 abstract public class AbstractErrorReportingTests {
@@ -49,8 +54,17 @@ abstract public class AbstractErrorReportingTests {
 
 	@Test
 	public void errors(String fileName) throws Exception {
-		IFile file = files.get(fileName);
+		PHPCorePreferenceInitializer initializer = new PHPCorePreferenceInitializer();
+		// reset to default
+		initializer.initializeDefaultPreferences();
+		// disable
+		IProblemPreferences problemPreferences = PHPCorePlugin.getDefault().getProblemPreferences();
+		problemPreferences.setSeverity(PHPProblemIdentifier.UnexpectedNamespaceDeclaration, ProblemSeverity.IGNORE,
+				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.FirstClassMustMatchFileName, ProblemSeverity.IGNORE,
+				DefaultScope.INSTANCE);
 
+		IFile file = files.get(fileName);
 		StringBuilder buf = new StringBuilder();
 
 		IMarker[] markers = file.findMarkers(getMarkerType(), true, IResource.DEPTH_ZERO);
@@ -107,4 +121,5 @@ abstract public class AbstractErrorReportingTests {
 	protected String getMarkerType() {
 		return PHPProblemIdentifier.MARKER_TYPE_ID;
 	}
+
 }

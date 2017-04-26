@@ -3007,6 +3007,14 @@
                id="UnusedVariable"
                name="Unused variable">
          </identifier>
+         <identifier
+               id="UnexpectedNamespaceDeclaration"
+               name="Unexpected namespace name">
+         </identifier>
+         <identifier
+               id="FirstClassMustMatchFileName"
+               name="First class in file doesn't match filename">
+         </identifier>
       </problem>
    </extension>
    <extension
