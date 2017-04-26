@@ -100,6 +100,7 @@ public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
 		commands.add("-t"); //$NON-NLS-1$
 		commands.add(configuration.getWorkingDirectory());
 		if (StringUtils.isNotEmpty(phpIniFile)) {
+			commands.add("-n"); //$NON-NLS-1$
 			commands.add("-c"); //$NON-NLS-1$
 			commands.add(phpIniFile);
 		}
