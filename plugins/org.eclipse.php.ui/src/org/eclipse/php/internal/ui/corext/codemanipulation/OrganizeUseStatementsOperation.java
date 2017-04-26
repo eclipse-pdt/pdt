@@ -32,6 +32,7 @@ import org.eclipse.ltk.core.refactoring.*;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite.ImportRewriteContext;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
@@ -39,7 +40,6 @@ import org.eclipse.php.internal.core.search.PHPSearchTypeNameMatch;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.Messages;
-import org.eclipse.php.internal.ui.corext.util.Strings;
 import org.eclipse.php.internal.ui.corext.util.TypeNameMatchCollector;
 import org.eclipse.php.internal.ui.text.correction.ASTResolving;
 import org.eclipse.php.internal.ui.text.correction.ProblemLocation;
@@ -184,8 +184,6 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 
 		private ImportRewrite fImpStructure;
 
-		private boolean fDoIgnoreLowerCaseNames;
-
 		private final UnresolvableImportMatcher fUnresolvableImportMatcher;
 
 		// private IPackageFragment fCurrPackage;
@@ -200,12 +198,10 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		private Program fRoot;
 
 		public TypeReferenceProcessor(Map<NamespaceDeclaration, Set<String>> oldSingleImports, Program root,
-				ImportRewrite impStructure, boolean ignoreLowerCaseNames,
-				UnresolvableImportMatcher unresolvableImportMatcher) {
+				ImportRewrite impStructure, UnresolvableImportMatcher unresolvableImportMatcher) {
 			fRoot = root;
 			fOldSingleImports = oldSingleImports;
 			fImpStructure = impStructure;
-			fDoIgnoreLowerCaseNames = ignoreLowerCaseNames;
 			fUnresolvableImportMatcher = unresolvableImportMatcher;
 
 			// fAnalyzer= new ScopeAnalyzer(root);
@@ -236,7 +232,12 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			NamespaceDeclaration namespace = fRoot.getNamespaceDeclaration(ref.getStart());
 			String typeName = ref.getName();
 
-			if (fImportsAdded.get(namespace).contains(typeName)) {
+			int index = typeName.indexOf(NamespaceReference.NAMESPACE_DELIMITER);
+			if (index > 0) {
+				typeName = typeName.substring(0, index);
+			}
+
+			if (fImportsAdded.get(namespace) == null || fImportsAdded.get(namespace).contains(typeName)) {
 				return;
 			}
 
@@ -260,13 +261,6 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 					fImpStructure.addImport(namespace, typeBindingName, alias);
 					fImportsAdded.get(namespace).add(typeName);
 					return;
-				}
-			} else {
-				if (fDoIgnoreLowerCaseNames && typeName.length() > 0) {
-					char ch = typeName.charAt(0);
-					if (Strings.isLowerCase(ch) && Character.isLetter(ch)) {
-						return;
-					}
 				}
 			}
 
@@ -415,20 +409,17 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 	private int fNumberOfImportsAdded;
 	private int fNumberOfImportsRemoved;
 
-	private boolean fIgnoreLowerCaseNames;
-
 	private IChooseImportQuery fChooseImportQuery;
 
 	private ISourceModule fSourceModule;
 
 	private Program fASTRoot;
 
-	public OrganizeUseStatementsOperation(ISourceModule sourceModule, Program astRoot, boolean ignoreLowerCaseNames,
+	public OrganizeUseStatementsOperation(ISourceModule sourceModule, Program astRoot,
 			IChooseImportQuery chooseImportQuery) {
 		fSourceModule = sourceModule;
 		fASTRoot = astRoot;
 
-		fIgnoreLowerCaseNames = ignoreLowerCaseNames;
 		// fAllowSyntaxErrors= allowSyntaxErrors;
 		fChooseImportQuery = chooseImportQuery;
 
@@ -471,7 +462,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			UnresolvableImportMatcher unresolvableImportMatcher = UnresolvableImportMatcher.forProgram(astRoot);
 
 			TypeReferenceProcessor processor = new TypeReferenceProcessor(oldSingleImports, astRoot, importsRewrite,
-					fIgnoreLowerCaseNames, unresolvableImportMatcher);
+					unresolvableImportMatcher);
 
 			Iterator<Identifier> refIterator = typeReferences.iterator();
 			while (refIterator.hasNext()) {
@@ -649,7 +640,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 	}
 
 	static class ReferencesCollector extends ApplyAll {
-		private static final List<String> TYPE_SKIP = new ArrayList<String>();
+		private static final List<String> TYPE_SKIP = new ArrayList<>();
 
 		static {
 			TYPE_SKIP.add("parent"); //$NON-NLS-1$
@@ -674,38 +665,29 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 
 		@Override
+		public boolean visit(NamespaceName namespace) {
+			if (!namespace.isGlobal() && !(namespace.getParent() instanceof NamespaceDeclaration)) {
+				if (PHPSimpleTypes.isHintable(namespace.getName(), namespace.getAST().apiLevel())
+						|| TYPE_SKIP.contains(namespace.getName())) {
+					return false;
+				}
+				List<Identifier> segs = namespace.segments();
+				Identifier node = segs.get(segs.size() - 1);
+				if (PhpElementConciliator.concile(node) == PhpElementConciliator.CONCILIATOR_CLASSNAME
+						|| PhpElementConciliator.concile(node) == PhpElementConciliator.CONCILIATOR_TRAITNAME) {
+					fTypeReferences.add(namespace);
+				}
+			}
+			return false;
+		}
+
+		@Override
 		public boolean visit(FunctionName functionName) {
 			return false;
 		}
 
 		@Override
-		public boolean visit(Variable variable) {
-			return false;
-		}
-
-		@Override
-		public boolean visit(NamespaceName namespace) {
-			if (namespace.isGlobal() || namespace.getParent() instanceof NamespaceDeclaration) {
-				return false;
-			}
-			return true;
-		}
-
-		@Override
 		public boolean visit(Scalar scalar) {
-			return false;
-		}
-
-		@Override
-		public boolean visit(Identifier identifier) {
-			if (PHPSimpleTypes.isSimpleType(identifier.getName()) || TYPE_SKIP.contains(identifier.getName())) {
-				return false;
-			}
-			ASTNode parent = identifier.getParent();
-			if (parent instanceof TypeDeclaration || parent instanceof FunctionDeclaration) {
-				return false;
-			}
-			fTypeReferences.add(identifier);
 			return false;
 		}
 
