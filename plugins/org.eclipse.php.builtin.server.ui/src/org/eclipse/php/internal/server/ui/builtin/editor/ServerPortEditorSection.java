@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.server.ui.builtin.editor;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 
@@ -37,11 +36,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
@@ -63,13 +60,15 @@ public class ServerPortEditorSection extends ServerEditorSection {
 	}
 
 	protected void addChangeListener() {
-		listener = new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				if (PHPServerConfiguration.MODIFY_PORT_PROPERTY.equals(event.getPropertyName())) {
-					String id = (String) event.getOldValue();
-					Integer i = (Integer) event.getNewValue();
-					changePortNumber(id, i.intValue());
+		listener = event -> {
+			if (PHPServerConfiguration.MODIFY_PORT_PROPERTY.equals(event.getPropertyName())) {
+				String id = (String) event.getOldValue();
+				Integer value = (Integer) event.getNewValue();
+				if (value < 1 || value > 65535) {
+					setErrorMessage(Messages.ServerPortEditorSection_port_range_validator);
+				} else {
+					setErrorMessage(null);
+					changePortNumber(id, value);
 				}
 			}
 		};
@@ -90,7 +89,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 			ServerPort sp = (ServerPort) items[i].getData();
 			if (sp.getId().equals(id)) {
 				items[i].setData(new ServerPort(id, sp.getName(), port, sp.getProtocol()));
-				items[i].setText(1, port + ""); //$NON-NLS-1$
+				items[i].setText(1, Integer.toString(port));
 				/*
 				 * if (i == selection) { selectPort(); }
 				 */
@@ -123,15 +122,12 @@ public class ServerPortEditorSection extends ServerEditorSection {
 		layout.marginWidth = 8;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.FILL_HORIZONTAL));
-		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
-		// whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_PORTS);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
 		ports = toolkit.createTable(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
 		ports.setHeaderVisible(true);
 		ports.setLinesVisible(true);
-		// whs.setHelp(ports, ContextIds.CONFIGURATION_EDITOR_PORTS_LIST);
 
 		TableLayout tableLayout = new TableLayout();
 
@@ -166,7 +162,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 				ServerPort sp = (ServerPort) element;
 				if (sp.getPort() < 0)
 					return "-"; //$NON-NLS-1$
-				return sp.getPort() + ""; //$NON-NLS-1$
+				return Integer.toString(sp.getPort());
 			}
 
 			@Override
@@ -193,7 +189,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 
 		// preselect second column (Windows-only)
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
-		if (os != null && os.toLowerCase().indexOf("win") >= 0) {
+		if (os != null && os.toLowerCase().indexOf("win") >= 0) { //$NON-NLS-1$
 			ports.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {
@@ -214,9 +210,6 @@ public class ServerPortEditorSection extends ServerEditorSection {
 			fPHPServerConfiguration.removePropertyChangeListener(listener);
 	}
 
-	/*
-	 * (non-Javadoc) Initializes the editor part with a site and input.
-	 */
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
@@ -242,11 +235,11 @@ public class ServerPortEditorSection extends ServerEditorSection {
 
 		Iterator<ServerPort> iterator = fPHPServerConfiguration.getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			ServerPort port = (ServerPort) iterator.next();
+			ServerPort port = iterator.next();
 			TableItem item = new TableItem(ports, SWT.NONE);
 			String portStr = "-"; //$NON-NLS-1$
 			if (port.getPort() >= 0)
-				portStr = port.getPort() + ""; //$NON-NLS-1$
+				portStr = Integer.toString(port.getPort());
 			String[] s = new String[] { port.getName(), portStr };
 			item.setText(s);
 			item.setImage(PHPServerUIPlugin.getImage(PHPServerUIPlugin.IMG_PORT));
