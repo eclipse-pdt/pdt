@@ -114,6 +114,7 @@ public class Messages extends NLS {
 	public static String contextCleanup;
 	public static String cleanTerminateServerDialogTitle;
 	public static String cleanTerminateServerDialogMessage;
+	public static String ServerPortEditorSection_port_range_validator;
 
 	static {
 		NLS.initializeMessages(Messages.class.getName(), Messages.class);
