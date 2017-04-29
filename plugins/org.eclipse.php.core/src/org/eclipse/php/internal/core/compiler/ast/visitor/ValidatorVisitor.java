@@ -26,20 +26,26 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
 public class ValidatorVisitor extends PHPASTVisitor {
 
+	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<String>();
+	private static final List<String> PHPDOC_TYPE_SKIP = new ArrayList<String>();
 
 	static {
 		TYPE_SKIP.add("parent"); //$NON-NLS-1$
 		TYPE_SKIP.add("self"); //$NON-NLS-1$
 		TYPE_SKIP.add("static"); //$NON-NLS-1$
+		PHPDOC_TYPE_SKIP.add("true"); //$NON-NLS-1$
+		PHPDOC_TYPE_SKIP.add("false"); //$NON-NLS-1$
 	}
 
 	private Map<String, UsePartInfo> usePartInfo = new LinkedHashMap<String, UsePartInfo>();
@@ -229,6 +235,36 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	/**
+	 * Generic checks to only visit PHPDoc type references whose names are valid
+	 * php identifier names. See also
+	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete
+	 * and precise PHPDoc type references handling.
+	 */
+	private void visitPHPDocType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
+		if (PHPDOC_TYPE_SKIP.contains(typeReference.getName().toLowerCase())) {
+			return;
+		}
+
+		String name = typeReference.getName();
+		assert name.length() > 0;
+
+		int idx = name.indexOf(PAAMAYIM_NEKUDOTAIM);
+		if (idx == -1) {
+			// look if complete name is a valid identifier name
+			if (PHPTextSequenceUtilities.readNamespaceStartIndex(name, name.length(), false) == 0) {
+				visit(typeReference, severity);
+			}
+		} else if (idx > 0) {
+			// look if name part before "::" is a valid (and non-empty)
+			// identifier name
+			if (PHPTextSequenceUtilities.readNamespaceStartIndex(name, idx, false) == 0) {
+				visit(new TypeReference(typeReference.start(), typeReference.start() + idx, name.substring(0, idx)),
+						severity);
+			}
+		}
+	}
+
 	@Override
 	public boolean visit(PHPDocTag phpDocTag) throws Exception {
 		for (TypeReference fullTypeReference : phpDocTag.getTypeReferences()) {
@@ -243,17 +279,17 @@ public class ValidatorVisitor extends PHPASTVisitor {
 					String typeName = fullTypeName.substring(start, matcher.start());
 					TypeReference typeReference = new TypeReference(fullTypeReference.start() + start,
 							fullTypeReference.start() + start + typeName.length(), typeName);
-					visit(typeReference, ProblemSeverities.Warning);
+					visitPHPDocType(typeReference, ProblemSeverities.Warning);
 				}
 				start = matcher.end();
 			}
 			if (start == 0) {
-				visit(fullTypeReference, ProblemSeverities.Warning);
+				visitPHPDocType(fullTypeReference, ProblemSeverities.Warning);
 			} else if (start != fullTypeName.length()) {
 				String typeName = fullTypeName.substring(start);
 				TypeReference typeReference = new TypeReference(fullTypeReference.start() + start,
 						fullTypeReference.start() + start + typeName.length(), typeName);
-				visit(typeReference, ProblemSeverities.Warning);
+				visitPHPDocType(typeReference, ProblemSeverities.Warning);
 			}
 		}
 		return false;

@@ -1,0 +1,18 @@
+--TEST--
+Bug 515893 - Some incorrect type warnings
+--FILE--
+<?php
+class Test
+{
+    /**
+     * @see Test
+     * @see Test::function_name($param)
+     * @see https://github.com/filp/whoops/docs/Open%20Files%20In%20An%20Editor.md
+     * @param bool $param
+     * @return false|null
+     */
+    function function_name($param) {
+    }
+}
+?>
+--EXPECT--
