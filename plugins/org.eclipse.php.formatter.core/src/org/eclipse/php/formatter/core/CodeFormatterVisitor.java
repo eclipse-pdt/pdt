@@ -26,8 +26,8 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
-import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.core.compiler.ast.nodes.VarComment;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
@@ -4155,6 +4155,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int lastPosition = listVariable.getStart() + 4;
 		lineWidth += 4;
 		List<Expression> variables = listVariable.variables();
+		// XXX: variablesArray will contain one empty Variable object (i.e. with
+		// zero-length name) to represent empty list() statements.
 		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
 		lastPosition = handleCommaList(variablesArray, lastPosition, this.preferences.insert_space_before_comma_in_list,
 				this.preferences.insert_space_after_comma_in_list, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
