@@ -691,8 +691,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		// IPhpScriptReconcilingListener attached to PHPStructuredEditor and
 		// defined in the PHPStructuredTextViewer constructor).
 		synchronized (this) {
-			if (fTextEditor instanceof PHPStructuredEditor
-					&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
+			if (fTextEditor instanceof PHPStructuredEditor) {
 				super.firePostSelectionChanged(offset, length);
 				fPostSelectionOffset = -1;
 				fPostSelectionLength = -1;
