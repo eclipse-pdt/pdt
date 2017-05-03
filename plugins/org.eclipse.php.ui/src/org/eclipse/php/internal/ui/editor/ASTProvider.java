@@ -212,13 +212,13 @@ public final class ASTProvider {
 
 	private static final String DEBUG_PREFIX = "ASTProvider > "; //$NON-NLS-1$
 
-	private ISourceModule fReconcilingJavaElement;
+	private volatile ISourceModule fReconcilingJavaElement;
 	private ISourceModule fActiveJavaElement;
 	private Program fAST;
 	private ActivationListener fActivationListener;
 	private Object fReconcileLock = new Object();
 	private Object fWaitLock = new Object();
-	private boolean fIsReconciling;
+	private volatile boolean fIsReconciling;
 	private IWorkbenchPart fActiveEditor;
 
 	/**
@@ -301,7 +301,7 @@ public final class ASTProvider {
 	 * @return <code>true</code> if the given compilation unit is the active one
 	 * @since 3.1
 	 */
-	public boolean isActive(ISourceModule cu) {
+	public synchronized boolean isActive(ISourceModule cu) {
 		return cu != null && cu.equals(fActiveJavaElement);
 	}
 
@@ -324,8 +324,8 @@ public final class ASTProvider {
 		synchronized (fReconcileLock) {
 			fIsReconciling = true;
 			fReconcilingJavaElement = javaElement;
-			cache(null, javaElement);
 		}
+		cache(null, javaElement);
 	}
 
 	/**
@@ -469,29 +469,34 @@ public final class ASTProvider {
 		final boolean canReturnNull = waitFlag == SharedASTProvider.WAIT_NO
 				|| (waitFlag == SharedASTProvider.WAIT_ACTIVE_ONLY && !(isActiveElement && fAST == null));
 		boolean isReconciling = false;
+		final ISourceModule activeElement;
 		if (isActiveElement) {
 			synchronized (fReconcileLock) {
+				activeElement = fReconcilingJavaElement;
 				isReconciling = isReconciling(input);
 				if (!isReconciling && !canReturnNull) {
 					aboutToBeReconciled(input);
 				}
 			}
+		} else {
+			activeElement = null;
 		}
 
 		if (isReconciling) {
 			try {
-				final ISourceModule activeElement = fReconcilingJavaElement;
-
 				// Wait for AST
 				synchronized (fWaitLock) {
-					if (DEBUG) {
-						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "waiting for AST for: " //$NON-NLS-1$ //$NON-NLS-2$
-								+ input.getElementName());
+					if (isReconciling(input)) {
+						if (DEBUG) {
+							System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "waiting for AST for: " //$NON-NLS-1$ //$NON-NLS-2$
+									+ input.getElementName());
+						}
+						fWaitLock.wait(30000); // XXX: The 30 seconds timeout is
+												// an
+												// attempt to at least avoid a
+												// deadlock. See
+												// https://bugs.eclipse.org/366048#c21
 					}
-					fWaitLock.wait(30000); // XXX: The 30 seconds timeout is an
-											// attempt to at least avoid a
-											// deadlock. See
-											// https://bugs.eclipse.org/366048#c21
 				}
 
 				// Check whether active element is still valid
@@ -549,10 +554,8 @@ public final class ASTProvider {
 	 * @return <code>true</code> if reported as currently being reconciled
 	 */
 	private boolean isReconciling(ISourceModule javaElement) {
-		synchronized (fReconcileLock) {
-			return javaElement != null && javaElement.equals(fReconcilingJavaElement) && fIsReconciling
-					&& !(javaElement instanceof IExternalSourceModule) && !isValidatorDisabled(javaElement);
-		}
+		return javaElement != null && javaElement.equals(fReconcilingJavaElement) && fIsReconciling
+				&& !(javaElement instanceof IExternalSourceModule) && !isValidatorDisabled(javaElement);
 	}
 
 	private boolean isValidatorDisabled(ISourceModule javaElement) {
@@ -695,6 +698,7 @@ public final class ASTProvider {
 		}
 
 		synchronized (fReconcileLock) {
+			fIsReconciling = false;
 			if (javaElement == null || !javaElement.equals(fReconcilingJavaElement)) {
 
 				if (DEBUG) {
@@ -707,7 +711,6 @@ public final class ASTProvider {
 
 				return;
 			}
-			fIsReconciling = progressMonitor != null && progressMonitor.isCanceled();
 			cache(ast, javaElement);
 		}
 	}
