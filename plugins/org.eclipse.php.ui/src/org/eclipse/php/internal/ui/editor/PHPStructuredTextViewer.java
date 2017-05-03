@@ -75,6 +75,59 @@ import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
+	private class EditorReconcilingListener implements IDocumentListener, ITextInputListener {
+
+		public void install() {
+			StyledText text = getTextWidget();
+			if (text == null || text.isDisposed())
+				return;
+
+			addTextInputListener(this);
+
+			IDocument document = getDocument();
+			if (document != null) {
+				document.addDocumentListener(this);
+			}
+		}
+
+		public void uninstall() {
+			removeTextInputListener(this);
+			IDocument document = getDocument();
+			if (document != null) {
+				document.removeDocumentListener(this);
+			}
+		}
+
+		@Override
+		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
+			if (oldInput != null) {
+				oldInput.removeDocumentListener(this);
+			}
+		}
+
+		@Override
+		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
+			if (newInput != null) {
+				newInput.addDocumentListener(this);
+				if (getTextEditor() instanceof PHPStructuredEditor) {
+					((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+				}
+			}
+		}
+
+		@Override
+		public void documentAboutToBeChanged(DocumentEvent event) {
+		}
+
+		@Override
+		public void documentChanged(DocumentEvent event) {
+			if (getTextEditor() instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+			}
+		}
+
+	}
+
 	/**
 	 * Text operation code for requesting the outline for the current input.
 	 */
@@ -99,6 +152,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IInformationPresenter fHierarchyPresenter;
 	private IAnnotationHover fProjectionAnnotationHover;
 	private boolean fFireSelectionChanged = true;
+	private EditorReconcilingListener fEditorReconcilingListener;
 
 	private IDocumentAdapter documentAdapter;
 
@@ -440,6 +494,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 
+		// need to install the EditorReconcilingListener before reconciler is
+		// installed so that PHPStructuredEditor.aboutToBeReconciled() can be
+		// called when editor opened
+		if (fEditorReconcilingListener == null) {
+			fEditorReconcilingListener = new EditorReconcilingListener();
+			fEditorReconcilingListener.install();
+		}
+
 		super.configure(configuration);
 
 		// release old annotation hover before setting new one
@@ -503,6 +565,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fOutlinePresenter != null) {
 			fOutlinePresenter.uninstall();
 			fOutlinePresenter = null;
+		}
+		if (fEditorReconcilingListener != null) {
+			fEditorReconcilingListener.uninstall();
+			fEditorReconcilingListener = null;
 		}
 		super.unconfigure();
 	}
@@ -691,8 +757,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		// IPhpScriptReconcilingListener attached to PHPStructuredEditor and
 		// defined in the PHPStructuredTextViewer constructor).
 		synchronized (this) {
-			if (fTextEditor instanceof PHPStructuredEditor
-					&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
+			if (fTextEditor instanceof PHPStructuredEditor) {
 				super.firePostSelectionChanged(offset, length);
 				fPostSelectionOffset = -1;
 				fPostSelectionLength = -1;
