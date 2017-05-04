@@ -81,18 +81,6 @@ String variables like ${eclipse_home} may be used.
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="version" type="string">
-            <annotation>
-               <documentation>
-                  Version of PHP (&amp;lt;major&amp;gt;.&amp;lt;minor&amp;gt;.&amp;lt;bug-fix&amp;gt;)
-
-Deprecated! The version is automatically determined by calling the PHP executable. This attribute will be removed in PDT 5.0.
-               </documentation>
-               <appInfo>
-                  <meta.attribute deprecated="true"/>
-               </appInfo>
-            </annotation>
-         </attribute>
          <attribute name="default" type="boolean">
             <annotation>
                <documentation>
