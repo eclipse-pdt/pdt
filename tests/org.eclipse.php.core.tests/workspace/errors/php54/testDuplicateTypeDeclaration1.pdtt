@@ -1,0 +1,18 @@
+--TEST--
+Test for duplicate type declaration
+--FILE--
+<?php
+namespace Exception;
+
+class Foo {
+}
+
+trait foo {
+}
+
+namespace name1;
+
+class Foo {
+}
+--EXPECT--
+[line=7, start=49, end=52] Cannot declare type foo because the name is already in use

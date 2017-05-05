@@ -1,0 +1,12 @@
+--TEST--
+Test for duplicate type declaration
+--FILE--
+<?php
+class Foo001 {
+}
+
+interface foo001 {
+}
+
+--EXPECT--
+[line=5, start=34, end=40] Cannot declare type foo001 because the name is already in use
