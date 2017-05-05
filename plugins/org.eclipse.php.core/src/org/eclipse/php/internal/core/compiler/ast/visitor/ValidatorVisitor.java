@@ -51,6 +51,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	private Map<String, UsePartInfo> usePartInfo = new LinkedHashMap<String, UsePartInfo>();
 	private Map<String, Boolean> elementExists = new HashMap<String, Boolean>();
 	private NamespaceDeclaration currentNamespace;
+	private Set<String> typeDeclared = new HashSet<>();
 	private ISourceModule sourceModule;
 	private IBuildContext context;
 
@@ -69,7 +70,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean endvisit(NamespaceDeclaration s) throws Exception {
 		Collection<UsePartInfo> useInfos = usePartInfo.values();
 		for (UsePartInfo useInfo : useInfos) {
-			if (useInfo.getRefCount() == 0) {
+			if (!useInfo.isProblemReported && useInfo.getRefCount() == 0) {
 				FullyQualifiedReference m = useInfo.getUsePart().getNamespace();
 				String name = m.getFullyQualifiedName();
 				reportProblem(m, Messages.UnusedImport, PhpProblemIdentifier.UnusedImport, name,
@@ -78,6 +79,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		}
 		usePartInfo.clear();
 		elementExists.clear();
+		typeDeclared.clear();
 		return super.endvisit(s);
 	}
 
@@ -206,7 +208,9 @@ public class ValidatorVisitor extends PHPASTVisitor {
 
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
-		checkDuplicateDeclaration(s);
+		if (!(s instanceof NamespaceDeclaration)) {
+			checkDuplicateTypeDeclaration(s);
+		}
 		return super.visit(s);
 	}
 
@@ -220,18 +224,21 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		} else {
 			currentNamespaceName = currentNamespace.getName();
 		}
+		String lcName = info.getRealName().toLowerCase();
 		if (!findElement(tri)) {
+			info.isProblemReported = true;
 			reportProblem(tri.getTypeReference(), Messages.ImportNotFound, PhpProblemIdentifier.ImportNotFound, name,
 					ProblemSeverities.Error);
-		} else if (usePartInfo.get(info.getRealName().toLowerCase()) != null) {
+		} else if (usePartInfo.get(lcName) != null) {
+			info.isProblemReported = true;
 			reportProblem(tri.getTypeReference(), Messages.DuplicateImport, PhpProblemIdentifier.DuplicateImport,
 					new String[] { name, info.getRealName() }, ProblemSeverities.Error);
 		} else if (info.getNamespaceName().equals(currentNamespaceName)) {
+			info.isProblemReported = true;
 			reportProblem(tri.getTypeReference(), Messages.UnnecessaryImport, PhpProblemIdentifier.UnnecessaryImport,
 					new String[] { name }, ProblemSeverities.Warning);
-		} else {
-			usePartInfo.put(info.getRealName().toLowerCase(), info);
 		}
+		usePartInfo.put(lcName, info);
 		return false;
 	}
 
@@ -295,9 +302,24 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		return false;
 	}
 
-	private void checkDuplicateDeclaration(TypeDeclaration node) {
+	private void checkDuplicateTypeDeclaration(TypeDeclaration node) {
 		String name = node.getName();
-		if (usePartInfo.containsKey(name)) {
+		String currentNamespaceName;
+		if (currentNamespace == null) {
+			currentNamespaceName = ""; //$NON-NLS-1$
+		} else {
+			currentNamespaceName = currentNamespace.getName();
+		}
+		boolean isDuplicateWithUse = false;
+		UsePartInfo info = usePartInfo.get(name.toLowerCase());
+		if (info != null) {
+			String fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(NamespaceReference.NAMESPACE_DELIMITER,
+					currentNamespaceName, name);
+			if (!info.getFullyQualifiedName().equals(fullyQualifiedName)) {
+				isDuplicateWithUse = true;
+			}
+		}
+		if (isDuplicateWithUse || !typeDeclared.add(name.toLowerCase())) {
 			reportProblem(node.getRef(), Messages.DuplicateDeclaration, PhpProblemIdentifier.DuplicateDeclaration, name,
 					ProblemSeverities.Error);
 		}
@@ -432,6 +454,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		private String fullyQualifiedName;
 		private TypeReferenceInfo tri;
 		private boolean isAlias = false;
+		private boolean isProblemReported = false;
 
 		public UsePartInfo(UsePart usePart) {
 			this.usePart = usePart;
@@ -445,9 +468,11 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			if (tri.getNamespaceName() != null) {
 				fullyQualifiedName = tri.getNamespaceName();
 			}
-			fullyQualifiedName += NamespaceReference.NAMESPACE_DELIMITER + usePart.getNamespace().getName();
-			if (!fullyQualifiedName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
-				fullyQualifiedName = NamespaceReference.NAMESPACE_DELIMITER + fullyQualifiedName;
+			fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(fullyQualifiedName,
+					usePart.getNamespace().getName());
+			if (fullyQualifiedName.length() > 0
+					&& fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				fullyQualifiedName = NamespaceReference.NAMESPACE_SEPARATOR + fullyQualifiedName;
 			}
 		}
 
@@ -508,8 +533,9 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				if (fullTypeReference.getNamespace() != null) {
 					hasNamespace = true;
 					namespaceName = fullTypeReference.getNamespace().getName();
-					if (usePartInfo.get(namespaceName) != null) {
-						namespaceName = usePartInfo.get(namespaceName).getFullyQualifiedName();
+					UsePartInfo info = usePartInfo.get(namespaceName.toLowerCase());
+					if (info != null) {
+						namespaceName = info.getFullyQualifiedName();
 					}
 				}
 			}
@@ -524,7 +550,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			if (fullTypeReference != null && isGlobal) {
 				fullyQualifiedName = fullTypeReference.getFullyQualifiedName();
 			} else if (hasNamespace) {
-				fullyQualifiedName = namespaceName + NamespaceReference.NAMESPACE_DELIMITER + typeReference.getName();
+				fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(namespaceName, typeReference.getName());
 			} else {
 				fullyQualifiedName = typeName;
 			}
@@ -532,12 +558,15 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				String key = getFirstSegmentOfTypeName(fullyQualifiedName).toLowerCase();
 				if (usePartInfo.containsKey(key)) {
 					fullyQualifiedName = usePartInfo.get(key).getFullyQualifiedName();
-				} else if (currentNamespace != null)
-					fullyQualifiedName = currentNamespace.getName() + NamespaceReference.NAMESPACE_DELIMITER
-							+ fullyQualifiedName;
+				} else if (currentNamespace != null) {
+					fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(currentNamespace.getName(),
+							fullyQualifiedName);
+				}
 			}
-			if (!fullyQualifiedName.startsWith(NamespaceReference.NAMESPACE_DELIMITER))
-				fullyQualifiedName = NamespaceReference.NAMESPACE_DELIMITER + fullyQualifiedName;
+			if (fullyQualifiedName.length() > 0
+					&& fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				fullyQualifiedName = NamespaceReference.NAMESPACE_SEPARATOR + fullyQualifiedName;
+			}
 		}
 
 		public boolean isGlobal() {
