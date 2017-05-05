@@ -1,0 +1,21 @@
+--TEST--
+Bug 516256 - Syntax check for unhintable simple type 
+--FILE--
+<?php
+namespace name;
+
+class Foo extends Resource {
+}
+
+class Bar extends Boolean {
+    
+    /**
+     * @return bool|boolean|resource
+     */
+    function test() {
+        
+    }
+}
+--EXPECT--
+[line=4, start=41, end=49] Resource cannot be resolved to a type
+[line=7, start=73, end=80] Boolean cannot be resolved to a type

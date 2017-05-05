@@ -23,9 +23,11 @@ import org.eclipse.dltk.compiler.problem.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
@@ -45,6 +47,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		TYPE_SKIP.add("parent"); //$NON-NLS-1$
 		TYPE_SKIP.add("self"); //$NON-NLS-1$
 		TYPE_SKIP.add("static"); //$NON-NLS-1$
+		TYPE_SKIP.add("null"); //$NON-NLS-1$
 		PHPDOC_TYPE_SKIP.add("true"); //$NON-NLS-1$
 		PHPDOC_TYPE_SKIP.add("false"); //$NON-NLS-1$
 	}
@@ -55,11 +58,14 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	private Set<String> typeDeclared = new HashSet<>();
 	private boolean hasNamespace;
 	private ISourceModule sourceModule;
+	private PHPVersion version;
 	private IBuildContext context;
 
+	@SuppressWarnings("null")
 	public ValidatorVisitor(IBuildContext context) {
 		this.context = context;
 		this.sourceModule = context.getSourceModule();
+		this.version = ProjectOptions.getPHPVersion(sourceModule);
 	}
 
 	@Override
@@ -116,11 +122,17 @@ public class ValidatorVisitor extends PHPASTVisitor {
 
 	@Override
 	public boolean visit(TypeReference node) throws Exception {
-		return visit(node, ProblemSeverities.Error);
+		return visit(node, ProblemSeverities.Error, false);
 	}
 
-	private boolean visit(TypeReference node, ProblemSeverity severity) throws Exception {
-		if (PHPSimpleTypes.isSimpleType(node.getName()) || TYPE_SKIP.contains(node.getName())) {
+	private boolean visit(TypeReference node, ProblemSeverity severity, boolean isInDoc) throws Exception {
+		boolean skip = false;
+		if (isInDoc) {
+			skip = PHPSimpleTypes.isSimpleType(node.getName());
+		} else {
+			skip = PHPSimpleTypes.isHintable(node.getName(), version);
+		}
+		if (skip || TYPE_SKIP.contains(node.getName().toLowerCase())) {
 			return true;
 		}
 		TypeReferenceInfo tri = new TypeReferenceInfo(node, false);
@@ -259,14 +271,14 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		if (idx == -1) {
 			// look if complete name is a valid identifier name
 			if (PHPTextSequenceUtilities.readNamespaceStartIndex(name, name.length(), false) == 0) {
-				visit(typeReference, severity);
+				visit(typeReference, severity, true);
 			}
 		} else if (idx > 0) {
 			// look if name part before "::" is a valid (and non-empty)
 			// identifier name
 			if (PHPTextSequenceUtilities.readNamespaceStartIndex(name, idx, false) == 0) {
 				visit(new TypeReference(typeReference.start(), typeReference.start() + idx, name.substring(0, idx)),
-						severity);
+						severity, true);
 			}
 		}
 	}
