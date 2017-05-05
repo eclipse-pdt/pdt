@@ -70,7 +70,6 @@ public class PHPexes {
 	private static final String TRUE = "true"; //$NON-NLS-1$
 	private static final String FALSE = "false"; //$NON-NLS-1$
 	public static final String SEPARATOR = ";"; //$NON-NLS-1$
-	private static final String VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
 	public static final String ZEND_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 
 	private static Object lock = new Object();
@@ -555,7 +554,6 @@ public class PHPexes {
 					String id = element.getAttribute(ID_ATTRIBUTE);
 					final String name = element.getAttribute(NAME_ATTRIBUTE);
 					String location = substitudeVariables(element.getAttribute(LOCATION_ATTRIBUTE));
-					final String version = element.getAttribute(VERSION_ATTRIBUTE);
 					String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
 					if (debuggerID == null || debuggerID.equals("")) { //$NON-NLS-1$
 						debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
@@ -588,11 +586,7 @@ public class PHPexes {
 					if (file != null && file.exists()) {
 						final PHPexeItem newItem = new PHPexeItem(name, file, null, debuggerID, false);
 						if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null)
-							continue; // not adding "problematic"
-						// executables
-						if (version != null) {
-							newItem.setVersion(version);
-						}
+							continue; // not adding "problematic" executables
 						/*
 						 * Override unique ID to be always the same when loading
 						 * item from extension once again (restart)
