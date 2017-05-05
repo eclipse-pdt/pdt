@@ -1,0 +1,8 @@
+--TEST--
+Test for Bug 516219 - Fix use statements check with no namespace declared
+--FILE--
+<?php
+use name\Foo;
+
+--EXPECT--
+[line=2, start=10, end=18] The import name\Foo is never used
