@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Statement;
@@ -52,6 +53,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	private Map<String, Boolean> elementExists = new HashMap<String, Boolean>();
 	private NamespaceDeclaration currentNamespace;
 	private Set<String> typeDeclared = new HashSet<>();
+	private boolean hasNamespace;
 	private ISourceModule sourceModule;
 	private IBuildContext context;
 
@@ -61,25 +63,23 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	}
 
 	@Override
+	public boolean endvisit(ModuleDeclaration s) throws Exception {
+		if (!hasNamespace) {
+			checkUnusedImport();
+		}
+		return super.endvisit(s);
+	}
+
+	@Override
 	public boolean visit(NamespaceDeclaration s) throws Exception {
+		hasNamespace = true;
 		currentNamespace = s;
 		return true;
 	}
 
 	@Override
 	public boolean endvisit(NamespaceDeclaration s) throws Exception {
-		Collection<UsePartInfo> useInfos = usePartInfo.values();
-		for (UsePartInfo useInfo : useInfos) {
-			if (!useInfo.isProblemReported && useInfo.getRefCount() == 0) {
-				FullyQualifiedReference m = useInfo.getUsePart().getNamespace();
-				String name = m.getFullyQualifiedName();
-				reportProblem(m, Messages.UnusedImport, PhpProblemIdentifier.UnusedImport, name,
-						ProblemSeverities.Warning);
-			}
-		}
-		usePartInfo.clear();
-		elementExists.clear();
-		typeDeclared.clear();
+		checkUnusedImport();
 		return super.endvisit(s);
 	}
 
@@ -127,15 +127,14 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		String nodeName = tri.getTypeName();
 		String key = null;
 		if (tri.isGlobal()) {
-			key = node.getName();
+			key = nodeName;
 		} else {
 			key = getFirstSegmentOfTypeName(nodeName);
 		}
 		UsePartInfo info = usePartInfo.get(key.toLowerCase());
 
 		if (info != null) {
-			if (!nodeName.equals(info.getFullyQualifiedName()))
-				info.refer();
+			info.refer();
 		}
 		boolean isFound = findElement(tri);
 		if (!isFound) {
@@ -376,6 +375,21 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				}
 			}
 		}
+	}
+
+	private void checkUnusedImport() {
+		Collection<UsePartInfo> useInfos = usePartInfo.values();
+		for (UsePartInfo useInfo : useInfos) {
+			if (!useInfo.isProblemReported && useInfo.getRefCount() == 0) {
+				FullyQualifiedReference m = useInfo.getUsePart().getNamespace();
+				String name = m.getFullyQualifiedName();
+				reportProblem(m, Messages.UnusedImport, PhpProblemIdentifier.UnusedImport, name,
+						ProblemSeverities.Warning);
+			}
+		}
+		usePartInfo.clear();
+		elementExists.clear();
+		typeDeclared.clear();
 	}
 
 	private boolean findElement(TypeReferenceInfo info) {
