@@ -40,7 +40,11 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.eclipse.emf.common,
  org.eclipse.dltk.core.manipulation,
  org.eclipse.wst.common.project.facet.ui,
- org.apache.commons.lang3
+ org.apache.commons.lang3,
+ org.eclipse.tm4e.core,
+ org.eclipse.tm4e.registry,
+ org.eclipse.tm4e.samples,
+ org.eclipse.tm4e.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatter.ui,org.eclipse.php.refactoring.ui",
  org.eclipse.php.internal.ui.actions;x-internal:=true,

@@ -25,17 +25,29 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private static final String NEW = "new"; //$NON-NLS-1$
 
+	IEditorPart textEditor;
+
+	public PHPHyperlinkDetector() {
+	}
+
+	public PHPHyperlinkDetector(IEditorPart editor) {
+		this.textEditor = editor;
+	}
+
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		ITextEditor textEditor = getAdapter(ITextEditor.class);
-		if (region == null || !(textEditor instanceof PHPStructuredEditor)) {
+		if (textEditor == null) {
+			textEditor = getAdapter(ITextEditor.class);
+		}
+
+		if (region == null || textEditor == null) {
 			return null;
 		}
 

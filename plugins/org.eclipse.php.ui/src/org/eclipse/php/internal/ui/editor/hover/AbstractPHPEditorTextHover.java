@@ -83,7 +83,15 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover im
 			}
 
 			IWorkingCopyManager manager = DLTKUIPlugin.getDefault().getWorkingCopyManager();
-			return manager.getWorkingCopy(input, false);
+			ICodeAssist codeAssist = manager.getWorkingCopy(input, false);
+			if (codeAssist != null) {
+				return codeAssist;
+			}
+
+			IModelElement element = getEditor().getEditorInput().getAdapter(IModelElement.class);
+			if (element instanceof ICodeAssist) {
+				return (ICodeAssist) element;
+			}
 		}
 
 		return null;

@@ -14,14 +14,12 @@ package org.eclipse.php.internal.ui.text.template.contentassist;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.internal.ui.text.HTML2TextReader;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlCreatorExtension;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Shell;
@@ -48,7 +46,8 @@ public final class TemplateInformationControlCreator
 	 *            SWT#LEFT_TO_RIGHT
 	 */
 	public TemplateInformationControlCreator(int orientation) {
-		Assert.isLegal(orientation == SWT.RIGHT_TO_LEFT || orientation == SWT.LEFT_TO_RIGHT);
+		// Assert.isLegal(orientation == SWT.RIGHT_TO_LEFT || orientation ==
+		// SWT.LEFT_TO_RIGHT);
 		fOrientation = orientation;
 	}
 
