@@ -259,6 +259,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete
 	 * and precise PHPDoc type references handling.
 	 */
+	@SuppressWarnings("null")
 	private void visitPHPDocType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
 		if (PHPDOC_TYPE_SKIP.contains(typeReference.getName().toLowerCase())) {
 			return;
@@ -270,13 +271,13 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		int idx = name.indexOf(PAAMAYIM_NEKUDOTAIM);
 		if (idx == -1) {
 			// look if complete name is a valid identifier name
-			if (PHPTextSequenceUtilities.readNamespaceStartIndex(name, name.length(), false) == 0) {
+			if (PHPTextSequenceUtilities.readIdentifierStartIndex(version, name, name.length(), false) == 0) {
 				visit(typeReference, severity, true);
 			}
 		} else if (idx > 0) {
 			// look if name part before "::" is a valid (and non-empty)
 			// identifier name
-			if (PHPTextSequenceUtilities.readNamespaceStartIndex(name, idx, false) == 0) {
+			if (PHPTextSequenceUtilities.readIdentifierStartIndex(version, name, idx, false) == 0) {
 				visit(new TypeReference(typeReference.start(), typeReference.start() + idx, name.substring(0, idx)),
 						severity, true);
 			}
