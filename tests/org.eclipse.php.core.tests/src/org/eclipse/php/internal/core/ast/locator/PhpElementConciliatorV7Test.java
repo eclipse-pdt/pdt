@@ -42,4 +42,20 @@ public class PhpElementConciliatorV7Test extends PhpElementConciliatorV5_6Test {
 		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 	}
 
+	@Test
+	public void concileLambdaFunctionReturnType() {
+		setFileContent("<?php $fnc = function(DateTime $bar): DateTime {};?>");
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the class name.
+		int start = 43;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
+	}
+
 }

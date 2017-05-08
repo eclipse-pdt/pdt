@@ -113,6 +113,7 @@ public abstract class ASTNode implements Visitable {
 	public static final int YIELD_STATEMENT = 75;
 	public static final int FINALLY_CLAUSE = 76;
 	public static final int ANONYMOUS_CLASS_DECLARATION = 77;
+	public static final int RETURN_TYPE = 78;
 
 	/**
 	 * Internal convenience constant indicating that there is definite risk of

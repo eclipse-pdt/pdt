@@ -44,7 +44,7 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<FormalParameter>();
 	private final boolean isReference;
 	private PHPDocBlock phpDoc;
-	private TypeReference returnType;
+	private ReturnType returnType;
 
 	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName,
 			List<FormalParameter> formalParameters, Block body, final boolean isReference, PHPDocBlock phpDoc) {
@@ -69,7 +69,7 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 
 		this.isReference = isReference;
 		this.phpDoc = phpDoc;
-		this.returnType = returnType;
+		setReturnType(returnType);
 	}
 
 	public PHPDocBlock getPHPDoc() {
@@ -81,11 +81,16 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 	}
 
 	public TypeReference getReturnType() {
-		return returnType;
+		if (returnType != null) {
+			return returnType.getReturnType();
+		}
+		return null;
 	}
 
 	public void setReturnType(TypeReference returnType) {
-		this.returnType = returnType;
+		if (returnType != null) {
+			this.returnType = new ReturnType(returnType);
+		}
 	}
 
 	@Override

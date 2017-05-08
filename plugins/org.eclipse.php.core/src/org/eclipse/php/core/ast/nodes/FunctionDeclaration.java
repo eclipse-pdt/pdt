@@ -43,7 +43,7 @@ public class FunctionDeclaration extends Statement {
 	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<FormalParameter>(
 			FORMAL_PARAMETERS_PROPERTY);
 	private Block body;
-	private Identifier returnType;
+	private ReturnType returnType;
 
 	/**
 	 * The structural property of this node type.
@@ -60,7 +60,7 @@ public class FunctionDeclaration extends Statement {
 			"body", Block.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
 	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
-			FunctionDeclaration.class, "returnType", Identifier.class, //$NON-NLS-1$
+			FunctionDeclaration.class, "returnType", ReturnType.class, //$NON-NLS-1$
 			OPTIONAL, CYCLE_RISK);
 
 	/**
@@ -98,10 +98,12 @@ public class FunctionDeclaration extends Statement {
 			FormalParameter formalParameter = (FormalParameter) obj;
 			this.formalParameters.add(formalParameter);
 		}
+		if (returnType != null) {
+			setReturnType(returnType);
+		}
 		if (body != null) {
 			setBody(body);
 		}
-		setReturnType(returnType);
 	}
 
 	public FunctionDeclaration(AST ast) {
@@ -300,7 +302,10 @@ public class FunctionDeclaration extends Statement {
 	 * @return return type Identifier, can be null
 	 */
 	public Identifier getReturnType() {
-		return returnType;
+		if (returnType != null) {
+			return returnType.getName();
+		}
+		return null;
 	}
 
 	/**
@@ -311,9 +316,13 @@ public class FunctionDeclaration extends Statement {
 	 */
 	public void setReturnType(Identifier returnType) {
 		ASTNode oldChild = this.returnType;
-		preReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
-		this.returnType = returnType;
-		postReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
+		ReturnType newChild = null;
+		if (returnType != null) {
+			newChild = new ReturnType(returnType);
+		}
+		preReplaceChild(oldChild, newChild, RETURN_TYPE_PROPERTY);
+		this.returnType = newChild;
+		postReplaceChild(oldChild, newChild, RETURN_TYPE_PROPERTY);
 	}
 
 	/*
