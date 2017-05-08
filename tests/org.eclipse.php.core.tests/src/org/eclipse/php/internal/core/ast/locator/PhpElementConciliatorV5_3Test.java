@@ -18,12 +18,18 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PhpElementConciliatorV5_3Test extends AbstractConciliatorTest {
 
 	static {
 		phpVersion = PHPVersion.PHP5_3;
+	}
+
+	@BeforeClass
+	public static void setUpSuite() throws Exception {
+		AbstractConciliatorTest.setUpSuite();
 	}
 
 	@Test

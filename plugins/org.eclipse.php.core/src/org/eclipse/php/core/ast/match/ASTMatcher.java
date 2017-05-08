@@ -1020,4 +1020,12 @@ public class ASTMatcher {
 				&& node.getFunctionName().equals(o.getFunctionName());
 	}
 
+	public boolean match(ReturnType node, Object other) {
+		if (!(other instanceof ReturnType)) {
+			return false;
+		}
+		ReturnType o = (ReturnType) other;
+		return node.getName().equals(o.getName());
+	}
+
 }
