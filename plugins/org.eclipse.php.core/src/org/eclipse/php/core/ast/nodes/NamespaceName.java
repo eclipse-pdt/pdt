@@ -212,7 +212,8 @@ public class NamespaceName extends Identifier {
 	 *         is global.
 	 */
 	public List<Identifier> segments() {
-		return this.segments;
+		assert segments.size() > 0 || global;
+		return segments;
 	}
 
 	/*
