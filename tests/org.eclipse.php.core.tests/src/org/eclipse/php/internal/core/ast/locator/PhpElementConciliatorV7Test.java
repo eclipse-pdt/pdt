@@ -18,12 +18,26 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.tests.TestUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PhpElementConciliatorV7Test extends PhpElementConciliatorV5_6Test {
 
 	static {
 		phpVersion = PHPVersion.PHP7_0;
+	}
+
+	@BeforeClass
+	public static void setUpSuite() throws Exception {
+		project = phpVersion != null ? createProject("projectConciliator", phpVersion)
+				: createProject("projectConciliator");
+	}
+
+	@AfterClass
+	public static void tearDownSuite() throws Exception {
+		TestUtils.deleteProject(project);
 	}
 
 	@Test
@@ -36,6 +50,22 @@ public class PhpElementConciliatorV7Test extends PhpElementConciliatorV5_6Test {
 
 		// select the class name.
 		int start = 39;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
+	}
+
+	@Test
+	public void concileLambdaFunctionReturnType() {
+		setFileContent("<?php $fnc = function(DateTime $bar): DateTime {};?>");
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the class name.
+		int start = 43;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
