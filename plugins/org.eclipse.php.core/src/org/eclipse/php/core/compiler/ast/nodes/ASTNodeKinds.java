@@ -90,5 +90,6 @@ public interface ASTNodeKinds {
 	public static final int YIELD_STATEMENT = 74;
 	public static final int FINALLY_CLAUSE = 75;
 	public static final int ANONYMOUS_CLASS_DECLARATION = 76;
+	public static final int RETURN_TYPE = 77;
 
 }

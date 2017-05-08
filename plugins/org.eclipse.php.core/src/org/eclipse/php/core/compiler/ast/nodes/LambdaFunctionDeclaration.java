@@ -38,7 +38,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final List<? extends Expression> lexicalVars;
 	protected List<FormalParameter> arguments = new LinkedList<FormalParameter>();
 	private Block body = new Block();
-	private TypeReference returnType;
+	private ReturnType returnType;
 
 	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters,
 			List<? extends Expression> lexicalVars, Block body, final boolean isReference) {
@@ -63,7 +63,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		this.lexicalVars = lexicalVars;
 		this.isReference = isReference;
 		this.isStatic = isStatic;
-		this.returnType = returnType;
+		setReturnType(returnType);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -111,11 +111,16 @@ public class LambdaFunctionDeclaration extends Expression {
 	}
 
 	public TypeReference getReturnType() {
-		return returnType;
+		if (returnType != null) {
+			return returnType.getReturnType();
+		}
+		return null;
 	}
 
 	public void setReturnType(TypeReference returnType) {
-		this.returnType = returnType;
+		if (returnType != null) {
+			this.returnType = new ReturnType(returnType);
+		}
 	}
 
 	/**

@@ -313,6 +313,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	public boolean endvisit(PHPMethodDeclaration s) throws Exception {
+		xmlWriter.endTag("PHPMethodDeclaration"); //$NON-NLS-1$
+		return true;
+	}
+
 	public boolean endvisit(PostfixExpression s) throws Exception {
 		xmlWriter.endTag("PostfixExpression"); //$NON-NLS-1$
 		return true;
@@ -355,6 +360,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean endvisit(ReturnStatement s) throws Exception {
 		xmlWriter.endTag("ReturnStatement"); //$NON-NLS-1$
+		return true;
+	}
+
+	public boolean endvisit(ReturnType s) throws Exception {
+		xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
 		return true;
 	}
 
@@ -826,22 +836,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
 		xmlWriter.startTag("PHPMethodDeclaration", parameters); //$NON-NLS-1$
-
-		if (s.getArguments() != null && s.getArguments().size() > 0) {
-			for (Object p : s.getArguments()) {
-				((FormalParameter) p).traverse(this);
-			}
-		}
-
-		if (s.getReturnType() != null) {
-			xmlWriter.startTag("ReturnType", new HashMap<String, String>()); //$NON-NLS-1$
-			s.getReturnType().traverse(this);
-			xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
-		}
-
-		s.getBody().traverse(this);
-		xmlWriter.endTag("PHPMethodDeclaration"); //$NON-NLS-1$
-		return false;
+		return true;
 	}
 
 	public boolean visit(PostfixExpression s) throws Exception {
@@ -898,6 +893,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ReturnStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReturnStatement", parameters); //$NON-NLS-1$
+		return true;
+	}
+
+	public boolean visit(ReturnType s) throws Exception {
+		xmlWriter.startTag("ReturnType", null); //$NON-NLS-1$
 		return true;
 	}
 

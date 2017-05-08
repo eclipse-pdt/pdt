@@ -267,6 +267,10 @@ public abstract class AbstractVisitor implements Visitor {
 		return true;
 	}
 
+	public boolean visit(ReturnType returnType) {
+		return true;
+	}
+
 	public boolean visit(YieldExpression YieldExpression) {
 		return true;
 	}
@@ -496,10 +500,13 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(ReflectionVariable reflectionVariable) {
 	}
 
-	public void endVisit(ReturnStatement YieldExpression) {
+	public void endVisit(ReturnStatement returnStatement) {
 	}
 
-	public void endVisit(YieldExpression YieldExpression) {
+	public void endVisit(ReturnType returnType) {
+	}
+
+	public void endVisit(YieldExpression yieldExpression) {
 	}
 
 	public void endVisit(Scalar scalar) {

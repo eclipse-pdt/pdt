@@ -251,6 +251,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(returnStatement);
 	}
 
+	public boolean visit(ReturnType returnType) {
+		return apply(returnType);
+	}
+
 	public boolean visit(Scalar scalar) {
 		return apply(scalar);
 	}
@@ -521,6 +525,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	public void endVisit(ReturnStatement returnStatement) {
 		endVisitNode(returnStatement);
+	}
+
+	public void endVisit(ReturnType returnType) {
+		endVisitNode(returnType);
 	}
 
 	public void endVisit(Scalar scalar) {
