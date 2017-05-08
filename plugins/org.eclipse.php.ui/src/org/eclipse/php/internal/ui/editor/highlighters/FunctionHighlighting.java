@@ -47,8 +47,10 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 		private void highlightFunctionName(Expression functionName) {
 			if (functionName instanceof NamespaceName) {
 				List<Identifier> segments = ((NamespaceName) functionName).segments();
-				Identifier segment = segments.get(segments.size() - 1);
-				highlight(segment);
+				if (segments.size() > 0) {
+					Identifier segment = segments.get(segments.size() - 1);
+					highlight(segment);
+				}
 			} else {
 				highlight(functionName);
 			}

@@ -164,11 +164,13 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 
 		private void highlightNamespaceType(NamespaceName name, boolean excludeSelf) {
 			List<Identifier> segments = name.segments();
-			Identifier segment = segments.get(segments.size() - 1);
-			if (!(segments.size() == 1 && !name.isGlobal()
-					&& (PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
-							|| (excludeSelf && "self".equalsIgnoreCase(segment.getName()))))) { //$NON-NLS-1$
-				highlight(segment);
+			if (segments.size() > 0) {
+				Identifier segment = segments.get(segments.size() - 1);
+				if (!(segments.size() == 1 && !name.isGlobal()
+						&& (PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
+								|| (excludeSelf && "self".equalsIgnoreCase(segment.getName()))))) { //$NON-NLS-1$
+					highlight(segment);
+				}
 			}
 		}
 	}

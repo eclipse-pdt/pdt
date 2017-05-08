@@ -57,7 +57,9 @@ public class ModifierCorrectionSubProcessor {
 			break;
 		case ASTNode.NAMESPACE_NAME:
 			List<Identifier> segments = ((NamespaceName) selectedNode).segments();
-			binding = segments.get(segments.size() - 1).resolveBinding();
+			if (segments.size() > 0) {
+				binding = segments.get(segments.size() - 1).resolveBinding();
+			}
 			break;
 		default:
 			return;
