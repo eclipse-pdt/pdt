@@ -24,10 +24,6 @@ import org.junit.Test;
 
 public class PhpElementConciliatorTest extends AbstractConciliatorTest {
 
-	static {
-		phpVersion = null;
-	}
-
 	@Test
 	public void concileClassName() {
 		setFileContent("<?php class TestRenameClass{}?>");

@@ -79,8 +79,7 @@ public class PhpElementConciliator {
 		parent = namespaceName.getParent();
 		if (parent.getType() == ASTNode.FUNCTION_NAME || parent.getType() == ASTNode.CLASS_NAME
 				|| parent.getType() == ASTNode.NAMESPACE || parent.getType() == ASTNode.USE_STATEMENT_PART
-				|| parent.getType() == ASTNode.TRAIT_USE_STATEMENT || parent.getType() == ASTNode.FUNCTION_DECLARATION
-				|| parent.getType() == ASTNode.LAMBDA_FUNCTION_DECLARATION
+				|| parent.getType() == ASTNode.TRAIT_USE_STATEMENT || parent.getType() == ASTNode.RETURN_TYPE
 				|| parent.getType() == ASTNode.ANONYMOUS_CLASS_DECLARATION) {
 			return false;
 		}
@@ -269,7 +268,8 @@ public class PhpElementConciliator {
 		final int parentType = parent.getType();
 		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION
 				|| parentType == ASTNode.INTERFACE_DECLARATION || parentType == ASTNode.CATCH_CLAUSE
-				|| parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.USE_STATEMENT_PART) {
+				|| parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.USE_STATEMENT_PART
+				|| parentType == ASTNode.RETURN_TYPE) {
 			return true;
 		}
 

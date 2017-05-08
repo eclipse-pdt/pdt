@@ -274,6 +274,10 @@ public interface Visitor {
 
 	public void endVisit(ReturnStatement returnStatement);
 
+	public boolean visit(ReturnType returnType);
+
+	public void endVisit(ReturnType returnType);
+
 	public boolean visit(Scalar scalar);
 
 	public void endVisit(Scalar scalar);

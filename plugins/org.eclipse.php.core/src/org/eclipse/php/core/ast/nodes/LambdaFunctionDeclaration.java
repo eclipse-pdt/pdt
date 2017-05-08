@@ -39,7 +39,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<Expression>(
 			LEXICAL_VARIABLES_PROPERTY);
 	private Block body;
-	private Identifier returnType;
+	private ReturnType returnType;
 
 	/**
 	 * The structural property of this node type.
@@ -60,7 +60,7 @@ public class LambdaFunctionDeclaration extends Expression {
 			LambdaFunctionDeclaration.class, "body", Block.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
 	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
-			LambdaFunctionDeclaration.class, "returnType", Identifier.class, //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "returnType", ReturnType.class, //$NON-NLS-1$
 			OPTIONAL, CYCLE_RISK);
 
 	/**
@@ -112,15 +112,14 @@ public class LambdaFunctionDeclaration extends Expression {
 				this.lexicalVariables.add(varsIt.next());
 			}
 		}
+		if (returnType != null) {
+			setReturnType(returnType);
+		}
 		if (body != null) {
 			setBody(body);
 		}
 		setStatic(isStatic);
 		this.staticStart = staticStart;
-		this.returnType = returnType;
-		if (this.returnType != null) {
-			this.returnType.setParent(this, RETURN_TYPE_PROPERTY);
-		}
 	}
 
 	public LambdaFunctionDeclaration(AST ast) {
@@ -319,7 +318,10 @@ public class LambdaFunctionDeclaration extends Expression {
 	 * @return return type Identifier, can be null
 	 */
 	public Identifier getReturnType() {
-		return returnType;
+		if (returnType != null) {
+			return returnType.getName();
+		}
+		return null;
 	}
 
 	/**
@@ -330,9 +332,13 @@ public class LambdaFunctionDeclaration extends Expression {
 	 */
 	public void setReturnType(Identifier returnType) {
 		ASTNode oldChild = this.returnType;
-		preReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
-		this.returnType = returnType;
-		postReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
+		ReturnType newChild = null;
+		if (returnType != null) {
+			newChild = new ReturnType(returnType);
+		}
+		preReplaceChild(oldChild, newChild, RETURN_TYPE_PROPERTY);
+		this.returnType = newChild;
+		postReplaceChild(oldChild, newChild, RETURN_TYPE_PROPERTY);
 	}
 
 	/*
