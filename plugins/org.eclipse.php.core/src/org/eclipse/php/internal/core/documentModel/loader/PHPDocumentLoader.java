@@ -18,8 +18,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
-import org.eclipse.php.internal.core.documentModel.parser.PhpStructuredDocumentReParser;
+import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
+import org.eclipse.php.internal.core.documentModel.parser.PHPStructuredDocumentReParser;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
@@ -39,14 +39,14 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 	protected IEncodedDocument newEncodedDocument() {
 		IEncodedDocument doc = super.newEncodedDocument();
 		assert doc instanceof BasicStructuredDocument;
-		((BasicStructuredDocument) doc).setReParser(new PhpStructuredDocumentReParser());
+		((BasicStructuredDocument) doc).setReParser(new PHPStructuredDocumentReParser());
 
 		// doc.setPreferredLineDelimiter( "\n" );
 		return doc;
 	}
 
 	public RegionParser getParser() {
-		PhpSourceParser parser = new PhpSourceParser();
+		PHPSourceParser parser = new PHPSourceParser();
 		// for the "static HTML" case, we need to initialize
 		// Blocktags here.
 		addHTMLishTag(parser, "script"); //$NON-NLS-1$

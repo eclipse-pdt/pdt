@@ -32,7 +32,7 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
@@ -355,7 +355,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 		// Find the first PHP script region:
 		IStructuredDocumentRegion sdRegion = document.getFirstStructuredDocumentRegion();
-		IPhpScriptRegion phpScriptRegion = null;
+		IPHPScriptRegion phpScriptRegion = null;
 		ITextRegion textRegion = null;
 		String docBlock = null;
 		while (sdRegion != null && docBlock == null) {
@@ -364,7 +364,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 				// File's content starts with '<?PHP' tag
 				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStartOffset());
 				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
-					phpScriptRegion = (IPhpScriptRegion) region;
+					phpScriptRegion = (IPHPScriptRegion) region;
 					try {
 						docBlock = CodeGeneration.getFileComment(data, null);
 					} catch (CoreException e) {
@@ -398,7 +398,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					offset = 0;
 				} else if (phpScriptRegion != null && sdRegion != null) {
 					// File's content starts with '<?php' tag
-					textRegion = phpScriptRegion.getPhpToken(0);
+					textRegion = phpScriptRegion.getPHPToken(0);
 					String lineDelimiter = document.getLineDelimiter(document.getLineOfOffset(textRegion.getStart()));
 					if (lineDelimiter == null) {
 						// XXX : should we add a newline before inserting

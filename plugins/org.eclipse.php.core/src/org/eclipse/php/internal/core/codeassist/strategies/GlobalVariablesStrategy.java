@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.language.PHPVariables;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -79,13 +79,13 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		IField[] fields = null;
 		if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
 			IDLTKSearchScope scope = createSearchScope();
-			fields = PhpModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
+			fields = PHPModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
 					Modifiers.AccConstant, scope, null);
 		} else if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
 			// FIXME why we can't get $myGlobalVar from php
 			// code:list($myGlobalVar) = 0;
 			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(abstractContext.getSourceModule());
-			fields = PhpModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
+			fields = PHPModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
 					Modifiers.AccConstant, scope, null);
 		}
 
@@ -106,7 +106,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		}
 
 		if (showPhpVariables) {
-			PHPVersion phpVersion = abstractContext.getPhpVersion();
+			PHPVersion phpVersion = abstractContext.getPHPVersion();
 			for (String variable : PHPVariables.getVariables(phpVersion)) {
 				if (variable.startsWith(prefix)) {
 					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {

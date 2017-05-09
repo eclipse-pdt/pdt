@@ -31,7 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.text.edits.TextEdit;
 
 /**
@@ -672,7 +672,7 @@ public class Program extends ASTNode {
 
 			IResource resource = getSourceModule().getUnderlyingResource();
 			if (resource != null) {
-				IMarker[] markers = resource.findMarkers(PhpProblemIdentifier.MARKER_TYPE_ID, true,
+				IMarker[] markers = resource.findMarkers(PHPProblemIdentifier.MARKER_TYPE_ID, true,
 						IResource.DEPTH_ONE);
 				IProblem[] problems = new DefaultProblem[markers.length];
 				for (int i = 0; i < markers.length; ++i) {

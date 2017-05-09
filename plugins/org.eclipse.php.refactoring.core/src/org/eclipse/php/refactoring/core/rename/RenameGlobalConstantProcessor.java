@@ -23,7 +23,7 @@ import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameGlobalConstant;
 
@@ -174,7 +174,7 @@ public class RenameGlobalConstantProcessor extends
 	}
 
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PhpElementConciliator.constantAlreadyExists(program,
+		if (PHPElementConciliator.constantAlreadyExists(program,
 				getNewElementName())) {
 			final String message = MessageFormat.format(
 					RenameGlobalConstantProcessor.CONSTANT_IS_USED,

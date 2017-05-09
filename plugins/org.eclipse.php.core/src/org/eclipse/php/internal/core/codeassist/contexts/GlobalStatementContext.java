@@ -60,7 +60,7 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 							}
 
 							actualOffset = textRegion.getStart() - 1;
-							textRegion = getPhpScriptRegion().getPhpToken(actualOffset);
+							textRegion = getPHPScriptRegion().getPHPToken(actualOffset);
 						}
 					}
 				} catch (BadLocationException e1) {

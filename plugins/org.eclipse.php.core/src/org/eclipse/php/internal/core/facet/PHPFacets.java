@@ -85,7 +85,7 @@ public class PHPFacets {
 	 *            the php faceted project
 	 * @return the php version
 	 */
-	public static PHPVersion getPhpVersionFromFacets(IProject project) {
+	public static PHPVersion getPHPVersionFromFacets(IProject project) {
 		try {
 			final IFacetedProject faceted = ProjectFacetsManager.create(project);
 			if (faceted != null) {

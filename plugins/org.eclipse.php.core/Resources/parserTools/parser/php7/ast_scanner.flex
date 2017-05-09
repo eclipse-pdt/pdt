@@ -26,7 +26,7 @@ import java_cup.runtime.Symbol;
 
 %%
 
-%class PhpAstLexer
+%class PHPAstLexer
 %public
 %unicode
 %line
@@ -105,7 +105,7 @@ import java_cup.runtime.Symbol;
 		}
 	}
 
-	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp) {
+	public void setUseAspTagsAsPHP(boolean useAspTagsAsPhp) {
 		asp_tags = useAspTagsAsPhp;
 	}
 

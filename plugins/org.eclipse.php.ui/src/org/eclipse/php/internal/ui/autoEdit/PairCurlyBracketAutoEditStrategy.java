@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -61,9 +61,9 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			}
 
 			// find the specified php token in the PhpScriptRegion
-			if (tRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - regionStart);
+			if (tRegion instanceof IPHPScriptRegion) {
+				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+				tRegion = scriptRegion.getPHPToken(offset - regionStart);
 
 				return tRegion;
 			}

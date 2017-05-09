@@ -35,7 +35,7 @@ import org.eclipse.ltk.core.refactoring.participants.*;
 import org.eclipse.ltk.internal.core.refactoring.resource.ResourceProcessors;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.typeinference.TraitUtils.ITraitMember;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.RefactoringPlugin;
@@ -485,13 +485,13 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 
-		int type = PhpElementConciliator.concile(identifier);
+		int type = PHPElementConciliator.concile(identifier);
 
 		identifier.getParent();
-		if (type == PhpElementConciliator.CONCILIATOR_CLASS_MEMBER) {
+		if (type == PHPElementConciliator.CONCILIATOR_CLASS_MEMBER) {
 			final TypeDeclaration host = RefactoringUtility.getType(identifier);
 			if (host != null
-					&& PhpElementConciliator.classMemeberAlreadyExists(host,
+					&& PHPElementConciliator.classMemeberAlreadyExists(host,
 							getNewElementName(), identifier.getParent()
 									.getType())) {
 				final String message = MessageFormat

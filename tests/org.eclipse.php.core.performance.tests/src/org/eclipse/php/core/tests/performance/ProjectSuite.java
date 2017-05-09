@@ -26,6 +26,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.filenetwork.AbstractModelTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
@@ -35,8 +36,7 @@ import org.eclipse.php.core.tests.performance.filenetwork.FileNetworkTestsWrappe
 import org.eclipse.php.core.tests.performance.markoccurrence.MarkOccurrenceTestsWrapper;
 import org.eclipse.php.core.tests.performance.selection.SelectionEngineTestsWrapper;
 import org.eclipse.php.core.tests.performance.typeinference.TypeInferenceTestsWrapper;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 
 import junit.extensions.TestSetup;
@@ -175,7 +175,7 @@ public class ProjectSuite extends AbstractModelTests {
 		}
 
 		public void runTest() throws Throwable {
-			final PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
@@ -195,7 +195,7 @@ public class ProjectSuite extends AbstractModelTests {
 		}
 
 		public void runTest() throws Throwable {
-			final PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
@@ -215,7 +215,7 @@ public class ProjectSuite extends AbstractModelTests {
 		}
 
 		public void runTest() throws Throwable {
-			final PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
@@ -235,7 +235,7 @@ public class ProjectSuite extends AbstractModelTests {
 		}
 
 		public void runTest() throws Throwable {
-			final PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
 
 			IScriptProject scriptProject = DLTKCore.create(project);
@@ -259,7 +259,7 @@ public class ProjectSuite extends AbstractModelTests {
 
 			IScriptProject scriptProject = DLTKCore.create(project);
 			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			final IType[] exceptionType = PhpModelAccess.getDefault().findTypes(map.get(TYPE).toString(),
+			final IType[] exceptionType = PHPModelAccess.getDefault().findTypes(map.get(TYPE).toString(),
 					MatchRule.EXACT, 0, 0, scope, null);
 
 			Assert.assertNotNull(exceptionType);
@@ -283,7 +283,7 @@ public class ProjectSuite extends AbstractModelTests {
 
 			IScriptProject scriptProject = DLTKCore.create(project);
 			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			final IType[] exceptionType = PhpModelAccess.getDefault().findTypes(map.get(TYPE).toString(),
+			final IType[] exceptionType = PHPModelAccess.getDefault().findTypes(map.get(TYPE).toString(),
 					MatchRule.EXACT, 0, 0, scope, null);
 
 			Assert.assertNotNull(exceptionType);

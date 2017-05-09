@@ -23,7 +23,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.proposals.ASTRewriteCorrectionProposal;
@@ -185,7 +185,7 @@ public class ModifierCorrectionSubProcessor {
 		boolean hasNoBody = funcDecl.getBody() == null;
 
 		IProblemIdentifier id = problem.getProblemIdentifier();
-		if (id == PhpProblemIdentifier.AbstractMethodInAbstractClass || parentIsAbstractClass) {
+		if (id == PHPProblemIdentifier.AbstractMethodInAbstractClass || parentIsAbstractClass) {
 			AST ast = astRoot.getAST();
 			ASTRewrite rewrite = ASTRewrite.create(ast);
 
@@ -202,7 +202,7 @@ public class ModifierCorrectionSubProcessor {
 			proposals.add(proposal);
 		}
 
-		if (!hasNoBody && id == PhpProblemIdentifier.BodyForAbstractMethod) {
+		if (!hasNoBody && id == PHPProblemIdentifier.BodyForAbstractMethod) {
 			ASTRewrite rewrite = ASTRewrite.create(funcDecl.getAST());
 			rewrite.remove(funcDecl.getBody(), null);
 
@@ -212,7 +212,7 @@ public class ModifierCorrectionSubProcessor {
 			proposals.add(proposal2);
 		}
 
-		if (id == PhpProblemIdentifier.AbstractMethodInAbstractClass && parentTypeDecl != null
+		if (id == PHPProblemIdentifier.AbstractMethodInAbstractClass && parentTypeDecl != null
 				&& !(parentTypeDecl instanceof TraitDeclaration)) {
 			addMakeTypeAbstractProposal(context, parentTypeDecl, proposals, cu);
 		}

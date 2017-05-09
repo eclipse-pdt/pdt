@@ -34,7 +34,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.ui.editor.EditorHighlightingSynchronizer;
@@ -482,7 +482,7 @@ public class RenameLinkedMode {
 
 		viewer.setSelectedRange(fOriginalSelection.x, fOriginalSelection.y);
 
-		final int elementType = PhpElementConciliator.concile(selectedNode);
+		final int elementType = PHPElementConciliator.concile(selectedNode);
 		RenameSupport renameSupport = RenameSupport.create(
 				selectedNode.getProgramRoot().getSourceModule().getResource(), elementType, selectedNode, newName,
 				RenameSupport.UPDATE_REFERENCES);

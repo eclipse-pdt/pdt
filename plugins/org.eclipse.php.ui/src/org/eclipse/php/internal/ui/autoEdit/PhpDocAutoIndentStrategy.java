@@ -21,7 +21,7 @@ import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
@@ -454,16 +454,16 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 				}
 
-				if (tRegion instanceof IPhpScriptRegion) {
-					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+				if (tRegion instanceof IPHPScriptRegion) {
+					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
 					regionOffset -= scriptRegion.getStart();
 
-					ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
+					ITextRegion commentRegion = scriptRegion.getPHPToken(regionOffset);
 					int phpScriptEndOffset = scriptRegion.getLength();
 					boolean isSpaceDeletionNeeded = false;
 					do {
 						int currentRegionEndOffset = commentRegion.getEnd();
-						commentRegion = scriptRegion.getPhpToken(currentRegionEndOffset);
+						commentRegion = scriptRegion.getPHPToken(currentRegionEndOffset);
 						String tokenType = commentRegion.getType();
 						if (PHPPartitionTypes.isPHPMultiLineCommentEndRegion(tokenType)
 								|| PHPPartitionTypes.isPHPDocEndRegion(tokenType)) {
@@ -580,14 +580,14 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 								regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 							}
 
-							if (tRegion instanceof IPhpScriptRegion) {
-								IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+							if (tRegion instanceof IPHPScriptRegion) {
+								IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
 
 								// update region offset for in order to get
 								// phpdoc region later
 								regionOffset -= scriptRegion.getStart();
 
-								ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
+								ITextRegion commentRegion = scriptRegion.getPHPToken(regionOffset);
 
 								String tokenType = commentRegion.getType();
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=509024
@@ -612,7 +612,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 										}
 										// get previous region
 										region = scriptRegion
-												.getPhpToken(region.getStart() - lineDelimiters[index].length());
+												.getPHPToken(region.getStart() - lineDelimiters[index].length());
 
 									} while (true);
 

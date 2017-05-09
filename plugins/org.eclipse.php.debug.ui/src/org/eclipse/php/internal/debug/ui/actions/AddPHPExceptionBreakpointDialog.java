@@ -29,7 +29,7 @@ import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -338,7 +338,7 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 					return o1.getElementName().toLowerCase().compareTo(o2.getElementName().toLowerCase());
 				}
 			});
-			final PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			final IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 			// Make sure that scope is up-to-date
 			scope.enclosingProjectsAndZips();

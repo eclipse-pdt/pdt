@@ -11,7 +11,7 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
+import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.swt.SWT;
@@ -103,7 +103,7 @@ public class PHPTextMergeViewer extends TextMergeViewer {
 		if (document instanceof IStructuredDocument) {
 			newDoc = (IStructuredDocument) document;
 		} else if (document != null) {
-			newDoc = StructuredDocumentFactory.getNewStructuredDocumentInstance(new PhpSourceParser());
+			newDoc = StructuredDocumentFactory.getNewStructuredDocumentInstance(new PHPSourceParser());
 			newDoc.set(document.get());
 
 			IDocumentPartitioner partitioner = getDocumentPartitioner();

@@ -15,9 +15,9 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
-import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
+import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
 import org.eclipse.php.internal.core.format.IndentationObject;
-import org.eclipse.php.internal.core.format.PhpIndentationFormatter;
+import org.eclipse.php.internal.core.format.PHPIndentationFormatter;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -129,11 +129,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				}
 			}
 
-			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
+			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PHPSourceParser());
 			StringBuilder tempsb = new StringBuilder(command.offset + command.text.length() + 1);
 			tempsb.append(document.get(0, command.offset)).append(command.text).append(fakeFirstCharsAfterCommandText);
 			newdocument.set(tempsb.toString());
-			PhpIndentationFormatter formatter = new PhpIndentationFormatter(command.offset, command.text.length(),
+			PHPIndentationFormatter formatter = new PHPIndentationFormatter(command.offset, command.text.length(),
 					indentationObject);
 			formatter.format(newdocument.getRegionAtCharacterOffset(command.offset));
 

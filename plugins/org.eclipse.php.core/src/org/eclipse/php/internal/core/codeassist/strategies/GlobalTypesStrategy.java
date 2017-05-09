@@ -35,7 +35,7 @@ import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseNameContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -155,7 +155,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
-			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
+			IType[] elements = PHPModelAccess.getDefault().findTypes(null,
 					fullName + NamespaceReference.NAMESPACE_SEPARATOR, MatchRule.PREFIX, 0, 0, scope, null);
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();
@@ -178,13 +178,13 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					fullName = fullName.substring(1);
 				}
 				try {
-					IType[] elements = PhpModelAccess.getDefault().findTypes(fullName, MatchRule.EXACT, 0, 0, scope,
+					IType[] elements = PHPModelAccess.getDefault().findTypes(fullName, MatchRule.EXACT, 0, 0, scope,
 							null);
 					for (int i = 0; i < elements.length; i++) {
 						reportAlias(reporter, scope, module, replacementRange, elements[i],
 								elements[i].getElementName(), name, suffix);
 					}
-					IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.EXACT, 0,
+					IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.EXACT, 0,
 							0, scope, null);
 					for (int i = 0; i < namespaces.length; i++) {
 						String elementName = namespaces[i].getElementName();
@@ -237,24 +237,24 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
-			IType[] types = PhpModelAccess.getDefault().findTypes(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
+			IType[] types = PHPModelAccess.getDefault().findTypes(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
 					scope, null);
 
-			IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.CAMEL_CASE,
+			IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.CAMEL_CASE,
 					trueFlag, falseFlag, scope, null);
 
 			result.addAll(Arrays.asList(types));
 			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 		}
-		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
+		IType[] types = PHPModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
 				scope, null);
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
+		IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
 				falseFlag, scope, null);
 
 		if (context instanceof NamespaceMemberContext) {

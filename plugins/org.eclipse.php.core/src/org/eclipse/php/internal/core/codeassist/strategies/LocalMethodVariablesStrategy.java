@@ -75,7 +75,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 				}
 			} else {
 				if (enclosingMethod.getParent() instanceof IField
-						&& concreteContext.getPhpVersion().isGreaterThan(PHPVersion.PHP5_3)) {
+						&& concreteContext.getPHPVersion().isGreaterThan(PHPVersion.PHP5_3)) {
 					IMethod method = (IMethod) enclosingMethod.getParent().getAncestor(IModelElement.METHOD);
 					if (method != null) {
 						declaringType = method.getDeclaringType();
@@ -95,7 +95,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 					ICompletionReporter.RELEVANCE_ADJUST);
 		}
 
-		PHPVersion phpVersion = concreteContext.getPhpVersion();
+		PHPVersion phpVersion = concreteContext.getPHPVersion();
 		for (String variable : PHPVariables.getVariables(phpVersion, PHPVariables.SUPER_GLOBAL)) {
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {

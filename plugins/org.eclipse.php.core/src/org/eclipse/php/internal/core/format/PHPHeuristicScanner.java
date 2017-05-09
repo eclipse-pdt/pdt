@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
@@ -994,10 +994,10 @@ public final class PHPHeuristicScanner implements Symbols {
 						startRegion += container.getStart();
 						textRegion = container.getRegionAtCharacterOffset(position);
 					}
-					if (textRegion instanceof IPhpScriptRegion) {
-						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+					if (textRegion instanceof IPHPScriptRegion) {
+						IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) textRegion;
 						startRegion += phpScriptRegion.getStart();
-						textRegion = phpScriptRegion.getPhpToken(position - startRegion);
+						textRegion = phpScriptRegion.getPHPToken(position - startRegion);
 						startRegion += textRegion.getStart();
 
 						String partitionType = PHPPartitionTypes.getPartitionType(textRegion.getType());
@@ -1032,10 +1032,10 @@ public final class PHPHeuristicScanner implements Symbols {
 						startRegion += container.getStart();
 						textRegion = container.getRegionAtCharacterOffset(position);
 					}
-					if (textRegion instanceof IPhpScriptRegion) {
-						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+					if (textRegion instanceof IPHPScriptRegion) {
+						IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) textRegion;
 						startRegion += phpScriptRegion.getStart();
-						textRegion = phpScriptRegion.getPhpToken(position - startRegion);
+						textRegion = phpScriptRegion.getPHPToken(position - startRegion);
 						return textRegion;
 					}
 				}
