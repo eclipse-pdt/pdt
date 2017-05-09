@@ -37,7 +37,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -180,7 +180,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 				@Override
 				public Image getImage(Object element) {
-					if (element instanceof ElementImplForPhp) {
+					if (element instanceof ElementImplForPHP) {
 						return null;
 					}
 					return super.getImage(element);

@@ -38,7 +38,7 @@ import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseConstNameContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
@@ -107,7 +107,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			scope = getSearchScope(abstractContext);
 		}
 
-		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
+		enclosingTypeConstants = PHPModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
 				scope, null);
 
 		if (isCaseSensitive()) {
@@ -156,7 +156,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				fullName = fullName.substring(1);
 			}
-			IField[] elements = PhpModelAccess.getDefault().findFields(null, fullName, MatchRule.PREFIX, 0, 0, scope,
+			IField[] elements = PHPModelAccess.getDefault().findFields(null, fullName, MatchRule.PREFIX, 0, 0, scope,
 					null);
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();
@@ -164,7 +164,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 						elementName.replace(fullName, name));
 			}
 
-			elements = PhpModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
+			elements = PHPModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();
 				reportAlias(reporter, scope, module, replacementRange, elements[i], elementName, name);

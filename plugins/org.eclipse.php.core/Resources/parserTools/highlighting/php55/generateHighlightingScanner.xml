@@ -16,7 +16,7 @@
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
-			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php55/PhpLexer.java">
+			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php55/PHPLexer.java">
 			<srcfiles dir="." includes="highlighting_scanner.jflex" />
 			<srcfiles dir="../../jflex" includes="common.skeleton" />
 		</uptodate>

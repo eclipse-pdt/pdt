@@ -46,7 +46,7 @@ public class ClassImplementsContext extends ClassDeclarationContext {
 
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
-		if (getPhpVersion().isGreaterThan(PHPVersion.PHP5)) {
+		if (getPHPVersion().isGreaterThan(PHPVersion.PHP5)) {
 			if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				prefix = prefix.substring(1);
 			}

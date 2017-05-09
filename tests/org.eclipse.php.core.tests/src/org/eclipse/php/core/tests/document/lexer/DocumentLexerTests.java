@@ -24,8 +24,8 @@ import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
+import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
+import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -61,7 +61,7 @@ public class DocumentLexerTests {
 	@Test
 	public void test(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(PHPCoreTests.getDefault().getBundle(), fileName, "UTF-8");
-		AbstractPhpLexer lexer = PhpLexerFactory.createLexer(
+		AbstractPHPLexer lexer = PHPLexerFactory.createLexer(
 				new InputStreamReader(new ByteArrayInputStream(pdttFile.getFile().trim().getBytes("UTF-8")), "UTF-8"),
 				version);
 		int inScriptingState = lexer.getScriptingState(); // different lexers

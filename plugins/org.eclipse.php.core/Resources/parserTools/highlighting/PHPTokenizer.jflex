@@ -20,7 +20,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPScriptRegion;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
@@ -424,12 +424,12 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
  * @return String - the context found: the desired context on a non-zero length match, the abortContext on immediate success
  * @throws IOException
  */
-private PhpScriptRegion bufferedTextRegion = null;
-private final String doScanEndPhp(String searchContext, int exitState, int immediateFallbackState) throws IOException {
+private PHPScriptRegion bufferedTextRegion = null;
+private final String doScanEndPHP(String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	yypushback(1); // begin with the last char
 
-	final AbstractPhpLexer phpLexer = getPhpLexer();
-	PhpScriptRegion region = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
+	final AbstractPHPLexer phpLexer = getPHPLexer();
+	PHPScriptRegion region = new PHPScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
 	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParameters());
@@ -445,8 +445,8 @@ private final String doScanEndPhp(String searchContext, int exitState, int immed
  * @param stream
  * @return a new lexer for the given project with the given stream initialized with current parameters
  */
-private AbstractPhpLexer getPhpLexer() {
-	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(zzReader, phpVersion);
+private AbstractPHPLexer getPHPLexer() {
+	final AbstractPHPLexer lexer = PHPLexerFactory.createLexer(zzReader, phpVersion);
 	int[] currentParameters = getParameters();
 	// this value is specific to each PHP version lexer
 	currentParameters[6] = lexer.getInScriptingState();
@@ -594,7 +594,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 				// some other exception happened; never should
 				Logger.logException(f);
 				// ... but IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_*"))
-				// can be thrown from doScanEndPhp(), so avoid infinite loops
+				// can be thrown from doScanEndPHP(), so avoid infinite loops
 				internalContext = null;
 				notFinished = false;
 				break;
@@ -2047,7 +2047,7 @@ PHP_ASP_END=%>
 
 }
 <ST_PHP_CONTENT> .|\n|\r {
-	return doScanEndPhp(PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
+	return doScanEndPHP(PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
 }
 
 . {

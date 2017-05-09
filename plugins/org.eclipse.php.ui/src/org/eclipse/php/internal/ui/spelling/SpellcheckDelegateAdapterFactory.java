@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.spelling;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -75,8 +75,8 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 								startRegion += container.getStart();
 								textRegion = container.getRegionAtCharacterOffset(offset);
 							}
-							if (textRegion instanceof IPhpScriptRegion) {
-								IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+							if (textRegion instanceof IPHPScriptRegion) {
+								IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) textRegion;
 								startRegion += phpScriptRegion.getStart();
 								String partition = phpScriptRegion.getPartition(offset - startRegion);
 								if (partition.equals(PHPPartitionTypes.PHP_QUOTED_STRING)

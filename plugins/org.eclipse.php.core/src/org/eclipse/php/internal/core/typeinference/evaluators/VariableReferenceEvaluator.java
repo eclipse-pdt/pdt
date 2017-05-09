@@ -132,8 +132,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					}
 				}
 
-				List<PHPDocBlock> docBlocks = new ArrayList<PHPDocBlock>(phpModule.getPhpDocBlocks().size());
-				docBlocks.addAll(phpModule.getPhpDocBlocks());
+				List<PHPDocBlock> docBlocks = new ArrayList<PHPDocBlock>(phpModule.getPHPDocBlocks().size());
+				docBlocks.addAll(phpModule.getPHPDocBlocks());
 				Collections.sort(docBlocks, new Comparator<PHPDocBlock>() {
 
 					@Override

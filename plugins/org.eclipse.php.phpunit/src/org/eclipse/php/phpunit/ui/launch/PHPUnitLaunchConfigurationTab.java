@@ -41,7 +41,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.ui.PHPUiConstants;
@@ -907,7 +907,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 					return;
 				} else {
 					IDLTKSearchScope searchScope = SearchEngine.createSearchScope(scriptProject);
-					IType[] classes = PhpModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0,
+					IType[] classes = PHPModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0,
 							Modifiers.AccInterface | Modifiers.AccNameSpace | Modifiers.AccAbstract, searchScope, null);
 					if (classes.length < 1) {
 						setErrorMessage(PHPUnitMessages.format(PHPUnitMessages.PHPUnitValidator_Not_In_Project,

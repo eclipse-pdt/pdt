@@ -31,7 +31,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.TemplateInformationControlCreator;
@@ -299,11 +299,11 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 					}
 
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+						IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) textRegion;
 						textRegion = phpScriptRegion
-								.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+								.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 						String type = textRegion.getType();
-						if (PHPPartitionTypes.isPHPCommentState(type) || PHPPartitionTypes.isPhpQuotesState(type)) {
+						if (PHPPartitionTypes.isPHPCommentState(type) || PHPPartitionTypes.isPHPQuotesState(type)) {
 							return true;
 						}
 					}

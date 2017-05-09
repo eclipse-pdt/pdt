@@ -31,7 +31,7 @@ import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
@@ -150,7 +150,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		}
 		boolean isFound = findElement(tri);
 		if (!isFound) {
-			reportProblem(node, Messages.UndefinedType, PhpProblemIdentifier.UndefinedType, node.getName(), severity);
+			reportProblem(node, Messages.UndefinedType, PHPProblemIdentifier.UndefinedType, node.getName(), severity);
 		}
 		return false;
 	}
@@ -199,7 +199,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			for (IType type : types) {
 				if (PHPFlags.isInterface(type.getFlags()) || PHPFlags.isAbstract(type.getFlags())) {
 					reportProblem(s.getClassName(), Messages.CannotInstantiateType,
-							PhpProblemIdentifier.CannotInstantiateType, type.getElementName(), ProblemSeverities.Error);
+							PHPProblemIdentifier.CannotInstantiateType, type.getElementName(), ProblemSeverities.Error);
 					break;
 				}
 			}
@@ -238,15 +238,15 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		String lcName = info.getRealName().toLowerCase();
 		if (!findElement(tri)) {
 			info.isProblemReported = true;
-			reportProblem(tri.getTypeReference(), Messages.ImportNotFound, PhpProblemIdentifier.ImportNotFound, name,
+			reportProblem(tri.getTypeReference(), Messages.ImportNotFound, PHPProblemIdentifier.ImportNotFound, name,
 					ProblemSeverities.Error);
 		} else if (usePartInfo.get(lcName) != null) {
 			info.isProblemReported = true;
-			reportProblem(tri.getTypeReference(), Messages.DuplicateImport, PhpProblemIdentifier.DuplicateImport,
+			reportProblem(tri.getTypeReference(), Messages.DuplicateImport, PHPProblemIdentifier.DuplicateImport,
 					new String[] { name, info.getRealName() }, ProblemSeverities.Error);
 		} else if (info.getNamespaceName().equals(currentNamespaceName)) {
 			info.isProblemReported = true;
-			reportProblem(tri.getTypeReference(), Messages.UnnecessaryImport, PhpProblemIdentifier.UnnecessaryImport,
+			reportProblem(tri.getTypeReference(), Messages.UnnecessaryImport, PHPProblemIdentifier.UnnecessaryImport,
 					new String[] { name }, ProblemSeverities.Warning);
 		}
 		usePartInfo.put(lcName, info);
@@ -332,7 +332,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			}
 		}
 		if (isDuplicateWithUse || !typeDeclared.add(name.toLowerCase())) {
-			reportProblem(node.getRef(), Messages.DuplicateDeclaration, PhpProblemIdentifier.DuplicateDeclaration, name,
+			reportProblem(node.getRef(), Messages.DuplicateDeclaration, PHPProblemIdentifier.DuplicateDeclaration, name,
 					ProblemSeverities.Error);
 		}
 	}
@@ -356,7 +356,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				PHPModelUtils.getMethodLabel(method, methodName);
 				String message = Messages.getString("AbstractMethodMustBeImplemented",
 						new String[] { type.getElementName(), methodName.toString() });
-				reportProblem(nodeStart, nodeEnd, message, PhpProblemIdentifier.AbstractMethodMustBeImplemented,
+				reportProblem(nodeStart, nodeEnd, message, PHPProblemIdentifier.AbstractMethodMustBeImplemented,
 						ProblemSeverities.Error);
 			}
 		}
@@ -372,18 +372,18 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				if (!isInterface) {
 					if (PHPFlags.isInterface(type.getFlags())) {
 						reportProblem(superClass, Messages.SuperclassMustBeAClass,
-								PhpProblemIdentifier.SuperclassMustBeAClass,
+								PHPProblemIdentifier.SuperclassMustBeAClass,
 								new String[] { superClass.getName(), className }, ProblemSeverities.Error);
 					}
 					if (PHPFlags.isFinal(type.getFlags())) {
 						reportProblem(superClass, Messages.ClassExtendFinalClass,
-								PhpProblemIdentifier.ClassExtendFinalClass,
+								PHPProblemIdentifier.ClassExtendFinalClass,
 								new String[] { className, type.getElementName() }, ProblemSeverities.Error);
 					}
 				} else {
 					if (!PHPFlags.isInterface(type.getFlags())) {
 						reportProblem(superClass, Messages.SuperInterfaceMustBeAnInterface,
-								PhpProblemIdentifier.SuperInterfaceMustBeAnInterface,
+								PHPProblemIdentifier.SuperInterfaceMustBeAnInterface,
 								new String[] { superClass.getName(), className }, ProblemSeverities.Error);
 					}
 				}
@@ -397,7 +397,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			if (!useInfo.isProblemReported && useInfo.getRefCount() == 0) {
 				FullyQualifiedReference m = useInfo.getUsePart().getNamespace();
 				String name = m.getFullyQualifiedName();
-				reportProblem(m, Messages.UnusedImport, PhpProblemIdentifier.UnusedImport, name,
+				reportProblem(m, Messages.UnusedImport, PHPProblemIdentifier.UnusedImport, name,
 						ProblemSeverities.Warning);
 			}
 		}

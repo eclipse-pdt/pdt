@@ -169,7 +169,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			functions = Arrays.asList(
-					PhpModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0, 0, scope, monitor));
+					PHPModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0, 0, scope, monitor));
 
 		} else {
 			functionName = functionName.toLowerCase();
@@ -181,7 +181,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 					IScriptProject scriptProject = sourceModule.getScriptProject();
 					IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-					IMethod[] allFunctions = PhpModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0,
+					IMethod[] allFunctions = PHPModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0,
 							0, scope, monitor);
 					Collection<IMethod> funcList = new ArrayList<IMethod>(allFunctions.length);
 					for (IMethod function : allFunctions) {
@@ -220,7 +220,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			types = Arrays.asList(
-					PhpModelAccess.getDefault().findTypes(namespaceName, typeName, MatchRule.EXACT, 0, 0, scope, null));
+					PHPModelAccess.getDefault().findTypes(namespaceName, typeName, MatchRule.EXACT, 0, 0, scope, null));
 
 		} else {
 			typeName = typeName.toLowerCase();
@@ -244,7 +244,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				IScriptProject scriptProject = sourceModule.getScriptProject();
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-				allTypesCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findTypes(namespaceName,
+				allTypesCache.put(searchFor, Arrays.asList(PHPModelAccess.getDefault().findTypes(namespaceName,
 						typeName, MatchRule.EXACT, 0, 0, scope, null)));
 			}
 
@@ -274,7 +274,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			namespaces = Arrays.asList(PhpModelAccess.getDefault().findNamespaces(null, namespaceName, MatchRule.EXACT,
+			namespaces = Arrays.asList(PHPModelAccess.getDefault().findNamespaces(null, namespaceName, MatchRule.EXACT,
 					0, 0, scope, null));
 
 		} else {
@@ -283,7 +283,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				IScriptProject scriptProject = sourceModule.getScriptProject();
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-				allNamespacesCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findNamespaces(null,
+				allNamespacesCache.put(searchFor, Arrays.asList(PHPModelAccess.getDefault().findNamespaces(null,
 						namespaceName, MatchRule.EXACT, 0, 0, scope, null)));
 			}
 
@@ -316,7 +316,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			types = Arrays.asList(PhpModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null));
+			types = Arrays.asList(PHPModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null));
 
 		} else {
 			typeName = typeName.toLowerCase();
@@ -340,7 +340,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				IScriptProject scriptProject = sourceModule.getScriptProject();
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-				allTraitsCache.put(searchFor, Arrays.asList(PhpModelAccess.getDefault().findTraits(namespaceName,
+				allTraitsCache.put(searchFor, Arrays.asList(PHPModelAccess.getDefault().findTraits(namespaceName,
 						typeName, MatchRule.EXACT, 0, 0, scope, null)));
 			}
 

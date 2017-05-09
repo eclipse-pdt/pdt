@@ -20,7 +20,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -368,7 +368,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset,
+					handled = preparePhpRegions(holdResults, (IPHPScriptRegion) region, startOffset,
 							partitionStartOffset, partitionLength);
 					previousAttr = null;
 					styleRange = null;
@@ -454,7 +454,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset,
+						handled = preparePhpRegions(holdResults, (IPHPScriptRegion) region, startOffset,
 								partitionStartOffset, partitionLength);
 						previousAttr = null;
 						styleRange = null;
@@ -518,7 +518,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	 * @param partitionStartOffset
 	 * @param partitionLength
 	 */
-	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPhpScriptRegion region, int regionStart,
+	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPHPScriptRegion region, int regionStart,
 			int partitionStartOffset, int partitionLength) {
 		assert holdResults != null && region != null && region.getType() == PHPRegionContext.PHP_CONTENT
 				&& region.getLength() > 0 && regionStart >= 0 && partitionStartOffset >= 0 && partitionLength > 0;
@@ -532,7 +532,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		try {
 
 			if (!region.isFullReparsed() && (regionStart == partitionStartOffset)) {
-				phpTokens = region.getUpdatedPhpTokens();
+				phpTokens = region.getUpdatedPHPTokens();
 				int from = region.getUpdatedTokensStart();
 				partitionStartOffset = from + regionStart;
 				partitionLength = region.getUpdatedTokensLength();
@@ -551,7 +551,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				}
 				// if length < 0 (i.e. when partitionLength < 0), we'll throw a
 				// BadLocationException
-				phpTokens = region.getPhpTokens(from, length);
+				phpTokens = region.getPHPTokens(from, length);
 			}
 
 			for (int i = 0; i < phpTokens.length; i++) {

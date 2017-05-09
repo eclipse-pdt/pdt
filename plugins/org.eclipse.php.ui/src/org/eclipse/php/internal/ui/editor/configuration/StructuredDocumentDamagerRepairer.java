@@ -16,7 +16,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -50,7 +50,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 			ITextRegion textReg = structuredDocumentRegion.getRegionAtCharacterOffset(region.getOffset());
 			if (textReg != null && textReg.getType() == PHPRegionContext.PHP_CONTENT
 					&& damageCoversWholeRegion(region, textReg, damage)) {
-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textReg;
+				IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) textReg;
 				if (!phpScriptRegion.isFullReparsed()) {
 					Region r = new Region(phpScriptRegion.getUpdatedTokensStart() + region.getOffset(),
 							phpScriptRegion.getUpdatedTokensLength());

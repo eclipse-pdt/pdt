@@ -19,15 +19,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.core.ast.nodes.DefaultCommentMapper;
 import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.Statement;
-import org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -109,7 +109,7 @@ public class CommentMapperTests {
 		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
-		program.initCommentMapper(document, new PhpAstLexer(reader));
+		program.initCommentMapper(document, new PHPAstLexer(reader));
 
 		final Statement node = program.statements().get(0);
 		final int extendedLength = program.getExtendedLength(node);
@@ -129,7 +129,7 @@ public class CommentMapperTests {
 		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
-		program.initCommentMapper(document, new PhpAstLexer(reader));
+		program.initCommentMapper(document, new PHPAstLexer(reader));
 
 		final ClassDeclaration node = (ClassDeclaration) program.statements().get(0);
 		final Statement statement = node.getBody().statements().get(index);

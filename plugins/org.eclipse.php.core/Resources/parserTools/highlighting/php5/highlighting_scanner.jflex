@@ -19,8 +19,8 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 %%
 
 %public
-%class PhpLexer
-%extends org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer
+%class PHPLexer
+%extends org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer
 %type String
 %unicode
 %caseless
@@ -45,7 +45,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 %state ST_PHP_DOLLAR_CURLY_OPEN
 
 %{
-	public PhpLexer(int state) {
+	public PHPLexer(int state) {
 		initialize(state);
 	}
 
@@ -75,7 +75,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 
 	private static final int[] phpQuotesStates = new int[] { ST_PHP_DOUBLE_QUOTES, ST_PHP_SINGLE_QUOTE, ST_PHP_BACKQUOTE, ST_PHP_HEREDOC, ST_PHP_START_HEREDOC, ST_PHP_END_HEREDOC };
 
-	public int[] getPhpQuotesStates() {
+	public int[] getPHPQuotesStates() {
 		return phpQuotesStates;
 	}
 
