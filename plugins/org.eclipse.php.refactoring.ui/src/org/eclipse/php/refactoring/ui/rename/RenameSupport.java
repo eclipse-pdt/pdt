@@ -26,7 +26,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.refactoring.core.rename.*;
 import org.eclipse.php.refactoring.ui.PHPRefactoringUIMessages;
 import org.eclipse.php.refactoring.ui.RefactoringUIPlugin;
@@ -179,28 +179,28 @@ public class RenameSupport {
 			processor = new RenameFolderProcessor((IContainer) operatedFile);
 		} else {
 			switch (element) {
-			case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
+			case PHPElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
 				processor = new RenameGlobalVariableProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_FUNCTION:
+			case PHPElementConciliator.CONCILIATOR_FUNCTION:
 				processor = new RenameFunctionProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
+			case PHPElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
 				processor = new RenameLocalVariableProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
+			case PHPElementConciliator.CONCILIATOR_CLASSNAME:
 				processor = new RenameClassProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_TRAITNAME:
+			case PHPElementConciliator.CONCILIATOR_TRAITNAME:
 				processor = new RenameTraitProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_CONSTANT:
+			case PHPElementConciliator.CONCILIATOR_CONSTANT:
 				processor = new RenameGlobalConstantProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
+			case PHPElementConciliator.CONCILIATOR_CLASS_MEMBER:
 				processor = new RenameClassMemberProcessor((IFile) operatedFile, locateNode);
 				break;
-			case PhpElementConciliator.CONCILIATOR_PROGRAM:
+			case PHPElementConciliator.CONCILIATOR_PROGRAM:
 				processor = new RenameFileProcessor(operatedFile, (Program) locateNode);
 				break;
 			}

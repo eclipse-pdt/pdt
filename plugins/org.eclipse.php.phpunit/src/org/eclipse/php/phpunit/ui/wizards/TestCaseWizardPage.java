@@ -36,7 +36,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.wizards.fields.*;
 import org.eclipse.php.phpunit.PHPUnitMessages;
@@ -128,12 +128,12 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 		} else {
 			final List<IMethod> staticOrGlobalMethods = new LinkedList<>();
 
-			IMethod[] globalFunctions = PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
+			IMethod[] globalFunctions = PHPModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
 					Modifiers.AccGlobal, 0, searchScope, new NullProgressMonitor());
 			if (globalFunctions != null) {
 				staticOrGlobalMethods.addAll(Arrays.asList(globalFunctions));
 			}
-			IMethod[] staticMethods = PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
+			IMethod[] staticMethods = PHPModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
 					Modifiers.AccStatic, Modifiers.AccGlobal | Modifiers.AccPrivate, searchScope,
 					new NullProgressMonitor());
 			if (staticMethods != null) {

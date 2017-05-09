@@ -20,7 +20,7 @@ import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.corext.util.DocumentUtils;
 import org.eclipse.php.internal.ui.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
@@ -93,7 +93,7 @@ public class UnusedUseStatementProcessor implements IQuickFixProcessor {
 
 	@Override
 	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier) {
-		return identifier == PhpProblemIdentifier.USE_STATEMENTS;
+		return identifier == PHPProblemIdentifier.USE_STATEMENTS;
 	}
 
 	@Override

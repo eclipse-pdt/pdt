@@ -43,7 +43,7 @@ import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -417,7 +417,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
 			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null
 					&& structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
-				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent.getRegion();
+				final IPHPScriptRegion region = (IPHPScriptRegion) structuredDocumentEvent.getRegion();
 				if (region.isFullReparsed()) {
 					final TextRegionListImpl newList = new TextRegionListImpl();
 					newList.add(region);

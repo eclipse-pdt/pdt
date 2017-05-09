@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiationStrategy {
 	private static final String CORE_PHP = "Core.php"; //$NON-NLS-1$
@@ -76,7 +76,7 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 		if (exceptionType != null)
 			return exceptionType;
 		IDLTKSearchScope scope = createSearchScope();
-		IType[] exceptionTypes = PhpModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, trueFlag, falseFlag,
+		IType[] exceptionTypes = PHPModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, trueFlag, falseFlag,
 				scope, null);
 		for (int i = 0; i < exceptionTypes.length; i++) {
 			if (isExctptionType(exceptionTypes[i])) {

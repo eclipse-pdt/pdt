@@ -31,7 +31,7 @@ import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
-import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
+import org.eclipse.php.internal.core.compiler.ast.parser.php56.PHPTokenNames;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
@@ -4948,10 +4948,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void appendStatementType(int statementType) {
 		if (statementType == UseStatement.T_FUNCTION) {
-			appendToBuffer(PhpTokenNames.getName(CompilerParserConstants.T_FUNCTION));
+			appendToBuffer(PHPTokenNames.getName(CompilerParserConstants.T_FUNCTION));
 			insertSpace();
 		} else if (statementType == UseStatement.T_CONST) {
-			appendToBuffer(PhpTokenNames.getName(CompilerParserConstants.T_CONST));
+			appendToBuffer(PHPTokenNames.getName(CompilerParserConstants.T_CONST));
 			insertSpace();
 		}
 	}

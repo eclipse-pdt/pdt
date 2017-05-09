@@ -24,7 +24,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 public class NamespaceNode extends SourceType {
 	public NamespaceNode(IModelElement modelElement, String name) {
@@ -35,7 +35,7 @@ public class NamespaceNode extends SourceType {
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
 		List<IModelElement> children = new LinkedList<>();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		PhpModelAccess modelAccess = PhpModelAccess.getDefault();
+		PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 		children.addAll(Arrays.asList(modelAccess.findTypes(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
 		children.addAll(Arrays.asList(modelAccess.findTraits(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));
 		children.addAll(Arrays.asList(modelAccess.findFunctions(name, null, MatchRule.PREFIX, 0, 0, scope, monitor)));

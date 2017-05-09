@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -63,12 +63,12 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 			regionStart += tRegion.getStart();
 		}
 
-		if (tRegion instanceof IPhpScriptRegion) {
-			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(previousLine.getOffset() - regionStart);
+		if (tRegion instanceof IPHPScriptRegion) {
+			IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+			tRegion = scriptRegion.getPHPToken(previousLine.getOffset() - regionStart);
 			if (regionStart + tRegion.getTextEnd() <= previousLine.getOffset()) {
 				// blanks at previousLine.getOffset() belong to previous token
-				tRegion = scriptRegion.getPhpToken(tRegion.getEnd());
+				tRegion = scriptRegion.getPHPToken(tRegion.getEnd());
 			}
 		}
 

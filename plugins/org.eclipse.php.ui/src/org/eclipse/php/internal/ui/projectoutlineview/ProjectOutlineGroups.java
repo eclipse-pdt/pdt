@@ -22,7 +22,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ui.ScriptElementLabels;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.NamespaceNode;
@@ -97,7 +97,7 @@ public enum ProjectOutlineGroups {
 			});
 			switch (this) {
 			case GROUP_NAMESPACES:
-				IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0,
+				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0,
 						scope, null);
 				Map<String, List<IType>> nsByName = new HashMap<String, List<IType>>();
 				if (namespaces != null) {
@@ -118,7 +118,7 @@ public enum ProjectOutlineGroups {
 				break;
 
 			case GROUP_CLASSES:
-				IType[] findTypes = PhpModelAccess.getDefault().findTypes(null, MatchRule.PREFIX, 0,
+				IType[] findTypes = PHPModelAccess.getDefault().findTypes(null, MatchRule.PREFIX, 0,
 						Modifiers.AccNameSpace, scope, null);
 				if (findTypes != null) {
 					childrenList.addAll(Arrays.asList(findTypes));
@@ -126,7 +126,7 @@ public enum ProjectOutlineGroups {
 				break;
 
 			case GROUP_FUNCTIONS:
-				IMethod[] findMethods = PhpModelAccess.getDefault().findFunctions(null, MatchRule.PREFIX,
+				IMethod[] findMethods = PHPModelAccess.getDefault().findFunctions(null, MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, null);
 				if (findMethods != null) {
 					childrenList.addAll(Arrays.asList(findMethods));
@@ -135,7 +135,7 @@ public enum ProjectOutlineGroups {
 
 			case GROUP_CONSTANTS:
 				// find all constants
-				IField[] findFields = PhpModelAccess.getDefault().findFields(null, MatchRule.PREFIX,
+				IField[] findFields = PHPModelAccess.getDefault().findFields(null, MatchRule.PREFIX,
 						Modifiers.AccConstant, 0, scope, null);
 				if (findFields != null) {
 					for (IField field : findFields) {

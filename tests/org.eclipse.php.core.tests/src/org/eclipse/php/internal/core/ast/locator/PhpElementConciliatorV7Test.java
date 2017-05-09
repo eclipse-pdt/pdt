@@ -45,7 +45,7 @@ public class PhpElementConciliatorV7Test extends PhpElementConciliatorV5_6Test {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
+		assertEquals(PHPElementConciliator.CONCILIATOR_CLASSNAME, PHPElementConciliator.concile(selectedNode));
 	}
 
 	@Test

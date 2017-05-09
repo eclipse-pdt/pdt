@@ -82,7 +82,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 
 	protected boolean isParent(KeywordData keyword) {
 		String name = keyword.name;
-		if (PHPVersion.PHP5_4.isLessThan(((AbstractCompletionContext) getContext()).getPhpVersion())) {
+		if (PHPVersion.PHP5_4.isLessThan(((AbstractCompletionContext) getContext()).getPHPVersion())) {
 			name = name.toLowerCase();
 		}
 

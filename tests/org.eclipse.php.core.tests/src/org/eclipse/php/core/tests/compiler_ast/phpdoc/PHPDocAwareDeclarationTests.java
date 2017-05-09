@@ -29,7 +29,7 @@ import org.eclipse.php.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
+import org.eclipse.php.internal.core.compiler.ast.parser.php5.PHPSourceParser;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -269,7 +269,7 @@ public class PHPDocAwareDeclarationTests {
 	 * @throws Exception
 	 */
 	public void parseAndTest(Reader reader, String declarationName, String str, boolean positiveTest) throws Exception {
-		IModuleDeclaration program = new PhpSourceParser().parse(reader, null,
+		IModuleDeclaration program = new PHPSourceParser().parse(reader, null,
 				ProjectOptions.useShortTags((IProject) null));
 		DeclarationSearcher searcher = new DeclarationSearcher(declarationName);
 		((PHPModuleDeclaration) program).traverse(searcher);

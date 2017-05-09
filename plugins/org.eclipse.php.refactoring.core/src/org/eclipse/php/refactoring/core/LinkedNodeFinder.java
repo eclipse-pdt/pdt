@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
@@ -56,7 +56,7 @@ public class LinkedNodeFinder {
 		}
 
 		OccurrenceLocation[] locations = null;
-		int type = PhpElementConciliator.concile(selectedNode);
+		int type = PHPElementConciliator.concile(selectedNode);
 
 		IOccurrencesFinder finder = OccurrencesFinderFactory
 				.getOccurrencesFinder(type);

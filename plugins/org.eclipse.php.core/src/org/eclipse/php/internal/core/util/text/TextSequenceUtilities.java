@@ -17,7 +17,7 @@ import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -62,8 +62,8 @@ public final class TextSequenceUtilities {
 			return null;
 		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			try {
-				return ((IPhpScriptRegion) tRegion)
-						.getPhpTokenType(sourceOffset - source.getStartOffset() - tRegion.getStart());
+				return ((IPHPScriptRegion) tRegion)
+						.getPHPTokenType(sourceOffset - source.getStartOffset() - tRegion.getStart());
 			} catch (BadLocationException e) {
 				assert false;
 				return null;

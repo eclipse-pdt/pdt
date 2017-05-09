@@ -87,7 +87,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 			PHPCorePlugin.log(e);
 		}
 
-		PHPVersion phpVersion = concreteContext.getPhpVersion();
+		PHPVersion phpVersion = concreteContext.getPHPVersion();
 
 		// Add magic methods:
 		Set<String> functions = new TreeSet<String>();
