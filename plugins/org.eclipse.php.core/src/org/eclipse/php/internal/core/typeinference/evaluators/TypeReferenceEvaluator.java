@@ -25,11 +25,9 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
+import org.eclipse.dltk.internal.core.ImportDeclaration;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -236,6 +234,20 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			}
 			ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
 			int offset = typeReference.sourceStart();
+			try {
+				// for use statement, extract namespace and class name directly
+				if (sourceModule.getElementAt(offset) instanceof ImportDeclaration) {
+					String namespace = PHPModelUtils.extractNameSpaceName(fullyQualifiedName);
+					className = PHPModelUtils.extractElementName(fullyQualifiedName);
+					if (namespace != null) {
+						result = new PHPClassType(namespace, className);
+					} else {
+						result = new PHPClassType(className);
+					}
+					return IGoal.NO_GOALS;
+				}
+			} catch (ModelException e) {
+			}
 			String extractedNamespace = PHPModelUtils.extractNamespaceName(fullyQualifiedName, sourceModule, offset);
 			if (extractedNamespace != null) {
 				parentNamespace = extractedNamespace;

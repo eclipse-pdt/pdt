@@ -1,0 +1,23 @@
+--TEST--
+Bug 516337 - Failed to select types in use statements
+--FILE--
+<?
+namespace NS\Sub;
+
+use NS\NS;
+use NS\|Foo|;
+use NS\Sub1;
+
+namespace NS;
+
+class NS {
+}
+
+class Foo {
+
+}
+
+namespace NS\Sub1;
+?>
+--EXPECT--
+type(Foo)
