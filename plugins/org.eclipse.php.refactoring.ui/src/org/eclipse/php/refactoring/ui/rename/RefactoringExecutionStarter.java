@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -44,7 +44,7 @@ public class RefactoringExecutionStarter {
 
 	private static RenameSupport createRenameSupport(IResource resource, ASTNode locateNode, String newName, int flags)
 			throws CoreException {
-		final int elementType = PhpElementConciliator.concile(locateNode);
+		final int elementType = PHPElementConciliator.concile(locateNode);
 		return RenameSupport.create(resource, elementType, locateNode, newName, flags);
 	}
 

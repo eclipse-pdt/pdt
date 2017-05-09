@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClassInstantiationStrategy {
 
@@ -77,7 +77,7 @@ public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClass
 		if (exceptionType != null)
 			return exceptionType;
 		IDLTKSearchScope scope = createSearchScope();
-		IType[] exceptionTypes = PhpModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, 0, 0, scope, null);
+		IType[] exceptionTypes = PHPModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, 0, 0, scope, null);
 		for (int i = 0; i < exceptionTypes.length; i++) {
 			if (isExctptionType(exceptionTypes[i])) {
 				exceptionType = exceptionTypes[i];

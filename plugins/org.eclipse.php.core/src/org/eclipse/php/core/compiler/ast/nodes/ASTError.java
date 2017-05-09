@@ -16,7 +16,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.core.ast.visitor.Visitor;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
@@ -34,7 +34,7 @@ public class ASTError extends Statement {
 
 	public ASTError(int start, int end) {
 		super(start, end);
-		this.problemIdentifier = PhpProblemIdentifier.SYNTAX;
+		this.problemIdentifier = PHPProblemIdentifier.SYNTAX;
 	}
 
 	public ASTError(int start, int end, IProblemIdentifier problemIdentifier) {

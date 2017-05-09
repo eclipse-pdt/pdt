@@ -31,7 +31,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.ltk.internal.core.refactoring.resource.MoveResourcesProcessor;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
@@ -72,8 +72,8 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 			action = new MoveResourceAction(fShellProvider);
 			if (list.size() == 1) {
 				Object object = list.get(0);
-				if (object instanceof ElementImplForPhp && ((ElementImplForPhp) object).getModelElement() != null) {
-					IResource resource = ((ElementImplForPhp) object).getModelElement().getResource();
+				if (object instanceof ElementImplForPHP && ((ElementImplForPHP) object).getModelElement() != null) {
+					IResource resource = ((ElementImplForPHP) object).getModelElement().getResource();
 					if (resource != null) {
 						selection = new StructuredSelection(resource);
 					}

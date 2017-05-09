@@ -339,7 +339,7 @@ precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC
 thestart ::=
 top_statement_list:statementList
 {:
-	PhpAstLexer phpAstLexer = (PhpAstLexer) parser.getScanner();
+	PHPAstLexer phpAstLexer = (PHPAstLexer) parser.getScanner();
 	List commentList = phpAstLexer.getCommentList();
 	Program program = new Program(statementListleft, statementListright, parser.ast, statementList, commentList);
 	RESULT = program;
@@ -1325,7 +1325,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
-	modifier = modifier == null ? PhpAstParser.PUBLIC : modifier;
+	modifier = modifier == null ? PHPAstParser.PUBLIC : modifier;
 	Identifier functionId = new Identifier(functionNameleft, functionNameright, parser.ast, functionName);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue());
 	MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
@@ -1364,7 +1364,7 @@ non_empty_member_modifiers:list
 
 | T_VAR
 {:
-	RESULT = PhpAstParser.PUBLIC;
+	RESULT = PHPAstParser.PUBLIC;
 :}
 ;
 
@@ -1403,32 +1403,32 @@ member_modifier:modifier
 member_modifier ::=
 T_PUBLIC
 {:
-	RESULT = PhpAstParser.PUBLIC;
+	RESULT = PHPAstParser.PUBLIC;
 :}
 
 | T_PROTECTED
 {:
-	RESULT = PhpAstParser.PROTECTED;
+	RESULT = PHPAstParser.PROTECTED;
 :}
 
 | T_PRIVATE
 {:
-	RESULT = PhpAstParser.PRIVATE;
+	RESULT = PHPAstParser.PRIVATE;
 :}
 
 | T_STATIC
 {:
-	RESULT = PhpAstParser.STATIC;
+	RESULT = PHPAstParser.STATIC;
 :}
 
 | T_ABSTRACT
 {:
-	RESULT = PhpAstParser.ABSTRACT;
+	RESULT = PHPAstParser.ABSTRACT;
 :}
 
 | T_FINAL
 {:
-	RESULT = PhpAstParser.FINAL;
+	RESULT = PHPAstParser.FINAL;
 :}
 ;
 

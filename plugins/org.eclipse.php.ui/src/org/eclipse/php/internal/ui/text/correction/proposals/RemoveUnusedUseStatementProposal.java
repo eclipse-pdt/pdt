@@ -18,7 +18,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.CorrectionMessages;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
@@ -40,9 +40,9 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 
 	private static String getMessage(IProblemLocation location) {
 		String message = ""; //$NON-NLS-1$
-		if (!(location.getProblemIdentifier() instanceof PhpProblemIdentifier))
+		if (!(location.getProblemIdentifier() instanceof PHPProblemIdentifier))
 			return message;
-		PhpProblemIdentifier id = (PhpProblemIdentifier) location.getProblemIdentifier();
+		PHPProblemIdentifier id = (PHPProblemIdentifier) location.getProblemIdentifier();
 		switch (id) {
 		case UnusedImport:
 		case ImportNotFound:

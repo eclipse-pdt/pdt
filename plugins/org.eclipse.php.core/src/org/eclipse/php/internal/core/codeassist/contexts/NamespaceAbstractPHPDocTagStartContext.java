@@ -22,9 +22,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -104,7 +104,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 				}
 			}
 		} else {
-			namespaces = PhpModelAccess.NULL_TYPES;
+			namespaces = PHPModelAccess.NULL_TYPES;
 		}
 		if (lastWord.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			nsPrefix = null;
@@ -142,7 +142,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 		if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			fullName = fullName.substring(1);
 		}
-		possibleNamespaces = PhpModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.PREFIX, 0, 0, scope,
+		possibleNamespaces = PHPModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.PREFIX, 0, 0, scope,
 				null);
 		possibleNamespaces = CodeAssistUtils.removeDuplicatedElements(possibleNamespaces).toArray(new IType[0]);
 	}
@@ -195,8 +195,8 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 				// after the namespace separator, otherwise there's no reason
 				// to retrieve the next region.
 				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER.length()) {
-			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			IPHPScriptRegion phpScriptRegion = getPHPScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPHPToken(phpToken.getEnd());
 			// Also check that we only retrieve PHP labels.
 			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();

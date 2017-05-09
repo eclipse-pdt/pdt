@@ -32,7 +32,7 @@ import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.ui.preferences.includepath.IncludePathUtils;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -234,7 +234,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 
 		superClassData = null;
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
-		IType[] types = PhpModelAccess.getDefault().findTypes(superclassName, MatchRule.EXACT, 0, 0, scope,
+		IType[] types = PHPModelAccess.getDefault().findTypes(superclassName, MatchRule.EXACT, 0, 0, scope,
 				new NullProgressMonitor());
 
 		String error = null;

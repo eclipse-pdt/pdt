@@ -31,7 +31,7 @@ import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseFunctionNameContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
@@ -69,7 +69,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PhpModelAccess.getDefault().findFunctions(prefix, matchRule, 0, 0, scope, null);
+		IMethod[] functions = PHPModelAccess.getDefault().findFunctions(prefix, matchRule, 0, 0, scope, null);
 
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);
@@ -115,14 +115,14 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			}
 			IMethod[] elements;
 			if (!fullName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
-				elements = PhpModelAccess.getDefault().findMethods(null, fullName, MatchRule.PREFIX, 0, 0, scope, null);
+				elements = PHPModelAccess.getDefault().findMethods(null, fullName, MatchRule.PREFIX, 0, 0, scope, null);
 				for (int i = 0; i < elements.length; i++) {
 					String elementName = elements[i].getElementName();
 					reportAlias(reporter, scope, module, replacementRange, elements[i], elementName,
 							elementName.replace(fullName, name), suffix);
 				}
 			}
-			elements = PhpModelAccess.getDefault().findMethods(fullName, MatchRule.EXACT, 0, 0, scope, null);
+			elements = PHPModelAccess.getDefault().findMethods(fullName, MatchRule.EXACT, 0, 0, scope, null);
 
 			for (int i = 0; i < elements.length; i++) {
 				String elementName = elements[i].getElementName();

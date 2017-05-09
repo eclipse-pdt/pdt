@@ -49,11 +49,11 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -176,10 +176,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				tRegion = container.getRegionAtCharacterOffset(offset);
 			}
 			if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+				IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 				try {
 					tRegion = phpScriptRegion
-							.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+							.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 				} catch (BadLocationException e) {
 					tRegion = null;
 				}
@@ -254,7 +254,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		// boolean inDocBlock=false;
 		if (parsedUnit instanceof PHPModuleDeclaration) {
 			PHPModuleDeclaration phpModuleDeclaration = (PHPModuleDeclaration) parsedUnit;
-			List<PHPDocBlock> phpBlocks = phpModuleDeclaration.getPhpDocBlocks();
+			List<PHPDocBlock> phpBlocks = phpModuleDeclaration.getPHPDocBlocks();
 			for (PHPDocBlock phpDocBlock : phpBlocks) {
 				int realStart = phpDocBlock.sourceStart();
 				int realEnd = phpDocBlock.sourceEnd();
@@ -377,7 +377,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					name = name.substring(1);
 				}
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-				types = PhpModelAccess.getDefault().findNamespaces(null, name, MatchRule.EXACT, 0, 0, scope, null);
+				types = PHPModelAccess.getDefault().findNamespaces(null, name, MatchRule.EXACT, 0, 0, scope, null);
 
 				if (types.length == 0) {
 					name = NamespaceReference.NAMESPACE_SEPARATOR + name;
@@ -643,8 +643,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
+			tRegion = phpScriptRegion.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 			// Determine element name:
 			int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
 			TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion,
@@ -668,7 +668,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// Determine next word:
 			ITextRegion nextRegion = tRegion;
 			do {
-				nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
+				nextRegion = phpScriptRegion.getPHPToken(nextRegion.getEnd());
 				if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType())
 						&& nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
 					break;
@@ -767,7 +767,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// If this is variable:
 			if (elementName.charAt(0) == '$' && !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
 				// Don't show escaped variables within PHP string:
-				if (PHPPartitionTypes.isPhpQuotesState(tRegion.getType())) {
+				if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
 					try {
 						char charBefore = sDoc.get(elementStart - 2, 1).charAt(0);
 						if (charBefore == NamespaceReference.NAMESPACE_SEPARATOR) {
@@ -809,7 +809,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 			if (NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord)) {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-				return PhpModelAccess.getDefault().findNamespaces(null, elementName, MatchRule.EXACT, 0, 0, scope,
+				return PHPModelAccess.getDefault().findNamespaces(null, elementName, MatchRule.EXACT, 0, 0, scope,
 						null);
 			}
 
@@ -896,7 +896,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (receiverType != null) {
 				IModelElement[] elements = null;
 				if ((receiverType instanceof PHPClassType) && ((PHPClassType) receiverType).isGlobal()) {
-					elements = PhpModelAccess.getDefault().findTypes(receiverType.getTypeName(), MatchRule.EXACT, 0, 0,
+					elements = PHPModelAccess.getDefault().findTypes(receiverType.getTypeName(), MatchRule.EXACT, 0, 0,
 							scope, null);
 					LinkedList<IModelElement> result = new LinkedList<IModelElement>();
 					for (IModelElement element : elements) {
@@ -966,7 +966,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				true);
 		if (useParts.containsKey(fieldName)) {
 			String fullName = useParts.get(fieldName).getNamespace().getFullyQualifiedName();
-			IField[] elements = PhpModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
+			IField[] elements = PHPModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
 			if (elements != null) {
 				List<IField> result = new ArrayList<IField>();
 				for (IField field : elements) {

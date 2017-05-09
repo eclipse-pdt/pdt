@@ -32,7 +32,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.DeclarationScope;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -71,7 +71,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-		IField[] elements = PhpModelAccess.getDefault().findFileFields(variableName, MatchRule.EXACT,
+		IField[] elements = PHPModelAccess.getDefault().findFileFields(variableName, MatchRule.EXACT,
 				Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 
 		// if no element found, return empty array.

@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
@@ -70,7 +70,7 @@ public abstract class OpenEditorAction extends Action {
 			element = DLTKCore.createSourceModuleFrom(iFile);
 		}
 		if (element == null) {
-			IType[] classes = PhpModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0, 0,
+			IType[] classes = PHPModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0, 0,
 					SearchEngine.createSearchScope(DLTKCore.create(project)), null);
 
 			if (classes != null && classes.length > 0) {
@@ -113,7 +113,7 @@ public abstract class OpenEditorAction extends Action {
 			}
 			element = DLTKCore.createSourceModuleFrom(iFile);
 		} else {
-			IMethod[] methods = PhpModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT, 0, 0,
+			IMethod[] methods = PHPModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT, 0, 0,
 					SearchEngine.createSearchScope(DLTKCore.create(project)), null);
 
 			if (methods != null && methods.length > 0) {

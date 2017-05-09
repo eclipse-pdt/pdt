@@ -35,7 +35,7 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite.ImportRewriteContext;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.search.PHPSearchTypeNameMatch;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -109,7 +109,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			IProblem[] problems = program.getProblems();
 			for (IProblem problem : problems) {
 				IProblemIdentifier id = ((DefaultProblem) problem).getID();
-				if (id == PhpProblemIdentifier.ImportNotFound) {
+				if (id == PHPProblemIdentifier.ImportNotFound) {
 					UseStatement problematicImport = getProblematicImport(problem, program);
 					if (problematicImport != null) {
 						unresolvableImports.add(problematicImport);

@@ -26,7 +26,7 @@ import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 /**
  * This strategy completes namespaces
@@ -92,25 +92,25 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 		if (prefix.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
-				result.addAll(CodeAssistUtils.removeDuplicatedElements(PhpModelAccess.getDefault().findNamespaces(null,
+				result.addAll(CodeAssistUtils.removeDuplicatedElements(PHPModelAccess.getDefault().findNamespaces(null,
 						prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
 			}
 			result.addAll(Arrays.asList(
-					PhpModelAccess.getDefault().findTypes(prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
+					PHPModelAccess.getDefault().findTypes(prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
 			result.addAll(Arrays.asList(
-					PhpModelAccess.getDefault().findTypes(prefix, "", MatchRule.PREFIX, trueFlag, falseFlag, scope, //$NON-NLS-1$
+					PHPModelAccess.getDefault().findTypes(prefix, "", MatchRule.PREFIX, trueFlag, falseFlag, scope, //$NON-NLS-1$
 							null)));
 		} else {
-			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag,
+			result.addAll(Arrays.asList(PHPModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag,
 					falseFlag, scope, null)));
 			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
-				result.addAll(CodeAssistUtils.removeDuplicatedElements(PhpModelAccess.getDefault().findNamespaces(null,
+				result.addAll(CodeAssistUtils.removeDuplicatedElements(PHPModelAccess.getDefault().findNamespaces(null,
 						prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
 			}
 

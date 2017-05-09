@@ -62,7 +62,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 		// }
 		// }
 
-		PHPVersion phpVersion = context.getPhpVersion();
+		PHPVersion phpVersion = context.getPHPVersion();
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			for (String keyword : KEYWORDS) {
 				if (keyword.startsWith(prefix)) {

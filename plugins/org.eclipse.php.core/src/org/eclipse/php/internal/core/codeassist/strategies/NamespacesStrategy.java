@@ -20,7 +20,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 /**
  * This strategy completes namespaces
@@ -46,11 +46,11 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.EXACT, trueFlag, falseFlag, scope,
+			return PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.EXACT, trueFlag, falseFlag, scope,
 					null);
 		}
 
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
+		IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
 				falseFlag, scope, null);
 		List<IType> result = CodeAssistUtils.removeDuplicatedElements(namespaces);
 		return result.toArray(new IType[0]);

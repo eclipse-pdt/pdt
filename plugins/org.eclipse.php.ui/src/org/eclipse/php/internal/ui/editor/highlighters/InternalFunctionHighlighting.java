@@ -14,7 +14,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.search.AbstractOccurrencesFinder;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
@@ -66,7 +66,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 
 		private IModelElement[] findMethods(Identifier identifier, NamespaceDeclaration namespace) {
 			String fullName = AbstractOccurrencesFinder.getFullName(identifier, fLastUseParts, namespace);
-			return PhpModelAccess.getDefault().findMethods(fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
+			return PHPModelAccess.getDefault().findMethods(fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
 		}
 	}
 

@@ -33,7 +33,7 @@ import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.ltk.internal.core.refactoring.resource.ResourceProcessors;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameClass;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
@@ -266,7 +266,7 @@ public class RenameClassProcessor extends AbstractRenameProcessor<IFile>
 	}
 
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PhpElementConciliator.classNameAlreadyExists(program,
+		if (PHPElementConciliator.classNameAlreadyExists(program,
 				getNewElementName())) {
 			final String message = MessageFormat.format(
 					RenameClassProcessor.CLASS_IS_USED,

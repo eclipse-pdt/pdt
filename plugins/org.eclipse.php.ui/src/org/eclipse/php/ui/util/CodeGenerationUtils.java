@@ -41,7 +41,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
-import org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer;
+import org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
@@ -1096,7 +1096,7 @@ public class CodeGenerationUtils {
 
 			final Reader reader = new StringReader(document.get());
 
-			program.initCommentMapper(document, new PhpAstLexer(reader));
+			program.initCommentMapper(document, new PHPAstLexer(reader));
 			program.recordModifications();
 
 		} catch (Exception e) {
