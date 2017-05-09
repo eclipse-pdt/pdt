@@ -19,7 +19,7 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner;
-import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
+import org.eclipse.php.internal.core.documentModel.parser.php5.PHPLexer;
 
 /**
  * This class houses a collection of static methods which do not refer to, or
@@ -85,8 +85,8 @@ class Util {
 		if (0 == trimmedText.length()) {
 			return true;
 		} else {
-			Scanner scanner = new PhpLexer(new StringReader(trimmedText));
-			scanner.initialize(PhpLexer.ST_PHP_IN_SCRIPTING);
+			Scanner scanner = new PHPLexer(new StringReader(trimmedText));
+			scanner.initialize(PHPLexer.ST_PHP_IN_SCRIPTING);
 			try {
 				return scanner.yylex() == null;
 			} catch (IOException e) {

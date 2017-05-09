@@ -32,7 +32,7 @@ import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
@@ -437,22 +437,22 @@ public class PHPCorePlugin extends Plugin {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findMethods(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
+				PHPModelAccess.getDefault().findMethods(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findTypes(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
+				PHPModelAccess.getDefault().findTypes(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findFields(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
+				PHPModelAccess.getDefault().findFields(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findIncludes(ID, MatchRule.PREFIX, scope, monitor);
+				PHPModelAccess.getDefault().findIncludes(ID, MatchRule.PREFIX, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}

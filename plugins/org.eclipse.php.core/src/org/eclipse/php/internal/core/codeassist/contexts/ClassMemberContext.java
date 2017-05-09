@@ -19,7 +19,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -151,8 +151,8 @@ public abstract class ClassMemberContext extends StatementContext {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR
 				|| phpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
-			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			IPHPScriptRegion phpScriptRegion = getPHPScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPHPToken(phpToken.getEnd());
 
 			if (phpToken.getTextLength() == phpToken.getLength()) {
 				int addOffset = 0;

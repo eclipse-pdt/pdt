@@ -22,7 +22,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.Model;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.providers.PHP5ElementContentProvider;
@@ -370,7 +370,7 @@ public class PHPUnitSearchEngine {
 			return null;
 		}
 
-		IType[] classes = PhpModelAccess.getDefault().findTypes(elementName, MatchRule.EXACT, 0, 0,
+		IType[] classes = PHPModelAccess.getDefault().findTypes(elementName, MatchRule.EXACT, 0, 0,
 				SearchEngine.createSearchScope(project), null);
 
 		if (classes != null && classes.length > 0) {

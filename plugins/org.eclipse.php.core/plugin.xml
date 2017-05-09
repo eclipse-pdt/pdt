@@ -95,7 +95,7 @@
 		point="org.eclipse.core.filebuffers.documentSetup">
 		<participant
 			contentTypeId="org.eclipse.php.core.phpsource"
-			class="org.eclipse.php.internal.core.documentModel.PhpDocumentSetupParticipant">
+			class="org.eclipse.php.internal.core.documentModel.PHPDocumentSetupParticipant">
 		</participant>
 	</extension>
 
@@ -292,7 +292,7 @@
 	<extension
          point="org.eclipse.dltk.core.indexerParticipant">
       <indexerParticipant
-            class="org.eclipse.php.internal.core.index.PhpIndexerParticipant"
+            class="org.eclipse.php.internal.core.index.PHPIndexerParticipant"
             nature="org.eclipse.php.core.PHPNature"
             targetId="">
       </indexerParticipant>
@@ -456,7 +456,7 @@
    <extension
          point="org.eclipse.dltk.core.problemFactory">
       <problemIdentifierFactory
-            class="org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifierFactory"
+            class="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifierFactory"
             namespace="org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier">
       </problemIdentifierFactory>
    </extension>

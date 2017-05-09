@@ -13,9 +13,9 @@ package org.eclipse.php.internal.core.ast.scanner;
 
 import java.util.List;
 
-import java_cup.runtime.Scanner;
-
 import org.eclipse.php.core.PHPVersion;
+
+import java_cup.runtime.Scanner;
 
 /**
  * Description:
@@ -28,7 +28,7 @@ public interface AstLexer extends Scanner {
 
 	public List getCommentList();
 
-	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp);
+	public void setUseAspTagsAsPHP(boolean useAspTagsAsPhp);
 
 	public void setUseShortTags(boolean useShortTags);
 

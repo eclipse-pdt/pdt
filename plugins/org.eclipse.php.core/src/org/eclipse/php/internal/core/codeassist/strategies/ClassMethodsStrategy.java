@@ -65,7 +65,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			replaceRange = getReplacementRangeWithBraces(concreteContext);
 		}
 
-		PHPVersion phpVersion = concreteContext.getPhpVersion();
+		PHPVersion phpVersion = concreteContext.getPHPVersion();
 		Set<String> magicMethods = new HashSet<String>();
 		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
 

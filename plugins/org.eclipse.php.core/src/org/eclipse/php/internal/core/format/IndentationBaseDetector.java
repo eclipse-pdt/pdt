@@ -17,7 +17,7 @@ import java.util.Set;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -160,14 +160,14 @@ public class IndentationBaseDetector {
 				phpContentStartOffset += phpScriptRegion.getStart();
 			}
 
-			if (phpScriptRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
+			if (phpScriptRegion instanceof IPHPScriptRegion) {
+				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) phpScriptRegion;
 				// the region we are trying to check if it is the indent base
 				// for the line we need to format
 				ContextRegion checkedRegion = (ContextRegion) scriptRegion
-						.getPhpToken(lineStartOffset - phpContentStartOffset);
+						.getPHPToken(lineStartOffset - phpContentStartOffset);
 				// the current region we need to format
-				ContextRegion currentRegion = (ContextRegion) scriptRegion.getPhpToken(offset - phpContentStartOffset);
+				ContextRegion currentRegion = (ContextRegion) scriptRegion.getPHPToken(offset - phpContentStartOffset);
 				String checkedType = checkedRegion.getType();
 				String currentType = currentRegion.getType();
 				// if we are in the beginning of a comment (DOC or Multi
@@ -233,11 +233,11 @@ public class IndentationBaseDetector {
 					regionStart += tRegion.getStart();
 				}
 
-				if (tRegion instanceof IPhpScriptRegion) {
-					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+				if (tRegion instanceof IPHPScriptRegion) {
+					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
 					ITextRegion[] tokens = null;
 					try {
-						tokens = scriptRegion.getPhpTokens(lineStartOffset - regionStart, biggest - lineStartOffset);
+						tokens = scriptRegion.getPHPTokens(lineStartOffset - regionStart, biggest - lineStartOffset);
 					} catch (BadLocationException e) {
 					}
 

@@ -27,10 +27,10 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
+import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -94,7 +94,7 @@ public class PHPTextSequenceUtilities {
 
 		// This text region must be of type PhpScriptRegion:
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 
 			try {
 				// Set default starting position to the beginning of the
@@ -105,9 +105,9 @@ public class PHPTextSequenceUtilities {
 				// PhpScriptRegion):
 				ITextRegion startTokenRegion;
 				if (documentOffset == startOffset) {
-					startTokenRegion = phpScriptRegion.getPhpToken(0);
+					startTokenRegion = phpScriptRegion.getPHPToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
 				}
 
 				List<IRegion> comments = new ArrayList<IRegion>();
@@ -132,7 +132,7 @@ public class PHPTextSequenceUtilities {
 						startOffset += startTokenRegion.getEnd();
 						break;
 					}
-					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(startTokenRegion.getStart() - 1);
 				}
 				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset,
 						offset - startOffset);
@@ -705,7 +705,7 @@ public class PHPTextSequenceUtilities {
 				phpVersion = PHPVersion.getLatestVersion();
 			}
 
-			AbstractPhpLexer lexer = PhpLexerFactory.createLexer(new StringReader(textSequence.toString()), phpVersion);
+			AbstractPHPLexer lexer = PHPLexerFactory.createLexer(new StringReader(textSequence.toString()), phpVersion);
 			lexer.initialize(lexer.getScriptingState());
 			String symbol = null;
 			int level = 0;

@@ -31,7 +31,7 @@ import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.visitor.TraitUseStatementVisitor;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 /**
  * TODO namespace,precedence and alias
@@ -144,7 +144,7 @@ public class TraitUtils {
 		List<IField> fieldList = new ArrayList<IField>();
 		Set<String> traitNameSet = new HashSet<String>();
 		for (String trait : useTrait.getTraits()) {
-			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
+			IType[] traitTypes = PHPModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
 					createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
 				String traitName = PHPModelUtils.getFullName(traitType);
@@ -231,7 +231,7 @@ public class TraitUtils {
 		List<IMethod> fieldList = new ArrayList<IMethod>();
 		Set<String> traitNameSet = new HashSet<String>();
 		for (String trait : useTrait.getTraits()) {
-			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
+			IType[] traitTypes = PHPModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
 					createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
 				String traitName = PHPModelUtils.getFullName(traitType);
