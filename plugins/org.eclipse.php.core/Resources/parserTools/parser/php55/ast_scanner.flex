@@ -1112,7 +1112,6 @@ if (parsePHPDoc()) {
 	}
 	// we must (at least) push the newline character back
 	yypushback(1);
-	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_END_HEREDOC>{LABEL}";"?[\n\r] {
@@ -1179,7 +1178,6 @@ if (parsePHPDoc()) {
 	}
 	// we must (at least) push the newline character back
 	yypushback(1);
-	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
