@@ -57,16 +57,16 @@ import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
-import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
-import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
+import org.eclipse.php.internal.core.documentModel.dom.IImplForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencePropagatorFactory;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagator;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
-import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
+import org.eclipse.php.internal.core.project.PHPVersionChangedHandler;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
@@ -1035,7 +1035,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		};
 
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(fPhpVersionListener);
+		PHPVersionChangedHandler.getInstance().addPHPVersionChangedListener(fPhpVersionListener);
 
 		fPreferencesListener = new IPreferenceChangeListener() {
 
@@ -1154,7 +1154,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			fInformationPresenter = null;
 		}
 		if (fPhpVersionListener != null) {
-			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(fPhpVersionListener);
+			PHPVersionChangedHandler.getInstance().removePHPVersionChangedListener(fPhpVersionListener);
 			fPhpVersionListener = null;
 		}
 		if (fFormatterProfileListener != null) {
@@ -2257,7 +2257,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (resource != null) {
 			if (PHPToolkitUtil.isPHPFile((IFile) resource)) {
 
-				PhpSourceParser.editFile.set(resource);
+				PHPSourceParser.editFile.set(resource);
 
 				super.doSetInput(input);
 
@@ -3040,7 +3040,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		if (locations == null && selectedNode != null
 				&& (selectedNode instanceof Identifier || (isScalarButNotInString(selectedNode)))) {
-			int type = PhpElementConciliator.concile(selectedNode);
+			int type = PHPElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
 				if (finder != null) {
@@ -3177,27 +3177,27 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * Returns is the occurrences of the type should be marked.
 	 * 
 	 * @param type
-	 *            One of the {@link PhpElementConciliator} constants integer
+	 *            One of the {@link PHPElementConciliator} constants integer
 	 *            type.
 	 * @return True, if the type occurrences should be marked; False, otherwise.
 	 */
 	boolean markOccurrencesOfType(int type) {
 		switch (type) {
-		case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
+		case PHPElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
 			return fMarkGlobalVariableOccurrences;
-		case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
+		case PHPElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
 			return fMarkLocalVariableOccurrences;
-		case PhpElementConciliator.CONCILIATOR_FUNCTION:
+		case PHPElementConciliator.CONCILIATOR_FUNCTION:
 			return fMarkFunctionOccurrences;
-		case PhpElementConciliator.CONCILIATOR_CLASSNAME:
-		case PhpElementConciliator.CONCILIATOR_TRAITNAME:
+		case PHPElementConciliator.CONCILIATOR_CLASSNAME:
+		case PHPElementConciliator.CONCILIATOR_TRAITNAME:
 			return fMarkTypeOccurrences;
-		case PhpElementConciliator.CONCILIATOR_CONSTANT:
+		case PHPElementConciliator.CONCILIATOR_CONSTANT:
 			return fMarkConstantOccurrences;
-		case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
+		case PHPElementConciliator.CONCILIATOR_CLASS_MEMBER:
 			return fMarkMethodOccurrences;
-		case PhpElementConciliator.CONCILIATOR_UNKNOWN:
-		case PhpElementConciliator.CONCILIATOR_PROGRAM:
+		case PHPElementConciliator.CONCILIATOR_UNKNOWN:
+		case PHPElementConciliator.CONCILIATOR_PROGRAM:
 		default:
 			return false;
 		}
@@ -3315,8 +3315,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			TextSelection textSelection = (TextSelection) selection[0];
 			if (textSelection instanceof IStructuredSelection) {
 				Object firstElement = ((IStructuredSelection) textSelection).getFirstElement();
-				if (firstElement instanceof IImplForPhp) {
-					((IImplForPhp) firstElement).setModelElement(getModelElement());
+				if (firstElement instanceof IImplForPHP) {
+					((IImplForPHP) firstElement).setModelElement(getModelElement());
 				}
 			}
 			// PR 39995: [navigation] Forward history cleared after going back

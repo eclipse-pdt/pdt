@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
@@ -48,10 +48,10 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 
 	private void process(IInvocationContext context, IProblemLocation problem,
 			Collection<AbstractCorrectionProposal> proposals) throws CoreException {
-		if (!(problem.getProblemIdentifier() instanceof PhpProblemIdentifier))
+		if (!(problem.getProblemIdentifier() instanceof PHPProblemIdentifier))
 			return;
 
-		PhpProblemIdentifier id = (PhpProblemIdentifier) problem.getProblemIdentifier();
+		PHPProblemIdentifier id = (PHPProblemIdentifier) problem.getProblemIdentifier();
 		switch (id) {
 		case UnusedImport:
 		case DuplicateImport:
@@ -91,9 +91,9 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 
 	@Override
 	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier) {
-		if (!(identifier instanceof PhpProblemIdentifier))
+		if (!(identifier instanceof PHPProblemIdentifier))
 			return false;
-		PhpProblemIdentifier problem = (PhpProblemIdentifier) identifier;
+		PHPProblemIdentifier problem = (PHPProblemIdentifier) identifier;
 		switch (problem) {
 		case AbstractMethodInAbstractClass:
 		case AbstractMethodsInConcreteClass:

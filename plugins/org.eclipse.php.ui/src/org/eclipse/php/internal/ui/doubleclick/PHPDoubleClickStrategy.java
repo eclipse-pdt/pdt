@@ -13,7 +13,7 @@ package org.eclipse.php.internal.ui.doubleclick;
 
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -70,10 +70,10 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
 								// We should always hit the PhpScriptRegion:
 								if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-									IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+									IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 									int offset = caretPosition - container.getStartOffset()
 											- phpScriptRegion.getStart();
-									tRegion = phpScriptRegion.getPhpToken(offset);
+									tRegion = phpScriptRegion.getPHPToken(offset);
 
 									// Handle double-click on PHPDoc tags:
 									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE
@@ -105,7 +105,7 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									// previous character is still in comment.
 									if (PHPPartitionTypes.isPHPCommentState(tRegion.getType()) && offset > 0
 											&& PHPPartitionTypes.isPHPCommentState(
-													phpScriptRegion.getPhpToken(offset - 1).getType())) {
+													phpScriptRegion.getPHPToken(offset - 1).getType())) {
 										resetVariableSelectionRangeInComments(textViewer, structuredTextViewer);
 										return;
 									}

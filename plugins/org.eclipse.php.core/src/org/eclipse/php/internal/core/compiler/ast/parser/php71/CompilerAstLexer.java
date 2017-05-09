@@ -21,7 +21,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
 import java_cup.runtime.Symbol;
 
-public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php71.PhpAstLexer {
+public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php71.PHPAstLexer {
 
 	private PHPDocBlock latestDocBlock;
 

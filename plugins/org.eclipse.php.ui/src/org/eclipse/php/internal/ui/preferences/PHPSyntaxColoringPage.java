@@ -52,7 +52,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -953,10 +953,10 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			}
 
 			if (interest.getType() == PHPRegionContext.PHP_CONTENT) {
-				IPhpScriptRegion phpScript = (IPhpScriptRegion) interest;
+				IPHPScriptRegion phpScript = (IPHPScriptRegion) interest;
 				try {
 					regionContext = phpScript
-							.getPhpTokenType(offset - container.getStartOffset() - phpScript.getStart());
+							.getPHPTokenType(offset - container.getStartOffset() - phpScript.getStart());
 				} catch (BadLocationException e) {
 					assert false;
 					return null;

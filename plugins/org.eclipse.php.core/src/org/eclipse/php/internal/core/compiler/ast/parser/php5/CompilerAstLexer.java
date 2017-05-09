@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
-import java_cup.runtime.Symbol;
-
 import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
@@ -21,7 +19,9 @@ import org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
-public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer {
+import java_cup.runtime.Symbol;
+
+public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer {
 
 	private PHPDocBlock latestDocBlock;
 

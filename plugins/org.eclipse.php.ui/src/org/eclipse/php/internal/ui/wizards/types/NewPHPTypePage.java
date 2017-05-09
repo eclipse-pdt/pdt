@@ -43,7 +43,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.util.Key;
@@ -1240,7 +1240,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			String interfaceName = interfaceObj.getElementName();
 
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
-			IType[] classes = PhpModelAccess.getDefault().findTypes(interfaceName, MatchRule.EXACT,
+			IType[] classes = PHPModelAccess.getDefault().findTypes(interfaceName, MatchRule.EXACT,
 					Modifiers.AccInterface, 0, scope, new NullProgressMonitor());
 
 			// could be null coming from a non PHP project when the user
@@ -1309,7 +1309,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			String interfaceName = interfaceObj.getElementName();
 
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
-			IType[] classes = PhpModelAccess.getDefault().findTypes(interfaceName, MatchRule.EXACT,
+			IType[] classes = PHPModelAccess.getDefault().findTypes(interfaceName, MatchRule.EXACT,
 					Modifiers.AccInterface, 0, scope, new NullProgressMonitor());
 
 			// could be null coming from a non PHP project when the user

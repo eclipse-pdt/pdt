@@ -17,8 +17,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -38,8 +38,8 @@ public class DocumentModelUtils {
 	 * @param project
 	 */
 	private static void resetDocumentReParser(@Nullable IStructuredDocument document, @Nullable IProject project) {
-		if (document != null && document.getReParser() instanceof PhpSourceParser) {
-			((PhpSourceParser) document.getReParser()).setProject(project);
+		if (document != null && document.getReParser() instanceof PHPSourceParser) {
+			((PHPSourceParser) document.getReParser()).setProject(project);
 		}
 	}
 
@@ -140,8 +140,8 @@ public class DocumentModelUtils {
 				reparseRegion(document, ((ITextRegionContainer) region).getRegions().iterator(),
 						offset + region.getStart(), project, setNewProject);
 			}
-			if (region instanceof IPhpScriptRegion) {
-				final IPhpScriptRegion phpRegion = (IPhpScriptRegion) region;
+			if (region instanceof IPHPScriptRegion) {
+				final IPHPScriptRegion phpRegion = (IPHPScriptRegion) region;
 				try {
 					if (setNewProject) {
 						phpRegion.completeReparse(document, offset + region.getStart(), region.getLength(), project);

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.search.Messages;
@@ -38,8 +38,8 @@ import java_cup.runtime.lr_parser;
  * Abstract syntax trees may be hand constructed by clients, using the
  * <code>new<i>TYPE</i></code> factory methods to create new nodes, and the
  * various <code>set<i>CHILD</i></code> methods (see
- * {@link org.eclipse.php.core.ast.nodes.ASTNode} and its subclasses)
- * to connect them together.
+ * {@link org.eclipse.php.core.ast.nodes.ASTNode} and its subclasses) to connect
+ * them together.
  * </p>
  * <p>
  * Each AST node belongs to a unique AST instance, called the owning AST. The
@@ -187,37 +187,37 @@ public class AST {
 			throws IOException {
 		if (PHPVersion.PHP5 == phpVersion) {
 			final AstLexer lexer5 = getLexer5(reader);
-			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer5.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer5.setUseShortTags(useShortTags);
 			return lexer5;
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
 			final AstLexer lexer53 = getLexer53(reader);
-			lexer53.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer53.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer53.setUseShortTags(useShortTags);
 			return lexer53;
 		} else if (PHPVersion.PHP5_4 == phpVersion) {
 			final AstLexer lexer54 = getLexer54(reader);
-			lexer54.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer54.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer54.setUseShortTags(useShortTags);
 			return lexer54;
 		} else if (PHPVersion.PHP5_5 == phpVersion) {
 			final AstLexer lexer55 = getLexer55(reader);
-			lexer55.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer55.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer55.setUseShortTags(useShortTags);
 			return lexer55;
 		} else if (PHPVersion.PHP5_6 == phpVersion) {
 			final AstLexer lexer56 = getLexer56(reader);
-			lexer56.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer56.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer56.setUseShortTags(useShortTags);
 			return lexer56;
 		} else if (PHPVersion.PHP7_0 == phpVersion) {
 			final AstLexer lexer7 = getLexer7(reader);
-			lexer7.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer7.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer7.setUseShortTags(useShortTags);
 			return lexer7;
 		} else if (PHPVersion.PHP7_1 == phpVersion) {
 			final AstLexer lexer71 = getLexer71(reader);
-			lexer71.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer71.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer71.setUseShortTags(useShortTags);
 			return lexer71;
 		} else {
@@ -231,49 +231,49 @@ public class AST {
 	}
 
 	private AstLexer getLexer71(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php71.PhpAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php71.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php71.PHPAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php71.PHPAstLexer(
 				reader);
 		phpAstLexer.setAST(this);
 		return phpAstLexer;
 	}
 
 	private AstLexer getLexer7(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php7.PHPAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php7.PHPAstLexer(
 				reader);
 		phpAstLexer.setAST(this);
 		return phpAstLexer;
 	}
 
 	private AstLexer getLexer56(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php56.PHPAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php56.PHPAstLexer(
 				reader);
 		phpAstLexer5.setAST(this);
 		return phpAstLexer5;
 	}
 
 	private AstLexer getLexer55(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php55.PHPAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php55.PHPAstLexer(
 				reader);
 		phpAstLexer5.setAST(this);
 		return phpAstLexer5;
 	}
 
 	private AstLexer getLexer54(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php54.PHPAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php54.PHPAstLexer(
 				reader);
 		phpAstLexer5.setAST(this);
 		return phpAstLexer5;
 	}
 
 	private AstLexer getLexer53(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php53.PHPAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php53.PHPAstLexer(
 				reader);
 		phpAstLexer5.setAST(this);
 		return phpAstLexer5;
 	}
 
 	private AstLexer getLexer5(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer(
+		final org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer(
 				reader);
 		phpAstLexer5.setAST(this);
 		return phpAstLexer5;
@@ -281,37 +281,37 @@ public class AST {
 
 	private lr_parser getParserInstance(PHPVersion phpVersion, Scanner lexer) {
 		if (PHPVersion.PHP5 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php5.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php5.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php53.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php53.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP5_4 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php54.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php54.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP5_5 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php55.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php55.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP5_6 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php56.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php56.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP7_0 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php7.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php7.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP7_1 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php71.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php71.PhpAstParser(
+			final org.eclipse.php.internal.core.ast.scanner.php71.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php71.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;

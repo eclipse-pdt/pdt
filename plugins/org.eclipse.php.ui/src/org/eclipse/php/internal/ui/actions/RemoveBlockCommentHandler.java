@@ -20,7 +20,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -132,8 +132,8 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 					try {
 						int textRegionOffset = textRegion.getStart();
 						int normelizedOffset = textRegionOffset + docRegionOffset;
-						ITextRegion[] phpTokens = ((PhpScriptRegion) textRegion)
-								.getPhpTokens(selectionOffset - normelizedOffset, selectionLength);
+						ITextRegion[] phpTokens = ((PHPScriptRegion) textRegion)
+								.getPHPTokens(selectionOffset - normelizedOffset, selectionLength);
 
 						int lastOffsetParsed = -1;
 
@@ -150,14 +150,14 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 								// if we are somewhere within a comment
 								// (start/end/body), this will find the start
 								// and end tokens
-								ITextRegion startToken = findCommentStartToken(token, (PhpScriptRegion) textRegion);
+								ITextRegion startToken = findCommentStartToken(token, (PHPScriptRegion) textRegion);
 								TextLocation commentOffsets = new TextLocation(startToken.getStart() + normelizedOffset,
 										startToken.getEnd() + normelizedOffset);
 								boolean result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
 								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
 
-								ITextRegion endToken = findCommentEndToken(token, (PhpScriptRegion) textRegion);
+								ITextRegion endToken = findCommentEndToken(token, (PHPScriptRegion) textRegion);
 								commentOffsets = new TextLocation(endToken.getStart() + normelizedOffset,
 										endToken.getEnd() + normelizedOffset);
 								result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
@@ -193,26 +193,26 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 		return false;
 	}
 
-	private ITextRegion findCommentStartToken(ITextRegion token, PhpScriptRegion phpScriptRegion)
+	private ITextRegion findCommentStartToken(ITextRegion token, PHPScriptRegion phpScriptRegion)
 			throws BadLocationException {
 		assert PHPPartitionTypes.isPHPMultiLineCommentState(token.getType());
 
 		if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(token.getType())) {
 			return token;
 		}
-		ITextRegion previousToken = phpScriptRegion.getPhpToken(token.getStart() - 1);
+		ITextRegion previousToken = phpScriptRegion.getPHPToken(token.getStart() - 1);
 		return findCommentStartToken(previousToken, phpScriptRegion);
 
 	}
 
-	private ITextRegion findCommentEndToken(ITextRegion token, PhpScriptRegion phpScriptRegion)
+	private ITextRegion findCommentEndToken(ITextRegion token, PHPScriptRegion phpScriptRegion)
 			throws BadLocationException {
 		assert PHPPartitionTypes.isPHPMultiLineCommentState(token.getType());
 
 		if (PHPPartitionTypes.isPHPMultiLineCommentEndRegion(token.getType())) {
 			return token;
 		}
-		ITextRegion nextToken = phpScriptRegion.getPhpToken(token.getEnd());
+		ITextRegion nextToken = phpScriptRegion.getPHPToken(token.getEnd());
 		return findCommentEndToken(nextToken, phpScriptRegion);
 
 	}

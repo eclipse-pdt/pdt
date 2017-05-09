@@ -28,7 +28,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	@Override
 	public String getPartitionType(final ITextRegion region, final int offset) {
 		// if php region
-		if (isPhpRegion(region.getType())) {
+		if (isPHPRegion(region.getType())) {
 			return PHPPartitionTypes.PHP_DEFAULT;
 		}
 
@@ -56,7 +56,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	 * @param regionType
 	 * @return
 	 */
-	private static final boolean isPhpRegion(final String regionType) {
+	private static final boolean isPHPRegion(final String regionType) {
 		return regionType == PHPRegionContext.PHP_OPEN || regionType == PHPRegionContext.PHP_CLOSE
 				|| regionType == PHPRegionContext.PHP_CONTENT;
 	}

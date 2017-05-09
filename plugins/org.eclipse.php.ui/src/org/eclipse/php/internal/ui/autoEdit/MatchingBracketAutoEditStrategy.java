@@ -15,7 +15,7 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -164,8 +164,8 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 
 				// This text region must be of type PhpScriptRegion:
 				if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
-					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-					tRegion = scriptRegion.getPhpToken(currOffset - regionStart);
+					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+					tRegion = scriptRegion.getPHPToken(currOffset - regionStart);
 
 					while (true) {
 						String regionType = tRegion.getType();
@@ -183,7 +183,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 							return MATCHING_BRACKET_NOT_NEEDED;
 						}
 						if (tRegion.getStart() > 0) {
-							tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+							tRegion = scriptRegion.getPHPToken(tRegion.getStart() - 1);
 						} else {
 							break;
 						}
@@ -247,9 +247,9 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				tRegion = container.getRegionAtCharacterOffset(offset);
 			}
 
-			if (tRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - sdRegion.getStartOffset(scriptRegion));
+			if (tRegion instanceof IPHPScriptRegion) {
+				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+				tRegion = scriptRegion.getPHPToken(offset - sdRegion.getStartOffset(scriptRegion));
 
 				if (tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {
 					return;

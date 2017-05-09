@@ -41,13 +41,13 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput im
 	@Override
 	public IPath getPath(Object element) {
 		IPath path = super.getPath(element);
-		return path.addFileExtension(Util.defaultPhpExtension());
+		return path.addFileExtension(Util.defaultPHPExtension());
 	}
 
 	@Override
 	public String getName() {
 		String result = super.getName();
-		return result + "." + Util.defaultPhpExtension(); //$NON-NLS-1$
+		return result + "." + Util.defaultPHPExtension(); //$NON-NLS-1$
 	}
 
 	@Override

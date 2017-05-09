@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.IncludeField;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.util.*;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedPharFileResult;
@@ -153,7 +153,7 @@ public class FileNetworkUtility {
 
 		IField[] includes = includesCache.get(parentElement);
 		if (includes == null) {
-			includes = PhpModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX, scope, monitor);
+			includes = PHPModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX, scope, monitor);
 			includesCache.put(parentElement, includes);
 		}
 
@@ -240,7 +240,7 @@ public class FileNetworkUtility {
 			Map<ISourceModule, Node> cachedTrees, IProgressMonitor monitor) throws CoreException {
 
 		ISourceModule sourceModule = root.getFile();
-		IField[] includes = PhpModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX,
+		IField[] includes = PHPModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX,
 				SearchEngine.createSearchScope(sourceModule), monitor);
 
 		if (includes == null) {

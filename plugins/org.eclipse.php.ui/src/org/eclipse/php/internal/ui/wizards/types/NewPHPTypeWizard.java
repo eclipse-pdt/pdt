@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.Logger;
@@ -224,11 +224,11 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	 */
 	protected int findPhpBlockOffset() {
 		int injectOffset = -1;
-		IPhpScriptRegion scriptRegion = null;
+		IPHPScriptRegion scriptRegion = null;
 		ITextRegion[] subRegions = getStructuredDocumentsRegionis();
 		for (ITextRegion currentRegion : subRegions) {
-			if (currentRegion != null && currentRegion instanceof IPhpScriptRegion) {
-				scriptRegion = (IPhpScriptRegion) currentRegion;
+			if (currentRegion != null && currentRegion instanceof IPHPScriptRegion) {
+				scriptRegion = (IPHPScriptRegion) currentRegion;
 				if (scriptRegion.getType().equals(PHPRegionTypes.PHP_CONTENT)) {
 					injectOffset = scriptRegion.getEnd();
 					return injectOffset;

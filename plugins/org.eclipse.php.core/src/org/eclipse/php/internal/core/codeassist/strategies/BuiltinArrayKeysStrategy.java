@@ -29,7 +29,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 /**
@@ -94,12 +94,12 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				matchRule = MatchRule.EXACT;
 			}
 			IDLTKSearchScope scope = createSearchScope();
-			IField[] elements = PhpModelAccess.getDefault().findFields("$" + prefix, matchRule, Modifiers.AccGlobal, //$NON-NLS-1$
+			IField[] elements = PHPModelAccess.getDefault().findFields("$" + prefix, matchRule, Modifiers.AccGlobal, //$NON-NLS-1$
 					Modifiers.AccConstant, scope, null);
 			List<IField> list = new ArrayList<IField>();
 
 			if (!prefix.startsWith("$")) { //$NON-NLS-1$
-				elements = PhpModelAccess.getDefault().findFields("$" + prefix, //$NON-NLS-1$
+				elements = PHPModelAccess.getDefault().findFields("$" + prefix, //$NON-NLS-1$
 						matchRule, Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 				list.addAll(Arrays.asList(elements));
 				elements = list.toArray(new IField[list.size()]);
@@ -119,7 +119,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				}
 			}
 
-			PHPVersion phpVersion = arrayContext.getPhpVersion();
+			PHPVersion phpVersion = arrayContext.getPHPVersion();
 			reportVariables(reporter, arrayContext, PHPVariables.getVariables(phpVersion), prefix, true, extraObject);
 		}
 	}

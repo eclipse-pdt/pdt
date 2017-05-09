@@ -24,7 +24,7 @@ import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 public class UseTraitNameStrategy extends GlobalTypesStrategy {
 
@@ -54,17 +54,17 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
-			IType[] types = PhpModelAccess.getDefault().findTraits(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
+			IType[] types = PHPModelAccess.getDefault().findTraits(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
 					scope, null);
 			result.addAll(Arrays.asList(types));
 		}
-		IType[] types = PhpModelAccess.getDefault().findTraits(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
+		IType[] types = PHPModelAccess.getDefault().findTraits(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
 				scope, null);
 		result.addAll(Arrays.asList(types));
 
