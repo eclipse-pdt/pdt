@@ -43,7 +43,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	public Element createElement(String tagName) throws DOMException {
 		checkTagNameValidity(tagName);
 
-		ElementImplForPhp element = new ElementImplForPhp();
+		ElementImplForPHP element = new ElementImplForPHP();
 		element.setOwnerDocument(this);
 		element.setTagName(tagName);
 		return element;
@@ -57,7 +57,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	 *            java.lang.String
 	 */
 	public Attr createAttribute(String name) throws DOMException {
-		AttrImplForPhp attr = new AttrImplForPhp();
+		AttrImplForPHP attr = new AttrImplForPHP();
 		attr.setOwnerDocument(this);
 		attr.setName(name);
 		return attr;
@@ -71,7 +71,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	 *            java.lang.String
 	 */
 	public Text createTextNode(String data) {
-		TextImplForPhp text = new TextImplForPhp();
+		TextImplForPHP text = new TextImplForPHP();
 		text.setOwnerDocument(this);
 		text.setData(data);
 		return text;

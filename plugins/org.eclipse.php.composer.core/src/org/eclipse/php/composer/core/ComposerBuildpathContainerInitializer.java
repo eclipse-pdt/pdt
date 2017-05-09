@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
+import org.eclipse.php.internal.core.project.PHPVersionChangedHandler;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 
@@ -78,12 +78,12 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 		};
 
 		project2PhpVerListener.put(project, versionChangeListener);
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(versionChangeListener);
+		PHPVersionChangedHandler.getInstance().addPHPVersionChangedListener(versionChangeListener);
 
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
 			public void closed() {
-				PhpVersionChangedHandler.getInstance()
-						.removePhpVersionChangedListener(project2PhpVerListener.get(project));
+				PHPVersionChangedHandler.getInstance()
+						.removePHPVersionChangedListener(project2PhpVerListener.get(project));
 				project2PhpVerListener.remove(project);
 			}
 		});

@@ -40,7 +40,7 @@ import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -518,10 +518,10 @@ public class UseStatementInjector {
 			}
 
 			if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+				IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 				try {
 					tRegion = phpScriptRegion
-							.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+							.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 				} catch (BadLocationException e) {
 					return null;
 				}

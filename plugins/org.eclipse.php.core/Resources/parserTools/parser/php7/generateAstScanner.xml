@@ -16,7 +16,7 @@
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
-			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/php7/PhpAstLexer.java">
+			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/php7/PHPAstLexer.java">
 			<srcfiles dir="." includes="ast_scanner.flex" />
 			<srcfiles dir="../../jflex" includes="common.skeleton" />
 		</uptodate>

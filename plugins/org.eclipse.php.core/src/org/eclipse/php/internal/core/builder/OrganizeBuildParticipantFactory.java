@@ -36,7 +36,7 @@ import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier;
+import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.corext.util.DocumentUtils;
 import org.eclipse.php.internal.core.search.Messages;
 
@@ -147,7 +147,7 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 
 				DefaultProblem problem = new DefaultProblem(context.getFile().getName(),
 						Messages.format(UNUSED_MESSAGE, part.getNamespace().getFullyQualifiedName()),
-						PhpProblemIdentifier.USE_STATEMENTS, new String[0], ProblemSeverities.Warning, sourceStart,
+						PHPProblemIdentifier.USE_STATEMENTS, new String[0], ProblemSeverities.Warning, sourceStart,
 						sourceEnd, lineNumber, -1);
 
 				context.getProblemReporter().reportProblem(problem);

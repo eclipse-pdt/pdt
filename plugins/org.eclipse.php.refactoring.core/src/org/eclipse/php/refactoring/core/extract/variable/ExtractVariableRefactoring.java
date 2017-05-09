@@ -23,7 +23,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.ltk.core.refactoring.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
@@ -1118,14 +1118,14 @@ public class ExtractVariableRefactoring extends Refactoring {
 		// check if the user given variable name already exists in the function
 		// scope
 		if (enclosingBodyNode.getType() == ASTNode.FUNCTION_DECLARATION) {
-			if (PhpElementConciliator.localVariableAlreadyExists((FunctionDeclaration) enclosingBodyNode, name)) {
+			if (PHPElementConciliator.localVariableAlreadyExists((FunctionDeclaration) enclosingBodyNode, name)) {
 				status.addWarning(
 						NLS.bind(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.26"), name)); //$NON-NLS-1$
 			}
 		} else {
 			// check if the user given variable name already exists in the
 			// global scope
-			if (PhpElementConciliator.globalVariableAlreadyExists((Program) astRoot, name)) {
+			if (PHPElementConciliator.globalVariableAlreadyExists((Program) astRoot, name)) {
 				status.addWarning(
 						NLS.bind(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.27"), name)); //$NON-NLS-1$
 			}

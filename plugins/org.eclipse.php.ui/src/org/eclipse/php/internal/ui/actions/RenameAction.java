@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.*;
 
@@ -69,8 +69,8 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 				if (object instanceof IResource) {
 					resource = (IResource) object;
 				}
-				if (object instanceof ElementImplForPhp) {
-					resource = ((ElementImplForPhp) object).getModelElement().getResource();
+				if (object instanceof ElementImplForPHP) {
+					resource = ((ElementImplForPHP) object).getModelElement().getResource();
 				}
 				if (resource != null) {
 					IStructuredSelection resourceSel = new StructuredSelection(resource);

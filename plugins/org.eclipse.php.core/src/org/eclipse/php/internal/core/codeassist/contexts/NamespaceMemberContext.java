@@ -15,7 +15,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -46,7 +46,7 @@ public class NamespaceMemberContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		if (getPhpVersion().isLessThan(PHPVersion.PHP5_3)) {
+		if (getPHPVersion().isLessThan(PHPVersion.PHP5_3)) {
 			return false;
 		}
 
@@ -146,8 +146,8 @@ public class NamespaceMemberContext extends StatementContext {
 				// after the namespace separator, otherwise there's no reason
 				// to retrieve the next region.
 				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER.length()) {
-			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			IPHPScriptRegion phpScriptRegion = getPHPScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPHPToken(phpToken.getEnd());
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459368
 			// Also check that we only retrieve PHP labels.
 			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {

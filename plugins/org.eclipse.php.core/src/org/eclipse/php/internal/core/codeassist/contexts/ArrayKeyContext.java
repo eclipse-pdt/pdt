@@ -65,12 +65,12 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 			TextSequence statementText = getStatementText();
 			int length = statementText.length();
 			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, length);
-			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText,
+			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPHPVersion(), statementText,
 					endPosition, true);
 
 			hasQuotes = false;
 
-			if (PHPPartitionTypes.isPhpQuotesState(phpToken.getType())) {
+			if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
 				hasQuotes = true;
 
 				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
@@ -92,7 +92,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 			}
 
 			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 1);
-			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText,
+			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPHPVersion(), statementText,
 					endPosition, true);
 			arrayVarName = statementText.subSequence(startPosition, endPosition).toString();
 			if (!arrayVarName.startsWith("$")) { //$NON-NLS-1$
