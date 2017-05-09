@@ -1,0 +1,111 @@
+--TEST--
+Bug 516306 - Syntax error in Heredoc
+--FILE--
+<?php
+<<<EOF
+namespace Namespaced
+{
+class WithComments
+{
+public static $loaded = true;
+}
+$string ='string should not be   modified {$string}';
+$heredoc = (<<<HD
+
+
+Heredoc should not be   modified {$string}
+
+
+HD
+);
+$nowdoc =<<<'ND'
+
+
+Nowdoc should not be   modified {$string}
+
+
+ND
+;
+}
+namespace
+{
+class Pearlike_WithComments
+{
+public static $loaded = true;
+}
+}
+namespace {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
+namespace {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
+namespace {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}
+EOF;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="580">
+	<ExpressionStatement start="6" end="576">
+		<Quote start="6" end="575" type="heredoc">
+			<Scalar start="13" end="71" type="string" value="namespace Namespaced
+{
+class WithComments
+{
+public static ">
+			</Scalar>
+			<VariableReference start="71" end="78" name="$loaded">
+			</VariableReference>
+			<Scalar start="78" end="89" type="string" value=" = true;
+}
+">
+			</Scalar>
+			<VariableReference start="89" end="96" name="$string">
+			</VariableReference>
+			<Scalar start="96" end="131" type="string" value=" =&apos;string should not be   modified ">
+			</Scalar>
+			<ReflectionVariableReference start="131" end="140">
+				<VariableReference start="132" end="139" name="$string">
+				</VariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="140" end="143" type="string" value="&apos;;
+">
+			</Scalar>
+			<VariableReference start="143" end="151" name="$heredoc">
+			</VariableReference>
+			<Scalar start="151" end="196" type="string" value=" = (&lt;&lt;&lt;HD
+Heredoc should not be   modified ">
+			</Scalar>
+			<ReflectionVariableReference start="196" end="205">
+				<VariableReference start="197" end="204" name="$string">
+				</VariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="210" end="214" type="string" value="
+);
+">
+			</Scalar>
+			<VariableReference start="214" end="221" name="$nowdoc">
+			</VariableReference>
+			<Scalar start="221" end="265" type="string" value=" =&lt;&lt;&lt;&apos;ND&apos;
+Nowdoc should not be   modified ">
+			</Scalar>
+			<ReflectionVariableReference start="265" end="274">
+				<VariableReference start="266" end="273" name="$string">
+				</VariableReference>
+			</ReflectionVariableReference>
+			<Scalar start="293" end="340" type="string" value="
+{
+class Pearlike_WithComments
+{
+public static ">
+			</Scalar>
+			<VariableReference start="340" end="347" name="$loaded">
+			</VariableReference>
+			<Scalar start="347" end="572" type="string" value=" = true;
+}
+}
+namespace {require __DIR__.&apos;/Fixtures/Namespaced/WithDirMagic.php&apos;;}
+namespace {require __DIR__.&apos;/Fixtures/Namespaced/WithFileMagic.php&apos;;}
+namespace {require __DIR__.&apos;/Fixtures/Namespaced/WithHaltCompiler.php&apos;;}
+">
+			</Scalar>
+		</Quote>
+	</ExpressionStatement>
+	<EmptyStatement start="577" end="579">
+	</EmptyStatement>
+</ModuleDeclaration>
