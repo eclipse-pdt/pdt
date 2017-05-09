@@ -50,11 +50,11 @@ import org.eclipse.swt.widgets.Display;
 
 public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDelegate {
 
-	public static final String PRINTER_NAME = "ZendPHPUnitLogger"; //$NON-NLS-1$
+	public static final String PRINTER_NAME = "PHPUnitLogger"; //$NON-NLS-1$
 
 	private static final String PRINTER_DIRECTORY = "printer";//$NON-NLS-1$
-	private static final String TMP_PRINTER_DIRECTORY = "zendprinter";//$NON-NLS-1$
-	private static final String ENV_PORT = "ZEND_PHPUNIT_PORT"; //$NON-NLS-1$
+	private static final String TMP_PRINTER_DIRECTORY = "phpunit_printer";//$NON-NLS-1$
+	private static final String ENV_PORT = "PHPUNIT_PORT"; //$NON-NLS-1$
 	private static final String TIMESTAMP_DATA_FORMAT = "yyyyMMdd-HHmm"; //$NON-NLS-1$
 	private static final String XML_FILE_FORMAT = "%s-%s.xml";//$NON-NLS-1$
 

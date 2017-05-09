@@ -29,7 +29,7 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit\Framework\ExpectationFailedException', 'ExpectationFailedException');
 }
 
-class ZendPHPUnitLogger extends Printer implements TestListener
+class PHPUnitLogger extends Printer implements TestListener
 {
     
     private $status;
@@ -450,18 +450,18 @@ function filterTrace($trace)
     foreach ($trace as $frame) {
         if (! isset($frame['file'])) {
             continue;
-            $filteredFrame = array(
-                'file' => $frame['file'],
-                'line' => $frame['line'],
-                'function' => $frame['function']
+        }
+        $filteredFrame = array(
+            'file' => $frame['file'],
+            'line' => $frame['line'],
+            'function' => $frame['function']
+        );
+        if (isset($frame['class'])) {
+            $filteredFrame += array(
+                'class' => $frame['class'],
+                'type' => $frame['type']
             );
-            if (isset($frame['class'])) {
-                $filteredFrame += array(
-                    'class' => $frame['class'],
-                    'type' => $frame['type']
-                );
-                $filteredTrace[] = $filteredFrame;
-            }
+            $filteredTrace[] = $filteredFrame;
         }
     }
     return $filteredTrace;
