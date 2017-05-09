@@ -1,0 +1,21 @@
+--TEST--
+Bug 516299 - Invalid unresolved type error
+--FILE--
+<?
+namespace NS\Sub;
+
+use NS\NS;
+use NS\Foo;
+
+namespace NS;
+
+class NS {
+}
+
+class Foo {
+
+}
+?>
+--EXPECT--
+[line=4, start=26, end=31] The import NS\NS is never used
+[line=5, start=37, end=43] The import NS\Foo is never used

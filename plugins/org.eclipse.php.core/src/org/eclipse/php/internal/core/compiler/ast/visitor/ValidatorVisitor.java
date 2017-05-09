@@ -560,9 +560,13 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				if (fullTypeReference.getNamespace() != null) {
 					hasNamespace = true;
 					namespaceName = fullTypeReference.getNamespace().getName();
-					UsePartInfo info = usePartInfo.get(namespaceName.toLowerCase());
-					if (info != null) {
-						namespaceName = info.getFullyQualifiedName();
+					// for use statement, no need to lookup the use statement
+					// to compute namespace name
+					if (!isUseStatement) {
+						UsePartInfo info = usePartInfo.get(namespaceName.toLowerCase());
+						if (info != null) {
+							namespaceName = info.getFullyQualifiedName();
+						}
 					}
 				}
 			}
