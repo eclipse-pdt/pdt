@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
-import org.eclipse.php.internal.formatter.core.HtmlFormatterForPhpCode;
+import org.eclipse.php.internal.formatter.core.HtmlFormatterForPHPCode;
 import org.eclipse.php.internal.formatter.core.Logger;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -72,7 +72,7 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 						"format PHP document", 0, document.getLength()); //$NON-NLS-1$
 
 				// html format
-				HTMLFormatProcessorImpl htmlFormatter = new HtmlFormatterForPhpCode();
+				HTMLFormatProcessorImpl htmlFormatter = new HtmlFormatterForPHPCode();
 				try {
 					htmlFormatter.formatDocument(document, region.getOffset(), region.getLength());
 				} catch (Exception e) {

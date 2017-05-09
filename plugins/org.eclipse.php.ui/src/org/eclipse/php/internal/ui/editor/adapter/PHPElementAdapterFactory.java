@@ -28,7 +28,7 @@ import org.eclipse.ui.IActionFilter;
  * 
  * @author yaronm
  */
-public class PhpElementAdapterFactory implements IAdapterFactory {
+public class PHPElementAdapterFactory implements IAdapterFactory {
 
 	private static Map<Class<?>, Object> adapterType2Object = new HashMap<>(4);
 
@@ -37,7 +37,7 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 		adapterType2Object.put(ISearchPageScoreComputer.class, new DLTKSearchPageScoreComputer());
 	}
 
-	public PhpElementAdapterFactory() {
+	public PHPElementAdapterFactory() {
 	}
 
 	@Override

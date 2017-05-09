@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 /**
  * The template's context
  */
-public class PhpTemplateContext extends ScriptTemplateContext {
+public class PHPTemplateContext extends ScriptTemplateContext {
 
 	private static final String DOLLAR = "dollar"; //$NON-NLS-1$
 	private static final String DOLLAR_SIGN = "$"; //$NON-NLS-1$
@@ -38,12 +38,12 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 
 	private String fLineDelimiter;
 
-	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, int offset,
+	public PHPTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, int offset,
 			int length, ISourceModule sourceModule) {
 		super(phpTemplateContextType, document, offset, length, sourceModule);
 	}
 
-	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, Position position,
+	public PHPTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, Position position,
 			ISourceModule sourceModule) {
 		super(phpTemplateContextType, document, position, sourceModule);
 	}

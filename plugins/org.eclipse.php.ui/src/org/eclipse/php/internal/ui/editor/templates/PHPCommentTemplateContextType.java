@@ -20,13 +20,13 @@ import org.eclipse.jface.text.IDocument;
 /**
  * Context Type id for PHPDOC and comments
  */
-public class PhpCommentTemplateContextType extends ScriptTemplateContextType {
+public class PHPCommentTemplateContextType extends ScriptTemplateContextType {
 
 	public static final String PHP_COMMENT_CONTEXT_TYPE_ID = "phpcomment"; //$NON-NLS-1$
 
 	@Override
 	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
-		return new PhpTemplateContext(this, document, offset, length, sourceModule);
+		return new PHPTemplateContext(this, document, offset, length, sourceModule);
 	}
 
 	/*

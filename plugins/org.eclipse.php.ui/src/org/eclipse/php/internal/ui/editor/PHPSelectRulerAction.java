@@ -26,11 +26,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * 
  * @author Shalom
  */
-public class PhpSelectRulerAction extends AbstractRulerActionDelegate {
+public class PHPSelectRulerAction extends AbstractRulerActionDelegate {
 
 	@Override
 	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
-		return new PhpSelectAnnotationRulerAction(PHPUIMessages.getResourceBundle(), "PhpSelectAnnotationRulerAction.", //$NON-NLS-1$
+		return new PHPSelectAnnotationRulerAction(PHPUIMessages.getResourceBundle(), "PhpSelectAnnotationRulerAction.", //$NON-NLS-1$
 				editor, rulerInfo);
 	}
 }

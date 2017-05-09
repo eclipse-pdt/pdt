@@ -20,7 +20,7 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -35,13 +35,13 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
-public abstract class PhpPreview {
+public abstract class PHPPreview {
 	protected String fInput;
 	protected final StyledText fText;
 	protected IStructuredDocumentRegion fNodes;
 	protected RegionParser fParser;
 	protected IPreferenceStore fPreferenceStore;
-	protected LineStyleProviderForPhp fStyleProvider = new LineStyleProviderForPhp();
+	protected LineStyleProviderForPHP fStyleProvider = new LineStyleProviderForPHP();
 
 	protected CodeFormatterPreferences codeFormatterPreferences;
 
@@ -51,7 +51,7 @@ public abstract class PhpPreview {
 	 * @param workingValues
 	 * @param parent
 	 */
-	public PhpPreview(CodeFormatterPreferences codeFormatterPreferences, Composite parent) {
+	public PHPPreview(CodeFormatterPreferences codeFormatterPreferences, Composite parent) {
 		// set the PHP parser
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		fParser = mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser();

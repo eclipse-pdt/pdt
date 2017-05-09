@@ -222,7 +222,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	 * 
 	 * @return injectOffset
 	 */
-	protected int findPhpBlockOffset() {
+	protected int findPHPBlockOffset() {
 		int injectOffset = -1;
 		IPHPScriptRegion scriptRegion = null;
 		ITextRegion[] subRegions = getStructuredDocumentsRegionis();
@@ -269,7 +269,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	 * @param fileName
 	 * @param contents
 	 */
-	protected boolean createNewPhpFile(final String containerName, final String fileName, final String contents) {
+	protected boolean createNewPHPFile(final String containerName, final String fileName, final String contents) {
 		if (!createNewFile(containerName, fileName, contents)) {
 			return false;
 		}
@@ -316,7 +316,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 		// 1. Require list only when not in new block
 		if (page.isInFirstPHPBlock()) {
 
-			int injectOffset = findPhpBlockOffset();
+			int injectOffset = findPHPBlockOffset();
 
 			int phpBlockEndOffset = -1;
 			if (injectOffset == -1) {
@@ -327,7 +327,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 				phpBlockInjector.inject("<?php", false, true);//$NON-NLS-1$
 
 				// find created php block end
-				injectOffset = findPhpBlockOffset();
+				injectOffset = findPHPBlockOffset();
 				if (injectOffset != -1) {
 					phpBlockEndOffset = injectOffset;
 				}

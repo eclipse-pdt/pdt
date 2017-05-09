@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodS
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 
-public class PhpTemplateVariables {
+public class PHPTemplateVariables {
 
 	public static class Index extends TemplateVariableResolver {
 		public static final String NAME = "index"; //$NON-NLS-1$

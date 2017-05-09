@@ -33,7 +33,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	@Override
 	public void foldersChanged(IFolder[] folders) {
 		try {
-			updatePhpExplorer(folders);
+			updatePHPExplorer(folders);
 		} catch (CoreException e) {
 			PHPUiPlugin.log(e);
 		}
@@ -50,7 +50,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	 *             if any of the folders does not exist or is in a closed
 	 *             project
 	 */
-	private void updatePhpExplorer(IFolder[] folders) throws CoreException {
+	private void updatePHPExplorer(IFolder[] folders) throws CoreException {
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 		final IFolder[] subfolders = lfm.getAllSubfolders(folders);
 
@@ -59,7 +59,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				PHPExplorerPart phpExplorer = getPhpExplorer();
+				PHPExplorerPart phpExplorer = getPHPExplorer();
 				if (phpExplorer != null) {
 					TreeViewer tree = phpExplorer.getTreeViewer();
 					for (IFolder subfolder : subfolders) {
@@ -79,7 +79,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	 * @return a reference to {@link PHPExplorerPart}, or <code>null</code> if
 	 *         none is available in the active workbench page
 	 */
-	private PHPExplorerPart getPhpExplorer() {
+	private PHPExplorerPart getPHPExplorer() {
 		// find the active workbench window
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)

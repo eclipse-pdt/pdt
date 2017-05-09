@@ -22,13 +22,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateCompletionProcessor;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
 import org.eclipse.swt.widgets.Shell;
 
 public class PHPCompletionProposalComputer extends ScriptCompletionProposalComputer {
 
 	private PHPCompletionProposalCollector phpCompletionProposalCollector;
-	private PhpTemplateCompletionProcessor phpTemplateCompletionProcessor;
+	private PHPTemplateCompletionProcessor phpTemplateCompletionProcessor;
 
 	@Override
 	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
@@ -37,7 +37,7 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 			explicit = ((PHPContentAssistInvocationContext) context).isExplicit();
 		}
 
-		phpTemplateCompletionProcessor = new PhpTemplateCompletionProcessor(context, explicit);
+		phpTemplateCompletionProcessor = new PHPTemplateCompletionProcessor(context, explicit);
 		return phpTemplateCompletionProcessor;
 	}
 

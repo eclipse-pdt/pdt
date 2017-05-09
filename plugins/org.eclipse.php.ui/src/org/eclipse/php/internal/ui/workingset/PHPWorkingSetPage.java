@@ -45,7 +45,7 @@ import org.eclipse.ui.dialogs.IWorkingSetPage;
  * 
  * 
  */
-public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
+public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private static final String PAGE_TITLE = WorkingSetMessages.PhpWorkingSetPage_title;
 	private static final String PAGE_ID = "ScriptWorkingSetPage"; //$NON-NLS-1$
@@ -60,7 +60,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	/**
 	 * Default constructor.
 	 */
-	public PhpWorkingSetPage() {
+	public PHPWorkingSetPage() {
 		super(PAGE_ID, PAGE_TITLE, DLTKPluginImages.DESC_WIZBAN_SCRIPT_WORKINGSET);
 		setDescription(WorkingSetMessages.PhpWorkingSetPage_workingSet_description);
 		fFirstCheck = true;
@@ -100,7 +100,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		gd.heightHint = convertHeightInCharsToPixels(15);
 		fTree.getControl().setLayoutData(gd);
 
-		fTreeContentProvider = new PhpWorkingSetPageContentProvider();
+		fTreeContentProvider = new PHPWorkingSetPageContentProvider();
 		fTree.setContentProvider(fTreeContentProvider);
 
 		AppearanceAwareLabelProvider fScriptElementLabelProvider = new AppearanceAwareLabelProvider(

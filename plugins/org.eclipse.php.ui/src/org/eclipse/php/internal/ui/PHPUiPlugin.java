@@ -36,8 +36,8 @@ import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
-import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
+import org.eclipse.php.internal.ui.editor.templates.PHPCommentTemplateContextType;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType;
 import org.eclipse.php.internal.ui.explorer.LibraryFolderChangeListener;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
@@ -367,13 +367,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		if (fContextTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 
-			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPTemplateContextType.PHP_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(PHPCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
 
 			fContextTypeRegistry = registry;
 		}

@@ -17,11 +17,11 @@ import org.w3c.dom.Node;
 /**
  * @author moshe, 2007
  */
-public class HtmlFormatterForPhpCode extends HTMLFormatProcessorImpl {
+public class HtmlFormatterForPHPCode extends HTMLFormatProcessorImpl {
 
 	@Override
 	protected IStructuredFormatter getFormatter(Node node) {
-		IStructuredFormatter formatter = HTMLFormatterFactoryForPhpCode.getInstance().createFormatter(node,
+		IStructuredFormatter formatter = HTMLFormatterFactoryForPHPCode.getInstance().createFormatter(node,
 				getFormatPreferences());
 
 		return formatter;

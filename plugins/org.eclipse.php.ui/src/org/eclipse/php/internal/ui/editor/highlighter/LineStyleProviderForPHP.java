@@ -39,7 +39,7 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 /**
  * Coloring mechanism for PHP partitions
  */
-public class LineStyleProviderForPhp extends AbstractLineStyleProvider implements LineStyleProvider {
+public class LineStyleProviderForPHP extends AbstractLineStyleProvider implements LineStyleProvider {
 
 	private IPreferenceStore fColorPreferences;
 
@@ -368,7 +368,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					handled = preparePhpRegions(holdResults, (IPHPScriptRegion) region, startOffset,
+					handled = preparePHPRegions(holdResults, (IPHPScriptRegion) region, startOffset,
 							partitionStartOffset, partitionLength);
 					previousAttr = null;
 					styleRange = null;
@@ -454,7 +454,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						handled = preparePhpRegions(holdResults, (IPHPScriptRegion) region, startOffset,
+						handled = preparePHPRegions(holdResults, (IPHPScriptRegion) region, startOffset,
 								partitionStartOffset, partitionLength);
 						previousAttr = null;
 						styleRange = null;
@@ -518,7 +518,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 	 * @param partitionStartOffset
 	 * @param partitionLength
 	 */
-	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPHPScriptRegion region, int regionStart,
+	private boolean preparePHPRegions(Collection<StyleRange> holdResults, IPHPScriptRegion region, int regionStart,
 			int partitionStartOffset, int partitionLength) {
 		assert holdResults != null && region != null && region.getType() == PHPRegionContext.PHP_CONTENT
 				&& region.getLength() > 0 && regionStart >= 0 && partitionStartOffset >= 0 && partitionLength > 0;

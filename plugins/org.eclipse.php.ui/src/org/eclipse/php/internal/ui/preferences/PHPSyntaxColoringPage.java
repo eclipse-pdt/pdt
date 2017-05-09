@@ -60,7 +60,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
-import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.php.internal.ui.editor.highlighters.*;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.SWT;
@@ -121,13 +121,13 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	private Map<String, String> fStyleToDescriptionMap;
 	private StyledText fText;
 	private Button fUnderline;
-	private final LineStyleProviderForPhp fStyleProvider;
+	private final LineStyleProviderForPHP fStyleProvider;
 	private Button fEnabler;
 	private static Map<String, Position[]> highlightingPositionMap;
 	private static Map<String, HighlightingStyle> highlightingStyleMap;
 
 	public PHPSyntaxColoringPage() {
-		fStyleProvider = new LineStyleProviderForPhp();
+		fStyleProvider = new LineStyleProviderForPHP();
 	}
 
 	// activate controls based on the given local color type

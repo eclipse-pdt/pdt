@@ -22,7 +22,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 
-class PhpWorkingSetPageContentProvider extends StandardModelElementContentProvider {
+class PHPWorkingSetPageContentProvider extends StandardModelElementContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {

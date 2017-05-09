@@ -45,13 +45,13 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
+public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
 	private static final String $_LINE_SELECTION = "${" + GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String $_WORD_SELECTION = "${" + GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static final ICompletionProposal[] EMPTY = {};
-	private String contextTypeId = PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
+	private String contextTypeId = PHPTemplateContextType.PHP_CONTEXT_TYPE_ID;
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 	private IDocument document;
@@ -63,7 +63,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	private IMethod enclosingMethod;
 	private IType enclosingType;
 
-	public PhpTemplateCompletionProcessor(ScriptContentAssistInvocationContext context, boolean explicit) {
+	public PHPTemplateCompletionProcessor(ScriptContentAssistInvocationContext context, boolean explicit) {
 		super(context);
 		this.explicit = explicit;
 	}
@@ -118,25 +118,25 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			enclosingType = (IType) enclosingElement;
 
 			if (enclosingMethod == null && enclosingType == null && !isFieldAccess) {
-				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-				contextIds.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+				contextIds.add(PHPTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds.add(PHPTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
 			} else if (enclosingMethod == null && enclosingType != null && !isFieldAccess) {
 				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
-					contextIds.add(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+					contextIds.add(PHPTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
 					if (PHPFlags.isClass(enclosingType.getFlags())) {
-						contextIds.add(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
+						contextIds.add(PHPTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
 					}
 				} else {
-					contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-					contextIds.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+					contextIds.add(PHPTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+					contextIds.add(PHPTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
 				}
 			} else if (enclosingMethod != null && enclosingType != null && !isFieldAccess) {
 				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
-					contextIds.add(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+					contextIds.add(PHPTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
 				}
-				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds.add(PHPTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 			} else if (enclosingMethod != null && enclosingType == null) {
-				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds.add(PHPTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
@@ -402,7 +402,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	@Override
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
 			int relevance) {
-		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
+		return new PHPTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
 	@Override
@@ -441,7 +441,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	 */
 	@Override
 	protected ScriptTemplateAccess getTemplateAccess() {
-		return PhpTemplateAccess.getInstance();
+		return PHPTemplateAccess.getInstance();
 	}
 
 	/**

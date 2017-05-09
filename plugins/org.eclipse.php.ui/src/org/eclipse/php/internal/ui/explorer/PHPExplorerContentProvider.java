@@ -95,7 +95,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		JavaScriptCore.removeElementChangedListener(this);
 	}
 
-	private Object[] getNonPhpProjects(final IScriptModel model) throws ModelException {
+	private Object[] getNonPHPProjects(final IScriptModel model) throws ModelException {
 		return model.getForeignResources();
 	}
 
@@ -152,7 +152,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			// ones)
 			if (parentElement instanceof IScriptModel) {
 				return StandardModelElementContentProvider.concatenate(getScriptProjects((IScriptModel) parentElement),
-						getNonPhpProjects((IScriptModel) parentElement));
+						getNonPHPProjects((IScriptModel) parentElement));
 			}
 
 			// Handles SourceModule and downwards as well as

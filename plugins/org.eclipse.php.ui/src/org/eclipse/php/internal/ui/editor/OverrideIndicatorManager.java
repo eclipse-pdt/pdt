@@ -52,7 +52,7 @@ import org.eclipse.ui.IEditorPart;
  * 
  * @since 3.0
  */
-class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
+class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 
 	/**
 	 * Overwrite and override indicator annotation.

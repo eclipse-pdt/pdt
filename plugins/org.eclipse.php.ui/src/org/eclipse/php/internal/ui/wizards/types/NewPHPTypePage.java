@@ -295,7 +295,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				openPhpFileDialog();
+				openPHPFileDialog();
 				validatePageValues(VALIDATE_EXISTING_FILE);
 				validatePageValues(VALIDATE_SOURCE_FOLDER);
 				updateDisabled();
@@ -1089,7 +1089,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			}
 
 			// fix bug 14446 - add PHP identifier validation
-			if (getProject() != null && !isValidPhpIdentifier(getElementName())) {
+			if (getProject() != null && !isValidPHPIdentifier(getElementName())) {
 				String message = Messages.NewPHPTypePage_InvalidPhp;
 				String nameLabel = Messages.NewPHPTypePage_InvalidPhpName;
 				switch (fTypeKind) {
@@ -1160,7 +1160,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 						namespaceStatus.setError(Messages.NewPHPTypePage_emptySublevel);
 					} else {
 						String[] segments = namespace.split("\\\\");//$NON-NLS-1$
-						if (segments.length == 1 && !isValidPhpIdentifier(namespace.trim())) {
+						if (segments.length == 1 && !isValidPHPIdentifier(namespace.trim())) {
 							namespaceStatus.setError(Messages.NewPHPTypePage_invalidNamespaceName);
 						} else {
 							for (String segment : segments) {
@@ -1375,7 +1375,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	/**
 	 * @return true if the given name is valid PHP identifier
 	 */
-	private boolean isValidPhpIdentifier(String name) {
+	private boolean isValidPHPIdentifier(String name) {
 		if (name != null && name.length() > 0) {
 			// Check if this is a valid PHP identifier:
 			if (!PHP_IDENTIFIER_PATTERN.matcher(name).matches()) {
@@ -1642,7 +1642,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		}
 	}
 
-	private void openPhpFileDialog() {
+	private void openPHPFileDialog() {
 		IFile[] selected = choosePHPEntries(null, new ArrayList<>());
 		if (selected == null || selected.length == 0) {
 			return;
@@ -1798,7 +1798,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 				existingFileStatus, interfacesStatus, namespaceStatus });
 	}
 
-	public PHPVersion getPhpVersion() {
+	public PHPVersion getPHPVersion() {
 		return phpVersion;
 	}
 

@@ -20,7 +20,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -94,7 +94,7 @@ public class PHPSourceViewerInformationControl
 	private Dictionary fContextStyleMap = null;
 	private IStructuredDocumentRegion fNodes = null;
 	private RegionParser fParser = null;
-	private LineStyleProviderForPhp styleProvider;
+	private LineStyleProviderForPHP styleProvider;
 	private String fInput = ""; //$NON-NLS-1$
 
 	/**
@@ -136,7 +136,7 @@ public class PHPSourceViewerInformationControl
 			return;
 		}
 		IStructuredDocumentRegion node = fNodes;
-		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
+		final LineStyleProviderForPHP styler = new LineStyleProviderForPHP();
 		final Collection holdResults = new ArrayList();
 		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
 
@@ -150,7 +150,7 @@ public class PHPSourceViewerInformationControl
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
-		styleProvider = new LineStyleProviderForPhp();
+		styleProvider = new LineStyleProviderForPHP();
 		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
 
 		setContextStyleMap(contextStyleMap);

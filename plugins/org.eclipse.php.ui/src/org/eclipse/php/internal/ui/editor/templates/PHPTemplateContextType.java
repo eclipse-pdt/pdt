@@ -21,7 +21,7 @@ import org.eclipse.jface.text.Position;
 /**
  * Context Type id for PHP
  */
-public class PhpTemplateContextType extends ScriptTemplateContextType {
+public class PHPTemplateContextType extends ScriptTemplateContextType {
 
 	// for all php except comment
 	public static final String PHP_CONTEXT_TYPE_ID = "php"; //$NON-NLS-1$
@@ -41,12 +41,12 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 
 	@Override
 	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
-		return new PhpTemplateContext(this, document, offset, length, sourceModule);
+		return new PHPTemplateContext(this, document, offset, length, sourceModule);
 	}
 
 	@Override
 	public ScriptTemplateContext createContext(IDocument document, Position position, ISourceModule sourceModule) {
-		return new PhpTemplateContext(this, document, position, sourceModule);
+		return new PHPTemplateContext(this, document, position, sourceModule);
 	}
 
 	/*
@@ -60,13 +60,13 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 		super.addScriptResolvers();
 		removeResolver(new ScriptTemplateVariables.Interpreter());
 
-		addResolver(new PhpTemplateVariables.Encoding());
-		addResolver(new PhpTemplateVariables.ClassContainer());
-		addResolver(new PhpTemplateVariables.FunctionContainer());
-		addResolver(new PhpTemplateVariables.Variable());
-		addResolver(new PhpTemplateVariables.Index());
-		addResolver(new PhpTemplateVariables.NewVariable());
-		addResolver(new PhpTemplateVariables.Class());
-		addResolver(new PhpTemplateVariables.NumberVariable());
+		addResolver(new PHPTemplateVariables.Encoding());
+		addResolver(new PHPTemplateVariables.ClassContainer());
+		addResolver(new PHPTemplateVariables.FunctionContainer());
+		addResolver(new PHPTemplateVariables.Variable());
+		addResolver(new PHPTemplateVariables.Index());
+		addResolver(new PHPTemplateVariables.NewVariable());
+		addResolver(new PHPTemplateVariables.Class());
+		addResolver(new PHPTemplateVariables.NumberVariable());
 	}
 }

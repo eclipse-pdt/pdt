@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Roy, 2007
  */
-public class PhpMergeViewerCreator implements IViewerCreator {
+public class PHPMergeViewerCreator implements IViewerCreator {
 
 	@Override
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {

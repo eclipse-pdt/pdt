@@ -130,7 +130,7 @@ import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 import com.ibm.icu.text.BreakIterator;
 
-public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
+public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScriptReconcilingListener {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 	private static final String FORMATTER_PLUGIN_ID = "org.eclipse.php.formatter.core"; //$NON-NLS-1$
@@ -2757,13 +2757,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
 
-	public void addReconcileListener(IPhpScriptReconcilingListener reconcileListener) {
+	public void addReconcileListener(IPHPScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
 			fReconcilingListeners.add(reconcileListener);
 		}
 	}
 
-	public void removeReconcileListener(IPhpScriptReconcilingListener reconcileListener) {
+	public void removeReconcileListener(IPHPScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
 			fReconcilingListeners.remove(reconcileListener);
 		}
@@ -2777,7 +2777,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
 		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IPhpScriptReconcilingListener) listeners[i]).aboutToBeReconciled();
+			((IPHPScriptReconcilingListener) listeners[i]).aboutToBeReconciled();
 	}
 
 	/*
@@ -2804,7 +2804,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
 		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IPhpScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
+			((IPHPScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
 	}
 
 	/**

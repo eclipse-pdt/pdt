@@ -17,6 +17,6 @@ import org.eclipse.wst.html.core.internal.format.EmbeddedCSSFormatter;
  * 
  * @author moshe, 2007
  */
-public class EmbeddedCSSFormatterForPhpCode extends EmbeddedCSSFormatter {
+public class EmbeddedCSSFormatterForPHPCode extends EmbeddedCSSFormatter {
 
 }

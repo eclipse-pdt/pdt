@@ -77,7 +77,7 @@ public class NewPHPInterfaceWizard extends NewPHPTypeWizard implements INewWizar
 		// Create an interface in a new file
 		if (!page.isInExistingPHPFile()) {
 			// create a new file and inject the code
-			createNewPhpFile(containerName, fileName, contents);
+			createNewPHPFile(containerName, fileName, contents);
 		} else { // an existing file
 			injectCodeIntoExistingFile();
 		}

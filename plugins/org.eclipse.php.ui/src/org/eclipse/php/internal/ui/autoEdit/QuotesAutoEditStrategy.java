@@ -82,7 +82,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 						}
 					} else {
 						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(startOffset);
-						ITextRegion tRegion = getPhpRegion(sdRegion, startOffset);
+						ITextRegion tRegion = getPHPRegion(sdRegion, startOffset);
 						// adding a specific char to close the quote in case the
 						// 2 following conditions fulfilled:
 						// 1. The region ends with whitespace.
@@ -141,7 +141,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 	/*
 	 * get php region by given IStructuredDocumentRegion and offset
 	 */
-	private ITextRegion getPhpRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
+	private ITextRegion getPHPRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
 		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
@@ -277,7 +277,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		if (sdRegion.getParentDocument().getLength() <= offset) {
 			return false;
 		}
-		ITextRegion quoteRegion = getPhpRegion(sdRegion, offset);
+		ITextRegion quoteRegion = getPHPRegion(sdRegion, offset);
 		if (quoteRegion == null || quoteRegion.getLength() > 1) {
 			return false;
 		}
@@ -287,7 +287,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			return false;
 		}
 
-		quoteRegion = getPhpRegion(sdRegion, offset + 1);
+		quoteRegion = getPHPRegion(sdRegion, offset + 1);
 		if (quoteRegion == null || quoteRegion.getLength() > 1) {
 			return false;
 		}

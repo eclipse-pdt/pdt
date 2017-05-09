@@ -23,7 +23,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -54,7 +54,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 	private RegionParser fParser = null;
 
 	private StyledText fText = null;
-	private LineStyleProviderForPhp styleProvider;
+	private LineStyleProviderForPHP styleProvider;
 
 	private IPreferenceStore editorStore;
 
@@ -292,7 +292,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
-		styleProvider = new LineStyleProviderForPhp();
+		styleProvider = new LineStyleProviderForPHP();
 	}
 
 	public StyledText getTextWidget() {

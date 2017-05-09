@@ -24,7 +24,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.corext.ASTNodes;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.validation.PhpReconcilingStrategy;
+import org.eclipse.php.internal.ui.editor.validation.PHPReconcilingStrategy;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.SharedASTProvider.WAIT_FLAG;
 import org.eclipse.ui.*;
@@ -572,7 +572,7 @@ public final class ASTProvider {
 			}
 			Set<Validator> validators = ValidationFramework.getDefault().getDisabledValidatorsFor(resource);
 			for (Validator v : validators) {
-				if (v.getId().equals(PhpReconcilingStrategy.ID)) {
+				if (v.getId().equals(PHPReconcilingStrategy.ID)) {
 					return true;
 				}
 

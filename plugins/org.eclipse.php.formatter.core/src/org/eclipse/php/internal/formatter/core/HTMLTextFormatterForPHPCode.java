@@ -20,7 +20,7 @@ import org.w3c.dom.Node;
  * @author moshe, 2006
  */
 @SuppressWarnings("deprecation")
-public class HTMLTextFormatterForPhpCode extends HTMLTextFormatter {
+public class HTMLTextFormatterForPHPCode extends HTMLTextFormatter {
 
 	@Override
 	protected void formatText(IDOMNode node, HTMLFormatContraints contraints, int mode) {

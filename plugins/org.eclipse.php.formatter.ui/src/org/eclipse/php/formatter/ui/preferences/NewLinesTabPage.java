@@ -98,7 +98,7 @@ public class NewLinesTabPage extends ModifyDialogTabPage {
 	}
 
 	@Override
-	protected PhpPreview doCreatePhpPreview(Composite parent) {
+	protected PHPPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}

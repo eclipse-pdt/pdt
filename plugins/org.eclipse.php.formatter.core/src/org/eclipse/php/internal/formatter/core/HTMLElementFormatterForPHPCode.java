@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
  * @author moshe, 2007
  */
 @SuppressWarnings("deprecation")
-public class HTMLElementFormatterForPhpCode extends HTMLElementFormatter {
+public class HTMLElementFormatterForPHPCode extends HTMLElementFormatter {
 
 	@Override
 	protected boolean canInsertBreakAfter(Node node) {
@@ -83,7 +83,7 @@ public class HTMLElementFormatterForPhpCode extends HTMLElementFormatter {
 				insertBreakBefore(child, contraints);
 			}
 
-			IStructuredFormatter formatter = HTMLFormatterFactoryForPhpCode.getInstance().createFormatter(child,
+			IStructuredFormatter formatter = HTMLFormatterFactoryForPHPCode.getInstance().createFormatter(child,
 					getFormatPreferences());
 			if (formatter != null) {
 				if (formatter instanceof HTMLFormatter) {

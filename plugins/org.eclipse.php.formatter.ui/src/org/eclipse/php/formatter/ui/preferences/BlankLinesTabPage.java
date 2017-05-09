@@ -157,7 +157,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected PhpPreview doCreatePhpPreview(Composite parent) {
+	protected PHPPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}

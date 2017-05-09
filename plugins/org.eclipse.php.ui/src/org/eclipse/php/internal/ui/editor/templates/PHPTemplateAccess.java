@@ -18,15 +18,15 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 /**
  * Provides access to the PHP template store.
  */
-public class PhpTemplateAccess extends ScriptTemplateAccess {
+public class PHPTemplateAccess extends ScriptTemplateAccess {
 	// Template
 	private static final String CUSTOM_TEMPLATES_KEY = "org.eclipse.php.Templates"; //$NON-NLS-1$
 
-	private static PhpTemplateAccess instance;
+	private static PHPTemplateAccess instance;
 
-	public static PhpTemplateAccess getInstance() {
+	public static PHPTemplateAccess getInstance() {
 		if (instance == null) {
-			instance = new PhpTemplateAccess();
+			instance = new PHPTemplateAccess();
 		}
 
 		return instance;
@@ -47,7 +47,7 @@ public class PhpTemplateAccess extends ScriptTemplateAccess {
 	 */
 	@Override
 	protected String getContextTypeId() {
-		return PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
+		return PHPTemplateContextType.PHP_CONTEXT_TYPE_ID;
 	}
 
 	/*

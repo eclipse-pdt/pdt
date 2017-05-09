@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
  * @author guy.g
  * 
  */
-public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferencePage {
+public class PHPTypingPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
 	private TypingConfigurationBlock typingConfigurationBlock;
 

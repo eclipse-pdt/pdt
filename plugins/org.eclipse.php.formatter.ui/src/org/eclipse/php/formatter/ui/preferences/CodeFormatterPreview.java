@@ -25,7 +25,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.text.edits.ReplaceEdit;
 
-public class CodeFormatterPreview extends PhpPreview {
+public class CodeFormatterPreview extends PHPPreview {
 
 	private final IDocument fPreviewDocument;
 	protected String fOriInput;

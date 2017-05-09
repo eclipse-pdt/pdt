@@ -16,13 +16,13 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 import org.w3c.dom.Node;
 
-class HTMLFormatterFactoryForPhpCode {
-	private static HTMLFormatterFactoryForPhpCode fInstance = null;
+class HTMLFormatterFactoryForPHPCode {
+	private static HTMLFormatterFactoryForPHPCode fInstance = null;
 	protected StructuredFormatPreferencesXML fFormatPreferences = null;
 
-	static synchronized HTMLFormatterFactoryForPhpCode getInstance() {
+	static synchronized HTMLFormatterFactoryForPHPCode getInstance() {
 		if (fInstance == null) {
-			fInstance = new HTMLFormatterFactoryForPhpCode();
+			fInstance = new HTMLFormatterFactoryForPHPCode();
 		}
 		return fInstance;
 	}
@@ -32,13 +32,13 @@ class HTMLFormatterFactoryForPhpCode {
 
 		switch (node.getNodeType()) {
 		case Node.ELEMENT_NODE:
-			formatter = new HTMLElementFormatterForPhpCode();
+			formatter = new HTMLElementFormatterForPHPCode();
 			break;
 		case Node.TEXT_NODE:
 			if (isEmbeddedCSS(node)) {
-				formatter = new EmbeddedCSSFormatterForPhpCode();
+				formatter = new EmbeddedCSSFormatterForPHPCode();
 			} else {
-				formatter = new HTMLTextFormatterForPhpCode();
+				formatter = new HTMLTextFormatterForPHPCode();
 			}
 			break;
 		default:
@@ -68,7 +68,7 @@ class HTMLFormatterFactoryForPhpCode {
 		return name.equalsIgnoreCase("STYLE");//$NON-NLS-1$
 	}
 
-	private HTMLFormatterFactoryForPhpCode() {
+	private HTMLFormatterFactoryForPHPCode() {
 		super();
 	}
 

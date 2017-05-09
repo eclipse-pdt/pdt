@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
-public class AdapterFactoryProviderForPhp implements AdapterFactoryProvider {
+public class AdapterFactoryProviderForPHP implements AdapterFactoryProvider {
 
 	/*
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)

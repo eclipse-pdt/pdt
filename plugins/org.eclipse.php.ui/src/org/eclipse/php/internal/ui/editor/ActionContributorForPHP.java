@@ -46,7 +46,7 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
  * 
  * Note that this class is still valid for single page editor.
  */
-public class ActionContributorForPhp extends ActionContributorHTML {
+public class ActionContributorForPHP extends ActionContributorHTML {
 
 	private static final String[] EDITOR_IDS = { "org.eclipse.php.core.phpsource", //$NON-NLS-1$
 			"org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$
@@ -73,7 +73,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 
 	protected RetargetTextEditorAction fAddDescription;
 
-	public ActionContributorForPhp() {
+	public ActionContributorForPHP() {
 		super();
 
 		ResourceBundle resourceBundle = DLTKEditorMessages.getBundleForConstructedKeys();

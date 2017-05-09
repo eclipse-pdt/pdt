@@ -70,7 +70,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * A context that contains the information needed to compute the folding
 	 * structure of an {@link ICompilationUnit} or an {@link IClassFile}.
 	 * Computed folding regions are collected via
-	 * {@linkplain #addProjectionRange(StructuredTextFoldingProviderPHP.PhpProjectionAnnotation, Position)
+	 * {@linkplain #addProjectionRange(StructuredTextFoldingProviderPHP.PHPProjectionAnnotation, Position)
 	 * addProjectionRange}.
 	 */
 	protected final class FoldingStructureComputationContext {
@@ -160,7 +160,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @param position
 		 *            the corresponding position
 		 */
-		public void addProjectionRange(PhpProjectionAnnotation annotation, Position position) {
+		public void addProjectionRange(PHPProjectionAnnotation annotation, Position position) {
 			fMap.put(annotation, position);
 		}
 
@@ -306,7 +306,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	/**
 	 * A {@link ProjectionAnnotation} for java code.
 	 */
-	protected static final class PhpProjectionAnnotation extends ProjectionAnnotation {
+	protected static final class PHPProjectionAnnotation extends ProjectionAnnotation {
 
 		private IModelElement fJavaElement;
 		private boolean fIsComment;
@@ -323,7 +323,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 *            <code>true</code> for a foldable comment,
 		 *            <code>false</code> for a foldable code element
 		 */
-		public PhpProjectionAnnotation(boolean isCollapsed, IModelElement element, boolean isComment) {
+		public PHPProjectionAnnotation(boolean isCollapsed, IModelElement element, boolean isComment) {
 			super(isCollapsed);
 			fJavaElement = element;
 			fIsComment = isComment;
@@ -358,10 +358,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	private static final class Tuple {
-		PhpProjectionAnnotation annotation;
+		PHPProjectionAnnotation annotation;
 		Position position;
 
-		Tuple(PhpProjectionAnnotation annotation, Position position) {
+		Tuple(PHPProjectionAnnotation annotation, Position position) {
 			this.annotation = annotation;
 			this.position = position;
 		}
@@ -371,7 +371,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * Filter for annotations.
 	 */
 	private static interface Filter {
-		boolean match(PhpProjectionAnnotation annotation);
+		boolean match(PHPProjectionAnnotation annotation);
 	}
 
 	/**
@@ -379,7 +379,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 */
 	private static final class CommentFilter implements Filter {
 		@Override
-		public boolean match(PhpProjectionAnnotation annotation) {
+		public boolean match(PHPProjectionAnnotation annotation) {
 			if (annotation.isComment() && !annotation.isMarkedDeleted()) {
 				return true;
 			}
@@ -392,7 +392,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 */
 	private static final class MemberFilter implements Filter {
 		@Override
-		public boolean match(PhpProjectionAnnotation annotation) {
+		public boolean match(PHPProjectionAnnotation annotation) {
 			if (!annotation.isComment() && !annotation.isMarkedDeleted()) {
 				IModelElement element = annotation.getElement();
 				if (element instanceof IMember) {
@@ -409,17 +409,17 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	/**
 	 * Matches java elements contained in a certain set.
 	 */
-	private static final class PhpElementSetFilter implements Filter {
+	private static final class PHPElementSetFilter implements Filter {
 		private final Set/* <? extends IModelElement> */<IModelElement> fSet;
 		private final boolean fMatchCollapsed;
 
-		private PhpElementSetFilter(Set/* <? extends IModelElement> */<IModelElement> set, boolean matchCollapsed) {
+		private PHPElementSetFilter(Set/* <? extends IModelElement> */<IModelElement> set, boolean matchCollapsed) {
 			fSet = set;
 			fMatchCollapsed = matchCollapsed;
 		}
 
 		@Override
-		public boolean match(PhpProjectionAnnotation annotation) {
+		public boolean match(PHPProjectionAnnotation annotation) {
 			boolean stateMatch = fMatchCollapsed == annotation.isCollapsed();
 			if (stateMatch && !annotation.isComment() && !annotation.isMarkedDeleted()) {
 				IModelElement element = annotation.getElement();
@@ -632,11 +632,11 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * away the lines before the one containing the simple name of the php
 	 * element, one folding away any lines after the caption.
 	 */
-	private static final class PhpElementPosition extends Position implements IProjectionPosition {
+	private static final class PHPElementPosition extends Position implements IProjectionPosition {
 
 		private IMember fMember;
 
-		public PhpElementPosition(int offset, int length, IMember member) {
+		public PHPElementPosition(int offset, int length, IMember member) {
 			super(offset, length);
 			Assert.isNotNull(member);
 			fMember = member;
@@ -1196,16 +1196,16 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		if (ctx == null)
 			return;
 
-		Map<PhpProjectionAnnotation, Position> additions = new HashMap<>();
-		List<PhpProjectionAnnotation> deletions = new ArrayList<>();
-		List<PhpProjectionAnnotation> updates = new ArrayList<>();
+		Map<PHPProjectionAnnotation, Position> additions = new HashMap<>();
+		List<PHPProjectionAnnotation> deletions = new ArrayList<>();
+		List<PHPProjectionAnnotation> updates = new ArrayList<>();
 
 		computeFoldingStructure(ctx);
 		Map<Object, Position> newStructure = ctx.fMap;
 		Map<IModelElement, Object> oldStructure = computeCurrentStructure(ctx);
 
 		for (Entry<Object, Position> entry : newStructure.entrySet()) {
-			PhpProjectionAnnotation newAnnotation = (PhpProjectionAnnotation) entry.getKey();
+			PHPProjectionAnnotation newAnnotation = (PHPProjectionAnnotation) entry.getKey();
 			Position newPosition = entry.getValue();
 
 			IModelElement element = newAnnotation.getElement();
@@ -1230,7 +1230,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				boolean matched = false;
 				while (x.hasNext()) {
 					Tuple tuple = (Tuple) x.next();
-					PhpProjectionAnnotation existingAnnotation = tuple.annotation;
+					PHPProjectionAnnotation existingAnnotation = tuple.annotation;
 					Position existingPosition = tuple.position;
 					if (newAnnotation.isComment() == existingAnnotation.isComment()) {
 						boolean updateCollapsedState = ctx.allowCollapsing()
@@ -1300,7 +1300,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	/**
 	 * Computes the folding structure for a given {@link IModelElement java
 	 * element}. Computed projection annotations are
-	 * {@link StructuredTextFoldingProviderPHP.FoldingStructureComputationContext#addProjectionRange(StructuredTextFoldingProviderPHP.PhpProjectionAnnotation, Position)
+	 * {@link StructuredTextFoldingProviderPHP.FoldingStructureComputationContext#addProjectionRange(StructuredTextFoldingProviderPHP.PHPProjectionAnnotation, Position)
 	 * added} to the computation context.
 	 * <p>
 	 * Subclasses may extend or replace. The default implementation creates
@@ -1367,7 +1367,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 						} else {
 							commentCollapse = ctx.collapseJavadoc();
 						}
-						ctx.addProjectionRange(new PhpProjectionAnnotation(commentCollapse, element, true), position);
+						ctx.addProjectionRange(new PHPProjectionAnnotation(commentCollapse, element, true), position);
 					}
 				}
 			}
@@ -1378,7 +1378,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 					Position position = element instanceof IMember ? createMemberPosition(normalized, (IMember) element)
 							: createCommentPosition(normalized);
 					if (position != null)
-						ctx.addProjectionRange(new PhpProjectionAnnotation(collapse, element, false), position);
+						ctx.addProjectionRange(new PHPProjectionAnnotation(collapse, element, false), position);
 				}
 			}
 		}
@@ -1560,7 +1560,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * @return a folding position corresponding to <code>aligned</code>
 	 */
 	protected final Position createMemberPosition(IRegion aligned, IMember member) {
-		return new PhpElementPosition(aligned.getOffset(), aligned.getLength(), member);
+		return new PHPElementPosition(aligned.getOffset(), aligned.getLength(), member);
 	}
 
 	/**
@@ -1640,17 +1640,17 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 * @param ctx
 	 *            the context
 	 */
-	private void match(List<PhpProjectionAnnotation> deletions, Map<PhpProjectionAnnotation, Position> additions,
-			List<PhpProjectionAnnotation> changes, FoldingStructureComputationContext ctx) {
+	private void match(List<PHPProjectionAnnotation> deletions, Map<PHPProjectionAnnotation, Position> additions,
+			List<PHPProjectionAnnotation> changes, FoldingStructureComputationContext ctx) {
 		if (deletions.isEmpty() || (additions.isEmpty() && changes.isEmpty()))
 			return;
 
-		List<PhpProjectionAnnotation> newDeletions = new ArrayList<>();
-		List<PhpProjectionAnnotation> newChanges = new ArrayList<>();
+		List<PHPProjectionAnnotation> newDeletions = new ArrayList<>();
+		List<PHPProjectionAnnotation> newChanges = new ArrayList<>();
 
-		Iterator<PhpProjectionAnnotation> deletionIterator = deletions.iterator();
+		Iterator<PHPProjectionAnnotation> deletionIterator = deletions.iterator();
 		while (deletionIterator.hasNext()) {
-			PhpProjectionAnnotation deleted = deletionIterator.next();
+			PHPProjectionAnnotation deleted = deletionIterator.next();
 			Position deletedPosition = ctx.getModel().getPosition(deleted);
 			if (deletedPosition == null)
 				continue;
@@ -1668,8 +1668,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				IModelElement element = match.annotation.getElement();
 				deleted.setElement(element);
 				deletedPosition.setLength(match.position.getLength());
-				if (deletedPosition instanceof PhpElementPosition && element instanceof IMember) {
-					PhpElementPosition jep = (PhpElementPosition) deletedPosition;
+				if (deletedPosition instanceof PHPElementPosition && element instanceof IMember) {
+					PHPElementPosition jep = (PHPElementPosition) deletedPosition;
 					jep.setMember((IMember) element);
 				}
 
@@ -1711,11 +1711,11 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 *            the context
 	 * @return a matching tuple or <code>null</code> for no match
 	 */
-	private Tuple findMatch(Tuple tuple, Collection<PhpProjectionAnnotation> annotations,
-			Map<PhpProjectionAnnotation, Position> positionMap, FoldingStructureComputationContext ctx) {
-		Iterator<PhpProjectionAnnotation> it = annotations.iterator();
+	private Tuple findMatch(Tuple tuple, Collection<PHPProjectionAnnotation> annotations,
+			Map<PHPProjectionAnnotation, Position> positionMap, FoldingStructureComputationContext ctx) {
+		Iterator<PHPProjectionAnnotation> it = annotations.iterator();
 		while (it.hasNext()) {
-			PhpProjectionAnnotation annotation = it.next();
+			PHPProjectionAnnotation annotation = it.next();
 			if (tuple.annotation.isComment() == annotation.isComment()) {
 				Position position = positionMap == null ? ctx.getModel().getPosition(annotation)
 						: positionMap.get(annotation);
@@ -1738,8 +1738,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		Iterator e = model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Object annotation = e.next();
-			if (annotation instanceof PhpProjectionAnnotation) {
-				PhpProjectionAnnotation java = (PhpProjectionAnnotation) annotation;
+			if (annotation instanceof PHPProjectionAnnotation) {
+				PHPProjectionAnnotation java = (PHPProjectionAnnotation) annotation;
 				Position position = model.getPosition(java);
 				Assert.isNotNull(position);
 				List<Tuple> list = (List<Tuple>) map.get(java.getElement());
@@ -1792,7 +1792,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	@Override
 	public final void collapseElements(IModelElement[] elements) {
 		Set<IModelElement> set = new HashSet<>(Arrays.asList(elements));
-		modifyFiltered(new PhpElementSetFilter(set, false), false);
+		modifyFiltered(new PHPElementSetFilter(set, false), false);
 	}
 
 	/*
@@ -1803,7 +1803,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	@Override
 	public final void expandElements(IModelElement[] elements) {
 		Set<IModelElement> set = new HashSet<>(Arrays.asList(elements));
-		modifyFiltered(new PhpElementSetFilter(set, true), true);
+		modifyFiltered(new PHPElementSetFilter(set, true), true);
 	}
 
 	/**
@@ -1823,12 +1823,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		if (model == null)
 			return;
 
-		List<PhpProjectionAnnotation> modified = new ArrayList<>();
+		List<PHPProjectionAnnotation> modified = new ArrayList<>();
 		Iterator iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
 			Object annotation = iter.next();
-			if (annotation instanceof PhpProjectionAnnotation) {
-				PhpProjectionAnnotation java = (PhpProjectionAnnotation) annotation;
+			if (annotation instanceof PHPProjectionAnnotation) {
+				PHPProjectionAnnotation java = (PHPProjectionAnnotation) annotation;
 
 				if (expand == java.isCollapsed() && filter.match(java)) {
 					if (expand)

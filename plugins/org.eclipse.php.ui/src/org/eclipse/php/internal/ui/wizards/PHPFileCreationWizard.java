@@ -44,7 +44,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
 	protected PHPFileCreationWizardPage phpFileCreationWizardPage;
 	protected ISelection selection;
-	protected NewPhpTemplatesWizardPage newPhpTemplatesWizardPage;
+	protected NewPHPTemplatesWizardPage newPhpTemplatesWizardPage;
 
 	/**
 	 * Constructor for SampleNewWizard.
@@ -63,7 +63,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		phpFileCreationWizardPage = new PHPFileCreationWizardPage(selection);
 		addPage(phpFileCreationWizardPage);
 
-		newPhpTemplatesWizardPage = new NewPhpTemplatesWizardPage();
+		newPhpTemplatesWizardPage = new NewPHPTemplatesWizardPage();
 		addPage(newPhpTemplatesWizardPage);
 	}
 

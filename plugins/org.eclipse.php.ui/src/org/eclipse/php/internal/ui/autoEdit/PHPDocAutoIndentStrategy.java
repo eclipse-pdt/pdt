@@ -42,7 +42,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
  * TODO : move this auto strategy to DLTK? Auto indent strategy for Script doc
  * comments.
  */
-public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
+public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	private static final String PHPDOC_COMMENT_BLOCK_START = "/**"; //$NON-NLS-1$
 	private static final String PHP_COMMENT_BLOCK_START = "/*"; //$NON-NLS-1$
 	private static final String PHP_COMMENT_BLOCK_MID = " *"; //$NON-NLS-1$
@@ -58,7 +58,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @param partitioning
 	 *            the document partitioning
 	 */
-	public PhpDocAutoIndentStrategy(String partitioning) {
+	public PHPDocAutoIndentStrategy(String partitioning) {
 		fPartitioning = partitioning;
 	}
 
@@ -69,7 +69,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @param partitioning
 	 *            the document partitioning
 	 */
-	public PhpDocAutoIndentStrategy() {
+	public PHPDocAutoIndentStrategy() {
 		this(PHPPartitionTypes.PHP_DEFAULT);
 	}
 

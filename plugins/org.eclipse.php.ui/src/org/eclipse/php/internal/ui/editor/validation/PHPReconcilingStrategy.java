@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
-import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
+import org.eclipse.php.internal.ui.editor.IPHPScriptReconcilingListener;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.widgets.Display;
@@ -56,7 +56,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * "As You Type" validation for PHP content This class reconciles php content to
  * the DLTK model
  */
-public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
+public class PHPReconcilingStrategy implements IValidator, ISourceValidator {
 
 	/**
 	 * @since 3.3.1
@@ -65,7 +65,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	private IEditorPart fEditor;
 	private IDocumentProvider fDocumentProvider;
 	private IProgressMonitor fProgressMonitor = null; // XXX: never set
-	private IPhpScriptReconcilingListener fJavaReconcilingListener;
+	private IPHPScriptReconcilingListener fJavaReconcilingListener;
 	private boolean fIsScriptReconcilingListener;
 	private boolean fNotify = true;
 	private IDocument document;
@@ -83,9 +83,9 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 
 		fEditor = getEditor(fEditorInput);
 
-		fIsScriptReconcilingListener = fEditor instanceof IPhpScriptReconcilingListener;
+		fIsScriptReconcilingListener = fEditor instanceof IPHPScriptReconcilingListener;
 		if (fIsScriptReconcilingListener) {
-			fJavaReconcilingListener = (IPhpScriptReconcilingListener) fEditor;
+			fJavaReconcilingListener = (IPHPScriptReconcilingListener) fEditor;
 		}
 	}
 

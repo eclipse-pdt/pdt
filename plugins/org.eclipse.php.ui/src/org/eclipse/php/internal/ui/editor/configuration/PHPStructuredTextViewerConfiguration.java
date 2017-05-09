@@ -50,7 +50,7 @@ import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
-import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.php.internal.ui.editor.hover.BestMatchHover;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
@@ -131,7 +131,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	public LineStyleProvider getLineStyleProvider() {
 		if (fLineStyleProvider == null) {
-			fLineStyleProvider = new LineStyleProviderForPhp();
+			fLineStyleProvider = new LineStyleProviderForPHP();
 		}
 		return fLineStyleProvider;
 	}
@@ -461,10 +461,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return strategies.toArray(new IAutoEditStrategy[strategies.size()]);
 		}
 
-		return getPhpAutoEditStrategy(sourceViewer, contentType);
+		return getPHPAutoEditStrategy(sourceViewer, contentType);
 	}
 
-	private final IAutoEditStrategy[] getPhpAutoEditStrategy(ISourceViewer sourceViewer, String contentType) {
+	private final IAutoEditStrategy[] getPHPAutoEditStrategy(ISourceViewer sourceViewer, String contentType) {
 		final IAutoEditStrategy[] autoEditStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		final int length = autoEditStrategies.length;
 		final IAutoEditStrategy[] augAutoEditStrategies = new IAutoEditStrategy[length + 1];

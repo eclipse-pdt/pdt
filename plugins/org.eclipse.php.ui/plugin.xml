@@ -180,7 +180,7 @@
 	<!--PHP Editor:-->
 	<extension point="org.eclipse.ui.editors">
 		<editor class="org.eclipse.php.internal.ui.editor.PHPStructuredEditor"
-			contributorClass="org.eclipse.php.internal.ui.editor.ActionContributorForPhp"
+			contributorClass="org.eclipse.php.internal.ui.editor.ActionContributorForPHP"
 			default="true" icon="icons/full/obj16/phpfile.png" id="org.eclipse.php.editor"
 			name="%editor.name.0" symbolicFontName="org.eclipse.wst.sse.ui.textfont">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
@@ -420,25 +420,25 @@
 	<extension point="org.eclipse.ui.editors.templates">
 
 		<contextType name="%templates.php.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
 			id="php" />
 		<contextType name="%templates.php1.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
 			id="php-statements" />
 		<contextType name="%templates.php2.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
 			id="php-type-members" />
 		<contextType name="%templates.php3.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
 			id="php-global-members" />
 		<contextType name="%templates.php4.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
 			id="php-type-method-statements" />
 		<contextType name="%templates.php5.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
 			id="php-class-members" />
 		<contextType name="%templates.phpcomment.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PHPCommentTemplateContextType"
 			id="phpcomment" />
 			
 
@@ -837,17 +837,17 @@
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.dltk.core.IModelElement" />
 		</factory>
 		<!--
@@ -863,17 +863,17 @@
 		-->
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.dltk.core.IModelElement" />
 		</factory>
 		<!--
@@ -1719,7 +1719,7 @@
 			id="org.eclipse.php.ui.preferences.PHPFoldingPreferencePage" name="%editorFoldingPageName">
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
-			class="org.eclipse.php.internal.ui.preferences.PhpTypingPreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPTypingPreferencePage"
 			id="org.eclipse.php.ui.preferences.PhpTypingPreferencePage" name="%editorTypingPageName">
 		</page>		
 		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
@@ -1784,7 +1784,7 @@
 	   <page
 		    name="%PhpLibraryPreferencePage.name"
 		    category="org.eclipse.php.ui.preferences.PHPSourcePathsPreferencePage"
-		    class="org.eclipse.php.internal.ui.preferences.PhpLibraryPreferencePage"
+		    class="org.eclipse.php.internal.ui.preferences.PHPLibraryPreferencePage"
 		    id="org.eclipse.dltk.php.preferences.UserLibraryPreferencePage">
 	   </page>
     <page
@@ -1813,7 +1813,7 @@
 	<!--History & Others Working Set:-->
 	<extension point="org.eclipse.ui.workingSets">
 		<workingSet name="%PHPWorkingSetPage.name"
-			pageClass="org.eclipse.php.internal.ui.workingset.PhpWorkingSetPage"
+			pageClass="org.eclipse.php.internal.ui.workingset.PHPWorkingSetPage"
 			updaterClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetUpdater"
 			icon="icons/full/obj16/php_project_obj.png" id="org.eclipse.php.ui.workingset.PHPWorkingSetPage" />
 	</extension>
@@ -2169,7 +2169,7 @@
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator"
-			class="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator"
+			class="org.eclipse.php.internal.ui.compare.PHPMergeViewerCreator"
 			extensions="php" />
 		<contentTypeBinding
 			contentTypeId="org.eclipse.php.core.phpsource"
@@ -2185,7 +2185,7 @@
 		<editorContribution id="org.eclipse.php.editor.ruler.actions"
 			targetID="org.eclipse.php.editor">
 			<action actionID="RulerClick"
-				class="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction" id="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
+				class="org.eclipse.php.internal.ui.editor.PHPSelectRulerAction" id="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
 				label="%PhpSelectRulerAction.label">
 			</action>
 		</editorContribution>
@@ -2199,7 +2199,7 @@
          <action
                label="%Dummy.label"
                helpContextId="org.eclipse.php.ui.quick_fix_action"
-               class="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
+               class="org.eclipse.php.internal.ui.editor.PHPSelectRulerAction"
                menubarPath="additions"
                definitionId="org.eclipse.jdt.ui.edit.text.java.correction.assist.proposals"
                id="org.eclipse.php.internal.ui.editor.PHPSelectRulerMenuAction">

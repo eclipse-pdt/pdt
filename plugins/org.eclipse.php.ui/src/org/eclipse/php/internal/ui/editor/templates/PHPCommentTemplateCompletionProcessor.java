@@ -42,15 +42,15 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
+public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
 	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
-	private String contextTypeId = PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID;
+	private String contextTypeId = PHPCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID;
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 
-	public PhpCommentTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
+	public PHPCommentTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
 		super(context);
 	}
 
@@ -119,9 +119,9 @@ public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 			// no prefix.
 			return EMPTY_ICOMPLETION_PROPOSAL;
 		}
-		List<PhpTemplateProposal> matches = new ArrayList<>();
+		List<PHPTemplateProposal> matches = new ArrayList<>();
 		for (int i = 0; i < completionProposals.length; i++) {
-			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal) completionProposals[i];
+			PHPTemplateProposal phpTemplateProposal = (PHPTemplateProposal) completionProposals[i];
 			Template template = phpTemplateProposal.getTemplateNew();
 			if (template.getName().startsWith(prefix)) {
 				matches.add(phpTemplateProposal);
@@ -198,7 +198,7 @@ public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 	@Override
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
 			int relevance) {
-		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
+		return new PHPTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
 	@Override
@@ -237,7 +237,7 @@ public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 	 */
 	@Override
 	protected ScriptTemplateAccess getTemplateAccess() {
-		return PhpTemplateAccess.getInstance();
+		return PHPTemplateAccess.getInstance();
 	}
 
 }

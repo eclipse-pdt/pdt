@@ -26,7 +26,7 @@ import org.eclipse.jface.text.templates.*;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 
@@ -68,8 +68,8 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 			IDocument document = new Document();
 			DocumentTemplateContext context = getContext(contextTypeRegistry, template, containerName, fileName,
 					document);
-			if (context instanceof PhpTemplateContext) {
-				PhpTemplateContext phpTemplateContext = (PhpTemplateContext) context;
+			if (context instanceof PHPTemplateContext) {
+				PHPTemplateContext phpTemplateContext = (PHPTemplateContext) context;
 				phpTemplateContext.setLineDelimiter(lineDelimiter);
 			}
 			TemplateBuffer buffer = null;

@@ -115,7 +115,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		this.fTextEditor = textEditor;
 		if (fTextEditor instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
-			phpEditor.addReconcileListener(new IPhpScriptReconcilingListener() {
+			phpEditor.addReconcileListener(new IPHPScriptReconcilingListener() {
 
 				@Override
 				public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
@@ -376,7 +376,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	@Override
 	protected IDocumentAdapter createDocumentAdapter() {
-		documentAdapter = new StructuredDocumentToTextAdapterForPhp(getTextWidget());
+		documentAdapter = new StructuredDocumentToTextAdapterForPHP(getTextWidget());
 		return documentAdapter;
 	}
 
@@ -403,13 +403,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		super.addVerticalRulerColumn(column);
 	}
 
-	public class StructuredDocumentToTextAdapterForPhp extends StructuredDocumentToTextAdapter {
+	public class StructuredDocumentToTextAdapterForPHP extends StructuredDocumentToTextAdapter {
 
-		public StructuredDocumentToTextAdapterForPhp() {
+		public StructuredDocumentToTextAdapterForPHP() {
 			super();
 		}
 
-		public StructuredDocumentToTextAdapterForPhp(StyledText styledTextWidget) {
+		public StructuredDocumentToTextAdapterForPHP(StyledText styledTextWidget) {
 			super(styledTextWidget);
 		}
 

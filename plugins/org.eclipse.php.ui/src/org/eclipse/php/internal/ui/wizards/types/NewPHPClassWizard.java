@@ -84,7 +84,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 		// Create an interface in a new file
 		if (!page.isInExistingPHPFile()) {
 			// create a new file and inject the code
-			createNewPhpFile(containerName, fileName, contents);
+			createNewPHPFile(containerName, fileName, contents);
 		} else { // an existing file
 			injectCodeIntoExistingFile();
 		}
@@ -98,7 +98,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 
 	// populate data object that is passed to the template engine
 	private NewPHPElementData populatePHPElementData() {
-		PHPVersion phpVersion = page.getPhpVersion();
+		PHPVersion phpVersion = page.getPHPVersion();
 		NewPHPClassPage page = (NewPHPClassPage) this.page;
 		NewPHPElementData data = new NewPHPElementData();
 		data.phpVersion = phpVersion;

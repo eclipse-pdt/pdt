@@ -16,8 +16,8 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.*;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateVariables;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContext;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateVariables;
 
 /**
   */
@@ -314,9 +314,9 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			// addCompilationUnitVariables();
 			fIsComment = true;
 		} else if (NEW_FILE_CONTEXTTYPE.equals(contextName)) {
-			addResolver(new PhpTemplateVariables.Encoding());
+			addResolver(new PHPTemplateVariables.Encoding());
 		} else if (NEW_HTMLFILE_CONTEXTTYPE.equals(contextName)) {
-			addResolver(new PhpTemplateVariables.Encoding());
+			addResolver(new PHPTemplateVariables.Encoding());
 		}
 	}
 
@@ -407,7 +407,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 
 	@Override
 	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
-		return new PhpTemplateContext(this, document, offset, length, sourceModule);
+		return new PHPTemplateContext(this, document, offset, length, sourceModule);
 	}
 
 	/*

@@ -29,7 +29,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy matchingBracketAutoEditStrategy = new MatchingBracketAutoEditStrategy();
 	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
 	private static IAppliedAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
-	private static IAutoEditStrategy docBlockAutoEditStrategy = new PhpDocAutoIndentStrategy();
+	private static IAutoEditStrategy docBlockAutoEditStrategy = new PHPDocAutoIndentStrategy();
 	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
 
 	@Override

@@ -24,9 +24,9 @@ import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.viewsupport.ProjectTemplateStore;
 
-public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage {
+public class NewPHPTemplatesWizardPage extends NewGenericFileTemplatesWizardPage {
 
-	public NewPhpTemplatesWizardPage() {
+	public NewPHPTemplatesWizardPage() {
 		super(PHPUIMessages.newPhpFile_wizard_templatePage_title,
 				PHPUIMessages.newPhpFile_wizard_templatePage_description);
 	}

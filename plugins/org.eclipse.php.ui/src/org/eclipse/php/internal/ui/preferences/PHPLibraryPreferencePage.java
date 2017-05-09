@@ -55,7 +55,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Preference page for user libraries
  */
-public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
+public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	/**
 	 * User libraries with such attribute should be treated as non removable and
@@ -311,7 +311,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 	/**
 	 * Constructor for ClasspathVariablesPreferencePage
 	 */
-	public PhpLibraryPreferencePage() {
+	public PHPLibraryPreferencePage() {
 		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
 		fDummyProject = createPlaceholderProject();
 

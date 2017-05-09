@@ -18,7 +18,7 @@ import org.eclipse.php.core.ast.nodes.Program;
  * Interface of an object listening to Java reconciling.
  * 
  */
-public interface IPhpScriptReconcilingListener {
+public interface IPHPScriptReconcilingListener {
 
 	/**
 	 * Called before reconciling is started.

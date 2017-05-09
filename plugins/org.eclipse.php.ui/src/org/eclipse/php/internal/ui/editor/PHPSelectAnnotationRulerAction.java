@@ -41,7 +41,7 @@ import org.eclipse.ui.texteditor.*;
  * Was originally called >code>JavaSelectMarkerRulerAction</code>.
  * </p>
  */
-public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
+public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 	private ITextEditor fTextEditor;
 	private Position fPosition;
@@ -51,7 +51,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	private boolean fHasCorrection;
 	private ResourceBundle fBundle;
 
-	public PhpSelectAnnotationRulerAction(ResourceBundle bundle, String prefix, ITextEditor editor,
+	public PHPSelectAnnotationRulerAction(ResourceBundle bundle, String prefix, ITextEditor editor,
 			IVerticalRulerInfo ruler) {
 		super(bundle, prefix, editor, ruler);
 		fBundle = bundle;
@@ -111,7 +111,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	 */
 	@Override
 	public void update() {
-		findPhpAnnotation();
+		findPHPAnnotation();
 		setEnabled(true); // super.update() might change this later
 
 		if (fAnnotation instanceof OverrideIndicatorManager.OverrideIndicator) {
@@ -131,7 +131,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		super.update();
 	}
 
-	private void findPhpAnnotation() {
+	private void findPHPAnnotation() {
 		fPosition = null;
 		fAnnotation = null;
 		fHasCorrection = false;

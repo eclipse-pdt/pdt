@@ -118,7 +118,7 @@ public class OccurrencesSearchGroup extends ActionGroup {
 			@Override
 			public void menuAboutToShow(IMenuManager mm) {
 				mm.removeAll();
-				updateActionsInPhpEditor();
+				updateActionsInPHPEditor();
 				addAction(fMethodExitOccurrencesAction, mm);
 				if (mm.isEmpty()) {
 					mm.add(new Action("SearchMessages.group_occurrences_quickMenu_noEntriesAvailable") { //$NON-NLS-1$
@@ -139,7 +139,7 @@ public class OccurrencesSearchGroup extends ActionGroup {
 		manager.appendToGroup(fGroupId, javaSearchMM);
 	}
 
-	private void updateActionsInPhpEditor() {
+	private void updateActionsInPHPEditor() {
 		if (fEditor == null) {
 			return;
 		}

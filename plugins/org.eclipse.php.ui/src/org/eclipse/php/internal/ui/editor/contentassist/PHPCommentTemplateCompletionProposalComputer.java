@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
-import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateCompletionProcessor;
+import org.eclipse.php.internal.ui.editor.templates.PHPCommentTemplateCompletionProcessor;
 
 public class PHPCommentTemplateCompletionProposalComputer extends PHPCompletionProposalComputer {
 
@@ -34,6 +34,6 @@ public class PHPCommentTemplateCompletionProposalComputer extends PHPCompletionP
 	@Override
 	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
 		context.getCoreContext();
-		return new PhpCommentTemplateCompletionProcessor(context);
+		return new PHPCommentTemplateCompletionProcessor(context);
 	}
 }

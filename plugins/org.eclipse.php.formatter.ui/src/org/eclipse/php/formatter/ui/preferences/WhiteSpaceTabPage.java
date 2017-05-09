@@ -187,7 +187,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 	}
 
-	private final class PhpElementComponent implements ISelectionChangedListener, ICheckStateListener {
+	private final class PHPElementComponent implements ISelectionChangedListener, ICheckStateListener {
 
 		private final String PREF_INNER_INDEX = FormatterUIPlugin.PLUGIN_ID
 				+ "formatter_page.white_space.php_view.inner"; //$NON-NLS-1$
@@ -204,7 +204,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 		private Composite fComposite;
 
-		public PhpElementComponent() {
+		public PHPElementComponent() {
 			fIndexedNodeList = new ArrayList<Node>();
 			fTree = WhiteSpaceOptions.createTreeByPhpElement(fworkingValues);
 			WhiteSpaceOptions.makeIndexForNodes(fTree, fIndexedNodeList);
@@ -410,11 +410,11 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private Combo fSwitchCombo;
 		private PageBook fPageBook;
 		private final SyntaxComponent fSyntaxComponent;
-		private final PhpElementComponent fPhpElementComponent;
+		private final PHPElementComponent fPhpElementComponent;
 
 		public SwitchComponent() {
 			fSyntaxComponent = new SyntaxComponent();
-			fPhpElementComponent = new PhpElementComponent();
+			fPhpElementComponent = new PHPElementComponent();
 		}
 
 		@Override
@@ -501,7 +501,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 	}
 
 	@Override
-	protected PhpPreview doCreatePhpPreview(Composite parent) {
+	protected PHPPreview doCreatePhpPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}
