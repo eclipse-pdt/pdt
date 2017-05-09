@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 
 /**
  * Constants occurrences finder.
@@ -81,7 +81,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(Identifier identifier) {
-		if (checkEquality(identifier.getName()) && PhpElementConciliator.isGlobalConstant(identifier)) {
+		if (checkEquality(identifier.getName()) && PHPElementConciliator.isGlobalConstant(identifier)) {
 			nodeToFullName.put(identifier,
 					getFullName((Identifier) identifier.getParent(), fLastUseParts, fCurrentNamespace));
 			nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier.getStart(), identifier.getLength(),

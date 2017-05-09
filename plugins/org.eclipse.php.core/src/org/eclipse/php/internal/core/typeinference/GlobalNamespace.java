@@ -25,7 +25,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 /**
  * Fake model element representing global namespace type
@@ -42,23 +42,23 @@ public class GlobalNamespace extends SourceType {
 
 	public IField[] getFields() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findFileFields(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
+		return PHPModelAccess.getDefault().findFileFields(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
 				0, scope, null);
 	}
 
 	public IMethod[] getMethods() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findFunctions(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
+		return PHPModelAccess.getDefault().findFunctions(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
 				0, scope, null);
 	}
 
 	public IType[] getTypes() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
 		List<IType> types = new ArrayList<IType>();
-		types.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(PHPCoreConstants.GLOBAL_NAMESPACE, null,
+		types.addAll(Arrays.asList(PHPModelAccess.getDefault().findTypes(PHPCoreConstants.GLOBAL_NAMESPACE, null,
 				MatchRule.PREFIX, 0, 0, scope, null)));
 
-		types.addAll(Arrays.asList(PhpModelAccess.getDefault().findTraits(PHPCoreConstants.GLOBAL_NAMESPACE, null,
+		types.addAll(Arrays.asList(PHPModelAccess.getDefault().findTraits(PHPCoreConstants.GLOBAL_NAMESPACE, null,
 				MatchRule.PREFIX, 0, 0, scope, null)));
 		return types.toArray(new IType[types.size()]);
 	}

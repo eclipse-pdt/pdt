@@ -17,7 +17,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.search.DLTKSearchPageScoreComputer;
-import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
+import org.eclipse.php.internal.core.documentModel.dom.IImplForPHP;
 import org.eclipse.php.internal.ui.actions.filters.GenericActionFilter;
 import org.eclipse.search.ui.ISearchPageScoreComputer;
 import org.eclipse.ui.IActionFilter;
@@ -42,9 +42,9 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
-		if (adaptableObject instanceof IImplForPhp) {
+		if (adaptableObject instanceof IImplForPHP) {
 			if (adapterType == IModelElement.class) {
-				return ((IImplForPhp) adaptableObject).getModelElement();
+				return ((IImplForPHP) adaptableObject).getModelElement();
 			}
 			// commenting the next block of code fixes these bugs
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=257421

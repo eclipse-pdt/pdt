@@ -47,7 +47,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.index.PhpIndexingVisitor;
+import org.eclipse.php.internal.core.index.PHPIndexingVisitor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
@@ -424,12 +424,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				} else if (arg.getInitialization() instanceof ArrayCreation) {
 					ArrayCreation arrayCreation = (ArrayCreation) arg.getInitialization();
 					if (arrayCreation.getElements().isEmpty()) {
-						initializers[a] = PhpIndexingVisitor.EMPTY_ARRAY_VALUE;
+						initializers[a] = PHPIndexingVisitor.EMPTY_ARRAY_VALUE;
 					} else {
-						initializers[a] = PhpIndexingVisitor.ARRAY_VALUE;
+						initializers[a] = PHPIndexingVisitor.ARRAY_VALUE;
 					}
 				} else {
-					initializers[a] = PhpIndexingVisitor.DEFAULT_VALUE;
+					initializers[a] = PHPIndexingVisitor.DEFAULT_VALUE;
 				}
 			}
 			if (arg instanceof FormalParameterByReference) {
@@ -476,7 +476,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		declarations.push(methodDeclaration);
 
-		mi.isConstructor = mi.name.equalsIgnoreCase(PhpIndexingVisitor.CONSTRUCTOR_NAME)
+		mi.isConstructor = mi.name.equalsIgnoreCase(PHPIndexingVisitor.CONSTRUCTOR_NAME)
 				|| (parentDeclaration instanceof ClassDeclaration
 						&& mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
 

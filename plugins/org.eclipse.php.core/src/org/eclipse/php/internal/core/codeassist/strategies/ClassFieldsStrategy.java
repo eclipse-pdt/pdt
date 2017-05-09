@@ -101,11 +101,11 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		}
 		if (concreteContext instanceof ClassStaticMemberContext && concreteContext.getTriggerType() == Trigger.CLASS
 				&& !concreteContext.isInUseTraitStatement()
-				&& PHPVersion.PHP5_4.isLessThan(concreteContext.getPhpVersion())
+				&& PHPVersion.PHP5_4.isLessThan(concreteContext.getPHPVersion())
 				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD.equals(prefix.toLowerCase()))) {
 			try {
-				ITextRegion phpToken = concreteContext.getPhpScriptRegion()
-						.getPhpToken(concreteContext.getPHPToken().getStart() - 1);
+				ITextRegion phpToken = concreteContext.getPHPScriptRegion()
+						.getPHPToken(concreteContext.getPHPToken().getStart() - 1);
 				if (PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM.equals(phpToken.getType())) {
 					phpToken = concreteContext.getPHPToken(phpToken.getStart() - 1);
 				}

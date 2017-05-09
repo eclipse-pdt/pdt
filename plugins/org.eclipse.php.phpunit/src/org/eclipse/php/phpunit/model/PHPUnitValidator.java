@@ -29,7 +29,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.phpunit.PHPUnitMessages;
@@ -73,7 +73,7 @@ public class PHPUnitValidator {
 	private static IType[] getTypesByName(String className, final IProject project) {
 		final IScriptProject scriptProject = DLTKCore.create(project);
 		IDLTKSearchScope searchScope = SearchEngine.createSearchScope(scriptProject);
-		return PhpModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0,
+		return PHPModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0,
 				Modifiers.AccInterface | Modifiers.AccNameSpace, searchScope, null);
 	}
 
@@ -164,7 +164,7 @@ public class PHPUnitValidator {
 			if (scriptProject.getProject() != project) {
 				// validate class name
 				IDLTKSearchScope searchScope = SearchEngine.createSearchScope(scriptProject);
-				IType[] foundClassElementsToTest = PhpModelAccess.getDefault().findTypes(modelElement.getElementName(),
+				IType[] foundClassElementsToTest = PHPModelAccess.getDefault().findTypes(modelElement.getElementName(),
 						MatchRule.EXACT, 0, Modifiers.AccInterface, searchScope, null);
 				if (foundClassElementsToTest == null || foundClassElementsToTest.length < 1) {
 					if (status != null)
@@ -191,10 +191,10 @@ public class PHPUnitValidator {
 
 			IModelElement[] foundClassElementsToTest = null;
 			if (elementType == IModelElement.TYPE) {
-				foundClassElementsToTest = PhpModelAccess.getDefault().findTypes(elementName, MatchRule.EXACT, 0,
+				foundClassElementsToTest = PHPModelAccess.getDefault().findTypes(elementName, MatchRule.EXACT, 0,
 						Modifiers.AccInterface, searchScope, null);
 			} else {
-				foundClassElementsToTest = PhpModelAccess.getDefault().findMethods(elementName, MatchRule.PREFIX,
+				foundClassElementsToTest = PHPModelAccess.getDefault().findMethods(elementName, MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, searchScope, null);
 			}
 

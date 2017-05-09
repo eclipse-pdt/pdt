@@ -245,7 +245,7 @@ abstract public class AbstractASTParser extends lr_parser {
 			}
 		}
 
-		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, PhpProblemIdentifier.SYNTAX,
+		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, PHPProblemIdentifier.SYNTAX,
 				errorMessage.toString());
 	}
 

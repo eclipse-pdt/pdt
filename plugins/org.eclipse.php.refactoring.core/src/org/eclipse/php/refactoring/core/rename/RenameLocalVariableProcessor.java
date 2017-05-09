@@ -20,7 +20,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameLocalVariable;
 
@@ -156,7 +156,7 @@ public class RenameLocalVariableProcessor extends
 	}
 
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PhpElementConciliator.localVariableAlreadyExists(
+		if (PHPElementConciliator.localVariableAlreadyExists(
 				this.functionDeclaration, getNewElementName())) {
 			final String message = MessageFormat.format(
 					RenameLocalVariableProcessor.LOCAL_VARIABLE_IS_USED,

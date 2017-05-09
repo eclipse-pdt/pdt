@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
@@ -57,7 +57,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private IStructuredDocument document;
 	private IStructuredDocumentRegion structuredDocumentRegion;
 	private ITextRegionCollection regionCollection;
-	private IPhpScriptRegion phpScriptRegion;
+	private IPHPScriptRegion phpScriptRegion;
 	private String partitionType;
 
 	public void init(CompletionCompanion companion) {
@@ -88,7 +88,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 					regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
 					if (regionCollection != null) {
 
-						phpScriptRegion = determinePhpRegion(document, regionCollection, offset);
+						phpScriptRegion = determinePHPRegion(document, regionCollection, offset);
 						if (phpScriptRegion != null) {
 
 							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
@@ -180,10 +180,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return php script region or <code>null</code> in case it could not be
 	 *         determined
 	 */
-	protected IPhpScriptRegion determinePhpRegion(IStructuredDocument document, ITextRegionCollection regionCollection,
+	protected IPHPScriptRegion determinePHPRegion(IStructuredDocument document, ITextRegionCollection regionCollection,
 			int offset) {
 		ITextRegion textRegion = determineTextRegion(document, regionCollection, offset);
-		IPhpScriptRegion phpScriptRegion = null;
+		IPHPScriptRegion phpScriptRegion = null;
 
 		if (textRegion != null) {
 			if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
@@ -197,8 +197,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			}
 		}
 
-		if (textRegion instanceof IPhpScriptRegion) {
-			phpScriptRegion = (IPhpScriptRegion) textRegion;
+		if (textRegion instanceof IPHPScriptRegion) {
+			phpScriptRegion = (IPHPScriptRegion) textRegion;
 		}
 
 		return phpScriptRegion;
@@ -215,7 +215,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return partition type (see {@link PHPRegionTypes})
 	 * @throws BadLocationException
 	 */
-	protected String determinePartitionType(ITextRegionCollection regionCollection, IPhpScriptRegion phpScriptRegion,
+	protected String determinePartitionType(ITextRegionCollection regionCollection, IPHPScriptRegion phpScriptRegion,
 			int offset) throws BadLocationException {
 		int internalOffset = getOffset(offset, regionCollection, phpScriptRegion);
 		String partitionType = phpScriptRegion.getPartition(internalOffset);
@@ -223,10 +223,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		// if we are at the begining of multi-line comment or docBlock then we
 		// should get completion.
 		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
-			String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
+			String regionType = phpScriptRegion.getPHPToken(internalOffset).getType();
 			if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(regionType)
 					|| PHPPartitionTypes.isPHPDocStartRegion(regionType)) {
-				if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
+				if (phpScriptRegion.getPHPToken(internalOffset).getStart() == internalOffset) {
 					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
 				}
 			}
@@ -290,7 +290,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return PHP version
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
-	public PHPVersion getPhpVersion() {
+	public PHPVersion getPHPVersion() {
 		return phpVersion;
 	}
 
@@ -329,10 +329,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	/**
 	 * Returns the PHP script region of PHP code where completion was requested
 	 * 
-	 * @return php script region (see {@link IPhpScriptRegion})
+	 * @return php script region (see {@link IPHPScriptRegion})
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
-	public IPhpScriptRegion getPhpScriptRegion() {
+	public IPHPScriptRegion getPHPScriptRegion() {
 		return phpScriptRegion;
 	}
 
@@ -535,10 +535,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	public ITextRegion getPHPToken(int offset) throws BadLocationException {
-		return phpScriptRegion.getPhpToken(getOffset(offset, regionCollection, phpScriptRegion));
+		return phpScriptRegion.getPHPToken(getOffset(offset, regionCollection, phpScriptRegion));
 	}
 
-	private int getOffset(int offset, ITextRegionCollection regionCollection, IPhpScriptRegion phpScriptRegion) {
+	private int getOffset(int offset, ITextRegionCollection regionCollection, IPHPScriptRegion phpScriptRegion) {
 		int result = offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1;
 		if (result < 0) {
 			result = 0;
@@ -577,7 +577,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
-		if (PHPPartitionTypes.isPhpQuotesState(phpToken.getType())) {
+		if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=475671
 			for (int index = offset; index < endOffset; index++) {
 				char charAt = document.getChar(index);
@@ -599,7 +599,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	public ITextRegion getNextPHPToken() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		do {
-			phpToken = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			phpToken = phpScriptRegion.getPHPToken(phpToken.getEnd());
 			if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType())
 					&& phpToken.getType() != PHPRegionTypes.WHITESPACE) {
 				break;
@@ -615,7 +615,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		while (times-- > 0) {
 			phpToken = getPHPToken(offset);
 			do {
-				phpToken = phpScriptRegion.getPhpToken(phpToken.getEnd());
+				phpToken = phpScriptRegion.getPHPToken(phpToken.getEnd());
 				if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType())
 						&& phpToken.getType() != PHPRegionTypes.WHITESPACE) {
 					break;
@@ -700,7 +700,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		// This text region must be of type PhpScriptRegion:
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 
 			try {
 				// Set default starting position to the beginning of the
@@ -711,9 +711,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				// PhpScriptRegion):
 				ITextRegion startTokenRegion;
 				if (documentOffset == startOffset) {
-					startTokenRegion = phpScriptRegion.getPhpToken(0);
+					startTokenRegion = phpScriptRegion.getPHPToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
 				}
 				// If statement start is at the beginning of the PHP script
 				// region:
@@ -732,7 +732,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						break;
 					}
 
-					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(startTokenRegion.getStart() - 1);
 				}
 
 			} catch (BadLocationException e) {
@@ -820,7 +820,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		// This text region must be of type PhpScriptRegion:
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 
 			try {
 				// Set default starting position to the beginning of the
@@ -831,9 +831,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				// PhpScriptRegion):
 				ITextRegion startTokenRegion;
 				if (documentOffset == startOffset) {
-					startTokenRegion = phpScriptRegion.getPhpToken(0);
+					startTokenRegion = phpScriptRegion.getPHPToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion.getPhpToken(offset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
 				}
 				// If statement start is at the beginning of the PHP script
 				// region:
@@ -847,7 +847,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						// startOffset += startTokenRegion.getEnd();
 						TextSequence statementText1 = getStatementText(startOffset + startTokenRegion.getStart() - 1);
 						startTokenRegion = phpScriptRegion
-								.getPhpToken(startTokenRegion.getStart() - statementText1.length());
+								.getPHPToken(startTokenRegion.getStart() - statementText1.length());
 						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
 							String[] types = statementText1.toString().trim().substring(3).trim().split(","); //$NON-NLS-1$
 							useTypes = new ArrayList<String>();
@@ -862,7 +862,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						return false;
 					}
 
-					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
+					startTokenRegion = phpScriptRegion.getPHPToken(startTokenRegion.getStart() - 1);
 				}
 
 			} catch (BadLocationException e) {

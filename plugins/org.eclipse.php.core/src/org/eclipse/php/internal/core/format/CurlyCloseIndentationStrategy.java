@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -71,9 +71,9 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			regionStart += tRegion.getStart();
 		}
 		do {
-			if (tRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - regionStart - 1);
+			if (tRegion instanceof IPHPScriptRegion) {
+				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+				tRegion = scriptRegion.getPHPToken(offset - regionStart - 1);
 
 				// go backward over the region to find a 'case' or 'default'
 				// region
@@ -90,7 +90,7 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 						curlyCount++;
 					}
 					if (tRegion.getStart() > 0) {
-						tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+						tRegion = scriptRegion.getPHPToken(tRegion.getStart() - 1);
 					} else {
 						break;
 					}

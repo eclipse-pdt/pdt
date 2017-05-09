@@ -59,7 +59,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -745,7 +745,7 @@ public class PHPModelUtils {
 	public static IField[] getFields(String fieldName, ISourceModule sourceModule, int offset, IModelAccessCache cache,
 			IProgressMonitor monitor) throws ModelException {
 		if (fieldName == null || fieldName.length() == 0) {
-			return PhpModelAccess.NULL_FIELDS;
+			return PHPModelAccess.NULL_FIELDS;
 		}
 		if (!fieldName.startsWith("$")) { // variables are not //$NON-NLS-1$
 											// supported by
@@ -758,7 +758,7 @@ public class PHPModelUtils {
 					if (fields.length > 0) {
 						return fields;
 					}
-					return PhpModelAccess.NULL_FIELDS;
+					return PHPModelAccess.NULL_FIELDS;
 				}
 				// it's a global reference: \C
 			} else {
@@ -775,7 +775,7 @@ public class PHPModelUtils {
 					// functions or constants if a namespaced function or
 					// constant does not exist:
 					IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-					fields = PhpModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT,
+					fields = PHPModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT,
 							Modifiers.AccConstant | Modifiers.AccGlobal, 0, scope, null);
 
 					Collection<IField> filteredElements = filterElements(sourceModule, Arrays.asList(fields), cache,
@@ -785,7 +785,7 @@ public class PHPModelUtils {
 			}
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-		IField[] fields = PhpModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT, Modifiers.AccGlobal, 0,
+		IField[] fields = PHPModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT, Modifiers.AccGlobal, 0,
 				scope, null);
 
 		Collection<IField> filteredElements = null;
@@ -793,7 +793,7 @@ public class PHPModelUtils {
 			filteredElements = filterElements(sourceModule, Arrays.asList(fields), cache, monitor);
 			return filteredElements.toArray(new IField[filteredElements.size()]);
 		}
-		return PhpModelAccess.NULL_FIELDS;
+		return PHPModelAccess.NULL_FIELDS;
 	}
 
 	/**
@@ -841,7 +841,7 @@ public class PHPModelUtils {
 			IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		if (functionName == null || functionName.length() == 0) {
-			return PhpModelAccess.NULL_METHODS;
+			return PHPModelAccess.NULL_METHODS;
 		}
 		String namespace = extractNamespaceName(functionName, sourceModule, offset);
 		functionName = extractElementName(functionName);
@@ -851,7 +851,7 @@ public class PHPModelUtils {
 				if (functions.length > 0) {
 					return functions;
 				}
-				return PhpModelAccess.NULL_METHODS;
+				return PHPModelAccess.NULL_METHODS;
 			}
 			// it's a global reference: \foo()
 		} else {
@@ -878,14 +878,14 @@ public class PHPModelUtils {
 		if (cache != null) {
 			Collection<IMethod> functions = cache.getGlobalFunctions(sourceModule, functionName, monitor);
 			if (functions == null) {
-				return PhpModelAccess.NULL_METHODS;
+				return PHPModelAccess.NULL_METHODS;
 			}
 			functions = filterTrueGlobal(functions);
 			return functions.toArray(new IMethod[functions.size()]);
 		}
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-		IMethod[] functions = PhpModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT,
+		IMethod[] functions = PHPModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT,
 				Modifiers.AccGlobal, 0, scope, null);
 
 		Collection<IMethod> filteredElements = filterElements(sourceModule, filterTrueGlobal(Arrays.asList(functions)),
@@ -1208,7 +1208,7 @@ public class PHPModelUtils {
 			}
 			return namespaces;
 		}
-		return PhpModelAccess.NULL_TYPES;
+		return PHPModelAccess.NULL_TYPES;
 	}
 
 	/**
@@ -1276,12 +1276,12 @@ public class PHPModelUtils {
 		if (cache != null) {
 			Collection<IType> namespaces = cache.getNamespaces(sourceModule, namespaceName, monitor);
 			if (namespaces == null) {
-				return PhpModelAccess.NULL_TYPES;
+				return PHPModelAccess.NULL_TYPES;
 			}
 			return namespaces.toArray(new IType[namespaces.size()]);
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, namespaceName, MatchRule.EXACT, 0, 0,
+		IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespaceName, MatchRule.EXACT, 0, 0,
 				scope, monitor);
 		return namespaces;
 	}
@@ -1775,7 +1775,7 @@ public class PHPModelUtils {
 			IProgressMonitor monitor, boolean isType, boolean isGlobal) throws ModelException {
 
 		if (typeName == null || typeName.length() == 0) {
-			return PhpModelAccess.NULL_TYPES;
+			return PHPModelAccess.NULL_TYPES;
 		}
 
 		if (!isGlobal) {
@@ -1796,7 +1796,7 @@ public class PHPModelUtils {
 					if (types.length > 0) {
 						return types;
 					}
-					return PhpModelAccess.NULL_TYPES;
+					return PHPModelAccess.NULL_TYPES;
 				}
 				// it's a global reference: \A
 			} else {
@@ -1817,10 +1817,10 @@ public class PHPModelUtils {
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 			if (isType) {
 				types = Arrays
-						.asList(PhpModelAccess.getDefault().findTypes(typeName, MatchRule.EXACT, 0, 0, scope, null));
+						.asList(PHPModelAccess.getDefault().findTypes(typeName, MatchRule.EXACT, 0, 0, scope, null));
 			} else {
 				types = Arrays
-						.asList(PhpModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null));
+						.asList(PHPModelAccess.getDefault().findTraits(typeName, MatchRule.EXACT, 0, 0, scope, null));
 			}
 		} else {
 			// Cached types will already be filtered by method
@@ -1837,7 +1837,7 @@ public class PHPModelUtils {
 				types = cache.getTraits(sourceModule, typeName, null, monitor);
 			}
 			if (types == null) {
-				return PhpModelAccess.NULL_TYPES;
+				return PHPModelAccess.NULL_TYPES;
 			}
 		}
 		List<IType> result = new ArrayList<IType>();
@@ -2021,7 +2021,7 @@ public class PHPModelUtils {
 				Collection<IType> types = null;
 				if (cache == null) {
 					IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
-					IType[] superTypes = PhpModelAccess.getDefault().findTypes(superClass, MatchRule.EXACT, 0,
+					IType[] superTypes = PHPModelAccess.getDefault().findTypes(superClass, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
 					types = fileNetworkFilter(type.getSourceModule(), Arrays.asList(superTypes), null, monitor);
 				} else {

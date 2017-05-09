@@ -16,7 +16,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -157,9 +157,9 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			regionStart += tRegion.getStart();
 		}
 
-		if (tRegion instanceof IPhpScriptRegion) {
-			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(offset - regionStart);
+		if (tRegion instanceof IPHPScriptRegion) {
+			IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+			tRegion = scriptRegion.getPHPToken(offset - regionStart);
 			return tRegion;
 		}
 		return null;
@@ -183,9 +183,9 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			tRegion = container.getRegionAtCharacterOffset(offset);
 			regionStart += tRegion.getStart();
 		}
-		if (tRegion instanceof IPhpScriptRegion) {
-			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(offset - regionStart);
+		if (tRegion instanceof IPHPScriptRegion) {
+			IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+			tRegion = scriptRegion.getPHPToken(offset - regionStart);
 			regionStart += tRegion.getStart();
 		}
 		return regionStart;
@@ -246,9 +246,9 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 				regionStart += tRegion.getStart();
 			}
 
-			if (tRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - regionStart);
+			if (tRegion instanceof IPHPScriptRegion) {
+				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+				tRegion = scriptRegion.getPHPToken(offset - regionStart);
 
 				if (tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 					return;

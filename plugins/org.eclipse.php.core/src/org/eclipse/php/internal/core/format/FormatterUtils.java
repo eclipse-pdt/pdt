@@ -19,7 +19,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -61,10 +61,10 @@ public class FormatterUtils {
 					regionStart += tRegion.getStart();
 				}
 
-				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
-					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+				if (tRegion != null && tRegion instanceof IPHPScriptRegion) {
+					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
 					int regionOffset = offset - regionStart;
-					ITextRegion innerRegion = scriptRegion.getPhpToken(regionOffset);
+					ITextRegion innerRegion = scriptRegion.getPHPToken(regionOffset);
 					return innerRegion.getType();
 				}
 			}
@@ -102,11 +102,11 @@ public class FormatterUtils {
 				regionStart += tRegion.getStart();
 			}
 
-			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+			if (tRegion != null && tRegion instanceof IPHPScriptRegion) {
+				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
 				if (preferNonWhitespacePartitions
-						&& scriptRegion.getPhpToken(offset - regionStart).getTextEnd() <= offset - regionStart) {
-					return scriptRegion.getPartition(scriptRegion.getPhpToken(offset - regionStart).getEnd());
+						&& scriptRegion.getPHPToken(offset - regionStart).getTextEnd() <= offset - regionStart) {
+					return scriptRegion.getPartition(scriptRegion.getPHPToken(offset - regionStart).getEnd());
 				}
 				return scriptRegion.getPartition(offset - regionStart);
 			}
@@ -149,7 +149,7 @@ public class FormatterUtils {
 	 * 
 	 * @param currentStructuredDocumentRegion
 	 */
-	public static IStructuredDocumentRegion getLastPhpStructuredDocumentRegion(
+	public static IStructuredDocumentRegion getLastPHPStructuredDocumentRegion(
 			IStructuredDocumentRegion currentStructuredDocumentRegion) {
 		assert currentStructuredDocumentRegion != null;
 

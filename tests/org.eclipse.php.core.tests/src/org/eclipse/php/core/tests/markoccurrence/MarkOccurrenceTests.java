@@ -39,7 +39,7 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
+import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
@@ -156,7 +156,7 @@ public class MarkOccurrenceTests {
 		ASTNode selectedNode = NodeFinder.perform(astRoot, offset, 0);
 		OccurrenceLocation[] locations = null;
 		if (selectedNode != null && (selectedNode instanceof Identifier || (isScalarButNotInString(selectedNode)))) {
-			int type = PhpElementConciliator.concile(selectedNode);
+			int type = PHPElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
 				if (finder != null) {
@@ -174,21 +174,21 @@ public class MarkOccurrenceTests {
 	 * Returns is the occurrences of the type should be marked.
 	 * 
 	 * @param type
-	 *            One of the {@link PhpElementConciliator} constants integer
+	 *            One of the {@link PHPElementConciliator} constants integer
 	 *            type.
 	 * @return True, if the type occurrences should be marked; False, otherwise.
 	 */
 	public static boolean markOccurrencesOfType(int type) {
 		switch (type) {
-		case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
-		case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
-		case PhpElementConciliator.CONCILIATOR_FUNCTION:
-		case PhpElementConciliator.CONCILIATOR_CLASSNAME:
-		case PhpElementConciliator.CONCILIATOR_CONSTANT:
-		case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
+		case PHPElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
+		case PHPElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
+		case PHPElementConciliator.CONCILIATOR_FUNCTION:
+		case PHPElementConciliator.CONCILIATOR_CLASSNAME:
+		case PHPElementConciliator.CONCILIATOR_CONSTANT:
+		case PHPElementConciliator.CONCILIATOR_CLASS_MEMBER:
 			return true;
-		case PhpElementConciliator.CONCILIATOR_UNKNOWN:
-		case PhpElementConciliator.CONCILIATOR_PROGRAM:
+		case PHPElementConciliator.CONCILIATOR_UNKNOWN:
+		case PHPElementConciliator.CONCILIATOR_PROGRAM:
 		default:
 			return false;
 		}

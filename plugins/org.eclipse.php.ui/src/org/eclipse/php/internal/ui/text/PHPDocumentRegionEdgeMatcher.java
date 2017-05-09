@@ -17,7 +17,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.ui.editor.PHPPairMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -83,11 +83,11 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 						ITextRegionContainer container = (ITextRegionContainer) currentTextRegion;
 						currentTextRegion = container.getRegionAtCharacterOffset(offset);
 					}
-					if (currentTextRegion instanceof IPhpScriptRegion) {
-						IPhpScriptRegion scriptRegion = (IPhpScriptRegion) currentTextRegion;
+					if (currentTextRegion instanceof IPHPScriptRegion) {
+						IPHPScriptRegion scriptRegion = (IPHPScriptRegion) currentTextRegion;
 						try {
 							currentTextRegion = scriptRegion
-									.getPhpToken(offset - docRegion.getStartOffset(scriptRegion));
+									.getPHPToken(offset - docRegion.getStartOffset(scriptRegion));
 
 							if (currentTextRegion.getTextLength() > 1) {
 								int offsetAtNearEdge = offset;

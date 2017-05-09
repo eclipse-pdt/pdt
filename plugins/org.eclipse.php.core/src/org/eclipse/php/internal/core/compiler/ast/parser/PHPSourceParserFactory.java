@@ -59,25 +59,25 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	 */
 	public static AbstractPHPSourceParser createParser(String fileName, PHPVersion phpVersion) {
 		if (PHPVersion.PHP5 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PHPSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_3 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PHPSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_4 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PHPSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_5 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PHPSourceParser(fileName);
 		}
 		if (PHPVersion.PHP5_6 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PHPSourceParser(fileName);
 		}
 		if (PHPVersion.PHP7_0 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PHPSourceParser(fileName);
 		}
 		if (PHPVersion.PHP7_1 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php71.PhpSourceParser(fileName);
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php71.PHPSourceParser(fileName);
 		}
 		return null;
 	}
@@ -91,25 +91,25 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	 */
 	public static AbstractPHPSourceParser createParser(PHPVersion phpVersion) {
 		if (PHPVersion.PHP5 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PHPSourceParser();
 		}
 		if (PHPVersion.PHP5_3 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PHPSourceParser();
 		}
 		if (PHPVersion.PHP5_4 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PHPSourceParser();
 		}
 		if (PHPVersion.PHP5_5 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PHPSourceParser();
 		}
 		if (PHPVersion.PHP5_6 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PHPSourceParser();
 		}
 		if (PHPVersion.PHP7_0 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PHPSourceParser();
 		}
 		if (PHPVersion.PHP7_1 == phpVersion) {
-			return new org.eclipse.php.internal.core.compiler.ast.parser.php71.PhpSourceParser();
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php71.PHPSourceParser();
 		}
 		return null;
 	}
