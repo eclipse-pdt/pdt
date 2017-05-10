@@ -175,7 +175,7 @@
 		<repository>
 			<id>dltk-tests</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/technology/dltk/updates-dev/latest-nightly</url>
+			<url>http://download.eclipse.org/technology/dltk/updates-dev/5.7.1/</url>
 		</repository>
 		<repository>
 			<id>eclipse-tests</id>
