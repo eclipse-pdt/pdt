@@ -46,7 +46,9 @@ import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.link.LinkedModeModel;
+import org.eclipse.jface.text.link.*;
+import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
+import org.eclipse.jface.text.link.LinkedModeUI.IExitPolicy;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.text.source.ImageUtilities;
@@ -62,6 +64,9 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
+import org.eclipse.php.internal.core.format.Symbols;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencePropagatorFactory;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagator;
@@ -77,6 +82,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.autoEdit.TabAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.TypingPreferences;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.selectionactions.*;
@@ -95,7 +101,9 @@ import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -111,6 +119,7 @@ import org.eclipse.ui.dnd.IDragAndDropService;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.IFoldingCommandIds;
 import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -324,6 +333,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	private SelectionHistory fSelectionHistory;
 
 	private PHPEditorErrorTickUpdater fPHPEditorErrorTickUpdater;
+	/** The bracket inserter. */
+	private final BracketInserter fBracketInserter = new BracketInserter();
 
 	/**
 	 * Internal implementation class for a change listener.
@@ -417,6 +428,362 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			doSelectionChanged(event);
 		}
 
+	}
+
+	private class ExitPolicy implements IExitPolicy {
+
+		final char fExitCharacter;
+		final char fEscapeCharacter;
+		final Stack<BracketLevel> fStack;
+		final int fSize;
+
+		public ExitPolicy(char exitCharacter, char escapeCharacter, Stack<BracketLevel> stack) {
+			fExitCharacter = exitCharacter;
+			fEscapeCharacter = escapeCharacter;
+			fStack = stack;
+			fSize = fStack.size();
+		}
+
+		@Override
+		public ExitFlags doExit(LinkedModeModel model, VerifyEvent event, int offset, int length) {
+
+			if (fSize == fStack.size() && !isMasked(offset)) {
+				if (event.character == fExitCharacter) {
+					BracketLevel level = fStack.peek();
+					if (level.fFirstPosition.offset > offset || level.fSecondPosition.offset < offset)
+						return null;
+					if (level.fSecondPosition.offset == offset && length == 0)
+						// don't enter the character if if its the closing peer
+						return new ExitFlags(ILinkedModeListener.UPDATE_CARET, false);
+				}
+				// when entering an anonymous class between the parenthesis', we
+				// don't want
+				// to jump after the closing parenthesis when return is pressed
+				if (event.character == SWT.CR && offset > 0) {
+					ISourceViewer sourceViewer = getSourceViewer();
+					IDocument document = sourceViewer.getDocument();
+					try {
+						if (document.getChar(offset - 1) == '{')
+							return new ExitFlags(ILinkedModeListener.EXIT_ALL, true);
+
+						// see bug 308217: while overriding a method and using
+						// '(' followed by parameter type to filter the content
+						// assist proposals, if ')' is added
+						// automatically on typing '(', pressing return key
+						// should not result in jumping after ')' instead of
+						// applying the selected proposal.
+						// if (document.getChar(offset) == ')' && sourceViewer
+						// instanceof AdaptedSourceViewer &&
+						// ((AdaptedSourceViewer)
+						// sourceViewer).getContentAssistant() instanceof
+						// ContentAssistant) {
+						// ContentAssistant contentAssistant= (ContentAssistant)
+						// ((AdaptedSourceViewer)
+						// sourceViewer).getContentAssistant();
+						// IContentAssistProcessor processor=
+						// contentAssistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
+						// if (processor instanceof ContentAssistProcessor) {
+						// ICompletionProposal proposal=
+						// ((ContentAssistProcessor)
+						// processor).getSelectedProposal();
+						// if (proposal instanceof OverrideCompletionProposal) {
+						// return new ExitFlags(ILinkedModeListener.EXIT_ALL,
+						// true);
+						// }
+						// }
+						// }
+					} catch (BadLocationException e) {
+					}
+				}
+			}
+			return null;
+		}
+
+		private boolean isMasked(int offset) {
+			IDocument document = getSourceViewer().getDocument();
+			try {
+				return fEscapeCharacter == document.getChar(offset - 1);
+			} catch (BadLocationException e) {
+			}
+			return false;
+		}
+	}
+
+	private static class BracketLevel {
+		LinkedModeUI fUI;
+		Position fFirstPosition;
+		Position fSecondPosition;
+	}
+
+	/**
+	 * Position updater that takes any changes at the borders of a position to
+	 * not belong to the position.
+	 *
+	 * @since 3.0
+	 */
+	private static class ExclusivePositionUpdater implements IPositionUpdater {
+
+		/** The position category. */
+		private final String fCategory;
+
+		/**
+		 * Creates a new updater for the given <code>category</code>.
+		 *
+		 * @param category
+		 *            the new category.
+		 */
+		public ExclusivePositionUpdater(String category) {
+			fCategory = category;
+		}
+
+		@Override
+		public void update(DocumentEvent event) {
+
+			int eventOffset = event.getOffset();
+			int eventOldLength = event.getLength();
+			int eventNewLength = event.getText() == null ? 0 : event.getText().length();
+			int deltaLength = eventNewLength - eventOldLength;
+
+			try {
+				Position[] positions = event.getDocument().getPositions(fCategory);
+
+				for (int i = 0; i != positions.length; i++) {
+
+					Position position = positions[i];
+
+					if (position.isDeleted())
+						continue;
+
+					int offset = position.getOffset();
+					int length = position.getLength();
+					int end = offset + length;
+
+					if (offset >= eventOffset + eventOldLength)
+						// position comes
+						// after change - shift
+						position.setOffset(offset + deltaLength);
+					else if (end <= eventOffset) {
+						// position comes way before change -
+						// leave alone
+					} else if (offset <= eventOffset && end >= eventOffset + eventOldLength) {
+						// event completely internal to the position - adjust
+						// length
+						position.setLength(length + deltaLength);
+					} else if (offset < eventOffset) {
+						// event extends over end of position - adjust length
+						int newEnd = eventOffset;
+						position.setLength(newEnd - offset);
+					} else if (end > eventOffset + eventOldLength) {
+						// event extends from before position into it - adjust
+						// offset
+						// and length
+						// offset becomes end of event, length adjusted
+						// accordingly
+						int newOffset = eventOffset + eventNewLength;
+						position.setOffset(newOffset);
+						position.setLength(end - newOffset);
+					} else {
+						// event consumes the position - delete it
+						position.delete();
+					}
+				}
+			} catch (BadPositionCategoryException e) {
+				// ignore and return
+			}
+		}
+
+	}
+
+	private class BracketInserter implements VerifyKeyListener, ILinkedModeListener {
+
+		private boolean fCloseBrackets = true;
+		private boolean fCloseStrings = true;
+		private final String CATEGORY = toString();
+		private final IPositionUpdater fUpdater = new ExclusivePositionUpdater(CATEGORY);
+		private final Stack<BracketLevel> fBracketLevelStack = new Stack<>();
+
+		public void setCloseBracketsEnabled(boolean enabled) {
+			fCloseBrackets = enabled;
+		}
+
+		public void setCloseStringsEnabled(boolean enabled) {
+			fCloseStrings = enabled;
+		}
+
+		private boolean isMultilineSelection() {
+			ISelection selection = getSelectionProvider().getSelection();
+			if (selection instanceof ITextSelection) {
+				ITextSelection ts = (ITextSelection) selection;
+				return ts.getStartLine() != ts.getEndLine();
+			}
+			return false;
+		}
+
+		@Override
+		public void verifyKey(VerifyEvent event) {
+
+			// early pruning to slow down normal typing as little as possible
+			if (!event.doit || getInsertMode() != SMART_INSERT
+					|| isBlockSelectionModeEnabled() && isMultilineSelection())
+				return;
+			switch (event.character) {
+			case '(':
+			case '[':
+			case '\'':
+			case '\"':
+			case '`':
+				break;
+			default:
+				return;
+			}
+
+			final ISourceViewer sourceViewer = getSourceViewer();
+			IDocument document = sourceViewer.getDocument();
+
+			final Point selection = sourceViewer.getSelectedRange();
+			final int offset = selection.x;
+			final int length = selection.y;
+
+			try {
+				IRegion startLine = document.getLineInformationOfOffset(offset);
+				IRegion endLine = document.getLineInformationOfOffset(offset + length);
+
+				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
+				int nextToken = scanner.nextToken(offset + length, endLine.getOffset() + endLine.getLength());
+				String next = nextToken == Symbols.TokenEOF ? null
+						: document.get(offset, scanner.getPosition() - offset).trim();
+				int prevToken = scanner.previousToken(offset - 1, startLine.getOffset() - 1);
+				int prevTokenOffset = scanner.getPosition() + 1;
+				String previous = prevToken == Symbols.TokenEOF ? null
+						: document.get(prevTokenOffset, offset - prevTokenOffset).trim();
+
+				switch (event.character) {
+				case '(':
+					if (!fCloseBrackets || nextToken == Symbols.TokenLPAREN || nextToken == Symbols.TokenIDENT
+							|| next != null && next.length() > 1)
+						return;
+					break;
+				case '[':
+					if (!fCloseBrackets || nextToken == Symbols.TokenIDENT || next != null && next.length() > 1)
+						return;
+					break;
+
+				case '\'':
+				case '"':
+				case '`':
+					if (!fCloseStrings || nextToken == Symbols.TokenIDENT || prevToken == Symbols.TokenIDENT
+							|| next != null && next.length() > 1 || previous != null && previous.length() > 1)
+						return;
+					break;
+
+				default:
+					return;
+				}
+
+				String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, offset);
+				if (!PHPPartitionTypes.PHP_DEFAULT.equals(partitionType))
+					return;
+
+				if (!validateEditorInputState())
+					return;
+
+				final char character = event.character;
+				final char closingCharacter = getPeerCharacter(character);
+				final StringBuffer buffer = new StringBuffer();
+				buffer.append(character);
+				buffer.append(closingCharacter);
+
+				document.replace(offset, length, buffer.toString());
+
+				BracketLevel level = new BracketLevel();
+				fBracketLevelStack.push(level);
+
+				LinkedPositionGroup group = new LinkedPositionGroup();
+				group.addPosition(new LinkedPosition(document, offset + 1, 0, LinkedPositionGroup.NO_STOP));
+
+				LinkedModeModel model = new LinkedModeModel();
+				model.addLinkingListener(this);
+				model.addGroup(group);
+				model.forceInstall();
+
+				// set up position tracking for our magic peers
+				if (fBracketLevelStack.size() == 1) {
+					document.addPositionCategory(CATEGORY);
+					document.addPositionUpdater(fUpdater);
+				}
+				level.fFirstPosition = new Position(offset, 1);
+				level.fSecondPosition = new Position(offset + 1, 1);
+				document.addPosition(CATEGORY, level.fFirstPosition);
+				document.addPosition(CATEGORY, level.fSecondPosition);
+
+				level.fUI = new EditorLinkedModeUI(model, sourceViewer);
+				level.fUI.setSimpleMode(true);
+				level.fUI.setExitPolicy(
+						new ExitPolicy(closingCharacter, getEscapeCharacter(closingCharacter), fBracketLevelStack));
+				level.fUI.setExitPosition(sourceViewer, offset + 2, 0, Integer.MAX_VALUE);
+				level.fUI.setCyclingMode(LinkedModeUI.CYCLE_NEVER);
+				level.fUI.enter();
+
+				IRegion newSelection = level.fUI.getSelectedRegion();
+				sourceViewer.setSelectedRange(newSelection.getOffset(), newSelection.getLength());
+
+				event.doit = false;
+
+			} catch (BadLocationException e) {
+				PHPUiPlugin.log(e);
+			} catch (BadPositionCategoryException e) {
+				PHPUiPlugin.log(e);
+			}
+		}
+
+		@Override
+		public void left(LinkedModeModel environment, int flags) {
+
+			final BracketLevel level = fBracketLevelStack.pop();
+
+			if (flags != ILinkedModeListener.EXTERNAL_MODIFICATION)
+				return;
+
+			// remove brackets
+			final ISourceViewer sourceViewer = getSourceViewer();
+			final IDocument document = sourceViewer.getDocument();
+			if (document instanceof IDocumentExtension) {
+				IDocumentExtension extension = (IDocumentExtension) document;
+				extension.registerPostNotificationReplace(null, new IDocumentExtension.IReplace() {
+
+					@Override
+					public void perform(IDocument d, IDocumentListener owner) {
+						if ((level.fFirstPosition.isDeleted || level.fFirstPosition.length == 0)
+								&& !level.fSecondPosition.isDeleted
+								&& level.fSecondPosition.offset == level.fFirstPosition.offset) {
+							try {
+								document.replace(level.fSecondPosition.offset, level.fSecondPosition.length, ""); //$NON-NLS-1$
+							} catch (BadLocationException e) {
+								PHPUiPlugin.log(e);
+							}
+						}
+
+						if (fBracketLevelStack.size() == 0) {
+							document.removePositionUpdater(fUpdater);
+							try {
+								document.removePositionCategory(CATEGORY);
+							} catch (BadPositionCategoryException e) {
+								PHPUiPlugin.log(e);
+							}
+						}
+					}
+				});
+			}
+
+		}
+
+		@Override
+		public void suspend(LinkedModeModel environment) {
+		}
+
+		@Override
+		public void resume(LinkedModeModel environment, int flags) {
+		}
 	}
 
 	/**
@@ -1141,6 +1508,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 
 	@Override
 	public void dispose() {
+
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer instanceof ITextViewerExtension) {
+			((ITextViewerExtension) sourceViewer).removeVerifyKeyListener(fBracketInserter);
+		}
+
 		if (fContextMenuGroup != null) {
 			fContextMenuGroup.dispose();
 			fContextMenuGroup = null;
@@ -2157,6 +2530,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	public void createPartControl(final Composite parent) {
 		super.createPartControl(parent);
 
+		fBracketInserter.setCloseBracketsEnabled(TypingPreferences.closeBrackets);
+		fBracketInserter.setCloseStringsEnabled(TypingPreferences.closeQuotes);
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer instanceof ITextViewerExtension) {
+			((ITextViewerExtension) sourceViewer).prependVerifyKeyListener(fBracketInserter);
+		}
+
 		// workaround for code folding
 		if (isFoldingEnabled()) {
 			installProjectionSupport();
@@ -2447,6 +2827,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 				}
 				return;
 			}
+			if (PreferenceConstants.EDITOR_CLOSE_BRACKETS.equals(property)) {
+				fBracketInserter.setCloseBracketsEnabled(getPreferenceStore().getBoolean(property));
+				return;
+			}
+
+			if (PreferenceConstants.EDITOR_CLOSE_STRINGS.equals(property)) {
+				fBracketInserter.setCloseStringsEnabled(getPreferenceStore().getBoolean(property));
+				return;
+			}
+
 			if (PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES.equals(property)) {
 				fMarkTypeOccurrences = newBooleanValue;
 				return;
@@ -2511,6 +2901,37 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 					installProjectionSupport();
 				}
 			}
+		}
+	}
+
+	private static char getEscapeCharacter(char character) {
+		switch (character) {
+		case '"':
+		case '\'':
+			return '\\';
+		default:
+			return 0;
+		}
+	}
+
+	private static char getPeerCharacter(char character) {
+		switch (character) {
+		case '(':
+			return ')';
+		case ')':
+			return '(';
+		case '[':
+			return ']';
+		case ']':
+			return '[';
+		case '"':
+			return character;
+		case '\'':
+			return character;
+		case '`':
+			return character;
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -3730,4 +4151,18 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		setTitleImage(image);
 	}
 
+	/**
+	 * Workaround for BracketInserterTest
+	 * 
+	 * <p>
+	 * Don't call this inside PDT.
+	 * 
+	 * TODO remove this once we find a better way to test it
+	 * </p>
+	 * 
+	 * @return
+	 */
+	final public VerifyKeyListener getfBracketInserter() {
+		return fBracketInserter;
+	}
 }

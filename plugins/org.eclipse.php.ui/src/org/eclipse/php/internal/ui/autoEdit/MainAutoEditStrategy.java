@@ -26,8 +26,6 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
 	private static IAutoEditStrategy curlyOpenAutoEditStrategy = new CurlyOpenAutoEditStrategy();
 	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
-	private static IAutoEditStrategy matchingBracketAutoEditStrategy = new MatchingBracketAutoEditStrategy();
-	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
 	private static IAppliedAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PHPDocAutoIndentStrategy();
 	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
@@ -58,7 +56,6 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 			// Do an additional check to be sure we handle lines only when
 			// command.offset is lying inside "quoted strings".
 			if (nextPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
-				quotesAutoEditStrategy.customizeDocumentCommand(document, command);
 				return;
 			}
 		}
@@ -71,11 +68,9 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 				// "case"/"default" was found and indented, we stop here
 				return;
 			}
-			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyCloseAutoEditStrategy.customizeDocumentCommand(document, command);
 			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
-			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
 			autoIndentStrategy.customizeDocumentCommand(document, command);
 		}
 

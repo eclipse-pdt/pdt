@@ -1,0 +1,16 @@
+--TEST--
+Test Bracket Inserter
+--FILE--
+<?php
+
+$a = array|
+
+?>
+--OTHER--
+(
+--EXPECT--
+<?php
+
+$a = array()
+
+?>

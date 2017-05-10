@@ -1,0 +1,26 @@
+--TEST--
+Test Bracket Inserter
+--FILE--
+<?php 
+
+/**
+ * |
+ */
+function foo(){
+    
+}
+
+?>
+--OTHER--
+[
+--EXPECT--
+<?php 
+
+/**
+ * [
+ */
+function foo(){
+    
+}
+
+?>
