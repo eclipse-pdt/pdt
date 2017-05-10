@@ -35,7 +35,7 @@ public class RefactoringAdapterFactory implements IAdapterFactory {
 			return null;
 		if ((object instanceof TextFileChange) || (object instanceof MultiStateTextFileChange)
 				|| (object instanceof ProgramDocumentChange))
-			return new PhpRefactoringChangeNode((TextEditBasedChange) object);
+			return new PHPRefactoringChangeNode((TextEditBasedChange) object);
 		return null;
 
 	}

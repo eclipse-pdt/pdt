@@ -34,7 +34,7 @@ import org.eclipse.text.edits.TextEdit;
  * @author Roy, 2007
  * @inspiredby JDT
  */
-public class PhpRefactoringChangeNode extends TextEditChangeNode {
+public class PHPRefactoringChangeNode extends TextEditChangeNode {
 
 	static final ChildNode[] EMPTY_CHILDREN = new ChildNode[0];
 
@@ -71,7 +71,7 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 		}
 	}
 
-	public PhpRefactoringChangeNode(TextEditBasedChange change) {
+	public PHPRefactoringChangeNode(TextEditBasedChange change) {
 		super(change);
 	}
 
@@ -104,7 +104,7 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 			for (int i = 0; i < changes.length; i++) {
 				final TextEditBasedChangeGroup tec = changes[i];
 				try {
-					final ASTNode element = getModifiedPhpElement(tec, program);
+					final ASTNode element = getModifiedPHPElement(tec, program);
 					addNode(program, children, map, tec, element);
 				} catch (Exception e) {
 					RefactoringUIPlugin.log(e);
@@ -145,7 +145,7 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 		return (TextEditBasedChangeGroup[]) result.toArray(new TextEditBasedChangeGroup[result.size()]);
 	}
 
-	private ASTNode getModifiedPhpElement(TextEditBasedChangeGroup edit, Program program) throws Exception {
+	private ASTNode getModifiedPHPElement(TextEditBasedChangeGroup edit, Program program) throws Exception {
 		IRegion range = edit.getRegion();
 		if (range.getOffset() == 0 && range.getLength() == 0)
 			return program;
