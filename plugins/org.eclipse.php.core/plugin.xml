@@ -90,8 +90,8 @@
 	</extension>
 
 	<extension
-		id="PhpDocumentSetupParticipant"
-		name="PhpDocumentSetupParticipant"
+		id="PHPDocumentSetupParticipant"
+		name="PHPDocumentSetupParticipant"
 		point="org.eclipse.core.filebuffers.documentSetup">
 		<participant
 			contentTypeId="org.eclipse.php.core.phpsource"

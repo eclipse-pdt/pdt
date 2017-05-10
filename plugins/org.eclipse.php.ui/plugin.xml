@@ -188,7 +188,7 @@
 	<editor
         class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor"
         icon="icons/full/obj16/phpfile.png"
-        id="org.eclipse.php.untitledPhpEditor"
+        id="org.eclipse.php.untitledPHPEditor"
         name="%editor.name.1"
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
   	</editor>
@@ -222,7 +222,7 @@
 			org.eclipse.php.ui.preferences.PHPTemplatesPreferencePage,
 			org.eclipse.php.ui.preferences.PHPColorPage,
 			org.eclipse.php.ui.preferences.PHPFoldingPreferencePage,
-			org.eclipse.php.ui.preferences.PhpTypingPreferencePage,
+			org.eclipse.php.ui.preferences.PHPTypingPreferencePage,
 			org.eclipse.php.ui.preferences.PHPEditorHoverPreferencePage,
 			org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage,
 			org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage,
@@ -836,17 +836,17 @@
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP"
 			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP"
 			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP"
 			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.dltk.core.IModelElement" />
 		</factory>
@@ -856,23 +856,23 @@
 //			https://bugs.eclipse.org/bugs/show_bug.cgi?id=257681
 //			https://bugs.eclipse.org/bugs/show_bug.cgi?id=271734	
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP"
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 		-->
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPHP"
 			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPHP"
 			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPHP"
 			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.dltk.core.IModelElement" />
 		</factory>
@@ -882,8 +882,8 @@
 //			https://bugs.eclipse.org/bugs/show_bug.cgi?id=257681
 //			https://bugs.eclipse.org/bugs/show_bug.cgi?id=271734		
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
-			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPHP"
+			class="org.eclipse.php.internal.ui.editor.adapter.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 		-->
@@ -1720,7 +1720,7 @@
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPTypingPreferencePage"
-			id="org.eclipse.php.ui.preferences.PhpTypingPreferencePage" name="%editorTypingPageName">
+			id="org.eclipse.php.ui.preferences.PHPTypingPreferencePage" name="%editorTypingPageName">
 		</page>		
 		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPEditorHoverPreferencePage"
@@ -2168,12 +2168,12 @@
 		</dropTargetContribution>
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
-		<viewer id="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator"
+		<viewer id="org.eclipse.php.internal.ui.compare.PHPMergeViewerCreator"
 			class="org.eclipse.php.internal.ui.compare.PHPMergeViewerCreator"
 			extensions="php" />
 		<contentTypeBinding
 			contentTypeId="org.eclipse.php.core.phpsource"
-            contentMergeViewerId="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator">
+            contentMergeViewerId="org.eclipse.php.internal.ui.compare.PHPMergeViewerCreator">
 	  </contentTypeBinding>
 	</extension>
 
@@ -2185,7 +2185,7 @@
 		<editorContribution id="org.eclipse.php.editor.ruler.actions"
 			targetID="org.eclipse.php.editor">
 			<action actionID="RulerClick"
-				class="org.eclipse.php.internal.ui.editor.PHPSelectRulerAction" id="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
+				class="org.eclipse.php.internal.ui.editor.PHPSelectRulerAction" id="org.eclipse.php.internal.ui.editor.PHPSelectRulerAction"
 				label="%PhpSelectRulerAction.label">
 			</action>
 		</editorContribution>
