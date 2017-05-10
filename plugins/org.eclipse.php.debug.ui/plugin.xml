@@ -455,17 +455,17 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPropertyPreferencePage"
-			id="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+			id="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"
 			name="%debugPreferencePageName">
 			<keywordReference id="org.eclipse.php.debug.ui.debug" />
 		</page>
-		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+		<page category="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.InstalledDebuggersPreferencePage"
 			id="org.eclipse.php.debug.ui.installedDebuggersPage" name="%Install.debuggers">
 			<keywordReference id="org.eclipse.php.debug.ui.installedDebuggers">
 			</keywordReference>
 		</page>
-		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+		<page category="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.WorkbenchOptionsPreferencePage"
 			id="org.eclipse.php.debug.ui.workbenchOptionsPage" name="%Workbench.options">
 			<keywordReference id="org.eclipse.php.debug.ui.workbench">
@@ -483,13 +483,13 @@
             name="%executionEnvironmentsPageName">
             <keywordReference id="org.eclipse.php.debug.ui.phpInterpreterExecution" />
       </page>
-		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+		<page category="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
 			id="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
 			name="%Step.filtering">
 		</page>
 		<page
-            category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+            category="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"
             class="org.eclipse.php.internal.debug.ui.preferences.coverage.CodeCoveragePreferencePage"
             id="org.eclipse.php.debug.ui.codeCoveragePage"
             name="%codeCoveragePreferencePage.name">
@@ -500,7 +500,7 @@
 		<page
 			class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPropertyPreferencePage"
 			category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
-			id="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage" name="%ProjectPage.name">
+			id="org.eclipse.php.debug.ui.property.PHPDebugPreferencePage" name="%ProjectPage.name">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
 				</adapt>
