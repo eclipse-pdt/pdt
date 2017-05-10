@@ -121,7 +121,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Visit $a on global references: $a = 5;
 	 */
 	public boolean visit(Variable variable) {
-		if ((!variable.isDollared() && !org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+		if ((!variable.isDollared() && !ASTNodes.isQuotedDollaredCurlied(variable))
 				|| variable.getName().getType() != ASTNode.IDENTIFIER) {
 			return true;
 		}
@@ -159,7 +159,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (variableName.getType() == ASTNode.VARIABLE) {
 					final Variable var = (Variable) variableName;
 					Expression varName = var.getName();
-					if ((var.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(var))
+					if ((var.isDollared() || ASTNodes.isQuotedDollaredCurlied(var))
 							&& varName.getType() == ASTNode.IDENTIFIER) {
 						final String name = ((Identifier) varName).getName();
 						if ("GLOBALS".equals(name) || "_GLOBALS".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -199,7 +199,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (variableName.getType() == ASTNode.VARIABLE) {
 			final Variable var = (Variable) variableName;
 			Expression varName = var.getName();
-			if ((var.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(var))
+			if ((var.isDollared() || ASTNodes.isQuotedDollaredCurlied(var))
 					&& varName.getType() == ASTNode.IDENTIFIER) {
 				final Identifier id = (Identifier) varName;
 				if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$

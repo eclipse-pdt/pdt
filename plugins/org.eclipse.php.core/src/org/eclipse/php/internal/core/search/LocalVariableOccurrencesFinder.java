@@ -84,8 +84,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		Expression name = variable.getName();
 		if (name.getType() == ASTNode.IDENTIFIER
 				&& ((variable.isDollared() && variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS)
-						|| (!variable.isDollared()
-								&& org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable)))) {
+						|| (!variable.isDollared() && ASTNodes.isQuotedDollaredCurlied(variable)))) {
 			if (((Identifier) name).getName().equals(this.fIdentifier.getName())) {
 				addOccurrence(variable);
 			}

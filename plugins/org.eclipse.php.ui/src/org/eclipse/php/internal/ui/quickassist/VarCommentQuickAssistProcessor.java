@@ -34,6 +34,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTNodes;
 import org.eclipse.php.core.ast.nodes.Variable;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
@@ -190,8 +191,8 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 			switch (selectedNode.getType()) {
 			case ASTNode.VARIABLE:
-				if (((Variable) selectedNode).isDollared() || org.eclipse.php.internal.core.corext.ASTNodes
-						.isQuotedDollaredCurlied((Variable) selectedNode)) {
+				if (((Variable) selectedNode).isDollared()
+						|| ASTNodes.isQuotedDollaredCurlied((Variable) selectedNode)) {
 					ASTNode parent = selectedNode.getParent();
 					if (parent != null && (parent.getType() == ASTNode.SINGLE_FIELD_DECLARATION
 							|| parent.getType() == ASTNode.FORMAL_PARAMETER)) {

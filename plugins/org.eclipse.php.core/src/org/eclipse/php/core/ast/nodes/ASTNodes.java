@@ -77,4 +77,38 @@ public class ASTNodes {
 		return builder.toString();
 	}
 
+	/**
+	 * Tells if a variable is in the form of <code>${var}</code> or
+	 * <code>${var[0]}</code> inside a back-quoted string, a double-quoted
+	 * string or a heredoc section
+	 * 
+	 * @param variable
+	 * @return true if the variable is in the form of <code>${var}</code> or
+	 *         <code>${var[0]}</code> inside a back-quoted string, a
+	 *         double-quoted string or a heredoc section, false otherwise
+	 */
+	public static boolean isQuotedDollaredCurlied(Variable variable) {
+		if (variable.isDollared() || variable.getParent() == null) {
+			return false;
+		}
+
+		ASTNode enclosing = null;
+
+		if (variable.getParent().getType() == ASTNode.ARRAY_ACCESS) {
+			enclosing = variable.getParent().getParent();
+			if (enclosing != null && enclosing.getType() == ASTNode.REFLECTION_VARIABLE) {
+				enclosing = enclosing.getParent();
+			} else {
+				enclosing = null;
+			}
+		} else if (variable.getParent().getType() == ASTNode.REFLECTION_VARIABLE) {
+			enclosing = variable.getParent().getParent();
+		}
+
+		if (enclosing == null) {
+			return false;
+		}
+
+		return enclosing.getType() == ASTNode.QUOTE || enclosing.getType() == ASTNode.BACK_TICK_EXPRESSION;
+	}
 }

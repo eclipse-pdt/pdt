@@ -84,8 +84,7 @@ public class RenameLocalVariable extends AbstractRename {
 	 * @param variable
 	 */
 	private boolean isGlobalVariable(Variable variable, boolean checkInQuotes) {
-		if (variable.isDollared()
-				|| (checkInQuotes && org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))) {
+		if (variable.isDollared() || (checkInQuotes && ASTNodes.isQuotedDollaredCurlied(variable))) {
 			final Expression variableName = variable.getName();
 			if (variableName instanceof Identifier) {
 				Identifier identifier = (Identifier) variableName;
