@@ -23,8 +23,8 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 
 public class TypingPreferences {
 
-	static boolean closeQuotes;
-	static boolean closeBrackets;
+	public static boolean closeQuotes;
+	public static boolean closeBrackets;
 	static boolean closeCurlyBracket;
 	static boolean closePhpdoc;
 	static boolean addDocTags;

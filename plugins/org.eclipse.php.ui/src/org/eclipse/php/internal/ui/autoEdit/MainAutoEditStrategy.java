@@ -26,8 +26,6 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
 	private static IAutoEditStrategy curlyOpenAutoEditStrategy = new CurlyOpenAutoEditStrategy();
 	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
-	private static IAutoEditStrategy matchingBracketAutoEditStrategy = new MatchingBracketAutoEditStrategy();
-	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
 	private static IAppliedAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PHPDocAutoIndentStrategy();
 	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
@@ -45,24 +43,6 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 			return;
 		}
 
-		String previousPartitionType = command.offset > 0
-				? FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset - 1) : null;
-
-		if (previousPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING
-				&& partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
-			String nextPartitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
-					true);
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=512891
-			// At this point we only know that command.offset is inside or just
-			// after some "quoted string".
-			// Do an additional check to be sure we handle lines only when
-			// command.offset is lying inside "quoted strings".
-			if (nextPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
-				quotesAutoEditStrategy.customizeDocumentCommand(document, command);
-				return;
-			}
-		}
-
 		if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT
 				|| partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
 			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
@@ -71,11 +51,9 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 				// "case"/"default" was found and indented, we stop here
 				return;
 			}
-			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyCloseAutoEditStrategy.customizeDocumentCommand(document, command);
 			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
-			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
 			autoIndentStrategy.customizeDocumentCommand(document, command);
 		}
 
