@@ -457,7 +457,7 @@
          point="org.eclipse.dltk.core.problemFactory">
       <problemIdentifierFactory
             class="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifierFactory"
-            namespace="org.eclipse.php.internal.core.compiler.ast.parser.PhpProblemIdentifier">
+            namespace="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier">
       </problemIdentifierFactory>
    </extension>
 </plugin>
