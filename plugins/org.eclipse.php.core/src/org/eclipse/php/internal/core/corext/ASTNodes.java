@@ -112,31 +112,6 @@ public class ASTNodes {
 		return false;
 	}
 
-	public static boolean isQuotedDollaredCurlied(Variable variable) {
-		if (variable.isDollared() || variable.getParent() == null) {
-			return false;
-		}
-
-		ASTNode enclosing = null;
-
-		if (variable.getParent().getType() == ASTNode.ARRAY_ACCESS) {
-			enclosing = variable.getParent().getParent();
-			if (enclosing != null && enclosing.getType() == ASTNode.REFLECTION_VARIABLE) {
-				enclosing = enclosing.getParent();
-			} else {
-				enclosing = null;
-			}
-		} else if (variable.getParent().getType() == ASTNode.REFLECTION_VARIABLE) {
-			enclosing = variable.getParent().getParent();
-		}
-
-		if (enclosing == null) {
-			return false;
-		}
-
-		return enclosing.getType() == ASTNode.QUOTE || enclosing.getType() == ASTNode.BACK_TICK_EXPRESSION;
-	}
-
 	public static int getExclusiveEnd(ASTNode node) {
 		return node.getEnd();
 	}

@@ -333,8 +333,8 @@ public class PHPElementConciliator {
 		}
 
 		// check for not variables / or $this / or field declaration
-		if ((!parent.isDollared() && !org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(parent))
-				|| isThisVariable(parent) || parent.getType() == ASTNode.FIELD_DECLARATION) {
+		if ((!parent.isDollared() && !ASTNodes.isQuotedDollaredCurlied(parent)) || isThisVariable(parent)
+				|| parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
 
@@ -362,8 +362,7 @@ public class PHPElementConciliator {
 	}
 
 	private final static boolean isThisVariable(Variable variable) {
-		return ((variable.isDollared()
-				|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+		return ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable))
 				&& variable.getName() instanceof Identifier
 				&& THIS.equalsIgnoreCase(((Identifier) variable.getName()).getName()));
 	}
@@ -406,7 +405,7 @@ public class PHPElementConciliator {
 
 		final Variable variable = (Variable) parent;
 		// if it is not a dollared variable - it is not a global one
-		if ((!variable.isDollared() && !org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+		if ((!variable.isDollared() && !ASTNodes.isQuotedDollaredCurlied(variable))
 				|| variable.getParent().getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
@@ -495,7 +494,7 @@ public class PHPElementConciliator {
 			final Expression variableName = arrayAccess.getName();
 			if (variableName.getType() == ASTNode.VARIABLE) {
 				Variable var = (Variable) variableName;
-				if ((var.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(var))
+				if ((var.isDollared() || ASTNodes.isQuotedDollaredCurlied(var))
 						&& var.getName() instanceof Identifier) {
 					final Identifier id = (Identifier) var.getName();
 					return id.getName().equals("_GLOBALS") //$NON-NLS-1$
@@ -768,8 +767,7 @@ public class PHPElementConciliator {
 
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
-				if (variable.isDollared()
-						|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable)) {
+				if (variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable)) {
 					assert variable.getName().getType() == ASTNode.IDENTIFIER;
 					Identifier identifier = (Identifier) variable.getName();
 					if (identifier.getName().equals(name)) {
@@ -917,9 +915,8 @@ public class PHPElementConciliator {
 				Identifier identifier = (Identifier) node;
 				if (identifier.getParent().getType() == ASTNode.VARIABLE) {
 					Variable variable = (Variable) identifier.getParent();
-					if ((variable.isDollared()
-							|| org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
-							&& isGlobalScope && name.equals(identifier.getName())) {
+					if ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable)) && isGlobalScope
+							&& name.equals(identifier.getName())) {
 						exists = true;
 					}
 				}

@@ -65,7 +65,7 @@ public class LocalVariableIndex extends AbstractVisitor {
 	 */
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
-		if ((variable.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+		if ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable))
 				&& name.getType() == ASTNode.IDENTIFIER) {
 			String variableName = ((Identifier) name).getName();
 			if (!variableName.equalsIgnoreCase("this") //$NON-NLS-1$

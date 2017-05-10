@@ -103,7 +103,7 @@ public class RenameGlobalVariable extends AbstractRename {
 	 * Rename $a on global references: $a = 5;
 	 */
 	public boolean visit(Variable variable) {
-		if ((variable.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(variable))
+		if ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable))
 				&& variable.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) variable.getName();
 			if (oldName.equals(identifier.getName()) && isGlobalScope) {
@@ -139,8 +139,7 @@ public class RenameGlobalVariable extends AbstractRename {
 		final Expression variableName = arrayAccess.getName();
 		if (variableName.getType() == ASTNode.VARIABLE) {
 			final Variable var = (Variable) variableName;
-			if ((var.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(var))
-					&& var.getName() instanceof Identifier) {
+			if ((var.isDollared() || ASTNodes.isQuotedDollaredCurlied(var)) && var.getName() instanceof Identifier) {
 				final Identifier id = (Identifier) var.getName();
 				if (id.getName().equals("GLOBALS") || id.getName().equals("_GLOBALS")) { //$NON-NLS-1$ //$NON-NLS-2$
 					final Expression index = arrayAccess.getIndex();

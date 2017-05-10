@@ -193,8 +193,7 @@ public class AssignToLocalCompletionProposal extends ASTRewriteCorrectionProposa
 
 		@Override
 		public boolean visit(Variable var) {
-			if ((var.isDollared() || org.eclipse.php.internal.core.corext.ASTNodes.isQuotedDollaredCurlied(var))
-					&& var.getName() instanceof Identifier) {
+			if ((var.isDollared() || ASTNodes.isQuotedDollaredCurlied(var)) && var.getName() instanceof Identifier) {
 				String name = ((Identifier) var.getName()).getName();
 				if (name != null && name.equals(search)) {
 					found = true;
