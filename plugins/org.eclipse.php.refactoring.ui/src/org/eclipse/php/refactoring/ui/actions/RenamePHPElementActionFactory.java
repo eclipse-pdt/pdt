@@ -19,7 +19,7 @@ import org.eclipse.ui.IActionDelegate;
  * 
  * @author Roy, 2007
  */
-public class RenamePhpElementActionFactory implements IRenamePHPElementActionFactory {
+public class RenamePHPElementActionFactory implements IRenamePHPElementActionFactory {
 
 	public IActionDelegate createRenameAction() {
 		return new RenamePHPElementActionDelegate();

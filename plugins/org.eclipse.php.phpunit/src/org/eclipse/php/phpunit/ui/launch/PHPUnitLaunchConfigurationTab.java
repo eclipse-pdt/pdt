@@ -237,7 +237,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		createExecutionGroup(comp);
 	}
 
-	private String choosePhpUnitConfig() {
+	private String choosePHPUnitConfig() {
 		String initialPath = fPhpunitConfigPath.getText();
 		IContainer root = fSelectedProject;
 
@@ -500,8 +500,8 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 					testElementFinder.cleareCaches();
 				}
 
-				IScriptProject phpProject = getPhpProject();
-				if (!validatePhpProject(phpProject.getProject())) {
+				IScriptProject phpProject = getPHPProject();
+				if (!validatePHPProject(phpProject.getProject())) {
 					return;
 				}
 
@@ -524,7 +524,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	 * Return the IProject corresponding to the project name in the project name
 	 * text field, or null if the text does not match a project name.
 	 */
-	private IScriptProject getPhpProject() {
+	private IScriptProject getPHPProject() {
 		final String projectName = fProjText.getText().trim();
 		if (projectName.isEmpty()) {
 			return null;
@@ -604,17 +604,17 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	 * or constraining the search for main classes to the specified project.
 	 */
 	private void handleProjectButtonPressed() {
-		final IProject project = choosePhpProject();
+		final IProject project = choosePHPProject();
 		if (project == null) {
 			return;
 		}
 		final String projectName = project.getName();
 		fProjText.setText(projectName);
-		validatePhpProject(project);
+		validatePHPProject(project);
 	}
 
 	private void handleBrowsePHPUnitConfigPressed() {
-		String newPath = choosePhpUnitConfig();
+		String newPath = choosePHPUnitConfig();
 		fPhpunitConfigPath.setText(newPath);
 	}
 
@@ -622,7 +622,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	 * Show a dialog that lists all main classess
 	 */
 	private void handleSearchButtonPressed() {
-		final IScriptProject phpProject = getPhpProject();
+		final IScriptProject phpProject = getPHPProject();
 		if (phpProject == null) {
 			return;
 		}
@@ -672,7 +672,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			} else {
 				fTestFileLabel.setText(StringUtils.EMPTY);
 			}
-			validatePhpProject(typResource.getProject());
+			validatePHPProject(typResource.getProject());
 		}
 	}
 
@@ -680,7 +680,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	 * Realize a Project selection dialog and return the first selected project,
 	 * or null if there was none.
 	 */
-	private IProject choosePhpProject() {
+	private IProject choosePHPProject() {
 		final ILabelProvider labelProvider = new ModelElementLabelProvider(ModelElementLabelProvider.SHOW_DEFAULT);
 		final ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);
 		dialog.setTitle(PHPUnitMessages.PHPUnitLaunchConfigurationTab_Project_Selection);
@@ -852,7 +852,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		setEnableSingleTestGroup(isSingleTestMode);
 		setEnableContainerTestGroup(!isSingleTestMode);
 		if (!isSingleTestMode && StringUtils.isEmpty(fContainerText.getText())) {
-			final IScriptProject phpProject = getPhpProject();
+			final IScriptProject phpProject = getPHPProject();
 			if (phpProject != null) {
 				setContainerElement(phpProject.getProject());
 			}
@@ -867,7 +867,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		setMessage(null);
 
 		if (fSingleTestRadioButton.getSelection()) {
-			IScriptProject scriptProject = getPhpProject();
+			IScriptProject scriptProject = getPHPProject();
 
 			if (scriptProject == null) {
 				testElementFinder.cleareCaches();
@@ -900,7 +900,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			} catch (CoreException e) {
 			}
 
-			if (validatePhpProject(project.getProject())) {
+			if (validatePHPProject(project.getProject())) {
 				final String className = fTestText.getText().trim();
 				if (className.length() == 0) {
 					setErrorMessage(PHPUnitMessages.PHPUnitLaunchConfigurationTab_No_Test);
@@ -931,7 +931,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		}
 	}
 
-	private boolean validatePhpProject(final IProject phpProject) {
+	private boolean validatePHPProject(final IProject phpProject) {
 		try {
 			if (testElementFinder.getPHP_UNIT_SUITE_CACHED() == null
 					&& testElementFinder.getPHP_UNIT_CASE_CACHED() == null) {
