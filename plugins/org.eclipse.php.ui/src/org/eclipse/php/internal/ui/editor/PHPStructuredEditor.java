@@ -969,7 +969,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		 */
 		@Override
 		public String getInformation(final ITextViewer textViewer, final IRegion subject) {
-			return fHoverInfo.toString();
+			return fHoverInfo == null ? null : fHoverInfo.toString();
 		}
 
 		/*

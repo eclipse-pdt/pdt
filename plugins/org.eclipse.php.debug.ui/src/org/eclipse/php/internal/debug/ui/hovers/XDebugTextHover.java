@@ -18,6 +18,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
@@ -65,19 +66,25 @@ public class XDebugTextHover extends PHPDebugTextHover {
 						arrayAccessKey = arrayAccessKey.replace("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					arrayAccessKey = "[" + arrayAccessKey + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-					variable = fetchMember(var, arrayAccessKey);
+					if (var != null) {
+						variable = fetchMember(var, arrayAccessKey);
+					}
 				} else if (!(scalar.getParent() instanceof Include) && scalar.getScalarType() == Scalar.TYPE_STRING) {
 					if (!(scalar.getStringValue().startsWith("\"") && scalar.getStringValue().endsWith("\""))) { //$NON-NLS-1$ //$NON-NLS-2$
 						variable = getVariable(scalar.getStringValue());
-						variable.addFacets(KIND_CONSTANT);
-						variable.addFacets(MOD_PUBLIC);
+						if (variable != null) {
+							variable.addFacets(KIND_CONSTANT);
+							variable.addFacets(MOD_PUBLIC);
+						}
 					}
 				}
 			} else if (node.getParent() instanceof Variable && node.getParent().getParent() instanceof FieldAccess) {
 				String nodeName = ((Identifier) node).getName();
 				String expression = computeExpression(((FieldAccess) node.getParent().getParent()).getDispatcher());
 				DBGpVariable var = getVariable(expression);
-				variable = fetchMember(var, nodeName);
+				if (var != null) {
+					variable = fetchMember(var, nodeName);
+				}
 			} else if (node.getParent() instanceof StaticConstantAccess) {
 				String nodeName = ((Identifier) node).getName();
 				StaticConstantAccess staticAccess = (StaticConstantAccess) node.getParent();
@@ -85,11 +92,13 @@ public class XDebugTextHover extends PHPDebugTextHover {
 				if (className != null) {
 					String name = className + "::" + nodeName; //$NON-NLS-1$
 					variable = getVariable(name);
-					if (nodeName.equals("class")) { //$NON-NLS-1$
-						variable.addFacets(VIRTUAL_CLASS);
-					} else {
-						variable.addFacets(KIND_CONSTANT);
-						variable.addFacets(MOD_PUBLIC);
+					if (variable != null) {
+						if (nodeName.equals("class")) { //$NON-NLS-1$
+							variable.addFacets(VIRTUAL_CLASS);
+						} else {
+							variable.addFacets(KIND_CONSTANT);
+							variable.addFacets(MOD_PUBLIC);
+						}
 					}
 				}
 			} else if (node.getParent() instanceof StaticFieldAccess) {
@@ -116,8 +125,10 @@ public class XDebugTextHover extends PHPDebugTextHover {
 					} else {
 						variable = getVariable(typeName + NamespaceReference.NAMESPACE_DELIMITER + nodeName);
 					}
-					variable.addFacets(KIND_CONSTANT);
-					variable.addFacets(MOD_PUBLIC);
+					if (variable != null) {
+						variable.addFacets(KIND_CONSTANT);
+						variable.addFacets(MOD_PUBLIC);
+					}
 				}
 			} else if (node.getParent() instanceof SingleFieldDeclaration) {
 				IField field = (IField) sourceModule.getElementAt(node.getStart());
@@ -132,8 +143,10 @@ public class XDebugTextHover extends PHPDebugTextHover {
 				String nodeName = ((Identifier) var.getName()).getName();
 				if (!PHPFlags.isStatic(field.getFlags())) {
 					DBGpVariable varThis = getVariable("$this"); //$NON-NLS-1$
-					if (isAnonymous || typeName.equals(varThis.getValue().getValueString())) {
-						variable = fetchMember(varThis, nodeName);
+					if (varThis != null) {
+						if (isAnonymous || typeName.equals(varThis.getValue().getValueString())) {
+							variable = fetchMember(varThis, nodeName);
+						}
 					}
 				} else {
 					variable = getVariable(typeName + "::$" + nodeName); //$NON-NLS-1$
@@ -175,6 +188,7 @@ public class XDebugTextHover extends PHPDebugTextHover {
 		return null;
 	}
 
+	@Nullable
 	protected DBGpVariable getVariable(String expression) {
 		DBGpVariable variable = null;
 		DBGpStackFrame frame = (DBGpStackFrame) getFrame();

@@ -21,7 +21,8 @@ public interface IHoverMessageDecorator {
 	/**
 	 * Gets the hover message and returns the decorated format
 	 * 
-	 * @param editorPart
+	 * @param msg
+	 *            (can be null)
 	 */
 	public String getDecoratedMessage(String msg);
 

@@ -45,7 +45,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 	}
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		return getHoverInfo2(textViewer, hoverRegion).toString();
+		Object hoverInfo = getHoverInfo2(textViewer, hoverRegion);
+		return hoverInfo == null ? null : hoverInfo.toString();
 	}
 
 	public IHoverMessageDecorator getMessageDecorator() {
