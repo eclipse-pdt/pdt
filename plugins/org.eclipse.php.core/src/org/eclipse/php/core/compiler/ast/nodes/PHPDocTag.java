@@ -249,7 +249,7 @@ public class PHPDocTag extends ASTNode {
 	private static int getClassStartIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
-			if (line.charAt(i) != Constants.TYPE_SEPERATOR_CHAR) {
+			if (line.charAt(i) != Constants.TYPE_SEPARATOR_CHAR) {
 				return i;
 			}
 		}
@@ -259,7 +259,7 @@ public class PHPDocTag extends ASTNode {
 	private static int getClassEndIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
-			if (line.charAt(i) == Constants.TYPE_SEPERATOR_CHAR) {
+			if (line.charAt(i) == Constants.TYPE_SEPARATOR_CHAR) {
 				return i;
 			}
 		}

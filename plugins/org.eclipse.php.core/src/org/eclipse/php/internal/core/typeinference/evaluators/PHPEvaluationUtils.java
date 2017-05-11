@@ -152,7 +152,7 @@ public class PHPEvaluationUtils {
 				return Collections.emptyList();
 			}
 			return Arrays.asList(split[0].split("\\" //$NON-NLS-1$
-					+ Constants.TYPE_SEPERATOR_CHAR));
+					+ Constants.TYPE_SEPARATOR_CHAR));
 		}
 		if (Constants.STATIC.equals(split[0])) {
 			split = Arrays.copyOfRange(split, 1, split.length);
@@ -168,7 +168,7 @@ public class PHPEvaluationUtils {
 		}
 		if (substring.equals(name)) {
 			return Arrays.asList(split[0].split("\\" //$NON-NLS-1$
-					+ Constants.TYPE_SEPERATOR_CHAR));
+					+ Constants.TYPE_SEPARATOR_CHAR));
 		}
 		return Collections.emptyList();
 	}

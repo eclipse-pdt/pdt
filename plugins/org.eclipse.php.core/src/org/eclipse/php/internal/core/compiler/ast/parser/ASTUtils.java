@@ -84,7 +84,7 @@ public class ASTUtils {
 			List<TypeReference> typeReferences = new LinkedList<TypeReference>();
 
 			if (types != null) {
-				int pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
+				int pipeIdx = types.indexOf(Constants.TYPE_SEPARATOR_CHAR);
 				while (pipeIdx >= 0) {
 					String typeName = types.substring(0, pipeIdx);
 					int typeEnd = typeStart + typeName.length();
@@ -93,7 +93,7 @@ public class ASTUtils {
 					}
 					types = types.substring(pipeIdx + 1);
 					typeStart += pipeIdx + 1;
-					pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
+					pipeIdx = types.indexOf(Constants.TYPE_SEPARATOR_CHAR);
 				}
 				String typeName = types;
 				int typeEnd = typeStart + typeName.length();

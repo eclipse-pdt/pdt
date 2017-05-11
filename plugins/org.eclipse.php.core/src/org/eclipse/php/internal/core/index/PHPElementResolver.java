@@ -208,7 +208,7 @@ public class PHPElementResolver implements IElementResolver {
 			if (info != null) {
 				String types = info.get("v"); //$NON-NLS-1$
 				if (types != null) {
-					types = types.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
+					types = types.replace(Constants.DOT, Constants.TYPE_SEPARATOR_CHAR);
 					return types;
 				}
 			}
@@ -248,7 +248,7 @@ public class PHPElementResolver implements IElementResolver {
 							type = null;
 						}
 						if (type != null) {
-							type = type.replace(Constants.DOT, Constants.TYPE_SEPERATOR_CHAR);
+							type = type.replace(Constants.DOT, Constants.TYPE_SEPARATOR_CHAR);
 						}
 						String param = values[1];
 
