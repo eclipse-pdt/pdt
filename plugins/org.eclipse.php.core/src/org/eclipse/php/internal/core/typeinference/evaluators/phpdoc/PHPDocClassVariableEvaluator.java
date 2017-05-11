@@ -92,7 +92,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		if (fieldType == null) {
 			return;
 		}
-		String[] typeNames = StringUtils.split(fieldType, Constants.TYPE_SEPERATOR_CHAR);
+		String[] typeNames = StringUtils.split(fieldType, Constants.TYPE_SEPARATOR_CHAR);
 		IType currentNamespace = PHPModelUtils.getCurrentNamespace(typeField);
 		IModelElement space = currentNamespace != null ? currentNamespace : typeField.getSourceModule();
 		evaluated.addAll(Arrays.asList(

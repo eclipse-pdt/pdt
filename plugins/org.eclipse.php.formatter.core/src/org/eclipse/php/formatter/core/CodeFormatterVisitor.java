@@ -1156,7 +1156,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 								boolean hasRefs = phpDocTag.getAllReferencesWithOrigOrder().size() != 0;
 								int nbLines = words.length;
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938
-								if (!hasRefs && nbLines > 1) {
+								if (!hasRefs && nbLines >= 1) {
 									nbLines--;
 								}
 								// insert several lines
@@ -1726,21 +1726,30 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (insertTag && hasDesc) {
 					insertNewLineForPHPDoc();
 				}
-				if (this.preferences.comment_indent_root_tags) {
-					insertSpaces(tagLength);
-				}
 
-				insertSpaces(1);
-				insertSpace = false;
+				// we do no extra indentation (after a tag reference) when
+				// inserting a tag (i.e. the tag name and the tag reference
+				// parts) having no tag description (because no newline was
+				// inserted after the tag reference)
+				boolean doIndent = !(insertTag && !hasDesc);
 
-				newLineOfComment = true;
-				if (this.preferences.comment_indent_root_tags
-						&& this.preferences.comment_indent_parameter_description) {
-					for (int i = 0; i < preferences.indentationSize; i++) {
-						appendToBuffer(preferences.indentationChar);
-						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+				if (doIndent) {
+					if (this.preferences.comment_indent_root_tags) {
+						insertSpaces(tagLength);
 					}
 
+					insertSpaces(1);
+					insertSpace = false;
+
+					newLineOfComment = true;
+					if (this.preferences.comment_indent_root_tags
+							&& this.preferences.comment_indent_parameter_description) {
+						for (int i = 0; i < preferences.indentationSize; i++) {
+							appendToBuffer(preferences.indentationChar);
+							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+						}
+
+					}
 				}
 			} else if (!insertTag && this.preferences.comment_indent_root_tags) {
 				insertSpaces(tagLength);
@@ -1761,7 +1770,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < reference.length; i++) {
 			if (i > 0 && reference[i - 1] instanceof TypeReference && reference[i] instanceof TypeReference) {
-				sb.append(Constants.TYPE_SEPERATOR_CHAR).append(reference[i].getName());
+				sb.append(Constants.TYPE_SEPARATOR_CHAR).append(reference[i].getName());
 			} else {
 				sb.append(" ").append(reference[i].getName()); //$NON-NLS-1$
 			}
