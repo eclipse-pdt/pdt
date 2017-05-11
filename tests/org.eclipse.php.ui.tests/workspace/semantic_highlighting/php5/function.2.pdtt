@@ -1,0 +1,21 @@
+--TEST--
+Bug 516476 - Function highlighter should not highlight php reserved keywords
+--FILE--
+<?php
+empty($a);
+eval($a);
+exit(0);
+isset($a);
+print($a);
+unset($a);
+use('filename');
+Empty($a);
+Eval($a);
+Exit(0);
+Isset($a);
+Print($a);
+Unset($a);
+Use('filename');
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.FunctionHighlighting:

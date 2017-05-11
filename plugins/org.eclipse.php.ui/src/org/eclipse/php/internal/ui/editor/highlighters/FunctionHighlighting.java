@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006, 2017 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.php.core.ast.nodes.*;
@@ -17,6 +18,18 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
 public class FunctionHighlighting extends AbstractSemanticHighlighting {
+	private static final List<String> NAME_SKIP = new ArrayList<>();
+
+	static {
+		// These are functions but also PHP reserved keywords
+		NAME_SKIP.add("empty"); //$NON-NLS-1$
+		NAME_SKIP.add("eval"); //$NON-NLS-1$
+		NAME_SKIP.add("exit"); //$NON-NLS-1$
+		NAME_SKIP.add("isset"); //$NON-NLS-1$
+		NAME_SKIP.add("print"); //$NON-NLS-1$
+		NAME_SKIP.add("unset"); //$NON-NLS-1$
+		NAME_SKIP.add("use"); //$NON-NLS-1$
+	}
 
 	protected class FunctionApply extends AbstractSemanticApply {
 
@@ -50,6 +63,11 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 				if (segments.size() > 0) {
 					Identifier segment = segments.get(segments.size() - 1);
 					highlight(segment);
+				}
+			} else if (functionName instanceof Identifier) {
+				String name = ((Identifier) functionName).getName();
+				if (!NAME_SKIP.contains(name.toLowerCase())) {
+					highlight(functionName);
 				}
 			} else {
 				highlight(functionName);
