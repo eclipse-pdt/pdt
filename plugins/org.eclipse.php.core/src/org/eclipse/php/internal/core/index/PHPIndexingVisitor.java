@@ -202,7 +202,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 					} else if (tag.getTagKind() == TagKind.VAR) {
 						if (tag.getTypeReferences().size() > 0) {
 							String typeNames = PHPModelUtils.appendTypeReferenceNames(tag.getTypeReferences());
-							typeNames = typeNames.replace(Constants.TYPE_SEPERATOR_CHAR, Constants.DOT);
+							typeNames = typeNames.replace(Constants.TYPE_SEPARATOR_CHAR, Constants.DOT);
 
 							info.put("v", typeNames); //$NON-NLS-1$
 						}
@@ -465,7 +465,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 			for (PHPDocTag tag : docBlock.getTags(TagKind.PARAM)) {
 				if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(paramName)) {
 					String typeNames = tag.getSingleTypeReference().getName();
-					result = typeNames.replace(Constants.TYPE_SEPERATOR_CHAR, Constants.DOT);
+					result = typeNames.replace(Constants.TYPE_SEPARATOR_CHAR, Constants.DOT);
 					break;
 				}
 			}

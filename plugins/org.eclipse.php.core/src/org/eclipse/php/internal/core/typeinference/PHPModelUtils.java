@@ -95,7 +95,7 @@ public class PHPModelUtils {
 		sb.append(references.get(0).getName());
 		for (int i = 1; i < references.size(); i++) {
 			TypeReference reference = references.get(i);
-			sb.append(Constants.TYPE_SEPERATOR_CHAR);
+			sb.append(Constants.TYPE_SEPARATOR_CHAR);
 			sb.append(reference.getName());
 		}
 

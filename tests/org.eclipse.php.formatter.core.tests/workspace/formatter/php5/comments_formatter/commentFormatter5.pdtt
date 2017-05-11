@@ -21,8 +21,7 @@ $e = array(array('level' => 'INFO'),
 array('level' => 'INFO'));
 /**
  *
- * @param            
- *
+ * @param
  */
 function foo (int $a, int $b)
 {}

@@ -657,7 +657,7 @@ public class CodeGeneration {
 			if (returnType != null) {
 				if (returnType.isNullable()) {
 					StringBuilder returnTypeBuffer = new StringBuilder();
-					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR)
+					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPARATOR_CHAR)
 							.append(PHPSimpleTypes.NULL.getTypeName());
 					retType = returnTypeBuffer.toString();
 				} else {
@@ -672,7 +672,7 @@ public class CodeGeneration {
 			if (returnType != null) {
 				if (returnType.isNullable()) {
 					StringBuilder returnTypeBuffer = new StringBuilder();
-					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR)
+					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPARATOR_CHAR)
 							.append(PHPSimpleTypes.NULL.getTypeName());
 					retType = returnTypeBuffer.toString();
 				} else {
@@ -758,11 +758,11 @@ public class CodeGeneration {
 							// even if looking for returnType.isUnknown() is not
 							// the same as looking for returnType.isNullType()
 							returnTypeBuffer.append(PHPSimpleTypes.NULL.getTypeName())
-									.append(Constants.TYPE_SEPERATOR_CHAR);
+									.append(Constants.TYPE_SEPARATOR_CHAR);
 						} else if (returnType.isAmbiguous()) {
-							returnTypeBuffer.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
+							returnTypeBuffer.append("Ambiguous").append(Constants.TYPE_SEPARATOR_CHAR); //$NON-NLS-1$
 						} else if (!appendAllPossibleTypes(returnType.getEvaluatedType(), returnTypeBuffer)) {
-							returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR);
+							returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPARATOR_CHAR);
 						}
 					}
 					if (returnTypeBuffer.length() > 0) {
@@ -861,7 +861,7 @@ public class CodeGeneration {
 		List<String> foundTypes = new ArrayList<>();
 		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
-				buffer.append(foundType).append(Constants.TYPE_SEPERATOR_CHAR);
+				buffer.append(foundType).append(Constants.TYPE_SEPARATOR_CHAR);
 			}
 			return true;
 		}

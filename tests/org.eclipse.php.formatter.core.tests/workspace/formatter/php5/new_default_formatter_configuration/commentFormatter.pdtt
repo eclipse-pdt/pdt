@@ -49,7 +49,7 @@ function foo4($foo)
  * Generates .foo files, .foo2 files and much more...
  * This sentence should go on second line.
  *
- * @param string $foo        	
+ * @param string $foo
  */
 function foo($foo) {
 }
@@ -57,7 +57,7 @@ function foo($foo) {
  * Generates .foo files, .foo2 files and much more ...
  * This sentence should go on second line.
  *
- * @param string $foo        	
+ * @param string $foo
  */
 function foo2($foo) {
 }
@@ -65,7 +65,7 @@ function foo2($foo) {
  * Generates .foo files, .foo2 files and much more...
  * This sentence should stay on second line.
  *
- * @param string $foo        	
+ * @param string $foo
  */
 function foo3($foo) {
 }
@@ -73,7 +73,7 @@ function foo3($foo) {
  * Generates .foo files, .foo2 files and much more ...
  * This sentence should stay on second line.
  *
- * @param string $foo        	
+ * @param string $foo
  */
 function foo4($foo) {
 }

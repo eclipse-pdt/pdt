@@ -46,7 +46,7 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
 		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
-		while (!Character.isWhitespace(getChar(prefixEnd)) && getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
+		while (!Character.isWhitespace(getChar(prefixEnd)) && getChar(prefixEnd) != Constants.TYPE_SEPARATOR_CHAR) {
 			++prefixEnd;
 		}
 		return prefixEnd;
