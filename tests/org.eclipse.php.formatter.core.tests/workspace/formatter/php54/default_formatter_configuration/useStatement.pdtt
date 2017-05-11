@@ -1,0 +1,10 @@
+--TEST--
+Bug 516496 - Code formatter adds unwanted parentheses for some use() statements
+--FILE--
+<?php
+use('filename');
+?>
+--EXPECT--
+<?php
+use ( 'filename' );
+?>

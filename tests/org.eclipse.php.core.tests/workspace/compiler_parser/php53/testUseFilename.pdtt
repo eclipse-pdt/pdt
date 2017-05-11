@@ -8,8 +8,8 @@ Test Use Filename
 		<PHPCallExpression start="6" end="29">
 			<SimpleReference start="6" end="9" name="use">
 			</SimpleReference>
-			<PHPCallArgumentsList start="9" end="29">
-				<Scalar start="9" end="29" type="string" value="&quot;c:\data\info.txt&quot;">
+			<PHPCallArgumentsList start="10" end="28">
+				<Scalar start="10" end="28" type="string" value="&quot;c:\data\info.txt&quot;">
 				</Scalar>
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
