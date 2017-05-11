@@ -143,7 +143,7 @@ public class PHPEvaluationUtils {
 	 * @return the types of the given variable
 	 */
 	public static Collection<String> getTypeBinding(String name, PHPDocTag docTag) {
-		String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
+		String[] split = MagicMemberUtil.WHITESPACE_SEPARATOR.split(docTag.getValue().trim());
 		if (split.length < 2) {
 			return Collections.emptyList();
 		}

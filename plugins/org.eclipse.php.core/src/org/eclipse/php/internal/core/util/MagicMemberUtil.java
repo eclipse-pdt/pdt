@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 
 public class MagicMemberUtil {
-	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\p{javaWhitespace}+"); //$NON-NLS-1$
+	public static final Pattern WHITESPACE_SEPARATOR = Pattern.compile("\\p{javaWhitespace}+"); //$NON-NLS-1$
 	public static final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
 
 	public static class MagicMember {
@@ -53,7 +53,7 @@ public class MagicMemberUtil {
 
 	public static MagicMethod getMagicMethod(String docValue) {
 		docValue = docValue.trim();
-		final String[] split = WHITESPACE_SEPERATOR.split(docValue);
+		final String[] split = WHITESPACE_SEPARATOR.split(docValue);
 		if (split.length < 2) {
 			return null;
 		}
@@ -79,7 +79,7 @@ public class MagicMemberUtil {
 	 */
 	public static MagicMethod getMagicMethod2(String docValue) {
 		docValue = docValue.trim();
-		final String[] split = WHITESPACE_SEPERATOR.split(docValue);
+		final String[] split = WHITESPACE_SEPARATOR.split(docValue);
 		if (split.length < 2) {
 			return null;
 		}
@@ -116,7 +116,7 @@ public class MagicMemberUtil {
 						value = param.substring(equalIndex + 1).trim();
 						param = param.substring(0, equalIndex).trim();
 					}
-					String[] paramPair = WHITESPACE_SEPERATOR.split(param.trim());
+					String[] paramPair = WHITESPACE_SEPARATOR.split(param.trim());
 					if (paramPair.length == 1) {
 						paramName[i] = paramPair[0];
 					} else if (paramPair.length == 2) {

@@ -993,7 +993,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
 					commentWords = Arrays.asList(
-							MagicMemberUtil.WHITESPACE_SEPERATOR.split(commentContent.substring(commentTokLen).trim()));
+							MagicMemberUtil.WHITESPACE_SEPARATOR.split(commentContent.substring(commentTokLen).trim()));
 					commentWords = removeEmptyString(commentWords);
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();
@@ -1156,7 +1156,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 								boolean hasRefs = phpDocTag.getAllReferencesWithOrigOrder().size() != 0;
 								int nbLines = words.length;
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938
-								if (!hasRefs && nbLines > 1) {
+								if (!hasRefs && nbLines >= 1) {
 									nbLines--;
 								}
 								// insert several lines
@@ -1660,7 +1660,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private void initCommentWords() {
 		String commentContent = join(commentWords, " "); //$NON-NLS-1$
 		commentContent = commentContent.trim();
-		commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(commentContent));
+		commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPARATOR.split(commentContent));
 		commentWords = removeEmptyString(commentWords);
 	}
 
@@ -1726,7 +1726,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (insertTag && hasDesc) {
 					insertNewLineForPHPDoc();
 				}
-				if (this.preferences.comment_indent_root_tags) {
+				boolean doIndent = !(insertTag && !hasDesc);
+				if (doIndent && this.preferences.comment_indent_root_tags) {
 					insertSpaces(tagLength);
 				}
 
@@ -1734,7 +1735,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				insertSpace = false;
 
 				newLineOfComment = true;
-				if (this.preferences.comment_indent_root_tags
+				if (doIndent && this.preferences.comment_indent_root_tags
 						&& this.preferences.comment_indent_parameter_description) {
 					for (int i = 0; i < preferences.indentationSize; i++) {
 						appendToBuffer(preferences.indentationChar);

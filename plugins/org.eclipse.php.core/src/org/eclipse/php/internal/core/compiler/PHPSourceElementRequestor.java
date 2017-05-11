@@ -677,7 +677,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			IPHPDocAwareDeclaration declaration = (IPHPDocAwareDeclaration) type;
 			final PHPDocBlock doc = declaration.getPHPDoc();
 			if (doc != null) {
-				Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPERATOR;
+				Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPARATOR;
 				final PHPDocTag[] tags = doc.getTags();
 				for (PHPDocTag docTag : tags) {
 					final TagKind tagKind = docTag.getTagKind();

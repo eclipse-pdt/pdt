@@ -192,7 +192,7 @@ public class PHPDocTag extends ASTNode {
 		if (wordsToSkip == 0) {
 			return text;
 		}
-		String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(text);
+		String[] split = MagicMemberUtil.WHITESPACE_SEPARATOR.split(text);
 		for (int i = 0; i < wordsToSkip; i++) {
 			int index = text.indexOf(split[i]);
 			text = text.substring(split[i].length() + index);
@@ -210,7 +210,7 @@ public class PHPDocTag extends ASTNode {
 				if (StringUtils.isBlank(text)) {
 					continue;
 				}
-				List<String> commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(text.trim()));
+				List<String> commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPARATOR.split(text.trim()));
 				commentWords = removeEmptyString(commentWords);
 				if (commentWords.size() <= wordsToSkip) {
 					wordsToSkip = wordsToSkip - commentWords.size();

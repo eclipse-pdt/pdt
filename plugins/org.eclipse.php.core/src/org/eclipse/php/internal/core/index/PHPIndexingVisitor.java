@@ -613,7 +613,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 					if (tagKind == TagKind.PROPERTY || tagKind == TagKind.PROPERTY_READ
 							|| tagKind == TagKind.PROPERTY_WRITE) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
-						final String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
+						final String[] split = MagicMemberUtil.WHITESPACE_SEPARATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
 							break;
 						}
@@ -636,7 +636,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 
 					} else if (tagKind == TagKind.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
-						String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
+						String[] split = MagicMemberUtil.WHITESPACE_SEPARATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
 							break;
 						}

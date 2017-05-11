@@ -706,7 +706,7 @@ public class PHPDocumentationContentAccess {
 			return null;
 		}
 
-		Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPERATOR;
+		Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPARATOR;
 		final PHPDocTag[] tags = doc.getTags();
 		for (PHPDocTag docTag : tags) {
 			final TagKind tagKind = docTag.getTagKind();

@@ -679,7 +679,7 @@ public class Strings {
 	 * @return the trimmed string
 	 */
 	public static String removeDuplicateWhitespaces(String string) {
-		Pattern pattern = MagicMemberUtil.WHITESPACE_SEPERATOR;
+		Pattern pattern = MagicMemberUtil.WHITESPACE_SEPARATOR;
 		Matcher matcher = pattern.matcher(string);
 		matcher.find();
 		return matcher.replaceAll(" "); //$NON-NLS-1$
