@@ -497,6 +497,10 @@ public class LibraryFolderManager {
 	private void collectAllSubfolders(IFolder folder, Collection<IFolder> result) throws CoreException {
 		result.add(folder);
 
+		if (!folder.exists()) {
+			return;
+		}
+
 		for (IResource child : folder.members()) {
 			if (child.getType() == IResource.FOLDER) {
 				collectAllSubfolders((IFolder) child, result);
