@@ -3575,13 +3575,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		Expression[] parameters = new Expression[parametersList.size()];
 		parameters = parametersList.toArray(parameters);
 
-		boolean hasParenthsis = parameters[0].getType() == ASTNode.PARENTHESIS_EXPRESSION; // print
+		boolean hasParenthesis = parameters[0].getType() == ASTNode.PARENTHESIS_EXPRESSION; // print
 		// always
 		// have
 		// one
 		// parameter.
 
-		if (hasParenthsis) {
+		if (hasParenthesis) {
 			innerVisit(functionInvocation, false);
 			return;
 		}
