@@ -1244,7 +1244,7 @@ T_CONSTANT_ENCAPSED_STRING:scalar
 
 | T_OPEN_PARENTHESE:s T_CONSTANT_ENCAPSED_STRING:scalar T_CLOSE_PARENTHESE:e
 {:
-	RESULT = new Scalar(sleft, eright, parser.ast, scalar, Scalar.TYPE_STRING);
+	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_STRING);
 :}
 ;
 
