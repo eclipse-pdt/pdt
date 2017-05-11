@@ -73,10 +73,10 @@ public class PHPProjectConfigurator implements ProjectConfigurator {
 
 			if (project.getFile(COMPOSER_JSON).exists()) {
 				IFolder vendorFolder = project.getFolder(VENDOR_DIRECTORY);
-				if (vendorFolder.exists()) {
-					LibraryFolderManager.getInstance().useAsLibraryFolder(new IFolder[] { vendorFolder },
-							SubMonitor.convert(monitor, 1));
-				}
+				// mark as library folder always because 'vendor' may not exist
+				// yet
+				LibraryFolderManager.getInstance().useAsLibraryFolder(new IFolder[] { vendorFolder },
+						SubMonitor.convert(monitor, 1));
 			}
 		} catch (OperationCanceledException | InterruptedException | CoreException e) {
 			Logger.logException(e);
