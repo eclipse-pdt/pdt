@@ -28,9 +28,9 @@ public interface IPHPKeywordsInitializer {
 	public static final String COLON_SUFFIX = ":"; //$NON-NLS-1$
 	public static final String WHITESPACE_COLON_SUFFIX = " :"; //$NON-NLS-1$
 	public static final String SEMICOLON_SUFFIX = ";"; //$NON-NLS-1$
-	public static final String WHITESPACE_PARENTESES_SUFFIX = " ()"; //$NON-NLS-1$
+	public static final String WHITESPACE_PARENTHESES_SUFFIX = " ()"; //$NON-NLS-1$
 	public static final String WHITESPACE_SUFFIX = " "; //$NON-NLS-1$
-	public static final String PARENTESES_SUFFIX = "()"; //$NON-NLS-1$
+	public static final String PARENTHESES_SUFFIX = "()"; //$NON-NLS-1$
 
 	/**
 	 * Initialize the given list with keywords data compatible with this PHP
