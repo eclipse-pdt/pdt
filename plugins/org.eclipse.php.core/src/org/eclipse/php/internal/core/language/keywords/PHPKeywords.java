@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,15 +110,23 @@ public class PHPKeywords {
 
 	private static final Map<PHPVersion, PHPKeywords> instances = new HashMap<PHPVersion, PHPKeywords>();
 	private Collection<KeywordData> keywordData;
+	private Collection<String> keywordNames;
 
 	private PHPKeywords(IPHPKeywordsInitializer keywordsInitializer) {
 		keywordData = new TreeSet<KeywordData>();
+		keywordNames = new TreeSet<>();
 		keywordsInitializer.initialize(keywordData);
 		keywordsInitializer.initializeSpecific(keywordData);
+		for (KeywordData kd : keywordData) {
+			keywordNames.add(kd.name);
+		}
 	}
 
 	public static PHPKeywords getInstance(IProject project) {
-		PHPVersion version = ProjectOptions.getPHPVersion(project);
+		return getInstance(ProjectOptions.getPHPVersion(project));
+	}
+
+	public static PHPKeywords getInstance(PHPVersion version) {
 		synchronized (instances) {
 			if (!instances.containsKey(version)) {
 				PHPKeywords instance;
@@ -148,6 +156,15 @@ public class PHPKeywords {
 			}
 		}
 		return instances.get(version);
+	}
+
+	/**
+	 * Returns the list of the keyword names
+	 * 
+	 * @return keyword names list
+	 */
+	public Collection<String> getKeywordNames() {
+		return keywordNames;
 	}
 
 	/**

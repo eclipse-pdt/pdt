@@ -10,27 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
 public class FunctionHighlighting extends AbstractSemanticHighlighting {
-	private static final List<String> NAME_SKIP = new ArrayList<>();
-
-	static {
-		// These are functions but also PHP reserved keywords:
-		NAME_SKIP.add("empty"); //$NON-NLS-1$
-		NAME_SKIP.add("eval"); //$NON-NLS-1$
-		NAME_SKIP.add("exit"); //$NON-NLS-1$
-		NAME_SKIP.add("isset"); //$NON-NLS-1$
-		NAME_SKIP.add("print"); //$NON-NLS-1$
-		NAME_SKIP.add("unset"); //$NON-NLS-1$
-		NAME_SKIP.add("use"); //$NON-NLS-1$
-	}
-
 	protected class FunctionApply extends AbstractSemanticApply {
 
 		/**
@@ -65,8 +52,9 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 					highlight(segment);
 				}
 			} else if (functionName instanceof Identifier) {
+				PHPKeywords keywords = PHPKeywords.getInstance(functionName.getAST().apiLevel());
 				String name = ((Identifier) functionName).getName();
-				if (!NAME_SKIP.contains(name.toLowerCase())) {
+				if (!keywords.getKeywordNames().contains(name.toLowerCase())) {
 					highlight(functionName);
 				}
 			} else {
