@@ -384,7 +384,7 @@ public final class ImportRewriteAnalyzer {
 
 	private boolean isImplicitImport(NamespaceDeclaration namespace, String qualifier) {
 		String packageName;
-		if (namespace == null) {
+		if (namespace == null || namespace.getName() == null) {
 			packageName = "global namespace"; //$NON-NLS-1$
 		} else {
 			packageName = namespace.getName().getName();
@@ -658,9 +658,15 @@ public final class ImportRewriteAnalyzer {
 	private int getNamespaceNameEndPos(Program root, NamespaceDeclaration namespace) {
 		int flags = this.flags.get(namespace);
 		if (namespace != null) {
-			NamespaceName packDecl = namespace.getName();
+			int offset = 0;
+			if (namespace.getName() == null) {
+				offset = namespace.getBody().getStart();
+			} else {
+				NamespaceName packDecl = namespace.getName();
+				offset = packDecl.getStart() + packDecl.getLength();
+			}
 			int afterPackageStatementPos = -1;
-			int lineNumber = root.getLineNumber(packDecl.getStart() + packDecl.getLength());
+			int lineNumber = root.getLineNumber(offset);
 			if (lineNumber >= 0) {
 				int lineAfterPackage = lineNumber + 1;
 				afterPackageStatementPos = getPostion(root, lineAfterPackage);
@@ -668,7 +674,7 @@ public final class ImportRewriteAnalyzer {
 			if (afterPackageStatementPos < 0) {
 				flags |= F_NEEDS_LEADING_DELIM;
 				this.flags.put(namespace, flags);
-				return packDecl.getStart() + packDecl.getLength();
+				return offset;
 			}
 			int firstStatementPos = getFirstStatementBeginPos(root, namespace);
 			if (firstStatementPos != -1 && firstStatementPos <= afterPackageStatementPos) {

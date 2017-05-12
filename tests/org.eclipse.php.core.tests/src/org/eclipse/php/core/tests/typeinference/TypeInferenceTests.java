@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -38,7 +39,6 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.junit.After;
@@ -61,15 +61,18 @@ public class TypeInferenceTests {
 	static {
 
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/typeinference/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/typeinference/php5" });
-		TESTS.put(PHPVersion.PHP5_4,
-				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php54",
-				"/workspace/typeinference/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php54",
-				"/workspace/typeinference/php55", "/workspace/typeinference/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php54",
-				"/workspace/typeinference/php55", "/workspace/typeinference/php56" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
+		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
 	};
 
 	private static int counter = 0;
