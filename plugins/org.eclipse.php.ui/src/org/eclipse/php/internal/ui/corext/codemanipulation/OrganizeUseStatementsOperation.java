@@ -484,7 +484,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 								ranges.get(namespace));
 						if (chosen == null) {
 							// cancel pressed by the user
-							throw new OperationCanceledException();
+							return null;
 						}
 						for (int i = 0; i < chosen.length; i++) {
 							TypeNameMatch typeInfo = chosen[i];

@@ -230,7 +230,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		TypeReferenceInfo tri = info.getTypeReferenceInfo();
 		String name = tri.getTypeName();
 		String currentNamespaceName;
-		if (currentNamespace == null) {
+		if (currentNamespace == null || currentNamespace.isGlobal()) {
 			currentNamespaceName = ""; //$NON-NLS-1$
 		} else {
 			currentNamespaceName = currentNamespace.getName();
@@ -317,7 +317,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	private void checkDuplicateTypeDeclaration(TypeDeclaration node) {
 		String name = node.getName();
 		String currentNamespaceName;
-		if (currentNamespace == null) {
+		if (currentNamespace == null || currentNamespace.isGlobal()) {
 			currentNamespaceName = ""; //$NON-NLS-1$
 		} else {
 			currentNamespaceName = currentNamespace.getName();
@@ -589,7 +589,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				String key = getFirstSegmentOfTypeName(fullyQualifiedName).toLowerCase();
 				if (usePartInfo.containsKey(key)) {
 					fullyQualifiedName = usePartInfo.get(key).getFullyQualifiedName();
-				} else if (currentNamespace != null) {
+				} else if (currentNamespace != null && !currentNamespace.isGlobal()) {
 					fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(currentNamespace.getName(),
 							fullyQualifiedName);
 				}

@@ -1,0 +1,38 @@
+--TEST--
+Test organize imports action
+--FILE--
+<?php
+namespace {
+
+    class Test {
+    }
+    new Test();
+
+}
+
+namespace name {
+
+    class Test {
+    }
+    new Test();
+
+}
+?>
+--EXPECT--
+<?php
+namespace {
+
+    class Test {
+    }
+    new Test();
+
+}
+
+namespace name {
+
+    class Test {
+    }
+    new Test();
+
+}
+?>

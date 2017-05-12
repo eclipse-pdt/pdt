@@ -1,0 +1,20 @@
+--TEST--
+Should complete namespace fully qualified name
+--FILE--
+<?php
+namespace {
+
+    class Test {
+    }
+}
+
+namespace name {
+
+    class Test {
+    }
+    $test = new Test();
+    testBracketedNamespace2($test);
+
+}
+--EXPECT--
+\name\Test

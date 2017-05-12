@@ -1,0 +1,20 @@
+--TEST--
+Test class instantiation error check
+--FILE--
+<?php
+namespace {
+
+    class Test {
+    }
+    new Test();
+
+}
+
+namespace name {
+
+    class Test {
+    }
+
+}
+?>
+--EXPECT--
