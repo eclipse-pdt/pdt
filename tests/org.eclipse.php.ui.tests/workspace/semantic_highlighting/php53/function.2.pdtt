@@ -19,5 +19,3 @@ Use('filename');
 ?>
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.FunctionHighlighting:
-highlight(use)
-highlight(Use)

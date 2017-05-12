@@ -25,7 +25,7 @@ public class KeywordInitializerPHP_5 extends KeywordInitializerPHP_4 {
 
 		list.add(new KeywordData("abstract", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
-		list.add(new KeywordData("catch", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$
+		list.add(new KeywordData("catch", WHITESPACE_PARENTHESES_SUFFIX, 2)); //$NON-NLS-1$
 		list.add(new KeywordData("clone", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("final", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
