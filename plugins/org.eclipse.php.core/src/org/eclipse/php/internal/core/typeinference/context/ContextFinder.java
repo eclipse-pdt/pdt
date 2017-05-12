@@ -33,6 +33,7 @@ import org.eclipse.php.core.compiler.ast.nodes.AnonymousClassDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.TraitDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPNamespaceType;
 import org.eclipse.php.internal.core.typeinference.PHPThisClassType;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
@@ -81,11 +82,18 @@ public abstract class ContextFinder extends ASTVisitor {
 	public boolean visit(TypeDeclaration node) throws Exception {
 		if (node instanceof NamespaceDeclaration) {
 			FileContext fileContext = (FileContext) contextStack.peek();
+			PHPNamespaceType instanceType;
 			if (((NamespaceDeclaration) node).isGlobal()) {
-				fileContext.setNamespace(null);
+				instanceType = new PHPNamespaceType(null);
 			} else {
-				fileContext.setNamespace(node.getName());
+				instanceType = new PHPNamespaceType(node.getName());
 			}
+			contextStack.push(new NamespaceContext(fileContext, instanceType));
+			boolean visitGeneral = visitGeneral(node);
+			if (!visitGeneral) {
+				contextStack.pop();
+			}
+			return visitGeneral;
 		} else {
 			ISourceModuleContext parentContext = (ISourceModuleContext) contextStack.peek();
 			PHPClassType instanceType;
@@ -123,8 +131,6 @@ public abstract class ContextFinder extends ASTVisitor {
 			}
 			return visitGeneral;
 		}
-
-		return visitGeneral(node);
 	}
 
 	public boolean visit(AnonymousClassDeclaration node) throws Exception {
@@ -173,9 +179,7 @@ public abstract class ContextFinder extends ASTVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration node) throws Exception {
-		if (!(node instanceof NamespaceDeclaration)) {
-			contextStack.pop();
-		}
+		contextStack.pop();
 		endvisitGeneral(node);
 		return true;
 	}

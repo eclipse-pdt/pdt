@@ -1,0 +1,38 @@
+--TEST--
+Bug 516584 - Wrong type inference and syntax check in bracketed namespace
+--FILE--
+<?php
+namespace {
+
+    class Test {
+    }
+    new Test();
+
+}
+
+namespace name {
+
+    class Test {
+    }
+    new Test();
+
+}
+?>
+--EXPECT--
+<?php
+namespace {
+
+    class Test {
+    }
+    new Test();
+
+}
+
+namespace name {
+
+    class Test {
+    }
+    new Test();
+
+}
+?>
