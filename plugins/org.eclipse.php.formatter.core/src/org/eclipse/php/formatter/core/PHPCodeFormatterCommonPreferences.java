@@ -17,13 +17,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
-import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
 import org.eclipse.php.internal.formatter.core.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrferences {
+public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPreferences {
 
 	@Override
 	public int getIndentationWrappedLineSize(IDocument document) {

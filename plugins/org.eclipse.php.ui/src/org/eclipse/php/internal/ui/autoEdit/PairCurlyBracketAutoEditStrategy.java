@@ -270,8 +270,8 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			// if there is a } then there is a problem with
 			// curlyCloseInsertionStrategy calc
 			// and we need to add manually another indentation.
-			int indentationSize = FormatterUtils.getFormatterCommonPrferences().getIndentationSize(document);
-			char indentationChar = FormatterUtils.getFormatterCommonPrferences().getIndentationChar(document);
+			int indentationSize = FormatterUtils.getFormatterCommonPreferences().getIndentationSize(document);
+			char indentationChar = FormatterUtils.getFormatterCommonPreferences().getIndentationChar(document);
 			for (int i = 0; i < indentationSize; i++) {
 				buffer.append(indentationChar);
 				whiteSpacesAdded++;

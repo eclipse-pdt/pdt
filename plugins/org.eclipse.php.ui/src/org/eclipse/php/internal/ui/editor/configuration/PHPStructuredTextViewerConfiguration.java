@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.FormatterUtils;
-import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
@@ -488,9 +488,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		Vector<String> vector = new Vector<>();
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
-		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
-		char indentCharPref = formatterCommonPrferences.getIndentationChar(sourceViewer.getDocument());
-		int indentationSize = formatterCommonPrferences.getIndentationSize(sourceViewer.getDocument());
+		IFormatterCommonPreferences formatterCommonPreferences = FormatterUtils.getFormatterCommonPreferences();
+		char indentCharPref = formatterCommonPreferences.getIndentationChar(sourceViewer.getDocument());
+		int indentationSize = formatterCommonPreferences.getIndentationSize(sourceViewer.getDocument());
 
 		for (int i = 0; i <= indentationSize; i++) {
 			StringBuilder prefix = new StringBuilder();
@@ -739,8 +739,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (document == null) {
 				return super.getTabWidth(sourceViewer);
 			}
-			IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
-			int tabSize = formatterCommonPrferences.getTabSize(document);
+			IFormatterCommonPreferences formatterCommonPreferences = FormatterUtils.getFormatterCommonPreferences();
+			int tabSize = formatterCommonPreferences.getTabSize(document);
 			return tabSize;
 		}
 		return super.getTabWidth(sourceViewer);

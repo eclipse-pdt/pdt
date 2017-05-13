@@ -24,7 +24,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.templates.*;
 import org.eclipse.php.internal.core.format.FormatterUtils;
-import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
 
 /**
  * The template's context
@@ -50,7 +50,7 @@ public class PHPTemplateContext extends ScriptTemplateContext {
 
 	@Override
 	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
-		IFormatterCommonPrferences prefs = FormatterUtils.getFormatterCommonPrferences();
+		IFormatterCommonPreferences prefs = FormatterUtils.getFormatterCommonPreferences();
 		boolean useTab = prefs.useTab(getDocument());
 		if (!useTab) {
 			int length = prefs.getIndentationSize(getDocument());

@@ -69,7 +69,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.internal.core.format.IFormatterCommonPrferences"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.internal.core.format.IFormatterCommonPreferences"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -108,7 +108,7 @@
       <documentation>
          &lt;p&gt;
 Plug-ins that wish to extend this extension point must implement interface:
-&lt;samp&gt;org.eclipse.php.internal.core.format.IFormatterCommonPrferences&lt;/samp&gt;
+&lt;samp&gt;org.eclipse.php.internal.core.format.IFormatterCommonPreferences&lt;/samp&gt;
 &lt;/p&gt;
       </documentation>
    </annotation>

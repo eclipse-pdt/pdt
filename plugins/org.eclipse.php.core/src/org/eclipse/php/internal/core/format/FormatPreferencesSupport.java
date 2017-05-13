@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
  * @author guy.g
  * 
  */
-public class FormatPreferencesSupport implements IFormatterCommonPrferences {
+public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 
 	private IDocument fLastDocument = null;
 	private IProject fLastProject = null;

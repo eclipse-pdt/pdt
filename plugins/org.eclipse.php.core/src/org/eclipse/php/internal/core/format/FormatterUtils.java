@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 public class FormatterUtils {
 	private static final String FORMATTER_COMMON_PREFERENCE_EXT = "org.eclipse.php.core.phpFormatterCommonPreferences"; //$NON-NLS-1$
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
-	private static IFormatterCommonPrferences usedFormatter;
+	private static IFormatterCommonPreferences usedFormatter;
 
 	public static final String PARTITION_CSS_STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
 	public static final String PARTITION_JS_SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
@@ -165,7 +165,7 @@ public class FormatterUtils {
 		return currentStructuredDocumentRegion;
 	}
 
-	public static IFormatterCommonPrferences getFormatterCommonPrferences() {
+	public static IFormatterCommonPreferences getFormatterCommonPreferences() {
 
 		if (usedFormatter == null) {
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
@@ -174,7 +174,7 @@ public class FormatterUtils {
 				IConfigurationElement element = elements[i];
 				if (element.getName().equals("processor")) { //$NON-NLS-1$
 					try {
-						usedFormatter = (IFormatterCommonPrferences) element.createExecutableExtension("class"); //$NON-NLS-1$
+						usedFormatter = (IFormatterCommonPreferences) element.createExecutableExtension("class"); //$NON-NLS-1$
 					} catch (CoreException e) {
 					}
 					;

@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.IDocument;
 
-public interface IFormatterCommonPrferences {
+public interface IFormatterCommonPreferences {
 	public int getIndentationWrappedLineSize(IDocument document);
 
 	public int getIndentationArrayInitSize(IDocument document);

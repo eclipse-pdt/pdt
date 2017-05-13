@@ -184,14 +184,14 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private void createAutoIndentMessage(final Composite composite) {
 		String linkTooltip = PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
-		char indentChar = FormatterUtils.getFormatterCommonPrferences().getIndentationChar(null);
+		char indentChar = FormatterUtils.getFormatterCommonPreferences().getIndentationChar(null);
 
 		if (indentChar == '\t') {
 
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 					new String[] { Integer.toString(4) });
 		} else {
-			int indentSize = FormatterUtils.getFormatterCommonPrferences().getIndentationSize(null);
+			int indentSize = FormatterUtils.getFormatterCommonPreferences().getIndentationSize(null);
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
 					new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
@@ -334,14 +334,14 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 	private final Map<Text, String> fTextFields = new HashMap<Text, String>();
 
 	public void refreshValues() {
-		char indentChar = FormatterUtils.getFormatterCommonPrferences().getIndentationChar(null);
+		char indentChar = FormatterUtils.getFormatterCommonPreferences().getIndentationChar(null);
 
 		if (indentChar == '\t') {
 
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 					new String[] { Integer.toString(4) });
 		} else {
-			int indentSize = FormatterUtils.getFormatterCommonPrferences().getIndentationSize(null);
+			int indentSize = FormatterUtils.getFormatterCommonPreferences().getIndentationSize(null);
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
 					new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}

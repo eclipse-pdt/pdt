@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.format.FormatterUtils;
-import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -267,8 +267,8 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	// This method applies the standard Tab rule and will perform a regular tab
 	private void applyTabRule() {
-		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
-		char indentChar = formatterCommonPrferences.getIndentationChar(document);
+		IFormatterCommonPreferences formatterCommonPreferences = FormatterUtils.getFormatterCommonPreferences();
+		char indentChar = formatterCommonPreferences.getIndentationChar(document);
 
 		if (indentChar == ' ') {
 			// determine where in line this command begins
@@ -280,7 +280,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
 
-			int indentSize = formatterCommonPrferences.getIndentationSize(document);
+			int indentSize = formatterCommonPreferences.getIndentationSize(document);
 
 			if (lineOffset > 0) {
 				lineOffset %= indentSize;
@@ -288,7 +288,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			}
 
 			if (indentSize == 0) {
-				indentSize = formatterCommonPrferences.getIndentationSize(document);
+				indentSize = formatterCommonPreferences.getIndentationSize(document);
 			}
 
 			command.text += getIndentationString(indentSize);
