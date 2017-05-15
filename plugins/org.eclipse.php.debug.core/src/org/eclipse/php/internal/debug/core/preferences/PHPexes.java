@@ -64,6 +64,7 @@ public class PHPexes {
 	private static final String EXTENSION_POINT_NAME = "phpExe"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
+	private static final String PHP_INI_ATTRIBUTE = "phpIni"; //$NON-NLS-1$
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String DEBUGGER_ID_ATTRIBUTE = "debuggerID"; //$NON-NLS-1$
 	private static final String PHPEXE_TAG = "phpExe"; //$NON-NLS-1$
@@ -554,6 +555,7 @@ public class PHPexes {
 					String id = element.getAttribute(ID_ATTRIBUTE);
 					final String name = element.getAttribute(NAME_ATTRIBUTE);
 					String location = substitudeVariables(element.getAttribute(LOCATION_ATTRIBUTE));
+					String phpIni = substitudeVariables(element.getAttribute(PHP_INI_ATTRIBUTE));
 					String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
 					if (debuggerID == null || debuggerID.equals("")) { //$NON-NLS-1$
 						debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
@@ -583,8 +585,9 @@ public class PHPexes {
 					boolean itemFound = false;
 
 					File file = getFileFromLocation(location, pluginId);
+					File phpIniFile = getFileFromLocation(phpIni, pluginId);
 					if (file != null && file.exists()) {
-						final PHPexeItem newItem = new PHPexeItem(name, file, null, debuggerID, false);
+						final PHPexeItem newItem = new PHPexeItem(name, file, phpIniFile, debuggerID, false);
 						if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null)
 							continue; // not adding "problematic" executables
 						/*
@@ -777,11 +780,17 @@ public class PHPexes {
 	}
 
 	private String substitudeVariables(String expression) throws CoreException {
-		return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(expression, true);
+		if (expression == null) {
+			return null;
+		} else {
+			return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(expression, true);
+		}
 	}
 
 	private File getFileFromLocation(String location, String pluginId) throws IOException {
-		if (Paths.get(location).isAbsolute()) {
+		if (location == null) {
+			return null;
+		} else if (Paths.get(location).isAbsolute()) {
 			return new File(location);
 		} else {
 			URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), null);

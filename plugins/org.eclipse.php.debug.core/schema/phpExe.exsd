@@ -98,6 +98,20 @@ This field is optional, and if not given, the php executable will not be assigne
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="phpIni" type="string">
+            <annotation>
+               <documentation>
+                  Path to the PHP configuration file (php.ini).
+
+If the value is an absolute path then the PHP configuration file will be loaded from that path. If the value is a relative path then the PHP configuration file will be loaded from that path inside the bundle.
+
+String variables like ${eclipse_home} may be used.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
