@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.ui.preferences.coverage;
 
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
@@ -44,8 +45,7 @@ public class CodeCoveragePreferencePage extends AbstractConfigurationBlockPrefer
 	 * AbstractConfigurationBlockPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
-		// TODO - help context
-		return null;
+		return IPHPHelpContextIds.CODE_COVERAGE_PREFERENCES;
 	}
 
 	/*

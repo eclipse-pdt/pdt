@@ -94,6 +94,8 @@ public static final String PHAR_INTEGRATION = PREFIX + "phar_integration"; //$NO
 
 public static final String EXCEPTION_BREAKPOINTS = PREFIX + "exception_breakpoints"; //$NON-NLS-1$ 016-concepts/192-exception_breakpoints.md
 
+public static final String PROFILING_CONCEPT = PREFIX + "profiling_concept"; //$NON-NLS-1$ 016-concepts/200-profiling_concept.md
+
 public static final String TASKS = PREFIX + "tasks"; //$NON-NLS-1$ 024-tasks/000-index.md
 
 public static final String CREATING_PHP_PROJECTS = PREFIX + "creating_php_projects"; //$NON-NLS-1$ 024-tasks/008-creating_php_projects.md
@@ -218,6 +220,14 @@ public static final String USING_JAVASCRIPT_SYNTAX_COLORING = PREFIX + "using_ja
 
 public static final String USING_JAVASCRIPT_MARK_OCCURENCES = PREFIX + "using_javascript_mark_occurences"; //$NON-NLS-1$ 024-tasks/208-using_javascript/048-using_javascript_mark_occurences.md
 
+public static final String PROFILING = PREFIX + "profiling"; //$NON-NLS-1$ 024-tasks/216-profiling/000-index.md
+
+public static final String LOCALLY_PROFILING_A_PHP_SCRIPT = PREFIX + "locally_profiling_a_php_script"; //$NON-NLS-1$ 024-tasks/216-profiling/008-profiling_local_php_script.md
+
+public static final String PROFILING_A_PHP_WEB_PAGE = PREFIX + "profiling_a_php_web_page"; //$NON-NLS-1$ 024-tasks/216-profiling/016-profiling_php_web_page.md
+
+public static final String PROFILING_WITH_BROWSER_TOOLBARS = PREFIX + "profiling_with_browser_toolbars"; //$NON-NLS-1$ 024-tasks/216-profiling/024-profiling_with_browser_toolbars.md
+
 public static final String REFERENCE = PREFIX + "reference"; //$NON-NLS-1$ 032-reference/000-index.md
 
 public static final String PHP_PERSPECTIVES_AND_VIEWS = PREFIX + "php_perspectives_and_views"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/000-index.md
@@ -249,6 +259,22 @@ public static final String PHP_ADDITIONAL_VIEWS = PREFIX + "php_additional_views
 public static final String PHP_FUNCTIONS_VIEW = PREFIX + "php_functions_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/024-php_additional_views/008-php_functions_view.md
 
 public static final String PROJECT_OUTLINE_VIEW = PREFIX + "project_outline_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/024-php_additional_views/016-project_outline_view.md
+
+public static final String PHP_PROFILE_PERSPECTIVE = PREFIX + "php_profile_perspective"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/000-index.md
+
+public static final String PROFILING_MONITOR_VIEW = PREFIX + "profiling_monitor_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/008-profiling_monitor_view.md
+
+public static final String PROFILER_INFORMATION_VIEW = PREFIX + "profiler_information_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/016-profiler_information_view.md
+
+public static final String EXECUTION_STATISTICS_VIEW = PREFIX + "execution_statistics_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/024-execution_statistics_view.md
+
+public static final String EXECUTION_FLOW_VIEW = PREFIX + "execution_flow_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/032-execution_flow_view.md
+
+public static final String CODE_COVERAGE_SUMMARY_VIEW = PREFIX + "code_coverage_summary_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/040-code_coverage_summary_view.md
+
+public static final String CODE_COVERAGE_VIEW = PREFIX + "code_coverage_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/048-code_coverage_view.md
+
+public static final String FUNCTION_INVOCATION_STATISTICS_VIEW = PREFIX + "function_invocation_statistics_view"; //$NON-NLS-1$ 032-reference/008-php_perspectives_and_views/032-php_profile_perspective/056-function_invocation_statistics_view.md
 
 public static final String MENUS = PREFIX + "menus"; //$NON-NLS-1$ 032-reference/016-menus/000-index.md
 
@@ -341,6 +367,8 @@ public static final String PHP_MANUAL_PREFERENCES = PREFIX + "php_manual_prefere
 public static final String PHP_SERVERS_PREFERENCES = PREFIX + "php_servers_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/080-php_servers.md
 
 public static final String CONFIGURING_TUNNELING_DEBUG_PREFERENCES = PREFIX + "configuring_tunneling_debug_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/088-configuring_tunneling_debug_preferences.md
+
+public static final String CODE_COVERAGE_PREFERENCES = PREFIX + "code_coverage_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/096-code_coverage.md
 
 public static final String VALIDATION_PREFERENCES = PREFIX + "validation_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/096-validation/000-index.md
 

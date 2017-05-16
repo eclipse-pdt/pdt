@@ -285,15 +285,6 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 			super(PHPProfileUIMessages.getString("ExecutionFlowActionGroup_6")); //$NON-NLS-1$
 			setDescription(PHPProfileUIMessages.getString("ExecutionFlowActionGroup_6")); //$NON-NLS-1$
 			setToolTipText(PHPProfileUIMessages.getString("ExecutionFlowActionGroup_6")); //$NON-NLS-1$
-
-			// TODO - help context
-
-			// this.setHelpListener(new HelpListener() {
-			// public void helpRequested(HelpEvent arg0) {
-			// org.eclipse.swt.program.Program
-			// .launch(IStudioHelpContextIds.EXECUTION_FLOW_VIEW);
-			// }
-			// });
 		}
 
 		/*
@@ -312,15 +303,6 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 			super(PHPProfileUIMessages.getString("ExecutionFlowActionGroup_7")); //$NON-NLS-1$
 			setDescription(PHPProfileUIMessages.getString("ExecutionFlowActionGroup_7")); //$NON-NLS-1$
 			setToolTipText(PHPProfileUIMessages.getString("ExecutionFlowActionGroup_7")); //$NON-NLS-1$
-
-			// TODO - help context
-
-			// this.setHelpListener(new HelpListener() {
-			// public void helpRequested(HelpEvent arg0) {
-			// org.eclipse.swt.program.Program
-			// .launch(IStudioHelpContextIds.EXECUTION_FLOW_VIEW);
-			// }
-			// });
 		}
 
 		/*

@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.profile.core.data.ProfilerCallTrace;
@@ -35,6 +36,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -84,17 +86,8 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 		createForm(parent);
-
-		// TODO - help context
-
-		// parent.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.EXECUTION_FLOW_VIEW);
-		// parent.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.EXECUTION_FLOW_VIEW);
-		// }
-		// });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.FUNCTION_INVOCATION_STATISTICS_VIEW);
 	}
 
 	private void createForm(Composite parent) {

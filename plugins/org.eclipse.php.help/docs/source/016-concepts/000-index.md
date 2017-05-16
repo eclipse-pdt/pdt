@@ -26,5 +26,5 @@
 <tr><td>[PHP Working Sets](088-php_working_sets.md)</td>
 <td>[Phar Integration](184-phar_integration.md)</td></tr>
 <tr><td>[Type Hierarchy](096-show_type_hierarchy.md)</td>
-<td></td></tr>
+<td>[Profiling](200-profiling_concept.md)</td></tr>
 </table>

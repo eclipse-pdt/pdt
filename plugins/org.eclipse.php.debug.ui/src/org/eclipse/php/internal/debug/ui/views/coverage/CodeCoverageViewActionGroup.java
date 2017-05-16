@@ -15,8 +15,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
-import org.eclipse.swt.events.HelpEvent;
-import org.eclipse.swt.events.HelpListener;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionGroup;
 
@@ -54,11 +52,6 @@ public class CodeCoverageViewActionGroup extends ActionGroup {
 			super(PHPDebugUIMessages.CodeCoverageViewActionGroup_0);
 			setDescription(PHPDebugUIMessages.CodeCoverageViewActionGroup_1);
 			setToolTipText(PHPDebugUIMessages.CodeCoverageViewActionGroup_2);
-			this.setHelpListener(new HelpListener() {
-				public void helpRequested(HelpEvent arg0) {
-					// TODO - help context
-				}
-			});
 			setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_EVIEW_EVENT_NEXT));
 		}
 
@@ -72,11 +65,6 @@ public class CodeCoverageViewActionGroup extends ActionGroup {
 			super(PHPDebugUIMessages.CodeCoverageViewActionGroup_3);
 			setDescription(PHPDebugUIMessages.CodeCoverageViewActionGroup_4);
 			setToolTipText(PHPDebugUIMessages.CodeCoverageViewActionGroup_5);
-			this.setHelpListener(new HelpListener() {
-				public void helpRequested(HelpEvent arg0) {
-					// TODO - help context
-				}
-			});
 			setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_EVIEW_EVENT_PREV));
 		}
 

@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.ui.editor.OpenRemoteFileContentRequestor;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.profile.core.data.ProfilerClassData;
 import org.eclipse.php.profile.core.data.ProfilerFileData;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Execution statistics view.
@@ -109,11 +111,9 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 						tableColumns[i].setImage(null);
 					}
 					if (fSorter.getOrder() == ProfilerUIConstants.SORT_ASCENDING) {
-						tableColumns[field]
-								.setImage(ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_SORT_ASCENDING));
+						tableColumns[field].setImage(ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_SORT_ASCENDING));
 					} else if (fSorter.getOrder() == ProfilerUIConstants.SORT_DESCENDING) {
-						tableColumns[field]
-								.setImage(ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_SORT_DESCENDING));
+						tableColumns[field].setImage(ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_SORT_DESCENDING));
 					}
 
 					BusyIndicator.showWhile(fTree.getDisplay(), new Runnable() {
@@ -149,18 +149,6 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 		fActionSet.fillActionBars(getViewSite().getActionBars());
 
 		hookContextMenu();
-
-		// TODO - context menu
-
-		// fTree.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.EXECUTION_STATISTICS_VIEW);
-		// fTree.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.EXECUTION_STATISTICS_VIEW);
-		// }
-		// });
-
 	}
 
 	/*
@@ -173,6 +161,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 		createTable(parent);
 		ProfileSessionsManager.addProfileSessionListener(this);
 		setInput(ProfileSessionsManager.getCurrent());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.EXECUTION_STATISTICS_VIEW);
 	}
 
 	/*
@@ -204,9 +193,8 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.views.AbstractProfilerView#setInput(org.eclipse.
-	 * php.profile.core.profiler.ProfilerDB)
+	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#setInput(org.
+	 * eclipse. php.profile.core.profiler.ProfilerDB)
 	 */
 	public void setInput(ProfilerDB profilerDB) {
 		if (fTreeViewer == null || fTreeViewer.getContentProvider() == null) {
@@ -303,7 +291,8 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer()
+	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer(
+	 * )
 	 */
 	public TreeViewer getViewer() {
 		return fTreeViewer;

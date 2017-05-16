@@ -19,6 +19,10 @@ To access this menu, go to Window menu and select **Preferences | PHP**.
 
 <td>Configure the display of elements in Outline views.</td></tr>
 
+<tr><td>[Code Coverage](096-code_coverage.md)</td>
+
+<td>Configure code coverage presentation settings.</td></tr>
+
 <tr><td>[Code Refactor](020-code_refactor.md)</td>
 
 <td>Code refactoring preferences</td></tr>

@@ -19,6 +19,7 @@ import java.util.Locale;
 import org.eclipse.birt.chart.model.Chart;
 import org.eclipse.birt.chart.model.attribute.impl.ColorDefinitionImpl;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.core.data.ProfilerFileData;
 import org.eclipse.php.profile.core.data.ProfilerGlobalData;
 import org.eclipse.php.profile.core.engine.IProfileSessionListener;
@@ -34,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -67,17 +69,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 		createForm(parent);
 		ProfileSessionsManager.addProfileSessionListener(this);
 		setInput(ProfileSessionsManager.getCurrent());
-
-		// TODO - help context
-
-		// parent.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.PROFILER_INFORMATION_VIEW);
-		// parent.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program.launch(
-		// IStudioHelpContextIds.PROFILER_INFORMATION_VIEW);
-		// }
-		// });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PROFILER_INFORMATION_VIEW);
 	}
 
 	/*
