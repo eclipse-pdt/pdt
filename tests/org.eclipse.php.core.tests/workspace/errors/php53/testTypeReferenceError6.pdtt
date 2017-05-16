@@ -1,0 +1,14 @@
+--TEST--
+Test type reference error check
+--FILE--
+<?php
+namespace error\ns1;
+
+try {
+	$a = 1;
+	$a instanceof Exception;
+} catch(Exception $e) {
+}
+--EXPECT--
+[line=6, start=58, end=67] Exception cannot be resolved to a type
+[line=7, start=77, end=86] Exception cannot be resolved to a type
