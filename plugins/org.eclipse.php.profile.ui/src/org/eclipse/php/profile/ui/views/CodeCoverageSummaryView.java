@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
 import org.eclipse.php.internal.debug.ui.views.coverage.CodeCoverageSection;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.core.data.ProfilerFileData;
 import org.eclipse.php.profile.core.engine.IProfileSessionListener;
 import org.eclipse.php.profile.core.engine.ProfileSessionsManager;
@@ -23,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Code coverage summary view.
@@ -33,7 +35,6 @@ public class CodeCoverageSummaryView extends AbstractProfilerView implements IPr
 	private ProfilerDB input;
 
 	public CodeCoverageSummaryView() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -41,24 +42,11 @@ public class CodeCoverageSummaryView extends AbstractProfilerView implements IPr
 		createCodeCoverageForm(parent);
 		ProfileSessionsManager.addProfileSessionListener(this);
 		setInput(ProfileSessionsManager.getCurrent());
-
-		// TODO - help context
-
-		// parent.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.CODE_COVERAGE_SUMMARY_VIEW);
-		// parent.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.CODE_COVERAGE_SUMMARY_VIEW);
-		// }
-		// });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.CODE_COVERAGE_SUMMARY_VIEW);
 	}
 
 	private ViewForm createCodeCoverageForm(final Composite parent) {
 		final ViewForm codeCoverageForm = new ViewForm(parent, SWT.NONE);
-		// final ToolBar codeCoverageToolBar = new ToolBar(codeCoverageForm,
-		// SWT.FLAT | SWT.WRAP);
-		// codeCoverageForm.setTopCenter(codeCoverageToolBar);
 		fCodeCoverageSection = new CodeCoverageSection(codeCoverageForm, this, null /* codeCoverageToolBar */);
 		codeCoverageForm.setContent(fCodeCoverageSection.getComposite());
 		return codeCoverageForm;

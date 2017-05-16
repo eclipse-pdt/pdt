@@ -14,6 +14,7 @@ import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
 import org.eclipse.php.profile.ui.ProfilerUiPlugin;
 import org.eclipse.swt.layout.GridData;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * "PHP Profile" preference page.
@@ -66,6 +68,7 @@ public class ProfilePreferencePage extends PreferencePage implements IWorkbenchP
 		fSwitchPerspectiveRadioGroup.setPreferenceName(PreferenceKeys.OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA);
 		fSwitchPerspectiveRadioGroup.setPreferenceStore(getPreferenceStore());
 		initializeControls();
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PROFILE_PREFERENCES);
 		return parent;
 	}
 
