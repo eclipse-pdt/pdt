@@ -14,12 +14,14 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.core.engine.IProfileSessionListener;
 import org.eclipse.php.profile.core.engine.ProfileSessionsManager;
 import org.eclipse.php.profile.core.engine.ProfilerDB;
 import org.eclipse.php.profile.ui.actions.ProfilingMonitorActionGroup;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -56,16 +58,7 @@ public class ProfilingMonitorView extends ViewPart
 
 		update();
 
-		// TODO - help context
-
-		// parent.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.PROFILING_MONITOR_VIEW);
-		// parent.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.PROFILING_MONITOR_VIEW);
-		// }
-		// });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PROFILING_MONITOR_VIEW);
 	}
 
 	/*

@@ -15,6 +15,7 @@ import java.io.File;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -22,6 +23,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Import session wizard first page.
@@ -96,17 +98,12 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 		setMessage(null);
 
 		setControl(composite);
+	}
 
-		// TODO - help context
-
-		// composite.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.EXPORT);
-		// composite.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.IMPORT);
-		// }
-		// });
+	@Override
+	public void performHelp() {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.IMPORTING_PROFILE_SESSIONS);
+		super.performHelp();
 	}
 
 	protected boolean validatePage() {

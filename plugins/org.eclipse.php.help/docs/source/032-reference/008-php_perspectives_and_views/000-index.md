@@ -7,7 +7,8 @@ PDT incorporates a number of Perspectives and Views for managing all aspects of 
 The following PHP perspectives are used for developing PHP:
 
  * [PHP Perspective](008-php_perspective_views/000-index.md)
- * [PHP Debug Perspective](008-php_perspectives_and_views/016-php_debug_perspective/000-index.md)
+ * [PHP Debug Perspective](016-php_debug_perspective/000-index.md)
+ * [PHP Profile Perspective](032-php_profile_perspective/000-index.md)
 
 See the Workbench User Guide for more on [Perspectives](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-4.htm) and [Views](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm) .
 
@@ -25,6 +26,7 @@ Additional user guides can be accessed from inside PDT by going to **Help | Help
 
  * [PHP Perspective](008-php_perspective_views/000-index.md)
  * [PHP Debug Perspective](016-php_debug_perspective/000-index.md)
+ * [PHP Profile Perspective](032-php_profile_perspective/000-index.md)
  * [PHP Additional Views](024-php_additional_views.md)
 
 <!--links-end-->

@@ -489,7 +489,7 @@
 			name="%Step.filtering">
 		</page>
 		<page
-            category="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"
+            category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
             class="org.eclipse.php.internal.debug.ui.preferences.coverage.CodeCoveragePreferencePage"
             id="org.eclipse.php.debug.ui.codeCoveragePage"
             name="%codeCoveragePreferencePage.name">

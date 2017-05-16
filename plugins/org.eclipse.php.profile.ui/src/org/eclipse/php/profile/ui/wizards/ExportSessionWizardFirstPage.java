@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.core.engine.ProfileSessionsManager;
 import org.eclipse.php.profile.core.engine.ProfilerDB;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
@@ -27,6 +28,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Export session wizard first page.
@@ -153,17 +155,12 @@ public class ExportSessionWizardFirstPage extends WizardPage {
 		setMessage(null);
 
 		setControl(composite);
+	}
 
-		// TODO - help context
-
-		// composite.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.EXPORT);
-		// composite.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.EXPORT);
-		// }
-		// });
+	@Override
+	public void performHelp() {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.EXPORTING_PROFILE_SESSIONS);
+		super.performHelp();
 	}
 
 	protected boolean validatePage() {

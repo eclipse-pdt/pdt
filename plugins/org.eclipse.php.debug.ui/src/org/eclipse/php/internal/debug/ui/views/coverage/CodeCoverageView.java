@@ -21,11 +21,11 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.IRemoteFileContentRequestor;
 import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.HelpEvent;
-import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -47,14 +47,7 @@ public class CodeCoverageView extends ViewPart {
 		fSourceViewer = new CodeCoverageTextViewer(parent, SWT.NONE);
 		fActionGroup = new CodeCoverageViewActionGroup(this);
 		fActionGroup.fillActionBars(getViewSite().getActionBars());
-		// parent.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.PATH_MAPPING);
-		parent.addHelpListener(new HelpListener() {
-			public void helpRequested(HelpEvent arg0) {
-				// TODO - add Help
-			}
-		});
-
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.CODE_COVERAGE_VIEW);
 	}
 
 	/*
