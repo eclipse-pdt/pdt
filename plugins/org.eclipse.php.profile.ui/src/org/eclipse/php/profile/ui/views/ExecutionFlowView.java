@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.core.data.ProfilerCallTrace;
 import org.eclipse.php.profile.core.data.ProfilerCallTraceLayer;
 import org.eclipse.php.profile.core.engine.IProfileSessionListener;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Execution flow view.
@@ -88,16 +90,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 		ProfileSessionsManager.addProfileSessionListener(this);
 		setInput(ProfileSessionsManager.getCurrent());
 
-		// TODO - help context
-
-		// parent.setData(WorkbenchHelpSystem.HELP_KEY,
-		// IStudioHelpContextIds.EXECUTION_FLOW_VIEW);
-		// parent.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent arg0) {
-		// org.eclipse.swt.program.Program
-		// .launch(IStudioHelpContextIds.EXECUTION_FLOW_VIEW);
-		// }
-		// });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.EXECUTION_FLOW_VIEW);
 	}
 
 	/*
