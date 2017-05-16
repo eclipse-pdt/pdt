@@ -874,7 +874,17 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	}
 
 	public boolean visit(TypeReference reference) throws Exception {
-		modifyReference(reference, new ReferenceInfo(IModelElement.TYPE, reference.sourceStart(),
+		int nodeType = FullyQualifiedReference.T_TYPE;
+		int elementType = IModelElement.TYPE;
+		if (reference instanceof FullyQualifiedReference) {
+			nodeType = ((FullyQualifiedReference) reference).getElementType();
+			if (nodeType == FullyQualifiedReference.T_CONSTANT) {
+				elementType = IModelElement.FIELD;
+			} else if (nodeType == FullyQualifiedReference.T_FUNCTION) {
+				elementType = IModelElement.METHOD;
+			}
+		}
+		modifyReference(reference, new ReferenceInfo(elementType, reference.sourceStart(),
 				reference.sourceEnd() - reference.sourceStart(), reference.getName(), null, null));
 		return visitGeneral(reference);
 	}

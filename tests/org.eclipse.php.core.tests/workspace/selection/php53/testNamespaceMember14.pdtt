@@ -1,0 +1,15 @@
+--TEST--
+Test namespace constant selection using other namespace alias
+--FILE--
+<?
+namespace NS;
+const foo = 1;
+class foo {
+}
+
+namespace OtherNS;
+use NS as Z;
+Z\|foo|;
+?>
+--EXPECT--
+field(foo)

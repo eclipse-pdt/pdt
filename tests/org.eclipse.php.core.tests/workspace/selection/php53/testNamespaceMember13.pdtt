@@ -1,0 +1,12 @@
+--TEST--
+Test namespace constant selection using 'namespace' keyword prefix
+--FILE--
+<?
+namespace NS;
+const foo = 1;
+class foo {
+}
+namespace\|foo|;
+?>
+--EXPECT--
+field(foo)

@@ -1,0 +1,15 @@
+--TEST--
+Bug 516485 - Constants are validated as types
+--FILE--
+<?php
+namespace error\ns1;
+
+echo \E_ALL;
+echo \name\A;
+\name\func();
+echo A::NAME;
+echo E_ALL;
+func();
+
+--EXPECT--
+[line=7, start=74, end=75] A cannot be resolved to a type

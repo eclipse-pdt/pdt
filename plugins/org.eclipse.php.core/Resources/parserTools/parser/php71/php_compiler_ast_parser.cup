@@ -38,6 +38,22 @@ parser code {:
 		return expr;
 	}
 
+	protected int getElementTypeByUseType(int useType) {
+		int elementType = 0;
+		switch (useType) {
+		case UseStatement.T_FUNCTION:
+			elementType = FullyQualifiedReference.T_FUNCTION;
+			break;
+		case UseStatement.T_CONST:
+			elementType = FullyQualifiedReference.T_CONSTANT;
+			break;
+		default:
+			elementType = FullyQualifiedReference.T_TYPE;
+			break;
+		}
+		return elementType;
+	}
+
 	protected String getTokenName(int token) {
 		return PHPTokenNames.getName(token);
 	}
@@ -844,6 +860,8 @@ namespace_body:body
 	useStatement.setStart(startleft);
 	useStatement.setEnd(endright);
 	useStatement.setStatementType(useType);
+	int elementType = getElementTypeByUseType(useType);
+	useStatement.getNamespace().setElementType(elementType);
 	parser.declarations.push(useStatement);
 :}
 
@@ -854,6 +872,10 @@ namespace_body:body
 
 | T_USE:start use_type:useType use_declarations:useDeclList T_SEMICOLON:end
 {:
+	int elementType = getElementTypeByUseType(useType);
+	for (Object usePart : useDeclList) {
+		((UsePart) usePart).getNamespace().setElementType(elementType);
+	}
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, useType));
 :}
 
@@ -964,6 +986,8 @@ use_declaration:useDeclaration
 
 | use_type:useType use_declaration:useDeclaration
 {:
+	int elementType = getElementTypeByUseType(useType);
+	useDeclaration.getNamespace().setElementType(elementType);
 	useDeclaration.setStatementType(useType);
 	RESULT = useDeclaration;
 :}
@@ -987,12 +1011,14 @@ use_declarations:useDeclList T_COMMA use_declaration:useDecl
 use_declaration ::=
 namespace_name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
 | namespace_name:name T_AS T_STRING:aliasName
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
@@ -1008,6 +1034,7 @@ namespace_name:name
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
@@ -1023,6 +1050,7 @@ namespace_name:name
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
@@ -1357,13 +1385,13 @@ T_CATCH:catch_word T_OPEN_PARENTHESE catch_name_list:catch_name_list T_VARIABLE:
 ;
 
 catch_name_list ::=
-name:name
+fully_qualified_class_name:name
 {:
 	List list = new LinkedList<TypeReference>();
 	list.add(name);
 	RESULT = list;
 :}
-| catch_name_list:list T_OR name:name
+| catch_name_list:list T_OR fully_qualified_class_name:name
 {:
 	list.add(name);
 	RESULT = list;
@@ -2081,16 +2109,17 @@ type:type
 type ::=
 T_ARRAY:array
 {:
-	RESULT = new FullyQualifiedReference(arrayleft, arrayright, "array", null);
+	RESULT = new FullyQualifiedReference(arrayleft, arrayright, "array", null, FullyQualifiedReference.T_TYPE);
 :}
 
 | T_CALLABLE:callable
 {:
-	RESULT = new FullyQualifiedReference(callableleft, callableright, "callable", null);
+	RESULT = new FullyQualifiedReference(callableleft, callableright, "callable", null, FullyQualifiedReference.T_TYPE);
 :}
 
 | name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 ;
@@ -3200,6 +3229,7 @@ name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameter
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
+	functionName.setElementType(FullyQualifiedReference.T_FUNCTION);
 	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
 :}
 
@@ -3234,11 +3264,12 @@ name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameter
 class_name ::=
 T_STATIC:s
 {:
-	RESULT = new FullyQualifiedReference(sleft, sright, "static", null);
+	RESULT = new FullyQualifiedReference(sleft, sright, "static", null, FullyQualifiedReference.T_TYPE);
 :}
 
 | name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 ;
@@ -3246,6 +3277,7 @@ T_STATIC:s
 fully_qualified_class_name ::=
 namespace_name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 
@@ -3256,6 +3288,7 @@ namespace_name:name
 	}
 
 	name.getNamespace().setLocal(true);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 
@@ -3269,6 +3302,7 @@ namespace_name:name
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 ;

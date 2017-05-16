@@ -1,0 +1,12 @@
+--TEST--
+Bug 516485 - Constants are validated as types
+--FILE--
+<?php
+namespace error\ns1;
+
+use Exception;
+use const name\Constant;
+use function name\func;
+
+--EXPECT--
+[line=4, start=32, end=41] The import Exception is never used
