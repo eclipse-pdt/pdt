@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Built-in PHP Binaries for Mac OS X
+Bundle-SymbolicName: org.eclipse.php.builtin.executables.macosx;singleton:=true
+Bundle-Version: 5.0.0.qualifier
+Fragment-Host: org.eclipse.php.debug.core
+Bundle-Localization: plugin
+Bundle-Vendor: Eclipse PDT
+Eclipse-PlatformFilter: (osgi.os=macosx)
+Eclipse-BundleShape: dir

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Built-in PHP Binaries for Windows
+Bundle-SymbolicName: org.eclipse.php.builtin.executables.windows;singleton:=true
+Bundle-Version: 5.0.0.qualifier
+Bundle-Vendor: Eclipse PDT
+Fragment-Host: org.eclipse.php.debug.core
+Bundle-Localization: plugin
+Eclipse-PlatformFilter: (osgi.os=win32)
+Eclipse-BundleShape: dir

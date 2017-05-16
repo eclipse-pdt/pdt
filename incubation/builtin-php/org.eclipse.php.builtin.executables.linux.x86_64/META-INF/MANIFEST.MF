@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Built-in PHP Binaries for Linux
+Bundle-SymbolicName: org.eclipse.php.builtin.executables.linux;singleton:=true
+Bundle-Version: 5.0.0.qualifier
+Bundle-Vendor: Eclipse PDT
+Fragment-Host: org.eclipse.php.debug.core
+Bundle-Localization: plugin
+Eclipse-PlatformFilter: (& (osgi.os=linux)(osgi.arch=x86_64))
+Eclipse-BundleShape: dir

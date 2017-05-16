@@ -1,0 +1,105 @@
+<project name="Fetching PHP binaries">
+
+	<property name="resource.cache.location" value="${settings.localRepository}/resources-cache" />
+
+	<!-- php binaries and debuggers -->
+	<property name="php.version" value="7.1.3" />
+	<property name="pack.name" value="php" />
+	<property name="pack.format" value="tar.gz" />
+	<property name="win.pack.format" value="zip" />
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="${mvn.plugin.classpath}" />
+		</classpath>
+	</taskdef>
+
+	<target name="fetchPhp">
+		<mkdir dir="${resource.cache.location}" />
+		<var name="pack.version" value="${php.version}" />
+		<var name="overwrite" value="false" />
+		<if>
+			<contains string="${os}" substring="windows" />
+			<then>
+				<var name="pack.format" value="${win.pack.format}" />
+			</then>
+		</if>
+		<property name="pack"
+			value="${pack.name}-${pack.version}-${os}.${pack.format}" />
+		<!-- check if resource is in cache -->
+		<if>
+			<or>
+				<equals arg1="${force.res.fetch}" arg2="true" />
+				<not>
+					<available file="${resource.cache.location}/${pack}"
+						type="file" property="cached.php.exists" />
+				</not>
+			</or>
+			<then>
+				<get src="${pack.location}/${pack}" dest="${resource.cache.location}" />
+			</then>
+		</if>
+		<var name="dest" value="resources" />
+		<!-- check if version already exists in workspace -->
+		<if>
+			<available file="${dest}/version.properties" type="file" />
+			<then>
+				<loadfile property="${php.version}-version-file" srcFile="${dest}/version.properties" />
+				<propertyregex property="${php.version}-version"
+					input="${${php.version}-version-file}" regexp="ver=(.*)" select="\1"
+					override="true" />
+			</then>
+		</if>
+		<if>
+			<or>
+				<not>
+					<equals arg1="${${php.version}-version}" arg2="${pack.version}" />
+				</not>
+				<equals arg1="${force.res.fetch}" arg2="true" />
+			</or>
+			<then>
+				<delete dir="${dest}" />
+				<if>
+					<contains string="${os}" substring="windows" />
+					<then>
+						<unzip dest="${dest}" src="${resource.cache.location}/${pack}"
+							overwrite="true">
+						</unzip>
+					</then>
+					<else>
+						<if>
+							<isset property="runsOnWindows" />
+							<then>
+								<untar dest="${dest}" src="${resource.cache.location}/${pack}"
+									compression="gzip" overwrite="true">
+								</untar>
+							</then>
+							<else>
+								<!-- we need to use exec here to preserve links for php libraries! -->
+								<mkdir dir="${dest}" />
+								<exec dir="${dest}" executable="tar" failonerror="true">
+									<arg
+										line="xf ${resource.cache.location}/${pack}" />
+								</exec>
+							</else>
+						</if>
+					</else>
+				</if>
+				<antcall target="createVersionFile">
+					<param name="version" value="${pack.version}" />
+					<param name="filePath" value="${dest}" />
+				</antcall>
+			</then>
+		</if>
+		<var name="php.exists" unset="true" />
+		<var name="cached.php.exists" unset="true" />
+		<var name="pack" unset="true" />
+		<var name="ver" unset="true" />
+	</target>
+
+	<target name="createVersionFile">
+		<var name="file" value="${filePath}/version.properties" />
+		<var name="version" value="${version}" />
+		<echo file="${file}" append="false">ver=${version}</echo>
+	</target>
+</project>

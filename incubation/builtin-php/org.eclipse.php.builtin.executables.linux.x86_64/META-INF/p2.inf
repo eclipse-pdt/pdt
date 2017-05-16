@@ -1,0 +1,6 @@
+instructions.install = \
+   chmod(targetDir:${artifact.location},targetFile:resources/php.ini,permissions:666);\
+   chmod(targetDir:${artifact.location},targetFile:resources/php,permissions:775);
+   
+instructions.install.import= \
+    org.eclipse.equinox.p2.touchpoint.natives.chmod

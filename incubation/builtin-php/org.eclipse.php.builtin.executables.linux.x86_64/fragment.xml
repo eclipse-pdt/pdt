@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="org.eclipse.php.debug.core.phpExe">
+      <phpExe
+            default="false"
+            id="pdt-builtin-php"
+            location="resources/php"
+            name="Built-in PHP">
+      </phpExe>
+      <phpExe
+            debuggerID="org.eclipse.php.debug.core.xdebugDebugger"
+            default="true"
+            id="pdt-builtin-php-xdebug"
+            location="resources/php"
+            phpIni="resources/php-xdebug.ini"
+            name="Built-in PHP with Xdebug">
+      </phpExe>
+   </extension>
+</fragment>
