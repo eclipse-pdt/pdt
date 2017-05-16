@@ -22,12 +22,22 @@ import org.eclipse.dltk.ast.references.TypeReference;
  */
 public class FullyQualifiedReference extends TypeReference {
 
+	public final static int T_TYPE = 1;
+	public final static int T_FUNCTION = 2;
+	public final static int T_CONSTANT = 3;
+
 	private NamespaceReference namespace;
 	private boolean nullable;
+	private int elementType;
 
 	public FullyQualifiedReference(int start, int end, String name, NamespaceReference namespace) {
+		this(start, end, name, namespace, T_CONSTANT);
+	}
+
+	public FullyQualifiedReference(int start, int end, String name, NamespaceReference namespace, int type) {
 		super(start, end, name);
 		this.namespace = namespace;
+		this.elementType = type;
 	}
 
 	public void traverse(ASTVisitor pVisitor) throws Exception {
@@ -83,5 +93,13 @@ public class FullyQualifiedReference extends TypeReference {
 		buf.append(getName());
 
 		return buf.toString();
+	}
+
+	public int getElementType() {
+		return elementType;
+	}
+
+	public void setElementType(int elementType) {
+		this.elementType = elementType;
 	}
 }

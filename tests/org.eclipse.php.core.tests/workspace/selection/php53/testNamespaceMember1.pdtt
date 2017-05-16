@@ -5,7 +5,7 @@ Test Namespace Class Selection
 namespace NS;
 class foo {
 }
-\NS\|foo|;
+\NS\|foo|::class;
 ?>
 --EXPECT--
 type(foo)

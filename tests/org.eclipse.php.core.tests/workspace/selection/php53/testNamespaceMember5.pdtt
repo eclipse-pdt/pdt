@@ -5,7 +5,7 @@ Test namespace element selection using 'namespace' keyword prefix
 namespace NS;
 class foo {
 }
-namespace\|foo|;
+namespace\|foo|::class;
 ?>
 --EXPECT--
 type(foo)

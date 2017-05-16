@@ -8,7 +8,7 @@ class foo {
 
 namespace OtherNS;
 use NS as Z;
-Z\|foo|;
+Z\|foo|::class;
 ?>
 --EXPECT--
 type(foo)

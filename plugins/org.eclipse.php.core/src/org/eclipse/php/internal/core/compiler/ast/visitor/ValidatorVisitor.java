@@ -117,7 +117,10 @@ public class ValidatorVisitor extends PHPASTVisitor {
 
 	@Override
 	public boolean visit(FullyQualifiedReference node) throws Exception {
-		return visit((TypeReference) node);
+		if (node.getElementType() == FullyQualifiedReference.T_TYPE) {
+			return visit((TypeReference) node);
+		}
+		return super.visit(node);
 	}
 
 	@Override
@@ -228,6 +231,17 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(UsePart part) throws Exception {
 		UsePartInfo info = new UsePartInfo(part);
 		TypeReferenceInfo tri = info.getTypeReferenceInfo();
+
+		if (tri.getTypeReference() instanceof FullyQualifiedReference) {
+			int elementType = ((FullyQualifiedReference) tri.getTypeReference()).getElementType();
+			if (elementType == FullyQualifiedReference.T_CONSTANT
+					|| elementType == FullyQualifiedReference.T_FUNCTION) {
+				// TODO implement later, skip check for function and constant
+				// for now
+				return false;
+			}
+		}
+
 		String name = tri.getTypeName();
 		String currentNamespaceName;
 		if (currentNamespace == null || currentNamespace.isGlobal()) {
@@ -431,15 +445,32 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		boolean isFound = false;
 		try {
 			TypeReference type = info.getTypeReference();
-			IModelElement[] types = PHPModelUtils.getTypes(name, sourceModule, type.start(), null);
-			if (types.length == 0) {
-				types = PHPModelUtils.getTraits(name, sourceModule, type.start(), null, null);
+			int elementType = FullyQualifiedReference.T_TYPE;
+			if (type instanceof FullyQualifiedReference) {
+				elementType = ((FullyQualifiedReference) type).getElementType();
 			}
-			if (types.length == 0 && info.isUseStatement()) {
-				types = sourceModule.codeSelect(type.start(), type.end() - type.start());
-			}
-			if (types.length > 0) {
+			switch (elementType) {
+			case FullyQualifiedReference.T_TYPE:
+				IModelElement[] types = PHPModelUtils.getTypes(name, sourceModule, type.start(), null);
+				if (types.length == 0) {
+					types = PHPModelUtils.getTraits(name, sourceModule, type.start(), null, null);
+				}
+				if (types.length == 0 && info.isUseStatement()) {
+					types = sourceModule.codeSelect(type.start(), type.end() - type.start());
+				}
+				if (types.length > 0) {
+					isFound = true;
+				}
+				break;
+			case FullyQualifiedReference.T_CONSTANT:
+			case FullyQualifiedReference.T_FUNCTION:
+				// TODO implement later, skip check for function and constant
+				// for now
 				isFound = true;
+				break;
+			default:
+				isFound = false;
+				break;
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
@@ -596,8 +627,10 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			if (typeReference instanceof FullyQualifiedReference) {
 				fullTypeReference = (FullyQualifiedReference) typeReference;
 				if (fullTypeReference.getNamespace() != null) {
-					hasNamespace = true;
-					namespaceName = fullTypeReference.getNamespace().getName();
+					if (!fullTypeReference.getNamespace().isLocal()) {
+						hasNamespace = true;
+						namespaceName = fullTypeReference.getNamespace().getName();
+					}
 					// for use statement, no need to lookup the use statement
 					// to compute namespace name
 					if (!isUseStatement) {

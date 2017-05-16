@@ -566,11 +566,17 @@ namespace_body:body
 
 | T_USE:start T_FUNCTION use_declarations:useDeclList T_SEMICOLON:end
 {:
+	for (Object usePart : useDeclList) {
+		((UsePart) usePart).getNamespace().setElementType(FullyQualifiedReference.T_FUNCTION);
+	}
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, UseStatement.T_FUNCTION));
 :}
 
 | T_USE:start T_CONST use_declarations:useDeclList T_SEMICOLON:end
 {:
+	for (Object usePart : useDeclList) {
+		((UsePart) usePart).getNamespace().setElementType(FullyQualifiedReference.T_CONSTANT);
+	}
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, UseStatement.T_CONST));
 :}
 
@@ -657,12 +663,14 @@ use_declarations:useDeclList T_COMMA use_declaration:useDecl
 use_declaration ::=
 namespace_name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
 | namespace_name:name T_AS T_STRING:aliasName
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
@@ -678,6 +686,7 @@ namespace_name:name
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
@@ -693,6 +702,7 @@ namespace_name:name
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
@@ -1685,13 +1695,13 @@ optional_class_type ::=
 
 | T_ARRAY:array
 {:
-	TypeReference reference = new FullyQualifiedReference(arrayleft, arrayright, "array", null);
+	TypeReference reference = new FullyQualifiedReference(arrayleft, arrayright, "array", null, FullyQualifiedReference.T_TYPE);
 	RESULT = reference;
 :}
 
 | T_CALLABLE:callable
 {:
-	TypeReference reference = new FullyQualifiedReference(callableleft, callableright, "callable", null);
+	TypeReference reference = new FullyQualifiedReference(callableleft, callableright, "callable", null, FullyQualifiedReference.T_TYPE);
 	RESULT = reference;
 :}
 ;
@@ -2948,6 +2958,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
+	functionName.setElementType(FullyQualifiedReference.T_FUNCTION);
 	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
 :}
 
@@ -3047,11 +3058,12 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 class_name ::=
 T_STATIC:s
 {:
-	RESULT = new FullyQualifiedReference(sleft, sright, "static", null);
+	RESULT = new FullyQualifiedReference(sleft, sright, "static", null, FullyQualifiedReference.T_TYPE);
 :}
 
 | namespace_name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 
@@ -3060,6 +3072,7 @@ T_STATIC:s
 	if (name.getNamespace() != null) {
 		name.getNamespace().setLocal(true);
 	}
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 
@@ -3073,6 +3086,7 @@ T_STATIC:s
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 ;
@@ -3080,6 +3094,7 @@ T_STATIC:s
 fully_qualified_class_name ::=
 namespace_name:name
 {:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 
@@ -3088,6 +3103,7 @@ namespace_name:name
 	if (name.getNamespace() != null) {
 		name.getNamespace().setLocal(true);
 	}
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 
@@ -3101,6 +3117,7 @@ namespace_name:name
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	name.setStart(sleft);
+	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
 ;

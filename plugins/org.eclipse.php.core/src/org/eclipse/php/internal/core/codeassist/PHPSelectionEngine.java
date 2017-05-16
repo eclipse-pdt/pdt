@@ -52,8 +52,8 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
+import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -359,38 +359,42 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					sourceModule, offset, cache, null);
 			return namespace;
 		}
-		// Class/Interface reference:
+		// Class/Interface/Trait/Constant/Function reference:
 		else if (node instanceof TypeReference) {
 			TypeReference typeReference = (TypeReference) node;
 			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
 			if (evaluatedType == null) {
 				return EMPTY;
 			}
+			IModelElement[] elements = new IModelElement[0];
 			String name = evaluatedType.getTypeName();
-			IModelElement[] types = PHPModelUtils.getTypes(name, sourceModule, offset, cache, null);
-			if (types.length == 0) {
-				types = PHPModelUtils.getTraits(name, sourceModule, offset, cache, null);
+			int nodeType = FullyQualifiedReference.T_TYPE;
+			if (node instanceof FullyQualifiedReference) {
+				nodeType = ((FullyQualifiedReference) node).getElementType();
 			}
-			if (types.length == 0) {
-				// This can be a constant or namespace in PHP 5.3:
-				if (name.length() > 0 && name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-					name = name.substring(1);
+			if (nodeType == FullyQualifiedReference.T_CONSTANT) {
+				elements = PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+			} else if (nodeType == FullyQualifiedReference.T_FUNCTION) {
+				elements = PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
+				if (elements.length == 0) {
+					elements = PHPModelUtils.getFunctions(typeReference.getName(), sourceModule, offset, cache, null);
 				}
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-				types = PHPModelAccess.getDefault().findNamespaces(null, name, MatchRule.EXACT, 0, 0, scope, null);
-
-				if (types.length == 0) {
-					name = NamespaceReference.NAMESPACE_SEPARATOR + name;
-					types = PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+			} else if (nodeType == FullyQualifiedReference.T_TYPE) {
+				elements = PHPModelUtils.getTypes(name, sourceModule, offset, cache, null);
+				if (elements.length == 0) {
+					elements = PHPModelUtils.getTraits(name, sourceModule, offset, cache, null);
 				}
-				if (types.length == 0) {
-					types = PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
-				}
-				if (types.length == 0) {
-					types = PHPModelUtils.getFunctions(typeReference.getName(), sourceModule, offset, cache, null);
+				if (elements.length == 0) {
+					// This can be a constant or namespace in PHP 5.3:
+					if (name.length() > 0 && name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+						name = name.substring(1);
+					}
+					IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+					elements = PHPModelAccess.getDefault().findNamespaces(null, name, MatchRule.EXACT, 0, 0, scope,
+							null);
 				}
 			}
-			return types;
+			return elements;
 		}
 		// 'new' statement
 		else if (node instanceof ClassInstanceCreation) {
