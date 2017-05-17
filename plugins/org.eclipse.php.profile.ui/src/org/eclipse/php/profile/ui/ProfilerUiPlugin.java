@@ -12,10 +12,6 @@ package org.eclipse.php.profile.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -42,7 +38,6 @@ public class ProfilerUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		setLaunchPerspective();
 	}
 
 	/**
@@ -86,17 +81,4 @@ public class ProfilerUiPlugin extends AbstractUIPlugin {
 		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
 	}
 
-	private void setLaunchPerspective() {
-		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType[] types = manager
-				.getLaunchConfigurationTypes();
-		for (int i = 0; i < types.length; i++) {
-			String identifier = types[i].getIdentifier();
-			if (identifier.startsWith("org.eclipse.php.")) { //$NON-NLS-1$
-				DebugUITools.setLaunchPerspective(types[i],
-						ILaunchManager.PROFILE_MODE,
-						ProfilerUIConstants.PROFILE_PERSPECTIVE);
-			}
-		}
-	}
 }

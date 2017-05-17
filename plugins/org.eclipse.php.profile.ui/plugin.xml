@@ -209,4 +209,19 @@
               section="org.eclipse.php.profile.ui.launcher.XDebugProfileExeLaunchSettingsSection">
         </phpProfilerLaunchSettingsSection>
      </extension>
+     <extension
+           point="org.eclipse.ui.startup">
+        <startup
+              class="org.eclipse.php.profile.ui.ProfilerUIStartup">
+        </startup>
+     </extension>
+     <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+              class="org.eclipse.php.profile.ui.preferences.ProfilePreferencePage"
+              id="org.eclipse.php.profile.ui.profilePreferencePage"
+              name="%profilePreferencePageName">
+        </page>
+     </extension>
 </plugin>
