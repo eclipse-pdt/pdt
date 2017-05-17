@@ -142,7 +142,7 @@ public class CodeAssistTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("CodeAssistTests_" + version.toString());
-		TestUtils.setProjectPhpVersion(project, version);
+		TestUtils.setProjectPHPVersion(project, version);
 	}
 
 	@AfterList

@@ -82,7 +82,7 @@ abstract public class AbstractErrorReportingTests {
 			pdttFiles.put(fileName, pdttFile);
 			files.put(fileName, createFile(pdttFile.getFile().trim()));
 		}
-		TestUtils.setProjectPhpVersion(project, getPHPVersion());
+		TestUtils.setProjectPHPVersion(project, getPHPVersion());
 		// Perform full build to trigger errors check
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		TestUtils.waitForIndexer();

@@ -31,7 +31,7 @@ import org.eclipse.php.internal.ui.corext.dom.fragments.ASTFragmentFactory;
 import org.eclipse.php.internal.ui.corext.dom.fragments.AssociativeInfixExpressionFragment;
 import org.eclipse.php.internal.ui.corext.dom.fragments.IASTFragment;
 import org.eclipse.php.internal.ui.corext.dom.fragments.IExpressionFragment;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.RefactoringPlugin;
 import org.eclipse.php.refactoring.core.SourceModuleSourceContext;
 import org.eclipse.php.refactoring.core.changes.ProgramDocumentChange;
@@ -44,7 +44,7 @@ import org.eclipse.text.edits.TextEditGroup;
 
 public class ExtractVariableRefactoring extends Refactoring {
 
-	private static final String CHANGE_DESCRIPTION = PhpRefactoringCoreMessages
+	private static final String CHANGE_DESCRIPTION = PHPRefactoringCoreMessages
 			.getString("ExtractVariableRefactoring.4"); //$NON-NLS-1$
 	private ISourceModule sourceModule = null;
 	private IDocument document = null;
@@ -144,7 +144,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 				astRoot = ASTUtils.createProgramFromSource(sourceModule);
 			} catch (Exception e) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.0")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.0")); //$NON-NLS-1$
 			}
 
 			status.merge(checkSelection(status, new SubProgressMonitor(pm, 3)));
@@ -184,14 +184,14 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 			if (selectedExpression == null) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
 			}
 			pm.worked(1);
 
 			enclosingBodyNode = getEnclosingBodyNode();
 			if (enclosingBodyNode == null)
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
 			pm.worked(1);
 
 			if (scopeHasSyntaxErrors(enclosingBodyNode)) {
@@ -296,7 +296,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		if (hasSemanticProblem) {
 			status.merge(RefactoringStatus.createWarningStatus(
-					PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.7"), //$NON-NLS-1$
+					PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.7"), //$NON-NLS-1$
 					new SourceModuleSourceContext(sourceModule, region)));
 		}
 
@@ -320,7 +320,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 					&& (associatedExpression.getStart() < selectedExpression.getStartPosition());
 			if (matchAppearsBeforeVariableDeclaration) {
 				status.merge(RefactoringStatus
-						.createErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.8"))); //$NON-NLS-1$
+						.createErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.8"))); //$NON-NLS-1$
 			}
 		}
 
@@ -334,53 +334,53 @@ public class ExtractVariableRefactoring extends Refactoring {
 			Scalar scalar = (Scalar) expression;
 			if (scalar.getScalarType() == Scalar.TYPE_STRING && scalar.getStringValue().equalsIgnoreCase("null")) { //$NON-NLS-1$
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.5")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.5")); //$NON-NLS-1$
 			}
 		}
 
 		if (isDispatch(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
 		}
 
 		if (isFunctionName(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
 		}
 
 		if (isClassName(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.9")); //$NON-NLS-1$
 		}
 
 		if (isExpressionLeftHandSide(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.10")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.10")); //$NON-NLS-1$
 		}
 
 		if (isUsedInForInitializerOrUpdaterOrIncrementor(expression))
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.11")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.11")); //$NON-NLS-1$
 
 		if (assignmentInStaticStatement(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.12")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.12")); //$NON-NLS-1$
 		}
 
 		if (expressionOfCatchVariable(expression)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.13")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.13")); //$NON-NLS-1$
 		}
 
 		if (expression.isStaticScalar()) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.14")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.14")); //$NON-NLS-1$
 		}
 
 		if (expression.getType() == ASTNode.FORMAL_PARAMETER
 				|| (expression.getParent() != null && expression.getParent().getType() == ASTNode.FORMAL_PARAMETER)) {
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.15")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.15")); //$NON-NLS-1$
 		}
 		return new RefactoringStatus();
 	}
@@ -868,7 +868,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		replacementRewrite.insertLast(move, null);
 
 		TextEditGroup insertDesc = new TextEditGroup(
-				PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
 		textFileChange.addTextEditGroup(insertDesc);
 
 		fRewriter.replace(target.getParent(), block, insertDesc);
@@ -1120,14 +1120,14 @@ public class ExtractVariableRefactoring extends Refactoring {
 		if (enclosingBodyNode.getType() == ASTNode.FUNCTION_DECLARATION) {
 			if (PHPElementConciliator.localVariableAlreadyExists((FunctionDeclaration) enclosingBodyNode, name)) {
 				status.addWarning(
-						NLS.bind(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.26"), name)); //$NON-NLS-1$
+						NLS.bind(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.26"), name)); //$NON-NLS-1$
 			}
 		} else {
 			// check if the user given variable name already exists in the
 			// global scope
 			if (PHPElementConciliator.globalVariableAlreadyExists((Program) astRoot, name)) {
 				status.addWarning(
-						NLS.bind(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.27"), name)); //$NON-NLS-1$
+						NLS.bind(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.27"), name)); //$NON-NLS-1$
 			}
 		}
 
@@ -1137,7 +1137,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.28"), 1); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.28"), 1); //$NON-NLS-1$
 
 			MultiTextEdit root = new MultiTextEdit();
 
@@ -1155,10 +1155,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 			try {
 				extractVariable();
 			} catch (CoreException exception) {
-				RefactoringPlugin.logException(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.29"), //$NON-NLS-1$
+				RefactoringPlugin.logException(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.29"), //$NON-NLS-1$
 						exception);
 			} catch (BadLocationException e) {
-				RefactoringPlugin.logException(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.30"), //$NON-NLS-1$
+				RefactoringPlugin.logException(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.30"), //$NON-NLS-1$
 						e);
 			}
 
@@ -1177,7 +1177,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 	@Override
 	public String getName() {
-		return PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.6"); //$NON-NLS-1$
+		return PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.6"); //$NON-NLS-1$
 	}
 
 	public Change getChange() {

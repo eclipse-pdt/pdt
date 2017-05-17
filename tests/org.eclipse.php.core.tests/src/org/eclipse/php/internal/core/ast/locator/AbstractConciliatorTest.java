@@ -62,7 +62,7 @@ public abstract class AbstractConciliatorTest {
 	public static IProject createProject(String name, PHPVersion version) {
 		IProject project = TestUtils.createProject(name);
 		try {
-			TestUtils.setProjectPhpVersion(project, version);
+			TestUtils.setProjectPHPVersion(project, version);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

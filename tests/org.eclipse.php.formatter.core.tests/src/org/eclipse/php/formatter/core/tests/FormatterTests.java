@@ -113,7 +113,7 @@ public class FormatterTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("FormatterTests_" + suiteCounter++);
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 		// Create files to format
 		for (String fileName : fileNames) {
 			PdttFile pdttFile = new PdttFile(getContext(), fileName);

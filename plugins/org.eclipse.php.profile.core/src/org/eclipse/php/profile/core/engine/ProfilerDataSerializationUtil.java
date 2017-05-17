@@ -238,7 +238,7 @@ public class ProfilerDataSerializationUtil {
 		parameters.put("file", data.getFileName()); //$NON-NLS-1$
 		parameters.put("localFile", data.getLocalFileName()); //$NON-NLS-1$
 		parameters.put("linesNum", Integer.toString(data.getLinesNum())); //$NON-NLS-1$
-		parameters.put("phpLinesNum", Integer.toString(data.getPhpLinesNum())); //$NON-NLS-1$
+		parameters.put("phpLinesNum", Integer.toString(data.getPHPLinesNum())); //$NON-NLS-1$
 		parameters.put("coverageBitmask", pack(data.getCoverageBitmask())); //$NON-NLS-1$
 		parameters.put(
 				"significanceBitmask", pack(data.getSignificanceBitmask())); //$NON-NLS-1$
@@ -415,7 +415,7 @@ public class ProfilerDataSerializationUtil {
 				coverageBitmask);
 		data.setURL(globalData.getOriginalURL());
 		data.setLocalFileName(localFileName);
-		data.setPhpLinesNum(phpLinesNum);
+		data.setPHPLinesNum(phpLinesNum);
 		data.setSignificanceBitmask(significanceBitmask);
 		return data;
 	}

@@ -25,13 +25,12 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.corext.util.Resources;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.extract.NameSuggestVisitor;
 
 /**
  * @author seva
  */
-@SuppressWarnings("restriction")
 public class RefactoringUtility {
 
 	/**
@@ -39,8 +38,7 @@ public class RefactoringUtility {
 	 * @param file
 	 * @throws Exception
 	 */
-	public static Program getProgramForFile(IProject project, final IFile file)
-			throws Exception {
+	public static Program getProgramForFile(IProject project, final IFile file) throws Exception {
 		// fix Mantis #0022461 - Refactoring does not seem to work properly if
 		// the encoding of the file to be refactored is utf-8
 		// The InputStreamReader must receive the file charset, otherwise
@@ -61,8 +59,7 @@ public class RefactoringUtility {
 	 * @param expression
 	 * @return For a given expression return a list of suggested variable names
 	 */
-	public static String[] getVariableNameSuggestions(
-			Expression assignedExpression) {
+	public static String[] getVariableNameSuggestions(Expression assignedExpression) {
 		List<String> res = new ArrayList<String>();
 
 		NameSuggestVisitor visitor = new NameSuggestVisitor();
@@ -86,9 +83,8 @@ public class RefactoringUtility {
 	 * @return
 	 */
 	public static final RefactoringStatus getFatalError(String newName) {
-		return RefactoringStatus
-				.createFatalErrorStatus(PhpRefactoringCoreMessages.format(
-						"RefactoringUtility.0", new Object[] { newName })); //$NON-NLS-1$
+		return RefactoringStatus.createFatalErrorStatus(
+				PHPRefactoringCoreMessages.format("RefactoringUtility.0", new Object[] { newName })); //$NON-NLS-1$
 	}
 
 	/**
@@ -97,8 +93,7 @@ public class RefactoringUtility {
 	 */
 	public static final boolean isValidIdentifier(String newName) {
 		if (newName == null || newName.length() == 0
-				|| !Character.isLetter(newName.charAt(0))
-				&& newName.charAt(0) != '_') {
+				|| !Character.isLetter(newName.charAt(0)) && newName.charAt(0) != '_') {
 			return false;
 		}
 
@@ -118,8 +113,7 @@ public class RefactoringUtility {
 
 	// -------- validateEdit checks ----
 
-	public static RefactoringStatus validateModifiesFiles(
-			IResource[] iResources, Object context) {
+	public static RefactoringStatus validateModifiesFiles(IResource[] iResources, Object context) {
 		RefactoringStatus result = new RefactoringStatus();
 		IStatus status = Resources.checkInSync(iResources);
 		if (!status.isOK())
@@ -128,8 +122,7 @@ public class RefactoringUtility {
 		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
 			if (!result.hasFatalError()) {
-				result.addFatalError(PhpRefactoringCoreMessages
-						.getString("ExtractVariableRefactoring.1")); //$NON-NLS-1$
+				result.addFatalError(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.1")); //$NON-NLS-1$
 			}
 		}
 		return result;
@@ -137,8 +130,7 @@ public class RefactoringUtility {
 
 	public static IResource getResource(Object element) {
 		if (element instanceof IPath) {
-			return ResourcesPlugin.getWorkspace().getRoot()
-					.findMember((IPath) element);
+			return ResourcesPlugin.getWorkspace().getRoot().findMember((IPath) element);
 		}
 		if (element instanceof IResource) {
 			return (IResource) element;
@@ -150,14 +142,12 @@ public class RefactoringUtility {
 			return ((IModelElement) element).getResource();
 		}
 		if (element instanceof IAdaptable) {
-			return (IResource) ((IAdaptable) element)
-					.getAdapter(IResource.class);
+			return (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 		}
 		return null;
 	}
 
-	public static IBuildpathEntry createNewBuildpathEntry(int bpeSource,
-			IPath path) {
+	public static IBuildpathEntry createNewBuildpathEntry(int bpeSource, IPath path) {
 		switch (bpeSource) {
 		case IBuildpathEntry.BPE_LIBRARY:
 			return DLTKCore.newLibraryEntry(path);
@@ -175,39 +165,26 @@ public class RefactoringUtility {
 		}
 	}
 
-	public static IBuildpathEntry createNewBuildpathEntry(
-			IBuildpathEntry fEntryToChange, IPath path, IPath filePath,
+	public static IBuildpathEntry createNewBuildpathEntry(IBuildpathEntry fEntryToChange, IPath path, IPath filePath,
 			String newName) {
 		switch (fEntryToChange.getEntryKind()) {
 		case IBuildpathEntry.BPE_LIBRARY:
-			return DLTKCore.newLibraryEntry(path,
-					fEntryToChange.getAccessRules(),
-					fEntryToChange.getExtraAttributes(),
+			return DLTKCore.newLibraryEntry(path, fEntryToChange.getAccessRules(), fEntryToChange.getExtraAttributes(),
 					fEntryToChange.isExported(), fEntryToChange.isExternal());
 		case IBuildpathEntry.BPE_PROJECT:
-			return DLTKCore.newProjectEntry(path,
-					fEntryToChange.getAccessRules(),
-					fEntryToChange.combineAccessRules(),
-					fEntryToChange.getExtraAttributes(),
-					fEntryToChange.isExported());
+			return DLTKCore.newProjectEntry(path, fEntryToChange.getAccessRules(), fEntryToChange.combineAccessRules(),
+					fEntryToChange.getExtraAttributes(), fEntryToChange.isExported());
 		case IBuildpathEntry.BPE_SOURCE:
-			IPath[] excludes = updatePathPatternes(
-					fEntryToChange.getExclusionPatterns(),
-					fEntryToChange.getPath(), filePath, newName);
-			IPath[] includes = updatePathPatternes(
-					fEntryToChange.getInclusionPatterns(),
-					fEntryToChange.getPath(), filePath, newName);
-			return DLTKCore.newSourceEntry(path, includes, excludes,
-					fEntryToChange.getExtraAttributes());
+			IPath[] excludes = updatePathPatternes(fEntryToChange.getExclusionPatterns(), fEntryToChange.getPath(),
+					filePath, newName);
+			IPath[] includes = updatePathPatternes(fEntryToChange.getInclusionPatterns(), fEntryToChange.getPath(),
+					filePath, newName);
+			return DLTKCore.newSourceEntry(path, includes, excludes, fEntryToChange.getExtraAttributes());
 		case IBuildpathEntry.BPE_CONTAINER:
-			return DLTKCore.newContainerEntry(path,
-					fEntryToChange.getAccessRules(),
-					fEntryToChange.getExtraAttributes(),
-					fEntryToChange.isExported());
+			return DLTKCore.newContainerEntry(path, fEntryToChange.getAccessRules(),
+					fEntryToChange.getExtraAttributes(), fEntryToChange.isExported());
 		case IBuildpathEntry.BPE_VARIABLE:
-			return DLTKCore.newVariableEntry(path,
-					fEntryToChange.getAccessRules(),
-					fEntryToChange.getExtraAttributes(),
+			return DLTKCore.newVariableEntry(path, fEntryToChange.getAccessRules(), fEntryToChange.getExtraAttributes(),
 					fEntryToChange.isExported());
 		default:
 			Assert.isTrue(false);
@@ -215,8 +192,7 @@ public class RefactoringUtility {
 		}
 	}
 
-	private static IPath[] updatePathPatternes(IPath[] updatingPaths,
-			IPath entryPath, IPath filePath, String newName) {
+	private static IPath[] updatePathPatternes(IPath[] updatingPaths, IPath entryPath, IPath filePath, String newName) {
 		IPath[] paths = updatingPaths;
 		IPath relativePath = filePath.makeRelativeTo(entryPath);
 		ArrayList<IPath> excludeList = new ArrayList<IPath>();
@@ -226,11 +202,9 @@ public class RefactoringUtility {
 				IPath truncatedPath = path.uptoSegment(mattchedPath);
 				IPath remaingPath = path.removeFirstSegments(mattchedPath);
 				if (mattchedPath == 0) {
-					excludeList.add(truncatedPath.removeLastSegments(1).append(
-							newName + "/")); //$NON-NLS-1$
+					excludeList.add(truncatedPath.removeLastSegments(1).append(newName + "/")); //$NON-NLS-1$
 				} else {
-					excludeList.add(truncatedPath.removeLastSegments(1)
-							.append(newName + "/") //$NON-NLS-1$
+					excludeList.add(truncatedPath.removeLastSegments(1).append(newName + "/") //$NON-NLS-1$
 							.append(remaingPath.toString()));
 				}
 			} else {
@@ -289,8 +263,7 @@ public class RefactoringUtility {
 		}
 
 		ASTNode model = node;
-		while (!(model instanceof TypeDeclaration)
-				&& !(model instanceof ClassInstanceCreation)) {
+		while (!(model instanceof TypeDeclaration) && !(model instanceof ClassInstanceCreation)) {
 			if (node == null) {
 				return null;
 			}

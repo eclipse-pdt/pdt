@@ -89,7 +89,7 @@ public class TypeInferenceTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("TypeInferenceTests_" + version.toString());
-		TestUtils.setProjectPhpVersion(project, version);
+		TestUtils.setProjectPHPVersion(project, version);
 		typeInferenceEngine = new PHPTypeInferencer();
 	}
 

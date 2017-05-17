@@ -21,7 +21,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameLocalVariable;
 
 /**
@@ -32,15 +32,15 @@ import org.eclipse.php.refactoring.core.rename.logic.RenameLocalVariable;
 public class RenameLocalVariableProcessor extends
 		AbstractRenameProcessor<IFile> implements ITextUpdating {
 
-	private static final String RENAME_IS_PROCESSING = PhpRefactoringCoreMessages
+	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameLocalVariableProcessor.0"); //$NON-NLS-1$
-	private static final String CREATING_MODIFICATIONS_LABEL = PhpRefactoringCoreMessages
+	private static final String CREATING_MODIFICATIONS_LABEL = PHPRefactoringCoreMessages
 			.getString("RenameLocalVariableProcessor.1"); //$NON-NLS-1$
-	private static final String LOCAL_VARIABLE_IS_USED = PhpRefactoringCoreMessages
+	private static final String LOCAL_VARIABLE_IS_USED = PHPRefactoringCoreMessages
 			.getString("RenameLocalVariableProcessor.2"); //$NON-NLS-1$
 	private static final String ID_RENAME_FUNCTION = "php.refactoring.ui.rename.localVariable"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_TEXTUAL_MATCHES = "textual"; //$NON-NLS-1$
-	public static final String RENAME_FUNCTION_PROCESSOR_NAME = PhpRefactoringCoreMessages
+	public static final String RENAME_FUNCTION_PROCESSOR_NAME = PHPRefactoringCoreMessages
 			.getString("RenameLocalVariableProcessor.3"); //$NON-NLS-1$
 
 	/**

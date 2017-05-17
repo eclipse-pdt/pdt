@@ -24,7 +24,7 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 
 /**
  * @author seva
@@ -58,7 +58,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 		if (files.size() == 0)
-			status.addFatalError(PhpRefactoringCoreMessages
+			status.addFatalError(PHPRefactoringCoreMessages
 					.getString("OrganizeIncludesProcessor.Not_Applicable")); //$NON-NLS-1$
 		return status;
 	}
@@ -71,11 +71,11 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	public Change createChange(IProgressMonitor monitor)
 			throws OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PhpRefactoringCoreMessages
+				PHPRefactoringCoreMessages
 						.getString("OrganizeIncludesProcessor.Organizing_Includes")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 		monitor.beginTask(
-				PhpRefactoringCoreMessages
+				PHPRefactoringCoreMessages
 						.getString("OrganizeIncludesProcessor.Calculating"), files.size()); //$NON-NLS-1$
 		for (IFile element : files) {
 			if (monitor.isCanceled())

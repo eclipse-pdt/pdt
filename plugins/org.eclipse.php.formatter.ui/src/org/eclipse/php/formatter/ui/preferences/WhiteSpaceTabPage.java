@@ -206,7 +206,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 		public PHPElementComponent() {
 			fIndexedNodeList = new ArrayList<Node>();
-			fTree = WhiteSpaceOptions.createTreeByPhpElement(fworkingValues);
+			fTree = WhiteSpaceOptions.createTreeByPHPElement(fworkingValues);
 			WhiteSpaceOptions.makeIndexForNodes(fTree, fIndexedNodeList);
 		}
 
@@ -410,11 +410,11 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private Combo fSwitchCombo;
 		private PageBook fPageBook;
 		private final SyntaxComponent fSyntaxComponent;
-		private final PHPElementComponent fPhpElementComponent;
+		private final PHPElementComponent fPHPElementComponent;
 
 		public SwitchComponent() {
 			fSyntaxComponent = new SyntaxComponent();
-			fPhpElementComponent = new PHPElementComponent();
+			fPHPElementComponent = new PHPElementComponent();
 		}
 
 		@Override
@@ -422,8 +422,8 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			final int index = fSwitchCombo.getSelectionIndex();
 			if (index == 0) {
 				fDialogSettings.put(PREF_VIEW_KEY, false);
-				fPhpElementComponent.refreshState();
-				fPageBook.showPage(fPhpElementComponent.getControl());
+				fPHPElementComponent.refreshState();
+				fPageBook.showPage(fPHPElementComponent.getControl());
 			} else if (index == 1) {
 				fDialogSettings.put(PREF_VIEW_KEY, true);
 				fSyntaxComponent.refreshState();
@@ -436,7 +436,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			fPageBook = new PageBook(parent, SWT.NONE);
 			fPageBook.setLayoutData(createGridData(numColumns, GridData.FILL_BOTH, SWT.DEFAULT));
 
-			fPhpElementComponent.createContents(numColumns, fPageBook);
+			fPHPElementComponent.createContents(numColumns, fPageBook);
 			fSyntaxComponent.createContents(numColumns, fPageBook);
 
 			fSwitchCombo = new Combo(parent, SWT.READ_ONLY);
@@ -447,7 +447,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 		public void initialize() {
 			fSwitchCombo.addSelectionListener(this);
-			fPhpElementComponent.initialize();
+			fPHPElementComponent.initialize();
 			fSyntaxComponent.initialize();
 			restoreSelection();
 		}
@@ -459,9 +459,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				fSwitchCombo.setText(fItems[1]);
 				fPageBook.showPage(fSyntaxComponent.getControl());
 			} else {
-				fPhpElementComponent.refreshState();
+				fPHPElementComponent.refreshState();
 				fSwitchCombo.setText(fItems[0]);
-				fPageBook.showPage(fPhpElementComponent.getControl());
+				fPageBook.showPage(fPHPElementComponent.getControl());
 			}
 		}
 	}
@@ -501,7 +501,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 	}
 
 	@Override
-	protected PHPPreview doCreatePhpPreview(Composite parent) {
+	protected PHPPreview doCreatePHPPreview(Composite parent) {
 		fPreview = new CodeFormatterPreview(codeFormatterPreferences, parent);
 		return fPreview;
 	}

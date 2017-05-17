@@ -31,7 +31,7 @@ import org.eclipse.php.core.libfolders.RenameLibraryFolderChange;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.*;
 import org.eclipse.php.refactoring.core.move.MoveUtils;
 import org.eclipse.php.refactoring.core.rename.logic.RenameIncludeFolder;
@@ -39,9 +39,9 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 import org.eclipse.text.edits.MultiTextEdit;
 
 public class RenameFolderProcessor extends AbstraceRenameResourceProcessor implements IReferenceUpdating {
-	public static final String RENAME_FOLDER_PROCESSOR_NAME = PhpRefactoringCoreMessages
+	public static final String RENAME_FOLDER_PROCESSOR_NAME = PHPRefactoringCoreMessages
 			.getString("RenameResourceProcessor.0"); //$NON-NLS-1$
-	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PhpRefactoringCoreMessages
+	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PHPRefactoringCoreMessages
 			.getString("RenameProcessorBase.internalerror"); //$NON-NLS-1$
 	private static final String ID_RENAME_FOLDER = "php.refactoring.ui.rename.folder"; //$NON-NLS-1$
 	private Map<String, String> attributes = new HashMap<String, String>();
@@ -78,7 +78,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 		rootChange.markAsSynthetic();
 
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages.getString("RenameFolderProcessor.RenamingFile"), 100); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("RenameFolderProcessor.RenamingFile"), 100); //$NON-NLS-1$
 
 			if (pm.isCanceled())
 				throw new OperationCanceledException();
@@ -109,8 +109,8 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 	}
 
 	private void createRenameReferenceChange(IProgressMonitor pm, CompositeChange rootChange) throws CoreException {
-		pm.beginTask(PhpRefactoringCoreMessages.getString("RenameFolderProcessor.0"), 0); //$NON-NLS-1$
-		pm.setTaskName(PhpRefactoringCoreMessages.getString("RenameFolderProcessor.1")); //$NON-NLS-1$
+		pm.beginTask(PHPRefactoringCoreMessages.getString("RenameFolderProcessor.0"), 0); //$NON-NLS-1$
+		pm.setTaskName(PHPRefactoringCoreMessages.getString("RenameFolderProcessor.1")); //$NON-NLS-1$
 
 		IPath source = resource.getFullPath().removeLastSegments(1);
 		String oldName = resource.getName();
@@ -298,7 +298,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 
 		if (!checkReadOnlyAndNull(resource)) {
 			status.merge(RefactoringStatus.createFatalErrorStatus(
-					NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
+					NLS.bind(PHPRefactoringCoreMessages.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
 		}
 		try {
 			boolean hasExternalDependencies = false;
@@ -325,7 +325,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 			}
 
 			if (hasExternalDependencies) {
-				final String message = PhpRefactoringCoreMessages.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
+				final String message = PHPRefactoringCoreMessages.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
 				return RefactoringStatus.createWarningStatus(message);
 			}
 
@@ -386,7 +386,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 		}
 		if (dest.exists()) {
 			status.merge(RefactoringStatus
-					.createFatalErrorStatus(NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.8"), //$NON-NLS-1$
+					.createFatalErrorStatus(NLS.bind(PHPRefactoringCoreMessages.getString("RenameFileProcessor.8"), //$NON-NLS-1$
 							getNewElementName(), sourcePath.toOSString())));
 		}
 

@@ -34,7 +34,7 @@ import org.eclipse.ltk.internal.core.refactoring.resource.ResourceProcessors;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameClass;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
@@ -46,15 +46,15 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 public class RenameClassProcessor extends AbstractRenameProcessor<IFile>
 		implements ITextUpdating {
 
-	public static final String RENAME_IS_PROCESSING = PhpRefactoringCoreMessages
+	public static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameClassNameProcessor.0"); //$NON-NLS-1$
-	public static final String CREATING_MODIFICATIONS_LABEL = PhpRefactoringCoreMessages
+	public static final String CREATING_MODIFICATIONS_LABEL = PHPRefactoringCoreMessages
 			.getString("RenameClassNameProcessor.1"); //$NON-NLS-1$
-	private static final String CLASS_IS_USED = PhpRefactoringCoreMessages
+	private static final String CLASS_IS_USED = PHPRefactoringCoreMessages
 			.getString("RenameClassNameProcessor.2"); //$NON-NLS-1$
 	private static final String ID_RENAME_CLASS = "php.refactoring.ui.rename.className"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_TEXTUAL_MATCHES = "textual"; //$NON-NLS-1$
-	public static final String RENAME_CLASS_PROCESSOR_NAME = PhpRefactoringCoreMessages
+	public static final String RENAME_CLASS_PROCESSOR_NAME = PHPRefactoringCoreMessages
 			.getString("RenameClassNameProcessor.3"); //$NON-NLS-1$
 
 	/**
@@ -107,7 +107,7 @@ public class RenameClassProcessor extends AbstractRenameProcessor<IFile>
 			OperationCanceledException {
 
 		CompositeChange rootChange = new CompositeChange(
-				PhpRefactoringCoreMessages
+				PHPRefactoringCoreMessages
 						.getString("RenameClassNameProcessor.4")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 

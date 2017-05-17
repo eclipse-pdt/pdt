@@ -15,10 +15,10 @@ package org.eclipse.php.internal.core.ast.locator;
 import org.eclipse.php.core.PHPVersion;
 import org.junit.BeforeClass;
 
-public class PhpElementConciliatorV5_6Test extends PhpElementConciliatorV5_5Test {
+public class PHPElementConciliatorV5_5Test extends PHPElementConciliatorV5_3Test {
 
 	static {
-		phpVersion = PHPVersion.PHP5_6;
+		phpVersion = PHPVersion.PHP5_5;
 	}
 
 	@BeforeClass

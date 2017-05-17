@@ -21,7 +21,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class PhpElementConciliatorV5_3Test extends AbstractConciliatorTest {
+public class PHPElementConciliatorV5_3Test extends AbstractConciliatorTest {
 
 	static {
 		phpVersion = PHPVersion.PHP5_3;

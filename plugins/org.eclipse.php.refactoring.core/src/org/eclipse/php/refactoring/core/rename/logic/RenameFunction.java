@@ -12,7 +12,7 @@ package org.eclipse.php.refactoring.core.rename.logic;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 
 /**
  * This visitor locates the identifiers to change given a global function name
@@ -21,7 +21,7 @@ import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
  */
 public class RenameFunction extends AbstractRename {
 
-	private static final String RENAME_FUNCTION = PhpRefactoringCoreMessages
+	private static final String RENAME_FUNCTION = PHPRefactoringCoreMessages
 			.getString("RenameFunctionName.0"); //$NON-NLS-1$
 
 	public RenameFunction(IFile file, String oldName, String newName,

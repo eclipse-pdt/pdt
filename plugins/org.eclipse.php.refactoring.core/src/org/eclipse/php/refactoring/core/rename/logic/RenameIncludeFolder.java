@@ -20,7 +20,7 @@ import org.eclipse.php.core.ast.nodes.Include;
 import org.eclipse.php.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.core.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEditGroup;
 
@@ -79,7 +79,7 @@ public class RenameIncludeFolder extends AbstractRename {
 							- oldName.length() - 1;
 
 					addChange(scalar.getStart() + len,
-							PhpRefactoringCoreMessages
+							PHPRefactoringCoreMessages
 									.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
 				} else {
 
@@ -94,7 +94,7 @@ public class RenameIncludeFolder extends AbstractRename {
 
 						addChange(
 								scalar.getStart() + len,
-								PhpRefactoringCoreMessages
+								PHPRefactoringCoreMessages
 										.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
 					}
 				}
@@ -184,7 +184,7 @@ public class RenameIncludeFolder extends AbstractRename {
 
 	@Override
 	public String getRenameDescription() {
-		return PhpRefactoringCoreMessages.getString("RenameIncludeFolder.4"); //$NON-NLS-1$
+		return PHPRefactoringCoreMessages.getString("RenameIncludeFolder.4"); //$NON-NLS-1$
 	}
 
 }

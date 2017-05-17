@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -19,7 +18,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -78,76 +76,4 @@ public class PHPCoreTests extends Plugin {
 	public static PHPCoreTests getDefault() {
 		return plugin;
 	}
-
-	/**
-	 * @deprecated use {@link TestUtils#compareContents(String, String)}
-	 *             instead.
-	 * 
-	 *             Compares expected result with the actual.
-	 * 
-	 * @param expected
-	 * @param actual
-	 * @return difference string or <code>null</code> in case expected result is
-	 *         equal to the actual.
-	 */
-	@Deprecated
-	public static String compareContents(String expected, String actual) {
-		return TestUtils.compareContents(expected, actual);
-	}
-
-	/**
-	 * @deprecated use
-	 *             {@link TestUtils#compareContentsIgnoreWhitespace(String, String)}
-	 *             instead.
-	 * 
-	 *             Compares expected result with the actual ignoring whitespace
-	 *             characters
-	 * 
-	 * @param expected
-	 * @param actual
-	 * @return difference string or <code>null</code> in case expected result is
-	 *         equal to the actual.
-	 */
-	@Deprecated
-	public static String compareContentsIgnoreWhitespace(String expected, String actual) {
-		return TestUtils.compareContentsIgnoreWhitespace(expected, actual);
-	}
-
-	/**
-	 * @deprecated use {@link TestUtils#waitForIndexer()} instead.
-	 * 
-	 *             Wait for indexer to finish its job.
-	 */
-	@Deprecated
-	public static void waitForIndexer() {
-		TestUtils.waitForIndexer();
-	}
-
-	/**
-	 * @deprecated use {@link TestUtils#waitForAutoBuild()} instead.
-	 * 
-	 *             Wait for auto-build notification to occur, that is for the
-	 *             auto-build to finish.
-	 */
-	@Deprecated
-	public static void waitForAutoBuild() {
-		TestUtils.waitForAutoBuild();
-	}
-
-	/**
-	 * @deprecated use
-	 *             {@link TestUtils#setProjectPhpVersion(IProject, PHPVersion)}
-	 *             instead.
-	 * 
-	 *             Set project PHP version
-	 * 
-	 * @param project
-	 * @param phpVersion
-	 * @throws CoreException
-	 */
-	@Deprecated
-	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
-		TestUtils.setProjectPhpVersion(project, phpVersion);
-	}
-
 }

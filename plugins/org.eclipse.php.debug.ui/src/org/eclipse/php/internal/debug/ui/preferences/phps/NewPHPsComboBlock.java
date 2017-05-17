@@ -758,7 +758,7 @@ public class NewPHPsComboBlock {
 			i++;
 		}
 		if (names.length == 0) {
-			names = new String[] { PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined };
+			names = new String[] { PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined };
 		}
 		fExecutablesCombo.setItems(names);
 		PHPexeItem defaultExe = exes.getDefaultItem();

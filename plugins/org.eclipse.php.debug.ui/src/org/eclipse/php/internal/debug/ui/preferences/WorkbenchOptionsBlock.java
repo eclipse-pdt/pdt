@@ -113,9 +113,9 @@ public class WorkbenchOptionsBlock extends AbstractPHPPreferencePageBlock {
 		group.setText(PHPDebugUIMessages.WorkbenchOptionsBlock_workbench_options);
 		group.setLayout(new GridLayout());
 		group.setLayoutData(new GridData(GridData.FILL_BOTH));
-		fOpenInBrowser = addCheckBox(group, PHPDebugUIMessages.PhpDebugPreferencePage_11,
+		fOpenInBrowser = addCheckBox(group, PHPDebugUIMessages.PHPDebugPreferencePage_11,
 				PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, 0);
-		fOpenDebugViews = addCheckBox(group, PHPDebugUIMessages.PhpDebugPreferencePage_7,
+		fOpenDebugViews = addCheckBox(group, PHPDebugUIMessages.PHPDebugPreferencePage_7,
 				PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, 0);
 	}
 

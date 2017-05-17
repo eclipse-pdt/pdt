@@ -622,7 +622,7 @@ public abstract class ModifyDialogTabPage {
 
 		createLabel(numColumns, composite, FormatterMessages.ModifyDialogTabPage_preview_label_text);
 
-		final PHPPreview preview = doCreatePhpPreview(composite);
+		final PHPPreview preview = doCreatePHPPreview(composite);
 		fDefaultFocusManager.add(preview.getControl());
 
 		final GridData gd = createGridData(numColumns, GridData.FILL_BOTH, 0);
@@ -644,7 +644,7 @@ public abstract class ModifyDialogTabPage {
 	 *            Parent composite
 	 * @return Created preview
 	 */
-	protected abstract PHPPreview doCreatePhpPreview(Composite parent);
+	protected abstract PHPPreview doCreatePHPPreview(Composite parent);
 
 	/**
 	 * This is called when the page becomes visible. Common tasks to do include:

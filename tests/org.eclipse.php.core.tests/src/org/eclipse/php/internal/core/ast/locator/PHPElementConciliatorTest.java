@@ -22,7 +22,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.TypeDeclaration;
 import org.junit.Test;
 
-public class PhpElementConciliatorTest extends AbstractConciliatorTest {
+public class PHPElementConciliatorTest extends AbstractConciliatorTest {
 
 	@Test
 	public void concileClassName() {

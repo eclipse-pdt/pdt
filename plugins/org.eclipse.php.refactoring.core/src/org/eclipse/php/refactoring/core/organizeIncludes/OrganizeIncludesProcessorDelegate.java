@@ -104,7 +104,7 @@ public class OrganizeIncludesProcessorDelegate {
 		// List<PHPIncludeFileData> unresolvedIncludes = new
 		// ArrayList<PHPIncludeFileData>();
 		//
-		//		monitor.beginTask(PhpRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.0"), 11); //$NON-NLS-1$
+		//		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.0"), 11); //$NON-NLS-1$
 		//
 		// // 1. Find the elements:
 		// if (monitor.isCanceled())
@@ -195,7 +195,7 @@ public class OrganizeIncludesProcessorDelegate {
 	// BucketMap<PHPFileData, CodeData> missingHardIncludes,
 	// BucketMap<PHPFileData, CodeData> missingSoftIncludes, IProgressMonitor
 	// monitor) {
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.1"), foundElements.getFirst().getKeys().size()); //$NON-NLS-1$
+	//		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.1"), foundElements.getFirst().getKeys().size()); //$NON-NLS-1$
 	// for (String elementName : foundElements.getFirst().getKeys()) {
 	// CodeData elementData = null;
 	// PHPFileData container = null;
@@ -288,7 +288,7 @@ public class OrganizeIncludesProcessorDelegate {
 	// existingIncludes, List<PHPIncludeFileData> unneededIncludes,
 	// List<PHPIncludeFileData> unresolvedIncludes, IProgressMonitor monitor) {
 	// PHPIncludeFileData[] includes = fileData.getIncludeFiles();
-	//		monitor.beginTask(PhpRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.2"), includes.length); //$NON-NLS-1$
+	//		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.2"), includes.length); //$NON-NLS-1$
 	// for (PHPIncludeFileData element : includes) {
 	// FileNode includedNode =
 	// fileNode.getIncluded(FileNetworkUtils.getFilePath(element));

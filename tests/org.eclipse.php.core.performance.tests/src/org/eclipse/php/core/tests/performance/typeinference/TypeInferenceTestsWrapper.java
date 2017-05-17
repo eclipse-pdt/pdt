@@ -93,7 +93,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 					suite.addTest(new TypeInferenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
 						protected void setUp() throws Exception {
-							TestUtils.setProjectPhpVersion(project, phpVersion);
+							TestUtils.setProjectPHPVersion(project, phpVersion);
 						}
 
 						protected void tearDown() throws Exception {

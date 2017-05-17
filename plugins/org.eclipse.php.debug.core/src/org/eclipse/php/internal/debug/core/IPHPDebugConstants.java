@@ -69,8 +69,8 @@ public interface IPHPDebugConstants {
 
 	public static final String DEBUG_PER_PROJECT = ID_PHP_DEBUG_CORE + ".use-project-settings"; //$NON-NLS-1$
 	public static final String DEBUG_QUALIFIER = ID_PHP_DEBUG_CORE + ".Debug_Process_Preferences"; //$NON-NLS-1$
-	public static final String PREFERENCE_PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"; //$NON-NLS-1$
-	public static final String PROJECT_PAGE_ID = "org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"; //$NON-NLS-1$
+	public static final String PREFERENCE_PAGE_ID = "org.eclipse.php.debug.ui.preferences.PHPDebugPreferencePage"; //$NON-NLS-1$
+	public static final String PROJECT_PAGE_ID = "org.eclipse.php.debug.ui.property.PHPDebugPreferencePage"; //$NON-NLS-1$
 
 	public static final String DEBUGGING_PAGES = "debugPages"; //$NON-NLS-1$
 	public static final String DEBUGGING_ALL_PAGES = "debugAllPages"; //$NON-NLS-1$

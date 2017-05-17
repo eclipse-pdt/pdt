@@ -89,7 +89,7 @@ public class ProjectSuite extends AbstractModelTests {
 				IProjectDescription desc = project.getDescription();
 				desc.setNatureIds(new String[] { PHPNature.ID });
 				project.setDescription(desc, null);
-				TestUtils.setProjectPhpVersion(project, (PHPVersion) map.get(PHP_VERSION));
+				TestUtils.setProjectPHPVersion(project, (PHPVersion) map.get(PHP_VERSION));
 				IFolder testFolder = project.getFolder("pdttest");
 				testFolder.create(true, true, null);
 

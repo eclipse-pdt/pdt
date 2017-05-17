@@ -26,7 +26,7 @@ import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.*;
 import org.eclipse.ltk.internal.core.refactoring.resource.ResourceProcessors;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 
 /**
  * The processor is the class responsible for most of the refactoring phases.
@@ -178,7 +178,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * getProcessorName()
 	 */
 	public String getProcessorName() {
-		return PhpRefactoringCoreMessages.getString("PHPMoveProcessor.0"); //$NON-NLS-1$
+		return PHPRefactoringCoreMessages.getString("PHPMoveProcessor.0"); //$NON-NLS-1$
 	}
 
 	/*

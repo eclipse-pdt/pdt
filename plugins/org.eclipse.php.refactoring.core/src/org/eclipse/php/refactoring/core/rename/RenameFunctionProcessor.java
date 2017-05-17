@@ -31,7 +31,7 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.rename.logic.RenameFunction;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
@@ -45,15 +45,15 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 		implements ITextUpdating {
 
-	private static final String RENAME_IS_PROCESSING = PhpRefactoringCoreMessages
+	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameFunctionProcessor.0"); //$NON-NLS-1$
-	private static final String CREATING_MODIFICATIONS_LABEL = PhpRefactoringCoreMessages
+	private static final String CREATING_MODIFICATIONS_LABEL = PHPRefactoringCoreMessages
 			.getString("RenameFunctionProcessor.1"); //$NON-NLS-1$
-	private static final String FUNCTION_IS_USED = PhpRefactoringCoreMessages
+	private static final String FUNCTION_IS_USED = PHPRefactoringCoreMessages
 			.getString("RenameFunctionProcessor.2"); //$NON-NLS-1$
 	private static final String ID_RENAME_FUNCTION = "php.refactoring.ui.rename.function"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_TEXTUAL_MATCHES = "textual"; //$NON-NLS-1$
-	public static final String RENAME_FUNCTION_PROCESSOR_NAME = PhpRefactoringCoreMessages
+	public static final String RENAME_FUNCTION_PROCESSOR_NAME = PHPRefactoringCoreMessages
 			.getString("RenameFunctionProcessor.3"); //$NON-NLS-1$
 
 	/**
@@ -77,7 +77,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PhpRefactoringCoreMessages
+				PHPRefactoringCoreMessages
 						.getString("RenameFunctionProcessor.4")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 		try {

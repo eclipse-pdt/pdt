@@ -15,7 +15,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  */
 public class RenameTrait extends AbstractRename {
 
-	private static final String RENAME_CLASS = PhpRefactoringCoreMessages.getString("RenameClassName.0"); //$NON-NLS-1$
+	private static final String RENAME_CLASS = PHPRefactoringCoreMessages.getString("RenameClassName.0"); //$NON-NLS-1$
 	private ASTNode originalDeclaration;
 	private IType[] types;
 

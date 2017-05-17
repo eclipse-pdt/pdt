@@ -134,7 +134,7 @@ public class SemanticHighlightingTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("SemanticHighlighting_" + phpVersion);
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 	}
 
 	@AfterList

@@ -21,7 +21,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.project.ProjectOptions;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.RefactoringPlugin;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
@@ -34,7 +34,7 @@ public class RenameClassMember extends AbstractRename {
 
 	private int nodeType;
 
-	private static final String RENAME_CLASS_MEMBER = PhpRefactoringCoreMessages.getString("RenameClassPropertyName.0"); //$NON-NLS-1$
+	private static final String RENAME_CLASS_MEMBER = PHPRefactoringCoreMessages.getString("RenameClassPropertyName.0"); //$NON-NLS-1$
 	// can be null
 	private ITypeBinding type;
 

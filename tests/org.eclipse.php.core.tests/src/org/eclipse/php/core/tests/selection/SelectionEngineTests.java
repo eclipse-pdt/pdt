@@ -84,7 +84,7 @@ public class SelectionEngineTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("AutoSelectionEngine_" + version.toString());
-		TestUtils.setProjectPhpVersion(project, version);
+		TestUtils.setProjectPHPVersion(project, version);
 	}
 
 	@AfterList
