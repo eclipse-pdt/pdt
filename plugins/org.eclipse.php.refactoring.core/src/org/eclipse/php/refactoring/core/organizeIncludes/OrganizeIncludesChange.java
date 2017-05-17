@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.ltk.core.refactoring.*;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -31,7 +31,7 @@ class OrganizeIncludesChange extends TextFileChange {
 			OrganizeIncludesProcessorDelegate processorDelegate) {
 		super(
 				MessageFormat
-						.format(PhpRefactoringCoreMessages
+						.format(PHPRefactoringCoreMessages
 								.getString("OrganizeIncludesChange_In_File"), new Object[] { processorDelegate.getFile().getFullPath().toString() }), processorDelegate.getFile()); //$NON-NLS-1$
 		// 0. Initialize the change:
 		setTextType("php"); //$NON-NLS-1$
@@ -116,7 +116,7 @@ class OrganizeIncludesChange extends TextFileChange {
 	// allEdits.add(createDeleteIncludeEdit(include));
 	// }
 	// // add the group edit:
-	//		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new GroupCategory("relocateIncludes", PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements"), PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	//		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new GroupCategory("relocateIncludes", PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	//
 	// return createChangeEditGroup(allEdits.toArray(new
 	// TextEdit[allEdits.size()]), editGroup, false);
@@ -133,7 +133,7 @@ class OrganizeIncludesChange extends TextFileChange {
 	// String includeLocation =
 	// PHPModelUtil.getRelativeLocation(processorDelegate.getProject(),
 	// existingInclude);
-	//			String editGroupName = OrganizeIncludesUtils.getEditGroupName(PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Move_Up"), includeLocation, existingIncludes.get(existingInclude)); //$NON-NLS-1$
+	//			String editGroupName = OrganizeIncludesUtils.getEditGroupName(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Move_Up"), includeLocation, existingIncludes.get(existingInclude)); //$NON-NLS-1$
 	// Collection<IPath> includePaths =
 	// processorDelegate.fileNode.getIncludePaths(processorDelegate.network.getNode(processorDelegate.projectModel.getFileData(existingInclude)));
 	// List<PHPIncludeFileData> identicalIncludes = new
@@ -167,7 +167,7 @@ class OrganizeIncludesChange extends TextFileChange {
 	// String includeLocation =
 	// PHPModelUtil.getRelativeLocation(processorDelegate.getProject(),
 	// missingInclude.getName());
-	//			String editGroupName = OrganizeIncludesUtils.getEditGroupName(PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Add"), includeLocation, missingIncludes.get(missingInclude)); //$NON-NLS-1$
+	//			String editGroupName = OrganizeIncludesUtils.getEditGroupName(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Add"), includeLocation, missingIncludes.get(missingInclude)); //$NON-NLS-1$
 	// TextEditChangeGroup editChangeGroup =
 	// createIncludeAddition(editGroupName, includeLocation, groupEnabled);
 	// editGroups.put(includeLocation, editChangeGroup);
@@ -181,8 +181,8 @@ class OrganizeIncludesChange extends TextFileChange {
 				insertionLabel,
 				new GroupCategorySet(
 						new GroupCategory(
-								PhpRefactoringCoreMessages
-										.getString("OrganizeIncludesChange_5"), PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions"), PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								PHPRefactoringCoreMessages
+										.getString("OrganizeIncludesChange_5"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return createChangeEditGroup(new TextEdit[] { edit }, editGroup,
 				enabled);
 	}
@@ -210,7 +210,7 @@ class OrganizeIncludesChange extends TextFileChange {
 	// for (PHPIncludeFileData unneededInclude : unneededIncludes) {
 	// String includeLocation = unneededInclude.getName();
 	// String editGroupName = OrganizeIncludesUtils.getEditGroupName(
-	//				PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Remove"), includeLocation, unresolved ? PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Unresolved") : PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Possibly_Unused")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	//				PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Remove"), includeLocation, unresolved ? PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Unresolved") : PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Possibly_Unused")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	// TextEditChangeGroup editChangeGroup = editGroups.get(includeLocation);
 	// if (editChangeGroup == null) {
 	// editChangeGroup = createIncludeDeletion(editGroupName, unneededInclude,
@@ -235,7 +235,7 @@ class OrganizeIncludesChange extends TextFileChange {
 	// // create and add the edit:
 	// TextEdit edit = createDeleteIncludeEdit(unneededInclude);
 	// // add the group edit:
-	//		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new GroupCategory("deleteIncludes", PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions"), PhpRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	//		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new GroupCategory("deleteIncludes", PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	// return createChangeEditGroup(new TextEdit[] { edit }, editGroup,
 	// groupEnabled);
 	// }

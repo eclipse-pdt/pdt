@@ -101,7 +101,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		String phpExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
 				.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
 		if (phpExeName == null || phpExeName.isEmpty()) {
-			phpExeName = PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined;
+			phpExeName = PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined;
 		}
 		String transferEncoding = service.getString(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
 				null, null);
@@ -148,7 +148,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (item != null) {
 			fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 		} else {
-			fCLIDebugger.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+			fCLIDebugger.setText(PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined);
 		}
 		fDebugEncodingSettings.setText(transferEncoding);
 		fOutputEncodingSettings.setText(outputEncoding);
@@ -242,13 +242,13 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		defultServerGroup.setLayout(layout);
 		defultServerGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Label label = addLabelControl(defultServerGroup, PHPDebugUIMessages.PhpDebugPreferencePage_9,
+		Label label = addLabelControl(defultServerGroup, PHPDebugUIMessages.PHPDebugPreferencePage_9,
 				ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 		GridData gd = new GridData();
 		gd.widthHint = 90;
 		label.setLayoutData(gd);
 		fDefaultServer = addCombo(defultServerGroup, 2);
-		addLink(defultServerGroup, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
+		addLink(defultServerGroup, PHPDebugUIMessages.PHPDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
 		label = addLabelControl(defultServerGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_ServerDebugger, null);
 		gd = new GridData();
 		gd.widthHint = 90;
@@ -267,13 +267,13 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		defultCLIGroup.setLayout(layout);
 		defultCLIGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		label = addLabelControl(defultCLIGroup, PHPDebugUIMessages.PhpDebugPreferencePage_12,
+		label = addLabelControl(defultCLIGroup, PHPDebugUIMessages.PHPDebugPreferencePage_12,
 				PHPDebugCorePreferenceNames.DEFAULT_PHP);
 		gd = new GridData();
 		gd.widthHint = 90;
 		label.setLayoutData(gd);
 		fDefaultPHPExe = addCombo(defultCLIGroup, 2);
-		addLink(defultCLIGroup, PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
+		addLink(defultCLIGroup, PHPDebugUIMessages.PHPDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
 		label = addLabelControl(defultCLIGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_CLIDebugger, null);
 		gd = new GridData();
 		gd.widthHint = 90;
@@ -316,7 +316,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (isPropertyPage())
 			createBaseURLGroup(composite);
 
-		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1,
+		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PHPDebugPreferencePage_1,
 				PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
 
 		fDefaultPHPExe.addSelectionListener(new SelectionAdapter() {
@@ -325,7 +325,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				if (item != null) {
 					fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 				} else {
-					fCLIDebugger.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+					fCLIDebugger.setText(PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined);
 				}
 			}
 		});
@@ -413,7 +413,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	private void loadPHPExes(Combo combo, PHPexeItem[] items) {
 		combo.removeAll();
 		if (items == null || items.length == 0) {
-			combo.add(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+			combo.add(PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined);
 			combo.select(0);
 			return;
 		}
@@ -482,7 +482,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				if (item != null) {
 					fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 				} else {
-					fCLIDebugger.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+					fCLIDebugger.setText(PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined);
 				}
 			}
 		});
@@ -537,7 +537,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (isProjectSpecific && debugUINode != null && preferenceScopes[0] instanceof ProjectScope
 				&& project != null) {
 			debugUINode.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-			if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined.equals(phpExe)) {
+			if (!PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined.equals(phpExe)) {
 				debugUINode.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 			}
 			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getText());
@@ -552,7 +552,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				prefs.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
 				prefs.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getText());
 				prefs.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getText());
-				if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined.equals(phpExe)) {
+				if (!PHPDebugUIMessages.PHPDebugPreferencePage_noExeDefined.equals(phpExe)) {
 					prefs.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 				}
 				ServersManager.setDefaultServer(project, fDefaultServer.getText());

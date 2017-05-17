@@ -21,7 +21,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 
 /**
@@ -32,7 +32,7 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  */
 public class RenameClass extends AbstractRename {
 
-	private static final String RENAME_CLASS = PhpRefactoringCoreMessages.getString("RenameClassName.0"); //$NON-NLS-1$
+	private static final String RENAME_CLASS = PHPRefactoringCoreMessages.getString("RenameClassName.0"); //$NON-NLS-1$
 	private ASTNode originalDeclaration;
 	private IType[] types;
 

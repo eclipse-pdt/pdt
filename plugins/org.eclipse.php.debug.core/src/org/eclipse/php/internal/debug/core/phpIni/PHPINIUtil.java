@@ -91,7 +91,7 @@ public class PHPINIUtil {
 	 * @param project
 	 * @return the ini file
 	 */
-	public static File createPhpIniByProject(File phpIniFile, IProject project) {
+	public static File createPHPIniByProject(File phpIniFile, IProject project) {
 
 		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
 
@@ -194,7 +194,7 @@ public class PHPINIUtil {
 	public static File prepareBeforeLaunch(File phpIniFile, String phpExePath, IProject project) {
 		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
 
-		tempIniFile = createPhpIniByProject(phpIniFile, project);
+		tempIniFile = createPHPIniByProject(phpIniFile, project);
 
 		// Modify Zend Debugger extension entry:
 		if (phpIniFile != null) {

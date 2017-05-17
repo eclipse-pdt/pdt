@@ -37,7 +37,7 @@ public class RenameProcessorTestCase0029408 extends AbstractRefactoringTest {
 	@Before
 	public void setUp() throws Exception {
 		project1 = TestUtils.createProject("project1");
-		TestUtils.setProjectPhpVersion(project1, PHPVersion.PHP5_3);
+		TestUtils.setProjectPHPVersion(project1, PHPVersion.PHP5_3);
 
 		IFolder folder = TestUtils.createFolder(project1, "src");
 		file = TestUtils.createFile(folder, "test00294081.php",

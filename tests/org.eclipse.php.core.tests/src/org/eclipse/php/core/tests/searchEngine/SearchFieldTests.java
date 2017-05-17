@@ -69,7 +69,7 @@ public class SearchFieldTests {
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("AutoSelectionEngine_" + phpVersion.toString());
 		ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + phpVersion.toString());
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 	}
 
 	@AfterList

@@ -140,7 +140,7 @@ public final class TestUtils {
 	 * @param phpVersion
 	 * @throws CoreException
 	 */
-	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
+	public static void setProjectPHPVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != ProjectOptions.getPHPVersion(project)) {
 			ProjectOptions.setPHPVersion(phpVersion, project);
 			waitForIndexer();

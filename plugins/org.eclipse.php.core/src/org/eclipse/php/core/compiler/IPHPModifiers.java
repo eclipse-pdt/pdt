@@ -22,7 +22,7 @@ public interface IPHPModifiers extends Modifiers {
 	/**
 	 * Represents non-PHP language element
 	 */
-	public static final int NonPhp = 1 << Modifiers.USER_MODIFIER;
+	public static final int NonPHP = (1 << Modifiers.USER_MODIFIER);
 
 	/**
 	 * Constructor method

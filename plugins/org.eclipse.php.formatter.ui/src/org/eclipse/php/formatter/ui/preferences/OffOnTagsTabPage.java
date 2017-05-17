@@ -150,7 +150,7 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 	}
 
 	@Override
-	protected PHPPreview doCreatePhpPreview(Composite parent) {
+	protected PHPPreview doCreatePHPPreview(Composite parent) {
 		return null;
 	}
 

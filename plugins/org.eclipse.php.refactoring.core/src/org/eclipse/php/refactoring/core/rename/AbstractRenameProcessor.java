@@ -35,7 +35,7 @@ import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.ProgramFileChange;
 import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -47,10 +47,10 @@ import org.eclipse.text.edits.MultiTextEdit;
  */
 public abstract class AbstractRenameProcessor<R extends IResource> extends RenameProcessor implements INameUpdating {
 
-	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PhpRefactoringCoreMessages
+	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PHPRefactoringCoreMessages
 			.getString("RenameProcessorBase.internalerror"); //$NON-NLS-1$
 
-	private static final String IS_NOT_A_VALID_PHP_IDENTIFIER = PhpRefactoringCoreMessages
+	private static final String IS_NOT_A_VALID_PHP_IDENTIFIER = PHPRefactoringCoreMessages
 			.getString("RenameProcessorBase.0"); //$NON-NLS-1$
 
 	private static final RefactoringParticipant[] EMPTY_REFACTORING_PARTICIPANTS = new RefactoringParticipant[0];
@@ -119,7 +119,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 		}
 
 		if (hasExternalDependencies) {
-			final String message = PhpRefactoringCoreMessages.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
+			final String message = PHPRefactoringCoreMessages.getString("AbstractRenameProcessor.1"); //$NON-NLS-1$
 			return RefactoringStatus.createWarningStatus(message);
 		}
 
@@ -199,7 +199,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 		RefactoringStatus result = RefactoringStatus.create(Status.OK_STATUS);
 
 		final SubProgressMonitor subProgressMonitor = new SubProgressMonitor(pm, 100);
-		subProgressMonitor.beginTask(PhpRefactoringCoreMessages.getString("RenameProcessorBase.1"), //$NON-NLS-1$
+		subProgressMonitor.beginTask(PHPRefactoringCoreMessages.getString("RenameProcessorBase.1"), //$NON-NLS-1$
 				participantFiles.size());
 
 		for (Entry<IFile, Program> entry : participantFiles.entrySet()) {

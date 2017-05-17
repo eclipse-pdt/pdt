@@ -36,7 +36,7 @@ public class RenameProcessorTestCaseZSTD_1006 extends AbstractRefactoringTest {
 	@Before
 	public void setUp() throws Exception {
 		project1 = TestUtils.createProject("project1");
-		TestUtils.setProjectPhpVersion(project1, PHPVersion.PHP5_3);
+		TestUtils.setProjectPHPVersion(project1, PHPVersion.PHP5_3);
 	}
 
 	@After

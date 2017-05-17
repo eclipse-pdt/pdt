@@ -24,7 +24,7 @@ import org.eclipse.php.core.ast.nodes.Include;
 import org.eclipse.php.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.core.ast.nodes.Scalar;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.TextEditGroup;
@@ -70,7 +70,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 			String stringValue = scalar.getStringValue();
 			if (isScalarNeedChange(scalar, stringValue)) {
 				addChange(scalar, stringValue,
-						PhpRefactoringCoreMessages
+						PHPRefactoringCoreMessages
 								.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
 			}
 		}

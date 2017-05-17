@@ -63,7 +63,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	}
 
 	public String getTitle() {
-		return PHPDebugUIMessages.PhpDebugPreferencePage_8;
+		return PHPDebugUIMessages.PHPDebugPreferencePage_8;
 	}
 
 	protected Control createCommonContents(Composite parent) {

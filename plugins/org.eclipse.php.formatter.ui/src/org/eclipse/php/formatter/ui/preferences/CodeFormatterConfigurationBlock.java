@@ -310,8 +310,8 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 
 		public PreviewController() {
 			fProfileManager.addObserver(this);
-			fPhpPreview.setPreferences(new CodeFormatterPreferences(fProfileManager.getSelected().getSettings()));
-			fPhpPreview.update();
+			fPHPPreview.setPreferences(new CodeFormatterPreferences(fProfileManager.getSelected().getSettings()));
+			fPHPPreview.update();
 		}
 
 		@Override
@@ -322,9 +322,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			case ProfileManager.PROFILE_DELETED_EVENT:
 			case ProfileManager.SELECTION_CHANGED_EVENT:
 			case ProfileManager.SETTINGS_CHANGED_EVENT:
-				fPhpPreview
+				fPHPPreview
 						.setPreferences(new CodeFormatterPreferences(((ProfileManager) o).getSelected().getSettings()));
-				fPhpPreview.update();
+				fPHPPreview.update();
 			}
 		}
 
@@ -371,7 +371,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 	/**
 	 * The PhpPreview.
 	 */
-	protected CodeFormatterPreview fPhpPreview;
+	protected CodeFormatterPreview fPHPPreview;
 	private PixelConverter fPixConv;
 
 	private IScopeContext fCurrContext;
@@ -541,14 +541,14 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 	}
 
 	private void configurePreview(Composite composite, int numColumns) {
-		fPhpPreview = new CodeFormatterPreview(CodeFormatterPreferences.getDefaultPreferences(), composite);
-		fPhpPreview.setPreviewText(PREVIEW);
+		fPHPPreview = new CodeFormatterPreview(CodeFormatterPreferences.getDefaultPreferences(), composite);
+		fPHPPreview.setPreviewText(PREVIEW);
 
 		final GridData gd = new GridData(GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = numColumns;
 		gd.verticalSpan = 7;
 		gd.widthHint = 0;
 		gd.heightHint = 0;
-		fPhpPreview.getControl().setLayoutData(gd);
+		fPHPPreview.getControl().setLayoutData(gd);
 	}
 }

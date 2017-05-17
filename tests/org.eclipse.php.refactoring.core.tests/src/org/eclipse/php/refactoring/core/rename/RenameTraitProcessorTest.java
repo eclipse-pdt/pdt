@@ -34,7 +34,7 @@ public class RenameTraitProcessorTest extends AbstractPDTTListRefactoringTest {
 	@PDTTList.BeforeList
 	public void setUpListSuite() throws Exception {
 		super.setUpListSuite();
-		TestUtils.setProjectPhpVersion(project.getProject(), PHPVersion.PHP5_4);
+		TestUtils.setProjectPHPVersion(project.getProject(), PHPVersion.PHP5_4);
 	}
 
 	@Test

@@ -404,7 +404,7 @@ public final class WhiteSpaceOptions {
 		return parent;
 	}
 
-	public static ArrayList<Node> createTreeByPhpElement(Map<String, Object> workingValues) {
+	public static ArrayList<Node> createTreeByPHPElement(Map<String, Object> workingValues) {
 
 		final InnerNode declarations = new InnerNode(null, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_declarations);

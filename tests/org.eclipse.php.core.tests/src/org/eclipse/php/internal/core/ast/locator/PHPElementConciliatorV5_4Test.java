@@ -15,7 +15,7 @@ package org.eclipse.php.internal.core.ast.locator;
 import org.eclipse.php.core.PHPVersion;
 import org.junit.BeforeClass;
 
-public class PhpElementConciliatorV5_4Test extends PhpElementConciliatorV5_3Test {
+public class PHPElementConciliatorV5_4Test extends PHPElementConciliatorV5_3Test {
 
 	static {
 		phpVersion = PHPVersion.PHP5_4;

@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.util.collections.BucketMap;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.RefactoringPlugin;
 
 public class MoveUtils {
@@ -308,11 +308,11 @@ public class MoveUtils {
 			}
 		}
 		for (IFile node : errors.getKeys()) {
-			status.addWarning(MessageFormat.format(PhpRefactoringCoreMessages
+			status.addWarning(MessageFormat.format(PHPRefactoringCoreMessages
 					.getString("MoveUtils.8"), node.getName())); //$NON-NLS-1$
 			for (IFile value : errors.get(node)) {
 				status.addWarning(MessageFormat.format(
-						PhpRefactoringCoreMessages.getString("MoveUtils.9"), node.getProjectRelativePath().toString(), value.getProjectRelativePath().toString())); //$NON-NLS-1$
+						PHPRefactoringCoreMessages.getString("MoveUtils.9"), node.getProjectRelativePath().toString(), value.getProjectRelativePath().toString())); //$NON-NLS-1$
 			}
 		}
 		//
@@ -334,11 +334,11 @@ public class MoveUtils {
 			}
 		}
 		for (IFile node : errors.getKeys()) {
-			status.addWarning(MessageFormat.format(PhpRefactoringCoreMessages
+			status.addWarning(MessageFormat.format(PHPRefactoringCoreMessages
 					.getString("MoveUtils.10"), node.getName())); //$NON-NLS-1$
 			for (IFile includingNode : errors.get(node)) {
 				status.addWarning(MessageFormat.format(
-						PhpRefactoringCoreMessages.getString("MoveUtils.11"), node.getProjectRelativePath().toString(), includingNode.getProjectRelativePath().toString())); //$NON-NLS-1$
+						PHPRefactoringCoreMessages.getString("MoveUtils.11"), node.getProjectRelativePath().toString(), includingNode.getProjectRelativePath().toString())); //$NON-NLS-1$
 			}
 		}
 		return status;

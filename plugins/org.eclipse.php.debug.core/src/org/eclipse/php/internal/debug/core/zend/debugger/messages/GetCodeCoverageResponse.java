@@ -75,10 +75,10 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 			fCodeCoverageData[i].setSignificanceBitmask(significanceBitmask);
 
 			// reading number of php lines:
-			int numberOfPhpLines = in.readInt();
+			int numberOfPHPLines = in.readInt();
 			if (isDebugMode)
-				System.out.println("Number of php lines: " + numberOfPhpLines); //$NON-NLS-1$
-			fCodeCoverageData[i].setPhpLinesNum(numberOfPhpLines);
+				System.out.println("Number of php lines: " + numberOfPHPLines); //$NON-NLS-1$
+			fCodeCoverageData[i].setPHPLinesNum(numberOfPHPLines);
 		}
 	}
 

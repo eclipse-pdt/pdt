@@ -76,7 +76,7 @@ public class AddGetterSetterTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("Add_GetterSetter_" + this.phpVersion);
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");
 		node.put(CodeFormatterConstants.FORMATTER_PROFILE, PHPDefaultFormatterPreferences.ID);

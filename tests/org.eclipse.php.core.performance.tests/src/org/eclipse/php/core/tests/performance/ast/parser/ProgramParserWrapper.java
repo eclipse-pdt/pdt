@@ -67,7 +67,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 					ProgramParser test = new ProgramParser(phpVersion.getAlias() + " - /" + fileName) {
 
 						protected void setUp() throws Exception {
-							TestUtils.setProjectPhpVersion(project, phpVersion);
+							TestUtils.setProjectPHPVersion(project, phpVersion);
 							pdttFile.applyPreferences();
 						}
 

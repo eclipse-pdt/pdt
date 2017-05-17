@@ -97,7 +97,7 @@ public class FormatterAutoEditTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("FormatterTests" + phpVersion.name());
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");
 		node.put(CodeFormatterConstants.FORMATTER_PROFILE, PHPDefaultFormatterPreferences.ID);

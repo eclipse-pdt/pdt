@@ -23,7 +23,7 @@ import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.ui.search.text.TextSearcher;
 import org.eclipse.php.internal.ui.search.text.TextSearcherFactory;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.ProgramFileChange;
 import org.eclipse.search.internal.ui.text.FileMatch;
 import org.eclipse.text.edits.ReplaceEdit;
@@ -203,7 +203,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 			while (isInside(currentComment, currentMatch)) {
 				// if the comment abs the text - add change
 				if (textInsideComment(currentComment, currentMatch)) {
-					addChange(currentMatch.getOffset() + 1, PhpRefactoringCoreMessages.getString("AbstractRename_0")); //$NON-NLS-1$
+					addChange(currentMatch.getOffset() + 1, PHPRefactoringCoreMessages.getString("AbstractRename_0")); //$NON-NLS-1$
 				}
 				currentMatch = (FileMatch) (searchIterator.hasNext() ? searchIterator.next() : null);
 			}
@@ -256,7 +256,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 				final Matcher matcher = pattern.matcher(stringValue);
 				while (matcher.find()) {
 					addChange(scalar.getStart() + matcher.start() + matcher.group().indexOf(oldName),
-							PhpRefactoringCoreMessages.getString("AbstractRename_0")); //$NON-NLS-1$
+							PHPRefactoringCoreMessages.getString("AbstractRename_0")); //$NON-NLS-1$
 				}
 			}
 		}

@@ -36,7 +36,7 @@ import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.internal.ui.corext.util.Resources;
 import org.eclipse.php.refactoring.core.LinkedNodeFinder;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.ProgramDocumentChange;
 import org.eclipse.php.refactoring.core.extract.function.SnippetFinder.Match;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
@@ -128,7 +128,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 			} catch (Exception e) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.10")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring.10")); //$NON-NLS-1$
 			}
 			status.merge(fAnalyzer.checkInitialConditions());
 
@@ -205,7 +205,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
 			if (!result.hasFatalError()) {
-				result.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.11")); //$NON-NLS-1$
+				result.addFatalError(PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring.11")); //$NON-NLS-1$
 			}
 		}
 		return result;
@@ -239,7 +239,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		if (fAnalyzer.getEnclosingBodyDeclaration().getType() == ASTNode.FUNCTION_DECLARATION
 				|| fAnalyzer.getEnclosingBodyDeclaration().getType() == ASTNode.METHOD_DECLARATION) {
 			if (PHPElementConciliator.functionAlreadyExists(astRoot, name)) {
-				status.addWarning(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.3")); //$NON-NLS-1$
+				status.addWarning(PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring.3")); //$NON-NLS-1$
 			}
 		}
 		return status;
@@ -248,17 +248,17 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring"), 1); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring"), 1); //$NON-NLS-1$
 
 			ASTNode declaration = fAnalyzer.getEnclosingBodyDeclaration();
 			fRewriter = ASTRewrite.create(declaration.getAST());
 
-			rootChange = new CompositeChange(PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.2", //$NON-NLS-1$
+			rootChange = new CompositeChange(PHPRefactoringCoreMessages.format("ExtractFunctionRefactoring.2", //$NON-NLS-1$
 					new String[] { fNewFunctionName }));
 			rootChange.markAsSynthetic();
 
 			MultiTextEdit root = new MultiTextEdit();
-			textFileChange = new ProgramDocumentChange(PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.2", //$NON-NLS-1$
+			textFileChange = new ProgramDocumentChange(PHPRefactoringCoreMessages.format("ExtractFunctionRefactoring.2", //$NON-NLS-1$
 					new String[] { fNewFunctionName }), document, astRoot);
 			textFileChange.setEdit(root);
 			textFileChange.setTextType("php"); //$NON-NLS-1$
@@ -267,7 +267,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 			ASTNode[] selectedNodes = fAnalyzer.getSelectedNodes();
 
-			TextEditGroup substituteDesc = new TextEditGroup(PhpRefactoringCoreMessages
+			TextEditGroup substituteDesc = new TextEditGroup(PHPRefactoringCoreMessages
 					.format("ExtractFunctionRefactoring.2", new String[] { fNewFunctionName })); //$NON-NLS-1$
 			textFileChange.addTextEditGroup(substituteDesc);
 
@@ -338,7 +338,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			}
 
 			TextEditGroup insertDesc = new TextEditGroup(
-					PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
+					PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring.4")); //$NON-NLS-1$
 			textFileChange.addTextEditGroup(insertDesc);
 
 			ChildListPropertyDescriptor desc = (ChildListPropertyDescriptor) declaration.getLocationInParent();
@@ -408,10 +408,10 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			return;
 		String label = null;
 		if (numberOf == 1)
-			label = PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.5", //$NON-NLS-1$
+			label = PHPRefactoringCoreMessages.format("ExtractFunctionRefactoring.5", //$NON-NLS-1$
 					new String[] { fNewFunctionName });
 		else
-			label = PhpRefactoringCoreMessages.format("ExtractFunctionRefactoring.6", //$NON-NLS-1$
+			label = PHPRefactoringCoreMessages.format("ExtractFunctionRefactoring.6", //$NON-NLS-1$
 					new String[] { fNewFunctionName });
 
 		TextEditGroup description = new TextEditGroup(label);
@@ -613,7 +613,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	 */
 	@Override
 	public String getName() {
-		return PhpRefactoringCoreMessages.getString("ExtractFunctionRefactoring.8"); //$NON-NLS-1$
+		return PHPRefactoringCoreMessages.getString("ExtractFunctionRefactoring.8"); //$NON-NLS-1$
 	}
 
 	// public Change getChange() {

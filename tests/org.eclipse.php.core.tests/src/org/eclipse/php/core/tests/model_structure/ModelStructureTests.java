@@ -69,7 +69,7 @@ public class ModelStructureTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("ModelStructureTests");
-		TestUtils.setProjectPhpVersion(project, version);
+		TestUtils.setProjectPHPVersion(project, version);
 	}
 
 	@AfterList

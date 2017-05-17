@@ -27,7 +27,7 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.ProgramFileChange;
 import org.eclipse.php.refactoring.core.changes.RenameBreackpointChange;
 import org.eclipse.php.refactoring.core.changes.RenameConfigurationChange;
@@ -41,7 +41,7 @@ import org.eclipse.text.edits.MultiTextEdit;
 public class RenameFileProcessor extends AbstraceRenameResourceProcessor implements IReferenceUpdating {
 
 	private static final String ID_RENAME_FILE = "php.refactoring.ui.rename.file"; //$NON-NLS-1$
-	public static final String RENAME_FILE_PROCESSOR_NAME = PhpRefactoringCoreMessages
+	public static final String RENAME_FILE_PROCESSOR_NAME = PHPRefactoringCoreMessages
 			.getString("RenameResourceProcessor.0"); //$NON-NLS-1$
 
 	private Map<String, String> attributes = new HashMap<String, String>();
@@ -83,7 +83,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 		rootChange.markAsSynthetic();
 
 		try {
-			pm.beginTask(PhpRefactoringCoreMessages.getString("RenameFileProcessor.RenamingFile"), 100); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("RenameFileProcessor.RenamingFile"), 100); //$NON-NLS-1$
 
 			if (pm.isCanceled())
 				throw new OperationCanceledException();
@@ -213,7 +213,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 
 		if (!checkReadOnlyAndNull(resource)) {
 			status.merge(RefactoringStatus.createFatalErrorStatus(
-					NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
+					NLS.bind(PHPRefactoringCoreMessages.getString("RenameFileProcessor.7"), resource))); //$NON-NLS-1$
 		}
 		super.checkInitialConditions(pm);
 
@@ -267,7 +267,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 		}
 		if (dest.exists()) {
 			status.merge(RefactoringStatus
-					.createFatalErrorStatus(NLS.bind(PhpRefactoringCoreMessages.getString("RenameFileProcessor.8"), //$NON-NLS-1$
+					.createFatalErrorStatus(NLS.bind(PHPRefactoringCoreMessages.getString("RenameFileProcessor.8"), //$NON-NLS-1$
 							getNewElementName(), sourcePath.toOSString())));
 		}
 

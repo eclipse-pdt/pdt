@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.util.collections.BucketMap;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.ProgramFileChange;
 import org.eclipse.php.refactoring.core.changes.RenameBreackpointChange;
 import org.eclipse.php.refactoring.core.changes.RenameBuildAndIcludePathChange;
@@ -111,7 +111,7 @@ public class MoveDelegate {
 					.findMember(new Path(newFilePath));
 			if (resource != null && resource.exists()) {
 				status.merge(RefactoringStatus.createFatalErrorStatus(NLS.bind(
-						PhpRefactoringCoreMessages.getString("MoveDelegate.6"), element.getName(), dest.toOSString()))); //$NON-NLS-1$
+						PHPRefactoringCoreMessages.getString("MoveDelegate.6"), element.getName(), dest.toOSString()))); //$NON-NLS-1$
 			}
 		}
 		return status;
@@ -155,7 +155,7 @@ public class MoveDelegate {
 			OperationCanceledException {
 		try {
 			pm.beginTask(
-					PhpRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
+					PHPRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
 
 			IResource[] sourceResources = fProcessor.getSourceSelection();
 			createMoveChange(sourceResources, rootChange);
@@ -184,7 +184,7 @@ public class MoveDelegate {
 			OperationCanceledException {
 		try {
 			pm.beginTask(
-					PhpRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
+					PHPRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
 
 			IResource[] sourceResources = fProcessor.getSourceSelection();
 
@@ -487,7 +487,7 @@ public class MoveDelegate {
 		List<ProgramFileChange> changes = new ArrayList<ProgramFileChange>();
 		try {
 			pm.beginTask(
-					PhpRefactoringCoreMessages.getString("MoveDelegate.1"), 100); //$NON-NLS-1$
+					PHPRefactoringCoreMessages.getString("MoveDelegate.1"), 100); //$NON-NLS-1$
 
 			// creat text changes:
 			// for each file that will be moved, update its includes
@@ -687,11 +687,11 @@ public class MoveDelegate {
 		Assert.isNotNull(destination);
 		if (!destination.exists() || destination.isPhantom())
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
+					.createFatalErrorStatus(PHPRefactoringCoreMessages
 							.getString("MoveDelegate.2")); //$NON-NLS-1$
 		if (!destination.isAccessible())
 			return RefactoringStatus
-					.createFatalErrorStatus(PhpRefactoringCoreMessages
+					.createFatalErrorStatus(PHPRefactoringCoreMessages
 							.getString("MoveDelegate.3")); //$NON-NLS-1$
 		Assert.isTrue(destination.getType() != IResource.ROOT);
 
@@ -699,11 +699,11 @@ public class MoveDelegate {
 		for (IResource element : sourceResources) {
 			if (destination.equals(element.getParent()))
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
+						.createFatalErrorStatus(PHPRefactoringCoreMessages
 								.getString("MoveDelegate.4")); //$NON-NLS-1$
 			if (destination.equals(element)) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages
+						.createFatalErrorStatus(PHPRefactoringCoreMessages
 								.getString("MoveDelegate.5")); //$NON-NLS-1$
 			}
 		}

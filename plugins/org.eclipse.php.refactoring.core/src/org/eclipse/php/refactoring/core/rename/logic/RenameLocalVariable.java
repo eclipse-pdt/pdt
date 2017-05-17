@@ -18,7 +18,7 @@ import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 
 /**
  * This visitor locates the identifiers to change given a local variable name
@@ -27,7 +27,7 @@ import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
  */
 public class RenameLocalVariable extends AbstractRename {
 
-	private static final String RENAME_LOCAL_VARIABLE = PhpRefactoringCoreMessages
+	private static final String RENAME_LOCAL_VARIABLE = PHPRefactoringCoreMessages
 			.getString("RenameLocalVariableName.0"); //$NON-NLS-1$
 
 	private boolean isGlobalScope = false;

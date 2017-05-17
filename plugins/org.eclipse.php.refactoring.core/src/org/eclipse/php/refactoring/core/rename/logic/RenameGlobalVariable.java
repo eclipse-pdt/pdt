@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 
 /**
  * This visitor locates the identifiers we need to change given a global
@@ -24,7 +24,7 @@ import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
  */
 public class RenameGlobalVariable extends AbstractRename {
 
-	private static final String RENAME_GLOBAL_VARIABLE = PhpRefactoringCoreMessages
+	private static final String RENAME_GLOBAL_VARIABLE = PHPRefactoringCoreMessages
 			.getString("RenameGlobalVariableName.0"); //$NON-NLS-1$
 
 	/**

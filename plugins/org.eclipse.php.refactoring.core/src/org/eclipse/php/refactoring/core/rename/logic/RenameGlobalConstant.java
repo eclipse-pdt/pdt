@@ -12,7 +12,7 @@ package org.eclipse.php.refactoring.core.rename.logic;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.ast.nodes.Scalar;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 
 /**
  * Rename visitor for constants
@@ -21,7 +21,7 @@ import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
  */
 public class RenameGlobalConstant extends AbstractRename {
 
-	private static final String RENAME_CONSTANT = PhpRefactoringCoreMessages
+	private static final String RENAME_CONSTANT = PHPRefactoringCoreMessages
 			.getString("RenameDefinedName.0"); //$NON-NLS-1$
 	private boolean isCaseSenstive = true;
 

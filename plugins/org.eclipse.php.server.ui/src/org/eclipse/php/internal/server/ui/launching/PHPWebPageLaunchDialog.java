@@ -301,8 +301,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	}
 
 	private IResource getFileFromDialog(IProject project) {
-		final String contenttypeidPhp = ContentTypeIdForPHP.ContentTypeID_PHP;
-		final IContentType contentType = Platform.getContentTypeManager().getContentType(contenttypeidPhp);
+		final String contenttypeidPHP = ContentTypeIdForPHP.ContentTypeID_PHP;
+		final IContentType contentType = Platform.getContentTypeManager().getContentType(contenttypeidPHP);
 		final String[] fileSpecs = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		return LaunchUtilities.getFileFromDialog(project, getShell(), fileSpecs, new String[] { PHPNature.ID }, false);
 	}

@@ -86,7 +86,7 @@ public class MarkOccurrenceTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("MarkOccurrenceTests_" + phpVersion.toString());
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 	}
 
 	@AfterList

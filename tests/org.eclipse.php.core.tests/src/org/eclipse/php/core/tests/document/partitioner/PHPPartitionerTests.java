@@ -198,7 +198,7 @@ public class PHPPartitionerTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void partitionPhpAsHTMLAttributeKey() throws Exception {
+	public void partitionPHPAsHTMLAttributeKey() throws Exception {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeKey.php");
 		for (int i = 0; i < matches.size(); i++) {
@@ -212,7 +212,7 @@ public class PHPPartitionerTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void partitionPhpAsHTMLAttributeValue() throws Exception {
+	public void partitionPHPAsHTMLAttributeValue() throws Exception {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeValue.php");
 		for (int i = 0; i < matches.size(); i++) {

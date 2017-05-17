@@ -82,7 +82,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 					MarkOccurrenceTests test = new MarkOccurrenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
 						protected void setUp() throws Exception {
-							TestUtils.setProjectPhpVersion(project, phpVersion);
+							TestUtils.setProjectPHPVersion(project, phpVersion);
 							pdttFile.applyPreferences();
 						}
 

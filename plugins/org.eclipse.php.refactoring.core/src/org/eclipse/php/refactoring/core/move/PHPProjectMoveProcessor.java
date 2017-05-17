@@ -22,7 +22,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.*;
 import org.eclipse.ltk.internal.core.refactoring.resource.ResourceProcessors;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.changes.PHPProjectMoveChange;
 
 /**
@@ -112,7 +112,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * getProcessorName()
 	 */
 	public String getProcessorName() {
-		return PhpRefactoringCoreMessages.getString("PHPMoveProcessor.0"); //$NON-NLS-1$
+		return PHPRefactoringCoreMessages.getString("PHPMoveProcessor.0"); //$NON-NLS-1$
 	}
 
 	/*

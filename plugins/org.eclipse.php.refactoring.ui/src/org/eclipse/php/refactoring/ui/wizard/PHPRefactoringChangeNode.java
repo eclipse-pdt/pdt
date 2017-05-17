@@ -38,18 +38,18 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 
 	static final ChildNode[] EMPTY_CHILDREN = new ChildNode[0];
 
-	private static class PhpLanguageNode extends LanguageElementNode {
+	private static class PHPLanguageNode extends LanguageElementNode {
 
 		private ASTNode fphpElement;
 		private static final ASTNodeImageProvider fgImageProvider = new ASTNodeImageProvider();
 
-		public PhpLanguageNode(TextEditChangeNode parent, ASTNode element) {
+		public PHPLanguageNode(TextEditChangeNode parent, ASTNode element) {
 			super(parent);
 			fphpElement = element;
 			Assert.isNotNull(fphpElement);
 		}
 
-		public PhpLanguageNode(ChildNode parent, ASTNode element) {
+		public PHPLanguageNode(ChildNode parent, ASTNode element) {
 			super(parent);
 			assert element != null;
 
@@ -128,7 +128,7 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		if (element.getType() == ASTNode.PROGRAM) {
 			children.add(createTextEditGroupNode(this, tec));
 		} else {
-			PhpLanguageNode pjce = getChangeElement(map, element, children, this);
+			PHPLanguageNode pjce = getChangeElement(map, element, children, this);
 			pjce.addChild(createTextEditGroupNode(pjce, tec));
 		}
 	}
@@ -157,23 +157,23 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		return getParentContext(result);
 	}
 
-	private PhpLanguageNode getChangeElement(Map map, ASTNode element, List children, TextEditChangeNode cunitChange) {
-		PhpLanguageNode result = (PhpLanguageNode) map.get(element);
+	private PHPLanguageNode getChangeElement(Map map, ASTNode element, List children, TextEditChangeNode cunitChange) {
+		PHPLanguageNode result = (PHPLanguageNode) map.get(element);
 		if (result != null)
 			return result;
 
 		final int type = element.getType();
 		if (type == ASTNode.CLASS_DECLARATION || type == ASTNode.INTERFACE_DECLARATION
 				|| type == ASTNode.FUNCTION_DECLARATION) {
-			result = new PhpLanguageNode(cunitChange, element);
+			result = new PHPLanguageNode(cunitChange, element);
 			children.add(result);
 			map.put(element, result);
 		} else {
 			assert element.getType() == ASTNode.METHOD_DECLARATION;
 
 			ASTNode parentNode = getParentContext(element);
-			final PhpLanguageNode parentChange = getChangeElement(map, parentNode, children, cunitChange);
-			result = new PhpLanguageNode(parentChange, element);
+			final PHPLanguageNode parentChange = getChangeElement(map, parentNode, children, cunitChange);
+			result = new PHPLanguageNode(parentChange, element);
 			parentChange.addChild(result);
 			map.put(element, result);
 		}

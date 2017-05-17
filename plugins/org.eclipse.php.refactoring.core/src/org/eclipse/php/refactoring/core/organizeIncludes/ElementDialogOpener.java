@@ -33,7 +33,7 @@ class ElementDialogOpener implements Runnable {
 	// }
 	//
 	public void run() {
-		//		OpenPhpElementDialog dialog = new OpenPhpElementDialog(Display.getDefault().getActiveShell(), MessageFormat.format(PhpRefactoringCoreMessages.getString("ElementDialogOpener.Choose"), new String[] { file.getFullPath().toString() })); //$NON-NLS-1$
+		//		OpenPhpElementDialog dialog = new OpenPhpElementDialog(Display.getDefault().getActiveShell(), MessageFormat.format(PHPRefactoringCoreMessages.getString("ElementDialogOpener.Choose"), new String[] { file.getFullPath().toString() })); //$NON-NLS-1$
 		// dialog.setInitialElements(initialElements);
 		// dialog.setInitFilterText(elementName);
 		// int status = dialog.open();

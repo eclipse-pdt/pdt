@@ -109,7 +109,7 @@ public class ContentAssistTests {
 		 * will insert the proposal,so we can test CA without UI interaction
 		 */
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
-		TestUtils.setProjectPhpVersion(project, phpVersion);
+		TestUtils.setProjectPHPVersion(project, phpVersion);
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");
 		node.put(CodeFormatterConstants.FORMATTER_PROFILE, PHPDefaultFormatterPreferences.ID);

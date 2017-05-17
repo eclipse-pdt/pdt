@@ -37,7 +37,7 @@ public class PHP53LanguageModelTest {
 	public static void setUp() throws Exception {
 		project = TestUtils.createProject("PHPLanguageModelTests");
 		ResourcesPlugin.getWorkspace().getRoot().getProject();
-		TestUtils.setProjectPhpVersion(project, PHPVersion.PHP5_3);
+		TestUtils.setProjectPHPVersion(project, PHPVersion.PHP5_3);
 		TestUtils.waitForIndexer();
 	}
 

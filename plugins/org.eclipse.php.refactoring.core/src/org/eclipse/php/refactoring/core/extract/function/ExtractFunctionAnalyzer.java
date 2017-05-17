@@ -23,7 +23,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.LocalVariableIndex;
 import org.eclipse.php.internal.core.corext.dom.Selection;
-import org.eclipse.php.refactoring.core.PhpRefactoringCoreMessages;
+import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
 import org.eclipse.php.refactoring.core.code.flow.FlowContext;
 import org.eclipse.php.refactoring.core.code.flow.FlowInfo;
 import org.eclipse.php.refactoring.core.code.flow.InOutFlowAnalyzer;
@@ -109,14 +109,14 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 			if (selectedNodes == null || selectedNodes.length == 0) {
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.2")); //$NON-NLS-1$
 			}
 			pm.worked(1);
 
 			ASTNode enclosingBodyNode = getFirstSelectedNode().getEnclosingBodyNode();
 			if (enclosingBodyNode == null)
 				return RefactoringStatus
-						.createFatalErrorStatus(PhpRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
 			pm.worked(1);
 
 			if (scopeHasSyntaxErrors(enclosingBodyNode)) {
@@ -145,7 +145,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		fInputFlowInfo = flowAnalyzer.perform(getSelectedNodes());
 
 		if (fInputFlowInfo.branches()) {
-			status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.0")); //$NON-NLS-1$
+			status.addFatalError(PHPRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.0")); //$NON-NLS-1$
 			fReturnKind = ERROR;
 			return status;
 		}
@@ -219,7 +219,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 			break;
 		default:
 			fReturnValue = null;
-			status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.1")); //$NON-NLS-1$
+			status.addFatalError(PHPRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.1")); //$NON-NLS-1$
 			return;
 		}
 		// List callerLocals= new ArrayList(5);
@@ -266,12 +266,12 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 					&& !(node instanceof DoStatement) && !(node instanceof ForEachStatement)
 					&& !(node instanceof IfStatement) && !(node instanceof SwitchStatement)
 					&& !(node instanceof TryStatement) && !(node instanceof WhileStatement)) {
-				status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.2")); //$NON-NLS-1$
+				status.addFatalError(PHPRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.2")); //$NON-NLS-1$
 			}
 		}
 
 		if (nodes == null || nodes.length == 0) {
-			status.addFatalError(PhpRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.3")); //$NON-NLS-1$
+			status.addFatalError(PHPRefactoringCoreMessages.getString("ExtractFunctionAnalyzer.3")); //$NON-NLS-1$
 		}
 
 	}
