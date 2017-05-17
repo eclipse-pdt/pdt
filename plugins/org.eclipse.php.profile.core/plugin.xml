@@ -67,8 +67,7 @@
             sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
             type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
          <modeCombination
-               modes="profile"
-               perspective="org.eclipse.profile.ui.ProfilePerspective">
+               modes="profile">
          </modeCombination>
       </launchDelegate>
       <launchDelegate
@@ -80,8 +79,7 @@
             sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
             type="org.eclipse.php.debug.core.launching.webPageLaunch">
          <modeCombination
-               modes="profile"
-               perspective="org.eclipse.profile.ui.ProfilePerspective">
+               modes="profile">
          </modeCombination>
       </launchDelegate>
       <launchDelegate
@@ -93,8 +91,7 @@
             sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
             type="org.eclipse.php.debug.core.remotePHPLaunchConfigurationType">
          <modeCombination
-               modes="profile"
-               perspective="org.eclipse.profile.ui.ProfilePerspective">
+               modes="profile">
          </modeCombination>
       </launchDelegate>
    </extension>

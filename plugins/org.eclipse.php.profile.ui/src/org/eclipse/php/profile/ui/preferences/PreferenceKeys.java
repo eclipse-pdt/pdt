@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.profile.ui.preferences;
 
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.profile.ui.ProfilerUiPlugin;
 
@@ -17,6 +18,8 @@ import org.eclipse.php.profile.ui.ProfilerUiPlugin;
  * Profiler UI preference keys.
  */
 public class PreferenceKeys {
+
+	public static final String OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA = "org.eclipse.php.profile.ui.openProfilePerspectiveOnSessionData";
 
 	public static final String EXECUTION_FLOW_SORT_ORDER = "executionFlowSortOrder"; //$NON-NLS-1$
 	public static final String EXECUTION_VIEW_SHOW_AS_PERCENTAGE = "executionViewShowAsPercentage"; //$NON-NLS-1$
@@ -30,6 +33,7 @@ public class PreferenceKeys {
 	}
 
 	public static void initializeDefaultValues() {
+		getPreferenceStore().setDefault(OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA, MessageDialogWithToggle.PROMPT);
 	}
 
 	private PreferenceKeys() {
