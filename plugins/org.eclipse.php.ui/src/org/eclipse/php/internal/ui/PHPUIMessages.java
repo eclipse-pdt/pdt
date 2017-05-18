@@ -950,6 +950,7 @@ public final class PHPUIMessages extends NLS {
 	public static String group_references;
 	public static String DefaultPHPFoldingPreferenceBlock_title;
 	public static String group_readReferences;
+	public static String SaveActionsConfigurationBlock_4;
 	public static String SaveActionsConfigurationBlock_3;
 	public static String SaveActionsConfigurationBlock_2;
 	public static String FilterDescriptor_filterCreationError_title;

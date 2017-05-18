@@ -22,6 +22,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant;
+import org.eclipse.php.internal.ui.editor.saveparticipant.OrganizeUseStatmentsSaveParticipant;
 import org.eclipse.php.internal.ui.editor.saveparticipant.RemoveTrailingWhitespacesSaveParticipant;
 import org.eclipse.php.internal.ui.folding.IStructuredTextFoldingProvider;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -990,6 +991,7 @@ public class PreferenceConstants {
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL = "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
 	public static final String FORMAT_ON_SAVE = "cleanup.format.on.save"; //$NON-NLS-1$
+	public static final String ORGANIZE_ON_SAVE = "cleanup.organize.on.save"; //$NON-NLS-1$
 	public static final String PREF_OUTLINEMODE = "ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
 
 	/**
@@ -1191,10 +1193,12 @@ public class PreferenceConstants {
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_ALL, true);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, false);
 		store.setDefault(FORMAT_ON_SAVE, false);
+		store.setDefault(ORGANIZE_ON_SAVE, false);
+		store.setDefault(OrganizeUseStatmentsSaveParticipant.EDITOR_SAVE_PARTICIPANT_PREFIX
+				+ OrganizeUseStatmentsSaveParticipant.ID, true);
 		store.setDefault(CodeFormatSaveParticipant.EDITOR_SAVE_PARTICIPANT_PREFIX + CodeFormatSaveParticipant.ID, true);
-		store.setDefault(
-				CodeFormatSaveParticipant.EDITOR_SAVE_PARTICIPANT_PREFIX + RemoveTrailingWhitespacesSaveParticipant.ID,
-				true);
+		store.setDefault(RemoveTrailingWhitespacesSaveParticipant.EDITOR_SAVE_PARTICIPANT_PREFIX
+				+ RemoveTrailingWhitespacesSaveParticipant.ID, true);
 
 		// default php outline mode
 		store.setDefault(PREF_OUTLINEMODE, PHPContentOutlineConfiguration.MODE_PHP);

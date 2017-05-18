@@ -40,23 +40,26 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 			PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY);
 
 	private static final Key PREF_FORMAT_ON_SAVE = new Key(PHPUiPlugin.ID, PreferenceConstants.FORMAT_ON_SAVE);
+	private static final Key PREF_ORGANIZE_ON_SAVE = new Key(PHPUiPlugin.ID, PreferenceConstants.ORGANIZE_ON_SAVE);
 
 	private Button removeTrailingWsCheckbox;
 	private Button allCheckbox;
 	private Button ignoreEmptyCheckbox;
 	private Button formatOnSaveCheckbox;
+	private Button organizeOnSaveCheckbox;
 
 	private boolean fRemoveWhitespaces;
 	private boolean fAllLines;
 	private boolean fIgnoreEmptyLines;
 	private boolean fFormatOnSave;
+	private boolean fOrganizeOnSave;
 
 	private IStatus fSaveActionsStatus;
 	private Group removeWhitespacesGroup;
 
 	private static Key[] getKeys() {
 		return new Key[] { PREF_REMOVE_TRAILING_WHITESPACES, PREF_REMOVE_TRAILING_WHITESPACES_ALL,
-				PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, PREF_FORMAT_ON_SAVE };
+				PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, PREF_FORMAT_ON_SAVE, PREF_ORGANIZE_ON_SAVE };
 	}
 
 	public SaveActionsConfigurationBlock(IStatusChangeListener context, IProject project,
@@ -132,6 +135,16 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 			}
 		});
 
+		organizeOnSaveCheckbox = new Button(whiteSpacesComposite, SWT.CHECK);
+		organizeOnSaveCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_4);
+		organizeOnSaveCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fOrganizeOnSave = !fOrganizeOnSave;
+				updateValues();
+			}
+		});
+
 		updateControls();
 
 		return whiteSpacesComposite;
@@ -148,11 +161,13 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		String all = getValue(PREF_REMOVE_TRAILING_WHITESPACES_ALL);
 		String ignore = getValue(PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY);
 		String format = getValue(PREF_FORMAT_ON_SAVE);
+		String organize = getValue(PREF_ORGANIZE_ON_SAVE);
 
 		fRemoveWhitespaces = Boolean.valueOf(remove).booleanValue();
 		fAllLines = Boolean.valueOf(all).booleanValue();
 		fIgnoreEmptyLines = Boolean.valueOf(ignore).booleanValue();
 		fFormatOnSave = Boolean.valueOf(format).booleanValue();
+		fOrganizeOnSave = Boolean.valueOf(organize).booleanValue();
 	}
 
 	private void updateValues() {
@@ -165,6 +180,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		allCheckbox.setEnabled(fRemoveWhitespaces);
 		ignoreEmptyCheckbox.setEnabled(fRemoveWhitespaces);
 		formatOnSaveCheckbox.setSelection(fFormatOnSave);
+		organizeOnSaveCheckbox.setSelection(fOrganizeOnSave);
 	}
 
 	/*
@@ -200,6 +216,7 @@ public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBl
 		setValue(PREF_REMOVE_TRAILING_WHITESPACES_ALL, fAllLines);
 		setValue(PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, fIgnoreEmptyLines);
 		setValue(PREF_FORMAT_ON_SAVE, fFormatOnSave);
+		setValue(PREF_ORGANIZE_ON_SAVE, fOrganizeOnSave);
 	}
 
 	@Override
