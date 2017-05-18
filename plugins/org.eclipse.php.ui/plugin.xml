@@ -447,20 +447,27 @@
 
 	</extension>
 
+	<!--Save Participants:-->
+	<extension point="org.eclipse.dltk.ui.saveParticipants">
+		<!--Must be defined before CodeFormatSaveParticipant-->
+		<saveParticipant
+			class="org.eclipse.php.internal.ui.editor.saveparticipant.OrganizeUseStatmentsSaveParticipant"
+			nature="org.eclipse.php.core.PHPNature">
+		</saveParticipant>
+
+		<saveParticipant
+			class="org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant"
+			nature="org.eclipse.php.core.PHPNature">
+		</saveParticipant>
+
+		<!--Must be defined after CodeFormatSaveParticipant as it should be run after CodeFormatSaveParticipant:-->
+		<saveParticipant
+			class="org.eclipse.php.internal.ui.editor.saveparticipant.RemoveTrailingWhitespacesSaveParticipant"
+			nature="org.eclipse.php.core.PHPNature">
+		</saveParticipant>
+	</extension>
+
 	<!--Property Pages:-->
-	<extension point="org.eclipse.dltk.ui.saveParticipants">
-	   <saveParticipant
-	         class="org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant"
-	         nature="org.eclipse.php.core.PHPNature">
-	   </saveParticipant>
-	</extension>
-	<!--Must be defined after CodeFormatSaveParticipant as it should be run after CodeFormatSaveParticipant:-->
-	<extension point="org.eclipse.dltk.ui.saveParticipants">
-	   <saveParticipant
-	         class="org.eclipse.php.internal.ui.editor.saveparticipant.RemoveTrailingWhitespacesSaveParticipant"
-	         nature="org.eclipse.php.core.PHPNature">
-	   </saveParticipant>
-	</extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page name="%phpPageName"
             class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
