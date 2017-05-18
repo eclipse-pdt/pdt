@@ -103,15 +103,14 @@ public final class ImportRewrite {
 		public final static int KIND_TYPE = 1;
 
 		/**
-		 * Kind constant specifying that the element is a static constant
-		 * import.
+		 * Kind constant specifying that the element is a constant import.
 		 */
-		public final static int KIND_STATIC_CONSTANT = 2;
+		public final static int KIND_CONSTANT = 2;
 
 		/**
-		 * Kind constant specifying that the element is a static method import.
+		 * Kind constant specifying that the element is a function import.
 		 */
-		public final static int KIND_STATIC_METHOD = 3;
+		public final static int KIND_FUNCTION = 3;
 
 		/**
 		 * Searches for the given element in the context and reports if the
@@ -139,7 +138,8 @@ public final class ImportRewrite {
 	}
 
 	public static final String ENCLOSING_TYPE_SEPARATOR = NamespaceReference.NAMESPACE_DELIMITER;
-	private static final char STATIC_PREFIX = 's';
+	private static final char FUNCTION_PREFIX = 'f';
+	private static final char CONSTANT_PREFIX = 'c';
 	private static final char NORMAL_PREFIX = 'n';
 	private static final char ALIAS_PREFIX = 'a';
 
@@ -343,19 +343,27 @@ public final class ImportRewrite {
 	 * Not API, package visibility as accessed from an anonymous type
 	 */
 	/* package */final int findInImports(NamespaceDeclaration namespace, String qualifier, String name, int kind) {
-		boolean allowAmbiguity = (kind == ImportRewriteContext.KIND_STATIC_METHOD)
-				|| (name.length() == 1 && name.charAt(0) == '*');
 		if (this.existingImports.get(namespace) == null) {
 			this.existingImports.put(namespace, new ArrayList<String>());
 		}
 		List<String> imports = this.existingImports.get(namespace);
-		char prefix = (kind == ImportRewriteContext.KIND_TYPE) ? NORMAL_PREFIX : STATIC_PREFIX;
+		char prefix;
+		switch (kind) {
+		case ImportRewriteContext.KIND_FUNCTION:
+			prefix = FUNCTION_PREFIX;
+			break;
+		case ImportRewriteContext.KIND_CONSTANT:
+			prefix = CONSTANT_PREFIX;
+			break;
+		default:
+			prefix = NORMAL_PREFIX;
+		}
 
 		for (int i = imports.size() - 1; i >= 0; i--) {
 			String curr = imports.get(i);
 			int res = compareImport(prefix, qualifier, name, curr);
 			if (res != ImportRewriteContext.RES_NAME_UNKNOWN) {
-				if (!allowAmbiguity || res == ImportRewriteContext.RES_NAME_FOUND) {
+				if (res == ImportRewriteContext.RES_NAME_FOUND) {
 					return res;
 				}
 			}
@@ -581,7 +589,16 @@ public final class ImportRewrite {
 		if (this.addedImports != null && this.addedImports.get(namespace) != null) {
 			for (int i = 0; i < this.addedImports.get(namespace).size(); i++) {
 				String curr = this.addedImports.get(namespace).get(i);
-				computer.addImport(namespace, curr.substring(1), STATIC_PREFIX == curr.charAt(0));
+				int importType;
+				char prefix = curr.charAt(0);
+				if (prefix == FUNCTION_PREFIX) {
+					importType = UseStatement.T_FUNCTION;
+				} else if (prefix == CONSTANT_PREFIX) {
+					importType = UseStatement.T_CONST;
+				} else {
+					importType = UseStatement.T_NONE;
+				}
+				computer.addImport(namespace, curr.substring(1), importType);
 			}
 		}
 
@@ -619,12 +636,21 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Returns all static imports that are recorded to be added.
+	 * Returns all function imports that are recorded to be added.
 	 * 
-	 * @return the static imports recorded to be added.
+	 * @return the function imports recorded to be added.
 	 */
-	public String[] getAddedStaticImports() {
-		return filterFromList(this.addedImports, STATIC_PREFIX);
+	public String[] getAddedFunctionImports() {
+		return filterFromList(this.addedImports, FUNCTION_PREFIX);
+	}
+
+	/**
+	 * Returns all constant imports that are recorded to be added.
+	 * 
+	 * @return the constant imports recorded to be added.
+	 */
+	public String[] getAddedConstImports() {
+		return filterFromList(this.addedImports, CONSTANT_PREFIX);
 	}
 
 	/**
@@ -637,12 +663,21 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Returns all static imports that are recorded to be removed.
+	 * Returns all function imports that are recorded to be removed.
 	 * 
-	 * @return the static imports recorded to be removed.
+	 * @return the function imports recorded to be removed.
 	 */
-	public String[] getRemovedStaticImports() {
-		return filterFromList(this.removedImports, STATIC_PREFIX);
+	public String[] getRemovedFunctionImports() {
+		return filterFromList(this.removedImports, FUNCTION_PREFIX);
+	}
+
+	/**
+	 * Returns all constant imports that are recorded to be removed.
+	 * 
+	 * @return the constant imports recorded to be removed.
+	 */
+	public String[] getRemovedConstImports() {
+		return filterFromList(this.removedImports, CONSTANT_PREFIX);
 	}
 
 	/**

@@ -1,0 +1,15 @@
+--TEST--
+Test organize use statements for function and const
+--FILE--
+<?php
+namespace name;
+
+use const CONSTANT_1;
+use function func;
+
+--EXPECT--
+<?php
+namespace name;
+
+use const CONSTANT_1;
+use function func;

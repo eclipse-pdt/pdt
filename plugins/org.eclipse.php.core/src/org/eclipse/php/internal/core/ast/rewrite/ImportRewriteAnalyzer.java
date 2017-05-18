@@ -81,6 +81,10 @@ public final class ImportRewriteAnalyzer {
 		this.replaceRange.put(namespace, evaluateReplaceRange(root, namespace));
 		if (restoreExistingImports.get(namespace)) {
 			addExistingImports(root, namespace);
+		} else {
+			// Currently does not support organize function and constant imports
+			// yet, so do not remove them for now
+			addExistingFunctionAndConstantImports(root, namespace);
 		}
 
 		PackageEntry[] order = new PackageEntry[importOrder.length];
@@ -166,7 +170,7 @@ public final class ImportRewriteAnalyzer {
 		return decl.parts().get(0).getName().getName();
 	}
 
-	private void addExistingImports(Program root, NamespaceDeclaration namespace) {
+	private void addExistingFunctionAndConstantImports(Program root, NamespaceDeclaration namespace) {
 		List<UseStatement> decls = root.getUseStatements(namespace);
 		if (decls.isEmpty()) {
 			return;
@@ -179,6 +183,11 @@ public final class ImportRewriteAnalyzer {
 		int currEndLine = root.getLineNumber(currOffset + currLength);
 
 		for (int i = 1; i < decls.size(); i++) {
+			int statementType = curr.getStatementType();
+			if (statementType == UseStatement.T_NONE) {
+				curr = decls.get(i);
+				continue;
+			}
 			String name = getFullName(curr);
 			String packName = getQualifier(name);
 			if (currPackage == null || currPackage.compareTo(packName) != 0) {
@@ -197,7 +206,58 @@ public final class ImportRewriteAnalyzer {
 				currEndLine++;
 				nextOffset = getPostion(root, currEndLine);
 			}
-			currPackage.add(new ImportDeclEntry(name, new Region(currOffset, nextOffset - currOffset)));
+			currPackage.add(new ImportDeclEntry(name, statementType, null));
+			currOffset = nextOffset;
+			curr = next;
+			currEndLine = root.getLineNumber(nextOffset + nextLength);
+		}
+
+		int statementType = curr.getStatementType();
+		if (statementType == UseStatement.T_NONE) {
+			return;
+		}
+		String name = getFullName(curr);
+		String packName = getQualifier(name);
+		if (currPackage == null || currPackage.compareTo(packName) != 0) {
+			currPackage = new PackageEntry(packName, null);
+			this.packageEntries.get(namespace).add(currPackage);
+		}
+		currPackage.add(new ImportDeclEntry(name, statementType, null));
+	}
+
+	private void addExistingImports(Program root, NamespaceDeclaration namespace) {
+		List<UseStatement> decls = root.getUseStatements(namespace);
+		if (decls.isEmpty()) {
+			return;
+		}
+		PackageEntry currPackage = null;
+
+		UseStatement curr = decls.get(0);
+		int currOffset = curr.getStart();
+		int currLength = curr.getLength();
+		int currEndLine = root.getLineNumber(currOffset + currLength);
+
+		for (int i = 1; i < decls.size(); i++) {
+			int statementType = curr.getStatementType();
+			String name = getFullName(curr);
+			String packName = getQualifier(name);
+			if (currPackage == null || currPackage.compareTo(packName) != 0) {
+				currPackage = new PackageEntry(packName, null);
+				this.packageEntries.get(namespace).add(currPackage);
+			}
+
+			UseStatement next = decls.get(i);
+			int nextOffset = next.getStart();
+			int nextLength = next.getLength();
+			int nextOffsetLine = root.getLineNumber(nextOffset + 1);
+
+			// if next import is on a different line, modify the end position to
+			// the next line begin offset
+			if (currEndLine < nextOffsetLine) {
+				currEndLine++;
+				nextOffset = getPostion(root, currEndLine);
+			}
+			currPackage.add(new ImportDeclEntry(name, statementType, new Region(currOffset, nextOffset - currOffset)));
 			currOffset = nextOffset;
 			curr = next;
 
@@ -208,13 +268,15 @@ public final class ImportRewriteAnalyzer {
 				currPackage = new PackageEntry(); // create a comment package
 				// entry for this
 				this.packageEntries.get(namespace).add(currPackage);
-				currPackage.add(new ImportDeclEntry(null, new Region(currOffset, nextOffset - currOffset)));
+				currPackage
+						.add(new ImportDeclEntry(null, statementType, new Region(currOffset, nextOffset - currOffset)));
 
 				currOffset = nextOffset;
 			}
 			currEndLine = root.getLineNumber(nextOffset + nextLength);
 		}
 
+		int statementType = curr.getStatementType();
 		String name = getFullName(curr);
 		String packName = getQualifier(name);
 		if (currPackage == null || currPackage.compareTo(packName) != 0) {
@@ -223,7 +285,7 @@ public final class ImportRewriteAnalyzer {
 		}
 		int length = this.replaceRange.get(namespace).getOffset() + this.replaceRange.get(namespace).getLength()
 				- curr.getStart();
-		currPackage.add(new ImportDeclEntry(name, new Region(curr.getStart(), length)));
+		currPackage.add(new ImportDeclEntry(name, statementType, new Region(curr.getStart(), length)));
 	}
 
 	/**
@@ -339,7 +401,7 @@ public final class ImportRewriteAnalyzer {
 		return 0;
 	}
 
-	private PackageEntry findBestMatch(ArrayList<PackageEntry> packageEntries, String newName, boolean isStatic) {
+	private PackageEntry findBestMatch(ArrayList<PackageEntry> packageEntries, String newName, int importType) {
 		if (packageEntries.isEmpty()) {
 			return null;
 		}
@@ -395,10 +457,10 @@ public final class ImportRewriteAnalyzer {
 		return false;
 	}
 
-	public void addImport(NamespaceDeclaration namespace, String fullTypeName, boolean isStatic) {
+	public void addImport(NamespaceDeclaration namespace, String fullTypeName, int importType) {
 		String typeContainerName = getQualifier(fullTypeName);
-		ImportDeclEntry decl = new ImportDeclEntry(fullTypeName, null);
-		sortIn(this.packageEntries.get(namespace), typeContainerName, decl, isStatic);
+		ImportDeclEntry decl = new ImportDeclEntry(fullTypeName, importType, null);
+		sortIn(this.packageEntries.get(namespace), typeContainerName, decl, importType);
 	}
 
 	public boolean removeImport(NamespaceDeclaration namespace, String qualifiedName) {
@@ -421,8 +483,8 @@ public final class ImportRewriteAnalyzer {
 	}
 
 	private void sortIn(ArrayList<PackageEntry> packageEntries, String typeContainerName, ImportDeclEntry decl,
-			boolean isStatic) {
-		PackageEntry bestMatch = findBestMatch(packageEntries, typeContainerName, isStatic);
+			int importType) {
+		PackageEntry bestMatch = findBestMatch(packageEntries, typeContainerName, importType);
 		if (bestMatch == null) {
 			PackageEntry packEntry = new PackageEntry(typeContainerName, null);
 			packEntry.add(decl);
@@ -531,7 +593,8 @@ public final class ImportRewriteAnalyzer {
 					IRegion region = currDecl.getSourceRange();
 
 					if (region == null) { // new entry
-						String str = getNewImportString(namespace, currDecl.getElementName(), lineDelim);
+						String str = getNewImportString(namespace, currDecl.getElementName(), currDecl.getImportType(),
+								lineDelim);
 						stringsToInsert.add(str);
 					} else {
 						int offset = region.getOffset();
@@ -614,9 +677,15 @@ public final class ImportRewriteAnalyzer {
 		return -1;
 	}
 
-	private String getNewImportString(NamespaceDeclaration namespace, String importName, String lineDelim) {
+	private String getNewImportString(NamespaceDeclaration namespace, String importName, int importType,
+			String lineDelim) {
 		StringBuilder buf = new StringBuilder();
 		buf.append("use "); //$NON-NLS-1$
+		if (importType == UseStatement.T_FUNCTION) {
+			buf.append("function "); //$NON-NLS-1$
+		} else if (importType == UseStatement.T_CONST) {
+			buf.append("const "); //$NON-NLS-1$
+		}
 		buf.append(importName);
 		buf.append(';'); // $NON-NLS-1$
 		buf.append(lineDelim);
@@ -729,11 +798,13 @@ public final class ImportRewriteAnalyzer {
 
 		private String elementName;
 		private boolean isAlias;
+		private int importType;
 		private IRegion sourceRange;
 
-		public ImportDeclEntry(String elementName, IRegion sourceRange) {
+		public ImportDeclEntry(String elementName, int importType, IRegion sourceRange) {
 			this.elementName = elementName;
-			if (elementName.toLowerCase().contains(" as ")) { //$NON-NLS-1$
+			this.importType = importType;
+			if (elementName != null && elementName.toLowerCase().contains(" as ")) { //$NON-NLS-1$
 				isAlias = true;
 			}
 			this.sourceRange = sourceRange;
@@ -765,6 +836,10 @@ public final class ImportRewriteAnalyzer {
 
 		public IRegion getSourceRange() {
 			return this.sourceRange;
+		}
+
+		public int getImportType() {
+			return importType;
 		}
 
 	}

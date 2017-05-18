@@ -74,8 +74,8 @@ public class OrganizeUseStatementsActionTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 
 	static {
-		TESTS.put(PHPVersion.PHP7_0,
-				new String[] { "/workspace/organize-imports/php53", "/workspace/organize-imports/php54" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/organize-imports/php53",
+				"/workspace/organize-imports/php54", "/workspace/organize-imports/php56" });
 	};
 
 	@Context
