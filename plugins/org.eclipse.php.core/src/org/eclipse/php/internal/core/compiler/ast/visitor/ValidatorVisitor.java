@@ -194,10 +194,10 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(ClassInstanceCreation s) throws Exception {
 		if (s.getClassName() instanceof TypeReference) {
 			TypeReferenceInfo tri = new TypeReferenceInfo((TypeReference) s.getClassName(), false);
-			IType[] types = PHPModelUtils.getTypes(tri.getFullyQualifiedName(), sourceModule,
-					s.getClassName().sourceStart(), null);
+			IType[] types = getAllTypes(tri.getFullyQualifiedName(), sourceModule, s.getClassName().sourceStart());
 			for (IType type : types) {
-				if (PHPFlags.isInterface(type.getFlags()) || PHPFlags.isAbstract(type.getFlags())) {
+				if (PHPFlags.isTrait(type.getFlags()) || PHPFlags.isInterface(type.getFlags())
+						|| PHPFlags.isAbstract(type.getFlags())) {
 					reportProblem(s.getClassName(), Messages.CannotInstantiateType,
 							PHPProblemIdentifier.CannotInstantiateType, type.getElementName(), ProblemSeverities.Error);
 					break;
@@ -251,6 +251,23 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		}
 		usePartInfo.put(lcName, info);
 		return false;
+	}
+
+	@Override
+	public boolean visit(TraitUseStatement s) throws Exception {
+		List<TypeReference> traits = s.getTraitList();
+		for (TypeReference trait : traits) {
+			TypeReferenceInfo tri = new TypeReferenceInfo(trait, false);
+			IType[] types = getAllTypes(tri.getFullyQualifiedName(), sourceModule, trait.start());
+			for (IType type : types) {
+				if (!PHPFlags.isTrait(type.getFlags())) {
+					reportProblem(trait, Messages.CannotUseTypeAsTrait, PHPProblemIdentifier.CannotUseTypeAsTrait,
+							new String[] { trait.getName() }, ProblemSeverities.Error);
+					break;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -366,11 +383,10 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			throws ModelException {
 		if (superClass != null) {
 			TypeReferenceInfo refInfo = new TypeReferenceInfo(superClass, false);
-			IType[] types = PHPModelUtils.getTypes(refInfo.getFullyQualifiedName(), sourceModule,
-					superClass.sourceStart(), null);
+			IType[] types = getAllTypes(refInfo.getFullyQualifiedName(), sourceModule, superClass.sourceStart());
 			for (IType type : types) {
 				if (!isInterface) {
-					if (PHPFlags.isInterface(type.getFlags())) {
+					if (PHPFlags.isTrait(type.getFlags()) || PHPFlags.isInterface(type.getFlags())) {
 						reportProblem(superClass, Messages.SuperclassMustBeAClass,
 								PHPProblemIdentifier.SuperclassMustBeAClass,
 								new String[] { superClass.getName(), className }, ProblemSeverities.Error);
@@ -381,7 +397,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 								new String[] { className, type.getElementName() }, ProblemSeverities.Error);
 					}
 				} else {
-					if (!PHPFlags.isInterface(type.getFlags())) {
+					if (PHPFlags.isTrait(type.getFlags()) || !PHPFlags.isInterface(type.getFlags())) {
 						reportProblem(superClass, Messages.SuperInterfaceMustBeAnInterface,
 								PHPProblemIdentifier.SuperInterfaceMustBeAnInterface,
 								new String[] { superClass.getName(), className }, ProblemSeverities.Error);
@@ -472,6 +488,28 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			}
 		}
 		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns all types of the given type name(class, interface, trait)
+	 * 
+	 * @param typeName
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
+	private IType[] getAllTypes(String typeName, ISourceModule sourceModule, int offset) {
+		try {
+			List<IType> lists = new ArrayList<>();
+			IType[] types = PHPModelUtils.getTypes(typeName, sourceModule, offset, null);
+			lists.addAll(Arrays.asList(types));
+			types = PHPModelUtils.getTraits(typeName, sourceModule, offset, null, null);
+			lists.addAll(Arrays.asList(types));
+			return lists.toArray(new IType[0]);
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+		return new IType[0];
 	}
 
 	private class UsePartInfo {

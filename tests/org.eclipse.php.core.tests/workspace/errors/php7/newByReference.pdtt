@@ -2,9 +2,11 @@
 Test unfinished try statement error reporting
 --FILE--
 <?php
+namespace name;
+
 class a {
 }
 
 $a = & new a ();
 --EXPECT--
-[line=5, start=26, end=29] syntax error, unexpected 'new'
+[line=7, start=43, end=46] syntax error, unexpected 'new'

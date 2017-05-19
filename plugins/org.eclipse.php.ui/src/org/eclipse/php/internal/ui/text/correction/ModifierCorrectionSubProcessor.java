@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.Flags;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
@@ -34,7 +35,6 @@ import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.swt.graphics.Image;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ModifierCorrectionSubProcessor {
 
 	public static final int TO_STATIC = 1;
@@ -44,7 +44,7 @@ public class ModifierCorrectionSubProcessor {
 	public static final int TO_NON_FINAL = 5;
 
 	public static void addNonAccessibleReferenceProposal(IInvocationContext context, IProblemLocation problem,
-			Collection proposals, int kind, int relevance) throws CoreException {
+			Collection<IScriptCompletionProposal> proposals, int kind, int relevance) throws CoreException {
 		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
 		if (selectedNode == null) {
 			return;
@@ -109,7 +109,7 @@ public class ModifierCorrectionSubProcessor {
 	}
 
 	public static void addMethodRequiresBodyProposals(IInvocationContext context, IProblemLocation problem,
-			Collection proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		ISourceModule cu = context.getCompilationUnit();
 		AST ast = context.getASTRoot().getAST();
 
@@ -145,7 +145,7 @@ public class ModifierCorrectionSubProcessor {
 	}
 
 	public static void addAbstractMethodProposals(IInvocationContext context, IProblemLocation problem,
-			Collection proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		ISourceModule cu = context.getCompilationUnit();
 
 		Program astRoot = context.getASTRoot();
@@ -220,7 +220,7 @@ public class ModifierCorrectionSubProcessor {
 	}
 
 	public static void addAbstractTypeProposals(IInvocationContext context, IProblemLocation problem,
-			Collection proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		Program astRoot = context.getASTRoot();
 
 		ASTNode selectedNode = problem.getCoveringNode(astRoot);
@@ -246,7 +246,7 @@ public class ModifierCorrectionSubProcessor {
 	}
 
 	public static void addMakeTypeAbstractProposal(IInvocationContext context, ClassDeclaration parentTypeDecl,
-			Collection proposals, ISourceModule cu) {
+			Collection<IScriptCompletionProposal> proposals, ISourceModule cu) {
 		ASTRewrite rewrite = ASTRewrite.create(parentTypeDecl.getAST());
 		rewrite.set(parentTypeDecl, ClassDeclaration.MODIFIER_PROPERTY,
 				parentTypeDecl.getModifier() | Modifiers.AccAbstract, null);

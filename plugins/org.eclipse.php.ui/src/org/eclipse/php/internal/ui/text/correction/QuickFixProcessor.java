@@ -13,13 +13,13 @@ package org.eclipse.php.internal.ui.text.correction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
-import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.php.ui.text.correction.IQuickFixProcessor;
@@ -34,7 +34,7 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 		}
 
 		HashSet<IProblemIdentifier> handledProblems = new HashSet<>(locations.length);
-		ArrayList<AbstractCorrectionProposal> resultingCollections = new ArrayList<>();
+		List<IScriptCompletionProposal> resultingCollections = new ArrayList<>();
 		for (int i = 0; i < locations.length; i++) {
 			IProblemLocation curr = locations[i];
 			IProblemIdentifier id = curr.getProblemIdentifier();
@@ -47,7 +47,7 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 	}
 
 	private void process(IInvocationContext context, IProblemLocation problem,
-			Collection<AbstractCorrectionProposal> proposals) throws CoreException {
+			Collection<IScriptCompletionProposal> proposals) throws CoreException {
 		if (!(problem.getProblemIdentifier() instanceof PHPProblemIdentifier))
 			return;
 

@@ -13,12 +13,16 @@ package org.eclipse.php.internal.ui.text.correction;
 import java.util.Collection;
 
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.proposals.ASTRewriteCorrectionProposal;
-import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
 import org.eclipse.php.internal.ui.text.correction.proposals.UnimplementedMethodsCorrectionProposal;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
 import org.eclipse.php.ui.text.correction.IProblemLocation;
@@ -27,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
 public class LocalCorrectionsSubProcessor {
 
 	public static void addUnimplementedMethodsProposals(IInvocationContext context, IProblemLocation problem,
-			Collection<AbstractCorrectionProposal> proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		ISourceModule cu = context.getCompilationUnit();
 		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
 		if (selectedNode == null) {
@@ -63,13 +67,31 @@ public class LocalCorrectionsSubProcessor {
 	}
 
 	public static void getInterfaceExtendsClassProposals(IInvocationContext context, IProblemLocation problem,
-			Collection<AbstractCorrectionProposal> proposals) {
+			Collection<IScriptCompletionProposal> proposals) {
 		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
 		if (selectedNode == null) {
 			return;
 		}
 		while (selectedNode.getParent() instanceof NamespaceName) {
 			selectedNode = selectedNode.getParent();
+		}
+
+		boolean isType = false;
+		if (selectedNode instanceof Identifier) {
+			ITypeBinding typeBinding = ((Identifier) selectedNode).resolveTypeBinding();
+			if (typeBinding != null && typeBinding.getPHPElement() instanceof IType) {
+				try {
+					int flags = ((IType) typeBinding.getPHPElement()).getFlags();
+					if (PHPFlags.isClass(flags) || PHPFlags.isInterface(flags)) {
+						isType = true;
+					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+				}
+			}
+		}
+		if (!isType) {
+			return;
 		}
 
 		StructuralPropertyDescriptor locationInParent = selectedNode.getLocationInParent();

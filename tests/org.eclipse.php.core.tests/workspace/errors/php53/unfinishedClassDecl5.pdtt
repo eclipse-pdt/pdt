@@ -2,8 +2,10 @@
 Test unfinished class declaration error reporting
 --FILE--
 <?php
+namespace ns1;
+
 class B{};
 class A extends B, {}
 ?>
 --EXPECT--
-[line=3, start=34, end=35] syntax error, unexpected ',', expecting '{'
+[line=5, start=50, end=51] syntax error, unexpected ',', expecting '{'

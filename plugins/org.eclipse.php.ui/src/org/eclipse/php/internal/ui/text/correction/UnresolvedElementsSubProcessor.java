@@ -16,13 +16,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.corext.util.QualifiedTypeNameHistory;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.text.correction.proposals.ASTRewriteCorrectionProposal;
-import org.eclipse.php.internal.ui.text.correction.proposals.AbstractCorrectionProposal;
 import org.eclipse.php.internal.ui.text.correction.proposals.AddImportCorrectionProposal;
 import org.eclipse.php.internal.ui.text.correction.proposals.CUCorrectionProposal;
 import org.eclipse.php.internal.ui.util.Messages;
@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 public class UnresolvedElementsSubProcessor {
 
 	public static void getTypeProposals(IInvocationContext context, IProblemLocation problem,
-			Collection<AbstractCorrectionProposal> proposals) throws CoreException {
+			Collection<IScriptCompletionProposal> proposals) throws CoreException {
 		ISourceModule cu = context.getCompilationUnit();
 
 		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
@@ -65,7 +65,7 @@ public class UnresolvedElementsSubProcessor {
 	}
 
 	private static void addSimilarTypeProposals(int kind, ISourceModule cu, Identifier node, int relevance,
-			Collection<AbstractCorrectionProposal> proposals) throws CoreException {
+			Collection<IScriptCompletionProposal> proposals) throws CoreException {
 		SimilarElement[] elements = SimilarElementsRequestor.findSimilarElement(cu, node, kind);
 
 		// add all similar elements
