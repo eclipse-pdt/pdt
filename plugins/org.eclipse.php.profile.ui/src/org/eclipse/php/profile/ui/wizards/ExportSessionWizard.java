@@ -23,7 +23,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.profile.core.engine.ProfilerDB;
 import org.eclipse.php.profile.core.engine.ProfilerDataSerializationUtil;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
+import org.eclipse.php.profile.ui.ProfilerUIImages;
 import org.eclipse.php.profile.ui.ProfilerUiPlugin;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -31,8 +33,7 @@ import org.eclipse.ui.IWorkbench;
 /**
  * Export session wizard.
  */
-public class ExportSessionWizard extends AbstractSessionWizard implements
-		IExportWizard {
+public class ExportSessionWizard extends AbstractSessionWizard implements IExportWizard {
 
 	private ExportSessionWizardFirstPage page1;
 
@@ -43,21 +44,16 @@ public class ExportSessionWizard extends AbstractSessionWizard implements
 		final ProfilerDB[] sessions = page1.getSessions();
 		final String fileName = page1.getTargetFile();
 
-		Job saveJob = new Job(PHPProfileUIMessages
-				.getString("ExportSessionWizard.0")) { //$NON-NLS-1$
+		Job saveJob = new Job(PHPProfileUIMessages.getString("ExportSessionWizard.0")) { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					ProfilerDataSerializationUtil.serialize(sessions,
-							new FileOutputStream(fileName));
+					ProfilerDataSerializationUtil.serialize(sessions, new FileOutputStream(fileName));
 				} catch (IOException e) {
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							MessageDialog
-									.openError(
-											Display.getDefault()
-													.getActiveShell(),
-											PHPProfileUIMessages
-													.getString("ExportSessionWizard.2"), NLS.bind(PHPProfileUIMessages.getString("ExportSessionWizard.3"), fileName)); //$NON-NLS-1$ //$NON-NLS-2$
+							MessageDialog.openError(Display.getDefault().getActiveShell(),
+									PHPProfileUIMessages.getString("ExportSessionWizard.2"), //$NON-NLS-1$
+									NLS.bind(PHPProfileUIMessages.getString("ExportSessionWizard.3"), fileName)); //$NON-NLS-1$
 						}
 					});
 					ProfilerUiPlugin.log(e);
@@ -80,4 +76,10 @@ public class ExportSessionWizard extends AbstractSessionWizard implements
 		page1 = new ExportSessionWizardFirstPage(getSession());
 		addPage(page1);
 	}
+
+	@Override
+	public Image getDefaultPageImage() {
+		return ProfilerUIImages.get(ProfilerUIImages.IMG_WIZBAN_EXPORT_PROFILE_SESSIONS);
+	}
+
 }

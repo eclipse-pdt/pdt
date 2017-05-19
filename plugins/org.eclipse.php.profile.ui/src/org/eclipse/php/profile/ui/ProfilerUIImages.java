@@ -33,6 +33,7 @@ public class ProfilerUIImages {
 	private static final String T_OBJ = ICONS_PATH + "obj16/"; //$NON-NLS-1$
 	private static final String T_ELCL = ICONS_PATH + "elcl16/"; //$NON-NLS-1$
 	private static final String T_ETOOL = ICONS_PATH + "etool16/"; //$NON-NLS-1$
+	private static final String T_WIZBAN = ICONS_PATH + "wizban/"; //$NON-NLS-1$
 
 	public static final String IMG_ELCL_COLLAPSE_ALL = "IMG_ELCL_COLLAPSE_ALL"; //$NON-NLS-1$
 	public static final String IMG_ELCL_EXPAND_ALL = "IMG_ELCL_EXPAND_ALL"; //$NON-NLS-1$
@@ -53,8 +54,10 @@ public class ProfilerUIImages {
 	public static final String IMG_OBJ_PROFILE_CONF = "IMG_OBJ_PROFILE_CONF"; //$NON-NLS-1$
 	public static final String IMG_ETOOL_IMPORT_WIZ = "IMG_ETOOL_IMPORT_WIZ"; //$NON-NLS-1$
 	public static final String IMG_ETOOL_EXPORT_WIZ = "IMG_ETOOL_EXPORT_WIZ"; //$NON-NLS-1$
+	public static final String IMG_WIZBAN_EXPORT_PROFILE_SESSIONS = "IMG_WIZBAN_EXPORT_PROFILE_SESSIONS"; //$NON-NLS-1$
+	public static final String IMG_WIZBAN_IMPORT_PROFILE_SESSIONS = "IMG_WIZBAN_IMPORT_PROFILE_SESSIONS"; //$NON-NLS-1$
+	public static final String IMG_WIZBAN_EXPORT_HTML_REPORT = "IMG_WIZBAN_EXPORT_HTML_REPORT"; //$NON-NLS-1$
 
-	
 	private static void declareImages() {
 		declareRegistryImage(IMG_OBJ_PROCESS, T_OBJ + "process_obj.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_REPORT, T_OBJ + "report_obj.png"); //$NON-NLS-1$
@@ -75,8 +78,11 @@ public class ProfilerUIImages {
 		declareRegistryImage(IMG_ELCL_CODE_COVERAGE, T_ELCL + "cov_statistic_co.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_ETOOL_IMPORT_WIZ, T_ETOOL + "import_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_ETOOL_EXPORT_WIZ, T_ETOOL + "export_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_EXPORT_PROFILE_SESSIONS, T_WIZBAN + "export_profile_session_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_IMPORT_PROFILE_SESSIONS, T_WIZBAN + "import_profile_session_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_EXPORT_HTML_REPORT, T_WIZBAN + "export_profile_report_wiz.png"); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Returns the image managed under the given key in this registry.
 	 * 

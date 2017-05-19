@@ -56,7 +56,7 @@ public class HTMLReportWizardFirstPage extends WizardPage {
 	public HTMLReportWizardFirstPage(ProfilerDB session) {
 		super(PHPProfileUIMessages.getString("HTMLReportWizardPage1.0")); //$NON-NLS-1$
 		setTitle(PHPProfileUIMessages.getString("HTMLReportWizardPage1.1")); //$NON-NLS-1$
-
+		setDescription(PHPProfileUIMessages.getString("HTMLReportWizardPage1.16"));
 		fSession = session;
 	}
 

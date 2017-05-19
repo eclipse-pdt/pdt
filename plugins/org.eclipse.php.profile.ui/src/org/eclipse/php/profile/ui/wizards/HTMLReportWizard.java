@@ -24,10 +24,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.profile.core.engine.ProfilerDB;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
 import org.eclipse.php.profile.ui.ProfilerUIConstants;
+import org.eclipse.php.profile.ui.ProfilerUIImages;
 import org.eclipse.php.profile.ui.ProfilerUiPlugin;
 import org.eclipse.php.profile.ui.report.HTMLReporter;
 import org.eclipse.php.profile.ui.utils.ProfileUITools;
 import org.eclipse.php.profile.ui.views.AbstractProfilerView;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
@@ -98,4 +100,10 @@ public class HTMLReportWizard extends AbstractSessionWizard implements IExportWi
 		page1 = new HTMLReportWizardFirstPage(getSession());
 		addPage(page1);
 	}
+
+	@Override
+	public Image getDefaultPageImage() {
+		return ProfilerUIImages.get(ProfilerUIImages.IMG_WIZBAN_EXPORT_HTML_REPORT);
+	}
+
 }
