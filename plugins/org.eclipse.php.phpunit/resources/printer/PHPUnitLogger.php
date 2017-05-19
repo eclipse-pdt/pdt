@@ -27,6 +27,7 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit\Framework\AssertionFailedError', 'AssertionFailedError');
     class_alias('PHPUnit\Framework\Exception', 'Exception2');
     class_alias('PHPUnit\Framework\ExpectationFailedException', 'ExpectationFailedException');
+    class_alias('PHPUnit\Framework\Error\Warning', 'PHPUnit_Framework_Error_Warning');
 }
 
 class PHPUnitLogger extends Printer implements TestListener
@@ -47,10 +48,7 @@ class PHPUnitLogger extends Printer implements TestListener
     {
         $this->cleanTest();
         
-        $port = $_SERVER['ZEND_PHPUNIT_PORT'];
-        if (! isset($port)) {
-            $port = 7478;
-        }
+        $port = isset($_SERVER['ZEND_PHPUNIT_PORT']) ? $_SERVER['ZEND_PHPUNIT_PORT'] : 7478;
         $this->out = fsockopen('127.0.0.1', $port, $errno, $errstr, 5);
     }
     
@@ -415,7 +413,7 @@ class ZendPHPUnitErrorHandler
             
             else
                 if ($errno == E_NOTICE) {
-                    trigger_error($errstr, E_USER_NOTICE);
+                    trigger_error(sprintf("%s:%d:%s", $errfile, $errline, $errstr), E_USER_NOTICE);
                     return FALSE;
                 }
             
