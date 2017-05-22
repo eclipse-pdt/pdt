@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class ValidationUtils {
 
-	protected static final Pattern NS_PATTERN = Pattern.compile("^[a-zA-Z_\\\\]+$"); //$NON-NLS-1$
+	protected static final Pattern NS_PATTERN = Pattern.compile("^[a-zA-Z0-9_\\\\]+[\\\\]$"); //$NON-NLS-1$
 
 	public static boolean validateNamespace(String namespace) {
 		Matcher matcher = NS_PATTERN.matcher(namespace);
