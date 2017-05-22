@@ -17,6 +17,7 @@ public class Messages extends NLS {
 	public static String AutoloadGroup_NamespaceLabel;
 	public static String AutoloadValidator_ErrorMessage;
 	public static String AutoloadValidator_Message;
+	public static String AutoloadValidator_PrefixEndMessage;
 	public static String BasicSettingsGroup_ContentAssistDecorationText;
 	public static String BasicSettingsGroup_DescriptionLabel;
 	public static String BasicSettingsGroup_KeywordsLabel;

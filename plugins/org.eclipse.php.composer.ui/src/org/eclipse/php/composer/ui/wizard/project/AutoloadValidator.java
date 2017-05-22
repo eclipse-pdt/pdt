@@ -34,6 +34,11 @@ public final class AutoloadValidator implements Observer {
 			secondPage.setMessage(Messages.AutoloadValidator_Message);
 			secondPage.setPageComplete(false);
 			return;
+		} else if (!namespace.endsWith("\\")) { //$NON-NLS-1$
+			secondPage.setErrorMessage(Messages.AutoloadValidator_PrefixEndMessage);
+			secondPage.setMessage(Messages.AutoloadValidator_Message);
+			secondPage.setPageComplete(false);
+			return;
 		}
 
 		secondPage.setPageComplete(true);
