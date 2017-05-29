@@ -247,6 +247,9 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 
 	private String getPrinterDirectory() {
 		IPath resourcePath = PHPUnitLaunchUtils.getResourcesPath().append(PRINTER_DIRECTORY);
+		File printerFile = resourcePath.append(PRINTER_NAME + ".php") //$NON-NLS-1$
+				.toFile();
+
 		String tmpDirectoryPath = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 		File tmpDirectory = new File(tmpDirectoryPath);
 		if (tmpDirectory.exists()) {
@@ -255,11 +258,9 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 				printerDirectory.mkdirs();
 			}
 			File tmpPrinterFile = new File(printerDirectory, PRINTER_NAME + ".php"); //$NON-NLS-1$
-			if (tmpPrinterFile.exists()) {
+			if (tmpPrinterFile.exists() && tmpPrinterFile.lastModified() >= printerFile.lastModified()) {
 				return tmpPrinterFile.getParentFile().getAbsolutePath();
 			}
-			File printerFile = resourcePath.append(PRINTER_NAME + ".php") //$NON-NLS-1$
-					.toFile();
 
 			try {
 				FileUtils.copyFile(printerFile, tmpPrinterFile);
