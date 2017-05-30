@@ -80,5 +80,40 @@
             typeIds="org.eclipse.php.server.builtin.*">
       </publishTask>
    </extension>
-
+   <extension
+         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+      <moduleArtifactAdapter
+            id="org.eclipse.php.builtin.server.core.php1"
+            class="org.eclipse.php.internal.server.core.builtin.deployables.PHPDeployableObjectAdapter">
+         <enablement>
+            <with variable="selection">
+               <adapt type="org.eclipse.core.resources.IProject">
+                  <test forcePluginActivation="true"
+                        property="org.eclipse.wst.common.project.facet.core.projectFacet"
+                        value="php.component" />
+               </adapt>
+            </with>
+         </enablement>
+      </moduleArtifactAdapter>
+      <moduleArtifactAdapter
+            id="org.eclipse.php.builtin.server.core.php2"
+            class="org.eclipse.php.internal.server.core.builtin.deployables.PHPDeployableObjectAdapter">
+         <enablement>
+            <with variable="selection">
+               <adapt type="org.eclipse.core.resources.IFile">
+                  <test forcePluginActivation="true"
+                        property="org.eclipse.wst.common.project.facet.core.projectFacet"
+                        value="php.component" />
+               </adapt>
+            </with>
+         </enablement>
+      </moduleArtifactAdapter> 
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.launchableAdapters">
+      <launchableAdapter
+            class="org.eclipse.php.internal.server.core.builtin.PHPServerLaunchableAdapterDelegate"
+            id="org.eclipse.php.server.builtin">
+      </launchableAdapter>
+   </extension>
 </plugin>

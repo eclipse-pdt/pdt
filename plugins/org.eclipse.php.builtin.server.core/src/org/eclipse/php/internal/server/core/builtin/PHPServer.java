@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Alex Xu - initial API and implementation
+ *     Kaloyan Raev - [516921] Implement "Run on server" for builtin server
  *******************************************************************************/
 package org.eclipse.php.internal.server.core.builtin;
 
@@ -297,7 +298,11 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 				return null;
 			URL url = getRootUrl();
 			if (url != null) {
-				String path = url.getPath() + config.getWebModuleURL(module);
+//				String path = url.getPath() + config.getWebModuleURL(module);
+				String path = url.toString();
+				if (!path.endsWith("/")) //$NON-NLS-1$
+					path += "/"; //$NON-NLS-1$
+				path += module.getName();
 				if (!path.endsWith("/")) //$NON-NLS-1$
 					path += "/"; //$NON-NLS-1$
 				return new URL(path);
