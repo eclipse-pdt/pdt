@@ -181,7 +181,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 				List<ASTNode> args = node.getArgs().getChilds();
 				if (args.size() == 2) {
 					ASTNode firstArg = args.get(0);
-					ASTNode secondArg = args.get(0);
+					ASTNode secondArg = args.get(1);
 					if (firstArg instanceof Scalar && secondArg instanceof Scalar) {
 						Scalar constantName = (Scalar) firstArg;
 						Scalar constantValue = (Scalar) secondArg;
