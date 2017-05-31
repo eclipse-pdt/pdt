@@ -444,7 +444,8 @@ public class PHPUnitView extends ViewPart {
 		bottomTabFolder = SWTUtil.createTabFolder(parent);
 		parent.setContent(bottomTabFolder);
 		final CTabItem traceTab = createTraceTab(bottomTabFolder);
-		createDiffTab(bottomTabFolder);
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517513
+		// createDiffTab(bottomTabFolder);
 		setCodeCoverageTabVisible(codeCoverageTabVisibile);
 		bottomTabFolder.setSelection(traceTab);
 	}
