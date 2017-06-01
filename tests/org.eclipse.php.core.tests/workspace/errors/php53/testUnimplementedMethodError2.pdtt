@@ -1,0 +1,25 @@
+--TEST--
+Bug 517637 - PDT identifies wrong class interfaces
+--FILE--
+<?php
+namespace {
+    class Name1
+    {
+        
+    }
+}
+
+namespace NS1
+{
+    interface Name1
+    {
+        public function test();
+    }
+}
+
+namespace NS2 {
+    class Name2 extends \Name1
+    {
+    }
+}
+--EXPECT--
