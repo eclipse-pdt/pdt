@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 IBM Corporation and others.
+ * Copyright (c) 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,16 +139,17 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		 * @param file
 		 * @param taskReporter
 		 * @param offset
+		 * @param end
 		 * @param nextTaskTag
 		 * @param priority
 		 * @throws BadLocationException
 		 * @throws CoreException
 		 */
-		private void reportTask(IDocument document, IFile file, ITaskReporter taskReporter, int offset,
+		private void reportTask(IDocument document, IFile file, ITaskReporter taskReporter, int offset, int end,
 				Scalar nextTaskTag, int priority) throws BadLocationException, CoreException {
 			int lineNumber = document.getLineOfOffset(offset);
 
-			String taskStr = getTaskStr(document, lineNumber, offset, nextTaskTag);
+			String taskStr = getTaskStr(document, lineNumber, offset, end, nextTaskTag);
 			// the end of the string to be highlighted
 			int charEnd = offset + taskStr.length();
 
@@ -189,11 +190,12 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		 * @param document
 		 * @param lineNumber
 		 * @param offset
+		 * @param end
 		 * @param nextTaskTag
 		 * @return
 		 * @throws BadLocationException
 		 */
-		private String getTaskStr(IDocument document, int lineNumber, int offset, Scalar nextTaskTag)
+		private String getTaskStr(IDocument document, int lineNumber, int offset, int end, Scalar nextTaskTag)
 				throws BadLocationException {
 			// get line info to identify the end of the task
 			IRegion lineInformation = document.getLineInformation(lineNumber);
@@ -204,9 +206,9 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 			// of the next token
 			int taskEnd;
 			if (nextTaskTag != null) {
-				taskEnd = Math.min(nextTaskTag.start(), lineEnd);
+				taskEnd = Math.min(nextTaskTag.start(), Math.min(end, lineEnd));
 			} else {
-				taskEnd = lineEnd;
+				taskEnd = Math.min(end, lineEnd);
 			}
 
 			String taskStr = document.get(offset, taskEnd - offset);
@@ -259,8 +261,15 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 					IDocument document = new Document(new String(context.getContents()));
 					for (Comment comment : ((PHPModuleDeclaration) moduleDeclaration).getCommentList()) {
 						List<Scalar> foundTaskTags = new ArrayList<Scalar>();
-						checkForTodo(todos, foundTaskTags, comment.start(),
-								document.get(comment.start(), comment.end() - comment.start()));
+						String commentContent = document.get(comment.start(), comment.end() - comment.start());
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517510
+						if (comment.getCommentType() == Comment.TYPE_MULTILINE
+								|| comment.getCommentType() == Comment.TYPE_PHPDOC) {
+							if (commentContent.endsWith("*/")) { //$NON-NLS-1$
+								commentContent = commentContent.substring(0, commentContent.length() - 2);
+							}
+						}
+						checkForTodo(todos, foundTaskTags, comment.start(), commentContent);
 						if (foundTaskTags.isEmpty()) {
 							comment.setTaskTags(null);
 						} else {
@@ -271,6 +280,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 										foundTaskTag.end() - foundTaskTag.start());
 								int priority = getTaskPriority(taskTags, taskKeyword);
 								reportTask(document, context.getFile(), context.getTaskReporter(), foundTaskTag.start(),
+										comment.start() + commentContent.length(),
 										i + 1 < foundTaskTags.size() ? foundTaskTags.get(i + 1) : null, priority);
 							}
 						}
