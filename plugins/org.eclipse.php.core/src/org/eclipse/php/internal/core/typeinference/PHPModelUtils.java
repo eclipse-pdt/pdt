@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2023,7 +2023,15 @@ public class PHPModelUtils {
 					IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
 					IType[] superTypes = PHPModelAccess.getDefault().findTypes(superClass, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
-					types = fileNetworkFilter(type.getSourceModule(), Arrays.asList(superTypes), null, monitor);
+
+					List<IType> list = new ArrayList<IType>();
+					for (IType superType : superTypes) {
+						if (superClass.equals(PHPModelUtils.getFullName(superType))) {
+							list.add(superType);
+						}
+					}
+
+					types = fileNetworkFilter(type.getSourceModule(), list, null, monitor);
 				} else {
 					String namespaceName = null;
 					int i = superClass.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
