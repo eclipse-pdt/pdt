@@ -62,5 +62,16 @@
             typeIds="org.eclipse.php.server.builtin">
       </section>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.php.perspective">
+         <view
+               id="org.eclipse.wst.server.ui.ServersView"
+               relationship="stack"
+               relative="org.eclipse.ui.console.ConsoleView">
+         </view>
+      </perspectiveExtension>
+   </extension>
 
 </plugin>
