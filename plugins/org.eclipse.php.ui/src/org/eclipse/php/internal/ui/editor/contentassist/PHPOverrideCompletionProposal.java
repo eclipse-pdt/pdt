@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptOverrideCompletionProposal;
@@ -29,6 +28,7 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.swt.widgets.Shell;
 
 public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionProposal

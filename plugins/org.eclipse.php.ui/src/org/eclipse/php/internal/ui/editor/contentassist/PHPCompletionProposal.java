@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
@@ -33,6 +32,7 @@ import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrategy;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
