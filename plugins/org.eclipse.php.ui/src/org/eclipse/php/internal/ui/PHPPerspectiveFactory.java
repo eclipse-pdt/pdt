@@ -74,7 +74,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_TASK_LIST);
-		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		bottom.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
 		IFolderLayout outlineFolder = layout.createFolder(TOP_RIGHT_LOCATION, IPageLayout.RIGHT, (float) 0.75,
