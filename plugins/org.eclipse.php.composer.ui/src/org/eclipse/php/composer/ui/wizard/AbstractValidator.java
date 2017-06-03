@@ -118,10 +118,9 @@ abstract public class AbstractValidator implements Observer {
 		}
 
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		String newProjectNameLowerCase = name.toLowerCase();
 		for (IProject currentProject : projects) {
 			String existingProjectName = currentProject.getName();
-			if (existingProjectName.toLowerCase().equals(newProjectNameLowerCase)) {
+			if (existingProjectName.equalsIgnoreCase(name)) {
 				throw new ValidationException(
 						NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists, Severity.ERROR);
 			}

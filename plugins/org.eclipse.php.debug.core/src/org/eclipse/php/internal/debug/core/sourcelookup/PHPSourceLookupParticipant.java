@@ -177,7 +177,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			if (!(obj instanceof ExternalEntryFile))
 				return false;
 			ExternalEntryFile other = (ExternalEntryFile) obj;
-			if (!fileName.toLowerCase().equals(other.fileName.toLowerCase()))
+			if (!fileName.equalsIgnoreCase(other.fileName))
 				return false;
 			return true;
 		}
