@@ -28,7 +28,7 @@ public class INIFileModifier {
 	private static final String GLOBAL_SECTION = "__global__"; //$NON-NLS-1$
 	private static final Pattern SECTION_PATTERN = Pattern.compile("\\[([^\\]]+)\\]"); //$NON-NLS-1$
 	private static final Pattern NAME_VAL_PATTERN = Pattern
-			.compile("([\\w]+)\\p{javaWhitespace}*=\\p{javaWhitespace}*(.*)"); //$NON-NLS-1$
+			.compile("([\\w\\.]+)\\p{javaWhitespace}*=\\p{javaWhitespace}*[\\\"]{0,1}([^\\\"]*)[\\\"]{0,1}"); //$NON-NLS-1$
 
 	class INIFileSection {
 		String name;
@@ -136,6 +136,11 @@ public class INIFileModifier {
 		if (sectionName == null || name == null || value == null) {
 			throw new NullPointerException();
 		}
+
+		if (!this.hasSection(sectionName)) {
+			addSection(sectionName);
+		}
+
 		for (INIFileSection section : sections) {
 			if (section.name.equals(sectionName)) {
 				if (replace) {
@@ -424,5 +429,45 @@ public class INIFileModifier {
 			}
 		}
 		return false;
+	}
+
+	public String getEntryValue(String sectionName, String name) {
+		for (INIFileSection section : sections) {
+			if (section.name.equals(sectionName)) {
+				return getValue(section, name);
+			}
+		}
+
+		return null;
+	}
+
+	private String getValue(INIFileSection section, String name) {
+		for (int i = 0; i < section.lines.size(); i++) {
+			Matcher m = NAME_VAL_PATTERN.matcher(section.lines.get(i));
+			if (m.find()) {
+				String entryName = m.group(1);
+				if (entryName.equals(name)) {
+					return m.group(2);
+				}
+			}
+		}
+		return null;
+	}
+
+	private void addSection(String name) {
+		INIFileSection section = new INIFileSection(name);
+		this.sections.add(section);
+	}
+
+	private boolean hasSection(String name) {
+		boolean hasSection = false;
+		for (INIFileSection section : this.sections) {
+			if (section.name.equals(name)) {
+				hasSection = true;
+				break;
+			}
+		}
+
+		return hasSection;
 	}
 }

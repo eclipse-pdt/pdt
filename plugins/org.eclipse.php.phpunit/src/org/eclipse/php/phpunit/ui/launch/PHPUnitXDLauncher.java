@@ -28,9 +28,10 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
-import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
+import org.eclipse.php.internal.debug.core.xdebug.cachegrind.Parser;
+import org.eclipse.php.internal.debug.core.xdebug.cachegrind.Tree;
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
@@ -129,6 +130,9 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 		File phpIni = (phpIniString != null && new File(phpIniString).exists()) ? new File(phpIniString)
 				: PHPINIUtil.findPHPIni(phpExeString);
 		File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString, project);
+		if (ILaunchManager.PROFILE_MODE.equals(mode)) {
+			tempIni = PHPINIUtil.appendLaunchSpecificOptions(tempIni, configuration);
+		}
 		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 
 		// add process type to process attributes, basically the name of the exe
@@ -198,21 +202,12 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 			envVarString = PHPLaunchUtilities.getEnvironment(configuration, new String[] { getLibraryPath(phpExe) });
 		}
 
-		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
+		IProgressMonitor subMonitor = SubMonitor.convert(monitor, 30);
 		subMonitor.beginTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3, 10);
 
 		// Detect PHP SAPI type and thus where we need arguments
 		File phpExeFile = new File(phpExeString);
-		String sapiType = null;
-		String phpV = null;
-		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
-		for (PHPexeItem item : items) {
-			if (item.getExecutable().equals(phpExeFile)) {
-				sapiType = item.getSapiType();
-				phpV = item.getVersion();
-				break;
-			}
-		}
+		String sapiType = determineSapiType(phpExeFile);
 		String[] args = null;
 		if (PHPexeItem.SAPI_CLI.equals(sapiType)) {
 			args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
@@ -253,6 +248,14 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 				subMonitor.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4);
 				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences(), monitor);
+			} else if (mode.equals(ILaunchManager.PROFILE_MODE)) {
+				try {
+					Parser parser = new Parser(PHPINIUtil.getGrindFile(tempIni));
+					Tree tree = parser.parse();
+					// TODO: Add parser data to perspective components
+				} catch (Exception ex) {
+					Logger.logException(ex);
+				}
 			}
 
 		} else {
