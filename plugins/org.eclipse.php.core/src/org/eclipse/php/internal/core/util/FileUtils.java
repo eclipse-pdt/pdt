@@ -148,7 +148,7 @@ public class FileUtils {
 		}
 
 		if ((containerFilterPath.getDevice() != null)
-				&& !containerFilterPath.getDevice().toLowerCase().equals(filePath.getDevice().toLowerCase())) {
+				&& !containerFilterPath.getDevice().equalsIgnoreCase(filePath.getDevice())) {
 			return false;
 		}
 
@@ -180,8 +180,7 @@ public class FileUtils {
 			return false;
 		}
 
-		if ((filePath1.getDevice() != null)
-				&& !filePath1.getDevice().toLowerCase().equals(filePath2.getDevice().toLowerCase())) {
+		if ((filePath1.getDevice() != null) && !filePath1.getDevice().equalsIgnoreCase(filePath2.getDevice())) {
 			return false;
 		}
 

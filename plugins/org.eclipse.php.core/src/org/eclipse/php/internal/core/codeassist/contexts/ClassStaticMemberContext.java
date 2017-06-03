@@ -73,7 +73,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 					.toString();
 
 			if (parentText.equals("parent") //$NON-NLS-1$
-					|| (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("parent"))) { //$NON-NLS-1$
+					|| (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.equalsIgnoreCase("parent"))) { //$NON-NLS-1$
 				isParent = isDirectParent = true;
 			}
 		}
@@ -85,7 +85,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length())
 					.toString();
 			if (parentText.equals("self") //$NON-NLS-1$
-					|| (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("self"))) { //$NON-NLS-1$
+					|| (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.equalsIgnoreCase("self"))) { //$NON-NLS-1$
 				isSelf = isDirectSelf = true;
 			}
 		}

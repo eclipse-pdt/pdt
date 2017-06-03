@@ -121,10 +121,9 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		 */
 		private int getTaskPriority(TaskTag[] taskTags, String taskStr) {
 
-			String taskTagLowerCase = taskStr.toLowerCase();
 			for (int i = 0; i < taskTags.length; i++) {
 				TaskTag taskTag = taskTags[i];
-				if (taskTag.getTag().toLowerCase().equals(taskTagLowerCase)) {
+				if (taskTag.getTag().equalsIgnoreCase(taskStr)) {
 					return taskTag.getPriority();
 				}
 			}

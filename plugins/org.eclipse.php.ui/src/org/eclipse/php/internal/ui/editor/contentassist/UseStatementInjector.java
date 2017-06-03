@@ -385,8 +385,7 @@ public class UseStatementInjector {
 					String existingNamespacePrefix = readNamespacePrefix(sourceModule, document, offset, phpVersion);
 
 					// Add alias to the replacement string:
-					if (existingNamespacePrefix == null
-							|| !usePartName.toLowerCase().equals(existingNamespacePrefix.toLowerCase())) {
+					if (existingNamespacePrefix == null || !usePartName.equalsIgnoreCase(existingNamespacePrefix)) {
 						replacementString = namespacePrefix + replacementString;
 					}
 					proposal.setReplacementString(replacementString);
@@ -406,8 +405,7 @@ public class UseStatementInjector {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459306
 				// if the type name already exists, use fully
 				// qualified name to replace:
-				if (existingNamespacePrefix == null
-						|| !namespaceName.toLowerCase().equals(existingNamespacePrefix.toLowerCase())) {
+				if (existingNamespacePrefix == null || !namespaceName.equalsIgnoreCase(existingNamespacePrefix)) {
 					replacementString = namespacePrefix + replacementString;
 				}
 				proposal.setReplacementString(replacementString);

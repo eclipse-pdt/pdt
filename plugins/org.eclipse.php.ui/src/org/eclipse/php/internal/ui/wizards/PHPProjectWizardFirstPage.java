@@ -284,10 +284,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			}
 
 			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-			String newProjectNameLowerCase = name.toLowerCase();
 			for (IProject currentProject : projects) {
 				String existingProjectName = currentProject.getName();
-				if (existingProjectName.toLowerCase().equals(newProjectNameLowerCase)) {
+				if (existingProjectName.equalsIgnoreCase(name)) {
 					setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
 					setPageComplete(false);
 					return;

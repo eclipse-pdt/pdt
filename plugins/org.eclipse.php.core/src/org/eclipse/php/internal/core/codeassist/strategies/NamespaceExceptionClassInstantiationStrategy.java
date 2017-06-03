@@ -79,7 +79,7 @@ public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClass
 		IDLTKSearchScope scope = createSearchScope();
 		IType[] exceptionTypes = PHPModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, 0, 0, scope, null);
 		for (int i = 0; i < exceptionTypes.length; i++) {
-			if (isExctptionType(exceptionTypes[i])) {
+			if (isExceptionType(exceptionTypes[i])) {
 				exceptionType = exceptionTypes[i];
 				break;
 			}
@@ -87,7 +87,7 @@ public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClass
 		return exceptionType;
 	}
 
-	private boolean isExctptionType(IType iType) {
+	private boolean isExceptionType(IType iType) {
 		if (EXCEPTION.equals(iType.getElementName()) && (CORE_PHP.equals(iType.getParent().getElementName())
 				|| BASIC_PHP.equals(iType.getParent().getElementName())))
 			return true;
