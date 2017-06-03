@@ -159,14 +159,7 @@ public class PHPUnitZDLauncher extends PHPUnitBasicLauncher {
 				phpConfigDir = new File(iniFileLocation).getParent();
 			}
 			// Detect PHP SAPI type:
-			String sapiType = null;
-			PHPexeItem[] items = PHPexes.getInstance().getAllItems();
-			for (PHPexeItem item : items) {
-				if (item.getExecutable().equals(phpExeFile)) {
-					sapiType = item.getSapiType();
-					break;
-				}
-			}
+			String sapiType = determineSapiType(phpExeFile);
 			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
 			// Prepare the environment
 			Map<String, String> additionalLaunchEnvironment = PHPLaunchUtilities.getPHPCGILaunchEnvironment(fileName,

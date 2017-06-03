@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.debug.core.phpIni;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,11 +20,14 @@ import java.util.List;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.debug.core.Logger;
@@ -332,5 +336,65 @@ public class PHPINIUtil {
 		}
 
 		return null;
+	}
+
+	private static void addIniSetting(File phpIniFile, String section, String name, String value) {
+		try {
+			INIFileModifier m = new INIFileModifier(phpIniFile);
+			// m.addEntry(section, name, value);
+			m.addEntry(section, name, value);
+			m.close();
+		} catch (IOException e) {
+			PHPDebugPlugin.log(e);
+		}
+	}
+
+	public static String getIniValue(File phpIniFile, String section, String name) {
+		String value = null;
+		try {
+			INIFileModifier m = new INIFileModifier(phpIniFile);
+			value = m.getEntryValue(section, name);
+			m.close();
+		} catch (IOException e) {
+			PHPDebugPlugin.log(e);
+		}
+		return value;
+	}
+
+	public static File appendLaunchSpecificOptions(File phpIniFile, ILaunchConfiguration launchConfig)
+			throws CoreException {
+		addIniSetting(phpIniFile, "xdebug", "xdebug.profiler_enable", "1");
+		File grindFile = createGrindFile(phpIniFile.getParentFile().toPath());
+		addIniSetting(phpIniFile, "xdebug", "xdebug.profiler_output_dir", grindFile.getAbsolutePath());
+		addIniSetting(phpIniFile, "xdebug", "xdebug.profiler_output_name", "cachegrind.out");
+
+		launchConfig.getWorkingCopy().setAttribute(IDebugParametersKeys.CACHE_GRIND_FILE,
+				new File(grindFile, "cachegrind.out").getAbsolutePath());
+
+		return phpIniFile;
+	}
+
+	public static File getGrindFile(File phpIniFile) {
+		String path = getIniValue(phpIniFile, "xdebug", "xdebug.profiler_output_dir");
+
+		File grindFile = new File(path, "cachegrind.out");
+
+		return grindFile;
+	}
+
+	private static File createGrindFile(Path directory) {
+		File grindFile = null;
+
+		try {
+			grindFile = new File(directory.toFile(), "cachegrind"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (grindFile.exists()) {
+				grindFile.delete();
+			}
+			grindFile.mkdirs();
+		} catch (Exception e) {
+			PHPDebugPlugin.log(e);
+		}
+
+		return grindFile;
 	}
 }

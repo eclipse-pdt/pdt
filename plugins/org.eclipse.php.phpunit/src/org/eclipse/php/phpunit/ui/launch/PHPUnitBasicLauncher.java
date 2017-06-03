@@ -218,4 +218,22 @@ public class PHPUnitBasicLauncher {
 				PHPDebugCoreMessages.Debugger_LaunchError_title, message));
 	}
 
+	/**
+	 * Detect PHP Sapi type for given php executable
+	 * 
+	 * @param phpExeFile
+	 *            The php executable to determine the sapi type of
+	 * @return The determined sapi type or null
+	 */
+	protected String determineSapiType(File phpExeFile) {
+		String sapiType = null;
+		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
+		for (PHPexeItem item : items) {
+			if (item.getExecutable().equals(phpExeFile)) {
+				sapiType = item.getSapiType();
+				break;
+			}
+		}
+		return sapiType;
+	}
 }
