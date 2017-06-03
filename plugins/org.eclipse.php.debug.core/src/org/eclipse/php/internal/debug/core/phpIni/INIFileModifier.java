@@ -425,4 +425,27 @@ public class INIFileModifier {
 		}
 		return false;
 	}
+
+	public String getEntryValue(String sectionName, String name) {
+		for (INIFileSection section : sections) {
+			if (section.name.equals(sectionName)) {
+				return getValue(section, name);
+			}
+		}
+
+		return null;
+	}
+
+	private String getValue(INIFileSection section, String name) {
+		for (int i = 0; i < section.lines.size(); i++) {
+			Matcher m = NAME_VAL_PATTERN.matcher(section.lines.get(i));
+			if (m.matches()) {
+				String entryName = m.group(1);
+				if (entryName.equals(name)) {
+					return m.group(2);
+				}
+			}
+		}
+		return null;
+	}
 }

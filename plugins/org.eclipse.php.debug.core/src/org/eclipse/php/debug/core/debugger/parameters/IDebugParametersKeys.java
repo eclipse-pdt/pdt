@@ -44,6 +44,8 @@ public interface IDebugParametersKeys {
 	public static final String OUTPUT_ENCODING = "debugOutputEncoding"; //$NON-NLS-1$
 	public static final String PHP_INI_LOCATION = "PHPIniLocation"; //$NON-NLS-1$
 
+	public static final String CACHE_GRIND_FILE = "grindFile";//$NON-NLS-1$
+
 	/**
 	 * Type of the launch
 	 */
