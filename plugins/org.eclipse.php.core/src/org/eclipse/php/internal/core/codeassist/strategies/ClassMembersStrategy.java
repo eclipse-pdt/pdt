@@ -17,12 +17,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
@@ -422,10 +422,11 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 
 	private boolean isTraitMember(PHPVersion phpVersion, IType type, IMember member, Set<IType> typeSet) {
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+			boolean caseSensitive = member instanceof IField;
 			UseTrait useTrait = TraitUtils.parse(type);
 			String typeName = PHPModelUtils.getFullName(member.getDeclaringType());
 			for (String trait : useTrait.getTraits()) {
-				if (trait.equals(typeName)) {
+				if ((caseSensitive && trait.equals(typeName)) || (!caseSensitive && trait.equalsIgnoreCase(typeName))) {
 					return true;
 				}
 			}

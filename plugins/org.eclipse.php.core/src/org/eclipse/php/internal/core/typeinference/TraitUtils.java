@@ -148,13 +148,11 @@ public class TraitUtils {
 					createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
 				String traitName = PHPModelUtils.getFullName(traitType);
-				if (!trait.equals(traitName)) {
+				if (!trait.equalsIgnoreCase(traitName)) {
 					continue;
 				}
-				if (traitNameSet.contains(traitName)) {
+				if (!traitNameSet.add(traitName.toLowerCase())) {
 					continue;
-				} else {
-					traitNameSet.add(traitName);
 				}
 				IField[] fields;
 				try {
@@ -198,7 +196,7 @@ public class TraitUtils {
 		String fullName = PHPModelUtils.getFullName(field.getDeclaringType());
 		if (aliasList != null) {
 			for (TraitAliasObject tao : aliasList) {
-				if ((tao.traitName == null || fullName.equals(tao.traitName))) {
+				if ((tao.traitName == null || fullName.equalsIgnoreCase(tao.traitName))) {
 					IField alias = new FieldWrapper(field, tao.newMethodVisibility, tao.newMethodName, type);
 					result.add(alias);
 					if (fieldName.equals(tao.newMethodName) || tao.newMethodName == null) {
@@ -206,7 +204,7 @@ public class TraitUtils {
 					}
 				}
 				if (tpo != null) {
-					if (!fullName.equals(tpo.traitName)) {
+					if (!fullName.equalsIgnoreCase(tpo.traitName)) {
 						continue;
 					} else {
 						shouldAddSelf = true;
@@ -214,7 +212,7 @@ public class TraitUtils {
 				}
 			}
 		} else {
-			if (tpo != null && fullName.equals(tpo.traitName)) {
+			if (tpo != null && fullName.equalsIgnoreCase(tpo.traitName)) {
 				shouldAddSelf = true;
 			}
 		}
@@ -235,13 +233,11 @@ public class TraitUtils {
 					createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
 				String traitName = PHPModelUtils.getFullName(traitType);
-				if (!trait.equals(traitName)) {
+				if (!trait.equalsIgnoreCase(traitName)) {
 					continue;
 				}
-				if (traitNameSet.contains(traitName)) {
+				if (!traitNameSet.add(traitName.toLowerCase())) {
 					continue;
-				} else {
-					traitNameSet.add(traitName);
 				}
 				IMethod[] methods;
 				try {
@@ -281,15 +277,15 @@ public class TraitUtils {
 		String fullName = PHPModelUtils.getFullName(method.getDeclaringType());
 		if (aliasList != null) {
 			for (TraitAliasObject tao : aliasList) {
-				if ((tao.traitName == null || fullName.equals(tao.traitName))) {
+				if ((tao.traitName == null || fullName.equalsIgnoreCase(tao.traitName))) {
 					IMethod alias = new MethodWrapper(method, tao.newMethodVisibility, tao.newMethodName, type);
 					result.add(alias);
-					if (methodName.equals(tao.newMethodName) || tao.newMethodName == null) {
+					if (methodName.equalsIgnoreCase(tao.newMethodName) || tao.newMethodName == null) {
 						changeVisibility = true;
 					}
 				}
 				if (tpo != null) {
-					if (!fullName.equals(tpo.traitName)) {
+					if (!fullName.equalsIgnoreCase(tpo.traitName)) {
 						continue;
 					} else {
 						shouldAddSelf = true;
@@ -298,7 +294,7 @@ public class TraitUtils {
 			}
 		} else {
 			if (tpo != null) {
-				if (fullName.equals(tpo.traitName)) {
+				if (fullName.equalsIgnoreCase(tpo.traitName)) {
 					shouldAddSelf = true;
 				}
 			}
@@ -478,7 +474,7 @@ public class TraitUtils {
 		}
 
 		public boolean useAlias() {
-			return name != null && !name.equals(member.getElementName());
+			return name != null && !name.equalsIgnoreCase(member.getElementName());
 		}
 	}
 
