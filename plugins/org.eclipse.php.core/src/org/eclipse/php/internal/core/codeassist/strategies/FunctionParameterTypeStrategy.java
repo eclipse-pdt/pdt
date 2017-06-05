@@ -39,7 +39,7 @@ public class FunctionParameterTypeStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String ingore) {
 		return isInsertMode() && abstractContext.hasSpaceAtPosition(getCompanion().getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

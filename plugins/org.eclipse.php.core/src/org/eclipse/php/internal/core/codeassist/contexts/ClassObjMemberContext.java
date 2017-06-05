@@ -134,4 +134,9 @@ public class ClassObjMemberContext extends ClassMemberContext {
 	public boolean isParent() {
 		return isParent;
 	}
+
+	@Override
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
+	}
 }

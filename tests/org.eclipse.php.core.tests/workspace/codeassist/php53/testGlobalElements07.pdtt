@@ -1,5 +1,7 @@
 --TEST--
 Should complete global function
+--PREFERENCES--
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php 
 echo \   in_|

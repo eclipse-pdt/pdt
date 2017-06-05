@@ -2,6 +2,7 @@
 Test instance of class
 --PREFERENCES--
 org.eclipse.php.core/contentAssistInsertCompletion=true
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 namespace test;
@@ -10,5 +11,6 @@ throw new Exception|
 --EXPECT--
 <?php
 namespace test;
-throw new \Exception()
+use Exception;
+throw new Exception()
 ?>

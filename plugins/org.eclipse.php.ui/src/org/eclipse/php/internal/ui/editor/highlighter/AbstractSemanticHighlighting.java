@@ -12,20 +12,22 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.BufferManager;
 import org.eclipse.dltk.internal.ui.editor.DocumentAdapter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingStyle;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -133,13 +135,14 @@ public abstract class AbstractSemanticHighlighting
 		Program program = null;
 		if (sourceModule != null) {
 			try {
-				// Wait active_only. Sometimes highlighters are called without
-				// reconciling
-				program = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_YES, null);
-			} catch (ModelException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				IProgressMonitor monitor = new NullProgressMonitor();
+				program = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, monitor);
+				if (program == null) {
+					ASTParser parser = ASTParser.newParser(sourceModule);
+					program = parser.createAST(monitor);
+				}
+			} catch (Exception e) {
+				PHPUiPlugin.log(e);
 			}
 		}
 		return program;

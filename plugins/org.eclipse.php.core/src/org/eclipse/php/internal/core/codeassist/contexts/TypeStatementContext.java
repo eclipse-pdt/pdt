@@ -72,7 +72,13 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext i
 				return false;
 			}
 
-			isAssignment = scanner2.scanBackward(offset, getCompanion().getScope().getOffset(), '=') > -1;
+			int assignmentPos = scanner2.scanBackward(offset, getCompanion().getScope().getOffset(), '=');
+			int colonPos = scanner2.scanBackward(offset - 1, getCompanion().getScope().getOffset(), ';');
+			int parenPos = scanner2.scanBackward(offset - 1, getCompanion().getScope().getOffset(), '}');
+
+			if (assignmentPos > colonPos && assignmentPos > parenPos) {
+				isAssignment = assignmentPos > -1;
+			}
 
 			return true;
 		} catch (BadLocationException e) {
@@ -104,5 +110,10 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext i
 		}
 
 		return new IType[0];
+	}
+
+	@Override
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
 	}
 }

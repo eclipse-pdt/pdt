@@ -512,6 +512,17 @@ public class TraitUtils {
 		public boolean useAlias() {
 			return name != null && !name.equals(member.getElementName());
 		}
+
+		@Override
+		public String getType() throws ModelException {
+			return member.getType();
+		}
+
+		@Override
+		public boolean exists() {
+			return member.exists();
+		}
+
 	}
 
 }

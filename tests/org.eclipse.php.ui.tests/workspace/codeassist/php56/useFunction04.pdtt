@@ -18,5 +18,5 @@ namespace Bar{
     }
 }
 namespace {
-    use function Bar\faabc
+    use function Bar\faabc;
 }

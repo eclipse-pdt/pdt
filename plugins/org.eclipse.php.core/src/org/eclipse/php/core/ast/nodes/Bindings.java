@@ -39,8 +39,9 @@ public class Bindings {
 	}
 
 	/**
-	 * Note: this method is for debugging and testing purposes only. There are tests
-	 * whose pre-computed test results rely on the returned String's format.
+	 * Note: this method is for debugging and testing purposes only. There are
+	 * tests whose pre-computed test results rely on the returned String's
+	 * format.
 	 * 
 	 * @param binding
 	 *            the binding
@@ -107,8 +108,8 @@ public class Bindings {
 	 * @param thrownException
 	 *            the type binding
 	 * 
-	 * @return <code>true</code> if the passed type binding is a runtime exception;
-	 *         otherwise <code>false</code> is returned
+	 * @return <code>true</code> if the passed type binding is a runtime
+	 *         exception; otherwise <code>false</code> is returned
 	 */
 	public static boolean isRuntimeException(ITypeBinding thrownException) {
 		if (thrownException == null || thrownException.isPrimitive() || thrownException.isArray()) {
@@ -145,10 +146,10 @@ public class Bindings {
 
 	/**
 	 * Finds the field specified by <code>fieldName</code> in the type hierarchy
-	 * denoted by the given type. Returns <code>null</code> if no such field exists.
-	 * If the field is defined in more than one super type only the first match is
-	 * returned. First the super class is examined and than the implemented
-	 * interfaces.
+	 * denoted by the given type. Returns <code>null</code> if no such field
+	 * exists. If the field is defined in more than one super type only the
+	 * first match is returned. First the super class is examined and than the
+	 * implemented interfaces.
 	 * 
 	 * @param type
 	 *            The type to search the field in
@@ -180,8 +181,8 @@ public class Bindings {
 
 	/**
 	 * Finds the method specified by <code>methodName<code> and </code>
-	 * parameters</code> in the given <code>type</code>. Returns <code>null</code>
-	 * if no such method exits.
+	 * parameters</code> in the given <code>type</code>. Returns
+	 * <code>null</code> if no such method exits.
 	 * 
 	 * @param type
 	 *            The type to search the method in
@@ -194,9 +195,17 @@ public class Bindings {
 			return null;
 		}
 		IMethodBinding[] methods = type.getDeclaredMethods();
-		for (int i = 0; i < methods.length; i++) {
-			if (methodName.equalsIgnoreCase(methods[i].getName())) {
-				return methods[i];
+		for (IMethodBinding method : methods) {
+			if (methodName.equalsIgnoreCase(method.getName())) {
+				return method;
+			}
+
+		}
+
+		methods = type.getImportedMethods();
+		for (IMethodBinding method : methods) {
+			if (methodName.equalsIgnoreCase(method.getName())) {
+				return method;
 			}
 
 		}
@@ -205,10 +214,10 @@ public class Bindings {
 
 	/**
 	 * Finds the method specified by <code>methodName</code> and </code>
-	 * parameters</code> in the type hierarchy denoted by the given type. Returns
-	 * <code>null</code> if no such method exists. If the method is defined in more
-	 * than one super type only the first match is returned. First the super class
-	 * is examined and than the implemented interfaces.
+	 * parameters</code> in the type hierarchy denoted by the given type.
+	 * Returns <code>null</code> if no such method exists. If the method is
+	 * defined in more than one super type only the first match is returned.
+	 * First the super class is examined and than the implemented interfaces.
 	 * 
 	 * @param type
 	 *            The type to search the method in
@@ -221,6 +230,7 @@ public class Bindings {
 		if (method != null) {
 			return method;
 		}
+
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
 			method = findMethodInHierarchy(superClass, methodName);
@@ -240,10 +250,10 @@ public class Bindings {
 
 	/**
 	 * Finds the method specified by <code>methodName</code> and </code>
-	 * parameters</code> in the type hierarchy denoted by the given type. Returns
-	 * <code>null</code> if no such method exists. If the method is defined in more
-	 * than one super type only the first match is returned. First the super class
-	 * is examined and than the implemented interfaces.
+	 * parameters</code> in the type hierarchy denoted by the given type.
+	 * Returns <code>null</code> if no such method exists. If the method is
+	 * defined in more than one super type only the first match is returned.
+	 * First the super class is examined and than the implemented interfaces.
 	 * 
 	 * @param type
 	 *            The type to search the method in
@@ -320,8 +330,8 @@ public class Bindings {
 	 *            The type to search the method in
 	 * @param method
 	 *            The specified method that would override the result
-	 * @return the method binding of the method that is overridden by the specified
-	 *         <code>method<code>, or <code>null</code>
+	 * @return the method binding of the method that is overridden by the
+	 *         specified <code>method<code>, or <code>null</code>
 	 */
 	public static IMethodBinding findOverriddenMethodInType(ITypeBinding type, IMethodBinding method) {
 		IMethodBinding[] methods = type.getDeclaredMethods();
@@ -334,11 +344,11 @@ public class Bindings {
 	}
 
 	/**
-	 * Finds a method in the hierarchy of <code>type</code> that is overridden by
-	 * </code>binding</code>. Returns <code>null</code> if no such method exists. If
-	 * the method is defined in more than one super type only the first match is
-	 * returned. First the super class is examined and than the implemented
-	 * interfaces.
+	 * Finds a method in the hierarchy of <code>type</code> that is overridden
+	 * by </code>binding</code>. Returns <code>null</code> if no such method
+	 * exists. If the method is defined in more than one super type only the
+	 * first match is returned. First the super class is examined and than the
+	 * implemented interfaces.
 	 * 
 	 * @param type
 	 *            The type to search the method in
@@ -386,16 +396,17 @@ public class Bindings {
 	 * @param overriding
 	 *            overriding method
 	 * @param testVisibility
-	 *            If true the result is tested on visibility. Null is returned if
-	 *            the method is not visible.
+	 *            If true the result is tested on visibility. Null is returned
+	 *            if the method is not visible.
 	 * @return the method binding representing the method
 	 */
 	public static IMethodBinding findOverriddenMethod(IMethodBinding overriding, boolean testVisibility) {
 		int modifiers = overriding.getModifiers();
-		if (testVisibility
-				&& (PHPFlags.isPrivate(modifiers) /*
-													 * || PHPFlags.isStatic(modifiers) || overriding.isConstructor()
-													 */)) {
+		if (testVisibility && (PHPFlags
+				.isPrivate(modifiers) /*
+										 * || PHPFlags.isStatic(modifiers) ||
+										 * overriding.isConstructor()
+										 */)) {
 			return null;
 		}
 
@@ -406,7 +417,8 @@ public class Bindings {
 		if (type.getSuperclass() != null) {
 			IMethodBinding res = findOverriddenMethodInHierarchy(type.getSuperclass(), overriding);
 			if (res != null && !PHPFlags.isPrivate(res.getModifiers())) {
-				if (!testVisibility || isVisibleInHierarchy(res/* , overriding.getDeclaringClass().getPackage() */)) {
+				if (!testVisibility || isVisibleInHierarchy(
+						res/* , overriding.getDeclaringClass().getPackage() */)) {
 					return res;
 				}
 			}
@@ -422,7 +434,8 @@ public class Bindings {
 		return null;
 	}
 
-	public static boolean isVisibleInHierarchy(IMethodBinding member/* , IPackageBinding pack */) {
+	public static boolean isVisibleInHierarchy(
+			IMethodBinding member/* , IPackageBinding pack */) {
 		int otherflags = member.getModifiers();
 		ITypeBinding declaringType = member.getDeclaringClass();
 		if (PHPFlags.isPublic(otherflags) || PHPFlags.isProtected(otherflags)
@@ -466,11 +479,11 @@ public class Bindings {
 	 *            overriding method (m1)
 	 * @param overridden
 	 *            overridden method (m2)
-	 * @return <code>true</code> iff the method <code>m1</code> is a subsignature of
-	 *         the method <code>m2</code>. This is one of the requirements for m1 to
-	 *         override m2. Accessibility and return types are not taken into
-	 *         account. Note that subsignature is <em>not</em> symmetric! TODO - PHP
-	 *         handling (shalom)
+	 * @return <code>true</code> iff the method <code>m1</code> is a
+	 *         subsignature of the method <code>m2</code>. This is one of the
+	 *         requirements for m1 to override m2. Accessibility and return
+	 *         types are not taken into account. Note that subsignature is
+	 *         <em>not</em> symmetric! TODO - PHP handling (shalom)
 	 */
 	public static boolean isSubsignature(IMethodBinding overriding, IMethodBinding overridden) {
 		// TODO: use IMethodBinding#isSubsignature(..) once it is tested and
@@ -483,8 +496,8 @@ public class Bindings {
 	}
 
 	/**
-	 * Finds a type binding for a given fully qualified type in the hierarchy of a
-	 * type. Returns <code>null</code> if no type binding is found.
+	 * Finds a type binding for a given fully qualified type in the hierarchy of
+	 * a type. Returns <code>null</code> if no type binding is found.
 	 * 
 	 * @param hierarchyType
 	 *            the binding representing the hierarchy

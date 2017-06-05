@@ -2,7 +2,7 @@
 Should complete other namespace class instantiation using 'namespace' keyword prefix.
 --FILE--
 <?
-namespace NS;
+namespace NS00009;
 
 class AAAA {}
 function AAAA() {}

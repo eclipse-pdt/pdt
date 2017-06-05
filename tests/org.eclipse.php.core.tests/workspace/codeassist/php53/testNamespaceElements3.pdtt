@@ -2,13 +2,13 @@
 Should complete namespace elements using fully qualified prefix
 --FILE--
 <?
-namespace NS;
+namespace NS0001;
 function AAA() {}
 class AAA {}
 const AAA = 5;
 $AAA = "";
 
-\NS\AA|
+\NS0001\AA|
 ?>
 --EXPECT--
 type(AAA)

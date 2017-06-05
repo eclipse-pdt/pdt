@@ -37,7 +37,7 @@ namespace AAA
 
     /**
      *
-     * @return \otherspace\multi\path\|\AAA
+     * @return \otherspace\multi\path|\AAA
      */
     function functionName($param)
     {

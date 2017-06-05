@@ -12,17 +12,21 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 public class MultiTypeBinding implements ITypeBinding {
+	private final static IVariableBinding[] NO_VARIABLES = new IVariableBinding[0];
+	private final static IMethodBinding[] NO_METHODS = new IMethodBinding[0];
 	private final ITypeBinding[] subtypes;
 	private final DefaultBindingResolver resolver;
+	private IMethodBinding[] importedMethods;
+	private ITypeBinding[] subTypes;
+	private IVariableBinding[] fields;
+	private IMethodBinding[] methods;
 
 	public MultiTypeBinding(DefaultBindingResolver resolver, ITypeBinding[] subtypes) {
 		this.subtypes = subtypes;
@@ -46,11 +50,22 @@ public class MultiTypeBinding implements ITypeBinding {
 
 	@Override
 	public IModelElement getPHPElement() {
+		IModelElement element;
+		for (ITypeBinding binding : subTypes) {
+			element = binding.getPHPElement();
+			if (element != null) {
+				return element;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public String getKey() {
+		StringBuilder sb = new StringBuilder("mutli_");
+		for (ITypeBinding binding : subTypes) {
+			sb.append(binding.getKey());
+		}
 		return null;
 	}
 
@@ -66,30 +81,58 @@ public class MultiTypeBinding implements ITypeBinding {
 
 	@Override
 	public ITypeBinding getComponentType() {
+		if (!isArray()) {
+			return null;
+		}
+		// TODO - This should be implemented as soon as the we will be able to
+		// identify the types that
+		// the array is holding.
+		// Once we have that, we can return a TypeBinding or a
+		// CompositeTypeBinding for multiple types array.
 		return null;
 	}
 
 	@Override
 	public IVariableBinding[] getDeclaredFields() {
-		List<IVariableBinding> list = new LinkedList<>();
-		for (ITypeBinding t : subtypes) {
-			list.addAll(Arrays.asList(t.getDeclaredFields()));
+
+		if (fields == null) {
+			if (isUnknown()) {
+				fields = NO_VARIABLES;
+			} else {
+				Set<IVariableBinding> tmp = new HashSet<>();
+				for (ITypeBinding binging : subTypes) {
+					tmp.addAll(Arrays.asList(binging.getDeclaredFields()));
+				}
+				fields = tmp.toArray(NO_VARIABLES);
+			}
 		}
-		return list.toArray(new IVariableBinding[0]);
+
+		return fields;
 	}
 
 	@Override
 	public IMethodBinding[] getDeclaredMethods() {
-		List<IMethodBinding> list = new LinkedList<>();
-		for (ITypeBinding t : subtypes) {
-			list.addAll(Arrays.asList(t.getDeclaredMethods()));
+		if (methods == null) {
+			if (isUnknown()) {
+				methods = NO_METHODS;
+			} else {
+				Set<IMethodBinding> tmp = new HashSet<>();
+				for (ITypeBinding binging : subTypes) {
+					tmp.addAll(Arrays.asList(binging.getDeclaredMethods()));
+				}
+				methods = tmp.toArray(NO_METHODS);
+			}
 		}
-		return list.toArray(new IMethodBinding[0]);
+		return methods;
 	}
 
 	@Override
 	public int getModifiers() {
-		return -1;
+		int mods = 0;
+		for (ITypeBinding type : subTypes) {
+			mods = mods | type.getModifiers();
+		}
+		return 0;
 	}
 
 	@Override
@@ -239,5 +282,22 @@ public class MultiTypeBinding implements ITypeBinding {
 			list.addAll(Arrays.asList(t.getPHPElements()));
 		}
 		return list.toArray(new IModelElement[0]);
+	}
+
+	@Override
+	public IMethodBinding[] getImportedMethods() {
+		if (importedMethods == null) {
+			if (isUnknown()) {
+				importedMethods = NO_METHODS;
+			} else {
+				Set<IMethodBinding> tmp = new HashSet<>();
+				for (ITypeBinding binging : subTypes) {
+					tmp.addAll(Arrays.asList(binging.getImportedMethods()));
+				}
+				importedMethods = tmp.toArray(NO_METHODS);
+			}
+		}
+
+		return importedMethods;
 	}
 }

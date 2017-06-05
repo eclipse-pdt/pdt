@@ -42,7 +42,7 @@ namespace OtherSpace
         function returnsmsms()
         {
             $o = new \MainSpace\OtherClass();
-            $o->test( $param );
+            $o->test  ( $param );
         }
     }
 }

@@ -27,6 +27,12 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
       run: xvfb-run -a mvn verify --file pom.xml
+    - uses: ashley-taylor/junit-report-annotations-action@v1.0
+      if: always()
+      with:
+        access-token: ${{ secrets.GITHUB_TOKEN }}
+        numFailures: 30
+        path: tests/*/target/surefire-reports/*.xml
     - name: Stage repository
       run: mkdir repository && cp -r dev/org.eclipse.php-repository/target/repository/* repository
     - name: Upload repository
