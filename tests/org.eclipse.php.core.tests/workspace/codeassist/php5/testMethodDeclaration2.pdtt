@@ -8,8 +8,9 @@ class A {
 }
 class B extends A {
 	function myFoo() {}
-	function my|
+	my|
 }
 ?>
 --EXPECT--
 method(myBar)
+method(my)

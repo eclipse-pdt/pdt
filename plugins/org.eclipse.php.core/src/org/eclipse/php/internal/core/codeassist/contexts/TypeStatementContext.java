@@ -105,4 +105,9 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext i
 
 		return new IType[0];
 	}
+
+	@Override
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
+	}
 }

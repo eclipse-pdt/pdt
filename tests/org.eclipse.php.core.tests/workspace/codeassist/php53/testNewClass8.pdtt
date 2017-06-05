@@ -2,13 +2,13 @@
 Should complete namespace elements using namespace alias
 --FILE--
 <?
-namespace NS;
+namespace NS0000008;
 class AAAA {}
 function AAAA() {}
 const AAAA = 5;
 namespace OtherNS;
 
-use NS as Z;
+use NS0000008 as Z;
 $a = new Z\AA|
 ?>
 --EXPECT--

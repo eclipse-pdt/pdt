@@ -29,7 +29,7 @@ public class InterfacesStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String addon) {
 		return ""; //$NON-NLS-1$
 	}
 }

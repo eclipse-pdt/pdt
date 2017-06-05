@@ -2,18 +2,18 @@
 Should complete sub-namespaces using prefix (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=267805)
 --FILE--
 <?php
-namespace NS;
+namespace NS100007;
 
-namespace NS\SubNS1;
+namespace NS100007\SubNS1;
 class A {
 }
 
-namespace NS\SubNS2;
+namespace NS100007\SubNS2;
 class B {
 }
 
-\NS\|
+\NS100007\|
 ?>
 --EXPECT--
-type(NS\SubNS1)
-type(NS\SubNS2)
+type(NS100007\SubNS1)
+type(NS100007\SubNS2)

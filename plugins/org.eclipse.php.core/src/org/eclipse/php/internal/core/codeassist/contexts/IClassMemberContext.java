@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.IType;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 
 public interface IClassMemberContext extends ICompletionContext {
@@ -39,4 +40,10 @@ public interface IClassMemberContext extends ICompletionContext {
 	public Trigger getTriggerType();
 
 	public IType[] getLhsTypes();
+
+	public String getPrefix() throws BadLocationException;
+
+	public String getPreviousWord() throws BadLocationException;
+
+	public String getSuffix(AbstractCompletionContext abstractContext);
 }

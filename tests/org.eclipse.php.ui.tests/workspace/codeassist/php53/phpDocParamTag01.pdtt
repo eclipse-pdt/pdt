@@ -7,26 +7,26 @@ org.eclipse.php.core/contentAssistInsertCompletion=true
 namespace foo\bar\baz1
 {
 
-    class Target
-    {
+	class Target
+	{
 
-        function foo_bar_baz();
-    }
+		function foo_bar_baz();
+	}
 }
 namespace foo
 {
 
-    class TestAbsolute
-    {
+	class TestAbsolute
+	{
 
-        /**
-         *
-         * @param string|targ| $first
-         *
-         */
-        function test($first)
-        {}
-    }
+		/**
+		 *
+		 * @param string|targ| $first
+		 *
+		 */
+		function test($first)
+		{}
+	}
 }
 ?>
 --EXPECT--
@@ -34,27 +34,27 @@ namespace foo
 namespace foo\bar\baz1
 {
 
-    class Target
-    {
+	class Target
+	{
 
-        function foo_bar_baz();
-    }
+		function foo_bar_baz();
+	}
 }
 namespace foo
 {
 
-    use foo\bar\baz1\Target;
-				
-    class TestAbsolute
-    {
+	use foo\bar\baz1\Target;
 
-        /**
-         *
-         * @param string|Target $first
-         *
-         */
-        function test($first)
-        {}
-    }
+	class TestAbsolute
+	{
+
+		/**
+		 *
+		 * @param string|Target $first
+		 *
+		 */
+		function test($first)
+		{}
+	}
 }
 ?>

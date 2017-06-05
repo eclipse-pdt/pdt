@@ -45,6 +45,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button showVariableFromReferencedFilesCheckBox;
 	protected Button insertFullyQualifiedNameForNamespaceCheckBox;
 	protected Button insertFullyQualifiedNameInCommentsCheckBox;
+	protected Button expandDefaultValueMethodsCheckBox;
 	protected Button fInsertParameterNamesRadioButton;
 	protected Button fPrefixGlobalFunctionCallRadioButton;
 
@@ -103,6 +104,9 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		insertFullyQualifiedNameInCommentsCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_insertFullyQualifiedNameInComments,
 				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_IN_COMMENTS, 0);
+		expandDefaultValueMethodsCheckBox = addCheckBox(composite,
+				PHPUIMessages.CodeAssistPreferencePage_expandDefaultValueMethods,
+				PHPCoreConstants.CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS, 0);
 
 		fInsertParameterNamesRadioButton = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_fillParameterNamesOnMethodCompletion,

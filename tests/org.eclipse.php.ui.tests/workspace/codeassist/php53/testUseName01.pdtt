@@ -27,6 +27,6 @@ namespace Other
 }
 namespace MySpace
 {
-    use Other\First
+    use Other\First;
 }
 ?> 

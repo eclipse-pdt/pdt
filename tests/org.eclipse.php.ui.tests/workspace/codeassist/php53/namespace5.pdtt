@@ -38,8 +38,6 @@ namespace bar\baz
 
 namespace foo
 {
-	use bar;
-	
 	class TestAbsolute
 	{
 		/**
@@ -55,6 +53,6 @@ namespace foo
 		 */
 		function test() {}
 	}
-	bar\baz\ //call CA here
+	\bar\baz //call CA here
 }
 ?>

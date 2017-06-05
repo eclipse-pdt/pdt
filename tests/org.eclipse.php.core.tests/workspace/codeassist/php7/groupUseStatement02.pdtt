@@ -1,5 +1,7 @@
 --TEST--
 Test group use statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 namespace Boo {

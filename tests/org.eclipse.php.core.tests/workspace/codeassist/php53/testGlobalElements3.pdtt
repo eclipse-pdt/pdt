@@ -2,14 +2,14 @@
 Should complete other namespace global constants defined in function 
 --FILE--
 <?
-namespace NS {
+namespace NS002 {
 	function foo() {
 		global $TEST2;
 		define('TEST1', 0);
 		$TEST2 = '';
 	}
 }
-namespace {
+namespace NS102{
 	TEST|
 }
 ?>

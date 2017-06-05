@@ -42,6 +42,17 @@ public final class ProposalExtraInfo {
 	 * @since 5.1
 	 */
 	public static final int ABSOLUTE_NAME = 1 << 10;
+	public static final int POTENTIAL_METHOD_DECLARATION = 1 << 10;
+	public static final int METHOD_OVERRIDE = 1 << 11;
+	public static final int MAGIC_METHOD_OVERLOAD = 1 << 12;
+	public static final int INSERT_THIS = 1 << 13;
+	public static final int IN_USE_STATEMENT_CONTEXT = 1 << 14;
+	public static final int IN_PHP_DOC = 1 << 15;
+	public static final int PREFIX_HAS_NAMESPACE = 1 << 16;
+
+	public static boolean isMethodOverride(int flags) {
+		return (flags & METHOD_OVERRIDE) != 0;
+	}
 
 	public static boolean isTypeOnly(int flags) {
 		return (flags & TYPE_ONLY) != 0;
@@ -82,6 +93,14 @@ public final class ProposalExtraInfo {
 	public static boolean isMagicMethod(Object flags) {
 		if (flags instanceof Integer) {
 			return isMagicMethod(((Integer) flags).intValue());
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isMagicMethodOverload(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), MAGIC_METHOD_OVERLOAD);
 		} else {
 			return false;
 		}
@@ -178,11 +197,52 @@ public final class ProposalExtraInfo {
 		}
 	}
 
-	/**
-	 * @since 5.1
-	 */
-	public static boolean isAbsoluteName(int flags) {
-		return contain(flags, ABSOLUTE_NAME);
+	public static boolean isPotentialMethodDeclaration(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), POTENTIAL_METHOD_DECLARATION);
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isMethodOverride(Object flags) {
+		if (flags instanceof Integer) {
+			return isMethodOverride(((Integer) flags).intValue());
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isInsertThis(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), INSERT_THIS);
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isInPHPDoc(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), IN_PHP_DOC);
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isInUseStatementContext(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), IN_USE_STATEMENT_CONTEXT);
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isPrefixHasNamespace(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), PREFIX_HAS_NAMESPACE);
+		} else {
+			return false;
+		}
 	}
 
 	public static boolean contain(int flags, int flag) {

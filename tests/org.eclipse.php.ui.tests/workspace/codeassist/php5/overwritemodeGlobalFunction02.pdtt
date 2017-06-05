@@ -2,6 +2,7 @@
 Test overwrite mode
 --PREFERENCES--
 org.eclipse.php.core/contentAssistInsertCompletion=false
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 function _xyz($param) {
@@ -13,4 +14,4 @@ _x|lalalala (4);
 function _xyz($param) {
 }
 
-_xyz(4);
+_xyz (4);

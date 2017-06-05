@@ -2,6 +2,8 @@
 Bug 510095 - CA doesn't work when a function or a method returns a nullable type
 --FILE--
 <?php
+namespace ns71;
+
 class FooBar {
 function test() : ?FooB|{
 }

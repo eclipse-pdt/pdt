@@ -39,6 +39,8 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class PHPCompletionEngine extends ScriptCompletionEngine implements ICompletionReporter {
 
+	public final static String ATTR_SUB_PROPOSAL = "ATTR_SUB_PROPOSAL";
+
 	private int relevanceKeyword;
 	private int relevanceMethod;
 	private int relevanceClass;
@@ -90,6 +92,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		relevanceVar = RELEVANCE_VAR;
 		relevanceConst = RELEVANCE_CONST;
 
+		actualCompletionPosition = position - 1;
 		try {
 			ICompletionContextResolver[] contextResolvers;
 			ICompletionStrategyFactory[] strategyFactories;
@@ -102,9 +105,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 
 			CompletionCompanion companion = new CompletionCompanion(requestor, module, position);
+			ISourceModule sourceModule = (ISourceModule) module.getModelElement();
 
-			org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
-					.getModelElement();
+			try {
+				ScriptModelUtil.reconcile(sourceModule);
+			} catch (ModelException e1) {
+			}
 
 			for (ICompletionContextResolver resolver : contextResolvers) {
 				ICompletionContext[] contexts = resolver.resolve(sourceModule, position, requestor, companion);
@@ -169,9 +175,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		int relevance = PHPFlags.isConstant(flags) ? relevanceConst : relevanceVar;
 		relevance += subRelevance;
 
-		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
+		noProposal = false;
+		int kind = 0;
+		if (field.getParent() instanceof IMethod) {
+			kind = CompletionProposal.LOCAL_VARIABLE_REF;
+		} else {
+			kind = CompletionProposal.FIELD_REF;
+		}
+		if (!requestor.isIgnored(kind)) {
 
-			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
+			CompletionProposal proposal = createProposal(kind, actualCompletionPosition);
+			proposal.setName(field.getElementName());
 
 			String fieldName = field.getElementName();
 
@@ -277,20 +291,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	@Override
 	public void reportMethod(IMethod method, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance) {
-		if (processedElements.containsKey(method)
-				&& ((IMethod) processedElements.get(method)).getParent().getClass() == method.getParent().getClass()) {
-
+		if (isMethodReported(method)) {
 			return;
 		}
-		processedElements.put(method, method);
+
 		noProposal = false;
 
-		assert StringUtils.isEmpty(prefix) || !prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER);
-		int type = ProposalExtraInfo.isStub(extraInfo) ? CompletionProposal.METHOD_DECLARATION
-				: CompletionProposal.METHOD_REF;
-		if (!requestor.isIgnored(type)) {
-			CompletionProposal proposal = createProposal(type, actualCompletionPosition);
-			proposal.setExtraInfo(extraInfo);
+		int completionKind = CompletionProposal.METHOD_REF;
+		if (ProposalExtraInfo.isMagicMethodOverload(extraInfo) || ProposalExtraInfo.isMethodOverride(extraInfo)) {
+			completionKind = CompletionProposal.METHOD_DECLARATION;
+		} else if (ProposalExtraInfo.isPotentialMethodDeclaration(extraInfo)) {
+			completionKind = CompletionProposal.POTENTIAL_METHOD_DECLARATION;
+		}
+
+		if (!requestor.isIgnored(completionKind)) {
+
+			CompletionProposal proposal = createProposal(completionKind, actualCompletionPosition);
 			// show method parameter names:
 			String[] params = null;
 			try {
@@ -321,6 +337,27 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			try {
 				proposal.setIsConstructor(elementName.equals("__construct") //$NON-NLS-1$
 						|| method.isConstructor());
+				if (proposal.isConstructor() && completionKind == CompletionProposal.METHOD_REF) {
+					CompletionProposal typeProposal = createProposal(CompletionProposal.TYPE_REF,
+							actualCompletionPosition);
+					typeProposal.setModelElement(method.getParent());
+					typeProposal.setName(elementName);
+					typeProposal.setCompletion(completionName);
+					typeProposal.setFlags(((IMember) method.getParent()).getFlags());
+					typeProposal.setReplaceRange(replaceRange.getOffset(),
+							replaceRange.getOffset() + replaceRange.getLength());
+					typeProposal.setRelevance(relevanceClass + subRelevance);
+					typeProposal.setExtraInfo(extraInfo);
+					proposal.setCompletion(suffix);
+					proposal.setReplaceRange(replaceRange.getOffset() + replaceRange.getLength(),
+							replaceRange.getOffset() + replaceRange.getLength());
+					proposal.setAttribute(ATTR_SUB_PROPOSAL, typeProposal);
+				} else {
+					proposal.setCompletion(completionName + suffix);
+					proposal.setReplaceRange(replaceRange.getOffset(),
+							replaceRange.getOffset() + replaceRange.getLength());
+				}
+				proposal.setExtraInfo(extraInfo);
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
 				if (DEBUG) {
@@ -328,7 +365,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 				}
 			}
 
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
 
 			this.requestor.accept(proposal);
@@ -338,6 +374,31 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 		}
 
+	}
+
+	private boolean isMethodReported(IMethod method) {
+		String methodName = method.getElementName();
+		String parentName = ""; //$NON-NLS-1$
+		if (method.getParent() instanceof IType) {
+			parentName = ((IType) method.getParent()).getFullyQualifiedName();
+		} else {
+			parentName = method.getParent().getElementName();
+		}
+		String signature = parentName + '$' + methodName;
+		boolean isReported = false;
+		if (method instanceof FakeMethodForProposal) {
+			if (processedElements.containsKey(signature)) {
+				IMethod m = (IMethod) processedElements.get(signature);
+				isReported = method.equals(m);
+			}
+		} else if (processedElements.containsKey(signature) && ((IMethod) processedElements.get(signature)).getParent()
+				.getClass() == method.getParent().getClass()) {
+			isReported = true;
+		}
+		if (!isReported) {
+			processedElements.put(signature, method);
+		}
+		return isReported;
 	}
 
 	@Override
@@ -415,14 +476,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 			try {
 				proposal.setFlags(type.getFlags());
+				proposal.setModelElement(type);
+				proposal.setName(elementName);
+
+				proposal.setCompletion(completionName + suffix);
+				proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+				proposal.setRelevance(relevance);
+
+				this.requestor.accept(proposal);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
-
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
-			proposal.setRelevance(relevance);
-
-			this.requestor.accept(proposal);
 
 			if (DEBUG) {
 				this.printDebug(proposal);

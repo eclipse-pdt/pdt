@@ -56,7 +56,6 @@ public class PropertyTypeStrategy extends TypesStrategy {
 		super.apply(reporter);
 	}
 
-	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}
