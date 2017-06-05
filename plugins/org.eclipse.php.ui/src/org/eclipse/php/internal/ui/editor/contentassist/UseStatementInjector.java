@@ -63,6 +63,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
  * 
  * @author michael
  */
+@Deprecated
 public class UseStatementInjector {
 
 	private ScriptCompletionProposal proposal;

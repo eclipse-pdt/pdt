@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -28,6 +29,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -56,7 +58,8 @@ public class FunctionsStrategy extends ElementsStrategy {
 
 		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext.getPreviousWord()
 				: abstractContext.getPrefix();
-		if (StringUtils.isBlank(prefix) || prefix.startsWith("$")) { //$NON-NLS-1$
+		String memberName = abstractContext.getMemberName();
+		if ((StringUtils.isBlank(prefix) && !StringUtils.isBlank(memberName)) || prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 
@@ -83,6 +86,10 @@ public class FunctionsStrategy extends ElementsStrategy {
 			extraInfo |= ProposalExtraInfo.NO_INSERT_NAMESPACE;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
+		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
@@ -90,7 +97,6 @@ public class FunctionsStrategy extends ElementsStrategy {
 		}
 		IDLTKSearchScope scope = createSearchScope();
 		IMethod[] functions;
-		String memberName = abstractContext.getMemberName();
 		String namespaceName = abstractContext.getQualifier(true);
 		functions = PHPModelAccess.getDefault().findFunctions(namespaceName, memberName, matchRule, 0, 0, scope, null);
 
@@ -99,6 +105,9 @@ public class FunctionsStrategy extends ElementsStrategy {
 		boolean isAbsoluteMethod = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
 		String suffix = getSuffix(abstractContext);
 		String namespace = getCompanion().getCurrentNamespace();
+		if (abstractContext.isAbsolute()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+		}
 		for (IMethod method : functions) {
 			if (nsUseGroupPrefix != null) {
 				reporter.reportMethod(method, nsUseGroupPrefix, suffix, memberReplacementRange, extraInfo,
@@ -178,6 +187,11 @@ public class FunctionsStrategy extends ElementsStrategy {
 
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.FULL_NAME;
+	}
+
+	private boolean isExpandMethodEnabled() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS, true, null);
 	}
 
 }

@@ -46,6 +46,8 @@ public class NamespacesStrategy extends TypesStrategy {
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return EMPTY;
+		} else if (prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+			prefix = prefix.substring(1);
 		}
 		if (prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			prefix = prefix.substring(1);

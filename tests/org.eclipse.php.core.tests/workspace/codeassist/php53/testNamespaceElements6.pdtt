@@ -2,7 +2,7 @@
 Should complete namespace elements using 'namespace' prefix, which means: current namespace
 --FILE--
 <?
-namespace NS;
+namespace NS100006;
 function AAA() {}
 class AAA {}
 const AAA = 5;

@@ -13,13 +13,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
@@ -47,13 +51,16 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 		super(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
-	 * filterKeyword
-	 * (org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData)
-	 */
+	@Override
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (StringUtils.isBlank(abstractContext.getPrefix())) {
+			return;
+		}
+		super.apply(reporter);
+	}
+
 	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
 		// if the class does not have parent

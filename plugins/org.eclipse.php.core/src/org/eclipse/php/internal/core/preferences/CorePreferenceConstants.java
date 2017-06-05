@@ -64,6 +64,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_IN_COMMENTS, false);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, true);

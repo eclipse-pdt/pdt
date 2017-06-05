@@ -50,10 +50,10 @@ public class UseNameStrategy extends TypesStrategy {
 				return;
 			}
 			if (keyword.startsWith(context.getPrefixBeforeCursor())) {
-				reporter.reportKeyword(keyword, getSuffix(context), getReplacementRange(context));
+				reporter.reportKeyword(keyword, getSuffix(context, null), getReplacementRange(context));
 			}
 		} else if (keyword.startsWith(completionContext.getPrefix())) {
-			reporter.reportKeyword(keyword, getSuffix(completionContext), getReplacementRange(completionContext));
+			reporter.reportKeyword(keyword, getSuffix(completionContext, null), getReplacementRange(completionContext));
 		}
 	}
 
@@ -78,7 +78,7 @@ public class UseNameStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String suff) {
 		return isInsertMode() && abstractContext.hasSpaceAtPosition(getCompanion().getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

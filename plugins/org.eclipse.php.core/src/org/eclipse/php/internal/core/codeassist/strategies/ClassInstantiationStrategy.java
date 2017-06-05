@@ -39,7 +39,7 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		String suffix = getSuffix(completionContext);
+		String suffix = getSuffix(completionContext, null);
 		addAlias(reporter, suffix);
 		super.apply(reporter);
 		addSelf(completionContext, reporter);

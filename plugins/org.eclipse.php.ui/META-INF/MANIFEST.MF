@@ -41,7 +41,8 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.wst.jsdt.web.core;resolution:=optional,
- org.eclipse.wst.jsdt.web.ui;resolution:=optional
+ org.eclipse.wst.jsdt.web.ui;resolution:=optional,
+ org.eclipse.php.formatter.core
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatter.ui,org.eclipse.php.refactoring.ui",
  org.eclipse.php.internal.ui.actions;x-internal:=true,
@@ -110,4 +111,5 @@ Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatte
 Bundle-Vendor: %Bundle-Vendor.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.eclipse.core.expressions,
+ org.eclipse.dltk.launching,
  org.eclipse.php.internal.ui.preferences

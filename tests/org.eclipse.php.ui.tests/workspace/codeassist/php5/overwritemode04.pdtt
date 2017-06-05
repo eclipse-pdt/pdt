@@ -2,6 +2,7 @@
 Test overwrite mode
 --PREFERENCES--
 org.eclipse.php.core/contentAssistInsertCompletion=false
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 class B{
@@ -27,6 +28,6 @@ class A
 	function usage()
 	{
 		$b = new B();
-		$b->overwrite('haha', true);
+		$b->overwrite ('haha', true);
 	}
 }

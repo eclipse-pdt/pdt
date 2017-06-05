@@ -43,7 +43,7 @@ public class CatchTypeStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String ignore) {
 		return isInsertMode() && abstractContext.hasSpaceAtPosition(getCompanion().getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

@@ -24,8 +24,14 @@ import org.eclipse.php.internal.ui.Logger;
 
 public class PHPCompletionProposalSorter implements ICompletionProposalSorter {
 
+	private final CompletionProposalComparator fComparator = new CompletionProposalComparator();
+
 	@Override
 	public int compare(ICompletionProposal p1, ICompletionProposal p2) {
+		int result = fComparator.compare(p1, p2);
+		if (fComparator.compare(p1, p2) != 0) {
+			return result;
+		}
 		if (p1 instanceof AbstractScriptCompletionProposal && p2 instanceof AbstractScriptCompletionProposal) {
 			AbstractScriptCompletionProposal cp1 = (AbstractScriptCompletionProposal) p1;
 			AbstractScriptCompletionProposal cp2 = (AbstractScriptCompletionProposal) p2;
@@ -35,7 +41,7 @@ public class PHPCompletionProposalSorter implements ICompletionProposalSorter {
 
 			if (el1.getElementType() == IModelElement.TYPE && el2.getElementType() == IModelElement.TYPE) {
 				try {
-					int result = Boolean.compare(PHPFlags.isNamespace(((IType) el1).getFlags()),
+					result = Boolean.compare(PHPFlags.isNamespace(((IType) el1).getFlags()),
 							PHPFlags.isNamespace(((IType) el2).getFlags()));
 					if (result != 0) {
 						return result;

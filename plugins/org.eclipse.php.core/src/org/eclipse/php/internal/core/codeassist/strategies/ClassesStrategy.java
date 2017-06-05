@@ -34,7 +34,7 @@ public class ClassesStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String ignore) {
 		return ""; //$NON-NLS-1$
 	}
 }

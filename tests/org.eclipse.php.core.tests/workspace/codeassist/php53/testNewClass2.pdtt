@@ -2,13 +2,13 @@
 Should complete class instantiation fully qualified name
 --FILE--
 <?
-namespace NS;
+namespace NS0000002;
 
 class AAAA {}
 function AAAA() {}
 const AAAA = 5;
 
-$a = new \NS\AA|
+$a = new \NS0000002\AA|
 ?>
 --EXPECT--
 method(AAAA)

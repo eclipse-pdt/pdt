@@ -10,7 +10,7 @@ class A {
 	public final function superFinal() {}
 }
 class B extends A {
-	function super|
+	super|
 }
 ?>
 --EXPECT--

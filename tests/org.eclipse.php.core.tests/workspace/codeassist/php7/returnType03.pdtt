@@ -4,6 +4,8 @@ Test function return type completion
 org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?php
+namespace ns7;
+
 class FooBar {}
 function test(): Foo| {
 }

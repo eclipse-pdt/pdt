@@ -15,7 +15,7 @@ class ExampleClass
     /**
      *           
      * @param \ContentA| $value2            
-     * @return \ContentAssistTest Returned value
+     * @return ContentAssistTest Returned value
      * @throws Exception Thrown exception
      *        
      */
@@ -35,8 +35,8 @@ class ExampleClass
 
     /**
      *           
-     * @param \ContentAssistTest $value2            
-     * @return \ContentAssistTest Returned value
+     * @param ContentAssistTest $value2            
+     * @return ContentAssistTest Returned value
      * @throws Exception Thrown exception
      *        
      */
