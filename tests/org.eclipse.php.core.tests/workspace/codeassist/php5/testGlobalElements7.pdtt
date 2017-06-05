@@ -3,6 +3,6 @@ Test PHPFunction
 --FILE--
 <? print| ?>
 --EXPECT--
-method(print_r)
 method(printf)
+method(print_r)
 keyword(print)

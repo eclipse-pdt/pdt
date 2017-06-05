@@ -35,6 +35,7 @@ public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStra
 		strategies.add(new LocalMethodVariablesStrategy(context));
 		strategies.add(new GlobalConstantsStrategy(context));
 		strategies.add(new MethodKeywordStrategy(context));
+		strategies.add(new ClassMethodsStrategy(context));
 	}
 
 	@Override

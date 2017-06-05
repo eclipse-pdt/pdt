@@ -23,3 +23,5 @@ class Foo {
 
 --EXPECT--
 method(testBar3)
+method(testBar2)
+method(testBar1)

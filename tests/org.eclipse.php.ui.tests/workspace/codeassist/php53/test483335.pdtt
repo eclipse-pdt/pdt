@@ -31,6 +31,6 @@ namespace Bar {
 namespace Boo {
 
 	use Bar\Test;
-	
+
 	Test::toMap ();
 }

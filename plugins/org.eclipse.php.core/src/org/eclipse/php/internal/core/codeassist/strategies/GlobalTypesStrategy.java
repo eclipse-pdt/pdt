@@ -79,14 +79,15 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
-		// now we compute type suffix in PHPCompletionProposalCollector
-		String suffix = "";//$NON-NLS-1$
-		String nsSuffix = getNSSuffix(abstractContext);
+
 		int extraInfo = getExtraInfo();
 
 		if (abstractContext.isAbsolutePrefix()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
 		}
 
 		if ((abstractContext.getOffset() - abstractContext.getPrefix().length() - 1 >= 0) && (abstractContext
@@ -95,9 +96,11 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 						.getChar(abstractContext.getOffset() - abstractContext.getPrefix().length() - 1) == '\"')) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
-		if ("namespace".equals(abstractContext.getPreviousWord(1)) //$NON-NLS-1$
-				|| isUseContext) {
+		if ("namespace".equals(abstractContext.getPreviousWord(1))) { //$NON-NLS-1$
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
+		}
+		if (isUseContext) {
+			extraInfo |= ProposalExtraInfo.IN_USE_STATEMENT_CONTEXT;
 		}
 
 		String namespace = abstractContext.getCurrentNamespace();
@@ -106,17 +109,16 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				int flags = type.getFlags();
 				boolean isNamespace = PHPFlags.isNamespace(flags);
 				int relevance = getRelevance(namespace, type);
+				String suffix = ""; //$NON-NLS-1$
 				if (!isNamespace && isUseContext) {
-					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
-							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE, relevance);
-				} else {
-					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange, extraInfo, relevance);
+					suffix = getSuffix(abstractContext, ";"); //$NON-NLS-1$
 				}
+				reporter.reportType(type, suffix, replacementRange, extraInfo, relevance);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
 		}
-		addAlias(reporter, suffix);
+		addAlias(reporter, ""); //$NON-NLS-1$
 
 	}
 
@@ -241,6 +243,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return EMPTY;
+		} else if (prefix.startsWith("\\")) { //$NON-NLS-1$
+			prefix = prefix.substring(1);
 		}
 
 		IDLTKSearchScope scope = createSearchScope();
@@ -315,7 +319,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (StringUtils.startsWithIgnoreCase("self", prefix)) { //$NON-NLS-1$
 			if (!context.getCompletionRequestor().isContextInformationMode() || prefix.length() == 4) { // "self".length()
 
-				String suffix = getSuffix(context);
+				String suffix = getSuffix(context, "::"); //$NON-NLS-1$
 
 				// get the class data for "self". In case of null, the self
 				// function will not be added
@@ -356,14 +360,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		}
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String suffix) {
 		String nextWord = null;
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return suffix.equals(nextWord) ? "" : suffix; //$NON-NLS-1$
 	}
 
 	/**

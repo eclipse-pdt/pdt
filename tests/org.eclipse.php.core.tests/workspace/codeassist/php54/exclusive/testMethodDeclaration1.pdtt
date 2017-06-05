@@ -1,0 +1,24 @@
+--TEST--
+Should complete namespace class magic method names 
+--FILE--
+<?
+namespace NS;
+class A {
+	_|
+}
+?>
+--EXPECT--
+method(__callstatic)
+method(__sleep)
+method(__set)
+method(__wakeup)
+method(__autoload)
+method(__invoke)
+method(__clone)
+method(__toString)
+method(__get)
+method(__isset)
+method(__unset)
+method(__set_state)
+method(__call)
+method(__construct)

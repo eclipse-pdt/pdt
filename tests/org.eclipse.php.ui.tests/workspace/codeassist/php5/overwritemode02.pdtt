@@ -2,6 +2,7 @@
 Test overwrite mode
 --PREFERENCES--
 org.eclipse.php.core/contentAssistInsertCompletion=false
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 class Foo {

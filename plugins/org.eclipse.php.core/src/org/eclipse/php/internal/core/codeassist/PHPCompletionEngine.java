@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.codeassist.*;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.strategies.CompletionStrategyFactory;
@@ -34,6 +35,8 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * @author michael
  */
 public class PHPCompletionEngine extends ScriptCompletionEngine implements ICompletionReporter {
+
+	public final static String ATTR_SUB_PROPOSAL = "ATTR_SUB_PROPOSAL";
 
 	private int relevanceKeyword;
 	private int relevanceMethod;
@@ -76,6 +79,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		relevanceVar = RELEVANCE_VAR;
 		relevanceConst = RELEVANCE_CONST;
 
+		actualCompletionPosition = position - 1;
 		try {
 			ICompletionContextResolver[] contextResolvers;
 			ICompletionStrategyFactory[] strategyFactories;
@@ -88,9 +92,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 
 			CompletionCompanion companion = new CompletionCompanion();
+			ISourceModule sourceModule = (ISourceModule) module.getModelElement();
 
-			org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
-					.getModelElement();
+			try {
+				ScriptModelUtil.reconcile(sourceModule);
+			} catch (ModelException e1) {
+			}
 
 			for (ICompletionContextResolver resolver : contextResolvers) {
 				ICompletionContext[] contexts = resolver.resolve(sourceModule, position, requestor, companion);
@@ -147,10 +154,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		relevance += subRelevance;
 
 		noProposal = false;
+		int kind = 0;
+		if (field.getParent() instanceof IMethod) {
+			kind = CompletionProposal.LOCAL_VARIABLE_REF;
+		} else {
+			kind = CompletionProposal.FIELD_REF;
+		}
+		if (!requestor.isIgnored(kind)) {
 
-		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
-
-			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
+			CompletionProposal proposal = createProposal(kind, actualCompletionPosition);
 			proposal.setName(field.getElementName());
 
 			String completion = field.getElementName() + suffix;
@@ -245,20 +257,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance) {
-		if (processedElements.containsKey(method)
-				&& ((IMethod) processedElements.get(method)).getParent().getClass() == method.getParent().getClass()) {
-
+		if (isMethodReported(method)) {
 			return;
 		}
-		processedElements.put(method, method);
 
 		noProposal = false;
 
-		if (!requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
+		int completionKind = CompletionProposal.METHOD_REF;
+		if (ProposalExtraInfo.isMagicMethodOverload(extraInfo) || ProposalExtraInfo.isMethodOverride(extraInfo)) {
+			completionKind = CompletionProposal.METHOD_DECLARATION;
+		} else if (ProposalExtraInfo.isPotentialMethodDeclaration(extraInfo)) {
+			completionKind = CompletionProposal.POTENTIAL_METHOD_DECLARATION;
+		}
 
-			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_DECLARATION,
-					actualCompletionPosition);
-			proposal.setExtraInfo(extraInfo);
+		if (!requestor.isIgnored(completionKind)) {
+
+			CompletionProposal proposal = createProposal(completionKind, actualCompletionPosition);
 			// show method parameter names:
 			String[] params = null;
 			try {
@@ -277,11 +291,31 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			proposal.setName(elementName);
 
 			int relevance = relevanceMethod + subRelevance;
-			proposal.setCompletion((completionName + suffix));
 
 			try {
 				proposal.setIsConstructor(elementName.equals("__construct") //$NON-NLS-1$
 						|| method.isConstructor());
+				if (proposal.isConstructor() && completionKind == CompletionProposal.METHOD_REF) {
+					CompletionProposal typeProposal = createProposal(CompletionProposal.TYPE_REF,
+							actualCompletionPosition);
+					typeProposal.setModelElement(method.getParent());
+					typeProposal.setName(elementName);
+					typeProposal.setCompletion(completionName);
+					typeProposal.setFlags(((IMember) method.getParent()).getFlags());
+					typeProposal.setReplaceRange(replaceRange.getOffset(),
+							replaceRange.getOffset() + replaceRange.getLength());
+					typeProposal.setRelevance(relevanceClass + subRelevance);
+					typeProposal.setExtraInfo(extraInfo);
+					proposal.setCompletion(suffix);
+					proposal.setReplaceRange(replaceRange.getOffset() + replaceRange.getLength(),
+							replaceRange.getOffset() + replaceRange.getLength());
+					proposal.setAttribute(ATTR_SUB_PROPOSAL, typeProposal);
+				} else {
+					proposal.setCompletion(completionName + suffix);
+					proposal.setReplaceRange(replaceRange.getOffset(),
+							replaceRange.getOffset() + replaceRange.getLength());
+				}
+				proposal.setExtraInfo(extraInfo);
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
 				if (DEBUG) {
@@ -289,7 +323,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 				}
 			}
 
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
 
 			this.requestor.accept(proposal);
@@ -299,6 +332,31 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 		}
 
+	}
+
+	private boolean isMethodReported(IMethod method) {
+		String methodName = method.getElementName();
+		String parentName = ""; //$NON-NLS-1$
+		if (method.getParent() instanceof IType) {
+			parentName = ((IType) method.getParent()).getFullyQualifiedName();
+		} else {
+			parentName = method.getParent().getElementName();
+		}
+		String signature = parentName + '$' + methodName;
+		boolean isReported = false;
+		if (method instanceof FakeMethodForProposal) {
+			if (processedElements.containsKey(signature)) {
+				IMethod m = (IMethod) processedElements.get(signature);
+				isReported = method.equals(m);
+			}
+		} else if (processedElements.containsKey(signature) && ((IMethod) processedElements.get(signature)).getParent()
+				.getClass() == method.getParent().getClass()) {
+			isReported = true;
+		}
+		if (!isReported) {
+			processedElements.put(signature, method);
+		}
+		return isReported;
 	}
 
 	@Override
@@ -329,42 +387,23 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
 			proposal.setExtraInfo(extraInfo);
-			// Support parameter names for constructor:
-			if (requestor.isContextInformationMode()) {
-				try {
-					for (IMethod method : type.getMethods()) {
-						if (method.isConstructor()) {
-							String[] params = method.getParameterNames();
-							if (params != null && params.length > 0) {
-								proposal.setParameterNames(params);
-							}
-							break;
-						}
-					}
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-			}
-
 			String elementName = type.getElementName();
-			String completionName = elementName;
-
-			proposal.setModelElement(type);
-			proposal.setName(elementName);
-
-			int relevance = relevanceClass + subRelevance;
-			proposal.setCompletion(completionName + suffix);
+			String completionName = type.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
 
 			try {
 				proposal.setFlags(type.getFlags());
+				proposal.setModelElement(type);
+				proposal.setName(elementName);
+
+				int relevance = relevanceClass + subRelevance;
+				proposal.setCompletion(completionName + suffix);
+				proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+				proposal.setRelevance(relevance);
+
+				this.requestor.accept(proposal);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
-
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
-			proposal.setRelevance(relevance);
-
-			this.requestor.accept(proposal);
 
 			if (DEBUG) {
 				this.printDebug(proposal);

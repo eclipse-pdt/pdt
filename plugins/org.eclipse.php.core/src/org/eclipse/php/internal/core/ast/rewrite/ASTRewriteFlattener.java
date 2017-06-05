@@ -651,11 +651,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(')');
 		if (functionDeclaration.getReturnType() != null) {
 			result.append(':');
+			result.append(' ');
 			functionDeclaration.getReturnType().accept(this);
 		}
 		Block body = functionDeclaration.getBody();
 		if (body != null) {
 			body.accept(this);
+		} else {
+			result.append(';');
 		}
 		return false;
 	}

@@ -13,9 +13,9 @@ package org.eclipse.php.internal.core.preferences;
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 
 import com.ibm.icu.util.ULocale;
 
@@ -61,6 +61,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
 		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);

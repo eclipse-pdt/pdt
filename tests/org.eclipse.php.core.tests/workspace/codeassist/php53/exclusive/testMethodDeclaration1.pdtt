@@ -4,23 +4,21 @@ Should complete namespace class magic method names
 <?
 namespace NS;
 class A {
-	function |
+	_|
 }
 ?>
 --EXPECT--
-method(__get)
-method(__set)
-method(__call)
+method(__callstatic)
 method(__sleep)
+method(__set)
 method(__wakeup)
+method(__autoload)
+method(__invoke)
+method(__clone)
+method(__toString)
+method(__get)
 method(__isset)
 method(__unset)
-method(__toString)
 method(__set_state)
-method(__clone)
-method(__autoload)
-method(__callstatic)
-method(__invoke)
-method(A)
+method(__call)
 method(__construct)
-method(__destruct)

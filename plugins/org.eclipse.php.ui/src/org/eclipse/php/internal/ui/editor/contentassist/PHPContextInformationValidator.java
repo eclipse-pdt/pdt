@@ -14,7 +14,6 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.SWT;
@@ -31,14 +30,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 	public void install(IContextInformation info, ITextViewer viewer, int offset) {
 		fInformation = info;
 		fViewer = viewer;
-		if (info instanceof IContextInformationExtension) {
-			fPosition = ((IContextInformationExtension) info).getContextInformationPosition();
-		} else {
-			fPosition = offset - 1;
-		}
-
-		// Work around for bug 253901.
-		fPosition++;
+		fPosition = offset;
 
 		fCurrentParameter = -1;
 	}

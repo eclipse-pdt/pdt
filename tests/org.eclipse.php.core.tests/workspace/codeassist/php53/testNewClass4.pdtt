@@ -2,12 +2,12 @@
 Test class instantiation in current namespace
 --FILE--
 <?
-namespace NS;
-class AAAA {}
-function AAAA() {}
-const AAAA = 5;
+namespace NS0000004;
+class CAAAA {}
+function CAAAA() {}
+const CAAAA = 5;
 
-$a = new AA|
+$a = new CAA|
 ?>
 --EXPECT--
-method(AAAA)
+method(CAAAA)

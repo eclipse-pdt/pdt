@@ -1,5 +1,7 @@
 --TEST--
 Test CA proposal for global elements
+--PREFERENCES--
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 str_w|

@@ -10,10 +10,11 @@ class A {
 	public final function superFinal() {}
 }
 class B extends A {
-	function super|
+	super|
 }
 ?>
 --EXPECT--
 method(superDefault)
 method(superProtected)
 method(superPublic)
+method(super)

@@ -200,6 +200,12 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE = "contentAssistInsertFullyQualifiedNameForNamespaceCheckBox"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls if code assist expand method proposal
+	 * for method with default value parameter
+	 */
+	public final static String CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS = "contentAssistExpandDefaultValueMethods"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that controls if code assist also contains proposals
 	 * from other files
 	 * <p>

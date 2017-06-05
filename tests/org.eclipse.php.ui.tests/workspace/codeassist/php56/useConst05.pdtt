@@ -16,5 +16,5 @@ namespace Bar\Zip {
     const MAXI = 456;
 }
 namespace {
-    use const Bar\Zip\MAXI
+    use const Bar\Zip\MAXI;
 }

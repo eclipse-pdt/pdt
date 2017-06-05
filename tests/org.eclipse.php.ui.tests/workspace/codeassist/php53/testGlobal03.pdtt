@@ -8,5 +8,5 @@ new Datetimez|
 --EXPECT--
 <?php
 namespace Foo;
-
-new \DateTimeZone($timezone)
+use DateTimeZone;
+new DateTimeZone($timezone)

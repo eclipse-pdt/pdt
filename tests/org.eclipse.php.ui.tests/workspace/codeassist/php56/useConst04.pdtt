@@ -16,5 +16,5 @@ namespace Bar{
     const MAXI = 456;
 }
 namespace {
-    use const Bar\MAXI
+    use const Bar\MAXI;
 }

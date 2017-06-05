@@ -11,6 +11,7 @@ if ($a instanceof Exception|) {
 --EXPECT--
 <?php
 namespace test;
-if ($a instanceof \Exception) {
+use Exception;
+if ($a instanceof Exception) {
 }
 ?>

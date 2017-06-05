@@ -108,12 +108,11 @@ public class StubUtility {
 					String typeName = addImports(namespace, curr.getType(), declaringNamespace, importContainers,
 							imports);
 					if (typeName != null) {
-						String parameterType = curr.getType();
 						if (supportNullable
 								&& ((FullyQualifiedReference) currTypeParam.getParameterType()).isNullable()) {
-							parameterType = '?' + parameterType;
+							typeName = '?' + typeName;
 						}
-						newTypeParam.setParameterType(ast.newIdentifier(parameterType));
+						newTypeParam.setParameterType(ast.newIdentifier(typeName));
 					}
 				}
 				newTypeParam.setParameterName(ast.newIdentifier(curr.getName()));
@@ -133,6 +132,56 @@ public class StubUtility {
 			}
 			func.setReturnType(ast.newIdentifier(returnTypeName));
 			addImports(namespace, returnType.getName(), declaringNamespace, importContainers, imports);
+		}
+		if (!deferred) {
+			Block body = ast.newBlock();
+			func.setBody(body);
+		}
+		return decl;
+	}
+
+	public static MethodDeclaration createMethodStub(ISourceModule unit, NamespaceDeclaration namespace,
+			ASTRewrite rewrite, ImportRewrite imports, IMethod method, boolean deferred) throws CoreException {
+		Assert.isNotNull(imports);
+		Assert.isNotNull(rewrite);
+
+		AST ast = rewrite.getAST();
+		MethodDeclaration decl = ast.newMethodDeclaration();
+		decl.setModifier(method.getFlags());
+		FunctionDeclaration func = ast.newFunctionDeclaration();
+		func.setFunctionName(ast.newIdentifier(method.getElementName()));
+		decl.setFunction(func);
+
+		IParameter[] typeParams = method.getParameters();
+		List<FormalParameter> typeParameters = decl.getFunction().formalParameters();
+
+		Map<String, ImportDeclaration> importContainers = getImportContainer(method);
+		String declaringNamespace = getDeclaringNamespace(method);
+		if (typeParams != null) {
+			for (int i = 0; i < typeParams.length; i++) {
+				FormalParameter newTypeParam = ast.newFormalParameter();
+				IParameter curr = typeParams[i];
+
+				if (curr.getType() != null) {
+					String typeName = addImports(namespace, curr.getType(), declaringNamespace, importContainers,
+							imports);
+					if (typeName != null) {
+						newTypeParam.setParameterType(ast.newIdentifier(typeName));
+					}
+				}
+				newTypeParam.setParameterName(ast.newIdentifier(curr.getName()));
+				if (curr.getDefaultValue() != null) {
+					newTypeParam.setDefaultValue(ast.newIdentifier(curr.getDefaultValue()));
+				}
+				typeParameters.add(newTypeParam);
+			}
+		}
+
+		boolean supportReturnType = ProjectOptions.getPHPVersion(unit).isGreaterThan(PHPVersion.PHP7_0);
+		String returnType = method.getType();
+		if (returnType != null && supportReturnType) {
+			func.setReturnType(ast.newIdentifier(returnType));
+			addImports(namespace, returnType, declaringNamespace, importContainers, imports);
 		}
 		if (!deferred) {
 			Block body = ast.newBlock();
@@ -177,8 +226,7 @@ public class StubUtility {
 			typeName = declaringNamespace + NamespaceReference.NAMESPACE_SEPARATOR + typeName;
 		}
 		if (typeName != null) {
-			imports.addImport(namespace, typeName);
-			return typeName;
+			return imports.addImport(namespace, typeName);
 		}
 		return null;
 	}

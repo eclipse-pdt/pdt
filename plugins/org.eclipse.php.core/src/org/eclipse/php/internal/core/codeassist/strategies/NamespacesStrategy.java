@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
@@ -42,6 +43,8 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return EMPTY;
+		} else if (prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+			prefix = prefix.substring(1);
 		}
 
 		IDLTKSearchScope scope = createSearchScope();

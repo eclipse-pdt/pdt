@@ -13,10 +13,10 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
@@ -45,7 +45,7 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 		if (completionContext.getPHPVersion().isGreaterThan(PHPVersion.PHP5_6)) {
 			String prefix = completionContext.getPrefixWithoutProcessing();
 			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
-				reporter.reportKeyword(CLASS_KEYWORD, "", getReplacementRange(completionContext)); // $NON-NLS-1$
+				reporter.reportKeyword(CLASS_KEYWORD, " ", getReplacementRange(completionContext)); // $NON-NLS-1$
 			}
 		}
 	}

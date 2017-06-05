@@ -2,7 +2,7 @@
 Should complete other namespace class instantiation using fully qualified name
 --FILE--
 <?
-namespace NS;
+namespace NS0000003;
 
 class AAAA {}
 function AAAA() {}
@@ -10,7 +10,7 @@ const AAAA = 5;
 
 namespace OtherNS;
 
-$a = new \NS\AA|
+$a = new \NS0000003\AA|
 ?>
 --EXPECT--
 method(AAAA)

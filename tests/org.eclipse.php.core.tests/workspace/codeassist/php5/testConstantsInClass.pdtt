@@ -2,6 +2,7 @@
 Test global constant.
 --PREFERENCES--
 org.eclipse.php.core/contentAssistShowStrictOptions=false
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?
 class bax

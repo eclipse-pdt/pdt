@@ -2,6 +2,7 @@
 Test CA proposal for global elements
 --PREFERENCES--
 org.eclipse.php.core/contentAssistPrefixGlobalFunctionCall=false
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 namespace Foo;
