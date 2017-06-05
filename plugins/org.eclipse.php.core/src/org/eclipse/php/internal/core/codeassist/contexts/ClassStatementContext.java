@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
  */
 public final class ClassStatementContext extends AbstractGlobalStatementContext {
 	private boolean isAssignment = false;
+	private IType enclosingType;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -52,8 +53,14 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 					offset--;
 				}
 				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset, true);
-				isAssignment = scanner.scanBackward(offset, ((IType) enclosingElement).getSourceRange().getOffset(),
-						'=') > -1;
+				int prefixStart = offset - getPrefix().length();
+				int token = scanner.previousToken(prefixStart, ((IType) enclosingElement).getSourceRange().getOffset());
+				if (token != PHPHeuristicScanner.TokenSEMICOLON && token != PHPHeuristicScanner.TokenRBRACE
+						&& token != PHPHeuristicScanner.TokenLBRACE && token != PHPHeuristicScanner.TokenIDENT) {
+					isAssignment = scanner.scanBackward(prefixStart,
+							((IType) enclosingElement).getSourceRange().getOffset(), '=') > -1;
+				}
+				enclosingType = (IType) enclosingElement;
 				return true;
 			}
 			if (enclosingElement instanceof IMethod) {
@@ -73,4 +80,9 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 	public boolean isAssignment() {
 		return isAssignment;
 	}
+
+	public IType getEnclosingType() {
+		return enclosingType;
+	}
+
 }

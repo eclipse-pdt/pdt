@@ -2,7 +2,7 @@
 Should complete class instantiation using current namespace notation
 --FILE--
 <?
-namespace NS;
+namespace NS000001;
 class AAAA {}
 function AAAA() {}
 const AAAA = 5;

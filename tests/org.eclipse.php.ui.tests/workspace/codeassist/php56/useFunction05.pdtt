@@ -18,5 +18,5 @@ namespace Bar\Zip {
     }
 }
 namespace {
-    use function Bar\Zip\faabc
+    use function Bar\Zip\faabc;
 }

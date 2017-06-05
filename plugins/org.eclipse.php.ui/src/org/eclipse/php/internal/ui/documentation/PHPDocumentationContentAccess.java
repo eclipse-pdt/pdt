@@ -29,6 +29,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.Constants;
+import org.eclipse.php.internal.core.codeassist.FakeMethodForProposal;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
@@ -485,7 +486,11 @@ public class PHPDocumentationContentAccess {
 
 	private PHPDocumentationContentAccess(IMember member, PHPDocBlock javadoc) {
 		fMember = member;
-		fMethod = null;
+		if (member instanceof IMethod) {
+			fMethod = (IMethod) member;
+		} else {
+			fMethod = null;
+		}
 		fJavadoc = javadoc;
 		fJavadocLookup = JavadocLookup.NONE;
 	}
@@ -595,7 +600,20 @@ public class PHPDocumentationContentAccess {
 			return PHPModelUtils.getDocBlock((IType) member);
 		}
 		if (member instanceof IMethod) {
-			PHPDocBlock result = PHPModelUtils.getDocBlock((IMethod) member);
+			PHPDocBlock result = null;
+			if (member instanceof FakeMethodForProposal) {
+				member = ((FakeMethodForProposal) member).getMethod();
+				if (member instanceof FakeConstructor) {
+					IType type = (IType) member.getParent();
+					IMethod[] ctors = FakeConstructor.getConstructors(type, true);
+					if (ctors != null && ctors.length == 2) {
+						if (ctors[0] != null) {
+							member = ctors[0];
+						}
+					}
+				}
+			}
+			result = PHPModelUtils.getDocBlock((IMethod) member);
 			if (result == null && member instanceof FakeConstructor) {
 				FakeConstructor fc = (FakeConstructor) member;
 				result = PHPModelUtils.getDocBlock((IType) fc.getParent());
@@ -803,14 +821,17 @@ public class PHPDocumentationContentAccess {
 		PHPDocTag[] tags = fJavadoc.getTags();
 		for (PHPDocTag tag : tags) {
 			if (TagKind.PARAM == tag.getTagKind()) {
-				parameters.add(tag);
-				if (!tag.isValidParamTag()) {
-					if (parameterNames.size() > parameters.indexOf(tag))
-						parameterNames.set(parameters.indexOf(tag), null);
-				} else {
-					int paramIndex = parameterNames.indexOf(tag.getVariableReference().getName());
-					if (paramIndex != -1) {
-						parameterNames.set(paramIndex, null);
+				if (tag.getVariableReference() == null
+						|| parameterNames.contains(tag.getVariableReference().getName())) {
+					parameters.add(tag);
+					if (!tag.isValidParamTag()) {
+						if (parameterNames.size() > parameters.indexOf(tag))
+							parameterNames.set(parameters.indexOf(tag), null);
+					} else {
+						int paramIndex = parameterNames.indexOf(tag.getVariableReference().getName());
+						if (paramIndex != -1) {
+							parameterNames.set(paramIndex, null);
+						}
 					}
 				}
 			} else if (TagKind.RETURN == tag.getTagKind()) {

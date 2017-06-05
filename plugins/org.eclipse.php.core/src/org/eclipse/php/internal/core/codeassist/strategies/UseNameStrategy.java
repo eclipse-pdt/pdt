@@ -35,7 +35,6 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-
 		reportKeyword(FUNCTION_KEYWORD, reporter);
 		reportKeyword(CONST_KEYWORD, reporter);
 		super.apply(reporter);

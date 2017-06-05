@@ -24,7 +24,7 @@ namespace Boo {
 namespace Foo {
 
 	use Boo\XYZ;
-	
+
 	function test(): XYZ {
 	}
 }

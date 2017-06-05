@@ -17,6 +17,31 @@ import org.eclipse.php.core.ast.nodes.*;
 
 public class ASTResolving {
 
+	/**
+	 * Finds the ancestor type of <code>node</code> (includes <code>node</code>
+	 * in the search).
+	 *
+	 * @param node
+	 *            the node to start the search from, can be <code>null</code>
+	 * @param treatModifiersOutside
+	 *            if set, modifiers are not part of their type, but of the
+	 *            type's parent
+	 * @return returns the ancestor type of <code>node</code>
+	 *         (AbstractTypeDeclaration or AnonymousTypeDeclaration) if any
+	 *         (including <code>node</code>), <code>null</code> otherwise
+	 */
+	public static ASTNode findParentType(ASTNode node) {
+		while (node != null) {
+			if (node instanceof TypeDeclaration) {
+				return node;
+			} else if (node instanceof AnonymousClassDeclaration) {
+				return node;
+			}
+			node = node.getParent();
+		}
+		return null;
+	}
+
 	public static ITypeBinding guessBindingForReference(ASTNode node) {
 		return getPossibleReferenceBinding(node);
 	}

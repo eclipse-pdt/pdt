@@ -4,3 +4,4 @@ Test In Class Declaration With Prefix
 <? class A { u| } ?>
 --EXPECT--
 keyword(use)
+method(u)

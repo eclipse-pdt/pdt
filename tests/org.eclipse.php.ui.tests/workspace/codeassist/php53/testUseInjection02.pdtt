@@ -13,9 +13,7 @@ namespace bar\baz
 <?php
 new Tar|
 --EXPECT--
-<?php
-use bar\baz\Target;
-?>
 <!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <?php
+use bar\baz\Target;
 new Target()

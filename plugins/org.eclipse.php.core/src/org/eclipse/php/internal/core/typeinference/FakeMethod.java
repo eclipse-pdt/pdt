@@ -38,6 +38,7 @@ public class FakeMethod extends SourceMethod {
 	private int nameOffset;
 	private int nameLength;
 	private boolean isConstructor;
+	private String returnType;
 
 	public String getReceiver() {
 		return receiver;
@@ -130,6 +131,14 @@ public class FakeMethod extends SourceMethod {
 
 		}
 		return this.parent;
+	}
+
+	public String getType() {
+		return returnType;
+	}
+
+	public void setType(String returnType) {
+		this.returnType = returnType;
 	}
 
 }

@@ -87,6 +87,6 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 
 	@Override
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.TYPE_ONLY;
+		return ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.IN_PHP_DOC;
 	}
 }

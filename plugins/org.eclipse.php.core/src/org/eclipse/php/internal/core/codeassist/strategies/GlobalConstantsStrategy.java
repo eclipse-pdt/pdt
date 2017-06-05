@@ -73,8 +73,11 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		boolean isUseConstContext = context instanceof UseConstNameContext;
 		int extraInfo = getExtraInfo();
 		if (isUseConstContext) {
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.IN_USE_STATEMENT_CONTEXT;
+		}
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
 		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
@@ -111,7 +114,6 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		String namespaceName = getQualifier(true);
 		if (abstractContext.isAbsolutePrefix()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 		enclosingTypeConstants = PHPModelAccess.getDefault().findFileFields(namespaceName, memberName, matchRule,
 				Modifiers.AccConstant, 0, scope, null);
@@ -125,7 +127,13 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		ISourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
-			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
+			int extraInfo1 = extraInfo;
+			// TODO remove this once import rewrite supports importing function and
+			// constant
+			if (!isUseConstContext && field.getParent() instanceof IType) {
+				extraInfo1 |= ProposalExtraInfo.FULL_NAME;
+			}
+			reporter.reportField(field, "", replaceRange, false, 0, extraInfo1); //$NON-NLS-1$
 		}
 		addAlias(reporter);
 	}

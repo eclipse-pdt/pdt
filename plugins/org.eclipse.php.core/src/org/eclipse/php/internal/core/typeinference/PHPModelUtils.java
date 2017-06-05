@@ -39,6 +39,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.internal.core.MethodParameterInfo;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRefElement;
@@ -55,6 +56,7 @@ import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.FakeMethodForProposal;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -507,6 +509,26 @@ public class PHPModelUtils {
 			PHPCorePlugin.log(e);
 		}
 		return null;
+	}
+
+	/**
+	 * Returns if the imported type is implicit with current namespace
+	 * 
+	 * @param sourceModule
+	 * @param offset
+	 * @param qualifiedTypeName
+	 * @return
+	 */
+	public static boolean isImplicitImport(ISourceModule sourceModule, int offset, String qualifiedTypeName) {
+		IType namespace = getCurrentNamespace(sourceModule, offset);
+		String qualifier = extractNameSpaceName(qualifiedTypeName);
+		if (namespace != null) {
+			String namespaceName = namespace.getFullyQualifiedName(ENCLOSING_TYPE_SEPARATOR);
+			return namespaceName.equalsIgnoreCase(qualifier);
+		} else if (StringUtils.isEmpty(qualifier)) {
+			return true;
+		}
+		return false;
 	}
 
 	@Nullable
@@ -1779,19 +1801,10 @@ public class PHPModelUtils {
 		}
 
 		if (!isGlobal) {
-			String fullTypeName = typeName;
 			String namespace = extractNamespaceName(typeName, sourceModule, offset);
 			typeName = extractElementName(typeName);
 			if (namespace != null) {
 				if (namespace.length() > 0) {
-					String typeNameSpaceName = extractNameSpaceName(fullTypeName);
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
-					// only look for aliases when there is no namespace
-					// separator in the type name
-					if (typeNameSpaceName == null) {
-						typeName = getRealName(typeName, sourceModule, offset, typeName);
-					}
-
 					IType[] types = getNamespaceType(namespace, typeName, true, sourceModule, cache, monitor, isType);
 					if (types.length > 0) {
 						return types;
@@ -2396,6 +2409,41 @@ public class PHPModelUtils {
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
+	}
+
+	/**
+	 * Expand method if parameter has default value.
+	 * 
+	 * For example
+	 * 
+	 * <pre>
+	 * bar($p1, $p2, $p3=true) => bar($p1, $p2), bar($p1, $p2, $p3)
+	 * </pre>
+	 * 
+	 * @param method
+	 * @return
+	 */
+	public static IMethod[] expandDefaultValueMethod(IMethod method) {
+		List<IMethod> methods = new ArrayList<>();
+		try {
+			IParameter[] parameters = method.getParameters();
+			List<IParameter> newParameters = new ArrayList<>();
+			for (IParameter parameter : parameters) {
+				IParameter newParameter = new MethodParameterInfo(parameter.getName(), parameter.getType(), null,
+						parameter.getFlags());
+				if (parameter.getDefaultValue() != null) {
+					FakeMethodForProposal fakeMethod = new FakeMethodForProposal(method,
+							newParameters.toArray(new IParameter[0]));
+					methods.add(fakeMethod);
+				}
+				newParameters.add(newParameter);
+			}
+			FakeMethodForProposal fakeMethod = new FakeMethodForProposal(method,
+					newParameters.toArray(new IParameter[0]));
+			methods.add(fakeMethod);
+		} catch (ModelException e) {
+		}
+		return methods.toArray(new IMethod[0]);
 	}
 
 }

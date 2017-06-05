@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -26,6 +27,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -53,15 +55,19 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 
 		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext.getPreviousWord()
 				: abstractContext.getPrefix();
-		if (StringUtils.isBlank(prefix) || prefix.startsWith("$")) { //$NON-NLS-1$
+		String memberName = getMemberName();
+		if ((StringUtils.isBlank(prefix) && !StringUtils.isBlank(memberName)) || prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 
 		boolean isUseFunctionContext = context instanceof UseFunctionNameContext;
 		int extraInfo = getExtraInfo();
 		if (isUseFunctionContext) {
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.IN_USE_STATEMENT_CONTEXT;
+		}
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
 		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
@@ -70,20 +76,31 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		}
 		IDLTKSearchScope scope = createSearchScope();
 		IMethod[] functions;
-		String memberName = getMemberName();
 		String namespaceName = getQualifier(true);
 		if (abstractContext.isAbsolutePrefix()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-
 		}
+
 		functions = PHPModelAccess.getDefault().findFunctions(namespaceName, memberName, matchRule, 0, 0, scope, null);
 
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
-		String suffix = getSuffix(abstractContext);
+		String suffix = getSuffix(abstractContext, isUseFunctionContext);
 		String namespace = abstractContext.getCurrentNamespace();
 		for (IMethod method : functions) {
-			reporter.reportMethod(method, suffix, replacementRange, extraInfo, getRelevance(namespace, method));
+			int extraInfo1 = extraInfo;
+			// TODO remove this once import rewrite supports importing function and
+			// constant
+			if (!isUseFunctionContext && method.getParent() instanceof IType) {
+				extraInfo1 |= ProposalExtraInfo.FULL_NAME;
+			}
+			if (!isUseFunctionContext && isExpandMethodEnabled()) {
+				IMethod[] methods = PHPModelUtils.expandDefaultValueMethod(method);
+				for (IMethod m : methods) {
+					reporter.reportMethod(m, suffix, replacementRange, extraInfo1, getRelevance(namespace, m));
+				}
+			} else {
+				reporter.reportMethod(method, suffix, replacementRange, extraInfo1, getRelevance(namespace, method));
+			}
 		}
 
 		addAlias(reporter, suffix);
@@ -145,18 +162,26 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 				getExtraInfo());
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, boolean isUseFunctionContext) {
 		String nextWord = null;
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
+		if (isUseFunctionContext) {
+			return ";".equals(nextWord) ? "" : ";"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT;
+	}
+
+	private boolean isExpandMethodEnabled() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS, true, null);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,13 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.internal.ui.text.hover.DocumentationHover;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.internal.text.html.BrowserInformationControl;
 import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -30,19 +27,23 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
-import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrategy;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
-public class PHPCompletionProposal extends ScriptCompletionProposal implements IPHPCompletionProposalExtension {
+public class PHPCompletionProposal extends ScriptCompletionProposal
+		implements IPHPCompletionProposalExtension, IProcessableProposal {
 
 	/**
 	 * The control creator.
 	 */
 	private IInformationControlCreator fCreator;
+
+	private ProposalProcessorManager mgr;
+	private String lastPrefix;
+	private String lastPrefixStyled;
+	private StyledString initialDisplayString;
 
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance) {
@@ -91,60 +92,6 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	}
 
 	@Override
-	public void apply(IDocument document, char trigger, int offset) {
-		IModelElement modelElement = getModelElement();
-
-		boolean activateCodeAssist = false;
-		String replacementString = getReplacementString();
-		if (modelElement instanceof IScriptProject
-				&& replacementString.endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR)) {
-			// workaround for:
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
-			activateCodeAssist = true;
-		} else {
-			IPreferencesService preferencesService = Platform.getPreferencesService();
-			boolean enableAutoactivation = preferencesService.getBoolean(PHPCorePlugin.ID,
-					PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null);
-			if (enableAutoactivation) {
-				char lastChar = replacementString.charAt(replacementString.length() - 1);
-				for (char autoActivationChar : PHPCompletionProcessor.completionAutoActivationChars) {
-					if (autoActivationChar == lastChar) {
-						activateCodeAssist = true;
-						break;
-					}
-				}
-			}
-		}
-		if (activateCodeAssist) {
-			AutoActivationTrigger.register(document);
-		}
-
-		UseStatementInjector injector = new UseStatementInjector(this);
-		offset = injector.inject(document, getTextViewer(), offset);
-
-		super.apply(document, trigger, offset);
-
-		setCursorPosition(calcCursorPosition());
-	}
-
-	private int calcCursorPosition() {
-		String replacementString = getReplacementString();
-		int i = replacementString.lastIndexOf('(');
-		if (i != -1) {
-			return i + 1;
-		}
-		i = replacementString.lastIndexOf('\'');
-		if (i != -1) {
-			return i;
-		}
-		i = replacementString.lastIndexOf('\"');
-		if (i != -1) {
-			return i;
-		}
-		return replacementString.length();
-	}
-
-	@Override
 	public IContextInformation getContextInformation() {
 		String displayString = getDisplayString();
 		if (displayString.indexOf('(') == -1) {
@@ -155,6 +102,11 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 
 	@Override
 	protected boolean isCamelCaseMatching() {
+		return true;
+	}
+
+	@Override
+	protected boolean isSubstringMatching() {
 		return true;
 	}
 
@@ -172,7 +124,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	@Override
 	public IInformationControlCreator getInformationControlCreator() {
 		if (fCreator == null) {
-			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
+			fCreator = new DocumentationHover.HoverControlCreator(new IInformationControlCreator() {
 				@Override
 				public IInformationControl createInformationControl(Shell parent) {
 					if (BrowserInformationControl.isAvailable(parent)) {
@@ -190,5 +142,39 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	@Override
 	public Object getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT;
+	}
+
+	@Override
+	public StyledString getStyledDisplayString() {
+		if (initialDisplayString == null) {
+			initialDisplayString = super.getStyledDisplayString();
+			StyledString copy = copyStyledString(initialDisplayString);
+			StyledString decorated = mgr.decorateStyledDisplayString(copy);
+			setStyledDisplayString(decorated);
+		}
+		if (lastPrefixStyled != lastPrefix) {
+			lastPrefixStyled = lastPrefix;
+			StyledString copy = copyStyledString(initialDisplayString);
+			StyledString decorated = mgr.decorateStyledDisplayString(copy);
+			setStyledDisplayString(decorated);
+		}
+		return super.getStyledDisplayString();
+	}
+
+	@Override
+	public boolean isPrefix(final String prefix, final String string) {
+		lastPrefix = prefix;
+		boolean res = mgr.prefixChanged(prefix) || super.isPrefix(prefix, string);
+		return res;
+	}
+
+	@Override
+	public ProposalProcessorManager getProposalProcessorManager() {
+		return this.mgr;
+	}
+
+	@Override
+	public void setProposalProcessorManager(ProposalProcessorManager mgr) {
+		this.mgr = mgr;
 	}
 }

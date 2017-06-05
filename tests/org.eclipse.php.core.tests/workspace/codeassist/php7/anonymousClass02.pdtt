@@ -9,3 +9,4 @@ new class() implements Test {
 keyword(private)
 keyword(protected)
 keyword(public)
+method(p)

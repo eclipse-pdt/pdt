@@ -73,6 +73,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		ASTNode expression = exprGoal.getExpression();
 		Class<?> expressionClass = expression.getClass();
 
+		if (expressionClass == AnonymousClassDeclaration.class) {
+			return new PHPAnonymousClassEvaluator(exprGoal, (AnonymousClassDeclaration) expression);
+		}
 		if (expressionClass == InterfaceDeclaration.class || expressionClass == ClassDeclaration.class
 				|| expressionClass == TraitDeclaration.class) {
 			return new PHPClassEvaluator(exprGoal, (TypeDeclaration) expression);

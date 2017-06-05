@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.osgi.util.NLS;
 
+import com.ibm.icu.text.MessageFormat;
+
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.editor.contentassist.messages"; //$NON-NLS-1$
 	public static String AutoActivationTrigger_0;
@@ -26,5 +28,9 @@ public class Messages extends NLS {
 	}
 
 	private Messages() {
+	}
+
+	public static String format(String message, Object object) {
+		return MessageFormat.format(message, new Object[] { object });
 	}
 }

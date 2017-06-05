@@ -2,12 +2,12 @@
 Should complete global constants from other namespace
 --FILE--
 <?
-namespace NS {
+namespace NS001 {
 	define('TEST1', 0);
 	$TEST2 = '';
 }
 
-namespace {
+namespace NS002 {
 	TEST|
 }
 ?>

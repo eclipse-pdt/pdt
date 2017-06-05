@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import java.util.List;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -21,7 +24,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
+import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
 import org.eclipse.swt.widgets.Shell;
 
@@ -52,6 +57,51 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 		phpCompletionProposalCollector = new PHPCompletionProposalCollector(context.getDocument(),
 				context.getSourceModule(), explicit);
 		return phpCompletionProposalCollector;
+	}
+
+	@Override
+	public List<ICompletionProposal> computeCompletionProposals(ContentAssistInvocationContext context,
+			IProgressMonitor monitor) {
+
+		List<ICompletionProposal> result = super.computeCompletionProposals(context, monitor);
+		ScriptCompletionProposalCollector collector = createCollector((ScriptContentAssistInvocationContext) context);
+
+		ICompletionProposal[] javaProposals = collector.getScriptCompletionProposals();
+		int contextInformationOffset = guessMethodContextInformationPosition(context);
+		if (contextInformationOffset != context.getInvocationOffset()) {
+			for (int i = 0; i < javaProposals.length; i++) {
+				if (javaProposals[i] instanceof ParameterGuessingProposal) {
+					ParameterGuessingProposal jmcp = (ParameterGuessingProposal) javaProposals[i];
+					jmcp.setContextInformationPosition(contextInformationOffset);
+				}
+			}
+		}
+		return result;
+	}
+
+	protected final int guessMethodContextInformationPosition(ContentAssistInvocationContext context) {
+		final int contextPosition = context.getInvocationOffset();
+
+		IDocument document = context.getDocument();
+		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document);
+		int bound = Math.max(-1, contextPosition - 2000);
+
+		// try the innermost scope of parentheses that looks like a method call
+		int pos = contextPosition - 1;
+		do {
+			int paren = scanner.findOpeningPeer(pos, bound, '(', ')');
+			if (paren == PHPHeuristicScanner.NOT_FOUND)
+				break;
+			int token = scanner.previousToken(paren - 1, bound);
+			// next token must be a method name (identifier) or the closing
+			// angle of a
+			// constructor call of a parameterized type.
+			if (token == PHPHeuristicScanner.TokenIDENT || token == PHPHeuristicScanner.TokenGREATERTHAN)
+				return paren + 1;
+			pos = paren - 1;
+		} while (true);
+
+		return contextPosition;
 	}
 
 	@Override

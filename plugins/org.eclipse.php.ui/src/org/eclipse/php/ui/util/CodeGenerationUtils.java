@@ -39,6 +39,8 @@ import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.formatter.core.PHPCodeFormatter;
+import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer;
@@ -228,12 +230,12 @@ public class CodeGenerationUtils {
 	 * @throws CoreException
 	 *             when stub creation failed
 	 */
-	public static void createSetterStub(IField field, String setterName, boolean addComments, int flags,
-			ListRewrite rewrite, ASTNode insertion) throws CoreException {
+	public static MethodDeclaration createSetterStub(IField field, String setterName, boolean addComments, int flags,
+			ASTRewrite rewrite) throws CoreException {
 		String fieldName = field.getElementName();
 		IType parentType = field.getDeclaringType();
 
-		AST ast = rewrite.getASTRewrite().getAST();
+		AST ast = rewrite.getAST();
 
 		String lineDelim = StubUtility.getLineDelimiterUsed(field.getScriptProject());
 
@@ -246,7 +248,7 @@ public class CodeGenerationUtils {
 		param.setParameterName(exp);
 
 		func.formalParameters().add(param);
-		func.setFunctionName(rewrite.getParent().getAST().newIdentifier(getSetterName(field)));
+		func.setFunctionName(rewrite.getAST().newIdentifier(getSetterName(field)));
 
 		method.setFunction(func);
 
@@ -289,7 +291,7 @@ public class CodeGenerationUtils {
 				parentType.getTypeQualifiedName(), setterName, fieldName, field.getElementName(), lineDelim);
 
 		if (bodyContent != null) {
-			ASTNode todoNode = rewrite.getASTRewrite().createStringPlaceholder(bodyContent, ASTNode.EMPTY_STATEMENT);
+			ASTNode todoNode = rewrite.createStringPlaceholder(bodyContent, ASTNode.EXPRESSION_STATEMENT);
 			body.statements().add((Statement) todoNode);
 		}
 
@@ -299,13 +301,35 @@ public class CodeGenerationUtils {
 					field.getDeclaringType().getElementName(), setterName, fieldName, filedType, field.getElementName(),
 					field.getElementName(), lineDelim);
 			if (comment != null) {
-				Comment commentNode = (Comment) rewrite.getASTRewrite().createStringPlaceholder(comment + lineDelim,
-						ASTNode.COMMENT);
+				Comment commentNode = (Comment) rewrite.createStringPlaceholder(comment + lineDelim, ASTNode.COMMENT);
 				commentNode.setCommentType(Comment.TYPE_PHPDOC);
 				method.setComment(commentNode);
 			}
 		}
 
+		return method;
+	}
+
+	/**
+	 * Create a stub for a getter of the given field using getter/setter
+	 * templates. The resulting code has to be formatted and indented.
+	 * 
+	 * @param field
+	 *            The field to create a getter for
+	 * @param setterName
+	 *            The chosen name for the setter
+	 * @param addComments
+	 *            If <code>true</code>, comments will be added.
+	 * @param flags
+	 *            The flags signaling visibility, if static, synchronized or
+	 *            final
+	 * @return Returns the generated stub.
+	 * @throws CoreException
+	 *             when stub creation failed
+	 */
+	public static void createSetterStub(IField field, String setterName, boolean addComments, int flags,
+			ListRewrite rewrite, ASTNode insertion) throws CoreException {
+		MethodDeclaration method = createSetterStub(field, setterName, addComments, flags, rewrite.getASTRewrite());
 		addNewAccessor(method, rewrite, insertion);
 	}
 
@@ -393,13 +417,14 @@ public class CodeGenerationUtils {
 	 * @throws CoreException
 	 *             when stub creation failed
 	 */
-	public static void createGetterStub(IField field, String getterName, boolean addComments, int flags, IType type,
-			ListRewrite rewrite, ASTNode insertion) throws CoreException {
+	public static MethodDeclaration createGetterStub(IField field, String getterName, boolean addComments, int flags,
+			IType type, ASTRewrite rewrite) throws CoreException {
+
 		String fieldName = field.getElementName();
 		IType parentType = field.getDeclaringType();
 		String lineDelim = StubUtility.getLineDelimiterUsed(field.getScriptProject());
 
-		AST ast = rewrite.getASTRewrite().getAST();
+		AST ast = rewrite.getAST();
 
 		MethodDeclaration method = new MethodDeclarationStub(ast);
 
@@ -439,7 +464,7 @@ public class CodeGenerationUtils {
 				parentType.getElementName(), getterName, fieldName, lineDelim);
 
 		if (bodyContent != null) {
-			ASTNode todoNode = rewrite.getASTRewrite().createStringPlaceholder(bodyContent, ASTNode.EMPTY_STATEMENT);
+			ASTNode todoNode = rewrite.createStringPlaceholder(bodyContent, ASTNode.EXPRESSION_STATEMENT);
 			body.statements().add((Statement) todoNode);
 		}
 
@@ -449,12 +474,40 @@ public class CodeGenerationUtils {
 					field.getDeclaringType().getElementName(), getterName, fieldName, filedType, field.getElementName(),
 					lineDelim);
 			if (comment != null) {
-				Comment commentNode = (Comment) rewrite.getASTRewrite().createStringPlaceholder(comment + lineDelim,
-						ASTNode.COMMENT);
+				Comment commentNode = (Comment) rewrite.createStringPlaceholder(comment + lineDelim, ASTNode.COMMENT);
 				commentNode.setCommentType(Comment.TYPE_PHPDOC);
 				method.setComment(commentNode);
 			}
 		}
+
+		return method;
+	}
+
+	/**
+	 * Create a stub for a getter of the given field using getter/setter
+	 * templates. The resulting code has to be formatted and indented.
+	 * 
+	 * @param field
+	 *            The field to create a getter for
+	 * @param getterName
+	 *            The chosen name for the getter
+	 * @param addComments
+	 *            If <code>true</code>, comments will be added.
+	 * @param flags
+	 *            The flags signaling visibility, if static, synchronized or
+	 *            final
+	 * @param insertion
+	 * @param rewrite
+	 * @param field2
+	 * @param type
+	 * @return Returns the generated stub.
+	 * @throws CoreException
+	 *             when stub creation failed
+	 */
+	public static void createGetterStub(IField field, String getterName, boolean addComments, int flags, IType type,
+			ListRewrite rewrite, ASTNode insertion) throws CoreException {
+		MethodDeclaration method = createGetterStub(field, getterName, addComments, flags, type,
+				rewrite.getASTRewrite());
 		addNewAccessor(method, rewrite, insertion);
 	}
 
@@ -715,6 +768,19 @@ public class CodeGenerationUtils {
 		}
 
 		return toImplement.toArray(new IMethodBinding[toImplement.size()]);
+	}
+
+	public static CodeGenerationSettings getCodeGenerationSettings(IProject project) {
+		CodeGenerationSettings res = new CodeGenerationSettings();
+		try {
+			CodeFormatterPreferences preferences = PHPCodeFormatter.getPreferences(project);
+			res.createComments = false;
+			res.tabWidth = preferences.tabSize;
+			res.indentWidth = preferences.indentationSize;
+		} catch (Exception e) {
+			PHPUiPlugin.log(e);
+		}
+		return res;
 	}
 
 	private static void findUnimplementedInterfaceMethods(ITypeBinding typeBinding, Set<ITypeBinding> visited,

@@ -2,15 +2,15 @@
 Should complete other namespace class instantiation
 --FILE--
 <?
-namespace NS;
+namespace NS0000006;
 
-class AAAA {}
-function AAAA() {}
-const AAAA = 5;
+class DAAAA {}
+function DAAAA() {}
+const DAAAA = 5;
 
 namespace OtherNS;
 
-$a = new AA|
+$a = new DAA|
 ?>
 --EXPECT--
-method(AAAA)
+method(DAAAA)

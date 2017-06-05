@@ -388,6 +388,17 @@ ${cursor}</template>
 </template>
 
 <template
+	name="ctor"
+	description="%description.php.constructMethod"
+	id="org.eclipse.php.ui.editor.templates.php.ctor"
+	context="php-class-members"
+	enabled="true"
+	autoinsert="false">public function __construct(${dollar}${param}) {
+	${cursor};
+}
+</template>
+
+<template
 	name="if"
 	description="%description.php.if"
 	id="org.eclipse.php.ui.editor.templates.php.if"

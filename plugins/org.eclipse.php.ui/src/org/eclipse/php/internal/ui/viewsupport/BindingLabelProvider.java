@@ -303,7 +303,7 @@ public class BindingLabelProvider extends LabelProvider {
 		if ((flags & ScriptElementLabels.M_APP_TYPE_PARAMETERS) != 0) {
 			// if (binding.isGenericMethod()) {
 			ITypeBinding[] typeParameters = binding.getParameterTypes();
-			if (typeParameters.length > 0) {
+			if (typeParameters != null && typeParameters.length > 0) {
 				buffer.append(' ');
 				getTypeParametersLabel(typeParameters, buffer);
 			}
