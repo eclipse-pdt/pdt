@@ -363,9 +363,7 @@ public final class ImportRewrite {
 			String curr = imports.get(i);
 			int res = compareImport(prefix, qualifier, name, curr);
 			if (res != ImportRewriteContext.RES_NAME_UNKNOWN) {
-				if (res == ImportRewriteContext.RES_NAME_FOUND) {
-					return res;
-				}
+				return res;
 			}
 		}
 		return ImportRewriteContext.RES_NAME_UNKNOWN;

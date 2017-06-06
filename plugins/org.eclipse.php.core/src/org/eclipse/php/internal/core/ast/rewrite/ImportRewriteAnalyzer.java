@@ -25,10 +25,13 @@ import org.eclipse.dltk.core.IBuffer;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
@@ -49,6 +52,7 @@ public final class ImportRewriteAnalyzer {
 	private boolean filterImplicitImports;
 
 	private Map<NamespaceDeclaration, Integer> flags = new HashMap<>();
+	private final String indentationString;
 
 	private static final int F_NEEDS_LEADING_DELIM = 2;
 	private static final int F_NEEDS_TRAILING_DELIM = 4;
@@ -56,6 +60,7 @@ public final class ImportRewriteAnalyzer {
 	public ImportRewriteAnalyzer(ISourceModule sourceModule, Program root, String[] importOrder,
 			Map<NamespaceDeclaration, Boolean> restoreExistingImports) {
 		this.sourceModule = sourceModule;
+		this.indentationString = createIndentationString(1);
 
 		this.filterImplicitImports = true;
 
@@ -70,6 +75,28 @@ public final class ImportRewriteAnalyzer {
 		} else {
 			initialize(root, null, importOrder, restoreExistingImports);
 		}
+	}
+
+	private String createIndentationString(int indentationUnits) {
+		int tabs = indentationUnits;
+		if (tabs == 0) {
+			return ""; //$NON-NLS-1$
+		}
+		try {
+			IDocument document = new PHPDocumentLoader().createNewStructuredDocument();
+			document.set(sourceModule.getSource());
+
+			char indentationChar = FormatterUtils.getFormatterCommonPreferences().getIndentationChar(document);
+			int indentWidth = FormatterUtils.getFormatterCommonPreferences().getIndentationSize(document);
+
+			StringBuilder buffer = new StringBuilder(tabs * indentWidth);
+			for (int i = 0; i < tabs * indentWidth; i++) {
+				buffer.append(indentationChar);
+			}
+			return buffer.toString();
+		} catch (ModelException e) {
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 	private void initialize(Program root, NamespaceDeclaration namespace, String[] importOrder,
@@ -680,6 +707,9 @@ public final class ImportRewriteAnalyzer {
 	private String getNewImportString(NamespaceDeclaration namespace, String importName, int importType,
 			String lineDelim) {
 		StringBuilder buf = new StringBuilder();
+		if (namespace != null && namespace.isBracketed()) {
+			buf.append(indentationString);
+		}
 		buf.append("use "); //$NON-NLS-1$
 		if (importType == UseStatement.T_FUNCTION) {
 			buf.append("function "); //$NON-NLS-1$
@@ -708,7 +738,7 @@ public final class ImportRewriteAnalyzer {
 				isAfterUseStatements = true;
 			}
 			for (Statement s : statements) {
-				if (s instanceof UseStatement) {
+				if (s instanceof UseStatement || s instanceof InLineHtml) {
 					isAfterUseStatements = true;
 					continue;
 				}
@@ -727,13 +757,7 @@ public final class ImportRewriteAnalyzer {
 	private int getNamespaceNameEndPos(Program root, NamespaceDeclaration namespace) {
 		int flags = this.flags.get(namespace);
 		if (namespace != null) {
-			int offset = 0;
-			if (namespace.getName() == null) {
-				offset = namespace.getBody().getStart();
-			} else {
-				NamespaceName packDecl = namespace.getName();
-				offset = packDecl.getStart() + packDecl.getLength();
-			}
+			int offset = namespace.getBody().getStart() + 1;
 			int afterPackageStatementPos = -1;
 			int lineNumber = root.getLineNumber(offset);
 			if (lineNumber >= 0) {
@@ -763,7 +787,7 @@ public final class ImportRewriteAnalyzer {
 		}
 		flags |= F_NEEDS_TRAILING_DELIM;
 		this.flags.put(namespace, flags);
-		return getPostion(root, 2);
+		return getFirstStatementBeginPos(root, null);
 	}
 
 	private int getPostion(Program root, int line) {
