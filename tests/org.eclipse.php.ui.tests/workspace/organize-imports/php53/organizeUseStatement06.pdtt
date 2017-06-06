@@ -1,0 +1,26 @@
+--TEST--
+Test for import namespace
+--FILE--
+<?php
+namespace name;
+
+use name\ns1\ns1;
+
+new ns1\Bar();
+
+namespace name\ns1\ns1;
+
+class Bar {
+}
+--EXPECT--
+<?php
+namespace name;
+
+use name\ns1\ns1;
+
+new ns1\Bar();
+
+namespace name\ns1\ns1;
+
+class Bar {
+}

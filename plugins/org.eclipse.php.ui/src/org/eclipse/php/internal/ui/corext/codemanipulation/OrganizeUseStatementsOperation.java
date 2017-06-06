@@ -231,13 +231,15 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		public void add(Identifier ref) {
 			NamespaceDeclaration namespace = fRoot.getNamespaceDeclaration(ref.getStart());
 			String typeName = ref.getName();
+			String importName = typeName;
 
 			int index = typeName.indexOf(NamespaceReference.NAMESPACE_DELIMITER);
 			if (index > 0) {
-				typeName = typeName.substring(0, index);
+				importName = typeName.substring(0, index);
+				typeName = typeName.substring(index + 1);
 			}
 
-			if (fImportsAdded.get(namespace) == null || fImportsAdded.get(namespace).contains(typeName)) {
+			if (fImportsAdded.get(namespace) == null || fImportsAdded.get(namespace).contains(importName)) {
 				return;
 			}
 
@@ -254,8 +256,20 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 						if (typeBindingName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 							typeBindingName = typeBindingName.substring(1);
 						}
-						if (!typeBindingName.endsWith(typeName)) {
-							alias = typeName;
+						int indexOfNs = typeBindingName.lastIndexOf(typeName);
+						if (indexOfNs > 0 && !importName.equalsIgnoreCase(typeName)) {
+							typeBindingName = typeBindingName.substring(0, indexOfNs);
+							if (typeBindingName.endsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+								typeBindingName = typeBindingName.substring(0, typeBindingName.length() - 1);
+							}
+						}
+						String lastSeg = typeBindingName;
+						String[] segs = typeBindingName.split("\\\\"); //$NON-NLS-1$
+						if (segs.length > 0) {
+							lastSeg = segs[segs.length - 1];
+						}
+						if (!lastSeg.equalsIgnoreCase(importName)) {
+							alias = importName;
 						}
 					}
 					fImpStructure.addImport(namespace, typeBindingName, alias);
