@@ -1,0 +1,42 @@
+--TEST--
+Test for import namespace as alias
+--FILE--
+<?php
+namespace name;
+
+use name\ns1 as Alias;
+use name\ns1\ns1 as Alias2;
+
+new alias\Foo();
+new alias\ns1\Bar();
+new alias2\Bar();
+
+namespace name\ns1;
+
+class Foo {
+}
+
+namespace name\ns1\ns1;
+
+class Bar {
+}
+--EXPECT--
+<?php
+namespace name;
+
+use name\ns1 as alias;
+use name\ns1\ns1 as alias2;
+
+new alias\Foo();
+new alias\ns1\Bar();
+new alias2\Bar();
+
+namespace name\ns1;
+
+class Foo {
+}
+
+namespace name\ns1\ns1;
+
+class Bar {
+}
