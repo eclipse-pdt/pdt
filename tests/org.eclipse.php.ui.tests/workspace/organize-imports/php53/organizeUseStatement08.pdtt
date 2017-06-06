@@ -1,0 +1,18 @@
+--TEST--
+Bug 517836 - wrong use statement position with inline html
+--FILE0--
+<?php
+namespace bar\baz
+{
+	class Target { function bar_baz(); }
+}
+--FILE--
+<!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<?php
+new Target();
+--EXPECT--
+<!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<?php
+use bar\baz\Target;
+
+new Target();

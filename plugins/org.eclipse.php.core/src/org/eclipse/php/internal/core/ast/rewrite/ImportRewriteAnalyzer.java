@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,14 +26,17 @@ import org.eclipse.dltk.core.IBuffer;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 
 public final class ImportRewriteAnalyzer {
 
@@ -49,6 +53,7 @@ public final class ImportRewriteAnalyzer {
 	private boolean filterImplicitImports;
 
 	private Map<NamespaceDeclaration, Integer> flags = new HashMap<>();
+	private final String indentationString;
 
 	private static final int F_NEEDS_LEADING_DELIM = 2;
 	private static final int F_NEEDS_TRAILING_DELIM = 4;
@@ -56,6 +61,7 @@ public final class ImportRewriteAnalyzer {
 	public ImportRewriteAnalyzer(ISourceModule sourceModule, Program root, String[] importOrder,
 			Map<NamespaceDeclaration, Boolean> restoreExistingImports) {
 		this.sourceModule = sourceModule;
+		this.indentationString = createIndentationString(1);
 
 		this.filterImplicitImports = true;
 
@@ -70,6 +76,27 @@ public final class ImportRewriteAnalyzer {
 		} else {
 			initialize(root, null, importOrder, restoreExistingImports);
 		}
+	}
+
+	private String createIndentationString(int indentationUnits) {
+		int tabs = indentationUnits;
+		if (tabs == 0) {
+			return ""; //$NON-NLS-1$
+		}
+		try {
+			IDocument document = StructuredModelManager.getModelManager()
+					.getModelForRead((IFile) sourceModule.getResource()).getStructuredDocument();
+			char indentationChar = FormatterUtils.getFormatterCommonPreferences().getIndentationChar(document);
+			int indentWidth = FormatterUtils.getFormatterCommonPreferences().getIndentationSize(document);
+
+			StringBuilder buffer = new StringBuilder(tabs * indentWidth);
+			for (int i = 0; i < tabs * indentWidth; i++) {
+				buffer.append(indentationChar);
+			}
+			return buffer.toString();
+		} catch (Exception e) {
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 	private void initialize(Program root, NamespaceDeclaration namespace, String[] importOrder,
@@ -204,7 +231,7 @@ public final class ImportRewriteAnalyzer {
 			// the next line begin offset
 			if (currEndLine < nextOffsetLine) {
 				currEndLine++;
-				nextOffset = getPostion(root, currEndLine);
+				nextOffset = getPosition(root, currEndLine);
 			}
 			currPackage.add(new ImportDeclEntry(name, statementType, null));
 			currOffset = nextOffset;
@@ -255,7 +282,7 @@ public final class ImportRewriteAnalyzer {
 			// the next line begin offset
 			if (currEndLine < nextOffsetLine) {
 				currEndLine++;
-				nextOffset = getPostion(root, currEndLine);
+				nextOffset = getPosition(root, currEndLine);
 			}
 			currPackage.add(new ImportDeclEntry(name, statementType, new Region(currOffset, nextOffset - currOffset)));
 			currOffset = nextOffset;
@@ -263,7 +290,7 @@ public final class ImportRewriteAnalyzer {
 
 			// add a comment entry for spacing between imports
 			if (currEndLine < nextOffsetLine) {
-				nextOffset = getPostion(root, nextOffsetLine);
+				nextOffset = getPosition(root, nextOffsetLine);
 
 				currPackage = new PackageEntry(); // create a comment package
 				// entry for this
@@ -524,7 +551,7 @@ public final class ImportRewriteAnalyzer {
 			int endPos = root.getExtendedStartPosition(last) + root.getExtendedLength(last);
 			int endLine = root.getLineNumber(endPos);
 			if (endLine > 0) {
-				int nextLinePos = getPostion(root, endLine + 1);
+				int nextLinePos = getPosition(root, endLine + 1);
 				if (nextLinePos >= 0) {
 					int firstStatementPos = getFirstStatementBeginPos(root, namespace);
 					if (firstStatementPos != -1 && firstStatementPos < nextLinePos) {
@@ -680,6 +707,9 @@ public final class ImportRewriteAnalyzer {
 	private String getNewImportString(NamespaceDeclaration namespace, String importName, int importType,
 			String lineDelim) {
 		StringBuilder buf = new StringBuilder();
+		if (namespace != null && namespace.isBracketed()) {
+			buf.append(indentationString);
+		}
 		buf.append("use "); //$NON-NLS-1$
 		if (importType == UseStatement.T_FUNCTION) {
 			buf.append("function "); //$NON-NLS-1$
@@ -708,7 +738,7 @@ public final class ImportRewriteAnalyzer {
 				isAfterUseStatements = true;
 			}
 			for (Statement s : statements) {
-				if (s instanceof UseStatement) {
+				if (s instanceof UseStatement || s instanceof InLineHtml) {
 					isAfterUseStatements = true;
 					continue;
 				}
@@ -727,18 +757,12 @@ public final class ImportRewriteAnalyzer {
 	private int getNamespaceNameEndPos(Program root, NamespaceDeclaration namespace) {
 		int flags = this.flags.get(namespace);
 		if (namespace != null) {
-			int offset = 0;
-			if (namespace.getName() == null) {
-				offset = namespace.getBody().getStart();
-			} else {
-				NamespaceName packDecl = namespace.getName();
-				offset = packDecl.getStart() + packDecl.getLength();
-			}
+			int offset = namespace.getBody().getStart() + 1;
 			int afterPackageStatementPos = -1;
 			int lineNumber = root.getLineNumber(offset);
 			if (lineNumber >= 0) {
 				int lineAfterPackage = lineNumber + 1;
-				afterPackageStatementPos = getPostion(root, lineAfterPackage);
+				afterPackageStatementPos = getPosition(root, lineAfterPackage);
 			}
 			if (afterPackageStatementPos < 0) {
 				flags |= F_NEEDS_LEADING_DELIM;
@@ -763,14 +787,14 @@ public final class ImportRewriteAnalyzer {
 		}
 		flags |= F_NEEDS_TRAILING_DELIM;
 		this.flags.put(namespace, flags);
-		return getPostion(root, 2);
+		return getFirstStatementBeginPos(root, null);
 	}
 
-	private int getPostion(Program root, int line) {
-		return getPostion(root, line, 0);
+	private int getPosition(Program root, int line) {
+		return getPosition(root, line, 0);
 	}
 
-	private int getPostion(Program root, int line, int column) {
+	private int getPosition(Program root, int line, int column) {
 		return root.getPosition(line, column) - 1;
 	}
 

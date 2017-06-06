@@ -1,0 +1,18 @@
+--TEST--
+Bug 517836 - incorrect indentation for braketed namespace
+--FILE--
+<?php
+namespace name {
+
+	new Exception();
+}
+?>
+--EXPECT--
+<?php
+namespace name {
+
+	use Exception;
+
+	new Exception();
+}
+?>

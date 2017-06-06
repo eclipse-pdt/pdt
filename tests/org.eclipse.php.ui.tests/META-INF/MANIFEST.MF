@@ -22,3 +22,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Eclipse PDT
 Export-Package: org.eclipse.php.ui.tests
+Import-Package: org.eclipse.php.formatter.ui.preferences

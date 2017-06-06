@@ -16,6 +16,8 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -26,7 +28,8 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
@@ -37,8 +40,11 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
+import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
+import org.eclipse.php.formatter.ui.preferences.ProfileManager;
+import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
+import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.internal.ui.actions.OrganizeUseStatementsAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPTestEditor;
@@ -69,6 +75,8 @@ public class OrganizeUseStatementsActionTests {
 	protected IFile[] otherFiles = new IFile[0];
 	protected PHPVersion phpVersion;
 	protected PHPStructuredEditor fEditor;
+	protected IScopeContext scopeContext;
+	protected ProfileManager profileManager;
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
@@ -89,16 +97,33 @@ public class OrganizeUseStatementsActionTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
-		// set auto insert to true,if there are only one proposal in the CA,it
-		// will insert the proposal,so we can test CA without UI interaction
-		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		project = TestUtils.createProject("OrganizeUseStatements_" + this.phpVersion);
+
+		Map<String, Object> settings = new HashMap<>();
+		settings.put("indentationChar", "\t");
+		settings.put(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE, "1");
+		CustomProfile profile = new CustomProfile("test", settings);
+		scopeContext = InstanceScope.INSTANCE;
+		profileManager = new ProfileManager(new ArrayList<Profile>(), scopeContext);
+		profileManager.addProfile(profile);
+		profileManager.setSelected(profile);
+		profileManager.commitChanges(scopeContext);
+
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
+		setDefaultFormatter(scopeContext, profileManager);
 		TestUtils.deleteProject(project);
+	}
+
+	private static void setDefaultFormatter(IScopeContext scopeContext, ProfileManager profileManager) {
+		profileManager.clearAllSettings(scopeContext);
+		if (profileManager.getSelected().getID() != PHPDefaultFormatterPreferences.ID) {
+			profileManager.setSelected(profileManager.getProfile(PHPDefaultFormatterPreferences.ID));
+		}
+		profileManager.commitChanges(scopeContext);
 	}
 
 	@After
@@ -125,6 +150,7 @@ public class OrganizeUseStatementsActionTests {
 			@Override
 			public void run() {
 				try {
+
 					createFile(pdttFile.getFile(), Long.toString(System.currentTimeMillis()),
 							prepareOtherStreams(pdttFile));
 					openEditor();
