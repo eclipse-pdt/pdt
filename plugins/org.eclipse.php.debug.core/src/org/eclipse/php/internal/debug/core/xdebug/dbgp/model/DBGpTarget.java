@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,11 +50,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
@@ -725,8 +721,7 @@ public class DBGpTarget extends DBGpElement
 			session = null;
 			if (hasState(STATE_TERMINATING)) {
 				// we are terminating, if we are a web launch, we need to issue
-				// the
-				// stop URL, then terminate the debug target.
+				// the stop URL, then terminate the debug target.
 				if (isWebLaunch() && !isMultiSessionManaged()) {
 					sendStopDebugURL();
 				}
@@ -789,9 +784,13 @@ public class DBGpTarget extends DBGpElement
 		// check we haven't already terminated
 		if (!hasState(STATE_TERMINATED)) {
 			DBGpSessionHandler.getInstance().removeSessionListener(this);
-			IBreakpointManager bpmgr = DebugPlugin.getDefault().getBreakpointManager();
-			bpmgr.removeBreakpointListener(this);
-			bpmgr.removeBreakpointManagerListener(this);
+			if (DebugPlugin.getDefault() != null) {
+				// remove the listeners (when eclipse and DebugPlugin are NOT
+				// shutting down) ...
+				IBreakpointManager bpmgr = DebugPlugin.getDefault().getBreakpointManager();
+				bpmgr.removeBreakpointListener(this);
+				bpmgr.removeBreakpointManagerListener(this);
+			}
 
 			if (isTerminate && hasState(STATE_STARTED_RUNNING)) {
 				setState(STATE_TERMINATING);
@@ -820,11 +819,17 @@ public class DBGpTarget extends DBGpElement
 			if (session != null) {
 				session.endSession();
 			}
-			if (langThread != null) {
+			if (langThread != null && DebugPlugin.getDefault() != null) {
+				// eclipse and DebugPlugin are NOT shutting down, we can fire
+				// the event...
 				langThread.fireTerminateEvent();
 			}
 			stepping = false;
-			fireTerminateEvent();
+			if (DebugPlugin.getDefault() != null) {
+				// eclipse and DebugPlugin are NOT shutting down, we can fire
+				// the event...
+				fireTerminateEvent();
+			}
 		}
 		if (!isMultiSessionManaged())
 			// Terminate corresponding launch if target is not multi-session
@@ -1286,8 +1291,7 @@ public class DBGpTarget extends DBGpElement
 	 * @throws DebugException
 	 */
 	private IStackFrame mergeFrame(DBGpStackFrame previous, DBGpStackFrame incoming) throws DebugException {
-		if (previous.getThread() == incoming.getThread()
-				&& previous.getName().equals(incoming.getName())
+		if (previous.getThread() == incoming.getThread() && previous.getName().equals(incoming.getName())
 				&& previous.getStackLevel().equals(incoming.getStackLevel())
 				&& previous.getSourceName().equals(incoming.getSourceName())
 				&& previous.getQualifiedFile().equals(incoming.getQualifiedFile())) {
