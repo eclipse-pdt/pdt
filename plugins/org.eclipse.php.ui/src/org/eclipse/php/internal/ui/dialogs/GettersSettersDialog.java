@@ -19,10 +19,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.*;
@@ -42,13 +39,14 @@ import org.eclipse.ui.editors.text.TextEditor;
 
 public class GettersSettersDialog extends PHPSourceActionDialog {
 
+	private static final String SETTINGS_SORT_ORDER = "GettersSettersDialog.sortorder"; //$NON-NLS-1$
+
 	private static final int SELECT_GETTERS_ID = IDialogConstants.CLIENT_ID + 1;
 	private static final int SELECT_SETTERS_ID = IDialogConstants.CLIENT_ID + 2;
 
 	private SettersForFinalFieldsFilter fSettersForFinalFieldsFilter;
 	private ConstantFieldsFilter fConstantFieldFilter;
-
-	private boolean fSortOrder = true;
+	private boolean fSortOrder;
 
 	public GettersSettersDialog(Shell parent, ILabelProvider labelProvider,
 			GettersSettersContentProvider contentProvider, IType textSelection, TextEditor editor) {
@@ -186,6 +184,19 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 				getTreeViewer().refresh();
 			}
 		}
+	}
+
+	@Override
+	protected void restoreWidgetsValue(IMethod[] methods) throws ModelException {
+		super.restoreWidgetsValue(methods);
+		fSortOrder = asBoolean(fSettings.get(SETTINGS_SORT_ORDER), true);
+	}
+
+	@Override
+	public boolean close() {
+		boolean close = super.close();
+		fSettings.put(SETTINGS_SORT_ORDER, getSortOrder());
+		return close;
 	}
 
 	private static class SettersForFinalFieldsFilter extends ViewerFilter {
