@@ -139,10 +139,7 @@ public class PHPRuntimeComposite extends Composite {
 		combo.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int sel = combo.getSelectionIndex();
-				PHPexeItem item = installedExecutables.get(sel);
-				runtime.setExecutableInstall(item);
-				runtimeWC.setLocation(new Path(item.getExecutable().getParent()));
+				updateRuntime();
 				validate();
 			}
 
@@ -164,6 +161,7 @@ public class PHPRuntimeComposite extends Composite {
 					if (combo.getSelectionIndex() == -1) {
 						combo.select(0);
 					}
+					updateRuntime();
 					validate();
 				}
 			}
@@ -177,6 +175,13 @@ public class PHPRuntimeComposite extends Composite {
 		name.forceFocus();
 	}
 
+	private void updateRuntime() {
+		int sel = combo.getSelectionIndex();
+		PHPexeItem item = installedExecutables.get(sel);
+		runtime.setExecutableInstall(item);
+		runtimeWC.setLocation(new Path(item.getExecutable().getParent()));
+	}
+	
 	protected void updateExecutables() {
 		// get all installed CLI executables
 		installedExecutables = new ArrayList<>();
