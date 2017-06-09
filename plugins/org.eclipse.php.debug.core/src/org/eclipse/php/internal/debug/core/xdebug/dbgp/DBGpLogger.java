@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 /**
@@ -75,7 +73,7 @@ public class DBGpLogger {
 	}
 
 	public static void logException(String info, Object obj, Throwable exc) {
-		ILog theLog = PHPDebugPlugin.getDefault().getLog();
+		ILog theLog = PHPDebugPlugin.getDefault() != null ? PHPDebugPlugin.getDefault().getLog() : null;
 		StringBuilder msg = new StringBuilder();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
@@ -88,17 +86,12 @@ public class DBGpLogger {
 		if (exc != null) {
 			debugException(exc);
 		}
-		/*
-		 * IStatus stat = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-		 * IStatus.ERROR, msg.toString(), exc); theLog.log(stat);
-		 */
-		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(bs);
-		if (exc != null) {
-			exc.printStackTrace(ps);
+		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID, IStatus.ERROR, msg.toString(), exc);
+		if (theLog != null) {
+			theLog.log(stat);
+		} else {
+			Logger.log(IStatus.ERROR, msg.toString(), exc);
 		}
-		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID, IStatus.ERROR, msg + "\n" + bs.toString(), null); //$NON-NLS-1$
-		theLog.log(stat);
 	}
 
 	/**
@@ -166,7 +159,7 @@ public class DBGpLogger {
 	 * @param type type of log message, ERROR, WARNING,INFO
 	 */
 	private static void doLog(String info, Object obj, Throwable exc, int type) {
-		ILog theLog = PHPDebugPlugin.getDefault().getLog();
+		ILog theLog = PHPDebugPlugin.getDefault() != null ? PHPDebugPlugin.getDefault().getLog() : null;
 		StringBuffer msg = new StringBuffer();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
@@ -186,6 +179,10 @@ public class DBGpLogger {
 		if (exc != null) {
 			debugException(exc);
 		}
-		theLog.log(stat);
+		if (theLog != null) {
+			theLog.log(stat);
+		} else {
+			Logger.log(type, msg.toString(), exc);
+		}
 	}
 }
