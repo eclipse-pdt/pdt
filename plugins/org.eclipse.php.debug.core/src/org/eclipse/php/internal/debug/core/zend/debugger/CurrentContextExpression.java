@@ -22,11 +22,9 @@ import org.eclipse.php.internal.debug.core.model.VariablesUtil;
  */
 public class CurrentContextExpression extends DefaultExpression {
 
-	private final static String GET_EXTENDED_CONTEXT = "eval('if (isset($this)) {$this;}; " //$NON-NLS-1$
-			+ "if (array_key_exists(\\'class\\', debug_backtrace(0, 1)[0])) " //$NON-NLS-1$
-			+ "{ return array_merge(get_defined_vars(), array(get_called_class())); } " //$NON-NLS-1$
-			+ "else " //$NON-NLS-1$
-			+ "{ return array_merge(get_defined_vars(), array(false)); }')"; //$NON-NLS-1$
+	private final static String GET_EXTENDED_CONTEXT = "eval('if (isset($this)) { " + // $NON-NLS-1$
+			"return array_merge(array(\\'this\\' => $this), get_defined_vars(), array(get_called_class())); } " + // $NON-NLS-1$
+			"else { return array_merge(get_defined_vars(), array(false)); }; ');";// $NON-NLS-1$
 
 	private final static String GET_CONTEXT = "eval('if (isset($this)) {$this;}; " // $NON-NLS-1$
 			+ "return array_merge(get_defined_vars(), array(false));')"; // $NON-NLS-1$
