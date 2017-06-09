@@ -32,7 +32,8 @@ public class RepositoryFactory {
 			return new PearRepository();
 		}
 
-		return null;
+		return new Repository(type) {
+		};
 	}
 
 	public static Type getType(String type) {
