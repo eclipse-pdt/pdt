@@ -260,7 +260,7 @@ public final class ImportRewriteAnalyzer {
 		PackageEntry currPackage = null;
 
 		UseStatement curr = decls.get(0);
-		int currOffset = curr.getStart();
+		int currOffset = getUseStatementStart(namespace, curr);
 		int currLength = curr.getLength();
 		int currEndLine = root.getLineNumber(currOffset + currLength);
 
@@ -274,7 +274,7 @@ public final class ImportRewriteAnalyzer {
 			}
 
 			UseStatement next = decls.get(i);
-			int nextOffset = next.getStart();
+			int nextOffset = getUseStatementStart(namespace, next);
 			int nextLength = next.getLength();
 			int nextOffsetLine = root.getLineNumber(nextOffset + 1);
 
@@ -310,9 +310,18 @@ public final class ImportRewriteAnalyzer {
 			currPackage = new PackageEntry(packName, null);
 			this.packageEntries.get(namespace).add(currPackage);
 		}
+		int start = getUseStatementStart(namespace, curr);
 		int length = this.replaceRange.get(namespace).getOffset() + this.replaceRange.get(namespace).getLength()
-				- curr.getStart();
-		currPackage.add(new ImportDeclEntry(name, statementType, new Region(curr.getStart(), length)));
+				- start;
+		currPackage.add(new ImportDeclEntry(name, statementType, new Region(start, length)));
+	}
+
+	private int getUseStatementStart(NamespaceDeclaration namespace, UseStatement statement) {
+		if (namespace != null && namespace.isBracketed()) {
+			Program root = statement.getProgramRoot();
+			return getPosition(root, root.getLineNumber(statement.getStart()));
+		}
+		return statement.getStart();
 	}
 
 	/**
@@ -547,7 +556,7 @@ public final class ImportRewriteAnalyzer {
 			UseStatement first = imports.get(0);
 			UseStatement last = imports.get(imports.size() - 1);
 
-			int startPos = first.getStart();
+			int startPos = getUseStatementStart(namespace, first);
 			int endPos = root.getExtendedStartPosition(last) + root.getExtendedLength(last);
 			int endLine = root.getLineNumber(endPos);
 			if (endLine > 0) {
