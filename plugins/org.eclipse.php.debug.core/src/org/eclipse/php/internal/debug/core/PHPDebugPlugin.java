@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2014, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
+import org.osgi.framework.SynchronousBundleListener;
 
 /**
  * The PHP Debug plug-in class.
@@ -82,7 +83,7 @@ public class PHPDebugPlugin extends Plugin {
 							perform();
 						} catch (Exception e) {
 							Logger.logException(MessageFormat.format(
-									"Errors occurred while performing ''{0}'' bundle post startup.", //$NON-NLS-1$
+									"Errors occurred while performing ''{0}'' bundle post-startup.", //$NON-NLS-1$
 									ID), e);
 						} finally {
 							// Unregister itself from listeners
@@ -112,6 +113,26 @@ public class PHPDebugPlugin extends Plugin {
 			DBGpProxyHandlersManager.INSTANCE.startup();
 		}
 
+	}
+
+	private class PreStop implements SynchronousBundleListener {
+
+		@Override
+		public void bundleChanged(BundleEvent event) {
+			if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STOPPING) {
+				try {
+					PHPDebugPlugin.this.stopping(getBundle().getBundleContext());
+				} catch (Exception e) {
+					Logger.logException(
+							MessageFormat.format("Errors occurred while performing ''{0}'' bundle pre-stop.", //$NON-NLS-1$
+									ID),
+							e);
+				} finally {
+					// Unregister itself from listeners
+					getBundle().getBundleContext().removeBundleListener(PreStop.this);
+				}
+			}
+		}
 	}
 
 	private static class ExtDirSupport {
@@ -249,6 +270,7 @@ public class PHPDebugPlugin extends Plugin {
 	public PHPDebugPlugin() {
 		plugin = this;
 		getBundle().getBundleContext().addBundleListener(new PostStart());
+		getBundle().getBundleContext().addBundleListener(new PreStop());
 	}
 
 	public static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.php.debug.core/debug")) //$NON-NLS-1$
@@ -263,13 +285,19 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	/**
-	 * This method is called when the plug-in is stopped
+	 * This method should be called when the plug-in is about to be stopped
 	 */
-	public void stop(BundleContext context) throws Exception {
+	public void stopping(BundleContext context) throws Exception {
 		XDebugLaunchListener.shutdown();
 		DBGpProxyHandlersManager.INSTANCE.shutdown();
 		InstanceScope.INSTANCE.getNode(ID).flush();
 		DebuggerSettingsManager.INSTANCE.shutdown();
+	}
+
+	/**
+	 * This method is called when the plug-in is stopped
+	 */
+	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
 		DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
