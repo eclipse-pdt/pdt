@@ -440,8 +440,10 @@ public class DBGpMultiSessionTarget extends DBGpElement
 			sendStopDebugURL();
 		}
 		targetState = STATE_TERMINATED;
-		DebugPlugin.getDefault().removeDebugEventListener(this);
-		fireTerminateEvent();
+		if (DebugPlugin.getDefault() != null) {
+			DebugPlugin.getDefault().removeDebugEventListener(this);
+			fireTerminateEvent();
+		}
 		// Terminate corresponding launch as well
 		try {
 			getLaunch().terminate();
