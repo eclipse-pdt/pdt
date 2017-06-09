@@ -75,6 +75,9 @@ public class DBGpLogger {
 	}
 
 	public static void logException(String info, Object obj, Throwable exc) {
+		if (PHPDebugPlugin.getDefault() == null) {
+			return;
+		}
 		ILog theLog = PHPDebugPlugin.getDefault().getLog();
 		StringBuilder msg = new StringBuilder();
 		if (obj != null) {
@@ -166,6 +169,9 @@ public class DBGpLogger {
 	 * @param type type of log message, ERROR, WARNING,INFO
 	 */
 	private static void doLog(String info, Object obj, Throwable exc, int type) {
+		if (PHPDebugPlugin.getDefault() == null) {
+			return;
+		}
 		ILog theLog = PHPDebugPlugin.getDefault().getLog();
 		StringBuffer msg = new StringBuffer();
 		if (obj != null) {

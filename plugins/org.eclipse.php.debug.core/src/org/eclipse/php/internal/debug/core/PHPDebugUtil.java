@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Zend Technologies and others.
+ * Copyright (c) 2015, 2017 Zend Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -55,7 +59,35 @@ public final class PHPDebugUtil {
 	 * @throws MalformedURLException
 	 */
 	public static void openLaunchURL(final String launchURL) throws DebugException {
+		// If no display is available, it means eclipse is shutting down,
+		// try then to call the URL in a non-graphical way
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517792
+		if (PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+			try {
+				URL url = new URL(launchURL);
+				URLConnection con = url.openConnection();
+				// Set the connection timeout to 5 seconds and the read timeout
+				// to 5 seconds
+				con.setConnectTimeout(5000);
+				con.setReadTimeout(5000);
+				InputStream is = con.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				while (reader.readLine() != null) {
+				}
+				reader.close();
+			} catch (Throwable t) {
+				Logger.logException(MessageFormat.format("Error initializing the connection for debug/launch URL: {0}", //$NON-NLS-1$
+						launchURL), t);
+				String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+						IPHPDebugConstants.INTERNAL_ERROR, errorMessage, t));
+			}
+
+			return;
+		}
+
 		final SyncObject<DebugException> e = new SyncObject<DebugException>();
+
 		// Run synchronously to pass exception if any
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
