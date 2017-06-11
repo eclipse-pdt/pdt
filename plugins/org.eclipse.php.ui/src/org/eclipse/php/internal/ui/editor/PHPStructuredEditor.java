@@ -3292,7 +3292,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			protected IStatus run(IProgressMonitor monitor) {
 				Program astRoot = null;
 				try {
-					astRoot = SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_ACTIVE_ONLY,
+					astRoot = SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_NO,
 							new NullProgressMonitor());
 				} catch (ModelException e) {
 					Logger.logException(e);
