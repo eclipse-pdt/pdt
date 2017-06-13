@@ -4,10 +4,8 @@ Test organize use statements for function and const
 <?php
 namespace ns1;
 
-echo TEST;
-echo E_ALL;
-func();
-var_dump();
+use const ns2\TEST as CONSTANT_ALIAS;
+use function ns2\func as func_alias;
 
 namespace ns2;
 
@@ -21,13 +19,6 @@ function func() {
 <?php
 namespace ns1;
 
-use const ns2\TEST;
-use function ns2\func;
-
-echo TEST;
-echo E_ALL;
-func();
-var_dump();
 
 namespace ns2;
 

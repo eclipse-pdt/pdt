@@ -24,10 +24,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.BindingUtility;
-import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.PHPCachedTypeInferencer;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.*;
 
 /**
  * @author Roy, 2008 TODO : caching is a must have for this resolver
@@ -295,7 +292,13 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (name.getParent() instanceof Variable) {
 			return resolveVariable((Variable) name.getParent());
 		}
-		return resolveExpressionType(name);
+		IBinding binding = resolveExpressionType(name);
+		if (binding instanceof ITypeBinding) {
+			if (((ITypeBinding) binding).getEvaluatedType() instanceof PHPNamespaceConstantType) {
+				return resolveField(name);
+			}
+		}
+		return binding;
 	}
 
 	private FunctionName getFunctionName(Identifier name) {
@@ -542,6 +545,38 @@ public class DefaultBindingResolver extends BindingResolver {
 		final Identifier constName = constantAccess.getConstant();
 		final ITypeBinding type = constantAccess.getClassName().resolveTypeBinding();
 		return Bindings.findFieldInHierarchy(type, constName.getName());
+	}
+
+	@Override
+	IVariableBinding resolveField(Scalar scalar) {
+		try {
+			IModelElement[] modelElements = sourceModule.codeSelect(scalar.getStart(), scalar.getLength());
+			if (modelElements != null && modelElements.length > 0) {
+				for (IModelElement element : modelElements) {
+					if (element.getElementType() == IModelElement.FIELD) {
+						return new VariableBinding(this, (IField) element);
+					}
+				}
+			}
+		} catch (ModelException e) {
+		}
+		return null;
+	}
+
+	@Override
+	IVariableBinding resolveField(Identifier name) {
+		try {
+			IModelElement[] modelElements = sourceModule.codeSelect(name.getStart(), name.getLength());
+			if (modelElements != null && modelElements.length > 0) {
+				for (IModelElement element : modelElements) {
+					if (element.getElementType() == IModelElement.FIELD) {
+						return new VariableBinding(this, (IField) element);
+					}
+				}
+			}
+		} catch (ModelException e) {
+		}
+		return null;
 	}
 
 	/*

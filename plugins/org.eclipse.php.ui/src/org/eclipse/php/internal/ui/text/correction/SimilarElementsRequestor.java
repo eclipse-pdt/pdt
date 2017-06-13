@@ -28,6 +28,8 @@ public class SimilarElementsRequestor extends CompletionRequestor {
 
 	public static final int CLASSES = 1 << 1;
 	public static final int INTERFACES = 1 << 2;
+	public static final int FUNCTIONS = 1 << 3;
+	public static final int CONSTANTS = 1 << 4;
 	public static final int REF_TYPES = CLASSES | INTERFACES;
 	public static final int ALL_TYPES = REF_TYPES;
 
@@ -74,7 +76,7 @@ public class SimilarElementsRequestor extends CompletionRequestor {
 		fName = name;
 		fKind = kind;
 
-		fResult = new HashSet<SimilarElement>();
+		fResult = new HashSet<>();
 	}
 
 	private void addResult(SimilarElement elem) {

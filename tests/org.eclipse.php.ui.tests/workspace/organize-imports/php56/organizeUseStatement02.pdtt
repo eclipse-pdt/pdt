@@ -1,0 +1,50 @@
+--TEST--
+Test organize use statements for function and const
+--FILE--
+<?php
+namespace ns1;
+
+use ns2;
+use ns3;
+use ns2 as alias2;
+use ns3 as alias3;
+
+echo ns2\TEST;
+echo alias2\TEST;
+ns3\func();
+alias3\func();
+
+namespace ns2;
+
+const TEST = 1;
+
+namespace ns3;
+
+function func() {
+}
+
+?>
+--EXPECT--
+<?php
+namespace ns1;
+
+use ns2;
+use ns2 as alias2;
+use ns3;
+use ns3 as alias3;
+
+echo ns2\TEST;
+echo alias2\TEST;
+ns3\func();
+alias3\func();
+
+namespace ns2;
+
+const TEST = 1;
+
+namespace ns3;
+
+function func() {
+}
+
+?>

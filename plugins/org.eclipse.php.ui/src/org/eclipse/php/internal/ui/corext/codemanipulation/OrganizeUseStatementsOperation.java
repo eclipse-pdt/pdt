@@ -13,7 +13,9 @@ package org.eclipse.php.internal.ui.corext.codemanipulation;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -25,6 +27,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.manipulation.SourceModuleChange;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.MethodNameMatch;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.core.search.TypeNameMatch;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
@@ -36,10 +39,12 @@ import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite.ImportRewriteContext;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
-import org.eclipse.php.internal.core.search.PHPSearchTypeNameMatch;
+import org.eclipse.php.internal.core.search.*;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.corext.util.FieldNameMatchCollector;
 import org.eclipse.php.internal.ui.corext.util.Messages;
+import org.eclipse.php.internal.ui.corext.util.MethodNameMatchCollector;
 import org.eclipse.php.internal.ui.corext.util.TypeNameMatchCollector;
 import org.eclipse.php.internal.ui.text.correction.ASTResolving;
 import org.eclipse.php.internal.ui.text.correction.ProblemLocation;
@@ -56,27 +61,30 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		 * @param openChoices
 		 *            From each array, a type reference has to be selected
 		 * @param ranges
-		 *            For each choice the range of the corresponding type
-		 *            reference.
-		 * @return Returns <code>null</code> to cancel the operation, or the
-		 *         selected imports.
+		 *            For each choice the range of the corresponding type reference.
+		 * @return Returns <code>null</code> to cancel the operation, or the selected
+		 *         imports.
 		 */
-		TypeNameMatch[] chooseImports(TypeNameMatch[][] openChoices, ISourceRange[] ranges);
+		IElementNameMatch[] chooseImports(IElementNameMatch[][] openChoices, ISourceRange[] ranges);
 	}
 
 	private static class UnresolvableImportMatcher {
+		private static final char FUNCTION_PREFIX = 'f';
+		private static final char CONSTANT_PREFIX = 'c';
+		private static final char NORMAL_PREFIX = 'n';
+
 		static UnresolvableImportMatcher forProgram(Program cu) {
-			Map<NamespaceDeclaration, Map<String, Set<String>>> typeImportsBySimpleName = new HashMap<>();
+			Map<NamespaceDeclaration, Map<String, Set<String>>> elementImportsBySimpleName = new HashMap<>();
 			List<NamespaceDeclaration> namespaces = cu.getNamespaceDeclarations();
 			if (namespaces.size() > 0) {
 				for (NamespaceDeclaration namespace : namespaces) {
-					forProgram(cu, namespace, typeImportsBySimpleName);
+					forProgram(cu, namespace, elementImportsBySimpleName);
 				}
 			} else {
-				forProgram(cu, null, typeImportsBySimpleName);
+				forProgram(cu, null, elementImportsBySimpleName);
 			}
 
-			return new UnresolvableImportMatcher(typeImportsBySimpleName);
+			return new UnresolvableImportMatcher(elementImportsBySimpleName);
 		}
 
 		private static void forProgram(Program cu, NamespaceDeclaration namespace,
@@ -84,7 +92,14 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			typeImportsBySimpleName.put(namespace, new HashMap<>());
 			Collection<UseStatement> unresolvableImports = determineUnresolvableImports(cu, namespace);
 			for (UseStatement importDeclaration : unresolvableImports) {
+				char prefix = NORMAL_PREFIX;
+				if (importDeclaration.getStatementType() == UseStatement.T_FUNCTION) {
+					prefix = FUNCTION_PREFIX;
+				} else if (importDeclaration.getStatementType() == UseStatement.T_CONST) {
+					prefix = CONSTANT_PREFIX;
+				}
 				for (UseStatementPart part : importDeclaration.parts()) {
+
 					String qualifiedName = part.getName().getName();
 
 					String simpleName = qualifiedName
@@ -97,7 +112,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 						importsBySimpleName.put(simpleName, importsWithSimpleName);
 					}
 
-					importsWithSimpleName.add(qualifiedName);
+					importsWithSimpleName.add(prefix + qualifiedName);
 				}
 			}
 		}
@@ -111,7 +126,8 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				IProblemIdentifier id = ((DefaultProblem) problem).getID();
 				if (id == PHPProblemIdentifier.ImportNotFound) {
 					UseStatement problematicImport = getProblematicImport(problem, program);
-					if (problematicImport != null) {
+					if (problematicImport != null
+							&& program.getNamespaceDeclaration(problematicImport.getStart()) == namespaceDeclaration) {
 						unresolvableImports.add(problematicImport);
 					}
 				}
@@ -128,56 +144,53 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			return null;
 		}
 
-		private final Map<NamespaceDeclaration, Map<String, Set<String>>> fTypeImportsBySimpleName;
+		private final Map<NamespaceDeclaration, Map<String, Set<String>>> fElementImportsBySimpleName;
 
-		private UnresolvableImportMatcher(Map<NamespaceDeclaration, Map<String, Set<String>>> typeImportsBySimpleName) {
-			fTypeImportsBySimpleName = typeImportsBySimpleName;
+		private UnresolvableImportMatcher(
+				Map<NamespaceDeclaration, Map<String, Set<String>>> elementImportsBySimpleName) {
+			fElementImportsBySimpleName = elementImportsBySimpleName;
 		}
 
 		private Set<String> matchImports(NamespaceDeclaration namespace, String simpleName) {
-			Map<String, Set<String>> importsBySimpleName = fTypeImportsBySimpleName.get(namespace);
+			Map<String, Set<String>> importsBySimpleName = fElementImportsBySimpleName.get(namespace);
 
 			Set<String> matchingSingleImports = importsBySimpleName.get(simpleName);
 			if (matchingSingleImports != null) {
 				return Collections.unmodifiableSet(matchingSingleImports);
 			}
 
-			Set<String> matchingOnDemandImports = importsBySimpleName.get("*"); //$NON-NLS-1$
-			if (matchingOnDemandImports != null) {
-				return Collections.unmodifiableSet(matchingOnDemandImports);
-			}
-
 			return Collections.emptySet();
 		}
 
-		Set<String> matchTypeImports(NamespaceDeclaration namespace, String simpleName) {
+		Set<String> matchElementImports(NamespaceDeclaration namespace, String simpleName) {
 			return matchImports(namespace, simpleName);
 		}
 	}
 
-	private static class TypeReferenceProcessor {
+	private static class ElementReferenceProcessor {
 
-		private static class UnresolvedTypeData {
-			final Identifier ref;
+		private static class UnresolvedElementData {
+			final ASTNode ref;
 			final int typeKinds;
-			final List<TypeNameMatch> foundInfos;
+			final List<IElementNameMatch> foundElementInfos;
 
-			public UnresolvedTypeData(Identifier ref) {
+			public UnresolvedElementData(ASTNode ref) {
 				this.ref = ref;
-				this.typeKinds = ASTResolving.getPossibleTypeKinds(ref);
-				this.foundInfos = new ArrayList<>(3);
+				this.typeKinds = ASTResolving.getPossibleElementKinds(ref);
+				this.foundElementInfos = new ArrayList<>(3);
 			}
 
-			public void addInfo(TypeNameMatch info) {
-				for (int i = this.foundInfos.size() - 1; i >= 0; i--) {
-					TypeNameMatch curr = this.foundInfos.get(i);
-					if (curr.getTypeContainerName().equals(info.getTypeContainerName())) {
+			public void addInfo(IElementNameMatch info) {
+				for (int i = this.foundElementInfos.size() - 1; i >= 0; i--) {
+					IElementNameMatch curr = this.foundElementInfos.get(i);
+					if (curr.getContainerName().equals(info.getContainerName())) {
 						return; // not added. already contains type with same
 								// name
 					}
 				}
-				foundInfos.add(info);
+				foundElementInfos.add(info);
 			}
+
 		}
 
 		private Map<NamespaceDeclaration, Set<String>> fOldSingleImports;
@@ -189,15 +202,14 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		// private IPackageFragment fCurrPackage;
 		//
 		// private ScopeAnalyzer fAnalyzer;
-		private boolean fAllowDefaultPackageImports;
 
-		private Map<NamespaceDeclaration, Map<String, UnresolvedTypeData>> fUnresolvedTypes = new HashMap<>();
+		private Map<NamespaceDeclaration, Map<String, UnresolvedElementData>> fUnresolvedTypes = new HashMap<>();
 		private Map<NamespaceDeclaration, Set<String>> fImportsAdded = new HashMap<>();
-		private Map<NamespaceDeclaration, TypeNameMatch[][]> fOpenChoices = new HashMap<>();
+		private Map<NamespaceDeclaration, IElementNameMatch[][]> fOpenChoices = new HashMap<>();
 		private Map<NamespaceDeclaration, SourceRange[]> fSourceRanges = new HashMap<>();
 		private Program fRoot;
 
-		public TypeReferenceProcessor(Map<NamespaceDeclaration, Set<String>> oldSingleImports, Program root,
+		public ElementReferenceProcessor(Map<NamespaceDeclaration, Set<String>> oldSingleImports, Program root,
 				ImportRewrite impStructure, UnresolvableImportMatcher unresolvableImportMatcher) {
 			fRoot = root;
 			fOldSingleImports = oldSingleImports;
@@ -207,8 +219,6 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			// fAnalyzer= new ScopeAnalyzer(root);
 			//
 			// fCurrPackage= (IPackageFragment) cu.getParent()
-
-			fAllowDefaultPackageImports = true;
 
 			List<NamespaceDeclaration> namespaces = root.getNamespaceDeclarations();
 			if (namespaces.size() > 0) {
@@ -223,41 +233,84 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 
 		/**
-		 * Tries to find the given type name and add it to the import structure.
+		 * Tries to find the given element name and add it to the import structure.
 		 * 
 		 * @param ref
 		 *            the name node
 		 */
-		public void add(Identifier ref) {
+		public void add(ASTNode ref) {
 			NamespaceDeclaration namespace = fRoot.getNamespaceDeclaration(ref.getStart());
-			String typeName = ref.getName();
-			String importName = typeName;
+			String elementName = null;
+			IBinding binding = null;
+			if (ref instanceof Identifier) {
+				elementName = ((Identifier) ref).getName();
+				binding = ((Identifier) ref).resolveBinding();
+			} else if (ref instanceof Scalar) {
+				elementName = ((Scalar) ref).getStringValue();
+				binding = ((Scalar) ref).resolveBinding();
+			} else {
+				return;
+			}
+			String importName = elementName;
 
-			int index = typeName.indexOf(NamespaceReference.NAMESPACE_DELIMITER);
+			int index = elementName.indexOf(NamespaceReference.NAMESPACE_DELIMITER);
 			if (index > 0) {
-				importName = typeName.substring(0, index);
-				typeName = typeName.substring(index + 1);
+				importName = elementName.substring(0, index);
+				elementName = elementName.substring(index + 1);
 			}
 
 			if (fImportsAdded.get(namespace) == null || fImportsAdded.get(namespace).contains(importName)) {
 				return;
 			}
 
-			IBinding binding = ref.resolveBinding();
 			if (binding != null) {
-				if (binding.getKind() != IBinding.TYPE) {
+				IBinding typeBinding = null;
+				int bindingKind = binding.getKind();
+				switch (bindingKind) {
+				case IBinding.TYPE:
+					typeBinding = ((ITypeBinding) binding).getTypeDeclaration();
+					break;
+				case IBinding.METHOD:
+					typeBinding = ((IMethodBinding) binding).getDeclaringClass();
+					// do not import functions declared in global namespace
+					if (typeBinding == null) {
+						return;
+					}
+					break;
+				case IBinding.VARIABLE:
+					typeBinding = ((IVariableBinding) binding).getDeclaringClass();
+					// do not import constants declared in global namespace
+					if (typeBinding == null) {
+						return;
+					}
+					break;
+				default:
 					return;
 				}
-				ITypeBinding typeBinding = ((ITypeBinding) binding).getTypeDeclaration();
 				if (typeBinding != null) {
 					String alias = null;
 					String typeBindingName = typeBinding.getName();
+					int importKind = ImportRewriteContext.KIND_TYPE;
 					if (typeBindingName != null) {
 						if (typeBindingName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 							typeBindingName = typeBindingName.substring(1);
 						}
-						int indexOfNs = typeBindingName.lastIndexOf(typeName);
-						if (indexOfNs > 0 && !importName.equalsIgnoreCase(typeName)) {
+						if (bindingKind == IBinding.METHOD || bindingKind == IBinding.VARIABLE) {
+							if (importName.equalsIgnoreCase(elementName)) {
+								switch (bindingKind) {
+								case IBinding.METHOD:
+									importKind = ImportRewriteContext.KIND_FUNCTION;
+									break;
+								case IBinding.VARIABLE:
+									importKind = ImportRewriteContext.KIND_CONSTANT;
+									break;
+								}
+							}
+							typeBindingName = typeBindingName + NamespaceReference.NAMESPACE_DELIMITER
+									+ binding.getName();
+						}
+						int indexOfNs = typeBindingName.lastIndexOf(elementName);
+						if (indexOfNs > 0 && !importName.equalsIgnoreCase(elementName)) {
 							typeBindingName = typeBindingName.substring(0, indexOfNs);
 							if (typeBindingName.endsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 								typeBindingName = typeBindingName.substring(0, typeBindingName.length() - 1);
@@ -272,19 +325,19 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 							alias = importName;
 						}
 					}
-					fImpStructure.addImport(namespace, typeBindingName, alias);
+					fImpStructure.addImport(namespace, typeBindingName, alias, importKind);
 					fImportsAdded.get(namespace).add(importName);
 					return;
 				}
 			}
 
-			fImportsAdded.get(namespace).add(typeName);
-			fUnresolvedTypes.get(namespace).put(typeName, new UnresolvedTypeData(ref));
+			fImportsAdded.get(namespace).add(elementName);
+			fUnresolvedTypes.get(namespace).put(elementName, new UnresolvedElementData(ref));
 		}
 
-		public Map<NamespaceDeclaration, Boolean> process(IProgressMonitor monitor) throws ModelException {
+		public Map<NamespaceDeclaration, Boolean> process(IProgressMonitor monitor) {
+			Map<NamespaceDeclaration, Boolean> hasOpenChoices = new HashMap<>();
 			try {
-				Map<NamespaceDeclaration, Boolean> hasOpenChoices = new HashMap<>();
 				final IScriptProject project = fImpStructure.getSourceModule().getScriptProject();
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
 
@@ -296,10 +349,12 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				} else {
 					hasOpenChoices.put(null, internalProcess(null, scope, monitor));
 				}
-				return hasOpenChoices;
+			} catch (Exception e) {
+				PHPUiPlugin.log(e);
 			} finally {
 				monitor.done();
 			}
+			return hasOpenChoices;
 		}
 
 		private boolean internalProcess(NamespaceDeclaration namespace, IDLTKSearchScope scope,
@@ -308,51 +363,85 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			if (nUnresolved == 0) {
 				return false;
 			}
-			final ArrayList<TypeNameMatch> typesFound = new ArrayList<>();
-			TypeNameMatchCollector collector = new TypeNameMatchCollector(typesFound);
+			final List<IElementNameMatch> typesFound = new ArrayList<>();
+			final List<IElementNameMatch> methodsFound = new ArrayList<>();
+			final List<IElementNameMatch> fieldsFound = new ArrayList<>();
 			for (Iterator<String> iter = fUnresolvedTypes.get(namespace).keySet().iterator(); iter.hasNext();) {
+				String key = iter.next();
+				int typeKind = fUnresolvedTypes.get(namespace).get(key).typeKinds;
 				ModelAccess modelAccess = new ModelAccess();
-				IType[] types = modelAccess.findTypes(iter.next(), MatchRule.EXACT, 0, 0, scope, monitor);
-				for (IType type : types) {
-					TypeNameMatch match = new PHPSearchTypeNameMatch(type, type.getFlags());
-					collector.acceptTypeNameMatch(match);
-				}
-			}
-
-			for (int i = 0; i < typesFound.size(); i++) {
-				TypeNameMatch curr = typesFound.get(i);
-				UnresolvedTypeData data = fUnresolvedTypes.get(namespace).get(curr.getSimpleTypeName());
-				if (data != null && isOfKind(curr, data.typeKinds)) {
-					if (fAllowDefaultPackageImports || curr.getPackageName().length() > 0) {
-						data.addInfo(curr);
+				if (typeKind == SimilarElementsRequestor.ALL_TYPES) {
+					TypeNameMatchCollector collector = new TypeNameMatchCollector(typesFound);
+					IType[] types = modelAccess.findTypes(key, MatchRule.EXACT, 0, 0, scope, monitor);
+					for (IType type : types) {
+						TypeNameMatch match = new PHPSearchTypeNameMatch(type, type.getFlags());
+						collector.acceptTypeNameMatch(match);
+					}
+				} else if (typeKind == SimilarElementsRequestor.FUNCTIONS) {
+					IMethod[] methods = modelAccess.findMethods(key, MatchRule.EXACT, 0, 0, scope, monitor);
+					for (IMethod method : methods) {
+						MethodNameMatchCollector collector = new MethodNameMatchCollector(methodsFound);
+						MethodNameMatch match = new PHPSearchMethodNameMatch(method, method.getFlags());
+						collector.acceptMethodNameMatch(match);
+					}
+				} else if (typeKind == SimilarElementsRequestor.CONSTANTS) {
+					IField[] fields = modelAccess.findFields(key, MatchRule.EXACT, 0, 0, scope, monitor);
+					for (IField field : fields) {
+						FieldNameMatchCollector collector = new FieldNameMatchCollector(fieldsFound);
+						FieldNameMatch match = new PHPSearchFieldNameMatch(field, field.getFlags());
+						collector.acceptFieldNameMatch(match);
 					}
 				}
 			}
 
-			for (Entry<String, UnresolvedTypeData> entry : fUnresolvedTypes.get(namespace).entrySet()) {
-				if (entry.getValue().foundInfos.size() == 0) { // No
-																// result
-																// found
-																// in
-																// search
-					Set<String> matchingUnresolvableImports = fUnresolvableImportMatcher.matchTypeImports(namespace,
+			List<IElementNameMatch> elementsFound = new ArrayList<>();
+			elementsFound.addAll(typesFound);
+			elementsFound.addAll(methodsFound);
+			elementsFound.addAll(fieldsFound);
+
+			for (int i = 0; i < elementsFound.size(); i++) {
+				IElementNameMatch curr = elementsFound.get(i);
+				UnresolvedElementData data = fUnresolvedTypes.get(namespace).get(curr.getSimpleName());
+				if (data != null && isOfKind(curr, data.typeKinds)) {
+					data.addInfo(curr);
+				}
+			}
+
+			for (Entry<String, UnresolvedElementData> entry : fUnresolvedTypes.get(namespace).entrySet()) {
+				if (entry.getValue().foundElementInfos.size() == 0) { // No
+																		// result
+																		// found
+																		// in
+																		// search
+					Set<String> matchingUnresolvableImports = fUnresolvableImportMatcher.matchElementImports(namespace,
 							entry.getKey());
 					if (!matchingUnresolvableImports.isEmpty()) {
 						// If there are matching unresolvable import(s),
 						// rely on them to provide the type.
 						for (String string : matchingUnresolvableImports) {
-							fImpStructure.addImport(namespace, string, UNRESOLVABLE_IMPORT_CONTEXT);
+							char prefix = string.charAt(0);
+							int importKind = ImportRewriteContext.KIND_TYPE;
+							switch (prefix) {
+							case UnresolvableImportMatcher.FUNCTION_PREFIX:
+								importKind = ImportRewriteContext.KIND_FUNCTION;
+								break;
+							case UnresolvableImportMatcher.CONSTANT_PREFIX:
+								importKind = ImportRewriteContext.KIND_CONSTANT;
+								break;
+							}
+							string = string.substring(1);
+							fImpStructure.addImport(namespace, string, null, importKind, UNRESOLVABLE_IMPORT_CONTEXT);
 						}
 					}
 				}
 			}
 
-			ArrayList<TypeNameMatch[]> openChoices = new ArrayList<>(nUnresolved);
+			ArrayList<IElementNameMatch[]> openChoices = new ArrayList<>(nUnresolved);
 			ArrayList<SourceRange> sourceRanges = new ArrayList<>(nUnresolved);
-			for (Iterator<UnresolvedTypeData> iter = fUnresolvedTypes.get(namespace).values().iterator(); iter
+			for (Iterator<UnresolvedElementData> iter = fUnresolvedTypes.get(namespace).values().iterator(); iter
 					.hasNext();) {
-				UnresolvedTypeData data = iter.next();
-				TypeNameMatch[] openChoice = processTypeInfo(namespace, data.foundInfos);
+				UnresolvedElementData data = iter.next();
+				IElementNameMatch[] openChoice = processElementInfo(namespace, data.foundElementInfos);
 				if (openChoice != null) {
 					openChoices.add(openChoice);
 					sourceRanges.add(new SourceRange(data.ref.getStart(), data.ref.getLength()));
@@ -361,46 +450,69 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			if (openChoices.isEmpty()) {
 				return false;
 			}
-			fOpenChoices.put(namespace, openChoices.toArray(new TypeNameMatch[openChoices.size()][]));
+			fOpenChoices.put(namespace, openChoices.toArray(new IElementNameMatch[openChoices.size()][]));
 			fSourceRanges.put(namespace, sourceRanges.toArray(new SourceRange[sourceRanges.size()]));
 			return true;
 
 		}
 
-		private TypeNameMatch[] processTypeInfo(NamespaceDeclaration namespace, List<TypeNameMatch> typeRefsFound) {
-			int nFound = typeRefsFound.size();
+		private IElementNameMatch[] processElementInfo(NamespaceDeclaration namespace,
+				List<IElementNameMatch> elementRefsFound) {
+			int nFound = elementRefsFound.size();
 			if (nFound == 0) {
 				// nothing found
 				return null;
 			} else if (nFound == 1) {
-				TypeNameMatch typeRef = typeRefsFound.get(0);
-				fImpStructure.addImport(namespace, typeRef.getFullyQualifiedName());
+				IElementNameMatch elementRef = elementRefsFound.get(0);
+				int importKind = ImportRewriteContext.KIND_TYPE;
+				if (elementRef instanceof MethodNameMatch) {
+					importKind = ImportRewriteContext.KIND_FUNCTION;
+					if (StringUtils.isBlank(elementRef.getContainerName())) {
+						return null;
+					}
+				} else if (elementRef instanceof FieldNameMatch) {
+					importKind = ImportRewriteContext.KIND_CONSTANT;
+					if (StringUtils.isBlank(elementRef.getContainerName())) {
+						return null;
+					}
+				}
+				fImpStructure.addImport(namespace, elementRef.getFullyQualifiedName(), importKind);
 				return null;
 			} else {
 				// multiple found, use old imports to find an entry
 				for (int i = 0; i < nFound; i++) {
-					TypeNameMatch typeRef = typeRefsFound.get(i);
-					String fullName = typeRef.getFullyQualifiedName();
+					IElementNameMatch elementRef = elementRefsFound.get(i);
+					int importKind = ImportRewriteContext.KIND_TYPE;
+					if (elementRef instanceof MethodNameMatch) {
+						importKind = ImportRewriteContext.KIND_FUNCTION;
+					} else if (elementRef instanceof FieldNameMatch) {
+						importKind = ImportRewriteContext.KIND_CONSTANT;
+					}
+					String fullName = elementRef.getFullyQualifiedName();
 					if (fOldSingleImports.get(namespace).contains(fullName)) {
 						// was single-imported
-						fImpStructure.addImport(namespace, fullName);
+						fImpStructure.addImport(namespace, fullName, importKind);
 						return null;
 					}
 				}
 				// return the open choices
-				return typeRefsFound.toArray(new TypeNameMatch[nFound]);
+				return elementRefsFound.toArray(new IElementNameMatch[nFound]);
 			}
 		}
 
-		private boolean isOfKind(TypeNameMatch curr, int typeKinds) {
+		private boolean isOfKind(IElementNameMatch curr, int typeKinds) {
 			int flags = curr.getModifiers();
 			if (Flags.isInterface(flags)) {
 				return (typeKinds & SimilarElementsRequestor.INTERFACES) != 0;
+			} else if (curr.getElementType() == IElementNameMatch.T_METHOD) {
+				return (typeKinds & SimilarElementsRequestor.FUNCTIONS) != 0;
+			} else if (curr.getElementType() == IElementNameMatch.T_FIELD) {
+				return (typeKinds & SimilarElementsRequestor.CONSTANTS) != 0;
 			}
 			return (typeKinds & SimilarElementsRequestor.CLASSES) != 0;
 		}
 
-		public Map<NamespaceDeclaration, TypeNameMatch[][]> getChoices() {
+		public Map<NamespaceDeclaration, IElementNameMatch[][]> getChoices() {
 			return fOpenChoices;
 		}
 
@@ -468,46 +580,58 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			ImportRewrite importsRewrite = ImportRewrite.create(astRoot, false);
 
 			Map<NamespaceDeclaration, Set<String>> oldSingleImports = new HashMap<>();
-			List<Identifier> typeReferences = new ArrayList<>();
+			List<ASTNode> elementReferences = new ArrayList<>();
 
-			if (!collectReferences(astRoot, typeReferences, oldSingleImports))
+			if (!collectReferences(astRoot, elementReferences, oldSingleImports))
 				return null;
 
 			UnresolvableImportMatcher unresolvableImportMatcher = UnresolvableImportMatcher.forProgram(astRoot);
 
-			TypeReferenceProcessor processor = new TypeReferenceProcessor(oldSingleImports, astRoot, importsRewrite,
-					unresolvableImportMatcher);
+			ElementReferenceProcessor processor = new ElementReferenceProcessor(oldSingleImports, astRoot,
+					importsRewrite, unresolvableImportMatcher);
 
-			Iterator<Identifier> refIterator = typeReferences.iterator();
+			Iterator<ASTNode> refIterator = elementReferences.iterator();
 			while (refIterator.hasNext()) {
-				Identifier typeRef = refIterator.next();
-				processor.add(typeRef);
+				ASTNode elementRef = refIterator.next();
+				processor.add(elementRef);
 			}
 
 			Map<NamespaceDeclaration, Boolean> hasOpenChoices = processor.process(SubMonitor.convert(monitor, 3));
 
 			if (fChooseImportQuery != null) {
-				Map<NamespaceDeclaration, TypeNameMatch[][]> choices = processor.getChoices();
+				Map<NamespaceDeclaration, IElementNameMatch[][]> choices = processor.getChoices();
 				Map<NamespaceDeclaration, SourceRange[]> ranges = processor.getChoicesSourceRanges();
 				for (Iterator<Entry<NamespaceDeclaration, Boolean>> iter = hasOpenChoices.entrySet().iterator(); iter
 						.hasNext();) {
 					Entry<NamespaceDeclaration, Boolean> entry = iter.next();
 					NamespaceDeclaration namespace = entry.getKey();
 					if (entry.getValue()) {
-						TypeNameMatch[] chosen = fChooseImportQuery.chooseImports(choices.get(namespace),
+						IElementNameMatch[] chosen = fChooseImportQuery.chooseImports(choices.get(namespace),
 								ranges.get(namespace));
 						if (chosen == null) {
 							// cancel pressed by the user
 							return null;
 						}
 						for (int i = 0; i < chosen.length; i++) {
-							TypeNameMatch typeInfo = chosen[i];
-							if (typeInfo != null) {
-								importsRewrite.addImport(namespace, typeInfo.getFullyQualifiedName());
+							IElementNameMatch elementInfo = chosen[i];
+							if (elementInfo != null) {
+								int importKind = ImportRewriteContext.KIND_TYPE;
+								if (elementInfo.getElementType() == IElementNameMatch.T_METHOD) {
+									importKind = ImportRewriteContext.KIND_FUNCTION;
+									if (StringUtils.isBlank(elementInfo.getContainerName())) {
+										return null;
+									}
+								} else if (elementInfo.getElementType() == IElementNameMatch.T_FIELD) {
+									importKind = ImportRewriteContext.KIND_CONSTANT;
+									if (StringUtils.isBlank(elementInfo.getContainerName())) {
+										return null;
+									}
+								}
+								importsRewrite.addImport(namespace, elementInfo.getFullyQualifiedName(), importKind);
 							} else { // Skipped by user
-								String typeName = choices.get(namespace)[i][0].getSimpleTypeName();
+								String elementName = choices.get(namespace)[i][0].getSimpleName();
 								Set<String> matchingUnresolvableImports = unresolvableImportMatcher
-										.matchTypeImports(namespace, typeName);
+										.matchElementImports(namespace, elementName);
 								if (!matchingUnresolvableImports.isEmpty()) {
 									// If there are matching unresolvable
 									// import(s),
@@ -608,7 +732,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 	}
 
-	private boolean collectReferences(Program astRoot, List<Identifier> typeReferences,
+	private boolean collectReferences(Program astRoot, List<ASTNode> elementReferences,
 			Map<NamespaceDeclaration, Set<String>> oldSingleImports) {
 		List<NamespaceDeclaration> namespaces = astRoot.getNamespaceDeclarations();
 		if (namespaces.size() > 0) {
@@ -618,7 +742,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		} else {
 			collectImports(astRoot, null, oldSingleImports);
 		}
-		astRoot.accept(new ReferencesCollector(typeReferences));
+		astRoot.accept(new ReferencesCollector(elementReferences));
 		return true;
 	}
 
@@ -655,6 +779,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 
 	static class ReferencesCollector extends ApplyAll {
 		private static final List<String> TYPE_SKIP = new ArrayList<>();
+		private static final Pattern CONSTANT_NAME = Pattern.compile("[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*");
 
 		static {
 			TYPE_SKIP.add("parent"); //$NON-NLS-1$
@@ -662,10 +787,10 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			TYPE_SKIP.add("static"); //$NON-NLS-1$
 			TYPE_SKIP.add("class"); //$NON-NLS-1$
 		}
-		List<Identifier> fTypeReferences;
+		List<ASTNode> fElementReferences;
 
-		public ReferencesCollector(List<Identifier> typeReferences) {
-			fTypeReferences = typeReferences;
+		public ReferencesCollector(List<ASTNode> elementReferences) {
+			fElementReferences = elementReferences;
 		}
 
 		@Override
@@ -689,8 +814,9 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				if (segs.size() > 0) {
 					Identifier node = segs.get(segs.size() - 1);
 					if (PHPElementConciliator.concile(node) == PHPElementConciliator.CONCILIATOR_CLASSNAME
-							|| PHPElementConciliator.concile(node) == PHPElementConciliator.CONCILIATOR_TRAITNAME) {
-						fTypeReferences.add(name);
+							|| PHPElementConciliator.concile(node) == PHPElementConciliator.CONCILIATOR_TRAITNAME
+							|| PHPElementConciliator.concile(node) == PHPElementConciliator.CONCILIATOR_CONSTANT) {
+						fElementReferences.add(name);
 					}
 				}
 			}
@@ -699,11 +825,21 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 
 		@Override
 		public boolean visit(FunctionName functionName) {
+			if (functionName.getName() instanceof NamespaceName) {
+				NamespaceName name = (NamespaceName) functionName.getName();
+				if (!name.isGlobal()) {
+					fElementReferences.add(name);
+				}
+			}
 			return false;
 		}
 
 		@Override
 		public boolean visit(Scalar scalar) {
+			if (scalar.getScalarType() == Scalar.TYPE_STRING
+					&& CONSTANT_NAME.matcher(scalar.getStringValue()).matches()) {
+				fElementReferences.add(scalar);
+			}
 			return false;
 		}
 

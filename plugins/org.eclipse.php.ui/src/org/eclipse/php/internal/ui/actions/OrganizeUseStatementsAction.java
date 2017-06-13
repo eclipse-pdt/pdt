@@ -17,11 +17,9 @@ import java.util.Comparator;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.search.TypeNameMatch;
 import org.eclipse.dltk.internal.corext.util.History;
 import org.eclipse.dltk.internal.corext.util.QualifiedTypeNameHistory;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
-import org.eclipse.dltk.internal.ui.util.TypeNameMatchLabelProvider;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -32,13 +30,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
+import org.eclipse.php.internal.core.search.IElementNameMatch;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.codemanipulation.OrganizeUseStatementsOperation;
 import org.eclipse.php.internal.ui.corext.codemanipulation.OrganizeUseStatementsOperation.IChooseImportQuery;
 import org.eclipse.php.internal.ui.dialogs.MultiElementListSelectionDialog;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.util.PHPTypeNameMatchLabelProvider;
+import org.eclipse.php.internal.ui.util.PHPElementNameMatchLabelProvider;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.*;
 import org.eclipse.ui.progress.IProgressService;
@@ -191,19 +189,19 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 	private IChooseImportQuery createChooseImportQuery(final PHPStructuredEditor editor) {
 		return new IChooseImportQuery() {
 			@Override
-			public TypeNameMatch[] chooseImports(TypeNameMatch[][] openChoices, ISourceRange[] ranges) {
+			public IElementNameMatch[] chooseImports(IElementNameMatch[][] openChoices, ISourceRange[] ranges) {
 				return doChooseImports(openChoices, ranges, editor);
 			}
 		};
 	}
 
-	private TypeNameMatch[] doChooseImports(TypeNameMatch[][] openChoices, final ISourceRange[] ranges,
+	private IElementNameMatch[] doChooseImports(IElementNameMatch[][] openChoices, final ISourceRange[] ranges,
 			final PHPStructuredEditor editor) {
 		// remember selection
 		ISelection sel = editor.getSelectionProvider().getSelection();
-		TypeNameMatch[] result = null;
-		ILabelProvider labelProvider = new PHPTypeNameMatchLabelProvider(TypeNameMatchLabelProvider.SHOW_FULLYQUALIFIED,
-				PHPUILanguageToolkit.getInstance());
+		IElementNameMatch[] result = null;
+		ILabelProvider labelProvider = new PHPElementNameMatchLabelProvider(
+				PHPElementNameMatchLabelProvider.SHOW_FULLYQUALIFIED);
 
 		MultiElementListSelectionDialog dialog = new MultiElementListSelectionDialog(getShell(), labelProvider) {
 			@Override
@@ -220,11 +218,11 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 		dialog.setComparator(ORGANIZE_IMPORT_COMPARATOR);
 		if (dialog.open() == Window.OK) {
 			Object[] res = dialog.getResult();
-			result = new TypeNameMatch[res.length];
+			result = new IElementNameMatch[res.length];
 			for (int i = 0; i < res.length; i++) {
 				Object[] array = (Object[]) res[i];
 				if (array.length > 0) {
-					result[i] = (TypeNameMatch) array[0];
+					result[i] = (IElementNameMatch) array[0];
 					QualifiedTypeNameHistory.remember(result[i].getFullyQualifiedName());
 				}
 			}
