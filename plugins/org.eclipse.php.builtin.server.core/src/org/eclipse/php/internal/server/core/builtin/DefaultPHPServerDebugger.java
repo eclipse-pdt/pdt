@@ -32,11 +32,13 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitiali
 import org.eclipse.php.internal.server.core.builtin.debugger.HttpReverseProxyServer;
 import org.eclipse.php.internal.server.core.builtin.debugger.HttpReverseProxyServer.IHttpRequestHandler;
 import org.eclipse.php.internal.server.core.builtin.debugger.PHPServerDebugTarget;
+import org.eclipse.wst.server.core.util.SocketUtil;
 
 @SuppressWarnings("restriction")
 public class DefaultPHPServerDebugger extends DefaultPHPServerRunner {
 
 	private HttpReverseProxyServer proxyServer;
+	private int port = 0;
 
 	@Override
 	public void run(PHPServerRunnerConfiguration configuration, ILaunch launch, IProgressMonitor monitor)
@@ -60,7 +62,10 @@ public class DefaultPHPServerDebugger extends DefaultPHPServerRunner {
 
 	@Override
 	public int getServerPort() {
-		return super.getServerPort() + 1;
+		if (port == 0) {
+			port = SocketUtil.findUnusedPort(10080, 30080);
+		}
+		return port;
 	}
 
 	class HttpRequestHandler implements IHttpRequestHandler {
