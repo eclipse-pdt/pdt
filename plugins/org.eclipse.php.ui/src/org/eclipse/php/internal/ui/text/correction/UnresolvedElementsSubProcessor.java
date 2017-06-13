@@ -129,7 +129,7 @@ public class UnresolvedElementsSubProcessor {
 	}
 
 	private static int evauateTypeKind(ASTNode node) {
-		int kind = ASTResolving.getPossibleTypeKinds(node);
+		int kind = ASTResolving.getPossibleElementKinds(node);
 		return kind;
 	}
 

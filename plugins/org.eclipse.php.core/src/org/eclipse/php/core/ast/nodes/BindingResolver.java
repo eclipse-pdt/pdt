@@ -432,6 +432,14 @@ public class BindingResolver {
 		return null;
 	}
 
+	IVariableBinding resolveField(Scalar scalar) {
+		return null;
+	}
+
+	IVariableBinding resolveField(Identifier name) {
+		return null;
+	}
+
 	/**
 	 * Resolves the given import declaration and returns the binding for it.
 	 * <p>
