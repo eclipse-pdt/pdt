@@ -91,11 +91,17 @@ public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
 
 	protected String[] fetchCmdLineFromConf(PHPServerRunnerConfiguration configuration) {
 		String phpIniFile = configuration.getIniFilePath();
+		String hostname = configuration.getHost();
+
+		// workaround for bug 518158
+		if ("localhost".equalsIgnoreCase(hostname)) { //$NON-NLS-1$
+			hostname = "127.0.0.1"; //$NON-NLS-1$
+		}
 
 		List<String> commands = new ArrayList<>();
 		commands.add(configuration.getExeFilePath());
 		commands.add("-S"); //$NON-NLS-1$
-		commands.add(configuration.getHost() + ':' + getServerPort());
+		commands.add(hostname + ':' + getServerPort());
 		commands.add("-t"); //$NON-NLS-1$
 		commands.add(configuration.getWorkingDirectory());
 		if (StringUtils.isNotEmpty(phpIniFile)) {
