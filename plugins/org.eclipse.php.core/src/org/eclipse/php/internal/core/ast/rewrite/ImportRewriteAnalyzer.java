@@ -108,10 +108,6 @@ public final class ImportRewriteAnalyzer {
 		this.replaceRange.put(namespace, evaluateReplaceRange(root, namespace));
 		if (restoreExistingImports.get(namespace)) {
 			addExistingImports(root, namespace);
-		} else {
-			// Currently does not support organize function and constant imports
-			// yet, so do not remove them for now
-			addExistingFunctionAndConstantImports(root, namespace);
 		}
 
 		PackageEntry[] order = new PackageEntry[importOrder.length];
@@ -195,61 +191,6 @@ public final class ImportRewriteAnalyzer {
 			return decl.parts().get(0).getAlias().getName();
 		}
 		return decl.parts().get(0).getName().getName();
-	}
-
-	private void addExistingFunctionAndConstantImports(Program root, NamespaceDeclaration namespace) {
-		List<UseStatement> decls = root.getUseStatements(namespace);
-		if (decls.isEmpty()) {
-			return;
-		}
-		PackageEntry currPackage = null;
-
-		UseStatement curr = decls.get(0);
-		int currOffset = curr.getStart();
-		int currLength = curr.getLength();
-		int currEndLine = root.getLineNumber(currOffset + currLength);
-
-		for (int i = 1; i < decls.size(); i++) {
-			int statementType = curr.getStatementType();
-			if (statementType == UseStatement.T_NONE) {
-				curr = decls.get(i);
-				continue;
-			}
-			String name = getFullName(curr);
-			String packName = getQualifier(name);
-			if (currPackage == null || currPackage.compareTo(packName) != 0) {
-				currPackage = new PackageEntry(packName, null);
-				this.packageEntries.get(namespace).add(currPackage);
-			}
-
-			UseStatement next = decls.get(i);
-			int nextOffset = next.getStart();
-			int nextLength = next.getLength();
-			int nextOffsetLine = root.getLineNumber(nextOffset + 1);
-
-			// if next import is on a different line, modify the end position to
-			// the next line begin offset
-			if (currEndLine < nextOffsetLine) {
-				currEndLine++;
-				nextOffset = getPosition(root, currEndLine);
-			}
-			currPackage.add(new ImportDeclEntry(name, statementType, null));
-			currOffset = nextOffset;
-			curr = next;
-			currEndLine = root.getLineNumber(nextOffset + nextLength);
-		}
-
-		int statementType = curr.getStatementType();
-		if (statementType == UseStatement.T_NONE) {
-			return;
-		}
-		String name = getFullName(curr);
-		String packName = getQualifier(name);
-		if (currPackage == null || currPackage.compareTo(packName) != 0) {
-			currPackage = new PackageEntry(packName, null);
-			this.packageEntries.get(namespace).add(currPackage);
-		}
-		currPackage.add(new ImportDeclEntry(name, statementType, null));
 	}
 
 	private void addExistingImports(Program root, NamespaceDeclaration namespace) {

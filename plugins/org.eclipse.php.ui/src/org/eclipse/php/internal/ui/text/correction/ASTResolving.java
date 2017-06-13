@@ -201,13 +201,17 @@ public class ASTResolving {
 		return null;
 	}
 
-	public static int getPossibleTypeKinds(ASTNode node) {
-		int kinds = internalGetPossibleTypeKinds(node);
+	public static int getPossibleElementKinds(ASTNode node) {
+		int kinds = internalGetPossibleElementKinds(node);
 		return kinds;
 	}
 
-	private static int internalGetPossibleTypeKinds(ASTNode node) {
+	private static int internalGetPossibleElementKinds(ASTNode node) {
 		int kind = SimilarElementsRequestor.ALL_TYPES;
+
+		if (node.getType() == ASTNode.SCALAR) {
+			return SimilarElementsRequestor.CONSTANTS;
+		}
 
 		ASTNode parent = node.getParent();
 
@@ -233,6 +237,9 @@ public class ASTResolving {
 			if (superParent == ASTNode.CATCH_CLAUSE) {
 				kind = SimilarElementsRequestor.CLASSES;
 			}
+			break;
+		case ASTNode.FUNCTION_NAME:
+			kind = SimilarElementsRequestor.FUNCTIONS;
 			break;
 		default:
 		}
