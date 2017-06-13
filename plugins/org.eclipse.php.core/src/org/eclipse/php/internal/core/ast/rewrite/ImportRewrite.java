@@ -395,12 +395,12 @@ public final class ImportRewrite {
 	 *         conflict prevented the import.
 	 */
 	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, ImportRewriteContext context) {
-		return internalAddImport(namespace, qualifiedTypeName, null, context);
+		return internalAddImport(namespace, qualifiedTypeName, null, ImportRewriteContext.KIND_TYPE, context);
 	}
 
-	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias,
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias, int importKind,
 			ImportRewriteContext context) {
-		return internalAddImport(namespace, qualifiedTypeName, alias, context);
+		return internalAddImport(namespace, qualifiedTypeName, alias, importKind, context);
 	}
 
 	/**
@@ -428,11 +428,19 @@ public final class ImportRewrite {
 		return addImport(namespace, qualifiedTypeName, this.defaultContext);
 	}
 
-	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias) {
-		return addImport(namespace, qualifiedTypeName, alias, this.defaultContext);
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, int importKind) {
+		return addImport(namespace, qualifiedTypeName, null, importKind, this.defaultContext);
 	}
 
-	private String internalAddImport(NamespaceDeclaration namespace, String fullTypeName, String alias,
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias) {
+		return addImport(namespace, qualifiedTypeName, alias, ImportRewriteContext.KIND_TYPE, this.defaultContext);
+	}
+
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias, int importKind) {
+		return addImport(namespace, qualifiedTypeName, alias, importKind, this.defaultContext);
+	}
+
+	private String internalAddImport(NamespaceDeclaration namespace, String fullTypeName, String alias, int importKind,
 			ImportRewriteContext context) {
 		int idx = fullTypeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		String typeContainerName, typeName;
@@ -462,7 +470,19 @@ public final class ImportRewrite {
 			return fullTypeName;
 		}
 		if (res == ImportRewriteContext.RES_NAME_UNKNOWN) {
-			addEntry(namespace, NORMAL_PREFIX + fullTypeName);
+			char prefix;
+			switch (importKind) {
+			case ImportRewriteContext.KIND_FUNCTION:
+				prefix = FUNCTION_PREFIX;
+				break;
+			case ImportRewriteContext.KIND_CONSTANT:
+				prefix = CONSTANT_PREFIX;
+				break;
+			default:
+				prefix = NORMAL_PREFIX;
+				break;
+			}
+			addEntry(namespace, prefix + fullTypeName);
 		}
 		return typeName;
 	}

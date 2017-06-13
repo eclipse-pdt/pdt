@@ -778,8 +778,8 @@ public class PHPModelUtils {
 					fields = PHPModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT,
 							Modifiers.AccConstant | Modifiers.AccGlobal, 0, scope, null);
 
-					Collection<IField> filteredElements = filterElements(sourceModule, Arrays.asList(fields), cache,
-							monitor);
+					Collection<IField> filteredElements = filterElements(sourceModule,
+							filterTrueGlobal(Arrays.asList(fields)), cache, monitor);
 					return filteredElements.toArray(new IField[filteredElements.size()]);
 				}
 			}
@@ -894,11 +894,11 @@ public class PHPModelUtils {
 	}
 
 	@NonNull
-	private static Collection<IMethod> filterTrueGlobal(Collection<IMethod> functions) {
-		List<IMethod> result = new ArrayList<IMethod>();
-		for (IMethod method : functions) {
-			if (method.getParent().getElementType() != IModelElement.TYPE) {
-				result.add(method);
+	private static <T extends IMember> Collection<T> filterTrueGlobal(Collection<T> elements) {
+		List<T> result = new ArrayList<>();
+		for (T element : elements) {
+			if (element.getParent().getElementType() != IModelElement.TYPE) {
+				result.add(element);
 			}
 		}
 		return result;
