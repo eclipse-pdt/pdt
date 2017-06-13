@@ -25,6 +25,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.util.SocketUtil;
 
 public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
 
@@ -91,11 +92,17 @@ public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
 
 	protected String[] fetchCmdLineFromConf(PHPServerRunnerConfiguration configuration) {
 		String phpIniFile = configuration.getIniFilePath();
+		String hostname = configuration.getHost();
+
+		// workaround for bug 518158
+		if (SocketUtil.isLocalhost(hostname)) {
+			hostname = "127.0.0.1"; //$NON-NLS-1$
+		}
 
 		List<String> commands = new ArrayList<>();
 		commands.add(configuration.getExeFilePath());
 		commands.add("-S"); //$NON-NLS-1$
-		commands.add(configuration.getHost() + ':' + getServerPort());
+		commands.add(hostname + ':' + getServerPort());
 		commands.add("-t"); //$NON-NLS-1$
 		commands.add(configuration.getWorkingDirectory());
 		if (StringUtils.isNotEmpty(phpIniFile)) {
