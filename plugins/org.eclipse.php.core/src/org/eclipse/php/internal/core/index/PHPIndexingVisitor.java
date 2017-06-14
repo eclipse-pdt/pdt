@@ -800,7 +800,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		modifiers = markAsDeprecated(modifiers, declaration);
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
-		int length = constantName.sourceEnd();
+		int length = constantName.sourceEnd() - constantName.sourceStart();
 		StringBuilder metadata = new StringBuilder();
 		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
 		metadata.append(QUALIFIER_SEPERATOR);
