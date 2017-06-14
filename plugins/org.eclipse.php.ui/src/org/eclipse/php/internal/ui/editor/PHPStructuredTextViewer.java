@@ -72,15 +72,26 @@ import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
-	private class EditorReconcilingListener implements IDocumentListener, ITextInputListener {
+	private class EditorReconcilingListener implements IDocumentListener, ITextInputListener,
+			IPHPScriptReconcilingListener, ISourceReconcilingListener {
+
+		/** Has the reconciler been reset. */
+		private boolean fReset = false;
+		/** Some changes need to be processed. */
+		private boolean fIsDirty = false;
 
 		public void install() {
 			StyledText text = getTextWidget();
 			if (text == null || text.isDisposed())
 				return;
+
+			if (getTextEditor() instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) getTextEditor()).addReconcileListener(this);
+			}
 
 			addTextInputListener(this);
 
@@ -92,6 +103,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 		public void uninstall() {
 			removeTextInputListener(this);
+			if (getTextEditor() instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) getTextEditor()).removeReconcileListener(this);
+			}
+
+			if (getReconciler() instanceof StructuredRegionProcessor) {
+				((StructuredRegionProcessor) getReconciler()).removeReconcilingListener(this);
+			}
+
 			IDocument document = getDocument();
 			if (document != null) {
 				document.removeDocumentListener(this);
@@ -122,8 +141,27 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		@Override
 		public void documentChanged(DocumentEvent event) {
 			if (getTextEditor() instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+				if (!fIsDirty && fReset) {
+					((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+					fIsDirty = true;
+					fReset = false;
+				}
 			}
+		}
+
+		@Override
+		public void aboutToBeReconciled() {
+		}
+
+		@Override
+		public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
+			fIsDirty = false;
+		}
+
+		@Override
+		public void reconciled(IDocument document, IAnnotationModel model, boolean forced,
+				IProgressMonitor progressMonitor) {
+			fReset = true;
 		}
 
 	}
@@ -503,6 +541,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 
 		super.configure(configuration);
+
+		if (getReconciler() instanceof StructuredRegionProcessor) {
+			((StructuredRegionProcessor) getReconciler()).addReconcilingListener(fEditorReconcilingListener);
+		}
 
 		// release old annotation hover before setting new one
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {

@@ -44,8 +44,7 @@ public final class ASTProvider {
 	 * 
 	 * @since 3.0
 	 */
-	private static final boolean DEBUG = "true" //$NON-NLS-1$
-			.equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jdt.ui/debug/ASTProvider")); //$NON-NLS-1$
+	private static final boolean DEBUG = true;
 
 	/**
 	 * Internal activation listener.
@@ -320,6 +319,20 @@ public final class ASTProvider {
 
 		if (DEBUG) {
 			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "about to reconcile: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		// this may be unnecessary
+		synchronized (fWaitLock) {
+			if (isReconciling(javaElement)) {
+				try {
+					if (DEBUG) {
+						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "waiting for reconciling finished: " //$NON-NLS-1$ //$NON-NLS-2$
+								+ toString(javaElement));
+					}
+					// tried several times, never come into here.
+					fWaitLock.wait(5000);
+				} catch (InterruptedException e) {
+				}
+			}
 		}
 		synchronized (fReconcileLock) {
 			fIsReconciling = true;
