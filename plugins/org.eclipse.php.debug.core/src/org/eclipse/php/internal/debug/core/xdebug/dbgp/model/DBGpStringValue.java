@@ -354,7 +354,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 			for (int i = 0; i < subCount; i++) {
 				int startIndex = i * childLimit;
 				int endIndex = (i + 1) * childLimit - 1;
-				if (endIndex > byteCount) {
+				if (endIndex >= byteCount) {
 					endIndex = byteCount - 1;
 				}
 				final int partitionSize = (endIndex - startIndex) + 1;
