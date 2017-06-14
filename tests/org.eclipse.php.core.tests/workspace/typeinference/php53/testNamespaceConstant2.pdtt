@@ -1,0 +1,12 @@
+--TEST--
+Test Constant
+--FILE--
+<?php
+namespace ns;
+
+const MY_CONST = true;
+
+testNamespaceConstant2(namespace\MY_CONST);
+?>
+--EXPECT--
+boolean

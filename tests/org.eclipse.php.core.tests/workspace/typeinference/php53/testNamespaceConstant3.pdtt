@@ -1,0 +1,8 @@
+--TEST--
+Test Constant
+--FILE--
+<?php
+testNamespaceConstant3(\PHP_VERSION);
+?>
+--EXPECT--
+string

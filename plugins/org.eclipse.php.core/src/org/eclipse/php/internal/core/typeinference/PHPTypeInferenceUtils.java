@@ -264,6 +264,11 @@ public class PHPTypeInferenceUtils {
 				}
 			}
 			return true;
+		} else if (object instanceof PHPNamespaceConstantType) {
+			if (!isSimple(((PHPNamespaceConstantType) object).getValueType())) {
+				return false;
+			}
+			return true;
 		}
 
 		return false;

@@ -27,6 +27,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.ImportDeclaration;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -42,9 +43,11 @@ import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPNamespaceConstantType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.INamespaceContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
 
 public class TypeReferenceEvaluator extends GoalEvaluator {
 
@@ -80,7 +83,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		final IContext context = goal.getContext();
-		String className = typeReference.getName();
+		String elementName = typeReference.getName();
 
 		if (isSelfOrStatic()) {
 			if (context instanceof MethodContext) {
@@ -223,14 +226,16 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				parentNamespace = ((INamespaceContext) context).getNamespace();
 			}
 			String fullyQualifiedName;
+			int elementType = FullyQualifiedReference.T_TYPE;
 			// If the namespace was prefixed explicitly - use it:
 			if (typeReference instanceof FullyQualifiedReference) {
 				fullyQualifiedName = ((FullyQualifiedReference) typeReference).getFullyQualifiedName();
+				elementType = ((FullyQualifiedReference) typeReference).getElementType();
 			} else {
 				fullyQualifiedName = typeReference.getName();
 
-				className = PHPEvaluationUtils.extractArrayType(fullyQualifiedName);
-				className = PHPModelUtils.extractElementName(className);
+				elementName = PHPEvaluationUtils.extractArrayType(fullyQualifiedName);
+				elementName = PHPModelUtils.extractElementName(elementName);
 			}
 			ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
 			int offset = typeReference.sourceStart();
@@ -238,11 +243,19 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				// for use statement, extract namespace and class name directly
 				if (sourceModule.getElementAt(offset) instanceof ImportDeclaration) {
 					String namespace = PHPModelUtils.extractNameSpaceName(fullyQualifiedName);
-					className = PHPModelUtils.extractElementName(fullyQualifiedName);
+					elementName = PHPModelUtils.extractElementName(fullyQualifiedName);
+					if (elementType == FullyQualifiedReference.T_CONSTANT) {
+						if (namespace != null) {
+							result = new PHPNamespaceConstantType(namespace, elementName);
+						} else {
+							result = new PHPNamespaceConstantType(elementName);
+						}
+						return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(), elementName, namespace) };
+					}
 					if (namespace != null) {
-						result = new PHPClassType(namespace, className);
+						result = new PHPClassType(namespace, elementName);
 					} else {
-						result = new PHPClassType(className);
+						result = new PHPClassType(elementName);
 					}
 					return IGoal.NO_GOALS;
 				}
@@ -251,20 +264,26 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			String extractedNamespace = PHPModelUtils.extractNamespaceName(fullyQualifiedName, sourceModule, offset);
 			if (extractedNamespace != null) {
 				parentNamespace = extractedNamespace;
-				className = PHPModelUtils.getRealName(fullyQualifiedName, sourceModule, offset, className);
+				elementName = PHPModelUtils.getRealName(fullyQualifiedName, sourceModule, offset, elementName);
 			}
 			if (PHPModelUtils.isInUseTraitStatement(((ISourceModuleContext) context).getRootNode(),
 					typeReference.sourceStart())) {
 				if (parentNamespace != null) {
-					result = new PHPTraitType(parentNamespace, className);
+					result = new PHPTraitType(parentNamespace, elementName);
 				} else {
-					result = new PHPTraitType(className);
+					result = new PHPTraitType(elementName);
 				}
 			} else {
 				if (parentNamespace != null) {
-					result = new PHPClassType(parentNamespace, className);
+					if (elementType == FullyQualifiedReference.T_CONSTANT) {
+						result = new PHPNamespaceConstantType(parentNamespace, elementName);
+						return new IGoal[] {
+								new ConstantDeclarationGoal(goal.getContext(), elementName, parentNamespace) };
+					} else {
+						result = new PHPClassType(parentNamespace, elementName);
+					}
 				} else {
-					result = new PHPClassType(className);
+					result = new PHPClassType(elementName);
 				}
 			}
 		}
@@ -277,6 +296,13 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
+		if (this.result instanceof PHPNamespaceConstantType) {
+			if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {
+				((PHPNamespaceConstantType) this.result).setValueType(PHPSimpleTypes.STRING);
+			} else {
+				((PHPNamespaceConstantType) this.result).setValueType((IEvaluatedType) result);
+			}
+		}
 		return IGoal.NO_GOALS;
 	}
 

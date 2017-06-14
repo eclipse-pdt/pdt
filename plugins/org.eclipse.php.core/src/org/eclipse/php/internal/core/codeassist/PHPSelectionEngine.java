@@ -54,10 +54,7 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -372,8 +369,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (node instanceof FullyQualifiedReference) {
 				nodeType = ((FullyQualifiedReference) node).getElementType();
 			}
-			if (nodeType == FullyQualifiedReference.T_CONSTANT) {
-				elements = PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+			if (nodeType == FullyQualifiedReference.T_CONSTANT && evaluatedType instanceof PHPNamespaceConstantType) {
+				String constantName = ((PHPNamespaceConstantType) evaluatedType).getConstantName();
+				elements = PHPModelUtils.getFields(constantName, sourceModule, offset, cache, null);
 			} else if (nodeType == FullyQualifiedReference.T_FUNCTION) {
 				elements = PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
 				if (elements.length == 0) {
