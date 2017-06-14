@@ -1510,9 +1510,13 @@ public class DBGpTarget extends DBGpElement
 				// like this for now.
 				args = "-n " + fullName + " -d " + getCurrentStackLevel() + " -p " + page; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
-			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propGet, args);
-			if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
-				return resp.getParentNode().getFirstChild();
+			synchronized (sessionMutex) {
+				if (session != null && session.isActive()) {
+					DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propGet, args);
+					if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+						return resp.getParentNode().getFirstChild();
+					}
+				}
 			}
 		}
 
@@ -1546,9 +1550,13 @@ public class DBGpTarget extends DBGpElement
 			// spec says you should use getValue to retrieve the entire data
 			// but xdebug won't work without it.
 			args += " -m " + length; //$NON-NLS-1$
-			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propValue, args);
-			if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
-				return resp.getParentNode();
+			synchronized (sessionMutex) {
+				if (session != null && session.isActive()) {
+					DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propValue, args);
+					if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+						return resp.getParentNode();
+					}
+				}
 			}
 		}
 
