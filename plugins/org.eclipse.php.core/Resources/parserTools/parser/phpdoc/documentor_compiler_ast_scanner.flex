@@ -200,6 +200,9 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		appendText();
 		if (numOfLines == 4) {
 			int firstLineEnd = sBuffer.indexOf("\n", 1);
+			if (firstLineEnd == -1) {
+				firstLineEnd = sBuffer.indexOf("\r", 1);
+			}
 			shortDesc = sBuffer.substring(0, firstLineEnd);
 			shortDesc = shortDesc.trim();
 			sBuffer.delete(0, firstLineEnd);
@@ -221,6 +224,9 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		appendLastText();
 		if (numOfLines == maxNumberofLines) {
 			int firstLineEnd = sBuffer.indexOf("\n", 1);
+			if (firstLineEnd == -1) {
+				firstLineEnd = sBuffer.indexOf("\r", 1);
+			}
 			shortDesc = sBuffer.substring(0, firstLineEnd);
 			shortDesc = shortDesc.trim();
 			sBuffer.delete(0, firstLineEnd);
