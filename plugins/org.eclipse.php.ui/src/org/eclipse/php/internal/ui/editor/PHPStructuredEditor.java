@@ -49,6 +49,7 @@ import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.*;
 import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
 import org.eclipse.jface.text.link.LinkedModeUI.IExitPolicy;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
@@ -130,8 +131,10 @@ import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 import com.ibm.icu.text.BreakIterator;
@@ -288,6 +291,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	 * @since 3.4
 	 */
 	private boolean fMarkImplementors;
+
+	/**
+	 * Fix for outline synchronization while reconcile
+	 */
+	protected volatile boolean fReconcileSelection = false;
 
 	/**
 	 * The override and implements indicator manager for this editor.
@@ -1433,6 +1441,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	/** The information presenter. */
 	protected InformationPresenter fInformationPresenter;
 
+	private ISourceReconcilingListener fEditorReconcilingListener = new EditorReconcilingListener();
+
 	public PHPStructuredEditor() {
 		/**
 		 * Bug fix: #158170 Set WST's folding support enablement according to
@@ -2549,11 +2559,56 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
 
+		addEditorReconcilingListener(getSourceViewerConfiguration(), getTextViewer());
+
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
 		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);// $NON-NLS-1$
+	}
+
+	private void addEditorReconcilingListener(SourceViewerConfiguration config, StructuredTextViewer textViewer) {
+		IReconciler reconciler = config.getReconciler(textViewer);
+		if (reconciler instanceof DocumentRegionProcessor) {
+			((DocumentRegionProcessor) reconciler).addReconcilingListener(fEditorReconcilingListener);
+		}
+	}
+
+	private class EditorReconcilingListener implements ISourceReconcilingListener {
+
+		@Override
+		public void aboutToBeReconciled() {
+			PHPStructuredEditor.this.aboutToBeReconciled();
+
+		}
+
+		@Override
+		public void reconciled(IDocument document, IAnnotationModel model, boolean forced,
+				IProgressMonitor progressMonitor) {
+		}
+
+	}
+
+	@Override
+	protected void setSourceViewerConfiguration(SourceViewerConfiguration config) {
+		SourceViewerConfiguration old = config;
+		super.setSourceViewerConfiguration(config);
+		StructuredTextViewer stv = getTextViewer();
+		if (stv != null) {
+			removeEditorReconcilingListener(old, stv);
+			addEditorReconcilingListener(config, stv);
+		}
+
+	}
+
+	private void removeEditorReconcilingListener(SourceViewerConfiguration config, StructuredTextViewer textViewer) {
+
+		IReconciler reconciler = config.getReconciler(textViewer);
+		if (reconciler instanceof DocumentRegionProcessor) {
+			((DocumentRegionProcessor) reconciler).removeReconcilingListener(fEditorReconcilingListener);
+		}
+
 	}
 
 	@Override
@@ -3137,6 +3192,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 
 	@Override
 	public void aboutToBeReconciled() {
+		fReconcileSelection = true;
 		// Notify AST provider
 		PHPUiPlugin.getDefault().getASTProvider().aboutToBeReconciled((ISourceModule) getModelElement());
 		// Notify listeners
@@ -3164,6 +3220,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		ISourceModule inputModelElement = (ISourceModule) getModelElement();
 
 		phpPlugin.getASTProvider().reconciled(ast, inputModelElement, progressMonitor);
+		this.fReconcileSelection = false;
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
@@ -3211,6 +3268,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		if (unit != null) {
 			try {
 				if (reconcile) {
+					fReconcileSelection = false;
 					ScriptModelUtil.reconcile(unit);
 					return unit.getElementAt(offset);
 				} else if (unit.isConsistent())
@@ -3266,6 +3324,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	/**
 	 * Updates the occurrences annotations based on the current selection.
 	 * 
+	 * TODO : since {@link PHPStructuredEditor#aboutToBeChangedEvent} currently
+	 * doesn't work, we check if " document.getLength() != astRoot.getEnd() " to
+	 * identify if the document was not already reconciled
+	 * 
 	 * @param selection
 	 *            the text selection
 	 * @param astRoot
@@ -3292,7 +3354,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			protected IStatus run(IProgressMonitor monitor) {
 				Program astRoot = null;
 				try {
-					astRoot = SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_NO,
+					astRoot = SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_ACTIVE_ONLY,
 							new NullProgressMonitor());
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -3327,6 +3389,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		IDocument document = viewer.getDocument();
 		if (document == null)
 			return;
+
+		// TODO: see the method comment, need to be removed once
+		// PHPStructuredEditor#aboutToBeChangedEvent is used
+		if (document.getLength() != astRoot.getEnd() || this.fReconcileSelection) {
+			return;
+		}
 
 		boolean hasChanged = false;
 		if (document instanceof IDocumentExtension4) {
