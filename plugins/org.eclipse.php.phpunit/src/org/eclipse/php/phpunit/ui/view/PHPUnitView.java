@@ -144,7 +144,7 @@ public class PHPUnitView extends ViewPart {
 	/**
 	 * The tab that shows the stack trace of a failure
 	 */
-	private DiffTrace fDiffTrace;
+	// private DiffTrace fDiffTrace;
 	private FailureTrace fFailureTrace;
 
 	/**
@@ -423,18 +423,19 @@ public class PHPUnitView extends ViewPart {
 		return traceTab;
 	}
 
-	CTabItem createDiffTab(final CTabFolder parent) {
-		final CTabItem diffTab = new CTabItem(parent, SWT.NONE);
-		diffTab.setText(PHPUnitMessages.PHPUnitView_Tab_Diff);
-		diffTab.setImage(fDiffViewIcon);
-		final ViewForm diffForm = new ViewForm(parent, SWT.NONE);
-		final ToolBar failureToolBar = new ToolBar(diffForm, SWT.FLAT | SWT.WRAP);
-		diffForm.setTopCenter(failureToolBar);
-		fDiffTrace = new DiffTrace(diffForm, this);
-		diffForm.setContent(fDiffTrace.getComposite());
-		diffTab.setControl(diffForm);
-		return diffTab;
-	}
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517513
+	// CTabItem createDiffTab(final CTabFolder parent) {
+	// final CTabItem diffTab = new CTabItem(parent, SWT.NONE);
+	// diffTab.setText(PHPUnitMessages.PHPUnitView_Tab_Diff);
+	// diffTab.setImage(fDiffViewIcon);
+	// final ViewForm diffForm = new ViewForm(parent, SWT.NONE);
+	// final ToolBar failureToolBar = new ToolBar(diffForm, SWT.FLAT | SWT.WRAP);
+	// diffForm.setTopCenter(failureToolBar);
+	// fDiffTrace = new DiffTrace(diffForm, this);
+	// diffForm.setContent(fDiffTrace.getComposite());
+	// diffTab.setControl(diffForm);
+	// return diffTab;
+	// }
 
 	void setShowFailuresOnly(final boolean failuresOnly) {
 		setFilterAndLayout(failuresOnly);
@@ -649,7 +650,8 @@ public class PHPUnitView extends ViewPart {
 	private void showFailure(final PHPUnitElement failure) {
 		postSyncRunnable(() -> {
 			if (!isDisposed()) {
-				fDiffTrace.showFailure(failure);
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517513
+				// fDiffTrace.showFailure(failure);
 				fFailureTrace.showFailure(failure);
 			}
 		});
