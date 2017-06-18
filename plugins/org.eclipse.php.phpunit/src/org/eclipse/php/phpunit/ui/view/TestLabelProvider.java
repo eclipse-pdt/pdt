@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
@@ -162,7 +163,9 @@ public class TestLabelProvider extends LabelProvider {
 			return prefix;
 		}
 		if (test instanceof PHPUnitTraceFrame) {
-			return test.toString() + "()"; //$NON-NLS-1$
+			PHPUnitTraceFrame frame = (PHPUnitTraceFrame) test;
+			IPath path = new Path(frame.getFile());
+			return path.lastSegment() + " - " + test.toString() + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return test.toString();
 	}

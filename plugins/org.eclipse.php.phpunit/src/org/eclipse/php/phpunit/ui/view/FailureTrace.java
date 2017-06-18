@@ -79,8 +79,9 @@ public class FailureTrace implements IMenuListener {
 
 	void handleDefaultSelected() {
 		final IStructuredSelection selection = (IStructuredSelection) fTreeViewer.getSelection();
-		if (selection.size() != 1)
+		if (selection.size() != 1) {
 			return;
+		}
 
 		final PHPUnitElement test = (PHPUnitElement) selection.getFirstElement();
 		OpenEditorAction action = null;
@@ -88,19 +89,18 @@ public class FailureTrace implements IMenuListener {
 		if (test instanceof PHPUnitTraceFrame) {
 			PHPUnitTraceFrame frame = (PHPUnitTraceFrame) test;
 			String methodName = frame.getFunction();
-			String className = frame.getClassName();
-			action = new OpenTestAction(OpenEditorAction.GOTO_METHOD, fTestRunner, className, null, 0, methodName);
-
+			action = new OpenEditorAtLineAction("", fTestRunner, frame.getFile(), frame.getLine(), methodName); //$NON-NLS-1$
 		} else if (test instanceof PHPUnitTestException) {
 			PHPUnitTestException te = (PHPUnitTestException) test;
 			PHPUnitTestCase parent = (PHPUnitTestCase) te.getParent();
 			String methodName = parent.getName();
-
-			action = new OpenEditorAtLineAction("", fTestRunner, test.getParent().getFile(), te.getLine(), methodName); //$NON-NLS-1$
+			action = new OpenEditorAtLineAction("", fTestRunner, test.getParent().getFile(), parent.getLine(), //$NON-NLS-1$
+					methodName);
 		}
 
-		if (action.isEnabled())
+		if (action.isEnabled()) {
 			action.run();
+		}
 	}
 
 	private void initMenu() {
