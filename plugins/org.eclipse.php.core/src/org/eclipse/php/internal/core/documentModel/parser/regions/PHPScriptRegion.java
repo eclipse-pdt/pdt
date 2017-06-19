@@ -442,7 +442,11 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 		} else if (tokenStart.getType() == PHPRegionTypes.PHP_LABEL) {
 			try {
 				ITextRegion token = tokensContainer.getToken(tokenStart.getStart() - 1);
-				token = tokensContainer.getToken(token.getStart() - 1);
+				int offset = token.getStart();
+				if (offset > 0) {
+					offset = offset - 1;
+				}
+				token = tokensContainer.getToken(offset);
 				// lexer has maybe found the "<<" bitwise shift operator
 				return token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2;
 			} catch (BadLocationException e) {
