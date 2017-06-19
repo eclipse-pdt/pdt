@@ -972,8 +972,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 				doNotIndent = false;
-				resetEnableStatus(
-						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
+				int commentEnd = comment.sourceEnd();
+				resetEnableStatus(document.get(comment.sourceStart() + offset, commentEnd - comment.sourceStart()));
 
 				if (this.editsEnabled && this.preferences.comment_format_line_comment
 						&& (startAtFirstColumn && this.preferences.comment_format_line_comment_starting_on_first_column
@@ -987,8 +987,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentStringForComment = ""; //$NON-NLS-1$
 					}
 
-					commentContent = document.get(comment.sourceStart() + offset,
-							comment.sourceEnd() - comment.sourceStart());
+					commentContent = document.get(comment.sourceStart() + offset, commentEnd - comment.sourceStart());
 					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
@@ -1031,7 +1030,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							newLineStart = false;
 						}
 					}
-					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
+					if (needInsertNewLine) {
+						commentEnd -= lineSeparator.length();
+					}
+					handleCharsWithoutComments(comment.sourceStart() + offset, commentEnd + offset, true);
 					if (needInsertNewLine) {
 						insertNewLine();
 						needInsertNewLine = false;
@@ -1042,8 +1044,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						afterNewLine = EMPTY_STRING;
 					}
 				} else {
-					commentContent = document.get(comment.sourceStart() + offset,
-							comment.sourceEnd() - comment.sourceStart());
+					commentContent = document.get(comment.sourceStart() + offset, commentEnd - comment.sourceStart());
 					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
@@ -1065,7 +1066,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 				}
 
-				start = comment.sourceEnd() + offset;
+				start = commentEnd + offset;
 				break;
 			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
@@ -3891,9 +3892,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return lastPosition;
 		}
 		if (positionOfElse > lastPosition) {
-			handleChars(lastPosition, positionOfElse + 4); // 4 =
-															// "else".length()
-			appendToBuffer("else"); //$NON-NLS-1$
+			// 4 = "else".length()
+			handleChars(lastPosition, positionOfElse);
 			handleChars(positionOfElse + 4, positionOfElse + 4);
 			lastPosition = positionOfElse + 4;
 		} else {

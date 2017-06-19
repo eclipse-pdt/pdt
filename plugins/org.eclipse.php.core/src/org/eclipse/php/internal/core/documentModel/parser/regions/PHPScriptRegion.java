@@ -437,7 +437,6 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 				return token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2;
 			} catch (BadLocationException e) {
 				// never happens
-				assert false;
 			}
 		} else if (tokenStart.getType() == PHPRegionTypes.PHP_LABEL) {
 			try {
@@ -447,7 +446,6 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 				return token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2;
 			} catch (BadLocationException e) {
 				// never happens
-				assert false;
 			}
 		}
 		return false;

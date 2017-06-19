@@ -22,9 +22,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.php.core.PHPVersion;
@@ -36,7 +34,9 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.internal.formatter.core.HtmlFormatterForPHPCode;
 import org.eclipse.php.internal.formatter.core.Logger;
+import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
+import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -167,14 +167,21 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 
 	private void replaceAll(IDocument document, List<ReplaceEdit> changes, IStructuredModel domModelForPHP)
 			throws BadLocationException {
-
-		// Replace the content of the document
-		StringBuilder buffer = new StringBuilder(document.get());
-		for (int i = changes.size() - 1; i >= 0; i--) {
-			ReplaceEdit replace = changes.get(i);
-			buffer.replace(replace.getOffset(), replace.getExclusiveEnd(), replace.getText());
+		MultiTextEdit multiEdit = new MultiTextEdit();
+		multiEdit.addChildren(changes.toArray(new ReplaceEdit[0]));
+		Map<String, IDocumentPartitioner> partitioners = null;
+		try {
+			if (multiEdit.getChildrenSize() > 20) {
+				partitioners = TextUtilities.removeDocumentPartitioners(document);
+			}
+			RewriteSessionEditProcessor editProcessor = new RewriteSessionEditProcessor(document, multiEdit,
+					TextEdit.CREATE_UNDO | TextEdit.UPDATE_REGIONS);
+			editProcessor.performEdits();
+		} finally {
+			if (partitioners != null) {
+				TextUtilities.addDocumentPartitioners(document, partitioners);
+			}
 		}
-		document.set(buffer.toString());
 	}
 
 	@Override
