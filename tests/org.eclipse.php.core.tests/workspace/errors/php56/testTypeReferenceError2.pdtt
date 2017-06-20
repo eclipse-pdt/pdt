@@ -1,0 +1,28 @@
+--TEST--
+Bug 517368 - Use statement doesn't take care Annotation / Alias
+
+wrong namespace detection in syntax validator
+--FILE--
+<?php
+namespace bar\model\translatable;
+
+trait Foo {
+
+    public $title = 'Hello World';
+
+}
+
+namespace error\name001;
+
+use bar\model as myModel;
+
+class Sample {
+    use myModel\translatable\Foo; // here should not report "type cannot be resolved" error
+
+    public function printTitle() {
+        echo $this->title . "\n";
+    }
+
+}
+--EXPECT--
+[line=12, start=123, end=132] The import bar\model cannot be resolved
