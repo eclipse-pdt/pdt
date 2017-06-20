@@ -634,9 +634,17 @@ public class ValidatorVisitor extends PHPASTVisitor {
 					// for use statement, no need to lookup the use statement
 					// to compute namespace name
 					if (!isUseStatement) {
-						UsePartInfo info = usePartInfo.get(namespaceName.toLowerCase());
+						// use first segment of namespace to lookup the use
+						// statements
+						String[] segments = namespaceName.split("\\\\", 2); //$NON-NLS-1$
+						UsePartInfo info = usePartInfo.get(segments[0].toLowerCase());
 						if (info != null) {
-							namespaceName = info.getFullyQualifiedName();
+							String restSegs = ""; //$NON-NLS-1$
+							if (segments.length > 1) {
+								restSegs = segments[1];
+							}
+							namespaceName = PHPModelUtils.concatFullyQualifiedNames(info.getFullyQualifiedName(),
+									restSegs);
 						}
 					}
 				}
