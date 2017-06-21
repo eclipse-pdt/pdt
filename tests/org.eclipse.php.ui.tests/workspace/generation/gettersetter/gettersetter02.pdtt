@@ -21,7 +21,7 @@ class MyClass {
      */
     protected $field;
 	/**
-	 * @return the $field
+	 * @return string
 	 */
 	public function getField() {
 		return $this->field;

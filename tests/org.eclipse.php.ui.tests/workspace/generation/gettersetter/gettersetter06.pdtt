@@ -43,7 +43,7 @@ namespace Foo {
 		function abc() {
 		}
 		/**
-		 * @return the $field
+		 * @return \Bar\TestClass
 		 */
 		public function getField() {
 			return $this->field;

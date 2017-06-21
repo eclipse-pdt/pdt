@@ -20,7 +20,7 @@ class MyClass {
 	 */
 	protected $field;
 	/**
-	 * @return the $field
+	 * @return LogicException
 	 */
 	public function getField() {
 		return $this->field;

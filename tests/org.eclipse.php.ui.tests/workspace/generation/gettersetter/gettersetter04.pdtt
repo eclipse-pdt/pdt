@@ -27,7 +27,7 @@ namespace Foo {
 		 */
 		protected $field;
 		/**
-		 * @return the $field
+		 * @return number
 		 */
 		public function getField() {
 			return $this->field;
