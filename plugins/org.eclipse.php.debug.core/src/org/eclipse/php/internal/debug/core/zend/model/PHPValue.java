@@ -26,6 +26,7 @@ import org.eclipse.php.internal.debug.core.model.VirtualPartition;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
+import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsUtil;
 
 /**
  * Value of a PHP variable.
@@ -58,9 +59,18 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
+	 */
+	public String getReferenceTypeName() throws DebugException {
+		return getDataType().getText().toUpperCase();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
 	 */
-	public boolean hasVariables() throws DebugException {
+	public synchronized boolean hasVariables() throws DebugException {
 		switch (fExpressionValue.getDataType()) {
 		case PHP_ARRAY:
 		case PHP_OBJECT:
@@ -73,17 +83,8 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	}
 
 	@Override
-	public DataType getDataType() {
+	public synchronized DataType getDataType() {
 		return fExpressionValue.getDataType();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
-	 */
-	public String getReferenceTypeName() throws DebugException {
-		return getDataType().getText().toUpperCase();
 	}
 
 	/*
@@ -91,7 +92,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * 
 	 * @see org.eclipse.debug.core.model.IValue#getValueString()
 	 */
-	public String getValueString() throws DebugException {
+	public synchronized String getValueString() throws DebugException {
 		return fExpressionValue.getValueAsString();
 	}
 
@@ -118,17 +119,26 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 		return fCurrentPartitions.values().toArray(new IVariable[fCurrentPartitions.size()]);
 	}
 
-	public String getValue() throws DebugException {
+	public synchronized String getValue() throws DebugException {
 		return String.valueOf(fExpressionValue.getValue());
 	}
 
-	public void updateValue(ExpressionValue value) {
+	public synchronized void updateValue(ExpressionValue value) {
 		fExpressionValue = value;
 		createVariables(fExpressionValue);
 	}
 
-	protected Expression getExpression() {
+	protected synchronized Expression getExpression() {
 		return fExpression;
+	}
+
+	protected synchronized void update(Expression expression) {
+		// Reset variables state
+		fPreviousVariables = fCurrentVariables;
+		fCurrentVariables = null;
+		// Bind to new expression
+		fExpression = expression;
+		fExpressionValue = fExpression.getValue();
 	}
 
 	/**
@@ -137,17 +147,8 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * @return <code>true</code> if there are multiple partitions with
 	 *         variables, <code>false</code> otherwise
 	 */
-	protected boolean hasPartitions() {
+	private boolean hasPartitions() {
 		return fCurrentPartitions.size() > 0;
-	}
-
-	protected void update(Expression expression) {
-		// Reset variables state
-		fPreviousVariables = fCurrentVariables;
-		fCurrentVariables = null;
-		// Bind to new expression
-		fExpression = expression;
-		fExpressionValue = fExpression.getValue();
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * @param descriptor
 	 * @return merged variable
 	 */
-	protected IVariable merge(IVariable variable) {
+	private IVariable merge(IVariable variable) {
 		if (fPreviousVariables == null)
 			return variable;
 		if (!(variable instanceof PHPVariable))

@@ -83,7 +83,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fLocalVariables = localVariables;
 	}
 
-	protected void update(int lineNumber, Expression[] localVariables) throws DebugException {
+	protected synchronized void update(int lineNumber, Expression[] localVariables) throws DebugException {
 		this.fLineNumber = lineNumber;
 		// Reset state
 		this.fPreviousVariables = fCurrentVariables;
@@ -102,7 +102,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @param descriptor
 	 * @return merged variable
 	 */
-	protected IVariable merge(IVariable variable) {
+	private IVariable merge(IVariable variable) {
 		if (fPreviousVariables == null)
 			return variable;
 		if (!(variable instanceof PHPVariable))
@@ -171,7 +171,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
-	public int getLineNumber() throws DebugException {
+	public synchronized int getLineNumber() throws DebugException {
 		return fLineNumber;
 	}
 
@@ -355,10 +355,6 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		getThread().terminate();
 	}
 
-	public int checkLineNumber() throws DebugException {
-		return fLineNumber;
-	}
-
 	/**
 	 * Returns the name of the source file this stack frame is associated with.
 	 * 
@@ -377,12 +373,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		return fFileName;
 	}
 
-	public Expression[] getStackVariables() {
+	public synchronized Expression[] getStackVariables() {
 		return fLocalVariables;
-	}
-
-	public void setStackVariables(Expression[] variables) {
-		fLocalVariables = variables;
 	}
 
 }
