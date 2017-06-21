@@ -15,7 +15,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.*;
+import org.eclipse.debug.core.model.IRegisterGroup;
+import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
@@ -109,7 +112,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fLocalVariables = localVariables;
 	}
 
-	protected void update(int lineNumber, Expression[] localVariables) throws DebugException {
+	protected synchronized void update(int lineNumber, Expression[] localVariables) throws DebugException {
 		this.fLineNumber = lineNumber;
 		// Reset state
 		this.fPreviousVariables = fCurrentVariables;
@@ -128,7 +131,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @param descriptor
 	 * @return merged variable
 	 */
-	protected IVariable merge(IVariable variable) {
+	private IVariable merge(IVariable variable) {
 		if (fPreviousVariables == null)
 			return variable;
 		if (!(variable instanceof PHPVariable))
@@ -208,7 +211,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
-	public int getLineNumber() throws DebugException {
+	public synchronized int getLineNumber() throws DebugException {
 		return fLineNumber;
 	}
 
@@ -392,10 +395,6 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		getThread().terminate();
 	}
 
-	public int checkLineNumber() throws DebugException {
-		return fLineNumber;
-	}
-
 	/**
 	 * Returns the name of the source file this stack frame is associated with.
 	 * 
@@ -414,12 +413,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		return fFileName;
 	}
 
-	public Expression[] getStackVariables() {
+	public synchronized Expression[] getStackVariables() {
 		return fLocalVariables;
-	}
-
-	public void setStackVariables(Expression[] variables) {
-		fLocalVariables = variables;
 	}
 
 }
