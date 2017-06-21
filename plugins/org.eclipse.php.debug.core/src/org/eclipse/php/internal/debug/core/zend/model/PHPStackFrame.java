@@ -15,7 +15,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.*;
+import org.eclipse.debug.core.model.IRegisterGroup;
+import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
@@ -109,7 +112,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fLocalVariables = localVariables;
 	}
 
-	protected void update(int lineNumber, Expression[] localVariables) throws DebugException {
+	protected synchronized void update(int lineNumber, Expression[] localVariables) throws DebugException {
 		this.fLineNumber = lineNumber;
 		// Reset state
 		this.fPreviousVariables = fCurrentVariables;

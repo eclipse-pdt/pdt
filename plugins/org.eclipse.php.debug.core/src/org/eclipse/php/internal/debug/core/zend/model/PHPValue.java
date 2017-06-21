@@ -147,7 +147,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 		return fCurrentPartitions.size() > 0;
 	}
 
-	protected void update(Expression expression) {
+	protected synchronized void update(Expression expression) {
 		// Reset variables state
 		fPreviousVariables = fCurrentVariables;
 		fCurrentVariables = null;
