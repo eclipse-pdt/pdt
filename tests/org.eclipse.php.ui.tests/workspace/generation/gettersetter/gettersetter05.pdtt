@@ -39,7 +39,7 @@ namespace Foo {
 		 */
 		protected $field;
 		/**
-		 * @return the $field
+		 * @return \Bar\TestClass
 		 */
 		public function getField() {
 			return $this->field;

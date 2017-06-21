@@ -146,7 +146,7 @@ public class StubUtility {
 		if (namespace != null) {
 			return namespace.getElementName();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private static int getImplementationModifiers(AST ast, IMethod method, boolean deferred) throws ModelException {
@@ -491,8 +491,8 @@ public class StubUtility {
 	 * @return return the type body template or <code>null</code>
 	 * @throws CoreException
 	 *             thrown if the template could not be evaluated
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String,
-	 *      ICompilationUnit, String, String)
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String, ICompilationUnit,
+	 *      String, String)
 	 */
 	public static String getTypeBody(String templateID, IScriptProject sp, String typeName, String lineDelim)
 			throws CoreException {
@@ -705,8 +705,6 @@ public class StubUtility {
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 * 
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getSetterComment(ICompilationUnit,
-	 * String, String, String, String, String, String, String)
 	 */
 	public static String getSetterComment(IScriptProject sp, String typeName, String methodName, String fieldName,
 			String fieldType, String paramName, String bareFieldName, String lineDelimiter) throws CoreException {
@@ -730,8 +728,6 @@ public class StubUtility {
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 * 
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getGetterComment(ICompilationUnit,
-	 * String, String, String, String, String, String)
 	 */
 	public static String getGetterComment(IScriptProject sp, String typeName, String methodName, String fieldName,
 			String fieldType, String bareFieldName, String lineDelimiter) throws CoreException {
@@ -792,8 +788,8 @@ public class StubUtility {
 	}
 
 	/*
-	 * private static ASTNode getReturnType(MethodDeclaration decl) { // used
-	 * from API, can't eliminate return decl.getAST().apiLevel() == AST.JLS2 ?
+	 * private static ASTNode getReturnType(MethodDeclaration decl) { // used from
+	 * API, can't eliminate return decl.getAST().apiLevel() == AST.JLS2 ?
 	 * decl.getReturnType() : decl.getReturnType2(); }
 	 */
 
