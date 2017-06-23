@@ -35,7 +35,7 @@ import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
-import org.eclipse.php.internal.ui.editor.ASTProvider;
+import org.eclipse.php.internal.ui.editor.ast.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PHPCommentTemplateContextType;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType;
 import org.eclipse.php.internal.ui.explorer.LibraryFolderChangeListener;
@@ -204,6 +204,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 		Job.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
 		Job.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
+		if (fASTProvider != null) {
+			fASTProvider.dispose();
+		}
 		fASTProvider = null;
 		plugin = null;
 	}

@@ -62,6 +62,7 @@ Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatte
  org.eclipse.php.internal.ui.doubleclick;x-internal:=true,
  org.eclipse.php.internal.ui.editor;x-friends:="org.eclipse.php.refactoring.ui",
  org.eclipse.php.internal.ui.editor.adapter;x-internal:=true,
+ org.eclipse.php.internal.ui.editor.ast;x-friends:="org.eclipse.php.refactoring.ui",
  org.eclipse.php.internal.ui.editor.configuration;x-internal:=true,
  org.eclipse.php.internal.ui.editor.contentassist;x-internal:=true,
  org.eclipse.php.internal.ui.editor.highlighter;x-friends:="org.eclipse.php.formatter.ui,org.eclipse.php.refactoring.ui",

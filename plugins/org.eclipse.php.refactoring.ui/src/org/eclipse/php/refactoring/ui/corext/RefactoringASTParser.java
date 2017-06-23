@@ -20,7 +20,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.ui.editor.ASTProvider;
+import org.eclipse.php.internal.ui.editor.ast.ASTProvider;
 import org.eclipse.php.refactoring.ui.RefactoringUIPlugin;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 
