@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import java.util.EventObject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
@@ -41,7 +40,6 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -54,7 +52,6 @@ import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -74,6 +71,59 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
+
+	private class EditorReconcilingListener implements IDocumentListener, ITextInputListener {
+
+		public void install() {
+			StyledText text = getTextWidget();
+			if (text == null || text.isDisposed())
+				return;
+
+			addTextInputListener(this);
+
+			IDocument document = getDocument();
+			if (document != null) {
+				document.addDocumentListener(this);
+			}
+		}
+
+		public void uninstall() {
+			removeTextInputListener(this);
+			IDocument document = getDocument();
+			if (document != null) {
+				document.removeDocumentListener(this);
+			}
+		}
+
+		@Override
+		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
+			if (oldInput != null) {
+				oldInput.removeDocumentListener(this);
+			}
+		}
+
+		@Override
+		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
+			if (newInput != null) {
+				newInput.addDocumentListener(this);
+				if (getTextEditor() instanceof PHPStructuredEditor) {
+					((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+				}
+			}
+		}
+
+		@Override
+		public void documentAboutToBeChanged(DocumentEvent event) {
+		}
+
+		@Override
+		public void documentChanged(DocumentEvent event) {
+			if (getTextEditor() instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+			}
+		}
+
+	}
 
 	/**
 	 * Text operation code for requesting the outline for the current input.
@@ -99,6 +149,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IInformationPresenter fHierarchyPresenter;
 	private IAnnotationHover fProjectionAnnotationHover;
 	private boolean fFireSelectionChanged = true;
+	private EditorReconcilingListener fEditorReconcilingListener;
 
 	private IDocumentAdapter documentAdapter;
 
@@ -113,32 +164,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		this.fTextEditor = textEditor;
-		if (fTextEditor instanceof PHPStructuredEditor) {
-			PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
-			phpEditor.addReconcileListener(new IPHPScriptReconcilingListener() {
-
-				@Override
-				public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
-					if (fPostSelectionLength != -1) {
-						Display.getDefault().syncExec(new Runnable() {
-							@Override
-							public void run() {
-								synchronized (PHPStructuredTextViewer.this) {
-									if (fPostSelectionOffset >= 0 && fPostSelectionLength >= 0
-											&& getDocument() != null) {
-										firePostSelectionChanged(fPostSelectionOffset, fPostSelectionLength);
-									}
-								}
-							}
-						});
-					}
-				}
-
-				@Override
-				public void aboutToBeReconciled() {
-				}
-			});
-		}
 	}
 
 	public ITextEditor getTextEditor() {
@@ -440,6 +465,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 
+		// need to install the EditorReconcilingListener before reconciler is
+		// installed so that PHPStructuredEditor.aboutToBeReconciled() can be
+		// called when editor opened
+		if (fEditorReconcilingListener == null) {
+			fEditorReconcilingListener = new EditorReconcilingListener();
+			fEditorReconcilingListener.install();
+		}
+
 		super.configure(configuration);
 
 		// release old annotation hover before setting new one
@@ -503,6 +536,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fOutlinePresenter != null) {
 			fOutlinePresenter.uninstall();
 			fOutlinePresenter = null;
+		}
+		if (fEditorReconcilingListener != null) {
+			fEditorReconcilingListener.uninstall();
+			fEditorReconcilingListener = null;
 		}
 		super.unconfigure();
 	}
@@ -651,10 +688,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	private InternalCommandStackListener fInternalCommandStackListener;
 
-	private int fPostSelectionLength;
-
-	private int fPostSelectionOffset;
-
 	/**
 	 * @return
 	 */
@@ -681,25 +714,5 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	@Override
 	public ContentAssistantFacade getContentAssistFacade() {
 		return fContentAssistantFacade;
-	}
-
-	@Override
-	protected void firePostSelectionChanged(int offset, int length) {
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=500993
-		// This method must be synchronized to avoid using negative
-		// fPostSelectionOffset values (see concurrent access with the
-		// IPhpScriptReconcilingListener attached to PHPStructuredEditor and
-		// defined in the PHPStructuredTextViewer constructor).
-		synchronized (this) {
-			if (fTextEditor instanceof PHPStructuredEditor
-					&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
-				super.firePostSelectionChanged(offset, length);
-				fPostSelectionOffset = -1;
-				fPostSelectionLength = -1;
-			} else {
-				fPostSelectionOffset = offset;
-				fPostSelectionLength = length;
-			}
-		}
 	}
 }
