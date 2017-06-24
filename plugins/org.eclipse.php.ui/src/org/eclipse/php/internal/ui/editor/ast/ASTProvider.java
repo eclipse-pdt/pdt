@@ -278,10 +278,6 @@ public final class ASTProvider {
 			fActiveJavaElement = javaElement;
 		}
 
-		if (javaElement != null) {
-			getCacheFor(javaElement).reset();
-		}
-
 		if (ASTUtils.DEBUG) {
 			System.out.println(ASTUtils.getThreadName() + " - " + ASTUtils.DEBUG_PREFIX + "active editor is: " //$NON-NLS-1$ //$NON-NLS-2$
 					+ toString(javaElement));
