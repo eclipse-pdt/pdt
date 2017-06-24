@@ -43,7 +43,9 @@ public class ASTCache {
 			return;
 		}
 
-		reset();
+		synchronized (this) {
+			fState = STATES.STARTED;
+		}
 	}
 
 	public void reconciled(final Program ast, final ISourceModule input, final IProgressMonitor progressMonitor) {
@@ -63,8 +65,10 @@ public class ASTCache {
 		// do not reset when an AST is under construction
 		if (fWaitLock.tryLock()) {
 			synchronized (this) {
-				fAST = null;
-				fState = STATES.NONE;
+				if (fState != STATES.STARTED) {
+					fAST = null;
+					fState = STATES.NONE;
+				}
 			}
 			fWaitLock.unlock();
 		}
@@ -89,12 +93,32 @@ public class ASTCache {
 
 		try {
 			if (fWaitLock.tryLock(30, TimeUnit.SECONDS)) {
-				synchronized (this) {
-					if (fState == STATES.DONE) {
-						return fAST;
+				boolean isReconciling = false;
+				int nbIterations = 300;
+
+				do {
+					synchronized (this) {
+						if (fState == STATES.DONE) {
+							return fAST;
+						} else if (fState == STATES.STARTED) {
+							isReconciling = true;
+						} else {
+							nbIterations = 0;
+							fState = STATES.STARTED;
+						}
 					}
-					fState = STATES.STARTED;
-				}
+
+					if (isReconciling && nbIterations > 0) {
+						Thread.sleep(100);
+						if (--nbIterations == 0) {
+							synchronized (this) {
+								fAST = null;
+								fState = STATES.CANCELED;
+								return fAST;
+							}
+						}
+					}
+				} while (isReconciling && nbIterations > 0);
 
 				Program currentAST = ASTUtils.createAST(input, progressMonitor);
 
