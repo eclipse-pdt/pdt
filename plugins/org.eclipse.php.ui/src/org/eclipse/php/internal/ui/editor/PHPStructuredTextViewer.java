@@ -17,6 +17,7 @@ import java.util.EventObject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
@@ -40,6 +41,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -72,12 +74,20 @@ import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
-	private class EditorReconcilingListener implements IDocumentListener, ITextInputListener {
+	private class EditorReconcilingListener
+			implements IDocumentListener, ITextInputListener, IPHPScriptReconcilingListener {
+
+		/** Some changes need to be processed. */
+		private boolean fIsDirty = false;
 
 		public void install() {
 			StyledText text = getTextWidget();
 			if (text == null || text.isDisposed())
 				return;
+
+			if (getTextEditor() instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) getTextEditor()).addReconcileListener(this);
+			}
 
 			addTextInputListener(this);
 
@@ -89,6 +99,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 		public void uninstall() {
 			removeTextInputListener(this);
+			if (getTextEditor() instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) getTextEditor()).removeReconcileListener(this);
+			}
+
 			IDocument document = getDocument();
 			if (document != null) {
 				document.removeDocumentListener(this);
@@ -118,9 +132,19 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 		@Override
 		public void documentChanged(DocumentEvent event) {
-			if (getTextEditor() instanceof PHPStructuredEditor) {
+			if (!fIsDirty && getTextEditor() instanceof PHPStructuredEditor) {
 				((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
+				fIsDirty = true;
 			}
+		}
+
+		@Override
+		public void aboutToBeReconciled() {
+		}
+
+		@Override
+		public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
+			fIsDirty = false;
 		}
 
 	}
