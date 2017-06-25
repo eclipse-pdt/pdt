@@ -43,7 +43,13 @@ public class ASTCache {
 			return;
 		}
 
-		reset();
+		synchronized (this) {
+			fState = STATES.STARTED;
+			// it seems that we should not provide non-null ASTs when
+			// calling getAST() with a WAIT_NO flag after a reconcile
+			// process has been started:
+			fAST = null;
+		}
 	}
 
 	public void reconciled(final Program ast, final ISourceModule input, final IProgressMonitor progressMonitor) {
@@ -54,19 +60,13 @@ public class ASTCache {
 		}
 
 		synchronized (this) {
-			fAST = ast;
-			fState = STATES.DONE;
-		}
-	}
-
-	public void reset() {
-		// do not reset when an AST is under construction
-		if (fWaitLock.tryLock()) {
-			synchronized (this) {
+			if (ast == null) {
+				fState = STATES.CANCELED;
 				fAST = null;
-				fState = STATES.NONE;
+			} else {
+				fState = STATES.DONE;
+				fAST = ast;
 			}
-			fWaitLock.unlock();
 		}
 	}
 
@@ -89,30 +89,53 @@ public class ASTCache {
 
 		try {
 			if (fWaitLock.tryLock(30, TimeUnit.SECONDS)) {
-				synchronized (this) {
-					if (fState == STATES.DONE) {
-						return fAST;
+				boolean isReconciling = false;
+				int nbIterations = 300;
+
+				do {
+					synchronized (this) {
+						if (fState == STATES.DONE) {
+							return fAST;
+						} else if (fState == STATES.STARTED) {
+							isReconciling = true;
+						} else {
+							nbIterations = 0;
+							// same as aboutToBeReconciled(input)
+							fState = STATES.STARTED;
+						}
 					}
-					fState = STATES.STARTED;
-				}
+
+					if (isReconciling && nbIterations > 0) {
+						Thread.sleep(100);
+						if (--nbIterations == 0) {
+							// stop the loop
+							synchronized (this) {
+								fState = STATES.CANCELED;
+								fAST = null;
+								return fAST;
+							}
+						}
+					}
+				} while (isReconciling && nbIterations > 0);
 
 				Program currentAST = ASTUtils.createAST(input, progressMonitor);
 
+				// same as reconciled(currentAST, input, progressMonitor)
 				synchronized (this) {
 					if (currentAST == null) {
-						fAST = null;
 						fState = STATES.CANCELED;
+						fAST = null;
 					} else {
-						fAST = currentAST;
 						fState = STATES.DONE;
+						fAST = currentAST;
 					}
 					return fAST;
 				}
 			}
 		} catch (Throwable e) {
 			synchronized (this) {
-				fAST = null;
 				fState = STATES.CANCELED;
+				fAST = null;
 			}
 		} finally {
 			if (fWaitLock.isHeldByCurrentThread()) {
