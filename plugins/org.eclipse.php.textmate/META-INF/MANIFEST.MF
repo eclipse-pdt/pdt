@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Textmate Editors
+Bundle-SymbolicName: org.eclipse.php.textmate;singleton:=true
+Bundle-Version: 5.1.0.qualifier
+Bundle-Activator: org.eclipse.php.textmate.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.tm4e.registry,
+ org.eclipse.ui.genericeditor,
+ org.eclipse.tm4e.ui,
+ org.eclipse.tm4e.samples
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Eclipse PDT
