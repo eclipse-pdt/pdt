@@ -10,14 +10,14 @@ class MyClass {
 class MyClass {
 	protected $field;
 	/**
-	 * @return unknown
+	 * @return mixed
 	 */
 	public function getField() {
 		return $this->field;
 	}
 
 	/**
-	 * @param unknown $field
+	 * @param mixed $field
 	 */
 	public function setField($field) {
 		$this->field = $field;

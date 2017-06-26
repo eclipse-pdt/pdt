@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
@@ -332,7 +333,7 @@ public class CodeGenerationUtils {
 			fieldType = evaluatedType.getTypeName();
 		}
 		if (StringUtils.isEmpty(fieldType)) {
-			fieldType = "unknown"; //$NON-NLS-1$
+			fieldType = PHPSimpleTypes.MIXED.getTypeName();
 		}
 		return fieldType;
 	}
