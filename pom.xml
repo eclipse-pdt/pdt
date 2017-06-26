@@ -202,6 +202,11 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
 		</repository>
+		<repository>
+			<id>textmate4e</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tm4e/snapshots/</url>
+		</repository>	
 	</repositories>
 
 	<pluginRepositories>

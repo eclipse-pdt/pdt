@@ -49,6 +49,7 @@
 		<module>org.eclipse.php.mylyn-feature</module>
 		<module>org.eclipse.php.source-feature</module>
 		<module>org.eclipse.php.test-feature</module>
+		<module>org.eclipse.php.textmate-feature</module>
 		<module>org.eclipse.php.sdk-feature</module>
 	</modules>
 </project>
