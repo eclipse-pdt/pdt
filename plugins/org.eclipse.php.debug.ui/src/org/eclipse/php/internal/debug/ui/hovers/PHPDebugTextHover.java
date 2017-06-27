@@ -224,7 +224,12 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 						}
 					}
 				}
-				variable = frame.findVariable(variableName);
+				for (IVariable stackVariable : frame.getVariables()) {
+					if (stackVariable.getName().equals(variableName)) {
+						variable = stackVariable;
+						break;
+					}
+				}
 			}
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);
