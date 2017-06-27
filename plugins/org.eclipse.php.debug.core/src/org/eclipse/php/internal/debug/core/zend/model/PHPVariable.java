@@ -121,7 +121,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 					+ "] PHPValue: Problem changing variable value"); //$NON-NLS-1$
 		}
 		expressionManager.update(changeVar, 1);
-		fValue.updateValue(changeVar.getValue());
+		fValue.update(changeVar);
 		fireChangeEvent(DebugEvent.CONTENT);
 	}
 

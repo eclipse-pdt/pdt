@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,36 +30,65 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
  */
 public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
-	private static class PHPVariableContainer {
-		IVariable[] locals = null;
+	private final class VariablesContainer {
 
-		/**
-		 * @param varName
-		 * @return
-		 * @throws DebugException
-		 */
-		public IVariable findVariable(String varName) throws DebugException {
-			if (locals != null) {
-				final IVariable variable = findVariable(varName, locals);
-				if (variable != null) {
-					return variable;
-				}
+		private Map<String, IVariable> fAllCurrentVariables = null;
+		private Map<String, IVariable> fAllPreviousVariables = null;
+		private IVariable[] fVariables = null;
+		private boolean fIsOutdated = true;
+
+		IVariable[] getVariables() {
+			if (fIsOutdated) {
+				updateVariables();
+				fVariables = fAllCurrentVariables.values().toArray(new IVariable[fAllCurrentVariables.size()]);
+				fIsOutdated = false;
 			}
-			return null;
+			return fVariables;
 		}
 
-		private static IVariable findVariable(String varName, IVariable[] vars) throws DebugException {
-			for (int i = 0; i < vars.length; i++) {
-				final IVariable var = vars[i];
-				if (var.getName().equals(varName)) {
-					return var;
-				}
+		void markOutdated() {
+			fIsOutdated = true;
+		}
+
+		/**
+		 * Merges incoming variable. Merge is done by means of checking if
+		 * related child variable existed in "one step back" state of a frame.
+		 * If related variable existed, it is updated with the use of the most
+		 * recent descriptor and returned instead of the incoming one.
+		 * 
+		 * @param variable
+		 * @param descriptor
+		 * @return merged variable
+		 */
+		private IVariable merge(IVariable variable) {
+			if (fAllPreviousVariables == null)
+				return variable;
+			if (!(variable instanceof PHPVariable))
+				return variable;
+			PHPVariable incoming = (PHPVariable) variable;
+			if (incoming.getFullName().isEmpty())
+				return incoming;
+			IVariable stored = fAllPreviousVariables.get(incoming.getFullName());
+			if (stored != null) {
+				((PHPVariable) stored).update(incoming.getExpression());
+				return stored;
 			}
-			return null;
+			return variable;
+		}
+
+		private void updateVariables() {
+			fAllPreviousVariables = fAllCurrentVariables;
+			fAllCurrentVariables = new LinkedHashMap<>();
+			Expression[] localVariables = ExpressionValue.sort(fExpressions);
+			fAllCurrentVariables = new LinkedHashMap<>();
+			for (int i = 0; i < localVariables.length; i++) {
+				PHPVariable incoming = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i]);
+				fAllCurrentVariables.put(incoming.getFullName(), merge(incoming));
+			}
 		}
 	}
 
-	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
+	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); // $NON-NLS-0$
 
 	private PHPThread fThread;
 	private String fFunctionName;
@@ -65,9 +96,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private String fResolvedFileName;
 	private int fLineNumber;
 	private int fDepth;
-	private Expression[] fLocalVariables;
-	private PHPVariableContainer fCurrentVariables;
-	private PHPVariableContainer fPreviousVariables;
+	private Expression[] fExpressions;
+	private VariablesContainer fVariablesContainer;
 
 	/**
 	 * Create new PHP stack frame
@@ -90,65 +120,30 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	public PHPStackFrame(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
 			int depth, Expression[] localVariables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
-
+		fVariablesContainer = new VariablesContainer();
 		baseInit(thread, fileName, resolvedFileName, funcName, lineNumber, depth, localVariables);
 	}
 
 	private void baseInit(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
 			int depth, Expression[] localVariables) {
-
 		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
 		if (matcher.matches()) {
 			fileName = matcher.group(1);
 			lineNumber = Integer.parseInt(matcher.group(2));
 		}
-
 		fFunctionName = funcName;
 		fFileName = fileName;
 		fResolvedFileName = resolvedFileName;
 		fLineNumber = lineNumber;
 		fDepth = depth;
 		fThread = (PHPThread) thread;
-		fLocalVariables = localVariables;
+		fExpressions = localVariables;
 	}
 
 	protected synchronized void update(int lineNumber, Expression[] localVariables) throws DebugException {
 		this.fLineNumber = lineNumber;
-		// Reset state
-		this.fPreviousVariables = fCurrentVariables;
-		this.fCurrentVariables = null;
-		// Set new locals
-		this.fLocalVariables = localVariables;
-	}
-
-	/**
-	 * Merges incoming variable. Merge is done by means of checking if related
-	 * child variable existed in "one step back" state of a frame. If related
-	 * variable existed, it is updated with the use of the most recent
-	 * descriptor and returned instead of the incoming one.
-	 * 
-	 * @param variable
-	 * @param descriptor
-	 * @return merged variable
-	 */
-	private IVariable merge(IVariable variable) {
-		if (fPreviousVariables == null)
-			return variable;
-		if (!(variable instanceof PHPVariable))
-			return variable;
-		PHPVariable incoming = (PHPVariable) variable;
-		if (incoming.getFullName().isEmpty())
-			return incoming;
-		for (IVariable stored : fPreviousVariables.locals) {
-			if (stored instanceof PHPVariable) {
-				PHPVariable previous = (PHPVariable) stored;
-				if (previous.getFullName().equals(incoming.getFullName())) {
-					((PHPVariable) stored).update(incoming.getExpression());
-					return stored;
-				}
-			}
-		}
-		return variable;
+		this.fExpressions = localVariables;
+		this.fVariablesContainer.markOutdated();
 	}
 
 	/**
@@ -175,26 +170,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public synchronized IVariable[] getVariables() throws DebugException {
-		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
-		if (fCurrentVariables == null) {
-			fCurrentVariables = new PHPVariableContainer();
-			fCurrentVariables.locals = new PHPVariable[localVariables.length];
-			for (int i = 0; i < localVariables.length; i++) {
-				PHPVariable incoming = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i]);
-				fCurrentVariables.locals[i] = merge(incoming);
-			}
-		}
-		return fCurrentVariables.locals;
-	}
-
-	public synchronized IVariable findVariable(String varName) throws DebugException {
-		if (fCurrentVariables == null) {
-			getVariables();
-		}
-		if (fCurrentVariables != null) {
-			return (IVariable) fCurrentVariables.findVariable(varName);
-		}
-		return null;
+		return fVariablesContainer.getVariables();
 	}
 
 	/*
@@ -414,7 +390,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	}
 
 	public synchronized Expression[] getStackVariables() {
-		return fLocalVariables;
+		return fExpressions;
 	}
 
 }
