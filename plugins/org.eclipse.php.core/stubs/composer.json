@@ -1,0 +1,6 @@
+{
+	"name" : "eclipse/pdt",
+	"require" : {
+		"jetbrains/phpstorm-stubs": "dev-master"
+	}
+}

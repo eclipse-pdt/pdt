@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 class DefaultLanguageModelProvider implements ILanguageModelProvider {
 
-	private static final String LANGUAGE_LIBRARY_PATH = "$nl$/Resources/language/php"; //$NON-NLS-1$
+	private static final String LANGUAGE_LIBRARY_PATH = "$nl$/stubs/vendor/jetbrains/phpstorm-stubs"; //$NON-NLS-1$
 
 	public IPath getPath(IScriptProject project) {
 		try {
@@ -45,25 +45,25 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 	}
 
 	private String getLanguageLibraryPath(IScriptProject project, PHPVersion phpVersion) {
-		if (phpVersion == PHPVersion.PHP5) {
-			return LANGUAGE_LIBRARY_PATH + "5"; //$NON-NLS-1$
-		}
-		if (phpVersion == PHPVersion.PHP5_3) {
-			return LANGUAGE_LIBRARY_PATH + "5.3"; //$NON-NLS-1$
-		}
-		if (phpVersion == PHPVersion.PHP5_4) {
-			return LANGUAGE_LIBRARY_PATH + "5.4"; //$NON-NLS-1$
-		}
-		if (phpVersion == PHPVersion.PHP5_5) {
-			return LANGUAGE_LIBRARY_PATH + "5.5"; //$NON-NLS-1$
-		}
-		if (phpVersion == PHPVersion.PHP5_6) {
-			return LANGUAGE_LIBRARY_PATH + "5.6"; //$NON-NLS-1$
-		}
-		if (phpVersion == PHPVersion.PHP7_0) {
-			return LANGUAGE_LIBRARY_PATH + "7"; //$NON-NLS-1$
-		}
-		return LANGUAGE_LIBRARY_PATH + "71"; //$NON-NLS-1$
+		// if (phpVersion == PHPVersion.PHP5) {
+		// return LANGUAGE_LIBRARY_PATH + "5"; //$NON-NLS-1$
+		// }
+		// if (phpVersion == PHPVersion.PHP5_3) {
+		// return LANGUAGE_LIBRARY_PATH + "5.3"; //$NON-NLS-1$
+		// }
+		// if (phpVersion == PHPVersion.PHP5_4) {
+		// return LANGUAGE_LIBRARY_PATH + "5.4"; //$NON-NLS-1$
+		// }
+		// if (phpVersion == PHPVersion.PHP5_5) {
+		// return LANGUAGE_LIBRARY_PATH + "5.5"; //$NON-NLS-1$
+		// }
+		// if (phpVersion == PHPVersion.PHP5_6) {
+		// return LANGUAGE_LIBRARY_PATH + "5.6"; //$NON-NLS-1$
+		// }
+		// if (phpVersion == PHPVersion.PHP7_0) {
+		// return LANGUAGE_LIBRARY_PATH + "7"; //$NON-NLS-1$
+		// }
+		return LANGUAGE_LIBRARY_PATH; // $NON-NLS-1$
 	}
 
 	public Plugin getPlugin() {
