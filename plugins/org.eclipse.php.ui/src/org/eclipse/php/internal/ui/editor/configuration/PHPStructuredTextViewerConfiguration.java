@@ -664,6 +664,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		@Override
 		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
+			if (fTextHover instanceof ITextHoverExtension2) {
+				return ((ITextHoverExtension2) fTextHover).getHoverInfo2(textViewer, subject);
+			}
 			return fTextHover.getHoverInfo(textViewer, subject);
 		}
 
