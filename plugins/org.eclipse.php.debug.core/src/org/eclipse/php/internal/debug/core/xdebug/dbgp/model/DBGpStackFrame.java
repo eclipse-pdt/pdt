@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -19,6 +22,7 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
@@ -26,33 +30,64 @@ import org.w3c.dom.Node;
 
 public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
-	private static class DBGpVariableContainer {
-		IVariable[] locals = null;
+	protected final class DBGpVariablesContainer {
+
+		private Map<String, IVariable> currentVariables;
+		private Map<String, IVariable> previousVariables;
+		private IVariable[] variables;
+		private boolean shouldUpdate = true;
+
+		IVariable[] getVariables() {
+			if (shouldUpdate) {
+				updateVariables();
+				variables = currentVariables.values().toArray(new IVariable[currentVariables.size()]);
+				shouldUpdate = false;
+			}
+			return variables;
+		}
+
+		void markToUpdate() {
+			shouldUpdate = true;
+		}
 
 		/**
-		 * @param varName
-		 * @return
-		 * @throws DebugException
+		 * Merges incoming variable. Merge is done by means of checking if
+		 * related child variable existed in "one step back" state of a frame.
+		 * If related variable existed, it is updated with the use of the most
+		 * recent descriptor and returned instead of the incoming one.
+		 * 
+		 * @param variable
+		 * @param descriptor
+		 * @return merged variable
 		 */
-		public IVariable findVariable(String varName) throws DebugException {
-			if (locals != null) {
-				final IVariable variable = findVariable(varName, locals);
-				if (variable != null) {
-					return variable;
-				}
+		private IVariable merge(IVariable variable) {
+			if (previousVariables == null)
+				return variable;
+			if (!(variable instanceof DBGpVariable))
+				return variable;
+			DBGpVariable incoming = (DBGpVariable) variable;
+			if (incoming.getFullName().isEmpty())
+				return incoming;
+			IVariable stored = previousVariables.get(incoming.getFullName());
+			if (stored != null) {
+				((DBGpVariable) stored).update(incoming.getDescriptor());
+				return stored;
 			}
-			return null;
+			return variable;
 		}
 
-		private static IVariable findVariable(String varName, IVariable[] vars) throws DebugException {
-			for (int i = 0; i < vars.length; i++) {
-				final IVariable var = vars[i];
-				if (var.getName().equals(varName)) {
-					return var;
-				}
+		private void updateVariables() {
+			previousVariables = currentVariables;
+			currentVariables = new LinkedHashMap<>();
+			// fetch new set of variables
+			IVariable[] incoming = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
+			VariablesUtil.sortContextMembers(incoming);
+			for (int i = 0; i < incoming.length; i++) {
+				DBGpVariable variable = ((DBGpVariable) incoming[i]);
+				currentVariables.put(variable.getFullName(), merge(variable));
 			}
-			return null;
 		}
+
 	}
 
 	private DBGpThread owningThread;
@@ -64,15 +99,15 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	private int lineNo; // line within the file of this stack frame
 	private String name = ""; // string to display in debugger for //$NON-NLS-1$
 								// this stack frame
-	private DBGpVariableContainer currentVariables;
-	private DBGpVariableContainer previousVariables;
 	private Node descriptor;
+	private DBGpVariablesContainer variablesContainer;
 
 	// private IVariable[] variables; // variables exposed to this stack frame
 
 	public DBGpStackFrame(DBGpThread threadOwner, Node stackData) {
 		super(threadOwner.getDebugTarget());
 		owningThread = threadOwner;
+		variablesContainer = new DBGpVariablesContainer();
 		update(stackData);
 	}
 
@@ -148,17 +183,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 */
 	public synchronized IVariable[] getVariables() throws DebugException {
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
-		if (currentVariables == null) {
-			currentVariables = new DBGpVariableContainer();
-			// fetch new set of variables
-			IVariable[] incoming = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
-			currentVariables.locals = new IVariable[incoming.length];
-			for (int i = 0; i < incoming.length; i++) {
-				DBGpVariable variable = ((DBGpVariable) incoming[i]);
-				currentVariables.locals[i] = merge(variable);
-			}
-		}
-		return currentVariables.locals;
+		return variablesContainer.getVariables();
 	}
 
 	/*
@@ -378,8 +403,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	protected void update(Node stackData) {
 		// Reset state
-		this.previousVariables = currentVariables;
-		this.currentVariables = null;
+		variablesContainer.markToUpdate();
 		// Set up new descriptor
 		descriptor = stackData;
 		String line = DBGpResponse.getAttribute(descriptor, "lineno"); //$NON-NLS-1$
@@ -401,46 +425,6 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 			fileName = qualifiedFile;
 		}
 		name = fileName + "." + function + "()"; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	/**
-	 * Merges incoming variable. Merge is done by means of checking if related
-	 * child variable existed in "one step back" state of a frame. If related
-	 * variable existed, it is updated with the use of the most recent
-	 * descriptor and returned instead of the incoming one.
-	 * 
-	 * @param variable
-	 * @param descriptor
-	 * @return merged variable
-	 */
-	protected IVariable merge(IVariable variable) {
-		if (previousVariables == null)
-			return variable;
-		if (!(variable instanceof DBGpVariable))
-			return variable;
-		DBGpVariable incoming = (DBGpVariable) variable;
-		if (incoming.getFullName().isEmpty())
-			return incoming;
-		for (IVariable stored : previousVariables.locals) {
-			if (stored instanceof DBGpVariable) {
-				DBGpVariable previous = (DBGpVariable) stored;
-				if (previous.getFullName().equals(incoming.getFullName())) {
-					((DBGpVariable) stored).update(incoming.getDescriptor());
-					return stored;
-				}
-			}
-		}
-		return variable;
-	}
-
-	public synchronized IVariable findVariable(String varName) throws DebugException {
-		if (currentVariables == null) {
-			getVariables();
-		}
-		if (currentVariables != null) {
-			return (IVariable) currentVariables.findVariable(varName);
-		}
-		return null;
 	}
 
 }

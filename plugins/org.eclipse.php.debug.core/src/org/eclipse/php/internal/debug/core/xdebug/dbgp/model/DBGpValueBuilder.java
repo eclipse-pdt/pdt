@@ -24,29 +24,52 @@ public class DBGpValueBuilder {
 	 * @return new DBGp value
 	 */
 	public AbstractDBGpValue build(DBGpVariable variable) {
+		AbstractDBGpValue value;
 		switch (variable.getDataType()) {
-		case PHP_ARRAY:
-			return new DBGpArrayValue(variable);
-		case PHP_BOOL:
-			return new DBGpBoolValue(variable);
-		case PHP_FLOAT:
-			return new DBGpFloatValue(variable);
-		case PHP_INT:
-			return new DBGpIntValue(variable);
-		case PHP_NULL:
-			return new DBGpNullValue(variable);
-		case PHP_OBJECT:
-			return new DBGpObjectValue(variable);
-		case PHP_RESOURCE:
-			return new DBGpResourceValue(variable);
-		case PHP_STRING:
-			return new DBGpStringValue(variable);
-		case PHP_UNINITIALIZED:
-			return new DBGpUninitializedValue(variable);
-		default:
+		case PHP_ARRAY: {
+			value = new DBGpArrayValue(variable);
 			break;
 		}
-		return new DBGpUnknownValue(variable);
+		case PHP_BOOL: {
+			value = new DBGpBoolValue(variable);
+			break;
+		}
+		case PHP_FLOAT: {
+			value = new DBGpFloatValue(variable);
+			break;
+		}
+		case PHP_INT: {
+			value = new DBGpIntValue(variable);
+			break;
+		}
+		case PHP_NULL: {
+			value = new DBGpNullValue(variable);
+			break;
+		}
+		case PHP_OBJECT: {
+			value = new DBGpObjectValue(variable);
+			break;
+		}
+		case PHP_RESOURCE: {
+			value = new DBGpResourceValue(variable);
+			break;
+		}
+		case PHP_STRING: {
+			value = new DBGpStringValue(variable);
+			break;
+		}
+		case PHP_UNINITIALIZED: {
+			value = new DBGpUninitializedValue(variable);
+			break;
+		}
+		default: {
+			value = new DBGpUnknownValue(variable);
+			break;
+		}
+		}
+		// Initialize value
+		value.update(variable.getDescriptor());
+		return value;
 	}
 
 }

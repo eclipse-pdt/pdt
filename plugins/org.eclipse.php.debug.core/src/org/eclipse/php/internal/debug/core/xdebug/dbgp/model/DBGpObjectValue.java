@@ -13,7 +13,6 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
-import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 
@@ -31,19 +30,7 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	 */
 	public DBGpObjectValue(DBGpVariable owner) {
 		super(owner);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
-	 * AbstractDBGpContainerValue#fetchVariables()
-	 */
-	@Override
-	protected void fetchVariables() {
-		super.fetchVariables();
-		// Sort members by name
-		VariablesUtil.sortObjectMembers(fCurrentVariables);
+		fVariablesContainer.markToSort();
 	}
 
 	/*

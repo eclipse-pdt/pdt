@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -19,6 +22,7 @@ import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.IVirtualPartition;
 import org.eclipse.php.internal.debug.core.model.IVirtualPartition.IVariableProvider;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.model.VirtualPartition;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
@@ -31,43 +35,187 @@ import org.w3c.dom.NodeList;
  */
 public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 
-	/**
-	 * Virtual partition for paging variables set.
-	 */
-	protected class DBGpPage implements IVariableProvider {
+	protected final class DBGpVariablesContainer {
 
-		private final int fPage;
-		private IVariable[] fPartitionVariables = null;
+		/**
+		 * Virtual partition for paging variables set.
+		 */
+		protected class DBGpPage implements IVariableProvider {
 
-		public DBGpPage(int page) {
-			this.fPage = page;
+			private final int fPage;
+			private IVariable[] fPartitionVariables = null;
+
+			public DBGpPage(int page) {
+				this.fPage = page;
+			}
+
+			@Override
+			public synchronized IVariable[] getVariables() throws DebugException {
+				// Should be synchronized and lazy
+				if (fPartitionVariables == null) {
+					Node node = getOwner().getNode(fPage);
+					if (!canProcess(node)) {
+						return new IVariable[] { new DBGpUnreachableVariable(getDebugTarget()) };
+					}
+					NodeList childProperties = node.getChildNodes();
+					int childrenReceived = childProperties.getLength();
+					fPartitionVariables = new IVariable[childrenReceived];
+					if (childrenReceived > 0) {
+						for (int i = 0; i < childrenReceived; i++) {
+							Node childProperty = childProperties.item(i);
+							IVariable child = createVariable(childProperty);
+							IVariable mergedChild = merge(child);
+							fPartitionVariables[i] = mergedChild;
+							fCurrentVariables.put(((DBGpVariable) mergedChild).getFullName(), mergedChild);
+						}
+					}
+				}
+				return fPartitionVariables;
+			}
+
 		}
 
-		@Override
-		public synchronized IVariable[] getVariables() throws DebugException {
-			// Should be synchronized and lazy
-			if (fPartitionVariables == null) {
-				Node node = getOwner().getNode(fPage);
-				if (canProcess(node)) {
-					return new IVariable[] { new DBGpUnreachableVariable(getDebugTarget()) };
+		private Map<String, IVariable> fCurrentVariables = null;
+		private Map<String, IVariable> fPreviousVariables = null;
+		private Map<String, IVirtualPartition> fCurrentPartitions = new LinkedHashMap<>();
+		private Map<String, IVirtualPartition> fPreviousPartitions = new LinkedHashMap<>();
+		private IVariable[] fVariables = null;
+		private boolean fShouldUpdate = true;
+		private boolean fShouldSort = false;
+
+		IVariable[] getVariables() {
+			if (fShouldUpdate) {
+				updateVariables();
+				// Check if we should divide it into partitions
+				if (fCurrentPartitions.size() > 0) {
+					fVariables = fCurrentPartitions.values().toArray(new IVariable[fCurrentPartitions.size()]);
+				} else {
+					fVariables = fCurrentVariables.values().toArray(new IVariable[fCurrentVariables.size()]);
 				}
-				NodeList childProperties = node.getChildNodes();
+				fShouldUpdate = false;
+				if (fShouldSort) {
+					VariablesUtil.sortObjectMembers(fVariables);
+				}
+			}
+			return fVariables;
+		}
+
+		void markToUpdate() {
+			fShouldUpdate = true;
+		}
+
+		void markToSort() {
+			fShouldSort = true;
+		}
+
+		/**
+		 * Uses container value related node to fetch child elements and build
+		 * child variables or multiple pages with variables.
+		 */
+		protected void updateVariables() {
+			fPreviousVariables = fCurrentVariables;
+			fCurrentVariables = new LinkedHashMap<>();
+			fPreviousPartitions = fCurrentPartitions;
+			fCurrentPartitions = new LinkedHashMap<>();
+			String childCountString = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
+			int childCount = 0;
+			if (childCountString != null && childCountString.trim().length() != 0) {
+				try {
+					childCount = Integer.parseInt(childCountString);
+				} catch (NumberFormatException nfe) {
+				}
+			}
+			String pageSizeStr = null;
+			pageSizeStr = DBGpResponse.getAttribute(fDescriptor, "pagesize"); //$NON-NLS-1$
+			int pageSize = ((DBGpTarget) getDebugTarget()).getMaxChildren();
+			if (pageSizeStr != null && pageSizeStr.trim().length() != 0) {
+				try {
+					pageSize = Integer.parseInt(pageSizeStr);
+				} catch (NumberFormatException nfe) {
+				}
+			}
+			if (childCount <= pageSize) {
+				// Child number < page size, no need for paging.
+				NodeList childProperties = fDescriptor.getChildNodes();
 				int childrenReceived = childProperties.getLength();
-				fPartitionVariables = new IVariable[childrenReceived];
+				// Check if descriptor is already filled up
+				if (childCount != childrenReceived) {
+					DBGpTarget target = (DBGpTarget) getDebugTarget();
+					switch (getOwner().getKind()) {
+					case EVAL: {
+						fDescriptor = target.eval(getOwner().getFullName(), 0);
+						break;
+					}
+					default: {
+						fDescriptor = target.getProperty(getOwner().getFullName(),
+								String.valueOf(getOwner().getStackLevel()), 0);
+						break;
+					}
+					}
+					if (!canProcess(fDescriptor)) {
+						fCurrentVariables = new LinkedHashMap<>();
+						fCurrentVariables.put(DataType.PHP_UNINITIALIZED.getText(),
+								new DBGpUnreachableVariable(getDebugTarget()));
+						return;
+					}
+					childProperties = fDescriptor.getChildNodes();
+					childrenReceived = childProperties.getLength();
+					childCount = childrenReceived;
+				}
+				fCurrentVariables = new LinkedHashMap<>();
 				if (childrenReceived > 0) {
 					for (int i = 0; i < childrenReceived; i++) {
 						Node childProperty = childProperties.item(i);
 						IVariable child = createVariable(childProperty);
-						fPartitionVariables[i] = merge(child);
+						fCurrentVariables.put(((DBGpVariable) child).getFullName(), merge(child));
 					}
 				}
-				// Add partition variables to current variables storage
-				IVariable[] concat = Arrays.copyOf(fCurrentVariables,
-						fCurrentVariables.length + fPartitionVariables.length);
-				System.arraycopy(fPartitionVariables, 0, concat, fCurrentVariables.length, fPartitionVariables.length);
-				fCurrentVariables = concat;
+			} else {
+				// Create multiple pages
+				int subCount = (int) Math.ceil((double) childCount / (double) pageSize);
+				for (int i = 0; i < subCount; i++) {
+					int startIndex = i * pageSize;
+					int endIndex = (i + 1) * pageSize - 1;
+					if (endIndex > childCount) {
+						endIndex = childCount - 1;
+					}
+					String partitionId = String.valueOf(startIndex) + '-' + String.valueOf(endIndex);
+					IVirtualPartition partition = fPreviousPartitions.get(partitionId);
+					if (partition != null) {
+						partition.setProvider(new DBGpPage(i));
+						fCurrentPartitions.put(partitionId, partition);
+					} else {
+						fCurrentPartitions.put(partitionId, new VirtualPartition(AbstractDBGpContainerValue.this,
+								new DBGpPage(i), startIndex, endIndex));
+					}
+				}
 			}
-			return fPartitionVariables;
+		}
+
+		/**
+		 * Merges incoming variable. Merge is done by means of checking if
+		 * related child variable existed in "one step back" state of a
+		 * container. If related variable existed, it is updated with the use of
+		 * the most recent descriptor and returned instead of the incoming one.
+		 * 
+		 * @param variable
+		 * @param descriptor
+		 * @return merged variable
+		 */
+		protected IVariable merge(IVariable variable) {
+			if (fPreviousVariables == null)
+				return variable;
+			if (!(variable instanceof DBGpVariable))
+				return variable;
+			DBGpVariable incoming = (DBGpVariable) variable;
+			if (incoming.getFullName().isEmpty())
+				return incoming;
+			IVariable stored = fPreviousVariables.get(incoming.getFullName());
+			if (stored != null) {
+				((DBGpVariable) stored).update(incoming.getDescriptor());
+				return stored;
+			}
+			return variable;
 		}
 
 	}
@@ -185,10 +333,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 
 	}
 
-	protected IVariable[] fCurrentVariables = null;
-	protected IVariable[] fPreviousVariables = null;
-	protected Map<String, IVirtualPartition> fCurrentPartitions = new LinkedHashMap<>();
-	protected Map<String, IVirtualPartition> fPreviousPartitions = new LinkedHashMap<>();
+	protected final DBGpVariablesContainer fVariablesContainer;
 
 	/**
 	 * Creates new DBGp container value.
@@ -197,6 +342,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	 */
 	public AbstractDBGpContainerValue(DBGpVariable owner) {
 		super(owner);
+		fVariablesContainer = new DBGpVariablesContainer();
 	}
 
 	/*
@@ -208,14 +354,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	 */
 	@Override
 	public synchronized IVariable[] getVariables() throws DebugException {
-		// Should be synchronized and lazy
-		if (fCurrentVariables == null) {
-			fetchVariables();
-		}
-		if (!hasPages()) {
-			return fCurrentVariables;
-		}
-		return fCurrentPartitions.values().toArray(new IVariable[fCurrentPartitions.size()]);
+		return fVariablesContainer.getVariables();
 	}
 
 	protected abstract IVariable createVariable(Node descriptor);
@@ -228,11 +367,10 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	 * update(org.w3c.dom.Node)
 	 */
 	@Override
-	protected void update(Node descriptor) {
+	protected synchronized void update(Node descriptor) {
 		super.update(descriptor);
-		// Reset state
-		fPreviousVariables = fCurrentVariables;
-		fCurrentVariables = null;
+		// Reset children state
+		fVariablesContainer.markToUpdate();
 		// Check if has any child elements
 		String childCountNumber = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
 		int childCount = 0;
@@ -248,16 +386,6 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	}
 
 	/**
-	 * Checks if there are multiple pages with variables.
-	 * 
-	 * @return <code>true</code> if there are multiple pages with variables,
-	 *         <code>false</code> otherwise
-	 */
-	protected boolean hasPages() {
-		return fCurrentPartitions.size() > 0;
-	}
-
-	/**
 	 * Checks if given property node can be processed.
 	 * 
 	 * @param property
@@ -265,118 +393,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	 *         <code>false</code> otherwise
 	 */
 	protected boolean canProcess(Node property) {
-		return property == null || "error".equalsIgnoreCase(property.getNodeName()); //$NON-NLS-1$
-	}
-
-	/**
-	 * Uses container value related node to fetch child elements and build child
-	 * variables or multiple pages with variables.
-	 */
-	protected void fetchVariables() {
-		fCurrentVariables = new IVariable[] {};
-		fPreviousPartitions = fCurrentPartitions;
-		fCurrentPartitions = new LinkedHashMap<>();
-		String childCountString = DBGpResponse.getAttribute(fDescriptor, "numchildren"); //$NON-NLS-1$
-		int childCount = 0;
-		if (childCountString != null && childCountString.trim().length() != 0) {
-			try {
-				childCount = Integer.parseInt(childCountString);
-			} catch (NumberFormatException nfe) {
-			}
-		}
-		String pageSizeStr = null;
-		pageSizeStr = DBGpResponse.getAttribute(fDescriptor, "pagesize"); //$NON-NLS-1$
-		int pageSize = ((DBGpTarget) getDebugTarget()).getMaxChildren();
-		if (pageSizeStr != null && pageSizeStr.trim().length() != 0) {
-			try {
-				pageSize = Integer.parseInt(pageSizeStr);
-			} catch (NumberFormatException nfe) {
-			}
-		}
-		if (childCount <= pageSize) {
-			// Child number < page size, no need for paging.
-			NodeList childProperties = fDescriptor.getChildNodes();
-			int childrenReceived = childProperties.getLength();
-			// Check if descriptor is already filled up
-			if (childCount != childrenReceived) {
-				DBGpTarget target = (DBGpTarget) getDebugTarget();
-				switch (getOwner().getKind()) {
-				case EVAL: {
-					fDescriptor = target.eval(getOwner().getFullName(), 0);
-					break;
-				}
-				default: {
-					fDescriptor = target.getProperty(getOwner().getFullName(),
-							String.valueOf(getOwner().getStackLevel()), 0);
-					break;
-				}
-				}
-				if (canProcess(fDescriptor)) {
-					fCurrentVariables = new IVariable[] { new DBGpUnreachableVariable(getDebugTarget()) };
-					return;
-				}
-				childProperties = fDescriptor.getChildNodes();
-				childrenReceived = childProperties.getLength();
-				childCount = childrenReceived;
-			}
-			fCurrentVariables = new IVariable[childCount];
-			if (childrenReceived > 0) {
-				for (int i = 0; i < childrenReceived; i++) {
-					Node childProperty = childProperties.item(i);
-					IVariable child = createVariable(childProperty);
-					fCurrentVariables[i] = merge(child);
-				}
-			}
-		} else {
-			// Create multiple pages
-			int subCount = (int) Math.ceil((double) childCount / (double) pageSize);
-			for (int i = 0; i < subCount; i++) {
-				int startIndex = i * pageSize;
-				int endIndex = (i + 1) * pageSize - 1;
-				if (endIndex > childCount) {
-					endIndex = childCount - 1;
-				}
-				String partitionId = String.valueOf(startIndex) + '-' + String.valueOf(endIndex);
-				IVirtualPartition partition = fPreviousPartitions.get(partitionId);
-				if (partition != null) {
-					partition.setProvider(new DBGpPage(i));
-					fCurrentPartitions.put(partitionId, partition);
-				} else {
-					fCurrentPartitions.put(partitionId,
-							new VirtualPartition(this, new DBGpPage(i), startIndex, endIndex));
-				}
-			}
-		}
-	}
-
-	/**
-	 * Merges incoming variable. Merge is done by means of checking if related
-	 * child variable existed in "one step back" state of a container. If
-	 * related variable existed, it is updated with the use of the most recent
-	 * descriptor and returned instead of the incoming one.
-	 * 
-	 * @param variable
-	 * @param descriptor
-	 * @return merged variable
-	 */
-	protected IVariable merge(IVariable variable) {
-		if (fPreviousVariables == null)
-			return variable;
-		if (!(variable instanceof DBGpVariable))
-			return variable;
-		DBGpVariable incoming = (DBGpVariable) variable;
-		if (incoming.getFullName().isEmpty())
-			return incoming;
-		for (IVariable stored : fPreviousVariables) {
-			if (stored instanceof DBGpVariable) {
-				DBGpVariable previous = (DBGpVariable) stored;
-				if (previous.getFullName().equals(incoming.getFullName())) {
-					((DBGpVariable) stored).update(incoming.getDescriptor());
-					return stored;
-				}
-			}
-		}
-		return variable;
+		return !(property == null || "error".equalsIgnoreCase(property.getNodeName())); //$NON-NLS-1$
 	}
 
 }
