@@ -240,15 +240,25 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 		bufferedState = createLexicalStateMemento();
 		String yylex = yylex();
 		if (PHPPartitionTypes.isPHPDocRegion(yylex)) {
-			final StringBuilder buffer = new StringBuilder();
 			int length = 0;
+			bufferedTokens = new LinkedList<ITextRegion>();
 			while (PHPPartitionTypes.isPHPDocRegion(yylex)) {
-				buffer.append(yytext());
-				length += yylength();
+				if (PHPPartitionTypes.isPHPDocTagState(yylex)) {
+					if (length > 0) {
+						bufferedTokens.add(new ContextRegion(PHPRegionTypes.PHPDOC_COMMENT, 0, length, length));
+						length = 0;
+					}
+					// each doc tag state is saved as a separate token to allow
+					// PHPDoc tag highlighting:
+					bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
+				} else {
+					length += yylength();
+				}
 				yylex = yylex();
 			}
-			bufferedTokens = new LinkedList<ITextRegion>();
-			bufferedTokens.add(new ContextRegion(PHPRegionTypes.PHPDOC_COMMENT, 0, length, length));
+			if (length > 0) {
+				bufferedTokens.add(new ContextRegion(PHPRegionTypes.PHPDOC_COMMENT, 0, length, length));
+			}
 			if (yylex != null) {
 				bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
 			}
