@@ -107,7 +107,8 @@ public class ASTCache {
 
 					if (isReconciling && nbIterations > 0) {
 						Thread.sleep(100);
-						if (--nbIterations == 0) {
+						nbIterations--;
+						if (nbIterations == 0 || fInput.get() == null) {
 							// stop the loop
 							synchronized (this) {
 								fState = STATES.CANCELED;
