@@ -953,9 +953,9 @@ define ('E_USER_NOTICE', 1024);
  * @link http://www.php.net/manual/en/errorfunc.constants.php
  */
 define ('E_ALL', 6143);
-define ('TRUE', true);
-define ('FALSE', false);
-define ('NULL', null);
+define ('true', true);
+define ('false', false);
+define ('null', null);
 define ('ZEND_THREAD_SAFE', false);
 define ('PHP_VERSION', "5.2.13");
 define ('PHP_MAJOR_VERSION', 5);

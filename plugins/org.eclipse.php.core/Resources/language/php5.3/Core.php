@@ -1039,9 +1039,9 @@ define ('E_USER_DEPRECATED', 16384);
  * @link http://www.php.net/manual/en/errorfunc.constants.php
  */
 define ('E_ALL', 30719);
-define ('TRUE', true);
-define ('FALSE', false);
-define ('NULL', null);
+define ('true', true);
+define ('false', false);
+define ('null', null);
 define ('ZEND_THREAD_SAFE', false);
 define ('ZEND_DEBUG_BUILD', false);
 define ('PHP_VERSION', "5.3.2");
