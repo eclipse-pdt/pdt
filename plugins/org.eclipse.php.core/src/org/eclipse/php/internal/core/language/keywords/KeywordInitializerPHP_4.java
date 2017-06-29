@@ -48,7 +48,6 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("eval", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("exit", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("extends", WHITESPACE_SUFFIX, 1, PHPKeywords.GLOBAL)); //$NON-NLS-1$
-		list.add(new KeywordData("false", EMPTY_SUFFIX, 0)); //$NON-NLS-1$
 		list.add(new KeywordData("foreach", WHITESPACE_PARENTHESES_SUFFIX, 2)); //$NON-NLS-1$
 		list.add(new KeywordData("for", WHITESPACE_PARENTHESES_SUFFIX, 2)); //$NON-NLS-1$
 		list.add(new KeywordData("function", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
@@ -61,7 +60,6 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("isset", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("list", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("new", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
-		list.add(new KeywordData("null", EMPTY_SUFFIX, 0)); //$NON-NLS-1$
 		list.add(new KeywordData("or", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2, //$NON-NLS-1$
 				PHPKeywords.METHOD_BODY | PHPKeywords.METHOD_PARAM));
@@ -73,7 +71,6 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("static", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("switch", WHITESPACE_PARENTHESES_SUFFIX, 2)); //$NON-NLS-1$
-		list.add(new KeywordData("true", EMPTY_SUFFIX, 0)); //$NON-NLS-1$
 		list.add(new KeywordData("unset", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("var", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY));
