@@ -88,7 +88,6 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 	public AbstractDBGpValue(DBGpVariable owner) {
 		super(owner.getDebugTarget());
 		this.fOwner = owner;
-		update(fOwner.getDescriptor());
 	}
 
 	/*

@@ -174,7 +174,12 @@ public class XDebugTextHover extends PHPDebugTextHover {
 						}
 					}
 				}
-				variable = (DBGpVariable) frame.findVariable(variableName);
+				for (IVariable stackVariable : frame.getVariables()) {
+					if (stackVariable.getName().equals(variableName)) {
+						variable = (DBGpVariable) stackVariable;
+						break;
+					}
+				}
 			}
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);
