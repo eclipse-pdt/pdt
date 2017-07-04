@@ -49,6 +49,9 @@ public class XDebugTextHover extends PHPDebugTextHover {
 		DBGpVariable variable = null;
 		try {
 			ISourceModule sourceModule = getEditorInputModelElement();
+			if (sourceModule == null) {
+				return null;
+			}
 			ASTNode root = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
 			if (root == null) {
 				ASTParser parser = ASTParser.newParser(sourceModule);
