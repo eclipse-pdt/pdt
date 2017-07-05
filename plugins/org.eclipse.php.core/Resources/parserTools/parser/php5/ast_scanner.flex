@@ -501,9 +501,6 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	return createSymbol(ParserConstants.T_EMPTY);
 }
 
-<ST_IN_SCRIPTING>"__halt_compiler" {
-	return createSymbol(ParserConstants.T_HALT_COMPILER);
-}
 <ST_IN_SCRIPTING>"static" {
 	return createSymbol(ParserConstants.T_STATIC);
 }

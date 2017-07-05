@@ -544,9 +544,6 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 	return createFullSymbol(ParserConstants.T_EMPTY);
 }
 
-<ST_IN_SCRIPTING>"__halt_compiler" {
-	return createSymbol(ParserConstants.T_HALT_COMPILER);
-}
 <ST_IN_SCRIPTING>"static" {
 	return createFullSymbol(ParserConstants.T_STATIC);
 }

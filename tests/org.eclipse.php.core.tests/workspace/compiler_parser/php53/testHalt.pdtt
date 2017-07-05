@@ -20,6 +20,14 @@ Test Halt
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
 	</ExpressionStatement>
+	<ExpressionStatement start="21" end="39">
+		<PHPCallExpression start="21" end="38">
+			<FullyQualifiedReference start="21" end="36" name="__halt_compiler">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="37" end="37">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
 	<ExpressionStatement start="40" end="45">
 		<PHPCallExpression start="40" end="44">
 			<SimpleReference start="40" end="44" name="exit">
@@ -35,6 +43,14 @@ Test Halt
 			<PHPCallArgumentsList start="51" end="52">
 				<Scalar start="51" end="52" type="int" value="2">
 				</Scalar>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="56" end="74">
+		<PHPCallExpression start="56" end="73">
+			<FullyQualifiedReference start="56" end="71" name="__halt_compiler">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="72" end="72">
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
 	</ExpressionStatement>

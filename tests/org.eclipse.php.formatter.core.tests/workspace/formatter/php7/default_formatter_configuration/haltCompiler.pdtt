@@ -1,0 +1,14 @@
+--TEST--
+Bug 518954 - formatter may remove __halt_compiler(); calls completely
+--FILE--
+<?php
+echo 1;
+__halt_compiler();
+echo 1;
+?>
+--EXPECT--
+<?php
+echo 1;
+__halt_compiler ();
+echo 1;
+?>
