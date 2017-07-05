@@ -376,12 +376,6 @@ statement:statement
 {:
 	RESULT = statement;
 :}
-
-| T_HALT_COMPILER T_OPEN_PARENTHESE T_CLOSE_PARENTHESE T_SEMICOLON:statement
-{:
-	// Note: we never generate T_HALT_COMPILER
-	RESULT = null;
-:}
 ;
 
 inner_statement_list ::=
@@ -414,12 +408,6 @@ statement:statement
 | class_declaration_statement:statement
 {:
 	RESULT = statement;
-:}
-
-| T_HALT_COMPILER:halt T_OPEN_PARENTHESE T_CLOSE_PARENTHESE:close T_SEMICOLON
-{:
-	// Note: we never generate K_HALT_COMPILER
-	RESULT = null;
 :}
 ;
 
@@ -2652,6 +2640,14 @@ T_ISSET:start T_OPEN_PARENTHESE isset_variables:varList T_CLOSE_PARENTHESE:end
 | T_REQUIRE_ONCE:include expr:expr
 {:
 	Include result = new Include(includeleft, exprright, parser.ast, expr, Include.IT_REQUIRE_ONCE);
+	RESULT = result;
+:}
+
+| T_HALT_COMPILER:start T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{:
+	Identifier id = new Identifier(startleft, startright, parser.ast, "__halt_compiler");
+	FunctionName name = new FunctionName(startleft, startright, parser.ast, id);
+	FunctionInvocation result = new FunctionInvocation(startleft, endright, parser.ast, name, parameters);
 	RESULT = result;
 :}
 ;

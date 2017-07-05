@@ -493,12 +493,6 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_HALT_COMPILER T_OPEN_PARENTHESE T_CLOSE_PARENTHESE T_SEMICOLON:statement
-{:
-	// Note: we never generate T_HALT_COMPILER
-	RESULT = null;
-:}
-
 | T_NAMESPACE:s namespace_name:list T_SEMICOLON:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast,
@@ -613,12 +607,6 @@ statement:statement
 | class_declaration_statement:statement
 {:
 	RESULT = statement;
-:}
-
-| T_HALT_COMPILER:halt T_OPEN_PARENTHESE T_CLOSE_PARENTHESE:close T_SEMICOLON
-{:
-	// Note: we never generate K_HALT_COMPILER
-	RESULT = null;
 :}
 ;
 
@@ -3608,6 +3596,13 @@ T_ISSET:s T_OPEN_PARENTHESE isset_variables:varList T_CLOSE_PARENTHESE:e
 | T_REQUIRE_ONCE:include expr:expr
 {:
 	RESULT = new Include(includeleft, exprright, parser.ast, expr, Include.IT_REQUIRE_ONCE);
+:}
+
+| T_HALT_COMPILER:s T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
+		new FunctionName(sleft, sright, parser.ast,
+			new Identifier(sleft, sright, parser.ast, "__halt_compiler")), parameters);
 :}
 ;
 

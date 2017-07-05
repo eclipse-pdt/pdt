@@ -23,6 +23,7 @@ public class KeywordInitializerPHP_5 extends KeywordInitializerPHP_4 {
 	public void initialize(Collection<KeywordData> list) {
 		super.initialize(list);
 
+		list.add(new KeywordData("__halt_compiler", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("abstract", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("catch", WHITESPACE_PARENTHESES_SUFFIX, 2)); //$NON-NLS-1$
