@@ -119,7 +119,6 @@ terminal PHPDocBlock T_VAR;
 terminal String T_UNSET;
 terminal String T_ISSET;
 terminal String T_EMPTY;
-terminal T_HALT_COMPILER;
 terminal PHPDocBlock T_CLASS;
 terminal PHPDocBlock T_INTERFACE;
 terminal T_EXTENDS;
@@ -491,12 +490,6 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_HALT_COMPILER T_OPEN_PARENTHESE T_CLOSE_PARENTHESE T_SEMICOLON:statement
-{:
-	// Note: we never generate T_HALT_COMPILER
-	RESULT = null;
-:}
-
 | T_NAMESPACE:start namespace_name:name
 {:
 	NamespaceDeclaration namespace = new NamespaceDeclaration(startleft, nameright, nameleft, nameright, name.getFullyQualifiedName(), null, null);
@@ -692,12 +685,6 @@ statement:statement
 | class_declaration_statement:statement
 {:
 	RESULT = statement;
-:}
-
-| T_HALT_COMPILER:halt T_OPEN_PARENTHESE T_CLOSE_PARENTHESE:close T_SEMICOLON
-{:
-	// Note: we never generate K_HALT_COMPILER
-	RESULT = null;
 :}
 ;
 

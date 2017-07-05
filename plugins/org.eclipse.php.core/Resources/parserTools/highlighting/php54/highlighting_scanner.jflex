@@ -446,10 +446,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_EMPTY;
 }
 
-<ST_PHP_IN_SCRIPTING>"__halt_compiler" {
-	return PHP_HALT_COMPILER;
-}
-
 <ST_PHP_IN_SCRIPTING>"static" {
 	return PHP_STATIC;
 }

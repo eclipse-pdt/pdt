@@ -193,7 +193,7 @@ public interface PHPRegionTypes {
 
 	// static final String PHP_UNSET_CAST = "PHP_UNSET_CAST";
 
-	static final String PHP_HALT_COMPILER = "PHP_HALT_COMPILER"; //$NON-NLS-1$
+	// static final String PHP_HALT_COMPILER = "PHP_HALT_COMPILER";
 
 	static final String PHP_INCLUDE_ONCE = "PHP_INCLUDE_ONCE"; //$NON-NLS-1$
 
