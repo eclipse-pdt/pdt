@@ -131,9 +131,9 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 
 					try {
 						int textRegionOffset = textRegion.getStart();
-						int normelizedOffset = textRegionOffset + docRegionOffset;
+						int normalizedOffset = textRegionOffset + docRegionOffset;
 						ITextRegion[] phpTokens = ((PHPScriptRegion) textRegion)
-								.getPHPTokens(selectionOffset - normelizedOffset, selectionLength);
+								.getPHPTokens(selectionOffset - normalizedOffset, selectionLength);
 
 						int lastOffsetParsed = -1;
 
@@ -151,18 +151,18 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 								// (start/end/body), this will find the start
 								// and end tokens
 								ITextRegion startToken = findCommentStartToken(token, (PHPScriptRegion) textRegion);
-								TextLocation commentOffsets = new TextLocation(startToken.getStart() + normelizedOffset,
-										startToken.getEnd() + normelizedOffset);
+								TextLocation commentOffsets = new TextLocation(startToken.getStart() + normalizedOffset,
+										startToken.getEnd() + normalizedOffset);
 								boolean result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
-								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
+								lastOffsetParsed = commentOffsets.endOffset - normalizedOffset;
 
 								ITextRegion endToken = findCommentEndToken(token, (PHPScriptRegion) textRegion);
-								commentOffsets = new TextLocation(endToken.getStart() + normelizedOffset,
-										endToken.getEnd() + normelizedOffset);
+								commentOffsets = new TextLocation(endToken.getStart() + normalizedOffset,
+										endToken.getEnd() + normalizedOffset);
 								result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
-								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
+								lastOffsetParsed = commentOffsets.endOffset - normalizedOffset;
 
 							}
 						}

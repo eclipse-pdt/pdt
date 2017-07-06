@@ -156,7 +156,6 @@ public class PHPIndentationFormatter {
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
 			// int scriptRegionPos = sdRegion.getStartOffset();
 			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
-			ITextRegion lastTokenInLine = null;
 			int regionStart = firstTokenInLine != null ? sdRegion.getStartOffset(firstTokenInLine) : 0;
 			if (firstTokenInLine instanceof ITextRegionContainer) {
 				// scriptRegionPos = regionStart;
@@ -166,7 +165,7 @@ public class PHPIndentationFormatter {
 			}
 			if (firstTokenInLine instanceof IPHPScriptRegion) {
 				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) firstTokenInLine;
-				assert regionStart + scriptRegion.getEnd() > formattedLineStart;
+				assert regionStart + scriptRegion.getLength() > formattedLineStart;
 
 				if (scriptRegion.isPHPQuotesState(formattedLineStart - regionStart)
 						&& (formattedLineStart - regionStart == 0
@@ -179,14 +178,6 @@ public class PHPIndentationFormatter {
 				if (regionStart + firstTokenInLine.getStart() < originalLineStart
 						&& firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 					firstTokenInLine = scriptRegion.getPHPToken(firstTokenInLine.getEnd());
-				}
-				if (formattedTextEnd <= regionStart + scriptRegion.getEnd()) {
-					lastTokenInLine = scriptRegion.getPHPToken(formattedTextEnd - regionStart - 1);
-					if (regionStart + lastTokenInLine.getEnd() > originalLineStart + originalLineLength
-							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE
-							&& lastTokenInLine.getStart() > 0) {
-						lastTokenInLine = scriptRegion.getPHPToken(lastTokenInLine.getStart() - 1);
-					}
 				}
 			}
 
