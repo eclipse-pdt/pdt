@@ -2613,7 +2613,7 @@ backticks_expr ::=
 | T_ENCAPSED_AND_WHITESPACE:string
 {:
 	List list = new LinkedList();
-	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	Scalar scalar = new Scalar(stringleft, stringright, string == null ? "" : string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
 	list.add(scalar);
 	RESULT = list;
 :}
@@ -2701,7 +2701,7 @@ T_LNUMBER:scalar
 | T_START_HEREDOC:label T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
 {:
 	List list = new LinkedList();
-	list.add(new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING));
+	list.add(new Scalar(stringleft, stringright, string == null ? "" : string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING));
 	RESULT = new Quote(labelleft, eright, list, label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC);
 :}
 
@@ -3293,7 +3293,7 @@ encaps_list:list encaps_var:var
 
 | encaps_list:list T_ENCAPSED_AND_WHITESPACE:string
 {:
-	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	Scalar scalar = new Scalar(stringleft, stringright, string == null ? "" : string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
 	list.add(scalar);
 	RESULT = list;
 :}
@@ -3315,7 +3315,7 @@ encaps_list:list encaps_var:var
 | T_ENCAPSED_AND_WHITESPACE:string encaps_var:var
 {:
 	List list = new LinkedList();
-	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	Scalar scalar = new Scalar(stringleft, stringright, string == null ? "" : string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
 	list.add(scalar);
 	list.add(var);
 	RESULT = list;
