@@ -41,8 +41,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 	private IPath destinationPath;
 	private IResource[] selectedResource;
 
-	public ChangeIncludePath(IFile file, IFile participateFile,
-			IPath fMainDestinationPath, boolean isIncluded,
+	public ChangeIncludePath(IFile file, IFile participateFile, IPath fMainDestinationPath, boolean isIncluded,
 			IResource[] selectedResources) {
 		this.file = file;
 		this.participateFile = participateFile;
@@ -54,8 +53,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 	public boolean visit(Include include) {
 		Scalar scalar = null;
 		if (include.getExpression() instanceof ParenthesisExpression) {
-			ParenthesisExpression exp = (ParenthesisExpression) include
-					.getExpression();
+			ParenthesisExpression exp = (ParenthesisExpression) include.getExpression();
 
 			Expression expression = exp.getExpression();
 			if (expression instanceof Scalar) {
@@ -69,9 +67,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 		if (scalar != null) {
 			String stringValue = scalar.getStringValue();
 			if (isScalarNeedChange(scalar, stringValue)) {
-				addChange(scalar, stringValue,
-						PHPRefactoringCoreMessages
-								.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
+				addChange(scalar, stringValue, PHPRefactoringCoreMessages.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
 			}
 		}
 
@@ -79,11 +75,13 @@ public class ChangeIncludePath extends AbstractVisitor {
 	}
 
 	private boolean isScalarNeedChange(Scalar scalar, final String stringValue) {
+		if (stringValue.length() == 0) {
+			return false;
+		}
 		String value = getUnQuotedString(stringValue);
 		IPath includePath = new Path(value);
 		if (includePath.toString().startsWith("..")) { //$NON-NLS-1$
-			includePath = participateFile.getParent().getFullPath()
-					.append(includePath)
+			includePath = participateFile.getParent().getFullPath().append(includePath)
 					.makeRelativeTo(file.getProject().getFullPath());
 		}
 
@@ -95,8 +93,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 		if (fileDirectory.isPrefixOf(includePath)) {
 			return includePath.equals(file.getProjectRelativePath());
 		} else {
-			IPath fullPath = participateFile.getParent()
-					.getProjectRelativePath().append(includePath);
+			IPath fullPath = participateFile.getParent().getProjectRelativePath().append(includePath);
 
 			return fullPath.equals(file.getProjectRelativePath());
 		}
@@ -122,8 +119,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 		String newValue = getNewPath(value);
 
 		if (!value.equals(newValue)) {
-			final ReplaceEdit replaceEdit = new ReplaceEdit(start,
-					value.length(), newValue);
+			final ReplaceEdit replaceEdit = new ReplaceEdit(start, value.length(), newValue);
 			textEditGroup.addTextEdit(replaceEdit);
 			groups.add(textEditGroup);
 		}
@@ -131,13 +127,11 @@ public class ChangeIncludePath extends AbstractVisitor {
 
 	private String getUnQuotedString(String oldString) {
 		String value = oldString;
-		if (oldString.charAt(0) == '"'
-				&& oldString.charAt(oldString.length() - 1) == '"') {
+		if (oldString.charAt(0) == '"' && oldString.charAt(oldString.length() - 1) == '"') {
 			value = oldString.substring(1, oldString.length() - 1);
 		}
 
-		if (oldString.charAt(0) == '\''
-				&& oldString.charAt(oldString.length() - 1) == '\'') {
+		if (oldString.charAt(0) == '\'' && oldString.charAt(oldString.length() - 1) == '\'') {
 			value = oldString.substring(1, oldString.length() - 1);
 		}
 
@@ -147,11 +141,9 @@ public class ChangeIncludePath extends AbstractVisitor {
 
 	private String getNewPath(String value) {
 		if (!isIncluded) {
-			return MoveUtils.getMovedIncludingString(file, destinationPath,
-					participateFile, value, selectedResource);
+			return MoveUtils.getMovedIncludingString(file, destinationPath, participateFile, value, selectedResource);
 		} else {
-			return MoveUtils.getMovedIncludedString(file, destinationPath,
-					value, selectedResource);
+			return MoveUtils.getMovedIncludedString(file, destinationPath, value, selectedResource);
 		}
 	}
 
@@ -176,19 +168,15 @@ public class ChangeIncludePath extends AbstractVisitor {
 	 * @param groups
 	 *            - the groups to add
 	 */
-	private final static void addGroups(TextFileChange change,
-			List<TextEditGroup> groups) {
+	private final static void addGroups(TextFileChange change, List<TextEditGroup> groups) {
 		assert change != null && groups != null;
 
-		TextEditChangeGroup[] textEditChangeGroups = change
-				.getTextEditChangeGroups();
+		TextEditChangeGroup[] textEditChangeGroups = change.getTextEditChangeGroups();
 		OUTER: for (TextEditGroup editGroup : groups) {
-			TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(
-					change, editGroup);
+			TextEditChangeGroup textEditChangeGroup = new TextEditChangeGroup(change, editGroup);
 			final TextEdit textEdit = editGroup.getTextEdits()[0];
 			for (TextEditChangeGroup existingTextEditChangeGroup : textEditChangeGroups) {
-				TextEdit existingTextEdit = existingTextEditChangeGroup
-						.getTextEdits()[0];
+				TextEdit existingTextEdit = existingTextEditChangeGroup.getTextEdits()[0];
 				// avoid overlapping edits
 				if (existingTextEdit.getOffset() == textEdit.getOffset()) {
 					continue OUTER;

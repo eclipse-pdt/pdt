@@ -104,7 +104,8 @@ public abstract class AbstractRename extends AbstractVisitor {
 	 * @param scalar
 	 */
 	protected void addChange(Scalar scalar) {
-		final char charAt = scalar.getStringValue().charAt(0);
+		String stringValue = scalar.getStringValue();
+		final char charAt = stringValue.length() > 0 ? stringValue.charAt(0) : ' ';
 		final int isQuotedOffset = charAt == '"' || charAt == '\'' ? 1 : 0;
 		addChange(scalar.getStart() + isQuotedOffset);
 	}
@@ -252,7 +253,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 	public boolean visit(Scalar scalar) {
 		if (searchTextual) {
 			final String stringValue = scalar.getStringValue();
-			if (scalar.getScalarType() == Scalar.TYPE_STRING && stringValue != null) {
+			if (scalar.getScalarType() == Scalar.TYPE_STRING && stringValue.length() > 0) {
 				final Matcher matcher = pattern.matcher(stringValue);
 				while (matcher.find()) {
 					addChange(scalar.getStart() + matcher.start() + matcher.group().indexOf(oldName),

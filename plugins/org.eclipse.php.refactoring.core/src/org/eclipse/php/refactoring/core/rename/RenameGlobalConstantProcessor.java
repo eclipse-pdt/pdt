@@ -32,15 +32,12 @@ import org.eclipse.php.refactoring.core.rename.logic.RenameGlobalConstant;
  * 
  * @author Roy, 2007
  */
-public class RenameGlobalConstantProcessor extends
-		AbstractRenameProcessor<IFile> implements ITextUpdating {
+public class RenameGlobalConstantProcessor extends AbstractRenameProcessor<IFile> implements ITextUpdating {
 
-	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
-			.getString("RenameDefinedProcessor.0"); //$NON-NLS-1$
+	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages.getString("RenameDefinedProcessor.0"); //$NON-NLS-1$
 	private static final String CREATING_MODIFICATIONS_LABEL = PHPRefactoringCoreMessages
 			.getString("RenameDefinedProcessor.1"); //$NON-NLS-1$
-	private static final String CONSTANT_IS_USED = PHPRefactoringCoreMessages
-			.getString("RenameDefinedProcessor.2"); //$NON-NLS-1$
+	private static final String CONSTANT_IS_USED = PHPRefactoringCoreMessages.getString("RenameDefinedProcessor.2"); //$NON-NLS-1$
 	private static final String ID_RENAME_CONSTANT = "php.refactoring.ui.rename.constant"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_TEXTUAL_MATCHES = "textual"; //$NON-NLS-1$
 	public static final String RENAME_CONSTANT_PROCESSOR_NAME = PHPRefactoringCoreMessages
@@ -58,22 +55,20 @@ public class RenameGlobalConstantProcessor extends
 	private boolean isUpdateTextualMatches;
 
 	public RenameGlobalConstantProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); //$NON-NLS-1$
+		super(operatedFile); // $NON-NLS-1$
 
 		this.scalar = getScalar(locateNode);
 
 		final String stringValue = scalar.getStringValue();
-		final char charAt = stringValue.charAt(0);
+		final char charAt = stringValue.length() > 0 ? stringValue.charAt(0) : ' ';
 		this.scalarName = charAt != '"' && charAt != '\'' ? stringValue
 				: stringValue.substring(1, stringValue.length() - 1);
 	}
 
 	private Scalar getScalar(ASTNode locateNode) {
 		if (locateNode.getType() != ASTNode.SCALAR) {
-			if (locateNode instanceof Identifier
-					&& "define".equals(((Identifier) locateNode).getName())) { //$NON-NLS-1$
-				FunctionInvocation inv = (FunctionInvocation) locateNode
-						.getParent().getParent();
+			if (locateNode instanceof Identifier && "define".equals(((Identifier) locateNode).getName())) { //$NON-NLS-1$
+				FunctionInvocation inv = (FunctionInvocation) locateNode.getParent().getParent();
 				List<Expression> parameters = inv.parameters();
 				if (parameters != null && parameters.size() > 0) {
 					return (Scalar) parameters.get(0);
@@ -90,15 +85,12 @@ public class RenameGlobalConstantProcessor extends
 	/**
 	 * Derive the change
 	 */
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PHPRefactoringCoreMessages
-						.getString("RenameDefinedProcessor.4")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("RenameDefinedProcessor.4")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 		try {
-			pm.beginTask(RenameGlobalConstantProcessor.RENAME_IS_PROCESSING,
-					participantFiles.size());
+			pm.beginTask(RenameGlobalConstantProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameGlobalConstantProcessor.CREATING_MODIFICATIONS_LABEL);
 
 			if (pm.isCanceled())
@@ -111,8 +103,7 @@ public class RenameGlobalConstantProcessor extends
 			for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 				final IFile file = entry.getKey();
 				final Program program = entry.getValue();
-				final RenameGlobalConstant rename = new RenameGlobalConstant(
-						file, scalarName, newElementName,
+				final RenameGlobalConstant rename = new RenameGlobalConstant(file, scalarName, newElementName,
 						getUpdateTextualMatches());
 
 				// aggregate the changes identifiers
@@ -174,10 +165,8 @@ public class RenameGlobalConstantProcessor extends
 	}
 
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PHPElementConciliator.constantAlreadyExists(program,
-				getNewElementName())) {
-			final String message = MessageFormat.format(
-					RenameGlobalConstantProcessor.CONSTANT_IS_USED,
+		if (PHPElementConciliator.constantAlreadyExists(program, getNewElementName())) {
+			final String message = MessageFormat.format(RenameGlobalConstantProcessor.CONSTANT_IS_USED,
 					new Object[] { key.getName() });
 			return RefactoringStatus.createWarningStatus(message);
 		}

@@ -49,7 +49,7 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 					|| scalar.getScalarType() == Scalar.TYPE_SYSTEM) && !"null".equalsIgnoreCase(value) //$NON-NLS-1$
 					&& !"false".equalsIgnoreCase(value) //$NON-NLS-1$
 					&& !"true".equalsIgnoreCase(value) //$NON-NLS-1$
-					&& value.charAt(0) != '\'' && value.charAt(0) != '"') {
+					&& value.length() > 0 && value.charAt(0) != '\'' && value.charAt(0) != '"') {
 				highlight(scalar);
 			} else if (scalar.getParent() instanceof FunctionInvocation) {// for
 																			// define

@@ -207,7 +207,7 @@ public class PHPElementConciliator {
 		}
 
 		// if it is not a dollared variable - it is not a global one
-		if (scalar == null || scalar.getScalarType() != Scalar.TYPE_STRING || scalar.getStringValue() == null) {
+		if (scalar == null || scalar.getScalarType() != Scalar.TYPE_STRING || scalar.getStringValue().length() == 0) {
 			return false;
 		}
 
@@ -707,7 +707,7 @@ public class PHPElementConciliator {
 				final Scalar scalar = (Scalar) node;
 
 				final String stringValue = scalar.getStringValue();
-				if (scalar.getScalarType() != Scalar.TYPE_STRING || stringValue == null) {
+				if (scalar.getScalarType() != Scalar.TYPE_STRING || stringValue.length() == 0) {
 					return false;
 				}
 
