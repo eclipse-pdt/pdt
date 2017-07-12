@@ -21,12 +21,10 @@ import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
  */
 public class RenameGlobalConstant extends AbstractRename {
 
-	private static final String RENAME_CONSTANT = PHPRefactoringCoreMessages
-			.getString("RenameDefinedName.0"); //$NON-NLS-1$
-	private boolean isCaseSenstive = true;
+	private static final String RENAME_CONSTANT = PHPRefactoringCoreMessages.getString("RenameDefinedName.0"); //$NON-NLS-1$
+	private boolean isCaseSensitive = true;
 
-	public RenameGlobalConstant(IFile file, String oldName, String newName,
-			boolean searchTextual) {
+	public RenameGlobalConstant(IFile file, String oldName, String newName, boolean searchTextual) {
 		super(file, oldName, newName, searchTextual);
 	}
 
@@ -40,7 +38,9 @@ public class RenameGlobalConstant extends AbstractRename {
 	// functionInvocation.getParent().getType() == ASTNode.EXPRESSION_STATEMENT)
 	// {
 	// final Identifier identifier = (Identifier) functionName;
-	//			if ("define".equalsIgnoreCase(identifier.getName()) && functionInvocation.getParameters() != null && functionInvocation.getParameters().length != 0) { //$NON-NLS-1$
+	// if ("define".equalsIgnoreCase(identifier.getName()) &&
+	// functionInvocation.getParameters() != null &&
+	// functionInvocation.getParameters().length != 0) { //$NON-NLS-1$
 	// final Expression expression = functionInvocation.getParameters()[0];
 	// Expression caseSensitive = null;
 	//
@@ -48,7 +48,7 @@ public class RenameGlobalConstant extends AbstractRename {
 	// caseSensitive = functionInvocation.getParameters()[2];
 	// if (expression.getType() == ASTNode.SCALAR) {
 	// String value = ((Scalar) caseSensitive).getStringValue();
-	//						if ("true".equalsIgnoreCase(value)) { //$NON-NLS-1$
+	// if ("true".equalsIgnoreCase(value)) { //$NON-NLS-1$
 	// isCaseSenstive = false;
 	// }
 	// }
@@ -84,19 +84,18 @@ public class RenameGlobalConstant extends AbstractRename {
 	 */
 	public boolean visit(Scalar scalar) {
 		String stringValue = scalar.getStringValue();
-		if (stringValue.length() > 2
-				&& (stringValue.charAt(0) == '\'' || stringValue.charAt(0) == '"')) {
+		if (stringValue.length() == 0) {
+			return false;
+		}
+		if (stringValue.length() > 2 && (stringValue.charAt(0) == '\'' || stringValue.charAt(0) == '"')) {
 			stringValue = stringValue.substring(1, stringValue.length() - 1);
 		}
-		if (isCaseSenstive) {
-			if (scalar.getScalarType() == Scalar.TYPE_STRING
-					&& stringValue != null && stringValue.equals(oldName)) {
+		if (isCaseSensitive) {
+			if (scalar.getScalarType() == Scalar.TYPE_STRING && stringValue.equals(oldName)) {
 				addChange(scalar);
 			}
 		} else {
-			if (scalar.getScalarType() == Scalar.TYPE_STRING
-					&& stringValue != null
-					&& stringValue.equalsIgnoreCase(oldName)) {
+			if (scalar.getScalarType() == Scalar.TYPE_STRING && stringValue.equalsIgnoreCase(oldName)) {
 				addChange(scalar);
 			}
 		}

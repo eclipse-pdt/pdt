@@ -95,7 +95,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(Scalar scalar) {
 		String scalarValue = scalar.getStringValue();
-		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue != null) {
+		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue.length() > 0) {
 			// disregard strings
 			if (!isQuoted(scalarValue) && (scalar.getParent().getType() != ASTNode.QUOTE)) {
 				if (checkEquality(scalarValue)) {

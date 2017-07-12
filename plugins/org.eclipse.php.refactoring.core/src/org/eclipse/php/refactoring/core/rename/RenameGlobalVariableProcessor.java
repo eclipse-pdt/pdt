@@ -44,8 +44,7 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  * 
  * @author Roy, 2007
  */
-public class RenameGlobalVariableProcessor extends
-		AbstractRenameProcessor<IFile> implements ITextUpdating {
+public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile> implements ITextUpdating {
 
 	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameGlobalVariableProcessor.0"); //$NON-NLS-1$
@@ -69,7 +68,7 @@ public class RenameGlobalVariableProcessor extends
 	private boolean isUpdateTextualMatches;
 
 	public RenameGlobalVariableProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); //$NON-NLS-1$
+		super(operatedFile); // $NON-NLS-1$
 
 		this.identifier = locateNode;
 	}
@@ -77,15 +76,12 @@ public class RenameGlobalVariableProcessor extends
 	/**
 	 * Derive the change
 	 */
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PHPRefactoringCoreMessages
-						.getString("RenameGlobalVariableProcessor.4")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("RenameGlobalVariableProcessor.4")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 		try {
-			pm.beginTask(RenameGlobalVariableProcessor.RENAME_IS_PROCESSING,
-					participantFiles.size());
+			pm.beginTask(RenameGlobalVariableProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameGlobalVariableProcessor.CREATING_MODIFICATIONS_LABEL);
 
 			if (pm.isCanceled())
@@ -98,8 +94,7 @@ public class RenameGlobalVariableProcessor extends
 			for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 				final IFile file = entry.getKey();
 				final Program program = entry.getValue();
-				final RenameGlobalVariable rename = new RenameGlobalVariable(
-						file, getIdentifierName(), newElementName,
+				final RenameGlobalVariable rename = new RenameGlobalVariable(file, getIdentifierName(), newElementName,
 						getUpdateTextualMatches());
 
 				// aggregate the changes identifiers
@@ -129,31 +124,26 @@ public class RenameGlobalVariableProcessor extends
 	protected void collectReferences(Program program, IProgressMonitor pm) {
 		final ArrayList<IResource> list = new ArrayList<IResource>();
 
-		IScriptProject project = this.identifier.getProgramRoot()
-				.getSourceModule().getScriptProject();
+		IScriptProject project = this.identifier.getProgramRoot().getSourceModule().getScriptProject();
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
-				getSearchFlags(false));
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, getSearchFlags(false));
 
-		SearchPattern pattern = SearchPattern.createPattern("$" //$NON-NLS-1$
-				+ getCurrentElementName(), IDLTKSearchConstants.FIELD,
-				IDLTKSearchConstants.ALL_OCCURRENCES,
-				SearchPattern.R_ERASURE_MATCH, PHPLanguageToolkit.getDefault());
+		SearchPattern pattern = SearchPattern.createPattern(
+				"$" //$NON-NLS-1$
+						+ getCurrentElementName(),
+				IDLTKSearchConstants.FIELD, IDLTKSearchConstants.ALL_OCCURRENCES, SearchPattern.R_ERASURE_MATCH,
+				PHPLanguageToolkit.getDefault());
 
 		SearchEngine engine = new SearchEngine();
 		try {
-			engine.search(pattern, new SearchParticipant[] { SearchEngine
-					.getDefaultSearchParticipant() }, scope,
+			engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
 					new SearchRequestor() {
 						@Override
-						public void acceptSearchMatch(SearchMatch match)
-								throws CoreException {
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
 
-							IModelElement element = (IModelElement) match
-									.getElement();
+							IModelElement element = (IModelElement) match.getElement();
 							if (element instanceof ISourceModule) {
-								list.add(((ISourceModule) element)
-										.getResource());
+								list.add(((ISourceModule) element).getResource());
 							}
 
 						}
@@ -165,8 +155,7 @@ public class RenameGlobalVariableProcessor extends
 			IResource file = it.next();
 			if (file instanceof IFile) {
 				try {
-					participantFiles.put((IFile) file,
-							RefactoringUtility.getProgramForFile((IFile) file));
+					participantFiles.put((IFile) file, RefactoringUtility.getProgramForFile((IFile) file));
 				} catch (Exception e) {
 				}
 			}
@@ -211,9 +200,8 @@ public class RenameGlobalVariableProcessor extends
 
 	private final String getIdentifierName() {
 		if (this.identifier.getType() == ASTNode.SCALAR) {
-			final String stringValue = ((Scalar) this.identifier)
-					.getStringValue();
-			return stringValue.substring(1, stringValue.length() - 1);
+			final String stringValue = ((Scalar) this.identifier).getStringValue();
+			return stringValue.length() == 0 ? stringValue : stringValue.substring(1, stringValue.length() - 1);
 		}
 		Identifier id = null;
 		if (identifier instanceof Identifier) {
@@ -234,10 +222,8 @@ public class RenameGlobalVariableProcessor extends
 	}
 
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PHPElementConciliator.globalVariableAlreadyExists(program,
-				getNewElementName())) {
-			final String message = MessageFormat.format(
-					RenameGlobalVariableProcessor.GLOBAL_VARIABLE_IS_USED,
+		if (PHPElementConciliator.globalVariableAlreadyExists(program, getNewElementName())) {
+			final String message = MessageFormat.format(RenameGlobalVariableProcessor.GLOBAL_VARIABLE_IS_USED,
 					new Object[] { key.getName() });
 			return RefactoringStatus.createWarningStatus(message);
 		}

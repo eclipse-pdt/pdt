@@ -568,7 +568,7 @@ public class RenameLinkedMode {
 
 		if (identifier.getType() == ASTNode.SCALAR) {
 			final String stringValue = ((Scalar) identifier).getStringValue();
-			if (((Scalar) identifier).getStringValue().charAt(0) == '"') {
+			if (stringValue.length() > 0 && stringValue.charAt(0) == '"') {
 				return stringValue.substring(1, stringValue.length() - 1);
 			} else {
 				return stringValue;

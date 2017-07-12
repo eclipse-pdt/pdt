@@ -29,8 +29,8 @@ public class RenameIncludeFolder extends AbstractRename {
 	private boolean updateReference;
 	private IPath folderPath;
 
-	public RenameIncludeFolder(IFile file, String oldName, String newName,
-			IPath folderPath, boolean searchTextual, boolean updateReference) {
+	public RenameIncludeFolder(IFile file, String oldName, String newName, IPath folderPath, boolean searchTextual,
+			boolean updateReference) {
 		super(file, oldName, newName, searchTextual);
 		this.updateReference = updateReference;
 		this.folderPath = folderPath;
@@ -41,8 +41,7 @@ public class RenameIncludeFolder extends AbstractRename {
 			Expression exp = include.getExpression();
 			Scalar scalar = null;
 			if (exp instanceof ParenthesisExpression) {
-				Expression object = ((ParenthesisExpression) exp)
-						.getExpression();
+				Expression object = ((ParenthesisExpression) exp).getExpression();
 				if (object instanceof Scalar) {
 					scalar = (Scalar) object;
 				} else {
@@ -61,41 +60,32 @@ public class RenameIncludeFolder extends AbstractRename {
 				// remove "" or ''
 				int len = 0;
 				if (includeString.startsWith("\"") || includeString.startsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
-					includeString = includeString.substring(1,
-							includeString.length() - 1);
+					includeString = includeString.substring(1, includeString.length() - 1);
 					len = 1;
 				}
 
 				if (includeString.startsWith(".")) { //$NON-NLS-1$
 					IPath path = new Path(includeString);
 					if (!path.isAbsolute()) {
-						path = changedFile.getParent().getFullPath()
-								.append(path);
+						path = changedFile.getParent().getFullPath().append(path);
 					}
 
-					String lastString = path.makeRelativeTo(folderPath)
-							.toString();
-					len = len + includeString.indexOf(lastString)
-							- oldName.length() - 1;
+					String lastString = path.makeRelativeTo(folderPath).toString();
+					len = len + includeString.indexOf(lastString) - oldName.length() - 1;
 
 					addChange(scalar.getStart() + len,
-							PHPRefactoringCoreMessages
-									.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
+							PHPRefactoringCoreMessages.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
 				} else {
 
 					IPath path = getPath(includeString);
-					String lastString = path.makeRelativeTo(folderPath)
-							.toString();
+					String lastString = path.makeRelativeTo(folderPath).toString();
 
 					// if no change is required - skip
 					if (!lastString.equalsIgnoreCase(includeString)) {
-						len = len + includeString.indexOf(lastString)
-								- oldName.length() - 1;
+						len = len + includeString.indexOf(lastString) - oldName.length() - 1;
 
-						addChange(
-								scalar.getStart() + len,
-								PHPRefactoringCoreMessages
-										.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
+						addChange(scalar.getStart() + len,
+								PHPRefactoringCoreMessages.getString("RenameIncludeAndClassName.1")); //$NON-NLS-1$
 					}
 				}
 
@@ -113,25 +103,26 @@ public class RenameIncludeFolder extends AbstractRename {
 	protected void addChange(int start, String description) {
 		final TextEditGroup textEditGroup = new TextEditGroup(description);
 
-		final ReplaceEdit replaceEdit = new ReplaceEdit(start,
-				oldName.length(), newName);
+		final ReplaceEdit replaceEdit = new ReplaceEdit(start, oldName.length(), newName);
 		textEditGroup.addTextEdit(replaceEdit);
 		groups.add(textEditGroup);
 	}
 
 	private boolean isScalarNeedChange(Scalar scalar) {
 		String includeString = scalar.getStringValue();
+		if (includeString.length() == 0) {
+			return false;
+		}
 
 		boolean needChange = false;
 		IPath path = getPath(includeString);
 
-		if (path != null
-				&& changedFile.getWorkspace().getRoot().getFile(path).exists()
+		if (path != null && changedFile.getWorkspace().getRoot().getFile(path).exists()
 				&& folderPath.isPrefixOf(path)) {
 
 			if ((includeString.startsWith("'./") //$NON-NLS-1$
-					|| includeString.startsWith("'../") || (includeString //$NON-NLS-1$
-					.indexOf("/") == -1 && includeString.indexOf("\\") == -1)) //$NON-NLS-1$ //$NON-NLS-2$
+					|| includeString.startsWith("'../") //$NON-NLS-1$
+					|| (includeString.indexOf("/") == -1 && includeString.indexOf("\\") == -1)) //$NON-NLS-1$ //$NON-NLS-2$
 					&& folderPath.isPrefixOf(changedFile.getFullPath())) {
 				needChange = false;
 			} else {
@@ -156,8 +147,7 @@ public class RenameIncludeFolder extends AbstractRename {
 	private IPath getPath(String includeString) {
 		// remove "" or ''
 		if (includeString.startsWith("\"") || includeString.startsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
-			includeString = includeString.substring(1,
-					includeString.length() - 1);
+			includeString = includeString.substring(1, includeString.length() - 1);
 		}
 
 		// Check for two cases:
@@ -172,9 +162,7 @@ public class RenameIncludeFolder extends AbstractRename {
 
 		} else {
 			final ISourceModule findSourceModule = FileNetworkUtility
-					.findSourceModule(
-							DLTKCore.createSourceModuleFrom(this.changedFile),
-							includeString);
+					.findSourceModule(DLTKCore.createSourceModuleFrom(this.changedFile), includeString);
 			if (findSourceModule != null) {
 				path = findSourceModule.getPath();
 			}
