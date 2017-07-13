@@ -12,6 +12,7 @@
 
 package org.eclipse.php.internal.ui.autoEdit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
@@ -45,7 +46,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		if ((command.text != null) && command.text.equals("\t")) { //$NON-NLS-1$
+		if (StringUtils.equals(command.text, "\t") && document instanceof IStructuredDocument) { //$NON-NLS-1$
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464605
 			// Workaround for bug 464605:
 			// tabulation handling conflicts here with JavaAutoIndentStrategy's
