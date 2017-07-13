@@ -58,6 +58,9 @@ public class XDebugTextHover extends PHPDebugTextHover {
 				root = parser.createAST(null);
 			}
 			ASTNode node = NodeFinder.perform(root, hoverRegion.getOffset(), hoverRegion.getLength());
+			if (node == null) {
+				return null;
+			}
 
 			if (node instanceof Scalar) {
 				Scalar scalar = (Scalar) node;
