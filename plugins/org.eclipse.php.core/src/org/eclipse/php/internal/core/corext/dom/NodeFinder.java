@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.corext.dom;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.visitor.ApplyAll;
@@ -46,6 +47,7 @@ public class NodeFinder extends ApplyAll {
 	 * 
 	 * @since 2.1
 	 */
+	@Nullable
 	public static ASTNode perform(ASTNode root, int start, int length) {
 		NodeFinder finder = new NodeFinder(start, length);
 		root.accept(finder);
@@ -56,6 +58,7 @@ public class NodeFinder extends ApplyAll {
 		return result;
 	}
 
+	@Nullable
 	public static ASTNode perform(ASTNode root, ISourceRange range) {
 		return perform(root, range.getOffset(), range.getLength());
 	}

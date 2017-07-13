@@ -94,6 +94,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 			throw new CoreException(new Status(IStatus.ERROR, RefactoringPlugin.PLUGIN_ID, "Unexpected Error", e)); //$NON-NLS-1$
 		}
 		ASTNode selectedNode = NodeFinder.perform(program, offset, 0);
+		if (selectedNode == null) {
+			this.selectionLength = 0;
+			return;
+		}
 		ASTNode parent = selectedNode.getParent();
 
 		// for the php 5.3 with name space case.
