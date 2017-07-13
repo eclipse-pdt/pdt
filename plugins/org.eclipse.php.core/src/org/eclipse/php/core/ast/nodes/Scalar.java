@@ -179,9 +179,10 @@ public class Scalar extends VariableBase {
 	}
 
 	/**
-	 * the scalar value
+	 * The scalar value. Note that it will always be empty when scalar type is
+	 * {@link #TYPE_UNKNOWN}.
 	 * 
-	 * @return scalar value
+	 * @return scalar value (never null but can be empty)
 	 */
 	public String getStringValue() {
 		return this.stringValue;
@@ -190,15 +191,10 @@ public class Scalar extends VariableBase {
 	/**
 	 * Sets the value of this scalar
 	 * 
-	 * @param new
-	 *            operator of this unary operation
+	 * @param value
+	 *            non-null value for this scalar
 	 * @exception IllegalArgumentException
-	 *                if:
-	 *                <ul>
-	 *                <li>the node belongs to a different AST</li>
-	 *                <li>the node already has a parent</li>
-	 *                <li>a cycle in would be created</li>
-	 *                </ul>
+	 *                if value is null
 	 */
 	public final void setStringValue(String value) {
 		if (value == null) {
