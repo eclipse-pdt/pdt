@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
+ *     Thierry Blind - initial API and implementation
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.ast;
 
@@ -101,6 +100,7 @@ public class ASTCache {
 						} else {
 							nbIterations = 0;
 							// same as aboutToBeReconciled(input)
+							// but we keep current fAST value
 							fState = STATES.STARTED;
 						}
 					}
