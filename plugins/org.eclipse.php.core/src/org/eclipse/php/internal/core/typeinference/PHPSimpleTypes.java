@@ -87,6 +87,11 @@ public class PHPSimpleTypes {
 	 */
 	public static final IEvaluatedType CALLABLE = new PHPClassType("callable"); //$NON-NLS-1$
 
+	/**
+	 * @since 5.1
+	 */
+	public static final IEvaluatedType ITERABLE = new PHPClassType("callable"); //$NON-NLS-1$
+
 	static {
 
 		SIMPLE_TYPES = new HashMap<String, TypeInfo>();
@@ -105,6 +110,7 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("null", new TypeInfo(NULL, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("mixed", new TypeInfo(MIXED, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("callable", new TypeInfo(CALLABLE, PHPVersion.PHP5_4)); //$NON-NLS-1$
+		SIMPLE_TYPES.put("iterable", new TypeInfo(ITERABLE, PHPVersion.PHP7_1)); //$NON-NLS-1$
 	}
 
 	/**

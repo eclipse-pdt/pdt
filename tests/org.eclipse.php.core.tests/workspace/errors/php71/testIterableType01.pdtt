@@ -1,0 +1,7 @@
+--TEST--
+Test iterable pseudo type
+--FILE--
+<?php
+function willAppearOnBAutocompleteNotA(iterable $aaa): iterable
+{}
+--EXPECT--
