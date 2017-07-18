@@ -1,0 +1,34 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+class Test {
+	
+	/**
+	 *
+	 * @var boolean
+	 */
+	public $|enabled|;
+}
+--EXPECT--
+<?php
+class Test {
+	
+	/**
+	 *
+	 * @var boolean
+	 */
+	public $enabled;
+	/**
+	 * @return boolean
+	 */
+	public function isEnabled() {
+		return $this->enabled;
+	}
+	/**
+	 * @param boolean $enabled
+	 */
+	public function setEnabled($enabled) {
+		$this->enabled = $enabled;
+	}
+}

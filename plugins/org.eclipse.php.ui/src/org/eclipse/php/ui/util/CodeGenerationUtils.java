@@ -209,7 +209,17 @@ public class CodeGenerationUtils {
 	 * @return getter name string.
 	 */
 	public static String getGetterName(IField field) {
-		return "get" + toInitialCaps(field.getElementName(), true); //$NON-NLS-1$
+		String prefix = "get"; // $NON-NLS-1$
+		try {
+			IEvaluatedType type = PHPSimpleTypes.fromString(field.getType());
+			if (type != null && type.equals(PHPSimpleTypes.BOOLEAN)) {
+				prefix = "is"; // $NON-NLS-1$
+			}
+		} catch (ModelException e) {
+			// skip
+		}
+
+		return prefix + toInitialCaps(field.getElementName(), true);
 	}
 
 	/**

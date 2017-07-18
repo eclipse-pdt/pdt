@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -119,7 +120,10 @@ public class PHPSimpleTypes {
 	 * @param type
 	 * @return
 	 */
-	public static IEvaluatedType fromString(String type) {
+	public static IEvaluatedType fromString(@Nullable String type) {
+		if (type == null) {
+			return null;
+		}
 		return fromStringCS(type.toLowerCase());
 	}
 
