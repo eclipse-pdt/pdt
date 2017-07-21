@@ -726,7 +726,14 @@ public class CodeGeneration {
 				if (formalParameter.getDefaultValue() != null && formalParameter.getDefaultValue() instanceof Scalar
 						&& !formalParameter.getDefaultValue().isNullExpression()) {
 					Scalar scalar = (Scalar) formalParameter.getDefaultValue();
-					IEvaluatedType simpleType = PHPSimpleTypes.fromString(Scalar.getType(scalar.getScalarType()));
+					String value = scalar.getStringValue();
+					IEvaluatedType simpleType;
+					if ("true".equalsIgnoreCase(value) //$NON-NLS-1$
+							|| "false".equalsIgnoreCase(value)) { //$NON-NLS-1$
+						simpleType = PHPSimpleTypes.BOOLEAN;
+					} else {
+						simpleType = PHPSimpleTypes.fromString(Scalar.getType(scalar.getScalarType()));
+					}
 					if (simpleType == null) {
 						parameterTypes[i++] = Scalar.getType(scalar.getScalarType());
 					} else {

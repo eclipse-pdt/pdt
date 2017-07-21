@@ -809,7 +809,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <YYINITIAL>"<?"|"<script"{WHITESPACES}"language"{WHITESPACES}?"="{WHITESPACES}?("php"|"\"php\""|"\'php\'"){WHITESPACES}?">" {
-	if (short_tags_allowed || yylength()>2) { /* yyleng>2 means it's not <? but <script> */
+	if (short_tags_allowed || yylength()>2) { /* yylength()>2 means it's not <? but <script> */
 		yybegin(ST_IN_SCRIPTING);
 		//return T_OPEN_TAG;
 	} else {
@@ -903,7 +903,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"define" {
-	/* not a keyword, hust for recognize constans.*/
+	/* not a keyword, used to recognize constants.*/
 	return createFullSymbol(ParserConstants.T_DEFINE);
 }
 
