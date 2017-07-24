@@ -1,0 +1,18 @@
+--TEST--
+Bug 520104 - auto-indentation sometimes doesn't work with arrays
+--FILE--
+<?php
+$a;
+|?>
+--OTHER--
+array(
+'method' => "'{$method}'"
+);
+                 
+--EXPECT--
+<?php
+$a;
+array(
+		'method' => "'{$method}'"
+);
+?>
