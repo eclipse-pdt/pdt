@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,9 +168,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		if (shouldIndent(document, offset, line)) {
 			indent(document, result, indentationObject.getIndentationChar(), indentationObject.getIndentationSize());
 		} else {
-			boolean intended = indentMultiLineCase(document, lineNumber, newForOffset, enterKeyPressed, result, blanks,
+			boolean indented = indentMultiLineCase(document, lineNumber, newForOffset, enterKeyPressed, result, blanks,
 					commandText, indentationObject);
-			if (!intended) {
+			if (!indented) {
 				lastNonEmptyLineIndex = lineNumber;
 				if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
 					lastNonEmptyLineIndex--;
@@ -413,15 +413,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		int lineStartOffset = offset;
 		try {
 			IRegion region = document.getLineInformation(lineNumber);
-			int start = lineStartOffset;
-			int end = region.getOffset() + region.getLength() - lineStartOffset;
-			for (int i = start; i < end; i++) {
+			int end = region.getOffset() + region.getLength();
+			for (int i = lineStartOffset; i < end; i++) {
 				if (Character.isWhitespace(document.getChar(i))) {
 				} else {
 					// move line start to first non blank char
 					// and do + 1 to adjust offset of
-					// PHPTextSequenceUtilities.getStatement(...)
-					lineStartOffset += i + 1;
+					// PHPTextSequenceUtilities.getStatementRegion(...)
+					lineStartOffset = i + 1;
 					break;
 				}
 			}
