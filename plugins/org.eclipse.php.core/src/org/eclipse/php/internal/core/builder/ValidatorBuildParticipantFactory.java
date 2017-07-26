@@ -29,6 +29,7 @@ public class ValidatorBuildParticipantFactory extends AbstractBuildParticipantTy
 
 	private String natureId = null;
 
+	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
 		if (natureId != null) {
 			return new ParserBuildParticipant();
@@ -36,6 +37,7 @@ public class ValidatorBuildParticipantFactory extends AbstractBuildParticipantTy
 		return null;
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
@@ -43,6 +45,7 @@ public class ValidatorBuildParticipantFactory extends AbstractBuildParticipantTy
 
 	private static class ParserBuildParticipant implements IBuildParticipant {
 
+		@Override
 		public void build(IBuildContext context) throws CoreException {
 			if (!isValidatorEnabled(context)) {
 				return;

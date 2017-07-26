@@ -26,10 +26,10 @@ import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ui.IWorkingSet;
 
 public class ReorgUtils {
-	public static boolean containsOnlyProjects(List elements) {
+	public static boolean containsOnlyProjects(List<?> elements) {
 		if (elements.isEmpty())
 			return false;
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			if (!isProject(iter.next()))
 				return false;
 		}
@@ -188,14 +188,14 @@ public class ReorgUtils {
 				&& ((IProjectFragment) modelElement).getKind() == IProjectFragment.K_SOURCE;
 	}
 
-	public static IResource[] getResources(List elements) {
-		List resources = new ArrayList(elements.size());
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+	public static IResource[] getResources(List<?> elements) {
+		List<Object> resources = new ArrayList<>(elements.size());
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IResource)
 				resources.add(element);
 		}
-		return (IResource[]) resources.toArray(new IResource[resources.size()]);
+		return resources.toArray(new IResource[resources.size()]);
 	}
 
 	public static IResource getResource(IModelElement element) {
@@ -206,52 +206,52 @@ public class ReorgUtils {
 	}
 
 	public static IResource[] getResources(IModelElement[] elements) {
-		List resultArray = new ArrayList();
+		List<IResource> resultArray = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			IResource res = ReorgUtils.getResource(elements[i]);
 			if (res != null) {
 				resultArray.add(res);
 			}
 		}
-		return (IResource[]) resultArray.toArray(new IResource[resultArray.size()]);
+		return resultArray.toArray(new IResource[resultArray.size()]);
 	}
 
 	public static IResource[] getNotLinked(IResource[] resources) {
-		Collection result = new ArrayList(resources.length);
+		Collection<IResource> result = new ArrayList<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
 			if (resource != null && !result.contains(resource) && !resource.isLinked())
 				result.add(resource);
 		}
-		return (IResource[]) result.toArray(new IResource[result.size()]);
+		return result.toArray(new IResource[result.size()]);
 	}
 
 	public static IResource[] getNotNulls(IResource[] resources) {
-		Collection result = new ArrayList(resources.length);
+		Collection<IResource> result = new ArrayList<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
 			if (resource != null && !result.contains(resource))
 				result.add(resource);
 		}
-		return (IResource[]) result.toArray(new IResource[result.size()]);
+		return result.toArray(new IResource[result.size()]);
 	}
 
-	public static Map groupBySourceModule(List modelElements) {
-		Map result = new HashMap();
-		for (Iterator iter = modelElements.iterator(); iter.hasNext();) {
-			IModelElement element = (IModelElement) iter.next();
+	public static Map<ISourceModule, ArrayList<IModelElement>> groupBySourceModule(List<IModelElement> modelElements) {
+		Map<ISourceModule, ArrayList<IModelElement>> result = new HashMap<>();
+		for (Iterator<IModelElement> iter = modelElements.iterator(); iter.hasNext();) {
+			IModelElement element = iter.next();
 			ISourceModule cu = ReorgUtils.getSourceModule(element);
 			if (cu != null) {
 				if (!result.containsKey(cu))
-					result.put(cu, new ArrayList(1));
-				((List) result.get(cu)).add(element);
+					result.put(cu, new ArrayList<>(1));
+				result.get(cu).add(element);
 			}
 		}
 		return result;
 	}
 
-	public static List getElementsOfType(IModelElement[] modelElements, int type) {
-		List result = new ArrayList(modelElements.length);
+	public static List<IModelElement> getElementsOfType(IModelElement[] modelElements, int type) {
+		List<IModelElement> result = new ArrayList<>(modelElements.length);
 		for (int i = 0; i < modelElements.length; i++) {
 			if (isOfType(modelElements[i], type))
 				result.add(modelElements[i]);
@@ -272,33 +272,37 @@ public class ReorgUtils {
 	}
 
 	public static IModelElement[] setMinus(IModelElement[] setToRemoveFrom, IModelElement[] elementsToRemove) {
-		Set setMinus = new HashSet(setToRemoveFrom.length - setToRemoveFrom.length);
+		Set<IModelElement> setMinus = new HashSet<>(setToRemoveFrom.length - setToRemoveFrom.length);
 		setMinus.addAll(Arrays.asList(setToRemoveFrom));
 		setMinus.removeAll(Arrays.asList(elementsToRemove));
-		return (IModelElement[]) setMinus.toArray(new IModelElement[setMinus.size()]);
+		return setMinus.toArray(new IModelElement[setMinus.size()]);
 	}
 
 	public static IModelElement[] union(IModelElement[] set1, IModelElement[] set2) {
-		List union = new ArrayList(set1.length + set2.length);// use lists to
+		List<Object> union = new ArrayList<>(set1.length + set2.length);// use
+																		// lists
+																		// to
 		// avoid
 		// sequence
 		// problems
 		addAll(set1, union);
 		addAll(set2, union);
-		return (IModelElement[]) union.toArray(new IModelElement[union.size()]);
+		return union.toArray(new IModelElement[union.size()]);
 	}
 
 	public static IResource[] union(IResource[] set1, IResource[] set2) {
-		List union = new ArrayList(set1.length + set2.length);// use lists to
+		List<Object> union = new ArrayList<>(set1.length + set2.length);// use
+																		// lists
+																		// to
 		// avoid
 		// sequence
 		// problems
 		addAll(ReorgUtils.getNotNulls(set1), union);
 		addAll(ReorgUtils.getNotNulls(set2), union);
-		return (IResource[]) union.toArray(new IResource[union.size()]);
+		return union.toArray(new IResource[union.size()]);
 	}
 
-	private static void addAll(Object[] array, List list) {
+	private static void addAll(Object[] array, List<Object> list) {
 		for (int i = 0; i < array.length; i++) {
 			if (!list.contains(array[i]))
 				list.add(array[i]);
@@ -306,20 +310,20 @@ public class ReorgUtils {
 	}
 
 	public static IResource[] setMinus(IResource[] setToRemoveFrom, IResource[] elementsToRemove) {
-		Set setMinus = new HashSet(setToRemoveFrom.length - setToRemoveFrom.length);
+		Set<IResource> setMinus = new HashSet<>(setToRemoveFrom.length - setToRemoveFrom.length);
 		setMinus.addAll(Arrays.asList(setToRemoveFrom));
 		setMinus.removeAll(Arrays.asList(elementsToRemove));
-		return (IResource[]) setMinus.toArray(new IResource[setMinus.size()]);
+		return setMinus.toArray(new IResource[setMinus.size()]);
 	}
 
-	public static IModelElement[] getModelElements(List elements) {
-		List resources = new ArrayList(elements.size());
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+	public static IModelElement[] getModelElements(List<?> elements) {
+		List<Object> resources = new ArrayList<>(elements.size());
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IModelElement)
 				resources.add(element);
 		}
-		return (IModelElement[]) resources.toArray(new IModelElement[resources.size()]);
+		return resources.toArray(new IModelElement[resources.size()]);
 	}
 
 	public static ISourceModule[] getSourceModules(IModelElement[] modelElements) {
@@ -330,19 +334,19 @@ public class ReorgUtils {
 		return result;
 	}
 
-	public static IWorkingSet[] getWorkingSets(List elements) {
-		List result = new ArrayList(1);
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
+	public static IWorkingSet[] getWorkingSets(List<?> elements) {
+		List<Object> result = new ArrayList<>(1);
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IWorkingSet) {
 				result.add(element);
 			}
 		}
-		return (IWorkingSet[]) result.toArray(new IWorkingSet[result.size()]);
+		return result.toArray(new IWorkingSet[result.size()]);
 	}
 
-	public static void splitIntoModelElementsAndResources(Object[] elements, List modelElementResult,
-			List resourceResult) {
+	public static void splitIntoModelElementsAndResources(Object[] elements, List<Object> modelElementResult,
+			List<IResource> resourceResult) {
 		for (int i = 0; i < elements.length; i++) {
 			Object element = elements[i];
 			if (element instanceof IModelElement) {
@@ -358,7 +362,7 @@ public class ReorgUtils {
 		}
 	}
 
-	public static boolean containsElementOrParent(Set elements, IModelElement element) {
+	public static boolean containsElementOrParent(Set<?> elements, IModelElement element) {
 		if (elements.contains(element))
 			return true;
 		IModelElement parent = element.getParent();
@@ -370,7 +374,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean containsElementOrParent(Set elements, IResource element) {
+	public static boolean containsElementOrParent(Set<?> elements, IResource element) {
 		if (elements.contains(element))
 			return true;
 		IResource parent = element.getParent();
@@ -458,12 +462,12 @@ public class ReorgUtils {
 	}
 
 	public static IFile[] getFiles(IResource[] resources) {
-		Set result = getResourcesOfType(resources, IResource.FILE);
-		return (IFile[]) result.toArray(new IFile[result.size()]);
+		Set<IResource> result = getResourcesOfType(resources, IResource.FILE);
+		return result.toArray(new IFile[result.size()]);
 	}
 
-	public static Set getResourcesOfType(IResource[] resources, int typeMask) {
-		Set result = new HashSet(resources.length);
+	public static Set<IResource> getResourcesOfType(IResource[] resources, int typeMask) {
+		Set<IResource> result = new HashSet<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			if (isOfType(resources[i], typeMask))
 				result.add(resources[i]);
@@ -472,8 +476,8 @@ public class ReorgUtils {
 	}
 
 	public static IFolder[] getFolders(IResource[] resources) {
-		Set result = getResourcesOfType(resources, IResource.FOLDER);
-		return (IFolder[]) result.toArray(new IFolder[result.size()]);
+		Set<IResource> result = getResourcesOfType(resources, IResource.FOLDER);
+		return result.toArray(new IFolder[result.size()]);
 	}
 
 	public static IProjectFragment getCorrespondingProjectFragment(IScriptProject p) throws ModelException {

@@ -90,7 +90,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	// We take advantage of the NULL wrapping to indicate that a null values
 	// will also
 	// be mapped to a server (the workspace server).
-	private Map<IProject, Server> defaultServersMap = new HashMap<IProject, Server>();
+	private Map<IProject, Server> defaultServersMap = new HashMap<>();
 	// Holds a server name to Server instance mapping.
 	private Map<String, Server> servers;
 	private List<IServersManagerListener> listeners;
@@ -108,8 +108,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	private ServersManager() {
-		servers = new LinkedHashMap<String, Server>();
-		listeners = new ArrayList<IServersManagerListener>();
+		servers = new LinkedHashMap<>();
+		listeners = new ArrayList<>();
 		loadServers();
 	}
 
@@ -157,7 +157,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
 			manager.fireEvent(event);
 		}
-		oldValue = (Server) manager.servers.put(server.getName(), server);
+		oldValue = manager.servers.put(server.getName(), server);
 		if (oldValue != null) {
 			oldValue.removePropertyChangeListener(manager);
 			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
@@ -202,7 +202,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		// first in the list.
 		ServersManager manager = ServersManager.getInstance();
 		Server workspaceDefault = getDefaultServer(null);
-		Server removedServer = (Server) manager.servers.remove(serverName);
+		Server removedServer = manager.servers.remove(serverName);
 		if (removedServer == null) {
 			// if the name is not existing, just quit.
 			return null;
@@ -246,7 +246,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 */
 	public static Server getServer(String serverName) {
 		ServersManager manager = getInstance();
-		return (Server) manager.servers.get(serverName);
+		return manager.servers.get(serverName);
 	}
 
 	public static Server getServer(Server oldServer) {
@@ -307,7 +307,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			// may not exists - ignore
 		}
 		// Find all servers that match given URL host address
-		List<Server> matchedByHost = new ArrayList<Server>();
+		List<Server> matchedByHost = new ArrayList<>();
 		for (Server server : getServers()) {
 			if (isNoneServer(server))
 				continue;
@@ -325,7 +325,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		if (matches.isEmpty())
 			return null;
 		// Filter out the servers by URL protocol
-		List<Server> matchedByProtocol = new ArrayList<Server>();
+		List<Server> matchedByProtocol = new ArrayList<>();
 		for (Server server : matches) {
 			if (url.getProtocol().equals(server.getRootURL().getProtocol())) {
 				matchedByProtocol.add(server);
@@ -334,7 +334,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		if (!matchedByProtocol.isEmpty())
 			matches = matchedByProtocol;
 		// Filter out the servers by URL port
-		List<Server> matchedByPort = new ArrayList<Server>();
+		List<Server> matchedByPort = new ArrayList<>();
 		int urlPort = url.getPort() != -1 ? url.getPort() : Server.DEFAULT_HTTP_PORT;
 		for (Server server : matches) {
 			if (urlPort == server.getPort()) {
@@ -368,7 +368,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	public static Server getDefaultServer(IProject project) {
 		ServersManager manager = getInstance();
 		// Try to get it from the memory first.
-		Server server = (Server) manager.defaultServersMap.get(project);
+		Server server = manager.defaultServersMap.get(project);
 		if (project != null) {
 			/*
 			 * In case that the project is not null, check that we have
@@ -382,7 +382,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				// We do not have a project specific setting for this project.
 				// Map it to the default workspace server.
 				manager.defaultServersMap.put(project, manager.defaultServersMap.get(null));
-				server = (Server) manager.defaultServersMap.get(null);
+				server = manager.defaultServersMap.get(null);
 			}
 		}
 		/*
@@ -407,7 +407,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				}
 			}
 			if (serverName != null && !"".equals(serverName)) { //$NON-NLS-1$
-				server = (Server) manager.servers.get(serverName);
+				server = manager.servers.get(serverName);
 				/*
 				 * Map this server as the default for the project (if not null)
 				 * or for the workspace (when the project is null).
@@ -419,7 +419,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		// as default
 		if (server == null) {
 			if (manager.servers.size() > 0) {
-				server = (Server) manager.servers.values().iterator().next();
+				server = manager.servers.values().iterator().next();
 				setDefaultServer(null, server);
 			}
 		}
@@ -442,7 +442,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		 * Get the default server for the given project. In case that we need to
 		 * set a new server for the project, make sure we save it as well.
 		 */
-		Server defaultProjectServer = (Server) manager.defaultServersMap.get(project);
+		Server defaultProjectServer = manager.defaultServersMap.get(project);
 		if (server != defaultProjectServer) {
 			manager.defaultServersMap.put(project, server);
 		}
@@ -460,7 +460,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 */
 	public static void setDefaultServer(IProject project, String serverName) {
 		ServersManager manager = getInstance();
-		Server server = (Server) manager.servers.get(serverName);
+		Server server = manager.servers.get(serverName);
 		setDefaultServer(project, server);
 	}
 
@@ -483,7 +483,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * Save the listed servers into the preferences.
 	 */
 	public static void save() {
-		List<IXMLPreferencesStorable> serversToSave = new ArrayList<IXMLPreferencesStorable>();
+		List<IXMLPreferencesStorable> serversToSave = new ArrayList<>();
 		for (Server server : getServers()) {
 			// <none> server only in memory
 			if (isNoneServer(server))
@@ -519,6 +519,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * @seejava.beans.PropertyChangeListener#propertyChange(java.beans.
 	 * PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// Listen to any attribute change in the Servers
 		Server server = (Server) evt.getSource();
@@ -534,6 +535,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		fireEvent(event);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
@@ -638,7 +640,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			defaultServersMap.put(null, defaultWebServer);
 			innerSaveDefaultServer(null, defaultWebServer);
 			// Save configurations
-			List<IXMLPreferencesStorable> serversToSave = new ArrayList<IXMLPreferencesStorable>();
+			List<IXMLPreferencesStorable> serversToSave = new ArrayList<>();
 			for (Server toSave : servers.values()) {
 				// <none> server only in memory
 				if (isNoneServer(toSave))

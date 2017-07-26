@@ -40,7 +40,7 @@ public class FunctionDeclaration extends Statement {
 
 	private boolean isReference;
 	private Identifier name;
-	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<FormalParameter>(
+	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<>(
 			FORMAL_PARAMETERS_PROPERTY);
 	private Block body;
 	private ReturnType returnType;
@@ -70,7 +70,7 @@ public class FunctionDeclaration extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(4);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
@@ -110,6 +110,7 @@ public class FunctionDeclaration extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -118,6 +119,7 @@ public class FunctionDeclaration extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		name.accept(visitor);
 		for (ASTNode node : this.formalParameters) {
@@ -131,6 +133,7 @@ public class FunctionDeclaration extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		name.traverseTopDown(visitor);
@@ -145,6 +148,7 @@ public class FunctionDeclaration extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		name.traverseBottomUp(visitor);
 		for (ASTNode node : this.formalParameters) {
@@ -159,6 +163,7 @@ public class FunctionDeclaration extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -189,6 +194,7 @@ public class FunctionDeclaration extends Statement {
 		buffer.append(tab).append("</FunctionDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FUNCTION_DECLARATION;
 	}
@@ -328,6 +334,7 @@ public class FunctionDeclaration extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_REFERENCE_PROPERTY) {
 			if (get) {
@@ -341,6 +348,7 @@ public class FunctionDeclaration extends Statement {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
@@ -370,7 +378,8 @@ public class FunctionDeclaration extends Statement {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == FORMAL_PARAMETERS_PROPERTY) {
 			return formalParameters();
 		}
@@ -381,6 +390,7 @@ public class FunctionDeclaration extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

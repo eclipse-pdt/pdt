@@ -354,68 +354,83 @@ public interface Debugger {
 	// Adapter for DebugResponseHandler.
 	static public class DefaultDebugResponseHandler implements DebugResponseHandler {
 
+		@Override
 		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
 			// System.out.println("breakpointAdded: " + success + " " + fileName
 			// + " " + lineNumber);
 		}
 
+		@Override
 		public void breakpointRemoved(int id, boolean success) {
 			// System.out.println("breakpointRemoved: " + success + " " + id);
 		}
 
+		@Override
 		public void allBreakpointRemoved(boolean success) {
 			// System.out.println("allBreakpointRemoved: " + success);
 		}
 
+		@Override
 		public void started(boolean success) {
 			// System.out.println("started: " + success);
 		}
 
+		@Override
 		public void evaled(String expression, String result, boolean success) {
 			// System.out.println("evaled: " + expression + " " + result + " " +
 			// success);
 		}
 
+		@Override
 		public void stepInto(boolean success) {
 			// System.out.println("stepInto: " + success);
 		}
 
+		@Override
 		public void stepOver(boolean success) {
 			// System.out.println("stepOver: " + success);
 		}
 
+		@Override
 		public void stepOut(boolean success) {
 			// System.out.println("stepOut: " + success);
 		}
 
+		@Override
 		public void go(boolean success) {
 			// System.out.println("go: " + success);
 		}
 
+		@Override
 		public void pause(boolean success) {
 			// System.out.println("pause: " + success);
 		}
 
+		@Override
 		public void valueAssigned(String var, String value, int depth, String[] path, boolean success) {
 			// System.out.println("valueAssigned: " + value + " " + depth + " "
 			// + success);
 		}
 
+		@Override
 		public void variableValue(String value, int depth, String[] path, String reslut, boolean success) {
 			// System.out.println("variableValue: " + value + " " + reslut + " "
 			// + success);
 		}
 
+		@Override
 		public void callStack(PHPstack pstack, boolean success) {
 			// System.out.println("callStack: " + pstack + " " + success);
 		}
 
+		@Override
 		public void stackVariableValue(int stackDepth, String value, int depth, String[] path, String reslut,
 				boolean success) {
 			// System.out.println("stackVariableValue: " + value + " " + reslut
 			// + " " + success);
 		}
 
+		@Override
 		public void addFiles(boolean success) {
 			// System.out.println("addFiles: " + success);
 		}

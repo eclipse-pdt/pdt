@@ -23,6 +23,7 @@ public class PHPModelContentProvider implements IModelContentProvider {
 	public PHPModelContentProvider() {
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void provideModelChanges(Object parentElement, List children, ITreeContentProvider iTreeContentProvider) {
 		if (parentElement instanceof IMethod) {

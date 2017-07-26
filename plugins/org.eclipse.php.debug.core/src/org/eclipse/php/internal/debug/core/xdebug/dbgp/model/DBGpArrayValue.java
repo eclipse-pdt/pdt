@@ -107,6 +107,7 @@ public class DBGpArrayValue extends AbstractDBGpContainerValue {
 		return variable;
 	}
 
+	@Override
 	public String getValueDetail() throws DebugException {
 		StringBuffer result = new StringBuffer("["); //$NON-NLS-1$
 		IVariable[] variables = getVariables();

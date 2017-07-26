@@ -101,14 +101,14 @@ public class UnresolvedElementsSubProcessor {
 		}
 
 		ASTRewriteCorrectionProposal proposal;
-		if (importRewrite != null && simpleName.equals(((Identifier) node).getName())) {
+		if (importRewrite != null && simpleName.equals(node.getName())) {
 			String[] arg = { simpleName, packName };
 			String label = Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_importtype_description,
 					arg);
 			Image image = DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_IMPDECL);
 			int boost = QualifiedTypeNameHistory.getBoost(fullName, 0, maxProposals);
 			proposal = new AddImportCorrectionProposal(label, cu, relevance + 100 + boost, image, packName, simpleName,
-					(Identifier) node);
+					node);
 		} else {
 			String[] arg = { BasicElementLabels.getJavaElementName(simpleName),
 					BasicElementLabels.getJavaElementName(packName) };

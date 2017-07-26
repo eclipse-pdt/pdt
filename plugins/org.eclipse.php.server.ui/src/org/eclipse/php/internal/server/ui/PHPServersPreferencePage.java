@@ -24,19 +24,23 @@ public class PHPServersPreferencePage extends AbstractConfigurationBlockPreferen
 		noDefaultAndApplyButton();
 	}
 
+	@Override
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new PHPServersConfigurationBlock(this, overlayPreferenceStore);
 	}
 
+	@Override
 	protected String getHelpId() {
 		// HELP
 		return IPHPHelpContextIds.PHP_SERVERS_PREFERENCES;
 	}
 
+	@Override
 	protected void setDescription() {
 		setDescription(PHPServerUIMessages.getString("PHPServersPreferencePage.removeLaunchNote")); //$NON-NLS-1$
 	}
 
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 	}

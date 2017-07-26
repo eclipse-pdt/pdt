@@ -49,7 +49,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	protected Text url;
 	private Button okButton;
 	private boolean enableOK = false;
-	private List configs;
+	private List<PHPManualConfig> configs;
 	private PHPManualConfig edited;
 	private PHPManualConfig result;
 	private Button remoteSiteBtn;
@@ -62,10 +62,10 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	private Label fileExtLabel;
 	private Combo fileExtCombo;
 
-	public NewPHPManualSiteDialog(Shell parentShell, PHPManualConfig edited, List configs) {
+	public NewPHPManualSiteDialog(Shell parentShell, PHPManualConfig edited, List<?> configs) {
 		super(parentShell);
 
-		this.configs = new ArrayList(configs.size());
+		this.configs = new ArrayList<>(configs.size());
 		for (int i = 0; i < configs.size(); i++) {
 			PHPManualConfig config = (PHPManualConfig) configs.get(i);
 			if (!config.equals(edited)) {
@@ -386,7 +386,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		}
 		for (int i = 0; i < configs.size(); i++) {
 			if (!isCurrentlyEditedSiteBookmark(i)) {
-				PHPManualConfig config = (PHPManualConfig) configs.get(i);
+				PHPManualConfig config = configs.get(i);
 				if (config.getLabel().equals(name.getText().trim())) {
 					okButton.setEnabled(false);
 					this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK,

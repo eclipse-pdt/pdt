@@ -30,15 +30,18 @@ public class BasePathValidator implements IPageControlValidator {
 		return fDefaultBasePath;
 	}
 
+	@Override
 	public String getErrorMessage() {
 
 		return errorMessage;
 	}
 
+	@Override
 	public boolean isValid() {
 		return isValid;
 	}
 
+	@Override
 	public void validate() {
 		if (fDefaultBasePath != null) {
 			String textAsString = fDefaultBasePath.getText();

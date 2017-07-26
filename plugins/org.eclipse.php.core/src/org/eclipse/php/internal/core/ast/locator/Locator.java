@@ -93,6 +93,7 @@ public class Locator extends ApplyAll {
 	 *            the node Checks if the node is in the offset if true then
 	 *            assign the node to the children' nodes
 	 */
+	@Override
 	public boolean apply(ASTNode node) {
 		assert node != null;
 

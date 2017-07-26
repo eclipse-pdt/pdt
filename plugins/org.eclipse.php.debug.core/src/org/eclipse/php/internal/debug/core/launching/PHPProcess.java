@@ -52,6 +52,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.IProcess#getLabel()
 	 */
+	@Override
 	public String getLabel() {
 		String suffix = null;
 		if (fLaunch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
@@ -69,6 +70,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.IProcess#getLaunch()
 	 */
+	@Override
 	public ILaunch getLaunch() {
 		return fLaunch;
 	}
@@ -78,6 +80,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.IProcess#getStreamsProxy()
 	 */
+	@Override
 	public IStreamsProxy getStreamsProxy() {
 		return fProxy;
 	}
@@ -88,9 +91,10 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * @see org.eclipse.debug.core.model.IProcess#setAttribute(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	public void setAttribute(String key, String value) {
 		if (fAttributes == null) {
-			fAttributes = new HashMap<String, String>(5);
+			fAttributes = new HashMap<>(5);
 		}
 		Object origVal = fAttributes.get(key);
 		if (origVal != null && origVal.equals(value)) {
@@ -105,11 +109,12 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.IProcess#getAttribute(java.lang.String)
 	 */
+	@Override
 	public String getAttribute(String key) {
 		if (fAttributes == null) {
 			return null;
 		}
-		return (String) fAttributes.get(key);
+		return fAttributes.get(key);
 	}
 
 	/*
@@ -117,6 +122,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.IProcess#getExitValue()
 	 */
+	@Override
 	public int getExitValue() throws DebugException {
 		return fExitValue;
 	}
@@ -126,7 +132,9 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
 	 */
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public Object getAdapter(Class adapter) {
 		if (adapter.equals(IProcess.class)) {
 			return this;
 		}
@@ -151,6 +159,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return !isTerminated();
 	}
@@ -160,6 +169,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
+	@Override
 	public boolean isTerminated() {
 		return fDebugTarget.isTerminated();
 	}
@@ -169,6 +179,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
+	@Override
 	public void terminate() throws DebugException {
 		// Terminate debug target
 		if (fDebugTarget.canTerminate()) {

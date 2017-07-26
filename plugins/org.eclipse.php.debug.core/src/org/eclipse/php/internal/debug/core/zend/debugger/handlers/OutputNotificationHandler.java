@@ -19,6 +19,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class OutputNotificationHandler implements IDebugMessageHandler {
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		String output = ((OutputNotification) message).getOutput();
 

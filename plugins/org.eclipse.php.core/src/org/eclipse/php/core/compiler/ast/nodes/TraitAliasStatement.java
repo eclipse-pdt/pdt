@@ -21,6 +21,7 @@ public class TraitAliasStatement extends TraitStatement {
 		this.alias = alias;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (alias != null) {

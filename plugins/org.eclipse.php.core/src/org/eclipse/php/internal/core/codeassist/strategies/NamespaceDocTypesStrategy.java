@@ -46,6 +46,7 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof NamespacePHPDocVarStartContext)) {
@@ -75,7 +76,7 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		String prefix = context.getPrefix();
 		prefix = PHPModelUtils.extractElementName(prefix);
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
@@ -104,7 +105,7 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 				}
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	private String getAlias(IType ns, String currentNSName) {

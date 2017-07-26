@@ -51,11 +51,13 @@ public class ASTError extends Statement {
 	public void traverseTopDown(Visitor visitor) {
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.AST_ERROR;
 	}
@@ -63,9 +65,11 @@ public class ASTError extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

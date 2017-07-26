@@ -41,11 +41,11 @@ import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
  * </li>
  * </ul>
  */
-@SuppressWarnings("restriction")
 public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 
 	private static final String URL_ENCODING = "UTF-8"; //$NON-NLS-1$
 
+	@Override
 	public void debug(ILaunch launch) throws DebugException {
 		DaemonPlugin.getDefault().makeSureDebuggerInitialized(null);
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry

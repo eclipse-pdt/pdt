@@ -38,11 +38,11 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class VariableBlock {
 
-	private ListDialogField fVariablesList;
+	private ListDialogField<IPVariableElement> fVariablesList;
 	private Control fControl;
 	private boolean fHasChanges;
 
-	private List fSelectedElements;
+	private List<IPVariableElement> fSelectedElements;
 	private boolean fAskToBuild;
 	private boolean fInPreferencePage;
 
@@ -51,7 +51,7 @@ public class VariableBlock {
 	 */
 	public VariableBlock(boolean inPreferencePage, String initSelection) {
 
-		fSelectedElements = new ArrayList(0);
+		fSelectedElements = new ArrayList<>(0);
 		fInPreferencePage = inPreferencePage;
 		fAskToBuild = true;
 
@@ -62,7 +62,7 @@ public class VariableBlock {
 
 		IPVariableElementLabelProvider labelProvider = new IPVariableElementLabelProvider(!inPreferencePage);
 
-		fVariablesList = new ListDialogField(adapter, buttonLabels, labelProvider);
+		fVariablesList = new ListDialogField<>(adapter, buttonLabels, labelProvider);
 		fVariablesList.setDialogFieldListener(adapter);
 		fVariablesList.setLabelText(PHPUIMessages.VariableBlock_vars_label);
 		fVariablesList.setRemoveButtonIndex(2);
@@ -115,34 +115,34 @@ public class VariableBlock {
 		return PHPUiPlugin.getActiveWorkbenchShell();
 	}
 
-	private class VariablesAdapter implements IDialogFieldListener, IListAdapter {
+	private class VariablesAdapter implements IDialogFieldListener, IListAdapter<IPVariableElement> {
 
 		// -------- IListAdapter --------
 
 		@Override
-		public void customButtonPressed(ListDialogField field, int index) {
+		public void customButtonPressed(ListDialogField<IPVariableElement> field, int index) {
 			switch (index) {
 			case 0: /* add */
 				editEntries(null);
 				break;
 			case 1: /* edit */
-				List selected = field.getSelectedElements();
+				List<?> selected = field.getSelectedElements();
 				editEntries((IPVariableElement) selected.get(0));
 				break;
 			}
 		}
 
 		@Override
-		public void selectionChanged(ListDialogField field) {
+		public void selectionChanged(ListDialogField<IPVariableElement> field) {
 			doSelectionChanged(field);
 		}
 
 		@Override
-		public void doubleClicked(ListDialogField field) {
+		public void doubleClicked(ListDialogField<IPVariableElement> field) {
 			if (fInPreferencePage) {
-				List selected = field.getSelectedElements();
+				List<IPVariableElement> selected = field.getSelectedElements();
 				if (canEdit(selected, containsReserved(selected))) {
-					editEntries((IPVariableElement) selected.get(0));
+					editEntries(selected.get(0));
 				}
 			}
 		}
@@ -155,27 +155,27 @@ public class VariableBlock {
 
 	}
 
-	private boolean containsReserved(List selected) {
+	private boolean containsReserved(List<IPVariableElement> selected) {
 		for (int i = selected.size() - 1; i >= 0; i--) {
-			if (((IPVariableElement) selected.get(i)).isReserved()) {
+			if (selected.get(i).isReserved()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private static void addAll(Object[] objs, Collection dest) {
+	private static void addAll(Object[] objs, Collection<Object> dest) {
 		for (int i = 0; i < objs.length; i++) {
 			dest.add(objs[i]);
 		}
 	}
 
-	private boolean canEdit(List selected, boolean containsReserved) {
+	private boolean canEdit(List<IPVariableElement> selected, boolean containsReserved) {
 		return selected.size() == 1 && !containsReserved;
 	}
 
 	private void doSelectionChanged(DialogField field) {
-		List selected = fVariablesList.getSelectedElements();
+		List<IPVariableElement> selected = fVariablesList.getSelectedElements();
 		boolean containsReserved = containsReserved(selected);
 
 		// edit
@@ -187,7 +187,7 @@ public class VariableBlock {
 	}
 
 	private void editEntries(IPVariableElement entry) {
-		List existingEntries = fVariablesList.getElements();
+		List<IPVariableElement> existingEntries = fVariablesList.getElements();
 
 		VariableCreationDialog dialog = new VariableCreationDialog(getShell(), entry, existingEntries);
 		if (dialog.open() != Window.OK) {
@@ -211,7 +211,7 @@ public class VariableBlock {
 		fVariablesList.selectElements(new StructuredSelection(entry));
 	}
 
-	public List getSelectedElements() {
+	public List<IPVariableElement> getSelectedElements() {
 		return fSelectedElements;
 	}
 
@@ -227,16 +227,16 @@ public class VariableBlock {
 	}
 
 	public boolean performOk() {
-		ArrayList removedVariables = new ArrayList();
-		ArrayList changedVariables = new ArrayList();
+		ArrayList<?> removedVariables = new ArrayList<>();
+		ArrayList<String> changedVariables = new ArrayList<>();
 		// removedVariables.addAll(Arrays.asList(PHPProjectOptions.getIncludePathVariableNames()));
 
 		// remove all unchanged
-		List changedElements = fVariablesList.getElements();
-		List unchangedElements = fVariablesList.getElements();
+		List<IPVariableElement> changedElements = fVariablesList.getElements();
+		List<IPVariableElement> unchangedElements = fVariablesList.getElements();
 
 		for (int i = changedElements.size() - 1; i >= 0; i--) {
-			IPVariableElement curr = (IPVariableElement) changedElements.get(i);
+			IPVariableElement curr = changedElements.get(i);
 			if (curr.isReserved()) {
 				changedElements.remove(curr);
 			} else {
@@ -309,7 +309,7 @@ public class VariableBlock {
 		return true;
 	}
 
-	private boolean doesChangeRequireFullBuild(List removed, List changed) {
+	private boolean doesChangeRequireFullBuild(List<?> removed, List<String> changed) {
 
 		/*
 		 * IProject[] projects =
@@ -325,12 +325,13 @@ public class VariableBlock {
 	}
 
 	private class VariableBlockRunnable implements IRunnableWithProgress {
-		private List fToRemove;
-		private List fToChange;
-		private List fUnchanged;
+		private List<?> fToRemove;
+		private List<IPVariableElement> fToChange;
+		private List<IPVariableElement> fUnchanged;
 		private boolean fDoBuild;
 
-		public VariableBlockRunnable(List toRemove, List toChange, List unchanged, boolean doBuild) {
+		public VariableBlockRunnable(List<?> toRemove, List<IPVariableElement> toChange,
+				List<IPVariableElement> unchanged, boolean doBuild) {
 			fToRemove = toRemove;
 			fToChange = toChange;
 			fUnchanged = unchanged;
@@ -364,13 +365,13 @@ public class VariableBlock {
 			int k = 0;
 
 			for (int i = 0; i < fUnchanged.size(); i++) {
-				IPVariableElement curr = (IPVariableElement) fUnchanged.get(i);
+				IPVariableElement curr = fUnchanged.get(i);
 				names[k] = curr.getName();
 				paths[k] = curr.getPath();
 				k++;
 			}
 			for (int i = 0; i < fToChange.size(); i++) {
-				IPVariableElement curr = (IPVariableElement) fToChange.get(i);
+				IPVariableElement curr = fToChange.get(i);
 				names[k] = curr.getName();
 				paths[k] = curr.getPath();
 				k++;

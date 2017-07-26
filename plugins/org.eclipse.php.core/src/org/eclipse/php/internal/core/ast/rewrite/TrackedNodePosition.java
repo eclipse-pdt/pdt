@@ -33,6 +33,7 @@ public class TrackedNodePosition implements ITrackedNodePosition {
 	 * org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getStartPosition
 	 * ()
 	 */
+	@Override
 	public int getStartPosition() {
 		if (this.group.isEmpty()) {
 			return this.node.getStart();
@@ -49,6 +50,7 @@ public class TrackedNodePosition implements ITrackedNodePosition {
 	 * 
 	 * @see org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getLength()
 	 */
+	@Override
 	public int getLength() {
 		if (this.group.isEmpty()) {
 			return this.node.getLength();

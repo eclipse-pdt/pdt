@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodRetu
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
+	@Override
 	public GoalEvaluator createEvaluator(IGoal goal) {
 
 		Class<?> goalClass = goal.getClass();

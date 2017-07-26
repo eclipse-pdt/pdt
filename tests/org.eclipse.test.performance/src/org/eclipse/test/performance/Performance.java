@@ -213,7 +213,7 @@ public class Performance {
 					className= className.substring(separator + 1);
 					bundle= Platform.getBundle(bundleName);
 				}
-				Class c= bundle.loadClass(className);
+				Class<?> c= bundle.loadClass(className);
 				instance= (PerformanceMeterFactory) c.newInstance();
 			} catch (ClassNotFoundException e) {
 		        PerformanceTestPlugin.log(e);

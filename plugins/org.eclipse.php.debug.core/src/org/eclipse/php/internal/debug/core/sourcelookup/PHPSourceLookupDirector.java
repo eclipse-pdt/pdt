@@ -28,6 +28,7 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 	 * @seeorg.eclipse.debug.internal.core.sourcelookup.ISourceLookupDirector#
 	 * initializeParticipants()
 	 */
+	@Override
 	public void initializeParticipants() {
 		addParticipants(new ISourceLookupParticipant[] { new PHPSourceLookupParticipant() });
 	}
@@ -38,6 +39,7 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 	 * @see org.eclipse.debug.core.sourcelookup.AbstractSourceLookupDirector#
 	 * getSourceElement(java.lang.Object)
 	 */
+	@Override
 	public Object getSourceElement(Object element) {
 		Object sourceElement = super.getSourceElement(element);
 		if (sourceElement == null && element instanceof IStackFrame) {

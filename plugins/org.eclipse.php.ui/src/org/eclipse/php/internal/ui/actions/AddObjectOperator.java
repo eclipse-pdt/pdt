@@ -83,7 +83,7 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 					}
 					if (sdRegion instanceof IStructuredDocumentRegion
 							&& textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-						run(textEditor, document, textSelection, (IStructuredDocumentRegion) sdRegion);
+						run(textEditor, document, textSelection, sdRegion);
 					}
 				}
 			}

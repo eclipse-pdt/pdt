@@ -59,6 +59,7 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 public class RenameLinkedMode {
 
 	private class FocusEditingSupport implements IEditingSupport {
+		@Override
 		public boolean ownsFocusShell() {
 			if (fInfoPopup == null)
 				return false;
@@ -73,6 +74,7 @@ public class RenameLinkedMode {
 			return false;
 		}
 
+		@Override
 		public boolean isOriginator(DocumentEvent event, IRegion subjectRegion) {
 			return false; // leave on external modification outside positions
 		}
@@ -80,6 +82,7 @@ public class RenameLinkedMode {
 	}
 
 	private class EditorSynchronizer implements ILinkedModeListener {
+		@Override
 		public void left(LinkedModeModel model, int flags) {
 			linkedModeLeft();
 			if ((flags & ILinkedModeListener.UPDATE_CARET) != 0) {
@@ -87,9 +90,11 @@ public class RenameLinkedMode {
 			}
 		}
 
+		@Override
 		public void resume(LinkedModeModel model, int flags) {
 		}
 
+		@Override
 		public void suspend(LinkedModeModel model) {
 		}
 	}
@@ -102,6 +107,7 @@ public class RenameLinkedMode {
 
 		}
 
+		@Override
 		public ExitFlags doExit(LinkedModeModel model, VerifyEvent event, int offset, int length) {
 			fShowPreview = (event.stateMask & SWT.CTRL) != 0
 					&& (event.character == SWT.CR || event.character == SWT.LF);
@@ -217,8 +223,8 @@ public class RenameLinkedMode {
 						Messages.RenameLinkedMode_4);
 				return;
 			}
-			if (((ASTNode) selectedNode).getParent() instanceof NamespaceName) {
-				NamespaceName namespaceName = (NamespaceName) ((ASTNode) selectedNode).getParent();
+			if (selectedNode.getParent() instanceof NamespaceName) {
+				NamespaceName namespaceName = (NamespaceName) selectedNode.getParent();
 				if (namespaceName.segments() != null && namespaceName.segments().size() > 0) {
 
 					if (!namespaceName.segments().get(namespaceName.segments().size() - 1).equals(selectedNode)) {
@@ -238,6 +244,7 @@ public class RenameLinkedMode {
 			// TODO: copied from LinkedNamesAssistProposal#apply(..):
 			// sort for iteration order, starting with the node @ offset
 			Arrays.sort(sameNodes, new Comparator<OccurrenceLocation>() {
+				@Override
 				public int compare(OccurrenceLocation o1, OccurrenceLocation o2) {
 					return rank(o1) - rank(o2);
 				}
@@ -452,6 +459,7 @@ public class RenameLinkedMode {
 		try {
 			if (!fOriginalName.equals(newName)) {
 				fEditor.getSite().getWorkbenchWindow().run(false, true, new IRunnableWithProgress() {
+					@Override
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						if (viewer instanceof ITextViewerExtension6) {
 							IUndoManager undoManager = ((ITextViewerExtension6) viewer).getUndoManager();

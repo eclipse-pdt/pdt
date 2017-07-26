@@ -40,6 +40,7 @@ public class PHPInterpreterExecutionPreferencePage extends AbstractPreferencePag
 	/**
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -47,6 +48,7 @@ public class PHPInterpreterExecutionPreferencePage extends AbstractPreferencePag
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 *      widgets .Composite)
 	 */
+	@Override
 	protected Control createContents(Composite ancestor) {
 		initializeDialogUnits(ancestor);
 		noDefaultAndApplyButton();
@@ -85,6 +87,7 @@ public class PHPInterpreterExecutionPreferencePage extends AbstractPreferencePag
 	/**
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		if (fConfigurationBlock != null && !fConfigurationBlock.performOk()) {
 			return false;

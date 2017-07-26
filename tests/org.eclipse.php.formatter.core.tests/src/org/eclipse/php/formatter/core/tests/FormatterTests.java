@@ -60,7 +60,7 @@ public class FormatterTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters(recursive = true)
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
@@ -79,8 +79,8 @@ public class FormatterTests {
 		return Activator.getDefault().getBundle();
 	}
 
-	protected Map<String, IFile> files = new LinkedHashMap<String, IFile>();
-	protected Map<String, PdttFile> pdttFiles = new LinkedHashMap<String, PdttFile>();
+	protected Map<String, IFile> files = new LinkedHashMap<>();
+	protected Map<String, PdttFile> pdttFiles = new LinkedHashMap<>();
 	protected final String[] fileNames;
 	protected IProject project;
 	protected int count;

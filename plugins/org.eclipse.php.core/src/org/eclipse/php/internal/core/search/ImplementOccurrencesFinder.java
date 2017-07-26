@@ -40,6 +40,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * eclipse.php.internal.core.ast.nodes.Program,
 	 * org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		if (isIdendifier(node)) {
@@ -100,6 +101,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.MethodDeclaration)
 	 */
+	@Override
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
 		if (methodBinding != null && !PHPFlags.isStatic(methodBinding.getModifiers())) {
@@ -118,6 +120,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see AbstractOccurrencesFinder#getOccurrenceType(ASTNode)
 	 * @see IOccurrencesFinder#K_IMPLEMENTS_OCCURRENCE
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.K_IMPLEMENTS_OCCURRENCE;
 	}
@@ -128,6 +131,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return fIdentifier.getName();
 	}
@@ -137,6 +141,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

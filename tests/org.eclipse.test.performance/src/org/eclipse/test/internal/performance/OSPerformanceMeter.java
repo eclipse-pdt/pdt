@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.eclipse.test.internal.performance.data.DataPoint;
+import org.eclipse.test.internal.performance.data.Dim;
 import org.eclipse.test.internal.performance.data.Sample;
+import org.eclipse.test.internal.performance.data.Scalar;
 
 
 /**
@@ -25,7 +27,7 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 
 	private PerformanceMonitor fPerformanceMonitor;
 	private long fStartTime;
-	private List fDataPoints= new ArrayList();    
+	private List<DataPoint> fDataPoints= new ArrayList<>();    
 	
 	/**
 	 * @param scenarioId the scenario id
@@ -39,6 +41,7 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#dispose()
 	 */
+	@Override
 	public void dispose() {
 	    fPerformanceMonitor= null;
 	    fDataPoints= null;
@@ -48,6 +51,7 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#start()
 	 */
+	@Override
 	public void start() {
 		snapshot(BEFORE);
 	}
@@ -55,6 +59,7 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#stop()
 	 */
+	@Override
 	public void stop() {
 		snapshot(AFTER);
 	}
@@ -62,11 +67,12 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 	/*
 	 * @see org.eclipse.test.internal.performance.InternalPerformanceMeter#getSample()
 	 */
+	@Override
 	public Sample getSample() {
 	    if (fDataPoints != null) {
-	        HashMap runProperties= new HashMap();
+	        HashMap<Dim, Scalar> runProperties= new HashMap<>();
 	        collectRunInfo(runProperties);
-	        return new Sample(getScenarioName(), fStartTime, runProperties, (DataPoint[]) fDataPoints.toArray(new DataPoint[fDataPoints.size()]));
+	        return new Sample(getScenarioName(), fStartTime, runProperties, fDataPoints.toArray(new DataPoint[fDataPoints.size()]));
 	    }
 	    return null;
 	}
@@ -74,7 +80,7 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 	//---- private stuff ------
 	
     private void snapshot(int step) {
-	    HashMap map= new HashMap();
+	    HashMap<Dim, Scalar> map= new HashMap<>();
 	    fPerformanceMonitor.collectOperatingSystemCounters(map);
 	    fDataPoints.add(new DataPoint(step, map));
     }
@@ -83,7 +89,7 @@ public class OSPerformanceMeter extends InternalPerformanceMeter {
 	 * Write out the run element if it hasn't been written out yet.
 	 * @param runProperties
 	 */
-	private void collectRunInfo(HashMap runProperties) {
+	private void collectRunInfo(HashMap<Dim, Scalar> runProperties) {
         fPerformanceMonitor.collectGlobalPerformanceInfo(runProperties);
 	}
 }

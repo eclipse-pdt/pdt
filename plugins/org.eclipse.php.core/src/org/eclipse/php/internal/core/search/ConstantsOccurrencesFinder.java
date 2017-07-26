@@ -30,8 +30,8 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	private boolean isCaseSensitiveConstant = true; // The default is true
 	private String constantName;
 	private ASTNode nameNode;
-	private Map<ASTNode, String> nodeToFullName = new HashMap<ASTNode, String>();
-	private Map<ASTNode, OccurrenceLocation> nodeToOccurrence = new HashMap<ASTNode, OccurrenceLocation>();
+	private Map<ASTNode, String> nodeToFullName = new HashMap<>();
+	private Map<ASTNode, OccurrenceLocation> nodeToOccurrence = new HashMap<>();
 
 	/**
 	 * @param root
@@ -40,12 +40,13 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node (must be an {@link Scalar} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		defineFound = false;
 		isCaseSensitiveConstant = true;
 		if (node.getType() == ASTNode.SCALAR) {
-			nameNode = (Scalar) node;
+			nameNode = node;
 			constantName = ((Scalar) nameNode).getStringValue();
 			if (isQuoted(constantName)) {
 				constantName = constantName.substring(1, constantName.length() - 1);
@@ -66,6 +67,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, constantName);
 		fASTRoot.accept(this);
@@ -80,6 +82,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 	}
 
+	@Override
 	public boolean visit(Identifier identifier) {
 		if (checkEquality(identifier.getName()) && PHPElementConciliator.isGlobalConstant(identifier)) {
 			nodeToFullName.put(identifier,
@@ -93,6 +96,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Visit the scalars in the program.
 	 */
+	@Override
 	public boolean visit(Scalar scalar) {
 		String scalarValue = scalar.getStringValue();
 		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue.length() > 0) {
@@ -225,6 +229,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of
 		// the Scalar visit might also use F_WRITE_OCCURRENCE
@@ -237,6 +242,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return constantName;
 	}
@@ -246,6 +252,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

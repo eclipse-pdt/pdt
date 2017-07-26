@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
@@ -32,7 +33,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * List of projection viewers currently associated with this projection
 	 * model node adapter factory.
 	 */
-	private HashMap fProjectionViewers;
+	private HashMap<ProjectionViewer, ProjectionViewerInformation> fProjectionViewers;
 
 	public ProjectionModelNodeAdapterFactoryHTML(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
@@ -120,7 +121,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * @param additions
 	 * @param modifications
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map<Annotation, Position> additions,
+			Annotation[] modifications) {
 		queueAnnotationModelChanges(node, deletions, additions, modifications, null);
 	}
 
@@ -135,21 +137,21 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * @param modifications
 	 * @param viewer
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications,
-			ProjectionViewer viewer) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map<Annotation, Position> additions,
+			Annotation[] modifications, ProjectionViewer viewer) {
 		// create a change object for latest change and add to queue
 		ProjectionAnnotationModelChanges newChange = new ProjectionAnnotationModelChanges(node, deletions, additions,
 				modifications);
 		if (fProjectionViewers != null) {
 			if (viewer != null) {
-				ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers.get(viewer);
+				ProjectionViewerInformation info = fProjectionViewers.get(viewer);
 				if (info != null) {
 					info.queueAnnotationModelChanges(newChange);
 				}
 			} else {
-				Iterator infos = fProjectionViewers.values().iterator();
+				Iterator<ProjectionViewerInformation> infos = fProjectionViewers.values().iterator();
 				while (infos.hasNext()) {
-					ProjectionViewerInformation info = (ProjectionViewerInformation) infos.next();
+					ProjectionViewerInformation info = infos.next();
 					info.queueAnnotationModelChanges(newChange);
 				}
 			}
@@ -161,9 +163,9 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		// go through every projectionviewer and call
 		// removeProjectionViewer(viewer);
 		if (fProjectionViewers != null) {
-			Iterator infos = fProjectionViewers.values().iterator();
+			Iterator<ProjectionViewerInformation> infos = fProjectionViewers.values().iterator();
 			while (infos.hasNext()) {
-				ProjectionViewerInformation info = (ProjectionViewerInformation) infos.next();
+				ProjectionViewerInformation info = infos.next();
 				info.dispose();
 				infos.remove();
 			}
@@ -184,7 +186,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		removeProjectionViewer(viewer);
 
 		if (fProjectionViewers == null) {
-			fProjectionViewers = new HashMap();
+			fProjectionViewers = new HashMap<>();
 		}
 
 		// create new object containing projection viewer and its info
@@ -197,14 +199,14 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		if (fProjectionViewers == null || !fProjectionViewers.containsKey(viewer)) {
 			return;
 		}
-		((ProjectionViewerInformation) fProjectionViewers.get(viewer)).setIsDocumentChanging(true);
+		fProjectionViewers.get(viewer).setIsDocumentChanging(true);
 	}
 
 	public void activateProjectionViewer(ProjectionViewer viewer) {
 		if (fProjectionViewers == null || !fProjectionViewers.containsKey(viewer)) {
 			return;
 		}
-		ProjectionViewerInformation pv = ((ProjectionViewerInformation) fProjectionViewers.get(viewer));
+		ProjectionViewerInformation pv = (fProjectionViewers.get(viewer));
 		pv.applyChangesJOB();
 	}
 
@@ -217,7 +219,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	public void removeProjectionViewer(ProjectionViewer viewer) {
 		if (fProjectionViewers != null) {
 			// remove entry from list of viewers
-			ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers.remove(viewer);
+			ProjectionViewerInformation info = fProjectionViewers.remove(viewer);
 			if (info != null) {
 				info.dispose();
 			}

@@ -33,6 +33,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceUseNameContext)) {
@@ -55,7 +56,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 		}
 		String prefix = context.getPrefix();
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
@@ -68,7 +69,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

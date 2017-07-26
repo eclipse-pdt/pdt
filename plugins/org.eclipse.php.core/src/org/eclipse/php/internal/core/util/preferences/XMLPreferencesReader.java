@@ -55,7 +55,7 @@ public class XMLPreferencesReader {
 	 * @return values map
 	 */
 	private static Map<String, Object> read(NodeList nodeList, boolean skipEmptyNodes) {
-		Map<String, Object> map = new HashMap<String, Object>(nodeList.getLength());
+		Map<String, Object> map = new HashMap<>(nodeList.getLength());
 		for (int i = 0; i < nodeList.getLength(); ++i) {
 			Node n = nodeList.item(i);
 			if (n.hasChildNodes()) {
@@ -101,7 +101,7 @@ public class XMLPreferencesReader {
 	public static List<Map<String, Object>> read(IEclipsePreferences store, String prefsKey, boolean skipEmptyNodes) {
 		String storedValue = store.get(prefsKey, null);
 		if (storedValue == null)
-			return new ArrayList<Map<String, Object>>();
+			return new ArrayList<>();
 		return getMapsFromValue(storedValue, skipEmptyNodes);
 	}
 
@@ -113,7 +113,7 @@ public class XMLPreferencesReader {
 	 * @return array of maps with stored values
 	 */
 	public static List<Map<String, Object>> getMapsFromValue(String storedValue, boolean skipEmptyNodes) {
-		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> maps = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(storedValue, new String(new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken(), skipEmptyNodes));

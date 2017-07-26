@@ -30,7 +30,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public enum DebuggerSettingsManager {
 
 	/**
@@ -136,9 +135,9 @@ public enum DebuggerSettingsManager {
 	}
 
 	private final OwnersListener ownersListener = new OwnersListener();
-	private final ListenerList listeners = new ListenerList();
-	private final Map<String, IDebuggerSettingsProvider> settingsCache = new HashMap<String, IDebuggerSettingsProvider>();
-	private final Map<IDebuggerSettings, IDebuggerSettingsWorkingCopy> settingsCopies = new HashMap<IDebuggerSettings, IDebuggerSettingsWorkingCopy>();
+	private final ListenerList<IDebuggerSettingsListener> listeners = new ListenerList<>();
+	private final Map<String, IDebuggerSettingsProvider> settingsCache = new HashMap<>();
+	private final Map<IDebuggerSettings, IDebuggerSettingsWorkingCopy> settingsCopies = new HashMap<>();
 
 	/**
 	 * Creates default manager instance.
@@ -202,7 +201,7 @@ public enum DebuggerSettingsManager {
 		IDebuggerSettingsProvider provider = settingsCache.get(debuggerId);
 		if (provider == null)
 			// There is no provider registered
-			return new ArrayList<IDebuggerSettings>();
+			return new ArrayList<>();
 		return provider.getAll();
 	}
 
@@ -269,7 +268,7 @@ public enum DebuggerSettingsManager {
 		IDebuggerSettings settings = settingsWorkingCopy.getOriginal();
 		Map<String, String> attributes = settings.getAttributes();
 		Map<String, String> attributesCopy = settingsWorkingCopy.getAttributes();
-		List<PropertyChangeEvent> events = new ArrayList<PropertyChangeEvent>();
+		List<PropertyChangeEvent> events = new ArrayList<>();
 		// Check if there are some new ones that were not in original
 		for (String key : attributesCopy.keySet()) {
 			if (!attributes.keySet().contains(key)) {

@@ -72,32 +72,32 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
 	 */
-	protected Stack<Declaration> declarations = new Stack<Declaration>();
+	protected Stack<Declaration> declarations = new Stack<>();
 
 	/**
 	 * Deferred elements that where declared in method/function but should
 	 * belong to the global scope.
 	 */
-	protected List<ASTNode> deferredDeclarations = new LinkedList<ASTNode>();
+	protected List<ASTNode> deferredDeclarations = new LinkedList<>();
 
 	/**
 	 * Deferred elements that where declared in method/function but should
 	 * belong to the namespaced scope.
 	 */
-	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<ASTNode>();
+	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<>();
 
 	/**
 	 * This stack contains a set per method, where each set contains all global
 	 * variable names declared through 'global' keyword inside this method.
 	 */
-	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
+	protected Stack<Set<String>> methodGlobalVars = new Stack<>();
 
 	/**
 	 * This set contains all variable names having global scope. NB: this set
 	 * has nothing to do with stack "methodGlobalVars" which only stores
 	 * variable names declared through 'global' keyword.
 	 */
-	protected Set<String> globalScopeVars = new HashSet<String>();
+	protected Set<String> globalScopeVars = new HashSet<>();
 
 	/**
 	 * Extensions indexing visitor extensions
@@ -107,16 +107,16 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 			.getConfigurationElementsFor(PHPCorePlugin.ID, EXTENSION_POINT);
 
 	protected NamespaceDeclaration fCurrentNamespace;
-	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
+	protected Map<String, UsePart> fLastUseParts = new HashMap<>();
 	protected String fCurrentQualifier;
-	protected Map<String, Integer> fCurrentQualifierCounts = new HashMap<String, Integer>();
+	protected Map<String, Integer> fCurrentQualifierCounts = new HashMap<>();
 	protected String fCurrentParent;
-	protected Stack<ASTNode> fNodes = new Stack<ASTNode>();
+	protected Stack<ASTNode> fNodes = new Stack<>();
 
 	public PHPIndexingVisitor(IIndexingRequestor requestor, ISourceModule module) {
 		this.requestor = requestor;
 
-		List<PHPIndexingVisitorExtension> extensions = new ArrayList<PHPIndexingVisitorExtension>(
+		List<PHPIndexingVisitorExtension> extensions = new ArrayList<>(
 				extensionElements.length);
 		for (IConfigurationElement element : extensionElements) {
 			try {
@@ -134,6 +134,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		this.extensions = extensions.toArray(new PHPIndexingVisitorExtension[extensions.size()]);
 	}
 
+	@Override
 	public void modifyDeclaration(ASTNode node, DeclarationInfo info) {
 		for (PHPIndexingVisitorExtension visitor : extensions) {
 			visitor.modifyDeclaration(node, info);
@@ -165,6 +166,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		requestor.addDeclaration(info);
 	}
 
+	@Override
 	public void modifyReference(ASTNode node, ReferenceInfo info) {
 		for (PHPIndexingVisitorExtension visitor : extensions) {
 			visitor.modifyReference(node, info);
@@ -185,7 +187,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		if (declaration instanceof IPHPDocAwareDeclaration) {
 			PHPDocBlock docBlock = ((IPHPDocAwareDeclaration) declaration).getPHPDoc();
 			if (docBlock != null) {
-				Map<String, String> info = new HashMap<String, String>();
+				Map<String, String> info = new HashMap<>();
 				for (PHPDocTag tag : docBlock.getTags()) {
 					if (tag.getTagKind() == TagKind.DEPRECATED) {
 						info.put("d", null); //$NON-NLS-1$
@@ -232,6 +234,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return buf.length() > 0 ? buf.toString() : null;
 	}
 
+	@Override
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		methodGlobalVars.pop();
 		declarations.pop();
@@ -244,6 +247,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -282,6 +286,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return true;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean visit(MethodDeclaration method) throws Exception {
 		fNodes.push(method);
@@ -357,7 +362,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		if (arguments != null) {
 			Iterator<Argument> i = arguments.iterator();
 			while (i.hasNext()) {
-				Argument arg = (Argument) i.next();
+				Argument arg = i.next();
 
 				String type = NULL_VALUE;
 				if (arg instanceof FormalParameter) {
@@ -473,6 +478,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return result;
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -551,7 +557,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 			return new String[] {};
 		}
 		List<ASTNode> superClassNames = superClasses.getChilds();
-		List<String> result = new ArrayList<String>(superClassNames.size());
+		List<String> result = new ArrayList<>(superClassNames.size());
 		Iterator<ASTNode> iterator = superClassNames.iterator();
 		while (iterator.hasNext()) {
 			ASTNode nameNode = iterator.next();
@@ -594,7 +600,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 				result.add(((SimpleReference) nameNode).getName());
 			}
 		}
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
 	/**
@@ -622,7 +628,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 9;
 
-						Map<String, String> info = new HashMap<String, String>();
+						Map<String, String> info = new HashMap<>();
 						info.put("v", split[0]); //$NON-NLS-1$
 
 						StringBuilder metadata = new StringBuilder();
@@ -656,7 +662,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 						}
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 6;
-						Map<String, String> info = new HashMap<String, String>();
+						Map<String, String> info = new HashMap<>();
 						info.put("r", split[0]); //$NON-NLS-1$
 
 						StringBuilder metadata = new StringBuilder();
@@ -743,7 +749,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 				return visitGeneral(call);
 			}
 
-			visit((FieldDeclaration) constantDecl);
+			visit(constantDecl);
 
 		} else {
 			int argsCount = 0;
@@ -770,7 +776,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 									.toString(1),
 							null));
 
-			String fullPath = ASTUtils.stripQuotes(((Scalar) filePath).getValue());
+			String fullPath = ASTUtils.stripQuotes(filePath.getValue());
 			int idx = Math.max(fullPath.lastIndexOf('/'), fullPath.lastIndexOf('\\'));
 
 			String lastSegment = fullPath;
@@ -889,6 +895,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return visitGeneral(reference);
 	}
 
+	@Override
 	public boolean visit(Statement node) throws Exception {
 		if (node instanceof PHPFieldDeclaration) {
 			return visit((PHPFieldDeclaration) node);
@@ -912,6 +919,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return visitGeneral(node);
 	}
 
+	@Override
 	public boolean endvisit(Statement node) throws Exception {
 		if (node instanceof PHPFieldDeclaration) {
 			return endvisit((PHPFieldDeclaration) node);
@@ -931,6 +939,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Expression node) throws Exception {
 		if (node instanceof Assignment) {
 			return visit((Assignment) node);
@@ -958,6 +967,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return visitGeneral(node);
 	}
 
+	@Override
 	public boolean endvisit(Expression node) throws Exception {
 		if (node instanceof Assignment) {
 			return endvisit((Assignment) node);
@@ -971,6 +981,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ModuleDeclaration declaration) throws Exception {
 		while (deferredDeclarations != null && !deferredDeclarations.isEmpty()) {
 			final ASTNode[] declarations = deferredDeclarations.toArray(new ASTNode[deferredDeclarations.size()]);
@@ -991,10 +1002,12 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return true;
 	}
 
+	@Override
 	public void endvisitGeneral(ASTNode node) throws Exception {
 		fNodes.pop();
 	}
 
+	@Override
 	public boolean visitGeneral(ASTNode node) throws Exception {
 		fNodes.push(node);
 		return true;

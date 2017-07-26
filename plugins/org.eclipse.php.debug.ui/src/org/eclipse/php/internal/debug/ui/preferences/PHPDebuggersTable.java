@@ -95,12 +95,14 @@ public class PHPDebuggersTable {
 		fPHPDebuggers.setLabelProvider(new PHPDebuggersLabelProvider());
 		fPHPDebuggers.setContentProvider(new PHPDebuggersContentProvider());
 		fPHPDebuggers.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(final SelectionChangedEvent evt) {
 				enableButtons();
 			}
 		});
 
 		fPHPDebuggers.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(final DoubleClickEvent e) {
 				if (!fPHPDebuggers.getSelection().isEmpty()) {
 					editSettings();
@@ -118,12 +120,14 @@ public class PHPDebuggersTable {
 
 		fSettingsButton = createPushButton(buttons, PHPDebugUIMessages.PHPDebuggersTable_configure);
 		fSettingsButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event evt) {
 				editSettings();
 			}
 		});
 
 		fPHPDebuggers.setComparator(new ViewerComparator() {
+			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof IDebuggerConfiguration && e2 instanceof IDebuggerConfiguration) {
 					return ((IDebuggerConfiguration) e2).getName().compareTo(((IDebuggerConfiguration) e1).getName());
@@ -136,6 +140,7 @@ public class PHPDebuggersTable {
 		fillWithWorkspaceDebuggers();
 		enableButtons();
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				resizeTable(parent, buttons, table, debuggerTypeColumn);
 			}
@@ -159,17 +164,20 @@ public class PHPDebuggersTable {
 	private void configureTableResizing(final Composite parent, final Composite buttons, final Table table,
 			final TableColumn debuggerTypeColumn) {
 		parent.addControlListener(new ControlAdapter() {
+			@Override
 			public void controlResized(final ControlEvent e) {
 				resizeTable(parent, buttons, table, debuggerTypeColumn);
 			}
 		});
 		table.addListener(SWT.Paint, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
 				table.removeListener(SWT.Paint, this);
 				resizeTable(parent, buttons, table, debuggerTypeColumn);
 			}
 		});
 		debuggerTypeColumn.addControlListener(new ControlAdapter() {
+			@Override
 			public void controlResized(final ControlEvent e) {
 				if (debuggerTypeColumn.getWidth() > 0 && !fResizingTable)
 					fWeight1 = getColumnWeight(0);
@@ -287,13 +295,16 @@ public class PHPDebuggersTable {
 	 */
 	class PHPDebuggersContentProvider implements IStructuredContentProvider {
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(final Object input) {
 			return PHPDebuggersRegistry.getDebuggersConfigurations();
 		}
 
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 	}
@@ -306,6 +317,7 @@ public class PHPDebuggersTable {
 		/**
 		 * @see ITableLabelProvider#getColumnImage(Object, int)
 		 */
+		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_DEBUG_CONF);
 		}
@@ -313,6 +325,7 @@ public class PHPDebuggersTable {
 		/**
 		 * @see ITableLabelProvider#getColumnText(Object, int)
 		 */
+		@Override
 		public String getColumnText(final Object element, final int columnIndex) {
 			if (element instanceof IDebuggerConfiguration) {
 				IDebuggerConfiguration configuration = (IDebuggerConfiguration) element;

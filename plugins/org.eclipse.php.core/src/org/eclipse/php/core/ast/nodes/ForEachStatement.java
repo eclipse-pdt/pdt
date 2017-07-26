@@ -58,7 +58,7 @@ public class ForEachStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(KEY_PROPERTY);
 		propertyList.add(VALUE_PROPERTY);
@@ -90,6 +90,7 @@ public class ForEachStatement extends Statement {
 		this(start, end, ast, expression, null, value, statement);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -98,6 +99,7 @@ public class ForEachStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
 		if (key != null) {
@@ -107,6 +109,7 @@ public class ForEachStatement extends Statement {
 		statement.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		expression.traverseTopDown(visitor);
@@ -117,6 +120,7 @@ public class ForEachStatement extends Statement {
 		statement.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		expression.traverseBottomUp(visitor);
 		if (key != null) {
@@ -127,6 +131,7 @@ public class ForEachStatement extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ForEachStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -148,6 +153,7 @@ public class ForEachStatement extends Statement {
 		buffer.append(tab).append("</ForEachStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FOR_EACH_STATEMENT;
 	}
@@ -271,6 +277,7 @@ public class ForEachStatement extends Statement {
 		postReplaceChild(oldChild, statement, STATEMENT_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -311,6 +318,7 @@ public class ForEachStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

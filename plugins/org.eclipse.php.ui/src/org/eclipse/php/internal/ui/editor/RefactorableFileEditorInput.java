@@ -82,7 +82,7 @@ public class RefactorableFileEditorInput
 	 */
 	@Override
 	public String toString() {
-		return innerEditorInput.toString(); // $NON-NLS-1$ //$NON-NLS-2$
+		return innerEditorInput.toString(); // $NON-NLS-1$
 	}
 
 	public void setFile(IFile file) {
@@ -147,6 +147,7 @@ public class RefactorableFileEditorInput
 		return innerEditorInput.getToolTipText();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		return innerEditorInput.getAdapter(adapter);

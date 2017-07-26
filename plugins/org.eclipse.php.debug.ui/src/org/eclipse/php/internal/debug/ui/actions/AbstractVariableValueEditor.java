@@ -29,7 +29,6 @@ import com.ibm.icu.text.MessageFormat;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractVariableValueEditor implements IVariableValueEditor {
 
 	protected class ValueValidator implements IInputValidator {
@@ -53,7 +52,7 @@ public abstract class AbstractVariableValueEditor implements IVariableValueEdito
 			}
 			return errorMsg;
 		}
-		
+
 	}
 
 	/**
@@ -71,11 +70,13 @@ public abstract class AbstractVariableValueEditor implements IVariableValueEdito
 	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.
 	 * eclipse .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
 	 */
+	@Override
 	public boolean editVariable(IVariable variable, Shell shell) {
 		try {
 			String name = variable.getName();
 			String title = PHPDebugUIMessages.AbstractVariableValueEditor_ChangeValueTitle;
-			String message = MessageFormat.format(PHPDebugUIMessages.AbstractVariableValueEditor_EnterValue, new Object[] { name });
+			String message = MessageFormat.format(PHPDebugUIMessages.AbstractVariableValueEditor_EnterValue,
+					new Object[] { name });
 			String initialValue = getValueString(variable);
 			ValueValidator validator = new ValueValidator(variable);
 			ChangeVariableValueInputDialog dialog = new ChangeVariableValueInputDialog(shell, title, message,
@@ -101,6 +102,7 @@ public abstract class AbstractVariableValueEditor implements IVariableValueEdito
 	 * eclipse .debug.core.model.IVariable, java.lang.String,
 	 * org.eclipse.swt.widgets.Shell)
 	 */
+	@Override
 	public boolean saveVariable(IVariable variable, String expression, Shell shell) {
 		return false;
 	}

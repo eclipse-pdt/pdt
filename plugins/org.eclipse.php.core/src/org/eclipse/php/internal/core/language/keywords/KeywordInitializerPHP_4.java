@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 
+	@Override
 	public void initialize(Collection<KeywordData> list) {
 		list.add(new KeywordData("and", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("array", PARENTHESES_SUFFIX, 1)); //$NON-NLS-1$
@@ -78,6 +79,7 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("xor", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 	}
 
+	@Override
 	public void initializeSpecific(Collection<KeywordData> list) {
 		list.add(new KeywordData("old_function", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 	}

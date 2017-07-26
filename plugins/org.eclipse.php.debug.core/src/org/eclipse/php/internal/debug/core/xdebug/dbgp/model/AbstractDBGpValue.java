@@ -95,6 +95,7 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 	 * 
 	 * @see org.eclipse.php.internal.debug.core.model.IPHPDataType#getDataType()
 	 */
+	@Override
 	public DataType getDataType() {
 		return fDataType;
 	}

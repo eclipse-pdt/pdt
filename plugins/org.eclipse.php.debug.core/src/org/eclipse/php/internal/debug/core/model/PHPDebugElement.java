@@ -36,6 +36,7 @@ public abstract class PHPDebugElement extends DebugElement {
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getModelIdentifier()
 	 */
+	@Override
 	public String getModelIdentifier() {
 		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
@@ -45,10 +46,12 @@ public abstract class PHPDebugElement extends DebugElement {
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
+	@Override
 	public ILaunch getLaunch() {
 		return getDebugTarget().getLaunch();
 	}
 
+	@Override
 	public String toString() {
 		String className = getClass().getName();
 		className = className.substring(className.lastIndexOf('.') + 1);

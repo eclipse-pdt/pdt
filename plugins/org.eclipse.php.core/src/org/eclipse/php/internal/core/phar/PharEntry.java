@@ -48,6 +48,7 @@ public class PharEntry implements IAchiveOutputEntry {
 		this.content = content;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -64,6 +65,7 @@ public class PharEntry implements IAchiveOutputEntry {
 		this.csize = csize;
 	}
 
+	@Override
 	public long getSize() {
 		return size;
 	}
@@ -80,10 +82,12 @@ public class PharEntry implements IAchiveOutputEntry {
 		this.crc = PharUtil.getCopy(crc);
 	}
 
+	@Override
 	public long getTime() {
 		return time;
 	}
 
+	@Override
 	public void setTime(long time) {
 		this.time = time;
 	}
@@ -104,6 +108,7 @@ public class PharEntry implements IAchiveOutputEntry {
 		this.metadata = metadata;
 	}
 
+	@Override
 	public boolean isDirectory() {
 
 		return name.endsWith("/"); //$NON-NLS-1$
@@ -127,10 +132,12 @@ public class PharEntry implements IAchiveOutputEntry {
 		return position + csize;
 	}
 
+	@Override
 	public long getCompressedSize() {
 		return csize;
 	}
 
+	@Override
 	public long getCrc() {
 		return toLong(crc);
 	}
@@ -139,14 +146,17 @@ public class PharEntry implements IAchiveOutputEntry {
 		return PharFile.getInt(crc2);
 	}
 
+	@Override
 	public int getMethod() {
 		return getCompressedType();
 	}
 
+	@Override
 	public void setCompressedSize(long csize) {
 		setCsize((int) csize);
 	}
 
+	@Override
 	public void setCrc(long crc) {
 		this.crc = toByte(crc);
 	}
@@ -160,6 +170,7 @@ public class PharEntry implements IAchiveOutputEntry {
 		return result;
 	}
 
+	@Override
 	public void setMethod(int method) {
 		if (bitMappedFlag == null) {
 			bitMappedFlag = new byte[4];
@@ -173,6 +184,7 @@ public class PharEntry implements IAchiveOutputEntry {
 
 	}
 
+	@Override
 	public void setSize(long size) {
 		setSize((int) size);
 	}

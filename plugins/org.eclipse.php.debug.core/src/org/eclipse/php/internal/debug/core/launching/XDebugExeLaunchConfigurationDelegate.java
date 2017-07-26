@@ -70,6 +70,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 
@@ -152,7 +153,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// add process type to process attributes, basically the name of the exe
 		// that was launched
-		final Map<String, String> processAttributes = new HashMap<String, String>();
+		final Map<String, String> processAttributes = new HashMap<>();
 		String programName = phpExe.lastSegment();
 		final String extension = phpExe.getFileExtension();
 		if (extension != null) {
@@ -357,6 +358,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
 						PHPDebugCoreMessages.XDebugMessage_debugError, message);

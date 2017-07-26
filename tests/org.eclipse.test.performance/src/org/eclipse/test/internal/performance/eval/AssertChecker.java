@@ -21,19 +21,19 @@ import org.eclipse.test.internal.performance.data.Dim;
  * @since 3.1
  */
 public abstract class AssertChecker {
-	private Set fDimensions;
+	private Set<Dim> fDimensions;
 	
 	public AssertChecker(Dim dimension) {
 		this(new Dim[] {dimension});
 	}
 	
 	public AssertChecker(Dim[] dimensions) {
-		fDimensions= new HashSet();
+		fDimensions= new HashSet<>();
 		fDimensions.addAll(Arrays.asList(dimensions));
 	}
 	
 	public Dim[] getDimensions() {
-		return (Dim[]) fDimensions.toArray(new Dim[fDimensions.size()]);
+		return fDimensions.toArray(new Dim[fDimensions.size()]);
 	}
 
 	protected Dim getDimension() {

@@ -44,19 +44,23 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 		}
 	}
 
+	@Override
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset)
 			throws CoreException {
 		return provider.addBreakpoint(document, input, lineNumber, offset);
 	}
 
+	@Override
 	public IResource getResource(IEditorInput input) {
 		return provider.getResource(input);
 	}
 
+	@Override
 	public void setSourceEditingTextTools(ISourceEditingTextTools tool) {
 		provider.setSourceEditingTextTools(tool);
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		provider.setInitializationData(config, propertyName, data);

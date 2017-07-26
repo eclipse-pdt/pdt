@@ -27,7 +27,7 @@ public class PHPCallProcessor implements ICallProcessor {
 
 	private class Requestor extends SearchRequestor {
 
-		public Map<Object, Object> result = new HashMap<Object, Object>();
+		public Map<Object, Object> result = new HashMap<>();
 		private IModelElement search;
 
 		public Requestor(IModelElement member) {
@@ -55,7 +55,7 @@ public class PHPCallProcessor implements ICallProcessor {
 	}
 
 	@Override
-	public Map process(IModelElement parent, IModelElement member, IDLTKSearchScope scope, IProgressMonitor monitor) {
+	public Map<?, ?> process(IModelElement parent, IModelElement member, IDLTKSearchScope scope, IProgressMonitor monitor) {
 
 		SearchPattern pattern = SearchPattern.createPattern(member, IDLTKSearchConstants.REFERENCES,
 				SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH, scope.getLanguageToolkit());

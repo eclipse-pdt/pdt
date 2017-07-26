@@ -56,6 +56,7 @@ public class PerformanceTestCase extends TestCase {
 	 * Overridden to create a default performance meter for this test case.
 	 * @throws Exception
 	 */
+	@Override
 	protected void setUp() throws Exception {
 		Performance performance= Performance.getDefault();
 		fPerformanceMeter= performance.createPerformanceMeter(performance.getDefaultScenarioId(this));
@@ -65,6 +66,7 @@ public class PerformanceTestCase extends TestCase {
 	 * Overridden to dispose of the performance meter.
 	 * @throws Exception
 	 */
+	@Override
 	protected void tearDown() throws Exception {
 		fPerformanceMeter.dispose();
 	}

@@ -34,6 +34,7 @@ public class IniAlteredNotificationHandler implements IDebugMessageHandler {
 
 	private static final String INCLUDE_PATH = "include_path"; //$NON-NLS-1$
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		IniAlteredNotification iniMessage = (IniAlteredNotification) message;
 		if (INCLUDE_PATH.equals(iniMessage.getName())) {
@@ -46,7 +47,7 @@ public class IniAlteredNotificationHandler implements IDebugMessageHandler {
 			}
 			if (newValues.size() > 0) {
 				RemoteDebugger debugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
-				List<IProject> toAddFiles = new ArrayList<IProject>();
+				List<IProject> toAddFiles = new ArrayList<>();
 				for (String newValue : newValues) {
 					String localPath = debugger.convertToLocalFilename(newValue, debugger.getCurrentWorkingDirectory(),
 							debugTarget.getLastFileName());
@@ -67,14 +68,14 @@ public class IniAlteredNotificationHandler implements IDebugMessageHandler {
 
 	private List<String> parseEntries(String oldValue) {
 		if (oldValue == null || oldValue.trim().length() == 0) {
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 		String separator = ":"; //$NON-NLS-1$
 		int semicolonIndex = oldValue.indexOf(';');
 		if (semicolonIndex != -1) {
 			separator = ";"; //$NON-NLS-1$
 		}
-		return new ArrayList<String>(Arrays.asList(oldValue.split(separator)));
+		return new ArrayList<>(Arrays.asList(oldValue.split(separator)));
 	}
 
 }

@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	public static final String ID = "org.eclipse.php.debug.core.noneDebugger"; //$NON-NLS-1$
@@ -196,7 +195,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			new Thread(new ProcessCrashDetector(launch, process)).start();
 			IProcess runtimeProcess = null;
 			// Add process type to process attributes
-			Map<String, String> processAttributes = new HashMap<String, String>();
+			Map<String, String> processAttributes = new HashMap<>();
 			String programName = phpExe.lastSegment();
 			String extension = phpExe.getFileExtension();
 			if (extension != null) {
@@ -291,7 +290,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 		private static final String LAUNCH_LISTENERS_EXTENSION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
 
-		private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<ILaunchDelegateListener>();
+		private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<>();
 
 		public WebLaunchDelegate() {
 			registerLaunchListeners();
@@ -408,12 +407,14 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 					final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
 					if (o instanceof ILaunchDelegateListener) {
 						ISafeRunnable runnable = new ISafeRunnable() {
+							@Override
 							public void run() throws Exception {
 								ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
 								Assert.isNotNull(listener);
 								preLaunchListeners.add(listener);
 							}
 
+							@Override
 							public void handleException(Throwable exception) {
 								Logger.logException(exception);
 							}
@@ -568,6 +569,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	private static void displayError(final String message) {
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title,
 						message);

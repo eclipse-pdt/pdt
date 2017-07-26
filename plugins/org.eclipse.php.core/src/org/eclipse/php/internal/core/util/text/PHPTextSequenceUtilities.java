@@ -110,7 +110,7 @@ public class PHPTextSequenceUtilities {
 					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
 				}
 
-				List<IRegion> comments = new ArrayList<IRegion>();
+				List<IRegion> comments = new ArrayList<>();
 				while (true) {
 					// If statement start is at the beginning of the PHP script
 					// region:
@@ -688,7 +688,7 @@ public class PHPTextSequenceUtilities {
 	 * @return
 	 */
 	public static @NonNull String[] getArgNames(@Nullable PHPVersion phpVersion, @Nullable CharSequence textSequence) {
-		List<String> args = new ArrayList<String>();
+		List<String> args = new ArrayList<>();
 		if (textSequence != null && textSequence.length() > 2) {
 			if (textSequence.charAt(textSequence.length() - 1) == ')') {
 				textSequence = textSequence.subSequence(0, textSequence.length() - 1);

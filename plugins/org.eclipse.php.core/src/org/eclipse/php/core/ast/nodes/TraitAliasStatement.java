@@ -43,6 +43,7 @@ public class TraitAliasStatement extends TraitStatement {
 		return super.subtreeMatch(matcher, other);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitAliasStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -59,6 +60,7 @@ public class TraitAliasStatement extends TraitStatement {
 		return result;
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

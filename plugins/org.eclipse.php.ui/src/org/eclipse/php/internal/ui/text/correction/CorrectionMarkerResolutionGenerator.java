@@ -135,7 +135,6 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 				&& PHPCorrectionProcessor.hasCorrections(cu, problemId, MarkerUtilities.getMarkerType(marker));
 	}
 
-	@SuppressWarnings("unchecked")
 	private static IMarkerResolution[] internalGetResolutions(IMarker marker) {
 		if (!internalHasResolutions(marker)) {
 			return NO_RESOLUTIONS;

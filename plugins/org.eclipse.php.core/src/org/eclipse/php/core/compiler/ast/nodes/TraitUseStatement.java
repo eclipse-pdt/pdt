@@ -43,6 +43,7 @@ public class TraitUseStatement extends Statement {
 		this.tsList = tsList;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			if (traitList != null) {
@@ -70,7 +71,7 @@ public class TraitUseStatement extends Statement {
 
 	public List<TraitStatement> getTsList() {
 		if (tsList == null) {
-			tsList = new ArrayList<TraitStatement>();
+			tsList = new ArrayList<>();
 		}
 		return tsList;
 	}
@@ -79,6 +80,7 @@ public class TraitUseStatement extends Statement {
 		this.tsList = tsList;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.USE_STATEMENT;
 	}
@@ -86,9 +88,11 @@ public class TraitUseStatement extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

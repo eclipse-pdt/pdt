@@ -43,7 +43,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	}
 
 	protected final int fStackLevel;
-	protected final Set<Facet> fFacets = new HashSet<Facet>();
+	protected final Set<Facet> fFacets = new HashSet<>();
 	protected DataType fDataType;
 	protected Node fDescriptor;
 	protected String fName;
@@ -63,6 +63,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 		update(descriptor);
 	}
 
+	@Override
 	public DataType getDataType() {
 		return fDataType;
 	}

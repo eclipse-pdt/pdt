@@ -38,6 +38,7 @@ public class OpenCoverageAction extends Action {
 	 * org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.
 	 * Event)
 	 */
+	@Override
 	public void run() {
 		final ISourceModule fileData = PHPToolkitUtil.getSourceModule(element);
 		if (fileData != null) {

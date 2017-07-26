@@ -43,25 +43,31 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 		super();
 	}
 
+	@Override
 	protected String getPreferenceNodeQualifier() {
 		return PHPProjectPreferences.getPreferenceNodeQualifier();
 	}
 
+	@Override
 	protected String getPreferencePageID() {
 		return IPHPDebugConstants.PREFERENCE_PAGE_ID;
 	}
 
+	@Override
 	protected String getProjectSettingsKey() {
 		return PHPProjectPreferences.getProjectSettingsKey();
 	}
 
+	@Override
 	protected String getPropertyPageID() {
 		return IPHPDebugConstants.PROJECT_PAGE_ID;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
+	@Override
 	public String getTitle() {
 		return PHPDebugUIMessages.PHPDebugPreferencePage_8;
 	}
@@ -82,6 +88,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 
 		debugPreferencesBlock.setValidator(new IPageValidator() {
 
+			@Override
 			public void validate(IPageControlValidator pageValidator) throws ControlValidationException {
 
 				pageValidator.validate();
@@ -111,6 +118,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 		return comp;
 	}
 
+	@Override
 	protected Control createProjectContents(Composite parent) {
 		return createCommonContents(parent);
 	}

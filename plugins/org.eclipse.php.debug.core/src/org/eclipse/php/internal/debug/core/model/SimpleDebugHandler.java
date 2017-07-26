@@ -20,20 +20,24 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 
 public abstract class SimpleDebugHandler implements IDebugHandler {
 
+	@Override
 	public void ready(String fileName, int lineNumber) {
 		Logger.debugMSG("PHPSimpleDebugHandler: ready: " + fileName + " " //$NON-NLS-1$ //$NON-NLS-2$
 				+ lineNumber);
 	}
 
+	@Override
 	public void debugChanged() {
 		Logger.debugMSG("PHPSimpleDebugHandler: debugChanged"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void debuggerErrorOccured(DebugError debugError) {
 		Logger.debugMSG("PHPSimpleDebugHandler: debuggerErrorOccured: " //$NON-NLS-1$
 				+ debugError);
 	}
 
+	@Override
 	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		Logger.debugMSG("PHPSimpleDebugHandler: sessionStarted "); //$NON-NLS-1$
 		Logger.debugMSG("                       fileName: " + remoteFile); //$NON-NLS-1$
@@ -42,43 +46,53 @@ public abstract class SimpleDebugHandler implements IDebugHandler {
 		Logger.debugMSG("                       options: " + options); //$NON-NLS-1$
 	}
 
+	@Override
 	public void sessionEnded() {
 		Logger.debugMSG("PHPSimpleDebugHandler: sessionEnded"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void connectionTimedout() {
 		Logger.debugMSG("PHPSimpleDebugHandler: connectionTimedout"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void multipleBindOccured() {
 		Logger.debugMSG("PHPSimpleDebugHandler: multipleBindOccured"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void handleScriptEnded() {
 		Logger.debugMSG("PHPSimpleDebugHandler: handleScriptEnded"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void connectionEstablished() {
 		Logger.debugMSG("PHPSimpleDebugHandler: connectionEstablished"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void connectionClosed() {
 		Logger.debugMSG("PHPSimpleDebugHandler: connectionClosed"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void newOutput(String output) {
 		Logger.debugMSG("PHPSimpleDebugHandler: newOutput " + output); //$NON-NLS-1$
 	}
 
+	@Override
 	public void newHeaderOutput(String output) {
 		Logger.debugMSG("PHPSimpleDebugHandler: newHeaderOutput " + output); //$NON-NLS-1$
 	}
 
+	@Override
 	public void parsingErrorOccured(DebugError debugError) {
 		Logger.debugMSG("PHPSimpleDebugHandler: parsingErrorOccured " //$NON-NLS-1$
 				+ debugError);
 	}
 
+	@Override
 	public void wrongDebugServer() {
 		Logger.debugMSG("PHPSimpleDebugHandler: wrongDebugServer"); //$NON-NLS-1$
 	}

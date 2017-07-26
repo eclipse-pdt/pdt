@@ -28,6 +28,7 @@ public PerformanceResultsElement() {
 	super();
 }
 
+@Override
 ResultsElement createChild(AbstractResults testResults) {
 	return new ComponentResultsElement(testResults, this);
 }
@@ -146,6 +147,7 @@ boolean hasRead(BuildResultsElement buildResultsElement) {
 	return true;
 }
 
+@Override
 public boolean isInitialized() {
 	return super.isInitialized() && this.results.size() > 0;
 }

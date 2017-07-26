@@ -225,6 +225,7 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	 * @param value
 	 *            the new value
 	 */
+	@Override
 	public void set(String property, Object value) {
 		super.set(property, new JsonValue(value));
 	}

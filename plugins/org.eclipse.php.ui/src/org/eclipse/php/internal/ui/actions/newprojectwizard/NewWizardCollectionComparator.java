@@ -30,7 +30,7 @@ import org.eclipse.ui.internal.registry.WizardsRegistryReader;
  * at the beginning of the sorted result.
  */
 class NewWizardCollectionComparator extends ViewerComparator {
-	private Set primaryWizards;
+	private Set<?> primaryWizards;
 	/**
 	 * Static instance of this class.
 	 */
@@ -88,7 +88,7 @@ class NewWizardCollectionComparator extends ViewerComparator {
 		return propertyId.equals(IBasicPropertyConstants.P_TEXT);
 	}
 
-	public void setPrimaryWizards(Set primaryWizards) {
+	public void setPrimaryWizards(Set<?> primaryWizards) {
 		this.primaryWizards = primaryWizards;
 	}
 }

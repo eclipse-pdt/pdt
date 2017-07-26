@@ -30,7 +30,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class GlobalStatement extends Statement {
 
-	private final ASTNode.NodeList<Variable> variables = new ASTNode.NodeList<Variable>(VARIABLES_PROPERTY);
+	private final ASTNode.NodeList<Variable> variables = new ASTNode.NodeList<>(VARIABLES_PROPERTY);
 
 	/**
 	 * The "variables" structural property of this node type.
@@ -45,7 +45,7 @@ public class GlobalStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(1);
 		properyList.add(VARIABLES_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
@@ -64,6 +64,7 @@ public class GlobalStatement extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -72,12 +73,14 @@ public class GlobalStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.variables) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -87,6 +90,7 @@ public class GlobalStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.variables) {
 			node.traverseBottomUp(visitor);
@@ -94,6 +98,7 @@ public class GlobalStatement extends Statement {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<GlobalStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -105,6 +110,7 @@ public class GlobalStatement extends Statement {
 		buffer.append(tab).append("</GlobalStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.GLOBAL_STATEMENT;
 	}
@@ -119,6 +125,7 @@ public class GlobalStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -136,7 +143,7 @@ public class GlobalStatement extends Statement {
 	}
 
 	@Override
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == VARIABLES_PROPERTY) {
 			return variables();
 		}

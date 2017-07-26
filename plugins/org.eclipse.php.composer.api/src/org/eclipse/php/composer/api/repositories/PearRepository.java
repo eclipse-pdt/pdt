@@ -41,6 +41,7 @@ public class PearRepository extends Repository implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public PearRepository clone() {
 		PearRepository clone = new PearRepository();
 		cloneProperties(clone);

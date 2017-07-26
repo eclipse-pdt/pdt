@@ -45,6 +45,7 @@ public class DeclareStatement extends Statement {
 		this.action = action;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -56,6 +57,7 @@ public class DeclareStatement extends Statement {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.DECLARE_STATEMENT;
 	}
@@ -75,9 +77,11 @@ public class DeclareStatement extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

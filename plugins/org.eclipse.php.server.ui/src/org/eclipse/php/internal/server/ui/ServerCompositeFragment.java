@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.*;
 /**
  * Wizard page to set the server install directory.
  */
-@SuppressWarnings("restriction")
 public class ServerCompositeFragment extends CompositeFragment {
 
 	protected Text name;
@@ -82,6 +81,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 * @throws IllegalArgumentException
 	 *             if the given object is not a {@link Server}
 	 */
+	@Override
 	public void setData(Object server) throws IllegalArgumentException {
 		if (server != null && !(server instanceof Server)) {
 			throw new IllegalArgumentException("The given object is not a Server"); //$NON-NLS-1$
@@ -98,6 +98,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	/**
 	 * Provide a wizard page to change the Server's installation directory.
 	 */
+	@Override
 	protected void createContents(Composite parent) {
 		Composite nameGroup = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
@@ -113,6 +114,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		name.setLayoutData(data);
 		name.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				getServer().setName(name.getText());
 				validate();
@@ -184,6 +186,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		}
 	}
 
+	@Override
 	public void validate() {
 		if (getServer() == null) {
 			setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
@@ -266,6 +269,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		layoutData.horizontalSpan = 2;
 		url.setLayoutData(layoutData);
 		url.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (getServer() != null) {
 					String urlStr = url.getText();
@@ -284,6 +288,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		webroot = new Text(group, SWT.BORDER);
 		webroot.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		webroot.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (getServer() != null) {
 					String webrootStr = webroot.getText();
@@ -295,6 +300,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		Button browseButton = new Button(group, SWT.PUSH);
 		browseButton.setText(PHPServerUIMessages.getString("ServerCompositeFragment.browse")); //$NON-NLS-1$
 		browseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
 				if (!"".equals(webroot.getText())) { //$NON-NLS-1$
@@ -340,6 +346,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	/**
 	 * Saves the IServerWorkingCopy.
 	 */
+	@Override
 	public boolean performOk() {
 		return true;
 	}

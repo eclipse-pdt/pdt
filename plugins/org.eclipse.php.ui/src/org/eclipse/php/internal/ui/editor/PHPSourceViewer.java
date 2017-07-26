@@ -270,7 +270,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 			styleProvider.prepareTextRegions(documentRegion, 0, documentRegion.getEnd(), holdResults);
 
 			for (Iterator<StyleRange> iter = holdResults.iterator(); iter.hasNext();) {
-				StyleRange element = (StyleRange) iter.next();
+				StyleRange element = iter.next();
 				fText.setStyleRange(element);
 			}
 			documentRegion = documentRegion.getNext();

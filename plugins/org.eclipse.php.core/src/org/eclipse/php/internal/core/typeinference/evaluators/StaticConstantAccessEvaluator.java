@@ -31,6 +31,7 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		StaticConstantAccess expr = (StaticConstantAccess) typedGoal.getExpression();
@@ -44,10 +45,12 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return evaluatedType;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {
 			evaluatedType = PHPSimpleTypes.STRING;

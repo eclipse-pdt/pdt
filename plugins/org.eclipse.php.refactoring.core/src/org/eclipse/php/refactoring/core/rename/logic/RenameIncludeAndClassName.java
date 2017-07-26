@@ -36,6 +36,7 @@ public class RenameIncludeAndClassName extends RenameClass {
 		this.changingResource = resource;
 	}
 
+	@Override
 	public boolean visit(Include include) {
 		if (updateReference) {
 			Expression exp = include.getExpression();
@@ -66,6 +67,7 @@ public class RenameIncludeAndClassName extends RenameClass {
 	/**
 	 * @param identifier
 	 */
+	@Override
 	protected void checkIdentifier(Identifier identifier) {
 		if (updateClassName) {
 			super.checkIdentifier(identifier);
@@ -84,6 +86,7 @@ public class RenameIncludeAndClassName extends RenameClass {
 	 * 
 	 * @param scalar
 	 */
+	@Override
 	protected void addChange(int start, String description) {
 		final TextEditGroup textEditGroup = new TextEditGroup(description);
 		final ReplaceEdit replaceEdit = new ReplaceEdit(start, oldName.length(), this.newName);

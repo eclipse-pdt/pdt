@@ -29,7 +29,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 	// private static final byte[] DEFAULT_STUB =
 	// "<?php\r\n__HALT_COMPILER();\r\n".getBytes();
 
-	List<PharAchiveOutputEntry> entries = new ArrayList<PharAchiveOutputEntry>();
+	List<PharAchiveOutputEntry> entries = new ArrayList<>();
 	PharAchiveOutputEntry currentEntry;
 	boolean currentStart;
 	SignatureBufferedOutputStream os;
@@ -62,6 +62,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 		stub.write(os);
 	}
 
+	@Override
 	public void close() throws IOException {
 		os.close();
 	}
@@ -125,6 +126,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 
 	}
 
+	@Override
 	public void putNextEntry(IAchiveOutputEntry output) throws IOException {
 
 		assert output instanceof PharAchiveOutputEntry;
@@ -148,6 +150,7 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 		return ((CRCable) currentOutputStream2).getCrc();
 	}
 
+	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 
 		// if currentStart is true,it should initialize the currentOutputStream

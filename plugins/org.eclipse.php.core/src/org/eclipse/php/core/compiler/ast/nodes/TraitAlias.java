@@ -35,6 +35,7 @@ public class TraitAlias extends Expression {
 		this.methodName = methodName;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (traitMethod != null) {

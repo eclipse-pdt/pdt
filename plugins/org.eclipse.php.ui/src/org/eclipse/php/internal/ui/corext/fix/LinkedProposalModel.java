@@ -20,7 +20,7 @@ import org.eclipse.php.internal.ui.corext.fix.LinkedProposalPositionGroup.Positi
 
 public class LinkedProposalModel {
 
-	private Map/* <String, PositionGroup> */ fPositionGroups;
+	private Map/* <String, PositionGroup> */<Object, Object> fPositionGroups;
 	private LinkedProposalPositionGroup.PositionInformation fEndPosition;
 
 	public void addPositionGroup(LinkedProposalPositionGroup positionGroup) {
@@ -44,9 +44,9 @@ public class LinkedProposalModel {
 		return group;
 	}
 
-	public Iterator getPositionGroupIterator() {
+	public Iterator<Object> getPositionGroupIterator() {
 		if (fPositionGroups == null) {
-			return new Iterator() {
+			return new Iterator<Object>() {
 				@Override
 				public boolean hasNext() {
 					return false;

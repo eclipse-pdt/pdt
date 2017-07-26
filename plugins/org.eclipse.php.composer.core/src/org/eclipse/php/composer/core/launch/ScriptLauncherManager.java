@@ -35,7 +35,7 @@ import org.eclipse.php.composer.core.log.Logger;
 public class ScriptLauncherManager implements ScriptLauncherInterface {
 
 	private static final String LAUNCHER_ID = ComposerPlugin.ID + ".executableLauncher"; //$NON-NLS-1$
-	private final HashMap<String, EnvironmentFactory> factories = new HashMap<String, EnvironmentFactory>();
+	private final HashMap<String, EnvironmentFactory> factories = new HashMap<>();
 
 	@Inject
 	public ScriptLauncherManager(IExtensionRegistry registry) {

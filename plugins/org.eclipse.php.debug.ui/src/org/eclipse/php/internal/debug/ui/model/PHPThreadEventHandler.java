@@ -29,19 +29,18 @@ import org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPThreadEventHandler extends DebugEventHandler {
 
 	/**
 	 * Queue of suspended threads to choose from when needing to select a thread
 	 * when another is resumed. Threads are added in the order they suspend.
 	 */
-	private final Set<IThread> fThreadQueue = new LinkedHashSet<IThread>();
+	private final Set<IThread> fThreadQueue = new LinkedHashSet<>();
 
 	/**
 	 * Map of previous TOS per thread
 	 */
-	private final Map<IThread, IStackFrame> fLastTopFrame = new HashMap<IThread, IStackFrame>();
+	private final Map<IThread, IStackFrame> fLastTopFrame = new HashMap<>();
 
 	/**
 	 * Creates an event handler for a threads in the given viewer.

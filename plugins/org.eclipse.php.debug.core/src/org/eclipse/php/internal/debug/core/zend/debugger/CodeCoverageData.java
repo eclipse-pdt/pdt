@@ -32,6 +32,7 @@ public class CodeCoverageData implements IAdaptable {
 		fCoverageBitmask = coverageBitmask;
 	}
 
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getAdapter(Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);

@@ -42,11 +42,11 @@ public class PHPPreferencePageBlocksRegistry {
 	 * group of addons are for the worspace scope. Since multiple addons can be
 	 * added to the same preferences page, the values are stored as a List.
 	 */
-	private Dictionary pageBlocks = new Hashtable();
+	private Dictionary<String, List<PHPPreferencePageBlocksFactory>> pageBlocks = new Hashtable<>();
 
 	/** Instance of this registry */
 	private static PHPPreferencePageBlocksRegistry instance = null;
-	private static Comparator pageBlockComparator = new PageBlockComparator();
+	private static Comparator<IPHPPreferencePageBlock> pageBlockComparator = new PageBlockComparator();
 
 	private PHPPreferencePageBlocksRegistry() {
 
@@ -62,16 +62,17 @@ public class PHPPreferencePageBlocksRegistry {
 		}
 	}
 
-	private void addBlock(Dictionary dictionary, String preferencesPageID, IConfigurationElement element) {
-		List list = (List) dictionary.get(preferencesPageID);
+	private void addBlock(Dictionary<String, List<PHPPreferencePageBlocksFactory>> dictionary, String preferencesPageID,
+			IConfigurationElement element) {
+		List<PHPPreferencePageBlocksFactory> list = dictionary.get(preferencesPageID);
 		if (list == null) {
-			list = new ArrayList(5);
+			list = new ArrayList<>(5);
 		}
 		list.add(new PHPPreferencePageBlocksFactory(element));
 		dictionary.put(preferencesPageID, list);
 	}
 
-	private Dictionary getPageBlocks() {
+	private Dictionary<String, List<PHPPreferencePageBlocksFactory>> getPageBlocks() {
 		return pageBlocks;
 	}
 
@@ -93,7 +94,7 @@ public class PHPPreferencePageBlocksRegistry {
 	 *         addons is by their ID.
 	 */
 	public static IPHPPreferencePageBlock[] getPHPPreferencePageBlock(String pageId) throws Exception {
-		List addonFactories = (List) getInstance().getPageBlocks().get(pageId);
+		List<?> addonFactories = getInstance().getPageBlocks().get(pageId);
 		IPHPPreferencePageBlock[] addons = getBlocks(addonFactories);
 		Arrays.sort(addons, pageBlockComparator);
 		return addons;
@@ -101,11 +102,11 @@ public class PHPPreferencePageBlocksRegistry {
 
 	// Collect, initialize and return all the {@link IPHPPreferencePageBlock}
 	// from the given factories List.
-	private static IPHPPreferencePageBlock[] getBlocks(List addonFactories) {
+	private static IPHPPreferencePageBlock[] getBlocks(List<?> addonFactories) {
 		if (addonFactories == null) {
 			return new IPHPPreferencePageBlock[0];
 		}
-		List<IPHPPreferencePageBlock> addons = new LinkedList<IPHPPreferencePageBlock>();
+		List<IPHPPreferencePageBlock> addons = new LinkedList<>();
 		for (Object addonFactory : addonFactories) {
 			IPHPPreferencePageBlock pageBlock = ((PHPPreferencePageBlocksFactory) addonFactory)
 					.createPHPPreferencePageBlock();
@@ -113,7 +114,7 @@ public class PHPPreferencePageBlocksRegistry {
 				addons.add(pageBlock);
 			}
 		}
-		return (IPHPPreferencePageBlock[]) addons.toArray(new IPHPPreferencePageBlock[addons.size()]);
+		return addons.toArray(new IPHPPreferencePageBlock[addons.size()]);
 	}
 
 	/**
@@ -146,11 +147,9 @@ public class PHPPreferencePageBlocksRegistry {
 		}
 	}
 
-	static class PageBlockComparator implements Comparator {
+	static class PageBlockComparator implements Comparator<IPHPPreferencePageBlock> {
 		@Override
-		public int compare(Object o1, Object o2) {
-			IPHPPreferencePageBlock firstBlock = (IPHPPreferencePageBlock) o1;
-			IPHPPreferencePageBlock secondBlock = (IPHPPreferencePageBlock) o2;
+		public int compare(IPHPPreferencePageBlock firstBlock, IPHPPreferencePageBlock secondBlock) {
 			if (firstBlock != null && secondBlock != null) {
 				boolean firstIsPDT = firstBlock.getClass().getName().startsWith(PDT_PREFIX);
 				boolean secondIsPDT = secondBlock.getClass().getName().startsWith(PDT_PREFIX);

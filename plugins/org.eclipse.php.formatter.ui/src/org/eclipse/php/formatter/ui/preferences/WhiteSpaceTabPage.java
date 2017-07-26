@@ -53,7 +53,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private Node fLastSelected = null;
 
 		public SyntaxComponent() {
-			fIndexedNodeList = new ArrayList<Node>();
+			fIndexedNodeList = new ArrayList<>();
 			fTree = WhiteSpaceOptions.createAltTree(fworkingValues);
 			WhiteSpaceOptions.makeIndexForNodes(fTree, fIndexedNodeList);
 		}
@@ -111,7 +111,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		public void refreshState() {
-			final ArrayList<Node> checked = new ArrayList<Node>(100);
+			final ArrayList<Node> checked = new ArrayList<>(100);
 			for (Iterator<Node> iter = fTree.iterator(); iter.hasNext();)
 				(iter.next()).getCheckedLeafs(checked);
 			fTreeViewer.setGrayedElements(new Object[0]);
@@ -152,7 +152,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			if (index < 0 || index > fIndexedNodeList.size() - 1) {
 				index = 0;
 			}
-			final Node node = (Node) fIndexedNodeList.get(index);
+			final Node node = fIndexedNodeList.get(index);
 			if (node != null) {
 				fTreeViewer.expandToLevel(node, 0);
 				fTreeViewer.setSelection(new StructuredSelection(new Node[] { node }));
@@ -205,7 +205,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private Composite fComposite;
 
 		public PHPElementComponent() {
-			fIndexedNodeList = new ArrayList<Node>();
+			fIndexedNodeList = new ArrayList<>();
 			fTree = WhiteSpaceOptions.createTreeByPHPElement(fworkingValues);
 			WhiteSpaceOptions.makeIndexForNodes(fTree, fIndexedNodeList);
 		}
@@ -233,7 +233,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				@Override
 				public Object[] getChildren(Object parentElement) {
 					final List<Node> children = ((Node) parentElement).getChildren();
-					final ArrayList<Node> innerChildren = new ArrayList<Node>();
+					final ArrayList<Node> innerChildren = new ArrayList<>();
 					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
 						final Node o = iter.next();
 						if (o instanceof InnerNode)
@@ -306,7 +306,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private void restoreSelections() {
 			Node node;
 			final int innerIndex = getValidatedIndex(PREF_INNER_INDEX);
-			node = (Node) fIndexedNodeList.get(innerIndex);
+			node = fIndexedNodeList.get(innerIndex);
 			if (node instanceof InnerNode) {
 				fInnerViewer.expandToLevel(node, 0);
 				fInnerViewer.setSelection(new StructuredSelection(new Object[] { node }));
@@ -314,7 +314,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			}
 
 			final int optionIndex = getValidatedIndex(PREF_OPTION_INDEX);
-			node = (Node) fIndexedNodeList.get(optionIndex);
+			node = fIndexedNodeList.get(optionIndex);
 			if (node instanceof OptionNode) {
 				fOptionsViewer.setSelection(new StructuredSelection(new Object[] { node }));
 			}
@@ -362,7 +362,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 			final List<Node> children = selectedNode.getChildren();
 
-			final ArrayList<Node> optionsChildren = new ArrayList<Node>();
+			final ArrayList<Node> optionsChildren = new ArrayList<>();
 			for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
 				final Node o = iter.next();
 				if (o instanceof OptionNode)

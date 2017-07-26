@@ -24,6 +24,7 @@ public class PHPStreamsProxy implements IStreamsProxy {
 	/**
 	 * @see org.eclipse.debug.core.model.IStreamsProxy#getErrorStreamMonitor()
 	 */
+	@Override
 	public IStreamMonitor getErrorStreamMonitor() {
 		// TODO: re-implement ProcessCrashDetector using this method
 		return null;
@@ -32,6 +33,7 @@ public class PHPStreamsProxy implements IStreamsProxy {
 	/**
 	 * @see org.eclipse.debug.core.model.IStreamsProxy#getErrorStreamMonitor()
 	 */
+	@Override
 	public IStreamMonitor getOutputStreamMonitor() {
 		// TODO: re-implement ProcessCrashDetector using this method
 		return null;
@@ -44,6 +46,7 @@ public class PHPStreamsProxy implements IStreamsProxy {
 	/**
 	 * @see org.eclipse.debug.core.model.IStreamsProxy#write(java.lang.String)
 	 */
+	@Override
 	public void write(String input) {
 	}
 

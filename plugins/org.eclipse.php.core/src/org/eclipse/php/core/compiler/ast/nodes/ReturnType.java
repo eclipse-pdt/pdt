@@ -23,6 +23,7 @@ public class ReturnType extends Statement {
 		this.returnType = returnType;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (returnType != null) {

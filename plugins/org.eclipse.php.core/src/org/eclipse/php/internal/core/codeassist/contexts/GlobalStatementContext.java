@@ -34,6 +34,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
  */
 public class GlobalStatementContext extends AbstractGlobalStatementContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

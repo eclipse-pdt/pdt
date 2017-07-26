@@ -36,7 +36,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final boolean isReference;
 	private final boolean isStatic;
 	private final List<? extends Expression> lexicalVars;
-	protected List<FormalParameter> arguments = new LinkedList<FormalParameter>();
+	protected List<FormalParameter> arguments = new LinkedList<>();
 	private Block body = new Block();
 	private ReturnType returnType;
 
@@ -66,6 +66,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		setReturnType(returnType);
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -126,13 +127,16 @@ public class LambdaFunctionDeclaration extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.LAMBDA_FUNCTION;
 	}

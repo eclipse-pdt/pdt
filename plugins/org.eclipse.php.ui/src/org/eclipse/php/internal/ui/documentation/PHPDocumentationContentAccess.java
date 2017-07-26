@@ -545,7 +545,7 @@ public class PHPDocumentationContentAccess {
 			buf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_specified_by_section);
 			buf.append("</b> "); //$NON-NLS-1$
 			for (Iterator<IMethod> iter = superInterfaceMethods.iterator(); iter.hasNext();) {
-				IMethod overridden = (IMethod) iter.next();
+				IMethod overridden = iter.next();
 				buf.append(createMethodInTypeLinks(overridden));
 				if (iter.hasNext())
 					buf.append(ScriptElementLabels.COMMA_STRING);
@@ -982,7 +982,7 @@ public class PHPDocumentationContentAccess {
 				PHPUiPlugin.log(e);
 			}
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	private boolean inheritParameterDescriptions(List<String> parameterNames, CharSequence[] parameterDescriptions,
@@ -992,7 +992,7 @@ public class PHPDocumentationContentAccess {
 			return hasInheritedParameters;
 		}
 		for (int i = 0; i < parameterNames.size(); i++) {
-			String name = (String) parameterNames.get(i);
+			String name = parameterNames.get(i);
 			if (name != null) {
 				parameterDescriptions[i] = fJavadocLookup.getInheritedParamDescription(fMethod, i);
 				parameterTypes[i] = fJavadocLookup.getInheritedParamType(fMethod, i);
@@ -1009,7 +1009,7 @@ public class PHPDocumentationContentAccess {
 			return hasInheritedExceptions;
 		}
 		for (int i = 0; i < exceptionNames.size(); i++) {
-			String name = (String) exceptionNames.get(i);
+			String name = exceptionNames.get(i);
 			if (name != null) {
 				exceptionDescriptions[i] = fJavadocLookup.getInheritedExceptionDescription(fMethod, name);
 				if (exceptionDescriptions[i] != null)

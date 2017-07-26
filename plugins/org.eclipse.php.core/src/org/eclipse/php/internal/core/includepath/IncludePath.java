@@ -52,6 +52,7 @@ public class IncludePath implements IAdaptable {
 		return isBuildpath;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -60,6 +61,7 @@ public class IncludePath implements IAdaptable {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -84,11 +86,14 @@ public class IncludePath implements IAdaptable {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return new StringBuilder("Include Path [").append(entry.toString()) //$NON-NLS-1$
 				.append(']').toString();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
 	public Object getAdapter(Class adapter) {
 		// TODO Auto-generated method stub
 		return null;

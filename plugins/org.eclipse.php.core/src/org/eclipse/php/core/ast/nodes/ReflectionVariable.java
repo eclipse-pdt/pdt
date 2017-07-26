@@ -41,6 +41,7 @@ public class ReflectionVariable extends Variable {
 	/**
 	 * @return the name PROPERTY
 	 */
+	@Override
 	public ChildPropertyDescriptor getNameProperty() {
 		return ReflectionVariable.NAME_PROPERTY;
 	}
@@ -48,6 +49,7 @@ public class ReflectionVariable extends Variable {
 	/**
 	 * @return the DOLLARED property
 	 */
+	@Override
 	public SimplePropertyDescriptor getDollaredProperty() {
 		return ReflectionVariable.DOLLARED_PROPERTY;
 	}
@@ -59,7 +61,7 @@ public class ReflectionVariable extends Variable {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(DOLLARED_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -73,6 +75,7 @@ public class ReflectionVariable extends Variable {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -81,6 +84,7 @@ public class ReflectionVariable extends Variable {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ReflectionVariable"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -89,6 +93,7 @@ public class ReflectionVariable extends Variable {
 		buffer.append("\n").append(tab).append("</ReflectionVariable>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.REFLECTION_VARIABLE;
 	}
@@ -96,6 +101,7 @@ public class ReflectionVariable extends Variable {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

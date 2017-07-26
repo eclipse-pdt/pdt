@@ -36,12 +36,12 @@ public class CompletionCompanion {
 	/**
 	 * Cache for calculated return types by document position
 	 */
-	private Map<Integer, IType[]> rhTypesCache = new HashMap<Integer, IType[]>();
+	private Map<Integer, IType[]> rhTypesCache = new HashMap<>();
 
 	/**
 	 * Cache for calculated super type hierarchy
 	 */
-	private Map<IType, ITypeHierarchy> superHierarchyCache = new HashMap<IType, ITypeHierarchy>();
+	private Map<IType, ITypeHierarchy> superHierarchyCache = new HashMap<>();
 
 	private static class FakeTypeHierarchy extends TypeHierarchy {
 		public FakeTypeHierarchy() {

@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
@@ -137,8 +138,8 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 		ISelection currentSelection = PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().getSelection();
 		if (currentSelection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) currentSelection;
-			List selectedElements = new ArrayList(structuredSelection.size());
-			Iterator iter = structuredSelection.iterator();
+			List<IAdaptable> selectedElements = new ArrayList<>(structuredSelection.size());
+			Iterator<?> iter = structuredSelection.iterator();
 			while (iter.hasNext()) {
 				Object selectedElement = iter.next();
 				if (selectedElement instanceof IProject)
@@ -156,7 +157,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 			return StructuredSelection.EMPTY;
 	}
 
-	private void addJavaElement(List selectedElements, IModelElement selectedElement) {
+	private void addJavaElement(List<IAdaptable> selectedElements, IModelElement selectedElement) {
 		// if (selectedElement.getResource().getParent() instanceof IProject) {
 		// selectedElements.add(selectedElement.getResource());
 		// return;
@@ -167,7 +168,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 			selectedElements.add(selectedElement);
 	}
 
-	private void addResource(List selectedElements, IResource resource) {
+	private void addResource(List<IAdaptable> selectedElements, IResource resource) {
 
 		IModelElement je = DLTKCore.create(resource);
 		if (je != null && je.exists() && je.getElementType() == IModelElement.SOURCE_MODULE)
@@ -176,7 +177,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 			selectedElements.add(resource);
 	}
 
-	private void addProject(List selectedElements, IProject project) {
+	private void addProject(List<IAdaptable> selectedElements, IProject project) {
 		try {
 			if (project.isAccessible() && project.hasNature(PHPNature.ID))
 				selectedElements.add(DLTKCore.create(project));

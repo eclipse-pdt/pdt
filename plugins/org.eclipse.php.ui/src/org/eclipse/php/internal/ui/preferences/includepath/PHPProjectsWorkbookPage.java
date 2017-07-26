@@ -44,7 +44,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	private final int IDX_EDIT = 2;
 	private final int IDX_REMOVE = 3;
 
-	private ListDialogField fBuildpathList;
+	private ListDialogField<BPListElement> fBuildpathList;
 	private IScriptProject fCurrJProject;
 
 	private TreeListDialogField fProjectsList;
@@ -53,7 +53,8 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 	private final IWorkbenchPreferenceContainer fPageContainer;
 
-	public PHPProjectsWorkbookPage(ListDialogField buildpathList, IWorkbenchPreferenceContainer pageContainer) {
+	public PHPProjectsWorkbookPage(ListDialogField<BPListElement> buildpathList,
+			IWorkbenchPreferenceContainer pageContainer) {
 		fBuildpathList = buildpathList;
 		fPageContainer = pageContainer;
 		fSWTControl = null;
@@ -93,9 +94,9 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 	private void updateProjectsList(IScriptProject currJProject) {
 		// add the projects-cpentries that are already on the class path
-		List cpelements = fBuildpathList.getElements();
+		List<?> cpelements = fBuildpathList.getElements();
 
-		final List checkedProjects = new ArrayList(cpelements.size());
+		final List<BPListElement> checkedProjects = new ArrayList<>(cpelements.size());
 
 		for (int i = cpelements.size() - 1; i >= 0; i--) {
 			BPListElement cpelem = (BPListElement) cpelements.get(i);
@@ -126,14 +127,15 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		return composite;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateBuildpathList() {
-		List projelements = fProjectsList.getElements();
+		List<BPListElement> projelements = fProjectsList.getElements();
 
 		boolean remove = false;
-		List cpelements = fBuildpathList.getElements();
+		List<BPListElement> cpelements = fBuildpathList.getElements();
 		// backwards, as entries will be deleted
 		for (int i = cpelements.size() - 1; i >= 0; i--) {
-			BPListElement cpe = (BPListElement) cpelements.get(i);
+			BPListElement cpe = cpelements.get(i);
 			if (isEntryKind(cpe.getEntryKind())) {
 				if (!projelements.remove(cpe)) {
 					cpelements.remove(i);
@@ -153,13 +155,14 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	 * @see BuildPathBasePage#getSelection
 	 */
 	@Override
-	public List getSelection() {
+	public List<?> getSelection() {
 		return fProjectsList.getSelectedElements();
 	}
 
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fProjectsList.selectElements(new StructuredSelection(selElements));
@@ -245,8 +248,8 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		if (entries != null) {
 			int nElementsChosen = entries.length;
 			// remove duplicates
-			List cplist = fProjectsList.getElements();
-			List elementsToAdd = new ArrayList(nElementsChosen);
+			List<?> cplist = fProjectsList.getElements();
+			List<BPListElement> elementsToAdd = new ArrayList<>(nElementsChosen);
 			for (int i = 0; i < nElementsChosen; i++) {
 				BPListElement curr = entries[i];
 				if (!cplist.contains(curr) && !elementsToAdd.contains(curr)) {
@@ -263,7 +266,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void removeEntry() {
-		List selElements = fProjectsList.getSelectedElements();
+		List<?> selElements = fProjectsList.getSelectedElements();
 		for (int i = selElements.size() - 1; i >= 0; i--) {
 			Object elem = selElements.get(i);
 			if (elem instanceof BPListElementAttribute) {
@@ -283,7 +286,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		} else {
 
 			// also remove library entry from build path
-			for (Iterator iterator = selElements.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = selElements.iterator(); iterator.hasNext();) {
 				BPListElement entry = (BPListElement) iterator.next();
 				try {
 					BuildPathUtils.removeEntryFromBuildPath(fCurrJProject, entry.getBuildpathEntry());
@@ -295,7 +298,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
-	private boolean canRemove(List selElements) {
+	private boolean canRemove(List<?> selElements) {
 		if (selElements.size() == 0) {
 			return false;
 		}
@@ -319,7 +322,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		return attributes == selElements.size() || elements == selElements.size();
 	}
 
-	private boolean canEdit(List selElements) {
+	private boolean canEdit(List<?> selElements) {
 		if (selElements.size() != 1) {
 			return false;
 		}
@@ -337,7 +340,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	 * Method editEntry.
 	 */
 	private void editEntry() {
-		List selElements = fProjectsList.getSelectedElements();
+		List<?> selElements = fProjectsList.getSelectedElements();
 		if (selElements.size() != 1) {
 			return;
 		}
@@ -402,14 +405,14 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	private BPListElement[] openProjectDialog(BPListElement elem) {
 
 		try {
-			ArrayList selectable = new ArrayList();
+			ArrayList<IScriptProject> selectable = new ArrayList<>();
 			final IScriptModel model = fCurrJProject.getModel();
 			final IDLTKLanguageToolkit toolkit = fCurrJProject.getLanguageToolkit();
 			selectable.addAll(Arrays.asList(
 					toolkit != null ? model.getScriptProjects(toolkit.getNatureId()) : model.getScriptProjects()));
 			selectable.remove(fCurrJProject);
 
-			List elements = fProjectsList.getElements();
+			List<?> elements = fProjectsList.getElements();
 			for (int i = 0; i < elements.size(); i++) {
 				BPListElement curr = (BPListElement) elements.get(i);
 				IScriptProject proj = (IScriptProject) DLTKCore.create(curr.getResource());
@@ -441,7 +444,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected void projectPageDoubleClicked(TreeListDialogField field) {
-		List selection = fProjectsList.getSelectedElements();
+		List<?> selection = fProjectsList.getSelectedElements();
 		if (canEdit(selection)) {
 			editEntry();
 		}
@@ -450,7 +453,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	protected void projectPageKeyPressed(TreeListDialogField field, KeyEvent event) {
 		if (field == fProjectsList) {
 			if (event.character == SWT.DEL && event.stateMask == 0) {
-				List selection = field.getSelectedElements();
+				List<?> selection = field.getSelectedElements();
 				if (canRemove(selection)) {
 					removeEntry();
 				}
@@ -466,7 +469,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void projectPageSelectionChanged(DialogField field) {
-		List selElements = fProjectsList.getSelectedElements();
+		List<?> selElements = fProjectsList.getSelectedElements();
 		fProjectsList.enableButton(IDX_EDIT, canEdit(selElements));
 		fProjectsList.enableButton(IDX_REMOVE, canRemove(selElements));
 

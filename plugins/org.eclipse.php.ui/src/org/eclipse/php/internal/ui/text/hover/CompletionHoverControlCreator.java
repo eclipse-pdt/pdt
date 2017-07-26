@@ -21,6 +21,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 /**
  * @deprecated
  */
+@Deprecated
 public final class CompletionHoverControlCreator extends AbstractReusableInformationControlCreator {
 	/**
 	 * The information presenter control creator.

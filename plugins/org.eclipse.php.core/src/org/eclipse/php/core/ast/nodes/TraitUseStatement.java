@@ -30,8 +30,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class TraitUseStatement extends Statement {
 
-	private ASTNode.NodeList<NamespaceName> traitList = new ASTNode.NodeList<NamespaceName>(TRAIT);
-	private ASTNode.NodeList<TraitStatement> tsList = new ASTNode.NodeList<TraitStatement>(TRAIT_STATEMENT);
+	private ASTNode.NodeList<NamespaceName> traitList = new ASTNode.NodeList<>(TRAIT);
+	private ASTNode.NodeList<TraitStatement> tsList = new ASTNode.NodeList<>(TRAIT_STATEMENT);
 
 	public static final ChildListPropertyDescriptor TRAIT = new ChildListPropertyDescriptor(TraitUseStatement.class,
 			"traitList", NamespaceName.class, CYCLE_RISK); //$NON-NLS-1$
@@ -45,7 +45,7 @@ public class TraitUseStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(TRAIT);
 		propertyList.add(TRAIT_STATEMENT);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -66,6 +66,7 @@ public class TraitUseStatement extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : traitList) {
 			node.accept(visitor);
@@ -76,6 +77,7 @@ public class TraitUseStatement extends Statement {
 
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		for (ASTNode node : traitList) {
 			node.traverseTopDown(visitor);
@@ -85,6 +87,7 @@ public class TraitUseStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : traitList) {
 			node.traverseBottomUp(visitor);
@@ -95,6 +98,7 @@ public class TraitUseStatement extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitUseStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -174,7 +178,8 @@ public class TraitUseStatement extends Statement {
 		}
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == TRAIT) {
 			return getTraitList();
 		} else if (property == TRAIT_STATEMENT) {

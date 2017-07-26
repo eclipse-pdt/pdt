@@ -78,10 +78,12 @@ public class BindingProperty extends ASTAttribute {
 		return res;
 	}
 
+	@Override
 	public Object getParent() {
 		return fParent;
 	}
 	
+	@Override
 	public Object[] getChildren() {
 		if (fValues != null) {
 			return fValues;
@@ -89,14 +91,17 @@ public class BindingProperty extends ASTAttribute {
 		return EMPTY;
 	}
 	
+	@Override
 	public String getLabel() {
 		return fName;
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 	
+	@Override
 	public String toString() {
 		return getLabel();
 	}
@@ -105,6 +110,7 @@ public class BindingProperty extends ASTAttribute {
 		return fIsRelevant;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -130,6 +136,7 @@ public class BindingProperty extends ASTAttribute {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		return (fParent != null ? fParent.hashCode() : 0)
 				+ (fName != null ? fName.hashCode() : 0);

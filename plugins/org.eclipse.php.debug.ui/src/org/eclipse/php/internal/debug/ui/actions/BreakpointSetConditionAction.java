@@ -63,6 +63,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		/**
 		 * @see Dialog#createDialogArea(Composite)
 		 */
+		@Override
 		protected Control createDialogArea(Composite parent) {
 			Composite area = (Composite) super.createDialogArea(parent);
 
@@ -76,12 +77,14 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 			getText().setEnabled(fSetConditionEnabled);
 
 			checkbox.addSelectionListener(new SelectionListener() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					fSetConditionEnabled = checkbox.getSelection();
 					getText().setEnabled(fSetConditionEnabled);
 					getOkButton().setEnabled(true);
 				}
 
+				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 
 				}
@@ -90,11 +93,13 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 
 			getText().addKeyListener(new org.eclipse.swt.events.KeyListener() {
 
+				@Override
 				public void keyPressed(KeyEvent e) {
 					getOkButton().setEnabled(true);
 
 				}
 
+				@Override
 				public void keyReleased(KeyEvent e) {
 					getOkButton().setEnabled(true);
 
@@ -114,12 +119,13 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
+	@Override
 	public void run(IAction action) {
 		IStructuredSelection selection = getCurrentSelection();
 		if (selection == null) {
 			return;
 		}
-		Iterator itr = selection.iterator();
+		Iterator<?> itr = selection.iterator();
 		if (!itr.hasNext()) {
 			return;
 		}
@@ -140,6 +146,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 
 	protected boolean ConditionDialog(PHPConditionalBreakpoint breakpoint) throws CoreException {
 		IInputValidator validator = new IInputValidator() {
+			@Override
 			public String isValid(String value) {
 				return value;
 			}
@@ -180,6 +187,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		fPart = targetPart;
 	}
@@ -187,6 +195,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection sel) {
 	}
 }

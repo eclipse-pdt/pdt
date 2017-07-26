@@ -27,7 +27,6 @@ import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.composer.ui.wizard.ValidationException.Severity;
 
-@SuppressWarnings("restriction")
 abstract public class AbstractValidator implements Observer {
 
 	protected AbstractWizardFirstPage firstPage;

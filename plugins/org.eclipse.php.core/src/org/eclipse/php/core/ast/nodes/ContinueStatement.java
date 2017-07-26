@@ -45,7 +45,7 @@ public class ContinueStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
@@ -66,6 +66,7 @@ public class ContinueStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -74,12 +75,14 @@ public class ContinueStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (expression != null) {
 			expression.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (expression != null) {
@@ -87,6 +90,7 @@ public class ContinueStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (expression != null) {
 			expression.traverseBottomUp(visitor);
@@ -94,6 +98,7 @@ public class ContinueStatement extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ContinueStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -105,6 +110,7 @@ public class ContinueStatement extends Statement {
 		buffer.append(tab).append("</ContinueStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CONTINUE_STATEMENT;
 	}
@@ -138,6 +144,7 @@ public class ContinueStatement extends Statement {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -154,6 +161,7 @@ public class ContinueStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

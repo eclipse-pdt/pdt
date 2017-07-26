@@ -31,7 +31,7 @@ public class PHPArchiveFileFilter extends ViewerFilter {
 
 	// private static final String[] fgArchiveExtensions = { "phar","zip" };
 
-	private List fExcludes;
+	private List<IFile> fExcludes;
 
 	private boolean fRecursive;
 
@@ -53,7 +53,7 @@ public class PHPArchiveFileFilter extends ViewerFilter {
 		fRecursive = recusive;
 	}
 
-	public PHPArchiveFileFilter(List excludedFiles, boolean recusive) {
+	public PHPArchiveFileFilter(List<IFile> excludedFiles, boolean recusive) {
 
 		fExcludes = excludedFiles;
 		fRecursive = recusive;

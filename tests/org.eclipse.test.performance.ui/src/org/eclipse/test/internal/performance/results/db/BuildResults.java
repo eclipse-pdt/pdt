@@ -96,6 +96,7 @@ void cleanValues() {
  *
  * @see Comparable#compareTo(Object)
  */
+@Override
 public int compareTo(Object obj) {
 	if (obj instanceof BuildResults) {
 		BuildResults res = (BuildResults) obj;
@@ -523,6 +524,7 @@ void setValue(int dim_id, int step, long value) {
 /* (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.AbstractResults#toString()
  */
+@Override
 public String toString() {
 	StringBuffer buffer = new StringBuffer(this.name);
 	buffer.append(": "); //$NON-NLS-1$

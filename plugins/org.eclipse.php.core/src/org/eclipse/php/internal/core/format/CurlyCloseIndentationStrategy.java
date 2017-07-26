@@ -23,6 +23,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 
+	@Override
 	public void placeMatchingBlanks(IStructuredDocument document, StringBuilder result, int lineNumber, int forOffset)
 			throws BadLocationException {
 		final IRegion curlyOpenLine = getCurlyOpenLineInformation(document, forOffset);

@@ -29,6 +29,7 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		// let NamespaceInstanceOfStrategy to deal with namespace prefix
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
@@ -44,10 +45,12 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 		addSelf(concreteContext, reporter);
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}

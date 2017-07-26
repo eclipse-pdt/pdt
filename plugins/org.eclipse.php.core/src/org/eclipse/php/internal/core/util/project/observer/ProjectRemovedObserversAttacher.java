@@ -49,6 +49,7 @@ public class ProjectRemovedObserversAttacher {
 	public boolean addProjectClosedObserver(IProject project, IProjectClosedObserver projectChangeObserver) {
 		if (resourceChangeListener == null) {
 			resourceChangeListener = new IResourceChangeListener() {
+				@Override
 				public void resourceChanged(IResourceChangeEvent event) {
 					IResourceDelta resourceDelta = event.getDelta();
 					if (resourceDelta == null) {

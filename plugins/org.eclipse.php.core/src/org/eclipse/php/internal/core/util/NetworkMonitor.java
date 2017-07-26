@@ -73,6 +73,7 @@ public class NetworkMonitor {
 			setSystem(true);
 			setUser(false);
 			addJobChangeListener(new JobChangeAdapter() {
+				@Override
 				public void done(IJobChangeEvent event) {
 					// Signal that addresses have been collected
 					latch.countDown();
@@ -84,9 +85,9 @@ public class NetworkMonitor {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			publicAddress = NetworkUtil.getPublicAddress();
-			privateAddresses = new ArrayList<Inet4Address>();
+			privateAddresses = new ArrayList<>();
 			privateAddresses.addAll(NetworkUtil.getPrivateAddresses());
-			allAddresses = new ArrayList<Inet4Address>();
+			allAddresses = new ArrayList<>();
 			if (publicAddress != null)
 				allAddresses.add(publicAddress);
 			allAddresses.addAll(privateAddresses);
@@ -115,7 +116,7 @@ public class NetworkMonitor {
 			} catch (InterruptedException e) {
 				return Status.CANCEL_STATUS;
 			}
-			List<String> invalid = new ArrayList<String>();
+			List<String> invalid = new ArrayList<>();
 			for (String clientHost : addresses) {
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
@@ -182,7 +183,7 @@ public class NetworkMonitor {
 			// Wait for addresses to be collected
 			latch.await();
 		} catch (InterruptedException e) {
-			return new ArrayList<Inet4Address>();
+			return new ArrayList<>();
 		}
 		return allAddresses;
 	}
@@ -197,7 +198,7 @@ public class NetworkMonitor {
 			// Wait for addresses to be collected
 			latch.await();
 		} catch (InterruptedException e) {
-			return new ArrayList<Inet4Address>();
+			return new ArrayList<>();
 		}
 		return privateAddresses;
 	}

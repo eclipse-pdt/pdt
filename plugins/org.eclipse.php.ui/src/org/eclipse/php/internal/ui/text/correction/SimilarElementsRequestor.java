@@ -74,7 +74,7 @@ public class SimilarElementsRequestor extends CompletionRequestor {
 		fName = name;
 		fKind = kind;
 
-		fResult = new HashSet<SimilarElement>();
+		fResult = new HashSet<>();
 	}
 
 	private void addResult(SimilarElement elem) {

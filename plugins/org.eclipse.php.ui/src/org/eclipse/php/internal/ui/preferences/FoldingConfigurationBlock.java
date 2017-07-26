@@ -292,7 +292,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	void updateListDependencies() {
 		String id = fStore.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
-		PHPFoldingStructureProviderDescriptor desc = (PHPFoldingStructureProviderDescriptor) fProviderDescriptors
+		PHPFoldingStructureProviderDescriptor desc = fProviderDescriptors
 				.get(id);
 		IPHPFoldingPreferenceBlock prefs;
 

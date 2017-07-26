@@ -173,7 +173,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void processCommandLine(BundleContext context) {
-		ServiceTracker environmentTracker = new ServiceTracker(context, EnvironmentInfo.class.getName(), null);
+		ServiceTracker<?, ?> environmentTracker = new ServiceTracker<>(context, EnvironmentInfo.class.getName(), null);
 		environmentTracker.open();
 		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker.getService();
 		environmentTracker.close();
@@ -525,7 +525,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		if (cu != null)
 			return cu;
 
-		ISourceModule je = (ISourceModule) editorInput.getAdapter(ISourceModule.class);
+		ISourceModule je = editorInput.getAdapter(ISourceModule.class);
 		return je;
 	}
 

@@ -39,6 +39,8 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 		super();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter != null && adapter.getName().equals(WORKBENCH_ADAPTER)) {
 			return null;
@@ -50,10 +52,12 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 		super(that);
 	}
 
+	@Override
 	protected boolean isNestedClosed(String regionType) {
 		return regionType == PHPRegionContext.PHP_CLOSE;
 	}
 
+	@Override
 	public Node cloneNode(boolean deep) {
 		ElementImpl cloned = new ElementImplForPHP(this);
 		if (deep)
@@ -65,6 +69,7 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 	 * @see ElementStyleImpl#setOwnerDocument(Document) make this method package
 	 *      visible
 	 */
+	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
@@ -72,10 +77,12 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 	/**
 	 * @see setTagName(String) make this method package visible
 	 */
+	@Override
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
 
+	@Override
 	public boolean isGlobalTag() {
 		return isPHPTag() ? false : super.isGlobalTag();
 	}
@@ -87,10 +94,11 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 		return PHPDOMModelParser.PHP_TAG_NAME.equals(getNodeName());
 	}
 
+	@Override
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
-		if (isPHPTag() && type instanceof Class && ValidationAdapter.class.isAssignableFrom((Class) type)) {
+		if (isPHPTag() && type instanceof Class && ValidationAdapter.class.isAssignableFrom((Class<?>) type)) {
 			return nullValidator;
 		}
 		return super.getExistingAdapter(type);
@@ -98,6 +106,7 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 
 	private final static ValidationComponent nullValidator = new NullValidator();
 
+	@Override
 	public String getPrefix() {
 		final String prefix = super.getPrefix();
 		if (prefix == null && isPHPTag()) {
@@ -106,10 +115,12 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 		return prefix;
 	}
 
+	@Override
 	public IModelElement getModelElement() {
 		return modelElement;
 	}
 
+	@Override
 	public void setModelElement(IModelElement modelElement) {
 		this.modelElement = modelElement;
 	}

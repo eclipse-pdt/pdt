@@ -47,7 +47,6 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPExeVerifier extends Job {
 
 	private static final String WIN_VC_DOWNLOAD = "http://www.microsoft.com/en-us/download/details.aspx?id=30679"; //$NON-NLS-1$
@@ -93,6 +92,7 @@ public class PHPExeVerifier extends Job {
 			messageError.setText(MessageFormat.format(Messages.PHPExeVerifier_Unable_to_verify_PHP_exe_error_message,
 					exeItem.getName()));
 			messageError.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), exeItem,
 							PHPexes.getInstance().getAllItems());
@@ -110,6 +110,7 @@ public class PHPExeVerifier extends Job {
 			messageReason.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			messageReason.setText(Messages.PHPExeVerifier_Unable_to_verify_PHP_exe_reason_message);
 			messageReason.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()

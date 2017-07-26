@@ -62,7 +62,6 @@ import org.eclipse.php.ui.util.PHPProjectUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
-@SuppressWarnings("restriction")
 public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPage
 		implements IPHPProjectCreateWizardPage, Observer {
 

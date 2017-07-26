@@ -39,7 +39,7 @@ public abstract class StructuralPropertyDescriptor {
 	/**
 	 * The concrete AST node type that owns this property.
 	 */
-	private final Class nodeClass;
+	private final Class<?> nodeClass;
 
 	/**
 	 * Creates a new property descriptor for the given node type with the given
@@ -51,7 +51,7 @@ public abstract class StructuralPropertyDescriptor {
 	 * @param propertyId
 	 *            the property id
 	 */
-	StructuralPropertyDescriptor(Class nodeClass, String propertyId) {
+	StructuralPropertyDescriptor(Class<?> nodeClass, String propertyId) {
 		if (nodeClass == null || propertyId == null) {
 			throw new IllegalArgumentException();
 		}
@@ -77,7 +77,7 @@ public abstract class StructuralPropertyDescriptor {
 	 * 
 	 * @return the node type that owns this property
 	 */
-	public final Class getNodeClass() {
+	public final Class<?> getNodeClass() {
 		return this.nodeClass;
 	}
 
@@ -119,6 +119,7 @@ public abstract class StructuralPropertyDescriptor {
 	 * 
 	 * @return {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
 		if (isChildListProperty()) {

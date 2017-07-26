@@ -211,9 +211,9 @@ public class RenameSupport {
 	private static void initialize(RenameRefactoring refactoring, String newName, int flags) {
 		if (refactoring.getProcessor() == null)
 			return;
-		setNewName((INameUpdating) refactoring.getAdapter(INameUpdating.class), newName);
+		setNewName(refactoring.getAdapter(INameUpdating.class), newName);
 
-		ITextUpdating text = (ITextUpdating) refactoring.getAdapter(ITextUpdating.class);
+		ITextUpdating text = refactoring.getAdapter(ITextUpdating.class);
 		if (text != null) {
 			text.setUpdateTextualMatches(updateTextualMatches(flags));
 		}

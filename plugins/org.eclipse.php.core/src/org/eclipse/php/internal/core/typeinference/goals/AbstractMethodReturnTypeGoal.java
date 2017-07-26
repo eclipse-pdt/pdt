@@ -91,6 +91,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		return this.evaluatedType;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -102,6 +103,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

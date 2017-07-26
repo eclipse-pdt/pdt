@@ -75,12 +75,12 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 			IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
 			if (activeSite == null)
 				return null;
-			Command command = ((ICommandService) activeSite.getService(ICommandService.class))
+			Command command = activeSite.getService(ICommandService.class)
 					.getCommand(ACTION_DEFININITION_ID);
 			if (!command.isEnabled())
 				return null;
 			final Event trigger = new Event();
-			ExecutionEvent executionEvent = ((IHandlerService) activeSite.getService(IHandlerService.class))
+			ExecutionEvent executionEvent = activeSite.getService(IHandlerService.class)
 					.createExecutionEvent(command, trigger);
 			try {
 				command.executeWithChecks(executionEvent);
@@ -196,26 +196,33 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 		if (styledText != null) {
 			expression = new IExpression() {
 
+				@Override
 				public String getModelIdentifier() {
 					return getDebugTarget().getModelIdentifier();
 				}
 
+				@Override
 				public ILaunch getLaunch() {
 					return getDebugTarget().getLaunch();
 				}
 
+				@SuppressWarnings({ "unchecked", "rawtypes" })
+				@Override
 				public Object getAdapter(Class adapter) {
 					return AdapterManager.getDefault().getAdapter(this, adapter);
 				}
 
+				@Override
 				public String getExpressionText() {
 					return result.getExpressionText();
 				}
 
+				@Override
 				public IValue getValue() {
 					return result.getValue();
 				}
 
+				@Override
 				public IDebugTarget getDebugTarget() {
 					IValue value = getValue();
 					if (value != null) {
@@ -229,11 +236,13 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 					return null;
 				}
 
+				@Override
 				public void dispose() {
 
 				}
 			};
 			PHPDebugUIPlugin.getStandardDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					showPopup(styledText);
 				}
@@ -256,13 +265,14 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 			protected Control createDialogArea(Composite parent) {
 				Control result = super.createDialogArea(parent);
 				if (fTextEditor != null) {
-					IContextService contextService = (IContextService) fTextEditor.getSite()
+					IContextService contextService = fTextEditor.getSite()
 							.getService(IContextService.class);
 					contextActivation = contextService.activateContext("org.eclipse.php.debug.ui.xdebug"); //$NON-NLS-1$
 				}
 				return result;
 			}
 
+			@Override
 			public boolean close() {
 				boolean returnValue = super.close();
 				if (fTextEditor != null && fSelectionBeforeEvaluation != null) {
@@ -293,6 +303,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 		setNewTargetPart(getTargetPart());
 		if (watchExpressionListener == null) {
 			watchExpressionListener = new IWatchExpressionListener() {
+				@Override
 				public void watchEvaluationFinished(IWatchExpressionResult result) {
 					evaluationComplete(result);
 				}
@@ -371,6 +382,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
+	@Override
 	public void run(IAction action) {
 		if (PHPUiPlugin.getActivePage() != null) {
 			setTargetPart(PHPUiPlugin.getActivePage().getActivePart());
@@ -383,6 +395,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		setAction(action);
 		if (selection instanceof ITextSelection) {
@@ -394,6 +407,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IWorkbenchWindowActionDelegate#dispose()
 	 */
+	@Override
 	public void dispose() {
 		disposeDebugModelPresentation();
 		IWorkbenchWindow win = getWindow();
@@ -405,6 +419,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IWorkbenchWindowActionDelegate#init(IWorkbenchWindow)
 	 */
+	@Override
 	public void init(IWorkbenchWindow window) {
 		setWindow(window);
 		IWorkbenchPage page = window.getActivePage();
@@ -446,6 +461,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IEditorActionDelegate#setActiveEditor(IAction, IEditorPart)
 	 */
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		setAction(action);
 		setTargetPart(targetEditor);
@@ -454,6 +470,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IPartListener#partActivated(IWorkbenchPart)
 	 */
+	@Override
 	public void partActivated(IWorkbenchPart part) {
 		setTargetPart(part);
 	}
@@ -461,12 +478,14 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IPartListener#partBroughtToTop(IWorkbenchPart)
 	 */
+	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
 	}
 
 	/**
 	 * @see IPartListener#partClosed(IWorkbenchPart)
 	 */
+	@Override
 	public void partClosed(IWorkbenchPart part) {
 		if (part == getTargetPart()) {
 			setTargetPart(null);
@@ -479,18 +498,21 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IPartListener#partDeactivated(IWorkbenchPart)
 	 */
+	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 	}
 
 	/**
 	 * @see IPartListener#partOpened(IWorkbenchPart)
 	 */
+	@Override
 	public void partOpened(IWorkbenchPart part) {
 	}
 
 	/**
 	 * @see IViewActionDelegate#init(IViewPart)
 	 */
+	@Override
 	public void init(IViewPart view) {
 		setTargetPart(view);
 	}
@@ -520,6 +542,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		setAction(action);
 		setTargetPart(targetPart);
@@ -559,10 +582,10 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	 * @return associated style text widget or <code>null</code>
 	 */
 	public static StyledText getStyledText(IWorkbenchPart part) {
-		ITextViewer viewer = (ITextViewer) part.getAdapter(ITextViewer.class);
+		ITextViewer viewer = part.getAdapter(ITextViewer.class);
 		StyledText textWidget = null;
 		if (viewer == null) {
-			Control control = (Control) part.getAdapter(Control.class);
+			Control control = part.getAdapter(Control.class);
 			if (control instanceof StyledText) {
 				textWidget = (StyledText) control;
 			}

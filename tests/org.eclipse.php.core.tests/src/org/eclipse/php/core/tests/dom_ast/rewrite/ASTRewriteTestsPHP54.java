@@ -56,6 +56,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		return PHPVersion.PHP5_4;
 	}
 
+	@Override
 	@Test
 	public void classConstant() throws Exception {
 		String str = "<?php $a = MyClass::MY_CONST; ?>";
@@ -69,6 +70,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php $a = Foo::BAR_CONST; ?>");
 	}
 
+	@Override
 	@Test
 	public void classDeclarationReplaceSuper() throws Exception {
 		String str = "<?php class MyClass extends Foo { } ?> ";
@@ -81,6 +83,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php class MyClass extends Bar { } ?> ");
 	}
 
+	@Override
 	@Test
 	public void classDeclarationRenameInterface() throws Exception {
 		String str = "<?php class MyClass extends AAA implements Foo,Bar{ } ?> ";
@@ -93,6 +96,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php class MyClass extends AAA implements Foo,BooBo{ } ?> ");
 	}
 
+	@Override
 	@Test
 	public void interfaceDeclarationRenameExtend() throws Exception {
 		String str = "<?php interface MyInterface extends Foo, Bar{ const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
@@ -119,6 +123,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 	// checkResult("<?php <<<Heredoc\nHello World\nefg\nHeredoc;\n?>");
 	// }
 
+	@Override
 	@Test
 	public void emptyHeredoc() throws Exception {
 		String str = "<?php <<<Heredoc\nHeredoc;\n?>";
@@ -213,7 +218,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		Variable name = ast.newVariable("world");
 		name.setIsDollared(false);
-		((FunctionInvocation) arrayAccess.get(0)).getFunctionName().setName(name);
+		arrayAccess.get(0).getFunctionName().setName(name);
 		rewrite();
 		checkResult("<?php (new Human('Gonzalo'))->world(); ?>");
 	}

@@ -33,7 +33,7 @@ import com.jcraft.jsch.Session;
 public class SSHTunnelSession {
 	private static final int DEFAULT_TIMEOUT = 45000;
 
-	private static java.util.Hashtable<String, SSHTunnelSession> pool = new java.util.Hashtable<String, SSHTunnelSession>();
+	private static java.util.Hashtable<String, SSHTunnelSession> pool = new java.util.Hashtable<>();
 
 	private Session session;
 
@@ -56,7 +56,7 @@ public class SSHTunnelSession {
 		String key = getPoolKey(username, hostname, port);
 
 		try {
-			SSHTunnelSession jschSession = (SSHTunnelSession) pool.get(key);
+			SSHTunnelSession jschSession = pool.get(key);
 			if (jschSession != null && !jschSession.getSession().isConnected()) {
 				pool.remove(key);
 				jschSession = null;

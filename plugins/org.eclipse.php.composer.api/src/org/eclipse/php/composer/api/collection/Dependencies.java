@@ -31,6 +31,7 @@ public class Dependencies extends AbstractJsonObject<VersionedPackage> implement
 	public Dependencies() {
 	}
 
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void doParse(Object obj) {
 		clear();
@@ -44,8 +45,9 @@ public class Dependencies extends AbstractJsonObject<VersionedPackage> implement
 		}
 	}
 
+	@Override
 	protected Object buildJson() {
-		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> out = new LinkedHashMap<>();
 		for (VersionedPackage dep : this) {
 			out.put(dep.getName(), dep.getVersion());
 		}
@@ -102,7 +104,8 @@ public class Dependencies extends AbstractJsonObject<VersionedPackage> implement
 	 * 
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@Override
 	public Iterator<VersionedPackage> iterator() {
-		return (Iterator<VersionedPackage>) properties.values().iterator();
+		return properties.values().iterator();
 	}
 }

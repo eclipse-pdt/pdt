@@ -39,7 +39,7 @@ public class Activator extends Plugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private ServiceTracker tracker;
+	private ServiceTracker<?, ?> tracker;
 
 	/**
 	 * The constructor
@@ -54,9 +54,10 @@ public class Activator extends Plugin {
 	 * @see
 	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		tracker = new ServiceTracker(getBundle().getBundleContext(), IJSchService.class.getName(), null);
+		tracker = new ServiceTracker<>(getBundle().getBundleContext(), IJSchService.class.getName(), null);
 		tracker.open();
 	}
 
@@ -66,6 +67,7 @@ public class Activator extends Plugin {
 	 * @see
 	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		SSHTunnelSession.shutdown();
 		tracker.close();

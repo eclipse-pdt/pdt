@@ -62,7 +62,7 @@ public class PHPMoveProcessorTestCase {
 
 		final IScriptProject scriptProject = DLTKCore.create(project2.getProject());
 
-		final List<IBuildpathEntry> entriesList = new ArrayList<IBuildpathEntry>();
+		final List<IBuildpathEntry> entriesList = new ArrayList<>();
 		IBuildpathEntry[] entries;
 		try {
 			entries = scriptProject.getRawBuildpath();

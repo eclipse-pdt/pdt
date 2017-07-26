@@ -33,6 +33,7 @@ public class NamespaceUseFunctionNameStrategy extends AbstractCompletionStrategy
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceUseFunctionNameContext)) {
@@ -51,7 +52,7 @@ public class NamespaceUseFunctionNameStrategy extends AbstractCompletionStrategy
 	public IMethod[] getMethods(NamespaceUseFunctionNameContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IMethod method : ns.getMethods()) {

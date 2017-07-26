@@ -48,7 +48,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 /**
  * PHP Debug Target
  */
-@SuppressWarnings("restriction")
 public class PHPDebugTarget extends PHPDebugElement
 		implements IPHPDebugTarget, IBreakpointManagerListener, IStepFilters {
 
@@ -100,8 +99,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	// private IVariable[] fVariables;
 	protected IProject fProject;
 	protected int fSuspendCount;
-	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<IPHPConsoleEventListener>();
-	protected Set<DebugError> fDebugErrors = new HashSet<DebugError>();
+	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<>();
+	protected Set<DebugError> fDebugErrors = new HashSet<>();
 	protected StartLock fStartLock = new StartLock();
 	protected BreakpointSet fBreakpointSet;
 	protected IBreakpointManager fBreakpointManager;
@@ -265,9 +264,10 @@ public class PHPDebugTarget extends PHPDebugElement
 		fBreakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		fBreakpointManager.addBreakpointListener(this);
 		fBreakpointManager.addBreakpointManagerListener(this);
-		fAddFilesPaths = new HashSet<String>();
+		fAddFilesPaths = new HashSet<>();
 	}
 
+	@Override
 	public IProcess getProcess() {
 		return fProcess;
 	}
@@ -281,6 +281,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getThreads()
 	 */
+	@Override
 	public IThread[] getThreads() throws DebugException {
 		return fThreads;
 	}
@@ -290,6 +291,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#hasThreads()
 	 */
+	@Override
 	public boolean hasThreads() throws DebugException {
 		return !fTerminated && fThreads.length > 0;
 	}
@@ -299,6 +301,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getName()
 	 */
+	@Override
 	public String getName() throws DebugException {
 		if (fName == null) {
 			fName = fURL;
@@ -329,6 +332,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
+	@Override
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
 			if (breakpoint instanceof IPHPExceptionBreakpoint)
@@ -345,6 +349,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getDebugTarget()
 	 */
+	@Override
 	public IDebugTarget getDebugTarget() {
 		return this;
 	}
@@ -354,6 +359,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
+	@Override
 	public ILaunch getLaunch() {
 		return fLaunch;
 	}
@@ -363,6 +369,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return !fTerminated;
 	}
@@ -372,6 +379,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
+	@Override
 	public boolean isTerminated() {
 		return fTerminated;
 	}
@@ -381,6 +389,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
+	@Override
 	public void terminate() throws DebugException {
 		StartLock startLock = getStartLock();
 		// Don't synchronize on lock, debugger may be hung. Just terminate.
@@ -432,6 +441,7 @@ public class PHPDebugTarget extends PHPDebugElement
 		// terminated state.
 		// This is needed since the migration to 3.3 (Europa)
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (activeWorkbenchWindow == null) {
@@ -453,6 +463,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
+	@Override
 	public boolean canResume() {
 		return !isTerminated() && isSuspended();
 	}
@@ -462,6 +473,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
+	@Override
 	public boolean canSuspend() {
 		return !isTerminated() && !isSuspended();
 	}
@@ -471,6 +483,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
+	@Override
 	public boolean isSuspended() {
 		return fSuspended;
 	}
@@ -480,6 +493,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
+	@Override
 	public void resume() throws DebugException {
 		fLastcmd = "resume"; //$NON-NLS-1$
 		// Fix for bug #163780 - Debugger irregular state control
@@ -527,6 +541,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
+	@Override
 	public void suspend() throws DebugException {
 		fLastcmd = "suspend"; //$NON-NLS-1$
 		((PHPThread) getThreads()[0]).setStepping(false);
@@ -545,6 +560,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
+	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
 		if (supportsBreakpoint(breakpoint)) {
 			try {
@@ -567,8 +583,7 @@ public class PHPDebugTarget extends PHPDebugElement
 					}
 
 					if (fileName == null) {
-						fileName = (String) marker.getAttribute(
-								StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+						fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
 								(String) marker.getAttribute(IMarker.LOCATION));
 						IPath localPath = EnvironmentPathUtils.getLocalPath(Path.fromPortableString(fileName));
 						fileName = localPath.toString();
@@ -594,6 +609,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
+	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		if (supportsBreakpoint(breakpoint)) {
 			if (breakpoint instanceof PHPRunToLineBreakpoint)
@@ -618,6 +634,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
+	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		if (!fBreakpointManager.isEnabled())
 			return;
@@ -657,6 +674,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#canDisconnect()
 	 */
+	@Override
 	public boolean canDisconnect() {
 		return false;
 	}
@@ -666,6 +684,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#disconnect()
 	 */
+	@Override
 	public void disconnect() throws DebugException {
 	}
 
@@ -674,6 +693,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#isDisconnected()
 	 */
+	@Override
 	public boolean isDisconnected() {
 		return false;
 	}
@@ -684,6 +704,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#
 	 * supportsStorageRetrieval ()
 	 */
+	@Override
 	public boolean supportsStorageRetrieval() {
 		return false;
 	}
@@ -695,6 +716,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
+	@Override
 	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 		return null;
 	}
@@ -870,6 +892,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 *            Enabled or Disable breakpoints.
 	 * 
 	 */
+	@Override
 	public void breakpointManagerEnablementChanged(boolean enabled) {
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
 				.getBreakpoints(getModelIdentifier());
@@ -922,6 +945,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @return the Output buffer for the target
 	 */
+	@Override
 	public DebugOutput getOutputBuffer() {
 		return fDebugOutput;
 	}
@@ -1093,14 +1117,17 @@ public class PHPDebugTarget extends PHPDebugElement
 		return null;
 	}
 
+	@Override
 	public boolean isStepFiltersEnabled() {
 		return isStepFiltersEnabled;
 	}
 
+	@Override
 	public void setStepFiltersEnabled(boolean enabled) {
 		isStepFiltersEnabled = enabled;
 	}
 
+	@Override
 	public boolean supportsStepFilters() {
 		return isStepFiltersEnabled;
 	}
@@ -1108,6 +1135,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	/**
 	 * always return false, this concept is xdebug specific.
 	 */
+	@Override
 	public boolean isWaiting() {
 		return false;
 	}
@@ -1118,10 +1146,10 @@ public class PHPDebugTarget extends PHPDebugElement
 
 	public void addBreakpointFiles(IProject... projects) {
 		if (debugger.getCurrentProtocolID() >= RemoteDebugger.PROTOCOL_ID_2012121702) {
-			List<String> paths = new ArrayList<String>();
+			List<String> paths = new ArrayList<>();
 			try {
 				if (fBreakpointManager.isEnabled()) {
-					List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>(
+					List<IBreakpoint> breakpoints = new ArrayList<>(
 							Arrays.asList(fBreakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE)));
 					if (breakpoints != null && breakpoints.size() > 0) {
 						for (IProject project : projects) {
@@ -1203,7 +1231,7 @@ public class PHPDebugTarget extends PHPDebugElement
 			if (res instanceof IContainer) {
 				getBreakpointFiles((IContainer) res, paths, breakpoints);
 			} else {
-				List<IBreakpoint> toRemove = new ArrayList<IBreakpoint>();
+				List<IBreakpoint> toRemove = new ArrayList<>();
 				for (IBreakpoint bp : breakpoints) {
 					if (bp.getMarker().getResource().equals(res)) {
 						String remotePath = RemoteDebugger.convertToRemoteFilename(res.getFullPath().toString(), this);

@@ -28,6 +28,7 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 		return arrayDeclaration;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -35,6 +36,7 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -51,6 +53,7 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "ExpressionTypeGoal: " //$NON-NLS-1$
 				+ ((arrayDeclaration != null) ? arrayDeclaration.toString() : "null") //$NON-NLS-1$

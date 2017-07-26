@@ -42,7 +42,6 @@ import org.eclipse.ui.progress.UIJob;
 /**
  * View for presenting debug output as rendered in a browser.
  */
-@SuppressWarnings("restriction")
 public class DebugBrowserView extends AbstractDebugOutputView implements ISelectionListener {
 
 	public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
@@ -51,6 +50,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 
 		private int fUpdateCount;
 
+		@Override
 		public void update(IPHPDebugTarget target) {
 			if (fSWTBrowser != null && !fSWTBrowser.isDisposed()) {
 				int oldcount = fUpdateCount;
@@ -84,6 +84,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 	 * Part listener that re-enables updating when the view appears.
 	 */
 	private final class DebugViewPartListener extends PartListenerAdapter {
+		@Override
 		public void partVisible(IWorkbenchPartReference ref) {
 			IWorkbenchPart part = ref.getPart(false);
 			if (part == DebugBrowserView.this) {
@@ -104,6 +105,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 	 * org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -129,6 +131,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 			label.setLayoutData(gridData);
 		}
 		fTerminateListener = new IDebugEventSetListener() {
+			@Override
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
@@ -140,6 +143,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 						if (events[i].getKind() == DebugEvent.TERMINATE) {
 							final IPHPDebugTarget target = (IPHPDebugTarget) obj;
 							Job job = new UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_0) {
+								@Override
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
@@ -166,6 +170,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
 				this);
@@ -186,6 +191,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
 	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IPHPDebugTarget target = fDebugViewHelper.getSelectionElement(selection);
 		update(target);
@@ -196,6 +202,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 	}
 

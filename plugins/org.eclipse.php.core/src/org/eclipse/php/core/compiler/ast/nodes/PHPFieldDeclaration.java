@@ -39,10 +39,12 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 		this.phpDoc = phpDoc;
 	}
 
+	@Override
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {
@@ -54,6 +56,7 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.FIELD_DECLARATION;
 	}
@@ -69,9 +72,11 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

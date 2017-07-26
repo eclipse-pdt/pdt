@@ -44,16 +44,19 @@ public class GetVariableValueResponse extends DebugMessageResponseImpl implement
 		return variableValue;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
 		setVarResult(CommunicationUtilities.readStringAsBytes(in));
 	}
 
+	@Override
 	public int getType() {
 		return 1032;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

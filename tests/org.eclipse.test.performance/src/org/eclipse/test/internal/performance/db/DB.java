@@ -59,7 +59,7 @@ public class DB {
     
     
     // Datapaoints
-    public static DataPoint[] queryDataPoints(Variations variations, String scenarioName, Set dims) {
+    public static DataPoint[] queryDataPoints(Variations variations, String scenarioName, Set<?> dims) {
         return getDefault().internalQueryDataPoints(variations, scenarioName, dims);
     }
    
@@ -72,7 +72,8 @@ public class DB {
      * @return array of scenarios
      * @deprecated Use queryScenarios(Variations variations, ...) instead
      */
-    public static Scenario[] queryScenarios(String configName, String buildPattern, String scenarioPattern) {
+    @Deprecated
+	public static Scenario[] queryScenarios(String configName, String buildPattern, String scenarioPattern) {
         Variations variations= new Variations();
         variations.put(PerformanceTestPlugin.CONFIG, configName);
         variations.put(PerformanceTestPlugin.BUILD, buildPattern);
@@ -87,7 +88,8 @@ public class DB {
      * @return array of scenarios
      * @deprecated Use queryScenarios(Variations variations, ...) instead
      */
-    public static Scenario[] queryScenarios(String configName, String[] buildPatterns, String scenarioPattern, Dim[] dimensions) {
+    @Deprecated
+	public static Scenario[] queryScenarios(String configName, String[] buildPatterns, String scenarioPattern, Dim[] dimensions) {
         Variations variations= new Variations();
         variations.put(PerformanceTestPlugin.CONFIG, configName);
         variations.put(PerformanceTestPlugin.BUILD, buildPatterns);
@@ -101,7 +103,8 @@ public class DB {
      * @return Scenario
      * @deprecated Use queryScenarios(Variations variations, ...) instead
      */
-    public static Scenario queryScenario(String configName, String[] buildPatterns, String scenarioName) {
+    @Deprecated
+	public static Scenario queryScenario(String configName, String[] buildPatterns, String scenarioName) {
         Variations variations= new Variations();
         variations.put(PerformanceTestPlugin.CONFIG, configName);
         variations.put(PerformanceTestPlugin.BUILD, buildPatterns);
@@ -149,11 +152,12 @@ public class DB {
      * @param scenarioPattern
      * @deprecated Use queryDistinctValues instead
      */
-    public static void queryBuildNames(List names, Variations variationPatterns, String scenarioPattern) {
+    @Deprecated
+	public static void queryBuildNames(List<String> names, Variations variationPatterns, String scenarioPattern) {
         getDefault().internalQueryDistinctValues(names, PerformanceTestPlugin.BUILD, variationPatterns, scenarioPattern);
     }
 
-    public static void queryDistinctValues(List values, String key, Variations variationPatterns, String scenarioPattern) {
+    public static void queryDistinctValues(List<String> values, String key, Variations variationPatterns, String scenarioPattern) {
         getDefault().internalQueryDistinctValues(values, key, variationPatterns, scenarioPattern);
     }
  
@@ -180,7 +184,7 @@ public class DB {
         return scenario;
     }
     
-    public static Map queryFailure(String scenarioPattern, Variations variations) {
+    public static Map<String, String> queryFailure(String scenarioPattern, Variations variations) {
         return getDefault().internalQueryFailure(scenarioPattern, variations);
     }
         
@@ -261,7 +265,8 @@ public class DB {
             	// not started as plugin
 	            Runtime.getRuntime().addShutdownHook(
 	                new Thread() {
-	                    public void run() {
+	                    @Override
+						public void run() {
 	                    	shutdown();
 	                    }
 	                }
@@ -403,7 +408,7 @@ public class DB {
         return true;
     }
     
-    private DataPoint[] internalQueryDataPoints(Variations variations, String scenarioName, Set dimSet) {
+    private DataPoint[] internalQueryDataPoints(Variations variations, String scenarioName, Set<?> dimSet) {
         if (fSQL == null)
             return null;
         
@@ -412,7 +417,7 @@ public class DB {
         	System.out.print("	- query data points from DB for scenario "+scenarioName+"..."); //$NON-NLS-1$ //$NON-NLS-2$
         ResultSet rs= null;
         try {
-            ArrayList dataPoints= new ArrayList();
+            ArrayList<DataPoint> dataPoints= new ArrayList<>();
             rs= fSQL.queryDataPoints(variations, scenarioName);
             if (DEBUG) {
 		        long time = System.currentTimeMillis();
@@ -423,7 +428,7 @@ public class DB {
 	            int datapoint_id= rs.getInt(1);
 	            int step= rs.getInt(2);
 
-	            HashMap map= new HashMap();
+	            HashMap<Dim, Scalar> map= new HashMap<>();
 	            ResultSet rs2= fSQL.queryScalars(datapoint_id);
 		        while (rs2.next()) {
 	                int dim_id= rs2.getInt(1);
@@ -446,7 +451,7 @@ public class DB {
 		        long time = System.currentTimeMillis();
             	System.out.println("		+ " + n + " datapoints created in "+(time-start)+"ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
-            return (DataPoint[])dataPoints.toArray(new DataPoint[n]);
+            return dataPoints.toArray(new DataPoint[n]);
 
         } catch (SQLException e) {
             PerformanceTestPlugin.log(e);
@@ -473,10 +478,10 @@ public class DB {
         ResultSet result= null;
         try {
             result= fSQL.queryScenarios(variations, scenarioPattern);
-            ArrayList scenarios= new ArrayList();
+            ArrayList<String> scenarios= new ArrayList<>();
             for (int i= 0; result.next(); i++)
 		        scenarios.add(result.getString(1));
-            return (String[])scenarios.toArray(new String[scenarios.size()]);
+            return scenarios.toArray(new String[scenarios.size()]);
 
         } catch (SQLException e) {
 	        PerformanceTestPlugin.log(e);
@@ -500,7 +505,7 @@ public class DB {
     /*
      * 
      */
-    private void internalQueryDistinctValues(List values, String seriesKey, Variations variations, String scenarioPattern) {
+    private void internalQueryDistinctValues(List<String> values, String seriesKey, Variations variations, String scenarioPattern) {
         if (fSQL == null)
             return;
         long start = System.currentTimeMillis();
@@ -540,7 +545,7 @@ public class DB {
         if (DEBUG) System.out.print("	- query summaries from DB for scenario pattern '"+scenarioPattern+"'..."); //$NON-NLS-1$ //$NON-NLS-2$
 		ResultSet result = null;
         try {
-            List fingerprints= new ArrayList();
+            List<SummaryEntry> fingerprints= new ArrayList<>();
             if (scenarioPattern != null)
                 result= fSQL.querySummaryEntries(variationPatterns, scenarioPattern);
             else
@@ -564,7 +569,7 @@ public class DB {
 	                fingerprints.add(new SummaryEntry(scenarioName, shortName, Dim.getDimension(dim_id), isGlobal, commentKind, comment));
                 }
             }
-            return (SummaryEntry[])fingerprints.toArray(new SummaryEntry[fingerprints.size()]);
+            return fingerprints.toArray(new SummaryEntry[fingerprints.size()]);
         } catch (SQLException e) {
 	        PerformanceTestPlugin.log(e);
         } finally {
@@ -596,7 +601,7 @@ public class DB {
         else
             Assert.assertTrue(false);
         
-        ArrayList values= new ArrayList();
+        ArrayList<String> values= new ArrayList<>();
         for (int i= 0; i < seriesPatterns.length; i++) {
             if (seriesPatterns[i].indexOf('%') >= 0) {
                 if (! isCloned) {
@@ -609,7 +614,7 @@ public class DB {
                 values.add(seriesPatterns[i]);
         }
         
-        String[] names= (String[])values.toArray(new String[values.size()]);
+        String[] names= values.toArray(new String[values.size()]);
         
         boolean sort= true;
         Pattern pattern= Pattern.compile("200[3-9][01][0-9][0-3][0-9]"); //$NON-NLS-1$
@@ -623,8 +628,9 @@ public class DB {
         }
         if (sort) {
 	        Arrays.sort(names,
-	            new Comparator() {
-	            	public int compare(Object o1, Object o2) {
+	            new Comparator<Object>() {
+	            	@Override
+					public int compare(Object o1, Object o2) {
 	            	    String s1= (String)o1;
 	            	    String s2= (String)o2;
 	            	    
@@ -644,14 +650,14 @@ public class DB {
         return names;
     }
 
-    private Map internalQueryFailure(String scenarioPattern, Variations variations) {
+    private Map<String, String> internalQueryFailure(String scenarioPattern, Variations variations) {
         if (fSQL == null)
             return null;
         long start = System.currentTimeMillis();
         if (DEBUG) System.out.print("	- query failure from DB for scenario pattern '"+scenarioPattern+"'..."); //$NON-NLS-1$ //$NON-NLS-2$
         ResultSet result= null;
         try {
-            Map map= new HashMap();
+            Map<String, String> map= new HashMap<>();
             result= fSQL.queryFailure(variations, scenarioPattern);
             while (result.next()) {
                 String scenario= result.getString(1);

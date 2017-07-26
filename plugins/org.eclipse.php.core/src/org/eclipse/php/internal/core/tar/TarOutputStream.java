@@ -39,6 +39,7 @@ public class TarOutputStream extends FilterOutputStream {
 	/**
 	 * Close the output stream and write any necessary padding.
 	 */
+	@Override
 	public void close() throws IOException {
 		// Spec says to write 1024 bytes of zeros at the end.
 		byte[] zeros = new byte[1024];
@@ -217,6 +218,7 @@ public class TarOutputStream extends FilterOutputStream {
 	/**
 	 * Writes data for the current file into the archive.
 	 */
+	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		super.write(b, off, len);
 		datapos = (datapos + len) % 512;

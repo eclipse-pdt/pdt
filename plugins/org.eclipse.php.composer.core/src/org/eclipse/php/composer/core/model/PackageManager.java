@@ -101,9 +101,9 @@ public class PackageManager {
 
 	private void initialize() {
 
-		packages = new HashMap<String, BuildpathPackage>();
-		installedPackages = new HashMap<String, List<InstalledPackage>>();
-		installedDevPackages = new HashMap<String, List<InstalledPackage>>();
+		packages = new HashMap<>();
+		installedPackages = new HashMap<>();
+		installedDevPackages = new HashMap<>();
 		IEclipsePreferences instancePreferences = ConfigurationScope.INSTANCE.getNode(ComposerPlugin.ID);
 
 		String[] propertyNames;
@@ -180,7 +180,7 @@ public class PackageManager {
 		if (!packages.containsKey(packageName)) {
 			return null;
 		}
-		return (BuildpathPackage) packages.get(makePackageName(packageName));
+		return packages.get(makePackageName(packageName));
 	}
 
 	private Object makePackageName(String packageName) {
@@ -198,17 +198,17 @@ public class PackageManager {
 	public synchronized String[] getPackageNames() {
 
 		Set<String> set = packages.keySet();
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new HashSet<>();
 		for (Iterator<String> iterator = set.iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
+			String key = iterator.next();
 			result.add(getPackageName(key));
 		}
 
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
 	public PackagePath[] getPackagePaths(IScriptProject project) {
-		List<PackagePath> packagePaths = new ArrayList<PackagePath>();
+		List<PackagePath> packagePaths = new ArrayList<>();
 
 		try {
 			IBuildpathContainer container = ModelManager.getModelManager()
@@ -442,7 +442,7 @@ public class PackageManager {
 
 	public List<InstalledPackage> getAllPackages(IScriptProject project) {
 
-		List<InstalledPackage> allPackages = new ArrayList<InstalledPackage>();
+		List<InstalledPackage> allPackages = new ArrayList<>();
 
 		if (!installedPackages.containsKey(project.getProject().getName())) {
 			return allPackages;

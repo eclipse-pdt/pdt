@@ -34,8 +34,8 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 	static protected class SwitchData {
 		private boolean fHasDefaultCase;
-		private List<IRegion> fRanges = new ArrayList<IRegion>(4);
-		private List<FlowInfo> fInfos = new ArrayList<FlowInfo>(4);
+		private List<IRegion> fRanges = new ArrayList<>(4);
+		private List<FlowInfo> fInfos = new ArrayList<>(4);
 
 		public void setHasDefaultCase() {
 			fHasDefaultCase = true;
@@ -51,19 +51,19 @@ abstract class FlowAnalyzer extends ApplyAll {
 		}
 
 		public IRegion[] getRanges() {
-			return (IRegion[]) fRanges.toArray(new IRegion[fRanges.size()]);
+			return fRanges.toArray(new IRegion[fRanges.size()]);
 		}
 
 		public FlowInfo[] getInfos() {
-			return (FlowInfo[]) fInfos.toArray(new FlowInfo[fInfos.size()]);
+			return fInfos.toArray(new FlowInfo[fInfos.size()]);
 		}
 
 		public FlowInfo getInfo(int index) {
-			return (FlowInfo) fInfos.get(index);
+			return fInfos.get(index);
 		}
 	}
 
-	private HashMap<ASTNode, FlowInfo> fData = new HashMap<ASTNode, FlowInfo>(100);
+	private HashMap<ASTNode, FlowInfo> fData = new HashMap<>(100);
 	/* package */FlowContext fFlowContext = null;
 
 	public FlowAnalyzer(FlowContext context) {
@@ -78,6 +78,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		return !traverseNode(node);
 	}
 
+	@Override
 	protected final boolean apply(ASTNode node) {
 		return traverseNode(node);
 	}
@@ -149,7 +150,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	// ----------------------------------------
 
 	protected FlowInfo getFlowInfo(ASTNode node) {
-		return (FlowInfo) fData.remove(node);
+		return fData.remove(node);
 	}
 
 	protected void setFlowInfo(ASTNode node, FlowInfo info) {
@@ -163,7 +164,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	}
 
 	protected FlowInfo accessFlowInfo(ASTNode node) {
-		return (FlowInfo) fData.get(node);
+		return fData.get(node);
 	}
 
 	// ---- Helpers to process sequential flow infos
@@ -229,11 +230,13 @@ abstract class FlowAnalyzer extends ApplyAll {
 	// ---- special visit methods
 	// -------------------------------------------------------
 
+	@Override
 	public boolean visit(EmptyStatement node) {
 		// Empty statements aren't of any interest.
 		return false;
 	}
 
+	@Override
 	public boolean visit(TryStatement node) {
 		if (traverseNode(node)) {
 			fFlowContext.pushExcptions(node);
@@ -260,7 +263,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		GenericSequentialFlowInfo info = null;
 
 		for (Iterator<Statement> iter = statements.iterator(); iter.hasNext();) {
-			Statement statement = (Statement) iter.next();
+			Statement statement = iter.next();
 			if (statement instanceof SwitchCase) {
 				SwitchCase switchCase = (SwitchCase) statement;
 				if (switchCase.isDefault()) {
@@ -290,24 +293,28 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 	// TODO - when should we call "info.setNoReturn();" ?
 
+	@Override
 	public void endVisit(ArrayAccess node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getName(), node.getIndex());
 	}
 
+	@Override
 	public void endVisit(ArrayCreation node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.elements());
 	}
 
+	@Override
 	public void endVisit(ArrayElement node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getKey(), node.getValue());
 	}
 
+	@Override
 	public void endVisit(Assignment node) {
 		if (skipNode(node))
 			return;
@@ -329,6 +336,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		info.merge(lhs, fFlowContext);
 	}
 
+	@Override
 	public void endVisit(BackTickExpression node) {
 		if (skipNode(node))
 			return;
@@ -336,6 +344,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		processSequential(node, node.expressions());
 	}
 
+	@Override
 	public void endVisit(Block node) {
 		if (skipNode(node))
 			return;
@@ -344,6 +353,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.statements());
 	}
 
+	@Override
 	public void endVisit(BreakStatement node) {
 		if (skipNode(node))
 			return;
@@ -352,6 +362,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		processSequential(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(CastExpression node) {
 		if (skipNode(node))
 			return;
@@ -359,12 +370,14 @@ abstract class FlowAnalyzer extends ApplyAll {
 		processSequential(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(CatchClause node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getVariable(), node.getBody());
 	}
 
+	@Override
 	public void endVisit(ConstantDeclaration node) {
 		if (skipNode(node))
 			return;
@@ -373,6 +386,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 	}
 
+	@Override
 	public void endVisit(ClassDeclaration node) {
 		if (skipNode(node))
 			return;
@@ -383,6 +397,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 	}
 
+	@Override
 	public void endVisit(ClassInstanceCreation node) {
 		if (skipNode(node))
 			return;
@@ -390,22 +405,26 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.ctorParams());
 	}
 
+	@Override
 	public void endVisit(ClassName node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getName());
 	}
 
+	@Override
 	public void endVisit(CloneExpression node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(Comment node) {
 		// nothing to do
 	}
 
+	@Override
 	public void endVisit(ConditionalExpression node) {
 		if (skipNode(node))
 			return;
@@ -415,6 +434,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		info.merge(getFlowInfo(node.getIfTrue()), getFlowInfo(node.getIfFalse()), fFlowContext);
 	}
 
+	@Override
 	public void endVisit(ContinueStatement node) {
 		if (skipNode(node))
 			return;
@@ -423,6 +443,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		processSequential(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(DeclareStatement node) {
 		if (skipNode(node))
 			return;
@@ -431,6 +452,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getBody());
 	}
 
+	@Override
 	public void endVisit(DoStatement node) {
 		if (skipNode(node))
 			return;
@@ -441,28 +463,33 @@ abstract class FlowAnalyzer extends ApplyAll {
 		info.removeLabel(null);
 	}
 
+	@Override
 	public void endVisit(EchoStatement node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.expressions());
 	}
 
+	@Override
 	public void endVisit(EmptyStatement node) {
 		// Leaf node.
 	}
 
+	@Override
 	public void endVisit(ExpressionStatement node) {
 		if (skipNode(node))
 			return;
 		assignFlowInfo(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(FieldAccess node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getField(), node.getField().getName());
 	}
 
+	@Override
 	public void endVisit(FieldsDeclaration node) {
 		if (skipNode(node))
 			return;
@@ -470,6 +497,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 	}
 
 	// TODO - ensure the right order of the merge
+	@Override
 	public void endVisit(ForEachStatement node) {
 		if (skipNode(node))
 			return;
@@ -480,6 +508,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 
 	}
 
+	@Override
 	public void endVisit(FormalParameter node) {
 		if (skipNode(node))
 			return;
@@ -488,6 +517,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getDefaultValue());
 	}
 
+	@Override
 	public void endVisit(ForStatement node) {
 		if (skipNode(node))
 			return;
@@ -501,6 +531,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		forInfo.removeLabel(null);
 	}
 
+	@Override
 	public void endVisit(FunctionDeclaration node) {
 		if (skipNode(node))
 			return;
@@ -508,26 +539,31 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getBody());
 	}
 
+	@Override
 	public void endVisit(FunctionInvocation node) {
 		endVisitFunctionInvocation(node, node.parameters(), getMethodBinding(node));
 	}
 
+	@Override
 	public void endVisit(FunctionName node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getName());
 	}
 
+	@Override
 	public void endVisit(GlobalStatement node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.variables());
 	}
 
+	@Override
 	public void endVisit(Identifier node) {
 
 	}
 
+	@Override
 	public void endVisit(IfStatement node) {
 		if (skipNode(node))
 			return;
@@ -537,22 +573,26 @@ abstract class FlowAnalyzer extends ApplyAll {
 		info.merge(getFlowInfo(node.getTrueStatement()), getFlowInfo(node.getFalseStatement()), fFlowContext);
 	}
 
+	@Override
 	public void endVisit(Include node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(InfixExpression node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getLeft(), node.getRight());
 	}
 
+	@Override
 	public void endVisit(InLineHtml node) {
 		// nothing to do
 	}
 
+	@Override
 	public void endVisit(InterfaceDeclaration node) {
 		if (skipNode(node))
 			return;
@@ -561,12 +601,14 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getBody());
 	}
 
+	@Override
 	public void endVisit(InstanceOfExpression node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getExpression(), node.getClassName());
 	}
 
+	@Override
 	public void endVisit(MethodDeclaration node) {
 		if (skipNode(node))
 			return;
@@ -575,49 +617,58 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getFunction().getBody());
 	}
 
+	@Override
 	public void endVisit(MethodInvocation node) {
 		endVisitMethodInvocation(node, node.getDispatcher(), node.getMethod().parameters(),
 				getMethodBinding(node.getMethod()));
 	}
 
+	@Override
 	public void endVisit(ParenthesisExpression node) {
 		if (skipNode(node))
 			return;
 		assignFlowInfo(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(PostfixExpression node) {
 		endVisitIncDecOperation(node, node.getVariable());
 	}
 
+	@Override
 	public void endVisit(PrefixExpression node) {
 		endVisitIncDecOperation(node, node.getVariable());
 	}
 
+	@Override
 	public void endVisit(Program node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.statements());
 	}
 
+	@Override
 	public void endVisit(Quote node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.expressions());
 	}
 
+	@Override
 	public void endVisit(Reference node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(ReflectionVariable node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getName());
 	}
 
+	@Override
 	public void endVisit(ReturnStatement node) {
 		if (skipNode(node))
 			return;
@@ -631,16 +682,19 @@ abstract class FlowAnalyzer extends ApplyAll {
 		}
 	}
 
+	@Override
 	public void endVisit(Scalar node) {
 		// nothing to do
 	}
 
+	@Override
 	public void endVisit(SingleFieldDeclaration node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.getName());
 	}
 
+	@Override
 	public void endVisit(StaticConstantAccess node) {
 		if (skipNode(node))
 			return;
@@ -648,6 +702,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getConstant());
 	}
 
+	@Override
 	public void endVisit(StaticFieldAccess node) {
 		if (skipNode(node))
 			return;
@@ -655,6 +710,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getField());
 	}
 
+	@Override
 	public void endVisit(StaticMethodInvocation node) {
 		if (skipNode(node))
 			return;
@@ -662,12 +718,14 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.getMethod());
 	}
 
+	@Override
 	public void endVisit(StaticStatement node) {
 		if (skipNode(node))
 			return;
 		processSequential(node, node.expressions());
 	}
 
+	@Override
 	public void endVisit(SwitchCase node) {
 		// TODO ???
 		// endVisitNode(node);
@@ -677,6 +735,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		process(info, node.actions());
 	}
 
+	@Override
 	public void endVisit(SwitchStatement node) {
 		if (skipNode(node))
 			return;
@@ -694,6 +753,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		switchFlowInfo.removeLabel(null);
 	}
 
+	@Override
 	public void endVisit(ThrowStatement node) {
 		if (skipNode(node))
 			return;
@@ -704,6 +764,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		info.mergeException(expression.resolveTypeBinding(), fFlowContext);
 	}
 
+	@Override
 	public void endVisit(TryStatement node) {
 		if (skipNode(node))
 			return;
@@ -717,10 +778,12 @@ abstract class FlowAnalyzer extends ApplyAll {
 		}
 	}
 
+	@Override
 	public void endVisit(UnaryOperation node) {
 		assignFlowInfo(node, node.getExpression());
 	}
 
+	@Override
 	public void endVisit(Variable node) {
 		if (skipNode(node))
 			return;
@@ -731,6 +794,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		}
 	}
 
+	@Override
 	public void endVisit(WhileStatement node) {
 		if (skipNode(node))
 			return;
@@ -763,7 +827,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 		MessageSendFlowInfo info = createMessageSendFlowInfo();
 		setFlowInfo(node, info);
 		for (Iterator<Expression> iter = arguments.iterator(); iter.hasNext();) {
-			Expression arg = (Expression) iter.next();
+			Expression arg = iter.next();
 			info.mergeArgument(getFlowInfo(arg), fFlowContext);
 		}
 		// info.mergeExceptions(binding, fFlowContext);

@@ -31,8 +31,9 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
  */
 public class DocumentUtils {
 	private static class NamespaceFinder extends PHPASTVisitor {
-		Vector<NamespaceDeclaration> declarations = new Vector<NamespaceDeclaration>();
+		Vector<NamespaceDeclaration> declarations = new Vector<>();
 
+		@Override
 		public boolean visit(NamespaceDeclaration n) throws Exception {
 			declarations.add(n);
 
@@ -63,11 +64,11 @@ public class DocumentUtils {
 	}
 
 	public static List<UseStatement> flatten(List<UseStatement> statements) {
-		Vector<UseStatement> total = new Vector<UseStatement>();
+		Vector<UseStatement> total = new Vector<>();
 
 		for (UseStatement statement : statements) {
 			for (UsePart part : statement.getParts()) {
-				Vector<UsePart> parts = new Vector<UsePart>();
+				Vector<UsePart> parts = new Vector<>();
 				parts.add(part);
 
 				total.add(new UseStatement(statement.start(), statement.end(), parts, statement.getStatementType()));
@@ -135,7 +136,7 @@ public class DocumentUtils {
 	 * @return sorted positions to exclude
 	 */
 	public static List<Position> getExcludeSortedAndFilteredPositions(ASTNode[] nodes) {
-		List<Position> excludePositions = new ArrayList<Position>();
+		List<Position> excludePositions = new ArrayList<>();
 		for (ASTNode n : nodes) {
 			if (n instanceof PHPDocBlock) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=490434
@@ -276,7 +277,7 @@ public class DocumentUtils {
 	 */
 	public static List<UseStatement> filterAndSort(UseStatement[] statements, IDocument doc,
 			ModuleDeclaration moduleDeclaration) {
-		Vector<UseStatement> total = new Vector<UseStatement>();
+		Vector<UseStatement> total = new Vector<>();
 
 		NamespaceFinder visitor = new NamespaceFinder();
 		try {
@@ -290,7 +291,7 @@ public class DocumentUtils {
 				excludePositions = getExcludeSortedAndFilteredPositions(
 						((PHPModuleDeclaration) moduleDeclaration).getCommentList().toArray(new ASTNode[0]));
 			} else {
-				excludePositions = new ArrayList<Position>();
+				excludePositions = new ArrayList<>();
 			}
 			String contents;
 			NamespaceDeclaration currentNamespace = visitor.getNamespaceDeclarationFor(statement);
@@ -301,7 +302,7 @@ public class DocumentUtils {
 				contents = stripUseStatements(statements, doc, excludePositions);
 			}
 
-			Vector<UsePart> parts = new Vector<UsePart>();
+			Vector<UsePart> parts = new Vector<>();
 			for (UsePart part : statement.getParts()) {
 				if (containsUseStatement(part, contents, excludePositions)) {
 					parts.add(part);
@@ -343,7 +344,7 @@ public class DocumentUtils {
 		});
 		set.addAll(total);
 
-		return new ArrayList<UseStatement>(set);
+		return new ArrayList<>(set);
 	}
 
 	/**
@@ -353,7 +354,7 @@ public class DocumentUtils {
 		UseStatement[] statements = ASTUtils.getUseStatements(moduleDeclaration, doc.getLength());
 
 		int start = 0;
-		Vector<ReplaceAction> queue = new Vector<ReplaceAction>();
+		Vector<ReplaceAction> queue = new Vector<>();
 
 		while (start < statements.length) {
 			int last_item = statements.length - 1;

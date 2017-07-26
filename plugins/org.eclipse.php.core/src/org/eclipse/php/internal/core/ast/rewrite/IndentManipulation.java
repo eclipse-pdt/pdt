@@ -394,7 +394,7 @@ public final class IndentManipulation {
 			throw new IllegalArgumentException();
 		}
 
-		List<ReplaceEdit> result = new ArrayList<ReplaceEdit>();
+		List<ReplaceEdit> result = new ArrayList<>();
 		try {
 			ILineTracker tracker = new DefaultLineTracker();
 			tracker.set(source);
@@ -462,7 +462,7 @@ public final class IndentManipulation {
 	 * @exception IllegalArgumentException
 	 *                if the given <code>options</code> is null
 	 */
-	public static int getTabWidth(Map options) {
+	public static int getTabWidth(Map<?, ?> options) {
 		if (options == null) {
 			throw new IllegalArgumentException();
 		}
@@ -484,7 +484,7 @@ public final class IndentManipulation {
 	 * @exception IllegalArgumentException
 	 *                if the given <code>options</code> is null
 	 */
-	public static int getIndentWidth(Map options) {
+	public static int getIndentWidth(Map<?, ?> options) {
 		if (options == null) {
 			throw new IllegalArgumentException();
 		}
@@ -500,7 +500,7 @@ public final class IndentManipulation {
 		 */return tabWidth;
 	}
 
-	private static int getIntValue(Map options, String key, int def) {
+	private static int getIntValue(Map<?, ?> options, String key, int def) {
 		try {
 			return Integer.parseInt((String) options.get(key));
 		} catch (NumberFormatException e) {

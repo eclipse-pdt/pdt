@@ -48,6 +48,7 @@ public abstract class TypeDeclarationContext extends DeclarationContext {
 	protected Matcher implementsMatcher;
 	protected Matcher extendsMatcher;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

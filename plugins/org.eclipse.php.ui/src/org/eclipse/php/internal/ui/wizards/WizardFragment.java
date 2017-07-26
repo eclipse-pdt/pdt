@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 public abstract class WizardFragment {
 	private WizardModel wizardModel;
 	private boolean isComplete = true;
-	private List listImpl;
+	private List<?> listImpl;
 
 	/**
 	 * Returns <code>true</code> if this fragment has an associated UI, and
@@ -165,9 +165,9 @@ public abstract class WizardFragment {
 	 * 
 	 * @return a list of child fragments
 	 */
-	public List getChildFragments() {
+	public List<?> getChildFragments() {
 		if (listImpl == null) {
-			listImpl = new ArrayList();
+			listImpl = new ArrayList<>();
 			createChildFragments(listImpl);
 		}
 		return listImpl;
@@ -191,7 +191,7 @@ public abstract class WizardFragment {
 	 * @param list
 	 *            a list to add the child fragments to
 	 */
-	protected void createChildFragments(List list) {
+	protected void createChildFragments(List<?> list) {
 		// do nothing
 	}
 

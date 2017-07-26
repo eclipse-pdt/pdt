@@ -52,15 +52,17 @@ public class PathMappingComposite extends Composite {
 	private static final ColumnLayoutData[] columnLayoutData = new ColumnLayoutData[] { new ColumnWeightData(15),
 			new ColumnWeightData(50), new ColumnWeightData(50) };
 
-	private ListDialogField fMapList;
+	private ListDialogField<Mapping> fMapList;
 
 	public PathMappingComposite(Composite parent, int style) {
 		super(parent, style);
 		initializeControls();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void initializeControls() {
-		fMapList = new ListDialogField(new ListAdapter(), buttonLabels, new LabelProvider(), new TableSorter());
+		fMapList = new ListDialogField<Mapping>((IListAdapter) new ListAdapter(), buttonLabels, new LabelProvider(),
+				new TableSorter());
 		fMapList.setRemoveButtonIndex(IDX_REMOVE);
 		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(columnLayoutData, columnHeaders, true));
 
@@ -115,11 +117,10 @@ public class PathMappingComposite extends Composite {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void handleEdit() {
-		List l = fMapList.getSelectedElements();
+		List<Mapping> l = fMapList.getSelectedElements();
 		if (l.size() == 1) {
-			Mapping oldElement = (Mapping) l.get(0);
+			Mapping oldElement = l.get(0);
 			PathMapperEntryDialog dialog = new PathMapperEntryDialog(getShell(), oldElement);
 			if (dialog.open() == Window.OK) {
 				Mapping newElement = dialog.getResult();
@@ -128,7 +129,6 @@ public class PathMappingComposite extends Composite {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void handleRemove() {
 		fMapList.removeElements(fMapList.getSelectedElements());
 	}
@@ -136,6 +136,7 @@ public class PathMappingComposite extends Composite {
 	/**
 	 * Accepts only Mapping[] type
 	 */
+	@Override
 	public void setData(Object data) {
 		if (!(data instanceof Mapping[])) {
 			throw new IllegalArgumentException("Data must be instance of Mapping[]"); //$NON-NLS-1$
@@ -145,19 +146,20 @@ public class PathMappingComposite extends Composite {
 		updateButtonsEnablement();
 	}
 
-	@SuppressWarnings("unchecked")
 	public Mapping[] getMappings() {
-		List l = fMapList.getElements();
-		return (Mapping[]) l.toArray(new Mapping[l.size()]);
+		List<Mapping> l = fMapList.getElements();
+		return l.toArray(new Mapping[l.size()]);
 	}
 
 	protected void updateButtonsEnablement() {
-		List<?> selectedElements = fMapList.getSelectedElements();
+		List<Mapping> selectedElements = fMapList.getSelectedElements();
 		fMapList.enableButton(IDX_EDIT, selectedElements.size() == 1);
 		fMapList.enableButton(IDX_REMOVE, selectedElements.size() > 0);
 	}
 
-	class ListAdapter implements IListAdapter {
+	class ListAdapter implements IListAdapter<Object> {
+		@SuppressWarnings("rawtypes")
+		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			switch (index) {
 			case IDX_ADD:
@@ -172,10 +174,14 @@ public class PathMappingComposite extends Composite {
 			}
 		}
 
+		@SuppressWarnings("rawtypes")
+		@Override
 		public void doubleClicked(ListDialogField field) {
 			handleEdit();
 		}
 
+		@SuppressWarnings("rawtypes")
+		@Override
 		public void selectionChanged(ListDialogField field) {
 			updateButtonsEnablement();
 		}
@@ -184,6 +190,7 @@ public class PathMappingComposite extends Composite {
 	class LabelProvider extends org.eclipse.jface.viewers.LabelProvider implements ITableLabelProvider {
 		private ScriptUILabelProvider phpLabelProvider = new ScriptUILabelProvider();
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (columnIndex == 2) { // local path
 				PathMapper.Mapping mapping = (PathMapper.Mapping) element;
@@ -204,6 +211,7 @@ public class PathMappingComposite extends Composite {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			PathMapper.Mapping mapping = (PathMapper.Mapping) element;
 			switch (columnIndex) {

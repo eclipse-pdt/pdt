@@ -50,7 +50,7 @@ public class AsyncDownloader extends AbstractDownloader {
 	private int lastSlot = 1;
 	private Log log = LogFactory.getLog(AsyncDownloader.class);
 	private PoolingHttpClientConnectionManager connectionManager;
-	private Map<Integer, Connection> connections = new HashMap<Integer, Connection>();
+	private Map<Integer, Connection> connections = new HashMap<>();
 
 	private class Connection implements Runnable {
 
@@ -183,6 +183,7 @@ public class AsyncDownloader extends AbstractDownloader {
 		super(url);
 	}
 
+	@Override
 	protected void init() {
 		super.init();
 

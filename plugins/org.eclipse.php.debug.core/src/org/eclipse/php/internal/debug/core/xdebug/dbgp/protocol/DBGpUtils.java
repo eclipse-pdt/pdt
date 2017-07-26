@@ -21,10 +21,10 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 
 public class DBGpUtils {
 
-	private static Map encoded;
+	private static Map<String, String> encoded;
 
 	static {
-		encoded = Collections.synchronizedMap(new HashMap());
+		encoded = Collections.synchronizedMap(new HashMap<String, String>());
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class DBGpUtils {
 	 */
 	public static String getFileURIString(String fileName) {
 		if (encoded.containsKey(fileName)) {
-			return (String) encoded.get(fileName);
+			return encoded.get(fileName);
 		}
 		String fileURIStr = ""; //$NON-NLS-1$
 		if (fileName == null || fileName.length() == 0) {

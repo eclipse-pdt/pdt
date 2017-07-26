@@ -629,8 +629,8 @@ public class UseStatementInjector {
 		return statementType == UseStatement.T_NONE || phpVersion.isGreaterThan(PHPVersion.PHP5_5);
 	}
 
-	private Map<Object, Object> createOptions(IModelElement modelElement) {
-		Map<Object, Object> options = new HashMap<>(PHPCorePlugin.getOptions());
+	private Map<String, String> createOptions(IModelElement modelElement) {
+		Map<String, String> options = new HashMap<>(PHPCorePlugin.getOptions());
 
 		if (modelElement == null || modelElement.getScriptProject() == null) {
 			return options;

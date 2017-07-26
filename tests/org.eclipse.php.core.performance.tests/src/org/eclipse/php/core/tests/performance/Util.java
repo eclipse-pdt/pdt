@@ -134,7 +134,7 @@ public class Util {
 		} else {
 			version = ProjectOptions.getDefaultPHPVersion();
 		}
-		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
+		ASTParser newParser = ASTParser.newParser(version, source);
 		return newParser.createAST(null);
 	}
 

@@ -41,18 +41,18 @@ public class ValuedCombo extends Combo {
 		viewedValues = new String[entryList.size()];
 		int i = 0;
 		for (Iterator<Entry> entryIterator = entryList.iterator(); entryIterator.hasNext(); ++i) {
-			Entry entry = (Entry) entryIterator.next();
+			Entry entry = entryIterator.next();
 			viewedValues[i] = entry.getViewedValue();
 		}
 	}
 
 	public String getSelectionValue() {
-		return ((Entry) entryList.get(getSelectionIndex())).getValue();
+		return entryList.get(getSelectionIndex()).getValue();
 	}
 
 	public boolean selectValue(String Value) {
 		for (Iterator<Entry> entryIterator = entryList.iterator(); entryIterator.hasNext();) {
-			Entry entry = (Entry) entryIterator.next();
+			Entry entry = entryIterator.next();
 			if (entry.getValue().equals(Value)) {
 				setText(entry.getViewedValue());
 				return true;

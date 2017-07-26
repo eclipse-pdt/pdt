@@ -27,6 +27,7 @@ public class UnaryOperationEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		UnaryOperation unaryOp = (UnaryOperation) typedGoal.getExpression();
@@ -44,11 +45,13 @@ public class UnaryOperationEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}

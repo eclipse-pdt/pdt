@@ -191,6 +191,7 @@ public class XDebugTextHover extends PHPDebugTextHover {
 
 	}
 
+	@Override
 	protected IStackFrame getFrame() {
 		IAdaptable adaptable = DebugUITools.getDebugContext();
 		if (adaptable != null) {

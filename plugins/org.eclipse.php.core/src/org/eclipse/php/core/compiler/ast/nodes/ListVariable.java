@@ -39,6 +39,7 @@ public class ListVariable extends Expression {
 		this.variables = variables;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -49,6 +50,7 @@ public class ListVariable extends Expression {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.LIST_VARIABLE;
 	}
@@ -60,9 +62,11 @@ public class ListVariable extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

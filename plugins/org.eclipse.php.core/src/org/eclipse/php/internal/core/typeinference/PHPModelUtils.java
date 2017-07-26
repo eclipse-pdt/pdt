@@ -295,7 +295,7 @@ public class PHPModelUtils {
 
 		// If it's just one element (or less) - return it
 		if (elements != null && elements.size() > 1) {
-			List<T> filteredElements = new LinkedList<T>();
+			List<T> filteredElements = new LinkedList<>();
 
 			// If some of elements belong to current file just return it:
 			for (T element : elements) {
@@ -330,7 +330,7 @@ public class PHPModelUtils {
 			@Nullable Collection<T> elements, IModelAccessCache cache, boolean isNs, IProgressMonitor monitor) {
 
 		if (elements != null && elements.size() > 0) {
-			List<T> filteredElements = new LinkedList<T>();
+			List<T> filteredElements = new LinkedList<>();
 
 			// If some of elements belong to current file return just it:
 			for (T element : elements) {
@@ -895,7 +895,7 @@ public class PHPModelUtils {
 
 	@NonNull
 	private static Collection<IMethod> filterTrueGlobal(Collection<IMethod> functions) {
-		List<IMethod> result = new ArrayList<IMethod>();
+		List<IMethod> result = new ArrayList<>();
 		for (IMethod method : functions) {
 			if (method.getParent().getElementType() != IModelElement.TYPE) {
 				result.add(method);
@@ -922,8 +922,8 @@ public class PHPModelUtils {
 	public static IModelElement[] getMethodFields(final IMethod method, final String prefix, final boolean exactName,
 			IProgressMonitor monitor) {
 
-		final List<IField> elements = new LinkedList<IField>();
-		final Set<String> processedVars = new HashSet<String>();
+		final List<IField> elements = new LinkedList<>();
+		final Set<String> processedVars = new HashSet<>();
 
 		try {
 			getMethodFields(method, prefix, exactName, elements, processedVars);
@@ -933,6 +933,7 @@ public class PHPModelUtils {
 			MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(rootNode, method);
 			if (methodDeclaration != null) {
 				methodDeclaration.traverse(new ASTVisitor() {
+					@Override
 					public boolean visit(Statement s) throws Exception {
 						if (s instanceof GlobalStatement) {
 							GlobalStatement globalStatement = (GlobalStatement) s;
@@ -1030,7 +1031,7 @@ public class PHPModelUtils {
 	public static IField[] getFileFields(final ISourceModule sourceModule, final String prefix, final boolean exactName,
 			IProgressMonitor monitor) {
 
-		final List<IField> elements = new LinkedList<IField>();
+		final List<IField> elements = new LinkedList<>();
 		try {
 			IField[] sourceModuleFields = sourceModule.getFields();
 			for (IField field : sourceModuleFields) {
@@ -1094,7 +1095,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		Collection<IField> result = new LinkedList<IField>();
+		Collection<IField> result = new LinkedList<>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeField(ns, prefix, exactName)));
 		}
@@ -1147,7 +1148,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		Collection<IMethod> result = new LinkedList<IMethod>();
+		Collection<IMethod> result = new LinkedList<>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(ns, prefix, exactName)));
 		}
@@ -1260,7 +1261,7 @@ public class PHPModelUtils {
 			throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache, monitor);
-		Collection<IType> result = new LinkedList<IType>();
+		Collection<IType> result = new LinkedList<>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns, prefix, exactName, isType)));
 		}
@@ -1321,7 +1322,7 @@ public class PHPModelUtils {
 				Logger.logException(e);
 			}
 		}
-		return (ASTNode) visitor.getResult();
+		return visitor.getResult();
 	}
 
 	public static MethodDeclaration getNodeByMethod(ModuleDeclaration rootNode, IMethod method) throws ModelException {
@@ -1445,9 +1446,9 @@ public class PHPModelUtils {
 	@NonNull
 	public static IField[] getTypeField(IType type, String prefix, boolean exactName) throws ModelException {
 
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (type.exists()) {
-			Set<String> nameSet = new HashSet<String>();
+			Set<String> nameSet = new HashSet<>();
 			IField[] fields = type.getFields();
 			for (IField field : fields) {
 				String elementName = field.getElementName();
@@ -1499,7 +1500,7 @@ public class PHPModelUtils {
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
-		final List<IField> fields = new LinkedList<IField>();
+		final List<IField> fields = new LinkedList<>();
 		fields.addAll(Arrays.asList(getTypeField(type, prefix, exactName)));
 		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 			fields.addAll(Arrays.asList(getSuperTypeHierarchyField(type, hierarchy, prefix, exactName, monitor)));
@@ -1546,7 +1547,7 @@ public class PHPModelUtils {
 		if (name == null) {
 			throw new NullPointerException();
 		}
-		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
+		final List<PHPDocBlock> docs = new LinkedList<>();
 		for (IField field : getTypeHierarchyField(type, name, exactName, monitor)) {
 			PHPDocBlock docBlock = getDocBlock(field);
 			if (docBlock != null) {
@@ -1578,7 +1579,7 @@ public class PHPModelUtils {
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
-		final List<IMethod> methods = new LinkedList<IMethod>();
+		final List<IMethod> methods = new LinkedList<>();
 		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
 		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 			methods.addAll(Arrays.asList(getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, monitor)));
@@ -1609,7 +1610,7 @@ public class PHPModelUtils {
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
-		final List<IMethod> methods = new LinkedList<IMethod>();
+		final List<IMethod> methods = new LinkedList<>();
 		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
 		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0 && methods.size() == 0) {
 			IType[] allSuperclasses = getSuperClasses(type, hierarchy);
@@ -1670,7 +1671,7 @@ public class PHPModelUtils {
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
-		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
+		final List<PHPDocBlock> docs = new LinkedList<>();
 		for (IMethod method : getTypeHierarchyMethod(type, hierarchy, prefix, exactName, monitor)) {
 			PHPDocBlock docBlock = getDocBlock(method);
 			if (docBlock != null) {
@@ -1694,9 +1695,9 @@ public class PHPModelUtils {
 	@NonNull
 	public static IMethod[] getTypeMethod(IType type, String prefix, boolean exactName) throws ModelException {
 
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		if (type.exists()) {
-			Set<String> nameSet = new HashSet<String>();
+			Set<String> nameSet = new HashSet<>();
 			IMethod[] methods = type.getMethods();
 			for (IMethod method : methods) {
 				String elementName = method.getElementName();
@@ -1840,7 +1841,7 @@ public class PHPModelUtils {
 				return PHPModelAccess.NULL_TYPES;
 			}
 		}
-		List<IType> result = new ArrayList<IType>();
+		List<IType> result = new ArrayList<>();
 		for (IType type : types) {
 			if (getCurrentNamespace(type) == null) {
 				result.add(type);
@@ -1869,7 +1870,7 @@ public class PHPModelUtils {
 	 */
 	@NonNull
 	public static IField[] getTypesField(IType[] types, String prefix, boolean exactName) throws ModelException {
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		for (IType type : types) {
 			result.addAll(Arrays.asList(getTypeField(type, prefix, exactName)));
 		}
@@ -1889,7 +1890,7 @@ public class PHPModelUtils {
 	 */
 	@NonNull
 	public static IMethod[] getTypesMethod(IType[] types, String prefix, boolean exactName) throws ModelException {
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		for (IType type : types) {
 			result.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
 		}
@@ -1911,7 +1912,7 @@ public class PHPModelUtils {
 	@NonNull
 	public static IType[] getTypeType(IType type, String prefix, boolean exactName, boolean isType)
 			throws ModelException {
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		IType[] types = type.getTypes();
 		for (IType t : types) {
 			if (isType && PHPFlags.isTrait(t.getFlags()) || !isType && !PHPFlags.isTrait(t.getFlags())) {
@@ -1965,8 +1966,8 @@ public class PHPModelUtils {
 	public static IMethod[] getUnimplementedMethods(IType type, IModelAccessCache cache, IProgressMonitor monitor)
 			throws ModelException {
 
-		HashMap<String, IMethod> abstractMethods = new HashMap<String, IMethod>();
-		HashSet<String> nonAbstractMethods = new HashSet<String>();
+		HashMap<String, IMethod> abstractMethods = new HashMap<>();
+		HashSet<String> nonAbstractMethods = new HashSet<>();
 
 		internalGetUnimplementedMethods(type, nonAbstractMethods, abstractMethods, new HashSet<String>(), cache,
 				monitor, true);
@@ -2024,7 +2025,7 @@ public class PHPModelUtils {
 					IType[] superTypes = PHPModelAccess.getDefault().findTypes(superClass, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
 
-					List<IType> list = new ArrayList<IType>();
+					List<IType> list = new ArrayList<>();
 					for (IType superType : superTypes) {
 						if (superClass.equalsIgnoreCase(PHPModelUtils.getFullName(superType))) {
 							list.add(superType);
@@ -2110,7 +2111,7 @@ public class PHPModelUtils {
 	@NonNull
 	public static Map<String, UsePart> getAliasToNSMap(final String prefix, ModuleDeclaration moduleDeclaration,
 			final int offset, IType namespace, final boolean exactMatch) {
-		final Map<String, UsePart> result = new HashMap<String, UsePart>();
+		final Map<String, UsePart> result = new HashMap<>();
 		try {
 			int start = 0;
 			if (namespace != null) {
@@ -2120,6 +2121,7 @@ public class PHPModelUtils {
 
 			moduleDeclaration.traverse(new ASTVisitor() {
 
+				@Override
 				public boolean visit(Statement s) throws Exception {
 					if (s instanceof UseStatement) {
 						UseStatement useStatement = (UseStatement) s;
@@ -2145,6 +2147,7 @@ public class PHPModelUtils {
 					return visitGeneral(s);
 				}
 
+				@Override
 				public boolean visitGeneral(ASTNode node) throws Exception {
 					if (node.sourceStart() > offset || node.sourceEnd() < searchStart) {
 						return false;
@@ -2307,6 +2310,7 @@ public class PHPModelUtils {
 		found[0] = false;
 		try {
 			rootNode.traverse(new PHPASTVisitor() {
+				@Override
 				public boolean visit(TraitUseStatement s) throws Exception {
 					if (s.sourceStart() <= offset && s.sourceEnd() >= offset) {
 						found[0] = true;

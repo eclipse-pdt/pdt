@@ -25,7 +25,6 @@ import org.eclipse.php.internal.debug.core.model.IPHPDataType.DataType;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPVariableLabelProvider extends VariableLabelProvider {
 
 	private static final String QUOTED_STRING = "\"{0}\""; //$NON-NLS-1$

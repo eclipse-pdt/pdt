@@ -62,7 +62,7 @@ public class PdttFile {
 				"--EXPECT--"), OTHER("--OTHER--"), OTHER_FILE("--FILE([0-9]+)--");
 
 		private static class Names {
-			private static Map<String, STATES> map = new HashMap<String, STATES>();
+			private static Map<String, STATES> map = new HashMap<>();
 		}
 
 		String name;
@@ -83,14 +83,14 @@ public class PdttFile {
 
 	private String fileName;
 	private Bundle testBundle;
-	private Map<String, String> config = new HashMap<String, String>();
+	private Map<String, String> config = new HashMap<>();
 	private String preferences;
 	private String description;
 	private String file = "";
 	/**
 	 * @since 3.5 List of additional files
 	 */
-	private List<CharSequence> otherFiles = new LinkedList<CharSequence>();
+	private List<CharSequence> otherFiles = new LinkedList<>();
 	private int currentFile;
 	private String expected = "";
 	private String other;
@@ -138,7 +138,7 @@ public class PdttFile {
 			if (reader != null) {
 				reader.close();
 			}
-			List<CharSequence> tmp = new ArrayList<CharSequence>(otherFiles.size());
+			List<CharSequence> tmp = new ArrayList<>(otherFiles.size());
 			int i = 0;
 			for (CharSequence seq : otherFiles) {
 				tmp.add(i, seq.toString());

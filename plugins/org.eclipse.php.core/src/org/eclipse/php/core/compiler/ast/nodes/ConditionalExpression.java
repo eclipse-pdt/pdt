@@ -64,6 +64,7 @@ public class ConditionalExpression extends Expression {
 		this.operatorType = OP_COALESCE;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -78,6 +79,7 @@ public class ConditionalExpression extends Expression {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.CONDITIONAL_EXPRESSION;
 	}
@@ -104,9 +106,11 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

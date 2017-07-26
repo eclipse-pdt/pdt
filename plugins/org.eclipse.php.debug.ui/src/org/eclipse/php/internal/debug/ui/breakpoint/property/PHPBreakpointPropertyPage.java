@@ -36,8 +36,9 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 		noDefaultAndApplyButton();
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
-		breakpoint = (PHPConditionalBreakpoint) getElement().getAdapter(PHPConditionalBreakpoint.class);
+		breakpoint = getElement().getAdapter(PHPConditionalBreakpoint.class);
 		if (breakpoint == null) {
 			Logger.log(Logger.ERROR, "Could not adapt to PHPConditionalBreakpoint"); //$NON-NLS-1$
 			return null;
@@ -67,11 +68,13 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 		text.setEnabled(conditionEnabled);
 
 		checkbox.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				conditionEnabled = checkbox.getSelection();
 				text.setEnabled(conditionEnabled);
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
@@ -87,6 +90,7 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		if (breakpoint != null) {
 			String condition = text.getText().trim();

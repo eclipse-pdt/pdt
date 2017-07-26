@@ -29,11 +29,13 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 			fLoopNode = loopNode;
 		}
 
+		@Override
 		protected boolean traverseNode(ASTNode node) {
 			return true; // end <= fSelection.end ||
 			// fSelection.enclosedBy(start, end);
 		}
 
+		@Override
 		protected boolean createReturnFlowInfo(ReturnStatement node) {
 			// Make sure that the whole return statement is selected or located
 			// before the selection.
@@ -53,6 +55,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 			}
 		}
 
+		@Override
 		public void endVisit(DoStatement node) {
 			if (skipNode(node))
 				return;
@@ -88,6 +91,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		// }
 		// forInfo.removeLabel(null);
 		// }
+		@Override
 		public void endVisit(ForStatement node) {
 			if (skipNode(node))
 				return;
@@ -143,10 +147,12 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		return getFlowInfo(node);
 	}
 
+	@Override
 	protected boolean traverseNode(ASTNode node) {
 		return node.getEnd() > fSelection.getInclusiveEnd();
 	}
 
+	@Override
 	protected boolean createReturnFlowInfo(ReturnStatement node) {
 		// Make sure that the whole return statement is located after the
 		// selection. There can be cases like
@@ -155,6 +161,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		return node.getStart() >= fSelection.getInclusiveEnd();
 	}
 
+	@Override
 	public boolean visit(DoStatement node) {
 		createLoopReentranceVisitor(node);
 		return super.visit(node);
@@ -165,11 +172,13 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 	// return super.visit(node);
 	// }
 
+	@Override
 	public boolean visit(ForStatement node) {
 		createLoopReentranceVisitor(node);
 		return super.visit(node);
 	}
 
+	@Override
 	public boolean visit(WhileStatement node) {
 		createLoopReentranceVisitor(node);
 		return super.visit(node);
@@ -181,6 +190,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 					fSelection, node);
 	}
 
+	@Override
 	public void endVisit(ConditionalExpression node) {
 		if (skipNode(node))
 			return;
@@ -197,11 +207,13 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		}
 	}
 
+	@Override
 	public void endVisit(DoStatement node) {
 		super.endVisit(node);
 		handleLoopReentrance(node);
 	}
 
+	@Override
 	public void endVisit(IfStatement node) {
 		if (skipNode(node))
 			return;
@@ -223,11 +235,13 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 	// handleLoopReentrance(node);
 	// }
 
+	@Override
 	public void endVisit(ForStatement node) {
 		super.endVisit(node);
 		handleLoopReentrance(node);
 	}
 
+	@Override
 	public void endVisit(SwitchStatement node) {
 		if (skipNode(node))
 			return;
@@ -247,6 +261,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		super.endVisit(node, data);
 	}
 
+	@Override
 	public void endVisit(WhileStatement node) {
 		super.endVisit(node);
 		handleLoopReentrance(node);

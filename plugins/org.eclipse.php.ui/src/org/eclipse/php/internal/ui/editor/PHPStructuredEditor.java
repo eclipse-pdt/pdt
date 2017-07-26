@@ -2566,7 +2566,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
 			if (getRefactorableFileEditorInput() != null
-					&& ((RefactorableFileEditorInput) getRefactorableFileEditorInput()).isRefactor()) {
+					&& getRefactorableFileEditorInput().isRefactor()) {
 				getRefactorableFileEditorInput().setRefactor(false);
 				if (getDocumentProvider() != null) {
 					getDocumentProvider().disconnect(getRefactorableFileEditorInput());
@@ -2580,7 +2580,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		}
 
 		if (resource != null) {
-			if (PHPToolkitUtil.isPHPFile((IFile) resource)) {
+			if (PHPToolkitUtil.isPHPFile(resource)) {
 
 				PHPSourceParser.editFile.set(resource);
 
@@ -2654,6 +2654,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class required) {
 
@@ -3121,7 +3122,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	/**
 	 * IScriptReconcilingListener methods - reconcile listeners
 	 */
-	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
+	private ListenerList<IPHPScriptReconcilingListener> fReconcilingListeners = new ListenerList<>(
+			ListenerList.IDENTITY);
 
 	public void addReconcileListener(IPHPScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
@@ -3768,7 +3770,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	 */
 	@Override
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
+		IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
 			return;
 
@@ -3804,7 +3806,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		if (viewer == null || fIsTextDragAndDropInstalled)
 			return;
 
-		final IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
+		final IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
 			return;
 
@@ -4007,7 +4009,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		if (viewer == null || !fIsTextDragAndDropInstalled)
 			return;
 
-		final IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
+		final IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
 			return;
 

@@ -49,7 +49,7 @@ public abstract class NamespacePHPDocTagContext extends NamespacePHPDocContext {
 	}
 
 	private ArrayList<Matcher> createMatcherList(String content) {
-		ArrayList<Matcher> list = new ArrayList<Matcher>(todos.length);
+		ArrayList<Matcher> list = new ArrayList<>(todos.length);
 		for (int i = 0; i < todos.length; i++) {
 			list.add(i, todos[i].matcher(content));
 		}
@@ -60,7 +60,7 @@ public abstract class NamespacePHPDocTagContext extends NamespacePHPDocContext {
 		Matcher minimal = null;
 		int size = matchers.size();
 		for (int i = 0; i < size;) {
-			Matcher tmp = (Matcher) matchers.get(i);
+			Matcher tmp = matchers.get(i);
 			if (tmp.find(startPosition)) {
 				if (minimal == null || tmp.start() < minimal.start()) {
 					minimal = tmp;
@@ -80,6 +80,7 @@ public abstract class NamespacePHPDocTagContext extends NamespacePHPDocContext {
 		return matcher != null;
 	}
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

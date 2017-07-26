@@ -23,7 +23,6 @@ import org.eclipse.php.composer.ui.wizard.ValidationException.Severity;
 /**
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
-@SuppressWarnings("restriction")
 public class Validator extends AbstractValidator {
 
 	public Validator(AbstractWizardFirstPage composerProjectWizardFirstPage) {

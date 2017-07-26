@@ -45,6 +45,7 @@ public class ClassObjMemberContext extends ClassMemberContext {
 	private boolean isDirectThis;
 	private boolean isParent;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

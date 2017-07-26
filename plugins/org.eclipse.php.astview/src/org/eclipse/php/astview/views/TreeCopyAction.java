@@ -33,11 +33,11 @@ public class TreeCopyAction extends Action {
 	private static class TreeObject {
 		private final TreeItem fTreeItem;
 		private boolean fSelected;
-		private final List fChildren;
+		private final List<TreeObject> fChildren;
 		public TreeObject(TreeItem element, boolean selected) {
 			fTreeItem= element;
 			fSelected= selected;
-			fChildren= new ArrayList();
+			fChildren= new ArrayList<TreeObject>();
 		}
 		public void setSelected() {
 			fSelected= true;
@@ -51,16 +51,17 @@ public class TreeCopyAction extends Action {
 		public TreeItem getTreeItem() {
 			return fTreeItem;
 		}
-		public List getChildren() {
+		public List<TreeObject> getChildren() {
 			return fChildren;
 		}
+		@Override
 		public String toString() {
 			StringBuffer buf= new StringBuffer();
 			if (fSelected)
 				buf.append("* "); //$NON-NLS-1$
 			buf.append(trim(fTreeItem.getText())).append(" ["); //$NON-NLS-1$
 			for (int i= 0; i < fChildren.size(); i++) {
-				TreeObject child= (TreeObject) fChildren.get(i);
+				TreeObject child= fChildren.get(i);
 				buf.append(trim(child.getTreeItem().getText()));
 				if (i > 0)
 					buf.append(", "); //$NON-NLS-1$
@@ -87,6 +88,7 @@ public class TreeCopyAction extends Action {
 		setActionDefinitionId(IWorkbenchCommandConstants.EDIT_COPY);
 	}
 
+	@Override
 	public void run() {
 		Tree tree= null;
 		for (int i= 0; i < fTrees.length; i++) {
@@ -117,13 +119,13 @@ public class TreeCopyAction extends Action {
 	}
 
 	private void copyTree(TreeItem[] selection, Clipboard clipboard) {
-		HashMap elementToTreeObj= new HashMap();
-		List roots= new ArrayList();
+		HashMap<TreeItem, TreeObject> elementToTreeObj= new HashMap<TreeItem, TreeObject>();
+		List<TreeObject> roots= new ArrayList<TreeObject>();
 		int indent= Integer.MIN_VALUE;
 		
 		for (int i= 0; i < selection.length; i++) {
 			TreeItem item= selection[i];
-			TreeObject treeObj= (TreeObject) elementToTreeObj.get(item);
+			TreeObject treeObj= elementToTreeObj.get(item);
 			if (treeObj == null) {
 				treeObj= new TreeObject(item, true);
 				elementToTreeObj.put(item, treeObj);
@@ -135,7 +137,7 @@ public class TreeCopyAction extends Action {
 			int level= 0;
 			item= item.getParentItem();
 			while (item != null) {
-				TreeObject parentTreeObj= (TreeObject) elementToTreeObj.get(item);
+				TreeObject parentTreeObj= elementToTreeObj.get(item);
 				if (parentTreeObj == null) {
 					parentTreeObj= new TreeObject(item, false);
 					elementToTreeObj.put(item, parentTreeObj);
@@ -161,9 +163,9 @@ public class TreeCopyAction extends Action {
 		clipboard.setContents(new Object[] { result }, new Transfer[] { TextTransfer.getInstance() });
 	}
 
-	private void appendSelectionObjects(StringBuffer buffer, int indent, List selObjs) {
-		for (Iterator iter= selObjs.iterator(); iter.hasNext();) {
-			TreeObject selObj= (TreeObject) iter.next();
+	private void appendSelectionObjects(StringBuffer buffer, int indent, List<TreeObject> selObjs) {
+		for (Iterator<TreeObject> iter= selObjs.iterator(); iter.hasNext();) {
+			TreeObject selObj= iter.next();
 			if (selObj.isSelected()) {
 				buffer.append('\n');
 				for (int d= 0; d < indent; d++)

@@ -47,7 +47,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 /**
  * View for presenting debug output as raw text.
  */
-@SuppressWarnings("restriction")
 public class DebugOutputView extends AbstractDebugOutputView implements ISelectionListener {
 
 	public static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
@@ -101,6 +100,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 	 * Part listener that re-enables updating when the view appears.
 	 */
 	private final class DebugViewPartListener extends PartListenerAdapter {
+		@Override
 		public void partVisible(IWorkbenchPartReference ref) {
 			IWorkbenchPart part = ref.getPart(false);
 			if (part == DebugOutputView.this) {
@@ -136,6 +136,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 		getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
 		setBackgroundColor();
 		fTerminateListener = new IDebugEventSetListener() {
+			@Override
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
@@ -151,6 +152,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 								target = (IPHPDebugTarget) ((PHPThread) obj).getDebugTarget();
 							}
 							Job job = new UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_1) {
+								@Override
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
@@ -174,6 +176,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
 				this);
@@ -195,6 +198,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
 	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IPHPDebugTarget target = fDebugViewHelper.getSelectionElement(selection);
 		update(target);
@@ -250,6 +254,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 		fSourceViewer.getTextWidget().setBackground(getBackgroundColor(store));
 		if (fPropertyChangeListener == null) {
 			fPropertyChangeListener = new IPropertyChangeListener() {
+				@Override
 				public void propertyChange(PropertyChangeEvent event) {
 					IPreferenceStore store = EditorsPlugin.getDefault().getPreferenceStore();
 					String prop = event.getProperty();

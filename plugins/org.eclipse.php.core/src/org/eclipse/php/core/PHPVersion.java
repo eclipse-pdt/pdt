@@ -43,7 +43,7 @@ public enum PHPVersion {
 	private String alias;
 
 	private static class Aliases {
-		private static Map<String, PHPVersion> map = new HashMap<String, PHPVersion>();
+		private static Map<String, PHPVersion> map = new HashMap<>();
 	}
 
 	PHPVersion(String alias) {

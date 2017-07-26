@@ -48,6 +48,7 @@ public class ArrayCreation extends Expression implements Dereferencable {
 		}
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			for (ArrayElement element : elements) {
@@ -58,6 +59,7 @@ public class ArrayCreation extends Expression implements Dereferencable {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.ARRAY_CREATION;
 	}
@@ -69,9 +71,11 @@ public class ArrayCreation extends Expression implements Dereferencable {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

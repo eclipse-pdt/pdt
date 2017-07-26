@@ -31,6 +31,7 @@ public class ComposerPlugin extends Plugin {
 
 	private static final String DEBUG = "org.eclipse.php.composer.core/debug"; //$NON-NLS-1$
 
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 
@@ -38,6 +39,7 @@ public class ComposerPlugin extends Plugin {
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IResourceChangeListener listener = new IResourceChangeListener() {
+			@Override
 			public void resourceChanged(IResourceChangeEvent event) {
 				if (event.getType() == IResourceChangeEvent.PRE_DELETE && event.getResource() instanceof IProject) {
 					ModelAccess.getInstance().getPackageManager().removeProject((IProject) event.getResource());
@@ -48,6 +50,7 @@ public class ComposerPlugin extends Plugin {
 
 	}
 
+	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 
 		super.stop(bundleContext);

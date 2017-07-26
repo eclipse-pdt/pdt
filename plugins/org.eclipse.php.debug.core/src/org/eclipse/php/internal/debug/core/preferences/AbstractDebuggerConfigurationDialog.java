@@ -72,6 +72,7 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 	 * 
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
 	 */
+	@Override
 	protected Point getInitialSize() {
 		Point p = super.getInitialSize();
 		p.x -= 200;

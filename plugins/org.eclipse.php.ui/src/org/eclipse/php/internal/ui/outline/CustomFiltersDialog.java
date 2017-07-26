@@ -333,7 +333,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		Set<String> enabledIds = new HashSet<>(result.length);
 		for (int i = 0; i < result.length; i++)
 			enabledIds.add(((FilterDescriptor) result[i]).getId());
-		return (String[]) enabledIds.toArray(new String[enabledIds.size()]);
+		return enabledIds.toArray(new String[enabledIds.size()]);
 	}
 
 	/**
@@ -395,7 +395,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 			list.add(pattern);
 		else {
 			int index = list.size() - 1;
-			list.set(index, ((String) list.get(index)) + pattern);
+			list.set(index, (list.get(index)) + pattern);
 		}
 	}
 

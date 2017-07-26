@@ -31,10 +31,12 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 
 public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 
+	@Override
 	public String getBreakpointModelID() {
 		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
 
+	@Override
 	public Object sourceNotFound(Object debugElement) {
 		Object obj = null;
 		if (debugElement instanceof IStackFrame) {
@@ -43,10 +45,12 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return obj;
 	}
 
+	@Override
 	public ISourceContainer getSourceContainer(IProject resource, ILaunchConfiguration launchConfig) {
 		return new PHPCompositeSourceContainer(resource, launchConfig);
 	}
 
+	@Override
 	public DBGpBreakpoint createDBGpBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint instanceof PHPLineBreakpoint) {
 			return new DBGpLineBreakpoint((PHPLineBreakpoint) breakpoint);
@@ -57,6 +61,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return null;
 	}
 
+	@Override
 	public IBreakpoint findBreakpointHit(String sourceFileLocation, int lineno, String exception) {
 		IBreakpoint bpFound = null;
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
@@ -100,6 +105,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return bpFound;
 	}
 
+	@Override
 	public boolean supportsBreakpoint(IBreakpoint bp) {
 		if (bp.getModelIdentifier().equals(getBreakpointModelID())) {
 			// TODO: Improvement: Breakpoint: better support for breakpoint
@@ -112,6 +118,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return false;
 	}
 
+	@Override
 	public String getSystemDebugProperty() {
 		return "org.eclipse.php.debug.ui.activeDebugging"; //$NON-NLS-1$
 	}

@@ -34,6 +34,7 @@ public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStra
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof InterfaceDeclarationKeywordContext)) {
@@ -48,6 +49,7 @@ public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStra
 		}
 	}
 
+	@Override
 	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 		if (!isInsertMode()) {
 			return getReplacementRangeWithSpaceAtPrefixEnd(context);

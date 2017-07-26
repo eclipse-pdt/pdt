@@ -33,7 +33,7 @@ public class BuildPathUtils {
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
 		// get the current buildpath entries, in order to add/remove entries
-		Set<IBuildpathEntry> newRawBuildpath = new HashSet<IBuildpathEntry>();
+		Set<IBuildpathEntry> newRawBuildpath = new HashSet<>();
 
 		// get all of the source folders and the language library from the
 		// existing build path
@@ -62,7 +62,7 @@ public class BuildPathUtils {
 			throws ModelException {
 
 		// get the current buildpath entries, in order to add/remove entries
-		Set<IBuildpathEntry> newRawBuildpath = new HashSet<IBuildpathEntry>();
+		Set<IBuildpathEntry> newRawBuildpath = new HashSet<>();
 
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
@@ -114,7 +114,7 @@ public class BuildPathUtils {
 
 		// get the current buildpath entries, in order to remove the given
 		// entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> newRawBuildpath = new ArrayList<>();
 
 		for (IBuildpathEntry entry : rawBuildpath) {
 			if (!(entry.getPath().equals(buildpathEntry.getPath()))) {
@@ -228,7 +228,7 @@ public class BuildPathUtils {
 			return Collections.emptyList();
 		}
 
-		ArrayList<IBuildpathEntry> result = new ArrayList<IBuildpathEntry>();
+		ArrayList<IBuildpathEntry> result = new ArrayList<>();
 		// go over the build path entries and for each one of the "sources"
 		// check if they are the same as the given include path entry or if they
 		// contain it

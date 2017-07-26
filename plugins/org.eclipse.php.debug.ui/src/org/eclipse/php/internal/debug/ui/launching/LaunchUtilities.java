@@ -55,6 +55,7 @@ public class LaunchUtilities {
 	 */
 	public static void openError(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = getShell();
 				MessageDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message);
@@ -72,6 +73,7 @@ public class LaunchUtilities {
 	 */
 	public static void openError(final String message, final IStatus status) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = getShell();
 				ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message, status);
@@ -177,6 +179,7 @@ public class LaunchUtilities {
 
 	private class WebLaunchLabelProvider extends org.eclipse.ui.model.WorkbenchLabelProvider {
 
+		@Override
 		protected String decorateText(String input, Object element) {
 			if (element instanceof IFile) {
 				IFile file = (IFile) element;

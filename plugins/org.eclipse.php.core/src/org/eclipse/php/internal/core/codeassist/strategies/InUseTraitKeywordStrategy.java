@@ -40,6 +40,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();

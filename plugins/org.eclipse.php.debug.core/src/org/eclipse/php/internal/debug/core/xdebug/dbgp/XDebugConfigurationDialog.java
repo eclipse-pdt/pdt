@@ -96,6 +96,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		return null;
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 		GridData ptGridData = (GridData) parent.getLayoutData();
@@ -134,10 +135,12 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		useProxy = addCheckBox(proxyGroup, PHPDebugCoreMessages.XDebugConfigurationDialog_useProxy,
 				XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY, 0);
 		useProxy.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				toggleProxyFields(useProxy.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				toggleProxyFields(useProxy.getSelection());
 			}
@@ -259,6 +262,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 	/**
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
+	@Override
 	protected void okPressed() {
 		// TODO: move to preference manager
 		IEclipsePreferences prefs = PHPDebugPlugin.getInstancePreferences();

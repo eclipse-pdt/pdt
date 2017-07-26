@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 public abstract class PerformanceMeterFactory {
 	
-	private static Set fScenarios= new HashSet();
+	private static Set<String> fScenarios= new HashSet<>();
 	
 	public PerformanceMeter createPerformanceMeter(String scenario) {
 		assertUniqueScenario(scenario);

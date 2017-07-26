@@ -50,12 +50,13 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 	/**
 	 * Holds the result of evaluated types that this evaluator resolved
 	 */
-	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private final List<IEvaluatedType> evaluated = new LinkedList<>();
 
 	public PHPDocMethodReturnTypeEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		for (IMethod method : getMethods()) {
 			if (!method.exists()) {
@@ -71,7 +72,7 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 					if (returnType != null) {
 						typeNames = StringUtils.split(returnType, Constants.TYPE_SEPARATOR_CHAR);
 					} else {
-						List<String> returnTypeList = new LinkedList<String>();
+						List<String> returnTypeList = new LinkedList<>();
 						evaluateReturnType(returnTypeList, method);
 						typeNames = returnTypeList.toArray(new String[returnTypeList.size()]);
 					}
@@ -127,10 +128,12 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 		}
 	}
 
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		return IGoal.NO_GOALS;
 	}

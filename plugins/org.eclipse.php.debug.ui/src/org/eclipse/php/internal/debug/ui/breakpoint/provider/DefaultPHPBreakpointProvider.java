@@ -52,6 +52,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 
 	private String originalURL;
 
+	@Override
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset)
 			throws CoreException {
 
@@ -87,7 +88,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 
 			IResource resource = getResourceFromInput(input);
 
-			Map<String, String> attributes = new HashMap<String, String>();
+			Map<String, Comparable<?>> attributes = new HashMap<>();
 			ISourceModule modelElement = DLTKUIPlugin.getEditorInputModelElement(input);
 
 			if (modelElement != null) {
@@ -169,17 +170,18 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 
 	@Override
 	public IBreakpoint createBreakpoint(IEditorInput input, IResource resource, int lineNumber, int charStart,
-			int charEnd, Map<String, String> attributes) throws CoreException {
+			int charEnd, Map<String, Comparable<?>> attributes) throws CoreException {
 		attributes.put(IDebugParametersKeys.ORIGINAL_URL, originalURL);
 		return new PHPConditionalBreakpoint(resource, lineNumber, charStart, charEnd, attributes);
 	}
 
+	@Override
 	public IResource getResource(IEditorInput input) {
 		return getResourceFromInput(input);
 	}
 
 	private IResource getResourceFromInput(IEditorInput input) {
-		IResource resource = (IResource) input.getAdapter(IFile.class);
+		IResource resource = input.getAdapter(IFile.class);
 		if (resource == null || !resource.exists()) {
 			// for non-workspace resources - use workspace root for storing
 			// breakpoints
@@ -243,10 +245,12 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
 	 *      java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
 		// not used
 	}
 
+	@Override
 	public void setSourceEditingTextTools(ISourceEditingTextTools tools) {
 		// not used
 	}

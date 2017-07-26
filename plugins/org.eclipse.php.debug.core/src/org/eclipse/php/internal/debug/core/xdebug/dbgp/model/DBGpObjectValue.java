@@ -99,6 +99,7 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 		return variable;
 	}
 
+	@Override
 	public String getValueDetail() throws DebugException {
 		String toString = this.fOwner.getFullName() + "->__toString()"; //$NON-NLS-1$
 		Node resp = ((DBGpTarget) fOwner.getDebugTarget()).eval(toString);

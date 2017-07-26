@@ -38,6 +38,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		super(locator);
 	}
 
+	@Override
 	protected void visitTypeDeclaration(TypeDeclaration t) {
 		if (t instanceof NamespaceDeclaration && ((NamespaceDeclaration) t).isGlobal()) {
 			return;
@@ -45,6 +46,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		super.visitTypeDeclaration(t);
 	}
 
+	@Override
 	protected void processStatement(ASTNode node, PatternLocator locator) {
 		if (node instanceof FieldDeclaration) {
 			locator.match((FieldDeclaration) node, getNodeSet());
@@ -165,6 +167,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		}
 	}
 
+	@Override
 	public void parseBodies(ModuleDeclaration unit) {
 		unit.rebuild();
 		super.parseBodies(unit);
@@ -185,10 +188,12 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			super(name, nameStart, nameEnd, declStart, declEnd);
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return locationEquals(this, obj);
 		}
 
+		@Override
 		public int hashCode() {
 			return this.sourceEnd() * 1001 + this.sourceEnd();
 		}
@@ -200,10 +205,12 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			super(start, end, name);
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return locationEquals(this, obj);
 		}
 
+		@Override
 		public int hashCode() {
 			return this.sourceEnd() * 1001 + this.sourceEnd();
 		}
@@ -224,10 +231,12 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			super(start, end, receiver, name, args);
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return locationEquals(this, obj);
 		}
 
+		@Override
 		public int hashCode() {
 			return this.sourceEnd() * 1001 + this.sourceEnd();
 		}

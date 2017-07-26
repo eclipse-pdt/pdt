@@ -90,7 +90,7 @@ public class PHPTemplateVariables {
 			String[] knownVars = requestor.getVariables();
 			Set<String> knownVarsSet = new HashSet<>(Arrays.asList(knownVars));
 
-			List params = variable.getVariableType().getParams();
+			List<?> params = variable.getVariableType().getParams();
 			if (params.size() == 0) {
 				String result = findUnusedName(knownVarsSet);
 				variable.setValue(result);

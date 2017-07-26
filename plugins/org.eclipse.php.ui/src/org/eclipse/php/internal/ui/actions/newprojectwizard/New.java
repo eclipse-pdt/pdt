@@ -92,7 +92,7 @@ public final class New extends WizardHandler {
 		} else {
 			// @issue the following is resource-specific legacy code
 			// Build the selection from the IFile of the editor
-			Class resourceClass = LegacyResourceSupport.getResourceClass();
+			Class<?> resourceClass = LegacyResourceSupport.getResourceClass();
 			if (resourceClass != null) {
 				IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
 				IWorkbenchPart part = activeWorkbenchWindow.getPartService().getActivePart();

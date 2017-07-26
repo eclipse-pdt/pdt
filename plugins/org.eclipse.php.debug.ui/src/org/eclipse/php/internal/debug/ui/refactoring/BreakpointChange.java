@@ -108,6 +108,7 @@ public abstract class BreakpointChange extends Change {
 	 * org.eclipse.ltk.core.refactoring.Change#initializeValidationData(org.
 	 * eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void initializeValidationData(IProgressMonitor pm) {
 		// do nothing
 	}
@@ -119,6 +120,7 @@ public abstract class BreakpointChange extends Change {
 	 * org.eclipse.ltk.core.refactoring.Change#isValid(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
@@ -128,6 +130,7 @@ public abstract class BreakpointChange extends Change {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.Change#getModifiedElement()
 	 */
+	@Override
 	public Object getModifiedElement() {
 		return fBreakpoint;
 	}

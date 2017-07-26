@@ -57,7 +57,7 @@ import java_cup.runtime.Symbol;
 %state ST_DOCBLOCK
 %state ST_ONE_LINE_COMMENT
 %{
-	private final LinkedList commentList = new LinkedList();
+	private final LinkedList<Object> commentList = new LinkedList<>();
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=514632
 	// stores nested HEREDOC ids
 	private final Stack<String> heredocIds = new Stack<>();
@@ -73,14 +73,17 @@ import java_cup.runtime.Symbol;
 		this.ast = ast;
 	}
 
+	@Override
 	public PHPVersion getPHPVersion() {
 		return PHPVersion.PHP5;
 	}
 
+	@Override
 	public void setInScriptingState() {
 		yybegin(ST_IN_SCRIPTING);
 	}
 
+	@Override
 	public void resetCommentList() {
 		commentList.clear();
 	}
@@ -88,7 +91,8 @@ import java_cup.runtime.Symbol;
 	/**
 	 * Will only be filled when ast != null
 	 */
-	public LinkedList getCommentList() {
+	@Override
+	public LinkedList<Object> getCommentList() {
 		return commentList;
 	}
 
@@ -103,10 +107,12 @@ import java_cup.runtime.Symbol;
 		}
 	}
 
+	@Override
 	public void setUseAspTagsAsPHP(boolean useAspTagsAsPhp) {
 		asp_tags = useAspTagsAsPhp;
 	}
 
+	@Override
 	public void setUseShortTags(boolean useShortTags) {
 		short_tags_allowed = useShortTags;
 	}
@@ -120,6 +126,7 @@ import java_cup.runtime.Symbol;
 		yybegin(stack.popStack());
 	}
 
+	@Override
 	public int getCurrentLine() {
 		return yyline;
 	}
@@ -132,6 +139,7 @@ import java_cup.runtime.Symbol;
 		return zzMarkedPos - zzStartRead;
 	}
 
+	@Override
 	public int getLength() {
 		return zzEndRead - _zzPushbackPos;
 	}

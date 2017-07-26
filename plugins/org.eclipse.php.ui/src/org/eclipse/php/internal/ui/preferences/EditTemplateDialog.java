@@ -178,7 +178,7 @@ public class EditTemplateDialog extends StatusDialog {
 
 		List<String[]> contexts = new ArrayList<>();
 		for (Iterator<TemplateContextType> it = registry.contextTypes(); it.hasNext();) {
-			TemplateContextType type = (TemplateContextType) it.next();
+			TemplateContextType type = it.next();
 			if (type.getId().equals("javadoc")) //$NON-NLS-1$
 				contexts.add(new String[] { type.getId(), type.getName(), "/**" + delim }); //$NON-NLS-1$
 			else
@@ -544,22 +544,22 @@ public class EditTemplateDialog extends StatusDialog {
 	private void fillContextMenu(IMenuManager menu) {
 		menu.add(new GroupMarker(ITextEditorActionConstants.GROUP_UNDO));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_UNDO,
-				(IAction) fGlobalActions.get(ITextEditorActionConstants.UNDO));
+				fGlobalActions.get(ITextEditorActionConstants.UNDO));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_UNDO,
-				(IAction) fGlobalActions.get(ITextEditorActionConstants.REDO));
+				fGlobalActions.get(ITextEditorActionConstants.REDO));
 
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_EDIT));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				(IAction) fGlobalActions.get(ITextEditorActionConstants.CUT));
+				fGlobalActions.get(ITextEditorActionConstants.CUT));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				(IAction) fGlobalActions.get(ITextEditorActionConstants.COPY));
+				fGlobalActions.get(ITextEditorActionConstants.COPY));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				(IAction) fGlobalActions.get(ITextEditorActionConstants.PASTE));
+				fGlobalActions.get(ITextEditorActionConstants.PASTE));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				(IAction) fGlobalActions.get(ITextEditorActionConstants.SELECT_ALL));
+				fGlobalActions.get(ITextEditorActionConstants.SELECT_ALL));
 
 		menu.add(new Separator(IContextMenuConstants.GROUP_GENERATE));
-		menu.appendToGroup(IContextMenuConstants.GROUP_GENERATE, (IAction) fGlobalActions.get("ContentAssistProposal")); //$NON-NLS-1$
+		menu.appendToGroup(IContextMenuConstants.GROUP_GENERATE, fGlobalActions.get("ContentAssistProposal")); //$NON-NLS-1$
 	}
 
 	protected void updateSelectionDependentActions() {

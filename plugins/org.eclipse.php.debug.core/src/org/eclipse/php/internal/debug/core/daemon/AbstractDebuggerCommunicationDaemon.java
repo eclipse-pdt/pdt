@@ -46,6 +46,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * Initializes the ServerSocket and starts a listen thread. Also, initialize
 	 * a preferences change listener for the port that is used by this daemon.
 	 */
+	@Override
 	public void init() {
 		resetSocket();
 	}
@@ -53,6 +54,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	/**
 	 * Starts the listening thread for any incoming debug requests (responces).
 	 */
+	@Override
 	public void startListen() {
 		synchronized (lock) {
 			if (!isAlive && serverSocket != null) {
@@ -66,6 +68,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	/**
 	 * Stops the listening thread. Any incoming request will not be treated.
 	 */
+	@Override
 	public void stopListen() {
 		synchronized (lock) {
 			isAlive = false;
@@ -99,6 +102,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * 
 	 * @return True, if the daemon is listening; False, otherwise.
 	 */
+	@Override
 	public boolean isListening(int port) {
 		synchronized (lock) {
 			return isAlive && getReceiverPort() == port;
@@ -111,6 +115,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * 
 	 * @return True, if the reset did not yield any errors; False, otherwise.
 	 */
+	@Override
 	public boolean resetSocket() {
 		stopListen();
 		int port = getReceiverPort();
@@ -135,6 +140,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * @seeorg.eclipse.php.debug.daemon.communication.ICommunicationDaemon#
 	 * handleMultipleBindingError()
 	 */
+	@Override
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
 		Logger.log(Logger.ERROR, "The debug port " //$NON-NLS-1$
@@ -163,6 +169,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * @return The debugger ID that is using this daemon.
 	 * @since PDT 1.0
 	 */
+	@Override
 	public abstract String getDebuggerID();
 
 	/**
@@ -183,6 +190,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 		listenerThread.start();
 	}
 
+	@Override
 	public boolean isInitialized() {
 		synchronized (lock) {
 			return isInitialized;
@@ -195,6 +203,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * session is initialized.
 	 */
 	private class ReceiverThread implements Runnable {
+		@Override
 		public void run() {
 			isInitialized = true;
 			try {
@@ -224,6 +233,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	 * org.eclipse.php.internal.debug.daemon.communication.ICommunicationDaemon
 	 * #isEnabled()
 	 */
+	@Override
 	public boolean isEnabled() {
 		return true;
 	}

@@ -64,7 +64,7 @@ public abstract class OptionsConfigurationBlock {
 
 		private LocalKey(String key) {
 			super("local", key); //$NON-NLS-1$
-			fValues = new HashMap<IScopeContext, String>();
+			fValues = new HashMap<>();
 		}
 
 		@Override
@@ -224,7 +224,7 @@ public abstract class OptionsConfigurationBlock {
 		if (fProject == null || hasProjectSpecificOptions(fProject)) {
 			fDisabledProjectSettings = null;
 		} else {
-			fDisabledProjectSettings = new IdentityHashMap<Key, String>();
+			fDisabledProjectSettings = new IdentityHashMap<>();
 			for (int i = 0; i < allKeys.length; i++) {
 				Key curr = allKeys[i];
 				fDisabledProjectSettings.put(curr, curr.getStoredValue(fLookupOrder, false, fManager));
@@ -233,12 +233,12 @@ public abstract class OptionsConfigurationBlock {
 
 		settingsUpdated();
 
-		fCheckBoxes = new ArrayList<Button>();
-		fComboBoxes = new ArrayList<Combo>();
-		fTextBoxes = new ArrayList<Text>(2);
-		fLinks = new ArrayList<Link>(2);
-		fLabels = new HashMap<Control, Label>();
-		fExpandableComposites = new ArrayList<ExpandableComposite>();
+		fCheckBoxes = new ArrayList<>();
+		fComboBoxes = new ArrayList<>();
+		fTextBoxes = new ArrayList<>(2);
+		fLinks = new ArrayList<>(2);
+		fLabels = new HashMap<>();
+		fExpandableComposites = new ArrayList<>();
 
 		fRebuildCount = getRebuildCount();
 	}
@@ -989,7 +989,7 @@ public abstract class OptionsConfigurationBlock {
 				updateControls();
 				validateSettings(null, null, null);
 			} else {
-				fDisabledProjectSettings = new IdentityHashMap<Key, String>();
+				fDisabledProjectSettings = new IdentityHashMap<>();
 				for (int i = 0; i < fAllKeys.length; i++) {
 					Key curr = fAllKeys[i];
 					String oldSetting = curr.getStoredValue(fLookupOrder, false, fManager);
@@ -1017,7 +1017,7 @@ public abstract class OptionsConfigurationBlock {
 	protected boolean processChanges(IWorkbenchPreferenceContainer container) {
 		IScopeContext currContext = fLookupOrder[0];
 
-		List<Key> changedOptions = new ArrayList<Key>();
+		List<Key> changedOptions = new ArrayList<>();
 		boolean needsBuild = getChanges(currContext, changedOptions);
 		if (changedOptions.isEmpty()) {
 			return true;

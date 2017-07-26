@@ -41,6 +41,7 @@ public class FileContentDebugHandler extends SimpleDebugHandler {
 	/**
 	 * Returns null.
 	 */
+	@Override
 	public PHPDebugTarget getDebugTarget() {
 		return null;
 	}
@@ -48,6 +49,7 @@ public class FileContentDebugHandler extends SimpleDebugHandler {
 	/**
 	 * Returns an {@link AdvancedRemoteDebugger}.
 	 */
+	@Override
 	public IRemoteDebugger getRemoteDebugger() {
 		if (fRemoteDebugger == null) {
 			fRemoteDebugger = new RemoteDebugger(this, fDebugConnection);
@@ -58,6 +60,7 @@ public class FileContentDebugHandler extends SimpleDebugHandler {
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void setDebugTarget(PHPDebugTarget debugTarget) {
 	}
 
@@ -67,6 +70,7 @@ public class FileContentDebugHandler extends SimpleDebugHandler {
 	 * @see org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#
 	 * connectionClosed ()
 	 */
+	@Override
 	public void connectionClosed() {
 		super.connectionClosed();
 		fRemoteDebugger.finish();
@@ -78,6 +82,7 @@ public class FileContentDebugHandler extends SimpleDebugHandler {
 	 * @see org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#
 	 * wrongDebugServer ()
 	 */
+	@Override
 	public void wrongDebugServer() {
 		super.wrongDebugServer();
 		fRemoteDebugger.finish();

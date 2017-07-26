@@ -85,6 +85,7 @@ public class RenameGlobalConstantProcessor extends AbstractRenameProcessor<IFile
 	/**
 	 * Derive the change
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
 				PHPRefactoringCoreMessages.getString("RenameDefinedProcessor.4")); //$NON-NLS-1$
@@ -128,42 +129,52 @@ public class RenameGlobalConstantProcessor extends AbstractRenameProcessor<IFile
 		}
 	}
 
+	@Override
 	public Object[] getElements() {
 		return new Object[] { scalar };
 	}
 
+	@Override
 	public String getIdentifier() {
 		return ID_RENAME_CONSTANT;
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RENAME_CONSTANT_PROCESSOR_NAME;
 	}
 
+	@Override
 	public Object getNewElement() {
 		return getNewElementName();
 	}
 
+	@Override
 	public String getCurrentElementName() {
 		return scalarName;
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return scalarName;
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		isUpdateTextualMatches = update;
 	}
 
+	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 		if (PHPElementConciliator.constantAlreadyExists(program, getNewElementName())) {
 			final String message = MessageFormat.format(RenameGlobalConstantProcessor.CONSTANT_IS_USED,

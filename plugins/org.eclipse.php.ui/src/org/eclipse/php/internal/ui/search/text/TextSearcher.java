@@ -112,7 +112,7 @@ public class TextSearcher {
 	/**
 	 * @return a list of {@link FileMatch}
 	 */
-	public List getResults() {
+	public List<?> getResults() {
 		assert done;
 		return visitor.getResult();
 	}

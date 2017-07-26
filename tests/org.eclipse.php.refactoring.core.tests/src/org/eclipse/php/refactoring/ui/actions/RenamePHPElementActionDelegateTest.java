@@ -69,7 +69,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 		}
 		assertNotNull(source);
 
-		final ArrayList<IType> type = new ArrayList<IType>();
+		final ArrayList<IType> type = new ArrayList<>();
 		try {
 			source.accept(new IModelElementVisitor() {
 				@Override
@@ -130,7 +130,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 		}
 		assertNotNull(source);
 
-		final ArrayList<IMethod> methods = new ArrayList<IMethod>();
+		final ArrayList<IMethod> methods = new ArrayList<>();
 		try {
 			source.accept(new IModelElementVisitor() {
 				@Override
@@ -198,7 +198,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 			fail(e1.getMessage());
 		}
 
-		final ArrayList<IMethod> methods = new ArrayList<IMethod>();
+		final ArrayList<IMethod> methods = new ArrayList<>();
 		try {
 			source.accept(new IModelElementVisitor() {
 				@Override
@@ -266,7 +266,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 			fail(e1.getMessage());
 		}
 
-		final ArrayList<IField> methods = new ArrayList<IField>();
+		final ArrayList<IField> methods = new ArrayList<>();
 		try {
 			source.accept(new IModelElementVisitor() {
 				@Override

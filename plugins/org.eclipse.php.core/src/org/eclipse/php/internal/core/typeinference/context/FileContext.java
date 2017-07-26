@@ -61,6 +61,7 @@ public class FileContext extends BasicContext implements INamespaceContext, IMod
 		}
 	}
 
+	@Override
 	public String getNamespace() {
 		return namespaceName;
 	}
@@ -74,14 +75,17 @@ public class FileContext extends BasicContext implements INamespaceContext, IMod
 		this.namespaceName = namespaceName;
 	}
 
+	@Override
 	public IModelAccessCache getCache() {
 		return cache;
 	}
 
+	@Override
 	public void setCache(IModelAccessCache cache) {
 		this.cache = cache;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -89,6 +93,7 @@ public class FileContext extends BasicContext implements INamespaceContext, IMod
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

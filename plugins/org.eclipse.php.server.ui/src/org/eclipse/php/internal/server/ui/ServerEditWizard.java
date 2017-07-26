@@ -17,7 +17,6 @@ import org.eclipse.php.internal.server.core.Server;
 /**
  * Wizard for editing PHP server settings.
  */
-@SuppressWarnings("restriction")
 public class ServerEditWizard extends Wizard {
 
 	private Server server;

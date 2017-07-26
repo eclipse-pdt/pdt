@@ -40,8 +40,8 @@ import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 public class ValidatorVisitor extends PHPASTVisitor {
 
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
-	private static final List<String> TYPE_SKIP = new ArrayList<String>();
-	private static final List<String> PHPDOC_TYPE_SKIP = new ArrayList<String>();
+	private static final List<String> TYPE_SKIP = new ArrayList<>();
+	private static final List<String> PHPDOC_TYPE_SKIP = new ArrayList<>();
 
 	static {
 		TYPE_SKIP.add("parent"); //$NON-NLS-1$
@@ -52,8 +52,8 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		PHPDOC_TYPE_SKIP.add("false"); //$NON-NLS-1$
 	}
 
-	private Map<String, UsePartInfo> usePartInfo = new LinkedHashMap<String, UsePartInfo>();
-	private Map<String, Boolean> elementExists = new HashMap<String, Boolean>();
+	private Map<String, UsePartInfo> usePartInfo = new LinkedHashMap<>();
+	private Map<String, Boolean> elementExists = new HashMap<>();
 	private NamespaceDeclaration currentNamespace;
 	private Set<String> typeDeclared = new HashSet<>();
 	private boolean hasNamespace;
@@ -228,6 +228,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		return super.visit(s);
 	}
 
+	@Override
 	public boolean visit(UsePart part) throws Exception {
 		UsePartInfo info = new UsePartInfo(part);
 		TypeReferenceInfo tri = info.getTypeReferenceInfo();

@@ -73,7 +73,7 @@ public class VirtualPath implements Cloneable {
 		}
 
 		StringTokenizer st = new StringTokenizer(path, "/\\"); //$NON-NLS-1$
-		segments = new LinkedList<String>();
+		segments = new LinkedList<>();
 		while (st.hasMoreTokens()) {
 			String segment = st.nextToken();
 			if (segment.length() > 0) {
@@ -139,6 +139,7 @@ public class VirtualPath implements Cloneable {
 		return !i1.hasNext();
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder(device);
 		Iterator<String> i = segments.iterator();
@@ -151,8 +152,9 @@ public class VirtualPath implements Cloneable {
 		return buf.toString();
 	}
 
+	@Override
 	public VirtualPath clone() {
-		LinkedList<String> segments = new LinkedList<String>();
+		LinkedList<String> segments = new LinkedList<>();
 		Iterator<String> i = this.segments.iterator();
 		while (i.hasNext()) {
 			segments.add(i.next());
@@ -161,10 +163,12 @@ public class VirtualPath implements Cloneable {
 		return path;
 	}
 
+	@Override
 	public int hashCode() {
 		return device.hashCode() + 13 * segments.hashCode() + 31 * sepChar;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof VirtualPath)) {
 			return false;

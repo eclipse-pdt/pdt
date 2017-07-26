@@ -54,6 +54,7 @@ public class ArrayAccess extends Variable {
 	/**
 	 * @return the name PROPERTY
 	 */
+	@Override
 	public ChildPropertyDescriptor getNameProperty() {
 		return ArrayAccess.NAME_PROPERTY;
 	}
@@ -61,6 +62,7 @@ public class ArrayAccess extends Variable {
 	/**
 	 * @return the DOLLARED property
 	 */
+	@Override
 	public SimplePropertyDescriptor getDollaredProperty() {
 		return ArrayAccess.DOLLARED_PROPERTY;
 	}
@@ -72,7 +74,7 @@ public class ArrayAccess extends Variable {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(4);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(DOLLARED_PROPERTY);
 		propertyList.add(INDEX_PROPERTY);
@@ -110,6 +112,7 @@ public class ArrayAccess extends Variable {
 		}
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getName().accept(visitor);
 		if (index != null) {
@@ -117,6 +120,7 @@ public class ArrayAccess extends Variable {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getName().traverseTopDown(visitor);
@@ -125,6 +129,7 @@ public class ArrayAccess extends Variable {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getName().traverseBottomUp(visitor);
 		if (index != null) {
@@ -133,6 +138,7 @@ public class ArrayAccess extends Variable {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ArrayAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -158,6 +164,7 @@ public class ArrayAccess extends Variable {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -166,6 +173,7 @@ public class ArrayAccess extends Variable {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.ARRAY_ACCESS;
 	}
@@ -197,6 +205,7 @@ public class ArrayAccess extends Variable {
 		postReplaceChild(oldChild, index, INDEX_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == INDEX_PROPERTY) {
 			if (get) {
@@ -240,12 +249,13 @@ public class ArrayAccess extends Variable {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == ARRAY_TYPE_PROPERTY) {
 			if (get) {
 				return getArrayType();
 			} else {
-				setArrayType((Integer) value);
+				setArrayType(value);
 				return 0;
 			}
 		}
@@ -276,6 +286,7 @@ public class ArrayAccess extends Variable {
 	 * 
 	 * @return the expression name node
 	 */
+	@Override
 	public VariableBase getName() {
 		return (VariableBase) super.getName();
 	}
@@ -283,6 +294,7 @@ public class ArrayAccess extends Variable {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

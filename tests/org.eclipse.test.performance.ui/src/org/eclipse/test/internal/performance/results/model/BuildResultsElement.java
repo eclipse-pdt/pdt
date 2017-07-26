@@ -56,9 +56,9 @@ public class BuildResultsElement extends ResultsElement {
 	private static final PropertyDescriptor BUILD_TEST_ERROR_DESCRIPTOR = new PropertyDescriptor(P_ID_BUILD_ERROR, P_STR_BUILD_ERROR);
 	private static final PropertyDescriptor BUILD_STUDENTS_TTEST_DESCRIPTOR = new PropertyDescriptor(P_ID_BUILD_TTEST, P_STR_BUILD_TTEST);
 
-    private static Vector DESCRIPTORS;
-    static Vector initDescriptors(int status) {
-		DESCRIPTORS = new Vector();
+    private static Vector<PropertyDescriptor> DESCRIPTORS;
+    static Vector<PropertyDescriptor> initDescriptors(int status) {
+		DESCRIPTORS = new Vector<>();
 		// Status category
 		DESCRIPTORS.add(getInfosDescriptor(status));
 		DESCRIPTORS.add(getWarningsDescriptor(status));
@@ -89,7 +89,7 @@ public class BuildResultsElement extends ResultsElement {
         return DESCRIPTORS;
 	}
     static ComboBoxPropertyDescriptor getInfosDescriptor(int status) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if ((status & SMALL_VALUE) != 0) {
 			list.add("This test and/or its variation has a small value, hence it may not be necessary to spend time on fixing it if a regression occurs");
 		}
@@ -105,7 +105,7 @@ public class BuildResultsElement extends ResultsElement {
 		return infoDescriptor;
 	}
     static PropertyDescriptor getWarningsDescriptor(int status) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if ((status & BIG_ERROR) != 0) {
 			list.add("The error on this test is over the 3% threshold, hence its result may not be really reliable");
 		}
@@ -129,7 +129,7 @@ public class BuildResultsElement extends ResultsElement {
 		warningDescriptor.setCategory("Status");
 		return warningDescriptor;
     }
-    static Vector getDescriptors() {
+    static Vector<PropertyDescriptor> getDescriptors() {
     	return DESCRIPTORS;
 	}
 
@@ -147,6 +147,7 @@ public BuildResultsElement(String name, ResultsElement parent) {
 	initInfo();
 }
 
+@Override
 public int compareTo(Object o) {
 	if (o instanceof BuildResultsElement && getName() != null) {
 		BuildResultsElement element = (BuildResultsElement)o;
@@ -158,6 +159,7 @@ public int compareTo(Object o) {
 	return super.compareTo(o);
 }
 
+@Override
 ResultsElement createChild(AbstractResults testResults) {
 	return null;
 }
@@ -166,6 +168,7 @@ private BuildResults getBuildResults() {
 	return (BuildResults) this.results;
 }
 
+@Override
 public Object[] getChildren(Object o) {
 	if (this.results == null) {
 		return new Object[0];
@@ -176,6 +179,7 @@ public Object[] getChildren(Object o) {
 	return this.children;
 }
 
+@Override
 public Object getEditableValue() {
 	if (this.results == null)  {
 		return "Build "+this.name;
@@ -186,8 +190,9 @@ public Object getEditableValue() {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
  */
+@Override
 public IPropertyDescriptor[] getPropertyDescriptors() {
-	Vector descriptors = getDescriptors();
+	Vector<PropertyDescriptor> descriptors = getDescriptors();
 	if (descriptors == null) {
 		descriptors = initDescriptors(getStatus());
 	}
@@ -196,7 +201,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 	descriptorsArray[0] = getInfosDescriptor(getStatus());
 	descriptorsArray[1] = getWarningsDescriptor(getStatus());
 	for (int i=2; i<size; i++) {
-		descriptorsArray[i] = (IPropertyDescriptor) descriptors.get(i);
+		descriptorsArray[i] = descriptors.get(i);
 	}
 	return descriptorsArray;
 }
@@ -204,6 +209,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
  */
+@Override
 public Object getPropertyValue(Object propKey) {
 	BuildResults buildResults = getBuildResults();
 	if (buildResults != null) {
@@ -274,6 +280,7 @@ public Object getPropertyValue(Object propKey) {
 	return super.getPropertyValue(propKey);
 }
 
+@Override
 void initChildren() {
 	BuildResults buildResults = (BuildResults) this.results;
 	Dim[] dimensions = buildResults.getDimensions();
@@ -292,6 +299,7 @@ void initInfo() {
 	this.important = this.milestone || Util.getNextMilestone(this.name) == null;
 }
 
+@Override
 void initStatus() {
 	if (this.results == null) {
 		if (this.parent.isInitialized()) {
@@ -338,6 +346,7 @@ public boolean isUnknown() {
 /* (non-Javadoc)
  * @see java.lang.Object#toString()
  */
+@Override
 public String toString() {
 	return getName();
 }

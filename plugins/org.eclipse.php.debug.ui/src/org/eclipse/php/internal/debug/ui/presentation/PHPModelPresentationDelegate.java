@@ -35,6 +35,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
 	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
+	@Override
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		getPresentation().computeDetail(value, listener);
 	}
@@ -45,6 +46,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * @see
 	 * org.eclipse.debug.ui.IDebugModelPresentation#getImage(java.lang.Object)
 	 */
+	@Override
 	public Image getImage(Object element) {
 		return getPresentation().getImage(element);
 	}
@@ -55,6 +57,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * @see
 	 * org.eclipse.debug.ui.IDebugModelPresentation#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		return getPresentation().getText(element);
 	}
@@ -65,6 +68,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.
 	 * String , java.lang.Object)
 	 */
+	@Override
 	public void setAttribute(String attribute, Object value) {
 		getPresentation().setAttribute(attribute, value);
 	}
@@ -76,6 +80,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.
 	 * jface.viewers.ILabelProviderListener)
 	 */
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		getPresentation().addListener(listener);
 	}
@@ -85,6 +90,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * 
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
+	@Override
 	public void dispose() {
 		getPresentation().dispose();
 		bestMatchPresentation = null;
@@ -97,6 +103,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang
 	 * .Object, java.lang.String)
 	 */
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return getPresentation().isLabelProperty(element, property);
 	}
@@ -108,6 +115,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse
 	 * .jface.viewers.ILabelProviderListener)
 	 */
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		getPresentation().removeListener(listener);
 	}
@@ -118,6 +126,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * @seeorg.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.
 	 * IEditorInput, java.lang.Object)
 	 */
+	@Override
 	public String getEditorId(IEditorInput input, Object element) {
 		return getPresentation().getEditorId(input, element);
 	}
@@ -128,6 +137,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	 * @see
 	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
 	 */
+	@Override
 	public IEditorInput getEditorInput(Object element) {
 		return getPresentation().getEditorInput(element);
 	}

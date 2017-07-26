@@ -76,6 +76,7 @@ public class Script extends JsonObject {
 			return s1 == s2;
 		}
 
+		@Override
 		public HandlerValue clone() {
 			HandlerValue clone = new HandlerValue(getAsString());
 			clone.setIndex(index);
@@ -89,6 +90,7 @@ public class Script extends JsonObject {
 		super();
 		listen();
 		handlers.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				firePropertyChange(getScript() + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()); //$NON-NLS-1$
 			}
@@ -115,7 +117,7 @@ public class Script extends JsonObject {
 	@Override
 	protected List<String> getOwnProperties() {
 		String[] props = new String[] { "handlers" }; //$NON-NLS-1$
-		List<String> list = new ArrayList<String>(Arrays.asList(props));
+		List<String> list = new ArrayList<>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
 	}
@@ -166,6 +168,7 @@ public class Script extends JsonObject {
 	/**
 	 * Clears the handlers from this script
 	 */
+	@Override
 	public void clear() {
 		handlers.clear();
 	}
@@ -232,6 +235,7 @@ public class Script extends JsonObject {
 	 * 
 	 * @see org.eclipse.php.composer.api.entities.AbstractJsonObject#size()
 	 */
+	@Override
 	public int size() {
 		return handlers.size();
 	}
@@ -241,6 +245,7 @@ public class Script extends JsonObject {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Script clone() {
 		Script clone = new Script();
 		cloneProperties(clone);

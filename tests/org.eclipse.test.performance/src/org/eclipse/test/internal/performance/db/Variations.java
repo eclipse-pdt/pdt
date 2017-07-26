@@ -39,7 +39,8 @@ public class Variations extends Properties {
      * @param buildValue a value to store under the build key
      * @deprecated Use the default constructor instead and fill in key/value pairs explicitely.
      */
-    public Variations(String configValue, String buildValue) {
+    @Deprecated
+	public Variations(String configValue, String buildValue) {
         if (configValue != null)
             put(PerformanceTestPlugin.CONFIG, configValue);
         if (buildValue != null)
@@ -98,8 +99,8 @@ public class Variations extends Properties {
 	 * TODO: we need to escape '=' and ';' characters in key/values.
 	 */
     private static String toDB(Properties keyValues, boolean asQuery) {
-        Set set= keyValues.keySet();
-        String[] keys= (String[]) set.toArray(new String[set.size()]);
+        Set<?> set= keyValues.keySet();
+        String[] keys= set.toArray(new String[set.size()]);
         Arrays.sort(keys);
         StringBuffer sb= new StringBuffer();
         

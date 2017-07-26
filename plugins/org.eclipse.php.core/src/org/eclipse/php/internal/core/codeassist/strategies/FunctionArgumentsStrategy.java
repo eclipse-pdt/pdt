@@ -45,6 +45,7 @@ public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 

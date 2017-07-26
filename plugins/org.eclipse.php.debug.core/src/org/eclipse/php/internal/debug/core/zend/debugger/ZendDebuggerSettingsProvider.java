@@ -32,7 +32,7 @@ public class ZendDebuggerSettingsProvider extends AbstractDebuggerSettingsProvid
 		private boolean dirty = false;
 
 		protected ServerSettingsWorkingCopy(IDebuggerSettings original) {
-			super(original.getOwnerId(), new HashMap<String, String>(original.getAttributes()));
+			super(original.getOwnerId(), new HashMap<>(original.getAttributes()));
 			this.original = original;
 		}
 
@@ -60,7 +60,7 @@ public class ZendDebuggerSettingsProvider extends AbstractDebuggerSettingsProvid
 		private boolean dirty = false;
 
 		protected ExeSettingsWorkingCopy(IDebuggerSettings original) {
-			super(original.getOwnerId(), new HashMap<String, String>(original.getAttributes()));
+			super(original.getOwnerId(), new HashMap<>(original.getAttributes()));
 			this.original = original;
 		}
 

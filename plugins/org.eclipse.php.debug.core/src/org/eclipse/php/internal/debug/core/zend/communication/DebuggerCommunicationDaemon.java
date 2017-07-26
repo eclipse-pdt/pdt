@@ -68,6 +68,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		 * 
 		 * @return The port specified in the preferences.
 		 */
+		@Override
 		public int getReceiverPort() {
 			return port;
 		}
@@ -79,10 +80,12 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		 *         ID).
 		 * @since PDT 1.0
 		 */
+		@Override
 		public String getDebuggerID() {
 			return DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 		}
 
+		@Override
 		public boolean isDebuggerDaemon() {
 			return true;
 		}
@@ -95,6 +98,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		 * @return True, if the reset did not yield any errors; False,
 		 *         otherwise.
 		 */
+		@Override
 		public boolean resetSocket() {
 			stopListen();
 			int port = getReceiverPort();
@@ -126,13 +130,14 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		 * 
 		 * @param socket
 		 */
+		@Override
 		protected synchronized void startConnection(Socket socket) {
 			new DebugConnection(socket);
 		}
 
 	}
 
-	private List<AbstractDebuggerCommunicationDaemon> daemons = new ArrayList<AbstractDebuggerCommunicationDaemon>();
+	private List<AbstractDebuggerCommunicationDaemon> daemons = new ArrayList<>();
 
 	private IPreferenceChangeListener defaultPortListener = null;
 
@@ -146,6 +151,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	 * Listen to any changes in the SSL preference.
 	 */
 	private class SSLChangeListener implements IPreferenceChangeListener {
+		@Override
 		public void preferenceChange(PreferenceChangeEvent event) {
 			if (event.getKey().equals(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA)) {
 				Object newValueObj = event.getNewValue();
@@ -329,7 +335,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	private synchronized void reset() {
 		Set<Integer> ports = PHPDebugUtil.getDebugPorts(getDebuggerID());
-		List<AbstractDebuggerCommunicationDaemon> daemonsToRemove = new ArrayList<AbstractDebuggerCommunicationDaemon>();
+		List<AbstractDebuggerCommunicationDaemon> daemonsToRemove = new ArrayList<>();
 		// Shutdown daemons that should not listen anymore
 		for (AbstractDebuggerCommunicationDaemon daemon : daemons) {
 			boolean isRedundant = true;

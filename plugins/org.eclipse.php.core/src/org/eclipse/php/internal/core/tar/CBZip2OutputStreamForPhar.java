@@ -32,6 +32,7 @@ public class CBZip2OutputStreamForPhar extends CBZip2OutputStream implements CRC
 		super.writeMigicBytes();
 	}
 
+	@Override
 	public long getCrc() {
 		// TODO Auto-generated method stub
 		return mCrc.getFinalCRC();

@@ -200,7 +200,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 								new Path(LanguageModelInitializer.CONTAINER_PATH), scriptProject);
 						if (languageContainer == null) {
 							Logger.log(Logger.ERROR, "project \"" + scriptProject.getProject().getName()
-									+ "\" has php nature but has no language container"); //$NON-NLS-1$ //$NON-NLS-2$
+									+ "\" has php nature but has no language container"); //$NON-NLS-1$ 
 							return Status.CANCEL_STATUS;
 						}
 						IBuildpathEntry[] buildpathEntries = languageContainer.getBuildpathEntries();
@@ -212,7 +212,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 								fragments.add(fragment);
 							}
 						}
-						newInput = (IProjectFragment[]) fragments.toArray(new IProjectFragment[fragments.size()]);
+						newInput = fragments.toArray(new IProjectFragment[fragments.size()]);
 
 					} catch (ModelException e) {
 						return Status.CANCEL_STATUS;
